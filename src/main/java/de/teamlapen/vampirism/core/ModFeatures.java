@@ -1,9 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -12,6 +10,7 @@ import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampStructure;
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
+import net.minecraft.world.gen.DimensionSettings;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -50,20 +49,19 @@ public class ModFeatures {
 
     static void registerStructures(IForgeRegistry<Structure<?>> registry) {
         Structure.field_236385_u_.put(hunter_camp, GenerationStage.Decoration.SURFACE_STRUCTURES);
-        Structure.field_236365_a_.put(REFERENCE.MODID+":hunter_camp", hunter_camp);
+        Structure.field_236365_a_.put(REFERENCE.MODID + ":hunter_camp", hunter_camp);
         registry.register(hunter_camp.setRegistryName(REFERENCE.MODID, "hunter_camp"));
+        Map<Structure<?>, StructureSeparationSettings> structureSettingsMapOverworld = DimensionSettings.Preset.field_236122_b_.func_236137_b_().func_236108_a_().func_236195_a_(); //TODO 1.16 Maybe check again when world gen/dimension stuff has stabilized in MC/Forge
+        structureSettingsMapOverworld.put(hunter_camp, HunterCampStructure.getSettings());
 
-        //temporary map needed for overriding
-        Map<Structure<?>, StructureSeparationSettings> tmp = Maps.newHashMap(DimensionStructuresSettings.field_236191_b_);
+
         if (VampirismConfig.SERVER.villageModify.get()) {
-            tmp.put(Structure.field_236382_r_, new StructureSeparationSettings(VampirismConfig.SERVER.villageDistance.get(),VampirismConfig.SERVER.villageSeparation.get(),DimensionStructuresSettings.field_236191_b_.get(Structure.field_236382_r_).func_236673_c_()));
-        }else {
+            LOGGER.info("Replacing vanilla village structure separation settings for the overworld dimension preset");
+            structureSettingsMapOverworld.put(Structure.field_236382_r_, new StructureSeparationSettings(VampirismConfig.SERVER.villageDistance.get(), VampirismConfig.SERVER.villageSeparation.get(), DimensionStructuresSettings.field_236191_b_.get(Structure.field_236382_r_).func_236673_c_()));
+        } else {
             LOGGER.trace("Not modifying village");
         }
 
-        ImmutableMap.Builder<Structure<?>, StructureSeparationSettings> builder = ImmutableMap.<Structure<?>, StructureSeparationSettings>builder().putAll(tmp)
-                .put(hunter_camp, HunterCampStructure.getSettings());
-        DimensionStructuresSettings.field_236191_b_ = builder.build();
     }
 
     static void registerIgnoredBiomesForStructures() {
