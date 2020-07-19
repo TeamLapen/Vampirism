@@ -186,6 +186,7 @@ public class ModItems {
     public static final VampirismItem hunter_minion_equipment = getNull();
     public static final VampirismItem hunter_minion_upgrade1 = getNull();
     public static final VampirismItem hunter_minion_upgrade2 = getNull();
+    public static final FeedingAdapterItem feeding_adapter = getNull();
 
     static void registerCraftingRecipes() {
         // Brewing
@@ -386,6 +387,7 @@ public class ModItems {
         registry.register(new VampirismItem("hunter_minion_equipment", creativeTabProps()));
         registry.register(new VampirismItem("hunter_minion_upgrade1", creativeTabProps()));
         registry.register(new VampirismItem("hunter_minion_upgrade2", creativeTabProps()));
+        registry.register(new FeedingAdapterItem());
 
         if(VampirismMod.inDataGen) {
             registry.register(new DummyItem().setRegistryName("guideapi-vp", "vampirism-guidebook"));

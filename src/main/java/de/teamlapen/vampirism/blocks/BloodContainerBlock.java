@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -13,6 +14,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -32,6 +34,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,6 +49,8 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     public final static String regName = "blood_container";
     protected static final VoxelShape containerShape = Block.makeCuboidShape(2, 0, 2, 14, 16, 14);
     private final static Logger LOGGER = LogManager.getLogger();
+    @ObjectHolder("vampirism:blood_container")
+    public static final Item item = UtilLib.getNull();
 
     public BloodContainerBlock() {
         super(regName, Properties.create(Material.GLASS).hardnessAndResistance(1f));
@@ -76,13 +81,36 @@ public class BloodContainerBlock extends VampirismBlockContainer {
         return containerShape;
     }
 
+    public static FluidStack getFluidFromItemStack(ItemStack stack) {
+        if (stack.getItem() == item) {
+            if (stack.hasTag() && stack.getTag().contains("fluid", 10)) {
+                CompoundNBT fluidTag = stack.getTag().getCompound("fluid");
+                FluidStack fluidStack = FluidStack.loadFluidStackFromNBT(fluidTag);
+                return fluidStack;
+            } else {
+                return new FluidStack(ModFluids.blood, 0);
+            }
+        }
+        return FluidStack.EMPTY;
+    }
+
+    public static void writeFluidToItemStack(ItemStack stack, FluidStack fluid) {
+        if (fluid.isEmpty()) {
+            if (stack.hasTag() && stack.getTag().contains("fluid")) {
+                stack.getTag().remove("fluid");
+            }
+        } else {
+            stack.setTagInfo("fluid", fluid.writeToNBT(new CompoundNBT()));
+        }
+    }
+
     @Override
     public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack heldStack) {
         ItemStack stack = new ItemStack(ModBlocks.blood_container, 1);
         if (te != null) {
             FluidStack fluid = ((BloodContainerTileEntity) te).getFluid();
             if (!fluid.isEmpty() && fluid.getAmount() >= VReference.FOOD_TO_FLUID_BLOOD) {
-                stack.setTagInfo("fluid", fluid.writeToNBT(new CompoundNBT()));
+                writeFluidToItemStack(stack, fluid);
             }
         }
         spawnAsEntity(worldIn, pos, stack);
@@ -118,18 +146,12 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
-        if (stack.hasTag() && stack.getTag().contains("fluid")) {
-            CompoundNBT nbt = stack.getTag().getCompound("fluid");
-            FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
-            if (fluid == null) {
-                LOGGER.warn("Failed to load fluid from item nbt {}", nbt);
-            } else {
-                TileEntity tile = (worldIn.getTileEntity(pos));
-                if (tile instanceof BloodContainerTileEntity) {
-                    ((BloodContainerTileEntity) tile).setFluidStack(fluid);
-                }
+        FluidStack fluid = getFluidFromItemStack(stack);
+        if (!stack.isEmpty()) {
+            TileEntity tile = (worldIn.getTileEntity(pos));
+            if (tile instanceof BloodContainerTileEntity) {
+                ((BloodContainerTileEntity) tile).setFluidStack(fluid);
             }
-
         }
     }
 

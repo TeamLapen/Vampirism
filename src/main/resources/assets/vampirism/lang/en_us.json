@@ -583,6 +583,7 @@
   "item.vampirism.hunter_minion_equipment": "Equipment for hunter minion",
   "item.vampirism.hunter_minion_upgrade1": "Hunter-minion equipment upgrade",
   "item.vampirism.hunter_minion_upgrade2": "Improved hunter-minion equipment upgrade",
+  "item.vampirism.feeding_adapter": "Feeding adapter",
   "block.vampirism.castle_block.no_spawn": "No entity can spawn on this",
   "block.vampirism.castle_block.vampire_spawn": "Only vampires can spawn on this",
   "block.vampirism.sunscreen_beacon.tooltip1": "Creative only.",
@@ -699,5 +700,7 @@
   "text.vampirism.name": "Name: ",
   "text.vampirism.minion.call_single": "Call single",
   "text.vampirism.minion.call_all": "Call all",
-  "text.vampirism.minion.respawn": "Respawn dead"
+  "text.vampirism.minion.respawn": "Respawn dead",
+  "__comment": "tasks",
+  "task.vampirism.feeding_adapter": "Kitchen utility"
 }
