@@ -35,6 +35,7 @@ public class ItemInfoBuilder {
     private Object[] formats = new Object[0];
     private Object[] links = null;
     private boolean customName;
+    private final List<IPage> additionalPages = new ArrayList<>();
 
     /**
      * @param block Whether to use "block" or "item" translation keys
@@ -135,8 +136,14 @@ public class ItemInfoBuilder {
                 }
             }
         }
+        pages.addAll(this.additionalPages);
         if (links != null) GuideHelper.addLinks(pages, links);
         entries.put(new ResourceLocation(base), new EntryItemStack(pages, customName ? base : mainStack.getTranslationKey(), mainStack));
+    }
+
+    public ItemInfoBuilder customPages(IPage... additionalPages) {
+        this.additionalPages.addAll(Arrays.asList(additionalPages));
+        return this;
     }
 
 

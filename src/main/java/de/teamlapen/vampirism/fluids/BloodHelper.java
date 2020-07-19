@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.fluids;
 
+import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.tileentity.BloodContainerTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -30,7 +32,7 @@ public class BloodHelper {
      * @param inventory
      * @return
      */
-    public static ItemStack getBloodContainerInHotbar(PlayerInventory inventory) {
+    public static ItemStack getBloodHandlerInHotbar(PlayerInventory inventory) {
         int hotbarSize = PlayerInventory.getHotbarSize();
         for (int i = 0; i < hotbarSize; i++) {
             ItemStack stack = inventory.getStackInSlot(i);
@@ -115,7 +117,7 @@ public class BloodHelper {
      */
     public static int fillBloodIntoInventory(PlayerEntity player, int amt) {
         if (amt <= 0) return 0;
-        ItemStack stack = getBloodContainerInHotbar(player.inventory);
+        ItemStack stack = getBloodHandlerInHotbar(player.inventory);
         if (!stack.isEmpty()) {
             int filled = fill(stack, amt, IFluidHandler.FluidAction.EXECUTE);
             if (filled > 0) {
@@ -143,7 +145,40 @@ public class BloodHelper {
             }
             return fillBloodIntoInventory(player, amt - filled);
         }
+        if (hasFeedingAdapterInHotbar(player.inventory)) {
+            ItemStack container = getBloodContainerInInventory(player.inventory, false, true);
+            if (!container.isEmpty()) {
+                FluidStack content = BloodContainerBlock.getFluidFromItemStack(container);
+                int filled = Math.min(amt, BloodContainerTileEntity.CAPACITY - content.getAmount());
+                content.setAmount(content.getAmount() + filled);
+                BloodContainerBlock.writeFluidToItemStack(container, content);
+                return fillBloodIntoInventory(player, amt - filled);
+            }
+        }
+
         return amt;
 
+    }
+
+    public static boolean hasFeedingAdapterInHotbar(PlayerInventory inventory) {
+        int hotbarSize = PlayerInventory.getHotbarSize();
+        for (int i = 0; i < hotbarSize; i++) {
+            ItemStack itemStack = inventory.getStackInSlot(i);
+            if (!itemStack.isEmpty() && itemStack.getItem().equals(ModItems.feeding_adapter)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static ItemStack getBloodContainerInInventory(PlayerInventory inventory, boolean allowFull, boolean allowEmpty) {
+        for (int i = 0; i < inventory.getSizeInventory(); i++) {
+            ItemStack stack = inventory.getStackInSlot(i);
+            FluidStack content = BloodContainerBlock.getFluidFromItemStack(stack);
+            if (content.getRawFluid() == ModFluids.blood && (allowFull || content.getAmount() < BloodContainerTileEntity.CAPACITY) && (allowEmpty || content.getAmount() > 0)) {
+                return stack;
+            }
+        }
+        return ItemStack.EMPTY;
     }
 }

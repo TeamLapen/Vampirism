@@ -17,10 +17,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blocks.AltarPillarBlock;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.items.BloodBottleItem;
 import de.teamlapen.vampirism.modcompat.guide.pages.PageHolderWithLinks;
 import de.teamlapen.vampirism.modcompat.guide.pages.PageTable;
@@ -53,7 +50,7 @@ public class GuideBook implements IGuideBook {
     private static final Logger LOGGER = LogManager.getLogger();
     private final static String IMAGE_BASE = "vampirismguide:textures/images/";
     private static Book guideBook;
-    private static Map<ResourceLocation, EntryAbstract> links = Maps.newHashMap();
+    private static final Map<ResourceLocation, EntryAbstract> links = Maps.newHashMap();
 
 
     static void buildCategories(List<CategoryAbstract> categories) {
@@ -368,6 +365,7 @@ public class GuideBook implements IGuideBook {
         ItemInfoBuilder.create(ModItems.heart_seeker_normal, ModItems.heart_seeker_enhanced, ModItems.heart_seeker_ultimate).recipes("vampire/heart_seeker_normal", "vampire/heart_seeker_enhanced").build(entries);
         ItemInfoBuilder.create(ModItems.heart_striker_normal, ModItems.heart_striker_enhanced, ModItems.heart_striker_ultimate).recipes("vampire/heart_striker_normal", "vampire/heart_striker_normal").build(entries);
         ItemInfoBuilder.create(ModItems.vampire_cloak_black_red, ModItems.vampire_cloak_black_blue, ModItems.vampire_cloak_red_black, ModItems.vampire_cloak_black_white, ModItems.vampire_cloak_white_black).recipes("vampire/vampire_cloak_black_red", "vampire/vampire_cloak_black_blue", "vampire/vampire_cloak_black_white", "vampire/vampire_cloak_red_black", "vampire/vampire_cloak_white_black").build(entries);
+        ItemInfoBuilder.create(ModItems.feeding_adapter).customPages(GuideHelper.createItemTaskDescription(ModTasks.feeding_adapter)).build(entries);
 
         //Hunter
         ItemInfoBuilder.create(ModItems.injection_empty, ModItems.injection_garlic, ModItems.injection_sanguinare).recipes("general/injection_0", "general/injection_1", "general/injection_2").build(entries);
@@ -385,7 +383,6 @@ public class GuideBook implements IGuideBook {
         ItemInfoBuilder.create(ModItems.hunter_coat_chest_normal, ModItems.hunter_coat_chest_enhanced, ModItems.hunter_coat_chest_enhanced, ModItems.hunter_coat_legs_normal, ModItems.hunter_coat_legs_enhanced, ModItems.hunter_coat_legs_ultimate, ModItems.hunter_coat_head_normal, ModItems.hunter_coat_head_enhanced, ModItems.hunter_coat_head_ultimate, ModItems.hunter_coat_feet_normal, ModItems.hunter_coat_feet_enhanced, ModItems.hunter_coat_feet_ultimate).recipes("weapontable/hunter_coat_chest_normal", "weapontable/hunter_coat_legs_normal", "weapontable/hunter_coat_head_normal", "weapontable/hunter_coat_feet_normal", "weapontable/hunter_coat_chest_enhanced", "weapontable/hunter_coat_legs_enhanced", "weapontable/hunter_coat_head_enhanced", "weapontable/hunter_coat_feet_enhanced").build(entries);
         ItemInfoBuilder.create(ModItems.obsidian_armor_chest_normal, ModItems.obsidian_armor_chest_enhanced, ModItems.obsidian_armor_chest_enhanced, ModItems.obsidian_armor_legs_normal, ModItems.obsidian_armor_legs_enhanced, ModItems.obsidian_armor_legs_ultimate, ModItems.obsidian_armor_head_normal, ModItems.obsidian_armor_head_enhanced, ModItems.obsidian_armor_head_ultimate, ModItems.obsidian_armor_feet_normal, ModItems.obsidian_armor_feet_enhanced, ModItems.obsidian_armor_feet_ultimate).recipes("weapontable/obsidian_armor_chest_normal", "weapontable/obsidian_armor_legs_normal", "weapontable/obsidian_armor_head_normal", "weapontable/obsidian_armor_feet_normal", "weapontable/obsidian_armor_chest_enhanced", "weapontable/obsidian_armor_legs_enhanced", "weapontable/obsidian_armor_head_enhanced", "weapontable/obsidian_armor_feet_enhanced").build(entries);
         ItemInfoBuilder.create(ModItems.hunter_axe_normal, ModItems.hunter_axe_enhanced, ModItems.hunter_axe_ultimate).recipes("weapontable/hunter_axe", "weapontable/hunter_axe_enhanced").build(entries);
-
 
         links.putAll(entries);
         return entries;
