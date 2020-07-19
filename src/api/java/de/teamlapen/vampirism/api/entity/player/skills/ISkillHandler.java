@@ -42,6 +42,6 @@ public interface ISkillHandler<T extends ISkillPlayer<?>> {
     void resetSkills();
 
     enum Result {
-        OK, ALREADY_ENABLED, PARENT_NOT_ENABLED, NOT_FOUND, NO_POINTS, OTHER_NODE_SKILL
+        OK, ALREADY_ENABLED, PARENT_NOT_ENABLED, NOT_FOUND, NO_POINTS, OTHER_NODE_SKILL, LOCKED_BY_OTHER_NODE
     }
 }
