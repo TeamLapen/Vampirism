@@ -5,8 +5,12 @@ import de.maxanier.guideapi.api.IPage;
 import de.maxanier.guideapi.api.IRecipeRenderer;
 import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
 import de.maxanier.guideapi.page.PageIRecipe;
+import de.maxanier.guideapi.page.PageItemStack;
 import de.maxanier.guideapi.page.PageJsonRecipe;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.task.Task;
+import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.inventory.recipes.AlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.inventory.recipes.ShapedWeaponTableRecipe;
 import de.teamlapen.vampirism.inventory.recipes.ShapelessWeaponTableRecipe;
@@ -14,6 +18,7 @@ import de.teamlapen.vampirism.modcompat.guide.pages.PageHolderWithLinks;
 import de.teamlapen.vampirism.modcompat.guide.recipes.AlchemicalCauldronRecipeRenderer;
 import de.teamlapen.vampirism.modcompat.guide.recipes.ShapedWeaponTableRecipeRenderer;
 import de.teamlapen.vampirism.modcompat.guide.recipes.ShapelessWeaponTableRecipeRenderer;
+import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
@@ -103,5 +108,27 @@ public class GuideHelper {
         return new PageJsonRecipe(id, GuideHelper::getRenderer);
     }
 
+    /**
+     * Create a simple page informing the reader about a task that can be used to obtain an item
+     */
+    public static PageItemStack createItemTaskDescription(Task task) {
+        assert task.getReward() instanceof ItemReward;
+        ItemStack reward = ((ItemReward) task.getReward()).getReward();
+        StringBuilder text = new StringBuilder();
+        IPlayableFaction<?> f = task.getFaction();
+        String type = f == null ? "" : f.getName().getString() + " ";
+        text.append(UtilLib.translate("text.vampirism.task.reward_obtain", type)).append("\n\n");
+        text.append(task.getTranslation().getFormattedText()).append('\n');
+        text.append(UtilLib.translate("text.vampirism.task.prerequisites")).append(":\n");
+        TaskUnlocker[] unlockers = task.getUnlocker();
+        if (unlockers.length > 0) {
+            for (TaskUnlocker u : unlockers) {
+                text.append("- ").append(u.getDescription().getFormattedText()).append("\n");
+            }
 
+        } else {
+            text.append(UtilLib.translate("text.vampirism.task.prerequisites.none"));
+        }
+        return new PageItemStack(text.toString(), reward);
+    }
 }
