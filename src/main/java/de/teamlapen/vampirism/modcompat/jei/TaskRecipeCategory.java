@@ -27,7 +27,7 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
     private final IDrawable icon;
 
     public TaskRecipeCategory(IGuiHelper guiHelper) {
-        background = guiHelper.drawableBuilder(new ResourceLocation("jei", "textures/gui/slot.png"), 0, 0, 18, 18).setTextureSize(18, 18).addPadding(10, 90, 75, 75).build();
+        background = guiHelper.drawableBuilder(new ResourceLocation("jei", "textures/gui/slot.png"), 0, 0, 18, 18).setTextureSize(18, 18).addPadding(14, 90, 75, 75).build();
         icon = guiHelper.createDrawableIngredient(new ItemStack(ModItems.vampire_fang));
     }
 
@@ -35,22 +35,26 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
     public void draw(Task task, double mouseX, double mouseY) {
         Minecraft minecraft = Minecraft.getInstance();
         int x = 4;
-        int y = 38;
+        int y = 40;
+        minecraft.fontRenderer.drawString(task.getTranslation().getFormattedText(), 1, 1, Color.gray.getRGB());
         IPlayableFaction<?> f = task.getFaction();
         String type = f == null ? "" : f.getName().getString() + " ";
         String text = UtilLib.translate("text.vampirism.task.reward_obtain", type);
         minecraft.fontRenderer.drawSplitString(text, x, y, 160, Color.gray.getRGB());
+        y += minecraft.fontRenderer.FONT_HEIGHT * 3;
+        String prerequisiteTitle = UtilLib.translate("text.vampirism.task.prerequisites") + ":";
+        minecraft.fontRenderer.drawString(prerequisiteTitle, x, y, Color.darkGray.getRGB());
+        y += minecraft.fontRenderer.FONT_HEIGHT;
+
         TaskUnlocker[] unlockers = task.getUnlocker();
         if (unlockers.length > 0) {
             StringBuilder prerequisite = new StringBuilder();
             for (TaskUnlocker u : unlockers) {
                 prerequisite.append("- ").append(u.getDescription().getFormattedText()).append("\n");
             }
-            y += minecraft.fontRenderer.FONT_HEIGHT * 3;
-            String prerequisiteTitle = UtilLib.translate("text.vampirism.task.prerequisites") + ":";
-            minecraft.fontRenderer.drawString(prerequisiteTitle, x, y, Color.darkGray.getRGB());
-            y += minecraft.fontRenderer.FONT_HEIGHT;
             minecraft.fontRenderer.drawSplitString(prerequisite.toString(), x, y, 160, Color.gray.getRGB());
+        } else {
+            minecraft.fontRenderer.drawString(UtilLib.translate("text.vampirism.task.prerequisites.none"), x, y, Color.gray.getRGB());
         }
 
 
@@ -93,7 +97,7 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
     public void setRecipe(IRecipeLayout recipeLayout, Task recipe, IIngredients ingredients) {
         int craftOutputSlot = 0;
         IGuiItemStackGroup guiItemStackGroup = recipeLayout.getItemStacks();
-        guiItemStackGroup.init(craftOutputSlot, false, 75, 10);
+        guiItemStackGroup.init(craftOutputSlot, false, 75, 14);
         List<List<ItemStack>> outputs = ingredients.getOutputs(VanillaTypes.ITEM);
         guiItemStackGroup.set(craftOutputSlot, outputs.get(0));
     }
