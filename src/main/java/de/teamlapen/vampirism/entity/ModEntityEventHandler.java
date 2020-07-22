@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.blocks.CastleBricksBlock;
 import de.teamlapen.vampirism.blocks.CastleSlabBlock;
@@ -222,14 +223,14 @@ public class ModEntityEventHandler {
                 Goal mobTarget = null;
 
                 for (PrioritizedGoal t : ((IronGolemEntity) event.getEntity()).targetSelector.goals) {
-                    if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 3 && MobEntity.class.equals(((NearestAttackableTargetGoal) t.getGoal()).targetClass)) {
+                    if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 3 && MobEntity.class.equals(((NearestAttackableTargetGoal<?>) t.getGoal()).targetClass)) {
                         mobTarget = t.getGoal();
                         break;
                     }
                 }
                 if (mobTarget != null) {
                     ((IronGolemEntity) event.getEntity()).targetSelector.removeGoal(mobTarget);
-                    ((IronGolemEntity) event.getEntity()).targetSelector.addGoal(3, new NearestAttackableTargetGoal<>((IronGolemEntity) event.getEntity(), MobEntity.class, 5, false, false, entity -> entity instanceof IMob && !(entity instanceof IHunter) && !(entity instanceof CreeperEntity)));
+                    ((IronGolemEntity) event.getEntity()).targetSelector.addGoal(3, new NearestAttackableTargetGoal<>((IronGolemEntity) event.getEntity(), MobEntity.class, 5, false, false, entity -> entity instanceof IMob && !(entity instanceof IHunter) && !(entity instanceof IVampire) && !(entity instanceof CreeperEntity)));
                 } else {
                     if (warnAboutGolem) {
                         LOGGER.warn("Could not replace villager iron golem target task");

@@ -136,13 +136,9 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     public static ITextComponent forceFactionCommand(IFaction faction, ServerPlayerEntity player) {
-        StructureStart<?> village = player.getServerWorld().func_241112_a_()/*getStructureManager*/.func_235010_a_(player.func_233580_cy_(), true, Structure.field_236381_q_);
+        StructureStart<?> village = UtilLib.getStructureStartAt(player, Structure.field_236381_q_);
 
-
-        if (!village.isValid()) {
-            return new TranslationTextComponent("command.vampirism.test.village.no_village");
-        }
-        if (village == StructureStart.DUMMY) {
+        if (village == null || !village.isValid() || village == StructureStart.DUMMY) {
             return new TranslationTextComponent("command.vampirism.test.village.no_village");
         }
         TileEntity te = player.getEntityWorld().getTileEntity(totemPositions.get(village));
@@ -377,7 +373,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         if (!(blockFaction.equals(this.controllingFaction == null ? nonFactionTotem : this.controllingFaction.getID()))) { //If block faction does not match tile faction, force the tile to update to the block faction
             this.forcedFaction = VampirismAPI.factionRegistry().getFactionByID(blockFaction);
         }
-        @Nullable StructureStart<?> structure = this.world instanceof ServerWorld ? ((ServerWorld) this.world).func_241112_a_()/*getStructureManager*/.func_235010_a_(getPos(), true, Structure.field_236381_q_) : null;
+        @Nullable StructureStart<?> structure = this.world instanceof ServerWorld ? UtilLib.getStructureStartAt(this.world, getPos(), Structure.field_236381_q_) : null;
         if (!(this.isInsideVillage = structure != null && structure.isValid())) return;
         if (structure == StructureStart.DUMMY) return;
         this.village = structure;
