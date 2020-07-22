@@ -688,7 +688,7 @@ public class UtilLib {
     @Nullable
     public static StructureStart<?> getStructureStartAt(World w, BlockPos pos, Structure<?> s) {
         if (w instanceof ServerWorld) {
-            return ((ServerWorld) w).func_241112_a_()/*getStructureManager*/.func_235010_a_(pos, true, s);
+            return ((ServerWorld) w).func_241112_a_()/*getStructureManager*/.func_235010_a_(pos, false, s);
         }
         return null;
     }
