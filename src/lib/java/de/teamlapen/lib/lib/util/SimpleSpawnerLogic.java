@@ -181,9 +181,10 @@ public class SimpleSpawnerLogic<T extends Entity> {
 
                     if (limitType != null) {
                         WorldEntitySpawner.EntityDensityManager densityManager = ((ServerWorld) this.world).getChunkProvider().func_241101_k_();
-                        if (!densityManager.func_234991_a_(limitType))
+                        if (!densityManager.func_234991_a_(limitType)) {
                             this.resetTimer();
-                        break;
+                            break;
+                        }
 
                     }
 
