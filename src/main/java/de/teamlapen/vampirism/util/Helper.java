@@ -10,8 +10,8 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
+import de.teamlapen.vampirism.api.world.IVampireBiome;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import net.minecraft.block.BlockState;
@@ -169,7 +169,7 @@ public class Helper {
     public static boolean isEntityInVampireBiome(Entity e) {
         if (e == null) return false;
         try {
-            return ModBiomes.vampire_forest.getRegistryName().equals(e.getEntityWorld().getBiome(e.func_233580_cy_()).getRegistryName());
+            return e.getEntityWorld().getBiome(e.func_233580_cy_()) instanceof IVampireBiome;
         } catch (NullPointerException e1) {
             //http://openeye.openmods.info/crashes/8cef4d710e41adf9be8362e57ad70d28
             LOGGER.error("Nullpointer when checking biome. This is strange and should not happen", e1);

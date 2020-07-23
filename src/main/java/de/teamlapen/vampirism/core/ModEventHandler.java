@@ -6,6 +6,7 @@ import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
+import de.teamlapen.vampirism.api.world.IVampireBiome;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.modcompat.IntegrationsNotifier;
@@ -50,7 +51,7 @@ public class ModEventHandler {
     @SubscribeEvent
     public void onHarvestDrops(BlockEvent.HarvestDropsEvent event) {
         if (event.getState().getBlock().equals(Blocks.OAK_LEAVES)) {
-            if (ModBiomes.vampire_forest.equals(event.getWorld().getBiome(event.getPos()))) {
+            if (event.getWorld().getBiome(event.getPos()) instanceof IVampireBiome) {
                 PlayerEntity p = event.getHarvester();
                 if (p != null && p.getRNG().nextInt(VampirismConfig.BALANCE.dropOrchidFromLeavesChance.get()) == 0) {
                     event.getDrops().add(new ItemStack(ModBlocks.vampire_orchid, 1));

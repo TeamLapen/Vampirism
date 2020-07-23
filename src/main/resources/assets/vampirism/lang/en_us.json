@@ -391,6 +391,7 @@
   "text.vampirism.hunter_trainer.ritual_missing_items": "Missing %s of \"%s\" for this ritual",
   "__comment": "biome",
   "biome.vampirism.vampire_forest": "Vampire Forest",
+  "biome.vampirism.vampire_forest_hills": "Vampire Forest Hills",
   "__comment": "text",
   "text.vampirism.update_message.download": "Download",
   "text.vampirism.update_message.changelog": "Changelog",

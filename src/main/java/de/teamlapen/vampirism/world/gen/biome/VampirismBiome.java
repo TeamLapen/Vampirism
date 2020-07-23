@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.world.gen.biome;
 
-import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 
 public abstract class VampirismBiome extends Biome {
 
-    public VampirismBiome(String regName, Builder builder) {
+    public VampirismBiome(ResourceLocation regName, Builder builder) {
         super(builder);
-        this.setRegistryName(REFERENCE.MODID, regName);
+        this.setRegistryName(regName);
     }
 }

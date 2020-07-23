@@ -1,23 +1,27 @@
 package de.teamlapen.vampirism.world.gen.biome;
 
+import de.teamlapen.vampirism.api.world.IVampireBiome;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.world.gen.features.VampirismBiomeFeatures;
 import net.minecraft.entity.EntityClassification;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.BiomeAmbience;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
 import net.minecraft.world.biome.MoodSoundAmbience;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
 
-public class VampireForestBiome extends VampireBiome {
-    public final static String regName = "vampire_forest";
+import java.util.function.Function;
+
+public class VampireForestBiome extends VampirismBiome implements IVampireBiome {
 
     private static final SurfaceBuilderConfig vampire_surface = new SurfaceBuilderConfig(ModBlocks.cursed_earth.getDefaultState(), ModBlocks.cursed_earth.getDefaultState(), ModBlocks.cursed_earth.getDefaultState());
 
-    public VampireForestBiome() {
-        super(regName, new Builder().surfaceBuilder(SurfaceBuilder.DEFAULT, vampire_surface).category(Category.FOREST).depth(0.1F).scale(0.025F).func_235097_a_((new BiomeAmbience.Builder()).func_235246_b_/*waterColor*/(0xEE2505).func_235248_c_/*waterfogColor*/(0xEE2505).func_235239_a_(0xAA5555).func_235243_a_(MoodSoundAmbience.field_235027_b_).func_235238_a_()).precipitation(RainType.NONE).parent(null).downfall(0).temperature(0.3f));
+    public VampireForestBiome(ResourceLocation regName, Function<Builder, Builder> builder) {
+        super(regName, builder.apply(new Builder().surfaceBuilder(SurfaceBuilder.DEFAULT, vampire_surface).category(Category.FOREST).depth(0.1F).scale(0.025F).func_235097_a_((new BiomeAmbience.Builder()).func_235246_b_/*waterColor*/(0xEE2505).func_235248_c_/*waterfogColor*/(0xEE2505).func_235239_a_(0xAA5555).func_235243_a_(MoodSoundAmbience.field_235027_b_).func_235238_a_()).precipitation(RainType.NONE).parent(null).downfall(0).temperature(0.3f)));
+        this.noSunDamageRegister();
 
         VampirismBiomeFeatures.addVampireTrees(this);
         VampirismBiomeFeatures.addVampirismFlowers(this);

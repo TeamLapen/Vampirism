@@ -6,6 +6,7 @@ import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
+import de.teamlapen.vampirism.api.world.IVampireBiome;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.converted.ConvertedCreatureEntity;
@@ -189,7 +190,7 @@ public class ModEntities {
          */
         List<Biome> zombieBiomes = Lists.newArrayList();
         zombieBiomes.addAll(allBiomes);
-        zombieBiomes.remove(ModBiomes.vampire_forest);
+        zombieBiomes.removeIf(biome -> biome instanceof IVampireBiome);
         Iterator<Biome> iterator = zombieBiomes.iterator();
         while (iterator.hasNext()) {
             Biome b = iterator.next();
