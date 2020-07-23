@@ -19,7 +19,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue holyWaterTierDamageInc;
     public final ForgeConfigSpec.DoubleValue heartSeekerChargingFactor;
     public final ForgeConfigSpec.DoubleValue heartSeekerUsageFactor;
-    public final ForgeConfigSpec.BooleanValue golemAttackVampire;
+    public final ForgeConfigSpec.BooleanValue golemAttackNonVillageFaction;
     public final ForgeConfigSpec.BooleanValue zombieIgnoreVampire;
     public final ForgeConfigSpec.IntValue hunterTentMaxSpawn;
     public final ForgeConfigSpec.DoubleValue crossbowDamageMult;
@@ -164,7 +164,7 @@ public class BalanceConfig {
         heartSeekerChargingFactor = builder.comment("The blood mB to charge percentage of the normal heart seeker vampire sword").defineInRange("heartSeekerChargingFactor", 0.05 / (double) VReference.FOOD_TO_FLUID_BLOOD, 0d, 1d);
         heartSeekerUsageFactor = builder.comment("The percentage of stored blood used for every hit with the normal heart seeker vampire sword").defineInRange("heartSeekerUsageFactor", 0.5, 0, 100d);
         dropOrchidFromLeavesChance = builder.comment("Drop orchid every n times breaking a leave in the vampire forest").defineInRange("dropOrchidFromLeavesChance", 25, 1, Integer.MAX_VALUE);
-        golemAttackVampire = builder.comment("If iron golems should attack vampire NPCs if in a non-vampire village").define("golemAttackVampire", true);
+        golemAttackNonVillageFaction = builder.comment("If iron golems should attack faction NPCs if in a village with a different faction").define("golemAttackNonVillageFaction", true);
         zombieIgnoreVampire = builder.comment("If zombies should ignore vampires").define("zombieIgnoreVampire", true);
         hunterTentMaxSpawn = builder.comment("Maximum number of hunters that can spawn at one tent per day").defineInRange("hunterTentMaxSpawn", 4, 0, 20);
         crossbowDamageMult = builder.comment("The base damage dealt by crossbow arrows is multiplied by this").defineInRange("crossbowDamageMult", 1, 0.2, 5);

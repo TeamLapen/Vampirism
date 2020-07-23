@@ -7,14 +7,13 @@ import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.hunter.IHunter;
-import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.blocks.CastleBricksBlock;
 import de.teamlapen.vampirism.blocks.CastleSlabBlock;
 import de.teamlapen.vampirism.blocks.CastleStairsBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.entity.goals.GolemTargetVampireGoal;
+import de.teamlapen.vampirism.entity.goals.GolemTargetNonVillageFactionGoal;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.BloodPotionTableContainer;
@@ -216,9 +215,7 @@ public class ModEntityEventHandler {
             }
 
             if (event.getEntity() instanceof IronGolemEntity) {
-                if (VampirismConfig.BALANCE.golemAttackVampire.get()) {
-                    ((IronGolemEntity) event.getEntity()).targetSelector.addGoal(4, new GolemTargetVampireGoal((IronGolemEntity) event.getEntity()));
-                }
+                ((IronGolemEntity) event.getEntity()).targetSelector.addGoal(4, new GolemTargetNonVillageFactionGoal((IronGolemEntity) event.getEntity()));
 
                 Goal mobTarget = null;
 
@@ -230,7 +227,7 @@ public class ModEntityEventHandler {
                 }
                 if (mobTarget != null) {
                     ((IronGolemEntity) event.getEntity()).targetSelector.removeGoal(mobTarget);
-                    ((IronGolemEntity) event.getEntity()).targetSelector.addGoal(3, new NearestAttackableTargetGoal<>((IronGolemEntity) event.getEntity(), MobEntity.class, 5, false, false, entity -> entity instanceof IMob && !(entity instanceof IHunter) && !(entity instanceof IVampire) && !(entity instanceof CreeperEntity)));
+                    ((IronGolemEntity) event.getEntity()).targetSelector.addGoal(3, new NearestAttackableTargetGoal<>((IronGolemEntity) event.getEntity(), MobEntity.class, 5, false, false, entity -> entity instanceof IMob && !(entity instanceof IFactionEntity) && !(entity instanceof CreeperEntity)));
                 } else {
                     if (warnAboutGolem) {
                         LOGGER.warn("Could not replace villager iron golem target task");
