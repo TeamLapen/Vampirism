@@ -1,5 +1,5 @@
 {
-  "parent": "block/beacon",
+  "parent": "minecraft:block/beacon",
   "textures": {
     "beacon": "vampirism:block/cursed_earth"
   }

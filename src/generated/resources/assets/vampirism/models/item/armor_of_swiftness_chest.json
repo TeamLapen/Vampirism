@@ -1,7 +1,7 @@
 {
-  "parent": "item/generated",
+  "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "item/leather_chestplate",
+    "layer0": "minecraft:item/leather_chestplate",
     "layer1": "vampirism:item/swiftness_chest_overlay"
   }
 }

@@ -1,7 +1,7 @@
 {
-  "parent": "item/generated",
+  "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "item/leather_boots",
+    "layer0": "minecraft:item/leather_boots",
     "layer1": "vampirism:item/swiftness_feet_overlay"
   }
 }

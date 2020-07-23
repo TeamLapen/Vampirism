@@ -1,5 +1,5 @@
 {
-  "parent": "block/outer_stairs",
+  "parent": "minecraft:block/outer_stairs",
   "textures": {
     "side": "vampirism:block/castle_block_dark_brick",
     "bottom": "vampirism:block/castle_block_dark_brick",
