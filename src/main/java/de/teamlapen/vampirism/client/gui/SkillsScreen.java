@@ -40,10 +40,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Gui screen which displays the skills available to the players and allows him to unlock some.
@@ -69,6 +67,8 @@ public class SkillsScreen extends Screen {
     private boolean display;
     private ISkill selected;
     private SkillNode selectedNode;
+    private int displayXWidth;
+    private int displayYHeight;
 
     public SkillsScreen() {
         super(new TranslationTextComponent("screen.vampirism.skills"));
@@ -123,6 +123,8 @@ public class SkillsScreen extends Screen {
             }
         }
 
+        this.displayXWidth = this.skillNodes.stream().flatMap(node -> Arrays.stream(node.getElements())).mapToInt(ISkill::getRenderColumn).max().orElse(0) * 25;
+        this.displayYHeight = this.skillNodes.stream().flatMap(node -> Arrays.stream(node.getElements())).mapToInt(ISkill::getRenderRow).max().orElse(0) * 20;
     }
 
     @Override
@@ -221,8 +223,8 @@ public class SkillsScreen extends Screen {
     }
 
     private void checkDisplay() {
-        displayY = MathHelper.clamp(displayY, -20 / zoomOut, 350 / zoomOut);
-        displayX = MathHelper.clamp(displayX, -400 / zoomOut + (zoomOut - 2.0F) * (-1) * 250, -300 / zoomOut + (zoomOut - 2.0F) * (-1) * 250);
+        displayY = MathHelper.clamp(displayY, -20 / zoomOut, (this.displayYHeight - 20) / zoomOut);
+        displayX = MathHelper.clamp(displayX, (-400 - displayXWidth) / zoomOut + (zoomOut - 2.0F) * (-1) * 250, (-400 + displayXWidth) / zoomOut + (zoomOut - 2.0F) * (-1) * 250);
         displayXNew = displayX;
         displayYNew = displayY;
     }
