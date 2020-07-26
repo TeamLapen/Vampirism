@@ -16,6 +16,8 @@ cache:
     - $HOME/.gradle/wrapper/
 branches:
   only:
+    - 1.16
+    - 1.15
     - 1.14
     - 1.12
 before_install: chmod +x gradlew

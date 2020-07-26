@@ -1,4 +1,4 @@
-Vampirism for Minecraft 1.16 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![Build Status](https://travis-ci.org/TeamLapen/Vampirism.svg?branch=1.15)](https://travis-ci.org/TeamLapen/Vampirism)  [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
+Vampirism for Minecraft 1.16 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![Build Status](https://travis-ci.org/TeamLapen/Vampirism.svg?branch=1.16)](https://travis-ci.org/TeamLapen/Vampirism)  [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 ============================================
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://maxanier.de)  
 
@@ -8,7 +8,7 @@ Very much WIP
 
 Vampires are fast, strong and blood-thirsty entities, which do not like the sun, but don't fear the night, and the best thing is: You can become one!
 
-This mod allows you to become a vampire with all it's benefits and drawbacks.
+This mod allows you to become a vampire with all its benefits and drawbacks.
 
 After being bitten by a vampire or manually injecting some vampire blood you get an effect called "Sanguinare Vampiris" which eventually turns you into a vampire.
 
@@ -24,6 +24,7 @@ For a more detailed description head over to the Minecraft forums or the Cursefo
 - [1LiterZinalco](https://chimute.org/) _Triage/Support/Community_
 
 ## Special Thanks to
+- PixelEyeStudios _Models/Textures_
 - TinkerHatWill _Textures_
 - Alis _Textures_
 - dimensionpainter _Textures_
@@ -101,11 +102,10 @@ The following example instructions will setup IntelliJ (Free community edition o
 4. Clone (`git clone https://github.com/TeamLapen/Vampirism`) or [download](https://github.com/TeamLapen/Vampirism/archive/master.zip) Vampirism to a new "Vampirism" folder.
 5. In IntelliJ use `New...` -> `New from Version Control` -> Fill out repo, directory and name
 6. After cloning is done IntelliJ offers you to import a unlinked Gradle Project. Click this.
-7. Select `Create directories for empty content roots` and __deselect__ `Create seperate module per source set` [Image](https://picload.org/image/ripradpa/importprojectfromgradle_001.png). If you do not get that dialog, you will have to edit your .idea/gradle.xml to include ` <option name="resolveModulePerSourceSet" value="false" />` (see [here](https://gist.github.com/maxanier/142b27c7800f9512cc4ef3d4e10b9bfd)) and refresh the gradle project again.  
-8. Refresh the gradle project  
-9. Run `genIntellijRuns` and edit the run config to use the correct module
-10. Make sure `Settings -> Build, Execution, Deployment -> Compiler -> 'Add runtime assertions for not-null-annotated methods and parameters' is disabled` (Unfortunately required, requires rebuild if the project has been built before)
-11. You might have to modify the projets compiler output path  
+7. Refresh the gradle project  
+8. Run `genIntellijRuns` and edit the run config to use the correct module
+9. Make sure `Settings -> Build, Execution, Deployment -> Compiler -> 'Add runtime assertions for not-null-annotated methods and parameters' is disabled` (Unfortunately required, requires rebuild if the project has been built before)
+10. You might have to modify the projets compiler output path  
 
 
 That's it.
@@ -124,9 +124,9 @@ For Eclipse you can use the settings created by @Cheaterpaul [FormatFile](https:
 This mod is licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/Vampirism/master/LICENCE) ***except*** for the following parts:
 
 ##### Textures
-Any textures included with this mod are licenced under the following terms:
+Any textures included in this mod are licenced under the following terms:
 ```
-Any textures included in the mod may be used, remixed and distributed for anything related to Vampirism (fan art, addon mods, forks, reviews, ...) excluding resource packs.
+Any textures (and models) included in the mod may be used, remixed and distributed for anything related to Vampirism (fan art, addon mods, forks, reviews, ...) excluding resource packs.
 If you want to use them in a resource/texture pack, you must credit the Vampirism project or the individual creator where applicable and it must not be used commercially.
 ```
 

@@ -3,11 +3,13 @@ name: Java CI
 on:
   push:
     branches:
+      - '1.16*'
       - '1.15*'
       - '1.14*'
       - '1.12*'
   pull_request:
     branches:
+      - '1.16*'
       - '1.15*'
       - '1.14*'
       - '1.12*'
