@@ -146,7 +146,7 @@ public class HunterTableBlock extends VampirismBlock {
         if (fromPos.getY() != pos.getY()) return;
         TABLE_VARIANT newVariant = determineTier(worldIn, pos, state.get(FACING));
         if (newVariant != state.get(VARIANT)) {
-            worldIn.setBlockState(pos, state.with(VARIANT, newVariant), 4);
+            worldIn.setBlockState(pos, state.with(VARIANT, newVariant), 2);
         }
     }
 
