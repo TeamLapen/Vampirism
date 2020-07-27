@@ -40,6 +40,8 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -256,12 +258,13 @@ public class ModPlayerEventHandler {
     public void onPlayerName(PlayerEvent.NameFormat event) {
         if (event.getPlayer() != null && VampirismConfig.SERVER.factionColorInChat.get()) {
             FactionPlayerHandler.getOpt(event.getPlayer()).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty()).ifPresent(fp -> {
-                IFaction f = fp.getDisguisedAs();
+                IFaction<?> f = fp.getDisguisedAs();
                 if (f != null) {
-                    event.setDisplayname(f.getChatColor() + event.getDisplayname() + TextFormatting.RESET);
+                    ITextComponent name = UtilLib.addFormatting(event.getDisplayname(), f.getChatColor());
                     if (fp instanceof IVampirePlayer && !fp.isDisguised() && ((IVampirePlayer) fp).isVampireLord()) {
-                        event.setDisplayname(TextFormatting.RED + "[" + UtilLib.translate("text.vampirism.lord") + "] " + TextFormatting.RESET + event.getDisplayname());
+                        name = new StringTextComponent("[" + UtilLib.translate("text.vampirism.lord") + "] ").func_240699_a_(TextFormatting.RED).func_230529_a_(name);
                     }
+                    event.setDisplayname(name);
                 }
 
             });

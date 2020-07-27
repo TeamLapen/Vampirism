@@ -95,11 +95,9 @@ public class ModEventHandler {
                 }
             }
         }
-        if (event.getPlayer().getRNG().nextInt(3) == 0) {
-            event.getPlayer().sendStatusMessage(new StringTextComponent("You are playing an alpha version of Vampirism for 1.16, some things might not work yet. Please report any issues except for:").func_240699_a_(TextFormatting.RED), false);
-            event.getPlayer().sendStatusMessage(new StringTextComponent("- Vampire forest is not generated in a normal overworld dimension"), false);
-            event.getPlayer().sendStatusMessage(new StringTextComponent("- Sleeping in coffin might not work"), false);
-        }
+//        if (event.getPlayer().getRNG().nextInt(3) == 0) {
+//            event.getPlayer().sendStatusMessage(new StringTextComponent("You are playing an alpha version of Vampirism for 1.16, some things might not work yet. Please report any issues except for:").func_240699_a_(TextFormatting.RED), false);
+//        }
 
         VampirismMod.dispatcher.sendTo(new SkillTreePacket(VampirismMod.proxy.getSkillTree(false).getCopy()), (ServerPlayerEntity) event.getPlayer());
 
