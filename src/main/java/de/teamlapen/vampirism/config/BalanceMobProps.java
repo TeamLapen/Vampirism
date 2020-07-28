@@ -9,7 +9,7 @@ public class BalanceMobProps {
     public static BalanceMobProps mobProps = new BalanceMobProps();
     public final int BLINDING_BAT_LIVE_SPAWN = 600;
     //    @DefaultInt(value = 40, name = "blinding_bat_effect_duration", minValue = 1, comment = "Blinding duration in ticks")
-    public final int BLINDING_BAT_EFFECT_DURATION = 40;
+    public final int BLINDING_BAT_EFFECT_DURATION = 80;
     //    @DefaultInt(value = 30, minValue = 0, maxValue = 1000000, name = "blinding_bat_spawn_chance", comment = "e.g. Zombie spawn chance: 100")
     public final int BLINDING_BAT_SPAWN_CHANCE = 60;
 
