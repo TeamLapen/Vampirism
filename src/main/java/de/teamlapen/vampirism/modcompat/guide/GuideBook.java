@@ -445,6 +445,7 @@ public class GuideBook implements IGuideBook {
         ItemInfoBuilder.create(ModBlocks.blood_sieve).recipes("general/blood_sieve").setFormats(translate(ModFluids.impure_blood.getAttributes().getTranslationKey()), loc(ModBlocks.blood_grinder)).setLinks(new ResourceLocation("guide.vampirism.blocks.blood_grinder")).build(entries);
         ItemInfoBuilder.create(ModBlocks.totem_top).recipes("general/totem_top").setLinks(new ResourceLocation("guide.vampirism.blocks.totem_base"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
         ItemInfoBuilder.create(ModBlocks.totem_base).recipes("general/totem_base").setLinks(new ResourceLocation("guide.vampirism.blocks.totem_top"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
+        ItemInfoBuilder.create(ModBlocks.potion_table).recipes("general/potion_table").build(entries);
         links.putAll(entries);
         return entries;
     }
