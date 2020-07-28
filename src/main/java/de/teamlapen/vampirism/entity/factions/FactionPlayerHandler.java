@@ -277,6 +277,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (player instanceof ServerPlayerEntity) {
             ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayerEntity) player, currentFaction, currentLevel);
         }
+        player.refreshDisplayName();
         return true;
 
     }
