@@ -48,6 +48,7 @@ public class HunterSkills {
     public static final ISkill efficient_brewing = getNull();
     public static final ISkill master_brewer = getNull();
     public static final ISkill swift_brewing = getNull();
+    public static final ISkill concentrated_durable_brewing = getNull();
 
     @SuppressWarnings("deprecation")
     public static void registerHunterSkills(IForgeRegistry<ISkill> registry) {
@@ -92,6 +93,7 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("efficient_brewing", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("master_brewer", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("swift_brewing", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("concentrated_durable_brewing", true));
     }
 
     public static void fixMappings(RegistryEvent.MissingMappings<ISkill> event) {

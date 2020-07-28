@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:hunter/potion4",
+  "skills": [
+    "vampirism:concentrated_durable_brewing"
+  ]
+}

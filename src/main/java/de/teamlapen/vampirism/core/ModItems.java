@@ -405,7 +405,7 @@ public class ModItems {
             if ("vampirism:blood_potion".equals(missingMapping.key.toString())) {
                 missingMapping.ignore();
             } else if ("vampirism:blood_potion_table".equals(missingMapping.key.toString())) {
-                missingMapping.remap(ModItems.potion_table);
+                missingMapping.ignore();
             }
         });
     }

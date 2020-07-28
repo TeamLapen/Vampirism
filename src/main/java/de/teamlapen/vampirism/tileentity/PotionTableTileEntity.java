@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.inventory.container.PotionTableContainer;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -391,12 +392,12 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
 
         public void deriveFromHunter(IHunterPlayer player) {
             ISkillHandler<IHunterPlayer> manager = player.getSkillHandler();
-            durableBrewing = true;
-            concentratedBrewing = true;
-            swiftBrewing = true;
-            masterBrewing = true;
-            efficientBrewing = true;
-            multiTaskBrewing = true;
+            durableBrewing = manager.isSkillEnabled(HunterSkills.durable_brewing) || manager.isSkillEnabled(HunterSkills.concentrated_durable_brewing);
+            concentratedBrewing = manager.isSkillEnabled(HunterSkills.concentrated_brewing) || manager.isSkillEnabled(HunterSkills.concentrated_durable_brewing);
+            swiftBrewing = manager.isSkillEnabled(HunterSkills.swift_brewing);
+            masterBrewing = manager.isSkillEnabled(HunterSkills.master_brewer);
+            efficientBrewing = manager.isSkillEnabled(HunterSkills.efficient_brewing);
+            multiTaskBrewing = manager.isSkillEnabled(HunterSkills.multitask_brewing);
         }
 
         public void fromByte(byte d) {
