@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.tileentity.PotionTableTileEntity;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
@@ -51,6 +52,12 @@ public class PotionTableBlock extends VampirismBlockContainer {
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
