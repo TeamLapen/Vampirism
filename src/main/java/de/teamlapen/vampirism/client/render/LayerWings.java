@@ -38,7 +38,7 @@ public class LayerWings<T extends LivingEntity, Q extends EntityModel<T>> extend
             bindTexture(texture);
             this.getEntityModel().setModelAttributes(model);
             this.model.copyRotationFromBody(bodyPartFunction.apply(entityIn, this.getEntityModel()));
-            this.model.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTicks);
+            this.model.setLivingAnimations(entityIn, ageInTicks);
             float s = 1f;
             if (entityIn instanceof VampireBaronEntity) {
                 s = ((VampireBaronEntity) entityIn).getEnragedProgress();

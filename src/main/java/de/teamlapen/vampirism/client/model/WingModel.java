@@ -5,6 +5,9 @@ import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
+import net.minecraft.util.math.MathHelper;
+
+import javax.annotation.Nonnull;
 
 /**
  * 1.14
@@ -21,7 +24,7 @@ public class WingModel<T extends LivingEntity> extends EntityModel<T> {
         this.textureWidth = 128;
         this.textureHeight = 64;
         this.wingRight = new RendererModel(this, 0, 46);
-        this.wingRight.setRotationPoint(0.0F, 4.0F, 2.0F);
+        this.wingRight.setRotationPoint(0.2F, 2.5F, 2.0F);
         this.wingRight.addBox(-18.0F, -6.0F, 0.0F, 18, 18, 0, 0.0F);
 
         this.setRotateAngle(wingRight, 0.136659280431156F, 0.5462880558742251F, 0.27314402793711257F);
@@ -32,7 +35,7 @@ public class WingModel<T extends LivingEntity> extends EntityModel<T> {
         this.setRotateAngle(wingLeft2, 0.0F, 0.8196066167365371F, 0.0F);
         this.wingLeft = new RendererModel(this, 0, 46);
         this.wingLeft.mirror = true;
-        this.wingLeft.setRotationPoint(0.0F, 4.0F, 2.0F);
+        this.wingLeft.setRotationPoint(-0.2F, 2.5F, 2.0F);
         this.wingLeft.addBox(0.0F, -6.0F, 0.0F, 18, 18, 0, 0.0F);
         this.setRotateAngle(wingLeft, 0.136659280431156F, -0.6373942428283291F, -0.27314402793711257F);
         this.wingRight2 = new RendererModel(this, 0, 28);
@@ -48,10 +51,31 @@ public class WingModel<T extends LivingEntity> extends EntityModel<T> {
         this.wingLeft2.rotateAngleY = body.rotateAngleY;
         this.wingRight.rotateAngleY = body.rotateAngleY;
         this.wingRight2.rotateAngleY = body.rotateAngleY;
+        this.wingLeft.rotateAngleX = body.rotateAngleX;
+        this.wingRight.rotateAngleX = body.rotateAngleX;
+        this.wingLeft.rotateAngleZ = body.rotateAngleZ;
+        this.wingRight.rotateAngleZ = body.rotateAngleZ;
+    }
+
+
+    public void setLivingAnimations(@Nonnull T entityIn, float ageInTicks) {
+        if (entityIn.shouldRenderSneaking()) {
+            this.wingRight.rotationPointY = 3.0f;
+            this.wingLeft.rotationPointY = 3.0f;
+        } else {
+            this.wingRight.rotationPointY = 2.5f;
+            this.wingLeft.rotationPointY = 2.5f;
+        }
+
+        this.wingLeft.rotateAngleZ -= MathHelper.cos(ageInTicks * 0.0662F + (float) Math.PI) * 0.06;
+        this.wingRight.rotateAngleZ += MathHelper.cos(ageInTicks * 0.0662F + (float) Math.PI) * 0.06;
+
+        this.wingLeft.rotateAngleY -= 0.3f;
+        this.wingRight.rotateAngleY += 0.3f;
     }
 
     @Override
-    public void render(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void render(@Nonnull T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         this.wingRight.render(scale);
         this.wingLeft.render(scale);
     }
