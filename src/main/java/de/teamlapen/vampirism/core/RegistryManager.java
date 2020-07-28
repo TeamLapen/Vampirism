@@ -211,6 +211,21 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
+    public void onMissingMappingsBlocks(RegistryEvent.MissingMappings<Block> event) {
+        ModBlocks.fixMappings(event);
+    }
+
+    @SubscribeEvent
+    public void onMissingMappingsItems(RegistryEvent.MissingMappings<Item> event) {
+        ModItems.fixMappings(event);
+    }
+
+    @SubscribeEvent
+    public void onMissingMappingsSkills(RegistryEvent.MissingMappings<ISkill> event) {
+        HunterSkills.fixMappings(event);
+    }
+
+    @SubscribeEvent
     public void onRegisterTasks(RegistryEvent.Register<Task> event) {
         ModTasks.registerTasks(event.getRegistry());
     }

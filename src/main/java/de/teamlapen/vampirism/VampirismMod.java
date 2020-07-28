@@ -34,8 +34,6 @@ import de.teamlapen.vampirism.player.skills.SkillTreeManager;
 import de.teamlapen.vampirism.player.vampire.BloodVision;
 import de.teamlapen.vampirism.player.vampire.NightVision;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.potion.blood.BloodPotionRegistry;
-import de.teamlapen.vampirism.potion.blood.BloodPotions;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.proxy.ServerProxy;
@@ -214,7 +212,6 @@ public class VampirismMod {
      */
     private void finishAPI2() {
         ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).finishRegistration();
-        ((BloodPotionRegistry) VampirismAPI.bloodPotionRegistry()).finish();
     }
 
     private void gatherData(GatherDataEvent event) {
@@ -273,7 +270,6 @@ public class VampirismMod {
 
         SupporterManager.getInstance().initAsync();
         VampireBookManager.getInstance().init();
-        BloodPotions.register();
         Permissions.init();
         VampirismEntitySelectors.registerSelectors();
 
@@ -297,8 +293,7 @@ public class VampirismMod {
         ExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry = new ExtendedBrewingRecipeRegistry();
 
         biteableRegistry.setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new);
-        BloodPotionRegistry bloodPotionRegistry = new BloodPotionRegistry();
-        VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, bloodPotionRegistry, entityActionManager, worldGenRegistry, extendedBrewingRecipeRegistry);
+        VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, entityActionManager, worldGenRegistry, extendedBrewingRecipeRegistry);
         VampirismAPI.setUpAccessors(new GarlicChunkHandler.Provider());
     }
 

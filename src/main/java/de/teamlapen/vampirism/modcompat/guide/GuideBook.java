@@ -268,9 +268,6 @@ public class GuideBook implements IGuideBook {
         String disguise = String.format("§l%s§r\n", translate(HunterActions.disguise_hunter.getTranslationKey()));
         disguise += translate(base + "skills.disguise.text", ModKeys.getKeyBinding(ModKeys.KEY.ACTION).getLocalizedName());
         skillPages.addAll(PageHelper.pagesForLongText(disguise));
-        String bloodPotion = String.format("§l%s§r\n", loc(ModBlocks.blood_potion_table));
-        bloodPotion += translate(base + "skills.blood_potion.text", ModKeys.getKeyBinding(ModKeys.KEY.BLOOD_POTION).getLocalizedName());
-        skillPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(bloodPotion), new ResourceLocation("guide.vampirism.blocks.blood_potion_table")));
         String weaponTable = String.format("§l%s§r\n", loc(ModBlocks.weapon_table));
         weaponTable += translate(base + "skills.weapon_table.text");
         skillPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(weaponTable), new ResourceLocation("guide.vampirism.blocks.weapon_table")));
@@ -439,7 +436,6 @@ public class GuideBook implements IGuideBook {
         ItemInfoBuilder.create(true, new ItemStack(ModItems.item_med_chair)).setFormats(loc(ModItems.injection_garlic), loc(ModItems.injection_sanguinare)).recipes("hunter/item_med_chair").build(entries);
         ItemInfoBuilder.create(ModBlocks.hunter_table).setFormats(loc(ModItems.hunter_intel_0)).setLinks(new ResourceLocation("guide.vampirism.hunter.leveling"), new ResourceLocation("guide.vampirism.items.hunter_intel")).recipes("hunter/hunter_table").build(entries);
         ItemInfoBuilder.create(ModBlocks.weapon_table).recipes("hunter/weapon_table").build(entries);
-        ItemInfoBuilder.create(ModBlocks.blood_potion_table).recipes("hunter/blood_potion_table").build(entries);
         ItemInfoBuilder.create(ModBlocks.alchemical_cauldron).recipes("hunter/alchemical_cauldron").build(entries);
         int cn = VampirismConfig.BALANCE.hsGarlicDiffusorNormalDist.get() * 2 + 1;
         int ce = VampirismConfig.BALANCE.hsGarlicDiffusorEnhancedDist.get() * 2 + 1;
