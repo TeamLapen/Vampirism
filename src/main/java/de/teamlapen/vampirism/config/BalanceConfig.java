@@ -152,8 +152,8 @@ public class BalanceConfig {
         builder.comment("General options");
         builder.push("general");
 
-        hunterTentDistance = builder.comment("In chunks. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentDistance", 6, 2, Integer.MAX_VALUE);
-        hunterTentSeparation = builder.comment("In chunks. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentSeparation", 2, 1, Integer.MAX_VALUE);
+        hunterTentDistance = builder.comment("In chunks. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentDistance", 6, 2, 4096);
+        hunterTentSeparation = builder.comment("In chunks. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentSeparation", 2, 1, 4096);
         vampireForestWeight = builder.defineInRange("vampireForestWeight", 6, 1, Integer.MAX_VALUE);
         canCancelSanguinare = builder.comment("If the sanguinare effect can be canceled by milk").define("canCancelSanguinare", true);
         arrowVampireKillerMaxHealth = builder.comment("The vampire killer arrow can only instant kill NPC vampires that have a max (not actual) health of this").defineInRange("arrowVampireKillerMaxHealth", 40, 1, Integer.MAX_VALUE);

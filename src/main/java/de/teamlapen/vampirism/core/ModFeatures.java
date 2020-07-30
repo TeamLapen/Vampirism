@@ -29,21 +29,22 @@ import java.util.Map;
 public class ModFeatures {
     private static final Logger LOGGER = LogManager.getLogger();
     //features
+    public static final VampireDungeonFeature vampire_dungeon = new VampireDungeonFeature(NoFeatureConfig.field_236558_a_);
 
     //structures
     public static final Structure<NoFeatureConfig> hunter_camp = new HunterCampStructure(NoFeatureConfig.field_236558_a_/*deserialize*/);
+
     //structure pieces
     public static final IStructurePieceType hunter_camp_fireplace = IStructurePieceType.register(HunterCampPieces.Fireplace::new, REFERENCE.MODID + ":hunter_camp_fireplace");
     public static final IStructurePieceType hunter_camp_tent = IStructurePieceType.register(HunterCampPieces.Tent::new, REFERENCE.MODID + ":hunter_camp_tent");
     public static final IStructurePieceType hunter_camp_special = IStructurePieceType.register(HunterCampPieces.SpecialBlock::new, REFERENCE.MODID + ":hunter_camp_craftingtable");
 
+    //structure proccesor
     public static final IStructureProcessorType<RandomStructureProcessor> random_selector = IStructureProcessorType.func_237139_a_/*register*/(REFERENCE.MODID+":random_selector", RandomStructureProcessor.CODEC);
     public static final IStructureProcessorType<BiomeTopBlockProcessor> biome_based = IStructureProcessorType.func_237139_a_/*register*/(REFERENCE.MODID+":biome_based", BiomeTopBlockProcessor.CODEC);
 
-    public static final VampireDungeonFeature vampire_dungeon = new VampireDungeonFeature(NoFeatureConfig.field_236558_a_);
 
     static void registerFeatures(IForgeRegistry<Feature<?>> registry) {
-
         registry.register(vampire_dungeon.setRegistryName(REFERENCE.MODID, "vampire_dungeon"));
     }
 
@@ -51,9 +52,15 @@ public class ModFeatures {
         Structure.field_236385_u_.put(hunter_camp, GenerationStage.Decoration.SURFACE_STRUCTURES);
         Structure.field_236365_a_.put(REFERENCE.MODID + ":hunter_camp", hunter_camp);
         registry.register(hunter_camp.setRegistryName(REFERENCE.MODID, "hunter_camp"));
+    }
+
+    static void registerIgnoredBiomesForStructures() {
+        VampirismAPI.worldGenRegistry().removeStructureFromBiomeCategories(hunter_camp.getRegistryName(), Lists.newArrayList(BiomeDictionary.Type.OCEAN, BiomeDictionary.Type.END, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.COLD, BiomeDictionary.Type.BEACH, BiomeDictionary.Type.RIVER, BiomeDictionary.Type.SWAMP, BiomeDictionary.Type.JUNGLE));
+    }
+
+    public static void registerStructureSeparation() {
         Map<Structure<?>, StructureSeparationSettings> structureSettingsMapOverworld = DimensionSettings.Preset.field_236122_b_.func_236137_b_().func_236108_a_().func_236195_a_(); //TODO 1.16 Maybe check again when world gen/dimension stuff has stabilized in MC/Forge
         structureSettingsMapOverworld.put(hunter_camp, HunterCampStructure.getSettings());
-
 
         if (VampirismConfig.SERVER.villageModify.get()) {
             LOGGER.info("Replacing vanilla village structure separation settings for the overworld dimension preset");
@@ -61,10 +68,5 @@ public class ModFeatures {
         } else {
             LOGGER.trace("Not modifying village");
         }
-
-    }
-
-    static void registerIgnoredBiomesForStructures() {
-        VampirismAPI.worldGenRegistry().removeStructureFromBiomeCategories(hunter_camp.getRegistryName(), Lists.newArrayList(BiomeDictionary.Type.OCEAN, BiomeDictionary.Type.END, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.COLD, BiomeDictionary.Type.BEACH, BiomeDictionary.Type.RIVER, BiomeDictionary.Type.SWAMP, BiomeDictionary.Type.JUNGLE));
     }
 }
