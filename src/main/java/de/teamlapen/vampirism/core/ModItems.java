@@ -187,6 +187,9 @@ public class ModItems {
     public static final VampirismItem hunter_minion_upgrade1 = getNull();
     public static final VampirismItem hunter_minion_upgrade2 = getNull();
     public static final FeedingAdapterItem feeding_adapter = getNull();
+    public static final VampirismItem vampire_minion_binding = getNull();
+    public static final VampirismItem vampire_minion_upgrade1 = getNull();
+    public static final VampirismItem vampire_minion_upgrade2 = getNull();
 
     static void registerCraftingRecipes() {
         // Brewing
@@ -388,6 +391,9 @@ public class ModItems {
         registry.register(new VampirismItem("hunter_minion_upgrade1", creativeTabProps()));
         registry.register(new VampirismItem("hunter_minion_upgrade2", creativeTabProps()));
         registry.register(new FeedingAdapterItem());
+        registry.register(new VampirismItem("vampire_minion_binding", creativeTabProps()));
+        registry.register(new VampirismItem("vampire_minion_upgrade1", creativeTabProps()));
+        registry.register(new VampirismItem("vampire_minion_upgrade2", creativeTabProps()));
     }
 
     private static Item.Properties creativeTabProps() {

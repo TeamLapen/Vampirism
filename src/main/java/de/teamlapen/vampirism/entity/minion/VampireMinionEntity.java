@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.minion;
 
 import com.google.common.collect.Lists;
+import de.teamlapen.lib.HelperLib;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -10,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.client.gui.VampireMinionAppearanceScreen;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.goals.RestrictSunVampireGoal;
@@ -24,11 +26,15 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -177,8 +183,36 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         super.registerGoals();
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(3, new RestrictSunVampireGoal<>(this));
+    }
 
+    @Override
+    protected boolean processInteract(PlayerEntity player, Hand hand) {
+        if (!this.world.isRemote() && isLord(player) && minionData != null) {
+            ItemStack heldItem = player.getHeldItem(hand);
+            if (heldItem.getItem() == ModItems.vampire_minion_upgrade1) {
+                if (this.minionData.level < 1) {
+                    this.minionData.setLevel(1);
+                    if (!player.abilities.isCreativeMode) heldItem.shrink(1);
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.vampire_minion.binding_upgrade"));
+                    HelperLib.sync(this);
+                } else {
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.vampire_minion.binding_wrong"));
+                }
+                return true;
+            } else if (heldItem.getItem() == ModItems.vampire_minion_upgrade2) {
+                if (this.minionData.level < 2) {
+                    this.minionData.setLevel(2);
+                    if (!player.abilities.isCreativeMode) heldItem.shrink(1);
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.vampire_minion.binding_upgrade"));
+                    HelperLib.sync(this);
+                } else {
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.vampire_minion.binding_wrong"));
+                }
 
+                return true;
+            }
+        }
+        return super.processInteract(player, hand);
     }
 
     public static class VampireMinionData extends MinionData {
@@ -186,11 +220,13 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
         private int type;
         private boolean useLordSkin;
+        private int level;
 
         public VampireMinionData(String name, int type, boolean useLordSkin) {
             super(name, 9);
             this.type = type;
             this.useLordSkin = useLordSkin;
+            this.level = 0;
         }
 
         private VampireMinionData() {
@@ -201,6 +237,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         public void deserializeNBT(CompoundNBT nbt) {
             super.deserializeNBT(nbt);
             type = nbt.getInt("vampire_type");
+            level = nbt.getInt("level");
             useLordSkin = nbt.getBoolean("use_lord_skin");
         }
 
@@ -222,7 +259,19 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         public void serializeNBT(CompoundNBT tag) {
             super.serializeNBT(tag);
             tag.putInt("vampire_type", type);
+            tag.putInt("level", level);
             tag.putBoolean("use_lord_skin", useLordSkin);
+        }
+
+        /**
+         * @param level 0, 1 or 2
+         * @return If the new level is higher than the old
+         */
+        public boolean setLevel(int level) {
+            boolean levelup = level > this.level;
+            this.level = level;
+            this.getInventory().setAvailableSize(level == 1 ? 12 : (level == 2 ? 15 : 9));
+            return levelup;
         }
 
         @Override

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.vampire;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
@@ -10,16 +11,14 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
-import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModLootTables;
-import de.teamlapen.vampirism.core.ModSounds;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
@@ -41,6 +40,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.structure.Structures;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -446,7 +446,53 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Override
     protected boolean processInteract(PlayerEntity player, Hand hand) {
-        convertToMinion(player);
-        return true;
+        if (this.isAlive() && !player.isSneaking()) {
+            if (!world.isRemote) {
+                int vampireLevel = FactionPlayerHandler.getOpt(player).map(fph -> fph.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0);
+                if (vampireLevel > 0) {
+                    FactionPlayerHandler.getOpt(player).ifPresent(fph -> {
+                        if (fph.getMaxMinions() > 0) {
+                            ItemStack heldItem = player.getHeldItem(hand);
+
+                            if (this.getLevel() > 0) {
+                                if (heldItem.getItem() == ModItems.vampire_minion_binding) {
+                                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.unavailable"), true);
+                                }
+                            } else {
+                                boolean freeSlot = MinionWorldData.getData(player.world).map(data -> data.getOrCreateController(fph)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
+                                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.available"), true);
+                                if (heldItem.getItem() == ModItems.vampire_minion_binding) {
+                                    if (!freeSlot) {
+                                        player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.no_free_slot"), true);
+                                    } else {
+                                        String key;
+                                        switch (this.getRNG().nextInt(3)) {
+                                            case 0:
+                                                key = "text.vampirism.basic_vampire.minion.start_serving1";
+                                                break;
+                                            case 1:
+                                                key = "text.vampirism.basic_vampire.minion.start_serving2";
+                                                break;
+                                            default:
+                                                key = "text.vampirism.basic_vampire.minion.start_serving3";
+                                                break;
+                                        }
+                                        player.sendMessage(new TranslationTextComponent(key));
+                                        convertToMinion(player);
+                                        if (!player.abilities.isCreativeMode) heldItem.shrink(1);
+                                    }
+                                } else if (freeSlot) {
+                                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.require_binding", UtilLib.translate(ModItems.vampire_minion_binding.getTranslationKey())), true);
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+
+            return true;
+        }
+        return super.processInteract(player, hand);
     }
 }
