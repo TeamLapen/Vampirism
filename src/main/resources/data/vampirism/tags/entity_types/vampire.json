@@ -6,6 +6,12 @@
     "vampirism:advanced_vampire_imob",
     "vampirism:vampire_imob",
     "vampirism:vampire_baron",
-    "vampirism:task_master_vampire"
+    "vampirism:task_master_vampire",
+    "vampirism:converted_creature",
+    "vampirism:converted_creature_imob",
+    "vampirism:converted_sheep",
+    "vampirism:converted_horse",
+    "vampirism:villager_converted",
+    "vampirism:vampire_minion"
   ]
 }

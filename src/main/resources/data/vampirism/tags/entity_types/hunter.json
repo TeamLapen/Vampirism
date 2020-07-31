@@ -7,6 +7,7 @@
     "vampirism:hunter_imob",
     "vampirism:hunter_trainer",
     "vampirism:hunter_trainer_dummy",
-    "vampirism:task_master_hunter"
+    "vampirism:task_master_hunter",
+    "vampirism:hunter_minion"
   ]
 }
