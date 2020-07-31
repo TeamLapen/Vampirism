@@ -45,8 +45,24 @@ public class ModTags {
     }
 
     public static class Entities {
+        /**
+         * All hunter mobs (including _imob)
+         */
         public static final Tag<EntityType<?>> HUNTER = tag("hunter");
+        /**
+         * All vampire mobs (including _imob)
+         */
         public static final Tag<EntityType<?>> VAMPIRE = tag("vampire");
+
+
+        /**
+         * Both advanced hunter mobs (normal + _imob)
+         */
+        public static final Tag<EntityType<?>> ADVANCED_HUNTER = tag("advanced_hunter");
+        /**
+         * Both advanced vampire mobs (normal + _imob)
+         */
+        public static final Tag<EntityType<?>> ADVANCED_VAMPIRE = tag("advanced_vampire");
 
         private static Tag<EntityType<?>> tag(ResourceLocation resourceLocation) {
             return new EntityTypeTags.Wrapper(resourceLocation);
