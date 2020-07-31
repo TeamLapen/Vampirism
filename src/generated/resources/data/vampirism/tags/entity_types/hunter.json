@@ -5,6 +5,9 @@
     "vampirism:hunter_imob",
     "vampirism:advanced_hunter",
     "vampirism:advanced_hunter_imob",
-    "vampirism:hunter_trainer"
+    "vampirism:hunter_trainer",
+    "vampirism:hunter_trainer",
+    "vampirism:hunter_trainer_dummy",
+    "vampirism:task_master_hunter"
   ]
 }

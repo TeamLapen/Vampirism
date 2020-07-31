@@ -45,8 +45,22 @@ public class ModTags {
     }
 
     public static class Entities {
+        /**
+         * All hunter mobs (including _imob)
+         */
         public static final ITag.INamedTag<EntityType<?>> HUNTER = tag("hunter");
+        /**
+         * All vampire mobs (including _imob)
+         */
         public static final ITag.INamedTag<EntityType<?>> VAMPIRE = tag("vampire");
+        /**
+         * Both advanced hunter mobs (normal + _imob)
+         */
+        public static final ITag.INamedTag<EntityType<?>> ADVANCED_HUNTER = tag("advanced_hunter");
+        /**
+         * Both advanced vampire mobs (normal + _imob)
+         */
+        public static final ITag.INamedTag<EntityType<?>> ADVANCED_VAMPIRE = tag("advanced_vampire");
 
         private static ITag.INamedTag<EntityType<?>> tag(ResourceLocation resourceLocation) {
             return EntityTypeTags.getTagById(resourceLocation.toString());

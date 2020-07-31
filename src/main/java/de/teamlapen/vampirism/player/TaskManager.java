@@ -19,7 +19,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stats;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -398,7 +398,7 @@ public class TaskManager implements ITaskManager {
                 break;
             case ENTITY_TAG:
                 //noinspection unchecked
-                for (EntityType<?> type : ((Tag<EntityType<?>>) requirement.getStat(this.factionPlayer)).getAllElements()) {
+                for (EntityType<?> type : ((ITag.INamedTag<EntityType<?>>) requirement.getStat(this.factionPlayer)).getAllElements()) {
                     actualStat += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
                 }
                 neededStat = this.stats.get(taskBoardId).get(task).get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
@@ -447,7 +447,7 @@ public class TaskManager implements ITaskManager {
                 case ENTITY_TAG:
                     int amount = 0;
                     //noinspection unchecked
-                    for (EntityType<?> type : ((Tag<EntityType<?>>) requirement.getStat(this.factionPlayer)).getAllElements()) {
+                    for (EntityType<?> type : ((ITag.INamedTag<EntityType<?>>) requirement.getStat(this.factionPlayer)).getAllElements()) {
                         amount += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
                     }
                     reqStats.putIfAbsent(requirement.getId(), amount);

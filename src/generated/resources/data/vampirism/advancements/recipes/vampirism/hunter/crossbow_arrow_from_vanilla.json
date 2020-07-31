@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:hunter/crossbow_arrow_from_vanilla"
+    ]
+  },
+  "criteria": {
+    "has_arrow": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:arrow"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:hunter/crossbow_arrow_from_vanilla"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_arrow",
+      "has_the_recipe"
+    ]
+  ]
+}

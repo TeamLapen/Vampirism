@@ -264,7 +264,6 @@ public class VampirismMod {
         if (event.includeClient()) {
             gen.addProvider(new BlockStateGenerator(event.getGenerator(), event.getExistingFileHelper()));
             gen.addProvider(new ItemModelGenerator(event.getGenerator(), event.getExistingFileHelper()));
-            gen.addProvider(new VampirismEntityTagProvider(gen));
         }
     }
 
