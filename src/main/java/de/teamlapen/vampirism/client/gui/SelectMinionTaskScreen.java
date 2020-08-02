@@ -82,9 +82,9 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
         this.elements.clear();
         FactionPlayerHandler.getOpt(minecraft.player).ifPresent(fp -> elements.addAll(PlayerMinionController.getAvailableTasks(fp).stream().map(Entry::new).collect(Collectors.toList())));
         this.elements.add(new Entry(new TranslationTextComponent("action.vampirism.cancel"), new ResourceLocation(REFERENCE.MODID, "textures/actions/cancel.png"), (GuiPieMenu::onClose)));
-        this.elements.add(new Entry(new TranslationTextComponent("text.vampirism.minion.call_single"), new ResourceLocation(""), (SelectMinionTaskScreen::callSingle)));
-        this.elements.add(new Entry(new TranslationTextComponent("text.vampirism.minion.call_all"), new ResourceLocation(""), (SelectMinionTaskScreen::callAll)));
-        this.elements.add(new Entry(new TranslationTextComponent("text.vampirism.minion.respawn"), new ResourceLocation(""), (SelectMinionTaskScreen::callRespawn)));
+        this.elements.add(new Entry(new TranslationTextComponent("text.vampirism.minion.call_single"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall_single.png"), (SelectMinionTaskScreen::callSingle)));
+        this.elements.add(new Entry(new TranslationTextComponent("text.vampirism.minion.call_all"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall.png"), (SelectMinionTaskScreen::callAll)));
+        this.elements.add(new Entry(new TranslationTextComponent("text.vampirism.minion.respawn"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/respawn.png"), (SelectMinionTaskScreen::callRespawn)));
     }
 
     private void callAll() {
