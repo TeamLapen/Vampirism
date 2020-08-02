@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.client.render.entities;
 
+import de.teamlapen.vampirism.client.render.LayerVampireEntity;
+import de.teamlapen.vampirism.client.render.LayerVampireTaskMasterType;
 import de.teamlapen.vampirism.entity.vampire.VampireTaskMasterEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -19,11 +21,15 @@ import javax.annotation.Nullable;
 @OnlyIn(Dist.CLIENT)
 public class VampireTaskMasterRenderer extends MobRenderer<VampireTaskMasterEntity, VillagerModel<VampireTaskMasterEntity>> {
 
-    private final static ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/task_master_vampire.png");
+    private final static ResourceLocation texture = new ResourceLocation("textures/entity/villager/villager.png");
+    private final static ResourceLocation overlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/vanilla/villager_overlay.png");
+
 
     public VampireTaskMasterRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new VillagerModel<>(0f), 0.5F);
         this.addLayer(new VillagerHeldItemLayer<>(this));
+        this.addLayer(new LayerVampireEntity<>(this, overlay, false));
+        this.addLayer(new LayerVampireTaskMasterType(this));
     }
 
     @Nullable
@@ -35,7 +41,7 @@ public class VampireTaskMasterRenderer extends MobRenderer<VampireTaskMasterEnti
 
     @Override
     protected void renderLivingLabel(@Nonnull VampireTaskMasterEntity entityIn, @Nonnull String str, double x, double y, double z, int maxDistance) {
-        super.renderLivingLabel(entityIn, str, x, y, z, maxDistance / 4);
+        super.renderLivingLabel(entityIn, str, x, y, z, maxDistance / 6);
     }
 
 
