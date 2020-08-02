@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
@@ -10,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.BalanceMobProps;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
@@ -223,7 +223,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         boolean converted = false;
             if (blood == 0) {
                 if (canBecomeVampire && entity.getRNG().nextBoolean()) {
-                    if (VampirismMod.isRealism()) {
+                    if (VampirismConfig.SERVER.infectCreaturesSanguinare.get()) {
                         PotionSanguinare.addRandom(entity, false);
                     } else {
                         makeVampire();
