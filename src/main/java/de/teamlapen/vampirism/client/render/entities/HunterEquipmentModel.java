@@ -7,12 +7,12 @@ import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.MobEntity;
 
 public class HunterEquipmentModel<T extends MobEntity> extends BipedModel<T> {
-    private ModelRenderer hatTop, hatRim, axeShaft, axeBlade1, axeBlade2, stake, stakeRight, hatTop2, hatRim2, hatRim3;
+    private final ModelRenderer hatTop, hatRim, axeShaft, axeBlade1, axeBlade2, stake, stakeRight, hatTop2, hatRim2, hatRim3;
 
     public HunterEquipmentModel() {
         super(0, 0, 64, 64);
         hatTop2 = new ModelRenderer(this, 0, 31);
-        hatTop2.addBox(-4F, -12F, -4F, 8, 3, 8);
+        hatTop2.addBox(-4.5F, -12F, -4.5F, 9, 3, 9);
         hatTop2.setRotationPoint(super.bipedHead.rotationPointX, super.bipedHead.rotationPointY, super.bipedHead.rotationPointZ);
         hatTop2.mirror = true;
 

@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
 import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.villager.IVillagerType;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -14,7 +15,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import java.util.Optional;
 import java.util.OptionalInt;
 
-public interface TaskMasterEntity extends ForceLookEntityGoal.TaskOwner, ITaskMasterEntity {
+public interface IDefaultTaskMasterEntity extends ForceLookEntityGoal.TaskOwner, ITaskMasterEntity {
 
     ITextComponent CONTAINER_NAME = new TranslationTextComponent("container.vampirism.taskmaster");
     ITextComponent NO_TASK = new TranslationTextComponent("text.vampirism.taskmaster.no_tasks");
@@ -33,5 +34,10 @@ public interface TaskMasterEntity extends ForceLookEntityGoal.TaskOwner, ITaskMa
         }
         return false;
     }
+
+    /**
+     * @return The biome type based on where this entity was spawned
+     */
+    IVillagerType getBiomeType();
 
 }
