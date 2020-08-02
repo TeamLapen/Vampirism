@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.entity.vampire;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.BalanceMobProps;
-import de.teamlapen.vampirism.entity.TaskMasterEntity;
+import de.teamlapen.vampirism.entity.IDefaultTaskMasterEntity;
 import de.teamlapen.vampirism.entity.goals.FleeSunVampireGoal;
 import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
 import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class VampireTaskMasterEntity extends VampireBaseEntity implements TaskMasterEntity {
+public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefaultTaskMasterEntity {
 
     @Nullable
     private PlayerEntity interactor;
@@ -106,6 +106,7 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements TaskMa
 
     }
 
+    @Override
     public IVillagerType getBiomeType() {
         String key = this.dataManager.get(BIOME_TYPE);
         ResourceLocation id = new ResourceLocation(key);

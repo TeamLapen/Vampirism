@@ -4,14 +4,14 @@ import de.teamlapen.vampirism.client.model.HunterEquipmentModel;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.function.Function;
 
 
-public class LayerHunterEquipment<T extends MobEntity, Q extends BipedModel<T>> extends LayerRenderer<T, Q> {
+public class LayerHunterEquipment<T extends MobEntity, Q extends EntityModel<T>> extends LayerRenderer<T, Q> {
     private final HunterEquipmentModel<T> equipmentModel;
     private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_extra.png");
     private final Function<T, HunterEquipmentModel.StakeType> predicateStake;

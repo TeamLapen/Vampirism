@@ -35,7 +35,7 @@ public class HunterTrainerRenderer extends BipedRenderer<HunterTrainerEntity, Pl
 
     @Override
     protected void renderLivingLabel(HunterTrainerEntity entityIn, String str, double x, double y, double z, int maxDistance) {
-        super.renderLivingLabel(entityIn, str, x, y, z, maxDistance / 4);
+        super.renderLivingLabel(entityIn, str, x, y, z, maxDistance / 6);
     }
 
 }

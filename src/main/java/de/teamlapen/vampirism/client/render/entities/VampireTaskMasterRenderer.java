@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.render.entities;
 
+import de.teamlapen.vampirism.client.render.LayerTaskMasterType;
 import de.teamlapen.vampirism.client.render.LayerVampireEntity;
-import de.teamlapen.vampirism.client.render.LayerVampireTaskMasterType;
 import de.teamlapen.vampirism.entity.vampire.VampireTaskMasterEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -15,21 +15,19 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * Render the advanced vampire with overlays
- */
 @OnlyIn(Dist.CLIENT)
 public class VampireTaskMasterRenderer extends MobRenderer<VampireTaskMasterEntity, VillagerModel<VampireTaskMasterEntity>> {
 
     private final static ResourceLocation texture = new ResourceLocation("textures/entity/villager/villager.png");
-    private final static ResourceLocation overlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/vanilla/villager_overlay.png");
+    private final static ResourceLocation vampireOverlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/vanilla/villager_overlay.png");
+    private final static ResourceLocation overlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_task_master_overlay.png");
 
 
     public VampireTaskMasterRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new VillagerModel<>(0f), 0.5F);
         this.addLayer(new VillagerHeldItemLayer<>(this));
-        this.addLayer(new LayerVampireEntity<>(this, overlay, false));
-        this.addLayer(new LayerVampireTaskMasterType(this));
+        this.addLayer(new LayerVampireEntity<>(this, vampireOverlay, false));
+        this.addLayer(new LayerTaskMasterType<>(this, overlay));
     }
 
     @Nullable

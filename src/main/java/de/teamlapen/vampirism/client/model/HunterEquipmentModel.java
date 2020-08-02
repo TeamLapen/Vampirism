@@ -13,7 +13,7 @@ public class HunterEquipmentModel<T extends MobEntity> extends BipedModel<T> {
     public HunterEquipmentModel() {
         super(0, 0, 64, 64);
         hatTop2 = new RendererModel(this, 0, 31);
-        hatTop2.addBox(-4F, -12F, -4F, 8, 3, 8);
+        hatTop2.addBox(-4.5F, -12F, -4.5F, 9, 3, 9);
         hatTop2.setRotationPoint(super.bipedHead.rotationPointX, super.bipedHead.rotationPointY, super.bipedHead.rotationPointZ);
         hatTop2.mirror = true;
 
