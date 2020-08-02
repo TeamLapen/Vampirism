@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
 import de.teamlapen.lib.util.WeightedRandomItem;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.DefaultMinionTask;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
@@ -11,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Util;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -27,11 +27,17 @@ public class CollectResourcesTask extends DefaultMinionTask<Desc> {
     private final int coolDown;
     private final List<WeightedRandomItem<ItemStack>> resources;
     private final Random rng = new Random();
+    @Nullable
+    private final IPlayableFaction<?> faction;
 
 
-    public CollectResourcesTask(int coolDown, List<WeightedRandomItem<ItemStack>> resources) {
+    /**
+     * @param faction If given, only available to this faction
+     */
+    public CollectResourcesTask(@Nullable IPlayableFaction<?> faction, int coolDown, List<WeightedRandomItem<ItemStack>> resources) {
         this.coolDown = coolDown;
         this.resources = resources;
+        this.faction = faction;
     }
 
     @Override
@@ -40,7 +46,7 @@ public class CollectResourcesTask extends DefaultMinionTask<Desc> {
             minion.recallMinion();
         }
         if (lord != null)
-            lord.sendStatusMessage(new TranslationTextComponent("minion_task.vampirism.collect_hunter_items.start"), true);
+            lord.sendStatusMessage(new TranslationTextComponent(Util.makeTranslationKey("minion_task", getRegistryName()) + ".start"), true);
         return new Desc(this, this.coolDown);
     }
 
@@ -51,7 +57,7 @@ public class CollectResourcesTask extends DefaultMinionTask<Desc> {
 
     @Override
     public boolean isAvailable(IPlayableFaction<?> faction, @Nullable ILordPlayer player) {
-        return VReference.HUNTER_FACTION == faction;
+        return this.faction == null || this.faction == faction;
     }
 
     @Override
