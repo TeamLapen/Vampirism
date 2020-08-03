@@ -20,6 +20,7 @@ import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
 import net.minecraft.util.*;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -190,7 +191,9 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
                     boolean rightHand = player.getPrimaryHand() == HandSide.RIGHT && hand == Hand.MAIN_HAND || player.getPrimaryHand() == HandSide.LEFT && hand == Hand.OFF_HAND;
                     IVampirismCrossbowArrow<?> itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArrow ? (IVampirismCrossbowArrow<?>) itemstack.getItem() : ModItems.crossbow_arrow_normal;
                     AbstractArrowEntity entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset, 0.3F + centerOffset, rightHand);
-                    entityarrow.func_234612_a_/*shoot*/(player, player.rotationPitch, player.rotationYaw, 0.0F, f * 3.0F, 1.0F);
+
+                    Vector3d vector3d = player.getLook(1.0F);
+                    entityarrow.shoot(vector3d.getX(), vector3d.getY(), vector3d.getZ(), f * 3, 1f);
 
                     if (isCritical(player.getRNG())) {
                         entityarrow.setIsCritical(true);
