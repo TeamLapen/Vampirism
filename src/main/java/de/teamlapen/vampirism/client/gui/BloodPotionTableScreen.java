@@ -91,7 +91,7 @@ public class BloodPotionTableScreen extends ContainerScreen<BloodPotionTableCont
 
     @Override
     protected void func_230451_b_(MatrixStack stack, int mouseX, int mouseY) {
-        super.func_230451_b_(stack, mouseX, mouseY);
+        //super.func_230451_b_(stack, mouseX, mouseY);
         List<ITextComponent> hints = container.getLocalizedCraftingHint();
         if (hints != null) {
             int i = (this.field_230708_k_ - this.xSize) / 2;
