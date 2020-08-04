@@ -184,6 +184,7 @@ public class VampirismMod {
     @SubscribeEvent
     public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
         ModFeatures.registerStructureSeparation();
+        ModWorld.addVillageStructures();
     }
 
     @SubscribeEvent
@@ -273,7 +274,7 @@ public class VampirismMod {
         if (inDev) {
             Tests.runBackgroundTests();
         }
-        ModWorld.addVillageStructures();
+        ModWorld.initVillageStructures();
     }
 
     private void setup(final FMLCommonSetupEvent event) {

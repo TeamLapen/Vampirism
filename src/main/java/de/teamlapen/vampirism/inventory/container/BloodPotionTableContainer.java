@@ -25,10 +25,7 @@ import net.minecraftforge.fml.network.IContainerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Table to create blood potions
@@ -92,9 +89,15 @@ public class BloodPotionTableContainer extends InventoryContainer {
     }
 
     private static Ingredient getSpecialIngredient(ITag<Item> tag, Item... items) {
-        Collection<Item> d = tag.func_230236_b_()/*getAllElements*/;
-        d.addAll(Arrays.asList(items));
-        return Ingredient.fromStacks(d.stream().map(ItemStack::new).collect(Collectors.toList()).toArray(new ItemStack[0]));
+        List<Item> d = tag.func_230236_b_()/*getAllElements*/;
+        ItemStack[] stacks = new ItemStack[d.size() + items.length];
+        for (int i = 0; i < items.length; i++) {
+            stacks[i] = new ItemStack(items[i]);
+        }
+        for (int i = 0; i < d.size(); i++) {
+            stacks[i + items.length] = new ItemStack(d.get(i));
+        }
+        return Ingredient.fromStacks(stacks);
     }
 
     public IWorldPosCallable getWorldPosCallable() {

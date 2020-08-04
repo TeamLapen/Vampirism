@@ -26,6 +26,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class ModWorld {
     public static boolean debug = false;
 
 
-    public static void addVillageStructures() {
+    public static void initVillageStructures() {
         ModWorld.setupSingleJigsawPieceGeneration();
 
         //init pools for modification
@@ -45,6 +46,24 @@ public class ModWorld {
         DesertVillagePools.init();
         TaigaVillagePools.init();
 
+        Pair<Map<String, List<Pair<JigsawPiece, Integer>>>, Map<String, JigsawPattern>> structures = getStructures();
+
+        ModWorld.replaceTemples(structures.getFirst());
+
+        ModWorld.saveChanges(structures.getFirst(), structures.getSecond());
+
+    }
+
+    public static void addVillageStructures() {
+        Pair<Map<String, List<Pair<JigsawPiece, Integer>>>, Map<String, JigsawPattern>> structures = getStructures();
+
+        ModWorld.addHunterTrainerHouse(structures.getFirst());
+        ModWorld.addTotem(structures.getFirst());
+
+        ModWorld.saveChanges(structures.getFirst(), structures.getSecond());
+    }
+
+    private static Pair<Map<String, List<Pair<JigsawPiece, Integer>>>, Map<String, JigsawPattern>> getStructures() {
         Map<String, JigsawPattern> patterns = new HashMap<String, JigsawPattern>() {{
             put("plains", JigsawManager.REGISTRY.get(new ResourceLocation("village/plains/houses")));
             put("desert", JigsawManager.REGISTRY.get(new ResourceLocation("village/desert/houses")));
@@ -63,12 +82,7 @@ public class ModWorld {
         //fill buildings with modifiable lists from the JigsawPattern's
         patterns.forEach((biome, pattern) -> buildings.put(biome, Lists.newArrayList(pattern.rawTemplates)));
 
-        ModWorld.replaceTemples(buildings);
-        ModWorld.addHunterTrainerHouse(buildings);
-        ModWorld.addTotem(buildings);
-
-        ModWorld.saveChanges(buildings, patterns);
-
+        return Pair.of(buildings, patterns);
     }
 
     /**
@@ -156,19 +170,15 @@ public class ModWorld {
         ImmutableList<StructureProcessor> taigaZombieProcessor = ImmutableList.of(new RuleStructureProcessor(ImmutableList.of(new RuleEntry(new RandomBlockMatchRuleTest(Blocks.COBBLESTONE, 0.8F), AlwaysTrueRuleTest.INSTANCE, Blocks.MOSSY_COBBLESTONE.getDefaultState()), new RuleEntry(new TagMatchRuleTest(BlockTags.DOORS), AlwaysTrueRuleTest.INSTANCE, Blocks.AIR.getDefaultState()), new RuleEntry(new BlockMatchRuleTest(Blocks.TORCH), AlwaysTrueRuleTest.INSTANCE, Blocks.AIR.getDefaultState()), new RuleEntry(new BlockMatchRuleTest(Blocks.WALL_TORCH), AlwaysTrueRuleTest.INSTANCE, Blocks.AIR.getDefaultState()), new RuleEntry(new BlockMatchRuleTest(Blocks.CAMPFIRE), AlwaysTrueRuleTest.INSTANCE, Blocks.CAMPFIRE.getDefaultState().with(CampfireBlock.LIT, false)), new RuleEntry(new RandomBlockMatchRuleTest(Blocks.COBBLESTONE, 0.08F), AlwaysTrueRuleTest.INSTANCE, Blocks.COBWEB.getDefaultState()), new RuleEntry(new RandomBlockMatchRuleTest(Blocks.SPRUCE_LOG, 0.08F), AlwaysTrueRuleTest.INSTANCE, Blocks.COBWEB.getDefaultState()), new RuleEntry(new RandomBlockMatchRuleTest(Blocks.GLASS_PANE, 0.5F), AlwaysTrueRuleTest.INSTANCE, Blocks.COBWEB.getDefaultState()), new RuleEntry(new BlockStateMatchRuleTest(Blocks.GLASS_PANE.getDefaultState().with(PaneBlock.NORTH, true).with(PaneBlock.SOUTH, true)), AlwaysTrueRuleTest.INSTANCE, Blocks.BROWN_STAINED_GLASS_PANE.getDefaultState().with(PaneBlock.NORTH, true).with(PaneBlock.SOUTH, true)), new RuleEntry(new BlockStateMatchRuleTest(Blocks.GLASS_PANE.getDefaultState().with(PaneBlock.EAST, true).with(PaneBlock.WEST, true)), AlwaysTrueRuleTest.INSTANCE, Blocks.BROWN_STAINED_GLASS_PANE.getDefaultState().with(PaneBlock.EAST, true).with(PaneBlock.WEST, true)), new RuleEntry(new RandomBlockMatchRuleTest(Blocks.WHEAT, 0.3F), AlwaysTrueRuleTest.INSTANCE, Blocks.PUMPKIN_STEM.getDefaultState()), new RuleEntry(new RandomBlockMatchRuleTest(Blocks.WHEAT, 0.2F), AlwaysTrueRuleTest.INSTANCE, Blocks.POTATOES.getDefaultState()))));
         ImmutableList<StructureProcessor> snowyZombieProcessor = ImmutableList.of(new RuleStructureProcessor(ImmutableList.of(new RuleEntry(new TagMatchRuleTest(BlockTags.DOORS), AlwaysTrueRuleTest.INSTANCE, Blocks.AIR.getDefaultState()), new RuleEntry(new BlockMatchRuleTest(Blocks.TORCH), AlwaysTrueRuleTest.INSTANCE, Blocks.AIR.getDefaultState()), new RuleEntry(new BlockMatchRuleTest(Blocks.WALL_TORCH), AlwaysTrueRuleTest.INSTANCE, Blocks.AIR.getDefaultState()), new RuleEntry(new BlockMatchRuleTest(Blocks.LANTERN), AlwaysTrueRuleTest.INSTANCE, Blocks.AIR.getDefaultState()), new RuleEntry(new RandomBlockMatchRuleTest(Blocks.SPRUCE_PLANKS, 0.2F), AlwaysTrueRuleTest.INSTANCE, Blocks.COBWEB.getDefaultState()), new RuleEntry(new RandomBlockMatchRuleTest(Blocks.SPRUCE_SLAB, 0.4F), AlwaysTrueRuleTest.INSTANCE, Blocks.COBWEB.getDefaultState()), new RuleEntry(new RandomBlockMatchRuleTest(Blocks.STRIPPED_SPRUCE_LOG, 0.05F), AlwaysTrueRuleTest.INSTANCE, Blocks.COBWEB.getDefaultState()), new RuleEntry(new RandomBlockMatchRuleTest(Blocks.STRIPPED_SPRUCE_WOOD, 0.05F), AlwaysTrueRuleTest.INSTANCE, Blocks.COBWEB.getDefaultState()), new RuleEntry(new RandomBlockMatchRuleTest(Blocks.GLASS_PANE, 0.5F), AlwaysTrueRuleTest.INSTANCE, Blocks.COBWEB.getDefaultState()), new RuleEntry(new BlockStateMatchRuleTest(Blocks.GLASS_PANE.getDefaultState().with(PaneBlock.NORTH, true).with(PaneBlock.SOUTH, true)), AlwaysTrueRuleTest.INSTANCE, Blocks.BROWN_STAINED_GLASS_PANE.getDefaultState().with(PaneBlock.NORTH, true).with(PaneBlock.SOUTH, true)), new RuleEntry(new BlockStateMatchRuleTest(Blocks.GLASS_PANE.getDefaultState().with(PaneBlock.EAST, true).with(PaneBlock.WEST, true)), AlwaysTrueRuleTest.INSTANCE, Blocks.BROWN_STAINED_GLASS_PANE.getDefaultState().with(PaneBlock.EAST, true).with(PaneBlock.WEST, true)), new RuleEntry(new RandomBlockMatchRuleTest(Blocks.WHEAT, 0.1F), AlwaysTrueRuleTest.INSTANCE, Blocks.CARROTS.getDefaultState()), new RuleEntry(new RandomBlockMatchRuleTest(Blocks.WHEAT, 0.8F), AlwaysTrueRuleTest.INSTANCE, Blocks.POTATOES.getDefaultState()))));
 
+        Map<String, List<StructureProcessor>> processors = ImmutableMap.of("plains_zombie", plainsZombieProcessor, "desert_zombie", desertZombieProcessor, "snowy_zombie", snowyZombieProcessor, "savanna_zombie", savannaZombieProcessor, "taiga_zombie", taigaZombieProcessor);
+
         //hunter trainer JigsawPattern
         JigsawManager.REGISTRY.register(new JigsawPattern(new ResourceLocation(REFERENCE.MODID, "village/entities/hunter_trainer"), new ResourceLocation("empty"), Lists.newArrayList(Pair.of(singleJigsawPiece("village/entities/hunter_trainer"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
 
-        buildings.get("desert").add(Pair.of(singleJigsawPiece("village/desert/houses/hunter_trainer"), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
-        buildings.get("plains").add(Pair.of(singleJigsawPiece("village/plains/houses/hunter_trainer"), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
-        buildings.get("savanna").add(Pair.of(singleJigsawPiece("village/savanna/houses/hunter_trainer"), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
-        buildings.get("snowy").add(Pair.of(singleJigsawPiece("village/snowy/houses/hunter_trainer"), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
-        buildings.get("taiga").add(Pair.of(singleJigsawPiece("village/taiga/houses/hunter_trainer"), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
-        buildings.get("desert_zombie").add(Pair.of(singleJigsawPiece("village/desert/houses/hunter_trainer", desertZombieProcessor), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
-        buildings.get("plains_zombie").add(Pair.of(singleJigsawPiece("village/plains/houses/hunter_trainer",    plainsZombieProcessor), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
-        buildings.get("savanna_zombie").add(Pair.of(singleJigsawPiece("village/savanna/houses/hunter_trainer", savannaZombieProcessor), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
-        buildings.get("snowy_zombie").add(Pair.of(singleJigsawPiece("village/snowy/houses/hunter_trainer", snowyZombieProcessor), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
-        buildings.get("taiga_zombie").add(Pair.of(singleJigsawPiece("village/taiga/houses/hunter_trainer", taigaZombieProcessor), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
+        buildings.forEach((name, list) -> {
+            list.removeIf(pair -> pair.getFirst().toString().equals(singleJigsawString(REFERENCE.MODID + ":village/" + name.replace("_zombie", "") + "/houses/hunter_trainer")));
+            list.add(Pair.of(singleJigsawPiece("village/" + name.replace("_zombie", "") + "/houses/hunter_trainer", processors.getOrDefault(name, Collections.emptyList())), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
+        });
     }
 
     /**
@@ -178,7 +188,7 @@ public class ModWorld {
         StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, VampirismConfig.BALANCE.viTotemPreSetPercentage.get().floatValue()), AlwaysTrueRuleTest.INSTANCE, ModBlocks.totem_top_vampirism_hunter.getDefaultState(), ModBlocks.totem_top_vampirism_vampire.getDefaultState())));
         StructureProcessor totemTopBlock = new BiomeTopBlockProcessor(Blocks.BRICK_WALL.getDefaultState());
         JigsawPiece totem = singleJigsawPiece("village/totem", Lists.newArrayList(totemProcessor, totemTopBlock));
-
+        buildings.values().forEach(list -> list.removeIf(pair -> pair.getFirst().toString().equals(singleJigsawString(REFERENCE.MODID + ":village/totem"))));
         buildings.values().forEach(list -> list.add(Pair.of(totem, VampirismConfig.BALANCE.viTotemWeight.get())));
     }
 
