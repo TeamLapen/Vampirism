@@ -34,17 +34,29 @@ public interface IExtendedBrewingRecipeRegistry {
     boolean isValidInput(ItemStack stack);
 
     interface IExtendedBrewingCapabilities {
-        boolean isConcentratedBrewing();
+        default boolean isConcentratedBrewing() {
+            return false;
+        }
 
-        boolean isDurableBrewing();
+        default boolean isDurableBrewing() {
+            return false;
+        }
 
-        boolean isEfficientBrewing();
+        default boolean isEfficientBrewing() {
+            return false;
+        }
 
-        boolean isMasterBrewing();
+        default boolean isMasterBrewing() {
+            return false;
+        }
 
-        boolean isMultiTaskBrewing();
+        default boolean isMultiTaskBrewing() {
+            return false;
+        }
 
-        boolean isSwiftBrewing();
+        default boolean isSwiftBrewing() {
+            return false;
+        }
     }
 
 }

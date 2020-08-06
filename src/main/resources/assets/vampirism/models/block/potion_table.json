@@ -6,7 +6,7 @@
     "iron": "block/iron_block",
     "top": "vampirism:block/blood_table_top",
     "bottle": "vampirism:item/vampire_blood_bottle",
-    "blaze": "items/blaze_rod"
+    "blaze": "item/blaze_rod"
   },
   "elements": [
     {
