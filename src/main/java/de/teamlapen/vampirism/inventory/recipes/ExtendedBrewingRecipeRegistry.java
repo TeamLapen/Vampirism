@@ -70,7 +70,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
         Potion potion = PotionUtils.getPotionFromItem(bottle);
         Item item = bottle.getItem();
         for (ExtendedPotionMix mix : conversionMixes) {
-            if (mix.input.get() == potion && mix.reagent1.test(ingredient) && ingredient.getCount() >= mix.reagent1Count && (mix.reagent2Count <= 0 || (mix.reagent2.test(extraIngredient) && extraIngredient.getCount() >= mix.reagent2Count)) && mix.condition.test(capabilities)) {
+            if (mix.input.get() == potion && mix.reagent1.test(ingredient) && ingredient.getCount() >= mix.reagent1Count && (mix.reagent2Count <= 0 || (mix.reagent2.test(extraIngredient) && extraIngredient.getCount() >= mix.reagent2Count)) && mix.canBrew(capabilities)) {
                 return Optional.of(Triple.of(PotionUtils.addPotionToItemStack(new ItemStack(item), mix.output.get()), mix.reagent1Count, mix.reagent2Count));
             }
         }

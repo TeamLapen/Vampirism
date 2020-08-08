@@ -201,7 +201,7 @@ public class ModPotions {
     }
 
     private static void veryDurable(Potion in, Potion out) {
-        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(Ingredient.fromItems(Items.REDSTONE_BLOCK), 64, 32).durable().build());
+        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(Ingredient.fromItems(Items.REDSTONE_BLOCK), 32, 16).durable().build());
     }
 
     private static void veryStrong(Potion in, Potion out) {

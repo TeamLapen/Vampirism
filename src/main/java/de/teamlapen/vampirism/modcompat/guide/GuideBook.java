@@ -17,7 +17,6 @@ import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
-import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.AltarPillarBlock;
 import de.teamlapen.vampirism.client.core.ModKeys;
@@ -458,40 +457,10 @@ public class GuideBook implements IGuideBook {
 
     private static IPage[] generatePotionMixes() {
         IPage[] pages = new IPage[4];
-        IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities durableCaps = new IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities() {
-            @Override
-            public boolean isDurableBrewing() {
-                return true;
-            }
-        };
-        pages[0] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.durable_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.condition.test(durableCaps)).toArray(ExtendedPotionMix[]::new));
-        IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities concentratedCaps = new IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities() {
-            @Override
-            public boolean isConcentratedBrewing() {
-                return true;
-            }
-        };
-        pages[1] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.concentrated_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.condition.test(concentratedCaps)).toArray(ExtendedPotionMix[]::new));
-        IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities concentratedDurableCaps = new IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities() {
-            @Override
-            public boolean isConcentratedBrewing() {
-                return true;
-            }
-
-            @Override
-            public boolean isDurableBrewing() {
-                return true;
-            }
-        };
-        pages[2] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.concentrated_durable_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.condition.test(concentratedDurableCaps)).toArray(ExtendedPotionMix[]::new));
-        IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities masterCaps = new IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities() {
-            @Override
-            public boolean isMasterBrewing() {
-                return true;
-            }
-
-        };
-        pages[3] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.master_brewer.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.condition.test(masterCaps)).toArray(ExtendedPotionMix[]::new));
+        pages[0] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.durable_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.durable && !mix.concentrated).toArray(ExtendedPotionMix[]::new));
+        pages[1] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.concentrated_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.concentrated && !mix.durable).toArray(ExtendedPotionMix[]::new));
+        pages[2] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.concentrated_durable_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.durable && mix.concentrated).toArray(ExtendedPotionMix[]::new));
+        pages[3] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.master_brewer.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.master && !mix.durable && !mix.concentrated).toArray(ExtendedPotionMix[]::new));
         return pages;
     }
 

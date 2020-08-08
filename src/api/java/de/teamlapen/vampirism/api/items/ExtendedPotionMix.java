@@ -4,8 +4,6 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.registries.IRegistryDelegate;
 
-import java.util.function.Predicate;
-
 public class ExtendedPotionMix {
     public final net.minecraftforge.registries.IRegistryDelegate<Potion> input;
     public final Ingredient reagent1;
@@ -13,16 +11,26 @@ public class ExtendedPotionMix {
     public final Ingredient reagent2;
     public final int reagent2Count;
     public final net.minecraftforge.registries.IRegistryDelegate<Potion> output;
-    public final Predicate<IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities> condition;
+    public final boolean durable;
+    public final boolean concentrated;
+    public final boolean master;
+    public final boolean efficient;
 
-    private ExtendedPotionMix(IRegistryDelegate<Potion> inputIn, Ingredient reagentIn1, int count1, Ingredient reagentIn2, int count2, IRegistryDelegate<Potion> outputIn, Predicate<IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities> condition) {
+    private ExtendedPotionMix(IRegistryDelegate<Potion> inputIn, Ingredient reagentIn1, int count1, Ingredient reagentIn2, int count2, IRegistryDelegate<Potion> outputIn, boolean durable, boolean concentrated, boolean master, boolean efficient) {
         this.input = inputIn;
         this.reagent1 = reagentIn1;
         this.reagent1Count = count1;
         this.reagent2 = reagentIn2;
         this.reagent2Count = count2;
         this.output = outputIn;
-        this.condition = condition;
+        this.durable = durable;
+        this.concentrated = concentrated;
+        this.master = master;
+        this.efficient = efficient;
+    }
+
+    public boolean canBrew(IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities cap) {
+        return (!master || cap.isMasterBrewing()) && (!durable || cap.isDurableBrewing()) && (!concentrated || cap.isConcentratedBrewing()) && (!efficient || !cap.isEfficientBrewing());
     }
 
 
@@ -31,10 +39,10 @@ public class ExtendedPotionMix {
         private final net.minecraftforge.registries.IRegistryDelegate<Potion> input;
         private final net.minecraftforge.registries.IRegistryDelegate<Potion> output;
         private Ingredient reagent1 = Ingredient.EMPTY;
-        private int reagent1Count = -0;
-        private int reagent1CountReduced = -0;
+        private int reagent1Count = 0;
+        private int reagent1CountReduced = -1;
         private Ingredient reagent2 = Ingredient.EMPTY;
-        private int reagent2Count = -1;
+        private int reagent2Count = 0;
         private int reagent2CountReduced = -1;
         private boolean durable = false;
         private boolean concentrated = false;
@@ -48,9 +56,9 @@ public class ExtendedPotionMix {
         public ExtendedPotionMix[] build() {
             boolean efficient = reagent1CountReduced != -1 || reagent2CountReduced != -1;
             ExtendedPotionMix[] result = new ExtendedPotionMix[efficient ? 2 : 1];
-            result[0] = new ExtendedPotionMix(input, reagent1Count == 0 ? Ingredient.EMPTY : reagent1, reagent1Count, reagent2Count == 0 ? Ingredient.EMPTY : reagent2, reagent2Count, output, cap -> (!master || cap.isMasterBrewing()) && (!durable || cap.isDurableBrewing()) && (!concentrated || cap.isConcentratedBrewing()) && (!efficient || !cap.isEfficientBrewing()));
+            result[0] = new ExtendedPotionMix(input, reagent1Count == 0 ? Ingredient.EMPTY : reagent1, reagent1Count, reagent2Count == 0 ? Ingredient.EMPTY : reagent2, reagent2Count, output, durable, concentrated, master, false);
             if (efficient) {
-                result[1] = new ExtendedPotionMix(input, reagent1Count == 0 || reagent2CountReduced == 0 ? Ingredient.EMPTY : reagent1, reagent1CountReduced != -1 ? reagent1CountReduced : reagent1Count, reagent2Count == 0 || reagent2CountReduced == 0 ? Ingredient.EMPTY : reagent2, reagent2Count != -1 ? reagent2CountReduced : reagent2Count, output, cap -> (!master || cap.isMasterBrewing()) && (!durable || cap.isDurableBrewing()) && (!concentrated || cap.isConcentratedBrewing()) && (cap.isEfficientBrewing()));
+                result[1] = new ExtendedPotionMix(input, reagent1Count == 0 || reagent1CountReduced == 0 ? Ingredient.EMPTY : reagent1, reagent1CountReduced != -1 ? reagent1CountReduced : reagent1Count, reagent2Count == 0 || reagent2CountReduced == 0 ? Ingredient.EMPTY : reagent2, reagent2CountReduced != -1 ? reagent2CountReduced : reagent2Count, output, durable, concentrated, master, true);
             }
             return result;
         }
