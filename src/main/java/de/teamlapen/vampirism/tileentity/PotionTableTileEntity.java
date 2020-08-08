@@ -291,7 +291,7 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
             }
         } else if (canBrew && this.fuel > 0) {
             --this.fuel;
-            this.brewTime = config.swiftBrewing ? 400 : 200;
+            this.brewTime = config.isSwiftBrewing() ? 400 : 200;
             this.ingredientID = this.brewingItemStacks.get(2).getItem();
             this.extraIngredientID = this.brewingItemStacks.get(1).getItem();
             this.markDirty();

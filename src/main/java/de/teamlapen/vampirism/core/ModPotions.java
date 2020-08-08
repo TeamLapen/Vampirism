@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
 import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
-import de.teamlapen.vampirism.api.items.MixPredicate;
 import de.teamlapen.vampirism.potion.VampirismPotion;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.item.Items;
@@ -193,23 +193,23 @@ public class ModPotions {
     }
 
     private static void durable(Potion in, Potion out) {
-        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new MixPredicate.Builder(in, out).ingredient(Ingredient.fromItems(Items.REDSTONE), 1).build());
+        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(Ingredient.fromItems(Items.REDSTONE), 1).build());
     }
 
     private static void strong(Potion in, Potion out) {
-        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new MixPredicate.Builder(in, out).ingredient(Ingredient.fromItems(Items.GLOWSTONE_DUST), 1).build());
+        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(Ingredient.fromItems(Items.GLOWSTONE_DUST), 1).build());
     }
 
     private static void veryDurable(Potion in, Potion out) {
-        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new MixPredicate.Builder(in, out).ingredient(Ingredient.fromItems(Items.REDSTONE_BLOCK), 64, 32).durable().build());
+        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(Ingredient.fromItems(Items.REDSTONE_BLOCK), 64, 32).durable().build());
     }
 
     private static void veryStrong(Potion in, Potion out) {
-        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new MixPredicate.Builder(in, out).ingredient(Ingredient.fromItems(Items.GLOWSTONE), 64, 32).concentrated().build());
+        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(Ingredient.fromItems(Items.GLOWSTONE), 64, 32).concentrated().build());
     }
 
     private static void master(Potion out, Ingredient in, int count, int countReduced) {
-        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new MixPredicate.Builder(Potions.AWKWARD, out).master().ingredient(in, count, countReduced).extraIngredient(Ingredient.fromItems(ModItems.vampire_blood_bottle)).build());
+        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(Potions.AWKWARD, out).master().ingredient(in, count, countReduced).extraIngredient(Ingredient.fromItems(ModItems.vampire_blood_bottle)).build());
     }
 
 

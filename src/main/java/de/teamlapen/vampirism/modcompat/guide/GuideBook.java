@@ -16,8 +16,8 @@ import de.maxanier.guideapi.page.PageTextImage;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
 import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
-import de.teamlapen.vampirism.api.items.MixPredicate;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.AltarPillarBlock;
 import de.teamlapen.vampirism.client.core.ModKeys;
@@ -464,14 +464,14 @@ public class GuideBook implements IGuideBook {
                 return true;
             }
         };
-        pages[0] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.durable_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getConversionMixes().stream().filter(mix -> mix.condition.test(durableCaps)).toArray(MixPredicate[]::new));
+        pages[0] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.durable_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.condition.test(durableCaps)).toArray(ExtendedPotionMix[]::new));
         IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities concentratedCaps = new IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities() {
             @Override
             public boolean isConcentratedBrewing() {
                 return true;
             }
         };
-        pages[1] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.concentrated_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getConversionMixes().stream().filter(mix -> mix.condition.test(concentratedCaps)).toArray(MixPredicate[]::new));
+        pages[1] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.concentrated_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.condition.test(concentratedCaps)).toArray(ExtendedPotionMix[]::new));
         IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities concentratedDurableCaps = new IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities() {
             @Override
             public boolean isConcentratedBrewing() {
@@ -483,7 +483,7 @@ public class GuideBook implements IGuideBook {
                 return true;
             }
         };
-        pages[2] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.concentrated_durable_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getConversionMixes().stream().filter(mix -> mix.condition.test(concentratedDurableCaps)).toArray(MixPredicate[]::new));
+        pages[2] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.concentrated_durable_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.condition.test(concentratedDurableCaps)).toArray(ExtendedPotionMix[]::new));
         IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities masterCaps = new IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities() {
             @Override
             public boolean isMasterBrewing() {
@@ -491,7 +491,7 @@ public class GuideBook implements IGuideBook {
             }
 
         };
-        pages[3] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.master_brewer.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getConversionMixes().stream().filter(mix -> mix.condition.test(masterCaps)).toArray(MixPredicate[]::new));
+        pages[3] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.master_brewer.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.condition.test(masterCaps)).toArray(ExtendedPotionMix[]::new));
         return pages;
     }
 

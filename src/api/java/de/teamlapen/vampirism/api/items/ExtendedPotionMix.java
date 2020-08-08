@@ -6,7 +6,7 @@ import net.minecraftforge.registries.IRegistryDelegate;
 
 import java.util.function.Predicate;
 
-public class MixPredicate {
+public class ExtendedPotionMix {
     public final net.minecraftforge.registries.IRegistryDelegate<Potion> input;
     public final Ingredient reagent1;
     public final int reagent1Count;
@@ -15,7 +15,7 @@ public class MixPredicate {
     public final net.minecraftforge.registries.IRegistryDelegate<Potion> output;
     public final Predicate<IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities> condition;
 
-    private MixPredicate(IRegistryDelegate<Potion> inputIn, Ingredient reagentIn1, int count1, Ingredient reagentIn2, int count2, IRegistryDelegate<Potion> outputIn, Predicate<IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities> condition) {
+    private ExtendedPotionMix(IRegistryDelegate<Potion> inputIn, Ingredient reagentIn1, int count1, Ingredient reagentIn2, int count2, IRegistryDelegate<Potion> outputIn, Predicate<IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities> condition) {
         this.input = inputIn;
         this.reagent1 = reagentIn1;
         this.reagent1Count = count1;
@@ -45,12 +45,12 @@ public class MixPredicate {
             this.output = output.delegate;
         }
 
-        public MixPredicate[] build() {
+        public ExtendedPotionMix[] build() {
             boolean efficient = reagent1CountReduced != -1 || reagent2CountReduced != -1;
-            MixPredicate[] result = new MixPredicate[efficient ? 2 : 1];
-            result[0] = new MixPredicate(input, reagent1Count == 0 ? Ingredient.EMPTY : reagent1, reagent1Count, reagent2Count == 0 ? Ingredient.EMPTY : reagent2, reagent2Count, output, cap -> (!master || cap.isMasterBrewing()) && (!durable || cap.isDurableBrewing()) && (!concentrated || cap.isConcentratedBrewing()) && (!efficient || !cap.isEfficientBrewing()));
+            ExtendedPotionMix[] result = new ExtendedPotionMix[efficient ? 2 : 1];
+            result[0] = new ExtendedPotionMix(input, reagent1Count == 0 ? Ingredient.EMPTY : reagent1, reagent1Count, reagent2Count == 0 ? Ingredient.EMPTY : reagent2, reagent2Count, output, cap -> (!master || cap.isMasterBrewing()) && (!durable || cap.isDurableBrewing()) && (!concentrated || cap.isConcentratedBrewing()) && (!efficient || !cap.isEfficientBrewing()));
             if (efficient) {
-                result[1] = new MixPredicate(input, reagent1Count == 0 || reagent2CountReduced == 0 ? Ingredient.EMPTY : reagent1, reagent1CountReduced != -1 ? reagent1CountReduced : reagent1Count, reagent2Count == 0 || reagent2CountReduced == 0 ? Ingredient.EMPTY : reagent2, reagent2Count != -1 ? reagent2CountReduced : reagent2Count, output, cap -> (!master || cap.isMasterBrewing()) && (!durable || cap.isDurableBrewing()) && (!concentrated || cap.isConcentratedBrewing()) && (cap.isEfficientBrewing()));
+                result[1] = new ExtendedPotionMix(input, reagent1Count == 0 || reagent2CountReduced == 0 ? Ingredient.EMPTY : reagent1, reagent1CountReduced != -1 ? reagent1CountReduced : reagent1Count, reagent2Count == 0 || reagent2CountReduced == 0 ? Ingredient.EMPTY : reagent2, reagent2Count != -1 ? reagent2CountReduced : reagent2Count, output, cap -> (!master || cap.isMasterBrewing()) && (!durable || cap.isDurableBrewing()) && (!concentrated || cap.isConcentratedBrewing()) && (cap.isEfficientBrewing()));
             }
             return result;
         }

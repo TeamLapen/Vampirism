@@ -9,21 +9,17 @@ import java.util.Optional;
 
 public interface IExtendedBrewingRecipeRegistry {
 
-    void addMix(MixPredicate mixPredicate);
+    void addMix(ExtendedPotionMix potionMix);
 
-    void addMix(MixPredicate[] mixPredicate);
-
-    void addRecipe(IExtendedBrewingRecipe recipe);
+    void addMix(ExtendedPotionMix[] mixPredicate);
 
     boolean brewPotions(NonNullList<ItemStack> inputs, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities, int[] inputIndexes, boolean onlyExtended);
 
     boolean canBrew(NonNullList<ItemStack> inputs, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities, int[] inputIndexes);
 
-    List<MixPredicate> getConversionMixes();
+    List<ExtendedPotionMix> getPotionMixes();
 
     Optional<Triple<ItemStack, Integer, Integer>> getOutput(ItemStack bottle, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities, boolean onlyExtended);
-
-    List<IExtendedBrewingRecipe> getRecipes();
 
     boolean hasOutput(ItemStack input, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities);
 

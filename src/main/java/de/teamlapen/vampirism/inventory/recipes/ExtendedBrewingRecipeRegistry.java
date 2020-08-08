@@ -1,9 +1,12 @@
 package de.teamlapen.vampirism.inventory.recipes;
 
-import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipe;
+import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
 import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
-import de.teamlapen.vampirism.api.items.MixPredicate;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import org.apache.commons.lang3.tuple.Triple;
@@ -13,28 +16,19 @@ import java.util.*;
 
 public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegistry {
 
-    private final List<IExtendedBrewingRecipe> recipes = new ArrayList<>();
-    private final List<MixPredicate> conversionMixes = new ArrayList<>();
+    private final List<ExtendedPotionMix> conversionMixes = new ArrayList<>();
 
 
-    public ExtendedBrewingRecipeRegistry() {
-        this.recipes.add(new ExtendedReagentRecipes());
+    @Override
+    public void addMix(ExtendedPotionMix potionMix) {
+        this.conversionMixes.add(potionMix);
     }
 
     @Override
-    public void addMix(MixPredicate mixPredicate) {
-        this.conversionMixes.add(mixPredicate);
-    }
-
-    @Override
-    public void addMix(MixPredicate[] mixPredicate) {
+    public void addMix(ExtendedPotionMix[] mixPredicate) {
         this.conversionMixes.addAll(Arrays.asList(mixPredicate));
     }
 
-    @Override
-    public void addRecipe(IExtendedBrewingRecipe recipe) {
-        this.recipes.add(recipe);
-    }
 
     @Override
     public boolean brewPotions(NonNullList<ItemStack> inputs, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities, int[] inputIndexes, boolean onlyExtended) {
@@ -70,19 +64,14 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
     }
 
     @Override
-    public List<MixPredicate> getConversionMixes() {
-        return Collections.unmodifiableList(conversionMixes);
-    }
-
-    @Override
     public Optional<Triple<ItemStack, Integer, Integer>> getOutput(ItemStack bottle, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities, boolean onlyExtended) {
         if (bottle.isEmpty() || bottle.getCount() != 1) return Optional.empty();
         if (ingredient.isEmpty()) return Optional.empty();
-
-        for (IExtendedBrewingRecipe recipe : recipes) {
-            Optional<Triple<ItemStack, Integer, Integer>> output = recipe.getOutput(bottle, ingredient, extraIngredient, capabilities);
-            if (output.isPresent()) {
-                return output;
+        Potion potion = PotionUtils.getPotionFromItem(bottle);
+        Item item = bottle.getItem();
+        for (ExtendedPotionMix mix : conversionMixes) {
+            if (mix.input.get() == potion && mix.reagent1.test(ingredient) && ingredient.getCount() >= mix.reagent1Count && (mix.reagent2Count <= 0 || (mix.reagent2.test(extraIngredient) && extraIngredient.getCount() >= mix.reagent2Count)) && mix.condition.test(capabilities)) {
+                return Optional.of(Triple.of(PotionUtils.addPotionToItemStack(new ItemStack(item), mix.output.get()), mix.reagent1Count, mix.reagent2Count));
             }
         }
         ItemStack output = BrewingRecipeRegistry.getOutput(bottle, ingredient);
@@ -90,9 +79,10 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
     }
 
     @Override
-    public List<IExtendedBrewingRecipe> getRecipes() {
-        return Collections.unmodifiableList(recipes);
+    public List<ExtendedPotionMix> getPotionMixes() {
+        return Collections.unmodifiableList(conversionMixes);
     }
+
 
     @Override
     public boolean hasOutput(ItemStack input, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities) {
@@ -103,11 +93,11 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
     public boolean isValidExtraIngredient(ItemStack stack) {
         if (stack.isEmpty()) return false;
 
-        for (IExtendedBrewingRecipe recipe : recipes) {
-            if (recipe.isExtraIngredient(stack)) {
-                return true;
-            }
+        for (ExtendedPotionMix mix : conversionMixes) {
+            if (mix.reagent2.test(stack)) return true;
+
         }
+
         return false;
     }
 
@@ -115,10 +105,8 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
     public boolean isValidIngredient(ItemStack stack) {
         if (stack.isEmpty()) return false;
 
-        for (IExtendedBrewingRecipe recipe : recipes) {
-            if (recipe.isIngredient(stack)) {
-                return true;
-            }
+        for (ExtendedPotionMix mix : conversionMixes) {
+            if (mix.reagent1.test(stack)) return true;
         }
         return BrewingRecipeRegistry.isValidIngredient(stack);
     }
@@ -127,11 +115,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
     public boolean isValidInput(ItemStack stack) {
         if (stack.getCount() != 1) return false;
 
-        for (IExtendedBrewingRecipe recipe : recipes) {
-            if (recipe.isInput(stack)) {
-                return true;
-            }
-        }
-        return BrewingRecipeRegistry.isValidIngredient(stack);
+        Item item = stack.getItem();
+        return item == Items.POTION || item == Items.SPLASH_POTION || item == Items.LINGERING_POTION || item == Items.GLASS_BOTTLE || BrewingRecipeRegistry.isValidIngredient(stack);
     }
 }

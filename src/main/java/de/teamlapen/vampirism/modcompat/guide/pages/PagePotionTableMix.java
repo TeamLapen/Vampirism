@@ -8,7 +8,7 @@ import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
 import de.maxanier.guideapi.api.util.GuiHelper;
 import de.maxanier.guideapi.api.util.PageHelper;
 import de.maxanier.guideapi.gui.BaseScreen;
-import de.teamlapen.vampirism.api.items.MixPredicate;
+import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -29,7 +29,7 @@ public class PagePotionTableMix extends Page {
     private final static Logger LOGGER = LogManager.getLogger();
     private static final SubTexture POTION_GRID = new SubTexture(new ResourceLocation("vampirismguide", "textures/gui/potion_table.png"), 0, 0, 89, 75);
     private final ITextComponent description;
-    private final MixPredicate[] recipes;
+    private final ExtendedPotionMix[] recipes;
     private long lastCycle = -1L;
     private ItemStack input;
     private ItemStack output;
@@ -43,7 +43,7 @@ public class PagePotionTableMix extends Page {
     @Nonnull
     private ItemStack[] ingredients2 = new ItemStack[0];
 
-    public PagePotionTableMix(ITextComponent description, MixPredicate... recipes) {
+    public PagePotionTableMix(ITextComponent description, ExtendedPotionMix... recipes) {
         assert recipes.length > 0;
         this.description = description;
         this.recipes = recipes;
@@ -52,8 +52,8 @@ public class PagePotionTableMix extends Page {
         in2 = ingredients2[0];
     }
 
-    public PagePotionTableMix(ITextComponent description, List<MixPredicate> recipes) {
-        this(description, recipes.toArray(new MixPredicate[0]));
+    public PagePotionTableMix(ITextComponent description, List<ExtendedPotionMix> recipes) {
+        this(description, recipes.toArray(new ExtendedPotionMix[0]));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -120,7 +120,7 @@ public class PagePotionTableMix extends Page {
         in2 = ingredients2[currentIngredient2Index];
     }
 
-    private void deriveItemStacks(MixPredicate recipe) {
+    private void deriveItemStacks(ExtendedPotionMix recipe) {
         input = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), recipe.input.get());
         output = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), recipe.output.get());
         ingredients1 = Arrays.stream(recipe.reagent1.getMatchingStacks()).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent1Count)).toArray(ItemStack[]::new);
