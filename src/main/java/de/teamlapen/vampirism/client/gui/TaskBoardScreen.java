@@ -53,6 +53,7 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
     private static final ItemStack PAPER = new ItemStack(Items.PAPER);
     private final TaskActionButton[] buttons = new TaskActionButton[7];
     private final Map<Task, List<String>> toolTips = Maps.newHashMap();
+    private final String messageKey;
     private final IFactionPlayer<?> factionPlayer;
     private int scrolledTask;
     private int openedTask;
@@ -91,6 +92,8 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
         this.ySize = 181;
         //noinspection OptionalGetWithoutIsPresent
         this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().get();
+        this.messageKey = "gui.vampirism.taskmaster.text." + container.getFaction().getID().toString().replace(':', '_');
+
     }
 
     @Override
@@ -180,6 +183,7 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
             }
             GlStateManager.popMatrix();
         }
+        renderMessage();
     }
 
     private void renderTaskToolTip(Task task, int x, int y, int mouseX, int mouseY) {
@@ -411,6 +415,52 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
         }
 
         return list1;
+    }
+
+    private void renderMessage() {
+
+        GlStateManager.disableRescaleNormal();
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.disableLighting();
+        GlStateManager.disableDepthTest();
+
+        int width = (this.width - this.xSize) / 2 - 20;
+
+        List<String> lines = this.font.listFormattedStringToWidth(UtilLib.translate(messageKey), width);
+        int x = 10;
+        int y = (this.height - this.ySize) / 2 + 5;
+        int height = 8;
+        if (lines.size() > 1) {
+            height += 2 + (lines.size() - 1) * 10;
+        }
+
+        this.blitOffset = 300;
+        this.itemRenderer.zLevel = 300.0F;
+        int colorCenter = -267386864;
+        this.fillGradient(x - 3, y - 4, x + width + 3, y - 3, colorCenter, colorCenter);
+        this.fillGradient(x - 3, y + height + 3, x + width + 3, y + height + 4, colorCenter, colorCenter);
+        this.fillGradient(x - 3, y - 3, x + width + 3, y + height + 3, colorCenter, colorCenter);
+        this.fillGradient(x - 4, y - 3, x - 3, y + height + 3, colorCenter, colorCenter);
+        this.fillGradient(x + width + 3, y - 3, x + width + 4, y + height + 3, colorCenter, colorCenter);
+        int colorOuter1 = 1347420415;
+        int colorOuter2 = 1344798847;
+        this.fillGradient(x - 3, y - 3 + 1, x - 3 + 1, y + height + 3 - 1, colorOuter1, colorOuter2);
+        this.fillGradient(x + width + 2, y - 3 + 1, x + width + 3, y + height + 3 - 1, colorOuter1, colorOuter2);
+        this.fillGradient(x - 3, y - 3, x + width + 3, y - 3 + 1, colorOuter1, colorOuter1);
+        this.fillGradient(x - 3, y + height + 2, x + width + 3, y + height + 3, colorOuter2, colorOuter2);
+
+        for (String line : lines) {
+            this.font.drawStringWithShadow(line, (float) x, (float) y, -1);
+            y += 10;
+        }
+
+
+        this.blitOffset = 0;
+        this.itemRenderer.zLevel = 0.0F;
+        GlStateManager.enableLighting();
+        GlStateManager.enableDepthTest();
+        RenderHelper.enableStandardItemLighting();
+        GlStateManager.enableRescaleNormal();
     }
 
     private void renderScroller(int x, int y, Collection<Task> tasks) {

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.inventory.container;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
@@ -164,6 +165,11 @@ public class TaskBoardContainer extends Container {
     @Nonnull
     public TextFormatting getFactionColor() {
         return this.factionColor;
+    }
+
+    @Nonnull
+    public IPlayableFaction<?> getFaction() {
+        return this.factionPlayer.getFaction();
     }
 
     public enum TaskAction {
