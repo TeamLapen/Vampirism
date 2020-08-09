@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.inventory.container;
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.blocks.HunterTableBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModItems;
@@ -11,6 +12,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.HunterIntelItem;
 import de.teamlapen.vampirism.items.PureBloodItem;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftResultInventory;
@@ -22,7 +24,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.network.IContainerFactory;
 
 /**
  * Container for the hunter table.
@@ -35,10 +40,6 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
     private final HunterLevelingConf levelingConf = HunterLevelingConf.instance();
     private ItemStack missing = ItemStack.EMPTY;
 
-    @Deprecated
-    public HunterTableContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, IWorldPosCallable.DUMMY);
-    }
 
     public HunterTableContainer(int id, PlayerInventory playerInventory, IWorldPosCallable worldPosCallable) {
         super(ModContainer.hunter_table, id, playerInventory, worldPosCallable, new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
@@ -64,7 +65,10 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
     }
 
     public boolean isLevelValid() {
-        return levelingConf.isLevelValidForTable(hunterLevel + 1);
+        return levelingConf.isLevelValidForTableAndTier(hunterLevel + 1, worldPos.apply(((world, blockPos) -> {
+            BlockState state = world.getBlockState(blockPos);
+            return state.has(HunterTableBlock.VARIANT) ? state.get(HunterTableBlock.VARIANT).tier : 0;
+        })).orElse(0));
     }
 
     @Override
@@ -168,6 +172,16 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
         public ItemStack onTake(PlayerEntity playerIn, ItemStack stack) {
             container.onPickupResult();
             return stack;
+        }
+    }
+
+
+    public static class Factory implements IContainerFactory<HunterTableContainer> {
+
+        @Override
+        public HunterTableContainer create(int windowId, PlayerInventory inv, PacketBuffer data) {
+            BlockPos pos = data.readBlockPos();
+            return new HunterTableContainer(windowId, inv, IWorldPosCallable.of(inv.player.world, pos));
         }
     }
 }
