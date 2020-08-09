@@ -276,8 +276,15 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.informEntitiesAboutCaptureStop();
         if (!this.world.isRemote)
             this.updateCreaturesOnCapture(fullConvert);
+        for (PlayerEntity p : world.getPlayers()) { //Add stat
+            if (this.getVillageArea().contains(p.getPositionVec())) {
+                FactionPlayerHandler.getOpt(p).filter(fph -> fph.getCurrentFaction() == this.capturingFaction).ifPresent(fph -> fph.getPlayer().addStat(ModStats.capture_village));
+            }
+        }
+
         this.setControllingFaction(this.capturingFaction);
         this.setCapturingFaction(null);
+
         if (notifyPlayer)
             this.notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.village_captured_by", controllingFaction.getNamePlural()));
         this.updateBossinfoPlayers(null);

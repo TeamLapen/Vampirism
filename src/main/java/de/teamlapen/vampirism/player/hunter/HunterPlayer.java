@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.items.ObsidianArmorItem;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.player.VampirismPlayer;
@@ -21,7 +20,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.DamageSource;
@@ -200,11 +198,6 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Hunter", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.hpStrengthMaxMod.get(), VampirismConfig.BALANCE.hpStrengthType.get(), AttributeModifier.Operation.MULTIPLY_TOTAL, false);
             if (level > 0) {
-                if (player instanceof ServerPlayerEntity && ((ServerPlayerEntity) player).connection != null) {
-                    //When loading from NBT the playerNetServerHandler is not always initialized, but that's required for achievements. So checking here
-                    player.addStat(ModStats.become_a_hunter);
-                }
-
                 if (oldLevel == 0) {
                     skillHandler.enableRootSkill();
 
