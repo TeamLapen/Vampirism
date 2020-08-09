@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.api.items;
 
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IRegistryDelegate;
 
 public class ExtendedPotionMix {
@@ -47,6 +49,7 @@ public class ExtendedPotionMix {
         private boolean durable = false;
         private boolean concentrated = false;
         private boolean master = false;
+        private static final Ingredient VAMPIRE_BLOOD = Ingredient.fromItems(ForgeRegistries.ITEMS.getValue(new ResourceLocation("vampirism", "vampire_blood_bottle")));
 
         public Builder(Potion input, Potion output) {
             this.input = input.delegate;
@@ -86,6 +89,10 @@ public class ExtendedPotionMix {
             this.reagent2 = i;
             this.reagent2Count = 1;
             return this;
+        }
+
+        public Builder blood() {
+            return this.extraIngredient(VAMPIRE_BLOOD);
         }
 
         public Builder extraIngredient(Ingredient i, int count) {

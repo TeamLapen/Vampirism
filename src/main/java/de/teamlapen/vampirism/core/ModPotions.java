@@ -193,23 +193,23 @@ public class ModPotions {
     }
 
     private static void durable(Potion in, Potion out) {
-        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(Ingredient.fromItems(Items.REDSTONE), 1).build());
+        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(Ingredient.fromItems(Items.REDSTONE), 1).blood().build());
     }
 
     private static void strong(Potion in, Potion out) {
-        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(Ingredient.fromItems(Items.GLOWSTONE_DUST), 1).build());
+        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(Ingredient.fromItems(Items.GLOWSTONE_DUST), 1).blood().build());
     }
 
     private static void veryDurable(Potion in, Potion out) {
-        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(Ingredient.fromItems(Items.REDSTONE_BLOCK), 32, 16).durable().build());
+        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(Ingredient.fromItems(Items.REDSTONE_BLOCK), 32, 16).blood().durable().build());
     }
 
     private static void veryStrong(Potion in, Potion out) {
-        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(Ingredient.fromItems(Items.GLOWSTONE), 64, 32).concentrated().build());
+        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(Ingredient.fromItems(Items.GLOWSTONE), 64, 32).blood().concentrated().build());
     }
 
     private static void master(Potion out, Ingredient in, int count, int countReduced) {
-        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(Potions.AWKWARD, out).master().ingredient(in, count, countReduced).extraIngredient(Ingredient.fromItems(ModItems.vampire_blood_bottle)).build());
+        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(Potions.AWKWARD, out).master().ingredient(in, count, countReduced).blood().build());
     }
 
 
