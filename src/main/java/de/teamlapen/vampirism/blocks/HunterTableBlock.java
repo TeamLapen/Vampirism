@@ -1,16 +1,18 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.inventory.container.HunterTableContainer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -21,7 +23,9 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
@@ -32,6 +36,7 @@ public class HunterTableBlock extends VampirismBlock {
     public static final String name = "hunter_table";
     public static final ITextComponent containerName = new TranslationTextComponent("container.hunter_table");
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final EnumProperty<TABLE_VARIANT> VARIANT = EnumProperty.create("variant", TABLE_VARIANT.class);
     private static final VoxelShape SOUTH = makeShape();
     private static final VoxelShape WEST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.NINETY);
     private static final VoxelShape NORTH = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.HUNDRED_EIGHTY);
@@ -58,14 +63,9 @@ public class HunterTableBlock extends VampirismBlock {
 
     public HunterTableBlock() {
         super(name, Properties.create(Material.WOOD).hardnessAndResistance(0.5f));
-        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
+        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(VARIANT, TABLE_VARIANT.SIMPLE));
     }
 
-    @Nullable
-    @Override
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-        return new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new HunterTableContainer(id, playerInventory, IWorldPosCallable.of(worldIn, pos)), containerName);
-    }
 
 
     @Override
@@ -83,10 +83,8 @@ public class HunterTableBlock extends VampirismBlock {
         return NORTH;
     }
 
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing());
+    public static TABLE_VARIANT getTierFor(boolean weapon_table, boolean potion_table, boolean cauldron) {
+        return weapon_table ? (potion_table ? (cauldron ? TABLE_VARIANT.COMPLETE : TABLE_VARIANT.WEAPON_POTION) : (cauldron ? TABLE_VARIANT.WEAPON_CAULDRON : TABLE_VARIANT.WEAPON)) : (potion_table ? (cauldron ? TABLE_VARIANT.POTION_CAULDRON : TABLE_VARIANT.POTION) : (cauldron ? TABLE_VARIANT.CAULDRON : TABLE_VARIANT.SIMPLE));
     }
 
     @Override
@@ -99,9 +97,21 @@ public class HunterTableBlock extends VampirismBlock {
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));
     }
 
+    @Nullable
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        player.openContainer(state.getContainer(world, pos));
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        Direction facing = context.getPlacementHorizontalFacing();
+        return this.getDefaultState().with(FACING, facing).with(VARIANT, determineTier(context.getWorld(), context.getPos(), facing));
+    }
+
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (!worldIn.isRemote) {
+            if (player instanceof ServerPlayerEntity) {
+                NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new HunterTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, pos)), new TranslationTextComponent("container.crafting")), pos);
+            }
+        }
+
         return ActionResultType.SUCCESS;
     }
 
@@ -112,6 +122,43 @@ public class HunterTableBlock extends VampirismBlock {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, VARIANT);
+    }
+
+    protected TABLE_VARIANT determineTier(IWorldReader world, BlockPos pos, Direction facing) {
+        Block behind = world.getBlockState(pos.offset(facing)).getBlock();
+        Block left = world.getBlockState(pos.offset(facing.rotateY())).getBlock();
+        Block right = world.getBlockState(pos.offset(facing.rotateYCCW())).getBlock();
+        Block front = world.getBlockState(pos.offset(facing.getOpposite())).getBlock();
+        boolean weapon_table = left == ModBlocks.weapon_table || right == ModBlocks.weapon_table || behind == ModBlocks.weapon_table || front == ModBlocks.weapon_table;
+        boolean potion_table = left == ModBlocks.potion_table || right == ModBlocks.potion_table || behind == ModBlocks.potion_table || front == ModBlocks.potion_table;
+        boolean cauldron = left == ModBlocks.alchemical_cauldron || right == ModBlocks.alchemical_cauldron || behind == ModBlocks.alchemical_cauldron || front == ModBlocks.alchemical_cauldron;
+
+        return getTierFor(weapon_table, potion_table, cauldron);
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        if (fromPos.getY() != pos.getY()) return;
+        TABLE_VARIANT newVariant = determineTier(worldIn, pos, state.get(FACING));
+        if (newVariant != state.get(VARIANT)) {
+            worldIn.setBlockState(pos, state.with(VARIANT, newVariant), 2);
+        }
+    }
+
+    public enum TABLE_VARIANT implements IStringSerializable {
+        SIMPLE("simple", 0), WEAPON("weapon", 1), CAULDRON("cauldron", 1), POTION("potion", 1), WEAPON_CAULDRON("weapon_cauldron", 2), WEAPON_POTION("weapon_potion", 2), POTION_CAULDRON("potion_cauldron", 2), COMPLETE("complete", 3);
+        public final String name;
+        public final int tier;
+
+        TABLE_VARIANT(String n, int tier) {
+            this.name = n;
+            this.tier = tier;
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
     }
 }

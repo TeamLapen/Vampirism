@@ -1,0 +1,41 @@
+{
+  "__comment": "Designed by Maxanier",
+  "textures": {
+    "potion": "vampirism:item/blood_bottle_9"
+  },
+  "elements": [
+    {
+      "__comment": "Element",
+      "from": [
+        1,
+        10,
+        4
+      ],
+      "to": [
+        7.5,
+        16,
+        4.0625
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#potion"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#potion"
+        }
+      }
+    }
+  ]
+}

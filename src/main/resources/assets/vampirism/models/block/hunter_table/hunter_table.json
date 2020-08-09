@@ -1,16 +1,15 @@
 {
   "__comment": "Designed by Maxanier",
   "textures": {
-    "top": "block/birch_planks",
+    "particle": "block/birch_planks",
     "material": "block/birch_planks",
+    "top": "block/birch_planks",
     "feet": "block/birch_log",
-    "potion": "vampirism:item/blood_bottle_9",
-    "garlic": "vampirism:item/garlic",
-    "hunterbook": "vampirism:item/hunter_table_book",
-    "particle": "block/birch_planks"
+    "hunterbook": "vampirism:item/hunter_table_book"
   },
   "elements": [
     {
+      "__comment": "Element",
       "from": [
         1,
         8,
@@ -579,70 +578,6 @@
       }
     },
     {
-      "from": [
-        1,
-        10,
-        4
-      ],
-      "to": [
-        7.5,
-        16,
-        4.0625
-      ],
-      "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#potion"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#potion"
-        }
-      }
-    },
-    {
-      "from": [
-        8.5,
-        10,
-        3
-      ],
-      "to": [
-        15,
-        16,
-        3.0625
-      ],
-      "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#garlic"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#garlic"
-        }
-      }
-    },
-    {
       "__comment": "Book",
       "from": [
         2.5,
@@ -706,121 +641,79 @@
   "display": {
     "thirdperson_righthand": {
       "rotation": [
-        57,
-        0,
+        75,
+        45,
         0
       ],
       "translation": [
         0,
-        1.89,
+        2.5,
         0
       ],
       "scale": [
-        0.4,
-        0.4,
-        0.4
+        0.375,
+        0.375,
+        0.375
       ]
     },
     "thirdperson_lefthand": {
       "rotation": [
-        57,
-        0,
+        75,
+        45,
         0
       ],
       "translation": [
         0,
-        1.89,
+        2.5,
         0
       ],
       "scale": [
-        0.4,
-        0.4,
-        0.4
-      ]
-    },
-    "ground": {
-      "rotation": [
-        0,
-        0,
-        0
-      ],
-      "translation": [
-        0,
-        0,
-        0
-      ],
-      "scale": [
-        0.3,
-        0.3,
-        0.3
-      ]
-    },
-    "fixed": {
-      "rotation": [
-        0,
-        180,
-        0
-      ],
-      "translation": [
-        0,
-        0,
-        -3.78
-      ],
-      "scale": [
-        0.5,
-        0.5,
-        0.5
+        0.375,
+        0.375,
+        0.375
       ]
     },
     "firstperson_righthand": {
       "rotation": [
         0,
-        -6,
+        45,
         0
       ],
-      "translation": [
-        1.13,
-        -0.19,
-        0.38
-      ],
       "scale": [
-        0.7,
-        0.7,
-        0.7
+        0.4,
+        0.4,
+        0.4
       ]
     },
     "firstperson_lefthand": {
       "rotation": [
         0,
-        -6,
+        45,
         0
       ],
-      "translation": [
-        1.13,
-        -0.19,
-        0.38
-      ],
       "scale": [
-        0.7,
-        0.7,
-        0.7
+        0.4,
+        0.4,
+        0.4
       ]
     },
     "gui": {
       "rotation": [
         30,
-        -35,
-        -1
-      ],
-      "translation": [
-        0,
-        0,
+        16,
         0
       ],
       "scale": [
-        0.6,
-        0.6,
-        0.6
+        0.625,
+        0.625,
+        0.625
+      ]
+    },
+    "fixed": {
+      "scale": [
+        0.5,
+        0.5,
+        0.5
       ]
     }
   }
