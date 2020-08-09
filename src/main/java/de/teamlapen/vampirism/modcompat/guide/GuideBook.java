@@ -45,10 +45,8 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 
 
@@ -277,7 +275,12 @@ public class GuideBook implements IGuideBook {
         weaponTable += translate(base + "skills.weapon_table.text");
         skillPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(weaponTable), new ResourceLocation("guide.vampirism.blocks.weapon_table")));
         entries.put(new ResourceLocation(base + "skills"), new EntryText(skillPages, base + "skills"));
-
+        String potionTable = String.format("§l%s§r\n", loc(ModBlocks.weapon_table));
+        potionTable += translate(base + "skills.potion_table.text");
+        List<IPage> potionTablePages = new ArrayList<>(PageHelper.pagesForLongText(potionTable));
+        potionTablePages.addAll(Arrays.asList(generatePotionMixes()));
+        skillPages.addAll(GuideHelper.addLinks(potionTablePages, new ResourceLocation("guide.vampirism.blocks.potion_table")));
+        entries.put(new ResourceLocation(base + "skills"), new EntryText(skillPages, base + "skills"));
         List<IPage> vampSlayerPages = new ArrayList<>();
         vampSlayerPages.addAll(PageHelper.pagesForLongText(translate(base + "vamp_slayer.intro")));
         String garlic = String.format("§l%s§r\n", loc(ModItems.item_garlic));
@@ -456,11 +459,13 @@ public class GuideBook implements IGuideBook {
     }
 
     private static IPage[] generatePotionMixes() {
-        IPage[] pages = new IPage[4];
-        pages[0] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.durable_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.durable && !mix.concentrated).toArray(ExtendedPotionMix[]::new));
-        pages[1] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.concentrated_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.concentrated && !mix.durable).toArray(ExtendedPotionMix[]::new));
-        pages[2] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.concentrated_durable_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.durable && mix.concentrated).toArray(ExtendedPotionMix[]::new));
-        pages[3] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.master_brewer.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.master && !mix.durable && !mix.concentrated).toArray(ExtendedPotionMix[]::new));
+        IPage[] pages = new IPage[6];
+        pages[0] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.durable_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.durable && !mix.concentrated && !mix.efficient).toArray(ExtendedPotionMix[]::new));
+        pages[1] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.concentrated_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.concentrated && !mix.durable && !mix.efficient).toArray(ExtendedPotionMix[]::new));
+        pages[2] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.durable_brewing.getTranslationKey()).appendText("\\n").appendSibling(new TranslationTextComponent(HunterSkills.efficient_brewing.getTranslationKey())), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.durable && !mix.concentrated && mix.efficient).toArray(ExtendedPotionMix[]::new));
+        pages[3] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.concentrated_brewing.getTranslationKey()).appendText("\\n").appendSibling(new TranslationTextComponent(HunterSkills.efficient_brewing.getTranslationKey())), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.concentrated && !mix.durable && mix.efficient).toArray(ExtendedPotionMix[]::new));
+        pages[4] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.master_brewer.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.master && !mix.durable && !mix.concentrated && !mix.efficient).toArray(ExtendedPotionMix[]::new));
+        pages[5] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.master_brewer.getTranslationKey()).appendText("\\n").appendSibling(new TranslationTextComponent(HunterSkills.efficient_brewing.getTranslationKey())), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.master && !mix.durable && !mix.concentrated && mix.efficient).toArray(ExtendedPotionMix[]::new));
         return pages;
     }
 
