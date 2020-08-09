@@ -15,6 +15,8 @@ import de.maxanier.guideapi.page.PageText;
 import de.maxanier.guideapi.page.PageTextImage;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.AltarPillarBlock;
 import de.teamlapen.vampirism.client.core.ModKeys;
@@ -23,9 +25,11 @@ import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
 import de.teamlapen.vampirism.items.BloodBottleItem;
 import de.teamlapen.vampirism.modcompat.guide.pages.PageHolderWithLinks;
+import de.teamlapen.vampirism.modcompat.guide.pages.PagePotionTableMix;
 import de.teamlapen.vampirism.modcompat.guide.pages.PageTable;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
+import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
@@ -34,16 +38,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 
 
@@ -268,14 +271,16 @@ public class GuideBook implements IGuideBook {
         String disguise = String.format("§l%s§r\n", translate(HunterActions.disguise_hunter.getTranslationKey()));
         disguise += translate(base + "skills.disguise.text", ModKeys.getKeyBinding(ModKeys.KEY.ACTION).getLocalizedName());
         skillPages.addAll(PageHelper.pagesForLongText(disguise));
-        String bloodPotion = String.format("§l%s§r\n", loc(ModBlocks.blood_potion_table));
-        bloodPotion += translate(base + "skills.blood_potion.text", ModKeys.getKeyBinding(ModKeys.KEY.BLOOD_POTION).getLocalizedName());
-        skillPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(bloodPotion), new ResourceLocation("guide.vampirism.blocks.blood_potion_table")));
         String weaponTable = String.format("§l%s§r\n", loc(ModBlocks.weapon_table));
         weaponTable += translate(base + "skills.weapon_table.text");
         skillPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(weaponTable), new ResourceLocation("guide.vampirism.blocks.weapon_table")));
         entries.put(new ResourceLocation(base + "skills"), new EntryText(skillPages, base + "skills"));
-
+        String potionTable = String.format("§l%s§r\n", loc(ModBlocks.weapon_table));
+        potionTable += translate(base + "skills.potion_table.text");
+        List<IPage> potionTablePages = new ArrayList<>(PageHelper.pagesForLongText(potionTable));
+        potionTablePages.addAll(Arrays.asList(generatePotionMixes()));
+        skillPages.addAll(GuideHelper.addLinks(potionTablePages, new ResourceLocation("guide.vampirism.blocks.potion_table")));
+        entries.put(new ResourceLocation(base + "skills"), new EntryText(skillPages, base + "skills"));
         List<IPage> vampSlayerPages = new ArrayList<>();
         vampSlayerPages.addAll(PageHelper.pagesForLongText(translate(base + "vamp_slayer.intro")));
         String garlic = String.format("§l%s§r\n", loc(ModItems.item_garlic));
@@ -439,7 +444,6 @@ public class GuideBook implements IGuideBook {
         ItemInfoBuilder.create(true, new ItemStack(ModItems.item_med_chair)).setFormats(loc(ModItems.injection_garlic), loc(ModItems.injection_sanguinare)).recipes("hunter/item_med_chair").build(entries);
         ItemInfoBuilder.create(ModBlocks.hunter_table).setFormats(loc(ModItems.hunter_intel_0)).setLinks(new ResourceLocation("guide.vampirism.hunter.leveling"), new ResourceLocation("guide.vampirism.items.hunter_intel")).recipes("hunter/hunter_table").build(entries);
         ItemInfoBuilder.create(ModBlocks.weapon_table).recipes("hunter/weapon_table").build(entries);
-        ItemInfoBuilder.create(ModBlocks.blood_potion_table).recipes("hunter/blood_potion_table").build(entries);
         ItemInfoBuilder.create(ModBlocks.alchemical_cauldron).recipes("hunter/alchemical_cauldron").build(entries);
         int cn = VampirismConfig.BALANCE.hsGarlicDiffusorNormalDist.get() * 2 + 1;
         int ce = VampirismConfig.BALANCE.hsGarlicDiffusorEnhancedDist.get() * 2 + 1;
@@ -449,8 +453,20 @@ public class GuideBook implements IGuideBook {
         ItemInfoBuilder.create(ModBlocks.blood_sieve).recipes("general/blood_sieve").setFormats(translate(ModFluids.impure_blood.getAttributes().getTranslationKey()), loc(ModBlocks.blood_grinder)).setLinks(new ResourceLocation("guide.vampirism.blocks.blood_grinder")).build(entries);
         ItemInfoBuilder.create(ModBlocks.totem_top).recipes("general/totem_top").setLinks(new ResourceLocation("guide.vampirism.blocks.totem_base"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
         ItemInfoBuilder.create(ModBlocks.totem_base).recipes("general/totem_base").setLinks(new ResourceLocation("guide.vampirism.blocks.totem_top"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
+        ItemInfoBuilder.create(ModBlocks.potion_table).recipes("hunter/potion_table").customPages(generatePotionMixes()).build(entries);
         links.putAll(entries);
         return entries;
+    }
+
+    private static IPage[] generatePotionMixes() {
+        IPage[] pages = new IPage[6];
+        pages[0] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.durable_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.durable && !mix.concentrated && !mix.efficient).toArray(ExtendedPotionMix[]::new));
+        pages[1] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.concentrated_brewing.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.concentrated && !mix.durable && !mix.efficient).toArray(ExtendedPotionMix[]::new));
+        pages[2] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.durable_brewing.getTranslationKey()).appendText("\\n").appendSibling(new TranslationTextComponent(HunterSkills.efficient_brewing.getTranslationKey())), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.durable && !mix.concentrated && mix.efficient).toArray(ExtendedPotionMix[]::new));
+        pages[3] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.concentrated_brewing.getTranslationKey()).appendText("\\n").appendSibling(new TranslationTextComponent(HunterSkills.efficient_brewing.getTranslationKey())), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.concentrated && !mix.durable && mix.efficient).toArray(ExtendedPotionMix[]::new));
+        pages[4] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.master_brewer.getTranslationKey()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.master && !mix.durable && !mix.concentrated && !mix.efficient).toArray(ExtendedPotionMix[]::new));
+        pages[5] = new PagePotionTableMix(new TranslationTextComponent(HunterSkills.master_brewer.getTranslationKey()).appendText("\\n").appendSibling(new TranslationTextComponent(HunterSkills.efficient_brewing.getTranslationKey())), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.master && !mix.durable && !mix.concentrated && mix.efficient).toArray(ExtendedPotionMix[]::new));
+        return pages;
     }
 
     public static String translate(String key, Object... format) {

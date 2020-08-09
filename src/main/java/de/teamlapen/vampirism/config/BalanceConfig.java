@@ -56,6 +56,9 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue haAwarenessCooldown;
     public final ForgeConfigSpec.BooleanValue haAwarenessEnabled;
     public final ForgeConfigSpec.IntValue haAwarenessRadius;
+    public final ForgeConfigSpec.IntValue haPotionResistanceDuration;
+    public final ForgeConfigSpec.IntValue haPotionResistanceCooldown;
+    public final ForgeConfigSpec.BooleanValue haPotionResistanceEnabled;
 
     public final ForgeConfigSpec.DoubleValue hpStrengthMaxMod;
     public final ForgeConfigSpec.DoubleValue hpStrengthType;
@@ -211,6 +214,9 @@ public class BalanceConfig {
         haAwarenessDuration = builder.comment("In ticks").defineInRange("awarenessDuration", 2400, 1, Integer.MAX_VALUE);
         haAwarenessCooldown = builder.comment("In ticks").defineInRange("awarenessCooldown", 1200, 1, Integer.MAX_VALUE);
         haAwarenessRadius = builder.comment("Radius in which vampires should be detected").defineInRange("awarenessRadius", 24, 0, 50);
+        haPotionResistanceEnabled = builder.define("potionResistanceEnabled", true);
+        haPotionResistanceDuration = builder.comment("In ticks").defineInRange("potionResistanceDuration", 400, 1, Integer.MAX_VALUE);
+        haPotionResistanceCooldown = builder.comment("In ticks").defineInRange("potionResistanceCooldown", 1200, 1, Integer.MAX_VALUE);
         builder.pop();
 
         //Hunter player

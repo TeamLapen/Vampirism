@@ -9,6 +9,7 @@ import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -31,7 +32,6 @@ public class ModBlocks {
     public static final BloodContainerBlock blood_container = getNull();
     public static final GrinderBlock blood_grinder = getNull();
     public static final PedestalBlock blood_pedestal = getNull();
-    public static final BloodPotionTableBlock blood_potion_table = getNull();
     public static final SieveBlock blood_sieve = getNull();
     public static final CastleBricksBlock castle_block_dark_brick = getNull();
     public static final CastleBricksBlock castle_block_dark_brick_bloody = getNull();
@@ -64,6 +64,7 @@ public class ModBlocks {
     public static final TotemTopBlock totem_top_vampirism_hunter = getNull();
     public static final VampirismFlowerBlock vampire_orchid = getNull();
     public static final WeaponTableBlock weapon_table = getNull();
+    public static final PotionTableBlock potion_table = getNull();
 
     static void registerItemBlocks(IForgeRegistry<Item> registry) {
         registry.register(itemBlock(alchemical_cauldron));
@@ -73,7 +74,6 @@ public class ModBlocks {
         registry.register(itemBlock(altar_tip));
         registry.register(itemBlock(blood_container, new Item.Properties().group(VampirismMod.creativeTab).maxStackSize(1)));
         registry.register(itemBlock(blood_grinder));
-        registry.register(itemBlock(blood_potion_table));
         registry.register(itemBlock(blood_pedestal));
         registry.register(itemBlock(blood_sieve));
         registry.register(itemBlock(church_altar));
@@ -102,6 +102,7 @@ public class ModBlocks {
         registry.register(itemBlock(totem_top_vampirism_vampire, new Item.Properties()));
         registry.register(itemBlock(vampire_orchid));
         registry.register(itemBlock(weapon_table));
+        registry.register(itemBlock(potion_table));
     }
 
     static void registerBlocks(IForgeRegistry<Block> registry) {
@@ -119,7 +120,6 @@ public class ModBlocks {
         registry.register(new BloodContainerBlock());
         registry.register(new GrinderBlock());
         registry.register(new PedestalBlock());
-        registry.register(new BloodPotionTableBlock());
         registry.register(new SieveBlock());
         registry.register(castle_block_dark_brick);
         registry.register(new CastleBricksBlock(CastleBricksBlock.EnumVariant.DARK_BRICK_BLOODY));
@@ -152,6 +152,7 @@ public class ModBlocks {
         registry.register(new TotemTopBlock(REFERENCE.VAMPIRE_PLAYER_KEY).setRegistryName(REFERENCE.MODID,"totem_top_vampirism_vampire"));
         registry.register(vampire_orchid);
         registry.register(new WeaponTableBlock());
+        registry.register(new PotionTableBlock());
     }
 
     @Nonnull
@@ -165,5 +166,13 @@ public class ModBlocks {
     @Nonnull
     private static BlockItem itemBlock(@Nonnull Block block) {
         return itemBlock(block, new Item.Properties().group(VampirismMod.creativeTab));
+    }
+
+    public static void fixMappings(RegistryEvent.MissingMappings<Block> event) {
+        event.getAllMappings().forEach(missingMapping -> {
+            if ("vampirism:blood_potion_table".equals(missingMapping.key.toString())) {
+                missingMapping.remap(ModBlocks.potion_table);
+            }
+        });
     }
 }

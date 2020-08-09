@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "vampirism:potion_table"
+  },
+  "pattern": [
+    "XXX",
+    "Y Y",
+    "ZZZ"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "minecraft:glass_bottle"
+    },
+    "Y": {
+      "tag": "minecraft:planks"
+    },
+    "Z": {
+      "tag": "forge:ingots/iron"
+    }
+  }
+}
