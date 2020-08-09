@@ -770,5 +770,10 @@
   "task.vampirism.hunter_lord5": "Megalomania",
   "task.vampirism.hunter_lord5.reward": "Lord Level 5",
   "task.vampirism.fire_resistance1": "Finally flame-proof",
-  "task.vampirism.fire_resistance2": "Upgraded resistance"
+  "task.vampirism.fire_resistance2": "Upgraded resistance",
+  "__comment": "Stats",
+  "stat.vampirism.infected_creatures": "Creatures infected with Sanguinare",
+  "stat.vampirism.interact_alchemical_cauldron": "Interactions with Alchemical Cauldron",
+  "stat.vampirism.weapon_table": "Interactions with Weapon Table",
+  "stat.vampirism.capture_village": "Villages captured"
 }
