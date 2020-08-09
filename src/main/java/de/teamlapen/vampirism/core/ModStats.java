@@ -11,15 +11,15 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class ModStats {
 
     public static final ResourceLocation weapon_table = new ResourceLocation(REFERENCE.MODID, "weapon_table");
-    public static final ResourceLocation blood_table = new ResourceLocation(REFERENCE.MODID, "blood_table");
     public static final ResourceLocation interact_alchemical_cauldron = new ResourceLocation(REFERENCE.MODID, "interact_alchemical_cauldron");
-    public static final ResourceLocation become_a_hunter = new ResourceLocation(REFERENCE.MODID, "become_a_hunter");
+    public static final ResourceLocation capture_village = new ResourceLocation(REFERENCE.MODID, "capture_village");
+    public static final ResourceLocation infected_creatures = new ResourceLocation(REFERENCE.MODID, "infected_creatures");
 
     static void registerStats(IForgeRegistry<StatType<?>> registry) {
         register(weapon_table);
         register(interact_alchemical_cauldron);
-        register(blood_table);
-        register(become_a_hunter);
+        register(capture_village);
+        register(infected_creatures);
     }
 
     private static void register(ResourceLocation id) {

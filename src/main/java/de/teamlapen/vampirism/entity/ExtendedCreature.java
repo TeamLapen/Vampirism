@@ -7,9 +7,11 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
@@ -250,6 +252,9 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             if (entity.getRNG().nextInt(4) == 0) {
                 amt = 2 * amt;
             }
+        }
+        if (converted && biter instanceof IVampirePlayer) {
+            ((IVampirePlayer) biter).getRepresentingPlayer().addStat(ModStats.infected_creatures);
         }
         return amt;
     }
