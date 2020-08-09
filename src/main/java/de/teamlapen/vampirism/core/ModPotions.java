@@ -19,7 +19,7 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 @ObjectHolder(REFERENCE.MODID)
 public class ModPotions {
-
+    //Hunter
     public static final VampirismPotion very_long_slow_falling = getNull();
     public static final VampirismPotion long_luck = getNull();
     public static final VampirismPotion very_long_weakness = getNull();
@@ -72,6 +72,9 @@ public class ModPotions {
     public static final VampirismPotion very_strong_resistance = getNull();
     public static final VampirismPotion long_strong_resistance = getNull();
 
+    //Vampire
+    public static final VampirismPotion vampire_fire_resistance = getNull();
+    public static final VampirismPotion long_vampire_fire_resistance = getNull();
 
     public static void registerPotions(IForgeRegistry<Potion> registry) {
         registry.register(new VampirismPotion("very_long_slow_falling", "slow_falling", new EffectInstance(Effects.SLOW_FALLING, 48000)));
@@ -126,6 +129,9 @@ public class ModPotions {
         registry.register(new VampirismPotion("very_strong_resistance", "resistance", new EffectInstance(Effects.RESISTANCE, 400, 2)));
         registry.register(new VampirismPotion("long_strong_resistance", "resistance", new EffectInstance(Effects.RESISTANCE, 1800, 1)));
 
+        //Vampire
+        registry.register(new VampirismPotion("vampire_fire_resistance", null, new EffectInstance(ModEffects.fire_protection, 3600, 5)));
+        registry.register(new VampirismPotion("long_vampire_fire_resistance", "vampire_fire_resistance", new EffectInstance(ModEffects.fire_protection, 9600, 5)));
     }
 
     public static void registerPotionMixes() {
