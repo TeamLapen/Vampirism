@@ -586,16 +586,19 @@
   "item.minecraft.potion.effect.nausea": "Potion of Nausea",
   "item.minecraft.potion.effect.health_boost": "Potion of Health Boost",
   "item.minecraft.potion.effect.resistance": "Potion of Resistance",
+  "item.minecraft.potion.effect.vampire_fire_resistance": "Potion of Vampire Fire Resistance",
   "item.minecraft.splash_potion.effect.thirst": "Splash Potion of Thirst",
   "item.minecraft.splash_potion.effect.blindness": "Splash Potion of Blindness",
   "item.minecraft.splash_potion.effect.nausea": "Splash Potion of Nausea",
   "item.minecraft.splash_potion.effect.health_boost": "Splash Potion of Health Boost",
   "item.minecraft.splash_potion.effect.resistance": "Splash Potion of Resistance",
+  "item.minecraft.splash_potion.effect.vampire_fire_resistance": "Splash Potion of Vampire Fire Resistance",
   "item.minecraft.lingering_potion.effect.thirst": "Lingering Potion of Thirst",
   "item.minecraft.lingering_potion.effect.blindness": "Lingering Potion of Blindness",
   "item.minecraft.lingering_potion.effect.nausea": "Lingering Potion of Nausea",
   "item.minecraft.lingering_potion.effect.health_boost": "Lingering Potion of Health Boost",
   "item.minecraft.lingering_potion.effect.resistance": "Lingering Potion of Resistance",
+  "item.minecraft.lingering_potion.effect.vampire_fire_resistance": "Lingering Potion of Vampire Fire Resistance",
   "__comment": "Attributes",
   "attribute.name.vampirism.blood_exhaustion": "Blood exhaustion",
   "attribute.name.vampirism.bite_damage": "Bite damage",
@@ -765,5 +768,7 @@
   "task.vampirism.hunter_lord4": "Control mania",
   "task.vampirism.hunter_lord4.reward": "Lord Level 4",
   "task.vampirism.hunter_lord5": "Megalomania",
-  "task.vampirism.hunter_lord5.reward": "Lord Level 5"
+  "task.vampirism.hunter_lord5.reward": "Lord Level 5",
+  "task.vampirism.fire_resistance1": "Finally flame-proof",
+  "task.vampirism.fire_resistance2": "Upgraded resistance"
 }

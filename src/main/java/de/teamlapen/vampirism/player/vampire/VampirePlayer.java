@@ -266,7 +266,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         float protectionMod = 1F;
         EffectInstance protection = player.getActivePotionEffect(ModEffects.fire_protection);
         if (protection != null) {
-            protectionMod = 1F / (2F + protection.getAmplifier());
+            int amplifier = protection.getAmplifier();
+            protectionMod = amplifier >= 5 ? 0 : 1F / (2F + amplifier);
         }
 
         return amount * protectionMod * (float) LevelAttributeModifier.calculateModifierValue(getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpFireVulnerabilityMaxMod.get(), 0.5);
