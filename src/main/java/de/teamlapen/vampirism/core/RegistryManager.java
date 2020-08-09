@@ -25,6 +25,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.potion.Effect;
+import net.minecraft.potion.Potion;
 import net.minecraft.stats.StatType;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.SoundEvent;
@@ -63,6 +64,7 @@ public class RegistryManager implements IInitListener {
                 ModEntities.registerEntityTypeAttributes();
                 ModEntities.registerCustomExtendedCreatures();
                 ModItems.registerCraftingRecipes();
+                ModPotions.registerPotionMixes();
                 ModAdvancements.registerAdvancements();
                 ModCommands.registerArgumentTypes();
                 ModLoot.registerLootConditions();
@@ -152,7 +154,7 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterPotions(RegistryEvent.Register<Effect> event) {
+    public void onRegisterEffects(RegistryEvent.Register<Effect> event) {
         ModEffects.registerEffects(event.getRegistry());
     }
 
@@ -219,7 +221,27 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
+    public void onMissingMappingsBlocks(RegistryEvent.MissingMappings<Block> event) {
+        ModBlocks.fixMappings(event);
+    }
+
+    @SubscribeEvent
+    public void onMissingMappingsItems(RegistryEvent.MissingMappings<Item> event) {
+        ModItems.fixMappings(event);
+    }
+
+    @SubscribeEvent
+    public void onMissingMappingsSkills(RegistryEvent.MissingMappings<ISkill> event) {
+        HunterSkills.fixMappings(event);
+    }
+
+    @SubscribeEvent
     public void onRegisterTasks(RegistryEvent.Register<Task> event) {
         ModTasks.registerTasks(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterPotions(RegistryEvent.Register<Potion> event) {
+        ModPotions.registerPotions(event.getRegistry());
     }
 }

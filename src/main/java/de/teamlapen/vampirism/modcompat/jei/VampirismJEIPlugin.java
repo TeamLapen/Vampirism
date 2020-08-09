@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.client.gui.AlchemicalCauldronScreen;
 import de.teamlapen.vampirism.client.gui.WeaponTableScreen;
 import de.teamlapen.vampirism.core.ModRecipes;
@@ -18,6 +19,8 @@ import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * Plugin for Just Enough Items
@@ -28,6 +31,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     static final ResourceLocation WEAPON_TABLE_RECIPE_ID = new ResourceLocation("vampirism", "hunter_weapon");
     static final ResourceLocation ALCHEMICAL_CAULDRON_RECIPE_UID = new ResourceLocation("vampirism", "alchemical_cauldron");
     static final ResourceLocation TASK_RECIPE_UID = new ResourceLocation("vampirism", "task");
+    static final ResourceLocation POTION_RECIPE_UID = new ResourceLocation("vampirism", "potion");
     private static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "plugin");
 
     @Nonnull
@@ -40,7 +44,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         IGuiHelper helper = registration.getJeiHelpers().getGuiHelper();
-        registration.addRecipeCategories(new AlchemicalCauldronRecipeCategory(helper), new WeaponTableRecipeCategory(helper), new TaskRecipeCategory(helper));
+        registration.addRecipeCategories(new AlchemicalCauldronRecipeCategory(helper), new WeaponTableRecipeCategory(helper), new TaskRecipeCategory(helper), new PotionTableRecipeCategory(helper));
     }
 
     @Override
@@ -56,6 +60,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipes(recipeManager.getRecipes(ModRecipes.ALCHEMICAL_CAULDRON_TYPE).values(),ALCHEMICAL_CAULDRON_RECIPE_UID);
         registration.addRecipes(recipeManager.getRecipes(ModRecipes.WEAPONTABLE_CRAFTING_TYPE).values(), WEAPON_TABLE_RECIPE_ID);
         registration.addRecipes(TaskUtil.getItemRewardTasks(), TASK_RECIPE_UID);
+        registration.addRecipes(VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()), POTION_RECIPE_UID);
     }
 
     @Override
@@ -63,7 +68,6 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipeTransferHandler(AlchemicalCauldronContainer.class,ALCHEMICAL_CAULDRON_RECIPE_UID,0,2,4,36);
         registration.addRecipeTransferHandler(AlchemicalCauldronContainer.class, VanillaRecipeCategoryUid.FUEL,3,1,4,36);
         registration.addRecipeTransferHandler(WeaponTableContainer.class, WEAPON_TABLE_RECIPE_ID, 1, 16, 17, 36);
-
     }
 
     @Override

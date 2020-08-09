@@ -4,10 +4,13 @@
     "particle": "block/spruce_planks",
     "foundation": "block/spruce_planks",
     "iron": "block/iron_block",
-    "top": "vampirism:block/blood_table_top"
+    "top": "vampirism:block/blood_table_top",
+    "bottle": "vampirism:item/vampire_blood_bottle",
+    "blaze": "item/blaze_rod"
   },
   "elements": [
     {
+      "__comment": "Element",
       "from": [
         0,
         0,
@@ -81,6 +84,7 @@
       }
     },
     {
+      "__comment": "Element",
       "from": [
         2,
         1,
@@ -131,6 +135,7 @@
       }
     },
     {
+      "__comment": "Element",
       "from": [
         0,
         9,
@@ -203,6 +208,7 @@
       }
     },
     {
+      "__comment": "Element",
       "from": [
         15,
         10,
@@ -265,6 +271,7 @@
       }
     },
     {
+      "__comment": "Element",
       "from": [
         0,
         10,
@@ -327,6 +334,7 @@
       }
     },
     {
+      "__comment": "Element",
       "from": [
         1,
         10,
@@ -369,6 +377,7 @@
       }
     },
     {
+      "__comment": "Element",
       "from": [
         1,
         10,
@@ -411,6 +420,7 @@
       }
     },
     {
+      "__comment": "Element",
       "from": [
         1,
         1,
@@ -470,6 +480,7 @@
       }
     },
     {
+      "__comment": "Element",
       "from": [
         14,
         1,
@@ -529,6 +540,7 @@
       }
     },
     {
+      "__comment": "Element",
       "from": [
         2,
         1,
@@ -561,6 +573,7 @@
       }
     },
     {
+      "__comment": "Element",
       "from": [
         2,
         1,
@@ -589,6 +602,126 @@
             15
           ],
           "texture": "#foundation"
+        }
+      }
+    },
+    {
+      "__comment": "BottleNorth",
+      "from": [
+        5,
+        2,
+        1.99
+      ],
+      "to": [
+        11,
+        8,
+        1.991
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#bottle"
+        }
+      }
+    },
+    {
+      "__comment": "BottleSouth",
+      "from": [
+        5,
+        2,
+        14.01
+      ],
+      "to": [
+        11,
+        8,
+        14.011
+      ],
+      "faces": {
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#bottle"
+        }
+      }
+    },
+    {
+      "__comment": "BottleEast",
+      "from": [
+        1.99,
+        2,
+        5
+      ],
+      "to": [
+        1.991,
+        8,
+        11
+      ],
+      "faces": {
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#bottle"
+        }
+      }
+    },
+    {
+      "__comment": "BottleWest",
+      "from": [
+        14.01,
+        2,
+        5
+      ],
+      "to": [
+        14.011,
+        8,
+        11
+      ],
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#bottle"
+        }
+      }
+    },
+    {
+      "__comment": "BlazeRod",
+      "from": [
+        9,
+        10,
+        9.5
+      ],
+      "to": [
+        14,
+        10.001,
+        14.5
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#blaze"
         }
       }
     }
@@ -628,49 +761,10 @@
         0.37
       ]
     },
-    "ground": {
-      "rotation": [
-        0,
-        0,
-        0
-      ],
-      "translation": [
-        0,
-        3,
-        0
-      ],
-      "scale": [
-        0.25,
-        0.25,
-        0.25
-      ]
-    },
-    "fixed": {
-      "rotation": [
-        0,
-        0,
-        0
-      ],
-      "translation": [
-        0,
-        0,
-        0
-      ],
-      "scale": [
-        0.5,
-        0.5,
-        0.5
-      ]
-    },
     "firstperson_righthand": {
       "rotation": [
         0,
         45,
-        0
-      ],
-      "translation": [
-        0,
-        0,
         0
       ],
       "scale": [
@@ -685,11 +779,6 @@
         225,
         0
       ],
-      "translation": [
-        0,
-        0,
-        0
-      ],
       "scale": [
         0.4,
         0.4,
@@ -702,15 +791,29 @@
         225,
         0
       ],
-      "translation": [
-        0,
-        0,
-        0
-      ],
       "scale": [
         0.625,
         0.625,
         0.625
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.25,
+        0.25,
+        0.25
+      ]
+    },
+    "fixed": {
+      "scale": [
+        0.5,
+        0.5,
+        0.5
       ]
     }
   }

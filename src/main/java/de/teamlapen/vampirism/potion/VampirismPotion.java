@@ -1,15 +1,14 @@
 package de.teamlapen.vampirism.potion;
 
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Potion;
 
-/**
- * Base class for Vampirism's potions
- */
-public class VampirismPotion extends Effect {
-    public VampirismPotion(String name, EffectType effectType, int potionColor) {
-        super(effectType, potionColor);
-        this.setRegistryName(REFERENCE.MODID, name);
+import javax.annotation.Nullable;
+
+public class VampirismPotion extends Potion {
+    public VampirismPotion(String regName, @Nullable String baseName, EffectInstance... effects) {
+        super(baseName, effects);
+        this.setRegistryName(REFERENCE.MODID, regName);
     }
 }

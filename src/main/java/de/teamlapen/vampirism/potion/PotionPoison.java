@@ -5,7 +5,7 @@ import net.minecraft.potion.EffectType;
 import net.minecraft.util.DamageSource;
 
 
-public class PotionPoison extends VampirismPotion {
+public class PotionPoison extends VampirismEffect {
 
     public PotionPoison(String name, int potionColor) {
         super(name, EffectType.HARMFUL, potionColor);

@@ -49,7 +49,6 @@ public class ModKeys {
     private static final String TOGGLE_ACTIONS = "keys.vampirism.action";
     private static final String SELECT_SKILLS = "keys.vampirism.select_skills";
     private static final String SWITCH_VISION = "keys.vampirism.vision";
-    private static final String BLOOD_POTION_CRAFTING = "keys.vampirism.blood_potion_crafting";
     private static final String ACTIVATE_ACTION1 = "keys.vampirism.action1";
     private static final String ACTIVATE_ACTION2 = "keys.vampirism.action2";
     private static final String MINION_TASK = "keys.vampirism.minion_task";
@@ -58,7 +57,6 @@ public class ModKeys {
     private static final KeyBinding ACTION = new KeyBinding(TOGGLE_ACTIONS, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);//Middle Mouse -98
     private static final KeyBinding SKILL = new KeyBinding(SELECT_SKILLS, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_P, CATEGORY);
     private static final KeyBinding VISION = new KeyBinding(SWITCH_VISION, KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_N, CATEGORY);
-    private static final KeyBinding BLOOD_POTION = new KeyBinding(BLOOD_POTION_CRAFTING, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_B, CATEGORY);
     private static final KeyBinding ACTION1 = new KeyBinding(ACTIVATE_ACTION1, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_1, CATEGORY);
     private static final KeyBinding ACTION2 = new KeyBinding(ACTIVATE_ACTION2, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_2, CATEGORY);
     private static final KeyBinding MINION = new KeyBinding(MINION_TASK, KeyConflictContext.IN_GAME, InputMappings.INPUT_INVALID, CATEGORY);
@@ -74,8 +72,6 @@ public class ModKeys {
                 return SKILL;
             case VISION:
                 return VISION;
-            case BLOOD_POTION:
-                return BLOOD_POTION;
             case ACTION1:
                 return ACTION1;
             case ACTION2:
@@ -94,7 +90,6 @@ public class ModKeys {
         ClientRegistry.registerKeyBinding(SUCK);
         ClientRegistry.registerKeyBinding(SKILL);
         ClientRegistry.registerKeyBinding(VISION);
-        ClientRegistry.registerKeyBinding(BLOOD_POTION);
         ClientRegistry.registerKeyBinding(ACTION1);
         ClientRegistry.registerKeyBinding(ACTION2);
         ClientRegistry.registerKeyBinding(MINION);
@@ -138,8 +133,6 @@ public class ModKeys {
             }
         } else if (keyPressed == KEY.VISION) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.VAMPIRE_VISION_TOGGLE, ""));
-        } else if (keyPressed == KEY.BLOOD_POTION) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.OPEN_BLOOD_POTION, ""));
         } else if (keyPressed == KEY.ACTION1) {
             PlayerEntity player = Minecraft.getInstance().player;
             if (player.isAlive()) {
@@ -173,8 +166,6 @@ public class ModKeys {
             return KEY.SKILL;
         } else if (VISION.isKeyDown()) {
             return KEY.VISION;
-        } else if (BLOOD_POTION.isKeyDown()) {
-            return KEY.BLOOD_POTION;
         } else if (ACTION1.isKeyDown()) {
             return KEY.ACTION1;
         } else if (ACTION2.isKeyDown()) {
@@ -202,6 +193,6 @@ public class ModKeys {
     }
 
     public enum KEY {
-        SUCK, UNKNOWN, ACTION, SKILL, VISION, BLOOD_POTION, ACTION1, ACTION2, MINION
+        SUCK, UNKNOWN, ACTION, SKILL, VISION, ACTION1, ACTION2, MINION
     }
 }

@@ -43,6 +43,11 @@ public abstract class InventoryContainer extends Container {
                     super.onSlotChange(oldStackIn, newStackIn);
                     InventoryContainer.this.onCraftMatrixChanged(this.inventory);
                 }
+
+                @Override
+                public boolean isEnabled() {
+                    return InventoryContainer.this.isSlotEnabled(this.slotNumber);
+                }
             });
         }
 
@@ -111,6 +116,10 @@ public abstract class InventoryContainer extends Container {
 
     protected void addPlayerSlots(PlayerInventory playerInventory) {
         this.addPlayerSlots(playerInventory, 8, 84);
+    }
+
+    protected boolean isSlotEnabled(int id) {
+        return true;
     }
 
     public static class SelectorSlot extends Slot {
