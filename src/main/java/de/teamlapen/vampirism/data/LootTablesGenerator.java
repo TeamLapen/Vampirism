@@ -198,7 +198,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.registerDropSelfLootTable(ModBlocks.blood_container);
             this.registerDropSelfLootTable(ModBlocks.blood_grinder);
             this.registerDropSelfLootTable(ModBlocks.blood_pedestal);
-            this.registerDropSelfLootTable(ModBlocks.blood_potion_table);
+            this.registerDropSelfLootTable(ModBlocks.potion_table);
             this.registerDropSelfLootTable(ModBlocks.blood_sieve);
             this.registerDropSelfLootTable(ModBlocks.castle_block_dark_brick);
             this.registerDropSelfLootTable(ModBlocks.castle_block_dark_brick_bloody);

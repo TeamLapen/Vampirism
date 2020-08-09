@@ -59,7 +59,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         simpleBlock(ModBlocks.altar_tip, models().getExistingFile(modLoc("block/altar_tip")));
         simpleBlock(ModBlocks.blood_container, models().getExistingFile(modLoc("block/blood_container/blood_container")));
         simpleBlock(ModBlocks.blood_pedestal, models().getExistingFile(modLoc("block/blood_pedestal")));
-        simpleBlock(ModBlocks.blood_potion_table, models().getExistingFile(modLoc("block/blood_potion_table")));
+        simpleBlock(ModBlocks.potion_table, models().getExistingFile(modLoc("block/potion_table")));
         simpleBlock(ModBlocks.fire_place, models().getExistingFile(modLoc("block/fire_place")));
         simpleBlock(ModBlocks.potted_vampire_orchid, models().withExistingParent("vampirism:block/potted_vampire_orchid", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/vampire_orchid"));
 

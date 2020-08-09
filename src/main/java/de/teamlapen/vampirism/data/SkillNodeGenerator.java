@@ -84,12 +84,12 @@ public class SkillNodeGenerator implements IDataProvider {
             ResourceLocation alchemy5 = SkillNodeBuilder.hunter(alchemy4, HunterSkills.garlic_beacon_improved).build(consumer, modId("alchemy5"));
             ResourceLocation alchemy6 = SkillNodeBuilder.hunter(alchemy5, HunterSkills.hunter_awareness).build(consumer, modId("alchemy6"));
 
-            ResourceLocation blood1 = SkillNodeBuilder.hunter(skill4, HunterSkills.blood_potion_table).build(consumer, modId("blood1"));
-            ResourceLocation blood2 = SkillNodeBuilder.hunter(blood1, HunterSkills.blood_potion_less_bad, HunterSkills.blood_potion_good_or_bad).build(consumer, modId("blood2"));
-            ResourceLocation blood3 = SkillNodeBuilder.hunter(blood2, HunterSkills.blood_potion_faster_crafting, HunterSkills.blood_potion_category_hint).build(consumer, modId("blood3"));
-            ResourceLocation blood4 = SkillNodeBuilder.hunter(blood3, HunterSkills.blood_potion_duration).build(consumer, modId("blood4"));
-            ResourceLocation blood5 = SkillNodeBuilder.hunter(blood4, HunterSkills.blood_potion_portable_crafting).build(consumer, modId("blood5"));
-            ResourceLocation blood6 = SkillNodeBuilder.hunter(blood5, HunterSkills.blood_potion_less_bad_2, HunterSkills.blood_potion_identify_some).build(consumer, modId("blood6"));
+            ResourceLocation potion1 = SkillNodeBuilder.hunter(skill4, HunterSkills.multitask_brewing).build(consumer, modId("potion1"));
+            ResourceLocation potion2 = SkillNodeBuilder.hunter(potion1, HunterSkills.durable_brewing, HunterSkills.concentrated_brewing).build(consumer, modId("potion2"));
+            ResourceLocation potion3 = SkillNodeBuilder.hunter(potion2, HunterSkills.swift_brewing, HunterSkills.efficient_brewing).build(consumer, modId("potion3"));
+            ResourceLocation potion4 = SkillNodeBuilder.hunter(potion3, HunterSkills.master_brewer).build(consumer, modId("potion4"));
+            ResourceLocation potion5 = SkillNodeBuilder.hunter(potion4, HunterSkills.potion_resistance).build(consumer, modId("potion5"));
+            ResourceLocation potion6 = SkillNodeBuilder.hunter(potion5, HunterSkills.concentrated_durable_brewing).build(consumer, modId("potion6"));
 
             ResourceLocation weapon1 = SkillNodeBuilder.hunter(skill4, HunterSkills.hunter_disguise).build(consumer, modId("weapon1"));
             ResourceLocation weapon2 = SkillNodeBuilder.hunter(weapon1, HunterSkills.hunter_attack_speed_advanced, HunterSkills.double_crossbow).build(consumer, modId("weapon2"));

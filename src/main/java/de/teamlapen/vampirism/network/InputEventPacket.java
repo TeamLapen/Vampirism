@@ -8,36 +8,29 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
-import de.teamlapen.vampirism.inventory.container.BloodPotionTableContainer;
 import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
 import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
-import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.tuple.Pair;
@@ -63,8 +56,6 @@ public class InputEventPacket implements IMessage {
     public static final String TRAINERLEVELUP = "tl";
     public static final String REVERTBACK = "rb";
     public static final String VAMPIRE_VISION_TOGGLE = "vvt";
-    public static final String CRAFT_BLOOD_POTION = "cb";
-    public static final String OPEN_BLOOD_POTION = "ob";
     public static final String BASICHUNTERLEVELUP = "bl";
     public static final String DRINK_BLOOD_BLOCK = "db";
     public static final String NAME_ITEM = "ni";
@@ -208,27 +199,6 @@ public class InputEventPacket implements IMessage {
                     break;
                 case VAMPIRE_VISION_TOGGLE:
                     VampirePlayer.getOpt(player).ifPresent(VampirePlayer::switchVision);
-                    break;
-                case CRAFT_BLOOD_POTION:
-                    if (player.openContainer instanceof BloodPotionTableContainer) {
-                        ((BloodPotionTableContainer) player.openContainer).onCraftingClicked();
-                    }
-                    break;
-                case OPEN_BLOOD_POTION:
-                    if (player.isAlive()) {
-                        IHunterPlayer hunter = HunterPlayer.get(player);
-                        if (hunter.getLevel() > 0) {
-                            if (hunter.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_portable_crafting)) {
-                                if (!player.world.isRemote()) {
-                                    NetworkHooks.openGui(player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new BloodPotionTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, new BlockPos(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()))), new TranslationTextComponent("container.crafting")), player.getPosition());
-                                }
-                            } else {
-                                player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", new TranslationTextComponent(HunterSkills.blood_potion_portable_crafting.getTranslationKey())));
-                            }
-                        } else {
-                            player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by", VReference.HUNTER_FACTION.getName()));
-                        }
-                    }
                     break;
                 case BASICHUNTERLEVELUP:
                     if (player.openContainer instanceof HunterBasicContainer) {

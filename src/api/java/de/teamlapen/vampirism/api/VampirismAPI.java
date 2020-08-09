@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionManager;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
-import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
+import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import de.teamlapen.vampirism.api.world.IWorldGenManager;
 import net.minecraft.entity.CreatureEntity;
@@ -28,20 +28,22 @@ import javax.annotation.Nonnull;
 public class VampirismAPI {
 
 
+    @SuppressWarnings("FieldMayBeFinal")
     @CapabilityInject(IExtendedCreatureVampirism.class)
     private static Capability<IExtendedCreatureVampirism> CAP_CREATURE = null;
+    @SuppressWarnings("FieldMayBeFinal")
     @CapabilityInject(IFactionPlayerHandler.class)
     private static Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = null;
     private static IFactionRegistry factionRegistry;
     private static ISundamageRegistry sundamageRegistry;
     private static IVampirismEntityRegistry entityRegistry;
     private static IVampireVisionRegistry vampireVisionRegistry;
-    private static IBloodPotionRegistry bloodPotionRegistry;
     private static IGarlicChunkHandler.Provider garlicHandlerProvider;
     private static ISkillManager skillManager;
     private static IActionManager actionManager;
     private static IEntityActionManager entityActionManager;
     private static IWorldGenManager worldGenRegistry;
+    private static IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry;
 
     public static ISkillManager skillManager() {
         return skillManager;
@@ -82,17 +84,14 @@ public class VampirismAPI {
     }
 
     /**
-     * @return The blood potion registry
-     */
-    public static IBloodPotionRegistry bloodPotionRegistry() {
-        return bloodPotionRegistry;
-    }
-
-    /**
      * @return The world gen registry
      */
     public static IWorldGenManager worldGenRegistry() {
         return worldGenRegistry;
+    }
+
+    public static IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry() {
+        return extendedBrewingRecipeRegistry;
     }
 
     /**
@@ -100,16 +99,16 @@ public class VampirismAPI {
      * FOR INTERNAL USAGE ONLY
      */
     public static void setUpRegistries(IFactionRegistry factionRegistryIn, ISundamageRegistry sundamageRegistryIn, IVampirismEntityRegistry entityRegistryIn, IActionManager actionManagerIn, ISkillManager skillManagerIn,
-                                       IVampireVisionRegistry vampireVisionRegistryIn, IBloodPotionRegistry bloodPotionRegistryIn, IEntityActionManager entityActionManagerIn, IWorldGenManager worldGenRegistryIn) {
+                                       IVampireVisionRegistry vampireVisionRegistryIn, IEntityActionManager entityActionManagerIn, IWorldGenManager worldGenRegistryIn, IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistryIn) {
         factionRegistry = factionRegistryIn;
         sundamageRegistry = sundamageRegistryIn;
         entityRegistry = entityRegistryIn;
         actionManager = actionManagerIn;
         skillManager = skillManagerIn;
         vampireVisionRegistry = vampireVisionRegistryIn;
-        bloodPotionRegistry = bloodPotionRegistryIn;
         entityActionManager = entityActionManagerIn;
         worldGenRegistry = worldGenRegistryIn;
+        extendedBrewingRecipeRegistry = extendedBrewingRecipeRegistryIn;
 
     }
 

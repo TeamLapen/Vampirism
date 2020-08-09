@@ -81,7 +81,7 @@ public class ModBlocksRender {
         RenderTypeLookup.setRenderLayer(ModBlocks.altar_tip, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.blood_container, RenderType.translucent());
         RenderTypeLookup.setRenderLayer(ModBlocks.blood_pedestal, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.blood_potion_table, cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.potion_table, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.blood_sieve, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.church_altar, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.fire_place, cutout);

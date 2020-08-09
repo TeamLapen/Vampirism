@@ -4,7 +4,7 @@ package de.teamlapen.vampirism.potion;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.EffectType;
 
-public class PotionFreeze extends VampirismPotion {
+public class PotionFreeze extends VampirismEffect {
     public PotionFreeze(String name) {
         super(name, EffectType.HARMFUL, 0xFFFFFF);
     }

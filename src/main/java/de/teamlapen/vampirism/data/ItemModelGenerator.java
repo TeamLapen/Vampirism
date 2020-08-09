@@ -41,7 +41,7 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModBlocks.castle_stairs_purple_brick);
             add(ModBlocks.blood_grinder);
             add(ModBlocks.blood_pedestal);
-            add(ModBlocks.blood_potion_table);
+            add(ModBlocks.potion_table);
             add(ModBlocks.blood_sieve);
             add(ModBlocks.church_altar);
             add(ModBlocks.cursed_earth);
@@ -111,7 +111,6 @@ public class ItemModelGenerator extends ItemModelProvider {
             put(ModItems.holy_water_splash_bottle_normal, modLoc("item/holy_water_splash_normal"));
             put(ModItems.holy_water_splash_bottle_enhanced, modLoc("item/holy_water_splash_enhanced"));
             put(ModItems.holy_water_splash_bottle_ultimate, modLoc("item/holy_water_splash_ultimate"));
-            put(ModItems.blood_potion, modLoc("item/vampire_blood_bottle"));
             put(ModItems.garlic_bread, modLoc("item/garlic_bread"));
             put(ModItems.hunter_hat_head_0, modLoc("item/hunter_hat_0"));
             put(ModItems.hunter_hat_head_1, modLoc("item/hunter_hat_1"));

@@ -12,6 +12,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -25,15 +26,6 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 public class HunterSkills {
 
     public static final ISkill basic_alchemy = getNull();
-    public static final ISkill blood_potion_category_hint = getNull();
-    public static final ISkill blood_potion_duration = getNull();
-    public static final ISkill blood_potion_faster_crafting = getNull();
-    public static final ISkill blood_potion_good_or_bad = getNull();
-    public static final ISkill blood_potion_identify_some = getNull();
-    public static final ISkill blood_potion_less_bad = getNull();
-    public static final ISkill blood_potion_less_bad_2 = getNull();
-    public static final ISkill blood_potion_portable_crafting = getNull();
-    public static final ISkill blood_potion_table = getNull();
     public static final ISkill double_crossbow = getNull();
     public static final ISkill enhanced_armor = getNull();
     public static final ISkill enhanced_crossbow = getNull();
@@ -50,20 +42,19 @@ public class HunterSkills {
     public static final ISkill stake2 = getNull();
     public static final ISkill tech_weapons = getNull();
     public static final ISkill weapon_table = getNull();
+    public static final ISkill durable_brewing = getNull();
+    public static final ISkill concentrated_brewing = getNull();
+    public static final ISkill multitask_brewing = getNull();
+    public static final ISkill efficient_brewing = getNull();
+    public static final ISkill master_brewer = getNull();
+    public static final ISkill swift_brewing = getNull();
+    public static final ISkill concentrated_durable_brewing = getNull();
+    public static final ISkill potion_resistance = getNull();
 
     @SuppressWarnings("deprecation")
     public static void registerHunterSkills(IForgeRegistry<ISkill> registry) {
         registry.register(new VampirismSkill.SimpleHunterSkill(VReference.HUNTER_FACTION.getID(), false));
         registry.register(new VampirismSkill.SimpleHunterSkill("basic_alchemy", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_category_hint", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_duration", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_faster_crafting", false));
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_good_or_bad", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_identify_some", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad_2", true).setDescription(() -> new TranslationTextComponent("skill.vampirism.blood_potion_less_bad.desc")).setTranslationKey("skill.vampirism.blood_potion_less_bad"));
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_portable_crafting", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_table", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("double_crossbow", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_armor", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_crossbow", false));
@@ -97,5 +88,21 @@ public class HunterSkills {
                 }));
         registry.register(new VampirismSkill.SimpleHunterSkill("tech_weapons", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("weapon_table", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("durable_brewing", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("concentrated_brewing", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("multitask_brewing", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("efficient_brewing", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("master_brewer", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("swift_brewing", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("concentrated_durable_brewing", true));
+        registry.register(new ActionSkill<IHunterPlayer>("potion_resistance", HunterActions.potion_resistance_hunter, true));
+    }
+
+    public static void fixMappings(RegistryEvent.MissingMappings<ISkill> event) {
+        event.getAllMappings().forEach(missingMapping -> {
+            if (missingMapping.key.toString().startsWith("vampirism:blood_potion_")) {
+                missingMapping.ignore();
+            }
+        });
     }
 }

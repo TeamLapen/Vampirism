@@ -24,6 +24,7 @@ import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
+import de.teamlapen.vampirism.inventory.recipes.ExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.modcompat.IMCHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.player.ModPlayerEventHandler;
@@ -34,8 +35,6 @@ import de.teamlapen.vampirism.player.skills.SkillTreeManager;
 import de.teamlapen.vampirism.player.vampire.BloodVision;
 import de.teamlapen.vampirism.player.vampire.NightVision;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.potion.blood.BloodPotionRegistry;
-import de.teamlapen.vampirism.potion.blood.BloodPotions;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.proxy.ServerProxy;
@@ -230,7 +229,6 @@ public class VampirismMod {
      */
     private void finishAPI2() {
         ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).finishRegistration();
-        ((BloodPotionRegistry) VampirismAPI.bloodPotionRegistry()).finish();
     }
 
     private void gatherData(final GatherDataEvent event) {
@@ -296,7 +294,6 @@ public class VampirismMod {
 
         SupporterManager.getInstance().initAsync();
         VampireBookManager.getInstance().init();
-        BloodPotions.register();
         Permissions.init();
         VampirismEntitySelectors.registerSelectors();
 
@@ -314,10 +311,10 @@ public class VampirismMod {
         GeneralRegistryImpl generalRegistry = new GeneralRegistryImpl();
         ActionManagerEntity entityActionManager = new ActionManagerEntity();
         WorldGenManager worldGenRegistry = new WorldGenManager();
+        ExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry = new ExtendedBrewingRecipeRegistry();
 
         biteableRegistry.setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new);
-        BloodPotionRegistry bloodPotionRegistry = new BloodPotionRegistry();
-        VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, bloodPotionRegistry, entityActionManager, worldGenRegistry);
+        VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, entityActionManager, worldGenRegistry, extendedBrewingRecipeRegistry);
         VampirismAPI.setUpAccessors(new GarlicChunkHandler.Provider());
     }
 

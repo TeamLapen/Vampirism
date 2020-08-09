@@ -18,6 +18,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -56,7 +57,6 @@ public class ModItems {
     public static final BucketItem blood_bucket = getNull();
     public static final VampirismItem blood_infused_iron_ingot = getNull();
     public static final VampirismItem blood_infused_enhanced_iron_ingot = getNull();
-    public static final BloodPotionItem blood_potion = getNull();
 
     public static final CrossbowArrowItem crossbow_arrow_normal = getNull();
     public static final CrossbowArrowItem crossbow_arrow_spitfire = getNull();
@@ -212,6 +212,7 @@ public class ModItems {
                 return holy_water_bottle_ultimate.equals(stack.getItem());
             }
         });
+
     }
 
 
@@ -257,7 +258,6 @@ public class ModItems {
 
         registry.register(new StakeItem());
         registry.register(new VampireBloodBottleItem());
-        registry.register(new BloodPotionItem());
         TechCrossbowItem basic_tech_crossbow = new TechCrossbowItem("basic_tech_crossbow", 1.6F, 6, 300);
         basic_tech_crossbow.setEnchantability(ItemTier.DIAMOND);
         registry.register(basic_tech_crossbow);
@@ -396,5 +396,15 @@ public class ModItems {
 
     private static Item.Properties creativeTabProps() {
         return new Item.Properties().group(VampirismMod.creativeTab);
+    }
+
+    public static void fixMappings(RegistryEvent.MissingMappings<Item> event) {
+        event.getAllMappings().forEach(missingMapping -> {
+            if ("vampirism:blood_potion".equals(missingMapping.key.toString())) {
+                missingMapping.ignore();
+            } else if ("vampirism:blood_potion_table".equals(missingMapping.key.toString())) {
+                missingMapping.ignore();
+            }
+        });
     }
 }

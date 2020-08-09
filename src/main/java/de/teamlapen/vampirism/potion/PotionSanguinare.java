@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PotionSanguinare extends VampirismPotion {
+public class PotionSanguinare extends VampirismEffect {
     /**
      * @param entity
      * @param player Whether to use the player effect duration or the mob duration

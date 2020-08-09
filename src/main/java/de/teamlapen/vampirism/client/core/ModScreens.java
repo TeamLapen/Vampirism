@@ -13,7 +13,6 @@ public class ModScreens {
     public static void registerScreens() {
         ScreenManager.<HunterTableContainer, HunterTableScreen>registerFactory(ModContainer.hunter_table, HunterTableScreen::new);
         ScreenManager.<AlchemicalCauldronContainer, AlchemicalCauldronScreen>registerFactory(ModContainer.alchemical_cauldron, AlchemicalCauldronScreen::new);
-        ScreenManager.<BloodPotionTableContainer, BloodPotionTableScreen>registerFactory(ModContainer.blood_potion_table, BloodPotionTableScreen::new);
         ScreenManager.<WeaponTableContainer, WeaponTableScreen>registerFactory(ModContainer.weapon_table, WeaponTableScreen::new);
         ScreenManager.<HunterTrainerContainer, HunterTrainerScreen>registerFactory(ModContainer.hunter_trainer, HunterTrainerScreen::new);
         ScreenManager.<HunterBasicContainer, HunterBasicScreen>registerFactory(ModContainer.hunter_basic, HunterBasicScreen::new);
@@ -21,5 +20,6 @@ public class ModScreens {
         ScreenManager.<BloodGrinderContainer, BloodGrinderScreen>registerFactory(ModContainer.blood_grinder, BloodGrinderScreen::new);
         ScreenManager.<MinionContainer, MinionScreen>registerFactory(ModContainer.minion, MinionScreen::new);
         ScreenManager.registerFactory(ModContainer.task_master, TaskBoardScreen::new);
+        ScreenManager.registerFactory(ModContainer.extended_potion_table, PotionTableScreen::new);
     }
 }
