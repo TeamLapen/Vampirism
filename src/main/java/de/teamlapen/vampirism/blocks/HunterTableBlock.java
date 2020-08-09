@@ -135,7 +135,7 @@ public class HunterTableBlock extends VampirismBlock {
         Block right = world.getBlockState(pos.offset(facing.rotateYCCW())).getBlock();
         Block front = world.getBlockState(pos.offset(facing.getOpposite())).getBlock();
         boolean weapon_table = left == ModBlocks.weapon_table || right == ModBlocks.weapon_table || behind == ModBlocks.weapon_table || front == ModBlocks.weapon_table;
-        boolean potion_table = left == ModBlocks.blood_potion_table || right == ModBlocks.blood_potion_table || behind == ModBlocks.blood_potion_table || front == ModBlocks.blood_potion_table; //TODO replace with extended potion table and update guide book
+        boolean potion_table = left == ModBlocks.potion_table || right == ModBlocks.potion_table || behind == ModBlocks.potion_table || front == ModBlocks.potion_table;
         boolean cauldron = left == ModBlocks.alchemical_cauldron || right == ModBlocks.alchemical_cauldron || behind == ModBlocks.alchemical_cauldron || front == ModBlocks.alchemical_cauldron;
 
         return getTierFor(weapon_table, potion_table, cauldron);
