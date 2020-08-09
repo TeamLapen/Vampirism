@@ -141,6 +141,10 @@ public class HunterLevelingConf {
         return targetLevel >= TABLE_MIN_LEVEL && targetLevel <= TABLE_MAX_LEVEL;
     }
 
+    public boolean isLevelValidForTableAndTier(int targetLevel, int tier) {
+        return isLevelValidForTable(targetLevel) && (targetLevel <= 11 || tier >= 3) && (targetLevel <= 9 || tier >= 2) && (targetLevel <= 7 || tier >= 1);
+    }
+
     /**
      * Checks if a hunter player can reach the given level using the hunter trainer
      */
