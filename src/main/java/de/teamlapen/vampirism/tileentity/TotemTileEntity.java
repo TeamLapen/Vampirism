@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.tileentity;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
@@ -33,7 +32,6 @@ import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.PotionSanguinareEffect;
 import de.teamlapen.vampirism.util.ModEventFactory;
-import de.teamlapen.vampirism.world.FactionPointOfInterestType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -51,9 +49,11 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.village.PointOfInterest;
 import net.minecraft.village.PointOfInterestManager;
@@ -63,8 +63,6 @@ import net.minecraft.world.ServerBossInfo;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.structure.StructureStart;
-import net.minecraft.world.gen.feature.structure.Structures;
-import net.minecraft.world.lighting.SkyLightStorage;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -76,114 +74,41 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 @ParametersAreNonnullByDefault
 public class TotemTileEntity extends TileEntity implements ITickableTileEntity, ITotem {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Random RNG = new Random();
     private static final ResourceLocation nonFactionTotem = new ResourceLocation("none");
-    /**
-     * stores all BoundingBoxes of vampire controlled villages per dimension, mapped from totem positions
-     */
-    private static final HashMap<Dimension, Map<BlockPos, MutableBoundingBox>> vampireVillages = Maps.newHashMap();
-    /**
-     * saves the position
-     */
-    private static final Map<BlockPos, BlockPos> totemPositions = Maps.newHashMap();//TODO removed pointofinterests?
 
-    public static boolean isInsideVampireAreaCached(Dimension dimension, BlockPos blockPos) {
-        if (vampireVillages.containsKey(dimension)) {
-            for (Map.Entry<BlockPos, MutableBoundingBox> entry : vampireVillages.get(dimension).entrySet()) {
-                if (entry.getValue().isVecInside(blockPos)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    @Deprecated
+    public static boolean isInsideVampireAreaCached(Dimension dimension, BlockPos blockPos) { //TODO 1.16 remove
+        return TotemHelper.isInsideVampireAreaCached(dimension, blockPos);
     }
 
-    public static void clearCacheForDimension(Dimension dimension) {
-        vampireVillages.remove(dimension);
-    }
-
-    private static void addVampireVillage(Dimension dimension, BlockPos pos, AxisAlignedBB box) {
-        vampireVillages.computeIfAbsent(dimension, dimension1 -> Maps.newHashMap()).put(pos, UtilLib.AABBtoMB(box));//TODO update AxisABB if village has grown
-    }
-
-    private static void removeVampireVillage(Dimension dimension, BlockPos pos) {
-        vampireVillages.computeIfPresent(dimension, (dimension1, structureStarts) -> {
-            structureStarts.remove(pos);
-            return structureStarts;
-        });
+    @Deprecated
+    public static void clearCacheForDimension(Dimension dimension) { //TODO 1.16 remove
+        TotemHelper.clearCacheForDimension(dimension);
     }
 
     /**
-     * @return false if another totem exists
+     * this method has no use anymore, because the village now persists of a collection of {@link PointOfInterest} and not based on a structure start
+     *
+     * @throws Exception
      */
-    private static boolean addTotem(Set<PointOfInterest> structures, BlockPos totemPos) {
-        if(structures.stream().noneMatch(structure -> totemPositions.containsKey(structure.getPos()) && !totemPositions.get(structure.getPos()).equals(totemPos))) {
-            for (PointOfInterest pointOfInterest : structures) {
-                totemPositions.computeIfAbsent(pointOfInterest.getPos(), (start -> totemPos));
-            }
-            totemPositions.put(totemPos,totemPos);
-            return true;
-        }
-        return false;
-    }
-
-    private static void removeTotem(Collection<PointOfInterest> structure, BlockPos pos) {
-        structure.forEach(pointOfInterest -> totemPositions.remove(pointOfInterest.getPos()));
-        totemPositions.remove(pos);
-    }
-    /**
-     * @return {@code null} if no totem exists
-     */
+    @Deprecated
     public static @Nullable
-    BlockPos getTotemPosition(Collection<PointOfInterest> structure) {
-        for (PointOfInterest pointOfInterest : structure) {
-            if(totemPositions.containsKey(pointOfInterest.getPos())){
-                return totemPositions.get(pointOfInterest.getPos());
-            }
-        }
-        return null;
+    BlockPos getTotemPosition(StructureStart structure) throws Exception { //TODO 1.16 remove
+        throw new Exception("This method no longer works"); //TODO backwards compatibility
     }
 
-    public static ITextComponent forceFactionCommand(IFaction<?> faction, ServerPlayerEntity player) {
-        List<PointOfInterest> pointOfInterests = ((ServerWorld)player.getEntityWorld()).getPointOfInterestManager().func_219146_b(point->true,player.getPosition(),30, PointOfInterestManager.Status.ANY).collect(Collectors.toList());
-        if(pointOfInterests.stream().noneMatch(point -> totemPositions.containsKey(point.getPos()))) {
-            return new TranslationTextComponent("command.vampirism.test.village.no_village");
-        }
-        TileEntity te = player.getEntityWorld().getTileEntity(totemPositions.get(pointOfInterests.get(0).getPos()));
-        if (!(te instanceof TotemTileEntity)) {
-            LOGGER.warn("TileEntity at {} is no TotemTileEntity", totemPositions.get(pointOfInterests.get(0).getPos()));
-            return new StringTextComponent("");
-        }
-        TotemTileEntity tile = (TotemTileEntity) te;
-        tile.forcedFaction = faction;
-        tile.forcedFactionTimer = 5;
-        tile.markDirty();
-        return new TranslationTextComponent("command.vampirism.test.village.success", faction.getName());
-    }
-
-    public static Set<PointOfInterest> getVillagePointsOfInterest(ServerWorld world, BlockPos pos) {
-        PointOfInterestManager manager = world.getPointOfInterestManager();
-        Set<PointOfInterest> finished = Sets.newHashSet();
-        Set<PointOfInterest> points = manager.func_219146_b(type-> !(type instanceof FactionPointOfInterestType), pos, 35, PointOfInterestManager.Status.ANY).collect(Collectors.toSet());
-        while (!points.isEmpty()) {
-            List<Stream<PointOfInterest>> list = points.stream().map(pointOfInterest -> manager.func_219146_b(type-> type != ModVillage.hunter_faction && type != ModVillage.vampire_faction, pointOfInterest.getPos(), 25, PointOfInterestManager.Status.ANY)).collect(Collectors.toList());
-            finished.addAll(points);
-            points.clear();
-            list.forEach(stream -> stream.forEach(point -> {
-                if(!finished.contains(point)){
-                    points.add(point);
-                }
-            }));
-        }
-        finished.forEach(point -> world.setBlockState(point.getPos().up(10),Blocks.BEDROCK.getDefaultState()));//TODO remove
-        return finished;
+    @Deprecated
+    public static ITextComponent forceFactionCommand(IFaction<?> faction, ServerPlayerEntity player) { //TODO 1.16 remove
+        return TotemHelper.forceFactionCommand(faction, player);
     }
 
     //block attributes
@@ -272,18 +197,22 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 3);
             if (!this.village.isEmpty()) {
                 if (this.controllingFaction == VReference.VAMPIRE_FACTION) {
-                    addVampireVillage(this.world.dimension, this.pos, this.getVillageArea());
+                    TotemHelper.addVampireVillage(this.world.dimension, this.pos, this.getVillageArea());
                 } else {
-                    removeVampireVillage(this.world.dimension, this.pos);
+                    TotemHelper.removeVampireVillage(this.world.dimension, this.pos);
                 }
             }
         }
     }
 
+    public int getSize() {
+        return this.village.size();
+    }
+
     @Override
     public void remove() {
-        removeVampireVillage(this.world.dimension, this.pos);
-        removeTotem(this.village, this.pos);
+        TotemHelper.removeVampireVillage(this.world.dimension, this.pos);
+        TotemHelper.removeTotem(this.village, this.pos);
         if (this.capturingFaction != null) {
             this.abortCapture(false);
         } else {
@@ -338,10 +267,10 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         if (!(blockFaction.equals(this.controllingFaction == null ? nonFactionTotem : this.controllingFaction.getID()))) { //If block faction does not match tile faction, force the tile to update to the block faction
             this.forcedFaction = VampirismAPI.factionRegistry().getFactionByID(blockFaction);
         }
-        Set<PointOfInterest> points = getVillagePointsOfInterest((ServerWorld)world,this.pos);
+        Set<PointOfInterest> points = TotemHelper.getVillagePointsOfInterest((ServerWorld) world, this.pos);
         if (!(this.isInsideVillage = !points.isEmpty())) return;
         this.village = points;
-        this.isDisabled = !addTotem(this.village, this.pos);//TODO print village to near
+        this.isDisabled = !TotemHelper.addTotem(this.world, this.village, this.pos);//TODO print village to near
         this.markDirty();
     }
 
@@ -441,10 +370,16 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                         }
                     }
                 } else {
-                    this.world.addEntity((Entity)entity);
+                    this.world.addEntity((Entity) entity);
                 }
             }
         }
+    }
+
+    public void setForcedFaction(@Nullable IFaction<?> faction) {
+        this.forcedFaction = faction;
+        this.forcedFactionTimer = 5;
+        this.markDirty();
     }
 
     @Override

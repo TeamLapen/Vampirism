@@ -1,11 +1,10 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.command.arguments.FactionArgument;
-import de.teamlapen.vampirism.tileentity.TotemTileEntity;
+import de.teamlapen.vampirism.tileentity.TotemHelper;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -20,7 +19,7 @@ public class CaptureVillageCommand extends BasicCommand {
     }
 
     private static int capture(CommandSource source, ServerPlayerEntity player, IPlayableFaction faction) {
-        source.sendFeedback(TotemTileEntity.forceFactionCommand(faction, player), true);
+        source.sendFeedback(TotemHelper.forceFactionCommand(faction, player), true);
         return 0;
     }
 }

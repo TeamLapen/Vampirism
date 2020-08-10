@@ -17,6 +17,7 @@ import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.tileentity.TotemHelper;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.Helper;
@@ -59,7 +60,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Event handler for all entity related events
@@ -245,7 +245,7 @@ public class ModEntityEventHandler {
             if (event.getEntity() instanceof VillagerEntity) {
                 Collection<PointOfInterest> points = ((ServerWorld) event.getWorld()).getPointOfInterestManager().func_219146_b(p -> true, event.getEntity().getPosition(), 25, PointOfInterestManager.Status.ANY).collect(Collectors.toList());
                 if (points.size()>0) {
-                    BlockPos pos = TotemTileEntity.getTotemPosition(points);
+                    BlockPos pos = TotemHelper.getTotemPosition(points);
                     if (pos != null) {
                         TileEntity tileEntity = event.getWorld().getTileEntity(pos);
                         if (tileEntity instanceof TotemTileEntity) {
