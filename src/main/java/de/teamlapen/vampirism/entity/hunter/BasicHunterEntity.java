@@ -260,7 +260,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     @Override
     public int getEntityTextureType() {
-        return getDataManager().get(TYPE);
+        return Math.max(0, getDataManager().get(TYPE));
     }
 
     @Override
