@@ -20,6 +20,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -42,8 +43,9 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
         int y = 40;
         minecraft.fontRenderer.func_243248_b(stack, task.getTranslation(), 1, 1, Color.gray.getRGB());
         IPlayableFaction<?> f = task.getFaction();
-        String type = f == null ? "" : f.getName().getString() + " ";
-        minecraft.fontRenderer.func_238418_a_(new TranslationTextComponent("text.vampirism.task.reward_obtain", type), x, y, 160, Color.gray.getRGB());
+        ITextComponent taskmasterComponent = f == null || f.getVillageData() == null ? new StringTextComponent("") : new TranslationTextComponent(f.getVillageData().getTaskMasterEntity().getTranslationKey());
+        ITextComponent text = new TranslationTextComponent("text.vampirism.task.reward_obtain", taskmasterComponent);
+        minecraft.fontRenderer.func_238418_a_(text, x, y, 160, Color.gray.getRGB());
         y += minecraft.fontRenderer.FONT_HEIGHT * 3;
         IFormattableTextComponent prerequisites = new TranslationTextComponent("text.vampirism.task.prerequisites").appendString(":\n");
         TaskUnlocker[] unlockers = task.getUnlocker();
