@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.util;
 
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -18,6 +19,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.util.math.BlockPos;
@@ -34,6 +36,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 
 public class Helper {
@@ -200,6 +203,24 @@ public class Helper {
             LOGGER.error("Failed to get experience points", e);
         }
         return 0;
+    }
+
+    /**
+     * Returns false on client side
+     * Determines the gender of the player by checking the skin and assuming 'slim'->female.
+     *
+     * @param p Player
+     * @return True if female
+     */
+    public static boolean attemptToGuessGenderSafe(PlayerEntity p) {
+        if (p instanceof ServerPlayerEntity) { //Could extend to also support client side, but have to use proxy then
+            Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> textureMap = ((ServerPlayerEntity) p).server.getMinecraftSessionService().getTextures(p.getGameProfile(), false);
+            if (textureMap.containsKey(MinecraftProfileTexture.Type.SKIN)) {
+                MinecraftProfileTexture skinTexture = textureMap.get(MinecraftProfileTexture.Type.SKIN);
+                return "slim".equals(skinTexture.getMetadata("model"));
+            }
+        }
+        return false;
     }
 
 }

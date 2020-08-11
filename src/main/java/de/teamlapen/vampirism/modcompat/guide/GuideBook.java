@@ -211,7 +211,15 @@ public class GuideBook implements IGuideBook {
         entries.put(new ResourceLocation(base + "skills"), new EntryText(skillPages, base + "skills"));
 
         List<IPage> lordPages = new ArrayList<>();
-        lordPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(translate(base + "lord.text", ModEntities.task_master_vampire.getName().getFormattedText(), VReference.VAMPIRE_FACTION.getHighestLordLevel())), new ResourceLocation("guide.vampirism.entity.taskmaster")));
+        lordPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(translate(base + "lord.text", ModEntities.task_master_vampire.getName().getFormattedText(), VReference.VAMPIRE_FACTION.getLordTitle(1, false).getFormattedText(), VReference.VAMPIRE_FACTION.getLordTitle(1, true).getFormattedText(), VReference.VAMPIRE_FACTION.getLordTitle(VReference.VAMPIRE_FACTION.getHighestLordLevel(), false).getFormattedText(), VReference.VAMPIRE_FACTION.getLordTitle(VReference.VAMPIRE_FACTION.getHighestLordLevel(), true).getFormattedText())), new ResourceLocation("guide.vampirism.entity.taskmaster")));
+        PageTable.Builder lordTitleBuilder = new PageTable.Builder(3).setHeadline(translate(base + "lord.titles"));
+        lordTitleBuilder.addUnlocLine("text.vampirism.level", "text.vampirism.title", "text.vampirism.title");
+        lordTitleBuilder.addLine(1, VReference.VAMPIRE_FACTION.getLordTitle(1, false).getFormattedText(), VReference.VAMPIRE_FACTION.getLordTitle(1, true).getFormattedText());
+        lordTitleBuilder.addLine(2, VReference.VAMPIRE_FACTION.getLordTitle(2, false).getFormattedText(), VReference.VAMPIRE_FACTION.getLordTitle(2, true).getFormattedText());
+        lordTitleBuilder.addLine(3, VReference.VAMPIRE_FACTION.getLordTitle(3, false).getFormattedText(), VReference.VAMPIRE_FACTION.getLordTitle(3, true).getFormattedText());
+        lordTitleBuilder.addLine(4, VReference.VAMPIRE_FACTION.getLordTitle(4, false).getFormattedText(), VReference.VAMPIRE_FACTION.getLordTitle(4, true).getFormattedText());
+        lordTitleBuilder.addLine(5, VReference.VAMPIRE_FACTION.getLordTitle(5, false).getFormattedText(), VReference.VAMPIRE_FACTION.getLordTitle(5, true).getFormattedText());
+        lordPages.add(lordTitleBuilder.build());
         lordPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(translate(base + "lord.minion", loc(ModItems.vampire_minion_binding), loc(ModItems.vampire_minion_upgrade1), loc(ModItems.vampire_minion_upgrade2))), new ResourceLocation("guide.vampirism.items.vampire_minion_binding")));
         lordPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(translate("guide.vampirism.common.minion_control", ModKeys.getKeyBinding(ModKeys.KEY.MINION).getLocalizedName(), translate("text.vampirism.minion.call_single"), translate("text.vampirism.minion.respawn")))));
         entries.put(new ResourceLocation(base + "lord"), new EntryText(lordPages, base + "lord"));
@@ -295,9 +303,20 @@ public class GuideBook implements IGuideBook {
         entries.put(new ResourceLocation(base + "vamp_slayer"), new EntryText(vampSlayerPages, base + "vamp_slayer"));
 
         List<IPage> lordPages = new ArrayList<>();
-        lordPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(translate(base + "lord.text", ModEntities.task_master_hunter.getName().getFormattedText(), VReference.HUNTER_FACTION.getHighestLordLevel())), new ResourceLocation("guide.vampirism.entity.taskmaster")));
+        lordPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(translate(base + "lord.text", ModEntities.task_master_hunter.getName().getFormattedText(), VReference.HUNTER_FACTION.getLordTitle(1, false).getFormattedText(), VReference.HUNTER_FACTION.getLordTitle(VReference.HUNTER_FACTION.getHighestLordLevel(), false).getFormattedText())), new ResourceLocation("guide.vampirism.entity.taskmaster")));
+        PageTable.Builder lordTitleBuilder = new PageTable.Builder(2);
+        lordTitleBuilder.setHeadline(translate(base + "lord.titles"));
+        lordTitleBuilder.addUnlocLine("text.vampirism.level", "text.vampirism.title");
+        lordTitleBuilder.addLine(1, VReference.HUNTER_FACTION.getLordTitle(1, false).getFormattedText());
+        lordTitleBuilder.addLine(2, VReference.HUNTER_FACTION.getLordTitle(2, false).getFormattedText());
+        lordTitleBuilder.addLine(3, VReference.HUNTER_FACTION.getLordTitle(3, false).getFormattedText());
+        lordTitleBuilder.addLine(4, VReference.HUNTER_FACTION.getLordTitle(4, false).getFormattedText());
+        lordTitleBuilder.addLine(5, VReference.HUNTER_FACTION.getLordTitle(5, false).getFormattedText());
+        lordPages.add(lordTitleBuilder.build());
         lordPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(translate(base + "lord.minion", loc(ModItems.hunter_minion_equipment), loc(ModItems.hunter_minion_upgrade1), loc(ModItems.hunter_minion_upgrade2))), new ResourceLocation("guide.vampirism.items.hunter_minion_equipment")));
         lordPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(translate("guide.vampirism.common.minion_control", ModKeys.getKeyBinding(ModKeys.KEY.MINION).getLocalizedName(), translate("text.vampirism.minion.call_single"), translate("text.vampirism.minion.respawn")))));
+
+
         entries.put(new ResourceLocation(base + "lord"), new EntryText(lordPages, base + "lord"));
 
         List<IPage> unHunterPages = new ArrayList<>();

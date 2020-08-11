@@ -494,11 +494,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return false;
     }
 
-    @Override
-    public boolean isVampireLord() {
-        return false;
-    }
-
     public void loadData(CompoundNBT nbt) {
         super.loadData(nbt);
         bloodStats.readNBT(nbt);

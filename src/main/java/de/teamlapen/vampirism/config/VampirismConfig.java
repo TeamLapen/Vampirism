@@ -109,6 +109,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue autoConvertGlassBottles;
         public final ForgeConfigSpec.BooleanValue playerCanTurnPlayer;
         public final ForgeConfigSpec.BooleanValue factionColorInChat;
+        public final ForgeConfigSpec.BooleanValue lordPrefixInChat;
         public final ForgeConfigSpec.EnumValue<IMobOptions> entityIMob;
         public final ForgeConfigSpec.BooleanValue umbrella;
         public final ForgeConfigSpec.BooleanValue infectCreaturesSanguinare;
@@ -146,6 +147,7 @@ public class VampirismConfig {
             autoConvertGlassBottles = builder.comment("Whether glass bottles should be automatically be converted to blood bottles when needed").define("autoConvertGlassBottles", true);
             playerCanTurnPlayer = builder.comment("Whether players can infect other players").define("playersCanTurnPlayers", true);
             factionColorInChat = builder.comment("Whether to color player names in chat based on their current faction").define("factionColorInChat", true);
+            lordPrefixInChat = builder.comment("Whether to add a prefix title based on the current lord level to the player names").define("lordPrefixInChat", true);
             entityIMob = builder.comment("Changes if entities are recognized as hostile by other mods. See https://github.com/TeamLapen/Vampirism/issues/199. Smart falls back to Never on servers ").defineEnum("entitiesIMob", IMobOptions.SMART);
             umbrella = builder.comment("If enabled adds a craftable umbrella that can be used to slowly walk though sunlight without taking damage").define("umbrella", false);
             infectCreaturesSanguinare = builder.comment("If enabled, creatures are infected with Sanguinare Vampirism first instead of immediately being converted to a vampire when their blood is sucked dry").define("infectCreaturesSanguinare", false);
