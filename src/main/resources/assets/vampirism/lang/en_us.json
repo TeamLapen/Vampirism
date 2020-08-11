@@ -437,7 +437,7 @@
   "text.vampirism.skill.unlock_parent_first": "Unlock parent first",
   "text.vampirism.skill.skills_reset": "Your skills have been reset",
   "text.vampirism.skill.deactivated_by_serveradmin": "This skill is deactivated by your serveradmin",
-  "container.vampirism.hunter_table.ritual_level_wrong": "You cannot use this altar at this level",
+  "container.vampirism.hunter_table.structure_level_wrong": "Table incomplete for your level",
   "container.vampirism.basic_hunter.levelup": "I hope you have learned something",
   "tile.vampirism.alchemical_cauldron.display": "%s’s %s",
   "text.vampirism.level_up": "Level Up",
