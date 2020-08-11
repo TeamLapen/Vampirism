@@ -380,6 +380,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         this.getDataManager().register(LEVEL, -1);
         this.getDataManager().register(SWINGING_ARMS, false);
         this.getDataManager().register(WATCHED_ID, 0);
+        this.getDataManager().register(TYPE, -1);
     }
 
     @Override
