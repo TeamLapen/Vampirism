@@ -22,7 +22,7 @@ public interface IDefaultTaskMasterEntity extends ForceLookEntityGoal.TaskOwner,
 
     default boolean processInteraction(PlayerEntity playerEntity, Entity entity) {
         if (FactionPlayerHandler.getOpt(playerEntity).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(taskManager -> taskManager.hasAvailableTasks(entity.getUniqueID())).orElse(false)) {
-            OptionalInt containerIdOpt = playerEntity.openContainer(new SimpleNamedContainerProvider((containerId, playerInventory, player) -> new TaskBoardContainer(containerId, playerInventory), CONTAINER_NAME.deepCopy()));
+            OptionalInt containerIdOpt = playerEntity.openContainer(new SimpleNamedContainerProvider((containerId, playerInventory, player) -> new TaskBoardContainer(containerId, playerInventory), entity.getDisplayName().shallowCopy()));
             if (containerIdOpt.isPresent()) {
                 FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(iFactionPlayer -> {
                     iFactionPlayer.getTaskManager().openTaskMasterScreen(entity.getUniqueID());

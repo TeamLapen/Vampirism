@@ -5,6 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 
 /**
@@ -67,5 +68,6 @@ public interface IFaction<T extends IFactionEntity> {
      *
      * @return the village data class
      */
+    @Nullable
     IVillageFactionData getVillageData();
 }
