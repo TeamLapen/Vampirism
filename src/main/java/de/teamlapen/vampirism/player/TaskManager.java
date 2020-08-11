@@ -98,13 +98,14 @@ public class TaskManager implements ITaskManager {
         this.acceptedTasks.compute(task.isUnique() ? UNIQUE_TASKS : taskBoardId, (id, tasks) -> {
             if (tasks != null) {
                 tasks.remove(task);
-                this.stats.computeIfPresent(taskBoardId, (entityId1, tasks1) -> {
+                this.stats.computeIfPresent(task.isUnique() ? UNIQUE_TASKS : taskBoardId, (entityId1, tasks1) -> {
                     tasks1.remove(task);
                     return tasks1;
                 });
             }
             return tasks;
         });
+        this.updateTaskMasterScreen(taskBoardId);
     }
 
     @Override
