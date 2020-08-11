@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.inventory.container.HunterTableContainer;
 import de.teamlapen.vampirism.items.PureBloodItem;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -40,7 +41,7 @@ public class HunterTableScreen extends ContainerScreen<HunterTableContainer> {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(altarGuiTextures);
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
@@ -54,7 +55,7 @@ public class HunterTableScreen extends ContainerScreen<HunterTableContainer> {
 
         ITextComponent text = null;
         if (!container.isLevelValid()) {
-            text = new TranslationTextComponent("container.vampirism.hunter_table.ritual_level_wrong");
+            text = new TranslationTextComponent("container.vampirism.hunter_table.structure_level_wrong");
         } else if (!container.getMissingItems().isEmpty()) {
             ItemStack missing = container.getMissingItems();
             ITextComponent item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : new TranslationTextComponent(missing.getTranslationKey());
