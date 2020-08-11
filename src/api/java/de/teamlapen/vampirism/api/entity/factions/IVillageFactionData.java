@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
-import de.teamlapen.vampirism.api.entity.IEntityWithHome;
 import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
