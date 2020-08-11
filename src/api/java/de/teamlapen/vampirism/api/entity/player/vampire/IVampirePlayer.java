@@ -72,7 +72,6 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      */
     boolean isAutoFillEnabled();
 
-    boolean isVampireLord();
 
     /**
      * Locks the vision again, preventing the player from using it

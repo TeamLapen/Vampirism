@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity.player;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,4 +22,10 @@ public interface ILordPlayer {
 
     @Nonnull
     PlayerEntity getPlayer();
+
+    /**
+     * @return Null, if level ==0
+     */
+    @Nullable
+    ITextComponent getLordTitle();
 }

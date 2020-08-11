@@ -39,6 +39,7 @@ public class ModCommands {
                             .then(LevelCommand.register())
                             .then(LordCommand.register())
                             .then(LevelUpCommand.register())
+                            .then(GenderCommand.register())
             );
         }
 

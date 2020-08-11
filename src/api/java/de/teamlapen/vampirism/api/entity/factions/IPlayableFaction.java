@@ -2,7 +2,10 @@ package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.LazyOptional;
+
+import javax.annotation.Nonnull;
 
 /**
  * Represents one playable faction (e.g. Vampire Player)
@@ -39,5 +42,13 @@ public interface IPlayableFaction<T extends IFactionPlayer> extends IFaction<T> 
      * @return The highest reachable lord level or 0 if no lord
      */
     int getHighestLordLevel();
+
+    /**
+     * @param level  lord level
+     * @param female Female version
+     * @return A text component representing the title of the player at the given lord level. empty if level==0
+     */
+    @Nonnull
+    ITextComponent getLordTitle(int level, boolean female);
 
 }
