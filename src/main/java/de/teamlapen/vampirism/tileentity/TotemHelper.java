@@ -97,7 +97,7 @@ public class TotemHelper {
             });
         }
         poiSets.put(totemPos, structures);
-        return true;
+        return !structures.isEmpty();
     }
 
     private static void handleTotemConflict(Set<PointOfInterest> pois, World world, BlockPos totem, BlockPos conflicting) {

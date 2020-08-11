@@ -74,10 +74,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 @ParametersAreNonnullByDefault
 public class TotemTileEntity extends TileEntity implements ITickableTileEntity, ITotem {
@@ -268,7 +265,10 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             this.forcedFaction = VampirismAPI.factionRegistry().getFactionByID(blockFaction);
         }
         Set<PointOfInterest> points = TotemHelper.getVillagePointsOfInterest((ServerWorld) world, this.pos);
-        if (!(this.isInsideVillage = !points.isEmpty())) return;
+        if (!(this.isInsideVillage = !points.isEmpty())) {
+            this.village = Collections.emptySet();
+            return;
+        }
         this.village = points;
         this.isDisabled = !TotemHelper.addTotem(this.world, this.village, this.pos);//TODO print village to near
         this.markDirty();
