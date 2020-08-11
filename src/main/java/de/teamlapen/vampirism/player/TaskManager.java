@@ -47,6 +47,8 @@ public class TaskManager implements ITaskManager {
     private final Map<UUID, Set<Task>> tasks = new HashMap<>();
     @Nonnull
     private final Map<UUID, Integer> lessTasks = new HashMap<>();
+    @Nonnull
+    private final Map<UUID, Integer> taskAmount = new HashMap<>();
 
     @Nonnull
     private final Map<UUID, Set<Task>> acceptedTasks = new HashMap<>();
@@ -245,6 +247,7 @@ public class TaskManager implements ITaskManager {
     public void resetTaskLists() {
         this.acceptedTasks.clear();
         this.lessTasks.clear();
+        this.taskAmount.clear();
         this.updateTaskLists();
     }
 
@@ -264,7 +267,7 @@ public class TaskManager implements ITaskManager {
         if (!selectedTasks.isEmpty()) {
             this.removeLockedTasks(taskBoardId, selectedTasks);
         }
-        int neededTaskAmount = VampirismConfig.BALANCE.taskMasterTaskAmount.get() - lessTasks.getOrDefault(taskBoardId, 0);
+        int neededTaskAmount = this.taskAmount.getOrDefault(taskBoardId, player.getRNG().nextInt(VampirismConfig.BALANCE.taskMasterMaxTaskAmount.get()) + 1) - lessTasks.getOrDefault(taskBoardId, 0);
         if (selectedTasks.size() < neededTaskAmount) {
             List<Task> tasks = new ArrayList<>(ModRegistries.TASKS.getValues());
             Collections.shuffle(tasks);
