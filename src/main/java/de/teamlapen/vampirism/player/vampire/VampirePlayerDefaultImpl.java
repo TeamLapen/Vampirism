@@ -181,11 +181,6 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
 
 
     @Override
-    public boolean isVampireLord() {
-        return false;
-    }
-
-    @Override
     public int onBite(IVampire biter) {
         return 0;
     }

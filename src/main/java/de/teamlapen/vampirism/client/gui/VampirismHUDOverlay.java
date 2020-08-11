@@ -232,7 +232,14 @@ public class VampirismHUDOverlay extends ExtendedGui {
             // boolean flag1 = false;
             int color = faction.getColor().getRGB();
             int lord = handler.getLordLevel();
-            String text = lord > 0 ? "L" + lord : "" + handler.getCurrentLevel();
+
+            String text;
+            if (lord > 0) {
+                String title = handler.getLordTitle().getFormattedText();
+                text = title.substring(0, Math.min(3, title.length()));
+            } else {
+                text = "" + handler.getCurrentLevel();
+            }
             int x = (this.mc.mainWindow.getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2 + VampirismConfig.CLIENT.guiLevelOffsetX.get();
             int y = this.mc.mainWindow.getScaledHeight() - VampirismConfig.CLIENT.guiLevelOffsetY.get();
             mc.fontRenderer.drawString(text, x + 1, y, 0);

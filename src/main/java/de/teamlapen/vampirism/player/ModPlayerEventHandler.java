@@ -1,13 +1,11 @@
 package de.teamlapen.vampirism.player;
 
 import com.google.common.base.Throwables;
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
@@ -255,15 +253,16 @@ public class ModPlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPlayerName(PlayerEvent.NameFormat event) {
         if (event.getPlayer() != null && VampirismConfig.SERVER.factionColorInChat.get()) {
-            FactionPlayerHandler.getOpt(event.getPlayer()).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty()).ifPresent(fp -> {
-                IFaction f = fp.getDisguisedAs();
-                if (f != null) {
-                    event.setDisplayname(f.getChatColor() + event.getDisplayname() + TextFormatting.RESET);
-                    if (fp instanceof IVampirePlayer && !fp.isDisguised() && ((IVampirePlayer) fp).isVampireLord()) {
-                        event.setDisplayname(TextFormatting.RED + "[" + UtilLib.translate("text.vampirism.lord") + "] " + TextFormatting.RESET + event.getDisplayname());
+            FactionPlayerHandler.getOpt(event.getPlayer()).ifPresent(fph -> {
+                fph.getCurrentFactionPlayer().ifPresent(fp -> {
+                    IFaction<?> f = fp.getDisguisedAs();
+                    if (f != null) {
+                        if (fph.getLordLevel() > 0 && VampirismConfig.SERVER.lordPrefixInChat.get()) {
+                            event.setDisplayname("[" + fph.getLordTitle() + "] " + event.getDisplayname());
+                        }
+                        event.setDisplayname(f.getChatColor() + event.getDisplayname() + TextFormatting.RESET);
                     }
-                }
-
+                });
             });
         }
     }
