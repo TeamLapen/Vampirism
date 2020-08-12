@@ -22,7 +22,7 @@ public class BiomeCommand extends BasicCommand {
     }
 
     private static int biome(CommandSource commandSource, ServerPlayerEntity asPlayer) {
-        ResourceLocation res = asPlayer.getEntityWorld().getBiome(asPlayer.func_233580_cy_()).getRegistryName();
+        ResourceLocation res = asPlayer.getEntityWorld().getBiome(asPlayer.getPosition()).getRegistryName();
         commandSource.sendFeedback(new StringTextComponent(res.toString()), true);
         return 0;
     }

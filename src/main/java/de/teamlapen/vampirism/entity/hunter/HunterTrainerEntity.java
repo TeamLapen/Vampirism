@@ -84,10 +84,10 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder()
-                .func_233815_a_(SharedMonsterAttributes.MAX_HEALTH, 300)
-                .func_233815_a_(SharedMonsterAttributes.ATTACK_DAMAGE, 19)
-                .func_233815_a_(SharedMonsterAttributes.MOVEMENT_SPEED, 0.17)
-                .func_233815_a_(SharedMonsterAttributes.FOLLOW_RANGE, 5);
+                .createMutableAttribute(SharedMonsterAttributes.MAX_HEALTH, 300)
+                .createMutableAttribute(SharedMonsterAttributes.ATTACK_DAMAGE, 19)
+                .createMutableAttribute(SharedMonsterAttributes.MOVEMENT_SPEED, 0.17)
+                .createMutableAttribute(SharedMonsterAttributes.FOLLOW_RANGE, 5);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
         super.readAdditional(nbt);
         if (nbt.contains("createHome") && (this.shouldCreateHome = nbt.getBoolean("createHome"))) {
             if (this.getHomePosition().equals(BlockPos.ZERO)) {
-                setHomePosAndDistance(this.func_233580_cy_(), 5);
+                setHomePosAndDistance(this.getPosition(), 5);
             }
         }
     }
@@ -120,11 +120,11 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
                         this.trainee = player;
                         this.getNavigator().clearPath();
                     } else {
-                        player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"), Util.field_240973_b_);
+                        player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"), Util.DUMMY_UUID);
                     }
 
                 } else {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_trainer.trainer_level_wrong"), Util.field_240973_b_);
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_trainer.trainer_level_wrong"), Util.DUMMY_UUID);
                 }
 
             }

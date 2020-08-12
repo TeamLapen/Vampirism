@@ -46,7 +46,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
                 }
             }
 
-            entity.getEntityWorld().playEvent(2002, entity.func_233580_cy_(), PotionUtils.getPotionColor(Potions.MUNDANE));
+            entity.getEntityWorld().playEvent(2002, entity.getPosition(), PotionUtils.getPotionColor(Potions.MUNDANE));
         }
 
     }

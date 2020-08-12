@@ -161,25 +161,25 @@ public class ModEntities {
     }
 
     static void registerEntityTypeAttributes() {
-        GlobalEntityTypeAttributes.put(advanced_hunter, AdvancedHunterEntity.getAttributeBuilder().func_233813_a_());
-        GlobalEntityTypeAttributes.put(advanced_hunter_imob, AdvancedHunterEntity.getAttributeBuilder().func_233813_a_());
-        GlobalEntityTypeAttributes.put(advanced_vampire, AdvancedVampireEntity.getAttributeBuilder().func_233813_a_());
-        GlobalEntityTypeAttributes.put(advanced_vampire_imob, AdvancedVampireEntity.getAttributeBuilder().func_233813_a_());
-        GlobalEntityTypeAttributes.put(blinding_bat, BatEntity.func_234175_m_().func_233813_a_());
-        GlobalEntityTypeAttributes.put(converted_creature, BasicVampireEntity.getAttributeBuilder().func_233813_a_());
-        GlobalEntityTypeAttributes.put(converted_creature_imob, BasicVampireEntity.getAttributeBuilder().func_233813_a_());
-        GlobalEntityTypeAttributes.put(converted_horse, ConvertedHorseEntity.getAttributeBuilder().func_233813_a_());
-        GlobalEntityTypeAttributes.put(converted_sheep, BasicVampireEntity.getAttributeBuilder().func_233813_a_());
-        GlobalEntityTypeAttributes.put(dummy_creature, BasicVampireEntity.getAttributeBuilder().func_233813_a_());
-        GlobalEntityTypeAttributes.put(hunter, BasicHunterEntity.getAttributeBuilder().func_233813_a_());
-        GlobalEntityTypeAttributes.put(hunter_imob, BasicHunterEntity.getAttributeBuilder().func_233813_a_());
-        GlobalEntityTypeAttributes.put(hunter_trainer, HunterTrainerEntity.getAttributeBuilder().func_233813_a_());
-        GlobalEntityTypeAttributes.put(hunter_trainer_dummy, HunterTrainerEntity.getAttributeBuilder().func_233813_a_());
-        GlobalEntityTypeAttributes.put(vampire, BasicVampireEntity.getAttributeBuilder().func_233813_a_());
-        GlobalEntityTypeAttributes.put(vampire_imob, BasicVampireEntity.getAttributeBuilder().func_233813_a_());
-        GlobalEntityTypeAttributes.put(vampire_baron, VampireBaronEntity.getAttributeBuilder().func_233813_a_());
-        GlobalEntityTypeAttributes.put(villager_angry, AggressiveVillagerEntity.getAttributeBuilder().func_233813_a_());
-        GlobalEntityTypeAttributes.put(villager_converted, ConvertedVillagerEntity.getAttributeBuilder().func_233813_a_());
+        GlobalEntityTypeAttributes.put(advanced_hunter, AdvancedHunterEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(advanced_hunter_imob, AdvancedHunterEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(advanced_vampire, AdvancedVampireEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(advanced_vampire_imob, AdvancedVampireEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(blinding_bat, BatEntity.func_234175_m_().create());
+        GlobalEntityTypeAttributes.put(converted_creature, BasicVampireEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(converted_creature_imob, BasicVampireEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(converted_horse, ConvertedHorseEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(converted_sheep, BasicVampireEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(dummy_creature, BasicVampireEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(hunter, BasicHunterEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(hunter_imob, BasicHunterEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(hunter_trainer, HunterTrainerEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(hunter_trainer_dummy, HunterTrainerEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(vampire, BasicVampireEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(vampire_imob, BasicVampireEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(vampire_baron, VampireBaronEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(villager_angry, AggressiveVillagerEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(villager_converted, ConvertedVillagerEntity.getAttributeBuilder().create());
     }
 
     private static Biome[] getZombieBiomes() {

@@ -18,8 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BiomeTopBlockProcessor extends StructureProcessor {
-    public static final Codec<BiomeTopBlockProcessor> CODEC = BlockState.field_235877_b_.fieldOf("replace_block").xmap(BiomeTopBlockProcessor::new, (entry) -> entry.replaceBlock).codec();
-    private static final Map<Block,Block> streetBlocks = new HashMap<Block, Block>(){{
+    public static final Codec<BiomeTopBlockProcessor> CODEC = BlockState.BLOCKSTATE_CODEC.fieldOf("replace_block").xmap(BiomeTopBlockProcessor::new, (entry) -> entry.replaceBlock).codec();
+    private static final Map<Block, Block> streetBlocks = new HashMap<Block, Block>() {{
         put(Blocks.SAND, Blocks.SMOOTH_SANDSTONE);
         put(Blocks.GRASS_BLOCK, Blocks.GRASS_PATH);
     }};

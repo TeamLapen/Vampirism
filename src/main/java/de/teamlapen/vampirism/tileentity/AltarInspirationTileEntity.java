@@ -85,7 +85,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         FluidStack old = tank.getFluid();
-        this.func_230337_a_(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
+        this.read(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
         if (!old.isFluidStackIdentical(tank.getFluid())) {
             updateModelData(true);
         }
@@ -129,8 +129,8 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
             switch (ritualTicksLeft) {
                 case 5:
                     LightningBoltEntity lightningboltentity = EntityType.LIGHTNING_BOLT.create(this.world);
-                    lightningboltentity.func_233576_c_(Vector3d.func_237492_c_(pos));
-                    lightningboltentity.func_233623_a_(true);
+                    lightningboltentity.moveForced(Vector3d.copyCenteredHorizontally(pos));
+                    lightningboltentity.setEffectOnly(true);
                     this.world.addEntity(lightningboltentity);
                     ritualPlayer.setHealth(ritualPlayer.getMaxHealth());
                     break;

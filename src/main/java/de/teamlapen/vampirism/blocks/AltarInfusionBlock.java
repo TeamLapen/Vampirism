@@ -112,7 +112,7 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
         //If non empty hand or missing tileInventory -> open GUI
         if (!heldItem.isEmpty() || result == AltarInfusionTileEntity.Result.INVMISSING) {
             if (te.getCurrentPhase() != AltarInfusionTileEntity.PHASE.NOT_RUNNING) {
-                player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"), Util.field_240973_b_);
+                player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"), Util.DUMMY_UUID);
                 return ActionResultType.SUCCESS;
             }
             player.openContainer(te);

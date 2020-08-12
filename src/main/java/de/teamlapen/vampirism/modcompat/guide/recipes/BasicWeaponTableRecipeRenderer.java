@@ -40,8 +40,8 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
 
         CRAFTING_GRID.draw(stack, guiLeft + 62, guiTop + 43);
 
-        baseScreen.func_238471_a_(stack, fontRenderer, UtilLib.translate(ModBlocks.weapon_table.getTranslationKey()), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
-        baseScreen.func_238471_a_(stack, fontRenderer, "§o" + getRecipeName() + "§r", guiLeft + baseScreen.xSize / 2, guiTop + 14 + fontRenderer.FONT_HEIGHT, 0);
+        baseScreen.drawCenteredString(stack, fontRenderer, UtilLib.translate(ModBlocks.weapon_table.getTranslationKey()), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
+        baseScreen.drawCenteredString(stack, fontRenderer, "§o" + getRecipeName() + "§r", guiLeft + baseScreen.xSize / 2, guiTop + 14 + fontRenderer.FONT_HEIGHT, 0);
 
         int outputX = guiLeft + 152;
         int outputY = guiTop + 72;

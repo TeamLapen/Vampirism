@@ -56,9 +56,9 @@ public class DummyHunterTrainerEntity extends VampirismEntity implements ICaptur
         if (!flag && this.isAlive() && !player.isSneaking()) {
             if (!this.world.isRemote) {
                 if (Helper.isHunter(player)) {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_disabled_hunter"), Util.field_240973_b_);
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_disabled_hunter"), Util.DUMMY_UUID);
                 } else {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_disabled"), Util.field_240973_b_);
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_disabled"), Util.DUMMY_UUID);
                 }
             }
             return ActionResultType.SUCCESS;

@@ -73,7 +73,7 @@ public class ModRecipes {
         Integer c = liquidColors.get(stack);
         if (c != null) return c;
         for (Map.Entry<ITag<Item>, Integer> entry : liquidColorsTags.entrySet()) {
-            if (entry.getKey().func_230235_a_(stack)) {
+            if (entry.getKey().contains(stack)) {
                 return entry.getValue();
             }
         }

@@ -31,7 +31,6 @@ public class ModCommands {
                     LiteralArgumentBuilder.<CommandSource>literal(s)
                             .then(BindActionCommand.register())
                             .then(ChangelogCommand.register())
-                            .then(CheckForVampireBiomeCommand.register())
                             .then(CurrentDimensionCommand.register())
                             .then(EyeCommand.register())
                             .then(FangCommand.register())

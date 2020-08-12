@@ -17,7 +17,7 @@ public class VampireForestBiome extends VampireBiome {
     private static final SurfaceBuilderConfig vampire_surface = new SurfaceBuilderConfig(ModBlocks.cursed_earth.getDefaultState(), ModBlocks.cursed_earth.getDefaultState(), ModBlocks.cursed_earth.getDefaultState());
 
     public VampireForestBiome() {
-        super(regName, new Builder().surfaceBuilder(SurfaceBuilder.DEFAULT, vampire_surface).category(Category.FOREST).depth(0.1F).scale(0.025F).func_235097_a_((new BiomeAmbience.Builder()).func_235246_b_/*waterColor*/(0xEE2505).func_235248_c_/*waterfogColor*/(0xEE2505).func_235239_a_(0xAA5555).func_235243_a_(MoodSoundAmbience.field_235027_b_).func_235238_a_()).precipitation(RainType.NONE).parent(null).downfall(0).temperature(0.3f));
+        super(regName, new Builder().surfaceBuilder(SurfaceBuilder.DEFAULT, vampire_surface).category(Category.FOREST).depth(0.1F).scale(0.025F).func_235097_a_((new BiomeAmbience.Builder()).setWaterColor(0xEE2505).setWaterFogColor(0xEE2505).setFogColor(0xAA5555).setMoodSound(MoodSoundAmbience.field_235027_b_).build()).precipitation(RainType.NONE).parent(null).downfall(0).temperature(0.3f));
 
         VampirismBiomeFeatures.addVampireTrees(this);
         VampirismBiomeFeatures.addVampirismFlowers(this);

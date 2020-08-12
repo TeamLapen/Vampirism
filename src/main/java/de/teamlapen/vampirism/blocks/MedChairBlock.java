@@ -91,7 +91,7 @@ public class MedChairBlock extends VampirismBlock {
                     used = true;
                 } else if (faction != null) {
                     if (!world.isRemote) {
-                        player.sendMessage(new TranslationTextComponent("text.vampirism.med_chair_other_faction", faction.getName()), Util.field_240973_b_);
+                        player.sendMessage(new TranslationTextComponent("text.vampirism.med_chair_other_faction", faction.getName()), Util.DUMMY_UUID);
                     }
 
                 }
@@ -187,13 +187,13 @@ public class MedChairBlock extends VampirismBlock {
         }
 
         @Override
-        public String func_176610_l() {
+        public String getString() {
             return name;
         }
 
         @Override
         public String toString() {
-            return func_176610_l();
+            return getString();
         }
 
 

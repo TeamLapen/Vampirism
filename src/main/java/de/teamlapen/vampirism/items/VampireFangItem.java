@@ -40,7 +40,7 @@ public class VampireFangItem extends VampirismItem {
                     if (Helper.isVampire(playerIn)) {
                         playerIn.sendStatusMessage(new TranslationTextComponent("text.vampirism.already_vampire"), true);
                     } else {
-                        playerIn.sendStatusMessage(new TranslationTextComponent("text.vampirism.immune_to").func_230529_a_(new TranslationTextComponent(ModEffects.sanguinare.getName())), true);
+                        playerIn.sendStatusMessage(new TranslationTextComponent("text.vampirism.immune_to").append(new TranslationTextComponent(ModEffects.sanguinare.getName())), true);
                     }
                 }
                 stack.shrink(1);

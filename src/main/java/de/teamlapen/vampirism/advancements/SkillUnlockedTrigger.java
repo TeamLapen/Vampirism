@@ -44,7 +44,7 @@ public class SkillUnlockedTrigger extends AbstractCriterionTrigger<SkillUnlocked
     }
 
     @Override
-    public Instance func_230307_a_(JsonObject json, ConditionArrayParser parser) {
+    public Instance deserialize(JsonObject json, ConditionArrayParser parser) {
         return new Instance(new ResourceLocation(JSONUtils.getString(json, "skill")));
     }
 
@@ -53,12 +53,12 @@ public class SkillUnlockedTrigger extends AbstractCriterionTrigger<SkillUnlocked
         private final ResourceLocation skillId;
 
         Instance(@Nonnull ISkill skill) {
-            super(ID, EntityPredicate.AndPredicate.field_234582_a_);
+            super(ID, EntityPredicate.AndPredicate.ANY_AND);
             this.skillId = skill.getRegistryName();
         }
 
         Instance(@Nonnull ResourceLocation skillId) {
-            super(ID, EntityPredicate.AndPredicate.field_234582_a_);
+            super(ID, EntityPredicate.AndPredicate.ANY_AND);
             this.skillId = skillId;
         }
 
@@ -67,8 +67,8 @@ public class SkillUnlockedTrigger extends AbstractCriterionTrigger<SkillUnlocked
         }
 
         @Override
-        public JsonObject func_230240_a_(ConditionArraySerializer serializer) {
-            JsonObject jsonObject = super.func_230240_a_(serializer);
+        public JsonObject serialize(ConditionArraySerializer serializer) {
+            JsonObject jsonObject = super.serialize(serializer);
             jsonObject.addProperty("skill", skillId.toString());
             return jsonObject;
         }

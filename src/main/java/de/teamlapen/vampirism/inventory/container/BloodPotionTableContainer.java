@@ -89,7 +89,7 @@ public class BloodPotionTableContainer extends InventoryContainer {
     }
 
     private static Ingredient getSpecialIngredient(ITag<Item> tag, Item... items) {
-        List<Item> d = tag.func_230236_b_()/*getAllElements*/;
+        List<Item> d = tag.getAllElements();
         ItemStack[] stacks = new ItemStack[d.size() + items.length];
         for (int i = 0; i < items.length; i++) {
             stacks[i] = new ItemStack(items[i]);
@@ -209,7 +209,7 @@ public class BloodPotionTableContainer extends InventoryContainer {
      */
     private boolean areRequirementsMet() {
         ItemStack garlic = inventory.getStackInSlot(2);
-        if (garlic.isEmpty() || !ModTags.Items.GARLIC.func_230235_a_/*contains*/(garlic.getItem())) return false;
+        if (garlic.isEmpty() || !ModTags.Items.GARLIC.contains(garlic.getItem())) return false;
         boolean bottle = false;
         ItemStack bottle1 = inventory.getStackInSlot(0);
         ItemStack bottle2 = inventory.getStackInSlot(1);

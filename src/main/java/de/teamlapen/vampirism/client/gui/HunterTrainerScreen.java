@@ -35,50 +35,50 @@ public class HunterTrainerScreen extends ContainerScreen<HunterTrainerContainer>
     }
 
     @Override
-    public void func_230430_a_(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.func_230446_a_(stack);
-        super.func_230430_a_(stack, mouseX, mouseY, partialTicks);
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(stack);
+        super.render(stack, mouseX, mouseY, partialTicks);
         this.func_230459_a_(stack, mouseX, mouseY);
 
     }
 
     @Override
-    public void func_231023_e_() {
-        super.func_231023_e_();
-        if (container.hasChanged() || this.field_230706_i_.player.getRNG().nextInt(40) == 6) {
-            buttonLevelup.field_230693_o_ = container.canLevelup();
+    public void tick() {
+        super.tick();
+        if (container.hasChanged() || this.minecraft.player.getRNG().nextInt(40) == 6) {
+            buttonLevelup.active = container.canLevelup();
         }
 
     }
 
     @Override
-    public void func_231160_c_() {
-        super.func_231160_c_();
-        int i = (this.field_230708_k_ - this.xSize) / 2;
-        int j = (this.field_230709_l_ - this.ySize) / 2;
+    public void init() {
+        super.init();
+        int i = (this.width - this.xSize) / 2;
+        int j = (this.height - this.ySize) / 2;
         ITextComponent name = new TranslationTextComponent("text.vampirism.level_up");
-        this.func_230480_a_(this.buttonLevelup = new Button(i + 120, j + 24, this.field_230712_o_.func_238414_a_(name) + 5, 20, name, (context) -> {
+        this.addButton(this.buttonLevelup = new Button(i + 120, j + 24, this.font.func_238414_a_(name) + 5, 20, name, (context) -> {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TRAINERLEVELUP, ""));
             PlayerEntity player = Minecraft.getInstance().player;
             UtilLib.spawnParticles(player.getEntityWorld(), ParticleTypes.ENCHANT, player.getPosX(), player.getPosY(), player.getPosZ(), 1, 1, 1, 100, 1);
             player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_HARP, 4.0F, (1.0F + (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F) * 0.7F);
-            this.func_231175_as__();
+            this.closeScreen();
         }));
-        this.buttonLevelup.field_230693_o_ = false;
+        this.buttonLevelup.active = false;
     }
 
     @Override
-    protected void func_230450_a_(MatrixStack stack, float var1, int var2, int var3) {
+    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float var1, int var2, int var3) {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.field_230706_i_.getTextureManager().bindTexture(altarGuiTextures);
-        int k = (this.field_230708_k_ - this.xSize) / 2;
-        int l = (this.field_230709_l_ - this.ySize) / 2;
-        this.func_238474_b_(stack, k, l, 0, 0, this.xSize, this.ySize);
+        this.minecraft.getTextureManager().bindTexture(altarGuiTextures);
+        int k = (this.width - this.xSize) / 2;
+        int l = (this.height - this.ySize) / 2;
+        this.blit(stack, k, l, 0, 0, this.xSize, this.ySize);
     }
 
     @Override
-    protected void func_230451_b_(MatrixStack stack, int par1, int par2) {
-        super.func_230451_b_(stack, par1, par2);
+    protected void drawGuiContainerForegroundLayer(MatrixStack stack, int par1, int par2) {
+        super.drawGuiContainerForegroundLayer(stack, par1, par2);
 
         ITextComponent text = null;
         if (!container.getMissingItems().isEmpty()) {
@@ -86,6 +86,6 @@ public class HunterTrainerScreen extends ContainerScreen<HunterTrainerContainer>
             ITextComponent item = missing.getItem() instanceof HunterIntelItem ? ((HunterIntelItem) missing.getItem()).getCustomName() : new TranslationTextComponent(missing.getTranslationKey());
             text = new TranslationTextComponent("text.vampirism.hunter_trainer.ritual_missing_items", missing.getCount(), item);
         }
-        if (text != null) this.field_230712_o_.func_238418_a_(text, 8, 50, this.xSize - 10, 0x000000);
+        if (text != null) this.font.func_238418_a_(text, 8, 50, this.xSize - 10, 0x000000);
     }
 }

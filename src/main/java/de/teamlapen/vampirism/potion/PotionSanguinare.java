@@ -44,7 +44,7 @@ public class PotionSanguinare extends VampirismPotion {
 
     public PotionSanguinare(String name, EffectType effectType, int potionColor) {
         super(name, effectType, potionColor);
-        addAttributesModifier(Attributes.field_233823_f_, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, AttributeModifier.Operation.ADDITION);
+        addAttributesModifier(Attributes.ATTACK_DAMAGE, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, AttributeModifier.Operation.ADDITION);
     }
 
     @Override
@@ -80,8 +80,8 @@ public class PotionSanguinare extends VampirismPotion {
     @Override
     public void renderInventoryEffect(EffectInstance effect, DisplayEffectsScreen<?> gui, MatrixStack mStack, int x, int y, float z) {
         String s = UtilLib.translate(effect.getPotion().getName());
-        gui.field_230712_o_
-                .func_238405_a_/*drawStringWithShadow*/
+        gui.font
+                .drawStringWithShadow/*drawStringWithShadow*/
                 (mStack, s, (float) (x + 10 + 18), (float) (y + 6), 16777215);
     }
 }

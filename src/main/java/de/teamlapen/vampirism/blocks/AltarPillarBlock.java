@@ -122,12 +122,12 @@ public class AltarPillarBlock extends VampirismBlock {
         }
 
         @Override
-        public String func_176610_l() {
+        public String getString() {
             return name;
         }
 
         public String getName() {
-            return func_176610_l();
+            return getString();
         }
 
 

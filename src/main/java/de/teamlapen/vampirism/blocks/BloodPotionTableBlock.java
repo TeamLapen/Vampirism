@@ -59,7 +59,7 @@ public class BloodPotionTableBlock extends VampirismBlock {
                 NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new BloodPotionTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, pos)), new TranslationTextComponent("container.crafting")), pos);
 
             } else {
-                player.sendMessage(new TranslationTextComponent("text.vampirism.blood_potion_table.cannot_use"), Util.field_240973_b_);
+                player.sendMessage(new TranslationTextComponent("text.vampirism.blood_potion_table.cannot_use"), Util.DUMMY_UUID);
             }
         }
 

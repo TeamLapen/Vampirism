@@ -92,13 +92,13 @@ public class SundamageRegistry implements ISundamageRegistry {
         List<? extends String> negative = VampirismConfig.SERVER.sundamageDimensionsOverrideNegative.get();
         for (String s : negative) {
             ResourceLocation id = new ResourceLocation(s); //Should be safe because config validates values?
-            RegistryKey<World> key = RegistryKey.func_240903_a_(Registry.field_239699_ae_, id);
+            RegistryKey<World> key = RegistryKey.func_240903_a_(Registry.WORLD_KEY, id);
             sundamageConfiguredDims.put(key, false);
         }
         List<? extends String> positive = VampirismConfig.SERVER.sundamageDimensionsOverridePositive.get();
         for (String s : positive) {
             ResourceLocation id = new ResourceLocation(s); //Should be safe because config validates values?
-            RegistryKey<World> key = RegistryKey.func_240903_a_(Registry.field_239699_ae_, id);
+            RegistryKey<World> key = RegistryKey.func_240903_a_(Registry.WORLD_KEY, id);
             sundamageConfiguredDims.put(key, true);
         }
 

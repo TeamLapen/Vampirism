@@ -53,11 +53,11 @@ public class PureBloodItem extends VampirismItem {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("item.vampirism.pure_blood.purity").func_230529_a_(new StringTextComponent(": " + (level + 1 + "/" + COUNT))).func_240699_a_(TextFormatting.RED));
+        tooltip.add(new TranslationTextComponent("item.vampirism.pure_blood.purity").append(new StringTextComponent(": " + (level + 1 + "/" + COUNT))).mergeStyle(TextFormatting.RED));
     }
 
     public ITextComponent getCustomName() {
-        return new TranslationTextComponent(this.getDefaultTranslationKey()).func_230529_a_(new StringTextComponent(" " + (level + 1)));
+        return new TranslationTextComponent(this.getDefaultTranslationKey()).append(new StringTextComponent(" " + (level + 1)));
     }
 
 }

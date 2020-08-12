@@ -108,7 +108,7 @@ public class VampirismVillagerEntity extends VillagerEntity {
     }
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return VillagerEntity.func_234551_eU_().func_233814_a_(SharedMonsterAttributes.ATTACK_DAMAGE);
+        return VillagerEntity.registerAttributes().createMutableAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
     }
 
     @Override

@@ -139,12 +139,12 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
         }
 
         @Override
-        public String func_176610_l() {
+        public String getString() {
             return name;
         }
 
         public String getName() {
-            return this.func_176610_l();
+            return this.getString();
         }
     }
 }

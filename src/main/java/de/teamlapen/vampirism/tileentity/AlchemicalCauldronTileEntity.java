@@ -72,10 +72,10 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
                 } else if (ownerID.equals(player.getUniqueID())) {
                     return true;
                 } else {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.alchemical_cauldron.other", getOwnerName()), Util.field_240973_b_);
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.alchemical_cauldron.other", getOwnerName()), Util.DUMMY_UUID);
                 }
             } else {
-                player.sendMessage(new TranslationTextComponent("text.vampirism.alchemical_cauldron.cannot_use", getOwnerName()), Util.field_240973_b_);
+                player.sendMessage(new TranslationTextComponent("text.vampirism.alchemical_cauldron.cannot_use", getOwnerName()), Util.DUMMY_UUID);
             }
         }
         return false;
@@ -130,10 +130,10 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
     }
 
     @Override
-    public void func_230337_a_(BlockState state, CompoundNBT compound) {
+    public void read(BlockState state, CompoundNBT compound) {
         ownerID = compound.hasUniqueId("owner") ? compound.getUniqueId("owner") : null;
         ownerName = compound.contains("owner_name") ? compound.getString("owner_name") : null;
-        super.func_230337_a_(state, compound);
+        super.read(state, compound);
     }
 
     @Override

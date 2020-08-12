@@ -69,8 +69,8 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
     }
 
     @Override
-    public void func_230337_a_(BlockState state, CompoundNBT tagCompound) {
-        super.func_230337_a_(state, tagCompound);
+    public void read(BlockState state, CompoundNBT tagCompound) {
+        super.read(state, tagCompound);
         cooldownPull = tagCompound.getInt("cooldown_pull");
         cooldownProcess = tagCompound.getInt("cooldown_process");
     }

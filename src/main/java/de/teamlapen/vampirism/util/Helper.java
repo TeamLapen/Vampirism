@@ -111,7 +111,7 @@ public class Helper {
 
     @Nonnull
     public static EnumStrength getGarlicStrength(Entity e, IWorld world) {
-        return getGarlicStrengthAt(world, e.func_233580_cy_());
+        return getGarlicStrengthAt(world, e.getPosition());
     }
 
     @Nonnull
@@ -169,7 +169,7 @@ public class Helper {
     public static boolean isEntityInVampireBiome(Entity e) {
         if (e == null) return false;
         try {
-            return ModBiomes.vampire_forest.getRegistryName().equals(e.getEntityWorld().getBiome(e.func_233580_cy_()).getRegistryName());
+            return ModBiomes.vampire_forest.getRegistryName().equals(e.getEntityWorld().getBiome(e.getPosition()).getRegistryName());
         } catch (NullPointerException e1) {
             //http://openeye.openmods.info/crashes/8cef4d710e41adf9be8362e57ad70d28
             LOGGER.error("Nullpointer when checking biome. This is strange and should not happen", e1);

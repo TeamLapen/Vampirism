@@ -34,7 +34,7 @@ public class HunterActionTrigger extends AbstractCriterionTrigger<HunterActionTr
 
     @Nonnull
     @Override
-    public Instance func_230307_a_(JsonObject json, ConditionArrayParser parser) {
+    public Instance deserialize(JsonObject json, ConditionArrayParser parser) {
         Action action = Action.NONE;
         if (json.has("action")) {
             String name = json.get("action").getAsString();
@@ -66,7 +66,7 @@ public class HunterActionTrigger extends AbstractCriterionTrigger<HunterActionTr
         private final Action action;
 
         Instance(@Nonnull Action action) {
-            super(ID, EntityPredicate.AndPredicate.field_234582_a_);
+            super(ID, EntityPredicate.AndPredicate.ANY_AND);
             this.action = action;
         }
 
@@ -76,8 +76,8 @@ public class HunterActionTrigger extends AbstractCriterionTrigger<HunterActionTr
 
         @Nonnull
         @Override
-        public JsonObject func_230240_a_(ConditionArraySerializer serializer) {
-            JsonObject json = super.func_230240_a_(serializer);
+        public JsonObject serialize(ConditionArraySerializer serializer) {
+            JsonObject json = super.serialize(serializer);
             json.addProperty("action", action.name());
             return json;
         }

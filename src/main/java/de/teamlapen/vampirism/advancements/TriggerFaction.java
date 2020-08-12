@@ -35,7 +35,7 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
 
     @Nonnull
     @Override
-    public Instance func_230307_a_(JsonObject json, ConditionArrayParser parser) {
+    public Instance deserialize(JsonObject json, ConditionArrayParser parser) {
         IPlayableFaction<?> faction = null;
         if (json.has("faction")) {
             ResourceLocation id = new ResourceLocation(json.get("faction").getAsString());
@@ -72,7 +72,7 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
         private final int level;
 
         Instance(@Nullable IPlayableFaction<?> faction, int level) {
-            super(ID, EntityPredicate.AndPredicate.field_234582_a_); //TODO check what AndPredicate does
+            super(ID, EntityPredicate.AndPredicate.ANY_AND); //TODO check what AndPredicate does
             this.faction = faction;
             this.level = level;
         }
@@ -86,8 +86,8 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
 
         @Nonnull
         @Override
-        public JsonObject func_230240_a_(ConditionArraySerializer serializer) {
-            JsonObject json = super.func_230240_a_(serializer);
+        public JsonObject serialize(ConditionArraySerializer serializer) {
+            JsonObject json = super.serialize(serializer);
             json.addProperty("faction", faction == null ? "null" : faction.getID().toString());
             json.addProperty("level", level);
             return json;

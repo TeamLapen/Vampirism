@@ -5,7 +5,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.gen.feature.template.*;
+import net.minecraft.world.gen.feature.template.AlwaysTrueTest;
+import net.minecraft.world.gen.feature.template.PosRuleTest;
+import net.minecraft.world.gen.feature.template.RuleEntry;
+import net.minecraft.world.gen.feature.template.RuleTest;
 
 import java.util.Optional;
 import java.util.Random;
@@ -15,13 +18,13 @@ public class RandomBlockState extends RuleEntry {
     public static final Codec<RandomBlockState> CODEC = RecordCodecBuilder.create((instance) -> {
         return instance.group(RuleTest.field_237127_c_.fieldOf("input_predicate").forGetter((getter) -> {
             return getter.inputPredicate;
-        }), RuleTest.field_237127_c_.fieldOf("location_predicate").forGetter( entry -> {
+        }), RuleTest.field_237127_c_.fieldOf("location_predicate").forGetter(entry -> {
             return entry.locationPredicate;
         }), PosRuleTest.field_237102_c_.fieldOf("position_predicate").forGetter(entry -> {
             return entry.field_237109_d_;
-        }), BlockState.field_235877_b_.fieldOf("output_state_1").forGetter(entry -> {
+        }), BlockState.BLOCKSTATE_CODEC.fieldOf("output_state_1").forGetter(entry -> {
             return entry.outputState;
-        }), BlockState.field_235877_b_.fieldOf("output_state_2").forGetter(entry -> {
+        }), BlockState.BLOCKSTATE_CODEC.fieldOf("output_state_2").forGetter(entry -> {
             return entry.outputState2;
         }), CompoundNBT.field_240597_a_.optionalFieldOf("output_nbt_1").forGetter(entry -> {
             return Optional.ofNullable(entry.outputNbt);

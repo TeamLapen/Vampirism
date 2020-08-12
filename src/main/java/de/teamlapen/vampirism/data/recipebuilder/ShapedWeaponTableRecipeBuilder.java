@@ -105,7 +105,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         this.validate(id);
         this.advancementBuilder
                 .withParentId(new ResourceLocation("recipes/root"))
-                .withCriterion("has_the_recipe", RecipeUnlockedTrigger.func_235675_a_(id))
+                .withCriterion("has_the_recipe", RecipeUnlockedTrigger.create(id))
                 .withRewards(net.minecraft.advancements.AdvancementRewards.Builder.recipe(id))
                 .withRequirementsStrategy(IRequirementsStrategy.OR);
         consumer.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, this.pattern, this.key, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getGroup().getPath() + "/" + id.getPath()), this.lava, this.skills != null ? this.skills : new ISkill[]{}, this.level, this.extraNbt));

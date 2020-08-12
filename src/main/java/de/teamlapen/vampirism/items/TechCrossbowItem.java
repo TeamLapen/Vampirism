@@ -96,12 +96,12 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         int arrows = getArrowsLeft(stack);
         if (arrows == -1) {
-            tooltip.add(new TranslationTextComponent(Enchantments.INFINITY.getName()).func_240699_a_(TextFormatting.DARK_GRAY));
+            tooltip.add(new TranslationTextComponent(Enchantments.INFINITY.getName()).mergeStyle(TextFormatting.DARK_GRAY));
         } else if (arrows == 0) {
-            tooltip.add(new TranslationTextComponent("text.vampirism.crossbow.not_loaded").func_240699_a_(TextFormatting.DARK_GRAY));
+            tooltip.add(new TranslationTextComponent("text.vampirism.crossbow.not_loaded").mergeStyle(TextFormatting.DARK_GRAY));
 
         } else {
-            tooltip.add(new TranslationTextComponent("text.vampirism.crossbow.loaded_arrow_count", arrows).func_240699_a_(TextFormatting.DARK_GRAY));
+            tooltip.add(new TranslationTextComponent("text.vampirism.crossbow.loaded_arrow_count", arrows).mergeStyle(TextFormatting.DARK_GRAY));
         }
     }
 

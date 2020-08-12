@@ -262,7 +262,7 @@ public class ModPlayerEventHandler {
                 if (f != null) {
                     ITextComponent name = UtilLib.addFormatting(event.getDisplayname(), f.getChatColor());
                     if (fp instanceof IVampirePlayer && !fp.isDisguised() && ((IVampirePlayer) fp).isVampireLord()) {
-                        name = new StringTextComponent("[" + UtilLib.translate("text.vampirism.lord") + "] ").func_240699_a_(TextFormatting.RED).func_230529_a_(name);
+                        name = new StringTextComponent("[" + UtilLib.translate("text.vampirism.lord") + "] ").mergeStyle(TextFormatting.RED).append(name);
                     }
                     event.setDisplayname(name);
                 }

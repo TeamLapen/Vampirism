@@ -36,17 +36,17 @@ public class BloodPotionTableScreen extends ContainerScreen<BloodPotionTableCont
     }
 
     @Override
-    public void func_230430_a_(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.func_230446_a_(stack);
-        super.func_230430_a_(stack, mouseX, mouseY, partialTicks);
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(stack);
+        super.render(stack, mouseX, mouseY, partialTicks);
         this.func_230459_a_(stack, mouseX, mouseY);
 
     }
 
     @Override
-    public void func_231023_e_() { //tick
-        super.func_231023_e_();
-        this.craftBtn.field_230693_o_ = container.canCurrentlyStartCrafting();
+    public void tick() { //tick
+        super.tick();
+        this.craftBtn.active = container.canCurrentlyStartCrafting();
         if (container.getCraftingPercentage() == 0 || container.getCraftingPercentage() == 1) {
             stopSound();
         } else {
@@ -55,33 +55,33 @@ public class BloodPotionTableScreen extends ContainerScreen<BloodPotionTableCont
     }
 
     @Override
-    public void func_231160_c_() {
-        super.func_231160_c_();
-        this.func_230480_a_(this.craftBtn = new Button(this.field_230708_k_ / 2 - 77, this.field_230709_l_ / 2 - 78, this.field_230712_o_.getStringWidth(UtilLib.translate("gui.vampirism.blood_potion_table.create")) + 5, 20, new TranslationTextComponent("gui.vampirism.blood_potion_table.create"), (context) -> handleClicked()));
-        craftBtn.field_230693_o_ = false;
+    public void init() {
+        super.init();
+        this.addButton(this.craftBtn = new Button(this.width / 2 - 77, this.height / 2 - 78, this.font.getStringWidth(UtilLib.translate("gui.vampirism.blood_potion_table.create")) + 5, 20, new TranslationTextComponent("gui.vampirism.blood_potion_table.create"), (context) -> handleClicked()));
+        craftBtn.active = false;
     }
 
     @Override
-    public void func_231175_as__() {
-        super.func_231175_as__();
+    public void closeScreen() {
+        super.closeScreen();
         stopSound();
     }
 
     @Override
-    protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        int i = (this.field_230708_k_ - this.xSize) / 2;
-        int j = (this.field_230709_l_ - this.ySize) / 2;
-        this.field_230706_i_.getTextureManager().bindTexture(TABLE_GUI_TEXTURES);
-        this.func_238474_b_(stack, i, j, 0, 0, this.xSize, this.ySize);
+        int i = (this.width - this.xSize) / 2;
+        int j = (this.height - this.ySize) / 2;
+        this.minecraft.getTextureManager().bindTexture(TABLE_GUI_TEXTURES);
+        this.blit(stack, i, j, 0, 0, this.xSize, this.ySize);
 
 
         if (container.getCraftingPercentage() > 0) {
             int j1 = (int) (28.0F * container.getCraftingPercentage());
 
             if (j1 > 0) {
-                this.func_238474_b_(stack, i + 145, j + 23, 176, 0, 9, j1);
+                this.blit(stack, i + 145, j + 23, 176, 0, 9, j1);
 
             }
 
@@ -90,16 +90,16 @@ public class BloodPotionTableScreen extends ContainerScreen<BloodPotionTableCont
     }
 
     @Override
-    protected void func_230451_b_(MatrixStack stack, int mouseX, int mouseY) {
-        //super.func_230451_b_(stack, mouseX, mouseY);
+    protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
+        //super.drawGuiContainerForegroundLayer(stack, mouseX, mouseY);
         List<ITextComponent> hints = container.getLocalizedCraftingHint();
         if (hints != null) {
-            int i = (this.field_230708_k_ - this.xSize) / 2;
-            int j = (this.field_230709_l_ - this.ySize) / 2;
+            int i = (this.width - this.xSize) / 2;
+            int j = (this.height - this.ySize) / 2;
             for (ITextComponent hint : hints) {
-                for (ITextProperties t : this.field_230712_o_.func_238425_b_(hint, 92)) {
-                    this.field_230712_o_.func_238422_b_(stack, t, i + 5, j + 28, Color.WHITE.getRGB());
-                    j += this.field_230712_o_.FONT_HEIGHT;
+                for (ITextProperties t : this.font.func_238425_b_(hint, 92)) {
+                    this.font.func_238422_b_(stack, t, i + 5, j + 28, Color.WHITE.getRGB());
+                    j += this.font.FONT_HEIGHT;
                 }
             }
         }
@@ -113,14 +113,14 @@ public class BloodPotionTableScreen extends ContainerScreen<BloodPotionTableCont
         if (sound == null) {
             container.getWorldPosCallable().consume(((world, pos) -> {
                 sound = new SimpleSound(ModSounds.boiling, SoundCategory.BLOCKS, 1, 1, pos);
-                this.field_230706_i_.getSoundHandler().play(sound);
+                this.minecraft.getSoundHandler().play(sound);
             }));
         }
     }
 
     private void stopSound() {
         if (sound != null) {
-            this.field_230706_i_.getSoundHandler().stop(sound);
+            this.minecraft.getSoundHandler().stop(sound);
             sound = null;
         }
     }

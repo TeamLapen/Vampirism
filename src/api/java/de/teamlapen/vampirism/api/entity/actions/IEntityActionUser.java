@@ -12,9 +12,9 @@ import java.util.List;
 public interface IEntityActionUser extends IAdjustableLevel, IFactionEntity {
 
     static <T extends LivingEntity & IEntityActionUser> void applyAttributes(T entity) {
-        entity.getAttribute(Attributes.field_233818_a_/*MAX_HEALTH*/).func_233769_c_(entity.getEntityClass().getHealthModifier()); /*Apply modifier and add to uuid map?*/
-        entity.getAttribute(Attributes.field_233823_f_/*ATTACK_DAMAGE*/).func_233769_c_(entity.getEntityClass().getDamageModifier());
-        entity.getAttribute(Attributes.field_233821_d_/*MOVEMENT_SPEED*/).func_233769_c_(entity.getEntityClass().getSpeedModifier());
+        entity.getAttribute(Attributes.MAX_HEALTH).applyPersistentModifier(entity.getEntityClass().getHealthModifier());
+        entity.getAttribute(Attributes.ATTACK_DAMAGE).applyPersistentModifier(entity.getEntityClass().getDamageModifier());
+        entity.getAttribute(Attributes.MOVEMENT_SPEED).applyPersistentModifier(entity.getEntityClass().getSpeedModifier());
     }
 
     /**

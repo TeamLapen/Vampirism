@@ -24,12 +24,12 @@ public class BloodGrinderScreen extends ContainerScreen<BloodGrinderContainer> {
     }
 
     @Override
-    protected void func_230450_a_(MatrixStack stack, float var1, int var2, int var3) {
+    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float var1, int var2, int var3) {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.field_230706_i_.getTextureManager().bindTexture(background);
-        int k = (this.field_230708_k_ - this.xSize) / 2;
-        int l = (this.field_230709_l_ - this.ySize) / 2;
-        this.func_238474_b_(stack, k, l, 0, 0, this.xSize, this.ySize);
+        this.minecraft.getTextureManager().bindTexture(background);
+        int k = (this.width - this.xSize) / 2;
+        int l = (this.height - this.ySize) / 2;
+        this.blit(stack, k, l, 0, 0, this.xSize, this.ySize);
     }
 
 

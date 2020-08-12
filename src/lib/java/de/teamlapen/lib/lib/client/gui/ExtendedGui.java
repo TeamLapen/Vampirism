@@ -19,7 +19,7 @@ public class ExtendedGui extends AbstractGui {
     /**
      * Draws a rectangle with a horizontal gradient between the specified colors (ARGB format). Args : x1, y1, x2, y2,
      * topColor, bottomColor
-     * Similar to func_238468_a_, but with gradient on the horizontal axis
+     * Similar to fillGradient, but with gradient on the horizontal axis
      */
     protected void fillGradient2(MatrixStack stack, int left, int top, int right, int bottom, int startColor, int endColor) {
         Matrix4f matrix = stack.getLast().getMatrix();
@@ -39,10 +39,10 @@ public class ExtendedGui extends AbstractGui {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder worldrenderer = tessellator.getBuffer();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldrenderer.pos(matrix, right, top, this.func_230927_p_()).color(f1, f2, f3, f).endVertex(); //Get blit offset
-        worldrenderer.pos(matrix, left, top, this.func_230927_p_()).color(f5, f6, f7, f4).endVertex();
-        worldrenderer.pos(matrix, left, bottom, this.func_230927_p_()).color(f5, f6, f7, f4).endVertex();
-        worldrenderer.pos(matrix, right, bottom, this.func_230927_p_()).color(f1, f2, f3, f).endVertex();
+        worldrenderer.pos(matrix, right, top, this.getBlitOffset()).color(f1, f2, f3, f).endVertex();
+        worldrenderer.pos(matrix, left, top, this.getBlitOffset()).color(f5, f6, f7, f4).endVertex();
+        worldrenderer.pos(matrix, left, bottom, this.getBlitOffset()).color(f5, f6, f7, f4).endVertex();
+        worldrenderer.pos(matrix, right, bottom, this.getBlitOffset()).color(f1, f2, f3, f).endVertex();
         tessellator.draw();
         GlStateManager.shadeModel(7424);
         GlStateManager.disableBlend();

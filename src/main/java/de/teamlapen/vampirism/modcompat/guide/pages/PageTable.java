@@ -49,7 +49,7 @@ public class PageTable extends Page {
         int y = guiTop + 12;
         int x = guiLeft + 39;
         if (headline != null) {
-            fontRendererObj.func_238421_b_(stack, "§l" + headline, x, y, 0);
+            fontRendererObj.drawString(stack, "§l" + headline, x, y, 0);
             y += fontRendererObj.FONT_HEIGHT;
         }
         drawLine(stack, x, y + fontRendererObj.FONT_HEIGHT, x + (guiBase.xSize * 3F / 5F), y + fontRendererObj.FONT_HEIGHT, guiBase.publicZLevel);
@@ -59,7 +59,7 @@ public class PageTable extends Page {
                 int mw = (int) (width[i] * charWidth);
                 int aw = fontRendererObj.getStringWidth(l[i]);
                 int dw = (mw - aw) / 2;
-                fontRendererObj.func_238421_b_(stack, l[i], x + dw, y, 0);
+                fontRendererObj.drawString(stack, l[i], x + dw, y, 0);
                 x += mw;
             }
             y += fontRendererObj.FONT_HEIGHT;

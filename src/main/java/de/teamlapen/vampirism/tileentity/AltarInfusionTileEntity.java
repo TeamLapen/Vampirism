@@ -199,8 +199,8 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
     }
 
     @Override
-    public void func_230337_a_(BlockState state, CompoundNBT tagCompound) {
-        super.func_230337_a_(state, tagCompound);
+    public void read(BlockState state, CompoundNBT tagCompound) {
+        super.read(state, tagCompound);
         int tick = tagCompound.getInt("tick");
         //This is used on both client and server side and has to be prepared for the world not being available yet
         if (tick > 0 && player == null && tagCompound.hasUniqueId("playerUUID")) {
@@ -216,7 +216,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.func_230337_a_(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
+        this.read(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
     }
 
     /**
@@ -350,7 +350,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
             if (messagePlayer) {
                 ITextComponent item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : new TranslationTextComponent(missing.getTranslationKey());
                 ITextComponent main = new TranslationTextComponent("text.vampirism.altar_infusion.ritual_missing_items", missing.getCount(), item);
-                player.sendMessage(main, Util.field_240973_b_);
+                player.sendMessage(main, Util.DUMMY_UUID);
             }
 
             return false;

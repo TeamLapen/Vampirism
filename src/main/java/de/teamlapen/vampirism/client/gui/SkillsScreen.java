@@ -71,18 +71,18 @@ public class SkillsScreen extends Screen {
 
     public SkillsScreen() {
         super(new TranslationTextComponent("screen.vampirism.skills"));
-        this.field_230708_k_ = display_width;
-        this.field_230709_l_ = display_height;
+        this.width = display_width;
+        this.height = display_height;
     }
 
     @Override
-    public void func_230430_a_(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         if (!display) {
-            super.func_230430_a_(stack, mouseX, mouseY, partialTicks);
+            super.render(stack, mouseX, mouseY, partialTicks);
             return;
         }
 
-        this.func_230446_a_(stack);
+        this.renderBackground(stack);
 
 
         this.drawSkills(stack, mouseX, mouseY, partialTicks);
@@ -94,14 +94,14 @@ public class SkillsScreen extends Screen {
     }
 
     @Override
-    public void func_231023_e_() {
-        if (!this.field_230706_i_.player.isAlive()) {
-            this.field_230706_i_.player.closeScreen();
+    public void tick() {
+        if (!this.minecraft.player.isAlive()) {
+            this.minecraft.player.closeScreen();
         }
     }
 
     @Override
-    public boolean func_231043_a_(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
+    public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
         zoomOut += p_mouseScrolled_5_ > 0 ? -0.25 : 0.25;
         zoomOut = MathHelper.clamp(this.zoomOut, 1.0F, 2.0F);
         checkDisplay();
@@ -109,8 +109,8 @@ public class SkillsScreen extends Screen {
     }
 
     @Override
-    public boolean func_231044_a_(double mouseX, double mouseY, int mouseButton) { //mouseClicked
-        boolean retur = super.func_231044_a_(mouseX, mouseY, mouseButton);
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        boolean retur = super.mouseClicked(mouseX, mouseY, mouseButton);
         if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT && selected != null) {
             if (skillHandler.canSkillBeEnabled(selected) == ISkillHandler.Result.OK) {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, selected.getRegistryName().toString()));
@@ -125,7 +125,7 @@ public class SkillsScreen extends Screen {
     }
 
     @Override
-    public boolean func_231045_a_(double p_mouseDragged_1_, double p_mouseDragged_3_, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
+    public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
         displayY -= p_mouseDragged_8_;
         displayX -= p_mouseDragged_6_;
         checkDisplay();
@@ -133,20 +133,20 @@ public class SkillsScreen extends Screen {
     }
 
     @Override
-    public boolean func_231046_a_/*keyPressed*/(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
+    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
         if (p_keyPressed_1_ == 256 || ModKeys.getKeyBinding(ModKeys.KEY.SKILL).getKey().getKeyCode() == p_keyPressed_1_) {
-            this.field_230706_i_.displayGuiScreen(null);
-            this.field_230706_i_.setGameFocused(true);
+            this.minecraft.displayGuiScreen(null);
+            this.minecraft.setGameFocused(true);
             return true;
         } else {
-            super.func_231046_a_(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+            super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
         }
         return false;
     }
 
     @Override
-    public void func_231160_c_() {
-        Optional<? extends IFactionPlayer> fOpt = FactionPlayerHandler.get(field_230706_i_.player).getCurrentFactionPlayer();
+    public void init() {
+        Optional<? extends IFactionPlayer> fOpt = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer();
         fOpt.ifPresent(factionPlayer -> {
             IPlayableFaction faction = factionPlayer.getFaction();
             display = true;
@@ -162,11 +162,11 @@ public class SkillsScreen extends Screen {
             SkillNode root = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(faction.getID());
             addToList(skillNodes, root);
         });
-        this.func_230480_a_(new Button(this.field_230708_k_ / 2 + 24, this.field_230709_l_ / 2 + 74, 80, 20, new TranslationTextComponent("gui.done"), (context) -> {
-            this.field_230706_i_.displayGuiScreen(null);
+        this.addButton(new Button(this.width / 2 + 24, this.height / 2 + 74, 80, 20, new TranslationTextComponent("gui.done"), (context) -> {
+            this.minecraft.displayGuiScreen(null);
         }));
         if (display) {
-            Button resetSkills = this.func_230480_a_(new Button((this.field_230708_k_ - display_width) / 2 + 24 + 20, this.field_230709_l_ / 2 + 74, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
+            Button resetSkills = this.addButton(new Button((this.width - display_width) / 2 + 24 + 20, this.height / 2 + 74, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
                 boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
                 ConfirmScreen resetGui = new ConfirmScreen((cxt) -> {
                     if (cxt) {
@@ -178,32 +178,32 @@ public class SkillsScreen extends Screen {
                 }, new TranslationTextComponent("gui.vampirism.reset_skills.title"), new TranslationTextComponent("gui.vampirism.reset_skills." + (test ? "desc_test" : "desc")));
                 Minecraft.getInstance().displayGuiScreen(resetGui);
             }));
-            this.func_230480_a_(new ImageButton((this.field_230708_k_ - display_width) / 2 + 10, this.field_230709_l_ / 2 + 74, 20, 20, 0, 0, 20, ACTIONBUTTON, 20, 40, (context) -> {
+            this.addButton(new ImageButton((this.width - display_width) / 2 + 10, this.height / 2 + 74, 20, 20, 0, 0, 20, ACTIONBUTTON, 20, 40, (context) -> {
 
-                IPlayableFaction faction = FactionPlayerHandler.get(field_230706_i_.player).getCurrentFaction();
+                IPlayableFaction faction = FactionPlayerHandler.get(minecraft.player).getCurrentFaction();
                 Minecraft.getInstance().displayGuiScreen(new SelectActionScreen(faction.getColor(), true));
             }));
 
             if (fOpt.map(IFactionPlayer::getLevel).orElse(0) < 2) {
-                resetSkills.field_230693_o_ = false;
+                resetSkills.active = false;
             }
         }
 
     }
 
     @Override
-    public boolean func_231177_au__() {
+    public boolean isPauseScreen() {
         return false;
     }
 
     protected void drawTitle(MatrixStack stack) {
         ITextComponent title = new TranslationTextComponent("text.vampirism.skills.gui_title");
-        int x = (this.field_230708_k_ - display_width) / 2;
-        int y = (this.field_230709_l_ - display_height) / 2;
-        this.field_230712_o_.func_238422_b_(stack, title, x + 15, y + 5, 0xFFFFFFFF);
+        int x = (this.width - display_width) / 2;
+        int y = (this.height - display_height) / 2;
+        this.font.func_238422_b_(stack, title, x + 15, y + 5, 0xFFFFFFFF);
         ITextComponent points = new TranslationTextComponent("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
-        x = (this.field_230708_k_ + display_width) / 2 - this.field_230712_o_.func_238414_a_(points);
-        this.field_230712_o_.func_238422_b_(stack, points, x - 15, y + 5, 0xFFFFFFFF);
+        x = (this.width + display_width) / 2 - this.font.func_238414_a_(points);
+        this.font.func_238422_b_(stack, points, x - 15, y + 5, 0xFFFFFFFF);
     }
 
     /**
@@ -246,18 +246,18 @@ public class SkillsScreen extends Screen {
         if (offsetY >= area_max_y) {
             offsetY = area_max_y - 1;
         }
-        int k = (this.field_230708_k_ - this.display_width) / 2;
-        int l = (this.field_230709_l_ - this.display_height) / 2;
+        int k = (this.width - this.display_width) / 2;
+        int l = (this.height - this.display_height) / 2;
         int i1 = k + 16;
         int j1 = l + 17;
 
         //Limit render area
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        double scale = field_230706_i_.getMainWindow().getGuiScaleFactor();
+        double scale = minecraft.getMainWindow().getGuiScaleFactor();
         GL11.glScissor((int) (k * scale), (int) (l * scale),
                 (int) (display_width * scale), (int) (display_height * scale));
 
-        this.func_230926_e_(0);
+        this.setBlitOffset(0);
         RenderSystem.depthFunc(518);
         stack.push();
         stack.translate(i1, j1, -200);
@@ -280,7 +280,7 @@ public class SkillsScreen extends Screen {
             RenderSystem.color4f(f2, f2, f2, 1.0F);
 
             for (int x = 0; (float) x * f1 - (float) i2 < 224.0F; ++x) {
-                random.setSeed(this.field_230706_i_.getSession().getPlayerID().hashCode() + k1 + x + (l1 + y) * 16);
+                random.setSeed(this.minecraft.getSession().getPlayerID().hashCode() + k1 + x + (l1 + y) * 16);
                 int j4 = random.nextInt(1 + l1 + y) + (l1 + y) / 2;
                 TextureAtlasSprite textureatlassprite = this.getTexture(Blocks.SAND);
 
@@ -306,15 +306,15 @@ public class SkillsScreen extends Screen {
                     textureatlassprite = this.getTexture(block);
                 }
 
-                this.field_230706_i_.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-                func_238470_a_(stack, x * 16 - i2, y * 16 - j2, this.func_230927_p_(), 16, 16, textureatlassprite);
+                this.minecraft.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+                blit(stack, x * 16 - i2, y * 16 - j2, this.getBlitOffset(), 16, 16, textureatlassprite);
             }
         }
 
         //Draw lines/arrows
         RenderSystem.enableDepthTest();
         RenderSystem.depthFunc(515);
-        this.field_230706_i_.getTextureManager().bindTexture(BACKGROUND);
+        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
 
         for (SkillNode node : skillNodes) {
             if (node.getParent() != null) {
@@ -331,17 +331,17 @@ public class SkillsScreen extends Screen {
                 } else if (unlockstate == 1) {
                     color = 0xff009900;
                 }
-                this.func_238465_a_(stack, xs, xp, yp, color);//hLine
-                this.func_238473_b_(stack, xs, ys - 11, yp, color);//vLine
+                this.hLine(stack, xs, xp, yp, color);
+                this.vLine(stack, xs, ys - 11, yp, color);
                 if (ys > yp) {
                     //Currently always like this. The other option are here in case this changes at some point
-                    this.func_238474_b_(stack, xs - 5, ys - 11 - 7, 96, 234, 11, 7);
+                    this.blit(stack, xs - 5, ys - 11 - 7, 96, 234, 11, 7);
                 } else if (ys < yp) {
-                    this.func_238474_b_(stack, xs - 5, ys + 11, 96, 241, 11, 7);
+                    this.blit(stack, xs - 5, ys + 11, 96, 241, 11, 7);
                 } else if (xs > xp) {
-                    this.func_238474_b_(stack, xs - 11 - 7, ys - 5, 114, 234, 7, 11);
+                    this.blit(stack, xs - 11 - 7, ys - 5, 114, 234, 7, 11);
                 } else if (xs < xp) {
-                    this.func_238474_b_(stack, xs + 11, ys - 5, 107, 234, 7, 11);
+                    this.blit(stack, xs + 11, ys - 5, 107, 234, 7, 11);
                 }
             }
         }
@@ -363,7 +363,7 @@ public class SkillsScreen extends Screen {
                 int y = elements[0].getRenderRow() * skill_width - offsetY;
                 if (maxX >= -skill_width && y >= -skill_width && (float) minX <= 224.0F * this.zoomOut && (float) y <= 155.0F * this.zoomOut) {
                     RenderSystem.enableBlend();
-                    this.func_238468_a_(stack, minX - 1, y - 1, maxX + 23, y + 23, 0xFF9B9DA1, 0xFF9B9DA1);//fillGradient
+                    this.fillGradient(stack, minX - 1, y - 1, maxX + 23, y + 23, 0xFF9B9DA1, 0xFF9B9DA1);
                     RenderSystem.disableBlend();
                 }
 
@@ -390,18 +390,18 @@ public class SkillsScreen extends Screen {
                         RenderSystem.color4f(f8, f8, f8, 1.0F);
                     }
 
-                    this.field_230706_i_.getTextureManager().bindTexture(BACKGROUND);
+                    this.minecraft.getTextureManager().bindTexture(BACKGROUND);
 
                     RenderSystem.enableBlend();
-                    this.func_238474_b_(stack, x - 2, y - 2, 0, 202, 26, 26);
+                    this.blit(stack, x - 2, y - 2, 0, 202, 26, 26);
                     RenderSystem.disableBlend();
 
-                    this.field_230706_i_.getTextureManager().bindTexture(getIconLoc(skill));
+                    this.minecraft.getTextureManager().bindTexture(getIconLoc(skill));
 
                     RenderSystem.disableLighting();
                     //GlStateManager.enableCull();
                     RenderSystem.enableBlend();
-                    UtilLib.drawTexturedModalRect(stack.getLast().getMatrix(), this.func_230927_p_(), x + 3, y + 3, 0, 0, 16, 16, 16, 16);
+                    UtilLib.drawTexturedModalRect(stack.getLast().getMatrix(), this.getBlitOffset(), x + 3, y + 3, 0, 0, 16, 16, 16, 16);
                     //GlStateManager.blendFunc(770, 771);
                     RenderSystem.disableLighting();
 
@@ -413,7 +413,7 @@ public class SkillsScreen extends Screen {
                     }
 
                     if (i + 1 < elements.length) {
-                        this.func_238471_a_(stack, this.field_230712_o_, "OR", x + skill_width + skill_width / 2, y + 1 + (skill_width - this.field_230712_o_.FONT_HEIGHT) / 2, 0xFFFFFF);
+                        this.drawCenteredString(stack, this.font, "OR", x + skill_width + skill_width / 2, y + 1 + (skill_width - this.font.FONT_HEIGHT) / 2, 0xFFFFFF);
                     }
                 }
             }
@@ -428,13 +428,13 @@ public class SkillsScreen extends Screen {
         //Draw "window" and buttons
         Color color = skillHandler.getPlayer().getFaction().getColor();
         RenderSystem.color4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1.0F);
-        this.field_230706_i_.getTextureManager().bindTexture(BACKGROUND);
-        this.func_238474_b_(stack, k, l, 0, 0, this.display_width, this.display_height);
-        this.func_230926_e_(0);
+        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
+        this.blit(stack, k, l, 0, 0, this.display_width, this.display_height);
+        this.setBlitOffset(0);
         RenderSystem.depthFunc(515);
         RenderSystem.disableDepthTest();
         RenderSystem.enableTexture();
-        super.func_230430_a_(stack, mouseX, mouseY, partialTicks);
+        super.render(stack, mouseX, mouseY, partialTicks);
 
         //Draw information for selected skill
         selected = newselected;
@@ -448,29 +448,29 @@ public class SkillsScreen extends Screen {
             ITextComponent desc = selected.getDescription();
             ISkillHandler.Result result = skillHandler.canSkillBeEnabled(selected);
 
-            int width_name = Math.max(this.field_230712_o_.func_238414_a_(name), 110);
+            int width_name = Math.max(this.font.func_238414_a_(name), 110);
 
 
-            List<ITextProperties> descLines = desc == null ? Collections.emptyList() : this.field_230712_o_.func_238425_b_(desc, width_name);
-            int height_desc = descLines.size() * this.field_230712_o_.FONT_HEIGHT;
+            List<ITextProperties> descLines = desc == null ? Collections.emptyList() : this.font.func_238425_b_(desc, width_name);
+            int height_desc = descLines.size() * this.font.FONT_HEIGHT;
 
             if (result == ISkillHandler.Result.ALREADY_ENABLED || result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
                 height_desc += 12;
             }
-            this.func_238468_a_(stack, m2MouseX - 3, m2MouseY - 3, m2MouseX + width_name + 3, m2MouseY + height_desc + 3 + 12, -1073741824, -1073741824);
+            this.fillGradient(stack, m2MouseX - 3, m2MouseY - 3, m2MouseX + width_name + 3, m2MouseY + height_desc + 3 + 12, -1073741824, -1073741824);
 
-            this.field_230712_o_.func_238407_a_(stack, name, (float) m2MouseX, (float) m2MouseY, 0xff808080);
+            this.font.func_238407_a_(stack, name, (float) m2MouseX, (float) m2MouseY, 0xff808080);
 
             int j = 0;
             for (ITextProperties t : descLines) {
-                this.field_230712_o_.func_238422_b_(stack, t, m2MouseX, m2MouseY + 12 + j, 0xff505050);
-                j += this.field_230712_o_.FONT_HEIGHT;
+                this.font.func_238422_b_(stack, t, m2MouseX, m2MouseY + 12 + j, 0xff505050);
+                j += this.font.FONT_HEIGHT;
             }
 
             if (result == ISkillHandler.Result.ALREADY_ENABLED) {
-                this.field_230712_o_.func_238407_a_(stack, new TranslationTextComponent("text.vampirism.skill.unlocked"), m2MouseX, m2MouseY + height_desc + 3, 0xFFFBAE00);
+                this.font.func_238407_a_(stack, new TranslationTextComponent("text.vampirism.skill.unlocked"), m2MouseX, m2MouseY + height_desc + 3, 0xFFFBAE00);
             } else if (result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
-                this.field_230712_o_.func_238407_a_(stack, new TranslationTextComponent("text.vampirism.skill.unlock_parent_first"), m2MouseX, m2MouseY + height_desc + 3, 0xFFA32228);
+                this.font.func_238407_a_(stack, new TranslationTextComponent("text.vampirism.skill.unlock_parent_first"), m2MouseX, m2MouseY + height_desc + 3, 0xFFA32228);
             }
             stack.pop();
         }
@@ -505,7 +505,7 @@ public class SkillsScreen extends Screen {
     }
 
     private void playSoundEffect(SoundEvent event, float pitch) {
-        field_230706_i_.getSoundHandler().play(SimpleSound.master(event, 1.0F));
+        minecraft.getSoundHandler().play(SimpleSound.master(event, 1.0F));
     }
 
 }

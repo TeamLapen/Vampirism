@@ -116,7 +116,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return VampirismEntity.getAttributeBuilder().func_233815_a_(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+        return VampirismEntity.getAttributeBuilder().createMutableAttribute(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
     @Override
@@ -165,12 +165,12 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
             if (isGettingSundamage(worldIn, true) || isGettingGarlicDamage(worldIn, true) != EnumStrength.NONE)
                 return false;
             if (spawnRestriction.level >= SpawnRestriction.NORMAL.level) {
-                if (worldIn.getBrightness(func_233580_cy_()) > 0.5 && rand.nextInt(5) != 0) {
+                if (worldIn.getBrightness(getPosition()) > 0.5 && rand.nextInt(5) != 0) {
                     return false;
                 }
-                if (this.world.isBlockPresent(func_233580_cy_()) && worldIn instanceof ServerWorld) {
-                    BlockPos nearestVillage = ((ServerWorld) worldIn).func_241117_a_(Structure.field_236381_q_, func_233580_cy_(), 1, false);
-                    if (nearestVillage != null && nearestVillage.withinDistance(func_233580_cy_(), 50)) {
+                if (this.world.isBlockPresent(getPosition()) && worldIn instanceof ServerWorld) {
+                    BlockPos nearestVillage = ((ServerWorld) worldIn).func_241117_a_(Structure.field_236381_q_, getPosition(), 1, false);
+                    if (nearestVillage != null && nearestVillage.withinDistance(getPosition(), 50)) {
                         if (getRNG().nextInt(60) != 0) {
                             return false;
                         }
@@ -280,9 +280,9 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
      * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#cursed_earth}
      */
     private boolean getCanSpawnHereRestricted(IWorld iWorld) {
-        boolean vampireBiome = ModBiomes.vampire_forest.equals(iWorld.getBiome(this.func_233580_cy_()));
+        boolean vampireBiome = ModBiomes.vampire_forest.equals(iWorld.getBiome(this.getPosition()));
         if (!vampireBiome) return isLowLightLevel(iWorld);
-        BlockState iblockstate = iWorld.getBlockState((this.func_233580_cy_()).down());
+        BlockState iblockstate = iWorld.getBlockState((this.getPosition()).down());
         return ModBlocks.cursed_earth.equals(iblockstate.getBlock());
     }
 

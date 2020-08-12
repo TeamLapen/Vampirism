@@ -233,8 +233,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void func_230337_a_(BlockState state, CompoundNBT compound) {
-        super.func_230337_a_(state, compound);
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
         this.isDisabled = compound.getBoolean("isDisabled");
         this.isComplete = compound.getBoolean("isComplete");
         this.isInsideVillage = compound.getBoolean("isInsideVillage");
@@ -269,7 +269,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
 
     @Override
     public void handleUpdateTag(BlockState state, CompoundNBT tag) {
-        this.func_230337_a_(state, tag);
+        this.read(state, tag);
     }
 
     private void abortCapture(boolean notifyPlayer) {

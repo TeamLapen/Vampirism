@@ -33,7 +33,7 @@ public class InjectionItem extends VampirismItem {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
         if (type == TYPE.SANGUINARE) {
-            playerIn.sendStatusMessage(new StringTextComponent("Please use a ").func_230529_a_(new TranslationTextComponent(ModBlocks.med_chair.getTranslationKey())), true);
+            playerIn.sendStatusMessage(new StringTextComponent("Please use a ").append(new TranslationTextComponent(ModBlocks.med_chair.getTranslationKey())), true);
         }
         return new ActionResult<>(ActionResultType.PASS, stack);
     }
@@ -50,12 +50,12 @@ public class InjectionItem extends VampirismItem {
 
         @Override
         @Nonnull
-        public String func_176610_l() {
+        public String getString() {
             return name;
         }
 
         public String getName() {
-            return this.func_176610_l();
+            return this.getString();
         }
     }
 }

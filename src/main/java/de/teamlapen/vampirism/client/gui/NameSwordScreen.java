@@ -48,61 +48,61 @@ public class NameSwordScreen extends Screen {
     }
 
     @Override
-    public void func_230430_a_(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.func_230446_a_(stack);
-        this.func_238472_a_(stack, this.field_230712_o_, this.text1, this.field_230708_k_ / 2, 70, 16777215);
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(stack);
+        this.drawCenteredString(stack, this.font, this.text1, this.width / 2, 70, 16777215);
         int i = 90;
         for (ITextProperties s : this.listLines) {
-            this.func_238472_a_/*drawCenteredString*/(stack, this.field_230712_o_, s, this.field_230708_k_ / 2, i, 16777215);
-            i += this.field_230712_o_.FONT_HEIGHT;
+            this.drawCenteredString(stack, this.font, s, this.width / 2, i, 16777215);
+            i += this.font.FONT_HEIGHT;
         }
-        this.nameField.func_230430_a_(stack, mouseX, mouseY, partialTicks);
+        this.nameField.render(stack, mouseX, mouseY, partialTicks);
 
 
-        super.func_230430_a_(stack, mouseX, mouseY, partialTicks);
+        super.render(stack, mouseX, mouseY, partialTicks);
         RenderSystem.disableLighting();
         RenderSystem.disableBlend();
     }
 
     @Override
-    public void func_231023_e_() {
+    public void tick() {
         nameField.tick();
     }
 
     @Override
-    public void func_231152_a_(Minecraft p_resize_1_, int p_resize_2_, int p_resize_3_) { //resize
+    public void resize(Minecraft p_resize_1_, int p_resize_2_, int p_resize_3_) {
         String text = nameField.getText();
-        super.func_231152_a_(p_resize_1_, p_resize_2_, p_resize_3_); //Text gets deleted as this calls init again
+        super.resize(p_resize_1_, p_resize_2_, p_resize_3_); //Text gets deleted as this calls init again
         nameField.setText(text);
     }
 
     @Override
-    public void func_231160_c_() {
-        super.func_231160_c_();
-        this.func_230480_a_(new OptionButton(this.field_230708_k_ / 2 - 155, this.field_230709_l_ / 6 + 96, 150, 20, AbstractOption.AO, this.yes, (context) -> {
+    public void init() {
+        super.init();
+        this.addButton(new OptionButton(this.width / 2 - 155, this.height / 6 + 96, 150, 20, AbstractOption.AO, this.yes, (context) -> {
             if (!StringUtils.isBlank(nameField.getText())) {
                 NameSwordScreen.this.sword.setDisplayName(new StringTextComponent(nameField.getText()));
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, nameField.getText()));
             }
-            this.field_230706_i_.displayGuiScreen(null);
-            this.field_230706_i_.setGameFocused(true);
+            this.minecraft.displayGuiScreen(null);
+            this.minecraft.setGameFocused(true);
         }));
-        this.func_230480_a_(new OptionButton(this.field_230708_k_ / 2 - 155 + 160, this.field_230709_l_ / 6 + 96, 150, 20, AbstractOption.AO, this.no, (context) -> {
+        this.addButton(new OptionButton(this.width / 2 - 155 + 160, this.height / 6 + 96, 150, 20, AbstractOption.AO, this.no, (context) -> {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, VampirismVampireSword.DO_NOT_NAME_STRING));
-            this.field_230706_i_.displayGuiScreen(null);
-            this.field_230706_i_.setGameFocused(true);
+            this.minecraft.displayGuiScreen(null);
+            this.minecraft.setGameFocused(true);
         }));
 
         this.listLines.clear();
-        this.listLines.addAll(this.field_230712_o_.func_238425_b_(this.text2, this.field_230708_k_ - 50));
+        this.listLines.addAll(this.font.func_238425_b_(this.text2, this.width - 50));
 
-        this.nameField = new TextFieldWidget(this.field_230712_o_, this.field_230708_k_ / 2 - 155 + 77, this.field_230709_l_ / 6 + 70, 155, 20, new StringTextComponent("text_sword"));
+        this.nameField = new TextFieldWidget(this.font, this.width / 2 - 155 + 77, this.height / 6 + 70, 155, 20, new StringTextComponent("text_sword"));
         this.nameField.setTextColor(-1);
         this.nameField.setDisabledTextColour(-1);
         this.nameField.setEnableBackgroundDrawing(true);
         this.nameField.setMaxStringLength(35);
         this.nameField.setText(sword_names[new Random().nextInt(sword_names.length)]);
-        this.field_230705_e_.add(nameField);
-        this.func_231035_a_(nameField); //setFocused
+        this.children.add(nameField);
+        this.setFocusedDefault(nameField);
     }
 }

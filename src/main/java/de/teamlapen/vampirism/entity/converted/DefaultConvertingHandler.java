@@ -29,9 +29,9 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
 
         @Override
         public double getConvertedDMG(EntityType<? extends CreatureEntity> entityType) {
-            AttributeModifierMap map = GlobalEntityTypeAttributes.func_233835_a_(entityType);
-            if (map.func_233809_c_(SharedMonsterAttributes.ATTACK_DAMAGE)) {
-                return map.func_233807_b_(SharedMonsterAttributes.ATTACK_DAMAGE) * 1.3;
+            AttributeModifierMap map = GlobalEntityTypeAttributes.getAttributesForEntity(entityType);
+            if (map.hasAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)) {
+                return map.getAttributeBaseValue(SharedMonsterAttributes.ATTACK_DAMAGE) * 1.3;
             } else {
                 return BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG;
             }
@@ -39,20 +39,20 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
 
         @Override
         public double getConvertedKnockbackResistance(EntityType<? extends CreatureEntity> entityType) {
-            AttributeModifierMap map = GlobalEntityTypeAttributes.func_233835_a_(entityType);
-            return map.func_233807_b_(SharedMonsterAttributes.KNOCKBACK_RESISTANCE) * 1.3;
+            AttributeModifierMap map = GlobalEntityTypeAttributes.getAttributesForEntity(entityType);
+            return map.getAttributeBaseValue(SharedMonsterAttributes.KNOCKBACK_RESISTANCE) * 1.3;
         }
 
         @Override
         public double getConvertedMaxHealth(EntityType<? extends CreatureEntity> entityType) {
-            AttributeModifierMap map = GlobalEntityTypeAttributes.func_233835_a_(entityType);
-            return map.func_233807_b_(SharedMonsterAttributes.MAX_HEALTH) * 1.5;
+            AttributeModifierMap map = GlobalEntityTypeAttributes.getAttributesForEntity(entityType);
+            return map.getAttributeBaseValue(SharedMonsterAttributes.MAX_HEALTH) * 1.5;
         }
 
         @Override
         public double getConvertedSpeed(EntityType<? extends CreatureEntity> entityType) {
-            AttributeModifierMap map = GlobalEntityTypeAttributes.func_233835_a_(entityType);
-            return Math.min(map.func_233807_b_(SharedMonsterAttributes.MOVEMENT_SPEED) * 1.2, 2.9D);
+            AttributeModifierMap map = GlobalEntityTypeAttributes.getAttributesForEntity(entityType);
+            return Math.min(map.getAttributeBaseValue(SharedMonsterAttributes.MOVEMENT_SPEED) * 1.2, 2.9D);
         }
     };
 

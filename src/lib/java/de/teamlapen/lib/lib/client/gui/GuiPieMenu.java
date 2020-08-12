@@ -66,17 +66,17 @@ public abstract class GuiPieMenu<T> extends Screen {
 
     public GuiPieMenu(Color backgroundColorIn, ITextComponent title) {
         super(title);
-        this.field_230711_n_ = true; //passEvents
+        this.passEvents = true;
         this.backgroundColor = backgroundColorIn;
         this.elements = new ArrayList<>();
     }
 
     @Override
-    public void func_230430_a_(MatrixStack stack, int mouseX, int mouseY, float partialTicks) { //render
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         // Calculate center and radius of the skill cycle
-        int cX = this.field_230708_k_ / 2;
-        int cY = this.field_230709_l_ / 2;
-        double radius = this.field_230709_l_ / 4d;
+        int cX = this.width / 2;
+        int cY = this.height / 2;
+        double radius = this.height / 4d;
 
         drawBackground(stack, cX, cY);
         // Check if the mouse is in bounds and whether its in the center or not
@@ -102,13 +102,10 @@ public abstract class GuiPieMenu<T> extends Screen {
             // Draw box and, if selected, highlight
             Color col = this.getColor(element);
             RenderSystem.color4f(col.getRed(), col.getGreen(), col.getBlue(), 0.5F);
-            this.field_230706_i_
-                    .getTextureManager().bindTexture(WIDGETS);
-            func_238474_b_
-                    (stack, x - 2, y - 2, 1, 1, 20, 20);
+            this.minecraft.getTextureManager().bindTexture(WIDGETS);
+            blit(stack, x - 2, y - 2, 1, 1, 20, 20);
             if (selected) {
-                func_238474_b_
-                        (stack, x - 3, y - 3, 1, 23, 22, 22);
+                blit(stack, x - 3, y - 3, 1, 23, 22, 22);
             }
             if (selected) {
                 selectedElement = i;
@@ -116,10 +113,8 @@ public abstract class GuiPieMenu<T> extends Screen {
             }
             // Draw Icon
             RenderSystem.color4f(1F, 1F, 1F, 1F);
-            this.field_230706_i_
-                    .getTextureManager().bindTexture(getIconLoc(element));
-            UtilLib.drawTexturedModalRect(stack.getLast().getMatrix(), func_230927_p_
-                    (), x, y, 0, 0, 16, 16, 16, 16);
+            this.minecraft.getTextureManager().bindTexture(getIconLoc(element));
+            UtilLib.drawTexturedModalRect(stack.getLast().getMatrix(), getBlitOffset(), x, y, 0, 0, 16, 16, 16, 16);
 
             this.afterIconDraw(stack, element, x, y);
 
@@ -128,31 +123,27 @@ public abstract class GuiPieMenu<T> extends Screen {
             this.drawUnselectedCenter(stack, cX, cY);
         } else {
             String name = UtilLib.translate(getUnlocalizedName(elements.get(selectedElement)));
-            int tx = cX - field_230706_i_
-                    .fontRenderer.getStringWidth(name) / 2;
-            int ty = this.field_230709_l_
-                    / 7;
-            field_230706_i_
-                    .fontRenderer.func_238405_a_
-                    (stack, name, tx, ty, Color.WHITE.getRGB());
+            int tx = cX - minecraft.fontRenderer.getStringWidth(name) / 2;
+            int ty = this.height / 7;
+            minecraft.fontRenderer.drawStringWithShadow(stack, name, tx, ty, Color.WHITE.getRGB());
         }
-        super.func_230430_a_(stack, mouseX, mouseY, partialTicks);
+        super.render(stack, mouseX, mouseY, partialTicks);
     }
 
     @Override
-    public void func_231023_e_() { //tick
-        super.func_231023_e_();
-        if (this.field_230706_i_
-                != null && this.field_230706_i_
+    public void tick() {
+        super.tick();
+        if (this.minecraft
+                != null && this.minecraft
                 .player != null) {
-            if (!this.field_230706_i_
+            if (!this.minecraft
                     .player.isAlive()) {
-                this.field_230706_i_
+                this.minecraft
                         .player.closeScreen();
             } else {
-                this.field_230706_i_
-                        .player.movementInput.func_225607_a_(this.field_230706_i_
-                        .player.func_228354_I_()); //tick, shouldRenderSneaking
+                this.minecraft
+                        .player.movementInput.tickMovement(this.minecraft
+                        .player.func_228354_I_()); //shouldRenderSneaking
             }
         }
     }
@@ -167,12 +158,12 @@ public abstract class GuiPieMenu<T> extends Screen {
     }
 
     @Override
-    public boolean func_231043_a_(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
+    public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
         return false;
     }
 
     @Override
-    public boolean func_231048_c_(double p_mouseReleased_1_, double p_mouseReleased_3_, int p_mouseReleased_5_) { //mouseReleased
+    public boolean mouseReleased(double p_mouseReleased_1_, double p_mouseReleased_3_, int p_mouseReleased_5_) {
         if (!isKeyBindingStillPressed()) {
             this.selectedAndClose();
             return true;
@@ -181,29 +172,29 @@ public abstract class GuiPieMenu<T> extends Screen {
     }
 
     @Override
-    public void func_231160_c_() {
+    public void init() {
         this.onGuiInit();
         this.elementCount = elements.size();
         radDiff = 2D * Math.PI / elementCount;// gap in rad
-        GLFW.glfwSetInputMode(field_230706_i_.getMainWindow().getHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
+        GLFW.glfwSetInputMode(minecraft.getMainWindow().getHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
         ForgeIngameGui.renderCrosshairs = false;
     }
 
     @Override
-    public void func_231164_f_() { //Removed
-        super.func_231164_f_();
+    public void onClose() {
+        super.onClose();
         GLFW.glfwSetInputMode(Minecraft.getInstance().getMainWindow().getHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
         ForgeIngameGui.renderCrosshairs = true;
     }
 
     @Override
-    public void func_231175_as__() {
-        super.func_231175_as__();
+    public void closeScreen() {
+        super.closeScreen();
         ForgeIngameGui.renderCrosshairs = true;
     }
 
     @Override
-    public boolean func_231177_au__() { //isPauseScreen
+    public boolean isPauseScreen() { //isPauseScreen
         return false;
     }
 
@@ -224,9 +215,9 @@ public abstract class GuiPieMenu<T> extends Screen {
         builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
         RenderSystem.lineWidth(2F);
 
-        builder.pos(stack.getLast().getMatrix(), (float) x1, (float) y1, this.func_230927_p_
+        builder.pos(stack.getLast().getMatrix(), (float) x1, (float) y1, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).endVertex();
-        builder.pos(stack.getLast().getMatrix(), (float) x2, (float) y2, this.func_230927_p_
+        builder.pos(stack.getLast().getMatrix(), (float) x2, (float) y2, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).endVertex();
         Tessellator.getInstance().draw();
         RenderSystem.enableTexture();
@@ -255,7 +246,7 @@ public abstract class GuiPieMenu<T> extends Screen {
     protected abstract KeyBinding getMenuKeyBinding();
 
     protected void selectedAndClose() {
-        func_231175_as__
+        closeScreen
                 ();
         if (selectedElement >= 0) {
             this.onElementSelected(elements.get(selectedElement));
@@ -282,28 +273,28 @@ public abstract class GuiPieMenu<T> extends Screen {
      */
     private void drawBackground(MatrixStack stack, float cX, float cY) {
         // Calculate the scale which has to be applied for the image to fit
-        float scale = (this.field_230709_l_
+        float scale = (this.height
                 / 2F + 16 + 16) / BGS;
         stack.push();
         RenderSystem.enableBlend();
-        stack.translate(cX, cY, this.func_230927_p_());
+        stack.translate(cX, cY, this.getBlitOffset());
         stack.scale(scale, scale, 1);
 
         // Draw the cicle image
-        this.field_230706_i_
+        this.minecraft
                 .getTextureManager().bindTexture(backgroundTex);
         Matrix4f matrix = stack.getLast().getMatrix();
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
         builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
-        builder.pos(matrix, BGS / 2f, BGS / 2f, this.func_230927_p_
+        builder.pos(matrix, BGS / 2f, BGS / 2f, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(1, 1).endVertex();
-        builder.pos(matrix, BGS / 2f, -BGS / 2f, this.func_230927_p_
+        builder.pos(matrix, BGS / 2f, -BGS / 2f, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(1, 0).endVertex();
-        builder.pos(matrix, -BGS / 2f, -BGS / 2f, this.func_230927_p_
+        builder.pos(matrix, -BGS / 2f, -BGS / 2f, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0, 0).endVertex();
-        builder.pos(matrix, -BGS / 2f, BGS / 2f, this.func_230927_p_
+        builder.pos(matrix, -BGS / 2f, BGS / 2f, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0, 1).endVertex();
         tessellator.draw();
 
@@ -333,30 +324,30 @@ public abstract class GuiPieMenu<T> extends Screen {
 
         // Caluculate rotation and scale
         double deg = Math.toDegrees(-rad);
-        float scale = (this.field_230709_l_
+        float scale = (this.height
         ) / 4F / CS;
         stack.push();
         RenderSystem.enableBlend();
         // Move origin to center, scale and rotate
-        stack.translate(cX, cY, this.func_230927_p_
+        stack.translate(cX, cY, this.getBlitOffset
                 ());
         stack.scale(scale, scale, 1);
         stack.rotate(Vector3f.ZP.rotationDegrees((float) deg));
 
         // Draw
         Matrix4f matrix = stack.getLast().getMatrix();
-        this.field_230706_i_
+        this.minecraft
                 .getTextureManager().bindTexture(centerTex);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
         builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
-        builder.pos(matrix, CS / 2f, CS / 2f, this.func_230927_p_
+        builder.pos(matrix, CS / 2f, CS / 2f, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0.5f, 1).endVertex();
-        builder.pos(matrix, CS / 2f, -CS / 2f, this.func_230927_p_
+        builder.pos(matrix, CS / 2f, -CS / 2f, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0.5f, 0).endVertex();
-        builder.pos(matrix, -CS / 2f, -CS / 2f, this.func_230927_p_
+        builder.pos(matrix, -CS / 2f, -CS / 2f, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0, 0).endVertex();
-        builder.pos(matrix, -CS / 2f, CS / 2f, this.func_230927_p_
+        builder.pos(matrix, -CS / 2f, CS / 2f, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0, 1).endVertex();
         tessellator.draw();
 
@@ -367,32 +358,32 @@ public abstract class GuiPieMenu<T> extends Screen {
 
     private void drawUnselectedCenter(MatrixStack stack, double cX, double cY) {
 
-        float scale = (this.field_230709_l_
+        float scale = (this.height
         ) / 4F / CS;
 
         stack.push();
         RenderSystem.enableBlend();
         // Move origin to center, scale and rotate
-        stack.translate(cX, cY, this.func_230927_p_
+        stack.translate(cX, cY, this.getBlitOffset
                 ());
         stack.scale(scale, scale, 1);
 
         // Draw
         Matrix4f matrix = stack.getLast().getMatrix();
 
-        this.field_230706_i_
+        this.minecraft
                 .getTextureManager().bindTexture(centerTex);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
         builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
-        builder.pos(matrix, CS / 2f, CS / 2f, this.func_230927_p_
+        builder.pos(matrix, CS / 2f, CS / 2f, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(1, 1).endVertex();
-        builder.pos(matrix, CS / 2f, -CS / 2f, this.func_230927_p_
+        builder.pos(matrix, CS / 2f, -CS / 2f, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(1, 0).endVertex();
-        builder.pos(matrix, -CS / 2f, -CS / 2f, this.func_230927_p_
+        builder.pos(matrix, -CS / 2f, -CS / 2f, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0.5f, 0).endVertex();
-        builder.pos(matrix, -CS / 2f, CS / 2f, this.func_230927_p_
+        builder.pos(matrix, -CS / 2f, CS / 2f, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0.5f, 1).endVertex();
         tessellator.draw();
 
@@ -408,14 +399,14 @@ public abstract class GuiPieMenu<T> extends Screen {
      * @param y
      */
     private void setAbsoluteMouse(double x, double y) {
-        x = x * this.field_230706_i_
-                .getMainWindow().getFramebufferWidth() / this.field_230708_k_
+        x = x * this.minecraft
+                .getMainWindow().getFramebufferWidth() / this.width
         ;
-        y = -(y + 1 - field_230709_l_
-        ) * this.field_230706_i_
-                .getMainWindow().getFramebufferHeight() / field_230709_l_
+        y = -(y + 1 - height
+        ) * this.minecraft
+                .getMainWindow().getFramebufferHeight() / height
         ;
-        GLFW.glfwSetCursorPos(this.field_230706_i_
+        GLFW.glfwSetCursorPos(this.minecraft
                 .getMainWindow().getHandle(), x, y);
     }
 

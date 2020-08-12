@@ -73,8 +73,8 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("garlic_beacon", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("garlic_beacon_improved", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("holy_water_enhanced", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_speed", false).registerAttributeModifier(Attributes.field_233825_h_/*ATTACK_SPEED*/, "8dd2f8cc-6ae1-4db1-9e14-96b4c74d7bf2", VampirismConfig.BALANCE.hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
-        registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_speed_advanced", true).registerAttributeModifier(Attributes.field_233825_h_/*ATTACK_SPEED*/, "d9311f44-a4ba-4ef4-83f2-9274ae1a827e", VampirismConfig.BALANCE.hsMajorAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_speed", false).registerAttributeModifier(Attributes.ATTACK_SPEED/*ATTACK_SPEED*/, "8dd2f8cc-6ae1-4db1-9e14-96b4c74d7bf2", VampirismConfig.BALANCE.hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_speed_advanced", true).registerAttributeModifier(Attributes.ATTACK_SPEED/*ATTACK_SPEED*/, "d9311f44-a4ba-4ef4-83f2-9274ae1a827e", VampirismConfig.BALANCE.hsMajorAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
         registry.register(new ActionSkill<IHunterPlayer>("hunter_awareness", HunterActions.awareness_hunter, true));
         registry.register(new ActionSkill<IHunterPlayer>("hunter_disguise", HunterActions.disguise_hunter, true));
         registry.register(new VampirismSkill.SimpleHunterSkill("purified_garlic", true));
@@ -82,8 +82,8 @@ public class HunterSkills {
                 .setDescription(() -> {
                     TextComponent desc = new TranslationTextComponent("skill.vampirism.stake1.desc", (int) (VampirismConfig.BALANCE.hsInstantKill1MaxHealth.get() * 100));
                     if (VampirismConfig.BALANCE.hsInstantKill1FromBehind.get()) {
-                        desc.func_230529_a_(new StringTextComponent(" "));
-                        desc.func_230529_a_(new TranslationTextComponent("text.vampirism.from_behind"));
+                        desc.append(new StringTextComponent(" "));
+                        desc.append(new TranslationTextComponent("text.vampirism.from_behind"));
                     }
                     return desc;
                 }));

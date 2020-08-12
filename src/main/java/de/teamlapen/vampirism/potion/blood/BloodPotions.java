@@ -114,9 +114,9 @@ public class BloodPotions {
             if (skillHandler.isSkillEnabled(HunterSkills.blood_potion_good_or_bad)) {
                 if (text instanceof IFormattableTextComponent) {
                     if (effect.getEffect().isBad()) {
-                        text = ((IFormattableTextComponent) text).func_240699_a_(TextFormatting.DARK_RED);
+                        text = ((IFormattableTextComponent) text).mergeStyle(TextFormatting.DARK_RED);
                     } else {
-                        text = ((IFormattableTextComponent) text).func_240699_a_(TextFormatting.DARK_GREEN);
+                        text = ((IFormattableTextComponent) text).mergeStyle(TextFormatting.DARK_GREEN);
                     }
                 }
             }

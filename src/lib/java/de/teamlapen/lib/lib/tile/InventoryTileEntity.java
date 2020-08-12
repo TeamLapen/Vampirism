@@ -83,8 +83,8 @@ public abstract class InventoryTileEntity extends LockableTileEntity implements 
     }
 
     @Override
-    public void func_230337_a_(BlockState state, CompoundNBT tagCompound) {
-        super.func_230337_a_(state, tagCompound);
+    public void read(BlockState state, CompoundNBT tagCompound) {
+        super.read(state, tagCompound);
         inventorySlots.clear();
         ItemStackHelper.loadAllItems(tagCompound, this.inventorySlots);
 

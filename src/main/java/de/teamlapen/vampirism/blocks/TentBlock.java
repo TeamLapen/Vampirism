@@ -80,7 +80,7 @@ public class TentBlock extends VampirismBlock {
                 world.removeBlock(blockpos, false);
             }
 
-            world.func_230546_a_(null, DamageSource.func_233546_a_(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
+            world.createExplosion(null, DamageSource.func_233546_a_(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
             return ActionResultType.SUCCESS;
         } else if (blockState.get(BedBlock.OCCUPIED)) {
             player.sendStatusMessage(new TranslationTextComponent("text.vampirism.tent.occupied"), true);

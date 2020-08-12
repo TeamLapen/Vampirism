@@ -33,25 +33,25 @@ public class HunterTableScreen extends ContainerScreen<HunterTableContainer> {
     }
 
     @Override
-    public void func_230430_a_(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.func_230446_a_(stack);
-        super.func_230430_a_(stack, mouseX, mouseY, partialTicks);
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(stack);
+        super.render(stack, mouseX, mouseY, partialTicks);
         this.func_230459_a_(stack, mouseX, mouseY);
 
     }
 
     @Override
-    protected void func_230450_a_(MatrixStack stack, float var1, int var2, int var3) {
+    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float var1, int var2, int var3) {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.field_230706_i_.getTextureManager().bindTexture(altarGuiTextures);
-        int i = (this.field_230708_k_ - this.xSize) / 2;
-        int j = (this.field_230709_l_ - this.ySize) / 2;
-        this.func_238474_b_(stack, i, j, 0, 0, this.xSize, this.ySize);
+        this.minecraft.getTextureManager().bindTexture(altarGuiTextures);
+        int i = (this.width - this.xSize) / 2;
+        int j = (this.height - this.ySize) / 2;
+        this.blit(stack, i, j, 0, 0, this.xSize, this.ySize);
     }
 
     @Override
-    protected void func_230451_b_(MatrixStack stack, int mouseX, int mouseY) {
-        super.func_230451_b_(stack, mouseX, mouseY);
+    protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
+        super.drawGuiContainerForegroundLayer(stack, mouseX, mouseY);
 
         ITextComponent text = null;
         if (!container.isLevelValid()) {
@@ -61,6 +61,6 @@ public class HunterTableScreen extends ContainerScreen<HunterTableContainer> {
             ITextComponent item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : new TranslationTextComponent(missing.getTranslationKey());
             text = new TranslationTextComponent("text.vampirism.hunter_table.ritual_missing_items", missing.getCount(), item);
         }
-        if (text != null) this.field_230712_o_.func_238418_a_(text, 8, 50, this.xSize - 10, 0x000000);
+        if (text != null) this.font.func_238418_a_(text, 8, 50, this.xSize - 10, 0x000000);
     }
 }

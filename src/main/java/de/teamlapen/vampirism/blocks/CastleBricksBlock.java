@@ -34,7 +34,7 @@ public class CastleBricksBlock extends VampirismBlock {
     @Override
     public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, world, tooltip, advanced);
-        tooltip.add(new TranslationTextComponent("block.vampirism.castle_block" + (variant == EnumVariant.DARK_STONE ? ".no_spawn" : ".vampire_spawn")).func_240699_a_(TextFormatting.ITALIC));
+        tooltip.add(new TranslationTextComponent("block.vampirism.castle_block" + (variant == EnumVariant.DARK_STONE ? ".no_spawn" : ".vampire_spawn")).mergeStyle(TextFormatting.ITALIC));
     }
 
 
@@ -67,12 +67,12 @@ public class CastleBricksBlock extends VampirismBlock {
         }
 
         @Override
-        public String func_176610_l() {
+        public String getString() {
             return this.name;
         }
 
         public String getName() {
-            return this.func_176610_l();
+            return this.getString();
         }
     }
 }

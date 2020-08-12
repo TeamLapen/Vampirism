@@ -137,7 +137,7 @@ public class ModEntityEventHandler {
             if (event.getEntity() instanceof IAdjustableLevel) {
                 IAdjustableLevel entity = (IAdjustableLevel) event.getEntity();
                 if (entity.getLevel() == -1) {
-                    Difficulty d = DifficultyCalculator.findDifficultyForPos(event.getWorld(), event.getEntity().func_233580_cy_(), 30);
+                    Difficulty d = DifficultyCalculator.findDifficultyForPos(event.getWorld(), event.getEntity().getPosition(), 30);
                     int l = entity.suggestLevel(d);
                     if (l > entity.getMaxLevel()) {
                         l = entity.getMaxLevel();

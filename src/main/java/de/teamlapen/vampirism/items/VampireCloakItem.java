@@ -47,7 +47,7 @@ public class VampireCloakItem extends ArmorItem {
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         PlayerEntity playerEntity = VampirismMod.proxy.getClientPlayer();
         if (playerEntity != null && Helper.isHunter(playerEntity)) {
-            tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_hunter").func_240699_a_(TextFormatting.RED));
+            tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_hunter").mergeStyle(TextFormatting.RED));
         }
     }
 
@@ -85,13 +85,13 @@ public class VampireCloakItem extends ArmorItem {
         }
 
         @Override
-        public String func_176610_l() {
+        public String getString() {
             return this.name;
         }
 
 
         public String getName() {
-            return func_176610_l();
+            return getString();
         }
 
 

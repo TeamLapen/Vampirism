@@ -59,7 +59,7 @@ public class ModFeatures {
     }
 
     public static void registerStructureSeparation() {
-        Map<Structure<?>, StructureSeparationSettings> structureSettingsMapOverworld = DimensionSettings.Preset.field_236122_b_.func_236137_b_().func_236108_a_().func_236195_a_(); //TODO 1.16 Maybe check again when world gen/dimension stuff has stabilized in MC/Forge
+        Map<Structure<?>, StructureSeparationSettings> structureSettingsMapOverworld = DimensionSettings.Preset.OVERWORLD.getSettings().getStructures().func_236195_a_(); //TODO 1.16 Maybe check again when world gen/dimension stuff has stabilized in MC/Forge
         structureSettingsMapOverworld.put(hunter_camp, HunterCampStructure.getSettings());
 
         if (VampirismConfig.SERVER.villageModify.get()) {

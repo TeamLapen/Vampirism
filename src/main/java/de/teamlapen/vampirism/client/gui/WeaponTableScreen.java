@@ -37,41 +37,41 @@ public class WeaponTableScreen extends ContainerScreen<WeaponTableContainer> imp
     }
 
     @Override
-    public void func_230430_a_(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        super.func_230430_a_(stack, mouseX, mouseY, partialTicks);
-        this.func_230446_a_(stack);
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        super.render(stack, mouseX, mouseY, partialTicks);
+        this.renderBackground(stack);
         if (this.recipeBookGui.isVisible() && this.widthTooNarrow) {
-            this.func_230450_a_(stack, partialTicks, mouseX, mouseY);
-            this.recipeBookGui.func_230430_a_(stack, mouseX, mouseY, partialTicks);
+            this.drawGuiContainerBackgroundLayer(stack, partialTicks, mouseX, mouseY);
+            this.recipeBookGui.render(stack, mouseX, mouseY, partialTicks);
         } else {
-            this.recipeBookGui.func_230430_a_(stack, mouseX, mouseY, partialTicks);
-            super.func_230430_a_(stack, mouseX, mouseY, partialTicks);
+            this.recipeBookGui.render(stack, mouseX, mouseY, partialTicks);
+            super.render(stack, mouseX, mouseY, partialTicks);
             this.recipeBookGui.func_230477_a_(stack, this.guiLeft, this.guiTop, true, partialTicks);
         }
         this.func_230459_a_(stack, mouseX, mouseY);
         this.recipeBookGui.func_238924_c_(stack, this.guiLeft, this.guiTop, mouseX, mouseY);
-        this.func_212932_b(this.recipeBookGui);
+        this.setListenerDefault(this.recipeBookGui);
     }
 
     @Override
-    public void func_231023_e_() {
-        super.func_231023_e_();
+    public void tick() {
+        super.tick();
         this.recipeBookGui.tick();
     }
 
     @Override
-    public boolean func_231044_a_(double mouseX, double mouseY, int p_mouseClicked_5_) {
-        if (this.recipeBookGui.func_231044_a_(mouseX, mouseY, p_mouseClicked_5_)) {
+    public boolean mouseClicked(double mouseX, double mouseY, int p_mouseClicked_5_) {
+        if (this.recipeBookGui.mouseClicked(mouseX, mouseY, p_mouseClicked_5_)) {
             return true;
         } else {
-            return this.widthTooNarrow && this.recipeBookGui.isVisible() || super.func_231044_a_(mouseX, mouseY, p_mouseClicked_5_);
+            return this.widthTooNarrow && this.recipeBookGui.isVisible() || super.mouseClicked(mouseX, mouseY, p_mouseClicked_5_);
         }
     }
 
     @Override
-    public void func_231164_f_() {
+    public void onClose() {
         this.recipeBookGui.removed();
-        super.func_231164_f_();
+        super.onClose();
     }
 
     @Override
@@ -80,20 +80,20 @@ public class WeaponTableScreen extends ContainerScreen<WeaponTableContainer> imp
     }
 
     @Override
-    protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         int i = this.guiLeft;
-        int j = (this.field_230709_l_ - this.ySize) / 2;
-        this.field_230706_i_.getTextureManager().bindTexture(TABLE_GUI_TEXTURES);
-        this.func_238474_b_(stack, i, j, 0, 0, this.xSize, this.ySize);
+        int j = (this.height - this.ySize) / 2;
+        this.minecraft.getTextureManager().bindTexture(TABLE_GUI_TEXTURES);
+        this.blit(stack, i, j, 0, 0, this.xSize, this.ySize);
         if (container.hasLava()) {
-            this.field_230706_i_.getTextureManager().bindTexture(TABLE_GUI_TEXTURES_LAVA);
-            this.func_238474_b_(stack, i, j, 0, 0, this.xSize, this.ySize);
+            this.minecraft.getTextureManager().bindTexture(TABLE_GUI_TEXTURES_LAVA);
+            this.blit(stack, i, j, 0, 0, this.xSize, this.ySize);
         }
         if (container.isMissingLava()) {
-            this.field_230706_i_.getTextureManager().bindTexture(TABLE_GUI_TEXTURES_MISSING_LAVA);
-            this.func_238474_b_(stack, i, j, 0, 0, this.xSize, this.ySize);
+            this.minecraft.getTextureManager().bindTexture(TABLE_GUI_TEXTURES_MISSING_LAVA);
+            this.blit(stack, i, j, 0, 0, this.xSize, this.ySize);
         }
     }
 
@@ -115,18 +115,18 @@ public class WeaponTableScreen extends ContainerScreen<WeaponTableContainer> imp
     }
 
     @Override
-    protected void func_231160_c_() {
-        super.func_231160_c_();
-        this.widthTooNarrow = this.field_230708_k_ < 379;
-        this.recipeBookGui.init(this.field_230708_k_, this.field_230709_l_, this.field_230706_i_, this.widthTooNarrow, this.container);
-        this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.field_230708_k_, this.xSize - 18);
-        this.field_230705_e_.add(this.recipeBookGui);
+    protected void init() {
+        super.init();
+        this.widthTooNarrow = this.width < 379;
+        this.recipeBookGui.init(this.width, this.height, this.minecraft, this.widthTooNarrow, this.container);
+        this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize - 18);
+        this.children.add(this.recipeBookGui);
         this.setFocusedDefault(this.recipeBookGui);
-        this.func_230480_a_(new ImageButton(this.guiLeft + 5, this.field_230709_l_ / 2 - 49, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (p_214076_1_) -> {
+        this.addButton(new ImageButton(this.guiLeft + 5, this.height / 2 - 49, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (p_214076_1_) -> {
             this.recipeBookGui.initSearchBar(this.widthTooNarrow);
             this.recipeBookGui.toggleVisibility();
-            this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.field_230708_k_, this.xSize - 18);
-            ((ImageButton) p_214076_1_).setPosition(this.guiLeft + 5, this.field_230709_l_ / 2 - 49);
+            this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize - 18);
+            ((ImageButton) p_214076_1_).setPosition(this.guiLeft + 5, this.height / 2 - 49);
         }));
     }
 

@@ -30,7 +30,7 @@ public class FirePlaceBlock extends VampirismBlock {
 
 
     public FirePlaceBlock() {
-        super(regName, Properties.create(Material.WOOD).func_235838_a_(s -> 15).hardnessAndResistance(1).notSolid());
+        super(regName, Properties.create(Material.WOOD).setLightLevel(s -> 15).hardnessAndResistance(1).notSolid());
 
     }
 

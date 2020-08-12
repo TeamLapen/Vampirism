@@ -13,8 +13,8 @@ public class SleepInMultiplayerModScreen extends SleepInMultiplayerScreen {
     }
 
     @Override
-    protected void func_231160_c_() {
-        super.func_231160_c_();
-        this.func_230480_a_(new Button(this.field_230708_k_ / 2 - 100, this.field_230709_l_ - 40, 200, 20, new TranslationTextComponent(leaveText), (p_212998_1_) -> this.wakeFromSleep()));
+    protected void init() {
+        super.init();
+        this.addButton(new Button(this.width / 2 - 100, this.height - 40, 200, 20, new TranslationTextComponent(leaveText), (p_212998_1_) -> this.wakeFromSleep()));
     }
 }

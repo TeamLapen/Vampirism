@@ -21,11 +21,11 @@ function initializeCoreMod() {
                 var newInstructions = new InsnList();
 
                 newInstructions.add(new FieldInsnNode(Opcodes.GETSTATIC, "de/teamlapen/vampirism/util/ASMHooks", "attribute_sundamage", "Lnet/minecraft/entity/ai/attributes/Attribute;"));
-                newInstructions.add(ASM.buildMethodCall("net/minecraft/entity/ai/attributes/AttributeModifierMap$MutableAttribute", "func_233814_a_", "(Lnet/minecraft/entity/ai/attributes/Attribute;)Lnet/minecraft/entity/ai/attributes/AttributeModifierMap$MutableAttribute;", ASM.MethodType.VIRTUAL));
+                newInstructions.add(ASM.buildMethodCall("net/minecraft/entity/ai/attributes/AttributeModifierMap$MutableAttribute", "createMutableAttribute", "(Lnet/minecraft/entity/ai/attributes/Attribute;)Lnet/minecraft/entity/ai/attributes/AttributeModifierMap$MutableAttribute;", ASM.MethodType.VIRTUAL));
                 newInstructions.add(new FieldInsnNode(Opcodes.GETSTATIC, "de/teamlapen/vampirism/util/ASMHooks", "attribute_blood_exhaustion", "Lnet/minecraft/entity/ai/attributes/Attribute;"));
-                newInstructions.add(ASM.buildMethodCall("net/minecraft/entity/ai/attributes/AttributeModifierMap$MutableAttribute", "func_233814_a_", "(Lnet/minecraft/entity/ai/attributes/Attribute;)Lnet/minecraft/entity/ai/attributes/AttributeModifierMap$MutableAttribute;", ASM.MethodType.VIRTUAL));
+                newInstructions.add(ASM.buildMethodCall("net/minecraft/entity/ai/attributes/AttributeModifierMap$MutableAttribute", "createMutableAttribute", "(Lnet/minecraft/entity/ai/attributes/Attribute;)Lnet/minecraft/entity/ai/attributes/AttributeModifierMap$MutableAttribute;", ASM.MethodType.VIRTUAL));
                 newInstructions.add(new FieldInsnNode(Opcodes.GETSTATIC, "de/teamlapen/vampirism/util/ASMHooks", "attribute_bite_damage", "Lnet/minecraft/entity/ai/attributes/Attribute;"));
-                newInstructions.add(ASM.buildMethodCall("net/minecraft/entity/ai/attributes/AttributeModifierMap$MutableAttribute", "func_233814_a_", "(Lnet/minecraft/entity/ai/attributes/Attribute;)Lnet/minecraft/entity/ai/attributes/AttributeModifierMap$MutableAttribute;", ASM.MethodType.VIRTUAL));
+                newInstructions.add(ASM.buildMethodCall("net/minecraft/entity/ai/attributes/AttributeModifierMap$MutableAttribute", "createMutableAttribute", "(Lnet/minecraft/entity/ai/attributes/Attribute;)Lnet/minecraft/entity/ai/attributes/AttributeModifierMap$MutableAttribute;", ASM.MethodType.VIRTUAL));
 
                 method.instructions.insertBefore(returnInstruction, newInstructions);
 

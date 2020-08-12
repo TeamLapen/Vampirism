@@ -173,7 +173,7 @@ public class CoffinBlock extends VampirismBlockContainer {
                     worldIn.removeBlock(blockpos, false);
                 }
 
-                worldIn.func_230546_a_(null, DamageSource.func_233546_a_(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
+                worldIn.createExplosion(null, DamageSource.func_233546_a_(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
                 return ActionResultType.SUCCESS;
             } else if (state.get(BedBlock.OCCUPIED)) {
                 player.sendStatusMessage(new TranslationTextComponent("text.vampirism.coffin.occupied"), true);
@@ -221,7 +221,7 @@ public class CoffinBlock extends VampirismBlockContainer {
             BlockPos blockpos = pos.offset(state.get(HORIZONTAL_FACING));
             worldIn.setBlockState(blockpos, state.with(PART, CoffinPart.HEAD), 3);
             worldIn.func_230547_a_(pos, Blocks.AIR);
-            state.func_235734_a_(worldIn, pos, 3); //updateNeighbours
+            state.updateNeighbours(worldIn, pos, 3);
         }
     }
 
@@ -252,7 +252,7 @@ public class CoffinBlock extends VampirismBlockContainer {
         }
 
         @Nonnull
-        public String func_176610_l() {
+        public String getString() {
             return this.name;
         }
 

@@ -33,7 +33,7 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
         super(dispatcher);
         this.model = new CoffinModel();
         for (DyeColor e : DyeColor.values()) {
-            textures[e.getId()] = new ResourceLocation(REFERENCE.MODID, "textures/block/coffin/coffin_" + e.func_176610_l() + ".png");
+            textures[e.getId()] = new ResourceLocation(REFERENCE.MODID, "textures/block/coffin/coffin_" + e.getString() + ".png");
         }
     }
 

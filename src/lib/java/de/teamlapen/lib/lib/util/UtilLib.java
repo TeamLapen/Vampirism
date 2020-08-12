@@ -206,7 +206,7 @@ public class UtilLib {
      */
     private static void onInitialSpawn(Entity e, SpawnReason reason) {
         if (e instanceof MobEntity) {
-            ((MobEntity) e).onInitialSpawn(e.getEntityWorld(), e.getEntityWorld().getDifficultyForLocation(e.func_233580_cy_()/*getPos*/), reason, null, null);
+            ((MobEntity) e).onInitialSpawn(e.getEntityWorld(), e.getEntityWorld().getDifficultyForLocation(e.getPosition()), reason, null, null);
         }
     }
 
@@ -302,7 +302,7 @@ public class UtilLib {
         double d5 = entity.getPosZ();
         entity.setRawPosition(x, y, z);
         boolean flag = false;
-        BlockPos blockPos = entity.func_233580_cy_(); //getPos
+        BlockPos blockPos = entity.getPosition(); //getPos
         double ty = y;
 
 
@@ -395,7 +395,7 @@ public class UtilLib {
     public static void sendMessageToAllExcept(PlayerEntity player, ITextComponent message) {
         for (Object o : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
             if (!o.equals(player)) {
-                ((PlayerEntity) o).sendMessage(message, Util.field_240973_b_);
+                ((PlayerEntity) o).sendMessage(message, Util.DUMMY_UUID);
             }
         }
     }
@@ -682,7 +682,7 @@ public class UtilLib {
 
     @Nullable
     public static StructureStart<?> getStructureStartAt(Entity entity, Structure<?> s) {
-        return getStructureStartAt(entity.getEntityWorld(), entity.func_233580_cy_(), s);
+        return getStructureStartAt(entity.getEntityWorld(), entity.getPosition(), s);
     }
 
     @Nullable
@@ -741,7 +741,7 @@ public class UtilLib {
 
     public static ITextComponent addFormatting(ITextComponent component, TextFormatting format) {
         if (component instanceof IFormattableTextComponent) {
-            ((IFormattableTextComponent) component).func_240699_a_(format);
+            ((IFormattableTextComponent) component).mergeStyle(format);
         }
         return component;
     }

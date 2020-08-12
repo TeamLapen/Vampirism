@@ -90,8 +90,8 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     @Override
-    public void func_230337_a_(BlockState state, CompoundNBT tag) {
-        super.func_230337_a_(state, tag);
+    public void read(BlockState state, CompoundNBT tag) {
+        super.read(state, tag);
         tank.readFromNBT(tag);
         cooldownProcess = tag.getInt("cooldown_process");
         cooldownPull = tag.getInt("cooldown_pull");

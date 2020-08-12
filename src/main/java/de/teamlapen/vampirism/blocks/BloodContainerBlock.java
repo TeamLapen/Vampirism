@@ -135,7 +135,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
             CompoundNBT nbt = stack.getTag().getCompound("fluid");
             FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
             if (fluid != null) {
-                tooltip.add(new TranslationTextComponent(fluid.getTranslationKey()).func_230529_a_(new StringTextComponent(": " + fluid.getAmount() + "mB")).func_240699_a_(TextFormatting.DARK_RED));
+                tooltip.add(new TranslationTextComponent(fluid.getTranslationKey()).append(new StringTextComponent(": " + fluid.getAmount() + "mB")).mergeStyle(TextFormatting.DARK_RED));
             }
 
         }

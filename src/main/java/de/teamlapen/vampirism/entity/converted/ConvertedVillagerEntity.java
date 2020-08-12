@@ -78,9 +78,9 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
             return super.getDisplayName();
         } else {
             VillagerProfession villagerprofession = this.getVillagerData().getProfession();
-            IFormattableTextComponent itextcomponent1 = (new TranslationTextComponent(EntityType.VILLAGER.getTranslationKey() + '.' + (!"minecraft".equals(villagerprofession.getRegistryName().getNamespace()) ? villagerprofession.getRegistryName().getNamespace() + '.' : "") + villagerprofession.getRegistryName().getPath())).func_240700_a_((p_211516_1_) -> p_211516_1_.func_240716_a_(this.getHoverEvent()).func_240714_a_(this.getCachedUniqueIdString()));
+            IFormattableTextComponent itextcomponent1 = (new TranslationTextComponent(EntityType.VILLAGER.getTranslationKey() + '.' + (!"minecraft".equals(villagerprofession.getRegistryName().getNamespace()) ? villagerprofession.getRegistryName().getNamespace() + '.' : "") + villagerprofession.getRegistryName().getPath())).modifyStyle((p_211516_1_) -> p_211516_1_.setHoverEvent(this.getHoverEvent()).setInsertion(this.getCachedUniqueIdString()));
             if (team != null) {
-                itextcomponent1.func_240699_a_(team.getColor());
+                itextcomponent1.mergeStyle(team.getColor());
             }
 
             return itextcomponent1;

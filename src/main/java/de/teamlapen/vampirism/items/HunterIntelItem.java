@@ -73,13 +73,13 @@ public class HunterIntelItem extends VampirismItem {
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltips, ITooltipFlag flagIn) {
         if (this.tooltip == null) {
-            this.tooltip = new TranslationTextComponent("item.vampirism.hunter_intel.for_level").func_230529_a_(new StringTextComponent(": " + (level + 5))).func_240699_a_(TextFormatting.RED);
+            this.tooltip = new TranslationTextComponent("item.vampirism.hunter_intel.for_level").append(new StringTextComponent(": " + (level + 5))).mergeStyle(TextFormatting.RED);
         }
         tooltips.add(this.tooltip);
     }
 
     public ITextComponent getCustomName() {
-        return new TranslationTextComponent(this.getDefaultTranslationKey()).func_230529_a_(new StringTextComponent(" ")).func_230529_a_(new TranslationTextComponent("item.vampirism.hunter_intel.for_level").func_230529_a_(new StringTextComponent(" " + (level + 5))));
+        return new TranslationTextComponent(this.getDefaultTranslationKey()).append(new StringTextComponent(" ")).append(new TranslationTextComponent("item.vampirism.hunter_intel.for_level").append(new StringTextComponent(" " + (level + 5))));
     }
 
     /**

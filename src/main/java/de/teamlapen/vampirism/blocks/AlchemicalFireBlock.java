@@ -35,7 +35,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
     private static final String name = "alchemical_fire";
 
     public AlchemicalFireBlock() {
-        super(name, Properties.create(Material.FIRE, MaterialColor.TNT).hardnessAndResistance(0.0f).func_235838_a_(s -> 15).sound(SoundType.CLOTH).doesNotBlockMovement().tickRandomly().notSolid().noDrops());
+        super(name, Properties.create(Material.FIRE, MaterialColor.TNT).hardnessAndResistance(0.0f).setLightLevel(s -> 15).sound(SoundType.CLOTH).doesNotBlockMovement().tickRandomly().notSolid().noDrops());
         this.setDefaultState(this.stateContainer.getBaseState().with(AGE, 0));
     }
 
@@ -95,7 +95,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
     @Override
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
         if (!this.isValidPosition(state, worldIn, pos)) {
-            worldIn.removeBlock(pos, this.field_235688_at_/*blocksMovement*/);
+            worldIn.removeBlock(pos, this.canCollide);
         }
 
 
@@ -106,7 +106,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
             state = state.with(AGE, age + 1);
             worldIn.setBlockState(pos, state, 4);
         } else if (age == 14) {
-            worldIn.removeBlock(pos, this.field_235688_at_/*blocksMovement*/);
+            worldIn.removeBlock(pos, this.canCollide);
         }
         worldIn.getPendingBlockTicks().scheduleTick(pos, this, 30 + random.nextInt(10));
     }

@@ -63,7 +63,7 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
     protected boolean tryCureSanguinare(PlayerEntity entity) {
         if (!this.world.isRemote && entity.isPotionActive(ModEffects.sanguinare)) {
             entity.removePotionEffect(ModEffects.sanguinare);
-            entity.sendMessage(new TranslationTextComponent("text.vampirism.hunter.cured_sanguinare"), Util.field_240973_b_);
+            entity.sendMessage(new TranslationTextComponent("text.vampirism.hunter.cured_sanguinare"), Util.DUMMY_UUID);
             return true;
         }
         return false;

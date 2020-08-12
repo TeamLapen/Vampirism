@@ -76,9 +76,9 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
         return VampirismVillagerEntity.getAttributeBuilder()
-                .func_233815_a_(SharedMonsterAttributes.MAX_HEALTH, BalanceMobProps.mobProps.HUNTER_VILLAGER_MAX_HEALTH)
-                .func_233815_a_(SharedMonsterAttributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.HUNTER_VILLAGER_ATTACK_DAMAGE)
-                .func_233815_a_(SharedMonsterAttributes.FOLLOW_RANGE, 32);
+                .createMutableAttribute(SharedMonsterAttributes.MAX_HEALTH, BalanceMobProps.mobProps.HUNTER_VILLAGER_MAX_HEALTH)
+                .createMutableAttribute(SharedMonsterAttributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.HUNTER_VILLAGER_ATTACK_DAMAGE)
+                .createMutableAttribute(SharedMonsterAttributes.FOLLOW_RANGE, 32);
     }
 
     @Override

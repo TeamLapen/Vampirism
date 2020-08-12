@@ -55,7 +55,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     @Override
     public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
         if (type == Type.WEAK || type == Type.IMPROVED) {
-            tooltip.add(new TranslationTextComponent(getTranslationKey() + "." + type.getName()).func_240699_a_(TextFormatting.AQUA));
+            tooltip.add(new TranslationTextComponent(getTranslationKey() + "." + type.getName()).mergeStyle(TextFormatting.AQUA));
         }
 
         tooltip.add(new TranslationTextComponent("block.vampirism.garlic_beacon.tooltip1"));
@@ -113,11 +113,11 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
                 GarlicBeaconTileEntity t = getTile(world, pos);
                 if (t != null) {
                     if (t.getFuelTime() > 0) {
-                        player.sendMessage(new TranslationTextComponent("block.vampirism.garlic_beacon.already_fueled"), Util.field_240973_b_);
+                        player.sendMessage(new TranslationTextComponent("block.vampirism.garlic_beacon.already_fueled"), Util.DUMMY_UUID);
                     } else {
                         t.onFueled();
                         if (!player.isCreative()) heldItem.shrink(1);
-                        player.sendMessage(new TranslationTextComponent("block.vampirism.garlic_beacon.successfully_fueled"), Util.field_240973_b_);
+                        player.sendMessage(new TranslationTextComponent("block.vampirism.garlic_beacon.successfully_fueled"), Util.DUMMY_UUID);
                     }
 
                 }
@@ -168,12 +168,12 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
 
 
         @Override
-        public String func_176610_l() {
+        public String getString() {
             return name;
         }
 
         public String getName() {
-            return this.func_176610_l();
+            return this.getString();
         }
     }
 }
