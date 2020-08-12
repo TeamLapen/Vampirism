@@ -20,8 +20,8 @@ import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
 public class VampirismBiomeFeatures {
 
     private final static BlockClusterFeatureConfig flowerConfig = new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.vampire_orchid.getDefaultState()), new SimpleBlockPlacer()).tries(64).build();
-    private final static BaseTreeFeatureConfig treeConfigSmall = new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.SPRUCE_LOG.getDefaultState()), new SimpleBlockStateProvider(Blocks.SPRUCE_LEAVES.getDefaultState()), new BlobFoliagePlacer(2, 0, 0, 0, 3), new StraightTrunkPlacer(4, 2, 0), new TwoLayerFeature(1, 0, 1)).setIgnoreVines().build();
-    private final static BaseTreeFeatureConfig treeConfigBig = new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.SPRUCE_LOG.getDefaultState()), new SimpleBlockStateProvider(Blocks.SPRUCE_LEAVES.getDefaultState()), new BlobFoliagePlacer(3, 0, 0, 0, 5), new StraightTrunkPlacer(6, 2, 0), new TwoLayerFeature(1, 0, 1)).setIgnoreVines().build();
+    private final static BaseTreeFeatureConfig treeConfigSmall = new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.SPRUCE_LOG.getDefaultState()), new SimpleBlockStateProvider(Blocks.OAK_LEAVES.getDefaultState()), new BlobFoliagePlacer(2, 0, 0, 0, 3), new StraightTrunkPlacer(4, 2, 0), new TwoLayerFeature(1, 0, 1)).setIgnoreVines().build();
+    private final static BaseTreeFeatureConfig treeConfigBig = new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.SPRUCE_LOG.getDefaultState()), new SimpleBlockStateProvider(Blocks.OAK_LEAVES.getDefaultState()), new BlobFoliagePlacer(3, 0, 0, 0, 5), new StraightTrunkPlacer(6, 2, 0), new TwoLayerFeature(1, 0, 1)).setIgnoreVines().build();
 
     public static void addVampirismFlowers(Biome biomeIn) {
         biomeIn.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.FLOWER.withConfiguration(flowerConfig).withPlacement(Placement.COUNT_HEIGHTMAP_32.configure(new FrequencyConfig(2)))); //defaultFlower
