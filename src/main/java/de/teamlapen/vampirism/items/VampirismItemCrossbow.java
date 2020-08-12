@@ -45,7 +45,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     /**
      * Checks for Frugality enchantment on the crossbow
      *
-     * @param crossbowStack
+     * @param crossbowStack crossbow to check
      * @return the enchantment level
      */
     protected static int isCrossbowFrugal(ItemStack crossbowStack) {
@@ -74,8 +74,9 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
         return VReference.HUNTER_FACTION;
     }
 
+    @Nonnull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public ActionResult<ItemStack> onItemRightClick(@Nonnull World worldIn, PlayerEntity playerIn, @Nonnull Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
         shoot(playerIn, 0, 0, worldIn, stack, handIn);
         return new ActionResult<>(ActionResultType.SUCCESS, stack);
@@ -88,7 +89,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     /**
      * Searches Offhand,Mainhand and the inventory afterwards for arrows
      *
-     * @param player
+     * @param player   player to search
      * @param bowStack The itemstack of the bow
      * @return The itemstack of the arrows or null
      */
@@ -140,6 +141,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     /**
      * @return If the shot arrow should do critical damage
      */
+    @SuppressWarnings("unused")
     protected boolean isCritical(Random random) {
         return false;
     }
@@ -186,9 +188,9 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
                 if (!world.isRemote) {
                     boolean rightHand = player.getPrimaryHand() == HandSide.RIGHT && hand == Hand.MAIN_HAND || player.getPrimaryHand() == HandSide.LEFT && hand == Hand.OFF_HAND;
-                    IVampirismCrossbowArrow itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArrow ? (IVampirismCrossbowArrow) itemstack.getItem() : ModItems.crossbow_arrow_normal;
+                    IVampirismCrossbowArrow<?> itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArrow ? (IVampirismCrossbowArrow<?>) itemstack.getItem() : ModItems.crossbow_arrow_normal;
                     AbstractArrowEntity entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset, 0.3F + centerOffset, rightHand);
-                    entityarrow.shoot(player.rotationPitch, player.rotationYaw, 0.0F, f * 3.0F, 1.0F);
+                    entityarrow.func_234612_a_/*shoot*/(player, player.rotationPitch, player.rotationYaw, 0.0F, f * 3.0F, 1.0F);
 
                     if (isCritical(player.getRNG())) {
                         entityarrow.setIsCritical(true);
@@ -256,7 +258,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return If the given arrow type can be used in an infinite crossbow
      */
     private boolean canArrowBeInfinite(ItemStack arrowStack) {
-        return !(arrowStack.getItem() instanceof IVampirismCrossbowArrow) || ((IVampirismCrossbowArrow) arrowStack.getItem()).isCanBeInfinite();
+        return !(arrowStack.getItem() instanceof IVampirismCrossbowArrow) || ((IVampirismCrossbowArrow<?>) arrowStack.getItem()).isCanBeInfinite();
     }
 
 
