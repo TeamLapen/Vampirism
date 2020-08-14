@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
-
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.ASMHooks;
@@ -22,19 +21,8 @@ import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPattern;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
 import net.minecraft.world.gen.feature.jigsaw.SingleJigsawPiece;
-import net.minecraft.world.gen.feature.structure.DesertVillagePools;
-import net.minecraft.world.gen.feature.structure.PlainsVillagePools;
-import net.minecraft.world.gen.feature.structure.SavannaVillagePools;
-import net.minecraft.world.gen.feature.structure.SnowyVillagePools;
-import net.minecraft.world.gen.feature.structure.TaigaVillagePools;
-import net.minecraft.world.gen.feature.template.AlwaysTrueRuleTest;
-import net.minecraft.world.gen.feature.template.BlockMatchRuleTest;
-import net.minecraft.world.gen.feature.template.BlockStateMatchRuleTest;
-import net.minecraft.world.gen.feature.template.RandomBlockMatchRuleTest;
-import net.minecraft.world.gen.feature.template.RuleEntry;
-import net.minecraft.world.gen.feature.template.RuleStructureProcessor;
-import net.minecraft.world.gen.feature.template.StructureProcessor;
-import net.minecraft.world.gen.feature.template.TagMatchRuleTest;
+import net.minecraft.world.gen.feature.structure.*;
+import net.minecraft.world.gen.feature.template.*;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.LogManager;
@@ -165,7 +153,7 @@ public class ModWorld {
         buildings.get("snowy_zombie").add(Pair.of(singleJigsawPiece( "village/snowy/houses/hunter_trainer", snowyZombieProcessor), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
         buildings.get("taiga_zombie").add(Pair.of(singleJigsawPiece( "village/taiga/houses/hunter_trainer", taigaZombieProcessor), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
         //totem JigsawPiece
-        StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, VampirismConfig.BALANCE.viTotemPreSetPercentage.get().floatValue()), AlwaysTrueRuleTest.INSTANCE, Arrays.stream(TotemTopBlock.getTotems()).map(Block::getDefaultState).toArray(BlockState[]::new))));
+        StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, VampirismConfig.BALANCE.viTotemPreSetPercentage.get().floatValue()), AlwaysTrueRuleTest.INSTANCE, ModBlocks.totem_top.getDefaultState(), Arrays.stream(TotemTopBlock.getTotems()).filter(totem -> totem != ModBlocks.totem_top).map(Block::getDefaultState).toArray(BlockState[]::new))));
         StructureProcessor totemTopBlock = new BiomeTopBlockProcessor(Blocks.BRICK_WALL.getDefaultState());
         JigsawPiece totem = singleJigsawPiece("village/totem", Lists.newArrayList(totemProcessor, totemTopBlock), JigsawPattern.PlacementBehaviour.RIGID);
         //add totem to all village JigsawPattern lists
