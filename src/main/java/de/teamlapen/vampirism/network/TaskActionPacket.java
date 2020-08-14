@@ -27,12 +27,12 @@ public class TaskActionPacket implements IMessage {
 
     static void encode(TaskActionPacket msg, PacketBuffer buf) {
         buf.writeString(Objects.requireNonNull(msg.task.getRegistryName()).toString());
-        buf.writeString(msg.entityId.toString());
+        buf.writeUniqueId(msg.entityId);
         buf.writeVarInt(msg.action.ordinal());
     }
 
     static TaskActionPacket decode(PacketBuffer buf) {
-        return new TaskActionPacket(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())), UUID.fromString(buf.readString()), TaskBoardContainer.TaskAction.values()[buf.readVarInt()]);
+        return new TaskActionPacket(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString(32767))), buf.readUniqueId(), TaskBoardContainer.TaskAction.values()[buf.readVarInt()]);
     }
 
     public static void handle(final TaskActionPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
