@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.player.vampire.actions.BatVampireAction;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
 import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
@@ -42,12 +43,17 @@ public class ASMHooks {
      */
     private static final List<String> onlyOneStructure = Lists.newArrayList();
 
-    public static void addSingleInstanceStructure(List<String> structures){
+    public static void addSingleInstanceStructure(List<String> structures) {
         onlyOneStructure.addAll(structures);
     }
 
     public static boolean checkStructures(List<StructurePiece> pieces, JigsawPiece jigsawPiece) {
         if (!onlyOneStructure.contains(jigsawPiece.toString())) return false;
         return pieces.stream().anyMatch(structurePiece -> onlyOneStructure.stream().anyMatch(string -> ((AbstractVillagePiece) structurePiece).getJigsawPiece().toString().equals(string)));
+    }
+
+
+    public static AttributeModifierMap.MutableAttribute handlePlayerAttributes(AttributeModifierMap.MutableAttribute attribute) {
+        return attribute.createMutableAttribute(attribute_sundamage).createMutableAttribute(attribute_bite_damage).createMutableAttribute(attribute_blood_exhaustion);
     }
 }
