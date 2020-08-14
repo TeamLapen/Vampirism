@@ -62,7 +62,6 @@ import net.minecraft.world.BossInfo;
 import net.minecraft.world.ServerBossInfo;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -90,17 +89,6 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     @Deprecated
     public static void clearCacheForDimension(Dimension dimension) { //TODO 1.16 remove
         TotemHelper.clearCacheForDimension(dimension);
-    }
-
-    /**
-     * this method has no use anymore, because the village now persists of a collection of {@link PointOfInterest} and not based on a structure start
-     *
-     * @throws Exception
-     */
-    @Deprecated
-    public static @Nullable
-    BlockPos getTotemPosition(StructureStart structure) throws Exception { //TODO 1.16 remove
-        throw new Exception("This method no longer works"); //TODO backwards compatibility
     }
 
     @Deprecated
@@ -269,8 +257,16 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             this.village = Collections.emptySet();
             return;
         }
-        this.village = points;
-        this.isDisabled = !TotemHelper.addTotem(this.world, this.village, this.pos);//TODO print village to near
+        if (!TotemHelper.isVillage(points, this.world)) {
+            this.isInsideVillage = false;
+            this.village = Collections.emptySet();
+            return;
+        }
+        if (!(this.isDisabled = !TotemHelper.addTotem(this.world, points, this.pos))) {
+            this.village = points;
+        } else {
+            this.village = Collections.emptySet();
+        }
         this.markDirty();
     }
 
@@ -649,10 +645,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                 return;
             }
         }
-        AxisAlignedBB totem = new AxisAlignedBB(this.pos).grow(35);
-        for (PointOfInterest pointOfInterest : this.village) {
-            totem = totem.union(new AxisAlignedBB(pointOfInterest.getPos()).grow(35));
-        }
+        AxisAlignedBB totem = TotemHelper.getAABBAroundPOIs(this.village);
         this.villageArea = totem;
         this.villageAreaReduced = totem.grow(-30,-10,-30);
     }

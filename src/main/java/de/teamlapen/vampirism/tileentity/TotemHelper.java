@@ -6,7 +6,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.world.FactionPointOfInterestType;
-import net.minecraft.block.Blocks;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -18,6 +18,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.village.PointOfInterest;
 import net.minecraft.village.PointOfInterestManager;
+import net.minecraft.village.PointOfInterestType;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.gen.feature.structure.StructureStart;
@@ -29,6 +30,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -72,34 +74,34 @@ public class TotemHelper {
     /**
      * @return false if another totem exists
      */
-    public static boolean addTotem(World world, Set<PointOfInterest> structures, BlockPos totemPos) {
+    public static boolean addTotem(World world, Set<PointOfInterest> pois, BlockPos totemPos) {
         BlockPos conflict = null;
-        for (PointOfInterest poi : structures) {
+        for (PointOfInterest poi : pois) {
             if (totemPositions.containsKey(poi.getPos()) && !totemPositions.get(poi.getPos()).equals(totemPos)) {
                 conflict = totemPositions.get(poi.getPos());
                 break;
             }
         }
         if (conflict != null) {
-            handleTotemConflict(structures, world, totemPos, conflict);
+            handleTotemConflict(pois, world, totemPos, conflict);
         }
-        if (structures.isEmpty()) {
+        if (pois.isEmpty()) {
             return false;
         }
-        for (PointOfInterest pointOfInterest : structures) {
+        for (PointOfInterest pointOfInterest : pois) {
             totemPositions.put(pointOfInterest.getPos(), totemPos);
         }
         totemPositions.put(totemPos, totemPos);
 
         if (poiSets.containsKey(totemPos)) {
             poiSets.get(totemPos).forEach(poi -> {
-                if (!structures.contains(poi)) {
+                if (!pois.contains(poi)) {
                     totemPositions.remove(poi.getPos());
                 }
             });
         }
-        poiSets.put(totemPos, structures);
-        return !structures.isEmpty();
+        poiSets.put(totemPos, pois);
+        return !pois.isEmpty();
     }
 
     private static void handleTotemConflict(Set<PointOfInterest> pois, World world, BlockPos totem, BlockPos conflicting) {
@@ -182,8 +184,19 @@ public class TotemHelper {
                 finished.add(point);
             }));
         }
-        finished.forEach(point -> world.setBlockState(point.getPos().up(10), Blocks.BEDROCK.getDefaultState()));//TODO remove
         return finished;
+    }
+
+    public static boolean isVillage(Set<PointOfInterest> pointOfInterests, World world) {
+        Map<PointOfInterestType, Long> poiTCounts = pointOfInterests.stream().map(PointOfInterest::getType).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        if (poiTCounts.getOrDefault(PointOfInterestType.HOME, 0L) >= 4) {
+            if (poiTCounts.entrySet().stream().filter(entry -> entry.getKey() != PointOfInterestType.HOME).mapToLong(Map.Entry::getValue).sum() >= 4) {
+                if (world.getEntitiesWithinAABB(VillagerEntity.class, getAABBAroundPOIs(pointOfInterests)).size() >= 4) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static void updateVampireBoundingBox(@Nonnull Dimension dimension, @Nonnull BlockPos totemPos, @Nullable AxisAlignedBB box) {
@@ -193,5 +206,13 @@ public class TotemHelper {
         } else {
             map.put(totemPos, UtilLib.AABBtoMB(box));
         }
+    }
+
+    /**
+     * @throws NoSuchElementException if poi is empty
+     */
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public static AxisAlignedBB getAABBAroundPOIs(@Nonnull Set<PointOfInterest> pois) {
+        return pois.stream().map(poi -> new AxisAlignedBB(poi.getPos()).grow(25)).reduce(AxisAlignedBB::union).get();
     }
 }
