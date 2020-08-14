@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.world.FactionPointOfInterestType;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -11,6 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -150,7 +152,7 @@ public class TotemHelper {
     }
 
     public static ITextComponent forceFactionCommand(IFaction<?> faction, ServerPlayerEntity player) {
-        List<PointOfInterest> pointOfInterests = ((ServerWorld) player.getEntityWorld()).getPointOfInterestManager().func_219146_b(point -> true, player.getPosition(), 30, PointOfInterestManager.Status.ANY).collect(Collectors.toList());
+        List<PointOfInterest> pointOfInterests = ((ServerWorld) player.getEntityWorld()).getPointOfInterestManager().func_219146_b(point -> true, player.getPosition(), 15, PointOfInterestManager.Status.ANY).sorted((point1, point2) -> (int) (new Vec3d(point1.getPos()).distanceTo(new Vec3d(player.getPosition())) - new Vec3d(point2.getPos()).distanceTo(new Vec3d(player.getPosition())))).collect(Collectors.toList());
         if (pointOfInterests.stream().noneMatch(point -> totemPositions.containsKey(point.getPos()))) {
             return new TranslationTextComponent("command.vampirism.test.village.no_village");
         }
@@ -170,12 +172,14 @@ public class TotemHelper {
         Set<PointOfInterest> points = manager.func_219146_b(type -> !(type instanceof FactionPointOfInterestType), pos, 35, PointOfInterestManager.Status.ANY).collect(Collectors.toSet());
         while (!points.isEmpty()) {
             List<Stream<PointOfInterest>> list = points.stream().map(pointOfInterest -> manager.func_219146_b(type -> !(type instanceof FactionPointOfInterestType), pointOfInterest.getPos(), 25, PointOfInterestManager.Status.ANY)).collect(Collectors.toList());
-            finished.addAll(points);
             points.clear();
             list.forEach(stream -> stream.forEach(point -> {
                 if (!finished.contains(point)) {
-                    points.add(point);
+                    if (point.getPos().withinDistance(pos, VampirismConfig.BALANCE.viMaxTotemRadius.get())) {
+                        points.add(point);
+                    }
                 }
+                finished.add(point);
             }));
         }
         finished.forEach(point -> world.setBlockState(point.getPos().up(10), Blocks.BEDROCK.getDefaultState()));//TODO remove

@@ -340,9 +340,9 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         if (this.world != null) {
             if (compound.contains("villageArea")) {
                 if (VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
-                    addVampireVillage(this.world.dimension, this.pos, UtilLib.intToBB(compound.getIntArray("villageArea")));
+                    TotemHelper.addVampireVillage(this.world.dimension, this.pos, UtilLib.intToBB(compound.getIntArray("villageArea")));
                 } else {
-                    removeVampireVillage(this.world.dimension, this.pos);
+                    TotemHelper.removeVampireVillage(this.world.dimension, this.pos);
                 }
             }
         }
