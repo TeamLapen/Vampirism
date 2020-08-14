@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
-
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.ASMHooks;
@@ -154,7 +153,7 @@ public class ModWorld {
         buildings.get("snowy_zombie").add(Pair.of(singleJigsawPiece("village/snowy/houses/hunter_trainer", snowyZombieProcessor), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
         buildings.get("taiga_zombie").add(Pair.of(singleJigsawPiece("village/taiga/houses/hunter_trainer", taigaZombieProcessor), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
         //totem JigsawPiece
-        StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, VampirismConfig.BALANCE.viTotemPreSetPercentage.get().floatValue()), AlwaysTrueRuleTest.INSTANCE, Arrays.stream(TotemTopBlock.getTotems()).map(Block::getDefaultState).toArray(BlockState[]::new))));
+        StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, VampirismConfig.BALANCE.viTotemPreSetPercentage.get().floatValue()), AlwaysTrueRuleTest.INSTANCE, ModBlocks.totem_top.getDefaultState(), Arrays.stream(TotemTopBlock.getTotems()).filter(totem -> totem != ModBlocks.totem_top).map(Block::getDefaultState).toArray(BlockState[]::new))));
         StructureProcessor totemTopBlock = new BiomeTopBlockProcessor(Blocks.BRICK_WALL.getDefaultState());
         JigsawPiece totem = singleJigsawPiece("village/totem", Lists.newArrayList(totemProcessor, totemTopBlock), JigsawPattern.PlacementBehaviour.RIGID);
         //add totem to all village JigsawPattern lists
