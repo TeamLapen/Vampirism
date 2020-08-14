@@ -118,6 +118,11 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         };
     }
 
+    @Override
+    public boolean canDespawn(double distanceToClosestPlayer) {
+        return false;
+    }
+
     /**
      * Copy of {@link MobEntity} but with modified DamageSource
      * Check if code still up-to-date
