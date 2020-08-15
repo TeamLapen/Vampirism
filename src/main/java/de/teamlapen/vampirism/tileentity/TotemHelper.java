@@ -35,6 +35,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TotemHelper {
+    public static final int MIN_HOMES = 4;
+    public static final int MIN_WORKSTATIONS = 2;
+    public static final int MIN_VILLAGER = 4;
+
+
     private static final Logger LOGGER = LogManager.getLogger();
     /**
      * stores all BoundingBoxes of vampire controlled villages per dimension, mapped from totem positions
@@ -192,16 +197,38 @@ public class TotemHelper {
         return finished;
     }
 
-    public static boolean isVillage(Set<PointOfInterest> pointOfInterests, World world, boolean hasInteraction) {
-        Map<PointOfInterestType, Long> poiTCounts = pointOfInterests.stream().map(PointOfInterest::getType).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-        if (poiTCounts.getOrDefault(PointOfInterestType.HOME, 0L) >= 4) {
-            if (poiTCounts.entrySet().stream().filter(entry -> entry.getKey() != PointOfInterestType.HOME).mapToLong(Map.Entry::getValue).sum() >= 2) {
-                if (hasInteraction || world.getEntitiesWithinAABB(VillagerEntity.class, getAABBAroundPOIs(pointOfInterests)).size() >= 4) {
-                    return true;
-                }
-            }
+    /**
+     * use {@link #isVillage(Set, World, boolean)}
+     *
+     * @param stats          the output of {@link #getVillageStats(Set, World)}
+     * @param hasInteraction if the village is influenced by a faction
+     */
+    public static int isVillage(Map<Integer, Integer> stats, boolean hasInteraction) {
+        int status = 0;
+        if (stats.get(1) >= MIN_HOMES) {
+            status += 1;
         }
-        return false;
+        if (stats.get(2) >= MIN_WORKSTATIONS) {
+            status += 2;
+        }
+        if (hasInteraction || stats.get(4) >= MIN_VILLAGER) {
+            status += 4;
+        }
+        return status;
+    }
+
+    public static int isVillage(Set<PointOfInterest> pointOfInterests, World world, boolean hasInteraction) {
+        return isVillage(getVillageStats(pointOfInterests, world), hasInteraction);
+    }
+
+    public static Map<Integer, Integer> getVillageStats(Set<PointOfInterest> pointOfInterests, World world) {
+        Map<PointOfInterestType, Long> poiTCounts = pointOfInterests.stream().map(PointOfInterest::getType).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        AxisAlignedBB area = getAABBAroundPOIs(pointOfInterests);
+        return new HashMap<Integer, Integer>() {{
+            put(1, poiTCounts.getOrDefault(PointOfInterestType.HOME, 0L).intValue());
+            put(2, ((int) poiTCounts.entrySet().stream().filter(entry -> entry.getKey() != PointOfInterestType.HOME).mapToLong(Entry::getValue).sum()));
+            put(4, area == null ? 0 : world.getEntitiesWithinAABB(VillagerEntity.class, area).size());
+        }};
     }
 
     public static void updateVampireBoundingBox(@Nonnull Dimension dimension, @Nonnull BlockPos totemPos, @Nullable AxisAlignedBB box) {
@@ -216,8 +243,8 @@ public class TotemHelper {
     /**
      * @throws NoSuchElementException if poi is empty
      */
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @Nullable
     public static AxisAlignedBB getAABBAroundPOIs(@Nonnull Set<PointOfInterest> pois) {
-        return pois.stream().map(poi -> new AxisAlignedBB(poi.getPos()).grow(25)).reduce(AxisAlignedBB::union).get();
+        return pois.stream().map(poi -> new AxisAlignedBB(poi.getPos()).grow(25)).reduce(AxisAlignedBB::union).orElse(null);
     }
 }
