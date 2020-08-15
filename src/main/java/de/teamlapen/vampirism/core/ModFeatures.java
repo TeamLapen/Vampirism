@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.core;
 
 
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.gen.features.VampireDungeonFeature;
@@ -11,7 +10,6 @@ import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampStructure;
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
-import net.minecraft.block.Blocks;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.FlowersFeature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -25,7 +23,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class ModFeatures {
     //features
     public static final FlowersFeature vampire_flower = new VampireForestFlowerFeature(NoFeatureConfig::deserialize);
-    public static final TreeFeature vampire_tree = new TreeFeature(NoFeatureConfig::deserialize, false, 4, Blocks.SPRUCE_LOG.getDefaultState(), Blocks.OAK_LEAVES.getDefaultState(), false);
+    public static final TreeFeature vampire_tree = new TreeFeature(NoFeatureConfig::deserialize, false, 4, ModBlocks.bloody_spruce_log.getDefaultState(), ModBlocks.bloody_spruce_leaves.getDefaultState(), false);
     public static final VampireDungeonFeature vampire_dungeon = new VampireDungeonFeature(NoFeatureConfig::deserialize);
     //structures
     public static final Structure<NoFeatureConfig> hunter_camp = new HunterCampStructure();
