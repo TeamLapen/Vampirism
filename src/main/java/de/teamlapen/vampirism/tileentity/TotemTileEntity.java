@@ -154,6 +154,12 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         super(ModTiles.totem);
     }
 
+    /**
+     * checks if the player can remove the totem
+     *
+     * @param player player to check
+     * @return weather he can or not
+     */
     public boolean canPlayerRemoveBlock(PlayerEntity player) {
         if (player.abilities.isCreativeMode) return true;
         if (!player.isAlive()) return false;
@@ -192,6 +198,11 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         }
     }
 
+    /**
+     * gets the size of the village
+     *
+     * @return amount of {@link PointOfInterest} related to this village totem
+     */
     public int getSize() {
         return this.village.size();
     }
@@ -246,6 +257,11 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         return this.capturingFaction == null ? 0 : this.phase == CAPTURE_PHASE.PHASE_2 ? 80 : (int) (this.captureTimer / (float) VampirismConfig.BALANCE.viPhase1Duration.get() * 80f);
     }
 
+    /**
+     * updates the tile status and determines the related {@link PointOfInterest}s
+     * <p>
+     * this includes checking if the totem is placed in a village, the totem is complete, if there is another totem and forces a faction
+     */
     public void updateTileStatus() {
         Block b = this.world.getBlockState(this.pos).getBlock();
         if (!(this.isComplete = b instanceof TotemTopBlock && this.world.getBlockState(this.pos.down()).getBlock().equals(ModBlocks.totem_base)))

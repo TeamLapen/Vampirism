@@ -39,7 +39,6 @@ public class TotemHelper {
     public static final int MIN_WORKSTATIONS = 2;
     public static final int MIN_VILLAGER = 4;
 
-
     private static final Logger LOGGER = LogManager.getLogger();
     /**
      * stores all BoundingBoxes of vampire controlled villages per dimension, mapped from totem positions
@@ -47,24 +46,52 @@ public class TotemHelper {
     private static final HashMap<Dimension, Map<BlockPos, MutableBoundingBox>> vampireVillages = Maps.newHashMap();
 
     /**
-     * saves the position
+     * saves the position of a {@link PointOfInterest} to the related village totem position
      */
     private static final Map<BlockPos, BlockPos> totemPositions = Maps.newHashMap();
 
+    /**
+     * saves the {@link PointOfInterest}s for every village totem
+     */
     private static final Map<BlockPos, Set<PointOfInterest>> poiSets = Maps.newHashMap();
 
+    /**
+     * cleans the vampire village cache
+     *
+     * @param dimension the dimension to be cleaned
+     */
     public static void clearCacheForDimension(Dimension dimension) {
         vampireVillages.remove(dimension);
     }
 
+    /**
+     * adds a vampire village
+     *
+     * @param dimension dimension of the village totem
+     * @param pos       position of the village totem
+     * @param box       bounding box of the village
+     */
     public static void addVampireVillage(Dimension dimension, BlockPos pos, AxisAlignedBB box) {
         updateVampireBoundingBox(dimension, pos, box);
     }
 
+    /**
+     * removes a vampire village
+     *
+     * @param dimension dimension of the village totem
+     * @param pos       position of the village totem
+     */
     public static void removeVampireVillage(Dimension dimension, BlockPos pos) {
         updateVampireBoundingBox(dimension, pos, null);
     }
 
+    /**
+     * checks if the position is in a vampire village
+     *
+     * @param dimension dimension of the pos
+     * @param blockPos  pos to check
+     * @return true if in a vampire controlled village otherwise false
+     */
     public static boolean isInsideVampireAreaCached(Dimension dimension, BlockPos blockPos) {
         if (vampireVillages.containsKey(dimension)) {
             for (Map.Entry<BlockPos, MutableBoundingBox> entry : vampireVillages.get(dimension).entrySet()) {
@@ -77,7 +104,12 @@ public class TotemHelper {
     }
 
     /**
-     * @return false if another totem exists
+     * add a totem
+     *
+     * @param world world of the totem
+     * @param pois points that may belong to the totem
+     * @param totemPos position of the totem
+     * @return false if no {@link PointOfInterest} belongs to the totem
      */
     public static boolean addTotem(World world, Set<PointOfInterest> pois, BlockPos totemPos) {
         BlockPos conflict = null;
@@ -109,48 +141,66 @@ public class TotemHelper {
         return !pois.isEmpty();
     }
 
+    /**
+     * removes {@link PointOfInterest} from the given set if another totem has more right to controll them
+     *
+     * @param pois        {@link PointOfInterest} collection which is disputed
+     * @param world       world of the totem
+     * @param totem       position of the totem
+     * @param conflicting position of the conflicting totem
+     */
     private static void handleTotemConflict(Set<PointOfInterest> pois, World world, BlockPos totem, BlockPos conflicting) {
 
         TotemTileEntity totem1 = ((TotemTileEntity) world.getTileEntity(totem));
         TotemTileEntity totem2 = ((TotemTileEntity) world.getTileEntity(conflicting));
 
-        if (totem1.getControllingFaction() != totem2.getControllingFaction()) {
-            pois.removeIf(poi -> !totem.equals(totemPositions.get(poi.getPos())));
-            return;
-            //TODO do nothing
+        boolean ignoreOtherTotem = true;
+
+        //noinspection ConstantConditions
+        if (totem1.getControllingFaction() != totem2.getControllingFaction()) { //both keep their pois
+            ignoreOtherTotem = false;
         }
 
-        if (totem1.getCapturingFaction() != null || totem2.getCapturingFaction() != null) {
-            pois.removeIf(poi -> !totem.equals(totemPositions.get(poi.getPos())));
-            return;
-            //TODO do nothing
+        if (totem1.getCapturingFaction() != null || totem2.getCapturingFaction() != null) { //both keep their pois
+            ignoreOtherTotem = false;
         }
 
         StructureStart structure1 = Structures.VILLAGE.getStart(world, totem, false);
         StructureStart structure2 = Structures.VILLAGE.getStart(world, conflicting, false);
 
-        if (structure1 == StructureStart.DUMMY && structure2 != StructureStart.DUMMY) {
-            pois.removeIf(poi -> !totem.equals(totemPositions.get(poi.getPos())));
-            return;
-            //TODO totem 2 winning
+        if (structure1 == StructureStart.DUMMY && structure2 != StructureStart.DUMMY) { //the first totem wins the pois if located in natural village, other looses them
+            ignoreOtherTotem = false;
         }
 
-        if (totem2.getSize() >= totem1.getSize()) {
+        if (totem2.getSize() >= totem1.getSize()) { //bigger village gets the pois, other looses them
+            ignoreOtherTotem = false;
+        }
+
+        if (!ignoreOtherTotem) {
             pois.removeIf(poi -> !totem.equals(totemPositions.get(poi.getPos())));
         }
     }
 
-    public static void removeTotem(Collection<PointOfInterest> structure, BlockPos pos) {
-        structure.forEach(pointOfInterest -> totemPositions.remove(pointOfInterest.getPos(), pos));
+    /**
+     * removes the totem
+     *
+     * @param pois the related {@link PointOfInterest}s
+     * @param pos  the position of the totem
+     */
+    public static void removeTotem(Collection<PointOfInterest> pois, BlockPos pos) {
+        pois.forEach(pointOfInterest -> totemPositions.remove(pointOfInterest.getPos(), pos));
         totemPositions.remove(pos);
     }
 
     /**
-     * @return {@code null} if no totem exists
+     * gets a totem position of a {@link PointOfInterest} if it exists
+     *
+     * @param pois collection of {@link PointOfInterest} to search for a totem position
+     * @return the registered totem position or {@code null} if no totem exists
      */
     @Nullable
-    public static BlockPos getTotemPosition(Collection<PointOfInterest> structure) {
-        for (PointOfInterest pointOfInterest : structure) {
+    public static BlockPos getTotemPosition(Collection<PointOfInterest> pois) {
+        for (PointOfInterest pointOfInterest : pois) {
             if (totemPositions.containsKey(pointOfInterest.getPos())) {
                 return totemPositions.get(pointOfInterest.getPos());
             }
@@ -158,11 +208,24 @@ public class TotemHelper {
         return null;
     }
 
+    /**
+     * gets the saved totem position for a related {@link PointOfInterest}
+     *
+     * @param pos position of the {@link PointOfInterest}
+     * @return the blockpos of the totem or {@code null} if there is no registered totem position for the {@link PointOfInterest}
+     */
     @Nullable
     public static BlockPos getTotemPosition(BlockPos pos) {
         return totemPositions.get(pos);
     }
 
+    /**
+     * forces a village totem to a specific faction
+     *
+     * @param faction the forced faction
+     * @param player  the player that requests the faction
+     * @return the feedback for the player
+     */
     public static ITextComponent forceFactionCommand(IFaction<?> faction, ServerPlayerEntity player) {
         List<PointOfInterest> pointOfInterests = ((ServerWorld) player.getEntityWorld()).getPointOfInterestManager().func_219146_b(point -> true, player.getPosition(), 15, PointOfInterestManager.Status.ANY).sorted((point1, point2) -> (int) (new Vec3d(point1.getPos()).distanceTo(new Vec3d(player.getPosition())) - new Vec3d(point2.getPos()).distanceTo(new Vec3d(player.getPosition())))).collect(Collectors.toList());
         if (pointOfInterests.stream().noneMatch(point -> totemPositions.containsKey(point.getPos()))) {
@@ -175,9 +238,16 @@ public class TotemHelper {
         }
         TotemTileEntity tile = (TotemTileEntity) te;
         tile.setForcedFaction(faction);
-        return new TranslationTextComponent("command.vampirism.test.village.success", faction.getName());
+        return new TranslationTextComponent("command.vampirism.test.village.success", faction == null ? "none" : faction.getName());
     }
 
+    /**
+     * gets all {@link PointOfInterest} points for a village totem to consider them as part of the village
+     *
+     * @param world world in which to search
+     * @param pos   position of the village totem to start searching
+     * @return a set of all related {@link PointOfInterest} points
+     */
     public static Set<PointOfInterest> getVillagePointsOfInterest(ServerWorld world, BlockPos pos) {
         PointOfInterestManager manager = world.getPointOfInterestManager();
         Set<PointOfInterest> finished = Sets.newHashSet();
@@ -199,9 +269,25 @@ public class TotemHelper {
 
     /**
      * use {@link #isVillage(Set, World, boolean)}
+     * <p>
+     *
+     * flag & 1 != 0 :
+     * <p>
+     *   - enough homes
+     * <p>
+     * flag & 2 != 0 :
+     * <p>
+     *   - enough work stations
+     * <p>
+     * flag & 4 != 0 :
+     * <p>
+     *   - enough villager
+     * <p>
      *
      * @param stats          the output of {@link #getVillageStats(Set, World)}
      * @param hasInteraction if the village is influenced by a faction
+     *
+     * @return flag which requirements are met
      */
     public static int isVillage(Map<Integer, Integer> stats, boolean hasInteraction) {
         int status = 0;
@@ -217,10 +303,39 @@ public class TotemHelper {
         return status;
     }
 
+    /**
+     * checks if the given  {@link PointOfInterest} Set can be interpreted as village
+     * <p>
+     * <p>
+     * flag & 1 != 0 :
+     * <p>
+     * - enough homes
+     * <p>
+     * flag & 2 != 0 :
+     * <p>
+     * - enough work stations
+     * <p>
+     * flag & 4 != 0 :
+     * <p>
+     * - enough villager
+     * <p>
+     *
+     * @param pointOfInterests the output of {@link #getVillageStats(Set, World)}
+     * @param world            the world of the point of interests
+     * @param hasInteraction   if the village is influenced by a faction
+     * @return flag which requirements are met
+     */
     public static int isVillage(Set<PointOfInterest> pointOfInterests, World world, boolean hasInteraction) {
         return isVillage(getVillageStats(pointOfInterests, world), hasInteraction);
     }
 
+    /**
+     * searches the given {@link PointOfInterest} set for village qualifying data
+     *
+     * @param pointOfInterests a {@link PointOfInterest} set to check for a village
+     * @param world            world of the point of interests
+     * @return map containing village related data
+     */
     public static Map<Integer, Integer> getVillageStats(Set<PointOfInterest> pointOfInterests, World world) {
         Map<PointOfInterestType, Long> poiTCounts = pointOfInterests.stream().map(PointOfInterest::getType).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         AxisAlignedBB area = getAABBAroundPOIs(pointOfInterests);
@@ -231,6 +346,13 @@ public class TotemHelper {
         }};
     }
 
+    /**
+     * adds/updates/removes the boundingbox of a vampire village to the global field {@link #vampireVillages}
+     *
+     * @param dimension dimension of the village totem
+     * @param totemPos  position of the village totem
+     * @param box       new bounding box of the village or null if the area should be removed
+     */
     public static void updateVampireBoundingBox(@Nonnull Dimension dimension, @Nonnull BlockPos totemPos, @Nullable AxisAlignedBB box) {
         Map<BlockPos, MutableBoundingBox> map = vampireVillages.computeIfAbsent(dimension, dimension1 -> new HashMap<>());
         if (box == null) {
@@ -241,6 +363,8 @@ public class TotemHelper {
     }
 
     /**
+     * creates a bounding box for the given {@link PointOfInterest}s
+     *
      * @throws NoSuchElementException if poi is empty
      */
     @Nullable
