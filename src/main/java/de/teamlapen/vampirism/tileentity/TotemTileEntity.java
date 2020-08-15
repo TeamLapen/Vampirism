@@ -257,7 +257,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             this.village = Collections.emptySet();
             return;
         }
-        if (!TotemHelper.isVillage(points, this.world)) {
+        if (!TotemHelper.isVillage(points, this.world, this.controllingFaction != null || this.capturingFaction != null)) {
             this.isInsideVillage = false;
             this.village = Collections.emptySet();
             return;

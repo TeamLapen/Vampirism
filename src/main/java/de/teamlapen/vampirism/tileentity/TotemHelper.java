@@ -153,6 +153,11 @@ public class TotemHelper {
         return null;
     }
 
+    @Nullable
+    public static BlockPos getTotemPosition(BlockPos pos) {
+        return totemPositions.get(pos);
+    }
+
     public static ITextComponent forceFactionCommand(IFaction<?> faction, ServerPlayerEntity player) {
         List<PointOfInterest> pointOfInterests = ((ServerWorld) player.getEntityWorld()).getPointOfInterestManager().func_219146_b(point -> true, player.getPosition(), 15, PointOfInterestManager.Status.ANY).sorted((point1, point2) -> (int) (new Vec3d(point1.getPos()).distanceTo(new Vec3d(player.getPosition())) - new Vec3d(point2.getPos()).distanceTo(new Vec3d(player.getPosition())))).collect(Collectors.toList());
         if (pointOfInterests.stream().noneMatch(point -> totemPositions.containsKey(point.getPos()))) {
@@ -171,9 +176,9 @@ public class TotemHelper {
     public static Set<PointOfInterest> getVillagePointsOfInterest(ServerWorld world, BlockPos pos) {
         PointOfInterestManager manager = world.getPointOfInterestManager();
         Set<PointOfInterest> finished = Sets.newHashSet();
-        Set<PointOfInterest> points = manager.func_219146_b(type -> !(type instanceof FactionPointOfInterestType), pos, 35, PointOfInterestManager.Status.ANY).collect(Collectors.toSet());
+        Set<PointOfInterest> points = manager.func_219146_b(type -> !(type instanceof FactionPointOfInterestType), pos, 50, PointOfInterestManager.Status.ANY).collect(Collectors.toSet());
         while (!points.isEmpty()) {
-            List<Stream<PointOfInterest>> list = points.stream().map(pointOfInterest -> manager.func_219146_b(type -> !(type instanceof FactionPointOfInterestType), pointOfInterest.getPos(), 25, PointOfInterestManager.Status.ANY)).collect(Collectors.toList());
+            List<Stream<PointOfInterest>> list = points.stream().map(pointOfInterest -> manager.func_219146_b(type -> !(type instanceof FactionPointOfInterestType), pointOfInterest.getPos(), 40, PointOfInterestManager.Status.ANY)).collect(Collectors.toList());
             points.clear();
             list.forEach(stream -> stream.forEach(point -> {
                 if (!finished.contains(point)) {
@@ -187,11 +192,11 @@ public class TotemHelper {
         return finished;
     }
 
-    public static boolean isVillage(Set<PointOfInterest> pointOfInterests, World world) {
+    public static boolean isVillage(Set<PointOfInterest> pointOfInterests, World world, boolean hasInteraction) {
         Map<PointOfInterestType, Long> poiTCounts = pointOfInterests.stream().map(PointOfInterest::getType).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         if (poiTCounts.getOrDefault(PointOfInterestType.HOME, 0L) >= 4) {
-            if (poiTCounts.entrySet().stream().filter(entry -> entry.getKey() != PointOfInterestType.HOME).mapToLong(Map.Entry::getValue).sum() >= 4) {
-                if (world.getEntitiesWithinAABB(VillagerEntity.class, getAABBAroundPOIs(pointOfInterests)).size() >= 4) {
+            if (poiTCounts.entrySet().stream().filter(entry -> entry.getKey() != PointOfInterestType.HOME).mapToLong(Map.Entry::getValue).sum() >= 2) {
+                if (hasInteraction || world.getEntitiesWithinAABB(VillagerEntity.class, getAABBAroundPOIs(pointOfInterests)).size() >= 4) {
                     return true;
                 }
             }
