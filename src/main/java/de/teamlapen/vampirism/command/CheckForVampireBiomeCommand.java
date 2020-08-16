@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -49,6 +48,7 @@ public class CheckForVampireBiomeCommand extends BasicCommand {
         } else {
             List<Biome> biomes = new ArrayList<>();
             biomes.add(ModBiomes.vampire_forest);
+            biomes.add(ModBiomes.vampire_forest_hills);
             context.getSource().sendFeedback((new TranslationTextComponent("command.vampirism.base.vampire_biome.searching")), true);
             ChunkPos pos = UtilLib.findNearBiome(entityPlayerMP.getEntityWorld(), entityPlayerMP.getPosition(), radius, biomes);
             if (pos == null) {

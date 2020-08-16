@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.gen.biome.VampireForestBiome;
 import de.teamlapen.vampirism.world.gen.features.VampirismBiomeFeatures;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
@@ -21,16 +22,20 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 @ObjectHolder(REFERENCE.MODID)
 public class ModBiomes {
     public static final VampireForestBiome vampire_forest = getNull();
+    public static final VampireForestBiome vampire_forest_hills = getNull();
 
 
     static void registerBiomes(IForgeRegistry<Biome> registry) {
         registry.register(new VampireForestBiome());
+        registry.register(new VampireForestBiome("vampire_forest_hills", builder -> builder.depth(0.8f).scale(0.5f)));
     }
 
     static void addBiome() {
         BiomeDictionary.addTypes(vampire_forest, BiomeDictionary.Type.OVERWORLD, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
+        BiomeDictionary.addTypes(vampire_forest_hills, BiomeDictionary.Type.OVERWORLD, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY, BiomeDictionary.Type.HILLS);
         if (!VampirismConfig.SERVER.disableVampireForest.get()) {
-            BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(vampire_forest, VampirismConfig.BALANCE.vampireForestWeight.get()));
+            BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(vampire_forest, MathHelper.clamp(VampirismConfig.BALANCE.vampireForestWeight.get() / 2, 1, Integer.MAX_VALUE)));
+            BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(vampire_forest_hills, VampirismConfig.BALANCE.vampireForestWeight.get() / 2));
         }
     }
 

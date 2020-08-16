@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.special.DraculaHalloweenEntity;
 import de.teamlapen.vampirism.entity.vampire.*;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.world.gen.biome.VampireBiome;
 import net.minecraft.entity.*;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.passive.*;
@@ -180,7 +181,7 @@ public class ModEntities {
          */
         List<Biome> zombieBiomes = Lists.newArrayList();
         zombieBiomes.addAll(allBiomes);
-        zombieBiomes.remove(ModBiomes.vampire_forest);
+        zombieBiomes.removeIf(biome -> biome instanceof VampireBiome);
         Iterator<Biome> iterator = zombieBiomes.iterator();
         while (iterator.hasNext()) {
             Biome b = iterator.next();
