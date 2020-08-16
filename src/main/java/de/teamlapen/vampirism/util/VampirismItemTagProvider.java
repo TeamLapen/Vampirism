@@ -30,5 +30,6 @@ public class VampirismItemTagProvider extends ItemTagsProvider {
         getBuilder(ModTags.Items.GARLIC).add(ModItems.item_garlic);
         getBuilder(ItemTags.SPRUCE_LOGS).add(ModBlocks.bloody_spruce_log.asItem());
         getBuilder(ItemTags.LEAVES).add(ModBlocks.bloody_spruce_leaves.asItem(), ModBlocks.bloody_spruce_leaves_red.asItem());
+        getBuilder(ItemTags.SAPLINGS).add(ModBlocks.bloody_spruce_sapling.asItem());
     }
 }
