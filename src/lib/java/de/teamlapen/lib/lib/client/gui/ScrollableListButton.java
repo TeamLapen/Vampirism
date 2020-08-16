@@ -71,7 +71,7 @@ public class ScrollableListButton extends ExtendedButton {
             GuiUtils.drawContinuousTexturedBox(mStack, MISC, this.x + width - 8, this.y - 1, alternate ? 23 : 0, 0, 9, this.height + 2, 9, 200, 2, 2, 2, 2, this.getBlitOffset());
             this.renderScroller(mStack);
             this.renderListButtons(mStack, mouseX, mouseY, partialTicks);
-            if (this.elements[this.elements.length - 1].visible) {
+            if (this.elements.length != 0 && this.elements[this.elements.length - 1].visible) {
                 this.hLine(mStack, this.x, this.x + this.width, this.y + this.height, alternate ? 0xffffffff : 0xff000000);
             }
         }

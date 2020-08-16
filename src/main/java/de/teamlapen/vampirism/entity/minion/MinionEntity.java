@@ -310,6 +310,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void loadUpdateFromNBT(CompoundNBT nbt) {
         if (nbt.contains("data_type")) {
@@ -318,6 +319,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
                 this.onMinionDataReceived((T) data);
                 this.minionData = (T) data;
                 this.minionId = nbt.getInt("minion_id");
+                super.setCustomName(data.getFormattedName());
             } catch (ClassCastException e) {
                 LOGGER.error("Failed to cast minion data. Maybe the correct data was not registered", e);
             }
@@ -490,7 +492,6 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * Can  be called client and server side
      */
     protected void onMinionDataReceived(@Nonnull T data) {
-
     }
 
     protected boolean isLord(PlayerEntity p) {

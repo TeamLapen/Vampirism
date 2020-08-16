@@ -697,6 +697,8 @@
   "entity.vampirism.vampire_baron": "Vampire Baron",
   "entity.vampirism.task_master_hunter": "Hunter representative",
   "entity.vampirism.task_master_vampire": "Vampire representative",
+  "entity.vampirism.vampire_minion": "Vampire Minion",
+  "entity.vampirism.hunter_minion": "Hunter Minion",
   "__comment": "entities_text",
   "entity.vampirism.vampire_baron.level": " Level %s",
   "__comment": "old",
