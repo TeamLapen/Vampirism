@@ -161,6 +161,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
     @Override
     protected void onMinionDataReceived(@Nonnull VampireMinionData data) {
+        super.onMinionDataReceived(data);
     }
 
     @Override
