@@ -26,7 +26,6 @@ import java.util.UUID;
 /**
  * Quick and dirty
  * Only just at halloween
- * TODO 1.14 test
  */
 public class HalloweenSpecial {
 
@@ -44,7 +43,7 @@ public class HalloweenSpecial {
         }
         int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
         int month = Calendar.getInstance().get(Calendar.MONTH);
-        return false; //day == 31 && month == 9; TODO
+        return day == 31 && month == 8;// 31.9
     }
 
     public static void checkEnable() {
