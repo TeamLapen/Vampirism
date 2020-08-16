@@ -4,7 +4,10 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.client.render.VampirismItemStackTESR;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.FlowerPotBlock;
+import net.minecraft.block.LogBlock;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.BlockItem;
@@ -66,8 +69,8 @@ public class ModBlocks {
     public static final WeaponTableBlock weapon_table = getNull();
     public static final PotionTableBlock potion_table = getNull();
     public static final LogBlock bloody_spruce_log = getNull();
-    public static final LeavesBlock bloody_spruce_leaves = getNull();
-    public static final LeavesBlock bloody_spruce_leaves_red = getNull();
+    public static final BloodySpruceLeavesBlock bloody_spruce_leaves = getNull();
+    public static final BloodySpruceLeavesBlock bloody_spruce_leaves_red = getNull();
     public static final BloodySpruceSaplingBlock bloody_spruce_sapling = getNull();
 
     static void registerItemBlocks(IForgeRegistry<Item> registry) {
@@ -162,8 +165,8 @@ public class ModBlocks {
         registry.register(new WeaponTableBlock());
         registry.register(new PotionTableBlock());
         registry.register(new LogBlock(MaterialColor.OBSIDIAN, Block.Properties.create(Material.WOOD, MaterialColor.BROWN).hardnessAndResistance(2.0F).sound(SoundType.WOOD)).setRegistryName(REFERENCE.MODID, "bloody_spruce_log"));
-        registry.register(new LeavesBlock(Block.Properties.create(Material.LEAVES).hardnessAndResistance(0.2F).tickRandomly().sound(SoundType.PLANT)).setRegistryName(REFERENCE.MODID, "bloody_spruce_leaves"));
-        registry.register(new LeavesBlock(Block.Properties.create(Material.LEAVES).hardnessAndResistance(0.2F).tickRandomly().sound(SoundType.PLANT)).setRegistryName(REFERENCE.MODID, "bloody_spruce_leaves_red"));
+        registry.register(new BloodySpruceLeavesBlock("bloody_spruce_leaves"));
+        registry.register(new BloodySpruceLeavesBlock("bloody_spruce_leaves_red"));
         registry.register(new BloodySpruceSaplingBlock());
     }
 
