@@ -1,0 +1,6 @@
+{
+  "parent": "block/leaves",
+  "textures": {
+    "all": "vampirism:block/bloody_spruce_leaves_red"
+  }
+}

@@ -13,6 +13,6 @@ public class BloodySpruceTree extends Tree {
     @Nullable
     @Override
     protected AbstractTreeFeature<NoFeatureConfig> getTreeFeature(@Nonnull Random random) {
-        return ModFeatures.vampire_tree;
+        return random.nextInt(10) < 7 ? ModFeatures.vampire_tree : ModFeatures.vampire_tree_red;
     }
 }
