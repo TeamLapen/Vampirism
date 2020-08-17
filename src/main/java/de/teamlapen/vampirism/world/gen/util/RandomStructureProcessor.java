@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.world.gen.util;
 
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.Dynamic;
-
 import de.teamlapen.vampirism.core.ModFeatures;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -20,6 +19,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * works the same as a {@link RuleStructureProcessor} but for {@link RandomBlockState} instead of {@link net.minecraft.world.gen.feature.template.RuleEntry}
+ */
 public class RandomStructureProcessor extends RuleStructureProcessor {
     private final List<RandomBlockState> rules;
 
@@ -33,11 +35,11 @@ public class RandomStructureProcessor extends RuleStructureProcessor {
     }
 
     @Nullable
-    public Template.BlockInfo process(IWorldReader worldReaderIn, BlockPos pos, Template.BlockInfo p_215194_3_, Template.BlockInfo blockInfo, PlacementSettings placementSettingsIn) {
+    public Template.BlockInfo process(IWorldReader worldReaderIn, @Nonnull BlockPos pos, @Nonnull Template.BlockInfo p_215194_3_, Template.BlockInfo blockInfo, @Nonnull PlacementSettings placementSettingsIn) {
         Random random = new Random(MathHelper.getPositionRandom(blockInfo.pos));
         BlockState blockstate = worldReaderIn.getBlockState(blockInfo.pos);
 
-        for(RandomBlockState ruleEntry : this.rules) {
+        for (RandomBlockState ruleEntry : this.rules) {
             if (ruleEntry.test(blockInfo.state, blockstate, random)) {
                 Pair<BlockState, CompoundNBT> pair = ruleEntry.getOutput();
                 return new Template.BlockInfo(blockInfo.pos, pair.getKey(), pair.getValue());
