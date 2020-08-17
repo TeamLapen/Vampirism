@@ -24,11 +24,6 @@ public class HunterTrainerRenderer extends BipedRenderer<HunterTrainerEntity, Pl
     }
 
     @Override
-    public void doRender(HunterTrainerEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        super.doRender(entity, x, y, z, entityYaw, partialTicks);
-    }
-
-    @Override
     protected ResourceLocation getEntityTexture(HunterTrainerEntity entity) {
         return texture;
     }
