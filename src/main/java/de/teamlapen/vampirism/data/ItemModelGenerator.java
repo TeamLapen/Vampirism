@@ -156,7 +156,6 @@ public class ItemModelGenerator extends ItemModelProvider {
 
         withExistingParent(ModItems.advanced_vampire_hunter_spawn_egg, mcLoc("item/template_spawn_egg"));
         withExistingParent(ModItems.advanced_vampire_spawn_egg, mcLoc("item/template_spawn_egg"));
-        withExistingParent(ModItems.ghost_spawn_egg, mcLoc("item/template_spawn_egg"));
         withExistingParent(ModItems.hunter_trainer_spawn_egg, mcLoc("item/template_spawn_egg"));
         withExistingParent(ModItems.vampire_baron_spawn_egg, mcLoc("item/template_spawn_egg"));
         withExistingParent(ModItems.vampire_spawn_egg, mcLoc("item/template_spawn_egg"));

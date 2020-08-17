@@ -17,7 +17,6 @@ import de.teamlapen.vampirism.entity.hunter.*;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.vampire.*;
-import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.*;
 import net.minecraft.util.ResourceLocation;
@@ -57,7 +56,6 @@ public class ModEntities {
     public static final EntityType<CrossbowArrowEntity> crossbow_arrow = getNull();
     public static final EntityType<DarkBloodProjectileEntity> dark_blood_projectile = getNull();
     public static final EntityType<DummyBittenAnimalEntity> dummy_creature;
-    public static final EntityType<GhostEntity> ghost;
     public static final EntityType<HunterTrainerEntity> hunter_trainer;
     public static final EntityType<DummyHunterTrainerEntity> hunter_trainer_dummy = getNull();
     public static final EntityType<AreaParticleCloudEntity> particle_cloud = getNull();
@@ -79,7 +77,6 @@ public class ModEntities {
 
     static {
         //IMPORTANT - Must include all entity types that are used in vampire forest spawns
-        ghost = prepareEntityType("ghost", EntityType.Builder.create(GhostEntity::new, EntityClassification.MONSTER).size(0.8F, 1.95F), true);
         hunter = prepareEntityType("hunter", EntityType.Builder.create(BasicHunterEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
         hunter_trainer = prepareEntityType("hunter_trainer", EntityType.Builder.create(HunterTrainerEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
         advanced_hunter = prepareEntityType("advanced_hunter", EntityType.Builder.create(AdvancedHunterEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
@@ -131,7 +128,6 @@ public class ModEntities {
         registry.register(prepareEntityType("crossbow_arrow", EntityType.Builder.<CrossbowArrowEntity>create(CrossbowArrowEntity::new, EntityClassification.MISC).size(0.5F, 0.5F).setCustomClientFactory((spawnEntity, world) -> new CrossbowArrowEntity(ModEntities.crossbow_arrow, world)), false));
         registry.register(prepareEntityType("dark_blood_projectile", EntityType.Builder.<DarkBloodProjectileEntity>create(DarkBloodProjectileEntity::new, EntityClassification.MISC).size(0.6F, 1.95F).immuneToFire().setCustomClientFactory((spawnEntity, world) -> new DarkBloodProjectileEntity(ModEntities.dark_blood_projectile, world)), false));
         registry.register(dummy_creature);
-        registry.register(ghost);
         registry.register(hunter_trainer);
         registry.register(prepareEntityType("hunter_trainer_dummy", EntityType.Builder.create(DummyHunterTrainerEntity::new, EntityClassification.MISC).size(0.6F, 1.95F), true));
         registry.register(prepareEntityType("particle_cloud", EntityType.Builder.create(AreaParticleCloudEntity::new, EntityClassification.MISC).size(6.0F, 0.5F).immuneToFire().setCustomClientFactory((spawnEntity, world) -> new AreaParticleCloudEntity(ModEntities.particle_cloud, world)), false));
@@ -166,7 +162,6 @@ public class ModEntities {
         EntitySpawnPlacementRegistry.register(dummy_creature, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, DummyBittenAnimalEntity::spawnPredicate);
         EntitySpawnPlacementRegistry.register(converted_creature, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ConvertedCreatureEntity::spawnPredicate);
         EntitySpawnPlacementRegistry.register(converted_sheep, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ConvertedCreatureEntity::spawnPredicate);
-        EntitySpawnPlacementRegistry.register(ghost, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, GhostEntity::spawnPredicateGhost);
         EntitySpawnPlacementRegistry.register(hunter_trainer, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canSpawnOn);
         EntitySpawnPlacementRegistry.register(hunter_trainer_dummy, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canSpawnOn);
         EntitySpawnPlacementRegistry.register(vampire, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, VampireBaseEntity::spawnPredicateVampire);
@@ -226,6 +221,8 @@ public class ModEntities {
                 mapping.remap(ModEntities.hunter);
             } else if (mapping.key.equals(new ResourceLocation("vampirism:vampire_hunter_imob"))) {
                 mapping.remap(ModEntities.hunter_imob);
+            } else if (mapping.key.equals(new ResourceLocation("vampirism:ghost"))) {
+                mapping.ignore();
             }
         });
     }

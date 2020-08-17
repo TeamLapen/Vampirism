@@ -20,7 +20,6 @@ public class ModEntitiesRender {
 
     public static void registerEntityRenderer(Supplier<Minecraft> minecraftSupplier) {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.blinding_bat, BatRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ghost, GhostRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_creature_imob, ConvertedCreatureRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_creature, ConvertedCreatureRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_horse, ConvertedHorseRenderer::new);

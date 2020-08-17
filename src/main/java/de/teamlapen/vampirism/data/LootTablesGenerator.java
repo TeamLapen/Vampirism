@@ -90,7 +90,6 @@ public class LootTablesGenerator extends LootTableProvider {
             this.registerLootTable(ModEntities.converted_sheep, LootTable.builder());
             this.registerLootTable(ModEntities.converted_horse, LootTable.builder());
             this.registerLootTable(ModEntities.dummy_creature, LootTable.builder());
-            this.registerLootTable(ModEntities.ghost, LootTable.builder());
             this.registerLootTable(ModEntities.hunter_trainer, LootTable.builder());
             LootTable.Builder vampire = LootTable.builder()
                     .addLootPool(LootPool.builder().name("general").rolls(ConstantRange.of(1)).acceptCondition(KilledByPlayer.builder()).acceptCondition(RandomChanceWithLooting.builder(0.33f, 0.05f))
