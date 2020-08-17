@@ -39,6 +39,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -69,6 +70,7 @@ public class GuideBook implements IGuideBook {
         categories.add(new CategoryItemStack(buildWorld(), "guide.vampirism.world.title", new ItemStack(ModBlocks.cursed_earth)));
         categories.add(new CategoryItemStack(buildItems(), "guide.vampirism.items.title", new ItemStack(Items.APPLE)));
         categories.add(new CategoryItemStack(buildBlocks(), "guide.vampirism.blocks.title", new ItemStack(ModBlocks.castle_block_dark_brick)));
+        MinecraftForge.EVENT_BUS.post(new VampirismGuideBookCategoriesEvent(categories));
         LOGGER.debug("Built content in {} ms", System.currentTimeMillis() - start);
     }
 
