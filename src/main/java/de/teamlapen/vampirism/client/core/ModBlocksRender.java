@@ -58,7 +58,7 @@ public class ModBlocksRender {
         }, ModBlocks.vampire_spruce_leaves);
         colors.register((state, worldIn, pos, tintIndex) -> {
             return 0x2e0606;
-        }, ModBlocks.bloody_spruce_leaves, ModBlocks.bloody_spruce_log);
+        }, ModBlocks.bloody_spruce_leaves);
     }
 
     private static void registerTileRenderer() {
