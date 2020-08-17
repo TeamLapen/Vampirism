@@ -10,13 +10,19 @@ import net.minecraft.world.biome.DefaultBiomeFeatures;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
 
+import java.util.function.Function;
+
 public class VampireForestBiome extends VampireBiome {
     public final static String regName = "vampire_forest";
 
     private static final SurfaceBuilderConfig vampire_surface = new SurfaceBuilderConfig(ModBlocks.cursed_earth.getDefaultState(), ModBlocks.cursed_earth.getDefaultState(), ModBlocks.cursed_earth.getDefaultState());
 
-    public VampireForestBiome() {//TODO 1.14 entity weight
-        super(regName, new Builder().surfaceBuilder(SurfaceBuilder.DEFAULT, vampire_surface).category(Category.FOREST).depth(0.1F).scale(0.025F).waterColor(0xEE2505).waterFogColor(0xEE2505).precipitation(RainType.NONE).parent(null).downfall(0).temperature(0.3f));
+    public VampireForestBiome() {
+        this(regName, biomeBuilder -> biomeBuilder);
+    }
+
+    public VampireForestBiome(String regName, Function<Builder, Builder> biomeChanger) {
+        super(regName, biomeChanger.apply(new Builder().surfaceBuilder(SurfaceBuilder.DEFAULT, vampire_surface).category(Category.FOREST).depth(0.1F).scale(0.025F).waterColor(0x7d0000).waterFogColor(0x7d0000).precipitation(RainType.NONE).parent(null).downfall(0).temperature(0.3f)));
 
         VampirismBiomeFeatures.addVampireTrees(this);
         VampirismBiomeFeatures.addVampirismFlowers(this);
