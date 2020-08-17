@@ -222,6 +222,8 @@ public class ModEntities {
                 mapping.remap(ModEntities.hunter);
             } else if (mapping.key.equals(new ResourceLocation("vampirism:vampire_hunter_imob"))) {
                 mapping.remap(ModEntities.hunter_imob);
+            } else if (mapping.key.equals(new ResourceLocation("vampirism:ghost"))) {
+                mapping.ignore();
             }
         });
     }

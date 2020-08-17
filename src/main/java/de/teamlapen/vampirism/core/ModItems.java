@@ -176,7 +176,6 @@ public class ModItems {
     public static final SpawnEggItem vampire_hunter_spawn_egg = getNull();
     public static final SpawnEggItem advanced_vampire_spawn_egg = getNull();
     public static final SpawnEggItem advanced_vampire_hunter_spawn_egg = getNull();
-    public static final SpawnEggItem ghost_spawn_egg = getNull();
     public static final SpawnEggItem vampire_baron_spawn_egg = getNull();
     public static final SpawnEggItem hunter_trainer_spawn_egg = getNull();
 
@@ -404,6 +403,8 @@ public class ModItems {
             if ("vampirism:blood_potion".equals(missingMapping.key.toString())) {
                 missingMapping.ignore();
             } else if ("vampirism:blood_potion_table".equals(missingMapping.key.toString())) {
+                missingMapping.ignore();
+            } else if ("vampirism:ghost_spawn_egg".equals(missingMapping.key.toString())) {
                 missingMapping.ignore();
             }
         });

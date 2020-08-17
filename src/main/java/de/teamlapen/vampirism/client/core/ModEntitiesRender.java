@@ -28,7 +28,6 @@ public class ModEntitiesRender {
 
     public static void registerEntityRenderer() {
         RenderingRegistry.registerEntityRenderingHandler(BlindingBatEntity.class, BatRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(GhostEntity.class, GhostRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ConvertedCreatureEntity.class, ConvertedCreatureRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ConvertedHorseEntity.class, ConvertedHorseRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(BasicHunterEntity.class, BasicHunterRenderer::new);
