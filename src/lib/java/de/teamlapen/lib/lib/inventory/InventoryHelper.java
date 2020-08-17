@@ -21,6 +21,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.BiPredicate;
 
 public class InventoryHelper {
 
@@ -29,22 +30,27 @@ public class InventoryHelper {
      * Checks if the given inventory contains at least the given amount of tileInventory in the respective slots.
      *
      * @param inventory
-     * @param items     Has to have the same size as the inventory
-     * @param amounts   Has to have the same size as the inventory
+     * @param items           Has to have the same size as the inventory
+     * @param amounts         Has to have the same size as the inventory
+     * @param compareFunction Used to determine if the first items can be used in place of the second one (most simple -> equals)
      * @return Null if all tileInventory are present otherwise an itemstack which represents the missing tileInventory
      */
-    public static ItemStack checkItems(IInventory inventory, Item[] items, int[] amounts) {
+    public static ItemStack checkItems(IInventory inventory, Item[] items, int[] amounts, BiPredicate<Item, Item> compareFunction) {
         if (inventory.getSizeInventory() < amounts.length || items.length != amounts.length) {
             throw new IllegalArgumentException("There has to be one itemstack and amount value for each item");
         }
         for (int i = 0; i < items.length; i++) {
             ItemStack stack = inventory.getStackInSlot(i);
-            int actual = (!stack.isEmpty() && stack.getItem().equals(items[i])) ? stack.getCount() : 0;
+            int actual = (!stack.isEmpty() && compareFunction.test(stack.getItem(), items[i])) ? stack.getCount() : 0;
             if (actual < amounts[i]) {
                 return new ItemStack(items[i], amounts[i] - actual);
             }
         }
         return ItemStack.EMPTY;
+    }
+
+    public static ItemStack checkItems(IInventory inventory, Item[] items, int[] amounts) {
+        return checkItems(inventory, items, amounts, Object::equals);
     }
 
     /**
