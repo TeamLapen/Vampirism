@@ -849,11 +849,13 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             if (fullConvert) {
                 List<HunterBaseEntity> hunterEntities = this.world.getEntitiesWithinAABB(HunterBaseEntity.class, getVillageArea());
                 for (HunterBaseEntity hunter : hunterEntities) {
-                    if(hunter instanceof ICaptureIgnore)
+                    if (hunter instanceof ICaptureIgnore)
                         continue;
                     this.spawnEntity(this.getCaptureEntityForFaction(this.capturingFaction).create(this.world), hunter, true);
                 }
             }
+        } else {
+            updateTrainer(true);
         }
 
         if (VReference.VAMPIRE_FACTION.equals(this.capturingFaction)) {

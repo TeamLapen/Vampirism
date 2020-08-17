@@ -18,12 +18,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class HunterTrainerRenderer extends BipedRenderer<MobEntity, PlayerModel<MobEntity>> {
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base1.png");
-    private static final ResourceLocation textureCloak = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampire_baron_cloak.png");
 
 
-    public HunterTrainerRenderer(EntityRendererManager renderManagerIn) {
+    public HunterTrainerRenderer(EntityRendererManager renderManagerIn, boolean renderEquipment) {
         super(renderManagerIn, new PlayerModel<>(0,false), 0.5F);
-        this.addLayer(new HunterEquipmentLayer<>(this, h-> HunterEquipmentModel.StakeType.ONLY, entityModel -> 1));
+        if(renderEquipment)this.addLayer(new HunterEquipmentLayer<>(this, h-> HunterEquipmentModel.StakeType.ONLY, entityModel -> 1));
         //this.addLayer(new CloakLayer<>(this, textureCloak, Predicates.alwaysTrue()));
     }
 

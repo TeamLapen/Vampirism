@@ -28,7 +28,7 @@ public class ModEntitiesRender {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter_imob, BasicHunterRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.vampire, BasicVampireRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.vampire_imob, BasicVampireRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter_trainer, HunterTrainerRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter_trainer, e -> new HunterTrainerRenderer(e,true));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.vampire_baron, VampireBaronRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.advanced_hunter, AdvancedHunterRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.advanced_hunter_imob, AdvancedHunterRenderer::new);
@@ -41,7 +41,7 @@ public class ModEntitiesRender {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.throwable_item, manager -> new ThrowableItemRenderer(manager, Minecraft.getInstance().getItemRenderer()));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.dark_blood_projectile, DarkBloodProjectileRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.soul_orb, manager -> new SoulOrbRenderer(manager, Minecraft.getInstance().getItemRenderer()));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter_trainer_dummy, HunterTrainerRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter_trainer_dummy, e-> new HunterTrainerRenderer(e,false));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.dummy_creature, DummyRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.vampire_minion, VampireMinionRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter_minion, HunterMinionRenderer::new);
