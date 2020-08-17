@@ -59,4 +59,8 @@ public class PureBloodItem extends VampirismItem {
         return new TranslationTextComponent(this.getDefaultTranslationKey()).appendText(" " + (level + 1));
     }
 
+    public int getLevel() {
+        return this.level;
+    }
+
 }

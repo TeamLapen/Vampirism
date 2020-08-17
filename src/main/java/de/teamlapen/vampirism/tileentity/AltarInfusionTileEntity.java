@@ -76,7 +76,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
      */
     private int targetLevel;
 
-    private LazyOptional<IItemHandler> itemHandlerOptional = LazyOptional.of(this::createWrapper);
+    private final LazyOptional<IItemHandler> itemHandlerOptional = LazyOptional.of(this::createWrapper);
 
     public AltarInfusionTileEntity() {
         super(ModTiles.altar_infusion, 3, AltarInfusionContainer.SELECTOR_INFOS);
@@ -348,7 +348,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
     private boolean checkItemRequirements(PlayerEntity player, boolean messagePlayer) {
         int newLevel = targetLevel;
         VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(newLevel);
-        ItemStack missing = InventoryHelper.checkItems(this, new Item[]{PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel), ModItems.human_heart, ModItems.vampire_book}, new int[]{requirements.blood, requirements.heart, requirements.vampireBook});
+        ItemStack missing = InventoryHelper.checkItems(this, new Item[]{PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel), ModItems.human_heart, ModItems.vampire_book}, new int[]{requirements.blood, requirements.heart, requirements.vampireBook}, (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem && required instanceof PureBloodItem && ((PureBloodItem) supplied).getLevel() >= ((PureBloodItem) required).getLevel()));
         if (!missing.isEmpty()) {
             if (messagePlayer) {
                 ITextComponent item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : new TranslationTextComponent(missing.getTranslationKey());
