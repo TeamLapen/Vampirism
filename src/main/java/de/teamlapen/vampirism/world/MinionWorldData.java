@@ -84,7 +84,6 @@ public class MinionWorldData extends WorldSavedData {
 
     @Override
     public void read(CompoundNBT nbt) {
-        LOGGER.info("Deserializing");
 
         controllers.clear();
         ListNBT all = nbt.getList("controllers", 10);
@@ -104,7 +103,6 @@ public class MinionWorldData extends WorldSavedData {
     @Nonnull
     @Override
     public CompoundNBT write(CompoundNBT compound) {
-        LOGGER.info("Serializing");
         ListNBT all = new ListNBT();
         controllers.object2ObjectEntrySet().fastForEach((entry) -> {
             if (entry.getValue().hasMinions()) {
