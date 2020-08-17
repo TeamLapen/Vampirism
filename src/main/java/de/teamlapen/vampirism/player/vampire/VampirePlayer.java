@@ -45,6 +45,7 @@ import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
@@ -714,6 +715,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     EffectInstance hunterEffect = player.getActivePotionEffect(Effects.HUNGER);
                     player.addPotionEffect(new EffectInstance(ModEffects.thirst, hunterEffect.getDuration(), hunterEffect.getAmplifier()));
                     player.removePotionEffect(Effects.HUNGER);
+                }
+                if (player.ticksExisted % 64 == 0 && player instanceof ServerPlayerEntity) {
+                    ((ServerPlayerEntity) player).getStats().setValue(player, Stats.CUSTOM.get(Stats.TIME_SINCE_REST), 1);
                 }
                 if (actionHandler.updateActions()) {
                     sync = true;
