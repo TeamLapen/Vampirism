@@ -48,7 +48,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     /**
      * Used for holding a crossbow
      */
-    private static final DataParameter<Boolean> RAISED_ARM = EntityDataManager.createKey(MinionEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> RAISED_ARM = EntityDataManager.createKey(HunterMinionEntity.class, DataSerializers.BOOLEAN);
 
     static {
         MinionData.registerDataType(HunterMinionData.ID, HunterMinionData::new);
