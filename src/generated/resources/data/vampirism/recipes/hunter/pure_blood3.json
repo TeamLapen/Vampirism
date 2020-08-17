@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "vampirism:pure_blood_4"
+    },
+    {
+      "item": "vampirism:vampire_blood_bottle"
+    }
+  ],
+  "result": {
+    "item": "vampirism:pure_blood_3"
+  }
+}

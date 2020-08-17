@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:hunter/pure_blood1"
+    ]
+  },
+  "criteria": {
+    "has_pure_blood": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:pure_blood_2"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:hunter/pure_blood1"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_pure_blood",
+      "has_the_recipe"
+    ]
+  ]
+}

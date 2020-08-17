@@ -54,7 +54,6 @@ public class HunterLevelingConf {
             case 9:
                 return new int[]{15, 1, 1, 1};
             case 10:
-                return new int[]{20, 1, 2, 1};
             case 11:
                 return new int[]{20, 1, 2, 1};
             case 12:
@@ -83,11 +82,10 @@ public class HunterLevelingConf {
             case 8:
                 return new int[]{40, 0};
             case 9:
+            case 11:
                 return new int[]{20, 10};
             case 10:
                 return new int[]{20, 20};
-            case 11:
-                return new int[]{20, 10};
             case 12:
                 return new int[]{30, 10};
             case 13:
