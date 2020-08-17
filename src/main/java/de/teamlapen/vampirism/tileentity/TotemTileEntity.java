@@ -921,6 +921,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                     this.spawnEntity(this.getCaptureEntityForFaction(this.capturingFaction).create(this.world), hunter, true);
                 }
             }
+        } else {
+            updateTrainer(true);
         }
 
         if (VReference.VAMPIRE_FACTION.equals(this.capturingFaction)) {
