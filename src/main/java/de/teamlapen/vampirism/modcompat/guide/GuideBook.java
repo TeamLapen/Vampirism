@@ -376,11 +376,6 @@ public class GuideBook implements IGuideBook {
 //        minionPages.addAll(GuideHelper.pagesForLongText(UtilLib.translate(base + "minion.text")));
 //        entries.put(new ResourceLocation(base + "minion"), new EntryText(minionPages, "entity.vampirism." + ModEntities.VAMPIRE_MINION_SAVEABLE_NAME + ".name"));
 
-        ArrayList<IPage> ghostPages = new ArrayList<>();
-        ghostPages.add(new PageEntity(ModEntities.ghost));
-        ghostPages.addAll(PageHelper.pagesForLongText(translate(base + "ghost.text")));
-        entries.put(new ResourceLocation(base + "ghost"), new EntryText(ghostPages, ModEntities.ghost.getTranslationKey()));
-
         ArrayList<IPage> hunterTrainerPages = new ArrayList<>();
         hunterTrainerPages.add(new PageEntity(ModEntities.hunter_trainer));
         hunterTrainerPages.addAll(PageHelper.pagesForLongText(translate(base + "hunter_trainer.text")));
