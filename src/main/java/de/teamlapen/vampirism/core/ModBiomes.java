@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.gen.biome.VampireForestBiome;
 import de.teamlapen.vampirism.world.gen.features.VampirismBiomeFeatures;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
@@ -33,9 +32,9 @@ public class ModBiomes {
     static void addBiome() {
         BiomeDictionary.addTypes(vampire_forest, BiomeDictionary.Type.OVERWORLD, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
         BiomeDictionary.addTypes(vampire_forest_hills, BiomeDictionary.Type.OVERWORLD, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY, BiomeDictionary.Type.HILLS);
-        if (!VampirismConfig.SERVER.disableVampireForest.get()) {
-            BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(vampire_forest, MathHelper.clamp(VampirismConfig.BALANCE.vampireForestWeight.get() / 2, 1, Integer.MAX_VALUE)));
-            BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(vampire_forest_hills, VampirismConfig.BALANCE.vampireForestWeight.get() / 2));
+        if (!VampirismConfig.SERVER.disableVampireForestBiomes.get()) {
+            BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(vampire_forest, VampirismConfig.BALANCE.vampireForestWeight.get() / 2));
+            BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(vampire_forest_hills, VampirismConfig.BALANCE.vampireForestHillsWeight.get() / 2));
         }
     }
 

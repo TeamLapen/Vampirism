@@ -24,8 +24,8 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class ModFeatures {
     //features
     public static final FlowersFeature vampire_flower = new VampireForestFlowerFeature(NoFeatureConfig::deserialize);
-    public static final TreeFeature vampire_tree = (TreeFeature) new TreeFeature(NoFeatureConfig::deserialize, false, 4, Blocks.SPRUCE_LOG.getDefaultState(), ModBlocks.bloody_spruce_leaves.getDefaultState(), false).setSapling(ModBlocks.bloody_spruce_sapling);
-    public static final TreeFeature vampire_tree_red = (TreeFeature) new TreeFeature(NoFeatureConfig::deserialize, false, 4, ModBlocks.bloody_spruce_log.getDefaultState(), ModBlocks.bloody_spruce_leaves_red.getDefaultState(), false).setSapling(ModBlocks.bloody_spruce_sapling);
+    public static final TreeFeature vampire_tree = (TreeFeature) new TreeFeature(NoFeatureConfig::deserialize, false, 4, Blocks.SPRUCE_LOG.getDefaultState(), ModBlocks.vampire_spruce_leaves.getDefaultState(), false).setSapling(ModBlocks.bloody_spruce_sapling);
+    public static final TreeFeature vampire_tree_red = (TreeFeature) new TreeFeature(NoFeatureConfig::deserialize, false, 4, ModBlocks.bloody_spruce_log.getDefaultState(), ModBlocks.bloody_spruce_leaves.getDefaultState(), false).setSapling(ModBlocks.bloody_spruce_sapling);
     public static final VampireDungeonFeature vampire_dungeon = new VampireDungeonFeature(NoFeatureConfig::deserialize);
     //structures
     public static final Structure<NoFeatureConfig> hunter_camp = new HunterCampStructure();

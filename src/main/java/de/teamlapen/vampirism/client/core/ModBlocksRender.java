@@ -55,10 +55,10 @@ public class ModBlocksRender {
         }, TotemTopBlock.getTotems());
         colors.register((state, worldIn, pos, tintIndex) -> {
             return 0x1E1F1F;
-        }, ModBlocks.bloody_spruce_leaves);
+        }, ModBlocks.vampire_spruce_leaves);
         colors.register((state, worldIn, pos, tintIndex) -> {
             return 0x2e0606;
-        }, ModBlocks.bloody_spruce_leaves_red, ModBlocks.bloody_spruce_log);
+        }, ModBlocks.bloody_spruce_leaves, ModBlocks.bloody_spruce_log);
     }
 
     private static void registerTileRenderer() {

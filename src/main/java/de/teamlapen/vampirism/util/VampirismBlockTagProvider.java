@@ -24,7 +24,7 @@ public class VampirismBlockTagProvider extends BlockTagsProvider {
         getBuilder(Tags.Blocks.DIRT).add(ModBlocks.cursed_earth);
         getBuilder(ModTags.Blocks.CURSEDEARTH).add(ModBlocks.cursed_earth);
         getBuilder(BlockTags.SPRUCE_LOGS).add(ModBlocks.bloody_spruce_log);
-        getBuilder(BlockTags.LEAVES).add(ModBlocks.bloody_spruce_leaves, ModBlocks.bloody_spruce_leaves_red);
+        getBuilder(BlockTags.LEAVES).add(ModBlocks.vampire_spruce_leaves, ModBlocks.bloody_spruce_leaves);
         getBuilder(BlockTags.SAPLINGS).add(ModBlocks.bloody_spruce_sapling);
 
     }

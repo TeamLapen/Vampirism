@@ -69,8 +69,8 @@ public class ModBlocks {
     public static final WeaponTableBlock weapon_table = getNull();
     public static final PotionTableBlock potion_table = getNull();
     public static final LogBlock bloody_spruce_log = getNull();
+    public static final BloodySpruceLeavesBlock vampire_spruce_leaves = getNull();
     public static final BloodySpruceLeavesBlock bloody_spruce_leaves = getNull();
-    public static final BloodySpruceLeavesBlock bloody_spruce_leaves_red = getNull();
     public static final BloodySpruceSaplingBlock bloody_spruce_sapling = getNull();
 
     static void registerItemBlocks(IForgeRegistry<Item> registry) {
@@ -111,8 +111,8 @@ public class ModBlocks {
         registry.register(itemBlock(weapon_table));
         registry.register(itemBlock(potion_table));
         registry.register(itemBlock(bloody_spruce_log));
+        registry.register(itemBlock(vampire_spruce_leaves));
         registry.register(itemBlock(bloody_spruce_leaves));
-        registry.register(itemBlock(bloody_spruce_leaves_red));
         registry.register(itemBlock(bloody_spruce_sapling));
     }
 
@@ -165,8 +165,8 @@ public class ModBlocks {
         registry.register(new WeaponTableBlock());
         registry.register(new PotionTableBlock());
         registry.register(new LogBlock(MaterialColor.OBSIDIAN, Block.Properties.create(Material.WOOD, MaterialColor.BROWN).hardnessAndResistance(2.0F).sound(SoundType.WOOD)).setRegistryName(REFERENCE.MODID, "bloody_spruce_log"));
+        registry.register(new BloodySpruceLeavesBlock("vampire_spruce_leaves"));
         registry.register(new BloodySpruceLeavesBlock("bloody_spruce_leaves"));
-        registry.register(new BloodySpruceLeavesBlock("bloody_spruce_leaves_red"));
         registry.register(new BloodySpruceSaplingBlock());
     }
 
