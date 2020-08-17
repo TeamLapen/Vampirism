@@ -227,7 +227,7 @@ public class TotemHelper {
      * @return the feedback for the player
      */
     public static ITextComponent forceFactionCommand(IFaction<?> faction, ServerPlayerEntity player) {
-        List<PointOfInterest> pointOfInterests = ((ServerWorld) player.getEntityWorld()).getPointOfInterestManager().func_219146_b(point -> true, player.getPosition(), 15, PointOfInterestManager.Status.ANY).sorted((point1, point2) -> (int) (new Vec3d(point1.getPos()).distanceTo(new Vec3d(player.getPosition())) - new Vec3d(point2.getPos()).distanceTo(new Vec3d(player.getPosition())))).collect(Collectors.toList());
+        List<PointOfInterest> pointOfInterests = ((ServerWorld) player.getEntityWorld()).getPointOfInterestManager().func_219146_b(point -> true, player.getPosition(), 25, PointOfInterestManager.Status.ANY).sorted((point1, point2) -> (int) (new Vec3d(point1.getPos()).distanceTo(new Vec3d(player.getPosition())) - new Vec3d(point2.getPos()).distanceTo(new Vec3d(player.getPosition())))).collect(Collectors.toList());
         if (pointOfInterests.stream().noneMatch(point -> totemPositions.containsKey(point.getPos()))) {
             return new TranslationTextComponent("command.vampirism.test.village.no_village");
         }

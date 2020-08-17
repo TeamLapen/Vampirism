@@ -18,7 +18,7 @@ public class CaptureVillageCommand extends BasicCommand {
                         .executes(context -> capture(context.getSource(), context.getSource().asPlayer(), FactionArgument.getFaction(context, "faction"))));
     }
 
-    private static int capture(CommandSource source, ServerPlayerEntity player, IPlayableFaction faction) {
+    private static int capture(CommandSource source, ServerPlayerEntity player, IPlayableFaction<?> faction) {
         source.sendFeedback(TotemHelper.forceFactionCommand(faction, player), true);
         return 0;
     }
