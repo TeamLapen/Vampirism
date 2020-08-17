@@ -54,6 +54,7 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModBlocks.totem_top_vampirism_vampire);
             add(ModBlocks.totem_top_vampirism_hunter);
             add(ModBlocks.vampire_orchid);
+            add(ModBlocks.bloody_spruce_log);
         }};
         Set<Item> items = new HashSet<Item>() {{
             add(ModItems.hunter_coat_chest_normal);
@@ -125,6 +126,11 @@ public class ItemModelGenerator extends ItemModelProvider {
         blocks.forEach(this::block);
         items.forEach(this::item);
         itemsWithTexture.forEach(this::item);
+
+        withExistingParent(ModBlocks.bloody_spruce_leaves, mcLoc("block/oak_leaves"));
+        withExistingParent(ModBlocks.vampire_spruce_leaves, mcLoc("block/oak_leaves"));
+
+        withExistingParent(ModBlocks.bloody_spruce_sapling, mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/" + ModBlocks.bloody_spruce_sapling.getRegistryName().getPath());
 
         withExistingParent(ModBlocks.alchemical_fire, modLoc("block/fire_side"));
         withExistingParent(ModBlocks.altar_inspiration, modLoc("block/altar_inspiration/altar_inspiration"));

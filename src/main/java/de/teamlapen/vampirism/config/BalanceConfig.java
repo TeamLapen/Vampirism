@@ -10,6 +10,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue hunterTentDistance;
     public final ForgeConfigSpec.IntValue hunterTentSeparation;
     public final ForgeConfigSpec.IntValue vampireForestWeight;
+    public final ForgeConfigSpec.IntValue vampireForestHillsWeight;
     public final ForgeConfigSpec.BooleanValue canCancelSanguinare;
     public final ForgeConfigSpec.IntValue arrowVampireKillerMaxHealth;
     public final ForgeConfigSpec.IntValue holyWaterSplashDamage;
@@ -166,7 +167,8 @@ public class BalanceConfig {
 
         hunterTentDistance = builder.comment("In chunks. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentDistance", 6, 2, Integer.MAX_VALUE);
         hunterTentSeparation = builder.comment("In chunks. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentSeparation", 2, 1, Integer.MAX_VALUE);
-        vampireForestWeight = builder.defineInRange("vampireForestWeight", 6, 1, Integer.MAX_VALUE);
+        vampireForestWeight = builder.defineInRange("vampireForestWeight", 3, 1, Integer.MAX_VALUE);
+        vampireForestHillsWeight = builder.defineInRange("vampireForestHillsWeight", 3, 1, Integer.MAX_VALUE);
         canCancelSanguinare = builder.comment("If the sanguinare effect can be canceled by milk").define("canCancelSanguinare", true);
         arrowVampireKillerMaxHealth = builder.comment("The vampire killer arrow can only instant kill NPC vampires that have a max (not actual) health of this").defineInRange("arrowVampireKillerMaxHealth", 40, 1, Integer.MAX_VALUE);
         holyWaterSplashDamage = builder.comment("Damage a normal holy water splash bottle does when directly hitting a vampire").defineInRange("holyWaterSplashDamage", 5, 0, Integer.MAX_VALUE);

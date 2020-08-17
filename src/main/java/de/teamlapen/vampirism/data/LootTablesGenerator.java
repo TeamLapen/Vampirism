@@ -40,6 +40,12 @@ import java.util.function.Supplier;
 
 public class LootTablesGenerator extends LootTableProvider {
 
+    /**
+     * copied from {@link BlockLootTables}
+     */
+    public static final float[] DEFAULT_SAPLING_DROP_RATES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};
+
+
     public LootTablesGenerator(DataGenerator dataGeneratorIn) {
         super(dataGeneratorIn);
     }
@@ -246,6 +252,10 @@ public class LootTablesGenerator extends LootTableProvider {
             this.registerDropSelfLootTable(ModBlocks.weapon_table);
             this.registerLootTable(ModBlocks.tent, BlockLootTables.func_218482_a());
             this.registerFlowerPot(ModBlocks.potted_vampire_orchid);
+            this.registerDropSelfLootTable(ModBlocks.bloody_spruce_sapling);
+            this.registerDropSelfLootTable(ModBlocks.bloody_spruce_log);
+            this.registerLootTable(ModBlocks.vampire_spruce_leaves, (block) -> droppingWithChancesAndSticks(block, ModBlocks.bloody_spruce_sapling, DEFAULT_SAPLING_DROP_RATES));
+            this.registerLootTable(ModBlocks.bloody_spruce_leaves, (block) -> droppingWithChancesAndSticks(block, ModBlocks.bloody_spruce_sapling, DEFAULT_SAPLING_DROP_RATES));
         }
 
         @Nonnull

@@ -2,14 +2,13 @@ package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.client.render.VampirismItemStackTESR;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.block.Block;
-import net.minecraft.block.FlowerPotBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -18,7 +17,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
-
 import java.util.Set;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
@@ -76,6 +74,10 @@ public class ModBlocks {
     public static final VampirismFlowerBlock vampire_orchid = getNull();
     public static final WeaponTableBlock weapon_table = getNull();
     public static final PotionTableBlock potion_table = getNull();
+    public static final LogBlock bloody_spruce_log = getNull();
+    public static final BloodySpruceLeavesBlock vampire_spruce_leaves = getNull();
+    public static final BloodySpruceLeavesBlock bloody_spruce_leaves = getNull();
+    public static final BloodySpruceSaplingBlock bloody_spruce_sapling = getNull();
 
     static void registerItemBlocks(IForgeRegistry<Item> registry) {
         registry.register(itemBlock(alchemical_cauldron));
@@ -115,6 +117,10 @@ public class ModBlocks {
         registry.register(itemBlock(vampire_orchid));
         registry.register(itemBlock(weapon_table));
         registry.register(itemBlock(potion_table));
+        registry.register(itemBlock(bloody_spruce_log));
+        registry.register(itemBlock(vampire_spruce_leaves));
+        registry.register(itemBlock(bloody_spruce_leaves));
+        registry.register(itemBlock(bloody_spruce_sapling));
     }
 
     static void registerBlocks(IForgeRegistry<Block> registry) {
@@ -160,14 +166,20 @@ public class ModBlocks {
         registry.register(prepareRegister(new TentMainBlock()));
         registry.register(prepareRegister(new TotemBaseBlock()));
         registry.register(prepareRegister(new TotemTopBlock(false, new ResourceLocation("none")).setRegistryName(REFERENCE.MODID, "totem_top")));
-        registry.register(prepareRegister(new TotemTopBlock(false, REFERENCE.HUNTER_PLAYER_KEY).setRegistryName(REFERENCE.MODID,"totem_top_vampirism_hunter")));
-        registry.register(prepareRegister(new TotemTopBlock(false, REFERENCE.VAMPIRE_PLAYER_KEY).setRegistryName(REFERENCE.MODID,"totem_top_vampirism_vampire")));
+        registry.register(prepareRegister(new TotemTopBlock(false, REFERENCE.HUNTER_PLAYER_KEY).setRegistryName(REFERENCE.MODID, "totem_top_vampirism_hunter")));
+        registry.register(prepareRegister(new TotemTopBlock(false, REFERENCE.VAMPIRE_PLAYER_KEY).setRegistryName(REFERENCE.MODID, "totem_top_vampirism_vampire")));
         registry.register(prepareRegister(new TotemTopBlock(true, new ResourceLocation("none")).setRegistryName(REFERENCE.MODID, "totem_top_crafted")));
         registry.register(prepareRegister(new TotemTopBlock(true, REFERENCE.HUNTER_PLAYER_KEY).setRegistryName(REFERENCE.MODID, "totem_top_vampirism_hunter_crafted")));
         registry.register(prepareRegister(new TotemTopBlock(true, REFERENCE.VAMPIRE_PLAYER_KEY).setRegistryName(REFERENCE.MODID, "totem_top_vampirism_vampire_crafted")));
         registry.register(prepareRegister(vampire_orchid));
         registry.register(prepareRegister(new WeaponTableBlock()));
         registry.register(prepareRegister(new PotionTableBlock()));
+        Block log = new LogBlock(MaterialColor.OBSIDIAN, Block.Properties.create(Material.WOOD, MaterialColor.BROWN).hardnessAndResistance(2.0F).sound(SoundType.WOOD)).setRegistryName(REFERENCE.MODID, "bloody_spruce_log");
+        ((FireBlock) Blocks.FIRE).setFireInfo(log, 5, 5);
+        registry.register(prepareRegister(log));
+        registry.register(prepareRegister(new BloodySpruceLeavesBlock("vampire_spruce_leaves")));
+        registry.register(prepareRegister(new BloodySpruceLeavesBlock("bloody_spruce_leaves")));
+        registry.register(prepareRegister(new BloodySpruceSaplingBlock()));
     }
 
     private static Block prepareRegister(Block block){

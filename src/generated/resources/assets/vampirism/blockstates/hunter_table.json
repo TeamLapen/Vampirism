@@ -38,7 +38,7 @@
     {
       "when": {
         "facing": "north",
-        "variant": "complete|potion_cauldron|potion|weapon_potion"
+        "variant": "potion_cauldron|potion|weapon_potion|complete"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_bottle"
@@ -47,7 +47,7 @@
     {
       "when": {
         "facing": "east",
-        "variant": "complete|potion_cauldron|potion|weapon_potion"
+        "variant": "potion_cauldron|potion|weapon_potion|complete"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_bottle",
@@ -57,7 +57,7 @@
     {
       "when": {
         "facing": "south",
-        "variant": "complete|potion_cauldron|potion|weapon_potion"
+        "variant": "potion_cauldron|potion|weapon_potion|complete"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_bottle",
@@ -67,7 +67,7 @@
     {
       "when": {
         "facing": "west",
-        "variant": "complete|potion_cauldron|potion|weapon_potion"
+        "variant": "potion_cauldron|potion|weapon_potion|complete"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_bottle",
@@ -77,7 +77,7 @@
     {
       "when": {
         "facing": "north",
-        "variant": "cauldron|weapon_cauldron|complete|potion_cauldron"
+        "variant": "potion_cauldron|cauldron|weapon_cauldron|complete"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_garlic"
@@ -86,7 +86,7 @@
     {
       "when": {
         "facing": "east",
-        "variant": "cauldron|weapon_cauldron|complete|potion_cauldron"
+        "variant": "potion_cauldron|cauldron|weapon_cauldron|complete"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_garlic",
@@ -96,7 +96,7 @@
     {
       "when": {
         "facing": "south",
-        "variant": "cauldron|weapon_cauldron|complete|potion_cauldron"
+        "variant": "potion_cauldron|cauldron|weapon_cauldron|complete"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_garlic",
@@ -106,7 +106,7 @@
     {
       "when": {
         "facing": "west",
-        "variant": "cauldron|weapon_cauldron|complete|potion_cauldron"
+        "variant": "potion_cauldron|cauldron|weapon_cauldron|complete"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_garlic",
@@ -116,7 +116,7 @@
     {
       "when": {
         "facing": "north",
-        "variant": "weapon|weapon_cauldron|complete|weapon_potion"
+        "variant": "weapon|weapon_cauldron|weapon_potion|complete"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_hammer"
@@ -125,7 +125,7 @@
     {
       "when": {
         "facing": "east",
-        "variant": "weapon|weapon_cauldron|complete|weapon_potion"
+        "variant": "weapon|weapon_cauldron|weapon_potion|complete"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_hammer",
@@ -135,7 +135,7 @@
     {
       "when": {
         "facing": "south",
-        "variant": "weapon|weapon_cauldron|complete|weapon_potion"
+        "variant": "weapon|weapon_cauldron|weapon_potion|complete"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_hammer",
@@ -145,7 +145,7 @@
     {
       "when": {
         "facing": "west",
-        "variant": "weapon|weapon_cauldron|complete|weapon_potion"
+        "variant": "weapon|weapon_cauldron|weapon_potion|complete"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_hammer",

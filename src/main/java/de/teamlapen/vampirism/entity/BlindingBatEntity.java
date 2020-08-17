@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.config.BalanceMobProps;
-import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.world.gen.biome.VampireBiome;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.passive.BatEntity;
@@ -25,7 +25,7 @@ import java.util.Random;
 public class BlindingBatEntity extends BatEntity {
 
     public static boolean spawnPredicate(EntityType<? extends BlindingBatEntity> entityType, IWorld iWorld, SpawnReason spawnReason, BlockPos blockPos, Random random) {
-        if (ModBiomes.vampire_forest.equals(iWorld.getBiome(blockPos))) return true;
+        if (iWorld.getBiome(blockPos) instanceof VampireBiome) return true;
         if (blockPos.getY() >= iWorld.getSeaLevel()) {
             return false;
         } else {

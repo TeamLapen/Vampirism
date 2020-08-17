@@ -127,7 +127,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue disableFangInfection;
         public final ForgeConfigSpec.BooleanValue disableMobBiteInfection;
         public final ForgeConfigSpec.BooleanValue disableHalloweenSpecial;
-        public final ForgeConfigSpec.BooleanValue disableVampireForest;
+        public final ForgeConfigSpec.BooleanValue disableVampireForestBiomes;
         public final ForgeConfigSpec.BooleanValue disableHunterTentGen;
 
         public final ForgeConfigSpec.BooleanValue infoAboutGuideAPI;
@@ -203,7 +203,7 @@ public class VampirismConfig {
             disableFangInfection = builder.comment("Disable vampire fangs being usable to infect yourself").define("disableFangInfection", false);
             disableHalloweenSpecial = builder.comment("Disable Halloween special event").define("disableHalloweenSpecialEvent", false);
             disableMobBiteInfection = builder.comment("Prevent vampire mobs from infecting players when attacking").define("disableMobBiteInfection", false);
-            disableVampireForest = builder.comment("Disable vampire forest generation").define("disableVampireForest", false);
+            disableVampireForestBiomes = builder.comment("Disable vampire forest biomes generation").define("disableVampireForest", false);
             disableHunterTentGen = builder.comment("Disable hunter camp generation").define("disableHunterTentGen", false);
 
             builder.pop();

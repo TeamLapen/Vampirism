@@ -17,10 +17,7 @@ import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import de.teamlapen.vampirism.world.VampirismWorld;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -36,7 +33,6 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -69,20 +65,6 @@ public class ModEventHandler {
             }
         }
 
-    }
-
-
-
-    @SubscribeEvent
-    public void onHarvestDrops(BlockEvent.HarvestDropsEvent event) {
-        if (event.getState().getBlock().equals(Blocks.OAK_LEAVES)) {
-            if (ModBiomes.vampire_forest.equals(event.getWorld().getBiome(event.getPos()))) {
-                PlayerEntity p = event.getHarvester();
-                if (p != null && p.getRNG().nextInt(VampirismConfig.BALANCE.dropOrchidFromLeavesChance.get()) == 0) {
-                    event.getDrops().add(new ItemStack(ModBlocks.vampire_orchid, 1));
-                }
-            }
-        }
     }
 
     @SubscribeEvent

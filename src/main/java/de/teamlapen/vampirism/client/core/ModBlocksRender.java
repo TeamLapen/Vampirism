@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -32,13 +33,14 @@ public class ModBlocksRender {
     }
 
     public static void registerColors() {
-        Minecraft.getInstance().getBlockColors().register((state, worldIn, pos, tintIndex) -> {
+        BlockColors colors = Minecraft.getInstance().getBlockColors();
+        colors.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 1) {
                 return 0x9966FF;
             }
             return 0x8855FF;
         }, ModBlocks.alchemical_fire);
-        Minecraft.getInstance().getBlockColors().register((state, worldIn, pos, tintIndex) -> {
+        colors.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 TileEntity tile = (worldIn == null || pos == null) ? null : worldIn.getTileEntity(pos);
                 if (tile instanceof AlchemicalCauldronTileEntity) {
@@ -47,7 +49,7 @@ public class ModBlocksRender {
             }
             return 0xFFFFFF;
         }, ModBlocks.alchemical_cauldron);
-        Minecraft.getInstance().getBlockColors().register((state, worldIn, pos, tintIndex) -> {
+        colors.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 TileEntity tile = (worldIn == null || pos == null) ? null : worldIn.getTileEntity(pos);
                 if (tile instanceof TotemTileEntity) {
@@ -57,6 +59,12 @@ public class ModBlocksRender {
             }
             return 0xFFFFFF;
         }, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0]));
+        colors.register((state, worldIn, pos, tintIndex) -> {
+            return 0x1E1F1F;
+        }, ModBlocks.vampire_spruce_leaves);
+        colors.register((state, worldIn, pos, tintIndex) -> {
+            return 0x2e0606;
+        }, ModBlocks.bloody_spruce_leaves);
     }
 
     private static void registerTileRenderer() {
@@ -100,6 +108,9 @@ public class ModBlocksRender {
         RenderTypeLookup.setRenderLayer(ModBlocks.vampire_orchid, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.garlic, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.potted_vampire_orchid, cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.bloody_spruce_leaves, RenderType.cutoutMipped());
+        RenderTypeLookup.setRenderLayer(ModBlocks.vampire_spruce_leaves, RenderType.cutoutMipped());
+        RenderTypeLookup.setRenderLayer(ModBlocks.bloody_spruce_sapling, cutout);
 
     }
 

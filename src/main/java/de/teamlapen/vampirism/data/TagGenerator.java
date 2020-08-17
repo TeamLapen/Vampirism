@@ -39,6 +39,9 @@ public class TagGenerator {
             getBuilder(BlockTags.STAIRS).add(ModTags.Blocks.CASTLE_STAIRS);
             getBuilder(BlockTags.SLABS).add(ModTags.Blocks.CASTLE_SLAPS);
             getBuilder(BlockTags.FLOWER_POTS).add(ModBlocks.potted_vampire_orchid);
+            getBuilder(BlockTags.SPRUCE_LOGS).add(ModBlocks.bloody_spruce_log);
+            getBuilder(BlockTags.LEAVES).add(ModBlocks.vampire_spruce_leaves, ModBlocks.bloody_spruce_leaves);
+            getBuilder(BlockTags.SAPLINGS).add(ModBlocks.bloody_spruce_sapling);
         }
     }
 
@@ -56,6 +59,9 @@ public class TagGenerator {
         @Override
         protected void registerTags() {
             copy(ModTags.Blocks.CASTLE_BLOCK, ModTags.Items.CASTLE_BLOCK);
+            copy(ModTags.Blocks.CASTLE_STAIRS, ModTags.Items.CASTLE_STAIRS);
+            copy(ModTags.Blocks.CASTLE_SLAPS, ModTags.Items.CASTLE_SLAPS);
+            copy(ModTags.Blocks.CURSEDEARTH, ModTags.Items.CURSEDEARTH);
 
             getBuilder(ModTags.Items.CROSSBOW_ARROW).add(ModItems.crossbow_arrow_normal, ModItems.crossbow_arrow_spitfire, ModItems.crossbow_arrow_vampire_killer);
             getBuilder(ModTags.Items.HUNTER_INTEL).add(ModItems.hunter_intel_0, ModItems.hunter_intel_1, ModItems.hunter_intel_2, ModItems.hunter_intel_3, ModItems.hunter_intel_4, ModItems.hunter_intel_5, ModItems.hunter_intel_6, ModItems.hunter_intel_7, ModItems.hunter_intel_8, ModItems.hunter_intel_9);
@@ -65,6 +71,11 @@ public class TagGenerator {
             getBuilder(ModTags.Items.GARLIC).add(ModItems.item_garlic);
             getBuilder(ModTags.Items.HOLY_WATER).add(ModItems.holy_water_bottle_normal, ModItems.holy_water_bottle_enhanced, ModItems.holy_water_bottle_ultimate);
             getBuilder(ModTags.Items.HOLY_WATER_SPLASH).add(ModItems.holy_water_splash_bottle_normal, ModItems.holy_water_splash_bottle_enhanced, ModItems.holy_water_splash_bottle_ultimate);
+            getBuilder(ItemTags.STAIRS).add(ModTags.Items.CASTLE_STAIRS);
+            getBuilder(ItemTags.SLABS).add(ModTags.Items.CASTLE_SLAPS);
+            getBuilder(ItemTags.SPRUCE_LOGS).add(ModBlocks.bloody_spruce_log.asItem());
+            getBuilder(ItemTags.LEAVES).add(ModBlocks.vampire_spruce_leaves.asItem(), ModBlocks.bloody_spruce_leaves.asItem());
+            getBuilder(ItemTags.SAPLINGS).add(ModBlocks.bloody_spruce_sapling.asItem());
         }
     }
 

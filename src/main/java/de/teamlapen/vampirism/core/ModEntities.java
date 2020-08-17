@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.core;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
@@ -18,6 +17,7 @@ import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.vampire.*;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.world.gen.biome.VampireBiome;
 import net.minecraft.entity.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
@@ -178,7 +178,7 @@ public class ModEntities {
          */
         List<Biome> zombieBiomes = Lists.newArrayList();
         zombieBiomes.addAll(allBiomes);
-        zombieBiomes.remove(ModBiomes.vampire_forest);
+        zombieBiomes.removeIf(biome -> biome instanceof VampireBiome);
         Iterator<Biome> iterator = zombieBiomes.iterator();
         while (iterator.hasNext()) {
             Biome b = iterator.next();
