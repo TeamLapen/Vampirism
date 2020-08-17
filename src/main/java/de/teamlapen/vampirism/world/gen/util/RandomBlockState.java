@@ -20,6 +20,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+/**
+ * should only be used with {@link RandomStructureProcessor}
+ * <p>
+ * returns a random blockstate with nbt data for the given {@link #inputPredicate} and {@link #locationPredicate}
+ *
+ * @see RuleEntry
+ */
 public class RandomBlockState extends RuleEntry {
     private static final Random RNG = new Random();
 
@@ -35,7 +42,7 @@ public class RandomBlockState extends RuleEntry {
 
     @SafeVarargs
     public RandomBlockState(RuleTest inputPredicate, RuleTest locationPredicate, Pair<BlockState, CompoundNBT> defaultState, Pair<BlockState, CompoundNBT>... outputStates) {
-        super(inputPredicate, locationPredicate, outputStates.length == 0 ? defaultState.getKey() : outputStates[0].getLeft(), outputStates.length == 0 ? defaultState.getRight() : outputStates[0].getValue());
+        super(inputPredicate, locationPredicate, defaultState.getLeft(), defaultState.getRight());
         this.defaultState = defaultState;
         this.outputStates = outputStates;
         this.inputPredicate = inputPredicate;
@@ -43,6 +50,9 @@ public class RandomBlockState extends RuleEntry {
     }
 
     public Pair<BlockState, CompoundNBT> getOutput() {
+        if (outputStates.length == 0) {
+            return defaultState;
+        }
         return outputStates[RNG.nextInt(outputStates.length)];
     }
 
@@ -70,7 +80,9 @@ public class RandomBlockState extends RuleEntry {
         builder.put(ops.createString("input_predicate"), this.inputPredicate.serialize(ops).getValue());
         builder.put(ops.createString("location_predicate"), this.locationPredicate.serialize(ops).getValue());
         builder.put(ops.createString("default_state"), BlockState.serialize(ops, this.defaultState.getLeft()).getValue());
-        builder.put(ops.createString("default_nbt"), new Dynamic<>(NBTDynamicOps.INSTANCE, this.defaultState.getRight()).convert(ops).getValue());
+        if (this.defaultState.getRight() != null) {
+            builder.put(ops.createString("default_nbt"), new Dynamic<>(NBTDynamicOps.INSTANCE, this.defaultState.getRight()).convert(ops).getValue());
+        }
         builder.put(ops.createString("amount"), ops.createInt(this.outputStates.length));
         for (int i = 0; i < outputStates.length; i++) {
             builder.put(ops.createString("output_state_" + i), BlockState.serialize(ops, outputStates[i].getKey()).getValue());
