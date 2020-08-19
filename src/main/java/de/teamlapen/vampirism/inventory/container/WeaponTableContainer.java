@@ -22,6 +22,7 @@ import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.RecipeBookCategory;
 import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SSetSlotPacket;
@@ -257,6 +258,11 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     @Override
     public List<RecipeBookCategories> getRecipeBookCategories() {
         return Lists.newArrayList(RecipeBookCategories.CRAFTING_MISC);
+    }
+
+    @Override
+    public RecipeBookCategory func_241850_m() {
+        return RecipeBookCategory.CRAFTING;
     }
 
     public static class Factory implements IContainerFactory<WeaponTableContainer> {

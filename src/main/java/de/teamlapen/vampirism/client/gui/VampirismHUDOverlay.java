@@ -179,7 +179,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
         //Render blood feed progress
         GameSettings gamesettings = this.mc.gameSettings;
-        if (gamesettings.thirdPersonView == 0 && this.mc.playerController.getCurrentGameType() != GameType.SPECTATOR) {
+        if (gamesettings.func_243230_g().func_243192_a() && this.mc.playerController.getCurrentGameType() != GameType.SPECTATOR) {
 
             float progress = VampirePlayer.getOpt(mc.player).map(VampirePlayer::getFeedProgress).orElse(0f);
             if (progress > 0) {

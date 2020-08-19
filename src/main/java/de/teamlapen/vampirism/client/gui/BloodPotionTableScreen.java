@@ -13,10 +13,10 @@ import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -97,7 +97,7 @@ public class BloodPotionTableScreen extends ContainerScreen<BloodPotionTableCont
             int i = (this.width - this.xSize) / 2;
             int j = (this.height - this.ySize) / 2;
             for (ITextComponent hint : hints) {
-                for (ITextProperties t : this.font.func_238425_b_(hint, 92)) {
+                for (IReorderingProcessor t : this.font.func_238425_b_(hint, 92)) {
                     this.font.func_238422_b_(stack, t, i + 5, j + 28, Color.WHITE.getRGB());
                     j += this.font.FONT_HEIGHT;
                 }

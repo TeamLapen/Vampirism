@@ -20,9 +20,11 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.profiler.IProfiler;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -53,9 +55,10 @@ public class Helper {
     public static boolean gettingSundamge(LivingEntity entity, IWorld world, @Nullable IProfiler profiler) {
         if (profiler != null) profiler.startSection("vampirism_checkSundamage");
         if (entity instanceof PlayerEntity && entity.isSpectator()) return false;
-        if (VampirismAPI.sundamageRegistry().getSundamageInDim(world.getWorld().func_234923_W_())) {
+        RegistryKey<World> worldKey = Helper.getWorldKey(world);
+        if (VampirismAPI.sundamageRegistry().getSundamageInDim(worldKey)) {
             if (!(world instanceof World) || !((World) world).isRaining()) {
-                float angle = world.getCelestialAngle(1.0F);
+                float angle = world.func_242415_f(1.0F);
                 //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
                 if (angle > 0.78 || angle < 0.24) {
                     BlockPos pos = new BlockPos(entity.getPosX(), entity.getPosY() + MathHelper.clamp(entity.getHeight() / 2.0F, 0F, 2F), entity.getPosZ());
@@ -63,7 +66,7 @@ public class Helper {
                         try {
                             Biome biome = world.getBiome(pos);
                             if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biome)) {
-                                if (!TotemTileEntity.isInsideVampireAreaCached(world.getWorld().func_234923_W_(), new BlockPos(entity.getPosX(), entity.getPosY() + 1, entity.getPosZ()))) { //For some reason client returns different value for #getPosition than server
+                                if (!TotemTileEntity.isInsideVampireAreaCached(worldKey, new BlockPos(entity.getPosX(), entity.getPosY() + 1, entity.getPosZ()))) { //For some reason client returns different value for #getPosition than server
                                     if (profiler != null) profiler.endSection();
                                     return true;
                                 }
@@ -110,13 +113,18 @@ public class Helper {
     }
 
     @Nonnull
-    public static EnumStrength getGarlicStrength(Entity e, IWorld world) {
+    public static EnumStrength getGarlicStrength(Entity e, RegistryKey<World> world) {
         return getGarlicStrengthAt(world, e.getPosition());
     }
 
     @Nonnull
-    public static EnumStrength getGarlicStrengthAt(IWorld world, BlockPos pos) {
+    public static EnumStrength getGarlicStrengthAt(RegistryKey<World> world, BlockPos pos) {
         return VampirismAPI.getGarlicChunkHandler(world).getStrengthAtChunk(new ChunkPos(pos));
+    }
+
+    @Nonnull
+    public static RegistryKey<World> getWorldKey(IWorld world) {
+        return world instanceof World ? ((World) world).func_234923_W_() : world instanceof IServerWorld ? ((IServerWorld) world).getWorld().func_234923_W_() : World.field_234918_g_;
     }
 
     public static boolean canBecomeVampire(PlayerEntity player) {

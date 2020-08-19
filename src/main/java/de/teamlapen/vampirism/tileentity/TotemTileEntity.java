@@ -732,6 +732,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     private void spawnCaptureEntity(IFaction<?> faction) {
+        assert this.world instanceof ServerWorld;
         EntityType<? extends MobEntity> entityType = this.getCaptureEntityForFaction(faction);
         if (entityType == null) {
             LOGGER.warn("No village capture entity registered for {}", faction);
@@ -742,7 +743,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
             ((VampireBaseEntity) entity).setSpawnRestriction(VampireBaseEntity.SpawnRestriction.SIMPLE);
         List<? extends PlayerEntity> players = this.world.getPlayers();
         players.removeIf(PlayerEntity::isSpectator);
-        if (entity != null && !UtilLib.spawnEntityInWorld(this.world, this.getVillageAreaReduced(), entity, 50, players, SpawnReason.EVENT)) {
+        if (entity != null && !UtilLib.spawnEntityInWorld((ServerWorld) this.world, this.getVillageAreaReduced(), entity, 50, players, SpawnReason.EVENT)) {
             entity.remove();
             entity = null;
         }
@@ -871,7 +872,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     private boolean spawnEntity(MobEntity newEntity) {
-        return UtilLib.spawnEntityInWorld(this.world, this.getVillageAreaReduced(), newEntity, 50, Lists.newArrayList(), SpawnReason.EVENT);
+        assert this.world instanceof ServerWorld;
+        return UtilLib.spawnEntityInWorld((ServerWorld) this.world, this.getVillageAreaReduced(), newEntity, 50, Lists.newArrayList(), SpawnReason.EVENT);
     }
 
     private boolean spawnEntity(MobEntity newEntity, MobEntity oldEntity, boolean replaceOld) {

@@ -28,12 +28,12 @@ import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -200,10 +200,10 @@ public class SkillsScreen extends Screen {
         ITextComponent title = new TranslationTextComponent("text.vampirism.skills.gui_title");
         int x = (this.width - display_width) / 2;
         int y = (this.height - display_height) / 2;
-        this.font.func_238422_b_(stack, title, x + 15, y + 5, 0xFFFFFFFF);
+        this.font.func_243248_b(stack, title, x + 15, y + 5, 0xFFFFFFFF);
         ITextComponent points = new TranslationTextComponent("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
         x = (this.width + display_width) / 2 - this.font.func_238414_a_(points);
-        this.font.func_238422_b_(stack, points, x - 15, y + 5, 0xFFFFFFFF);
+        this.font.func_243248_b(stack, points, x - 15, y + 5, 0xFFFFFFFF);
     }
 
     /**
@@ -413,7 +413,7 @@ public class SkillsScreen extends Screen {
                     }
 
                     if (i + 1 < elements.length) {
-                        this.drawCenteredString(stack, this.font, "OR", x + skill_width + skill_width / 2, y + 1 + (skill_width - this.font.FONT_HEIGHT) / 2, 0xFFFFFF);
+                        drawCenteredString(stack, this.font, "OR", x + skill_width + skill_width / 2, y + 1 + (skill_width - this.font.FONT_HEIGHT) / 2, 0xFFFFFF);
                     }
                 }
             }
@@ -451,7 +451,7 @@ public class SkillsScreen extends Screen {
             int width_name = Math.max(this.font.func_238414_a_(name), 110);
 
 
-            List<ITextProperties> descLines = desc == null ? Collections.emptyList() : this.font.func_238425_b_(desc, width_name);
+            List<IReorderingProcessor> descLines = desc == null ? Collections.emptyList() : this.font.func_238425_b_(desc, width_name);
             int height_desc = descLines.size() * this.font.FONT_HEIGHT;
 
             if (result == ISkillHandler.Result.ALREADY_ENABLED || result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
@@ -459,18 +459,18 @@ public class SkillsScreen extends Screen {
             }
             this.fillGradient(stack, m2MouseX - 3, m2MouseY - 3, m2MouseX + width_name + 3, m2MouseY + height_desc + 3 + 12, -1073741824, -1073741824);
 
-            this.font.func_238407_a_(stack, name, (float) m2MouseX, (float) m2MouseY, 0xff808080);
+            this.font.func_243246_a(stack, name, (float) m2MouseX, (float) m2MouseY, 0xff808080);
 
             int j = 0;
-            for (ITextProperties t : descLines) {
+            for (IReorderingProcessor t : descLines) {
                 this.font.func_238422_b_(stack, t, m2MouseX, m2MouseY + 12 + j, 0xff505050);
                 j += this.font.FONT_HEIGHT;
             }
 
             if (result == ISkillHandler.Result.ALREADY_ENABLED) {
-                this.font.func_238407_a_(stack, new TranslationTextComponent("text.vampirism.skill.unlocked"), m2MouseX, m2MouseY + height_desc + 3, 0xFFFBAE00);
+                this.font.func_243246_a(stack, new TranslationTextComponent("text.vampirism.skill.unlocked"), m2MouseX, m2MouseY + height_desc + 3, 0xFFFBAE00);
             } else if (result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
-                this.font.func_238407_a_(stack, new TranslationTextComponent("text.vampirism.skill.unlock_parent_first"), m2MouseX, m2MouseY + height_desc + 3, 0xFFA32228);
+                this.font.func_243246_a(stack, new TranslationTextComponent("text.vampirism.skill.unlock_parent_first"), m2MouseX, m2MouseY + height_desc + 3, 0xFFA32228);
             }
             stack.pop();
         }

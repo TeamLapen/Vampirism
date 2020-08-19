@@ -30,6 +30,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -182,8 +183,8 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public void onKillEntity(LivingEntity entity) {
-        super.onKillEntity(entity);
+    public void func_241847_a(ServerWorld world, LivingEntity entity) {
+        super.func_241847_a(world, entity);
         if (entity instanceof VampireBaronEntity) {
             this.setHealth(this.getMaxHealth());
         }

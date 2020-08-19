@@ -29,7 +29,6 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap;
@@ -66,7 +65,7 @@ public class UtilLib {
     }
 
     public static boolean doesBlockHaveSolidTopSurface(World worldIn, BlockPos pos) {
-        return Block.hasSolidSide(worldIn.getBlockState(pos), worldIn, pos, Direction.UP);
+        return worldIn.getBlockState(pos).isSolidSide(worldIn, pos, Direction.UP);
     }
 
 
@@ -171,7 +170,7 @@ public class UtilLib {
     public static @Nonnull
     Vector3d getItemPosition(LivingEntity entity, boolean mainHand) {
         boolean left = (mainHand ? entity.getPrimaryHand() : entity.getPrimaryHand().opposite()) == HandSide.LEFT;
-        boolean firstPerson = entity instanceof PlayerEntity && ((PlayerEntity) entity).isUser() && Minecraft.getInstance().gameSettings.thirdPersonView == 0;
+        boolean firstPerson = entity instanceof PlayerEntity && ((PlayerEntity) entity).isUser() && Minecraft.getInstance().gameSettings.func_243230_g().func_243192_a();
         Vector3d dir = firstPerson ? entity.getForward() : Vector3d.fromPitchYaw(new Vector2f(entity.rotationPitch, entity.renderYawOffset));
         dir = dir.rotateYaw((float) (Math.PI / 5f) * (left ? 1f : -1f)).scale(0.75f);
         return dir.add(entity.getPosX(), entity.getPosY() + entity.getEyeHeight(), entity.getPosZ());
@@ -182,18 +181,18 @@ public class UtilLib {
 
         BlockPos behind = getPositionBehindEntity(entity, 2);
         MobEntity e = toSpawn.create(entity.getEntityWorld());
-
+        World world = entity.getEntityWorld();
         e.setPosition(behind.getX(), entity.getPosY(), behind.getZ());
 
-        if (e.canSpawn(entity.getEntityWorld(), reason) && e.isNotColliding(entity.getEntityWorld())) {
+        if (e.canSpawn(world, reason) && e.isNotColliding(world)) {
             entity.getEntityWorld().addEntity(e);
             return e;
         } else {
-            int y = entity.getEntityWorld().getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, behind).getY();
+            int y = world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, behind).getY();
             e.setPosition(behind.getX(), y, behind.getZ());
-            if (e.canSpawn(entity.getEntityWorld(), reason) && e.isNotColliding(entity.getEntityWorld())) {
-                entity.getEntityWorld().addEntity(e);
-                onInitialSpawn(e, reason);
+            if (e.canSpawn(world, reason) && e.isNotColliding(world)) {
+                world.addEntity(e);
+                if (world instanceof ServerWorld) onInitialSpawn((ServerWorld) world, e, reason);
                 return e;
             }
         }
@@ -202,11 +201,11 @@ public class UtilLib {
     }
 
     /**
-     * Call {@link MobEntity#onInitialSpawn(IWorld, DifficultyInstance, SpawnReason, ILivingEntityData, CompoundNBT)} if applicable
+     * Call {@link MobEntity#onInitialSpawn(net.minecraft.world.IServerWorld, DifficultyInstance, SpawnReason, ILivingEntityData, CompoundNBT)} if applicable
      */
-    private static void onInitialSpawn(Entity e, SpawnReason reason) {
+    private static void onInitialSpawn(ServerWorld world, Entity e, SpawnReason reason) {
         if (e instanceof MobEntity) {
-            ((MobEntity) e).onInitialSpawn(e.getEntityWorld(), e.getEntityWorld().getDifficultyForLocation(e.getPosition()), reason, null, null);
+            ((MobEntity) e).onInitialSpawn(world, e.getEntityWorld().getDifficultyForLocation(e.getPosition()), reason, null, null);
         }
     }
 
@@ -228,7 +227,7 @@ public class UtilLib {
      * @param reason          Spawn reason
      * @return Successful spawn
      */
-    public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry, @Nonnull List<? extends LivingEntity> avoidedEntities, SpawnReason reason) {
+    public static boolean spawnEntityInWorld(ServerWorld world, AxisAlignedBB box, Entity e, int maxTry, @Nonnull List<? extends LivingEntity> avoidedEntities, SpawnReason reason) {
         if (!world.isAreaLoaded((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ)) {
             return false;
         }
@@ -258,7 +257,7 @@ public class UtilLib {
 
         if (flag) {
             world.addEntity(e);
-            onInitialSpawn(e, reason);
+            onInitialSpawn(world, e, reason);
             return true;
         }
         return false;
@@ -274,7 +273,7 @@ public class UtilLib {
      * @return The spawned creature or null if not successful
      */
     @Nullable
-    public static Entity spawnEntityInWorld(World world, AxisAlignedBB box, EntityType entityType, int maxTry, @Nonnull List<? extends LivingEntity> avoidedEntities, SpawnReason reason) {
+    public static Entity spawnEntityInWorld(ServerWorld world, AxisAlignedBB box, EntityType entityType, int maxTry, @Nonnull List<? extends LivingEntity> avoidedEntities, SpawnReason reason) {
         Entity e = entityType.create(world);
         if (spawnEntityInWorld(world, box, e, maxTry, avoidedEntities, reason)) {
             return e;
@@ -513,7 +512,7 @@ public class UtilLib {
     }
 
     private static ChunkPos isBiomeAt(ServerWorld world, int x, int z, List<Biome> biomes) {
-        BlockPos pos = (world.getChunkProvider()).getChunkGenerator().getBiomeProvider().func_225531_a_(x, world.getSeaLevel(), z, 32, biomes, new Random());//findBiomePosition
+        BlockPos pos = (world.getChunkProvider()).getChunkGenerator().getBiomeProvider().func_225531_a_(x, world.getSeaLevel(), z, 32, b -> biomes.contains(b), new Random());//findBiomePosition
         if (pos != null) {
             return new ChunkPos(pos.getX() >> 4, pos.getZ() >> 4);
         }

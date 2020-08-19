@@ -13,10 +13,12 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModBlocks;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -40,8 +42,8 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
 
         CRAFTING_GRID.draw(stack, guiLeft + 62, guiTop + 43);
 
-        baseScreen.drawCenteredString(stack, fontRenderer, UtilLib.translate(ModBlocks.weapon_table.getTranslationKey()), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
-        baseScreen.drawCenteredString(stack, fontRenderer, "§o" + getRecipeName() + "§r", guiLeft + baseScreen.xSize / 2, guiTop + 14 + fontRenderer.FONT_HEIGHT, 0);
+        AbstractGui.drawCenteredString(stack, fontRenderer, UtilLib.translate(ModBlocks.weapon_table.getTranslationKey()), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
+        AbstractGui.drawCenteredString(stack, fontRenderer, "§o" + getRecipeName() + "§r", guiLeft + baseScreen.xSize / 2, guiTop + 14 + fontRenderer.FONT_HEIGHT, 0);
 
         int outputX = guiLeft + 152;
         int outputY = guiTop + 72;
@@ -60,8 +62,8 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
 
         int y = guiTop + 120;
         if (recipe.getRequiredLevel() > 1) {
-            ITextProperties level = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
-            fontRenderer.func_238422_b_(stack, level, guiLeft + 40, y, Color.gray.getRGB());
+            ITextComponent level = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
+            fontRenderer.func_243248_b(stack, level, guiLeft + 40, y, Color.gray.getRGB());
             y += fontRenderer.FONT_HEIGHT + 2;
         }
         if (recipe.getRequiredSkills() != null && recipe.getRequiredSkills().length > 0) {

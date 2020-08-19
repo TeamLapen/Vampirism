@@ -99,7 +99,7 @@ public class PageHolderWithLinks implements IPage {
         int ll = guiLeft + guiBase.xSize - 5;
         int y = guiTop + 10;
         for (Link l : links) {
-            fontRendererObj.func_238407_a_(stack, l.getDisplayName(), ll, y, 0xFFFFFF);
+            fontRendererObj.func_243246_a(stack, l.getDisplayName(), ll, y, 0xFFFFFF);
             if (l.width == 0) {
                 l.width = fontRendererObj.func_238414_a_(l.getDisplayName());
             }

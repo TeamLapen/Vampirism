@@ -143,7 +143,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
 
     public void updateSpawner() {
         if (isActivated()) {
-            if (!this.world.isRemote) {
+            if (this.world instanceof ServerWorld) {
                 if (this.spawnDelay == -1) {
                     this.resetTimer();
                 }
@@ -188,7 +188,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
 
                     }
 
-                    if (UtilLib.spawnEntityInWorld(this.world, getSpawningBox(), entity, 1, Collections.emptyList(), SpawnReason.SPAWNER)) {
+                    if (UtilLib.spawnEntityInWorld((ServerWorld) this.world, getSpawningBox(), entity, 1, Collections.emptyList(), SpawnReason.SPAWNER)) {
                         onSpawned(entity);
                         flag1 = true;
                     }

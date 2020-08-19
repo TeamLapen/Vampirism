@@ -474,7 +474,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public EnumStrength isGettingGarlicDamage(IWorld iWorld, boolean forcerefresh) {
         if (forcerefresh) {
-            garlic_cache = Helper.getGarlicStrength(player, iWorld);
+            garlic_cache = Helper.getGarlicStrength(player, Helper.getWorldKey(iWorld));
         }
         return garlic_cache;
     }

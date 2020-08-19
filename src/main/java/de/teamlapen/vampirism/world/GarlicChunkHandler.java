@@ -7,7 +7,6 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -109,8 +108,8 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
 
         @Nonnull
         @Override
-        public IGarlicChunkHandler getHandler(IWorld world) {
-            return handlers.computeIfAbsent(world.getWorld().func_234923_W_(), k -> new GarlicChunkHandler());
+        public IGarlicChunkHandler getHandler(RegistryKey<World> world) {
+            return handlers.computeIfAbsent(world, k -> new GarlicChunkHandler());
         }
     }
 

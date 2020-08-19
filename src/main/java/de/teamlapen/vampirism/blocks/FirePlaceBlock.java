@@ -42,8 +42,8 @@ public class FirePlaceBlock extends VampirismBlock {
 
 
     @Override
-    public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
-        return Block.hasSolidSide(world.getBlockState(pos.down()), world, pos.down(), Direction.UP);
+    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        return worldIn.getBlockState(pos.down()).isSolidSide(worldIn, pos.down(), Direction.UP);
     }
 
     @Override

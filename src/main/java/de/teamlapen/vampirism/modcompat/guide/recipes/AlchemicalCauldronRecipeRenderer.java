@@ -13,10 +13,12 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.inventory.recipes.AlchemicalCauldronRecipe;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -35,8 +37,8 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
     public void draw(MatrixStack stack, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen baseScreen, FontRenderer fontRenderer, IngredientCycler ingredientCycler) {
 
         CRAFTING_GRID.draw(stack, guiLeft + 60, guiTop + 42);
-        baseScreen.drawCenteredString(stack, fontRenderer, UtilLib.translate(ModBlocks.alchemical_cauldron.getTranslationKey()), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
-        baseScreen.drawCenteredString(stack, fontRenderer, "§o" + UtilLib.translate("guideapi.text.crafting.shaped") + "§r", guiLeft + baseScreen.xSize / 2, guiTop + 14 + fontRenderer.FONT_HEIGHT, 0);
+        AbstractGui.drawCenteredString(stack, fontRenderer, UtilLib.translate(ModBlocks.alchemical_cauldron.getTranslationKey()), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
+        AbstractGui.drawCenteredString(stack, fontRenderer, "§o" + UtilLib.translate("guideapi.text.crafting.shaped") + "§r", guiLeft + baseScreen.xSize / 2, guiTop + 14 + fontRenderer.FONT_HEIGHT, 0);
 
         int outputX = guiLeft + 150;
         int outputY = guiTop + 72;
@@ -75,8 +77,8 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
 
         int y = guiTop + 120;
         if (recipe.getRequiredLevel() > 1) {
-            ITextProperties level = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
-            fontRenderer.func_238422_b_(stack, level, guiLeft + 50, y, Color.gray.getRGB());
+            ITextComponent level = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
+            fontRenderer.func_243248_b(stack, level, guiLeft + 50, y, Color.gray.getRGB());
             y += fontRenderer.FONT_HEIGHT + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {

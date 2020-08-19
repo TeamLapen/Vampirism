@@ -56,7 +56,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
         if (recipe.getRequiredLevel() > 1) {
             ITextComponent level = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
 
-            minecraft.fontRenderer.func_238422_b_(stack, level, x, y, Color.gray.getRGB());
+            minecraft.fontRenderer.func_243248_b(stack, level, x, y, Color.gray.getRGB());
             y += minecraft.fontRenderer.FONT_HEIGHT + 2;
         }
         ISkill[] requiredSkills = recipe.getRequiredSkills();

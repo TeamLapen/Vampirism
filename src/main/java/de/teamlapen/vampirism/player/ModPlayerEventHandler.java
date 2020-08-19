@@ -45,6 +45,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.*;
@@ -301,13 +302,13 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void sleepTimeFinish(SleepFinishedTimeEvent event) {
-        if (event.getWorld().getWorld().isDaytime()) {
+        if (event.getWorld() instanceof ServerWorld && ((ServerWorld) event.getWorld()).isDaytime()) {
             boolean sleepingInCoffin = event.getWorld().getPlayers().stream().anyMatch(player -> {
                 Optional<BlockPos> pos = player.getBedPosition();
                 return pos.isPresent() && event.getWorld().getBlockState(pos.get()).getBlock() instanceof CoffinBlock;
             });
             if (sleepingInCoffin) {
-                long dist = event.getWorld().getWorld().getDayTime() % 24000L > 12000L ? 13000 : -11000; //Make sure we don't go backwards in time (in special case sleeping at 23500)
+                long dist = ((ServerWorld) event.getWorld()).getDayTime() % 24000L > 12000L ? 13000 : -11000; //Make sure we don't go backwards in time (in special case sleeping at 23500)
                 event.setTimeAddition(event.getNewTime() + dist);
 
             }

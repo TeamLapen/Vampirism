@@ -86,12 +86,9 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
             entityCreature.prevRenderYawOffset = this.prevRenderYawOffset;
             entityCreature.deathTime = this.deathTime;
 
-            if (world.isRemote) {
-                entityCreature.serverPosX = this.serverPosX;
-                entityCreature.serverPosY = this.serverPosY;
-                entityCreature.serverPosZ = this.serverPosZ;
-
-            }
+//            if (world.isRemote) {
+//                entityCreature.func_242277_a(this.func_242274_V()); //Careful not available on server, so if needed we have to use a proxy here
+//            }
         }
         if (entityChanged) {
             this.updateEntityAttributes();

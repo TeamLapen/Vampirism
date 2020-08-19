@@ -14,7 +14,8 @@ import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import de.teamlapen.vampirism.api.world.IWorldGenManager;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.IWorld;
+import net.minecraft.util.RegistryKey;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
@@ -29,9 +30,9 @@ public class VampirismAPI {
 
 
     @CapabilityInject(IExtendedCreatureVampirism.class)
-    private static Capability<IExtendedCreatureVampirism> CAP_CREATURE = null;
+    private static final Capability<IExtendedCreatureVampirism> CAP_CREATURE = null;
     @CapabilityInject(IFactionPlayerHandler.class)
-    private static Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = null;
+    private static final Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = null;
     private static IFactionRegistry factionRegistry;
     private static ISundamageRegistry sundamageRegistry;
     private static IVampirismEntityRegistry entityRegistry;
@@ -142,7 +143,7 @@ public class VampirismAPI {
      * @return The {@link IGarlicChunkHandler} for the given world
      */
     @Nonnull
-    public static IGarlicChunkHandler getGarlicChunkHandler(IWorld world) {
+    public static IGarlicChunkHandler getGarlicChunkHandler(RegistryKey<World> world) {
         return garlicHandlerProvider.getHandler(world);
     }
 

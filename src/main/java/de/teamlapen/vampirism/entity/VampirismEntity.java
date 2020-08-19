@@ -30,10 +30,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.Difficulty;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import javax.annotation.Nullable;
@@ -45,7 +42,7 @@ import java.util.Random;
  */
 public abstract class VampirismEntity extends CreatureEntity implements IEntityWithHome, IVampirismEntity {
 
-    public static boolean spawnPredicateLight(IWorld world, BlockPos blockPos, Random random) {
+    public static boolean spawnPredicateLight(IServerWorld world, BlockPos blockPos, Random random) {
         if (world.getLightFor(LightType.SKY, blockPos) > random.nextInt(32)) {
             return false;
         } else {
@@ -55,7 +52,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     }
 
     public static boolean spawnPredicateVampireFog(IWorld world, BlockPos blockPos) {
-        return world.getBiome(blockPos).getRegistryName() == ModBiomes.vampire_forest.getRegistryName() || (world instanceof World && TotemTileEntity.isInsideVampireAreaCached(((World) world).func_234923_W_(), blockPos));
+        return world.getBiome(blockPos) == ModBiomes.vampire_forest || (world instanceof World && TotemTileEntity.isInsideVampireAreaCached(((World) world).func_234923_W_(), blockPos));
     }
 
     public static boolean spawnPredicateCanSpawn(EntityType<? extends MobEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {

@@ -8,7 +8,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.villager.IVillagerType;
+import net.minecraft.entity.villager.VillagerType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Difficulty;
@@ -31,7 +31,7 @@ public class VampirismVillagerEntity extends VillagerEntity {
         super(type, worldIn);
     }
 
-    public VampirismVillagerEntity(EntityType<? extends VampirismVillagerEntity> type, World worldIn, IVillagerType villagerType) {
+    public VampirismVillagerEntity(EntityType<? extends VampirismVillagerEntity> type, World worldIn, VillagerType villagerType) {
         super(type, worldIn, villagerType);
     }
 

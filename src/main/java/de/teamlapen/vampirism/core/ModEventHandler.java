@@ -14,10 +14,7 @@ import de.teamlapen.vampirism.network.SkillTreePacket;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
@@ -25,8 +22,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
@@ -46,18 +43,6 @@ public class ModEventHandler {
 
     private final static Logger LOGGER = LogManager.getLogger(ModEventHandler.class);
 
-
-    @SubscribeEvent
-    public void onHarvestDrops(BlockEvent.HarvestDropsEvent event) {
-        if (event.getState().getBlock().equals(Blocks.OAK_LEAVES)) {
-            if (ModBiomes.vampire_forest.equals(event.getWorld().getBiome(event.getPos()))) {
-                PlayerEntity p = event.getHarvester();
-                if (p != null && p.getRNG().nextInt(VampirismConfig.BALANCE.dropOrchidFromLeavesChance.get()) == 0) {
-                    event.getDrops().add(new ItemStack(ModBlocks.vampire_orchid, 1));
-                }
-            }
-        }
-    }
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
@@ -117,7 +102,9 @@ public class ModEventHandler {
 
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
-        VampirismAPI.getGarlicChunkHandler(event.getWorld()).clear();
-        TotemTileEntity.clearCacheForDimension(event.getWorld().getWorld().func_234923_W_());
+        if (event.getWorld() instanceof World) {
+            VampirismAPI.getGarlicChunkHandler(((World) event.getWorld()).func_234923_W_()).clear();
+            TotemTileEntity.clearCacheForDimension(((World) event.getWorld()).func_234923_W_());
+        }
     }
 }

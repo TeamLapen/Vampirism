@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -96,7 +95,7 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
                         BlockPos pos = blockPos.add(dx, dy, dz);
                         BlockState blockState = entity.getEntityWorld().getBlockState(pos);
                         if (blockState.getMaterial().isReplaceable()
-                                && Block.hasSolidSide(entity.getEntityWorld().getBlockState(pos.down()), entity.getEntityWorld(), pos.down(), Direction.UP) && (entity).getRNG().nextInt(4) != 0) {
+                                && entity.getEntityWorld().getBlockState(pos.down()).isSolidSide(entity.getEntityWorld(), pos.down(), Direction.UP) && (entity).getRNG().nextInt(4) != 0) {
                             entity.getEntityWorld().setBlockState(pos, ModBlocks.alchemical_fire.getDefaultState());
                         }
                     }

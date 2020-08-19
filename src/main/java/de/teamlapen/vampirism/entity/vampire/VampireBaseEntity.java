@@ -30,10 +30,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Difficulty;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.server.ServerWorld;
 
@@ -46,7 +43,7 @@ import java.util.Random;
 @SuppressWarnings("EntityConstructor")
 public abstract class VampireBaseEntity extends VampirismEntity implements IVampireMob {
 
-    public static boolean spawnPredicateVampire(EntityType<? extends VampirismEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
+    public static boolean spawnPredicateVampire(EntityType<? extends VampirismEntity> entityType, IServerWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
         return world.getDifficulty() != Difficulty.PEACEFUL && (spawnPredicateLight(world, blockPos, random) || spawnPredicateVampireFog(world, blockPos)) && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
     }
 
@@ -143,7 +140,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     @Override
     public EnumStrength isGettingGarlicDamage(IWorld iWorld, boolean forcerefresh) {
         if (forcerefresh) {
-            garlicCache = Helper.getGarlicStrength(this, iWorld);
+            garlicCache = Helper.getGarlicStrength(this, Helper.getWorldKey(iWorld));
         }
         return garlicCache;
     }
