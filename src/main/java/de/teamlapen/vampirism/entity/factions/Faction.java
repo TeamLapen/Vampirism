@@ -33,7 +33,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private int integerId;
     private TextFormatting chatColor;
     @Nonnull
-    private IVillageFactionData villageFactionData;
+    private final IVillageFactionData villageFactionData;
 
     Faction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, @Nonnull IVillageFactionData villageFactionData) {
         this.id = id;
@@ -105,6 +105,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
         return this;
     }
 
+    @Nonnull
     @Override
     public IVillageFactionData getVillageData() {
         return villageFactionData;

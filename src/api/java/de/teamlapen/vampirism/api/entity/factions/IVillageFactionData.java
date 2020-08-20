@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public interface IVillageFactionData {
             return Blocks.AIR;
         }
 
+        @Nullable
         @Override
         public EntityType<? extends ITaskMasterEntity> getTaskMasterEntity() {
             return null;
@@ -48,5 +50,6 @@ public interface IVillageFactionData {
 
     Block getTotemTopBlock();
 
+    @Nullable
     EntityType<? extends ITaskMasterEntity> getTaskMasterEntity();
 }
