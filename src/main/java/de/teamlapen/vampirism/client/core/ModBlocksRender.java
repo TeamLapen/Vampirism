@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.client.render.tiles.TotemTESR;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.tileentity.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -26,13 +27,14 @@ public class ModBlocksRender {
     }
 
     public static void registerColors() {
-        Minecraft.getInstance().getBlockColors().register((state, worldIn, pos, tintIndex) -> {
+        BlockColors colors = Minecraft.getInstance().getBlockColors();
+        colors.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 1) {
                 return 0x9966FF;
             }
             return 0x8855FF;
         }, ModBlocks.alchemical_fire);
-        Minecraft.getInstance().getBlockColors().register((state, worldIn, pos, tintIndex) -> {
+        colors.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 TileEntity tile = (worldIn == null || pos == null) ? null : worldIn.getTileEntity(pos);
                 if (tile instanceof AlchemicalCauldronTileEntity) {
@@ -41,7 +43,7 @@ public class ModBlocksRender {
             }
             return 0xFFFFFF;
         }, ModBlocks.alchemical_cauldron);
-        Minecraft.getInstance().getBlockColors().register((state, worldIn, pos, tintIndex) -> {
+        colors.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 TileEntity tile = (worldIn == null || pos == null) ? null : worldIn.getTileEntity(pos);
                 if (tile instanceof TotemTileEntity) {
@@ -51,6 +53,12 @@ public class ModBlocksRender {
             }
             return 0xFFFFFF;
         }, TotemTopBlock.getTotems());
+        colors.register((state, worldIn, pos, tintIndex) -> {
+            return 0x1E1F1F;
+        }, ModBlocks.vampire_spruce_leaves);
+        colors.register((state, worldIn, pos, tintIndex) -> {
+            return 0x2e0606;
+        }, ModBlocks.bloody_spruce_leaves);
     }
 
     private static void registerTileRenderer() {

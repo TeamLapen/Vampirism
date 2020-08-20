@@ -6,6 +6,7 @@ import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
+import de.teamlapen.vampirism.blocks.BloodySpruceLeavesBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -17,6 +18,7 @@ import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import de.teamlapen.vampirism.world.VampirismWorld;
+import de.teamlapen.vampirism.world.gen.biome.VampireBiome;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -76,8 +78,8 @@ public class ModEventHandler {
 
     @SubscribeEvent
     public void onHarvestDrops(BlockEvent.HarvestDropsEvent event) {
-        if (event.getState().getBlock().equals(Blocks.OAK_LEAVES)) {
-            if (ModBiomes.vampire_forest.equals(event.getWorld().getBiome(event.getPos()))) {
+        if (event.getState().getBlock().equals(Blocks.OAK_LEAVES) || event.getState().getBlock() instanceof BloodySpruceLeavesBlock) { //TODO 1.16 remove oak leaves
+            if (event.getWorld().getBiome(event.getPos()) instanceof VampireBiome) {
                 PlayerEntity p = event.getHarvester();
                 if (p != null && p.getRNG().nextInt(VampirismConfig.BALANCE.dropOrchidFromLeavesChance.get()) == 0) {
                     event.getDrops().add(new ItemStack(ModBlocks.vampire_orchid, 1));

@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "end": "vampirism:block/bloody_spruce_log_top",
+    "side": "vampirism:block/bloody_spruce_log"
+  }
+}
+

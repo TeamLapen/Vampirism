@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireBaron;
 import de.teamlapen.vampirism.config.BalanceMobProps;
-import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.goals.AttackRangedDarkBloodGoal;
@@ -13,6 +12,7 @@ import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.world.gen.biome.VampireBiome;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -47,7 +47,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     private static final DataParameter<Boolean> LADY = EntityDataManager.createKey(VampireBaronEntity.class, DataSerializers.BOOLEAN);
 
     public static boolean spawnPredicateBaron(EntityType<? extends VampireBaronEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
-        return world.getBiome(blockPos) == ModBiomes.vampire_forest && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
+        return world.getBiome(blockPos) instanceof VampireBiome && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
     }
 
     public static final int MAX_LEVEL = 4;

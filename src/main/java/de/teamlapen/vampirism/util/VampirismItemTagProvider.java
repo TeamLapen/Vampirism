@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.util;
 
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModTags;
 import net.minecraft.data.DataGenerator;
@@ -27,5 +28,8 @@ public class VampirismItemTagProvider extends ItemTagsProvider {
         getBuilder(ModTags.Items.VAMPIRE_CLOAK).add(ModItems.vampire_cloak_black_blue, ModItems.vampire_cloak_black_red, ModItems.vampire_cloak_black_white, ModItems.vampire_cloak_red_black, ModItems.vampire_cloak_white_black);
         getBuilder(ItemTags.SMALL_FLOWERS).add(ModItems.vampire_orchid);
         getBuilder(ModTags.Items.GARLIC).add(ModItems.item_garlic);
+        getBuilder(ItemTags.SPRUCE_LOGS).add(ModBlocks.bloody_spruce_log.asItem());
+        getBuilder(ItemTags.LEAVES).add(ModBlocks.vampire_spruce_leaves.asItem(), ModBlocks.bloody_spruce_leaves.asItem());
+        getBuilder(ItemTags.SAPLINGS).add(ModBlocks.bloody_spruce_sapling.asItem());
     }
 }
