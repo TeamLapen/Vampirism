@@ -1,21 +1,25 @@
 package de.teamlapen.vampirism.entity.goals;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.tileentity.TotemHelper;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.feature.structure.StructureStart;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.village.PointOfInterest;
+import net.minecraft.village.PointOfInterestManager;
+import net.minecraft.world.server.ServerWorld;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Targets vampires if the golem as a non vampire village assigned
@@ -25,20 +29,22 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
     private static final Map<IFaction<?>, Predicate<LivingEntity>> predicates = new HashMap<>();
 
     private IFaction<?> faction;
+    private final IronGolemEntity golem;
 
     public GolemTargetNonVillageFactionGoal(IronGolemEntity creature) {
         super(creature, LivingEntity.class, 4, false, false, null);
+        this.golem = creature;
     }
 
     @Override
     public boolean shouldExecute() {
         IFaction<?> faction = VReference.HUNTER_FACTION;
         if (VampirismConfig.BALANCE.golemAttackNonVillageFaction.get()) {
-            StructureStart<?> structureStart = UtilLib.getStructureStartAt(goalOwner, Structure.field_236381_q_);
-            if (structureStart != null && structureStart.isValid()) {
-                BlockPos pos = TotemTileEntity.getTotemPosition(structureStart);
-                if (pos != null) {
-                    TotemTileEntity tile = ((TotemTileEntity) goalOwner.world.getTileEntity(pos));
+            Collection<PointOfInterest> points = ((ServerWorld)this.golem.world).getPointOfInterestManager().func_219146_b(p->true,this.golem.getPosition(),35, PointOfInterestManager.Status.ANY).collect(Collectors.toList());
+            if (points.size()>0) {
+                BlockPos pos = TotemHelper.getTotemPosition(points);
+                if (pos != null && this.golem.world.getChunkProvider().isChunkLoaded(new ChunkPos(pos))) {
+                    TotemTileEntity tile = ((TotemTileEntity) golem.world.getTileEntity(pos));
                     if (tile != null) {
                         if (tile.getControllingFaction() != null) {
                             faction = tile.getControllingFaction();

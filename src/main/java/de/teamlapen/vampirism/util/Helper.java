@@ -14,7 +14,7 @@ import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.tileentity.TotemTileEntity;
+import de.teamlapen.vampirism.tileentity.TotemHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -73,7 +73,7 @@ public class Helper {
                         try {
                             ResourceLocation biome = getBiomeId(world, pos);
                             if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biome)) {
-                                if (!TotemTileEntity.isInsideVampireAreaCached(worldKey, new BlockPos(entity.getPosX(), entity.getPosY() + 1, entity.getPosZ()))) { //For some reason client returns different value for #getPosition than server
+                                if (!TotemHelper.isInsideVampireAreaCached(worldKey, new BlockPos(entity.getPosX(), entity.getPosY() + 1, entity.getPosZ()))) { //For some reason client returns different value for #getPosition than server
                                     if (profiler != null) profiler.endSection();
                                     return true;
                                 }

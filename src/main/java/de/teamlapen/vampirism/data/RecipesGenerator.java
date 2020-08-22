@@ -98,6 +98,7 @@ public class RecipesGenerator extends RecipeProvider {
         ITag<Item> glass_pane = Tags.Items.GLASS_PANES;
         ITag<Item> logs = ItemTags.LOGS;
         ITag<Item> diamond = Tags.Items.GEMS_DIAMOND;
+        ITag<Item> diamondBlock = Tags.Items.STORAGE_BLOCKS_DIAMOND;
         ITag<Item> iron_ingot = Tags.Items.INGOTS_IRON;
         ITag<Item> quartz_block = Tags.Items.STORAGE_BLOCKS_QUARTZ;
         ITag<Item> coal_block = Tags.Items.STORAGE_BLOCKS_COAL;
@@ -131,8 +132,7 @@ public class RecipesGenerator extends RecipeProvider {
         ShapelessRecipeBuilder.shapelessRecipe(ModItems.injection_garlic).addIngredient(injection_empty).addIngredient(garlic).addCriterion("has_injection", hasItem(injection_empty)).build(consumer, general("injection_1"));
         ShapelessRecipeBuilder.shapelessRecipe(ModItems.injection_sanguinare).addIngredient(injection_empty).addIngredient(vampire_fang, 8).addCriterion("has_injection", hasItem(injection_empty)).build(consumer, general("injection_2"));
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.totem_base).patternLine("XYX").patternLine("XYX").patternLine("ZZZ").key('X', planks).key('Y', obsidian).key('Z', iron_ingot).addCriterion("has_obsidian", hasItem(obsidian)).build(consumer, general("totem_base"));
-        ShapedRecipeBuilder.shapedRecipe(ModBlocks.totem_top).patternLine("YXY").patternLine("XZX").patternLine("Y Y").key('X', glass).key('Y', obsidian).key('Z', iron_ingot).addCriterion("has_obsidian", hasItem(obsidian)).build(consumer, general("totem_top"));
-        ConditionalRecipe.builder().addCondition(new ConfigCondition("umbrella")).addRecipe((consumer1) -> ShapedRecipeBuilder.shapedRecipe(ModItems.umbrella).patternLine("###").patternLine("BAB").patternLine(" A ").key('#', wool).key('A', stick).key('B', vampire_orchid).addCriterion("has_wool", hasItem(wool)).build(consumer1, general("umbrella"))).build(consumer, general("umbrella"));
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.totem_top_crafted).patternLine("X X").patternLine(" Y ").patternLine("XZX").key('X',obsidian).key('Y', diamond).key('Z',vampire_book).addCriterion("has_diamond", hasItem(diamondBlock)).addCriterion("has_obsidian", hasItem(obsidian)).build(consumer, general("totem_top"));        ConditionalRecipe.builder().addCondition(new ConfigCondition("umbrella")).addRecipe((consumer1) -> ShapedRecipeBuilder.shapedRecipe(ModItems.umbrella).patternLine("###").patternLine("BAB").patternLine(" A ").key('#', wool).key('A', stick).key('B', vampire_orchid).addCriterion("has_wool", hasItem(wool)).build(consumer1, general("umbrella"))).build(consumer, general("umbrella"));
 
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.alchemical_cauldron).patternLine("XZX").patternLine("XXX").patternLine("Y Y").key('X', iron_ingot).key('Y', stone_bricks).key('Z', garlic).addCriterion("has_iron", hasItem(iron_ingot)).build(consumer, hunter("alchemical_cauldron"));
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.potion_table).patternLine("XXX").patternLine("Y Y").patternLine("ZZZ").key('X', glass_bottle).key('Y', planks).key('Z', iron_ingot).addCriterion("has_glass_bottle", hasItem(glass_bottle)).build(consumer, hunter("hunter_potion_table"));

@@ -56,7 +56,7 @@ public class ModBlocksRender {
                 }
             }
             return 0xFFFFFF;
-        }, TotemTopBlock.getTotems());
+        }, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0]));
     }
 
     private static void registerTileRenderer() {

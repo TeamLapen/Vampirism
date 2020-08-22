@@ -105,6 +105,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
         return this;
     }
 
+    @Nonnull
     @Override
     public IVillageFactionData getVillageData() {
         return villageFactionData;

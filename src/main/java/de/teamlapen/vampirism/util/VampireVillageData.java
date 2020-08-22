@@ -12,6 +12,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 
@@ -38,8 +39,8 @@ public class VampireVillageData implements IVillageFactionData {
     }
 
     @Override
-    public Block getTotemTopBlock() {
-        return ModBlocks.totem_top_vampirism_vampire;
+    public Pair<Block, Block> getTotemTopBlock() {
+        return Pair.of(ModBlocks.totem_top_vampirism_vampire, ModBlocks.totem_top_vampirism_vampire_crafted);
     }
 
     @Override

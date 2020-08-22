@@ -7,7 +7,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
+import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,10 +32,11 @@ public interface IVillageFactionData {
         }
 
         @Override
-        public Block getTotemTopBlock() {
-            return Blocks.AIR;
+        public Pair<Block, Block> getTotemTopBlock() {
+            return Pair.of(Blocks.AIR, Blocks.AIR);
         }
 
+        @Nullable
         @Override
         public EntityType<? extends ITaskMasterEntity> getTaskMasterEntity() {
             return null;
@@ -46,7 +49,11 @@ public interface IVillageFactionData {
 
     List<CaptureEntityEntry> getCaptureEntries();
 
-    Block getTotemTopBlock();
+    /**
+     * @return Pair of totem top blocks for faction. Left is the generated (crafted=false), right is the crafted
+     */
+    Pair<Block, Block> getTotemTopBlock();
 
+    @Nullable
     EntityType<? extends ITaskMasterEntity> getTaskMasterEntity();
 }

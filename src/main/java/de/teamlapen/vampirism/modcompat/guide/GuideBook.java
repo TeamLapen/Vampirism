@@ -393,7 +393,7 @@ public class GuideBook implements IGuideBook {
         List<IPage> vampireForestPages = new ArrayList<>(PageHelper.pagesForLongText(translateComponent(base + "vampire_forest.text")));
         entries.put(new ResourceLocation(base + "vampire_forest"), new EntryText(vampireForestPages, translateComponent(base + "vampire_forest")));
 
-        List<IPage> villagePages = new ArrayList<>(GuideHelper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "villages.text")), new ResourceLocation("guide.vampirism.blocks.totem_base"), new ResourceLocation("guide.vampirism.blocks.totem_top")));
+        List<IPage> villagePages = new ArrayList<>(GuideHelper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "villages.text")), new ResourceLocation("guide.vampirism.blocks.totem_base"), new ResourceLocation("guide.vampirism.blocks.totem_top_crafted")));
         entries.put(new ResourceLocation(base + "villages"), new EntryText(villagePages, translateComponent(base + "villages")));
 
 
@@ -464,8 +464,8 @@ public class GuideBook implements IGuideBook {
         ItemInfoBuilder.create(ModBlocks.blood_pedestal).recipes("vampire/blood_pedestal").build(entries);
         ItemInfoBuilder.create(ModBlocks.blood_grinder).recipes("general/blood_grinder").setFormats(loc(ModItems.human_heart), loc(Items.BEEF), loc(ModBlocks.blood_sieve)).build(entries);
         ItemInfoBuilder.create(ModBlocks.blood_sieve).recipes("general/blood_sieve").setFormats(translateComponent(ModFluids.impure_blood.getAttributes().getTranslationKey()), loc(ModBlocks.blood_grinder)).setLinks(new ResourceLocation("guide.vampirism.blocks.blood_grinder")).build(entries);
-        ItemInfoBuilder.create(ModBlocks.totem_top).recipes("general/totem_top").setLinks(new ResourceLocation("guide.vampirism.blocks.totem_base"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
-        ItemInfoBuilder.create(ModBlocks.totem_base).recipes("general/totem_base").setLinks(new ResourceLocation("guide.vampirism.blocks.totem_top"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
+        ItemInfoBuilder.create(ModBlocks.totem_top_crafted, ModBlocks.totem_top).setLinks(new ResourceLocation("guide.vampirism.blocks.totem_base"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
+        ItemInfoBuilder.create(ModBlocks.totem_base).recipes("general/totem_base").setLinks(new ResourceLocation("guide.vampirism.blocks.totem_top_crafted"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
         ItemInfoBuilder.create(ModBlocks.potion_table).recipes("hunter/potion_table").customPages(generatePotionMixes()).build(entries);
         links.putAll(entries);
         return entries;

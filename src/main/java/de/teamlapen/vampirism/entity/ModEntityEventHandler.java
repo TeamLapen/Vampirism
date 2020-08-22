@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
@@ -18,6 +17,7 @@ import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.tileentity.TotemHelper;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.Helper;
@@ -43,8 +43,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.feature.structure.StructureStart;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.village.PointOfInterest;
+import net.minecraft.village.PointOfInterestManager;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -58,6 +60,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * Event handler for all entity related events
@@ -250,11 +255,10 @@ public class ModEntityEventHandler {
             //------------------
 
             if (event.getEntity() instanceof VillagerEntity) {
-
-                StructureStart<?> structure = UtilLib.getStructureStartAt(event.getEntity(), Structure.field_236381_q_);
-                if (structure != null && structure.isValid() && !(structure == StructureStart.DUMMY)) {
-                    BlockPos pos = TotemTileEntity.getTotemPosition(structure);
-                    if (pos != null) {
+                Collection<PointOfInterest> points = ((ServerWorld) event.getWorld()).getPointOfInterestManager().func_219146_b(p -> true, event.getEntity().getPosition(), 25, PointOfInterestManager.Status.ANY).collect(Collectors.toList());
+                if (points.size()>0) {
+                    BlockPos pos = TotemHelper.getTotemPosition(points);
+                    if (pos != null && event.getWorld().getChunkProvider().isChunkLoaded(new ChunkPos(pos))) {
                         TileEntity tileEntity = event.getWorld().getTileEntity(pos);
                         if (tileEntity instanceof TotemTileEntity) {
                             if (VReference.HUNTER_FACTION.equals(((TotemTileEntity) tileEntity).getControllingFaction())) {
