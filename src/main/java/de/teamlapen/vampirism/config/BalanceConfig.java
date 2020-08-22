@@ -81,6 +81,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue viTotemWeight;
     public final ForgeConfigSpec.DoubleValue viTotemPreSetPercentage;
     public final ForgeConfigSpec.IntValue viMaxVillagerRespawn;
+    public final ForgeConfigSpec.IntValue viMaxTotemRadius;
 
     public final ForgeConfigSpec.DoubleValue vsSundamgeReduction1;
     public final ForgeConfigSpec.DoubleValue vsThirstReduction1;
@@ -248,6 +249,7 @@ public class BalanceConfig {
         viTotemWeight = builder.comment("Weight of the Totem Building inside the Village").defineInRange("viTotemWeight", 20,1,Integer.MAX_VALUE);
         viTotemPreSetPercentage = builder.comment("Percentage of totem which should be have a pre defined faction").defineInRange("viTotemPreSetPercentage", 0.60d, 0d, 1d);
         viMaxVillagerRespawn = builder.comment("Maximum of Villager the Totem can respawn").defineInRange("viMaxVillagerRespawn", 30, 0, Integer.MAX_VALUE);
+        viMaxTotemRadius = builder.comment("Maximum range of a Totem to grow the village").defineInRange("viMaxTotemRadius", 100, 0, Integer.MAX_VALUE);
         builder.pop();
 
 

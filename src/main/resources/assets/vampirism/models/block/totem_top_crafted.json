@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:block/totem_top",
+  "textures": {
+    "outer": "minecraft:block/obsidian"
+  }
+}

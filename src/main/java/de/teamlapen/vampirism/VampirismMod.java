@@ -319,7 +319,7 @@ public class VampirismMod {
     }
 
     /**
-     * Setup API during pre-init before configs are loaded
+     * Setup API during mod contruction before configs are loaded
      */
     private void setupAPI2() {
         VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction(REFERENCE.VAMPIRE_PLAYER_KEY, IVampirePlayer.class, Color.MAGENTA.darker().darker(), true, () -> VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL, REFERENCE.HIGHEST_VAMPIRE_LORD, LordTitles::getVampireTitle, new VampireVillageData());

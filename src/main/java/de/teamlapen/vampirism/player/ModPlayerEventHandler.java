@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.player;
 
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -26,20 +28,27 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.player.vampire.actions.BatVampireAction;
+import de.teamlapen.vampirism.tileentity.TotemHelper;
+import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.network.IPacket;
+import net.minecraft.network.play.server.SChangeBlockPacket;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.village.PointOfInterestType;
 import net.minecraft.world.World;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -59,7 +68,9 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Event handler for player related events
@@ -341,6 +352,55 @@ public class ModPlayerEventHandler {
             if (event.getEntity().isAlive() && event.getEntity().getPositionVector().lengthSquared() != 0) { //Do not attempt to get capability while entity is being initialized
                 if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(vampire -> vampire.getSpecialAttributes().bat).orElse(false)) {
                     event.setNewHeight(BatVampireAction.BAT_EYE_HEIGHT);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void blockDestroyed(BlockEvent.BreakEvent event) {
+        //don't allow player to destroy blocks with PointOfInterests that are owned by a totem with different faction as the player
+        if (event.getPlayer().isCreative()) return;
+        Set<BlockPos> positions = new HashSet<>();
+        BlockPos totemPos = TotemHelper.getTotemPosition(event.getPos());
+        Block block = event.getState().getBlock();
+        //if the blockstate does not have a POI, but another blockstate of the specific block eg. the bed, search for the blockstate in a 3x3x3 radius
+        //or the other way around
+        ImmutableList<BlockState> validStates = block.getStateContainer().getValidStates();
+        if (validStates.size() > 1 && PointOfInterestType.getAllStates().anyMatch(validStates::contains)) {
+            for (int x = event.getPos().getX() - 1; x <= event.getPos().getX() + 1; ++x) {
+                for (int z = event.getPos().getZ() - 1; z <= event.getPos().getZ() + 1; ++z) {
+                    for (double y = event.getPos().getY() - 1; y <= event.getPos().getY() + 1; ++y) {
+                        BlockPos pos1 = new BlockPos(x, y, z);
+                        if (event.getWorld().getChunkProvider().isChunkLoaded(new ChunkPos(pos1)) && event.getWorld().getBlockState(pos1).getBlock() == block) {
+                            BlockPos totemPos1 = TotemHelper.getTotemPosition(pos1);
+                            if (totemPos1 != null && totemPos == null) {
+                                totemPos = totemPos1;
+                            }
+                            positions.add(pos1);
+                        }
+                    }
+                }
+            }
+        }
+        //cancel the event and notify client about the failed block destroy.
+        //also notify client about wrong destroyed neighbor blocks (bed)
+        if (totemPos != null && event.getWorld().isBlockLoaded(totemPos)) {
+            TotemTileEntity totem = ((TotemTileEntity) event.getWorld().getTileEntity(totemPos));
+            if (totem.getControllingFaction() != null && VampirismAPI.getFactionPlayerHandler(event.getPlayer()).map(player -> player.getCurrentFaction() != totem.getControllingFaction()).orElse(true)) {
+                event.setCanceled(true);
+                event.getPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.village.totem_destroy.fail_totem_faction"), true);
+                if (!positions.isEmpty()) {
+                    positions.forEach(pos -> {
+                        ((ServerPlayerEntity) event.getPlayer()).connection.sendPacket(new SChangeBlockPacket(event.getWorld(), pos));
+                        TileEntity tileentity = event.getWorld().getTileEntity(pos);
+                        if (tileentity != null) {
+                            IPacket<?> pkt = tileentity.getUpdatePacket();
+                            if (pkt != null) {
+                                ((ServerPlayerEntity) event.getPlayer()).connection.sendPacket(pkt);
+                            }
+                        }
+                    });
                 }
             }
         }

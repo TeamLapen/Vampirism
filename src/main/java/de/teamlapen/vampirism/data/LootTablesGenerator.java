@@ -232,12 +232,13 @@ public class LootTablesGenerator extends LootTableProvider {
                             .addEntry(ItemLootEntry.builder(Items.COAL))
                             .addEntry(ItemLootEntry.builder(Blocks.OAK_PLANKS))));
             this.registerDropSelfLootTable(ModBlocks.totem_base);
-            this.registerDropSelfLootTable(ModBlocks.totem_top);
+            this.registerDropSelfLootTable(ModBlocks.totem_top_crafted);
+            this.registerLootTable(ModBlocks.totem_top, func_218482_a());
             this.registerLootTable(ModBlocks.totem_top_vampirism_hunter, dropping(ModBlocks.totem_top));
             this.registerLootTable(ModBlocks.totem_top_vampirism_vampire, dropping(ModBlocks.totem_top));
             this.registerDropSelfLootTable(ModBlocks.vampire_orchid);
             this.registerDropSelfLootTable(ModBlocks.weapon_table);
-            this.registerLootTable(ModBlocks.tent, func_218482_a());
+            this.registerLootTable(ModBlocks.tent, BlockLootTables.func_218482_a());
             this.registerFlowerPot(ModBlocks.potted_vampire_orchid);
         }
 

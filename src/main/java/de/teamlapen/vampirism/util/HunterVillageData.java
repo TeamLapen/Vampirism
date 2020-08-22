@@ -8,11 +8,11 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
-import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 
@@ -39,8 +39,8 @@ public class HunterVillageData implements IVillageFactionData {
     }
 
     @Override
-    public Block getTotemTopBlock() {
-        return ModBlocks.totem_top_vampirism_hunter;
+    public Pair<Block, Block> getTotemTopBlock() {
+        return Pair.of(ModBlocks.totem_top_vampirism_hunter, ModBlocks.totem_top_vampirism_hunter_crafted);
     }
 
     @Override

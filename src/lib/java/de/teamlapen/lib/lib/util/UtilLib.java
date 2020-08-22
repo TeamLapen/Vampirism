@@ -697,13 +697,23 @@ public class UtilLib {
     }
 
     @Nonnull
-    public static AxisAlignedBB intToBB(int[] array) {
+    public static AxisAlignedBB intToBB(@Nonnull int[] array) {
         return new AxisAlignedBB(array[0], array[1], array[2], array[3], array[4], array[5]);
     }
 
     @Nonnull
-    public static MutableBoundingBox intToMB(int[] array) {
+    public static MutableBoundingBox intToMB(@Nonnull int[] array) {
         return new MutableBoundingBox(array[0], array[1], array[2], array[3], array[4], array[5]);
+    }
+
+    @Nonnull
+    public static MutableBoundingBox AABBtoMB(@Nonnull AxisAlignedBB bb) {
+        return new MutableBoundingBox((int)bb.minX,(int)bb.minY,(int)bb.minZ,(int)bb.maxX,(int)bb.maxY,(int)bb.maxZ);
+    }
+
+    @Nonnull
+    public static AxisAlignedBB MBtoAABB(@Nonnull MutableBoundingBox bb) {
+        return new AxisAlignedBB(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
     }
 
     public enum RotationAmount {

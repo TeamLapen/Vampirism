@@ -4,7 +4,7 @@
     "particle": "block/obsidian",
     "core": "vampirism:block/totem_core",
     "iron": "block/iron_block",
-    "obsidian": "block/obsidian"
+    "outer": "block/glowstone"
   },
   "elements": [
     {
@@ -143,7 +143,7 @@
             15,
             15
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "up": {
           "uv": [
@@ -152,7 +152,7 @@
             15,
             15
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "north": {
           "uv": [
@@ -161,7 +161,7 @@
             15,
             15
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "south": {
           "uv": [
@@ -170,7 +170,7 @@
             15,
             15
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "west": {
           "uv": [
@@ -179,7 +179,7 @@
             15,
             15
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "east": {
           "uv": [
@@ -188,7 +188,7 @@
             15,
             15
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         }
       }
     },
@@ -212,7 +212,7 @@
             15,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "south": {
           "uv": [
@@ -221,7 +221,7 @@
             2,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "west": {
           "uv": [
@@ -230,7 +230,7 @@
             2,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "east": {
           "uv": [
@@ -239,7 +239,7 @@
             15,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         }
       }
     },
@@ -263,7 +263,7 @@
             15,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "south": {
           "uv": [
@@ -272,7 +272,7 @@
             2,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "west": {
           "uv": [
@@ -281,7 +281,7 @@
             2,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "east": {
           "uv": [
@@ -290,7 +290,7 @@
             15,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         }
       }
     },
@@ -314,7 +314,7 @@
             15,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "south": {
           "uv": [
@@ -323,7 +323,7 @@
             2,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "west": {
           "uv": [
@@ -332,7 +332,7 @@
             2,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "east": {
           "uv": [
@@ -341,7 +341,7 @@
             15,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         }
       }
     },
@@ -365,7 +365,7 @@
             15,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "south": {
           "uv": [
@@ -374,7 +374,7 @@
             2,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "west": {
           "uv": [
@@ -383,7 +383,7 @@
             2,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "east": {
           "uv": [
@@ -392,7 +392,7 @@
             15,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         }
       }
     },
@@ -416,7 +416,7 @@
             15,
             15
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "up": {
           "uv": [
@@ -425,7 +425,7 @@
             15,
             15
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "north": {
           "uv": [
@@ -434,7 +434,7 @@
             15,
             15
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "south": {
           "uv": [
@@ -443,7 +443,7 @@
             15,
             15
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "west": {
           "uv": [
@@ -452,7 +452,7 @@
             15,
             15
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "east": {
           "uv": [
@@ -461,7 +461,7 @@
             15,
             15
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         }
       }
     },
@@ -545,7 +545,7 @@
             15,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "south": {
           "uv": [
@@ -554,7 +554,7 @@
             2,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "west": {
           "uv": [
@@ -563,7 +563,7 @@
             2,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "east": {
           "uv": [
@@ -572,7 +572,7 @@
             15,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         }
       }
     },
@@ -596,7 +596,7 @@
             15,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "south": {
           "uv": [
@@ -605,7 +605,7 @@
             2,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "west": {
           "uv": [
@@ -614,7 +614,7 @@
             2,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "east": {
           "uv": [
@@ -623,7 +623,7 @@
             15,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         }
       }
     },
@@ -647,7 +647,7 @@
             15,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "south": {
           "uv": [
@@ -656,7 +656,7 @@
             2,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "west": {
           "uv": [
@@ -665,7 +665,7 @@
             2,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "east": {
           "uv": [
@@ -674,7 +674,7 @@
             15,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         }
       }
     },
@@ -698,7 +698,7 @@
             15,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "south": {
           "uv": [
@@ -707,7 +707,7 @@
             2,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "west": {
           "uv": [
@@ -716,7 +716,7 @@
             2,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         },
         "east": {
           "uv": [
@@ -725,7 +725,7 @@
             15,
             14
           ],
-          "texture": "#obsidian"
+          "texture": "#outer"
         }
       }
     }
