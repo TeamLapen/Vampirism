@@ -386,8 +386,8 @@ public class ModItems {
         registry.register(new UmbrellaItem());
 
         registry.register(new VampirismItem("hunter_minion_equipment", creativeTabProps()));
-        registry.register(new VampirismItem("hunter_minion_upgrade1", creativeTabProps()));
-        registry.register(new VampirismItem("hunter_minion_upgrade2", creativeTabProps()));
+        registry.register(new MinionUpgradeItem(1, "hunter_minion_upgrade1"));
+        registry.register(new MinionUpgradeItem(2, "hunter_minion_upgrade2"));
         registry.register(new FeedingAdapterItem());
         registry.register(new VampirismItem("vampire_minion_binding", creativeTabProps()));
         registry.register(new VampirismItem("vampire_minion_upgrade1", creativeTabProps()));

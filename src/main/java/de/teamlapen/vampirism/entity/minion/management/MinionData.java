@@ -21,7 +21,7 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
 
 
     public final static int MAX_NAME_LENGTH = 15;
-    private final static Logger LOGGER = LogManager.getLogger();
+    protected final static Logger LOGGER = LogManager.getLogger();
     private final static Map<ResourceLocation, Supplier<? extends MinionData>> constructors = new HashMap<>(); //TODO maybe API
 
 
@@ -117,6 +117,10 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
     }
 
     public void handleMinionAppearanceConfig(String name, int... data) {
+    }
+
+    public boolean upgradeStat(int statId) {
+        return false;
     }
 
     public boolean isTaskLocked() {

@@ -8,12 +8,14 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.client.gui.HunterMinionAppearanceScreen;
+import de.teamlapen.vampirism.client.gui.HunterMinionStatsScreen;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.goals.AttackRangedCrossbowGoal;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.items.MinionUpgradeItem;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -127,6 +129,12 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         Minecraft.getInstance().displayGuiScreen(new HunterMinionAppearanceScreen(this));
     }
 
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void openStatsScreen() {
+        Minecraft.getInstance().displayGuiScreen(new HunterMinionStatsScreen(this));
+    }
+
     public void setUseLordSkin(boolean useLordSkin) {
         this.getMinionData().ifPresent(d -> d.useLordSkin = useLordSkin);
     }
@@ -170,26 +178,18 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     protected boolean processInteract(PlayerEntity player, Hand hand) {
         if (!this.world.isRemote() && isLord(player) && minionData != null) {
             ItemStack heldItem = player.getHeldItem(hand);
-            if (heldItem.getItem() == ModItems.hunter_minion_upgrade1) {
-                if (this.minionData.level < 1) {
-                    this.minionData.setLevel(1);
+            if (heldItem.getItem() instanceof MinionUpgradeItem) {
+                int upgradeLevel = ((MinionUpgradeItem) heldItem.getItem()).getLevel();
+                if (this.minionData.level < upgradeLevel) {
+                    this.minionData.level++;
                     if (!player.abilities.isCreativeMode) heldItem.shrink(1);
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_upgrade"));
+                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_upgrade"), false);
+                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.upgraded"), true);
                     HelperLib.sync(this);
                 } else {
                     player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_wrong"));
-                }
-                return true;
-            } else if (heldItem.getItem() == ModItems.hunter_minion_upgrade2) {
-                if (this.minionData.level < 2) {
-                    this.minionData.setLevel(2);
-                    if (!player.abilities.isCreativeMode) heldItem.shrink(1);
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_upgrade"));
-                    HelperLib.sync(this);
-                } else {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_wrong"));
-                }
 
+                }
                 return true;
             }
         }
@@ -223,10 +223,42 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     public static class HunterMinionData extends MinionData {
         public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "hunter");
 
+        public static final int MAX_LEVEL = 5;
+        public static final int MAX_LEVEL_INVENTORY = 2;
+        public static final int MAX_LEVEL_HEALTH = 2;
+        public static final int MAX_LEVEL_STRENGTH = 2;
+        public static final int MAX_LEVEL_RESOURCES = 2;
         private int type;
         private int hat;
         private boolean useLordSkin;
         private int level;
+        private int inventoryLevel;
+        private int healthLevel;
+        private int strengthLevel;
+        private int resourceEfficiencyLevel;
+
+        @Override
+        public void deserializeNBT(CompoundNBT nbt) {
+            super.deserializeNBT(nbt);
+            type = nbt.getInt("hunter_type");
+            hat = nbt.getInt("hunter_hat");
+            level = nbt.getInt("level");
+            useLordSkin = nbt.getBoolean("use_lord_skin");
+            inventoryLevel = nbt.getInt("l_inv");
+            healthLevel = nbt.getInt("l_he");
+            strengthLevel = nbt.getInt("l_str");
+            resourceEfficiencyLevel = nbt.getInt("l_res");
+
+        }
+
+        public int getHealthLevel() {
+            return healthLevel;
+        }
+
+        public int getInventoryLevel() {
+            return this.inventoryLevel;
+        }
+
 
         public HunterMinionData(String name, int type, int hat, boolean useLordSkin) {
             super(name, 9);
@@ -236,17 +268,16 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             this.level = 0;
         }
 
+        public int getInventorySize() {
+            return inventoryLevel == 1 ? 12 : (inventoryLevel == 2 ? 15 : 9);
+        }
+
         private HunterMinionData() {
             super();
         }
 
-        @Override
-        public void deserializeNBT(CompoundNBT nbt) {
-            super.deserializeNBT(nbt);
-            type = nbt.getInt("hunter_type");
-            hat = nbt.getInt("hunter_hat");
-            level = nbt.getInt("level");
-            useLordSkin = nbt.getBoolean("use_lord_skin");
+        public int getRemainingStatPoints() {
+            return Math.max(0, this.level - inventoryLevel - healthLevel - resourceEfficiencyLevel - strengthLevel);
         }
 
         @Override
@@ -264,12 +295,28 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             }
         }
 
+        public int getResourceEfficiencyLevel() {
+            return resourceEfficiencyLevel;
+        }
+
+        public int getStrengthLevel() {
+            return strengthLevel;
+        }
+
+        public boolean isMaxLevel() {
+            return this.level == MAX_LEVEL;
+        }
+
         @Override
         public void serializeNBT(CompoundNBT tag) {
             super.serializeNBT(tag);
             tag.putInt("hunter_type", type);
             tag.putInt("hunter_hat", hat);
             tag.putInt("level", level);
+            tag.putInt("l_inv", inventoryLevel);
+            tag.putInt("l_he", healthLevel);
+            tag.putInt("l_str", strengthLevel);
+            tag.putInt("l_res", resourceEfficiencyLevel);
             tag.putBoolean("use_lord_skin", useLordSkin);
         }
 
@@ -278,10 +325,41 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
          * @return If the new level is higher than the old
          */
         public boolean setLevel(int level) {
+            if (level < 0 || level > MAX_LEVEL) return false;
             boolean levelup = level > this.level;
             this.level = level;
-            this.getInventory().setAvailableSize(level == 1 ? 12 : (level == 2 ? 15 : 9));
             return levelup;
+        }
+
+        @Override
+        public boolean upgradeStat(int statId) {
+            if (getRemainingStatPoints() == 0) {
+                LOGGER.warn("Cannot upgrade minion stat as no stat points are left");
+                return false;
+            }
+            switch (statId) {
+                case 0:
+                    if (inventoryLevel >= 2) return false;
+                    inventoryLevel++;
+                    this.getInventory().setAvailableSize(getInventorySize());
+                    return true;
+                case 1:
+                    if (healthLevel >= 2) return false;
+                    healthLevel++;
+                    return true;
+                case 2:
+                    if (strengthLevel >= 2) return false;
+                    strengthLevel++;
+                    this.getInventory().setAvailableSize(getInventorySize());
+                case 3:
+                    if (resourceEfficiencyLevel >= 2) return false;
+                    resourceEfficiencyLevel++;
+                    return true;
+
+                default:
+                    LOGGER.warn("Cannot upgrade minion stat {} as it does not exist", statId);
+                    return false;
+            }
         }
 
         @Override

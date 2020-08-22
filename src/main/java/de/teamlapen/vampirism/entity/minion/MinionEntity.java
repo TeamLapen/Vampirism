@@ -370,6 +370,11 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     public void openAppearanceScreen() {
     }
 
+    @OnlyIn(Dist.CLIENT)
+    public void openStatsScreen() {
+
+    }
+
     @Override
     public void readAdditional(CompoundNBT nbt) {
         super.readAdditional(nbt);

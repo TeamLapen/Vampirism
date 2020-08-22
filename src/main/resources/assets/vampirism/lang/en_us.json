@@ -105,6 +105,7 @@
   "gui.vampirism.taskmaster.text.vampirism_vampire": "Sire, if you are willing to help the local vampire community, there are several tasks you can complete. You will be rewarded upon completion and make yourself a name. Please browse the available task and accept any you like",
   "gui.vampirism.taskmaster.text.vampirism_hunter": "Fellow hunter,\nto support the local hunter community, there are several tasks you can complete. You will be rewarded upon completion. Please browse the available tasks and accept any you like.",
   "gui.vampirism.taskmaster.not_accepted": "Not accepted yet",
+  "gui.vampirism.minion_stats": "Minion Stats",
   "enchantment.vampirism.arrow_frugality": "Arrow Frugality",
   "enchantment.vampirism.vampire_slayer": "Vampire Slayer",
   "enchantment.vampirism.crossbow_infinity": "Crossbow Infinity",
@@ -253,9 +254,9 @@
   "text.vampirism.trainer_disabled_hunter": "It is not safe enough to train you here. Please free the village.",
   "text.vampirism.actions.bind_action": "Bound action %s to action key %s",
   "text.vampirism.hunter.cured_sanguinare": "You have come to the right person. I have cured you of sanguinare",
-  "text.vampirism.hunter_minion.equipment_upgrade": "Thank you for the upgraded equipment. I can now carry more items and am stronger.",
+  "text.vampirism.hunter_minion.equipment_upgrade": "Thank you for the upgraded equipment. Please choose in which area I should train.",
   "text.vampirism.hunter_minion.equipment_wrong": "I already have this equipment",
-  "text.vampirism.vampire_minion.binding_upgrade": "I am grateful for the upgrade, I shall serve you even better now Sire.",
+  "text.vampirism.vampire_minion.binding_upgrade": "I am grateful for the upgrade, I shall serve you even better now Sire. Please choose in which area I should improve",
   "text.vampirism.vampire_minion.binding_wrong": "This upgrade is of no help for me",
   "text.vampirism.taskmaster.no_tasks": "No tasks available at the moment",
   "text.vampirism.taskmaster.no_tasks_unique": "There are no task left",
@@ -827,5 +828,7 @@
   "text.vampirism.lord_title.hunter.2": "Captain",
   "text.vampirism.lord_title.hunter.3": "Major",
   "text.vampirism.lord_title.hunter.4": "Colonel",
-  "text.vampirism.lord_title.hunter.5": "Brigadier"
+  "text.vampirism.lord_title.hunter.5": "Brigadier",
+  "text.vampirism.minion.stats.inventory_level": "Inventory Size",
+  "text.vampirism.minion.stats.resource_level": "Resource Efficiency"
 }
