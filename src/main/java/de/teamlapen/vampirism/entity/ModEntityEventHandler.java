@@ -41,6 +41,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.village.PointOfInterest;
 import net.minecraft.village.PointOfInterestManager;
 import net.minecraft.world.server.ServerWorld;
@@ -246,7 +247,7 @@ public class ModEntityEventHandler {
                 Collection<PointOfInterest> points = ((ServerWorld) event.getWorld()).getPointOfInterestManager().func_219146_b(p -> true, event.getEntity().getPosition(), 25, PointOfInterestManager.Status.ANY).collect(Collectors.toList());
                 if (points.size()>0) {
                     BlockPos pos = TotemHelper.getTotemPosition(points);
-                    if (pos != null && event.getWorld().isBlockLoaded(pos)) {
+                    if (pos != null && event.getWorld().getChunkProvider().isChunkLoaded(new ChunkPos(pos))) {
                         TileEntity tileEntity = event.getWorld().getTileEntity(pos);
                         if (tileEntity instanceof TotemTileEntity) {
                             if (VReference.HUNTER_FACTION.equals(((TotemTileEntity) tileEntity).getControllingFaction())) {

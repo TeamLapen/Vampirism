@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vampirism:totem_top"
+          "name": "vampirism:totem_top_crafted"
         }
       ],
       "conditions": [

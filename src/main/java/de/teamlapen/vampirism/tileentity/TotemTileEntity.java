@@ -621,7 +621,9 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.controllingFaction = faction;
         this.baseColors = faction != null ? faction.getColor().getColorComponents(null) : DyeColor.WHITE.getColorComponentValues();
         if (this.world != null) {
-            this.world.setBlockState(this.pos, (faction == null ? ModBlocks.totem_top : faction.getVillageData().getTotemTopBlock()).getDefaultState(), 55);
+            Block b = this.getBlockState().getBlock();
+            boolean crafted = b instanceof TotemTopBlock && ((TotemTopBlock) b).isCrafted();
+            this.world.setBlockState(this.pos, (faction == null ? crafted ? ModBlocks.totem_top_crafted : ModBlocks.totem_top : crafted ? faction.getVillageData().getTotemTopBlock().getRight() : faction.getVillageData().getTotemTopBlock().getLeft()).getDefaultState(), 55);
         }
     }
 

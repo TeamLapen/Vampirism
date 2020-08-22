@@ -45,6 +45,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.village.PointOfInterestType;
@@ -368,7 +369,7 @@ public class ModPlayerEventHandler {
                 for (int z = event.getPos().getZ() - 1; z <= event.getPos().getZ() + 1; ++z) {
                     for (double y = event.getPos().getY() - 1; y <= event.getPos().getY() + 1; ++y) {
                         BlockPos pos1 = new BlockPos(x, y, z);
-                        if (event.getWorld().isBlockLoaded(pos1) && event.getWorld().getBlockState(pos1).getBlock() == block) {
+                        if (event.getWorld().getChunkProvider().isChunkLoaded(new ChunkPos(pos1)) && event.getWorld().getBlockState(pos1).getBlock() == block) {
                             BlockPos totemPos1 = TotemHelper.getTotemPosition(pos1);
                             if (totemPos1 != null && totemPos == null) {
                                 totemPos = totemPos1;

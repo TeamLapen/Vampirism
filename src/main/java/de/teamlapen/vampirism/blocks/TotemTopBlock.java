@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import com.google.common.collect.Maps;
-
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
@@ -27,7 +25,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Top of a two block multiblock structure.
@@ -37,16 +37,14 @@ import java.util.Map;
  * Has both model renderer (with color/tint) and TESR (used for beam)
  */
 public class TotemTopBlock extends ContainerBlock {
+    private static final List<TotemTopBlock> blocks = new ArrayList<>();
     private static final VoxelShape shape = makeShape();
-    private static final Map<ResourceLocation, TotemTopBlock> factionTotems = Maps.newHashMap();
 
-    public static TotemTopBlock getTotem(ResourceLocation faction) {
-        return factionTotems.get(faction);
+    public static List<TotemTopBlock> getBlocks() {
+        return Collections.unmodifiableList(blocks);
     }
 
-    public static Block[] getTotems() {
-        return factionTotems.values().toArray(new Block[0]);
-    }
+    private final boolean crafted;
 
     private static VoxelShape makeShape() {
         VoxelShape a = Block.makeCuboidShape(3, 0, 3, 13, 10, 13);
@@ -56,20 +54,14 @@ public class TotemTopBlock extends ContainerBlock {
 
     public final ResourceLocation faction;
 
-    @Deprecated
-    public TotemTopBlock() {
-        super(Properties.create(Material.ROCK).hardnessAndResistance(40, 2000).sound(SoundType.STONE));
-        this.faction = new ResourceLocation("none");
-        factionTotems.put(this.faction, this);
-    }
-
     /**
      * @param faction faction must be faction registryname;
      */
-    public TotemTopBlock(ResourceLocation faction) {
-        super(Properties.create(Material.ROCK).hardnessAndResistance(40, 2000).sound(SoundType.STONE));
+    public TotemTopBlock(boolean crafted, ResourceLocation faction) {
+        super(Properties.create(Material.ROCK).hardnessAndResistance(20, 2000).sound(SoundType.STONE));
         this.faction = faction;
-        factionTotems.put(this.faction, this);
+        this.crafted = crafted;
+        blocks.add(this);
     }
 
     @Override
@@ -105,6 +97,10 @@ public class TotemTopBlock extends ContainerBlock {
     @Override
     public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
         return shape;
+    }
+
+    public boolean isCrafted() {
+        return crafted;
     }
 
     @Override
