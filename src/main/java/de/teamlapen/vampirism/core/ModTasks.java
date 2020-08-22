@@ -70,6 +70,7 @@ public class ModTasks {
         registry.register(TaskBuilder.builder().addRequirement("skeleton", EntityType.SKELETON, 14).setReward(new ItemStack(Items.CHAINMAIL_LEGGINGS)).build("break_bones2"));
         registry.register(TaskBuilder.builder().addRequirement("skeleton", EntityType.SKELETON, 10).setReward(new ItemStack(Items.CHAINMAIL_BOOTS)).build("break_bones3"));
         registry.register(TaskBuilder.builder().addRequirement("skeleton", EntityType.SKELETON, 10).setReward(new ItemStack(Items.CHAINMAIL_HELMET)).build("break_bones4"));
+        registry.register(TaskBuilder.builder().unlockedBy(new LvlUnlocker(5)).addRequirement("obsidian", new ItemStack(Items.OBSIDIAN, 32)).addRequirement("diamond", new ItemStack(Items.DIAMOND, 1)).addRequirement("zombie", EntityType.ZOMBIE, 32).setReward(new ItemStack(ModBlocks.totem_top_crafted)).build("totem_top"));
 
 
     }

@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.entity.FactionVillagerProfession;
 import de.teamlapen.vampirism.entity.villager.Trades;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.world.FactionPointOfInterestType;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.entity.ai.brain.schedule.Activity;
 import net.minecraft.entity.ai.brain.schedule.Schedule;
@@ -29,8 +30,9 @@ public class ModVillage {
     public static final VillagerProfession hunter_expert = getNull();
     public static final VillagerProfession vampire_expert = getNull();
 
-    public static final PointOfInterestType hunter_faction = getNull();
-    public static final PointOfInterestType vampire_faction = getNull();
+    public static final FactionPointOfInterestType no_faction = getNull();
+    public static final FactionPointOfInterestType hunter_faction = getNull();
+    public static final FactionPointOfInterestType vampire_faction = getNull();
 
     public static final Schedule converted_default = getNull();
 
@@ -54,12 +56,15 @@ public class ModVillage {
     }
 
     static void registerVillagePointOfInterestType(IForgeRegistry<PointOfInterestType> registry) {
-        PointOfInterestType hunter_faction = new PointOfInterestType("hunter_faction", ImmutableSet.of(ModBlocks.totem_top_vampirism_hunter.getStateContainer().getBaseState()), 1, null, 1).setRegistryName(REFERENCE.MODID, "hunter_faction");
-        PointOfInterestType vampire_faction = new PointOfInterestType("vampire_faction", ImmutableSet.of(ModBlocks.totem_top_vampirism_vampire.getStateContainer().getBaseState()), 1, null, 1).setRegistryName(REFERENCE.MODID, "vampire_faction");
+        PointOfInterestType hunter_faction = new FactionPointOfInterestType("hunter_faction", ImmutableSet.of(ModBlocks.totem_top_vampirism_hunter.getStateContainer().getBaseState()), 1, null, 1).setRegistryName(REFERENCE.MODID, "hunter_faction");
+        PointOfInterestType vampire_faction = new FactionPointOfInterestType("vampire_faction", ImmutableSet.of(ModBlocks.totem_top_vampirism_vampire.getStateContainer().getBaseState()), 1, null, 1).setRegistryName(REFERENCE.MODID, "vampire_faction");
+        PointOfInterestType no_faction = new FactionPointOfInterestType("no_faction", ImmutableSet.of(ModBlocks.totem_top.getStateContainer().getBaseState()),1,null,1).setRegistryName(REFERENCE.MODID,"no_faction");
         registry.register(hunter_faction);
         registry.register(vampire_faction);
+        registry.register(no_faction);
         PointOfInterestType.func_221052_a(hunter_faction);
         PointOfInterestType.func_221052_a(vampire_faction);
+        PointOfInterestType.func_221052_a(no_faction);
     }
 
     static void registerSchedule(IForgeRegistry<Schedule> registry) {

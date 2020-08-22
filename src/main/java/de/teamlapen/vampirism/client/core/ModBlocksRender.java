@@ -52,7 +52,7 @@ public class ModBlocksRender {
                 }
             }
             return 0xFFFFFF;
-        }, TotemTopBlock.getTotems());
+        }, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0]));
         colors.register((state, worldIn, pos, tintIndex) -> {
             return 0x1E1F1F;
         }, ModBlocks.vampire_spruce_leaves);

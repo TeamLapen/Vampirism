@@ -43,7 +43,7 @@ public class ModTiles {
         registry.register(create("blood_pedestal", PedestalTileEntity::new, ModBlocks.blood_pedestal));
         registry.register(create("grinder", BloodGrinderTileEntity::new, ModBlocks.blood_grinder));
         registry.register(create("sieve", SieveTileEntity::new, ModBlocks.blood_sieve));
-        registry.register(create("totem", TotemTileEntity::new, TotemTopBlock.getTotems()));
+        registry.register(create("totem", TotemTileEntity::new, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0])));
         registry.register(create("potion_table", PotionTableTileEntity::new, ModBlocks.potion_table));
     }
 
