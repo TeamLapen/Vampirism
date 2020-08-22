@@ -62,6 +62,8 @@ import net.minecraft.world.BossInfo;
 import net.minecraft.world.ServerBossInfo;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.gen.feature.structure.StructureStart;
+import net.minecraft.world.gen.feature.structure.Structures;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -362,12 +364,12 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             this.forcedFaction = VampirismAPI.factionRegistry().getFactionByID(blockFaction);
         }
         Set<PointOfInterest> points = TotemHelper.getVillagePointsOfInterest((ServerWorld) world, this.pos);
-        if (!(this.isInsideVillage = !points.isEmpty())) {
+        if (!(this.isInsideVillage = !points.isEmpty() )) {
             this.village = Collections.emptySet();
             if (this.controllingFaction != null) {
                 this.setControllingFaction(null);
             }
-        } else if (!(7 == TotemHelper.isVillage(points, this.world, this.controllingFaction != null || this.capturingFaction != null))) {
+        } else if (!(7 == TotemHelper.isVillage(points, this.world, this.pos, this.controllingFaction != null || this.capturingFaction != null))) {
             this.isInsideVillage = false;
             this.village = Collections.emptySet();
             if (this.controllingFaction != null) {
@@ -712,6 +714,13 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             }
         }
         AxisAlignedBB totem = TotemHelper.getAABBAroundPOIs(this.village);
+        //noinspection ConstantConditions
+        if (Structures.VILLAGE.isPositionInStructure(this.world,this.pos)) {
+            StructureStart start = Structures.VILLAGE.getStart(this.world, this.pos, false);
+            if (start != StructureStart.DUMMY) {
+                totem = UtilLib.MBtoAABB(start.getBoundingBox());
+            }
+        }
         assert totem != null;
         this.villageArea = totem;
         this.villageAreaReduced = totem.grow(-30,-10,-30);

@@ -6,6 +6,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.world.FactionPointOfInterestType;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -325,7 +326,10 @@ public class TotemHelper {
      * @param hasInteraction   if the village is influenced by a faction
      * @return flag which requirements are met
      */
-    public static int isVillage(Set<PointOfInterest> pointOfInterests, World world, boolean hasInteraction) {
+    public static int isVillage(Set<PointOfInterest> pointOfInterests, World world, BlockPos totemPos, boolean hasInteraction) {
+        if (Structures.VILLAGE.isPositionInStructure(world, totemPos)) {
+            return 7;
+        }
         return isVillage(getVillageStats(pointOfInterests, world), hasInteraction);
     }
 
