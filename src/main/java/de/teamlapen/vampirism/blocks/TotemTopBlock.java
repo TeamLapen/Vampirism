@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -140,7 +141,14 @@ public class TotemTopBlock extends ContainerBlock {
                 return false;
             }
         }
-        return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
+        if (super.removedByPlayer(state, world, pos, player, willHarvest, fluid)) {
+            if (tile != null && tile.getControllingFaction() != null) {
+                tile.notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.village_abandoned"));
+            }
+            return true;
+        }else {
+            return false;
+        }
     }
 
     @Nullable

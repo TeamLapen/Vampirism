@@ -383,6 +383,7 @@ public class ModPlayerEventHandler {
             TotemTileEntity totem = ((TotemTileEntity) event.getWorld().getTileEntity(totemPos));
             if (totem.getControllingFaction() != null && VampirismAPI.getFactionPlayerHandler(event.getPlayer()).map(player -> player.getCurrentFaction() != totem.getControllingFaction()).orElse(true)) {
                 event.setCanceled(true);
+                event.getPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.village.totem_destroy.fail_totem_faction"), true);
                 if (!positions.isEmpty()) {
                     positions.forEach(pos -> {
                         ((ServerPlayerEntity) event.getPlayer()).connection.sendPacket(new SChangeBlockPacket(event.getWorld(), pos));

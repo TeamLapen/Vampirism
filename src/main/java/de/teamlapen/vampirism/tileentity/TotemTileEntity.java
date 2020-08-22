@@ -179,7 +179,11 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                 return false;
             }
         } else {
-            return this.capturingFaction == null && this.controllingFaction == null;
+            if(!(this.capturingFaction == null && this.controllingFaction == null)) {
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.totem_destroy.fail_other_faction"), true);
+                return false;
+            }
+            return true;
         }
     }
 
@@ -1026,7 +1030,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         return controllingFaction;
     }
 
-    private void notifyNearbyPlayers(ITextComponent textComponent) {
+    public void notifyNearbyPlayers(ITextComponent textComponent) {
         //noinspection ConstantConditions
         for (PlayerEntity player : this.world.getPlayers()) {
             if (player.getDistanceSq(this.pos.getX(), this.pos.getY(), this.pos.getZ()) > VampirismConfig.BALANCE.viNotifyDistanceSQ.get())
