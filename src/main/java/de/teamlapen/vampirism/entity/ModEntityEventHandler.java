@@ -246,7 +246,7 @@ public class ModEntityEventHandler {
                 Collection<PointOfInterest> points = ((ServerWorld) event.getWorld()).getPointOfInterestManager().func_219146_b(p -> true, event.getEntity().getPosition(), 25, PointOfInterestManager.Status.ANY).collect(Collectors.toList());
                 if (points.size()>0) {
                     BlockPos pos = TotemHelper.getTotemPosition(points);
-                    if (pos != null) {
+                    if (pos != null && event.getWorld().isBlockLoaded(pos)) {
                         TileEntity tileEntity = event.getWorld().getTileEntity(pos);
                         if (tileEntity instanceof TotemTileEntity) {
                             if (VReference.HUNTER_FACTION.equals(((TotemTileEntity) tileEntity).getControllingFaction())) {

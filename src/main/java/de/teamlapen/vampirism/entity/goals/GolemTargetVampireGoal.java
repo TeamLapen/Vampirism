@@ -32,7 +32,7 @@ public class GolemTargetVampireGoal extends NearestAttackableTargetGoal<LivingEn
         Collection<PointOfInterest> points = ((ServerWorld)this.golem.world).getPointOfInterestManager().func_219146_b(p->true,this.golem.getPosition(),35, PointOfInterestManager.Status.ANY).collect(Collectors.toList());
         if (points.size()>0) {
             BlockPos pos = TotemHelper.getTotemPosition(points);
-            if (pos != null) {
+            if (pos != null && this.golem.world.isBlockLoaded(pos)) {
                 TotemTileEntity tile = ((TotemTileEntity) golem.world.getTileEntity(pos));
                 if (tile != null && VReference.VAMPIRE_FACTION.equals(tile.getControllingFaction())) {
                     return false;

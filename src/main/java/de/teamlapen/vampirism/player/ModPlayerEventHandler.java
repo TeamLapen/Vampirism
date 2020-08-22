@@ -368,7 +368,7 @@ public class ModPlayerEventHandler {
                 for (int z = event.getPos().getZ() - 1; z <= event.getPos().getZ() + 1; ++z) {
                     for (double y = event.getPos().getY() - 1; y <= event.getPos().getY() + 1; ++y) {
                         BlockPos pos1 = new BlockPos(x, y, z);
-                        if (event.getWorld().getBlockState(pos1).getBlock() == block) {
+                        if (event.getWorld().isBlockLoaded(pos1) && event.getWorld().getBlockState(pos1).getBlock() == block) {
                             BlockPos totemPos1 = TotemHelper.getTotemPosition(pos1);
                             if (totemPos1 != null && totemPos == null) {
                                 totemPos = totemPos1;
@@ -379,7 +379,7 @@ public class ModPlayerEventHandler {
                 }
             }
         }
-        if (totemPos != null) {
+        if (totemPos != null && event.getWorld().isBlockLoaded(totemPos)) {
             TotemTileEntity totem = ((TotemTileEntity) event.getWorld().getTileEntity(totemPos));
             if (totem.getControllingFaction() != null && VampirismAPI.getFactionPlayerHandler(event.getPlayer()).map(player -> player.getCurrentFaction() != totem.getControllingFaction()).orElse(true)) {
                 event.setCanceled(true);
