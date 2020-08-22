@@ -668,30 +668,26 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                 this.setControllingFaction(null);  //Reset the controlling faction only on interaction, not in tick. Maybe village is just temporarily unavailable #417
                 this.markDirty();
             }
-            if (player.isSneaking()) {
-                //noinspection ConstantConditions
-                Map<Integer, Integer> stats = TotemHelper.getVillageStats(TotemHelper.getVillagePointsOfInterest((ServerWorld) world, this.pos), this.world);
-                int status = TotemHelper.isVillage(stats, this.controllingFaction != null || this.capturingFaction != null);
-                ITextComponent text = new TranslationTextComponent("text.vampirism.village.missing_components");
-                if ((status & 1) == 0) {
-                    text.appendText("\n  - ");
-                    text.appendSibling(new TranslationTextComponent("text.vampirism.village.missing_components.home"));
-                    text.appendText(" " + stats.get(1) + "/" + MIN_HOMES);
-                }
-                if ((status & 2) == 0) {
-                    text.appendText("\n  - ");
-                    text.appendSibling(new TranslationTextComponent("text.vampirism.village.missing_components.workstations"));
-                    text.appendText(" " + stats.get(2) + "/" + MIN_WORKSTATIONS);
-                }
-                if ((status & 4) == 0) {
-                    text.appendText("\n  - ");
-                    text.appendSibling(new TranslationTextComponent("text.vampirism.village.missing_components.villager"));
-                    text.appendText(" " + stats.get(4) + "/" + MIN_VILLAGER);
-                }
-                player.sendStatusMessage(text, false);
-            } else {
-                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.no_near_village"), true);
+            //noinspection ConstantConditions
+            Map<Integer, Integer> stats = TotemHelper.getVillageStats(TotemHelper.getVillagePointsOfInterest((ServerWorld) world, this.pos), this.world);
+            int status = TotemHelper.isVillage(stats, this.controllingFaction != null || this.capturingFaction != null);
+            ITextComponent text = new TranslationTextComponent("text.vampirism.village.missing_components");
+            if ((status & 1) == 0) {
+                text.appendText("\n  - ");
+                text.appendSibling(new TranslationTextComponent("text.vampirism.village.missing_components.home"));
+                text.appendText(" " + stats.get(1) + "/" + MIN_HOMES);
             }
+            if ((status & 2) == 0) {
+                text.appendText("\n  - ");
+                text.appendSibling(new TranslationTextComponent("text.vampirism.village.missing_components.workstations"));
+                text.appendText(" " + stats.get(2) + "/" + MIN_WORKSTATIONS);
+            }
+            if ((status & 4) == 0) {
+                text.appendText("\n  - ");
+                text.appendSibling(new TranslationTextComponent("text.vampirism.village.missing_components.villager"));
+                text.appendText(" " + stats.get(4) + "/" + MIN_VILLAGER);
+            }
+            player.sendStatusMessage(text, false);
 
 
             return false;
