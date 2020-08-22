@@ -360,14 +360,16 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         Set<PointOfInterest> points = TotemHelper.getVillagePointsOfInterest((ServerWorld) world, this.pos);
         if (!(this.isInsideVillage = !points.isEmpty())) {
             this.village = Collections.emptySet();
-            return;
-        }
-        if (!(7 == TotemHelper.isVillage(points, this.world, this.controllingFaction != null || this.capturingFaction != null))) {
+            if (this.controllingFaction != null) {
+                this.setControllingFaction(null);
+            }
+        } else if (!(7 == TotemHelper.isVillage(points, this.world, this.controllingFaction != null || this.capturingFaction != null))) {
             this.isInsideVillage = false;
             this.village = Collections.emptySet();
-            return;
-        }
-        if (!(this.isDisabled = !TotemHelper.addTotem(this.world, points, this.pos))) {
+            if (this.controllingFaction != null) {
+                this.setControllingFaction(null);
+            }
+        }else if (!(this.isDisabled = !TotemHelper.addTotem(this.world, points, this.pos))) {
             this.village = points;
         } else {
             this.village = Collections.emptySet();
