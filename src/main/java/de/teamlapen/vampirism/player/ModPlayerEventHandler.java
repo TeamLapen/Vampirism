@@ -359,10 +359,13 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void blockDestroyed(BlockEvent.BreakEvent event) {
+        //don't allow player to destroy blocks with PointOfInterests that are owned by a totem with different faction as the player
         if (event.getPlayer().isCreative()) return;
         Set<BlockPos> positions = new HashSet<>();
         BlockPos totemPos = TotemHelper.getTotemPosition(event.getPos());
         Block block = event.getState().getBlock();
+        //if the blockstate does not have a POI, but another blockstate of the specific block eg. the bed, search for the blockstate in a 3x3x3 radius
+        //or the other way around
         ImmutableList<BlockState> validStates = block.getStateContainer().getValidStates();
         if (validStates.size() > 1 && PointOfInterestType.getAllStates().anyMatch(validStates::contains)) {
             for (int x = event.getPos().getX() - 1; x <= event.getPos().getX() + 1; ++x) {
@@ -380,6 +383,8 @@ public class ModPlayerEventHandler {
                 }
             }
         }
+        //cancel the event and notify client about the failed block destroy.
+        //also notify client about wrong destroyed neighbor blocks (bed)
         if (totemPos != null && event.getWorld().isBlockLoaded(totemPos)) {
             TotemTileEntity totem = ((TotemTileEntity) event.getWorld().getTileEntity(totemPos));
             if (totem.getControllingFaction() != null && VampirismAPI.getFactionPlayerHandler(event.getPlayer()).map(player -> player.getCurrentFaction() != totem.getControllingFaction()).orElse(true)) {
