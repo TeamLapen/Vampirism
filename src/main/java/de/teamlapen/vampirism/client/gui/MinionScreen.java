@@ -99,6 +99,8 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
             drawButtonTip(UtilLib.translate("gui.vampirism.minion.lock_action"), mouseX, mouseY);
         } else if (this.appearanceButton.isMouseOver(mouseX, mouseY)) {
             drawButtonTip(UtilLib.translate("gui.vampirism.minion.appearance"), mouseX, mouseY);
+        } else if (this.statButton.isMouseOver(mouseX, mouseY)) {
+            drawButtonTip(UtilLib.translate("gui.vampirism.minion_stats"), mouseX, mouseY);
         } else {
             super.renderHoveredToolTip(mouseX, mouseY);
         }

@@ -60,6 +60,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     public static void init() {
 
     }
+
     private boolean crossbowTask = false;
     private AttackRangedCrossbowGoal<HunterMinionEntity> crossbowGoal;
     private MeleeAttackGoal meleeGoal;
@@ -161,25 +162,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        updateAttributes();
-    }
-
-    private void updateAttributes() {
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH + BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH_PL * getMinionData().map(HunterMinionData::getHealthLevel).orElse(0));
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE_PL * getMinionData().map(HunterMinionData::getStrengthLevel).orElse(0));
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED);
-    }
-
-    @Override
-    protected void registerData() {
-        super.registerData();
-        this.getDataManager().register(RAISED_ARM, false);
-
-    }
-
-    @Override
     protected boolean processInteract(PlayerEntity player, Hand hand) {
         if (!this.world.isRemote() && isLord(player) && minionData != null) {
             ItemStack heldItem = player.getHeldItem(hand);
@@ -199,6 +181,19 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             }
         }
         return super.processInteract(player, hand);
+    }
+
+    @Override
+    protected void registerAttributes() {
+        super.registerAttributes();
+        updateAttributes();
+    }
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+        this.getDataManager().register(RAISED_ARM, false);
+
     }
 
     @Override
@@ -225,22 +220,44 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
     }
 
+    private void updateAttributes() {
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH + BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH_PL * getMinionData().map(HunterMinionData::getHealthLevel).orElse(0));
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE_PL * getMinionData().map(HunterMinionData::getStrengthLevel).orElse(0));
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED);
+    }
+
     public static class HunterMinionData extends MinionData {
         public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "hunter");
 
-        public static final int MAX_LEVEL = 5;
+        public static final int MAX_LEVEL = 6;
         public static final int MAX_LEVEL_INVENTORY = 2;
-        public static final int MAX_LEVEL_HEALTH = 2;
-        public static final int MAX_LEVEL_STRENGTH = 2;
+        public static final int MAX_LEVEL_HEALTH = 3;
+        public static final int MAX_LEVEL_STRENGTH = 3;
         public static final int MAX_LEVEL_RESOURCES = 2;
+
         private int type;
         private int hat;
         private boolean useLordSkin;
+        /**
+         * Should be between 0 and {@link HunterMinionData#MAX_LEVEL}
+         */
         private int level;
         private int inventoryLevel;
         private int healthLevel;
         private int strengthLevel;
         private int resourceEfficiencyLevel;
+
+        public HunterMinionData(String name, int type, int hat, boolean useLordSkin) {
+            super(name, 9);
+            this.type = type;
+            this.hat = hat;
+            this.useLordSkin = useLordSkin;
+            this.level = 0;
+        }
+
+        private HunterMinionData() {
+            super();
+        }
 
         @Override
         public void deserializeNBT(CompoundNBT nbt) {
@@ -256,6 +273,11 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
         }
 
+        @Override
+        public ITextComponent getFormattedName() {
+            return super.getFormattedName().applyTextStyle(VReference.HUNTER_FACTION.getChatColor());
+        }
+
         public int getHealthLevel() {
             return healthLevel;
         }
@@ -264,40 +286,16 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             return this.inventoryLevel;
         }
 
-
-        public HunterMinionData(String name, int type, int hat, boolean useLordSkin) {
-            super(name, 9);
-            this.type = type;
-            this.hat = hat;
-            this.useLordSkin = useLordSkin;
-            this.level = 0;
-        }
-
         public int getInventorySize() {
             return inventoryLevel == 1 ? 12 : (inventoryLevel == 2 ? 15 : 9);
         }
 
-        private HunterMinionData() {
-            super();
+        public int getLevel() {
+            return this.level;
         }
 
         public int getRemainingStatPoints() {
             return Math.max(0, this.level - inventoryLevel - healthLevel - resourceEfficiencyLevel - strengthLevel);
-        }
-
-        @Override
-        public ITextComponent getFormattedName() {
-            return super.getFormattedName().applyTextStyle(VReference.HUNTER_FACTION.getChatColor());
-        }
-
-        @Override
-        public void handleMinionAppearanceConfig(String newName, int... data) {
-            this.setName(newName);
-            if (data.length >= 3) {
-                type = data[0];
-                hat = data[1];
-                useLordSkin = data[2] == 1;
-            }
         }
 
         public int getResourceEfficiencyLevel() {
@@ -308,8 +306,14 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             return strengthLevel;
         }
 
-        public int getLevel() {
-            return this.level;
+        @Override
+        public void handleMinionAppearanceConfig(String newName, int... data) {
+            this.setName(newName);
+            if (data.length >= 3) {
+                type = data[0];
+                hat = data[1];
+                useLordSkin = data[2] == 1;
+            }
         }
 
         @Override
