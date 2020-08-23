@@ -216,9 +216,6 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return onlyShould ? this.hardAttackPredicate.and(this.softAttackPredicate) : this.hardAttackPredicate;
     }
 
-    public int getAvailableInvSize() {
-        return 9; //TODO integrate with minion data maybe via data parameter as required client side
-    }
 
     public abstract List<IMinionTask<?, ?>> getAvailableTasks();
 

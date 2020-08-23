@@ -760,6 +760,7 @@
   "text.vampirism.minion.call_single": "Call single",
   "text.vampirism.minion.call_all": "Call all",
   "text.vampirism.minion.respawn": "Respawn dead",
+  "text.vampirism.minion.upgraded": "Your minion has an additional stat point.",
   "__comment": "tasks",
   "task.vampirism.feeding_adapter": "Kitchen utility",
   "task.vampirism.vampire_minion_binding": "Minion control",

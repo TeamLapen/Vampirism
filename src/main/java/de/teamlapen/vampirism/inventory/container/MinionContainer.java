@@ -17,6 +17,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.IWorldPosCallable;
@@ -172,6 +173,40 @@ public class MinionContainer extends InventoryContainer {
             }
             return MinionContainer.create(windowId, inv, (MinionEntity<?>) e);
         }
+    }
+
+    @Override
+    public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
+        ItemStack result = ItemStack.EMPTY;
+        Slot slot = this.inventorySlots.get(index);
+        if (slot != null && slot.getHasStack()) {
+            ItemStack slotStack = slot.getStack();
+            result = slotStack.copy();
+            int startMinionInv = 6;
+            int startPlayerInv = 6 + extraSlots;
+            if (index < startPlayerInv) {
+                if (!this.mergeItemStack(slotStack, startPlayerInv, startPlayerInv + 36, true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (index >= startPlayerInv) {
+                if (!this.mergeItemStack(slotStack, 2, startPlayerInv, false)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+
+            if (slotStack.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
+            } else {
+                slot.onSlotChanged();
+            }
+
+            if (slotStack.getCount() == result.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTake(playerEntity, slotStack);
+        }
+        return result;
     }
 
 
