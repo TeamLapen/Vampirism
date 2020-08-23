@@ -53,7 +53,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         for (int i = 0; i < statCount; i++) {
             int finalI = i;
             statButtons.get(i).active = entity.getMinionData().map(d -> isActive(d, finalI)).orElse(false);
-            statButtons.get(i).visible = entity.getMinionData().map(this::isMaxLevel).orElse(false);
+            statButtons.get(i).visible = entity.getMinionData().map(d -> !isMaxLevel(d)).orElse(false);
         }
 
     }

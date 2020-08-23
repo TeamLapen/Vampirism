@@ -35,12 +35,12 @@ public class HunterMinionStatsScreen extends MinionStatsScreen<HunterMinionEntit
 
     @Override
     protected boolean isMaxLevel(HunterMinionEntity.HunterMinionData d) {
-        return d.isMaxLevel();
+        return d.getLevel() == HunterMinionEntity.HunterMinionData.MAX_LEVEL;
     }
 
     @Override
     protected void renderStats(HunterMinionEntity.HunterMinionData data) {
-        renderLevelRow(data.getInventoryLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL + 1);
+        renderLevelRow(data.getLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL + 1);
         renderStatRow(0, inventoryLevel, new StringTextComponent("" + data.getInventorySize()), data.getInventoryLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_INVENTORY + 1);
         renderStatRow(1, healthLevel, new StringTextComponent("" + entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue()), data.getHealthLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_HEALTH + 1);
         renderStatRow(2, strengthLevel, new StringTextComponent("" + entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getBaseValue()), data.getStrengthLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_STRENGTH + 1);

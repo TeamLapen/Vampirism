@@ -61,11 +61,11 @@ public class MinionContainer extends InventoryContainer {
 
     private final MinionEntity<?> minionEntity;
     @Nonnull
-    private final IMinionTask<?>[] availableTasks;
+    private final IMinionTask<?, ?>[] availableTasks;
     @Nullable
-    private final IMinionTask<?> previousTask;
+    private final IMinionTask<?, ?> previousTask;
     @Nullable
-    private IMinionTask<?> taskToActivate;
+    private IMinionTask<?, ?> taskToActivate;
 
     private final boolean previousTaskLocked;
     private boolean taskLocked;
@@ -95,7 +95,7 @@ public class MinionContainer extends InventoryContainer {
     }
 
     @Nonnull
-    public IMinionTask<?>[] getAvailableTasks() {
+    public IMinionTask<?, ?>[] getAvailableTasks() {
         return availableTasks;
     }
 
@@ -103,12 +103,12 @@ public class MinionContainer extends InventoryContainer {
         return extraSlots;
     }
 
-    public Optional<IMinionTask<?>> getPreviousTask() {
+    public Optional<IMinionTask<?, ?>> getPreviousTask() {
         return Optional.ofNullable(previousTask);
     }
 
     @Nonnull
-    public IMinionTask<?> getSelectedTask() {
+    public IMinionTask<?, ?> getSelectedTask() {
         return this.taskToActivate != null ? this.taskToActivate : (this.previousTask != null ? this.previousTask : MinionTasks.stay);
     }
 

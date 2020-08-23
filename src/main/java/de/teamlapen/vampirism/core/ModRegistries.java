@@ -20,7 +20,7 @@ public class ModRegistries {
     public static final IForgeRegistry<ISkill> SKILLS;
     public static final IForgeRegistry<IAction> ACTIONS;
     public static final IForgeRegistry<IEntityAction> ENTITYACTIONS;
-    public static final IForgeRegistry<IMinionTask<?>> MINION_TASKS;
+    public static final IForgeRegistry<IMinionTask<?, ?>> MINION_TASKS;
     public static final IForgeRegistry<Task> TASKS;
 
     static {
@@ -28,7 +28,7 @@ public class ModRegistries {
         ACTIONS = makeRegistry(ACTIONS_ID, IAction.class, Integer.MAX_VALUE >> 5);
         ENTITYACTIONS = makeRegistry(ENTITYACTIONS_ID, IEntityAction.class, Integer.MAX_VALUE >> 5);
         //noinspection unchecked
-        MINION_TASKS = ModRegistries.makeRegistry(MINION_TASKS_ID, (Class<IMinionTask<?>>) (Object) IMinionTask.class, Integer.MAX_VALUE >> 5);
+        MINION_TASKS = ModRegistries.makeRegistry(MINION_TASKS_ID, (Class<IMinionTask<?, ?>>) (Object) IMinionTask.class, Integer.MAX_VALUE >> 5);
         TASKS = makeRegistry(TASK_ID, Task.class, Integer.MAX_VALUE >> 5);
     }
 

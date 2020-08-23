@@ -4,6 +4,7 @@ import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.MinionWorldData;
@@ -44,7 +45,7 @@ public class SelectMinionTaskPacket implements IMessage {
                     controller.createMinionEntityAtPlayer(id, ctx.getSender());
                 }
             } else {
-                IMinionTask<?> task = ModRegistries.MINION_TASKS.getValue(msg.taskID);
+                IMinionTask<?, MinionData> task = (IMinionTask<?, MinionData>) ModRegistries.MINION_TASKS.getValue(msg.taskID);
                 if (task == null) {
                     LOGGER.error("Cannot find action to activate {}", msg.taskID);
                 } else if (msg.minionID < -1) {

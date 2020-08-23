@@ -75,7 +75,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     @Override
-    public List<IMinionTask<?>> getAvailableTasks() {
+    public List<IMinionTask<?, ?>> getAvailableTasks() {
         return Lists.newArrayList(MinionTasks.follow_lord, MinionTasks.defend_area, MinionTasks.stay, MinionTasks.collect_hunter_items, MinionTasks.protect_lord);
     }
 
@@ -157,13 +157,18 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     protected void onMinionDataReceived(@Nonnull HunterMinionData data) {
         super.onMinionDataReceived(data);
         this.updateAttackGoal();
+        this.updateAttributes();
     }
 
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH + BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH_PL * 3);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE_PL * 3);
+        updateAttributes();
+    }
+
+    private void updateAttributes() {
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH + BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH_PL * getMinionData().map(HunterMinionData::getHealthLevel).orElse(0));
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE_PL * getMinionData().map(HunterMinionData::getStrengthLevel).orElse(0));
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED);
     }
 
@@ -303,8 +308,8 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             return strengthLevel;
         }
 
-        public boolean isMaxLevel() {
-            return this.level == MAX_LEVEL;
+        public int getLevel() {
+            return this.level;
         }
 
         @Override
@@ -332,27 +337,30 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
-        public boolean upgradeStat(int statId) {
+        public boolean upgradeStat(int statId, MinionEntity<?> entity) {
             if (getRemainingStatPoints() == 0) {
                 LOGGER.warn("Cannot upgrade minion stat as no stat points are left");
                 return false;
             }
+            assert entity instanceof HunterMinionEntity;
             switch (statId) {
                 case 0:
-                    if (inventoryLevel >= 2) return false;
+                    if (inventoryLevel >= MAX_LEVEL_INVENTORY) return false;
                     inventoryLevel++;
                     this.getInventory().setAvailableSize(getInventorySize());
                     return true;
                 case 1:
-                    if (healthLevel >= 2) return false;
+                    if (healthLevel >= MAX_LEVEL_HEALTH) return false;
                     healthLevel++;
+                    ((HunterMinionEntity) entity).updateAttributes();
                     return true;
                 case 2:
-                    if (strengthLevel >= 2) return false;
+                    if (strengthLevel >= MAX_LEVEL_STRENGTH) return false;
                     strengthLevel++;
-                    this.getInventory().setAvailableSize(getInventorySize());
+                    ((HunterMinionEntity) entity).updateAttributes();
+                    return true;
                 case 3:
-                    if (resourceEfficiencyLevel >= 2) return false;
+                    if (resourceEfficiencyLevel >= MAX_LEVEL_RESOURCES) return false;
                     resourceEfficiencyLevel++;
                     return true;
 

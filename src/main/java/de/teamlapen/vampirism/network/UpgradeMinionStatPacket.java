@@ -24,7 +24,7 @@ public class UpgradeMinionStatPacket implements IMessage {
             if (player != null) {
                 Entity entity = player.world.getEntityByID(msg.entityId);
                 if (entity instanceof MinionEntity) {
-                    if (((MinionEntity<?>) entity).getMinionData().map(d -> d.upgradeStat(msg.statId)).orElse(false)) {
+                    if (((MinionEntity<?>) entity).getMinionData().map(d -> d.upgradeStat(msg.statId, (MinionEntity<?>) entity)).orElse(false)) {
                         HelperLib.sync((MinionEntity<?>) entity);
                     }
                 }
