@@ -34,8 +34,8 @@ public class HunterMinionStatsScreen extends MinionStatsScreen<HunterMinionEntit
     }
 
     @Override
-    protected boolean isMaxLevel(HunterMinionEntity.HunterMinionData d) {
-        return d.getLevel() == HunterMinionEntity.HunterMinionData.MAX_LEVEL;
+    protected boolean areButtonsVisible(HunterMinionEntity.HunterMinionData d) {
+        return d.getRemainingStatPoints() > 0 || d.getLevel() < HunterMinionEntity.HunterMinionData.MAX_LEVEL;
     }
 
     @Override

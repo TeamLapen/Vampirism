@@ -34,8 +34,8 @@ public class VampireMinionStatsScreen extends MinionStatsScreen<VampireMinionEnt
     }
 
     @Override
-    protected boolean isMaxLevel(VampireMinionEntity.VampireMinionData d) {
-        return d.getLevel() == VampireMinionEntity.VampireMinionData.MAX_LEVEL;
+    protected boolean areButtonsVisible(VampireMinionEntity.VampireMinionData d) {
+        return d.getRemainingStatPoints() > 0 || d.getLevel() < VampireMinionEntity.VampireMinionData.MAX_LEVEL;
     }
 
     @Override

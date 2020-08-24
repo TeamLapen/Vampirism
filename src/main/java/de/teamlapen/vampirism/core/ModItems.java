@@ -185,10 +185,18 @@ public class ModItems {
     public static final VampirismItem hunter_minion_equipment = getNull();
     public static final VampirismItem hunter_minion_upgrade1 = getNull();
     public static final VampirismItem hunter_minion_upgrade2 = getNull();
+    public static final VampirismItem hunter_minion_upgrade3 = getNull();
+    public static final VampirismItem hunter_minion_upgrade4 = getNull();
+    public static final VampirismItem hunter_minion_upgrade5 = getNull();
+    public static final VampirismItem hunter_minion_upgrade6 = getNull();
     public static final FeedingAdapterItem feeding_adapter = getNull();
     public static final VampirismItem vampire_minion_binding = getNull();
     public static final VampirismItem vampire_minion_upgrade1 = getNull();
     public static final VampirismItem vampire_minion_upgrade2 = getNull();
+    public static final VampirismItem vampire_minion_upgrade3 = getNull();
+    public static final VampirismItem vampire_minion_upgrade4 = getNull();
+    public static final VampirismItem vampire_minion_upgrade5 = getNull();
+    public static final VampirismItem vampire_minion_upgrade6 = getNull();
 
     static void registerCraftingRecipes() {
         // Brewing
@@ -386,12 +394,21 @@ public class ModItems {
         registry.register(new UmbrellaItem());
 
         registry.register(new VampirismItem("hunter_minion_equipment", creativeTabProps()));
-        registry.register(new MinionUpgradeItem(1, "hunter_minion_upgrade1"));
-        registry.register(new MinionUpgradeItem(2, "hunter_minion_upgrade2"));
+        registry.register(new MinionUpgradeItem(1, "hunter_minion_upgrade"));
+        registry.register(new MinionUpgradeItem(2, "hunter_minion_upgrade"));
+        registry.register(new MinionUpgradeItem(3, "hunter_minion_upgrade"));
+        registry.register(new MinionUpgradeItem(4, "hunter_minion_upgrade"));
+        registry.register(new MinionUpgradeItem(5, "hunter_minion_upgrade"));
+        registry.register(new MinionUpgradeItem(6, "hunter_minion_upgrade"));
         registry.register(new FeedingAdapterItem());
         registry.register(new VampirismItem("vampire_minion_binding", creativeTabProps()));
-        registry.register(new VampirismItem("vampire_minion_upgrade1", creativeTabProps()));
-        registry.register(new VampirismItem("vampire_minion_upgrade2", creativeTabProps()));
+        registry.register(new MinionUpgradeItem(1, "vampire_minion_upgrade"));
+        registry.register(new MinionUpgradeItem(2, "vampire_minion_upgrade"));
+        registry.register(new MinionUpgradeItem(3, "vampire_minion_upgrade"));
+        registry.register(new MinionUpgradeItem(4, "vampire_minion_upgrade"));
+        registry.register(new MinionUpgradeItem(5, "vampire_minion_upgrade"));
+        registry.register(new MinionUpgradeItem(6, "vampire_minion_upgrade"));
+
     }
 
     private static Item.Properties creativeTabProps() {
