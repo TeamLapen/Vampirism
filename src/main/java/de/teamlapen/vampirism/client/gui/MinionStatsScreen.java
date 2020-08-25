@@ -6,12 +6,14 @@ import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.network.UpgradeMinionStatPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +31,15 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     private final List<Button> statButtons = new ArrayList<>();
     protected int guiLeft;
     protected int guiTop;
+    @Nullable
+    protected final Screen backScreen;
 
-    protected MinionStatsScreen(Q entity, int statCount) {
+    protected MinionStatsScreen(Q entity, int statCount, @Nullable Screen backScreen) {
         super(new TranslationTextComponent("gui.vampirism.minion_stats"));
         assert statCount > 0;
         this.entity = entity;
         this.statCount = statCount;
+        this.backScreen = backScreen;
     }
 
 
@@ -63,9 +68,14 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
 
-        this.addButton(new Button(this.guiLeft + ((this.xSize - 80) / 2), this.guiTop + 152, 80, 20, UtilLib.translate("gui.done"), (context) -> {
+        this.addButton(new Button(this.guiLeft + this.xSize - 80 - 20, this.guiTop + 152, 80, 20, UtilLib.translate("gui.done"), (context) -> {
             this.onClose();
         }));
+        if (backScreen != null) {
+            this.addButton(new Button(this.guiLeft + 20, this.guiTop + 152, 80, 20, UtilLib.translate("gui.back"), (context) -> {
+                Minecraft.getInstance().displayGuiScreen(this.backScreen);
+            }));
+        }
         for (int i = 0; i < statCount; i++) {
             int finalI = i;
             statButtons.add(this.addButton(new Button(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, "+", (button) -> VampirismMod.dispatcher.sendToServer(new UpgradeMinionStatPacket(entity.getEntityId(), finalI)))));

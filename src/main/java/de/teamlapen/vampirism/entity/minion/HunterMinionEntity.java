@@ -127,13 +127,13 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     @OnlyIn(Dist.CLIENT)
     @Override
     public void openAppearanceScreen() {
-        Minecraft.getInstance().displayGuiScreen(new HunterMinionAppearanceScreen(this));
+        Minecraft.getInstance().displayGuiScreen(new HunterMinionAppearanceScreen(this, Minecraft.getInstance().currentScreen));
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void openStatsScreen() {
-        Minecraft.getInstance().displayGuiScreen(new HunterMinionStatsScreen(this));
+        Minecraft.getInstance().displayGuiScreen(new HunterMinionStatsScreen(this, Minecraft.getInstance().currentScreen));
     }
 
     public void setUseLordSkin(boolean useLordSkin) {

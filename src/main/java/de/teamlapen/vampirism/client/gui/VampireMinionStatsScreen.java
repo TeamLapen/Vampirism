@@ -1,9 +1,12 @@
 package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+
+import javax.annotation.Nullable;
 
 
 public class VampireMinionStatsScreen extends MinionStatsScreen<VampireMinionEntity.VampireMinionData, VampireMinionEntity> {
@@ -13,8 +16,8 @@ public class VampireMinionStatsScreen extends MinionStatsScreen<VampireMinionEnt
     private final TranslationTextComponent speedLevel = new TranslationTextComponent("attribute.name." + SharedMonsterAttributes.MOVEMENT_SPEED.getName());
 
 
-    public VampireMinionStatsScreen(VampireMinionEntity entity) {
-        super(entity, 4);
+    public VampireMinionStatsScreen(VampireMinionEntity entity, @Nullable Screen backScreen) {
+        super(entity, 4, backScreen);
     }
 
     @Override

@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.network.AppearancePacket;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.CheckboxButton;
 import net.minecraft.util.text.ITextComponent;
@@ -15,6 +16,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
+
+import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
 public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinionEntity> {
@@ -27,8 +30,8 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
     private CheckboxButton lordSkinButton;
     private TextFieldWidget nameWidget;
 
-    public VampireMinionAppearanceScreen(VampireMinionEntity minion) {
-        super(NAME, minion);
+    public VampireMinionAppearanceScreen(VampireMinionEntity minion, @Nullable Screen backScreen) {
+        super(NAME, minion, backScreen);
     }
 
     @Override

@@ -145,12 +145,12 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     @OnlyIn(Dist.CLIENT)
     @Override
     public void openAppearanceScreen() {
-        Minecraft.getInstance().displayGuiScreen(new VampireMinionAppearanceScreen(this));
+        Minecraft.getInstance().displayGuiScreen(new VampireMinionAppearanceScreen(this, Minecraft.getInstance().currentScreen));
     }
 
     @Override
     public void openStatsScreen() {
-        Minecraft.getInstance().displayGuiScreen(new VampireMinionStatsScreen(this));
+        Minecraft.getInstance().displayGuiScreen(new VampireMinionStatsScreen(this, Minecraft.getInstance().currentScreen));
     }
 
     public void setUseLordSkin(boolean useLordSkin) {

@@ -1,9 +1,12 @@
 package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+
+import javax.annotation.Nullable;
 
 
 public class HunterMinionStatsScreen extends MinionStatsScreen<HunterMinionEntity.HunterMinionData, HunterMinionEntity> {
@@ -13,8 +16,8 @@ public class HunterMinionStatsScreen extends MinionStatsScreen<HunterMinionEntit
     private final TranslationTextComponent strengthLevel = new TranslationTextComponent("attribute.name." + SharedMonsterAttributes.ATTACK_DAMAGE.getName());
     private final TranslationTextComponent resourceLevel = new TranslationTextComponent("text.vampirism.minion.stats.resource_level");
 
-    public HunterMinionStatsScreen(HunterMinionEntity entity) {
-        super(entity, 4);
+    public HunterMinionStatsScreen(HunterMinionEntity entity, @Nullable Screen backScreen) {
+        super(entity, 4, backScreen);
     }
 
     @Override
