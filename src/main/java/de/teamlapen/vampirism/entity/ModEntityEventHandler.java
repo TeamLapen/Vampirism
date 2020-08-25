@@ -27,6 +27,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.Goal;
@@ -34,9 +35,7 @@ import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -187,10 +186,19 @@ public class ModEntityEventHandler {
                     }
                     if (target != null) {
                         ((ZombieEntity) event.getEntity()).targetSelector.removeGoal(target);
-                        ((ZombieEntity) event.getEntity()).targetSelector.addGoal(2, new NearestAttackableTargetGoal<>((ZombieEntity) event.getEntity(), PlayerEntity.class, 10, true, false, entity -> !Helper.isVampire(entity)));
+                        EntityType<?> type = event.getEntity().getType();
+                        if (type == EntityType.ZOMBIE || type == EntityType.HUSK || type == EntityType.ZOMBIE_VILLAGER) {
+                            ((ZombieEntity) event.getEntity()).targetSelector.addGoal(2, new NearestAttackableTargetGoal<>((ZombieEntity) event.getEntity(), PlayerEntity.class, 10, true, false, entity -> !Helper.isVampire(entity)));
+                        } else if (type == EntityType.DROWNED) {
+                            ((DrownedEntity) event.getEntity()).targetSelector.addGoal(2, new NearestAttackableTargetGoal<>((DrownedEntity) event.getEntity(), PlayerEntity.class, 10, true, false, entity -> ((DrownedEntity) event.getEntity()).shouldAttack(entity) && !Helper.isVampire(entity)));
+                        } else if (type == EntityType.ZOMBIFIED_PIGLIN) {
+                            ((ZombifiedPiglinEntity) event.getEntity()).targetSelector.addGoal(2, new NearestAttackableTargetGoal<>((ZombifiedPiglinEntity) event.getEntity(), PlayerEntity.class, 10, true, false, entity -> ((ZombifiedPiglinEntity) event.getEntity()).func_233680_b_(entity) && !Helper.isVampire(entity)));
+                        } else {
+                            LOGGER.warn("Unknown zombie entity type {} for zombie target task", type.getName());
+                        }
                     } else {
                         if (warnAboutZombie) {
-                            LOGGER.warn("Could not replace zombie target task");
+                            LOGGER.warn("Could not replace zombie target task for {}", event.getEntity().getType().getName());
                             warnAboutZombie = false;
                         }
                     }
