@@ -27,7 +27,7 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
     protected int guiLeft;
     protected int guiTop;
     @Nullable
-    private Screen backScreen;
+    private final Screen backScreen;
 
     public AppearanceScreen(ITextComponent titleIn, T entity, @Nullable Screen backScreen) {
         super(titleIn);
@@ -64,6 +64,7 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
 
     @Override
     protected void init() {
+        this.buttons.clear();
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
 

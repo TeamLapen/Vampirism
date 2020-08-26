@@ -71,6 +71,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
 
     @Override
     protected void init() {
+        this.statButtons.clear();
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
         this.addButton(new Button(this.guiLeft + this.xSize - 80 - 20, this.guiTop + 152, 80, 20, UtilLib.translate("gui.done"), (context) -> {
