@@ -12,6 +12,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
@@ -25,10 +26,13 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
     private final List<Button> buttons = Lists.newArrayList();
     protected int guiLeft;
     protected int guiTop;
+    @Nullable
+    private final Screen backScreen;
 
-    public AppearanceScreen(ITextComponent titleIn, T entity) {
+    public AppearanceScreen(ITextComponent titleIn, T entity, @Nullable Screen backScreen) {
         super(titleIn);
         this.entity = entity;
+        this.backScreen = backScreen;
     }
 
     @Override
@@ -60,12 +64,18 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
 
     @Override
     protected void init() {
+        this.buttons.clear();
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
 
-        this.addButton(new Button(this.guiLeft + 5, this.guiTop + 152, 80, 20, UtilLib.translate("gui.done"), (context) -> {
+        this.addButton(new Button(this.guiLeft + this.xSize - 80 - 10, this.guiTop + 152, 80, 20, UtilLib.translate("gui.done"), (context) -> {
             this.onClose();
         }));
+        if (this.backScreen != null) {
+            this.addButton(new Button(this.guiLeft + 10, this.guiTop + 152, 80, 20, UtilLib.translate("gui.back"), (context) -> {
+                this.minecraft.displayGuiScreen(this.backScreen);
+            }));
+        }
     }
 
     protected void renderGuiBackground() {

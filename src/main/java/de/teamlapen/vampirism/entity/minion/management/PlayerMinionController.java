@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity.minion.management;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.core.ModRegistries;
@@ -37,7 +36,7 @@ import java.util.stream.Collectors;
  * Minions are represented by a {@link MinionData}. All important information except for position and similar should be stored in there.
  * {@link MinionEntity} are merely shells for this.
  * <p>
- * When the player has a free minion slot {@link PlayerMinionController#createNewMinionSlot(MinionData)} can be used to reserve one.
+ * When the player has a free minion slot {@link PlayerMinionController#createNewMinionSlot(MinionData, EntityType)} can be used to reserve one.
  * The minion slots are represented by their id (0-x). The minion slot holds the minion data and is not directly related to an entity.
  * <p>
  * A unclaimed minion slot (either a freshly reserved one or of a dead minion) can be claimed by a {@link MinionEntity} via {@link PlayerMinionController#claimMinionSlot(int)}.
@@ -50,7 +49,7 @@ import java.util.stream.Collectors;
  * If a minion entity is stored in an unloaded chunk, it will try to checkout the minion data/slot again once loaded. However, if the player has recalled it in the meantime (which means a new shell entity has been created, the minion entity will fail to checkout the data and remove itself from the world.
  * <p>
  * <p>
- * - Recruit a new minion{@link PlayerMinionController#createNewMinionSlot(MinionData)}
+ * - Recruit a new minion{@link PlayerMinionController#createNewMinionSlot(MinionData, EntityType)} }
  * - Associate a entity representation (real entity, nbt saved entity, ...) with the minion slot {@link PlayerMinionController#claimMinionSlot(int)}
  * - Checkout minion slot if entity is added to world. Can "fail" if minion has been reclaimed in the meantime. {@link PlayerMinionController#checkoutMinion(int, int, MinionEntity)}
  * - Checkin minion slot if entity is removed from world {@link PlayerMinionController#checkInMinion(int, int)}
@@ -60,7 +59,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
 
     private final static Logger LOGGER = LogManager.getLogger();
 
-    public static List<IMinionTask<?>> getAvailableTasks(ILordPlayer player) {
+    public static List<IMinionTask<?, ?>> getAvailableTasks(ILordPlayer player) {
         return ModRegistries.MINION_TASKS.getValues().stream().filter(t -> t.isAvailable(player.getLordFaction(), player)).collect(Collectors.toList());
     }
 
@@ -83,7 +82,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         this.lordID = lordID;
     }
 
-    public void activateTask(int minionID, IMinionTask<?> task) {
+    public void activateTask(int minionID, IMinionTask<?, MinionData> task) {
         if (minionID >= minions.length) {
             LOGGER.warn("Trying to activate a task for a non-existent minion {}", minionID);
         } else {
@@ -411,6 +410,9 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         }
     }
 
+    /**
+     * Tick serverside
+     */
     public void tick() {
         for (MinionInfo i : minions) {
             if (i.deathCooldown > 0) {
@@ -420,15 +422,15 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
                     getLordPlayer().ifPresent(player -> player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.can_respawn", i.data.getFormattedName()), true));
                 }
             } else {
-                IMinionTask.IMinionTaskDesc taskDesc = i.data.getCurrentTaskDesc();
+                IMinionTask.IMinionTaskDesc<MinionData> taskDesc = i.data.getCurrentTaskDesc();
                 tickTask(taskDesc.getTask(), taskDesc, i);
             }
         }
     }
 
-    private void activateTask(MinionInfo info, IMinionTask<?> task) {
+    private void activateTask(MinionInfo info, IMinionTask<?, MinionData> task) {
         @Nullable
-        IMinionTask.IMinionTaskDesc desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data.getInventory());
+        IMinionTask.IMinionTaskDesc desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data);
         if (desc == null) {
             getLordPlayer().ifPresent(player -> player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.could_not_activate"), false));
         } else {
@@ -487,16 +489,16 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
 
     }
 
-    private <Q extends IMinionTask.IMinionTaskDesc, T extends IMinionTask<Q>> void tickTask(T task, IMinionTask.IMinionTaskDesc desc, MinionInfo info) {
+    private <Q extends IMinionTask.IMinionTaskDesc<MinionData>, T extends IMinionTask<Q, MinionData>> void tickTask(T task, IMinionTask.IMinionTaskDesc<MinionData> desc, MinionInfo info) {
         if (info.isActive()) {
-            task.tickActive((Q) desc, () -> getMinionEntity(info).map(m -> (IMinionEntity) m), info.data.getInventory());
+            task.tickActive((Q) desc, () -> getMinionEntity(info).map(m -> m), info.data);
         } else {
-            task.tickBackground((Q) desc, info.data.getInventory());
+            task.tickBackground((Q) desc, info.data);
 
         }
     }
 
-    private class MinionInfo {
+    private static class MinionInfo {
         final int minionID;
         @Nonnull
         final MinionData data;

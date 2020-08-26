@@ -216,14 +216,11 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return onlyShould ? this.hardAttackPredicate.and(this.softAttackPredicate) : this.hardAttackPredicate;
     }
 
-    public int getAvailableInvSize() {
-        return 9; //TODO integrate with minion data maybe via data parameter as required client side
-    }
 
-    public abstract List<IMinionTask<?>> getAvailableTasks();
+    public abstract List<IMinionTask<?, ?>> getAvailableTasks();
 
     @Override
-    public Optional<IMinionTask.IMinionTaskDesc> getCurrentTask() {
+    public Optional<IMinionTask.IMinionTaskDesc<?>> getCurrentTask() {
         return minionData != null ? Optional.of(minionData.getCurrentTaskDesc()) : Optional.empty();
     }
 
@@ -326,8 +323,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         if (nbt.contains("data_type")) {
             MinionData data = MinionData.fromNBT(nbt);
             try {
-                this.onMinionDataReceived((T) data);
                 this.minionData = (T) data;
+                this.onMinionDataReceived((T) data);
                 this.minionId = nbt.getInt("minion_id");
                 super.setCustomName(data.getFormattedName());
             } catch (ClassCastException e) {
@@ -368,6 +365,11 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     @OnlyIn(Dist.CLIENT)
     public void openAppearanceScreen() {
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void openStatsScreen() {
+
     }
 
     @Override
@@ -492,7 +494,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     /**
      * Called when valid minion data is received on world load.
-     * Can  be called client and server side
+     * {@link MinionEntity#minionData} is already set
+     * Can be called client and server side
      */
     protected void onMinionDataReceived(@Nonnull T data) {
     }

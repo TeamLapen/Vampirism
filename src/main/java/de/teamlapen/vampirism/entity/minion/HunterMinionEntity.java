@@ -8,12 +8,14 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.client.gui.HunterMinionAppearanceScreen;
+import de.teamlapen.vampirism.client.gui.HunterMinionStatsScreen;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.goals.AttackRangedCrossbowGoal;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.items.MinionUpgradeItem;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -58,6 +60,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     public static void init() {
 
     }
+
     private boolean crossbowTask = false;
     private AttackRangedCrossbowGoal<HunterMinionEntity> crossbowGoal;
     private MeleeAttackGoal meleeGoal;
@@ -73,7 +76,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     @Override
-    public List<IMinionTask<?>> getAvailableTasks() {
+    public List<IMinionTask<?, ?>> getAvailableTasks() {
         return Lists.newArrayList(MinionTasks.follow_lord, MinionTasks.defend_area, MinionTasks.stay, MinionTasks.collect_hunter_items, MinionTasks.protect_lord);
     }
 
@@ -124,7 +127,13 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     @OnlyIn(Dist.CLIENT)
     @Override
     public void openAppearanceScreen() {
-        Minecraft.getInstance().displayGuiScreen(new HunterMinionAppearanceScreen(this));
+        Minecraft.getInstance().displayGuiScreen(new HunterMinionAppearanceScreen(this, Minecraft.getInstance().currentScreen));
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void openStatsScreen() {
+        Minecraft.getInstance().displayGuiScreen(new HunterMinionStatsScreen(this, Minecraft.getInstance().currentScreen));
     }
 
     public void setUseLordSkin(boolean useLordSkin) {
@@ -149,14 +158,33 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     protected void onMinionDataReceived(@Nonnull HunterMinionData data) {
         super.onMinionDataReceived(data);
         this.updateAttackGoal();
+        this.updateAttributes();
+    }
+
+    @Override
+    protected boolean processInteract(PlayerEntity player, Hand hand) {
+        if (!this.world.isRemote() && isLord(player) && minionData != null) {
+            ItemStack heldItem = player.getHeldItem(hand);
+            if (heldItem.getItem() instanceof MinionUpgradeItem && ((MinionUpgradeItem) heldItem.getItem()).getFaction() == this.getFaction()) {
+                if (this.minionData.level + 1 >= ((MinionUpgradeItem) heldItem.getItem()).getMinLevel() && this.minionData.level + 1 <= ((MinionUpgradeItem) heldItem.getItem()).getMaxLevel()) {
+                    this.minionData.level++;
+                    if (!player.abilities.isCreativeMode) heldItem.shrink(1);
+                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_upgrade"), false);
+                    HelperLib.sync(this);
+                } else {
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_wrong"));
+
+                }
+                return true;
+            }
+        }
+        return super.processInteract(player, hand);
     }
 
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH + BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH_PL * 3);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE_PL * 3);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED);
+        updateAttributes();
     }
 
     @Override
@@ -164,36 +192,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         super.registerData();
         this.getDataManager().register(RAISED_ARM, false);
 
-    }
-
-    @Override
-    protected boolean processInteract(PlayerEntity player, Hand hand) {
-        if (!this.world.isRemote() && isLord(player) && minionData != null) {
-            ItemStack heldItem = player.getHeldItem(hand);
-            if (heldItem.getItem() == ModItems.hunter_minion_upgrade1) {
-                if (this.minionData.level < 1) {
-                    this.minionData.setLevel(1);
-                    if (!player.abilities.isCreativeMode) heldItem.shrink(1);
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_upgrade"));
-                    HelperLib.sync(this);
-                } else {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_wrong"));
-                }
-                return true;
-            } else if (heldItem.getItem() == ModItems.hunter_minion_upgrade2) {
-                if (this.minionData.level < 2) {
-                    this.minionData.setLevel(2);
-                    if (!player.abilities.isCreativeMode) heldItem.shrink(1);
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_upgrade"));
-                    HelperLib.sync(this);
-                } else {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_wrong"));
-                }
-
-                return true;
-            }
-        }
-        return super.processInteract(player, hand);
     }
 
     @Override
@@ -220,13 +218,32 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
     }
 
+    private void updateAttributes() {
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH + BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH_PL * getMinionData().map(HunterMinionData::getHealthLevel).orElse(0));
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE_PL * getMinionData().map(HunterMinionData::getStrengthLevel).orElse(0));
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED);
+    }
+
     public static class HunterMinionData extends MinionData {
         public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "hunter");
+
+        public static final int MAX_LEVEL = 6;
+        public static final int MAX_LEVEL_INVENTORY = 2;
+        public static final int MAX_LEVEL_HEALTH = 3;
+        public static final int MAX_LEVEL_STRENGTH = 3;
+        public static final int MAX_LEVEL_RESOURCES = 2;
 
         private int type;
         private int hat;
         private boolean useLordSkin;
+        /**
+         * Should be between 0 and {@link HunterMinionData#MAX_LEVEL}
+         */
         private int level;
+        private int inventoryLevel;
+        private int healthLevel;
+        private int strengthLevel;
+        private int resourceEfficiencyLevel;
 
         public HunterMinionData(String name, int type, int hat, boolean useLordSkin) {
             super(name, 9);
@@ -247,11 +264,44 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             hat = nbt.getInt("hunter_hat");
             level = nbt.getInt("level");
             useLordSkin = nbt.getBoolean("use_lord_skin");
+            inventoryLevel = nbt.getInt("l_inv");
+            healthLevel = nbt.getInt("l_he");
+            strengthLevel = nbt.getInt("l_str");
+            resourceEfficiencyLevel = nbt.getInt("l_res");
+
         }
 
         @Override
         public ITextComponent getFormattedName() {
             return super.getFormattedName().applyTextStyle(VReference.HUNTER_FACTION.getChatColor());
+        }
+
+        public int getHealthLevel() {
+            return healthLevel;
+        }
+
+        public int getInventoryLevel() {
+            return this.inventoryLevel;
+        }
+
+        public int getInventorySize() {
+            return inventoryLevel == 1 ? 12 : (inventoryLevel == 2 ? 15 : 9);
+        }
+
+        public int getLevel() {
+            return this.level;
+        }
+
+        public int getRemainingStatPoints() {
+            return Math.max(0, this.level - inventoryLevel - healthLevel - resourceEfficiencyLevel - strengthLevel);
+        }
+
+        public int getResourceEfficiencyLevel() {
+            return resourceEfficiencyLevel;
+        }
+
+        public int getStrengthLevel() {
+            return strengthLevel;
         }
 
         @Override
@@ -270,6 +320,10 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             tag.putInt("hunter_type", type);
             tag.putInt("hunter_hat", hat);
             tag.putInt("level", level);
+            tag.putInt("l_inv", inventoryLevel);
+            tag.putInt("l_he", healthLevel);
+            tag.putInt("l_str", strengthLevel);
+            tag.putInt("l_res", resourceEfficiencyLevel);
             tag.putBoolean("use_lord_skin", useLordSkin);
         }
 
@@ -278,10 +332,44 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
          * @return If the new level is higher than the old
          */
         public boolean setLevel(int level) {
+            if (level < 0 || level > MAX_LEVEL) return false;
             boolean levelup = level > this.level;
             this.level = level;
-            this.getInventory().setAvailableSize(level == 1 ? 12 : (level == 2 ? 15 : 9));
             return levelup;
+        }
+
+        @Override
+        public boolean upgradeStat(int statId, MinionEntity<?> entity) {
+            if (getRemainingStatPoints() == 0) {
+                LOGGER.warn("Cannot upgrade minion stat as no stat points are left");
+                return false;
+            }
+            assert entity instanceof HunterMinionEntity;
+            switch (statId) {
+                case 0:
+                    if (inventoryLevel >= MAX_LEVEL_INVENTORY) return false;
+                    inventoryLevel++;
+                    this.getInventory().setAvailableSize(getInventorySize());
+                    return true;
+                case 1:
+                    if (healthLevel >= MAX_LEVEL_HEALTH) return false;
+                    healthLevel++;
+                    ((HunterMinionEntity) entity).updateAttributes();
+                    return true;
+                case 2:
+                    if (strengthLevel >= MAX_LEVEL_STRENGTH) return false;
+                    strengthLevel++;
+                    ((HunterMinionEntity) entity).updateAttributes();
+                    return true;
+                case 3:
+                    if (resourceEfficiencyLevel >= MAX_LEVEL_RESOURCES) return false;
+                    resourceEfficiencyLevel++;
+                    return true;
+
+                default:
+                    LOGGER.warn("Cannot upgrade minion stat {} as it does not exist", statId);
+                    return false;
+            }
         }
 
         @Override
