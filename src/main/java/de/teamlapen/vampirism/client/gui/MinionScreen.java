@@ -33,6 +33,7 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
     private ScrollableListButton taskList;
     private Button taskButton;
     private Button appearanceButton;
+    private Button statButton;
     private LockIconButton lockActionButton;
 
     public MinionScreen(MinionContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
@@ -73,8 +74,9 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
     @Override
     protected void init() {
         super.init();
-        this.appearanceButton = this.addButton(new ImageButton(this.guiLeft + 4, this.guiTop + 19, 20, 20, 236, 0, 20, GUI_TEXTURE, this::onConfigurePressed));
+        this.appearanceButton = this.addButton(new ImageButton(this.guiLeft + 6, this.guiTop + 21, 18, 18, 238, 0, 18, GUI_TEXTURE, this::onConfigurePressed));
         this.lockActionButton = this.addButton(new LockIconButton(this.guiLeft + 99, this.guiTop + 19, this::toggleActionLock));
+        this.statButton = this.addButton(new ImageButton(this.guiLeft + 6, this.guiTop + 40, 18, 18, 220, 0, 18, GUI_TEXTURE, this::onStatsPressed));
         this.lockActionButton.setLocked(this.container.isTaskLocked());
         ITextComponent[] taskNames = Arrays.stream(container.getAvailableTasks()).map(IMinionTask::getName).toArray(ITextComponent[]::new);
 
@@ -87,8 +89,8 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
 
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack mStack, int mouseX, int mouseY) {
-        this.font.func_243246_a(mStack, title, 5, 6.0F, 0x404040);
-        this.font.func_243246_a(mStack, new TranslationTextComponent("gui.vampirism.minion.active_task"), 120, 10.0F, 0x404040);
+        this.font.func_243248_b(mStack, title, 5, 6.0F, 0x404040);
+        this.font.func_243248_b(mStack, new TranslationTextComponent("gui.vampirism.minion.active_task"), 120, 10.0F, 0x404040);
 
     }
 
@@ -98,6 +100,8 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
             drawButtonTip(mStack, new TranslationTextComponent("gui.vampirism.minion.lock_action"), mouseX, mouseY);
         } else if (this.appearanceButton.isMouseOver(mouseX, mouseY)) {
             drawButtonTip(mStack, new TranslationTextComponent("gui.vampirism.minion.appearance"), mouseX, mouseY);
+        } else if (this.statButton.isMouseOver(mouseX, mouseY)) {
+            drawButtonTip(mStack, new TranslationTextComponent("gui.vampirism.minion_stats"), mouseX, mouseY);
         } else {
             super.renderHoveredTooltip(mStack, mouseX, mouseY);
         }
@@ -113,7 +117,11 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
     }
 
     private void onConfigurePressed(Button b) {
+        container.openConfigurationScreen();
+    }
 
+    private void onStatsPressed(Button b) {
+        container.openStatsScreen();
     }
 
     private void selectTask(int id) {

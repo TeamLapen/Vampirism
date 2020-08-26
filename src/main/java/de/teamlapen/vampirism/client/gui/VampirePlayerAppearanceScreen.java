@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.network.AppearancePacket;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -18,6 +19,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 
 @OnlyIn(Dist.CLIENT)
@@ -35,8 +37,8 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
     private ExtendedButton fangButton;
 
 
-    public VampirePlayerAppearanceScreen() {
-        super(NAME, Minecraft.getInstance().player);
+    public VampirePlayerAppearanceScreen(@Nullable  Screen backScreen) {
+        super(NAME, Minecraft.getInstance().player, backScreen);
     }
 
     @Override

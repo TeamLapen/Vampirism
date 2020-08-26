@@ -95,6 +95,9 @@ public class MinionWorldData extends WorldSavedData {
         }
     }
 
+    /**
+     * Tick server side
+     */
     public void tick() {
         controllers.object2ObjectEntrySet().fastForEach(entry -> entry.getValue().tick());
     }

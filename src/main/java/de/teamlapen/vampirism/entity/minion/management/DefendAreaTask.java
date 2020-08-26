@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity.minion.management;
 
 import de.teamlapen.vampirism.api.entity.minion.DefaultMinionTask;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
-import de.teamlapen.vampirism.api.entity.minion.IMinionInventory;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -15,11 +14,11 @@ import javax.annotation.Nullable;
 import static de.teamlapen.vampirism.entity.minion.management.DefendAreaTask.Desc;
 
 
-public class DefendAreaTask extends DefaultMinionTask<Desc> {
+public class DefendAreaTask extends DefaultMinionTask<Desc, MinionData> {
 
 
     @Override
-    public Desc activateTask(@Nullable PlayerEntity lord, @Nullable IMinionEntity minion, IMinionInventory inventory) {
+    public Desc activateTask(@Nullable PlayerEntity lord, @Nullable IMinionEntity minion, MinionData inventory) {
         BlockPos pos = minion != null ? minion.getRepresentingEntity().getPosition() : (lord != null ? lord.getPosition() : null);
         return pos == null ? null : new Desc(pos, 10);
     }
@@ -37,7 +36,7 @@ public class DefendAreaTask extends DefaultMinionTask<Desc> {
         return new Desc(pos, dist);
     }
 
-    public static class Desc implements IMinionTask.IMinionTaskDesc {
+    public static class Desc implements IMinionTask.IMinionTaskDesc<MinionData> {
 
         public final BlockPos center;
         public final int distance;
@@ -48,7 +47,7 @@ public class DefendAreaTask extends DefaultMinionTask<Desc> {
         }
 
         @Override
-        public IMinionTask<?> getTask() {
+        public IMinionTask<?, MinionData> getTask() {
             return MinionTasks.defend_area;
         }
 

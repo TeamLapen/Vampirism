@@ -122,7 +122,7 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterMinionTasks(RegistryEvent.Register<IMinionTask<?>> event) {
+    public void onRegisterMinionTasks(RegistryEvent.Register<IMinionTask<?, ?>> event) {
 
         MinionTasks.register(event.getRegistry());
     }

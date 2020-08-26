@@ -99,7 +99,7 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
 
     }
 
-    private void sendTask(IMinionTask<?> task) {
+    private void sendTask(IMinionTask<?,?> task) {
         VampirismMod.dispatcher.sendToServer(new SelectMinionTaskPacket(-1, task.getRegistryName()));
     }
 
@@ -109,7 +109,7 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
         private final ResourceLocation loc;
         private final Consumer<SelectMinionTaskScreen> onSelected;
 
-        public Entry(IMinionTask<?> task) {
+        public Entry(IMinionTask<?,?> task) {
             this(task.getName(), new ResourceLocation(task.getRegistryName().getNamespace(), "textures/tasks/" + task.getRegistryName().getPath() + ".png"), (screen -> screen.sendTask(task)));
         }
 
