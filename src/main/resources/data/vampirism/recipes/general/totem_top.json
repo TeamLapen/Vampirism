@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "vampirism:totem_top_crafted"
+  },
+  "pattern": [
+    "X X",
+    " Y ",
+    "XZX"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "tag": "forge:obsidian"
+    },
+    "Y": {
+      "tag": "forge:storage_blocks/diamond"
+    },
+    "Z": {
+      "item": "vampirism:vampire_book"
+    }
+  }
+}
