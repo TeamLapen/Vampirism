@@ -121,7 +121,7 @@ public class SkillsScreen extends Screen {
                 }
                 if (Helper.isVampire(minecraft.player)) {
                     this.addButton(new ImageButton((this.width - display_width) / 2 + 10 + 22, this.height / 2 + 74, 20, 20, 72, 202, 20, BACKGROUND, 256, 256, (context) -> {
-                        Minecraft.getInstance().displayGuiScreen(new VampirePlayerAppearanceScreen());
+                        Minecraft.getInstance().displayGuiScreen(new VampirePlayerAppearanceScreen(this));
                     }));
                 }
                 this.addButton(new ImageButton((this.width - display_width) / 2 + 10, this.height / 2 + 74, 20, 20, 52, 202, 20, BACKGROUND, 256, 256, (context) -> {

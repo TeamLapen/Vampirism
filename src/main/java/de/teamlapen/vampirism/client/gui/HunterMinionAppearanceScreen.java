@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.network.AppearancePacket;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.CheckboxButton;
 import net.minecraft.util.text.ITextComponent;
@@ -32,8 +33,8 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
     private CheckboxButton useLordSkinButton;
     private TextFieldWidget nameWidget;
 
-    public HunterMinionAppearanceScreen(HunterMinionEntity minion) {
-        super(NAME, minion);
+    public HunterMinionAppearanceScreen(HunterMinionEntity minion, Screen backScreen) {
+        super(NAME, minion, backScreen);
     }
 
     @Override

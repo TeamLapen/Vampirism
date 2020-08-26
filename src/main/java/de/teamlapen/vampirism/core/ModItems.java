@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
@@ -183,9 +184,15 @@ public class ModItems {
     public static final BlockItem vampire_orchid = getNull();
 
     public static final VampirismItem hunter_minion_equipment = getNull();
-    public static final VampirismItem hunter_minion_upgrade1 = getNull();
-    public static final VampirismItem hunter_minion_upgrade2 = getNull();
+    public static final MinionUpgradeItem hunter_minion_upgrade_simple = getNull();
+    public static final MinionUpgradeItem hunter_minion_upgrade_enhanced = getNull();
+    public static final MinionUpgradeItem hunter_minion_upgrade_special = getNull();
     public static final FeedingAdapterItem feeding_adapter = getNull();
+    public static final VampirismItem vampire_minion_binding = getNull();
+    public static final MinionUpgradeItem vampire_minion_upgrade_simple = getNull();
+    public static final MinionUpgradeItem vampire_minion_upgrade_enhanced = getNull();
+    public static final MinionUpgradeItem vampire_minion_upgrade_special = getNull();
+
 
     static void registerCraftingRecipes() {
         // Brewing
@@ -383,9 +390,15 @@ public class ModItems {
         registry.register(new UmbrellaItem());
 
         registry.register(new VampirismItem("hunter_minion_equipment", creativeTabProps()));
-        registry.register(new VampirismItem("hunter_minion_upgrade1", creativeTabProps()));
-        registry.register(new VampirismItem("hunter_minion_upgrade2", creativeTabProps()));
+        registry.register(new MinionUpgradeItem("hunter_minion_upgrade_simple", 1, 2, VReference.HUNTER_FACTION));
+        registry.register(new MinionUpgradeItem("hunter_minion_upgrade_enhanced", 3, 4, VReference.HUNTER_FACTION));
+        registry.register(new MinionUpgradeItem("hunter_minion_upgrade_special", 5, 6, VReference.HUNTER_FACTION));
+
         registry.register(new FeedingAdapterItem());
+        registry.register(new VampirismItem("vampire_minion_binding", creativeTabProps()));
+        registry.register(new MinionUpgradeItem("vampire_minion_upgrade_simple", 1, 2, VReference.VAMPIRE_FACTION));
+        registry.register(new MinionUpgradeItem("vampire_minion_upgrade_enhanced", 3, 4, VReference.VAMPIRE_FACTION));
+        registry.register(new MinionUpgradeItem("vampire_minion_upgrade_special", 5, 6, VReference.VAMPIRE_FACTION));
 
         if(VampirismMod.inDataGen) {
             registry.register(new DummyItem().setRegistryName("guideapi-vp", "vampirism-guidebook"));

@@ -15,7 +15,7 @@ public interface IMinionEntity extends IFactionEntity {
     /**
      * @return The description of the currently executed task. Empty if minion data is not available
      */
-    Optional<IMinionTask.IMinionTaskDesc> getCurrentTask();
+    Optional<IMinionTask.IMinionTaskDesc<?>> getCurrentTask();
 
     /**
      * @return The minion inventory. Empty if minion data is not available

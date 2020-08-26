@@ -18,6 +18,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.IWorldPosCallable;
@@ -45,8 +46,8 @@ public class MinionContainer extends InventoryContainer {
     private static SelectorInfo[] createSelectors(MinionEntity<?> minionEntity, int extraSlots) {
         Predicate<ItemStack> factionPredicate = itemStack -> !(itemStack.getItem() instanceof IFactionExclusiveItem) || ((IFactionExclusiveItem) itemStack.getItem()).getExclusiveFaction().equals(minionEntity.getFaction());
         SelectorInfo[] slots = new SelectorInfo[6 + extraSlots];
-        slots[0] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.MAINHAND, minionEntity)), 7, 42, false, 1);
-        slots[1] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.OFFHAND, minionEntity)), 7, 60, false, 1);
+        slots[0] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.MAINHAND, minionEntity)), 7, 60, false, 1);
+        slots[1] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.OFFHAND, minionEntity)), 7, 78, false, 1);
         slots[2] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.FEET, minionEntity)), 81, 22, false, 1, Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE,PlayerContainer.EMPTY_ARMOR_SLOT_BOOTS));
         slots[3] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.LEGS, minionEntity)), 63, 22, false, 1, Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE,PlayerContainer.EMPTY_ARMOR_SLOT_LEGGINGS));
         slots[4] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.CHEST, minionEntity)), 45, 22, false, 1, Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE,PlayerContainer.EMPTY_ARMOR_SLOT_CHESTPLATE));
@@ -62,11 +63,11 @@ public class MinionContainer extends InventoryContainer {
 
     private final MinionEntity<?> minionEntity;
     @Nonnull
-    private final IMinionTask<?>[] availableTasks;
+    private final IMinionTask<?, ?>[] availableTasks;
     @Nullable
-    private final IMinionTask<?> previousTask;
+    private final IMinionTask<?, ?> previousTask;
     @Nullable
-    private IMinionTask<?> taskToActivate;
+    private IMinionTask<?, ?> taskToActivate;
 
     private final boolean previousTaskLocked;
     private boolean taskLocked;
@@ -96,7 +97,7 @@ public class MinionContainer extends InventoryContainer {
     }
 
     @Nonnull
-    public IMinionTask<?>[] getAvailableTasks() {
+    public IMinionTask<?, ?>[] getAvailableTasks() {
         return availableTasks;
     }
 
@@ -104,12 +105,12 @@ public class MinionContainer extends InventoryContainer {
         return extraSlots;
     }
 
-    public Optional<IMinionTask<?>> getPreviousTask() {
+    public Optional<IMinionTask<?, ?>> getPreviousTask() {
         return Optional.ofNullable(previousTask);
     }
 
     @Nonnull
-    public IMinionTask<?> getSelectedTask() {
+    public IMinionTask<?, ?> getSelectedTask() {
         return this.taskToActivate != null ? this.taskToActivate : (this.previousTask != null ? this.previousTask : MinionTasks.stay);
     }
 
@@ -133,6 +134,11 @@ public class MinionContainer extends InventoryContainer {
     @OnlyIn(Dist.CLIENT)
     public void openConfigurationScreen() {
         this.minionEntity.openAppearanceScreen();
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void openStatsScreen() {
+        this.minionEntity.openStatsScreen();
     }
 
     public void setTaskToActivate(int id) {
@@ -168,6 +174,40 @@ public class MinionContainer extends InventoryContainer {
             }
             return MinionContainer.create(windowId, inv, (MinionEntity<?>) e);
         }
+    }
+
+    @Override
+    public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
+        ItemStack result = ItemStack.EMPTY;
+        Slot slot = this.inventorySlots.get(index);
+        if (slot != null && slot.getHasStack()) {
+            ItemStack slotStack = slot.getStack();
+            result = slotStack.copy();
+            int startMinionInv = 6;
+            int startPlayerInv = 6 + extraSlots;
+            if (index < startPlayerInv) {
+                if (!this.mergeItemStack(slotStack, startPlayerInv, startPlayerInv + 36, true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (index >= startPlayerInv) {
+                if (!this.mergeItemStack(slotStack, 2, startPlayerInv, false)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+
+            if (slotStack.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
+            } else {
+                slot.onSlotChanged();
+            }
+
+            if (slotStack.getCount() == result.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTake(playerEntity, slotStack);
+        }
+        return result;
     }
 
 

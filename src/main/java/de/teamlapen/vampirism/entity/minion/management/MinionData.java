@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
+import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
@@ -17,11 +19,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class MinionData implements INBTSerializable<CompoundNBT> {
+public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
 
 
     public final static int MAX_NAME_LENGTH = 15;
-    private final static Logger LOGGER = LogManager.getLogger();
+    protected final static Logger LOGGER = LogManager.getLogger();
     private final static Map<ResourceLocation, Supplier<? extends MinionData>> constructors = new HashMap<>(); //TODO maybe API
 
 
@@ -49,19 +51,19 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
 
 
     @Nonnull
-    private IMinionTask.IMinionTaskDesc activeTaskDesc;
+    private IMinionTask.IMinionTaskDesc<MinionData> activeTaskDesc;
     private boolean taskLocked;
 
     protected MinionData(String name, int invSize) {
         this.health = getMaxHealth();
         this.name = name;
         this.inventory = new MinionInventory(invSize);
-        this.activeTaskDesc = new IMinionTask.NoDesc(MinionTasks.nothing);
+        this.activeTaskDesc = new IMinionTask.NoDesc<>(MinionTasks.nothing);
     }
 
     protected MinionData() {
         this.inventory = new MinionInventory();
-        this.activeTaskDesc = new IMinionTask.NoDesc(MinionTasks.nothing);
+        this.activeTaskDesc = new IMinionTask.NoDesc<>(MinionTasks.nothing);
     }
 
     @Override
@@ -74,7 +76,7 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         if (nbt.contains("task", 10)) {
             CompoundNBT task = nbt.getCompound("task");
             ResourceLocation id = new ResourceLocation(task.getString("id"));
-            IMinionTask<?> activeTask = ModRegistries.MINION_TASKS.getValue(id);
+            IMinionTask<?, MinionData> activeTask = (IMinionTask<?, MinionData>) ModRegistries.MINION_TASKS.getValue(id);
             if (activeTask != null) {
                 activeTaskDesc = activeTask.readFromNBT(task);
             } else {
@@ -83,15 +85,18 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         }
     }
 
+    @Override
     @Nonnull
-    public IMinionTask.IMinionTaskDesc getCurrentTaskDesc() {
+    public IMinionTask.IMinionTaskDesc<MinionData> getCurrentTaskDesc() {
         return activeTaskDesc;
     }
 
+    @Override
     public ITextComponent getFormattedName() {
         return new StringTextComponent(name);
     }
 
+    @Override
     public float getHealth() {
         return health;
     }
@@ -100,14 +105,17 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         this.health = health;
     }
 
+    @Override
     public MinionInventory getInventory() {
         return inventory;
     }
 
+    @Override
     public int getMaxHealth() {
         return VampirismConfig.BALANCE.miBaseHealth.get();
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -117,6 +125,11 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
     }
 
     public void handleMinionAppearanceConfig(String name, int... data) {
+    }
+
+    public <Q extends IMinionTask.IMinionTaskDesc<MinionData>, T extends IMinionTask<Q, ?>> void switchTask(T oldTask, IMinionTask.IMinionTaskDesc<MinionData> oldDesc, IMinionTask.IMinionTaskDesc<MinionData> newDesc) {
+        oldTask.deactivateTask((Q) oldDesc);
+        this.activeTaskDesc = newDesc;
     }
 
     public boolean isTaskLocked() {
@@ -149,9 +162,11 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         return this.taskLocked = locked;
     }
 
-    public <Q extends IMinionTask.IMinionTaskDesc, T extends IMinionTask<Q>> void switchTask(T oldTask, IMinionTask.IMinionTaskDesc oldDesc, IMinionTask.IMinionTaskDesc newDesc) {
-        oldTask.deactivateTask((Q) oldDesc);
-        this.activeTaskDesc = newDesc;
+    /**
+     * Called on server side to upgrade a stat of the given id
+     */
+    public boolean upgradeStat(int statId, MinionEntity<?> entity) {
+        return false;
     }
 
     protected ResourceLocation getDataType() {

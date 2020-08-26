@@ -83,6 +83,11 @@ public class VampirismMod {
 
             return new ItemStack(ModItems.vampire_fang);
         }
+//
+//        @Override
+//        public void fill(NonNullList<ItemStack> items) { //Sort based on registry name. Not ideal
+//            ForgeRegistries.ITEMS.getValues().stream().sorted(Comparator.comparing(ForgeRegistryEntry::getRegistryName)).forEach(item->item.fillItemGroup(this,items));
+//        }
     };
     private final static Logger LOGGER = LogManager.getLogger();
     /**

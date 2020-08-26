@@ -6,7 +6,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 
-public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc> extends ForgeRegistryEntry<IMinionTask<?>> implements IMinionTask<T> {
+public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends IMinionData> extends ForgeRegistryEntry<IMinionTask<?, ?>> implements IMinionTask<T, Q> {
     private ITextComponent name;
 
     @Override
