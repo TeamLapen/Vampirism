@@ -6,7 +6,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
@@ -15,28 +15,34 @@ import java.util.List;
 
 
 public class MinionUpgradeItem extends VampirismItem {
-    private final int level;
+    private final int minLevel;
+    private final int maxLevel;
+
+    public MinionUpgradeItem(String regName, int minLevel, int maxLevel, IFaction<?> faction) {
+        super(regName, new Item.Properties().group(VampirismMod.creativeTab));
+        this.faction = faction;
+        this.maxLevel = maxLevel;
+        this.minLevel = minLevel;
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+        tooltip.add(new TranslationTextComponent("item.vampirism.minion_upgrade_item.desc").applyTextStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent("text.vampirism.for_to_levels", minLevel + 1, maxLevel + 1).applyTextStyle(TextFormatting.GRAY));
+    }
+
     private final IFaction<?> faction;
 
-    public MinionUpgradeItem(int level, String regNameBase, IFaction<?> faction) {
-        super(regNameBase + level, new Item.Properties().group(VampirismMod.creativeTab));
-        this.level = level;
-        this.setTranslation_key(regNameBase);
-        this.faction = faction;
+    public int getMaxLevel() {
+        return maxLevel;
     }
 
     public IFaction<?> getFaction() {
         return faction;
     }
 
-
-    public int getLevel() {
-        return this.level;
-    }
-
-    @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslationTextComponent("text.vampirism.for_up_to_level").appendSibling(new StringTextComponent(": " + (this.level + 1))));
+    public int getMinLevel() {
+        return minLevel;
     }
 }

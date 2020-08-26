@@ -184,20 +184,15 @@ public class ModItems {
     public static final BlockItem vampire_orchid = getNull();
 
     public static final VampirismItem hunter_minion_equipment = getNull();
-    public static final VampirismItem hunter_minion_upgrade1 = getNull();
-    public static final VampirismItem hunter_minion_upgrade2 = getNull();
-    public static final VampirismItem hunter_minion_upgrade3 = getNull();
-    public static final VampirismItem hunter_minion_upgrade4 = getNull();
-    public static final VampirismItem hunter_minion_upgrade5 = getNull();
-    public static final VampirismItem hunter_minion_upgrade6 = getNull();
+    public static final MinionUpgradeItem hunter_minion_upgrade_simple = getNull();
+    public static final MinionUpgradeItem hunter_minion_upgrade_enhanced = getNull();
+    public static final MinionUpgradeItem hunter_minion_upgrade_special = getNull();
     public static final FeedingAdapterItem feeding_adapter = getNull();
     public static final VampirismItem vampire_minion_binding = getNull();
-    public static final VampirismItem vampire_minion_upgrade1 = getNull();
-    public static final VampirismItem vampire_minion_upgrade2 = getNull();
-    public static final VampirismItem vampire_minion_upgrade3 = getNull();
-    public static final VampirismItem vampire_minion_upgrade4 = getNull();
-    public static final VampirismItem vampire_minion_upgrade5 = getNull();
-    public static final VampirismItem vampire_minion_upgrade6 = getNull();
+    public static final MinionUpgradeItem vampire_minion_upgrade_simple = getNull();
+    public static final MinionUpgradeItem vampire_minion_upgrade_enhanced = getNull();
+    public static final MinionUpgradeItem vampire_minion_upgrade_special = getNull();
+
 
     static void registerCraftingRecipes() {
         // Brewing
@@ -395,20 +390,16 @@ public class ModItems {
         registry.register(new UmbrellaItem());
 
         registry.register(new VampirismItem("hunter_minion_equipment", creativeTabProps()));
-        registry.register(new MinionUpgradeItem(1, "hunter_minion_upgrade", VReference.HUNTER_FACTION));
-        registry.register(new MinionUpgradeItem(2, "hunter_minion_upgrade", VReference.HUNTER_FACTION));
-        registry.register(new MinionUpgradeItem(3, "hunter_minion_upgrade", VReference.HUNTER_FACTION));
-        registry.register(new MinionUpgradeItem(4, "hunter_minion_upgrade", VReference.HUNTER_FACTION));
-        registry.register(new MinionUpgradeItem(5, "hunter_minion_upgrade", VReference.HUNTER_FACTION));
-        registry.register(new MinionUpgradeItem(6, "hunter_minion_upgrade", VReference.HUNTER_FACTION));
+        registry.register(new MinionUpgradeItem("hunter_minion_upgrade_simple", 1, 2, VReference.HUNTER_FACTION));
+        registry.register(new MinionUpgradeItem("hunter_minion_upgrade_enhanced", 3, 4, VReference.HUNTER_FACTION));
+        registry.register(new MinionUpgradeItem("hunter_minion_upgrade_special", 5, 6, VReference.HUNTER_FACTION));
+
         registry.register(new FeedingAdapterItem());
         registry.register(new VampirismItem("vampire_minion_binding", creativeTabProps()));
-        registry.register(new MinionUpgradeItem(1, "vampire_minion_upgrade", VReference.VAMPIRE_FACTION));
-        registry.register(new MinionUpgradeItem(2, "vampire_minion_upgrade", VReference.VAMPIRE_FACTION));
-        registry.register(new MinionUpgradeItem(3, "vampire_minion_upgrade", VReference.VAMPIRE_FACTION));
-        registry.register(new MinionUpgradeItem(4, "vampire_minion_upgrade", VReference.VAMPIRE_FACTION));
-        registry.register(new MinionUpgradeItem(5, "vampire_minion_upgrade", VReference.VAMPIRE_FACTION));
-        registry.register(new MinionUpgradeItem(6, "vampire_minion_upgrade", VReference.VAMPIRE_FACTION));
+        registry.register(new MinionUpgradeItem("vampire_minion_upgrade_simple", 1, 2, VReference.VAMPIRE_FACTION));
+        registry.register(new MinionUpgradeItem("vampire_minion_upgrade_enhanced", 3, 4, VReference.VAMPIRE_FACTION));
+        registry.register(new MinionUpgradeItem("vampire_minion_upgrade_special", 5, 6, VReference.VAMPIRE_FACTION));
+
 
     }
 
