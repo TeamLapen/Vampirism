@@ -78,7 +78,9 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         }
         for (int i = 0; i < statCount; i++) {
             int finalI = i;
-            statButtons.add(this.addButton(new Button(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, "+", (button) -> VampirismMod.dispatcher.sendToServer(new UpgradeMinionStatPacket(entity.getEntityId(), finalI)))));
+            Button button = this.addButton(new Button(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, "+", (button) -> VampirismMod.dispatcher.sendToServer(new UpgradeMinionStatPacket(entity.getEntityId(), finalI))));
+            statButtons.add(button);
+            button.visible = false;
         }
     }
 
