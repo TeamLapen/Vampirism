@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
@@ -394,20 +395,20 @@ public class ModItems {
         registry.register(new UmbrellaItem());
 
         registry.register(new VampirismItem("hunter_minion_equipment", creativeTabProps()));
-        registry.register(new MinionUpgradeItem(1, "hunter_minion_upgrade"));
-        registry.register(new MinionUpgradeItem(2, "hunter_minion_upgrade"));
-        registry.register(new MinionUpgradeItem(3, "hunter_minion_upgrade"));
-        registry.register(new MinionUpgradeItem(4, "hunter_minion_upgrade"));
-        registry.register(new MinionUpgradeItem(5, "hunter_minion_upgrade"));
-        registry.register(new MinionUpgradeItem(6, "hunter_minion_upgrade"));
+        registry.register(new MinionUpgradeItem(1, "hunter_minion_upgrade", VReference.HUNTER_FACTION));
+        registry.register(new MinionUpgradeItem(2, "hunter_minion_upgrade", VReference.HUNTER_FACTION));
+        registry.register(new MinionUpgradeItem(3, "hunter_minion_upgrade", VReference.HUNTER_FACTION));
+        registry.register(new MinionUpgradeItem(4, "hunter_minion_upgrade", VReference.HUNTER_FACTION));
+        registry.register(new MinionUpgradeItem(5, "hunter_minion_upgrade", VReference.HUNTER_FACTION));
+        registry.register(new MinionUpgradeItem(6, "hunter_minion_upgrade", VReference.HUNTER_FACTION));
         registry.register(new FeedingAdapterItem());
         registry.register(new VampirismItem("vampire_minion_binding", creativeTabProps()));
-        registry.register(new MinionUpgradeItem(1, "vampire_minion_upgrade"));
-        registry.register(new MinionUpgradeItem(2, "vampire_minion_upgrade"));
-        registry.register(new MinionUpgradeItem(3, "vampire_minion_upgrade"));
-        registry.register(new MinionUpgradeItem(4, "vampire_minion_upgrade"));
-        registry.register(new MinionUpgradeItem(5, "vampire_minion_upgrade"));
-        registry.register(new MinionUpgradeItem(6, "vampire_minion_upgrade"));
+        registry.register(new MinionUpgradeItem(1, "vampire_minion_upgrade", VReference.VAMPIRE_FACTION));
+        registry.register(new MinionUpgradeItem(2, "vampire_minion_upgrade", VReference.VAMPIRE_FACTION));
+        registry.register(new MinionUpgradeItem(3, "vampire_minion_upgrade", VReference.VAMPIRE_FACTION));
+        registry.register(new MinionUpgradeItem(4, "vampire_minion_upgrade", VReference.VAMPIRE_FACTION));
+        registry.register(new MinionUpgradeItem(5, "vampire_minion_upgrade", VReference.VAMPIRE_FACTION));
+        registry.register(new MinionUpgradeItem(6, "vampire_minion_upgrade", VReference.VAMPIRE_FACTION));
 
     }
 

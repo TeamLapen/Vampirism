@@ -63,11 +63,16 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
 
     }
 
+    protected abstract int getRemainingStatPoints(T d);
+
+    protected abstract boolean isActive(T data, int i);
+
+    protected abstract boolean areButtonsVisible(T d);
+
     @Override
     protected void init() {
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
-
         this.addButton(new Button(this.guiLeft + this.xSize - 80 - 20, this.guiTop + 152, 80, 20, UtilLib.translate("gui.done"), (context) -> {
             this.onClose();
         }));
@@ -78,15 +83,11 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         }
         for (int i = 0; i < statCount; i++) {
             int finalI = i;
-            Button button = this.addButton(new Button(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, "+", (button) -> VampirismMod.dispatcher.sendToServer(new UpgradeMinionStatPacket(entity.getEntityId(), finalI))));
+            Button button = this.addButton(new Button(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, "+", (b) -> VampirismMod.dispatcher.sendToServer(new UpgradeMinionStatPacket(entity.getEntityId(), finalI))));
             statButtons.add(button);
             button.visible = false;
         }
     }
-
-    protected abstract boolean isActive(T data, int i);
-
-    protected abstract boolean areButtonsVisible(T d);
 
     protected void renderGuiBackground() {
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
@@ -95,7 +96,11 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
 
     protected void renderLevelRow(int current, int max) {
         this.font.drawString(textLevel.getFormattedText(), guiLeft + 10, guiTop + 30, 0x0);
-        this.font.drawString(current + "/" + max, guiLeft + 150, guiTop + 30, 0x404040);
+        this.font.drawString(current + "/" + max, guiLeft + 145, guiTop + 30, 0x404040);
+        int remainingPoints = entity.getMinionData().map(this::getRemainingStatPoints).orElse(0);
+        if (remainingPoints > 0) {
+            this.font.drawString("(" + remainingPoints + ")", guiLeft + 228, guiTop + 30, 0x404040);
+        }
         this.hLine(guiLeft + 10, guiLeft + xSize - 10, guiTop + 40, 0xF0303030);
     }
 

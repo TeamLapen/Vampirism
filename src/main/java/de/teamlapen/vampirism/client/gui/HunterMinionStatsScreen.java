@@ -42,12 +42,17 @@ public class HunterMinionStatsScreen extends MinionStatsScreen<HunterMinionEntit
     }
 
     @Override
+    protected int getRemainingStatPoints(HunterMinionEntity.HunterMinionData d) {
+        return d.getRemainingStatPoints();
+    }
+
+    @Override
     protected void renderStats(HunterMinionEntity.HunterMinionData data) {
         renderLevelRow(data.getLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL + 1);
         renderStatRow(0, inventoryLevel, new StringTextComponent("" + data.getInventorySize()), data.getInventoryLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_INVENTORY + 1);
         renderStatRow(1, healthLevel, new StringTextComponent("" + entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue()), data.getHealthLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_HEALTH + 1);
         renderStatRow(2, strengthLevel, new StringTextComponent("" + entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getBaseValue()), data.getStrengthLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_STRENGTH + 1);
-        renderStatRow(3, resourceLevel, new StringTextComponent("" + (int)(Math.ceil((float)(data.getResourceEfficiencyLevel() + 1) / (HunterMinionEntity.HunterMinionData.MAX_LEVEL_RESOURCES + 1) * 100)) + "%")), data.getResourceEfficiencyLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_RESOURCES + 1);
+        renderStatRow(3, resourceLevel, new StringTextComponent("" + (int) (Math.ceil((float) (data.getResourceEfficiencyLevel() + 1) / (HunterMinionEntity.HunterMinionData.MAX_LEVEL_RESOURCES + 1) * 100)) + "%"), data.getResourceEfficiencyLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_RESOURCES + 1);
 
     }
 }

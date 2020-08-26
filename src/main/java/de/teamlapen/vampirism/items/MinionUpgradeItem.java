@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,11 +16,17 @@ import java.util.List;
 
 public class MinionUpgradeItem extends VampirismItem {
     private final int level;
+    private final IFaction<?> faction;
 
-    public MinionUpgradeItem(int level, String regNameBase) {
+    public MinionUpgradeItem(int level, String regNameBase, IFaction<?> faction) {
         super(regNameBase + level, new Item.Properties().group(VampirismMod.creativeTab));
         this.level = level;
         this.setTranslation_key(regNameBase);
+        this.faction = faction;
+    }
+
+    public IFaction<?> getFaction() {
+        return faction;
     }
 
 

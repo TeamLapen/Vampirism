@@ -12,12 +12,12 @@ import de.teamlapen.vampirism.client.gui.VampireMinionAppearanceScreen;
 import de.teamlapen.vampirism.client.gui.VampireMinionStatsScreen;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.goals.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.items.MinionUpgradeItem;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -148,7 +148,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         Minecraft.getInstance().displayGuiScreen(new VampireMinionAppearanceScreen(this, Minecraft.getInstance().currentScreen));
     }
 
- @OnlyIn(Dist.Client)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void openStatsScreen() {
         Minecraft.getInstance().displayGuiScreen(new VampireMinionStatsScreen(this, Minecraft.getInstance().currentScreen));
@@ -182,26 +182,17 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     protected boolean processInteract(PlayerEntity player, Hand hand) {
         if (!this.world.isRemote() && isLord(player) && minionData != null) {
             ItemStack heldItem = player.getHeldItem(hand);
-            if (heldItem.getItem() == ModItems.vampire_minion_upgrade1) {
-                if (this.minionData.level < 1) {
-                    this.minionData.setLevel(1);
+            if (heldItem.getItem() instanceof MinionUpgradeItem && ((MinionUpgradeItem) heldItem.getItem()).getFaction() == this.getFaction()) {
+                int upgradeLevel = ((MinionUpgradeItem) heldItem.getItem()).getLevel();
+                if (this.minionData.level < upgradeLevel) {
+                    this.minionData.level++;
                     if (!player.abilities.isCreativeMode) heldItem.shrink(1);
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.vampire_minion.binding_upgrade"));
+                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.vampire_minion.equipment_upgrade"), false);
                     HelperLib.sync(this);
                 } else {
                     player.sendMessage(new TranslationTextComponent("text.vampirism.vampire_minion.binding_wrong"));
-                }
-                return true;
-            } else if (heldItem.getItem() == ModItems.vampire_minion_upgrade2) {
-                if (this.minionData.level < 2) {
-                    this.minionData.setLevel(2);
-                    if (!player.abilities.isCreativeMode) heldItem.shrink(1);
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.vampire_minion.binding_upgrade"));
-                    HelperLib.sync(this);
-                } else {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.vampire_minion.binding_wrong"));
-                }
 
+                }
                 return true;
             }
         }

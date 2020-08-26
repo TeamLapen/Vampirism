@@ -42,6 +42,11 @@ public class VampireMinionStatsScreen extends MinionStatsScreen<VampireMinionEnt
     }
 
     @Override
+    protected int getRemainingStatPoints(VampireMinionEntity.VampireMinionData d) {
+        return d.getRemainingStatPoints();
+    }
+
+    @Override
     protected void renderStats(VampireMinionEntity.VampireMinionData data) {
         renderLevelRow(data.getLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL + 1);
         renderStatRow(0, inventoryLevel, new StringTextComponent("" + data.getInventorySize()), data.getInventoryLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_INVENTORY + 1);
