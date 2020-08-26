@@ -148,6 +148,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         Minecraft.getInstance().displayGuiScreen(new VampireMinionAppearanceScreen(this, Minecraft.getInstance().currentScreen));
     }
 
+ @OnlyIn(Dist.Client)
     @Override
     public void openStatsScreen() {
         Minecraft.getInstance().displayGuiScreen(new VampireMinionStatsScreen(this, Minecraft.getInstance().currentScreen));
