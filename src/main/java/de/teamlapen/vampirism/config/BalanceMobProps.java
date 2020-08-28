@@ -102,4 +102,8 @@ public class BalanceMobProps {
     //    @DefaultInt(value = 10, minValue = 0, maxValue = 1000000, name = "vampire_baron_spawn_chance", comment = "e.g. Zombie spawn chance: 100")
     public final int VAMPIRE_BARON_SPAWN_CHANCE = 10;
 
+    public final double MINION_MAX_HEALTH = 45;
+    public final double MINION_MAX_HEALTH_PL = 5;
+    public final double MINION_ATTACK_DAMAGE = 3;
+    public final double MINION_ATTACK_DAMAGE_PL = 1;
 }
