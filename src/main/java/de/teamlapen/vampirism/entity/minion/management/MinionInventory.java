@@ -2,7 +2,10 @@ package de.teamlapen.vampirism.entity.minion.management;
 
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
+import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -94,6 +97,26 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
             }
         }
 
+    }
+
+    public void damageArmor(float damage, MinionEntity<?> entity) {
+        if (damage > 0) {
+            damage = damage / 4.0F;
+            if (damage < 1.0F) {
+                damage = 1.0F;
+            }
+
+            for (int i = 0; i < this.inventoryArmor.size(); ++i) {
+                ItemStack itemstack = this.inventoryArmor.get(i);
+                if (itemstack.getItem() instanceof ArmorItem) {
+                    final int i_final = i;
+                    itemstack.damageItem((int) damage, entity, (e) -> {
+                        e.sendBreakAnimation(EquipmentSlotType.fromSlotTypeAndIndex(EquipmentSlotType.Group.ARMOR, i_final));
+                    });
+                }
+            }
+
+        }
     }
 
     @Override

@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
@@ -325,7 +326,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         MinionInfo i = getMinionInfo(id, token);
         if (i != null) {
             i.checkin();
-            i.deathCooldown = 60 * 5; //TODO
+            i.deathCooldown = 20 * VampirismConfig.BALANCE.miDeathRecoveryTime.get();
             if (id < minionTokens.length) {
                 minionTokens[id] = Optional.empty();
             }
