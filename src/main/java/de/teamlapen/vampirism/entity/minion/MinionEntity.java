@@ -118,6 +118,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             boolean flag2 = livingEntity instanceof MinionEntity && ((MinionEntity<?>) livingEntity).getLordID().filter(id -> getLordID().map(id2 -> id == id2).orElse(false)).isPresent(); //Don't attack other minions of lord
             return !flag1 && !flag2;
         };
+        setDontDropEquipment();
     }
 
     @Override
@@ -150,10 +151,17 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
                 ((LivingEntity) entityIn).applyKnockback(f1 * 0.5F, MathHelper.sin(this.rotationYaw * ((float) Math.PI / 180F)), -MathHelper.cos(this.rotationYaw * ((float) Math.PI / 180F)));
                 this.setMotion(this.getMotion().mul(0.6D, 1.0D, 0.6D));
             }
+            ItemStack itemstack = this.getHeldItemMainhand();
 
             if (entityIn instanceof PlayerEntity) {
                 PlayerEntity playerentity = (PlayerEntity) entityIn;
                 this.func_233655_a_(playerentity, this.getHeldItemMainhand(), playerentity.isHandActive() ? playerentity.getActiveItemStack() : ItemStack.EMPTY);
+            }
+            if (!this.world.isRemote && !itemstack.isEmpty() && entityIn instanceof LivingEntity) {
+                itemstack.getItem().hitEntity(itemstack, (LivingEntity) entityIn, this);
+                if (itemstack.isEmpty()) {
+                    this.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
+                }
             }
 
             this.applyEnchantments(this, entityIn);
@@ -161,6 +169,11 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
 
         return flag;
+    }
+
+    @Override
+    protected void damageArmor(DamageSource damageSource, float damage) {
+        if (this.minionData != null) this.minionData.getInventory().damageArmor(damageSource, damage, this);
     }
 
     public void changeMinionName(String name) {
