@@ -152,6 +152,9 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue miResourceCooldownOfflineMult;
     public final ForgeConfigSpec.IntValue miDeathRecoveryTime;
 
+    public final ForgeConfigSpec.IntValue mbVampireSpawnChance;
+    public final ForgeConfigSpec.IntValue mbAdvancedVampireSpawnChance;
+
     BalanceConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("A ton of options which allow you to balance the mod to your desire");
         builder.push("balance");
@@ -327,6 +330,11 @@ public class BalanceConfig {
         vaHalfInvulnerableThreshold = builder.comment("Damage threshold relative to players max health. Damage above this value will be ignored").defineInRange("halfInvulnerableThreshold", 0.4d, 0.0d, 1d);
         vaHalfInvulnerableBloodCost = builder.defineInRange("halfInvulnerableBloodCost", 4, 0, 1000);
         vaHalfInvulnerableEnabled = builder.define("halfInvulnerableEnabled", true);
+        builder.pop();
+
+        builder.push("mobs");
+        mbVampireSpawnChance = builder.comment("Vampire spawn chance/weight (e.g. Zombie: 100)").defineInRange("vampireSpawnChance", 75, 0, 100000);
+        mbAdvancedVampireSpawnChance = builder.comment("Advanceed vampire spawn chance/weight (e.g. Zombie: 100)").defineInRange("advancedVampireSpawnChance", 19, 0, 100000);
         builder.pop();
 
         builder.push("minions");

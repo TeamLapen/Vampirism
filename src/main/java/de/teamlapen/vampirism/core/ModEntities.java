@@ -7,7 +7,7 @@ import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
-import de.teamlapen.vampirism.config.BalanceMobProps;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.converted.ConvertedCreatureEntity;
 import de.teamlapen.vampirism.entity.converted.ConvertedHorseEntity;
@@ -150,8 +150,8 @@ public class ModEntities {
 
         //add to biomes
         for (Biome e : getZombieBiomes()) {
-            e.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(vampire, BalanceMobProps.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 2));
-            e.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(advanced_vampire, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_SPAWN_PROBE, 1, 1));
+            e.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(vampire, VampirismConfig.BALANCE.mbVampireSpawnChance.get(), 1, 2));
+            e.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(advanced_vampire, VampirismConfig.BALANCE.mbAdvancedVampireSpawnChance.get(), 1, 1));
         }
     }
 
