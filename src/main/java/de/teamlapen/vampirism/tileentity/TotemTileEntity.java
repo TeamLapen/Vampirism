@@ -257,11 +257,14 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         //noinspection ConstantConditions
         if (!this.world.isRemote)
             this.updateCreaturesOnCapture(fullConvert);
-        for (PlayerEntity p : world.getPlayers()) { //Add stat
-            if (this.getVillageArea().contains(p.getPositionVec())) {
-                FactionPlayerHandler.getOpt(p).filter(fph -> fph.getCurrentFaction() == this.capturingFaction).ifPresent(fph -> fph.getPlayer().addStat(ModStats.capture_village));
+        if (this.controllingFaction != null) {
+            for (PlayerEntity p : world.getPlayers()) { //Add stat
+                if (this.getVillageArea().contains(p.getPositionVec())) {
+                    FactionPlayerHandler.getOpt(p).filter(fph -> fph.getCurrentFaction() == this.capturingFaction).ifPresent(fph -> fph.getPlayer().addStat(ModStats.capture_village));
+                }
             }
         }
+
 
         this.setControllingFaction(this.capturingFaction);
         this.setCapturingFaction(null);

@@ -813,7 +813,7 @@
   "stat.vampirism.infected_creatures": "Creatures infected with Sanguinare",
   "stat.vampirism.interact_alchemical_cauldron": "Interactions with Alchemical Cauldron",
   "stat.vampirism.weapon_table": "Interactions with Weapon Table",
-  "stat.vampirism.capture_village": "Villages captured",
+  "stat.vampirism.capture_village": "Hostile villages captured",
   "__comment": "Titles",
   "text.vampirism.lord_title.vampire.male1": "Baron",
   "text.vampirism.lord_title.vampire.male2": "Viscount",
