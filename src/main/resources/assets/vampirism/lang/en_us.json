@@ -808,6 +808,7 @@
   "task.vampirism.break_bones2": "Break some bones II",
   "task.vampirism.break_bones3": "Break some bones III",
   "task.vampirism.break_bones4": "Break some bones IV",
+  "task.vampirism.totem_top": "Village control",
   "__comment": "Stats",
   "stat.vampirism.infected_creatures": "Creatures infected with Sanguinare",
   "stat.vampirism.interact_alchemical_cauldron": "Interactions with Alchemical Cauldron",

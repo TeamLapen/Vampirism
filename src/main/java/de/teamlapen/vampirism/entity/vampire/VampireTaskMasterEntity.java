@@ -64,7 +64,7 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
     @Override
     public void livingTick() {
         super.livingTick();
-        if (interactor != null && (!interactor.isAlive() || interactor.openContainer instanceof TaskBoardContainer)) {
+        if (interactor != null && !(interactor.isAlive() && interactor.openContainer instanceof TaskBoardContainer)) {
             this.interactor = null;
         }
     }
