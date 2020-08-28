@@ -320,6 +320,11 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     @Override
     public void livingTick() {
         super.livingTick();
+        if (!this.world.isRemote && this.isAlive()) {
+            if (this.rand.nextInt(900) == 0 && this.deathTime == 0) {
+                this.heal(1.0F);
+            }
+        }
         if (convertCounter > 0) {
             convertCounter--;
         }
