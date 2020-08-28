@@ -38,7 +38,7 @@ public class ModBiomes {
     static void registerBiomes(IForgeRegistry<Biome> registry) {
         MobSpawnInfo.Builder forestSpawnBuilder = new MobSpawnInfo.Builder();
         forestSpawnBuilder.withCreatureSpawnProbability(0.25f);
-        forestSpawnBuilder.withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.vampire, BalanceMobProps.mobProps.VAMPIRE_SPAWN_CHANCE / 2, 1, 3));
+        forestSpawnBuilder.withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.vampire, VampirismConfig.BALANCE.mbVampireSpawnChance.get() / 2, 1, 3));
         forestSpawnBuilder.withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.vampire_baron, BalanceMobProps.mobProps.VAMPIRE_BARON_SPAWN_CHANCE, 1, 1));
         forestSpawnBuilder.withSpawner(EntityClassification.AMBIENT, new MobSpawnInfo.Spawners(ModEntities.blinding_bat, BalanceMobProps.mobProps.BLINDING_BAT_SPAWN_CHANCE, 2, 4));
         forestSpawnBuilder.withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.dummy_creature, BalanceMobProps.mobProps.DUMMY_CREATURE_SPAWN_CHANCE, 3, 6));
@@ -70,8 +70,8 @@ public class ModBiomes {
     public static void onBiomeLoadingEventAdditions(BiomeLoadingEvent event) {
         List<MobSpawnInfo.Spawners> monsterList = event.getSpawns().getSpawner(EntityClassification.MONSTER);
         if (monsterList != null && monsterList.stream().anyMatch(spawners -> spawners.type == EntityType.ZOMBIE)) {
-            event.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.vampire, BalanceMobProps.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 2));
-            event.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.advanced_vampire, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_SPAWN_PROBE, 1, 1));
+            event.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.vampire, VampirismConfig.BALANCE.mbVampireSpawnChance.get() , 1, 2));
+            event.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.advanced_vampire, VampirismConfig.BALANCE.mbAdvancedVampireSpawnChance.get() , 1, 1));
         }
         event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_STRUCTURES, VampirismBiomeFeatures.vampire_dungeon);
         if (!VampirismConfig.SERVER.disableHunterTentGen.get() && VampirismAPI.worldGenRegistry().canStructureBeGeneratedInBiome(ModFeatures.hunter_camp.getRegistryName(), event.getName(), event.getCategory())) {
