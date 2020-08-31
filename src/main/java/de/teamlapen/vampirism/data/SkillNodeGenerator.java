@@ -75,7 +75,7 @@ public class SkillNodeGenerator implements IDataProvider {
         {
             ResourceLocation skill2 = SkillNodeBuilder.hunter(modId("hunter"), HunterSkills.stake1).build(consumer, modId("skill2"));
             ResourceLocation skill3 = SkillNodeBuilder.hunter(skill2, HunterSkills.hunter_attack_speed).build(consumer, modId("skill3"));
-            ResourceLocation skill4 = SkillNodeBuilder.hunter(skill3, HunterSkills.hunter_disguise).build(consumer, modId("skill4"));
+            ResourceLocation skill4 = SkillNodeBuilder.hunter(skill3, HunterSkills.weapon_table).build(consumer, modId("skill4"));
 
             ResourceLocation alchemy1 = SkillNodeBuilder.hunter(skill4, HunterSkills.basic_alchemy).build(consumer, modId("alchemy1"));
             ResourceLocation alchemy2 = SkillNodeBuilder.hunter(alchemy1, HunterSkills.garlic_beacon).build(consumer, modId("alchemy2"));
@@ -91,7 +91,7 @@ public class SkillNodeGenerator implements IDataProvider {
             ResourceLocation blood5 = SkillNodeBuilder.hunter(blood4, HunterSkills.blood_potion_portable_crafting).build(consumer, modId("blood5"));
             ResourceLocation blood6 = SkillNodeBuilder.hunter(blood5, HunterSkills.blood_potion_less_bad_2, HunterSkills.blood_potion_identify_some).build(consumer, modId("blood6"));
 
-            ResourceLocation weapon1 = SkillNodeBuilder.hunter(skill4, HunterSkills.weapon_table).build(consumer, modId("weapon1"));
+            ResourceLocation weapon1 = SkillNodeBuilder.hunter(skill4, HunterSkills.hunter_disguise).build(consumer, modId("weapon1"));
             ResourceLocation weapon2 = SkillNodeBuilder.hunter(weapon1, HunterSkills.hunter_attack_speed_advanced, HunterSkills.double_crossbow).build(consumer, modId("weapon2"));
             ResourceLocation weapon3 = SkillNodeBuilder.hunter(weapon2, HunterSkills.enhanced_weapons, HunterSkills.enhanced_crossbow).build(consumer, modId("weapon3"));
             ResourceLocation weapon4 = SkillNodeBuilder.hunter(weapon3, HunterSkills.enhanced_armor).build(consumer, modId("weapon4"));
