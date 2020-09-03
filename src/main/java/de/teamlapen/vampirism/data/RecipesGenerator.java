@@ -144,6 +144,10 @@ public class RecipesGenerator extends RecipeProvider {
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.weapon_table).patternLine("X  ").patternLine("YYY").patternLine(" Z ").key('X', bucket).key('Y', iron_ingot).key('Z', iron_block).addCriterion("has_iron_ingot", this.hasItem(iron_ingot)).build(consumer, hunter("hunter_weapon_table"));
         ShapedRecipeBuilder.shapedRecipe(ModItems.crossbow_arrow_normal, 6).patternLine("X").patternLine("Y").key('X', iron_ingot).key('Y', stick).addCriterion("has_iron_ingot", this.hasItem(iron_ingot)).build(consumer, hunter("hunter_crossbow_arrow_normal"));
         ShapelessRecipeBuilder.shapelessRecipe(ModItems.crossbow_arrow_normal).addIngredient(Items.ARROW).build(consumer, hunter("crossbow_arrow_from_vanilla"));
+        ShapelessRecipeBuilder.shapelessRecipe(ModItems.pure_blood_0).addIngredient(ModItems.pure_blood_1).addIngredient(ModItems.vampire_blood_bottle).build(consumer,hunter("pure_blood0"));
+        ShapelessRecipeBuilder.shapelessRecipe(ModItems.pure_blood_1).addIngredient(ModItems.pure_blood_2).addIngredient(ModItems.vampire_blood_bottle).build(consumer,hunter("pure_blood1"));
+        ShapelessRecipeBuilder.shapelessRecipe(ModItems.pure_blood_2).addIngredient(ModItems.pure_blood_3).addIngredient(ModItems.vampire_blood_bottle).build(consumer,hunter("pure_blood2"));
+        ShapelessRecipeBuilder.shapelessRecipe(ModItems.pure_blood_3).addIngredient(ModItems.pure_blood_4).addIngredient(ModItems.vampire_blood_bottle).build(consumer,hunter("pure_blood3"));
 
         SingleItemRecipeBuilder.stonecuttingRecipe(Ingredient.fromItems(castle_block_dark_stone), ModBlocks.castle_block_dark_brick).addCriterion("has_castle_stone", this.hasItem(castle_block_dark_stone)).build(consumer, modId("stonecutting/castle_block_dark_brick_from_castle_block_dark_brick"));
         SingleItemRecipeBuilder.stonecuttingRecipe(Ingredient.fromItems(castle_block_dark_stone), ModBlocks.castle_stairs_dark_stone).addCriterion("has_stone", this.hasItem(castle_block_dark_stone)).build(consumer, modId("stonecutting/castle_stairs_dark_stone_from_castle_block_dark_stone"));
