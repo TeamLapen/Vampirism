@@ -3,7 +3,6 @@ repositories {
 //        name "Mobius Repo"
 //        url "http://mobiusstrip.eu/maven"
 //    }
-    maven { url 'http://tehnut.info/maven/' }
     maven { url 'http://chickenbones.net/maven' }
     maven {
         url "http://dvs1.progwml6.com/files/maven"
