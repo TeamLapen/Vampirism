@@ -114,7 +114,7 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
     }
 
     private void onConfigurePressed(Button b) {
-
+        container.openConfigurationScreen();
     }
 
     private void onStatsPressed(Button b) {

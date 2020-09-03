@@ -112,7 +112,7 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
         private final Consumer<SelectMinionTaskScreen> onSelected;
 
         public Entry(IMinionTask<?,?> task) {
-            this(task.getName(), new ResourceLocation(task.getRegistryName().getNamespace(), "textures/tasks/" + task.getRegistryName().getPath() + ".png"), (screen -> screen.sendTask(task)));
+            this(task.getName(), new ResourceLocation(task.getRegistryName().getNamespace(), "textures/minion_tasks/" + task.getRegistryName().getPath() + ".png"), (screen -> screen.sendTask(task)));
         }
 
         public Entry(ITextComponent text, ResourceLocation icon, Consumer<SelectMinionTaskScreen> onSelected) {
