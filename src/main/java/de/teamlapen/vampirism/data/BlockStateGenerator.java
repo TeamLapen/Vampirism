@@ -30,8 +30,6 @@ public class BlockStateGenerator extends BlockStateProvider {
         models().withExistingParent("fire_side1", modLoc("block/fire_side")).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
         models().withExistingParent("fire_floor0", modLoc("block/fire_floor")).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
         models().withExistingParent("fire_floor1", modLoc("block/fire_floor")).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
-        models().withExistingParent("totem_top_vampirism_vampire", modLoc("block/totem_top"));
-        models().withExistingParent("totem_top_vampirism_hunter", modLoc("block/totem_top"));
 
         //default blocks
         horizontalBlock(ModBlocks.garlic_beacon_normal, models().withExistingParent("garlic_beacon_normal", modLoc("block/garlic_beacon")));
@@ -50,8 +48,11 @@ public class BlockStateGenerator extends BlockStateProvider {
         simpleBlock(ModBlocks.coffin, models().getExistingFile(modLoc("block/coffin")));
         simpleBlock(ModBlocks.vampire_orchid, models().cross("vampire_orchid", modLoc("block/vampire_orchid")));
         simpleBlock(ModBlocks.totem_top, models().getExistingFile(modLoc("block/totem_top")));
-        simpleBlock(ModBlocks.totem_top_vampirism_hunter, models().getExistingFile(modLoc("block/totem_top")));
-        simpleBlock(ModBlocks.totem_top_vampirism_vampire, models().getExistingFile(modLoc("block/totem_top")));
+        simpleBlock(ModBlocks.totem_top_crafted, models().getExistingFile(modLoc("block/totem_top_crafted")));
+        simpleBlock(ModBlocks.totem_top_vampirism_hunter,   models().withExistingParent("totem_top_vampirism_hunter", modLoc("block/totem_top")));
+        simpleBlock(ModBlocks.totem_top_vampirism_vampire, models().withExistingParent("totem_top_vampirism_vampire", modLoc("block/totem_top")));
+        simpleBlock(ModBlocks.totem_top_vampirism_hunter_crafted, models().withExistingParent("totem_top_vampirism_hunter_crafted", modLoc("block/totem_top_crafted")));
+        simpleBlock(ModBlocks.totem_top_vampirism_vampire_crafted, models().withExistingParent("totem_top_vampirism_vampire_crafted", modLoc("block/totem_top_crafted")));
         simpleBlock(ModBlocks.totem_base, models().getExistingFile(modLoc("block/totem_base")));
         simpleBlock(ModBlocks.altar_infusion, models().getExistingFile(modLoc("block/altar_infusion")));
         simpleBlock(ModBlocks.altar_inspiration, models().getExistingFile(modLoc("block/altar_inspiration/altar_inspiration")));
