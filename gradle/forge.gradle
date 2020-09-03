@@ -72,6 +72,12 @@ minecraft {
             }
 
         }
+        client2 {
+            parent runs.client
+            taskName 'runClient2'
+            args '--username', 'Dev2'
+
+        }
         server {
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
