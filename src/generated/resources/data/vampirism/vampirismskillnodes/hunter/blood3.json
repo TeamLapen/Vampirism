@@ -1,7 +1,0 @@
-{
-  "parent": "vampirism:hunter/blood2",
-  "skills": [
-    "vampirism:blood_potion_faster_crafting",
-    "vampirism:blood_potion_category_hint"
-  ]
-}

@@ -2,26 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "vampirism:general/totem_top"
+      "vampirism:hunter/hunter_potion_table"
     ]
   },
   "criteria": {
-    "has_diamond": {
+    "has_glass_bottle": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "tag": "forge:storage_blocks/diamond"
-          }
-        ]
-      }
-    },
-    "has_obsidian": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "tag": "forge:obsidian"
+            "item": "minecraft:glass_bottle"
           }
         ]
       }
@@ -29,14 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "vampirism:general/totem_top"
+        "recipe": "vampirism:hunter/hunter_potion_table"
       }
     }
   },
   "requirements": [
     [
-      "has_diamond",
-      "has_obsidian",
+      "has_glass_bottle",
       "has_the_recipe"
     ]
   ]

@@ -2,26 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "vampirism:general/totem_top"
+      "vampirism:hunter/pure_blood3"
     ]
   },
   "criteria": {
-    "has_diamond": {
+    "pure_blood": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "tag": "forge:storage_blocks/diamond"
-          }
-        ]
-      }
-    },
-    "has_obsidian": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "tag": "forge:obsidian"
+            "item": "vampirism:pure_blood_4"
           }
         ]
       }
@@ -29,14 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "vampirism:general/totem_top"
+        "recipe": "vampirism:hunter/pure_blood3"
       }
     }
   },
   "requirements": [
     [
-      "has_diamond",
-      "has_obsidian",
+      "pure_blood",
       "has_the_recipe"
     ]
   ]

@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vampirism:blood_potion_table"
+          "name": "vampirism:totem_top"
         }
       ],
       "conditions": [

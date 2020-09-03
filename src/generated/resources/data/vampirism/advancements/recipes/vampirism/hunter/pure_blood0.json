@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "vampirism:hunter/hunter_blood_potion_table"
+      "vampirism:hunter/pure_blood0"
     ]
   },
   "criteria": {
-    "has_glass_bottle": {
+    "pure_blood": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "minecraft:glass_bottle"
+            "item": "vampirism:pure_blood_1"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "vampirism:hunter/hunter_blood_potion_table"
+        "recipe": "vampirism:hunter/pure_blood0"
       }
     }
   },
   "requirements": [
     [
-      "has_glass_bottle",
+      "pure_blood",
       "has_the_recipe"
     ]
   ]
