@@ -98,6 +98,7 @@ public class RecipesGenerator extends RecipeProvider {
         Tag<Item> glass_pane = Tags.Items.GLASS_PANES;
         Tag<Item> logs = ItemTags.LOGS;
         Tag<Item> diamond = Tags.Items.GEMS_DIAMOND;
+        Tag<Item> diamondBlock = Tags.Items.STORAGE_BLOCKS_DIAMOND;
         Tag<Item> iron_ingot = Tags.Items.INGOTS_IRON;
         Tag<Item> quartz_block = Tags.Items.STORAGE_BLOCKS_QUARTZ;
         Tag<Item> coal_block = Tags.Items.STORAGE_BLOCKS_COAL;
@@ -131,6 +132,7 @@ public class RecipesGenerator extends RecipeProvider {
         ShapelessRecipeBuilder.shapelessRecipe(ModItems.injection_garlic).addIngredient(injection_empty).addIngredient(garlic).addCriterion("has_injection", this.hasItem(injection_empty)).build(consumer, general("injection_1"));
         ShapelessRecipeBuilder.shapelessRecipe(ModItems.injection_sanguinare).addIngredient(injection_empty).addIngredient(vampire_fang, 8).addCriterion("has_injection", this.hasItem(injection_empty)).build(consumer, general("injection_2"));
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.totem_base).patternLine("XYX").patternLine("XYX").patternLine("ZZZ").key('X', planks).key('Y', obsidian).key('Z', iron_ingot).addCriterion("has_obsidian", this.hasItem(obsidian)).build(consumer, general("totem_base"));
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.totem_top_crafted).patternLine("X X").patternLine(" Y ").patternLine("XZX").key('X',obsidian).key('Y', diamond).addCriterion("has_diamond", this.hasItem(diamondBlock)).addCriterion("has_obsidian", this.hasItem(obsidian)).build(consumer, general("totem_top"));
         ConditionalRecipe.builder().addCondition(new ConfigCondition("umbrella")).addRecipe((consumer1) -> ShapedRecipeBuilder.shapedRecipe(ModItems.umbrella).patternLine("###").patternLine("BAB").patternLine(" A ").key('#', wool).key('A', stick).key('B', vampire_orchid).addCriterion("has_wool", this.hasItem(wool)).build(consumer1, general("umbrella"))).build(consumer, general("umbrella"));
 
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.alchemical_cauldron).patternLine("XZX").patternLine("XXX").patternLine("Y Y").key('X', iron_ingot).key('Y', stone_bricks).key('Z', garlic).addCriterion("has_iron", this.hasItem(iron_ingot)).build(consumer, hunter("alchemical_cauldron"));
