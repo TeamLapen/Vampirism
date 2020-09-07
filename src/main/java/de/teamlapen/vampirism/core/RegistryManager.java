@@ -16,6 +16,7 @@ import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.brain.schedule.Schedule;
+import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.ContainerType;
@@ -158,6 +159,11 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterPointOfInterest(RegistryEvent.Register<PointOfInterestType> event) {
         ModVillage.registerVillagePointOfInterestType(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterSensorTypes(RegistryEvent.Register<SensorType<?>> event) {
+        ModVillage.registerSensor(event.getRegistry());
     }
 
     @SubscribeEvent

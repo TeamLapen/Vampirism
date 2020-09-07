@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.converted;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.mojang.datafixers.Dynamic;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
@@ -26,6 +27,8 @@ import net.minecraft.entity.ai.brain.memory.MemoryModuleStatus;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
 import net.minecraft.entity.ai.brain.schedule.Activity;
 import net.minecraft.entity.ai.brain.schedule.Schedule;
+import net.minecraft.entity.ai.brain.sensor.Sensor;
+import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.ai.brain.task.VillagerTasks;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
@@ -52,12 +55,30 @@ import java.util.Random;
  * Vampire Villager
  */
 public class ConvertedVillagerEntity extends VampirismVillagerEntity implements IConvertedCreature<VillagerEntity> {
+    public static final List<SensorType<? extends Sensor<? super VillagerEntity>>> SENSOR_TYPES;
     private EnumStrength garlicCache = EnumStrength.NONE;
     private boolean sundamageCache;
     private int bloodTimer = 0;
 
+    static {
+        SENSOR_TYPES = Lists.newArrayList(VillagerEntity.SENSOR_TYPES);
+        SENSOR_TYPES.remove(SensorType.VILLAGER_HOSTILES);
+        SENSOR_TYPES.add(ModVillage.vampire_villager_hostiles);
+    }
+
     public ConvertedVillagerEntity(EntityType<? extends ConvertedVillagerEntity> type, World worldIn) {
         super(type, worldIn);
+    }
+
+    /**
+     * copied from {@link VillagerEntity#createBrain(Dynamic)} but with {@link #SENSOR_TYPES}, where {@link SensorType#VILLAGER_HOSTILES} is replaced by {@link ModVillage#vampire_villager_hostiles}
+     */
+    @Nonnull
+    @Override
+    protected Brain<?> createBrain(@Nonnull Dynamic<?> dynamicIn) {
+        Brain<VillagerEntity> brain = new Brain<>(MEMORY_TYPES, SENSOR_TYPES, dynamicIn);
+        this.initBrain(brain);
+        return brain;
     }
 
     @Override

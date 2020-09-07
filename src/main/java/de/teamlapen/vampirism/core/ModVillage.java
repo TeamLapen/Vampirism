@@ -6,12 +6,14 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.entity.FactionVillagerProfession;
 import de.teamlapen.vampirism.entity.villager.Trades;
+import de.teamlapen.vampirism.entity.villager.VampireVillagerHostilesSensor;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.FactionPointOfInterestType;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.entity.ai.brain.schedule.Activity;
 import net.minecraft.entity.ai.brain.schedule.Schedule;
 import net.minecraft.entity.ai.brain.schedule.ScheduleBuilder;
+import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.item.ItemStack;
@@ -36,14 +38,16 @@ public class ModVillage {
 
     public static final Schedule converted_default = getNull();
 
+    public static final SensorType<VampireVillagerHostilesSensor> vampire_villager_hostiles = getNull();
+
     static void registerProfessions(IForgeRegistry<VillagerProfession> registry) {
-        VillagerProfession vampire_expert = new FactionVillagerProfession("vampire_expert", vampire_faction, ImmutableSet.of(), ImmutableSet.of(), null){
+        VillagerProfession vampire_expert = new FactionVillagerProfession("vampire_expert", vampire_faction, ImmutableSet.of(), ImmutableSet.of(), null) {
             @Override
             public IFaction getFaction() {
                 return VReference.VAMPIRE_FACTION;
             }
         }.setRegistryName(REFERENCE.MODID, "vampire_expert");
-        VillagerProfession hunter_expert = new FactionVillagerProfession("hunter_expert", hunter_faction, ImmutableSet.of(), ImmutableSet.of(), null){
+        VillagerProfession hunter_expert = new FactionVillagerProfession("hunter_expert", hunter_faction, ImmutableSet.of(), ImmutableSet.of(), null) {
             @Override
             public IFaction getFaction() {
                 return VReference.HUNTER_FACTION;
@@ -57,14 +61,18 @@ public class ModVillage {
 
     static void registerVillagePointOfInterestType(IForgeRegistry<PointOfInterestType> registry) {
         PointOfInterestType hunter_faction = new FactionPointOfInterestType("hunter_faction", ImmutableSet.of(ModBlocks.totem_top_vampirism_hunter.getStateContainer().getBaseState()), 1, 1).setRegistryName(REFERENCE.MODID, "hunter_faction");
-        PointOfInterestType vampire_faction = new FactionPointOfInterestType("vampire_faction", ImmutableSet.of(ModBlocks.totem_top_vampirism_vampire.getStateContainer().getBaseState()), 1,1).setRegistryName(REFERENCE.MODID, "vampire_faction");
-        PointOfInterestType no_faction = new FactionPointOfInterestType("no_faction", ImmutableSet.of(ModBlocks.totem_top.getStateContainer().getBaseState()),1,1).setRegistryName(REFERENCE.MODID,"no_faction");
+        PointOfInterestType vampire_faction = new FactionPointOfInterestType("vampire_faction", ImmutableSet.of(ModBlocks.totem_top_vampirism_vampire.getStateContainer().getBaseState()), 1, 1).setRegistryName(REFERENCE.MODID, "vampire_faction");
+        PointOfInterestType no_faction = new FactionPointOfInterestType("no_faction", ImmutableSet.of(ModBlocks.totem_top.getStateContainer().getBaseState()), 1, 1).setRegistryName(REFERENCE.MODID, "no_faction");
         registry.register(hunter_faction);
         registry.register(vampire_faction);
         registry.register(no_faction);
         PointOfInterestType.func_221052_a(hunter_faction);
         PointOfInterestType.func_221052_a(vampire_faction);
         PointOfInterestType.func_221052_a(no_faction);
+    }
+
+    static void registerSensor(IForgeRegistry<SensorType<?>> registry) {
+        registry.register(new SensorType<>(VampireVillagerHostilesSensor::new).setRegistryName(REFERENCE.MODID, "vampire_villager_hostiles"));
     }
 
     static void registerSchedule(IForgeRegistry<Schedule> registry) {
