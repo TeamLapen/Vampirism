@@ -501,15 +501,18 @@ public class TaskManager implements ITaskManager {
         //stats
         if (!this.stats.isEmpty()) {
             CompoundNBT stats = new CompoundNBT();
-            this.stats.forEach((entity, tasks) -> {
-                CompoundNBT tasksNBT = new CompoundNBT();
-                tasks.forEach((task, requirements) -> {
-                    CompoundNBT taskNBT = new CompoundNBT();
-                    requirements.forEach((requirement, amount) -> taskNBT.putInt(requirement.toString(), amount));
-                    taskNBT.put(Objects.requireNonNull(task.getRegistryName()).toString(), taskNBT);
-                });
-                stats.put(entity.toString(), tasksNBT);
-            });
+            for (Map.Entry<UUID, Map<Task, Map<ResourceLocation, Integer>>> taskBoardEntries : this.stats.entrySet()) {
+                CompoundNBT board = new CompoundNBT();
+                for (Map.Entry<Task, Map<ResourceLocation, Integer>> taskEntries : taskBoardEntries.getValue().entrySet()) {
+                    CompoundNBT task = new CompoundNBT();
+                    for (Map.Entry<ResourceLocation, Integer> requirementEntries : taskEntries.getValue().entrySet()) {
+                        task.putInt(requirementEntries.getKey().toString(), requirementEntries.getValue());
+                    }
+                    //noinspection ConstantConditions
+                    board.put(taskEntries.getKey().getRegistryName().toString(), task);
+                }
+                stats.put(taskBoardEntries.getKey().toString(), board);
+            }
             compoundNBT.put("stats", stats);
         }
     }
@@ -560,17 +563,19 @@ public class TaskManager implements ITaskManager {
         //stats
         if (compoundNBT.contains("stats")) {
             CompoundNBT stats = compoundNBT.getCompound("stats");
-            stats.keySet().forEach(taskBoardId -> {
-                CompoundNBT entityIdNBT = stats.getCompound(taskBoardId);
+            for (String taskBoardId : stats.keySet()) {
+                CompoundNBT taskBoardNBT = stats.getCompound(taskBoardId);
                 Map<Task, Map<ResourceLocation, Integer>> tasks = new HashMap<>();
-                entityIdNBT.keySet().forEach((task) -> {
-                    CompoundNBT taskNBT = entityIdNBT.getCompound(task);
+                for (String taskRegistryName : taskBoardNBT.keySet()) {
+                    CompoundNBT taskNBT = taskBoardNBT.getCompound(taskRegistryName);
                     Map<ResourceLocation, Integer> requirements = new HashMap<>();
-                    taskNBT.keySet().forEach((requirementId) -> requirements.put(new ResourceLocation(requirementId), taskNBT.getInt(requirementId)));
-                    tasks.put(ModRegistries.TASKS.getValue(new ResourceLocation(task)), requirements);
-                });
+                    for (String requirementString : taskNBT.keySet()) {
+                        requirements.put(new ResourceLocation(requirementString), taskNBT.getInt(requirementString));
+                    }
+                    tasks.put(ModRegistries.TASKS.getValue(new ResourceLocation(taskRegistryName)), requirements);
+                }
                 this.stats.put(UUID.fromString(taskBoardId), tasks);
-            });
+            }
         }
     }
 
