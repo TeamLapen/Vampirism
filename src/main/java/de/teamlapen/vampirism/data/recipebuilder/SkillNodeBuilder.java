@@ -18,10 +18,12 @@ public class SkillNodeBuilder {
     private final ResourceLocation parent;
     private final ISkill[] skills;
     private ResourceLocation faction;
+    private ResourceLocation[] lockingSkillNodes;
 
     public SkillNodeBuilder(ResourceLocation parent, ISkill... skills) {
         this.parent = parent;
         this.skills = skills;
+        this.lockingSkillNodes = new ResourceLocation[0];
     }
 
     public static SkillNodeBuilder skill(ResourceLocation parent, ISkill... skills) {
@@ -34,6 +36,11 @@ public class SkillNodeBuilder {
 
     public static SkillNodeBuilder vampire(ResourceLocation parent, ISkill... skills) {
         return skill(parent, skills).faction(VReference.VAMPIRE_FACTION);
+    }
+
+    public SkillNodeBuilder lockingNodes(ResourceLocation... skillNodes) {
+        this.lockingSkillNodes = skillNodes;
+        return this;
     }
 
     public SkillNodeBuilder faction(IPlayableFaction<?> faction) {
@@ -52,7 +59,7 @@ public class SkillNodeBuilder {
             id = new ResourceLocation(id.getNamespace(), faction.getPath() + "/" + id.getPath());
         }
         this.validate(id);
-        consumer.accept(new Result(id, this.parent, skills));
+        consumer.accept(new Result(id, this.parent, this.skills, this.lockingSkillNodes));
         return id;
     }
 
@@ -60,11 +67,13 @@ public class SkillNodeBuilder {
         private final ResourceLocation parent;
         private final ISkill[] skills;
         private final ResourceLocation id;
+        private final ResourceLocation[] lockingSkillNodes;
 
-        public Result(ResourceLocation id, ResourceLocation parent, ISkill[] skills) {
+        public Result(ResourceLocation id, ResourceLocation parent, ISkill[] skills, ResourceLocation[] lockingSkillNodes) {
             this.id = id;
             this.parent = parent;
             this.skills = skills;
+            this.lockingSkillNodes = lockingSkillNodes;
         }
 
         @Override
@@ -75,6 +84,13 @@ public class SkillNodeBuilder {
                 array.add(skill.getRegistryName().toString());
             }
             json.add("skills", array);
+            if (lockingSkillNodes.length > 0) {
+                JsonArray nodes = new JsonArray();
+                for (ResourceLocation lockingSkillNode : this.lockingSkillNodes) {
+                    nodes.add(lockingSkillNode.toString());
+                }
+                json.add("locking", nodes);
+            }
         }
 
         @Override
