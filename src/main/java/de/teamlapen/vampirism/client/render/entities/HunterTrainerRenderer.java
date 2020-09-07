@@ -1,9 +1,6 @@
 package de.teamlapen.vampirism.client.render.entities;
 
-import com.google.common.base.Predicates;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.teamlapen.vampirism.client.model.BasicHunterModel;
-import de.teamlapen.vampirism.client.render.layers.CloakLayer;
 import de.teamlapen.vampirism.client.render.layers.HunterEquipmentLayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -17,7 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class HunterTrainerRenderer extends BipedRenderer<MobEntity, PlayerModel<MobEntity>> {
-    private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base1.png");
+    private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_trainer.png");
 
 
     public HunterTrainerRenderer(EntityRendererManager renderManagerIn, boolean renderEquipment) {

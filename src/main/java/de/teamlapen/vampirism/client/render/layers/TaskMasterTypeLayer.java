@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.render.layers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.teamlapen.vampirism.client.model.VillagerWithArmsModel;
 import de.teamlapen.vampirism.entity.IDefaultTaskMasterEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
@@ -15,10 +14,10 @@ import net.minecraft.util.registry.Registry;
 /**
  * Render biome specific middle layer and "profession" specific top layer
  */
-public class TaskMasterTypeLayer<T extends MobEntity & IDefaultTaskMasterEntity> extends LayerRenderer<T, VillagerWithArmsModel<T>> {
+public class TaskMasterTypeLayer<T extends MobEntity & IDefaultTaskMasterEntity> extends LayerRenderer<T, VillagerModel<T>> {
     private final ResourceLocation additionalOverlay;
 
-    public TaskMasterTypeLayer(IEntityRenderer<T, VillagerWithArmsModel<T>> entityRendererIn, ResourceLocation additionalOverlay) {
+    public TaskMasterTypeLayer(IEntityRenderer<T, VillagerModel<T>> entityRendererIn, ResourceLocation additionalOverlay) {
         super(entityRendererIn);
         this.additionalOverlay = additionalOverlay;
     }

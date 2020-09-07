@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import com.google.common.collect.Maps;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
@@ -57,7 +56,7 @@ public class TotemTopBlock extends ContainerBlock {
      * @param faction faction must be faction registryname;
      */
     public TotemTopBlock(boolean crafted, ResourceLocation faction) {
-        super(Properties.create(Material.ROCK).hardnessAndResistance(20, 2000).sound(SoundType.STONE));
+        super(Properties.create(Material.ROCK).hardnessAndResistance(12, 2000).sound(SoundType.STONE));
         this.faction = faction;
         this.crafted = crafted;
         blocks.add(this);
