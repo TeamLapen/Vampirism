@@ -15,26 +15,38 @@ issueTrackerURL="https://github.com/TeamLapen/Vampirism/issues"
     updateJSONURL="https://maxanier.de/projects/vampirism/versions.json"
     [[dependencies.vampirism]]
         modId="forge"
-        mandatory=true
-        versionRange="[${forge_version},)"
-        ordering="NONE"
-        side="BOTH"
-    [[dependencies.vampirism]]
-        modId="teamlapenlib"
-        mandatory=true
-        versionRange="[${version},)"
-        ordering="AFTER"
-        side="BOTH"
+    mandatory = true
+    versionRange = "[${forge_version},)"
+    ordering = "NONE"
+    side = "BOTH"
+[[dependencies.vampirism]]
+modId = "teamlapenlib"
+mandatory = true
+versionRange = "[${version},)"
+ordering = "AFTER"
+side = "BOTH"
+[[dependencies.vampirism]]
+modId = "guideapi-vp"
+mandatory = false
+versionRange = "[${guideapi_version},)"
+ordering = "AFTER"
+side = "BOTH"
+[[dependencies.vampirism]]
+modId = "jei"
+mandatory = false
+versionRange = "[${jei_version},)"
+ordering = "AFTER"
+side = "BOTH"
 [[mods]]
-    modId="teamlapenlib"
-    namespace="teamlapenlib"
-    version="${version}"
-    displayName="Teamlapen Library"
-    authors="Maxanier, Cheaterpaul"
-    description="Required by Vampirism"
-    displayURL="https://vampirism.maxanier.de"
-    [[dependencies.teamlapen-lib]]
-        modId="forge"
+modId = "teamlapenlib"
+namespace = "teamlapenlib"
+version = "${version}"
+displayName = "Teamlapen Library"
+authors = "Maxanier, Cheaterpaul"
+description = "Required by Vampirism"
+displayURL = "https://vampirism.maxanier.de"
+[[dependencies.teamlapen-lib]]
+modId = "forge"
         mandatory=true
         versionRange="[${forge_version},)"
         ordering="NONE"
