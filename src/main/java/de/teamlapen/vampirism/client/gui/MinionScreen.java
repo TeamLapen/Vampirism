@@ -19,7 +19,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
@@ -79,7 +78,7 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
         this.lockActionButton.setLocked(this.container.isTaskLocked());
         String[] taskNames = Arrays.stream(container.getAvailableTasks()).map(IMinionTask::getName).map(ITextComponent::getFormattedText).toArray(String[]::new);
 
-        this.taskList = this.addButton(new ScrollableListButton(this.guiLeft + 119, this.guiTop + 19 + 19, 87, Math.min(60, 20 * taskNames.length), taskNames.length, taskNames, "", this::selectTask, false));
+        this.taskList = this.addButton(new ScrollableListButton(this.guiLeft + 119, this.guiTop + 19 + 19, 87, Math.min(3, taskNames.length), taskNames.length, taskNames, "", this::selectTask, false));
         this.taskList.visible = false;
         this.taskButton = this.addButton(new ExtendedButton(this.guiLeft + 119, this.guiTop + 19, 88, 20, getActiveTaskName(), (button -> {
             this.taskList.visible = !this.taskList.visible;

@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
-import de.teamlapen.vampirism.network.SelectMinionTaskPacket;
+import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.SelectMinionTaskPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -98,7 +98,7 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
     }
 
     private void callSingle() {
-
+        VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SELECT_CALL_MINION, ""));
     }
 
     private void sendTask(IMinionTask<?,?> task) {

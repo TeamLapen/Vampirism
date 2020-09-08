@@ -127,7 +127,6 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     /**
      * Copy of {@link MobEntity} but with modified DamageSource
      * Check if code still up-to-date
-     * TODO 1.15
      * TODO 1.16
      * TODO 1.17
      *
@@ -175,6 +174,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             }
 
             this.applyEnchantments(this, entityIn);
+            this.setLastAttackedEntity(entityIn);
         }
 
         return flag;

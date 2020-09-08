@@ -285,7 +285,7 @@ public class GuideBook implements IGuideBook {
         weaponTable += translate(base + "skills.weapon_table.text");
         skillPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(weaponTable), new ResourceLocation("guide.vampirism.blocks.weapon_table")));
         entries.put(new ResourceLocation(base + "skills"), new EntryText(skillPages, base + "skills"));
-        String potionTable = String.format("§l%s§r\n", loc(ModBlocks.weapon_table));
+        String potionTable = String.format("§l%s§r\n", loc(ModBlocks.potion_table));
         potionTable += translate(base + "skills.potion_table.text");
         List<IPage> potionTablePages = new ArrayList<>(PageHelper.pagesForLongText(potionTable));
         potionTablePages.addAll(Arrays.asList(generatePotionMixes()));
