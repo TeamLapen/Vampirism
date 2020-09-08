@@ -64,11 +64,11 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
         return missing;
     }
 
-    public boolean isLevelValid() {
-        return levelingConf.isLevelValidForTableAndTier(hunterLevel + 1, worldPos.apply(((world, blockPos) -> {
+    public boolean isLevelValid(boolean considerTier) {
+        return considerTier ? levelingConf.isLevelValidForTableTier(hunterLevel + 1, worldPos.apply(((world, blockPos) -> {
             BlockState state = world.getBlockState(blockPos);
             return state.has(HunterTableBlock.VARIANT) ? state.get(HunterTableBlock.VARIANT).tier : 0;
-        })).orElse(0));
+        })).orElse(0)) : levelingConf.isLevelValidForTable(hunterLevel + 1);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
 
     @Override
     public void onCraftMatrixChanged(IInventory inventoryIn) {
-        if (isLevelValid()) {
+        if (isLevelValid(true)) {
             int[] req = levelingConf.getItemRequirementsForTable(hunterLevel + 1);
             missing = checkItems(req[0], req[1], req[2], req[3]);
             if (missing.isEmpty()) {

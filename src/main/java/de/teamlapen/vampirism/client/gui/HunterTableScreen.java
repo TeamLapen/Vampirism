@@ -54,7 +54,9 @@ public class HunterTableScreen extends ContainerScreen<HunterTableContainer> {
         this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 0x404040);
 
         ITextComponent text = null;
-        if (!container.isLevelValid()) {
+        if (!container.isLevelValid(false)) {
+            text = new TranslationTextComponent("container.vampirism.hunter_table.level_wrong");
+        } else if (!container.isLevelValid(true)) {
             text = new TranslationTextComponent("container.vampirism.hunter_table.structure_level_wrong");
         } else if (!container.getMissingItems().isEmpty()) {
             ItemStack missing = container.getMissingItems();
