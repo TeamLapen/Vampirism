@@ -23,13 +23,13 @@ public class VampireVillagerHostilesSensor extends VillagerHostilesSensor {
     }
 
     @Override
-    protected boolean func_220987_a(@Nonnull LivingEntity villager, LivingEntity hostile) {
+    public boolean func_220987_a(@Nonnull LivingEntity villager, LivingEntity hostile) { //public to avoid AT issues
         float f = hostiles.get(hostile.getType());
         return hostile.getDistanceSq(villager) <= (double) (f * f);
     }
 
     @Override
-    protected boolean func_220988_c(LivingEntity hostile) {
+    public boolean func_220988_c(LivingEntity hostile) { //public to avoid AT issues
         return hostiles.containsKey(hostile.getType());
     }
 
