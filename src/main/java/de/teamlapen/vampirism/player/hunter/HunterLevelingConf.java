@@ -139,7 +139,10 @@ public class HunterLevelingConf {
         return targetLevel >= TABLE_MIN_LEVEL && targetLevel <= TABLE_MAX_LEVEL;
     }
 
-    public boolean isLevelValidForTableAndTier(int targetLevel, int tier) {
+    /**
+     * Check if the table tier is sufficient for the given level.
+     */
+    public boolean isLevelValidForTableTier(int targetLevel, int tier) {
         return isLevelValidForTable(targetLevel) && (targetLevel <= 11 || tier >= 3) && (targetLevel <= 9 || tier >= 2) && (targetLevel <= 7 || tier >= 1);
     }
 

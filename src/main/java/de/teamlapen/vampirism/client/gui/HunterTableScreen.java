@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.inventory.container.HunterTableContainer;
 import de.teamlapen.vampirism.items.PureBloodItem;
@@ -21,7 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class HunterTableScreen extends ContainerScreen<HunterTableContainer> {
     private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_table.png");
-    private IWorldPosCallable worldPos;
+    private final IWorldPosCallable worldPos;
 
     public HunterTableScreen(HunterTableContainer inventorySlotsIn, PlayerInventory playerInventory, ITextComponent name) {
         this(inventorySlotsIn, playerInventory, name, IWorldPosCallable.DUMMY);
@@ -54,7 +53,9 @@ public class HunterTableScreen extends ContainerScreen<HunterTableContainer> {
         this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 0x404040);
 
         ITextComponent text = null;
-        if (!container.isLevelValid()) {
+        if (!container.isLevelValid(false)) {
+            text = new TranslationTextComponent("container.vampirism.hunter_table.level_wrong");
+        } else if (!container.isLevelValid(true)) {
             text = new TranslationTextComponent("container.vampirism.hunter_table.structure_level_wrong");
         } else if (!container.getMissingItems().isEmpty()) {
             ItemStack missing = container.getMissingItems();
