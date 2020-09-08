@@ -54,7 +54,7 @@ public class HunterTableScreen extends ContainerScreen<HunterTableContainer> {
         super.drawGuiContainerForegroundLayer(stack, mouseX, mouseY);
 
         ITextComponent text = null;
-        if (!container.isLevelValid()) {
+        if (!container.isLevelValid(false)) {
             text = new TranslationTextComponent("container.vampirism.hunter_table.structure_level_wrong");
         } else if (!container.getMissingItems().isEmpty()) {
             ItemStack missing = container.getMissingItems();
