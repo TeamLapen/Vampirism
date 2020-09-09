@@ -53,6 +53,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
@@ -62,8 +63,10 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.forgespi.language.IModInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 import java.awt.*;
 import java.io.File;
@@ -131,6 +134,11 @@ public class VampirismMod {
             REFERENCE.VERSION = opt.get().getModInfo().getVersion();
         } else {
             LOGGER.warn("Cannot get version from mod info");
+        }
+        Optional<? extends net.minecraftforge.fml.ModContainer> guideApiOpt = ModList.get().getModContainerById("guideapi-vp");
+        if (guideApiOpt.map(ModContainer::getModInfo).map(IModInfo::getVersion).map(v -> v.compareTo(new DefaultArtifactVersion("2.2.1")) < 0).orElse(false)) {
+            LOGGER.error("Vampirism requires GuideAPI-VP version 2.2.1 or higher");
+            throw new IllegalStateException("Vampirism requires GuideAPI-VP version 2.2.1 or higher");
         }
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);

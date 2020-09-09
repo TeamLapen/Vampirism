@@ -3,6 +3,7 @@
   "text.vampirism.command.subcommand_help": "Use '/%s help <subcommand>' to get more information",
   "text.vampirism.command.usage": "/%s <subcommand> <params> | Use /%s help to get all available subcommands",
   "action.vampirism.cancel": "Cancel",
+  "text.vampirism.no_permission": "You do not have permission to do so",
   "text.vampirism.action.not_unlocked": "This action is not unlocked",
   "text.vampirism.action.deactivated_by_serveradmin": "This action is deactivated by your serveradmin",
   "text.vampirism.action.not_bound": "No action is bound to this key. See %s.",
