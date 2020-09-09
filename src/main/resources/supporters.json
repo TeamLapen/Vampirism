@@ -4,7 +4,7 @@
     {
       "name": "The powerful Bill",
       "texture": "wildbill",
-      "type": 2,
+      "type": 15,
       "status": 0
     },
     {
@@ -16,19 +16,31 @@
     {
       "name": "Adrian DraxWind",
       "texture": "bronzeshadow",
-      "type": 2,
+      "type": 15,
       "status": 1
     },
     {
       "name": "Prince Zin",
       "texture": "1LiterZinalco",
-      "type": 0,
+      "type": 15,
       "status": 1
     },
     {
-      "name": "Kranzy",
-      "texture": "Kranzy",
-      "type": 0,
+      "name": "Marchioness Spade",
+      "texture": "F_Spade",
+      "type": 15,
+      "status": 2
+    },
+    {
+      "name": "The nightmarish Krab",
+      "texture": "God_Seth_Big",
+      "type": 13,
+      "status": 2
+    },
+    {
+      "name": "Cultist Courn",
+      "texture": "cournualllama2",
+      "type": 15,
       "status": 2
     }
   ],
@@ -52,14 +64,32 @@
       "status": 1
     },
     {
-      "name": "Wise Emberball",
-      "texture": "Emberball",
+      "name": "James the hunter",
+      "texture": "JaberC",
+      "type": 1,
+      "status": 2
+    },
+    {
+      "name": "Pendragon Helsing",
+      "texture": "xXvPendragonvXx",
+      "type": 1,
+      "status": 2
+    },
+    {
+      "name": "Marcus Walker",
+      "texture": "RebelT",
+      "type": 2,
+      "status": 1
+    },
+    {
+      "name": "Terrible Twig",
+      "texture": "Twig_Sunshine",
       "type": 0,
       "status": 2
     },
     {
-      "name": "James the hunter",
-      "texture": "JaberC",
+      "name": "Vampire Evader",
+      "texture": "ElectricEvader",
       "type": 1,
       "status": 2
     }
