@@ -109,7 +109,7 @@ public class VampirismMod {
     public static VampirismMod instance;
     public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
     public static boolean inDev = false;
-    public final ModCompatLoader modCompatLoader = new ModCompatLoader(REFERENCE.MODID + "/vampirism_mod_compat.cfg");
+    public final ModCompatLoader modCompatLoader = new ModCompatLoader();
     private final RegistryManager registryManager;
     private VersionChecker.VersionInfo versionInfo;
 

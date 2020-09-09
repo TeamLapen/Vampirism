@@ -1,15 +1,9 @@
 package de.teamlapen.vampirism.modcompat;
 
 import com.google.common.collect.Lists;
-import de.teamlapen.lib.lib.config.forge.Configuration;
-import de.teamlapen.lib.lib.config.forge.Property;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraftforge.fml.ModList;
-import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,22 +44,22 @@ public class IntegrationsNotifier {
      * @return If already notified
      */
     private static boolean checkAndUpdateAlreadyNotified(List<String> mods) {
-        Configuration config = VampirismMod.instance.modCompatLoader.getConfig();
-        assert config != null : "Do not call before init";
-        Property conf = config.get(Configuration.CATEGORY_GENERAL, "integration_mod_notification", "", "INTERNAL - Set to 'never' if you don't want to be notified about integration mods");
-        String saved = conf.getString();
-        if ("never".equals(saved) || "'never'".equals(saved)) {
-            return true;
-        }
-        String[] previous = saved.split(":");
-        List<String> missing = new ArrayList<>(mods);
-        missing.removeAll(Arrays.asList(previous));
-        if (missing.size() == 0) {
-            return true;
-        }
-        Collections.addAll(missing, previous);
-        conf.set(StringUtils.join(missing, ":"));
-        config.save();
+//        Configuration config = VampirismMod.instance.modCompatLoader.getConfig();
+//        assert config != null : "Do not call before init";
+//        Property conf = config.get(Configuration.CATEGORY_GENERAL, "integration_mod_notification", "", "INTERNAL - Set to 'never' if you don't want to be notified about integration mods");
+//        String saved = conf.getString();
+//        if ("never".equals(saved) || "'never'".equals(saved)) {
+//            return true;
+//        }
+//        String[] previous = saved.split(":");
+//        List<String> missing = new ArrayList<>(mods);
+//        missing.removeAll(Arrays.asList(previous));
+//        if (missing.size() == 0) {
+//            return true;
+//        }
+//        Collections.addAll(missing, previous);
+//        conf.set(StringUtils.join(missing, ":"));
+//        config.save();
         return false;
     }
 }
