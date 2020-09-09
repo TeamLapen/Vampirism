@@ -118,7 +118,7 @@ public class VampirismMod {
         return false;
     }
 
-    public final ModCompatLoader modCompatLoader = new ModCompatLoader(REFERENCE.MODID + "/vampirism_mod_compat.cfg");
+    public final ModCompatLoader modCompatLoader = new ModCompatLoader();
     private final RegistryManager registryManager;
     private VersionChecker.VersionInfo versionInfo;
 

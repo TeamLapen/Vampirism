@@ -1,17 +1,17 @@
 package de.teamlapen.lib.lib.util;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
-import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
+import org.apache.maven.artifact.versioning.VersionRange;
 
 import javax.annotation.Nullable;
-import java.io.File;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Handles loading of mod compatibilities
@@ -19,19 +19,14 @@ import java.util.List;
 public class ModCompatLoader implements IInitListener {
 
     private final static Logger LOGGER = LogManager.getLogger();
-    private final String configName;
     private
     @Nullable
     List<IModCompat> availableModCompats = new LinkedList<>();
     private List<IModCompat> loadedModCompats;
+    private final Map<IModCompat, ForgeConfigSpec.BooleanValue> compatEnableMap = new HashMap<>();
 
+    private final List<IModCompat> incompatibleCompats = new LinkedList<>();
 
-    /**
-     * @param configName Name for the config file. Can be a file in a folder
-     */
-    public ModCompatLoader(String configName) {
-        this.configName = configName;
-    }
 
     /**
      * Add any compats BEFORE pre-init
@@ -40,7 +35,7 @@ public class ModCompatLoader implements IInitListener {
      */
     public void addModCompat(IModCompat compat) {
         if (availableModCompats == null) {
-            throw new IllegalStateException("Add mod compats BEFORE pre-init (" + compat.getModID() + ")");
+            throw new IllegalStateException("Add mod compats BEFORE init (" + compat.getModID() + ")");
         }
         availableModCompats.add(compat);
     }
@@ -49,15 +44,32 @@ public class ModCompatLoader implements IInitListener {
         return availableModCompats;
     }
 
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        builder.push("Compatibility");
+        assert availableModCompats != null;
+        for (IModCompat c : availableModCompats) {
+            if (!isModLoaded(c)) continue;
+            builder.push(c.getModID());
+            compatEnableMap.put(c, builder.define("enable_compat_" + c.getModID(), true));
+            c.buildConfig(builder);
+            builder.pop();
+        }
+
+    }
+
+    public List<IModCompat> getIncompatibleCompats() {
+        return ImmutableList.copyOf(incompatibleCompats);
+    }
 
     public List<IModCompat> getLoadedModCompats() {
         return ImmutableList.copyOf(loadedModCompats);
     }
 
+
     @Override
     public void onInitStep(Step step, ModLifecycleEvent event) {
         if (step == Step.COMMON_SETUP) {
-            prepareModCompats(FMLPaths.CONFIGDIR.get().toFile());
+            prepareModCompats();
         }
         Iterator<IModCompat> it = loadedModCompats.iterator();
         while (it.hasNext()) {
@@ -65,37 +77,60 @@ public class ModCompatLoader implements IInitListener {
             try {
                 next.onInitStep(step, event);
             } catch (Exception e) {
-                LOGGER.error(LogUtil.COMPAT, "---------------------------------------------------------");
-                LOGGER.error(LogUtil.COMPAT, "Mod Compat {} threw an exception during {}. Unloading.", next.getModID(), step);
-                LOGGER.error(LogUtil.COMPAT, "Issue", e);
-                LOGGER.error(LogUtil.COMPAT, "---------------------------------------------------------");
+                LOGGER.error("---------------------------------------------------------", e);
+                LOGGER.error("Mod Compat {} threw an exception during {}. Unloading.", next.getModID(), step);
+                LOGGER.error("---------------------------------------------------------");
                 it.remove();
             }
         }
     }
 
+
     private boolean isModLoaded(IModCompat modCompat) {
         return ModList.get().isLoaded(modCompat.getModID());
     }
 
-    private void prepareModCompats(File configDir) {
+    private boolean isVersionOk(IModCompat modCompat) {
+        Optional<? extends ModContainer> mod = ModList.get().getModContainerById(modCompat.getModID());
+        if (mod.isPresent()) {
+            String s = modCompat.getAcceptedVersionRange();
+            if (s == null) return true;
+            VersionRange range = null;
+            try {
+                range = VersionRange.createFromVersionSpec(s);
+            } catch (InvalidVersionSpecificationException e) {
+                LOGGER.error("Invalid version spec {} for {}", s, modCompat.getModID());
+                return false;
+            }
+            return range.containsVersion(mod.get().getModInfo().getVersion());
+        }
+        return false;
+    }
+
+    private void prepareModCompats() {
         if (availableModCompats == null) {
             LOGGER.warn("Trying to load mod compat twice");
             return;
         }
 
+
         List<IModCompat> loaded = new LinkedList<>();
         for (IModCompat modCompat : availableModCompats) {
             if (isModLoaded(modCompat)) {
-                //TODO make configurable again
-                //if (config.getBoolean("enable_compat_" + modCompat.getModID(), compatCat.getName(), true, "If the compatibility for this mod should be loaded")) {
-                loaded.add(modCompat);
-                LOGGER.trace(LogUtil.COMPAT, "Prepared {} compatibility", modCompat.getModID());
-                //}
+                ForgeConfigSpec.BooleanValue enabled = compatEnableMap.get(modCompat);
+                if (enabled != null && enabled.get()) {
+                    if (isVersionOk(modCompat)) {
+                        loaded.add(modCompat);
+                        LOGGER.debug("Prepared {} compatibility", modCompat.getModID());
+                    } else {
+                        LOGGER.warn("Cannot load {} compat due to incompatible version", modCompat.getModID());
+                        incompatibleCompats.add(modCompat);
+                    }
+                }
             }
         }
-
         loadedModCompats = loaded;
         availableModCompats = null;
     }
+
 }
