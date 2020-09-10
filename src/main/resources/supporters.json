@@ -92,6 +92,12 @@
       "texture": "ElectricEvader",
       "type": 1,
       "status": 2
+    },
+    {
+      "name": "Tery the Brave",
+      "texture": "teri_berry",
+      "type": 3,
+      "status": 2
     }
   ]
 }
