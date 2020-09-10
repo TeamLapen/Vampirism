@@ -269,7 +269,7 @@ public class ModPlayerEventHandler {
                     IFaction<?> f = fp.getDisguisedAs();
                     if (f != null) {
                         if (fph.getLordLevel() > 0 && VampirismConfig.SERVER.lordPrefixInChat.get()) {
-                            event.setDisplayname("[" + fph.getLordTitle() + "] " + event.getDisplayname());
+                            event.setDisplayname("[" + fph.getLordTitle().getFormattedText() + "] " + event.getDisplayname());
                         }
                         event.setDisplayname(f.getChatColor() + event.getDisplayname() + TextFormatting.RESET);
                     }
