@@ -40,6 +40,7 @@ public class ModCommands {
                             .then(LordCommand.register())
                             .then(LevelUpCommand.register())
                             .then(GenderCommand.register())
+                            .then(BloodBarCommand.register())
             );
         }
 
@@ -51,7 +52,6 @@ public class ModCommands {
                             .then(MarkerCommand.register())
                             .then(GiveTestTargetMapCommand.register())
                             .then(SkillCommand.register())
-                            .then(EmptyBloodBarCommand.register())
                             .then(EntityCommand.register())
                             .then(InfoEntityCommand.register())
                             .then(BiomeCommand.register())
