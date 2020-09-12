@@ -22,28 +22,18 @@ public class BloodBarCommand extends BasicCommand {
         return Commands.literal("bloodBar")
                 .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
                 .then(Commands.literal("fill")
-                        .executes(context -> fillBloodBar(Lists.newArrayList(context.getSource().asPlayer())))
+                        .executes(context -> setBloodBar(Integer.MAX_VALUE, Lists.newArrayList(context.getSource().asPlayer())))
                         .then(Commands.argument("player", EntityArgument.players())
-                                .executes(context -> fillBloodBar(EntityArgument.getPlayers(context, "player")))))
+                                .executes(context -> setBloodBar(Integer.MAX_VALUE, EntityArgument.getPlayers(context, "player")))))
                 .then(Commands.literal("empty")
-                        .executes(context -> emptyBloodBar(Lists.newArrayList(context.getSource().asPlayer())))
+                        .executes(context -> setBloodBar(0, Lists.newArrayList(context.getSource().asPlayer())))
                         .then(Commands.argument("player", EntityArgument.players())
-                                .executes(context -> emptyBloodBar(EntityArgument.getPlayers(context, "player")))))
+                                .executes(context -> setBloodBar(0, EntityArgument.getPlayers(context, "player")))))
                 .then(Commands.literal("set")
                         .then(Commands.argument("amount", IntegerArgumentType.integer(0))
                                 .executes(context -> setBloodBar(IntegerArgumentType.getInteger(context, "amount"), Lists.newArrayList(context.getSource().asPlayer())))
                                 .then(Commands.argument("player", EntityArgument.players())
                                         .executes(context -> setBloodBar(IntegerArgumentType.getInteger(context, "amount"), EntityArgument.getPlayers(context, "player"))))));
-    }
-
-    private static int emptyBloodBar(Collection<ServerPlayerEntity> player) {
-        player.stream().map(VampirePlayer::getOpt).filter(player1 -> player1.map(VampirismPlayer::getLevel).orElse(0) > 0).forEach(player1 -> player1.ifPresent(vampire -> vampire.useBlood(Integer.MAX_VALUE, true)));
-        return 0;
-    }
-
-    private static int fillBloodBar(Collection<ServerPlayerEntity> player) {
-        player.stream().map(VampirePlayer::getOpt).filter(player1 -> player1.map(VampirismPlayer::getLevel).orElse(0) > 0).forEach(player1 -> player1.ifPresent(vampire -> vampire.drinkBlood(Integer.MAX_VALUE, 0, false)));
-        return 0;
     }
 
     private static int setBloodBar(int amount, Collection<ServerPlayerEntity> player) {
