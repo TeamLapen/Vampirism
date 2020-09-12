@@ -265,9 +265,9 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onEyeHeightSet(EntityEvent.EyeHeight event) {
+    public void onEyeHeightSet(EntityEvent.Size event) {
         if (event.getEntity() instanceof VampireBaseEntity || event.getEntity() instanceof HunterBaseEntity)
-            event.setNewHeight(event.getOldHeight() * 0.875f);
+            event.setNewEyeHeight(event.getOldEyeHeight() * 0.875f);
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)

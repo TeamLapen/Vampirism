@@ -246,7 +246,7 @@ public class VampirismMod {
     }
 
     private void gatherData(final GatherDataEvent event) {
-        registryManager.onInitStep(IInitListener.Step.GATHER_DATA, event);
+        registryManager.onGatherData(event);
         DataGenerator gen = event.getGenerator();
         if (event.includeServer()) {
             TagGenerator.register(gen);

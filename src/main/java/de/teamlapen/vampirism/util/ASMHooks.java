@@ -1,13 +1,8 @@
 package de.teamlapen.vampirism.util;
 
 import com.google.common.collect.Lists;
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.player.vampire.actions.BatVampireAction;
-import net.minecraft.entity.EntitySize;
-import net.minecraft.entity.Pose;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
 import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
@@ -28,13 +23,6 @@ public class ASMHooks {
     @ObjectHolder("vampirism:bite_damage")
     public static final Attribute attribute_bite_damage = getNull();
 
-    public static EntitySize getPlayerSize(PlayerEntity player, Pose pose) {
-        return BatVampireAction.BAT_SIZE;
-    }
-
-    public static boolean overwritePlayerSize(PlayerEntity player) {
-        return player.isAlive() && VampirePlayer.getOpt(player).map(vampire -> vampire.getSpecialAttributes().bat).orElse(false);
-    }
 
     /**
      * JigsawPieces in this list only will be generated once per village

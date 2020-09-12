@@ -290,11 +290,12 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void eyeHeight(EntityEvent.EyeHeight event) {
-        if (event.getEntity() instanceof PlayerEntity) {
+    public void eyeHeight(EntityEvent.Size event) {
+        if (event.getEntity() instanceof PlayerEntity && ((PlayerEntity) event.getEntity()).inventory != null /*make sure we are not in the player's contructor*/) {
             if (event.getEntity().isAlive() && event.getEntity().getPositionVec().lengthSquared() != 0) { //Do not attempt to get capability while entity is being initialized
                 if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(vampire -> vampire.getSpecialAttributes().bat).orElse(false)) {
-                    event.setNewHeight(BatVampireAction.BAT_EYE_HEIGHT);
+                    event.setNewSize(BatVampireAction.BAT_SIZE);
+                    event.setNewEyeHeight(BatVampireAction.BAT_EYE_HEIGHT);
                 }
             }
         }

@@ -8,7 +8,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -16,6 +15,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class InventoryHelper {
 
@@ -58,7 +58,7 @@ public class InventoryHelper {
     }
 
     @Nonnull
-    public static LazyOptional<Pair<IItemHandler, TileEntity>> tryGetItemHandler(IBlockReader world, BlockPos pos, @Nullable Direction side) {
+    public static Optional<Pair<IItemHandler, TileEntity>> tryGetItemHandler(IBlockReader world, BlockPos pos, @Nullable Direction side) {
         BlockState state = world.getBlockState(pos);
         if (state.getBlock().hasTileEntity(state)) {
             TileEntity tile = world.getTileEntity(pos);
@@ -67,7 +67,7 @@ public class InventoryHelper {
 
             }
         }
-        return LazyOptional.empty();
+        return Optional.empty();
     }
 
 

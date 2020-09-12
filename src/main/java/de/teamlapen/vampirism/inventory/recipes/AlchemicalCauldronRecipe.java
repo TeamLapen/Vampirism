@@ -16,13 +16,13 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
@@ -72,7 +72,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
         fluid.ifLeft((ingredient1 -> fluidMatch.set(ingredient1.test(inv.getStackInSlot(0)))));
         fluid.ifRight((ingredient1 -> {
             fluidMatch.set(false);
-            LazyOptional<FluidStack> stack = FluidUtil.getFluidContained(inv.getStackInSlot(0));
+            Optional<FluidStack> stack = FluidUtil.getFluidContained(inv.getStackInSlot(0));
             stack.ifPresent((handlerItem) -> fluidMatch.set(ingredient1.isFluidEqual(handlerItem) && ingredient1.getAmount() <= handlerItem.getAmount()));
         }));
         return match && fluidMatch.get();

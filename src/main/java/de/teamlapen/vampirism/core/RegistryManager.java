@@ -30,6 +30,7 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
 import net.minecraftforge.registries.ObjectHolderRegistry;
 
@@ -49,7 +50,6 @@ public class RegistryManager implements IInitListener {
 
     @Override
     public void onInitStep(Step step, ModLifecycleEvent event) {
-
         switch (step) {
             case COMMON_SETUP:
                 ModBiomes.addBiome();
@@ -61,10 +61,6 @@ public class RegistryManager implements IInitListener {
                 ModItems.registerCraftingRecipes();
                 ModAdvancements.registerAdvancements();
                 ModCommands.registerArgumentTypes();
-            case GATHER_DATA:
-                ModLoot.registerLootConditions();
-                ModLoot.registerLootFunctionType();
-                break;
             case LOAD_COMPLETE:
                 if (ModEffects.checkNightVision()) {
                     ModEffects.fixNightVisionEffecTypes();
@@ -79,6 +75,11 @@ public class RegistryManager implements IInitListener {
         }
     }
 
+    @Override
+    public void onGatherData(GatherDataEvent event) {
+        ModLoot.registerLootConditions();
+        ModLoot.registerLootFunctionType();
+    }
 
     @SubscribeEvent
     public void onRegisterActions(RegistryEvent.Register<IAction> event) {

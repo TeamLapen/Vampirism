@@ -51,7 +51,7 @@ public class WeaponTableRecipeBookGui extends RecipeBookGui {
             ObjectSet<RecipeList> objectset = new ObjectLinkedOpenHashSet<>(this.mc.getSearchTree(SearchTreeManager.RECIPES).search(s.toLowerCase(Locale.ROOT)));
             list1.removeIf((p_193947_1_) -> !objectset.contains(p_193947_1_));
         }
-        if (this.recipeBook.isFilteringCraftable(this.field_201522_g)) {
+        if (this.recipeBook.func_242141_a(this.field_201522_g)) {
             list1.removeIf((p_193958_0_) -> !p_193958_0_.containsCraftableRecipes());
         }
         this.recipeBookPage.updateLists(list1, forceFirstPage);
