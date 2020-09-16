@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampStructure;
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.DimensionSettings;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.Feature;
@@ -19,7 +20,6 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.IStructureProcessorType;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,11 +55,11 @@ public class ModFeatures {
     }
 
     static void registerIgnoredBiomesForStructures() {
-        VampirismAPI.worldGenRegistry().removeStructureFromBiomeCategories(hunter_camp.getRegistryName(), Lists.newArrayList(BiomeDictionary.Type.OCEAN, BiomeDictionary.Type.END, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.COLD, BiomeDictionary.Type.BEACH, BiomeDictionary.Type.RIVER, BiomeDictionary.Type.SWAMP, BiomeDictionary.Type.JUNGLE));
+        VampirismAPI.worldGenRegistry().removeStructureFromBiomeCategories(hunter_camp.getRegistryName(), Lists.newArrayList(Biome.Category.OCEAN, Biome.Category.THEEND, Biome.Category.NETHER, Biome.Category.BEACH, Biome.Category.ICY, Biome.Category.RIVER, Biome.Category.JUNGLE));
     }
 
     public static void registerStructureSeparation() {
-        Map<Structure<?>, StructureSeparationSettings> structureSettingsMapOverworld = DimensionSettings.Preset.OVERWORLD.getSettings().getStructures().func_236195_a_(); //TODO 1.16 Maybe check again when world gen/dimension stuff has stabilized in MC/Forge
+        Map<Structure<?>, StructureSeparationSettings> structureSettingsMapOverworld = DimensionSettings.func_242746_i().getStructures().func_236195_a_(); //TODO 1.16 Maybe check again when world gen/dimension stuff has stabilized in MC/Forge
         structureSettingsMapOverworld.put(hunter_camp, HunterCampStructure.getSettings());
 
         if (VampirismConfig.SERVER.villageModify.get()) {

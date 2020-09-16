@@ -612,7 +612,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                     boolean flag = false;
                     if (VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
                         if (!(world.getBlockState(pos.up()).getBlock() instanceof BushBlock)) {
-                            if (b.getBlock() == world.getBiome(pos).getSurfaceBuilderConfig().getTop().getBlock() && b.getBlock() != Blocks.SAND) {
+                            if (b.getBlock() == world.getBiome(pos).func_242440_e().func_242502_e().getTop().getBlock() && b.getBlock() != Blocks.SAND) {
                                 world.removeBlock(pos.up(), false);
                                 world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState());
                                 if (world.getBlockState(pos.up()).getBlock() == Blocks.TALL_GRASS) {
@@ -623,7 +623,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                         }
                     } else if (controllingFaction == VReference.HUNTER_FACTION) {
                         if (b.getBlock() == ModBlocks.cursed_earth) {
-                            world.setBlockState(pos, world.getBiome(pos).getSurfaceBuilderConfig().getTop());
+                            world.setBlockState(pos, world.getBiome(pos).func_242440_e().func_242502_e().getTop());
                             flag = true;
                         }
                     }

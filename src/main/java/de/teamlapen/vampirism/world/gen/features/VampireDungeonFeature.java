@@ -17,12 +17,10 @@ import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.DungeonsFeature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class VampireDungeonFeature extends DungeonsFeature {
@@ -34,30 +32,27 @@ public class VampireDungeonFeature extends DungeonsFeature {
         super(featureConfig);
     }
 
+
     /**
-     * copied from {@link net.minecraft.world.gen.feature.DungeonsFeature#func_230362_a_}
-     *
-     *   - changed {@link Blocks#MOSSY_COBBLESTONE} to {@link ModBlocks#castle_block_dark_brick} and {@link ModBlocks#castle_block_dark_brick_bloody}
-     *   - changed {@link Blocks#COBBLESTONE} to {@link Blocks#SPRUCE_PLANKS}
-     *   - changed {@link LootTables#CHESTS_SIMPLE_DUNGEON} to {@link ModLootTables#chest_vampire_dungeon}
-     *   - changed {@link DungeonsFeature#getRandomDungeonMob(Random)} to {@link ModEntities#vampire}
+     * copied from {@link net.minecraft.world.gen.feature.DungeonsFeature#func_241855_a}
+     * <p>
+     * - changed {@link Blocks#MOSSY_COBBLESTONE} to {@link ModBlocks#castle_block_dark_brick} and {@link ModBlocks#castle_block_dark_brick_bloody}
+     * - changed {@link Blocks#COBBLESTONE} to {@link Blocks#SPRUCE_PLANKS}
+     * - changed {@link LootTables#CHESTS_SIMPLE_DUNGEON} to {@link ModLootTables#chest_vampire_dungeon}
+     * - changed {@link DungeonsFeature#getRandomDungeonMob(Random)} to {@link ModEntities#vampire}
      */
-    @SuppressWarnings({"unused", "JavadocReference"})
     @Override
-    public boolean func_230362_a_(@Nonnull ISeedReader worldIn, @Nonnull StructureManager structureManager, @Nonnull ChunkGenerator chunkGenerator, Random rand, @Nonnull BlockPos pos, @Nonnull NoFeatureConfig config) {
-        int i = 3;
+    public boolean func_241855_a(ISeedReader worldIn, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) {
         int j = rand.nextInt(2) + 2;
         int k = -j - 1;
         int l = j + 1;
-        int i1 = -1;
-        int j1 = 4;
         int k1 = rand.nextInt(2) + 2;
         int l1 = -k1 - 1;
         int i2 = k1 + 1;
         int j2 = 0;
 
-        for(int k2 = k; k2 <= l; ++k2) {
-            for(int l2 = -1; l2 <= 4; ++l2) {
+        for (int k2 = k; k2 <= l; ++k2) {
+            for (int l2 = -1; l2 <= 4; ++l2) {
                 for(int i3 = l1; i3 <= i2; ++i3) {
                     BlockPos blockpos = pos.add(k2, l2, i3);
                     Material material = worldIn.getBlockState(blockpos).getMaterial();
@@ -139,6 +134,8 @@ public class VampireDungeonFeature extends DungeonsFeature {
         } else {
             return false;
         }
+
     }
+
 
 }

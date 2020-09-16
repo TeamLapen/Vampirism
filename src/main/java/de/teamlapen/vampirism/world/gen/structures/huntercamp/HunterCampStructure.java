@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.config.BalanceConfig;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -43,7 +44,7 @@ public class HunterCampStructure extends Structure<NoFeatureConfig> {
         }
 
         @Override
-        public void func_230364_a_(ChunkGenerator generator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn, NoFeatureConfig featureConfig) {
+        public void func_230364_a_(DynamicRegistries registries, ChunkGenerator chunkGenerator, TemplateManager templateManager, int chunkX, int chunkZ, Biome biomeIn, NoFeatureConfig featureConfig) {
             HunterCampPieces.init(chunkX, chunkZ, biomeIn, this.rand, this.components);
             this.recalculateStructureSize();
         }

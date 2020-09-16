@@ -84,7 +84,7 @@ public class AdvancementGenerator extends AdvancementProvider {
             Advancement vampire_forest = Advancement.Builder.builder()
                     .withDisplay(Items.OAK_LOG, new TranslationTextComponent("advancement.vampirism.vampire_forest"), new TranslationTextComponent("advancement.vampirism.vampire_forest.desc"), null, FrameType.TASK, true, true, true)
                     .withParent(root)
-                    .withCriterion("main", PositionTrigger.Instance.forLocation(LocationPredicate.forBiome(ModBiomes.vampire_forest)))
+                    .withCriterion("main", PositionTrigger.Instance.forLocation(LocationPredicate.func_242665_a(ModBiomes.VAMPIRE_FOREST_KEY)))
                     .register(consumer, REFERENCE.MODID + ":main/vampire_forest");
             Advancement ancient_knowledge = Advancement.Builder.builder()
                     .withDisplay(ModItems.vampire_book, new TranslationTextComponent("advancement.vampirism.ancient_knowledge"), new TranslationTextComponent("advancement.vampirism.ancient_knowledge.desc"), null, FrameType.TASK, true, true, true)

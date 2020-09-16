@@ -1,12 +1,10 @@
 package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
-import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.converted.ConvertedCreatureEntity;
 import de.teamlapen.vampirism.entity.converted.ConvertedHorseEntity;
@@ -19,18 +17,13 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.passive.BatEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -136,12 +129,6 @@ public class ModEntities {
         registry.register(prepareEntityType("villager_angry", EntityType.Builder.create(AggressiveVillagerEntity::new, EntityClassification.CREATURE).size(0.6F, 1.95F), false));
         registry.register(prepareEntityType("villager_converted", EntityType.Builder.create(ConvertedVillagerEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), false));
         registry.register(prepareEntityType("converted_horse", EntityType.Builder.create(ConvertedHorseEntity::new, EntityClassification.CREATURE).size(1.3964844F, 1.6F), false));
-
-        //add to biomes
-        for (Biome e : getZombieBiomes()) {
-            e.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(vampire, BalanceMobProps.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 2));
-            e.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(advanced_vampire, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_SPAWN_PROBE, 1, 1));
-        }
     }
 
     static void registerSpawns() {
@@ -180,40 +167,6 @@ public class ModEntities {
         GlobalEntityTypeAttributes.put(vampire_baron, VampireBaronEntity.getAttributeBuilder().create());
         GlobalEntityTypeAttributes.put(villager_angry, AggressiveVillagerEntity.getAttributeBuilder().create());
         GlobalEntityTypeAttributes.put(villager_converted, ConvertedVillagerEntity.getAttributeBuilder().create());
-    }
-
-    private static Biome[] getZombieBiomes() {
-        Collection<Biome> allBiomes = ForgeRegistries.BIOMES.getValues();
-        /*
-         * After setting this up this array will contain only biomes in which zombies can spawn.
-         */
-        List<Biome> zombieBiomes = Lists.newArrayList();
-        zombieBiomes.addAll(allBiomes);
-        zombieBiomes.remove(ModBiomes.vampire_forest);
-        Iterator<Biome> iterator = zombieBiomes.iterator();
-        while (iterator.hasNext()) {
-            Biome b = iterator.next();
-            if (b != null) {
-                if (!b.getClass().getName().startsWith("de.teamlapen.")) {
-                    Iterator<Biome.SpawnListEntry> iterator2 = b.getSpawns(EntityClassification.MONSTER).iterator();
-                    boolean zombie = false;
-                    while (iterator2.hasNext()) {
-                        if (iterator2.next().entityType.equals(EntityType.ZOMBIE)) {
-                            zombie = true;
-                            break;
-                        }
-                    }
-                    if (!zombie) {
-                        LOGGER.debug("In biome {} no vampire will spawn", b);
-                        iterator.remove();
-                    }
-                }
-            }
-        }
-
-        return zombieBiomes.toArray(new Biome[zombieBiomes.size()]);
-
-
     }
 
     private static <T extends Entity> EntityType<T> prepareEntityType(String id, EntityType.Builder<T> builder, boolean spawnable) {

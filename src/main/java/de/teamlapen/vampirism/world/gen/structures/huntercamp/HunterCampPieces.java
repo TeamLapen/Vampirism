@@ -40,7 +40,7 @@ public abstract class HunterCampPieces extends StructurePiece {
     protected final Block baseBlock;
 
     public static void init(int chunkX, int chunkZ, Biome biomeIn, Random rand, List<StructurePiece> componentsIn) {
-        Fireplace hunterCamp = new Fireplace(rand, chunkX * 16 + rand.nextInt(16), 63, chunkZ * 16 + rand.nextInt(16), biomeIn.getSurfaceBuilderConfig().getTop().getBlock());
+        Fireplace hunterCamp = new Fireplace(rand, chunkX * 16 + rand.nextInt(16), 63, chunkZ * 16 + rand.nextInt(16), biomeIn.func_242440_e().func_242502_e().getTop().getBlock());
         componentsIn.add(hunterCamp);
         hunterCamp.buildComponent(hunterCamp, componentsIn, rand);
     }

@@ -12,28 +12,12 @@ import java.util.Set;
 public interface IWorldGenManager {
 
     /**
-     * add a structure which should not be generated in the listed biomes
-     *
-     * @param structure resourcelocation of the structure
-     * @param biomes    biomes
+     * @param featureRegistryName
+     * @param biomeRegistryKey
+     * @param biomeCategory
+     * @return Whether the given feature should be generated in the given biome id and category
      */
-    void removeStructureFromBiomes(ResourceLocation structure, List<Biome> biomes);
-
-    /**
-     * returns biomes in which the named structure shouldn't be generated
-     *
-     * @param structure resourcelocation of the structure
-     * @return set of biomes to ignore
-     */
-    Set<Biome> getIgnoredBiomes(ResourceLocation structure);
-
-    /**
-     * add a structure which should not be generated in the listed biome categories
-     *
-     * @param structure  resourcelocation of the structure
-     * @param categories categories
-     */
-    //void removeStructureFromBiomeCategories(ResourceLocation structure, List<BiomeDictionary.Type> categories);
+    boolean canStructureBeGeneratedInBiome(ResourceLocation featureRegistryName, ResourceLocation biomeRegistryKey, Biome.Category biomeCategory);
 
     /**
      * returns biome categories in which the named structure shouldn't be generated
@@ -41,10 +25,29 @@ public interface IWorldGenManager {
      * @param structure resourcelocation of the structure
      * @return set of biome categories to ignore
      */
-    //Set<BiomeDictionary.Type> getIgnoredBiomeCategories(ResourceLocation structure);
+    Set<Biome.Category> getIgnoredBiomeCategories(ResourceLocation structure);
 
     /**
-     * @return if the given structure can be generated in the given biome
+     * returns biomes in which the named structure shouldn't be generated
+     *
+     * @param structure resourcelocation of the structure
+     * @return set of biomes to ignore
      */
-    boolean canStructureBeGeneratedInBiome(ResourceLocation structure, Biome biome);
+    Set<ResourceLocation> getIgnoredBiomes(ResourceLocation structure);
+
+    /**
+     * add a structure which should not be generated in the listed biome categories
+     *
+     * @param structure  resourcelocation of the structure
+     * @param categories categories
+     */
+    void removeStructureFromBiomeCategories(ResourceLocation structure, List<Biome.Category> categories);
+
+    /**
+     * add a structure which should not be generated in the listed biomes
+     *
+     * @param structure resourcelocation of the structure
+     * @param biomes    biome ids
+     */
+    void removeStructureFromBiomes(ResourceLocation structure, List<ResourceLocation> biomes);
 }

@@ -53,6 +53,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
@@ -145,6 +146,7 @@ public class VampirismMod {
         registryManager = new RegistryManager();
         FMLJavaModLoadingContext.get().getModEventBus().register(registryManager);
         MinecraftForge.EVENT_BUS.register(registryManager);
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, ModBiomes::onBiomeLoadingEventAdditions);
 
         setupAPI1();
         setupAPI2();
