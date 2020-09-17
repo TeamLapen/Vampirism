@@ -47,7 +47,7 @@ public class ModBiomes {
         forestSpawnBuilder.func_242575_a(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.dummy_creature, BalanceMobProps.mobProps.DUMMY_CREATURE_SPAWN_CHANCE, 3, 6));
         forestBuilder.func_242458_a(forestSpawnBuilder.func_242577_b());
         forestBuilder.precipitation(Biome.RainType.NONE).category(Biome.Category.FOREST).depth(0.1F).scale(0.025f).temperature(0.3f).downfall(0);
-        biomeAmbienceBuilder.setWaterColor(0xEE2505).setWaterFogColor(0xEE2505).setMoodSound(MoodSoundAmbience.field_235027_b_);
+        biomeAmbienceBuilder.setWaterColor(0xEE2505).setWaterFogColor(0xEE2505).setMoodSound(MoodSoundAmbience.field_235027_b_).setFogColor(0xE0A0A0).func_242539_d(0xA08080);
         forestBuilder.func_235097_a_(biomeAmbienceBuilder.build());
 
 
@@ -62,7 +62,7 @@ public class ModBiomes {
 
 
         forestBuilder.func_242457_a(biomeGenBuilder.func_242508_a());
-        registry.register(forestBuilder.func_242455_a().setRegistryName(VAMPIRE_FOREST_KEY.getRegistryName()));
+        registry.register(forestBuilder.func_242455_a().setRegistryName(VAMPIRE_FOREST_KEY.func_240901_a_()));
     }
 
     static void addBiome() {
@@ -70,12 +70,14 @@ public class ModBiomes {
 //        if (!VampirismConfig.SERVER.disableVampireForest.get()) {
 //            BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(vampire_forest, VampirismConfig.BALANCE.vampireForestWeight.get()));
 //        }
+
+
     }
 
     /**
      * Use only for adding to biome lists
      * <p>
-     * Registered in mod contructor
+     * Registered in mod constructor
      */
     public static void onBiomeLoadingEventAdditions(BiomeLoadingEvent event) {
         if (event.getSpawns().getEntityTypes().contains(EntityType.ZOMBIE)) {
