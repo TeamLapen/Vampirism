@@ -90,7 +90,6 @@ public class PedestalBlock extends VampirismBlockContainer {
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (world.isRemote) return ActionResultType.SUCCESS;
         PedestalTileEntity tile = getTileEntity(world, pos);
         if (tile == null) return ActionResultType.SUCCESS;
         ItemStack stack = player.getHeldItem(hand);

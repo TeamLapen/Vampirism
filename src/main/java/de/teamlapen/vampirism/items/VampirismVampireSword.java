@@ -20,7 +20,6 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
 import net.minecraft.nbt.ByteNBT;
@@ -207,7 +206,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      * If the stack is not named and the player hasn't been named before, ask the player to name this stack
      */
     public void tryName(ItemStack stack, PlayerEntity player) {
-        if (!stack.hasDisplayName() && player instanceof ServerPlayerEntity && (!stack.hasTag() || !stack.getTag().getBoolean("dont_name"))) {
+        if (!stack.hasDisplayName() && player.world.isRemote() && (!stack.hasTag() || !stack.getTag().getBoolean("dont_name"))) {
             VampirismMod.proxy.displayNameSwordScreen(stack);
             player.world.playSound((player).getPosX(), (player).getPosY(), (player).getPosZ(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1f, 1f, false);
         }
