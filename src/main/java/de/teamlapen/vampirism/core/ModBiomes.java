@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -77,8 +76,6 @@ public class ModBiomes {
 
 
         VampirismAPI.sundamageRegistry().addNoSundamageBiomes(VAMPIRE_FOREST_KEY.func_240901_a_());
-        VampirismAPI.worldGenRegistry().removeStructureFromBiomes(ModFeatures.hunter_camp.getRegistryName(), Lists.newArrayList(ModBiomes.vampire_forest.getRegistryName()));
-
     }
 
     /**
