@@ -5,48 +5,27 @@ import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-
-import javax.annotation.Nonnull;
 
 /**
  * Manages sundamage for biomes and dimensions
  */
 public interface ISundamageRegistry {
 
-    /**
-     * Register a biome by id in which no sundamage applies to vampires
-     */
-    void addNoSundamageBiome(ResourceLocation registryName);
 
     /**
-     * Register a biome by class in which no sundamage applies to vampires
-     * Also affects subclasses
-     *
-     * @param clazz Biome class or interface
-     */
-    void addNoSundamageBiome(Class clazz);
-
-    /**
-     * Register a biome by instance in which no sundamage applies to vampires.
-     * Also effects subclasses of given biomes
+     * Register a biome by instance in which no sundamage applies to vampires.*
      *
      * @param biomes
      */
-    void addNoSundamageBiomes(Biome... biomes);
+    void addNoSundamageBiomes(ResourceLocation... biomes);
 
     /**
      * Checkd if vampirs can get sundamage in that biome
      *
-     * @return
+     * @return Whether vampires can get sundamage in that biome
      */
-    @Deprecated
     boolean getSundamageInBiome(ResourceLocation registryName);
 
-    /**
-     * @return If sundamage applies to vampires in this biome
-     */
-    boolean getSundamageInBiome(@Nonnull Biome biome);
 
     /**
      * Checks if vampires can get sundamge in that dimension

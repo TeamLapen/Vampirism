@@ -2,7 +2,7 @@ package de.teamlapen.lib.lib.util;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
+import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,7 +55,7 @@ public class ModCompatLoader implements IInitListener {
     }
 
     @Override
-    public void onInitStep(Step step, ModLifecycleEvent event) {
+    public void onInitStep(Step step, ParallelDispatchEvent event) {
         if (step == Step.COMMON_SETUP) {
             prepareModCompats(FMLPaths.CONFIGDIR.get().toFile());
         }

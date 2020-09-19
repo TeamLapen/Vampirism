@@ -21,9 +21,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.util.RegistryKey;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.IBiomeReader;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -36,6 +39,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 
 public class Helper {
@@ -64,7 +68,7 @@ public class Helper {
                     BlockPos pos = new BlockPos(entity.getPosX(), entity.getPosY() + MathHelper.clamp(entity.getHeight() / 2.0F, 0F, 2F), entity.getPosZ());
                     if (canBlockSeeSun(world, pos)) {
                         try {
-                            Biome biome = world.getBiome(pos);
+                            ResourceLocation biome = getBiomeId(world, pos);
                             if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biome)) {
                                 if (!TotemTileEntity.isInsideVampireAreaCached(worldKey, new BlockPos(entity.getPosX(), entity.getPosY() + 1, entity.getPosZ()))) { //For some reason client returns different value for #getPosition than server
                                     if (profiler != null) profiler.endSection();
@@ -176,13 +180,23 @@ public class Helper {
 
     public static boolean isEntityInVampireBiome(Entity e) {
         if (e == null) return false;
-        try {
-            return ModBiomes.vampire_forest.getRegistryName().equals(e.getEntityWorld().getBiome(e.getPosition()).getRegistryName());
-        } catch (NullPointerException e1) {
-            //http://openeye.openmods.info/crashes/8cef4d710e41adf9be8362e57ad70d28
-            LOGGER.error("Nullpointer when checking biome. This is strange and should not happen", e1);
-            return false;
-        }
+        World w = e.getEntityWorld();
+        Biome b = w.getBiome(e.getPosition());
+        ResourceLocation biomeId = getBiomeId(w, b);
+        Objects.requireNonNull(biomeId, "Cannot determine id of local biome");
+        return ModBiomes.vampire_forest.getRegistryName().equals(biomeId);
+    }
+
+    public static ResourceLocation getBiomeId(Entity e) {
+        return getBiomeId(e.getEntityWorld(), e.getPosition());
+    }
+
+    public static ResourceLocation getBiomeId(IBiomeReader world, BlockPos pos) {
+        return getBiomeId(world, world.getBiome(pos));
+    }
+
+    public static ResourceLocation getBiomeId(IBiomeReader world, Biome biome) {
+        return world.func_241828_r().func_243612_b(Registry.BIOME_KEY).getKey(biome);
     }
 
     /**

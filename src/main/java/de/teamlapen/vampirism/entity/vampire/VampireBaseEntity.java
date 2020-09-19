@@ -277,7 +277,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
      * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#cursed_earth}
      */
     private boolean getCanSpawnHereRestricted(IWorld iWorld) {
-        boolean vampireBiome = ModBiomes.vampire_forest.equals(iWorld.getBiome(this.getPosition()));
+        boolean vampireBiome = ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(iWorld, this.getPosition()));
         if (!vampireBiome) return isLowLightLevel(iWorld);
         BlockState iblockstate = iWorld.getBlockState((this.getPosition()).down());
         return ModBlocks.cursed_earth.equals(iblockstate.getBlock());

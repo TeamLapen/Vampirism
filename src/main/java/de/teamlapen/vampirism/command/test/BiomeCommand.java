@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -22,7 +23,7 @@ public class BiomeCommand extends BasicCommand {
     }
 
     private static int biome(CommandSource commandSource, ServerPlayerEntity asPlayer) {
-        ResourceLocation res = asPlayer.getEntityWorld().getBiome(asPlayer.getPosition()).getRegistryName();
+        ResourceLocation res = Helper.getBiomeId(asPlayer);
         commandSource.sendFeedback(new StringTextComponent(res.toString()), true);
         return 0;
     }

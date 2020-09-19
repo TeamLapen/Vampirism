@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.modcompat;
 
 import de.teamlapen.lib.lib.util.IModCompat;
-import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
+import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 
 
 public class SpongeModCompat implements IModCompat {
@@ -13,7 +13,7 @@ public class SpongeModCompat implements IModCompat {
     }
 
     @Override
-    public void onInitStep(Step step, ModLifecycleEvent event) {
+    public void onInitStep(Step step, ParallelDispatchEvent event) {
 
     }
 }

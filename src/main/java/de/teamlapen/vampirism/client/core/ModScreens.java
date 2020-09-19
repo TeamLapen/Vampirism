@@ -6,8 +6,11 @@ import de.teamlapen.vampirism.inventory.container.*;
 import net.minecraft.client.gui.ScreenManager;
 
 public class ModScreens {
+    /**
+     * Call on serial loading queue to avoid possible issues with parallel access
+     */
     @SuppressWarnings("RedundantTypeArguments")
-    public static void registerScreens() {
+    public static void registerScreensUnsafe() {
         ScreenManager.<HunterTableContainer, HunterTableScreen>registerFactory(ModContainer.hunter_table, HunterTableScreen::new);
         ScreenManager.<AlchemicalCauldronContainer, AlchemicalCauldronScreen>registerFactory(ModContainer.alchemical_cauldron, AlchemicalCauldronScreen::new);
         ScreenManager.<BloodPotionTableContainer, BloodPotionTableScreen>registerFactory(ModContainer.blood_potion_table, BloodPotionTableScreen::new);

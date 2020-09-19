@@ -9,11 +9,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -26,7 +25,6 @@ public class SundamageRegistry implements ISundamageRegistry {
     private final HashMap<RegistryKey<World>, Boolean> sundamageConfiguredDims = new HashMap<>();
     private final Set<ResourceLocation> noSundamageBiomesIDs = new CopyOnWriteArraySet<>();
     private final Set<ResourceLocation> noSundamageConfiguredBiomesIDs = new CopyOnWriteArraySet<>();
-    private final Set<Class> noSundamageBiomes = new CopyOnWriteArraySet<>();
 
     public SundamageRegistry() {
         sundamageDims.put(World.field_234918_g_, true);
@@ -34,42 +32,20 @@ public class SundamageRegistry implements ISundamageRegistry {
         sundamageDims.put(World.field_234920_i_, false);
     }
 
-    @Override
-    public void addNoSundamageBiome(ResourceLocation registryName) {
-        noSundamageBiomesIDs.add(registryName);
-    }
-
-    @Override
-    public void addNoSundamageBiome(Class clazz) {
-        noSundamageBiomes.add(clazz);
-    }
 
     public void addNoSundamageBiomeConfigured(ResourceLocation id) {
         noSundamageConfiguredBiomesIDs.add(id);
     }
 
     @Override
-    public void addNoSundamageBiomes(Biome... biomes) {
-        for (Biome b : biomes) {
-            addNoSundamageBiome(b.getClass());
-        }
+    public void addNoSundamageBiomes(ResourceLocation... biomes) {
+        noSundamageBiomesIDs.addAll(Arrays.asList(biomes));
     }
 
     @Deprecated
     @Override
     public boolean getSundamageInBiome(ResourceLocation registryName) {
         return !noSundamageBiomesIDs.contains(registryName) && !noSundamageConfiguredBiomesIDs.contains(registryName);
-    }
-
-    @Override
-    public boolean getSundamageInBiome(@Nonnull Biome biome) {
-        if (!getSundamageInBiome(biome.getRegistryName())) return false;
-        for (Class clazz : noSundamageBiomes) {
-            if (clazz.isAssignableFrom(biome.getClass())) {
-                return false;
-            }
-        }
-        return true;
     }
 
     @Override

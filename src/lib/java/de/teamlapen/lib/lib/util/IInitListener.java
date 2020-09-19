@@ -2,13 +2,13 @@ package de.teamlapen.lib.lib.util;
 
 
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
-import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
+import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 
 /**
  * Simple interface which provides ClientSetup, CommonSetup and LoadComplete.
  */
 public interface IInitListener {
-    default void onInitStep(Step step, ModLifecycleEvent event) {
+    default void onInitStep(Step step, ParallelDispatchEvent event) {
     }
 
     default void onGatherData(GatherDataEvent event) {

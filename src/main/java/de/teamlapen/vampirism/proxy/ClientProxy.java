@@ -44,7 +44,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
+import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -143,7 +143,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void onInitStep(Step step, ModLifecycleEvent event) {
+    public void onInitStep(Step step, ParallelDispatchEvent event) {
         super.onInitStep(step, event);
         switch (step) {
             case CLIENT_SETUP:
@@ -157,7 +157,7 @@ public class ClientProxy extends CommonProxy {
                 ModBlocksRender.registerColors();
                 ModItemsRender.registerColors();
                 ModParticleFactories.registerFactories();
-                ModScreens.registerScreens();
+                event.enqueueWork(ModScreens::registerScreensUnsafe);
                 skillTreeManager.init();
                 registerVampireEntityOverlays();
                 break;

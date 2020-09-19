@@ -31,7 +31,7 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
-import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
+import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import net.minecraftforge.registries.ObjectHolderRegistry;
 
 
@@ -49,10 +49,10 @@ public class RegistryManager implements IInitListener {
     }
 
     @Override
-    public void onInitStep(Step step, ModLifecycleEvent event) {
+    public void onInitStep(Step step, ParallelDispatchEvent event) {
         switch (step) {
             case COMMON_SETUP:
-                ModBiomes.addBiome();
+                event.enqueueWork(ModBiomes::addBiomesToGeneratorUnsafe);
                 ModFeatures.registerIgnoredBiomesForStructures();
                 ModEntities.registerConvertibles();
                 ModEntities.registerSpawns();

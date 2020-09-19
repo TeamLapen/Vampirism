@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.vampirism.player.skills.SkillTree;
 import de.teamlapen.vampirism.player.skills.SkillTreeManager;
-import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
+import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 
 /**
  * Abstract proxy base for both client and server.
@@ -19,6 +19,6 @@ public abstract class CommonProxy implements IProxy {
     }
 
     @Override
-    public void onInitStep(Step step, ModLifecycleEvent event) {
+    public void onInitStep(Step step, ParallelDispatchEvent event) {
     }
 }

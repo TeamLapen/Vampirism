@@ -18,7 +18,7 @@ public class IMCHandler {
             Object value = msg.getMessageSupplier().get();
             if (value instanceof ResourceLocation) {
                 LOGGER.info("Received no sundamage biome {} from {}", value, msg.getSenderModId());
-                sundamageRegistry.addNoSundamageBiome((ResourceLocation) value);
+                sundamageRegistry.addNoSundamageBiomes((ResourceLocation) value);
             } else {
                 LOGGER.error("Received invalid nosundamage-biome thing {} from {}", value, msg.getSenderModId());
             }
