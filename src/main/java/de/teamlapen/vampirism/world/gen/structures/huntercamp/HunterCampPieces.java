@@ -23,6 +23,7 @@ import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
+import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -49,7 +50,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         this.setBoundingBox();
 
         //fail conditions
-        return testPreconditions(worldIn);
+        return testPreconditions(worldIn, chunkPosIn.x, chunkPosIn.z);
     }
 
     public static class Fireplace extends HunterCampPieces {
@@ -257,8 +258,8 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        protected boolean testPreconditions(IWorld worldIn) {
-            return super.testPreconditions(worldIn)
+        protected boolean testPreconditions(IWorld worldIn, int chunkX, int chunkY) {
+            return super.testPreconditions(worldIn, chunkX, chunkY)
                     && !worldIn.getBlockState(new BlockPos(xCenter, y - 1, z - 1)).getMaterial().isLiquid()
                     && !worldIn.getBlockState(new BlockPos(x, y - 1, z - 1)).getMaterial().isLiquid()
                     && !worldIn.getBlockState(new BlockPos(xCenter, y - 1, z)).getMaterial().isLiquid()
@@ -341,13 +342,18 @@ public abstract class HunterCampPieces extends StructurePiece {
 
 
         @Override
-        protected boolean testPreconditions(IWorld worldIn) {
-            return super.testPreconditions(worldIn)
+        protected boolean testPreconditions(IWorld worldIn, int chunkX, int chunkY) {
+            return super.testPreconditions(worldIn, chunkX, chunkY)
                     && (Math.abs(this.y - worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0), this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0))) < 3);
         }
     }
 
-    protected boolean testPreconditions(IWorld worldIn) {
+    protected boolean testPreconditions(IWorld worldIn, int chunkX, int chunkY) {
+        for (StructureStart value : worldIn.getChunk(chunkX, chunkY).getStructureStarts().values()) {
+            if (value != StructureStart.DUMMY && value.getStructure() != ModFeatures.hunter_camp) {
+                return false;
+            }
+        }
         return this.y >= 63
                 && !worldIn.getBlockState(new BlockPos(x, y - 1, z)).getMaterial().isLiquid()
                 && !Structure.VILLAGE.isPositionInStructure(worldIn, new BlockPos(x, y, z));
