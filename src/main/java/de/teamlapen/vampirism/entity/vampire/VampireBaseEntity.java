@@ -41,7 +41,7 @@ import java.util.Random;
  * Base class for Vampirism's vampire entities
  */
 @SuppressWarnings("EntityConstructor")
-public abstract class VampireBaseEntity extends VampirismEntity implements IVampireMob {
+public abstract class VampireBaseEntity extends VampirismEntity implements IVampireMob, INPC/*mainly for JourneyMap*/ {
 
     public static boolean spawnPredicateVampire(EntityType<? extends VampirismEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
         return world.getDifficulty() != Difficulty.PEACEFUL && (spawnPredicateLight(world, blockPos, random) || spawnPredicateVampireFog(world, blockPos)) && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);

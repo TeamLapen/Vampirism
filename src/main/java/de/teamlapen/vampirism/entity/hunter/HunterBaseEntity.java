@@ -3,10 +3,7 @@ package de.teamlapen.vampirism.entity.hunter;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.VampirismEntity;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -22,11 +19,12 @@ import java.util.Random;
  * Base class for all vampire hunter
  */
 @SuppressWarnings("EntityConstructor")
-public abstract class HunterBaseEntity extends VampirismEntity implements IHunterMob {
+public abstract class HunterBaseEntity extends VampirismEntity implements IHunterMob, INPC/*mainly for JourneyMap*/ {
 
     public static boolean spawnPredicateHunter(EntityType<? extends HunterBaseEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
         return world.getDifficulty() != Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
     }
+
     private final boolean countAsMonster;
     protected final int MOVE_TO_RESTRICT_PRIO = 3;
 
