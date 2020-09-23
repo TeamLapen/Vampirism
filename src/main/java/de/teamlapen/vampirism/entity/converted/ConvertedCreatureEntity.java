@@ -120,7 +120,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
             return super.getName();
         }
         if (name == null) {
-            this.name = new TranslationTextComponent("text.vampirism.vampire").appendString(" ").append((nil() ? super.getName() : entityCreature.getName()));
+            this.name = new TranslationTextComponent("entity.vampirism.vampire").appendString(" ").append((nil() ? super.getName() : entityCreature.getName()));
         }
         return name;
     }
