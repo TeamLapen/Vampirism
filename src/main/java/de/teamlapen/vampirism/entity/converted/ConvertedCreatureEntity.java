@@ -25,7 +25,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -124,7 +123,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
             return super.getName();
         }
         if (name == null) {
-            this.name = new StringTextComponent(new TranslationTextComponent("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName()));
+            this.name = new TranslationTextComponent("entity.vampirism.vampire").appendText(" ").appendSibling((nil() ? super.getName() : entityCreature.getName()));
         }
         return name;
     }
