@@ -45,6 +45,8 @@ public class ModWorld {
 
         ModWorld.replaceTemples(structures.getFirst());
 
+        addVillageStructures(structures.getFirst());
+
         ModWorld.saveChanges(structures.getFirst(), structures.getSecond());
 
     }
@@ -52,10 +54,14 @@ public class ModWorld {
     public static void addVillageStructures() {
         Pair<Map<String, List<Pair<JigsawPiece, Integer>>>, Map<String, JigsawPattern>> structures = getStructures();
 
-        ModWorld.addHunterTrainerHouse(structures.getFirst());
-        ModWorld.addTotem(structures.getFirst());
+        addVillageStructures(structures.getFirst());
 
         ModWorld.saveChanges(structures.getFirst(), structures.getSecond());
+    }
+
+    public static void addVillageStructures(Map<String, List<Pair<JigsawPiece, Integer>>> map) {
+        ModWorld.addHunterTrainerHouse(map);
+        ModWorld.addTotem(map);
     }
 
     //
