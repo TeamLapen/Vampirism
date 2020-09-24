@@ -1,3 +1,4 @@
 {
-  "entity_attributes": "META-INF/coremods/entity_attributes.js"
+  "entity_attributes": "META-INF/coremods/entity_attributes.js",
+  "jigsaw": "META-INF/coremods/jigsaw.js"
 }
