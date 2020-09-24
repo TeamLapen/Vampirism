@@ -25,16 +25,16 @@ function initializeCoreMod() {
                 var indexOfFirstHasNext = method.instructions.indexOf(firstHasNext);
                 var secondHasNext = ASM.findFirstMethodCallAfter(method, ASM.MethodType.INTERFACE, "java/util/Iterator", "hasNext", "()Z", indexOfFirstHasNext + 1); //Search for next hasNext (IMPORTANT findFirstMethodCallAfter requires +1 to look for next one
                 var indexOfSecondHasNext = method.instructions.indexOf(secondHasNext);
-                print("Found " + indexOfFirstHasNext + " " + secondHasNext);
+                // print("Found " + indexOfFirstHasNext + " " + secondHasNext);
 
                 var loopBeginLabel = method.instructions.get(indexOfSecondHasNext - 3);
-                print("Found begin label: " + loopBeginLabel + " " + loopBeginLabel.getType());
+                // print("Found begin label: " + loopBeginLabel + " " + loopBeginLabel.getType());
 
                 var loopStart = method.instructions.get(indexOfSecondHasNext + 6);
-                print("Found loop start " + loopStart + " " + loopStart.getType());
-                for (var i = -3; i < 10; i++) {
-                    print("N " + i + " " + method.instructions.get(indexOfSecondHasNext + 6 + i));
-                }
+                // print("Found loop start " + loopStart + " " + loopStart.getType());
+                // for (var i = -3; i < 10; i++) {
+                //     print("N " + i + " " + method.instructions.get(indexOfSecondHasNext + 6 + i));
+                // }
 
 
                 //Insert                                 if(ASMHooks.checkStructures(this.structurePieces,lvt_27_1_))continue ;
@@ -82,7 +82,7 @@ function initializeCoreMod() {
                L42
                  */
 
-                print("Completed transformation");
+                // print("Completed transformation");
                 return method;
             }
         }
