@@ -17,6 +17,7 @@ import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
+import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
@@ -57,6 +58,7 @@ public class ModBiomes {
         List<RegistryKey<Biome>> modList = new ArrayList<>(OverworldBiomeProvider.field_226847_e_);
         modList.add(RegistryKey.func_240903_a_(Registry.BIOME_KEY, new ResourceLocation(REFERENCE.MODID, "vampire_forest")));
         OverworldBiomeProvider.field_226847_e_ = ImmutableList.copyOf(modList);
+        BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_KEY, VampirismConfig.BALANCE.vampireForestWeight.get()));
     }
 
     /**
