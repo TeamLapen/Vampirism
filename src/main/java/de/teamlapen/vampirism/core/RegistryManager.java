@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
+import de.teamlapen.vampirism.world.biome.VampirismBiomeFeatures;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
@@ -63,6 +64,7 @@ public class RegistryManager implements IInitListener {
                 ModCommands.registerArgumentTypes();
                 ModLoot.registerLootConditions();
                 ModLoot.registerLootFunctionType();
+                VampirismBiomeFeatures.init();
             case LOAD_COMPLETE:
                 if (ModEffects.checkNightVision()) {
                     ModEffects.fixNightVisionEffecTypes();

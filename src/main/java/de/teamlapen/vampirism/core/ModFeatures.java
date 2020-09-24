@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.world.gen.features.ModLakeFeature;
 import de.teamlapen.vampirism.world.gen.features.VampireDungeonFeature;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampStructure;
@@ -13,6 +14,7 @@ import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.DimensionSettings;
 import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.feature.BlockStateFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
@@ -30,6 +32,7 @@ public class ModFeatures {
     private static final Logger LOGGER = LogManager.getLogger();
     //features
     public static final VampireDungeonFeature vampire_dungeon = new VampireDungeonFeature(NoFeatureConfig.field_236558_a_);
+    public static final ModLakeFeature mod_lake = new ModLakeFeature(BlockStateFeatureConfig.field_236455_a_);
 
     //structures
     public static final Structure<NoFeatureConfig> hunter_camp = new HunterCampStructure(NoFeatureConfig.field_236558_a_/*deserialize*/);
@@ -46,6 +49,7 @@ public class ModFeatures {
 
     static void registerFeatures(IForgeRegistry<Feature<?>> registry) {
         registry.register(vampire_dungeon.setRegistryName(REFERENCE.MODID, "vampire_dungeon"));
+        registry.register(mod_lake.setRegistryName(REFERENCE.MODID, "mod_lake"));
     }
 
     static void registerStructures(IForgeRegistry<Structure<?>> registry) {
