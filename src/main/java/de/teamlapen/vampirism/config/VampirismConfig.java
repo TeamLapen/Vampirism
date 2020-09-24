@@ -129,6 +129,8 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue disableVampireForest;
         public final ForgeConfigSpec.BooleanValue disableHunterTentGen;
 
+        public final ForgeConfigSpec.BooleanValue oldVampireBiomeGen;
+
         public final ForgeConfigSpec.BooleanValue infoAboutGuideAPI;
 
 
@@ -207,6 +209,7 @@ public class VampirismConfig {
 
             builder.push("internal");
             infoAboutGuideAPI = builder.comment("Send message about Guide-API once").define("infoAboutGuideAPI", true);
+            oldVampireBiomeGen = builder.comment("If world was generated using the old vampirism biome").define("oldVampireBiomeGen", true);
             builder.pop();
 
             builder.pop();
