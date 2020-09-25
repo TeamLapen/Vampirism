@@ -14,7 +14,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
@@ -33,9 +34,9 @@ public class PageTable extends Page {
      * Max char count in one cell for each column
      */
     private final int[] width;
-    private final ITextComponent headline;
+    private final IFormattableTextComponent headline;
 
-    private PageTable(List<String[]> lines, int[] width, ITextComponent headline) {
+    private PageTable(List<String[]> lines, int[] width, IFormattableTextComponent headline) {
         this.lines = lines;
         this.width = width;
         this.headline = headline;
@@ -49,7 +50,7 @@ public class PageTable extends Page {
         int y = guiTop + 12;
         int x = guiLeft + 39;
         if (headline != null) {
-            fontRendererObj.drawString(stack, "§l" + headline, x, y, 0);
+            fontRendererObj.func_243248_b(stack, headline.mergeStyle(TextFormatting.BOLD), x, y, 0);
             y += fontRendererObj.FONT_HEIGHT;
         }
         drawLine(stack, x, y + fontRendererObj.FONT_HEIGHT, x + (guiBase.xSize * 3F / 5F), y + fontRendererObj.FONT_HEIGHT, guiBase.publicZLevel);
@@ -89,7 +90,7 @@ public class PageTable extends Page {
     public static class Builder {
         int columns;
         List<String[]> lines;
-        ITextComponent headline;
+        IFormattableTextComponent headline;
 
         public Builder(int columns) {
             this.columns = columns;
@@ -129,7 +130,7 @@ public class PageTable extends Page {
             return new PageTable(lines, width, headline);
         }
 
-        public Builder setHeadline(ITextComponent s) {
+        public Builder setHeadline(IFormattableTextComponent s) {
             headline = s;
             return this;
         }

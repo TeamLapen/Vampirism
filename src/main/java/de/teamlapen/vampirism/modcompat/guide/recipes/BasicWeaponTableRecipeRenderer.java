@@ -13,11 +13,11 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModBlocks;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -41,9 +41,8 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
 
 
         CRAFTING_GRID.draw(stack, guiLeft + 62, guiTop + 43);
-
-        AbstractGui.drawCenteredString(stack, fontRenderer, UtilLib.translate(ModBlocks.weapon_table.getTranslationKey()), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
-        AbstractGui.drawCenteredString(stack, fontRenderer, "§o" + getRecipeName() + "§r", guiLeft + baseScreen.xSize / 2, guiTop + 14 + fontRenderer.FONT_HEIGHT, 0);
+        baseScreen.drawCenteredStringWithoutShadow(stack, fontRenderer, ModBlocks.weapon_table.getTranslatedName(), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
+        baseScreen.drawCenteredStringWithoutShadow(stack, fontRenderer, getRecipeName().modifyStyle(style -> style.setItalic(true)), guiLeft + baseScreen.xSize / 2, guiTop + 14 + fontRenderer.FONT_HEIGHT, 0);
 
         int outputX = guiLeft + 152;
         int outputY = guiTop + 72;
@@ -77,8 +76,8 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
         }
     }
 
-    protected String getRecipeName() {
-        return UtilLib.translate("guideapi.text.crafting.shaped");
+    protected IFormattableTextComponent getRecipeName() {
+        return new TranslationTextComponent("guideapi.text.crafting.shaped");
     }
 
 

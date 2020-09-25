@@ -587,7 +587,7 @@ public class UtilLib {
         } else {
             try {
                 pattern = replaceDeprecatedFormatter(pattern);
-                return ForgeI18n.parseFormat(pattern, format);
+                return ForgeI18n.parseFormat(pattern, Arrays.stream(format).map(o -> o instanceof ITextComponent ? ((ITextComponent) o).getString() : o).toArray());
             } catch (IllegalArgumentException e) {
                 LOGGER.error("Illegal format found `{}`", pattern);
                 return pattern;

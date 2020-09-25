@@ -122,7 +122,7 @@ public class ItemInfoBuilder {
     public void build(Map<ResourceLocation, EntryAbstract> entries) {
         ArrayList<IPage> pages = new ArrayList<>();
         String base = "guide.vampirism." + (block ? "blocks" : "items") + "." + name;
-        pages.addAll(PageHelper.pagesForLongText(GuideBook.translate(base + ".text", formats), ingredient));
+        pages.addAll(PageHelper.pagesForLongText(GuideBook.translateComponent(base + ".text", formats), ingredient));
         for (ResourceLocation id : recipes) {
             pages.add(GuideHelper.getRecipePage(id));
         }
