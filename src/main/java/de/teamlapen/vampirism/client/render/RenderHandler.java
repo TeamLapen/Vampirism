@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
@@ -16,7 +15,6 @@ import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.FogRenderer;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.OutlineLayerBuffer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -30,7 +28,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.BatEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.EffectInstance;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -146,17 +143,17 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
             }
         }
 
-        //Saturation shader
-        if (mc.player != null && mc.player.getRNG().nextInt(10) == 3) {
-            EffectInstance pe = mc.player.getActivePotionEffect(ModEffects.saturation);
-            boolean active = pe != null && pe.getAmplifier() >= 2;
-            GameRenderer renderer = mc.gameRenderer;
-            if (active && renderer.getShaderGroup() == null) {
-                renderer.loadShader(saturation1);
-            } else if (!active && renderer.getShaderGroup() != null && renderer.getShaderGroup().getShaderGroupName().equals(saturation1.toString())) {
-                renderer.stopUseShader();
-            }
-        }
+        //Saturation shader BUGGED this renderes the hotbar white
+//        if (mc.player != null && mc.player.getRNG().nextInt(10) == 3) {
+//            EffectInstance pe = mc.player.getActivePotionEffect(ModEffects.saturation);
+//            boolean active = pe != null && pe.getAmplifier() >= 2;
+//            GameRenderer renderer = mc.gameRenderer;
+//            if (active && renderer.getShaderGroup() == null) {
+//                renderer.loadShader(saturation1);
+//            } else if (!active && renderer.getShaderGroup() != null && renderer.getShaderGroup().getShaderGroupName().equals(saturation1.toString())) {
+//                renderer.stopUseShader();
+//            }
+//        }
 
 
     }
