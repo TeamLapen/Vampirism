@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -12,7 +11,6 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.tileentity.TotemHelper;
-import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -89,10 +87,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
      */
     private int displayHeight, displayWidth;
     private boolean isInsideBloodVisionRendering = false;
-    /**
-     * Temporarily stores if the hunter disguise blend profile has been enabled. (From RenderPlayer.Pre to RenderPlayer.Post)
-     */
-    private boolean hunterDisguiseEnabled;
+
     @Nullable
     private Shader blur1, blur2, blit0;
 
@@ -269,25 +264,6 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
             float f = MathHelper.lerp(partialTicks, entityBat.prevRotationYaw, entityBat.rotationYaw);
             mc.getRenderManager().renderEntityStatic(entityBat, d0, d1, d2, f, partialTicks, event.getMatrixStack(), mc.getRenderTypeBuffers().getBufferSource(), mc.getRenderManager().getPackedLight(entityBat, partialTicks));
 
-        } else if (HunterPlayer.getOpt(player).map(HunterPlayer::getSpecialAttributes).map(HunterPlayerSpecialAttribute::isDisguised).orElse(false)) {
-            if (!player.equals(this.mc.player)) {
-                double distSq = player.getDistanceSq(this.mc.player);
-                if (distSq > VampirismConfig.BALANCE.haDisguiseInvisibleSQ.get()) {
-                    event.setCanceled(true);
-                } else {
-                    hunterDisguiseEnabled = true;
-                    enableProfile(Profile.HUNTER_DISGUISE, MathHelper.clamp((float) (distSq / VampirismConfig.BALANCE.haDisguiseInvisibleSQ.get() * 25), 0, 1) * HunterPlayer.getOpt(player).map(HunterPlayer::getSpecialAttributes).map(HunterPlayerSpecialAttribute::getDisguiseProgress).orElse(0f));
-                }
-            }
-
-
-        }
-    }
-
-    @SubscribeEvent
-    public void onRenderPlayerPost(RenderPlayerEvent.Post event) {
-        if (hunterDisguiseEnabled) {
-            disableProfile(Profile.HUNTER_DISGUISE);
         }
     }
 
@@ -329,19 +305,6 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
 
     }
 
-    private void disableProfile(Profile profile) {
-        profile.clean();
-    }
-
-    private void enableProfile(Profile profile, float progress) {
-        progress = MathHelper.clamp(progress, 0, 1);
-        profile.apply(progress);
-    }
-
-    private void enableProfile(Profile profile) {
-        profile.apply(1);
-    }
-
     private float getBloodVisionProgress(float partialTicks) {
         return (bloodVisionTicks + (bloodVisionTicks - lastBloodVisionTicks) * partialTicks) / (float) BLOOD_VISION_FADE_TICKS;
     }
@@ -377,40 +340,6 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         if (this.blurShader != null) {
             this.blurShader.createBindFramebuffers(width, height);
         }
-    }
-
-
-    private enum Profile {
-        HUNTER_DISGUISE {
-            @Override
-            public void apply(float progress) {
-                RenderSystem.color4f(1F, 1F, 1F, 1 - progress * 0.8F);
-                if (progress >= 1F) {
-                    RenderSystem.depthMask(false);
-                }
-                RenderSystem.enableBlend();
-                RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-                RenderSystem.alphaFunc(516, 0.003921569F);
-            }
-
-            @Override
-            public void clean() {
-                RenderSystem.disableBlend();
-                RenderSystem.alphaFunc(516, 0.1F);
-                RenderSystem.depthMask(true);
-                RenderSystem.color4f(1F, 1F, 1F, 1F);
-            }
-        };
-
-        Profile() {
-        }
-
-        /**
-         * @param progress If dynamic this can be a value between 0 and 1 to fade the effect.
-         */
-        public abstract void apply(float progress);
-
-        public abstract void clean();
     }
 
 }
