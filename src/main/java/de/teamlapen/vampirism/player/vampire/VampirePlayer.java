@@ -147,7 +147,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private EnumStrength garlic_cache = EnumStrength.NONE;
     private int eyeType = 0;
     private int fangType = 0;
-    private boolean glowingEyes = true;
+    private boolean glowingEyes = false;
     private int ticksInSun = 0;
     private boolean wasDead = false;
     private final List<IVampireVision> unlockedVisions = new ArrayList<>();
@@ -500,7 +500,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         bloodStats.readNBT(nbt);
         eyeType = nbt.getInt(KEY_EYE);
         fangType = nbt.getInt(KEY_FANGS);
-        glowingEyes = !nbt.contains(KEY_GLOWING_EYES) || nbt.getBoolean(KEY_GLOWING_EYES);
+        glowingEyes = nbt.getBoolean(KEY_GLOWING_EYES);
         actionHandler.loadFromNbt(nbt);
         skillHandler.loadFromNbt(nbt);
     }
@@ -1070,6 +1070,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             this.setFangType(data[0]);
             if (data.length > 1) {
                 this.setEyeType(data[1]);
+                if (data.length > 2) {
+                    this.setGlowingEyes(data[2] > 0);
+                }
             }
         }
     }
