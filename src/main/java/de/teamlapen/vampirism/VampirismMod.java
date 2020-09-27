@@ -93,13 +93,13 @@ public class VampirismMod {
      * {@link VReference} instead of this one. This is only here to init it as early
      * as possible
      */
-    private final static EntityClassification HUNTER_CREATURE_TYPE = EntityClassification.MONSTER;//EntityClassification.create("vampirism_hunter", "vampirism_hunter", 25, false, false, 128);
+    private final static EntityClassification HUNTER_CREATURE_TYPE = EntityClassification.create("vampirism_hunter", "vampirism_hunter", 25, false, false, 128);
     /**
      * Vampire creatures are of this creature type. Use the instance in
      * {@link VReference} instead of this one. This is only here to init it as early
      * as possible
      */
-    private static final EntityClassification VAMPIRE_CREATURE_TYPE = EntityClassification.MONSTER;//EntityClassification.create("vampirism_vampire", "vampirism_vampire", 30, false, false, 128);
+    private static final EntityClassification VAMPIRE_CREATURE_TYPE = EntityClassification.create("vampirism_vampire", "vampirism_vampire", 30, false, false, 128);
     /**
      * Vampire creatures have this attribute Vampire creatures are of this creature
      * type. Use the instance in {@link VReference} instead of this one. This is
@@ -123,6 +123,9 @@ public class VampirismMod {
     public VampirismMod() {
         instance = this;
         checkEnv();
+
+        EntityClassification.VALUES_MAP.put(HUNTER_CREATURE_TYPE.getName(), HUNTER_CREATURE_TYPE); //TODO remove including AT once https://github.com/MinecraftForge/MinecraftForge/pull/7337
+        EntityClassification.VALUES_MAP.put(VAMPIRE_CREATURE_TYPE.getName(), VAMPIRE_CREATURE_TYPE);
 
         Optional<? extends net.minecraftforge.fml.ModContainer> opt = ModList.get().getModContainerById(REFERENCE.MODID);
         if (opt.isPresent()) {
