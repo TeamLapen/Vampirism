@@ -67,7 +67,8 @@ public class ModBiomes {
      * Registered in mod constructor
      */
     public static void onBiomeLoadingEventAdditions(BiomeLoadingEvent event) {
-        if (event.getSpawns().getEntityTypes().contains(EntityType.ZOMBIE)) {
+        List<MobSpawnInfo.Spawners> monsterList = event.getSpawns().getSpawner(EntityClassification.MONSTER);
+        if (monsterList != null && monsterList.stream().anyMatch(spawners -> spawners.field_242588_c == EntityType.ZOMBIE)) {
             event.getSpawns().func_242575_a(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.vampire, BalanceMobProps.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 2));
             event.getSpawns().func_242575_a(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.advanced_vampire, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_SPAWN_PROBE, 1, 1));
         }
