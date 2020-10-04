@@ -287,8 +287,6 @@ public class VampirismMod {
         VampirePlayer.registerCapability();
         FactionPlayerHandler.registerCapability();
         ExtendedCreature.registerCapability();
-
-
         modCompatLoader.onInitStep(IInitListener.Step.COMMON_SETUP, event);
         setupAPI3();
 

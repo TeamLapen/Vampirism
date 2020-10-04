@@ -55,10 +55,12 @@ public class ModBiomes {
      * Only call from main thread / non parallel event
      */
     static void addBiomesToGeneratorUnsafe() {
-        List<RegistryKey<Biome>> modList = new ArrayList<>(OverworldBiomeProvider.field_226847_e_);
-        modList.add(RegistryKey.func_240903_a_(Registry.BIOME_KEY, new ResourceLocation(REFERENCE.MODID, "vampire_forest")));
-        OverworldBiomeProvider.field_226847_e_ = ImmutableList.copyOf(modList);
-        BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_KEY, VampirismConfig.BALANCE.vampireForestWeight.get()));
+        if (!VampirismConfig.SERVER.disableVampireForest.get()) {
+            List<RegistryKey<Biome>> modList = new ArrayList<>(OverworldBiomeProvider.field_226847_e_);
+            modList.add(VAMPIRE_FOREST_KEY);
+            OverworldBiomeProvider.field_226847_e_ = ImmutableList.copyOf(modList);
+            BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_KEY, VampirismConfig.BALANCE.vampireForestWeight.get()));
+        }
     }
 
     /**

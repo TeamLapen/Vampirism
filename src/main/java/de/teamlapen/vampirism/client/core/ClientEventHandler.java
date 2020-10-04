@@ -5,15 +5,19 @@ import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
+import de.teamlapen.vampirism.client.gui.OptifineWarningScreen;
 import de.teamlapen.vampirism.client.model.blocks.BakedAltarInspirationModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedWeaponTableModel;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.WorldSelectionScreen;
 import net.minecraft.client.renderer.model.BlockModel;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.IUnbakedModel;
@@ -21,10 +25,13 @@ import net.minecraft.client.renderer.model.ModelRotation;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.DynamicRegistries;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.FOVUpdateEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -141,6 +148,22 @@ public class ClientEventHandler {
         } catch (Exception e) {
             LOGGER.error("Failed to load fluid models for weapon crafting table", e);
 
+        }
+    }
+
+    public static boolean skipOptifineWarningOnce = false;
+
+    @SubscribeEvent
+    public void onGuiInit(GuiScreenEvent.InitGuiEvent.Pre event) {
+        if (event.getGui() instanceof WorldSelectionScreen) {
+            if (DynamicRegistries.func_239770_b_().func_230521_a_(Registry.BIOME_KEY).get().getValueForKey(ModBiomes.VAMPIRE_FOREST_KEY) == null) {
+                if (!skipOptifineWarningOnce) {
+                    event.setCanceled(true);
+                    Minecraft.getInstance().displayGuiScreen(new OptifineWarningScreen(event.getGui()));
+                } else {
+                    skipOptifineWarningOnce = false;
+                }
+            }
         }
     }
 
