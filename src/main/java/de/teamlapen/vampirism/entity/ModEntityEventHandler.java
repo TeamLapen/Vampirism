@@ -35,7 +35,10 @@ import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.monster.*;
+import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.monster.DrownedEntity;
+import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -191,9 +194,7 @@ public class ModEntityEventHandler {
                             ((ZombieEntity) event.getEntity()).targetSelector.addGoal(2, new NearestAttackableTargetGoal<>((ZombieEntity) event.getEntity(), PlayerEntity.class, 10, true, false, entity -> !Helper.isVampire(entity)));
                         } else if (type == EntityType.DROWNED) {
                             ((DrownedEntity) event.getEntity()).targetSelector.addGoal(2, new NearestAttackableTargetGoal<>((DrownedEntity) event.getEntity(), PlayerEntity.class, 10, true, false, entity -> ((DrownedEntity) event.getEntity()).shouldAttack(entity) && !Helper.isVampire(entity)));
-                        } else if (type == EntityType.ZOMBIFIED_PIGLIN) {
-                            ((ZombifiedPiglinEntity) event.getEntity()).targetSelector.addGoal(2, new NearestAttackableTargetGoal<>((ZombifiedPiglinEntity) event.getEntity(), PlayerEntity.class, 10, true, false, entity -> ((ZombifiedPiglinEntity) event.getEntity()).func_233680_b_(entity) && !Helper.isVampire(entity)));
-                        } else {
+                        } else if (type != EntityType.ZOMBIFIED_PIGLIN) {//Don't change zombified piglin as they are similar to pigmen
                             LOGGER.warn("Unknown zombie entity type {} for zombie target task", type.getName());
                         }
                     } else {
@@ -202,23 +203,27 @@ public class ModEntityEventHandler {
                             warnAboutZombie = false;
                         }
                     }
-                    Goal villagerTarget = null;
+                    //Also replace attack villager task for entities that have it
+                    if (event.getEntity().getType() != EntityType.ZOMBIFIED_PIGLIN) {
+                        Goal villagerTarget = null;
 
-                    for (PrioritizedGoal t : ((ZombieEntity) event.getEntity()).targetSelector.goals) {
-                        if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 3 && AbstractVillagerEntity.class.equals(((NearestAttackableTargetGoal) t.getGoal()).targetClass)) {
-                            villagerTarget = t.getGoal();
-                            break;
+                        for (PrioritizedGoal t : ((ZombieEntity) event.getEntity()).targetSelector.goals) {
+                            if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 3 && AbstractVillagerEntity.class.equals(((NearestAttackableTargetGoal) t.getGoal()).targetClass)) {
+                                villagerTarget = t.getGoal();
+                                break;
+                            }
+                        }
+                        if (villagerTarget != null) {
+                            ((ZombieEntity) event.getEntity()).targetSelector.removeGoal(villagerTarget);
+                            ((ZombieEntity) event.getEntity()).targetSelector.addGoal(3, new NearestAttackableTargetGoal<>((ZombieEntity) event.getEntity(), AbstractVillagerEntity.class, 10, false, false, entity -> !Helper.isVampire(entity)));
+                        } else {
+                            if (warnAboutZombie) {
+                                LOGGER.warn("Could not replace villager zombie target task");
+                                warnAboutZombie = false;
+                            }
                         }
                     }
-                    if (villagerTarget != null) {
-                        ((ZombieEntity) event.getEntity()).targetSelector.removeGoal(villagerTarget);
-                        ((ZombieEntity) event.getEntity()).targetSelector.addGoal(3, new NearestAttackableTargetGoal<>((ZombieEntity) event.getEntity(), AbstractVillagerEntity.class, 10, false, false, entity -> !Helper.isVampire(entity)));
-                    } else {
-                        if (warnAboutZombie) {
-                            LOGGER.warn("Could not replace villager zombie target task");
-                            warnAboutZombie = false;
-                        }
-                    }
+
                 }
             }
 
