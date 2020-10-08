@@ -1,827 +1,827 @@
 {
-  “ text.vampirism.command.available_subcommands”：“可用的子命令：”，
-  “ text.vampirism.command.subcommand_help”：“使用'/％s help <subcommand>'獲取更多信息”，
-  “ text.vampirism.command.usage”：“ /％s <子命令> <參數> |使用/％s幫助來獲取所有可用的子命令”，
-  “ action.vampirism.cancel”：“取消”，
-  “ text.vampirism.no_permission”：“您無權這樣做”，
-  “ text.vampirism.action.not_unlocked”：“此操作未解鎖”，
-  “ text.vampirism.action.deactivated_by_serveradmin”：“您的服務器管理員已停用此操作”，
-  “ text.vampirism.action.not_bound”：“此鍵沒有任何動作。請參見％s。”，
-  “ text.vampirism.action.only_faction”：“此動作只能由％s派系的玩家使用”，
-  “ keys.vampirism.select_skills”：“選擇技能”，
-  “ keys.vampirism.action”：“使用動作”，
-  “ keys.vampirism.category”：“吸血鬼”，
-  “ keys.vampirism.suck”：“吸血”，
-  “ keys.vampirism.auto”：“自動填充血瓶”，
-  “ keys.vampirism.vision”：“切換視覺”，
-  “ keys.vampirism.action1”：“切換動作1”，
-  “ keys.vampirism.action2”：“切換動作2”，
-  “ advancement.vampirism.desc”：“吸血鬼入門”，
-  “ advancement.vampirism.become_vampire”：“弄一些尖牙”，
-  “ advancement.vampirism.become_vampire.desc”：“成為吸血鬼”，
-  “ advancement.vampirism.become_hunter”：“開始狩獵”，
-  “ advancement.vampirism.become_hunter.desc”：“成為吸血鬼獵人”，
-  “ advancement.vampirism.sucking_blood”：“第一滴血”，
-  “ advancement.vampirism.sucking_blood.desc”：“從生物身上吸血”，
-  “ advancement.vampirism.stake”：“通過心靈”，
-  “ advancement.vampirism.stake.desc”：“用木樁刺吸血鬼”，
-  “ advancement.vampirism.vampire_forest”：“吸血鬼森林”，
-  “ advancement.vampirism.vampire_forest.desc”：“探索新的吸血鬼森林”，
-  “ advancement.vampirism.bat”：“蝙蝠模式”，
-  “ advancement.vampirism.bat.desc”：“成為蝙蝠”，
-  “ advancement.vampirism.max_level_vampire”：“盡其所能”，
-  “ advancement.vampirism.max_level_vampire.desc”：“達到最高的吸血鬼等級”，
-  “ advancement.vampirism.max_level_hunter”：“盡其致命”，
-  “ advancement.vampirism.max_level_hunter.desc”：“達到最高獵人等級”，
-  “ advancement.vampirism.technology”：“現代技術”，
-  “ advancement.vampirism.technology.desc”：“為自己準備一把高級cross”，
-  “ advancement.vampirism.extra_storage”：“額外的存儲空間”，
-  “ advancement.vampirism.extra_storage.desc”：“為所有血液獲取一個血液容器”，
-  “ advancement.vampirism.ancient_knowledge”：“古代知識”，
-  “ advancement.vampirism.ancient_knowledge.desc”：“找到一本舊的吸血鬼書”，
-  “ advancement.vampirism.betrayal”：“背叛”，
-  “ advancement.vampirism.betrayal.desc”：“在自己成為獵人後殺死獵人”，
-  “ advancement.vampirism.regicide”：“ Regicide”，
-  “ advancement.vampirism.regicide.desc”：“擊敗吸血鬼男爵”，
-  “ advancement.vampirism.blood_cult”：“血統”，
-  “ advancement.vampirism.blood_cult.desc”：“在輸液祭壇上進行儀式”，
-  “ advancement.vampirism.yuck”：“糟糕！”，
-  “ advancement.vampirism.yuck.desc”：“從不死生物身上吸血”，
-  “ advancement.vampirism.sniped”：“被狙擊！”，
-  “ advancement.vampirism.sniped.dec”：“在蝙蝠模式下被狙擊”，
-  “ effect.vampirism.sunscreen”：“防曬霜”，
-  “ effect.vampirism.thirst”：“乾渴”，
-  “ effect.vampirism.poison”：“有毒”，
-  “ effect.vampirism.saturation”：“飽和度”，
-  “ effect.vampirism.sanguinare”：“ Sanguinare Vampiris”，
-  “ effect.vampirism.fire_protection”：“防火”，
-  “ effect.vampirism.garlic”：“大蒜”，
-  “ fluid.vampirism.blood”：“血液”，
-  “ fluid.vampirism.blood.vampirism”：“吸血鬼血”，
-  “ fluid.vampirism.impure_blood”：“不純之血”，
-  “ fluid.vampirism.impure_blood.vampirism”：“吸血鬼不純血”，
-  “ gui.vampirism.hunter_weapon_table”：“獵人武器表”，
-  “ gui.vampirism.hunter_weapon_table.level”：“所需的獵人等級：％s”，
-  “ gui.vampirism.hunter_weapon_table.skill”：“所需技能：％s”，
- “ gui.vampirism.revertback.head”：“還原為正常人”，
-  “ gui.vampirism.revertback.desc”：“您將失去所有關卡並死亡”，
-  “ gui.vampirism.reset_skills.title”：“重置技能”，
-  “ gui.vampirism.reset_skills.desc”：“如果您重置技能，您將失去一個等級。您想重置技能嗎？”，
-  “ gui.vampirism.reset_skills.desc_test”：“您想重置您的技能嗎？（您不會失去等級，因為您使用的是Vampirism的Alpha版本）”，
-  “ gui.vampirism.alchemical_cauldron.level”：“所需的獵人等級：％s”，
-  “ gui.vampirism.alchemical_cauldron.skill”：“所需技能：％s”，
-  “ gui.vampirism.name_sword.title”：“劍名”，
-  “ gui.vampirism.name_sword.text”：“您想給這把劍起個名字嗎？”，
-  “ gui.vampirism.minion.appearance”：“更改僕從外觀”，
-  “ gui.vampirism.minion.lock_action”：“忽略全局命令”，
-  “ gui.vampirism.minion.active_task”：“當前任務”，
-  “ gui.vampirism.minion_appearance”：“更改小兵的外觀”，
-  “ gui.vampirism.minion_appearance.skin”：“皮膚類型”，
-  “ gui.vampirism.minion_appearance.hat”：“帽子類型”，
-  “ gui.vampirism.minion_appearance.use_lord_skin”：“使用主皮”，
-  “ gui.vampirism.appearance”：“更改外觀”，
-  “ gui.vampirism.appearance.fang”：“方型”，
-  “ gui.vampirism.appearance.eye”：“眼睛類型”，
-  “ gui.vampirism.taskmaster.item_req”：“要獲取的物品”，
-  “ gui.vampirism.taskmaster.entity_req”：“要殺死的實體”，
-  “ gui.vampirism.taskmaster.entity_tag_req”：“要殺死的實體類型”，
-  “ gui.vampirism.taskmaster.bool_req”：“達到”，
-  “ gui.vampirism.taskmaster.stat_req”：“要實現的統計信息”，
-  “ gui.vampirism.taskmaster.complete_task”：“提交”，
-  “ gui.vampirism.taskmaster.accept_task”：“接受”，
-  “ gui.vampirism.taskmaster.abort_task”：“中止”，
-  “ gui.vampirism.taskmaster.requirement”：“ Requirement：”，
-  “ gui.vampirism.taskmaster.reward”：“獎勵：”，
-  “ gui.vampirism.taskmaster.text.vampirism_vampire”：“很抱歉，如果您願意幫助當地的吸血鬼社區，那麼您可以完成幾項任務。完成後您會得到回報，並給自己起個名字。請瀏覽任務並接受您喜歡的任何東西”，
-  “ gui.vampirism.taskmaster.text.vampirism_hunter”：“資深獵人，為了支持本地獵人社區，您可以完成幾項任務。完成後您將獲得獎勵。請瀏覽可用的任務並接受您喜歡的任何任務。 ”，
-  “ gui.vampirism.taskmaster.not_accepted”：“尚未接受”，
-  “ gui.vampirism.minion_stats”：“ Minion Stats”，
-  “ enchantment.vampirism.arrow_frugality”：“箭頭節儉”，
-  “ enchantment.vampirism.vampire_slayer”：“吸血鬼殺手”，
-  “ enchantment.vampirism.crossbow_infinity”：“ Crossbow Infinity”，
-  “ enchantment.vampirism.crossbowfrugality.desc”：“拍攝時，有時使cross不消耗箭頭。機率隨等級增加”，
-  “ enchantment.vampirism.vampireslayer.desc”：“增加對吸血鬼生物的傷害”，
-  “ enchantment.vampirism.crossbowinfinite.desc”：“使您（非技術類）的shoot射而無需消耗箭頭”，
-  “ text.vampirism.village.faction_capturing”：“％s正在佔領這個村莊”，
-  “ text.vampirism.village.faction_controlling”：“％s正在控制這個村莊”，
-  “ text.vampirism.village.neutral”：“中立村”，
-  “ text.vampirism.village.totem_destroy.fail_other_capturing”：“當另一派系佔領圖騰時，它無法銷毀”
-  “ text.vampirism.village.totem_destroy.fail_capture_in_progress”：“在有人捕獲圖騰時無法銷毀”
-  “ text.vampirism.village.totem_destroy.fail_other_faction”：“無法銷毀另一個派系的圖騰”，
-  “ text.vampirism.village.totem_destroy.fail_totem_faction”：“無法銷毀另一個派別村莊的村莊組成部分”，
-  “ text.vampirism.village.village_captured_by”：“附近的村莊已被％s捕獲”，
-  “ text.vampirism.village.village_capture_aborted”：“對附近村莊的襲擊已被中止”，
-  “ text.vampirism.village.neutral_village_under_attack”：“附近的一個中立村莊正受到％s的攻擊”，
-  “ text.vampirism.village.faction_village_under_attack”：“附近的％s村莊受到％s的攻擊”，
-  “ text.vampirism.village.almost_captured”：“村莊險些被俘虜。％s捍衛者離開了”，
-  “ text.vampirism.village.bossinfo.capture”：“村莊捕獲進度”，
-  “ text.vampirism.village.defender_remaining”：“剩餘的防御者”，
-  “ text.vampirism.village.village_abandoned”：“附近的村莊已被廢棄”，
-  “ text.vampirism.hunter_villager.trade_successful”：“感謝您追捕那些吸血鬼”，
-  “ text.vampirism.hunter_villager.decline_trade_vampire”：“我不與邪惡的吸血鬼交易”，
-  “ text.vampirism.hunter_villager.decline_trade_normal”：“對不起，但是我的交易只對吸血鬼獵人很有趣”，
-  “ text.vampirism.vampire_villager.trade_successful”：“感謝您從吸血鬼獵人手中拯救了我們”，
-  “ text.vampirism.vampire_villager.decline_trade_vampire”：“我不與邪惡的吸血鬼獵人交易”，
-  “ text.vampirism.vampire_villager.decline_trade_normal”：“對不起，但是我的交易只對吸血鬼有意思”，
-  “ text.vampirism.vampire”：“吸血鬼”，
-  “ text.vampirism.vampires”：“吸血鬼”，
-  “ text.vampirism.all”：“全部”，
-  “ text.vampirism.hunter”：“獵人”，
-  “ text.vampirism.hunters”：“獵人”，
-  “ text.vampirism.level”：“級別”，
-  “ text.vampirism.for_up_to_level”：“針對最高級別”，
-  “ text.vampirism.for_to_levels”：“從％s到％s的級別”，
-  “ text.vampirism.level_short”：“ Lvl”，
-  “ text.vampirism.lord”：“主”，
-  “ text.vampirism.title”：“標題”，
-  “ text.vampirism.can_only_be_used_by”：“這只能由％s玩家使用”，
-  “ text.vampirism.can_only_be_used_by_level”：“只能由％s級或更高級別的％s玩家使用”，
-  “ text.vampirism.med_chair_other_faction”：“由於您已經是％s，因此您無法成為獵人”，
-  “ text.vampirism.already_vampire”：“您已經是吸血鬼”，
-  “ text.vampirism.can_only_be_used_with_skill”：“只能與技能％s一起使用”，
-  “ text.vampirism.need_item_to_use”：“您需要\”％s \“才能使用此”，
-  “ text.vampirism.immune_to”：“您不受”的影響，
-  “ text.vampirism.required_skill”：“必選技能：％s”，
-  “ text.vampirism.from_behind”：“從後面。”，
-  “ text.vampirism.unknown”：“未知”，
-  “ text.vampirism.basic_hunter.cannot_train_you_any_further”：“我無法再對您進行培訓。您必須尋找更有經驗的人。”，
-  “ text.vampirism.basic_hunter.pay_n_vampire_blood_more”：“請多付給我％s的吸血鬼血瓶來訓練你”，
-  “ text.vampirism.basic_hunter.i_will_train_you”：“好的，我會訓練你的”
-  “ text.vampirism.basic_hunter.minion.available”：“我很樂意為這樣一個享有聲譽的吸血鬼獵人工作”，
-  “ text.vampirism.basic_hunter.minion.start_serving”：“感謝您提供的設備，我現在將為您服務，並按照您的要求做”
-  “ text.vampirism.basic_hunter.minion.no_free_slot”：“但是，我認為您沒有足夠的經驗來指揮額外的獵人”，
-  “ text.vampirism.basic_hunter.minion.require_equipment”：“如果您以％s項的形式向我提供適當的設備，我會為您服務”
-  “ text.vampirism.basic_hunter.minion.unavailable”：“您似乎是著名的吸血鬼獵人，但我不喜歡為自己以外的人服務”，
-  “ text.vampirism.basic_vampire.minion.unavailable”：“此吸血鬼太結實，無法綁定到您”，
-  “ text.vampirism.basic_vampire.minion.available”：“此吸血鬼可以綁定到您上，成為您的僕從”，
-  “ text.vampirism.basic_vampire.minion.no_free_slot”：“您無法控制更多的奴才”，
-  “ text.vampirism.basic_vampire.minion.start_serving1”：“您似乎是一個很有價值的人，我將與您的主人一起努力。”，
-  “ text.vampirism.basic_vampire.minion.start_serving2”：“和您這樣的人同住確實是一種榮譽！”，
-  “ text.vampirism.basic_vampire.minion.start_serving3”：“感謝您的好意和盛情，我將為您服務。
-  “ text.vampirism.basic_vampire.minion.require_binding”：“您需要一個％s將此吸血鬼綁定到您”，
-  “ text.vampirism.i_am_busy_right_now”：“我現在很忙”，
-  “ text.vampirism.crossbow.not_loaded”：“未加載”，
-  “ text.vampirism.crossbow.loaded_arrow_count”：“已加載％s箭頭”，
-  “ text.vampirism.blood.poisonous”：“毒血”，
-  “ text.vampirism.task.reward”：“任務獎勵”，
-  “ text.vampirism.task.reward_obtain”：“可以從％s獲得作為任務獎勵”，
-  “ text.vampirism.task.require_parent”：“完整的父項（％s）”，
-  “ text.vampirism.task.prerequisites”：“前提條件”，
-  “ text.vampirism.task.prerequisites.none”：“無”，
-  “ itemGroup.vampirism”：“吸血鬼”，
-  “ death.attack.sun”：“％1 $ s不喜歡太陽”，
-  “ death.attack.garlic”：“％1 $ s被大蒜毒死了”，
-  “ death.attack.vampire_on_fire”：“％1 $ s被燒成灰燼”，
-  “ death.attack.vampire_on_fire.player”：“％2 $ s被燒成％1 $ s”，
-  “ death.attack.vampire_in_fire”：“％1 $ s被燒成灰燼”，
-  “ death.attack.vampire_in_fire.player”：“％1 $ s被％2 $ s焚化了”，
-  “ death.attack.holy_water”：“％1 $ s被聖水燃燒了”，
-  “ death.attack.holy_water.player”：“％2 $ s用聖水燒了％1 $ s”，
-  “ death.attack.blood_loss”：“％1 $ s被吸乾”，
-  “ death.minion.on_behalf”：“代表％1 $ s”，
-  “ text.vampirism.skill.level_to_low”：“您的吸血鬼等級太低了，”
-  “ text.vampirism.skill.cooldown_not_over”：“請等待，直到冷卻結束”，
-  “ text.vampirism.not_enough_blood”：“壇中沒有足夠的血”，
-  “ text.vampirism.ritual_requirements_not_met”：“未滿足該儀式的所有要求”，
-  “ text.vampirism.ritual_no_vampire”：“您需要成為該儀式的吸血鬼”，
-  “ text.vampirism.cant_fly_umbrella”：“您不能在配備遮陽傘的情況下飛行”，
-  “ text.vampirism.cant_fly_day”：“您白天不能飛行”，
-  “ text.vampirism.cant_fly_garlic”：“您不能在大蒜的作用下飛行”，
-  “ text.vampirism.cant_fly_end”：“您無法從頭到尾變成蝙蝠”，
-  “ text.vampirism.no_more_minions”：“您將無法再控制其他奴才”，
-  “ text.vampirism.coffin.no_sleep”：“您只能白天睡覺”，
-  “ text.vampirism.coffin.too_far_away”：“您現在可能不休息；棺材太遠了”，
-  “ text.vampirism.coffin.obstructed”：“此棺材被阻塞”，
-  “ text.vampirism.coffin.occupied”：“此棺材已被佔用”，
-  “ text.vampirism.coffin.stop_sleeping”：“離開棺材”，
-  “ text.vampirism.coffin.cant_use”：“你不能睡在棺材裡”，
-  “ text.vampirism.tent.no_sleep”：“您只能在晚上和雷暴期間入睡”，
-  “ text.vampirism.tent.too_far_away”：“您現在可能不休息；帳篷距離太遠​​”，
-  “ text.vampirism.tent.obstructed”：“此帳篷被擋住”，
-  “ text.vampirism.tent.occupied”：“此帳篷已被佔用”，
-  “ text.vampirism.tent.stop_sleeping”：“離開帳篷”，
-  “ text.vampirism.tent.cant_use”：“你不能睡在帳篷裡”，
-  “ text.vampirism.blood_left”：“左血”，
-  “ text.vampirism.blood”：“血液”，
-  “ text.vampirism.vampirelevel”：“ Vampirelevel”，
-  “ text.vampirism.entitysblood”：“實體的鮮血”，
-  “ text.vampirism.minion”：“ Minion”，
-  “ text.vampirism.normal_vision”：“普通視力”，
-  “ text.vampirism.night_vision”：“夜視”，
-  “ text.vampirism.no_control_minion”：“您無法控制這個奴才”，
-  “ text.vampirism.need_empty_bottle”：“我的主，我需要一個空瓶子來收集血液”，
-  “ text.vampirism.thanks”：“謝謝”，
-  “ text.vampirism.coming_back”：“主啊，我回來了，”
-  “ text.vampirism.sorry_i_died_while_doing”：“對不起，我很抱歉，但是我在完成您的任務時死了”
- “ text.vampirism.current_task”：“當前任務”，
-  “ text.vampirism.lord.become”：“您被吸血的吸血鬼勳章”，
-  “ text.vampirism.lord.other_player_become”：“擊敗了現任的吸血鬼領主並取代了他”，
-  “ text.vampirism.lord.vampire_replace”：“另一位玩家取代了你，成為吸血鬼領主”，
-  “ text.vampirism.lord.vampire_kill_replace”：“另一個吸血鬼殺死了你，並取代你成為吸血鬼領主”，
-  “ text.vampirism.lord.new_lord_castle”：“一位新的吸血鬼領主升起並搬進了他的城堡”，
-  “ text.vampirism.lord.vampire_replace_absence”：“在您不在的情況下，另一個吸血鬼取代您成為吸血鬼領主”，
-  “ text.vampirism.lord.portal_disabled”：“此門戶無法通往任何地方”，
-  “ text.vampirism.lord.level_to_low”：“您的吸血鬼等級太低，無法成為吸血鬼領主”，
-  “ text.vampirism.coffin.wrong_dimension”：“您無法在這個維度上睡覺。”，
-  “ text.vampirism.deactivated_by_serveradmin”：“這已由您的serveradmin停用”，
-  “ text.vampirism.castle_fail”：“吸血鬼無法為吸血鬼城堡找到合適的位置。建議生成一個新世界。如果找不到，您也可以嘗試\” / vampirism checkForVampireBiome \“。生物群系，另一個mod可能正在干擾。”，
-  “ text.vampirism.structure”：“結構”，
-  “ text.vampirism.pillar_blocks”：“支柱塊”，
-  “ text.vampirism.no_dracula_to_call”：“吸血鬼死了，無法被召喚”，
-  “ text.vampirism.garlic_weapons”：“此武器上塗有大蒜，並毒害了吸血鬼。/n但是大蒜會磨損。”，
-  “ text.vampirism.outdated”：“您正在運行吸血鬼％s，最新版本是％s。”，
-  “ text.vampirism.action.cooldown_not_over”：“冷卻尚未結束”，
-  “ text.vampirism.action.disallowed”：“您現在不能使用此操作”，
-  “ text.vampirism.poisonous_to_vampires”：“對吸血鬼有毒”，
-  “ text.vampirism.poisonous_to_hunter”：“對獵人有毒”，
-  “ text.vampirism.deals_more_damage_to”：“對％s造成的傷害提高％s”，
-  “ text.vampirism.liquid_container”：“任何液體容器”，
-  “ text.vampirism.translators”：“無”，
-  “ text.vampirism.sword_charged”：“已收費：”，
-  “ text.vampirism.sword_trained”：“訓練有素：”，
-  “ text.vampirism.guideapi_available.first”：“要獲取吸血鬼指南，請安裝GuideAPI-VP”，
-  “ text.vampirism.guideapi_available.download”：“單擊此處轉到mod頁面”，
-  “ text.vampirism.integrations_available.first”：“有一個針對Vampirism的集成模塊，它為以下已安裝的模塊增加了兼容性：”，
-  “ text.vampirism.integrations_available.download”：“單擊此處轉到mod頁面”，
-  “ text.vampirism.trainer_disabled”：“我不是獵人”，
-  “ text.vampirism.trainer_disabled_hunter”：“在這裡訓練你不夠安全。請釋放村莊。”，
-  “ text.vampirism.actions.bind_action”：“將動作％s綁定到動作鍵％s”，
-  “ text.vampirism.hunter.cured_sanguinare”：“您來找對了。我治癒了您的sanguinare”，
-  “ text.vampirism.hunter_minion.equipment_upgrade”：“感謝您升級設備。請選擇我應該在哪個區域訓練。”，
- “ text.vampirism.hunter_minion.equipment_wrong”：“我無法使用此升級”，
-  “ text.vampirism.vampire_minion.binding_upgrade”：“我很感謝這次升級，現在我將為您提供更好的服務，先生。請選擇應該改進的領域”，
-  “ text.vampirism.vampire_minion.binding_wrong”：“此升級對我沒有幫助”，
-  “ text.vampirism.taskmaster.no_tasks”：“目前沒有可用的任務”，
-  “ text.vampirism.taskmaster.no_tasks_unique”：“沒有剩下的任務了”，
-  “ __comment”：“ task_entity_tags”，
-  “ tasks.vampirism.vampirism：hunter”：“獵人實體”，
-  “ tasks.vampirism.vampirism：advanced_hunter”：“高級獵人”，
-  “ tasks.vampirism.vampirism：advanced_vampire”：“高級吸血鬼”，
-  “ tasks.vampirism.vampirism：vampire”：“吸血鬼實體”，
-  “ category.vampirism.balance”：“平衡設置”，
-  “ category.vampirism.balance.tooltip”：“更改幾乎所有與餘額相關的屬性”，
-  “ category.vampirism.balance_general”：“一般”，
-  “ category.vampirism.balance_general.tooltip”：“常規配置選項”，
-  “ category.vampirism.balance_leveling”：“升級餘額設置”，
-  “ category.vampirism.balance_vampire_player”：“吸血鬼玩家將軍”，
-  “ category.vampirism.balance_vampire_player.tooltip”：“配置吸血鬼播放器修改器”，
-  “ category.vampirism.balance_vampire_player_skills”：“吸血鬼玩家技能”，
-  “ category.vampirism.balance_vampire_player_skills.tooltip”：“配置技能”，
-  “ category.vampirism.balance_vampire_player_actions”：“吸血鬼玩家動作”，
-  “ category.vampirism.balance_vampire_player_actions.tooltip”：“配置動作”，
-  “ category.vampirism.balance_hunter_player”：“獵人職業將軍”，
-  “ category.vampirism.balance_hunter_player.tooltip”：“配置獵人玩家修改器”，
-  “ category.vampirism.balance_hunter_player_skills”：“獵人的技能”，
-  “ category.vampirism.balance_hunter_player_skills.tooltip”：“配置技能”，
-  “ category.vampirism.balance_hunter_player_actions”：“獵人玩家動作”，
-  “ category.vampirism.balance_hunter_player_actions.tooltip”：“配置動作”，
-  “ category.vampirism.balance_mob_prop”：“吸血鬼暴民屬性”，
-  “ category.vampirism.balance_mob_prop.tooltip”：“更改由吸血鬼添加的小怪的屬性”，
-  “ category.vampirism.balance_village”：“鄉村吸血鬼屬性”，
-  “ category.vampirism.balance_village.tooltip”：“改變村莊獵人的行為方式並調整其他與村莊有關的東西”，
-  “ category.vampirism.balance_leveling.tooltip”：“配置玩家練級”，
-  “ category.vampirism.disable”：“禁用功能”，
-  “ category.vampirism.disable.tooltip”：“禁用該模塊的部分（不推薦）”，
-  “ category.vampirism.village”：“村莊配置”，
-  “ category.vampirism.village.tooltip”：“配置吸血鬼村莊的修改”，
-  “ category.vampirism.gui”：“ GUI配置”，
-  “ category.vampirism.gui.tooltip”：“配置顯示”，
-  “ category.vampirism.worldgen”：“世界一代”，
-  “ __comment”：“動作”，
-  “ action.vampirism.bat”：“切換Batmode”，
-  “ action.vampirism.bat.desc”：“變成蝙蝠然後飛走”，
-  “ action.vampirism.freeze”：“凍結”，
-  “ action.vampirism.freeze.desc”：“暫時凍結附近的所有實體”，
-  “ action.vampirism.vampire_invisibility”：“隱形”，
-  “ action.vampirism.regen”：“再生”，
-  “ action.vampirism.regen.desc”：“暫時恢復健康，但消耗更多血液”，
-  “ action.vampirism.revive_fallen”：“復興墮落”，
-  “ action.vampirism.summon_bat”：“召喚蝙蝠”，
-  “ action.vampirism.summon_bat.desc”：“召喚一隻蝙蝠聚集在你周圍，使任何觸碰它的玩家蒙蔽”，
-  “ action.vampirism.teleport”：“傳送”，
-  “ action.vampirism.teleport.desc”：“快速傳送到您正在尋找的地點”，
-  “ action.vampirism.vampire_rage”：“吸血鬼之怒”，
-  “ action.vampirism.vampire_rage.desc”：“在憤怒模式下，您更快，造成的傷害更大，但消耗更多的血”，
-  “ action.vampirism.sunscreen”：“防曬霜”，
-  “ action.vampirism.sunscreen.desc”：“暫時消除任何陽光傷害”，
-  “ action.vampirism.disguise_vampire”：“偽裝”，
-  “ action.vampirism.disguise_vampire.desc”：“暫時偽裝成非吸血鬼來欺騙暴民和玩家”，
-  “ action.vampirism.disguise_hunter”：“偽裝”，
-  “ action.vampirism.disguise_hunter.desc”：“暫時顯著降低了對暴民和玩家的偵測和可見度範圍。”，
-  “ action.vampirism.dark_blood_projectile”：“暗血彈丸”，
-  “ action.vampirism.dark_blood_projectile.desc”：“發射會造成傷害的鮮血彈頭，”
-  “ action.vampirism.half_invulnerable”：“損害限制器”，
-  “ action.vampirism.half_invulnerable.desc”：“阻止大筆損失卻使您減速的動作”，
-  “ action.vampirism.awareness_hunter”：“吸血鬼意識”，
-  “ action.vampirism.awareness_hunter.desc”：“感知附近吸血鬼玩家或實體的動作”，
-  “ action.vampirism.potion_resistance_hunter”：“抗藥水”，
-  “ action.vampirism.potion_resistance_hunter.desc”：“移除某些對你不利的藥水效果”，
-  “ __comment”：“技能”，
-  “ skill.vampirism.vampire”：“成為吸血鬼”，
-  “ skill.vampirism.creeper_avoided”：“被爬行者所避免”，
-  “ skill.vampirism.blood_vision”：“血液視野”，
-  “ skill.vampirism.poisonous_bite”：“毒牙”，
-  “ skill.vampirism.poisonous_bite.desc”：“使您咬的生物中毒”，
-  “ skill.vampirism.advanced_biter”：“高級咬人”，
-  “ skill.vampirism.more_bite_damage”：“硬化的牙齒”，
-  “ skill.vampirism.less_blood_thirst”：“節儉的吸血鬼”，
-  “ skill.vampirism.less_garlicdamage”：“減少大蒜損傷”，
-  “ skill.vampirism.less_sundamage”：“減少日曬傷害”，
-  “ skill.vampirism.night_vision”：“夜視”，
-  “ skill.vampirism.disguise”：“偽裝”，
-  “ skill.vampirism.vampire_forest_fog”：“ Vista”，
-  “ skill.vampirism.water_resistance”：“耐水性”，
-  “ skill.vampirism.blood_charge”：“充血”，
-  “ skill.vampirism.sword_finisher”：“完成者”，
- “ skill.vampirism.blood_vision_garlic”：“大蒜血視力”，
-  “ skill.vampirism.hunter”：“成為一名獵人”，
-  “ skill.vampirism.hunter_attack_speed”：“增加的攻擊速度”，
-  “ skill.vampirism.weapon_table”：“獵人武器表”，
-  “ skill.vampirism.double_crossbow”：“ Double It”，
-  “ skill.vampirism.enhanced_crossbow”：“增強的bo”，
-  “ skill.vampirism.hunter_attack_speed_advanced”：“進攻像風一樣迅捷”，
-  “ skill.vampirism.stake1”：“如何使用賭注”，
-  “ skill.vampirism.stake2”：“如何實際使用賭注”，
-  “ skill.vampirism.multitask_brewing”：“多任務釀造”，
-  “ skill.vampirism.durable_brewing”：“持久釀造”，
-  “ skill.vampirism.concentrated_brewing”：“集中釀造”，
-  “ skill.vampirism.swift_brewing”：“迅速釀造”，
-  “ skill.vampirism.efficient_brewing”：“高效釀造”，
-  “ skill.vampirism.master_brewer”：“大師布魯爾”，
-  “ skill.vampirism.concentrated_durable_brewing”：“集中和持久的釀造”，
-  “ skill.vampirism.tech_weapons”：“技術”，
-  “ skill.vampirism.enhanced_armor”：“強化裝甲”，
-  “ skill.vampirism.enhanced_weapons”：“增強武器”，
-  “ skill.vampirism.basic_alchemy”：“基本煉金術”，
-  “ skill.vampirism.garlic_beacon”：“吸血鬼排斥”，
-  “ skill.vampirism.purified_garlic”：“純淨大蒜”，
-  “ skill.vampirism.holy_water_enhanced”：“增強的聖水”，
-  “ skill.vampirism.garlic_beacon_improved”：“改良的擴散器”，
-  “ skill.vampirism.vampire_speed”：“永久性提速”，
-  “ skill.vampirism.vampire_jump”：“永久跳助力”，
-  “ __comment”：“ skill_desc”，
-  “ skill.vampirism.freeze.desc”：“暫時凍結附近的所有生物”，
-  “ skill.vampirism.blood_vision.desc”：“允許您在黑暗中穿過牆壁查看實體。用鑰匙切換。
-  “ skill.vampirism.blood_vision_garlic.desc”：“另外標識有毒血液的實體”，
-  “ skill.vampirism.advanced_biter.desc”：“使您可以更有效地吸血並在適當的時機停止。還會增加您的咬傷。
-  “ skill.vampirism.more_bite_damage.desc”：“咬人時造成更多傷害”，
-  “ skill.vampirism.less_blood_thirst.desc”：“減少了對血液的渴求”，
-  “ skill.vampirism.vampire_forest_fog.desc”：“增加吸血鬼森林的霧距離”，
-  “ skill.vampirism.water_resistance.desc”：“您的身體將不再被水削弱”，
-  “ skill.vampirism.blood_charge.desc”：“隨時隨地用鼠標右鍵單擊即可使用工具充電血液。”，
-  “ skill.vampirism.sword_finisher.desc”：“立即使用吸血鬼劍殺死任何最大生命值低於％s的非吸血鬼”，
-  “ skill.vampirism.half_invulnerable.desc”：“暫時阻止高價值損害但為此消耗血液的行動”，
-  “ skill.vampirism.vampire_rage.desc”：“通過增加血液使用量來提高速度和傷害的行動，”
-  “ skill.vampirism.summon_bats.desc”：“在蝙蝠模式下召喚很多蝙蝠來分散敵人的注意力，”
-  “ skill.vampirism.sunscreen.desc”：“授予暫時免受直接日曬傷害的免疫力。冷卻時間長。”，
-  “ skill.vampirism.garlic_blood_vision.desc”：“允許您另外檢測有毒血液的實體”，
-  “ skill.vampirism.enhanced_armor.desc”：“解鎖製作增強版的獵人裝甲”，
-  “ skill.vampirism.hunter_attack_speed_advanced.desc”：“進一步減少攻擊的冷卻時間”，
-  “ skill.vampirism.weapon_table.desc”：“了解如何使用獵人武器表”，
-  “ skill.vampirism.double_crossbow.desc”：“解鎖雙Cross”，
-  “ skill.vampirism.enhanced_crossbow.desc”：“學習如何增強cross”，
-  “ skill.vampirism.hunter_advanced_attack_speed.desc”：“進一步提高攻擊速度”，
-  “ skill.vampirism.stake1.desc”：“立即用賭注殺死任何吸血率低於其最大生命值％s的吸血鬼”，
-  “ skill.vampirism.stake2.desc_all”：“只要他的最大生命值低於％s，立即用樁柱從背後殺死任何吸血鬼”，
-  “ skill.vampirism.stake2.desc_npc”：“只要他的最大生命值低於％s，立即用樁柱從背後殺死任何吸血鬼NPC”，
-  “ skill.vampirism.tech_weapons.desc”：“學習如何製造一些先進的武器”，
-  “ skill.vampirism.disguise_hunter.desc”：“使您能夠躲藏於暴民之中，並且對其他玩家的可見度大大降低”，
-  “ skill.vampirism.basic_alchemy.desc”：“學習如何使用煉金術師來製作很棒的東西。”，
-  “ skill.vampirism.garlic_beacon.desc”：“學習如何製作大蒜擴散器以使那些吸血鬼遠離。”，
-  “ skill.vampirism.purified_garlic.desc”：“淨化大蒜以增強其效果。用它增強大蒜擴散器。”，
-  “ skill.vampirism.holy_water_enhanced.desc”：“創建增強的聖水，而不是普通的聖水。”，
-  “ skill.vampirism.garlic_beacon_improved.desc”：“了解如何製作更大範圍的大蒜擴散器”，
-  “ skill.vampirism.multitask_brewing.desc”：“立即用藥水錶從5個而不是3個藥水中抽出，”
-  “ skill.vampirism.durable_brewing.desc”：“學習昂貴的食譜來釀造非常持久的藥水”，
-  “ skill.vampirism.concentrated_brewing.desc”：“學習昂貴的食譜來釀造非常濃的藥水”，
-  “ skill.vampirism.swift_brewing.desc”：“加快釀造過程”，
-  “ skill.vampirism.efficient_brewing.desc”：“少即是多”，
-  “ skill.vampirism.master_brewer.desc”：“掌握一些全新的藥水”，
-  “ skill.vampirism.concentrated_durable_brewing.desc”：“長而堅強終於有可能”，
-  “ __comment”：“互動”，
-  “ text.vampirism.hunter_trainer.trainer_level_wrong”：“我不會像您一樣沒有經驗地訓練獵人。尋找經驗不足的人”，
-  “ text.vampirism.alchemical_cauldron.other”：“此大鍋屬於％s。您不應使用它。”，
-  “ text.vampirism.alchemical_cauldron.cannot_use”：“您尚未學會如何使用它”，
-  “ text.vampirism.altar_infusion.ritual_missing_times”：“您缺少該儀式的物品”，
-  “ text.vampirism.altar_infusion.ritual_structure_wrong”：“此儀式的結構有誤”，
-  “ text.vampirism.altar_infusion.ritual_level_wrong”：“您不能在此級別使用此祭壇”，
-  “ text.vampirism.altar_infusion.ritual_still_running”：“儀式仍在運行”，
-  “ text.vampirism.altar_infusion.ritual_night_only”：“您只能在晚上執行此儀式”，
-  “ text.vampirism.weapon_table.cannot_use”：“您尚未學會如何使用它”，
-  “ text.vampirism.village.no_faction”：“您必須加入派系”，
-  “ text.vampirism.village.capturing_in_progress”：“已經在進行捕獲”，
-  “ text.vampirism.village.same_faction”：“您不能攻擊自己派系擁有的村莊”，
-  “ text.vampirism.village.missing_components”：“附近的村莊或村莊都不小：”，
-  “ text.vampirism.village.missing_components.home”：“遺失房屋”，
-  “ text.vampirism.village.missing_components.workstations”：“缺少工作場所”，
-  “ text.vampirism.village.missing_components.villager”：“缺少村民”，
-  “ text.vampirism.village.othertotem”：“此圖騰不起作用。搜索另一個圖騰”，
-  “ __comment”：“容器/實體/屏幕”，
-  “ tile.vampirism.blood_grinder”：“血腥磨床”，
-  “ tile.vampirism.alchemical_cauldron”：“煉金術大鍋”，
-  “ tile.vampirism.altar_infusion”：“輸液祭壇”，
-  “ container.vampirism.hunter_weapon_table.name”：“武器表”，
-  “ container.hunter”：“獵人”，
-  “ container.hunter_table”：“獵人表”，
-  “ container.huntertrainer”：“獵人訓練師”，
-  “ container.vampirism.taskmaster”：“任務大師”，
-  “ __comment”：“容器/實體/ screen_text”，
-  “ text.vampirism.skills.gui_title”：“您的技能”，
-  “ text.vampirism.skills.points_left”：“還剩％d個技能點”，
- “ text.vampirism.skill.resetall”：“重置技能”，
-  “ text.vampirism.skill.unlocked”：“已解鎖”，
-  “ text.vampirism.skill.locked”：“被其他技能鎖定”，
-  “ text.vampirism.skill.clusion”：“彼此排斥：”，
-  “ text.vampirism.skill.unlocks_action”：“解鎖動作”，
-  “ text.vampirism.skill.unlock_parent_first”：“先解鎖父母”，
-  “ text.vampirism.skill.skills_reset”：“您的技能已被重置”，
-  “ text.vampirism.skill.deactivated_by_serveradmin”：“您的服務器管理員已停用此技能”，
-  “ container.vampirism.hunter_table.structure_level_wrong”：“您的等級表不完整”，
-  “ container.vampirism.hunter_table.level_wrong”：“無法在此級別使用表”，
-  “ container.vampirism.basic_hunter.levelup”：“我希望你學到了一些東西”，
-  “ tile.vampirism.alchemical_cauldron.display”：“％s的％s”，
-  “ text.vampirism.level_up”：“升級”，
-  “ text.vampirism.hunter_table.ritual_missing_items”：“此儀式缺少\”％s \“的％s”，
-  “ text.vampirism.altar_infusion.ritual_missing_items”：“此儀式缺少\”％s \“的％s”，
-  “ text.vampirism.hunter_trainer.ritual_missing_items”：“此儀式缺少\”％s \“的％s”，
-  “ __comment”：“ biome”，
-  “ biome.vampirism.vampire_forest”：“吸血鬼森林”，
-  “ biome.vampirism.vampire_forest_hills”：“吸血鬼森林山”，
-  “ __comment”：“文本”，
-  “ text.vampirism.update_message.download”：“下載”，
-  “ text.vampirism.update_message.changelog”：“ Changelog”，
-  “ text.vampirism.update_message.modpage”：“ Mod Page”，
-  “ __comment”：“塊”，
-  “ block.vampirism.castle_block_dark_stone”：“暗石”，
-  “ block.vampirism.castle_block_normal_brick”：“石磚”，
-  “ block.vampirism.castle_block_dark_brick”：“黑石磚”，
-  “ block.vampirism.castle_block_purple_brick”：“紫色石磚”，
-  “ block.vampirism.castle_block_dark_brick_bloody”：“血腥的黑石磚”，
-  “ block.vampirism.castle_stairs_dark_brick”：“黑磚樓梯”，
-  “ block.vampirism.castle_stairs_purple_brick”：“紫色磚台階”，
-  “ block.vampirism.castle_stairs_dark_stone”：“黑石樓梯”，
-  “ block.vampirism.blood_container”：“血液容器”，
-  “ block.vampirism.cursed_earth”：“被詛咒的地球”，
-  “ block.vampirism.vampire_orchid”：“吸血鬼蘭花”，
-  “ block.vampirism.altar_infusion”：“輸液祭壇”，
-  “ block.vampirism.altar_pillar”：“祭壇支柱”，
-  “ block.vampirism.altar_tip”：“祭壇提示”，
-  “ block.vampirism.hunter_table”：“獵人研究表”，
-  “ block.vampirism.church_altar”：“清潔祭壇”，
- “ block.vampirism.altar_inspiration”：“靈感壇”，
-  “ block.vampirism.fire_place”：“壁爐”，
-  “ block.vampirism.weapon_table”：“獵人武器表”，
-  “ block.vampirism.sunscreen_beacon”：“防曬霜燈塔”，
-  “ block.vampirism.alchemical_cauldron”：“煉金術大鍋”，
-  “ block.vampirism.garlic_beacon”：“大蒜擴散劑”，
-  “ block.vampirism.blood_pedestal”：“血統基座”，
-  “ block.vampirism.blood_grinder”：“鮮血磨床”，
-  “ block.vampirism.blood_sieve”：“血篩”，
-  “ block.vampirism.totem_top”：“脆弱的村莊圖騰頂部”，
-  “ block.vampirism.totem_top_vampirism_hunter”：“脆弱的村莊圖騰頂部”，
-  “ block.vampirism.totem_top_vampirism_vampire”：“脆弱的村莊圖騰頂部”，
-  “ block.vampirism.totem_top_crafted”：“鄉村圖騰頂部”，
-  “ block.vampirism.totem_top_vampirism_hunter_crafted”：“鄉村圖騰頂部”，
-  “ block.vampirism.totem_top_vampirism_vampire_crafted”：“鄉村圖騰頂部”，
-  “ block.vampirism.totem_base”：“鄉村圖騰庫”，
-  “ block.vampirism.castle_slab_dark_brick”：“深色磚坯”，
-  “ block.vampirism.castle_slab_purple_brick”：“紫色磚坯”，
-  “ block.vampirism.castle_slab_dark_stone”：“暗石台階”，
-  “ block.vampirism.coffin”：“棺材”，
-  “ block.vampirism.potion_table”：“藥水錶”，
-  “ block.vampirism.bloody_spruce_log”：“血腥雲杉日誌”，
-  “ block.vampirism.vampire_spruce_leaves”：“吸血鬼雲杉葉”，
-  “ block.vampirism.bloody_spruce_leaves”：“血腥的雲杉葉”，
-  “ block.vampirism.bloody_spruce_sapling”：“血腥雲杉樹苗”，
-  “ __comment”：“ blocks_old”，
-  “ block.vampirism.tent”：“帳篷”，
-  “ block.vampirism.med_chair”：“注射椅”，
-  “ block.vampirism.alchemical_fire”：“煉金術之火”，
-  “ block.vampirism.garlic_beacon.already_fueled”：“已經加油”，
-  “ block.vampirism.garlic_beacon.successfully_fueled”：“成功加油”，
-  “ block.vampirism.castle_block”：“城堡街區”，
-  “ __comment”：“項目”，
-  “ item.vampirism.hunter_intel”：“ Hunter Intel”，
-  “ item.vampirism.pure_blood”：“純血”，
-  “ item.vampirism.injection_empty”：“注射器”，
-  “ item.vampirism.injection_garlic”：“大蒜注射劑”，
-  “ item.vampirism.injection_sanguinare”：“ Sanguinare注射劑”，
-  “ item.vampirism.vampire_fang”：“吸血鬼牙”，
-  “ item.vampirism.weak_human_heart”：“弱人之心”，
-  “ item.vampirism.human_heart”：“人類之心”，
-  “ item.vampirism.vampire_blood_bottle”：“吸血鬼之血”，
-  “ item.vampirism.item_garlic”：“大蒜”，
-  “ item.vampirism.item_med_chair”：“注射椅”，
-  “ item.vampirism.pitchfork”：“乾草叉”，
-  “ item.vampirism.basic_crossbow”：“十字弓”，
-  “ item.vampirism.basic_double_crossbow”：“雙Cross”，
-  “ item.vampirism.enhanced_crossbow”：“增強的b”，
-  “ item.vampirism.enhanced_double_crossbow”：“增強的雙Cross”，
-  “ item.vampirism.basic_tech_crossbow”：“半自動Cross”，
-  “ item.vampirism.enhanced_tech_crossbow”：“增強的半自動Cross”，
-  “ item.vampirism.crossbow_arrow_vampire_killer”：“吸血鬼殺手之箭”，
-  “ item.vampirism.crossbow_arrow_spitfire”：“烈性人”，
-  “ item.vampirism.crossbow_arrow_normal”：“十字弓箭頭”，
-  “ item.vampirism.stake”：“ Stake”，
-  “ item.vampirism.blood_bottle”：“血瓶”，
-  “ item.vampirism.tech_crossbow_ammo_package”：“箭頭剪輯”，
-  “ item.vampirism.vampire_book”：“吸血鬼書”，
-  “ item.vampirism.holy_water_bottle”：“聖水”，
-  “ item.vampirism.holy_water_splash_bottle”：“濺起一瓶聖水”，
-  “ item.vampirism.pure_salt”：“純鹽”，
-  “ item.vampirism.holy_salt”：“祝福的鹽”，
-  “ item.vampirism.purified_garlic”：“純淨大蒜”，
-  “ item.vampirism.item_alchemical_fire”：“煉金術之火”，
-  “ item.vampirism.garlic_beacon_core”：“大蒜擴散核”，
-  “ item.vampirism.garlic_beacon_core_improved”：“改良的大蒜擴散器核心”，
-  “ item.vampirism.armor_of_swiftness_head”：“迅捷頭盔”，
-  “ item.vampirism.armor_of_swiftness_chest”：“迅捷胸甲”，
-  “ item.vampirism.armor_of_swiftness_legs”：“迅捷的腿”，
-  “ item.vampirism.armor_of_swiftness_feet”：“迅捷之靴”，
-  “ item.vampirism.hunter_coat_head”：“獵人外套頭盔”，
-  “ item.vampirism.hunter_coat_chest”：“獵人外套”，
-  “ item.vampirism.hunter_coat_legs”：“獵人外套打底褲”，
-  “ item.vampirism.hunter_coat_feet”：“獵人外套靴子”，
-  “ item.vampirism.obsidian_armor_head”：“黑曜石頭盔的地獄”，
-  “ item.vampirism.obsidian_armor_chest”：“黑曜石地獄胸甲”，
-  “ item.vampirism.obsidian_armor_legs”：“黑曜石的地獄護腿”，
-  “ item.vampirism.obsidian_armor_feet”：“黑曜石之靴”，
-  “ item.vampirism.vampire_cloak_white_black”：“吸血鬼披風”，
-  “ item.vampirism.vampire_cloak_black_white”：“吸血鬼披風”，
-  “ item.vampirism.vampire_cloak_black_red”：“吸血鬼披風”，
-  “ item.vampirism.vampire_cloak_black_blue”：“吸血鬼披風”，
-  “ item.vampirism.vampire_cloak_red_black”：“吸血鬼披風”，
-  “ item.vampirism.hunter_hat_head”：“獵人帽”，
-  “ item.vampirism.heart_seeker”：“尋心者”，
-  “ item.vampirism.heart_striker”：“ Heartstriker”，
-  “ item.vampirism.hunter_axe”：“獵人之斧”，
-  “ item.vampirism.blood_infused_iron_ingot”：“輸血鐵錠”，
-  “ item.vampirism.blood_infused_enhanced_iron_ingot”：“增強血液注入鐵錠”，
-  “ item.vampirism.soul_orb_vampire”：“吸血鬼之魂”，
-  “ item.vampirism.item_tent”：“帳篷”，
-  “ item.vampirism.vampire_spawn_egg”：“吸血鬼卵”，
-  “ item.vampirism.vampire_hunter_spawn_egg”：“吸血鬼獵人產生的卵”，
-  “ item.vampirism.advanced_vampire_spawn_egg”：“高級吸血鬼產卵”，
-  “ item.vampirism.advanced_vampire_hunter_spawn_egg”：“高級吸血鬼獵人產生的卵”，
-  “ item.vampirism.vampire_baron_spawn_egg”：“吸血鬼男爵卵”
-  “ item.vampirism.hunter_trainer_spawn_egg”：“獵人訓練師的產卵”，
-  “ item.vampirism.blood_bucket”：“血桶”，
-  “ item.vampirism.impure_blood_bucket”：“不純的血桶”，
-  “ item.vampirism.garlic_bread”：“大蒜麵包”，
-  “ item.vampirism.umbrella”：“傘”，
-  “ item.vampirism.minion_upgrade_item.desc”：“一次升級”，
-  “ __comment”：“ item_old”，
-  “ item.vampirism.vampires_fear”：“吸血鬼的恐懼”，
-  “ item.vampirism.torch”：“火炬”，
-  “ item.vampirism.sunscreen”：“防曬霜”，
-  “ item.vampirism.leech_sword”：“水ech”，
-  “ item.vampirism.vampire_armor_helmet”：“吸血鬼頭盔”，
-  “ item.vampirism.vampire_armor_leggings”：“吸血鬼的綁腿”，
-  “ item.vampirism.vampire_armor_boots”：“吸血鬼的靴子”，
-  “ item.vampirism.vampire_armor_chestplate”：“吸血鬼的胸甲”，
-  “ item.vampirism.minion_name_tag”：“奴才名稱標籤”，
-  “ item.vampirism.gem_of_binding”：“具有約束力的寶石”，
-  “ item.vampirism.blood_eye”：“鮮血”，
-  “ item.vampirism.weak_vampire_fang”：“弱吸血鬼牙”，
-  “ item.vampirism.concentrated_garlic”：“濃縮大蒜”，
-  “ item.vampirism.garlic_bomb”：“大蒜炸彈”，
-  “ item.vampirism.holy_salt_water”：“福鹹水”，
-  “ item.vampirism.battle_axe”：“戰斧”，
-  “ __comment”：“藥水”，
-  “ item.minecraft.potion.effect.thirst”：“口渴藥水”，
-  “ item.minecraft.potion.effect.blindness”：“失明藥水”，
-  “ item.minecraft.potion.effect。噁心”：“噁心藥水”，
-  “ item.minecraft.potion.effect.health_boost”：“健康促進藥水”，
-  “ item.minecraft.potion.effect.resistance”：“抵抗藥水”，
-  “ item.minecraft.potion.effect.vampire_fire_resistance”：“吸血鬼抗火藥水”，
-  “ item.minecraft.splash_potion.effect.thirst”：“口渴的飛濺藥水”，
-  “ item.minecraft.splash_potion.effect.blindness”：“飛濺的失明藥水”，
-  “ item.minecraft.splash_potion.effect。噁心”：“噁心的飛濺藥水”，
-  “ item.minecraft.splash_potion.effect.health_boost”：“健康促進的飛濺藥水”，
-  “ item.minecraft.splash_potion.effect.resistance”：“抵抗的飛濺藥水”，
-  “ item.minecraft.splash_potion.effect.vampire_fire_resistance”：“吸血鬼耐火飛濺藥水”，
-  “ item.minecraft.lingering_potion.effect.thirst”：“口渴的藥水”，
-  “ item.minecraft.lingering_potion.effect.blindness”：“留著盲藥”
-  “ item.minecraft.lingering_potion.effect。噁心”：“噁心的留香藥水”，
-  “ item.minecraft.lingering_potion.effect.health_boost”：“健康促進的持久藥水”，
-  “ item.minecraft.lingering_potion.effect.resistance”：“抵抗的持久藥水”，
-  “ item.minecraft.lingering_potion.effect.vampire_fire_resistance”：“吸血鬼耐火藥水”，
-  “ __comment”：“屬性”，
-  “ attribute.name.vampirism.blood_exhaustion”：“血液衰竭”，
-  “ attribute.name.vampirism.bite_damage”：“咬傷”，
-  “ attribute.name.vampirism.sundamage”：“太陽的傷害”，
-  “ __comment”：“工具提示”，
-  “，” item.vampirism.crossbow_arrow_vampire_killer.tooltip“：”立即殺死低級吸血鬼NPC。“，
-  “ item.vampirism.crossbow_arrow_spitfire.tooltip”：“在撞擊時產生煉金術之火”，
-  “ item.vampirism.tech_crossbow_ammo_package.tooltip”：“可用於填寫％s”，
-  “ item.vampirism.item.tier.normal”：“普通”，
-  “ item.vampirism.item.tier.enhanced”：“增強”，
-  “ item.vampirism.item.tier.ultimate”：“終極”，
-  “ item.vampirism.item_alchemical_fire.desc1”：“不擴散”，
-  “ item.vampirism.item_alchemical_fire.desc2”：“無限燃燒”，
-  “ item.vampirism.pure_blood.purity”：“純度”，
-  “ item.vampirism.hunter_minion_equipment”：“獵人小僕的裝備”，
-  “ item.vampirism.hunter_minion_upgrade_simple”：“獵人小兵裝備升級”，
-  “ item.vampirism.hunter_minion_upgrade_enhanced”：“增強了獵人的奴才裝備升級”，
-  “ item.vampirism.hunter_minion_upgrade_special”：“特殊獵人小兵裝備升級”，
-  “ item.vampirism.feeding_adapter”：“進紙適配器”，
-  “ item.vampirism.vampire_minion_binding”：“吸血鬼奴才綁定”，
-  “ item.vampirism.vampire_minion_upgrade_simple”：“吸血鬼小兵升級”，
-  “ item.vampirism.vampire_minion_upgrade_enhanced”：“增強的吸血鬼小兵升級”，
-  “ item.vampirism.vampire_minion_upgrade_special”：“特殊吸血鬼小兵升級”，
-  “ block.vampirism.castle_block.no_spawn”：“沒有實體可以在其上產生”，
-  “ block.vampirism.castle_block.vampire_spawn”：“只有吸血鬼可以在此產卵”，
-  “ block.vampirism.sunscreen_beacon.tooltip1”：“僅限廣告素材。”，
-  “，” block.vampirism.sunscreen_beacon.tooltip2“：”給吸血鬼玩家從基岩到天空以％s的半徑遮擋防曬霜。“，
-  “ block.vampirism.garlic_beacon.improved”：“改進了大蒜擴散器”，
-  “ block.vampirism.garlic_beacon.weak”：“大蒜擴散劑弱”，
-  “ block.vampirism.garlic_beacon.tooltip1”：“擴散大蒜顆粒。”，
-  “ block.vampirism.garlic_beacon.tooltip2”：“通過％s的塊面積影響％s。”，
-  “ tile.vampirism.tent.spawner”：“ Spawns Hunter”，
-  “ __comment”：“命令”，
-  “ command.vampirism.failed_to_execute”：“無法執行命令。內部錯誤。”，
-  “” command.vampirism.failed_to_execute.players“：”無法為％s執行命令。內部錯誤。“，
-  “，” command.vampirism.base.reset_balance.success“：”已成功重置％s餘額類別。請重新啟動MC。“，
-  “ command.vampirism.base.reset_balance.not_found”：“未找到％s餘額類別。”，
-  “ command.vampirism.base.reset_balance.help1”：“您可以將Vampirism平衡值重置為默認值。如果您尚未修改它們，建議在每次更新Vampirism之後使用”
-  “” command.vampirism.base.reset_balance.help2“：”使用'/ vampirism resetBalance all'重置所有類別，或使用'/ vampirism resetBalance <category>'指定類別”，
-  “ command.vampirism.base.levelup.nofaction”：“％s必須在一個派系中才能升級”，
-  “ command.vampirism.base.levelup.max”：“％s已經在最高級別上”，
-  “ command.vampirism.base.levelup.newlevel”：“％s現在是％s級別％s”，
-  “ command.vampirism.base.level.cant_leave”：“％s無法離開派系％s”，
-  “ command.vampirism.base.level.successful”：“％s現在是％s級別％s”，
-  “ command.vampirism.base.glowing_eyes.enabled”：“成功啟用了發光的眼睛”，
-  “ command.vampirism.base.glowing_eyes.disabled”：“成功禁用了發光的眼睛”，
-  “ command.vampirism.base.fang.types”：“ <id>必須為0到％s之間的有效數字”，
-  “ command.vampirism.base.fang.success”：“成功將fang類型更改為％s”，
-  “ command.vampirism.base.eye.types”：“ <id>必須為0到％s之間的有效數字”，
-  “ command.vampirism.base.eye.success”：“已成功將眼睛類型更改為％s”，
-  “ command.vampirism.base.currentdimension.dimension”：“維度ID：％s”，
-  “ command.vampirism.base.vampire_biome.time_warning”：“這將花費很長時間。如果確定，請使用'/％s％s！yes'”，
-  “ command.vampirism.base.vampire_biome.searching”：“正在尋找吸血鬼森林生物群落。請稍候”，
-  “ command.vampirism.base.vampire_biome.not_found”：“未找到吸血鬼森林生物群系。”，
-  “ command.vampirism.base.vampire_biome.found”：“最近的吸血鬼森林生物群系位於％s％s”，
-  “ command.vampirism.base.vampire_biome.disabled”：“吸血鬼生物群系已在配置文件中禁用”，
-  “ command.vampirism.base.changelog.newversion”：“沒有可用的新版本”，
-  “ command.vampirism.base.bind_action.success”：“已成功將操作％s綁定到操作鍵％s”，
-  “ command.vampirism.base.bind_action.not_existing”：“給定的動作％s不存在”，
-  “，” command.vampirism.base.bind_action.help“：”您可以將自定義動作（例如蝙蝠模式）綁定到兩個可用的動作鍵（請參閱按鍵綁定）。“，
-  “ command.vampirism.test.gen_debug.true”：“已啟用Worldgen調試”，
-  “ command.vampirism.test.gen_debug.false”：“已禁用Worldgen調試”，
-  “ command.vampirism.test.skill.enabled”：“成功啟用技能％s”，
-  “ command.vampirism.test.skill.alreadyenabled”：“技能已啟用（％s）”，
-  “ command.vampirism.test.skill.parent”：“必須啟用父級技能（％s）”，
-  “ command.vampirism.test.skill.parents”：“必須啟用家長技能（％s或％s）”，
-  “ command.vampirism.test.skill.nopoints”：“沒有剩餘的技能點”，
-  “ command.vampirism.test.skill.othernode”：“其他技能已啟用”，
-  “ command.vampirism.test.skill.otherfaction”：“您的派係不允許使用此技能”，
-  “ command.vampirism.test.skill.noinfaction”：“您必須加入派系”，
-  “ command.vampirism.test.skill.disabled”：“禁用的技能”，
-  “ command.vampirism.test.skill.locked”：“被其他技能節點鎖定”，
-  “ command.vampirism.test.tent.success”：“成功”，
-  “ command.vampirism.test.swordtrained.nosword”：“您必須在主手上握著吸血鬼劍”，
-  “ command.vampirism.test.swordcharged.nosword”：“您必須在主手上握著吸血鬼劍”，
-  “ command.vampirism.test.resetactions”：“重置計時器”，
-  “ command.vampirism.test.place.notloaded”：“未加載結構％s”，
-  “ command.vampirism.test.place.notfound”：“未找到結構％s。”，
-  “ command.vampirism.test.infoentity.printed”：“已打印的日誌信息”，
-  “ command.vampirism.test.garlicprofiler.tick”：“ Tick”，
-  “ command.vampirism.test.garlicprofiler.garlic”：“大蒜”，
-  “ command.vampirism.test.garlicprofiler.print”：“％s：％s |％s”，
- “ command.vampirism.test.garliccheck.strength”：“大蒜強度：％s”，
-  “ command.vampirism.test.entity.notbiteable”：“不適合％s”，
-  “ command.vampirism.test.village.no_village”：“附近沒有村莊”，
-  “ command.vampirism.test.village.success”：“成功將村莊轉換為派系％s”，
-  “ command.vampirism.argument.skill.notfound”：“給定的技能％s不存在”，
-  “ command.vampirism.argument.action.notfound”：“給定的動作％s不存在”，
-  “ command.vampirism.argument.faction.notfound”：“給定的派系％s不存在”，
-  “ command.vampirism.argument.faction.notplayable”：“您不能扮演％s”，
-  “ command.vampirism.base.gender.success”：“已成功設置主標題顯示的性別”，
-  “ command.vampirism.base.lord.successful”：“％s現在是％s主級％s”，
-  “ __comment”：“ commands_old”，
-  “” command.vampirism.base.vampire_biome.parse_dist“：”無法解析最大距離。使用％s。“，
-  “ __comment”：“實體”，
-  “ entity.vampirism.vampire_baron”：“吸血鬼男爵”，
-  “ entity.vampirism.task_master_hunter”：“獵人代表”，
-  “ entity.vampirism.task_master_vampire”：“吸血鬼代表”，
-  “ entity.vampirism.vampire_minion”：“吸血鬼小僕”，
-  “ entity.vampirism.hunter_minion”：“獵人小兵”，
-  “ entity.vampirism.dummy_creature”：“虛擬生物”，
-  “ __comment”：“ entities_text”，
-  “ entity.vampirism.vampire_baron.level”：“級別％s”，
-  “ __comment”：“舊”，
-  “ __comment”：“實體”，
-  “ entity.vampirism.hunter_trainer”：“吸血鬼獵人訓練師”，
-  “ entity.vampirism.hunter_trainer_dummy”：“秘密獵人訓練師”
-  “ entity.vampirism.advanced_vampire”：“高級吸血鬼”，
-  “ entity.vampirism.advanced_hunter”：“高級獵人”，
-  “ entity.vampirism.villager_angry”：“憤怒的村民”，
-  “ entity.vampirism.vampire_hunter”：“吸血鬼獵人”，
-  “ entity.vampirism.hunter”：“吸血鬼獵人”，
-  “ entity.vampirism.vampire”：“吸血鬼”，
-  “ entity.vampirism.blinding_bat”：“蝙蝠”，
-  “ entity.vampirism.dracula”：“ Dracula”，
-  “ entity.vampirism.dead_mob”：“死亡暴徒”，
-  “ entity.vampirism.portal_guard”：“門衛”，
-  “ entity.vampirism.villager_converted”：“吸血鬼村民”，
-  “ entity.vampirism.villager_vampire_faction”：“吸血鬼專家”，
-  “ entity.vampirism.villager_hunter_faction”：“獵人專家”，
-  “ entity.Villager.vampirism.hunter_priest”：“煉金術士”，
-  “ entity.Villager.vampirism.vampire_expert”：“吸血鬼專家”，
-  “ entity.minecraft.villager.vampirism.hunter_expert”：“獵人專家”，
-  “ entity.minecraft.villager.vampirism.vampire_expert”：“吸血鬼專家”，
-  “ entity.vampirism.advanced_vampire_imob”：“高級吸血鬼”，
-  “ entity.vampirism.advanced_hunter_imob”：“高級獵人”，
-  “ entity.vampirism.hunter_imob”：“吸血鬼獵人”，
-  “ entity.vampirism.vampire_imob”：“吸血鬼”，
-  “ __comment”：“ minioncommands”，
-  “ minion_task.vampirism.protect_lord”：“捍衛主”，
-  “ minion_task.vampirism.nothing”：“沒有”，
-  “ minion_task.vampirism.stay”：“留在這裡”，
-  “ minion_task.vampirism.follow_lord”：“關注”，
-  “ minion_task.vampirism.defend_area”：“防禦區”，
-  “ minion_task.vampirism.collect_hunter_items”：“收集資源”，
-  “ minion_task.vampirism.collect_hunter_items.start”：“我將前往並蒐索資源”，
-  “ minion_task.vampirism.collect_blood”：“收集血液”，
-  “ minion_task.vampirism.collect_blood.start”：“ S父，我將為你採血。”，
-  “ text.vampirism.minion.can_respawn”：“我的主，我已經康復了（％s）”，
-  “ text.vampirism.minion.died”：“我的主，我已經死了（％s）”，
-  “ text.vampirism.name”：“名稱：”，
-  “ text.vampirism.minion.call_single”：“通話單”，
-  “ text.vampirism.minion.call_all”：“全部調用”，
-  “ text.vampirism.minion.respawn”：“重生失敗”，
-  “ __comment”：“任務”，
-  “ task.vampirism.feeding_adapter”：“廚房實用程序”，
-  “ task.vampirism.vampire_minion_binding”：“小兵控制”，
-  “ task.vampirism.vampire_minion_upgrade_simple”：“小兵升級”，
-  “ task.vampirism.vampire_minion_upgrade_enhanced”：“性能增強器”，
-  “ task.vampirism.vampire_minion_upgrade_special”：“終極助推器”，
-  “ task.vampirism.vampire_lord1”：“您值得嗎？”，
-  “ task.vampirism.vampire_lord1.reward”：“成為吸血鬼領主”，
-  “ task.vampirism.vampire_lord2”：“下一步”，
-  “ task.vampirism.vampire_lord2.reward”：“第2級領主”，
-  “ task.vampirism.vampire_lord3”：“再來一次”，
-  “ task.vampirism.vampire_lord3.reward”：“三級領主”，
-  “ task.vampirism.vampire_lord4”：“控制狂熱”，
-  “ task.vampirism.vampire_lord4.reward”：“ 4級領主”，
-  “ task.vampirism.vampire_lord5”：“女同性戀症”
-  “ task.vampirism.vampire_lord5.reward”：“ 5級領主”，
-  “ task.vampirism.hunter_minion_equipment”：“適當的裝備”，
-  “ task.vampirism.hunter_minion_upgrade_simple”：“升級”，
-  “ task.vampirism.hunter_minion_upgrade_enhanced”：“更好的升級”，
-  “ task.vampirism.hunter_minion_upgrade_special”：“一流的設備”，
-  “ task.vampirism.hunter_lord1”：“你值得嗎？”，
-  “ task.vampirism.hunter_lord1.reward”：“成為獵人之王”，
-  “ task.vampirism.hunter_lord2”：“下一步”，
-  “ task.vampirism.hunter_lord2.reward”：“第2級領主”，
-  “ task.vampirism.hunter_lord3”：“再來一次”，
-  “ task.vampirism.hunter_lord3.reward”：“三級領主”，
-  “ task.vampirism.hunter_lord4”：“控制狂熱”，
-  “ task.vampirism.hunter_lord4.reward”：“ 4級領主”，
-  “ task.vampirism.hunter_lord5”：“女同性戀症”，
-  “ task.vampirism.hunter_lord5.reward”：“ 5級領主”，
-  “ task.vampirism.fire_resistance1”：“最終防火”，
-  “ task.vampirism.fire_resistance2”：“抗性升級”，
-  “ task.vampirism.v_infect1”：“桑古納雷吊具I”，
-  “ task.vampirism.v_infect2”：“ Sanguinare撒佈機II”，
-  “ task.vampirism.v_infect3”：“ Sanguinare撒佈機III”，
-  “ task.vampirism.v_capture1”：“擴展區域I”，
-  “ task.vampirism.v_capture2”：“擴展區域II”，
-  “ task.vampirism.v_kill1”：“獵人狩獵我”，
-  “ task.vampirism.v_kill2”：“獵人狩獵II”，
-  “ task.vampirism.h_kill1”：“正在清洗I”，
-  “ task.vampirism.h_kill2”：“清潔II”，
-  “ task.vampirism.h_kill3”：“清潔III”，
-  “ task.vampirism.h_capture1”：“鄉村保護I”，
-  “ task.vampirism.h_capture2”：“鄉村保護II”，
-  “ task.vampirism.h_souls”：“靈魂收集”，
-  “ task.vampirism.h_crossbow”：“設備捐贈”，
-  “ task.vampirism.break_bones1”：“破壞我的骨頭”，
-  “ task.vampirism.break_bones2”：“破壞某些骨骼II”，
- “ task.vampirism.break_bones3”：“破壞某些骨骼III”，
-  “ task.vampirism.break_bones4”：“破壞一些骨骼IV”，
-  “ task.vampirism.totem_top”：“村莊控制”，
-  “ __comment”：“統計”，
-  “ stat.vampirism.infected_creatures”：“受Sanguinare感染的生物”，
-  “ stat.vampirism.interact_alchemical_cauldron”：“與煉金大鍋的相互作用”，
-  “ stat.vampirism.weapon_table”：“與武器表的互動”，
-  “ stat.vampirism.capture_village”：“已捕獲敵對村莊”，
-  “ __comment”：“標題”，
-  “ text.vampirism.lord_title.vampire.male1”：“男爵”，
-  “ text.vampirism.lord_title.vampire.male2”：“子爵”，
-  “ text.vampirism.lord_title.vampire.male3”：“計數”，
-  “ text.vampirism.lord_title.vampire.male4”：“公爵”，
-  “ text.vampirism.lord_title.vampire.male5”：“王子”，
-  “ text.vampirism.lord_title.vampire.female1”：“男爵夫人”，
-  “ text.vampirism.lord_title.vampire.female2”：“子爵夫人”，
-  “ text.vampirism.lord_title.vampire.female3”：“伯爵夫人”，
-  “ text.vampirism.lord_title.vampire.female4”：“公爵夫人”，
-  “ text.vampirism.lord_title.vampire.female5”：“公主”，
-  “ text.vampirism.lord_title.hunter.1”：“中尉”，
-  “ text.vampirism.lord_title.hunter.2”：“船長”，
-  “ text.vampirism.lord_title.hunter.3”：“主要”，
-  “ text.vampirism.lord_title.hunter.4”：“上校”，
-  “ text.vampirism.lord_title.hunter.5”：“準將”，
-  “ text.vampirism.minion.stats.inventory_level”：“庫存大小”，
-  “ text.vampirism.minion.stats.resource_level”：“資源效率”
+  "text.vampirism.command.available_subcommands":"可用的子命令:",
+  "text.vampirism.command.subcommand_help":"使用'/％s help <subcommand>'獲取更多信息",
+  "text.vampirism.command.usage":"/％s <子命令> <參數> |使用/％s幫助來獲取所有可用的子命令",
+  "action.vampirism.cancel":"取消",
+  "text.vampirism.no_permission":"您無權這樣做",
+  "text.vampirism.action.not_unlocked":"此操作未解鎖",
+  "text.vampirism.action.deactivated_by_serveradmin":"您的服務器管理員已停用此操作",
+  "text.vampirism.action.not_bound":"此鍵沒有任何動作。請參見％s。",
+  "text.vampirism.action.only_faction":"此動作只能由％s派系的玩家使用",
+  "keys.vampirism.select_skills":"選擇技能",
+  "keys.vampirism.action":"使用動作",
+  "keys.vampirism.category":"吸血鬼",
+  "keys.vampirism.suck":"吸血",
+  "keys.vampirism.auto":"自動填充血瓶",
+  "keys.vampirism.vision":"切換視覺",
+  "keys.vampirism.action1":"切換動作1",
+  "keys.vampirism.action2":"切換動作2",
+  "advancement.vampirism.desc":"吸血鬼入門",
+  "advancement.vampirism.become_vampire":"弄一些尖牙",
+  "advancement.vampirism.become_vampire.desc":"成為吸血鬼",
+  "advancement.vampirism.become_hunter":"開始狩獵",
+  "advancement.vampirism.become_hunter.desc":"成為吸血鬼獵人",
+  "advancement.vampirism.sucking_blood":"第一滴血",
+  "advancement.vampirism.sucking_blood.desc":"從生物身上吸血",
+  "advancement.vampirism.stake":"通過心靈",
+  "advancement.vampirism.stake.desc":"用木樁刺吸血鬼",
+  "advancement.vampirism.vampire_forest":"吸血鬼森林",
+  "advancement.vampirism.vampire_forest.desc":"探索新的吸血鬼森林",
+  "advancement.vampirism.bat":"蝙蝠模式",
+  "advancement.vampirism.bat.desc":"成為蝙蝠",
+  "advancement.vampirism.max_level_vampire":"盡其所能",
+  "advancement.vampirism.max_level_vampire.desc":"達到最高的吸血鬼等級",
+  "advancement.vampirism.max_level_hunter":"盡其致命",
+  "advancement.vampirism.max_level_hunter.desc":"達到最高獵人等級",
+  "advancement.vampirism.technology":"現代技術",
+  "advancement.vampirism.technology.desc":"為自己準備一把高級cross",
+  "advancement.vampirism.extra_storage":"額外的存儲空間",
+  "advancement.vampirism.extra_storage.desc":"為所有血液獲取一個血液容器",
+  "advancement.vampirism.ancient_knowledge":"古代知識",
+  "advancement.vampirism.ancient_knowledge.desc":"找到一本舊的吸血鬼書",
+  "advancement.vampirism.betrayal":"背叛",
+  "advancement.vampirism.betrayal.desc":"在自己成為獵人後殺死獵人",
+  "advancement.vampirism.regicide":"Regicide",
+  "advancement.vampirism.regicide.desc":"擊敗吸血鬼男爵",
+  "advancement.vampirism.blood_cult":"血統",
+  "advancement.vampirism.blood_cult.desc":"在輸液祭壇上進行儀式",
+  "advancement.vampirism.yuck":"糟糕！",
+  "advancement.vampirism.yuck.desc":"從不死生物身上吸血",
+  "advancement.vampirism.sniped":"被狙擊！",
+  "advancement.vampirism.sniped.dec":"在蝙蝠模式下被狙擊",
+  "effect.vampirism.sunscreen":"防曬霜",
+  "effect.vampirism.thirst":"乾渴",
+  "effect.vampirism.poison":"有毒",
+  "effect.vampirism.saturation":"飽和度",
+  "effect.vampirism.sanguinare":"Sanguinare Vampiris",
+  "effect.vampirism.fire_protection":"防火",
+  "effect.vampirism.garlic":"大蒜",
+  "fluid.vampirism.blood":"血液",
+  "fluid.vampirism.blood.vampirism":"吸血鬼血",
+  "fluid.vampirism.impure_blood":"不純之血",
+  "fluid.vampirism.impure_blood.vampirism":"吸血鬼不純血",
+  "gui.vampirism.hunter_weapon_table":"獵人武器表",
+  "gui.vampirism.hunter_weapon_table.level":"所需的獵人等級:％s",
+  "gui.vampirism.hunter_weapon_table.skill":"所需技能:％s",
+  "gui.vampirism.revertback.head":"還原為正常人",
+  "gui.vampirism.revertback.desc":"您將失去所有關卡並死亡",
+  "gui.vampirism.reset_skills.title":"重置技能",
+  "gui.vampirism.reset_skills.desc":"如果您重置技能,您將失去一個等級。您想重置技能嗎？",
+  "gui.vampirism.reset_skills.desc_test":"您想重置您的技能嗎？（您不會失去等級,因為您使用的是Vampirism的Alpha版本）",
+  "gui.vampirism.alchemical_cauldron.level":"所需的獵人等級:％s",
+  "gui.vampirism.alchemical_cauldron.skill":"所需技能:％s",
+  "gui.vampirism.name_sword.title":"劍名",
+  "gui.vampirism.name_sword.text":"您想給這把劍起個名字嗎？",
+  "gui.vampirism.minion.appearance":"更改僕從外觀",
+  "gui.vampirism.minion.lock_action":"忽略全局命令",
+  "gui.vampirism.minion.active_task":"當前任務",
+  "gui.vampirism.minion_appearance":"更改小兵的外觀",
+  "gui.vampirism.minion_appearance.skin":"皮膚類型",
+  "gui.vampirism.minion_appearance.hat":"帽子類型",
+  "gui.vampirism.minion_appearance.use_lord_skin":"使用主皮",
+  "gui.vampirism.appearance":"更改外觀",
+  "gui.vampirism.appearance.fang":"方型",
+  "gui.vampirism.appearance.eye":"眼睛類型",
+  "gui.vampirism.taskmaster.item_req":"要獲取的物品",
+  "gui.vampirism.taskmaster.entity_req":"要殺死的實體",
+  "gui.vampirism.taskmaster.entity_tag_req":"要殺死的實體類型",
+  "gui.vampirism.taskmaster.bool_req":"達到",
+  "gui.vampirism.taskmaster.stat_req":"要實現的統計信息",
+  "gui.vampirism.taskmaster.complete_task":"提交",
+  "gui.vampirism.taskmaster.accept_task":"接受",
+  "gui.vampirism.taskmaster.abort_task":"中止",
+  "gui.vampirism.taskmaster.requirement":"Requirement:",
+  "gui.vampirism.taskmaster.reward":"獎勵:",
+  "gui.vampirism.taskmaster.text.vampirism_vampire":"很抱歉,如果您願意幫助當地的吸血鬼社區,那麼您可以完成幾項任務。完成後您會得到回報,並給自己起個名字。請瀏覽任務並接受您喜歡的任何東西",
+  "gui.vampirism.taskmaster.text.vampirism_hunter":"資深獵人,為了支持本地獵人社區,您可以完成幾項任務。完成後您將獲得獎勵。請瀏覽可用的任務並接受您喜歡的任何任務。 ",
+  "gui.vampirism.taskmaster.not_accepted":"尚未接受",
+  "gui.vampirism.minion_stats":"Minion Stats",
+  "enchantment.vampirism.arrow_frugality":"箭頭節儉",
+  "enchantment.vampirism.vampire_slayer":"吸血鬼殺手",
+  "enchantment.vampirism.crossbow_infinity":"Crossbow Infinity",
+  "enchantment.vampirism.crossbowfrugality.desc":"拍攝時,有時使cross不消耗箭頭。機率隨等級增加",
+  "enchantment.vampirism.vampireslayer.desc":"增加對吸血鬼生物的傷害",
+  "enchantment.vampirism.crossbowinfinite.desc":"使您（非技術類）的shoot射而無需消耗箭頭",
+  "text.vampirism.village.faction_capturing":"％s正在佔領這個村莊",
+  "text.vampirism.village.faction_controlling":"％s正在控制這個村莊",
+  "text.vampirism.village.neutral":"中立村",
+  "text.vampirism.village.totem_destroy.fail_other_capturing":"當另一派系佔領圖騰時,它無法銷毀",
+  "text.vampirism.village.totem_destroy.fail_capture_in_progress":"在有人捕獲圖騰時無法銷毀",
+  "text.vampirism.village.totem_destroy.fail_other_faction":"無法銷毀另一個派系的圖騰",
+  "text.vampirism.village.totem_destroy.fail_totem_faction":"無法銷毀另一個派別村莊的村莊組成部分",
+  "text.vampirism.village.village_captured_by":"附近的村莊已被％s捕獲",
+  "text.vampirism.village.village_capture_aborted":"對附近村莊的襲擊已被中止",
+  "text.vampirism.village.neutral_village_under_attack":"附近的一個中立村莊正受到％s的攻擊",
+  "text.vampirism.village.faction_village_under_attack":"附近的％s村莊受到％s的攻擊",
+  "text.vampirism.village.almost_captured":"村莊險些被俘虜。％s捍衛者離開了",
+  "text.vampirism.village.bossinfo.capture":"村莊捕獲進度",
+  "text.vampirism.village.defender_remaining":"剩餘的防御者",
+  "text.vampirism.village.village_abandoned":"附近的村莊已被廢棄",
+  "text.vampirism.hunter_villager.trade_successful":"感謝您追捕那些吸血鬼",
+  "text.vampirism.hunter_villager.decline_trade_vampire":"我不與邪惡的吸血鬼交易",
+  "text.vampirism.hunter_villager.decline_trade_normal":"對不起,但是我的交易只對吸血鬼獵人很有趣",
+  "text.vampirism.vampire_villager.trade_successful":"感謝您從吸血鬼獵人手中拯救了我們",
+  "text.vampirism.vampire_villager.decline_trade_vampire":"我不與邪惡的吸血鬼獵人交易",
+  "text.vampirism.vampire_villager.decline_trade_normal":"對不起,但是我的交易只對吸血鬼有意思",
+  "text.vampirism.vampire":"吸血鬼",
+  "text.vampirism.vampires":"吸血鬼",
+  "text.vampirism.all":"全部",
+  "text.vampirism.hunter":"獵人",
+  "text.vampirism.hunters":"獵人",
+  "text.vampirism.level":"級別",
+  "text.vampirism.for_up_to_level":"針對最高級別",
+  "text.vampirism.for_to_levels":"從％s到％s的級別",
+  "text.vampirism.level_short":"Lvl",
+  "text.vampirism.lord":"主",
+  "text.vampirism.title":"標題",
+  "text.vampirism.can_only_be_used_by":"這只能由％s玩家使用",
+  "text.vampirism.can_only_be_used_by_level":"只能由％s級或更高級別的％s玩家使用",
+  "text.vampirism.med_chair_other_faction":"由於您已經是％s,因此您無法成為獵人",
+  "text.vampirism.already_vampire":"您已經是吸血鬼",
+  "text.vampirism.can_only_be_used_with_skill":"只能與技能％s一起使用",
+  "text.vampirism.need_item_to_use":"您需要\"％s \"才能使用此",
+  "text.vampirism.immune_to":"您不受的影響",
+  "text.vampirism.required_skill":"必選技能:％s",
+  "text.vampirism.from_behind":"從後面。",
+  "text.vampirism.unknown":"未知",
+  "text.vampirism.basic_hunter.cannot_train_you_any_further":"我無法再對您進行培訓。您必須尋找更有經驗的人。",
+  "text.vampirism.basic_hunter.pay_n_vampire_blood_more":"請多付給我％s的吸血鬼血瓶來訓練你",
+  "text.vampirism.basic_hunter.i_will_train_you":"好的,我會訓練你的",
+  "text.vampirism.basic_hunter.minion.available":"我很樂意為這樣一個享有聲譽的吸血鬼獵人工作",
+  "text.vampirism.basic_hunter.minion.start_serving":"感謝您提供的設備,我現在將為您服務,並按照您的要求做",
+  "text.vampirism.basic_hunter.minion.no_free_slot":"但是,我認為您沒有足夠的經驗來指揮額外的獵人",
+  "text.vampirism.basic_hunter.minion.require_equipment":"如果您以％s項的形式向我提供適當的設備,我會為您服務",
+  "text.vampirism.basic_hunter.minion.unavailable":"您似乎是著名的吸血鬼獵人,但我不喜歡為自己以外的人服務",
+  "text.vampirism.basic_vampire.minion.unavailable":"此吸血鬼太結實,無法綁定到您",
+  "text.vampirism.basic_vampire.minion.available":"此吸血鬼可以綁定到您上,成為您的僕從",
+  "text.vampirism.basic_vampire.minion.no_free_slot":"您無法控制更多的奴才",
+  "text.vampirism.basic_vampire.minion.start_serving1":"您似乎是一個很有價值的人,我將與您的主人一起努力。",
+  "text.vampirism.basic_vampire.minion.start_serving2":"和您這樣的人同住確實是一種榮譽！",
+  "text.vampirism.basic_vampire.minion.start_serving3":"感謝您的好意和盛情,我將為您服務。",
+  "text.vampirism.basic_vampire.minion.require_binding":"您需要一個％s將此吸血鬼綁定到您",
+  "text.vampirism.i_am_busy_right_now":"我現在很忙",
+  "text.vampirism.crossbow.not_loaded":"未加載",
+  "text.vampirism.crossbow.loaded_arrow_count":"已加載％s箭頭",
+  "text.vampirism.blood.poisonous":"毒血",
+  "text.vampirism.task.reward":"任務獎勵",
+  "text.vampirism.task.reward_obtain":"可以從％s獲得作為任務獎勵",
+  "text.vampirism.task.require_parent":"完整的父項（％s）",
+  "text.vampirism.task.prerequisites":"前提條件",
+  "text.vampirism.task.prerequisites.none":"無",
+  "itemGroup.vampirism":"吸血鬼",
+  "death.attack.sun":"％1 $ s不喜歡太陽",
+  "death.attack.garlic":"％1 $ s被大蒜毒死了",
+  "death.attack.vampire_on_fire":"％1 $ s被燒成灰燼",
+  "death.attack.vampire_on_fire.player":"％2 $ s被燒成％1 $ s",
+  "death.attack.vampire_in_fire":"％1 $ s被燒成灰燼",
+  "death.attack.vampire_in_fire.player":"％1 $ s被％2 $ s焚化了",
+  "death.attack.holy_water":"％1 $ s被聖水燃燒了",
+  "death.attack.holy_water.player":"％2 $ s用聖水燒了％1 $ s",
+  "death.attack.blood_loss":"％1 $ s被吸乾",
+  "death.minion.on_behalf":"代表％1 $ s",
+  "text.vampirism.skill.level_to_low":"您的吸血鬼等級太低了",
+  "text.vampirism.skill.cooldown_not_over":"請等待,直到冷卻結束",
+  "text.vampirism.not_enough_blood":"壇中沒有足夠的血",
+  "text.vampirism.ritual_requirements_not_met":"未滿足該儀式的所有要求",
+  "text.vampirism.ritual_no_vampire":"您需要成為該儀式的吸血鬼",
+  "text.vampirism.cant_fly_umbrella":"您不能在配備遮陽傘的情況下飛行",
+  "text.vampirism.cant_fly_day":"您白天不能飛行",
+  "text.vampirism.cant_fly_garlic":"您不能在大蒜的作用下飛行",
+  "text.vampirism.cant_fly_end":"您無法從頭到尾變成蝙蝠",
+  "text.vampirism.no_more_minions":"您將無法再控制其他奴才",
+  "text.vampirism.coffin.no_sleep":"您只能白天睡覺",
+  "text.vampirism.coffin.too_far_away":"您現在可能不休息；棺材太遠了",
+  "text.vampirism.coffin.obstructed":"此棺材被阻塞",
+  "text.vampirism.coffin.occupied":"此棺材已被佔用",
+  "text.vampirism.coffin.stop_sleeping":"離開棺材",
+  "text.vampirism.coffin.cant_use":"你不能睡在棺材裡",
+  "text.vampirism.tent.no_sleep":"您只能在晚上和雷暴期間入睡",
+  "text.vampirism.tent.too_far_away":"您現在可能不休息；帳篷距離太遠​​",
+  "text.vampirism.tent.obstructed":"此帳篷被擋住",
+  "text.vampirism.tent.occupied":"此帳篷已被佔用",
+  "text.vampirism.tent.stop_sleeping":"離開帳篷",
+  "text.vampirism.tent.cant_use":"你不能睡在帳篷裡",
+  "text.vampirism.blood_left":"左血",
+  "text.vampirism.blood":"血液",
+  "text.vampirism.vampirelevel":"Vampirelevel",
+  "text.vampirism.entitysblood":"實體的鮮血",
+  "text.vampirism.minion":"Minion",
+  "text.vampirism.normal_vision":"普通視力",
+  "text.vampirism.night_vision":"夜視",
+  "text.vampirism.no_control_minion":"您無法控制這個奴才",
+  "text.vampirism.need_empty_bottle":"我的主,我需要一個空瓶子來收集血液",
+  "text.vampirism.thanks":"謝謝",
+  "text.vampirism.coming_back":"主啊,我回來了",
+  "text.vampirism.sorry_i_died_while_doing":"對不起,我很抱歉,但是我在完成您的任務時死了",
+  "text.vampirism.current_task":"當前任務",
+  "text.vampirism.lord.become":"您被吸血的吸血鬼勳章",
+  "text.vampirism.lord.other_player_become":"擊敗了現任的吸血鬼領主並取代了他",
+  "text.vampirism.lord.vampire_replace":"另一位玩家取代了你,成為吸血鬼領主",
+  "text.vampirism.lord.vampire_kill_replace":"另一個吸血鬼殺死了你,並取代你成為吸血鬼領主",
+  "text.vampirism.lord.new_lord_castle":"一位新的吸血鬼領主升起並搬進了他的城堡",
+  "text.vampirism.lord.vampire_replace_absence":"在您不在的情況下,另一個吸血鬼取代您成為吸血鬼領主",
+  "text.vampirism.lord.portal_disabled":"此門戶無法通往任何地方",
+  "text.vampirism.lord.level_to_low":"您的吸血鬼等級太低,無法成為吸血鬼領主",
+  "text.vampirism.coffin.wrong_dimension":"您無法在這個維度上睡覺。",
+  "text.vampirism.deactivated_by_serveradmin":"這已由您的serveradmin停用",
+  "text.vampirism.castle_fail":"吸血鬼無法為吸血鬼城堡找到合適的位置。建議生成一個新世界。如果找不到,您也可以嘗試\" / vampirism checkForVampireBiome \"。生物群系,另一個mod可能正在干擾。",
+  "text.vampirism.structure":"結構",
+  "text.vampirism.pillar_blocks":"支柱塊",
+  "text.vampirism.no_dracula_to_call":"吸血鬼死了,無法被召喚",
+  "text.vampirism.garlic_weapons":"此武器上塗有大蒜,並毒害了吸血鬼。/n但是大蒜會磨損。",
+  "text.vampirism.outdated":"您正在運行吸血鬼％s,最新版本是％s。",
+  "text.vampirism.action.cooldown_not_over":"冷卻尚未結束",
+  "text.vampirism.action.disallowed":"您現在不能使用此操作",
+  "text.vampirism.poisonous_to_vampires":"對吸血鬼有毒",
+  "text.vampirism.poisonous_to_hunter":"對獵人有毒",
+  "text.vampirism.deals_more_damage_to":"對％s造成的傷害提高％s",
+  "text.vampirism.liquid_container":"任何液體容器",
+  "text.vampirism.translators":"無",
+  "text.vampirism.sword_charged":"已收費:",
+  "text.vampirism.sword_trained":"訓練有素:",
+  "text.vampirism.guideapi_available.first":"要獲取吸血鬼指南,請安裝GuideAPI-VP",
+  "text.vampirism.guideapi_available.download":"單擊此處轉到mod頁面",
+  "text.vampirism.integrations_available.first":"有一個針對Vampirism的集成模塊,它為以下已安裝的模塊增加了兼容性:",
+  "text.vampirism.integrations_available.download":"單擊此處轉到mod頁面",
+  "text.vampirism.trainer_disabled":"我不是獵人",
+  "text.vampirism.trainer_disabled_hunter":"在這裡訓練你不夠安全。請釋放村莊。",
+  "text.vampirism.actions.bind_action":"將動作％s綁定到動作鍵％s",
+  "text.vampirism.hunter.cured_sanguinare":"您來找對了。我治癒了您的sanguinare",
+  "text.vampirism.hunter_minion.equipment_upgrade":"感謝您升級設備。請選擇我應該在哪個區域訓練。",
+  "text.vampirism.hunter_minion.equipment_wrong":"我無法使用此升級",
+  "text.vampirism.vampire_minion.binding_upgrade":"我很感謝這次升級,現在我將為您提供更好的服務,先生。請選擇應該改進的領域",
+  "text.vampirism.vampire_minion.binding_wrong":"此升級對我沒有幫助",
+  "text.vampirism.taskmaster.no_tasks":"目前沒有可用的任務",
+  "text.vampirism.taskmaster.no_tasks_unique":"沒有剩下的任務了",
+  "__comment":"task_entity_tags",
+  "tasks.vampirism.vampirism:hunter":"獵人實體",
+  "tasks.vampirism.vampirism:advanced_hunter":"高級獵人",
+  "tasks.vampirism.vampirism:advanced_vampire":"高級吸血鬼",
+  "tasks.vampirism.vampirism:vampire":"吸血鬼實體",
+  "category.vampirism.balance":"平衡設置",
+  "category.vampirism.balance.tooltip":"更改幾乎所有與餘額相關的屬性",
+  "category.vampirism.balance_general":"一般",
+  "category.vampirism.balance_general.tooltip":"常規配置選項",
+  "category.vampirism.balance_leveling":"升級餘額設置",
+  "category.vampirism.balance_vampire_player":"吸血鬼玩家將軍",
+  "category.vampirism.balance_vampire_player.tooltip":"配置吸血鬼播放器修改器",
+  "category.vampirism.balance_vampire_player_skills":"吸血鬼玩家技能",
+  "category.vampirism.balance_vampire_player_skills.tooltip":"配置技能",
+  "category.vampirism.balance_vampire_player_actions":"吸血鬼玩家動作",
+  "category.vampirism.balance_vampire_player_actions.tooltip":"配置動作",
+  "category.vampirism.balance_hunter_player":"獵人職業將軍",
+  "category.vampirism.balance_hunter_player.tooltip":"配置獵人玩家修改器",
+  "category.vampirism.balance_hunter_player_skills":"獵人的技能",
+  "category.vampirism.balance_hunter_player_skills.tooltip":"配置技能",
+  "category.vampirism.balance_hunter_player_actions":"獵人玩家動作",
+  "category.vampirism.balance_hunter_player_actions.tooltip":"配置動作",
+  "category.vampirism.balance_mob_prop":"吸血鬼暴民屬性",
+  "category.vampirism.balance_mob_prop.tooltip":"更改由吸血鬼添加的小怪的屬性",
+  "category.vampirism.balance_village":"鄉村吸血鬼屬性",
+  "category.vampirism.balance_village.tooltip":"改變村莊獵人的行為方式並調整其他與村莊有關的東西",
+  "category.vampirism.balance_leveling.tooltip":"配置玩家練級",
+  "category.vampirism.disable":"禁用功能",
+  "category.vampirism.disable.tooltip":"禁用該模塊的部分（不推薦）",
+  "category.vampirism.village":"村莊配置",
+  "category.vampirism.village.tooltip":"配置吸血鬼村莊的修改",
+  "category.vampirism.gui":"GUI配置",
+  "category.vampirism.gui.tooltip":"配置顯示",
+  "category.vampirism.worldgen":"世界一代",
+  "__comment":"動作",
+  "action.vampirism.bat":"切換Batmode",
+  "action.vampirism.bat.desc":"變成蝙蝠然後飛走",
+  "action.vampirism.freeze":"凍結",
+  "action.vampirism.freeze.desc":"暫時凍結附近的所有實體",
+  "action.vampirism.vampire_invisibility":"隱形",
+  "action.vampirism.regen":"再生",
+  "action.vampirism.regen.desc":"暫時恢復健康,但消耗更多血液",
+  "action.vampirism.revive_fallen":"復興墮落",
+  "action.vampirism.summon_bat":"召喚蝙蝠",
+  "action.vampirism.summon_bat.desc":"召喚一隻蝙蝠聚集在你周圍,使任何觸碰它的玩家蒙蔽",
+  "action.vampirism.teleport":"傳送",
+  "action.vampirism.teleport.desc":"快速傳送到您正在尋找的地點",
+  "action.vampirism.vampire_rage":"吸血鬼之怒",
+  "action.vampirism.vampire_rage.desc":"在憤怒模式下,您更快,造成的傷害更大,但消耗更多的血",
+  "action.vampirism.sunscreen":"防曬霜",
+  "action.vampirism.sunscreen.desc":"暫時消除任何陽光傷害",
+  "action.vampirism.disguise_vampire":"偽裝",
+  "action.vampirism.disguise_vampire.desc":"暫時偽裝成非吸血鬼來欺騙暴民和玩家",
+  "action.vampirism.disguise_hunter":"偽裝",
+  "action.vampirism.disguise_hunter.desc":"暫時顯著降低了對暴民和玩家的偵測和可見度範圍。",
+  "action.vampirism.dark_blood_projectile":"暗血彈丸",
+  "action.vampirism.dark_blood_projectile.desc":"發射會造成傷害的鮮血彈頭",
+  "action.vampirism.half_invulnerable":"損害限制器",
+  "action.vampirism.half_invulnerable.desc":"阻止大筆損失卻使您減速的動作",
+  "action.vampirism.awareness_hunter":"吸血鬼意識",
+  "action.vampirism.awareness_hunter.desc":"感知附近吸血鬼玩家或實體的動作",
+  "action.vampirism.potion_resistance_hunter":"抗藥水",
+  "action.vampirism.potion_resistance_hunter.desc":"移除某些對你不利的藥水效果",
+  "__comment":"技能",
+  "skill.vampirism.vampire":"成為吸血鬼",
+  "skill.vampirism.creeper_avoided":"被爬行者所避免",
+  "skill.vampirism.blood_vision":"血液視野",
+  "skill.vampirism.poisonous_bite":"毒牙",
+  "skill.vampirism.poisonous_bite.desc":"使您咬的生物中毒",
+  "skill.vampirism.advanced_biter":"高級咬人",
+  "skill.vampirism.more_bite_damage":"硬化的牙齒",
+  "skill.vampirism.less_blood_thirst":"節儉的吸血鬼",
+  "skill.vampirism.less_garlicdamage":"減少大蒜損傷",
+  "skill.vampirism.less_sundamage":"減少日曬傷害",
+  "skill.vampirism.night_vision":"夜視",
+  "skill.vampirism.disguise":"偽裝",
+  "skill.vampirism.vampire_forest_fog":"Vista",
+  "skill.vampirism.water_resistance":"耐水性",
+  "skill.vampirism.blood_charge":"充血",
+  "skill.vampirism.sword_finisher":"完成者",
+  "skill.vampirism.blood_vision_garlic":"大蒜血視力",
+  "skill.vampirism.hunter":"成為一名獵人",
+  "skill.vampirism.hunter_attack_speed":"增加的攻擊速度",
+  "skill.vampirism.weapon_table":"獵人武器表",
+  "skill.vampirism.double_crossbow":"Double It",
+  "skill.vampirism.enhanced_crossbow":"增強的bo",
+  "skill.vampirism.hunter_attack_speed_advanced":"進攻像風一樣迅捷",
+  "skill.vampirism.stake1":"如何使用賭注",
+  "skill.vampirism.stake2":"如何實際使用賭注",
+  "skill.vampirism.multitask_brewing":"多任務釀造",
+  "skill.vampirism.durable_brewing":"持久釀造",
+  "skill.vampirism.concentrated_brewing":"集中釀造",
+  "skill.vampirism.swift_brewing":"迅速釀造",
+  "skill.vampirism.efficient_brewing":"高效釀造",
+  "skill.vampirism.master_brewer":"大師布魯爾",
+  "skill.vampirism.concentrated_durable_brewing":"集中和持久的釀造",
+  "skill.vampirism.tech_weapons":"技術",
+  "skill.vampirism.enhanced_armor":"強化裝甲",
+  "skill.vampirism.enhanced_weapons":"增強武器",
+  "skill.vampirism.basic_alchemy":"基本煉金術",
+  "skill.vampirism.garlic_beacon":"吸血鬼排斥",
+  "skill.vampirism.purified_garlic":"純淨大蒜",
+  "skill.vampirism.holy_water_enhanced":"增強的聖水",
+  "skill.vampirism.garlic_beacon_improved":"改良的擴散器",
+  "skill.vampirism.vampire_speed":"永久性提速",
+  "skill.vampirism.vampire_jump":"永久跳助力",
+  "__comment":"skill_desc",
+  "skill.vampirism.freeze.desc":"暫時凍結附近的所有生物",
+  "skill.vampirism.blood_vision.desc":"允許您在黑暗中穿過牆壁查看實體。用鑰匙切換。",
+  "skill.vampirism.blood_vision_garlic.desc":"另外標識有毒血液的實體",
+  "skill.vampirism.advanced_biter.desc":"使您可以更有效地吸血並在適當的時機停止。還會增加您的咬傷。",
+  "skill.vampirism.more_bite_damage.desc":"咬人時造成更多傷害",
+  "skill.vampirism.less_blood_thirst.desc":"減少了對血液的渴求",
+  "skill.vampirism.vampire_forest_fog.desc":"增加吸血鬼森林的霧距離",
+  "skill.vampirism.water_resistance.desc":"您的身體將不再被水削弱",
+  "skill.vampirism.blood_charge.desc":"隨時隨地用鼠標右鍵單擊即可使用工具充電血液。",
+  "skill.vampirism.sword_finisher.desc":"立即使用吸血鬼劍殺死任何最大生命值低於％s的非吸血鬼",
+  "skill.vampirism.half_invulnerable.desc":"暫時阻止高價值損害但為此消耗血液的行動",
+  "skill.vampirism.vampire_rage.desc":"通過增加血液使用量來提高速度和傷害的行動",
+  "skill.vampirism.summon_bats.desc":"在蝙蝠模式下召喚很多蝙蝠來分散敵人的注意力",
+  "skill.vampirism.sunscreen.desc":"授予暫時免受直接日曬傷害的免疫力。冷卻時間長。",
+  "skill.vampirism.garlic_blood_vision.desc":"允許您另外檢測有毒血液的實體",
+  "skill.vampirism.enhanced_armor.desc":"解鎖製作增強版的獵人裝甲",
+  "skill.vampirism.hunter_attack_speed_advanced.desc":"進一步減少攻擊的冷卻時間",
+  "skill.vampirism.weapon_table.desc":"了解如何使用獵人武器表",
+  "skill.vampirism.double_crossbow.desc":"解鎖雙Cross",
+  "skill.vampirism.enhanced_crossbow.desc":"學習如何增強cross",
+  "skill.vampirism.hunter_advanced_attack_speed.desc":"進一步提高攻擊速度",
+  "skill.vampirism.stake1.desc":"立即用賭注殺死任何吸血率低於其最大生命值％s的吸血鬼",
+  "skill.vampirism.stake2.desc_all":"只要他的最大生命值低於％s,立即用樁柱從背後殺死任何吸血鬼",
+  "skill.vampirism.stake2.desc_npc":"只要他的最大生命值低於％s,立即用樁柱從背後殺死任何吸血鬼NPC",
+  "skill.vampirism.tech_weapons.desc":"學習如何製造一些先進的武器",
+  "skill.vampirism.disguise_hunter.desc":"使您能夠躲藏於暴民之中,並且對其他玩家的可見度大大降低",
+  "skill.vampirism.basic_alchemy.desc":"學習如何使用煉金術師來製作很棒的東西。",
+  "skill.vampirism.garlic_beacon.desc":"學習如何製作大蒜擴散器以使那些吸血鬼遠離。",
+  "skill.vampirism.purified_garlic.desc":"淨化大蒜以增強其效果。用它增強大蒜擴散器。",
+  "skill.vampirism.holy_water_enhanced.desc":"創建增強的聖水,而不是普通的聖水。",
+  "skill.vampirism.garlic_beacon_improved.desc":"了解如何製作更大範圍的大蒜擴散器",
+  "skill.vampirism.multitask_brewing.desc":"立即用藥水錶從5個而不是3個藥水中抽出",
+  "skill.vampirism.durable_brewing.desc":"學習昂貴的食譜來釀造非常持久的藥水",
+  "skill.vampirism.concentrated_brewing.desc":"學習昂貴的食譜來釀造非常濃的藥水",
+  "skill.vampirism.swift_brewing.desc":"加快釀造過程",
+  "skill.vampirism.efficient_brewing.desc":"少即是多",
+  "skill.vampirism.master_brewer.desc":"掌握一些全新的藥水",
+  "skill.vampirism.concentrated_durable_brewing.desc":"長而堅強終於有可能",
+  "__comment":"互動",
+  "text.vampirism.hunter_trainer.trainer_level_wrong":"我不會像您一樣沒有經驗地訓練獵人。尋找經驗不足的人",
+  "text.vampirism.alchemical_cauldron.other":"此大鍋屬於％s。您不應使用它。",
+  "text.vampirism.alchemical_cauldron.cannot_use":"您尚未學會如何使用它",
+  "text.vampirism.altar_infusion.ritual_missing_times":"您缺少該儀式的物品",
+  "text.vampirism.altar_infusion.ritual_structure_wrong":"此儀式的結構有誤",
+  "text.vampirism.altar_infusion.ritual_level_wrong":"您不能在此級別使用此祭壇",
+  "text.vampirism.altar_infusion.ritual_still_running":"儀式仍在運行",
+  "text.vampirism.altar_infusion.ritual_night_only":"您只能在晚上執行此儀式",
+  "text.vampirism.weapon_table.cannot_use":"您尚未學會如何使用它",
+  "text.vampirism.village.no_faction":"您必須加入派系",
+  "text.vampirism.village.capturing_in_progress":"已經在進行捕獲",
+  "text.vampirism.village.same_faction":"您不能攻擊自己派系擁有的村莊",
+  "text.vampirism.village.missing_components":"附近的村莊或村莊都不小:",
+  "text.vampirism.village.missing_components.home":"遺失房屋",
+  "text.vampirism.village.missing_components.workstations":"缺少工作場所",
+  "text.vampirism.village.missing_components.villager":"缺少村民",
+  "text.vampirism.village.othertotem":"此圖騰不起作用。搜索另一個圖騰",
+  "__comment":"容器/實體/屏幕",
+  "tile.vampirism.blood_grinder":"血腥磨床",
+  "tile.vampirism.alchemical_cauldron":"煉金術大鍋",
+  "tile.vampirism.altar_infusion":"輸液祭壇",
+  "container.vampirism.hunter_weapon_table.name":"武器表",
+  "container.hunter":"獵人",
+  "container.hunter_table":"獵人表",
+  "container.huntertrainer":"獵人訓練師",
+  "container.vampirism.taskmaster":"任務大師",
+  "__comment":"容器/實體/ screen_text",
+  "text.vampirism.skills.gui_title":"您的技能",
+  "text.vampirism.skills.points_left":"還剩％d個技能點",
+  "text.vampirism.skill.resetall":"重置技能",
+  "text.vampirism.skill.unlocked":"已解鎖",
+  "text.vampirism.skill.locked":"被其他技能鎖定",
+  "text.vampirism.skill.clusion":"彼此排斥:",
+  "text.vampirism.skill.unlocks_action":"解鎖動作",
+  "text.vampirism.skill.unlock_parent_first":"先解鎖父母",
+  "text.vampirism.skill.skills_reset":"您的技能已被重置",
+  "text.vampirism.skill.deactivated_by_serveradmin":"您的服務器管理員已停用此技能",
+  "container.vampirism.hunter_table.structure_level_wrong":"您的等級表不完整",
+  "container.vampirism.hunter_table.level_wrong":"無法在此級別使用表",
+  "container.vampirism.basic_hunter.levelup":"我希望你學到了一些東西",
+  "tile.vampirism.alchemical_cauldron.display":"％s的％s",
+  "text.vampirism.level_up":"升級",
+  "text.vampirism.hunter_table.ritual_missing_items":"此儀式缺少\"％s \"的％s",
+  "text.vampirism.altar_infusion.ritual_missing_items":"此儀式缺少\"％s \"的％s",
+  "text.vampirism.hunter_trainer.ritual_missing_items":"此儀式缺少\"％s \"的％s",
+  "__comment":"biome",
+  "biome.vampirism.vampire_forest":"吸血鬼森林",
+  "biome.vampirism.vampire_forest_hills":"吸血鬼森林山",
+  "__comment":"文本",
+  "text.vampirism.update_message.download":"下載",
+  "text.vampirism.update_message.changelog":"Changelog",
+  "text.vampirism.update_message.modpage":"Mod Page",
+  "__comment":"塊",
+  "block.vampirism.castle_block_dark_stone":"暗石",
+  "block.vampirism.castle_block_normal_brick":"石磚",
+  "block.vampirism.castle_block_dark_brick":"黑石磚",
+  "block.vampirism.castle_block_purple_brick":"紫色石磚",
+  "block.vampirism.castle_block_dark_brick_bloody":"血腥的黑石磚",
+  "block.vampirism.castle_stairs_dark_brick":"黑磚樓梯",
+  "block.vampirism.castle_stairs_purple_brick":"紫色磚台階",
+  "block.vampirism.castle_stairs_dark_stone":"黑石樓梯",
+  "block.vampirism.blood_container":"血液容器",
+  "block.vampirism.cursed_earth":"被詛咒的地球",
+  "block.vampirism.vampire_orchid":"吸血鬼蘭花",
+  "block.vampirism.altar_infusion":"輸液祭壇",
+  "block.vampirism.altar_pillar":"祭壇支柱",
+  "block.vampirism.altar_tip":"祭壇提示",
+  "block.vampirism.hunter_table":"獵人研究表",
+  "block.vampirism.church_altar":"清潔祭壇",
+  "block.vampirism.altar_inspiration":"靈感壇",
+  "block.vampirism.fire_place":"壁爐",
+  "block.vampirism.weapon_table":"獵人武器表",
+  "block.vampirism.sunscreen_beacon":"防曬霜燈塔",
+  "block.vampirism.alchemical_cauldron":"煉金術大鍋",
+  "block.vampirism.garlic_beacon":"大蒜擴散劑",
+  "block.vampirism.blood_pedestal":"血統基座",
+  "block.vampirism.blood_grinder":"鮮血磨床",
+  "block.vampirism.blood_sieve":"血篩",
+  "block.vampirism.totem_top":"脆弱的村莊圖騰頂部",
+  "block.vampirism.totem_top_vampirism_hunter":"脆弱的村莊圖騰頂部",
+  "block.vampirism.totem_top_vampirism_vampire":"脆弱的村莊圖騰頂部",
+  "block.vampirism.totem_top_crafted":"鄉村圖騰頂部",
+  "block.vampirism.totem_top_vampirism_hunter_crafted":"鄉村圖騰頂部",
+  "block.vampirism.totem_top_vampirism_vampire_crafted":"鄉村圖騰頂部",
+  "block.vampirism.totem_base":"鄉村圖騰庫",
+  "block.vampirism.castle_slab_dark_brick":"深色磚坯",
+  "block.vampirism.castle_slab_purple_brick":"紫色磚坯",
+  "block.vampirism.castle_slab_dark_stone":"暗石台階",
+  "block.vampirism.coffin":"棺材",
+  "block.vampirism.potion_table":"藥水錶",
+  "block.vampirism.bloody_spruce_log":"血腥雲杉日誌",
+  "block.vampirism.vampire_spruce_leaves":"吸血鬼雲杉葉",
+  "block.vampirism.bloody_spruce_leaves":"血腥的雲杉葉",
+  "block.vampirism.bloody_spruce_sapling":"血腥雲杉樹苗",
+  "__comment":"blocks_old",
+  "block.vampirism.tent":"帳篷",
+  "block.vampirism.med_chair":"注射椅",
+  "block.vampirism.alchemical_fire":"煉金術之火",
+  "block.vampirism.garlic_beacon.already_fueled":"已經加油",
+  "block.vampirism.garlic_beacon.successfully_fueled":"成功加油",
+  "block.vampirism.castle_block":"城堡街區",
+  "__comment":"項目",
+  "item.vampirism.hunter_intel":"Hunter Intel",
+  "item.vampirism.pure_blood":"純血",
+  "item.vampirism.injection_empty":"注射器",
+  "item.vampirism.injection_garlic":"大蒜注射劑",
+  "item.vampirism.injection_sanguinare":"Sanguinare注射劑",
+  "item.vampirism.vampire_fang":"吸血鬼牙",
+  "item.vampirism.weak_human_heart":"弱人之心",
+  "item.vampirism.human_heart":"人類之心",
+  "item.vampirism.vampire_blood_bottle":"吸血鬼之血",
+  "item.vampirism.item_garlic":"大蒜",
+  "item.vampirism.item_med_chair":"注射椅",
+  "item.vampirism.pitchfork":"乾草叉",
+  "item.vampirism.basic_crossbow":"十字弓",
+  "item.vampirism.basic_double_crossbow":"雙Cross",
+  "item.vampirism.enhanced_crossbow":"增強的b",
+  "item.vampirism.enhanced_double_crossbow":"增強的雙Cross",
+  "item.vampirism.basic_tech_crossbow":"半自動Cross",
+  "item.vampirism.enhanced_tech_crossbow":"增強的半自動Cross",
+  "item.vampirism.crossbow_arrow_vampire_killer":"吸血鬼殺手之箭",
+  "item.vampirism.crossbow_arrow_spitfire":"烈性人",
+  "item.vampirism.crossbow_arrow_normal":"十字弓箭頭",
+  "item.vampirism.stake":"Stake",
+  "item.vampirism.blood_bottle":"血瓶",
+  "item.vampirism.tech_crossbow_ammo_package":"箭頭剪輯",
+  "item.vampirism.vampire_book":"吸血鬼書",
+  "item.vampirism.holy_water_bottle":"聖水",
+  "item.vampirism.holy_water_splash_bottle":"濺起一瓶聖水",
+  "item.vampirism.pure_salt":"純鹽",
+  "item.vampirism.holy_salt":"祝福的鹽",
+  "item.vampirism.purified_garlic":"純淨大蒜",
+  "item.vampirism.item_alchemical_fire":"煉金術之火",
+  "item.vampirism.garlic_beacon_core":"大蒜擴散核",
+  "item.vampirism.garlic_beacon_core_improved":"改良的大蒜擴散器核心",
+  "item.vampirism.armor_of_swiftness_head":"迅捷頭盔",
+  "item.vampirism.armor_of_swiftness_chest":"迅捷胸甲",
+  "item.vampirism.armor_of_swiftness_legs":"迅捷的腿",
+  "item.vampirism.armor_of_swiftness_feet":"迅捷之靴",
+  "item.vampirism.hunter_coat_head":"獵人外套頭盔",
+  "item.vampirism.hunter_coat_chest":"獵人外套",
+  "item.vampirism.hunter_coat_legs":"獵人外套打底褲",
+  "item.vampirism.hunter_coat_feet":"獵人外套靴子",
+  "item.vampirism.obsidian_armor_head":"黑曜石頭盔的地獄",
+  "item.vampirism.obsidian_armor_chest":"黑曜石地獄胸甲",
+  "item.vampirism.obsidian_armor_legs":"黑曜石的地獄護腿",
+  "item.vampirism.obsidian_armor_feet":"黑曜石之靴",
+  "item.vampirism.vampire_cloak_white_black":"吸血鬼披風",
+  "item.vampirism.vampire_cloak_black_white":"吸血鬼披風",
+  "item.vampirism.vampire_cloak_black_red":"吸血鬼披風",
+  "item.vampirism.vampire_cloak_black_blue":"吸血鬼披風",
+  "item.vampirism.vampire_cloak_red_black":"吸血鬼披風",
+  "item.vampirism.hunter_hat_head":"獵人帽",
+  "item.vampirism.heart_seeker":"尋心者",
+  "item.vampirism.heart_striker":"Heartstriker",
+  "item.vampirism.hunter_axe":"獵人之斧",
+  "item.vampirism.blood_infused_iron_ingot":"輸血鐵錠",
+  "item.vampirism.blood_infused_enhanced_iron_ingot":"增強血液注入鐵錠",
+  "item.vampirism.soul_orb_vampire":"吸血鬼之魂",
+  "item.vampirism.item_tent":"帳篷",
+  "item.vampirism.vampire_spawn_egg":"吸血鬼卵",
+  "item.vampirism.vampire_hunter_spawn_egg":"吸血鬼獵人產生的卵",
+  "item.vampirism.advanced_vampire_spawn_egg":"高級吸血鬼產卵",
+  "item.vampirism.advanced_vampire_hunter_spawn_egg":"高級吸血鬼獵人產生的卵",
+  "item.vampirism.vampire_baron_spawn_egg":"吸血鬼男爵卵",
+  "item.vampirism.hunter_trainer_spawn_egg":"獵人訓練師的產卵",
+  "item.vampirism.blood_bucket":"血桶",
+  "item.vampirism.impure_blood_bucket":"不純的血桶",
+  "item.vampirism.garlic_bread":"大蒜麵包",
+  "item.vampirism.umbrella":"傘",
+  "item.vampirism.minion_upgrade_item.desc":"一次升級",
+  "__comment":"item_old",
+  "item.vampirism.vampires_fear":"吸血鬼的恐懼",
+  "item.vampirism.torch":"火炬",
+  "item.vampirism.sunscreen":"防曬霜",
+  "item.vampirism.leech_sword":"水ech",
+  "item.vampirism.vampire_armor_helmet":"吸血鬼頭盔",
+  "item.vampirism.vampire_armor_leggings":"吸血鬼的綁腿",
+  "item.vampirism.vampire_armor_boots":"吸血鬼的靴子",
+  "item.vampirism.vampire_armor_chestplate":"吸血鬼的胸甲",
+  "item.vampirism.minion_name_tag":"奴才名稱標籤",
+  "item.vampirism.gem_of_binding":"具有約束力的寶石",
+  "item.vampirism.blood_eye":"鮮血",
+  "item.vampirism.weak_vampire_fang":"弱吸血鬼牙",
+  "item.vampirism.concentrated_garlic":"濃縮大蒜",
+  "item.vampirism.garlic_bomb":"大蒜炸彈",
+  "item.vampirism.holy_salt_water":"福鹹水",
+  "item.vampirism.battle_axe":"戰斧",
+  "__comment":"藥水",
+  "item.minecraft.potion.effect.thirst":"口渴藥水",
+  "item.minecraft.potion.effect.blindness":"失明藥水",
+  "item.minecraft.potion.effect。噁心":"噁心藥水",
+  "item.minecraft.potion.effect.health_boost":"健康促進藥水",
+  "item.minecraft.potion.effect.resistance":"抵抗藥水",
+  "item.minecraft.potion.effect.vampire_fire_resistance":"吸血鬼抗火藥水",
+  "item.minecraft.splash_potion.effect.thirst":"口渴的飛濺藥水",
+  "item.minecraft.splash_potion.effect.blindness":"飛濺的失明藥水",
+  "item.minecraft.splash_potion.effect。噁心":"噁心的飛濺藥水",
+  "item.minecraft.splash_potion.effect.health_boost":"健康促進的飛濺藥水",
+  "item.minecraft.splash_potion.effect.resistance":"抵抗的飛濺藥水",
+  "item.minecraft.splash_potion.effect.vampire_fire_resistance":"吸血鬼耐火飛濺藥水",
+  "item.minecraft.lingering_potion.effect.thirst":"口渴的藥水",
+  "item.minecraft.lingering_potion.effect.blindness":"留著盲藥",
+  "item.minecraft.lingering_potion.effect。噁心":"噁心的留香藥水",
+  "item.minecraft.lingering_potion.effect.health_boost":"健康促進的持久藥水",
+  "item.minecraft.lingering_potion.effect.resistance":"抵抗的持久藥水",
+  "item.minecraft.lingering_potion.effect.vampire_fire_resistance":"吸血鬼耐火藥水",
+  "__comment":"屬性",
+  "attribute.name.vampirism.blood_exhaustion":"血液衰竭",
+  "attribute.name.vampirism.bite_damage":"咬傷",
+  "attribute.name.vampirism.sundamage":"太陽的傷害",
+  "__comment":"工具提示",
+  "item.vampirism.crossbow_arrow_vampire_killer.tooltip":"立即殺死低級吸血鬼NPC。",
+  "item.vampirism.crossbow_arrow_spitfire.tooltip":"在撞擊時產生煉金術之火",
+  "item.vampirism.tech_crossbow_ammo_package.tooltip":"可用於填寫％s",
+  "item.vampirism.item.tier.normal":"普通",
+  "item.vampirism.item.tier.enhanced":"增強",
+  "item.vampirism.item.tier.ultimate":"終極",
+  "item.vampirism.item_alchemical_fire.desc1":"不擴散",
+  "item.vampirism.item_alchemical_fire.desc2":"無限燃燒",
+  "item.vampirism.pure_blood.purity":"純度",
+  "item.vampirism.hunter_minion_equipment":"獵人小僕的裝備",
+  "item.vampirism.hunter_minion_upgrade_simple":"獵人小兵裝備升級",
+  "item.vampirism.hunter_minion_upgrade_enhanced":"增強了獵人的奴才裝備升級",
+  "item.vampirism.hunter_minion_upgrade_special":"特殊獵人小兵裝備升級",
+  "item.vampirism.feeding_adapter":"進紙適配器",
+  "item.vampirism.vampire_minion_binding":"吸血鬼奴才綁定",
+  "item.vampirism.vampire_minion_upgrade_simple":"吸血鬼小兵升級",
+  "item.vampirism.vampire_minion_upgrade_enhanced":"增強的吸血鬼小兵升級",
+  "item.vampirism.vampire_minion_upgrade_special":"特殊吸血鬼小兵升級",
+  "block.vampirism.castle_block.no_spawn":"沒有實體可以在其上產生",
+  "block.vampirism.castle_block.vampire_spawn":"只有吸血鬼可以在此產卵",
+  "block.vampirism.sunscreen_beacon.tooltip1":"僅限廣告素材。",
+  "block.vampirism.sunscreen_beacon.tooltip2":"給吸血鬼玩家從基岩到天空以％s的半徑遮擋防曬霜。",
+  "block.vampirism.garlic_beacon.improved":"改進了大蒜擴散器",
+  "block.vampirism.garlic_beacon.weak":"大蒜擴散劑弱",
+  "block.vampirism.garlic_beacon.tooltip1":"擴散大蒜顆粒。",
+  "block.vampirism.garlic_beacon.tooltip2":"通過％s的塊面積影響％s。",
+  "tile.vampirism.tent.spawner":"Spawns Hunter",
+  "__comment":"命令",
+  "command.vampirism.failed_to_execute":"無法執行命令。內部錯誤。",
+  "command.vampirism.failed_to_execute.players":"無法為％s執行命令。內部錯誤。",
+  "command.vampirism.base.reset_balance.success":"已成功重置％s餘額類別。請重新啟動MC。",
+  "command.vampirism.base.reset_balance.not_found":"未找到％s餘額類別。",
+  "command.vampirism.base.reset_balance.help1":"您可以將Vampirism平衡值重置為默認值。如果您尚未修改它們,建議在每次更新Vampirism之後使用",
+  "command.vampirism.base.reset_balance.help2":"使用'/ vampirism resetBalance all'重置所有類別,或使用'/ vampirism resetBalance <category>'指定類別",
+  "command.vampirism.base.levelup.nofaction":"％s必須在一個派系中才能升級",
+  "command.vampirism.base.levelup.max":"％s已經在最高級別上",
+  "command.vampirism.base.levelup.newlevel":"％s現在是％s級別％s",
+  "command.vampirism.base.level.cant_leave":"％s無法離開派系％s",
+  "command.vampirism.base.level.successful":"％s現在是％s級別％s",
+  "command.vampirism.base.glowing_eyes.enabled":"成功啟用了發光的眼睛",
+  "command.vampirism.base.glowing_eyes.disabled":"成功禁用了發光的眼睛",
+  "command.vampirism.base.fang.types":"<id>必須為0到％s之間的有效數字",
+  "command.vampirism.base.fang.success":"成功將fang類型更改為％s",
+  "command.vampirism.base.eye.types":"<id>必須為0到％s之間的有效數字",
+  "command.vampirism.base.eye.success":"已成功將眼睛類型更改為％s",
+  "command.vampirism.base.currentdimension.dimension":"維度ID:％s",
+  "command.vampirism.base.vampire_biome.time_warning":"這將花費很長時間。如果確定,請使用'/％s％s！yes'",
+  "command.vampirism.base.vampire_biome.searching":"正在尋找吸血鬼森林生物群落。請稍候",
+  "command.vampirism.base.vampire_biome.not_found":"未找到吸血鬼森林生物群系。",
+  "command.vampirism.base.vampire_biome.found":"最近的吸血鬼森林生物群系位於％s％s",
+  "command.vampirism.base.vampire_biome.disabled":"吸血鬼生物群系已在配置文件中禁用",
+  "command.vampirism.base.changelog.newversion":"沒有可用的新版本",
+  "command.vampirism.base.bind_action.success":"已成功將操作％s綁定到操作鍵％s",
+  "command.vampirism.base.bind_action.not_existing":"給定的動作％s不存在",
+  "command.vampirism.base.bind_action.help":"您可以將自定義動作（例如蝙蝠模式）綁定到兩個可用的動作鍵（請參閱按鍵綁定）",
+  "command.vampirism.test.gen_debug.true":"已啟用Worldgen調試",
+  "command.vampirism.test.gen_debug.false":"已禁用Worldgen調試",
+  "command.vampirism.test.skill.enabled":"成功啟用技能％s",
+  "command.vampirism.test.skill.alreadyenabled":"技能已啟用（％s）",
+  "command.vampirism.test.skill.parent":"必須啟用父級技能（％s）",
+  "command.vampirism.test.skill.parents":"必須啟用家長技能（％s或％s）",
+  "command.vampirism.test.skill.nopoints":"沒有剩餘的技能點",
+  "command.vampirism.test.skill.othernode":"其他技能已啟用",
+  "command.vampirism.test.skill.otherfaction":"您的派係不允許使用此技能",
+  "command.vampirism.test.skill.noinfaction":"您必須加入派系",
+  "command.vampirism.test.skill.disabled":"禁用的技能",
+  "command.vampirism.test.skill.locked":"被其他技能節點鎖定",
+  "command.vampirism.test.tent.success":"成功",
+  "command.vampirism.test.swordtrained.nosword":"您必須在主手上握著吸血鬼劍",
+  "command.vampirism.test.swordcharged.nosword":"您必須在主手上握著吸血鬼劍",
+  "command.vampirism.test.resetactions":"重置計時器",
+  "command.vampirism.test.place.notloaded":"未加載結構％s",
+  "command.vampirism.test.place.notfound":"未找到結構％s。",
+  "command.vampirism.test.infoentity.printed":"已打印的日誌信息",
+  "command.vampirism.test.garlicprofiler.tick":"Tick",
+  "command.vampirism.test.garlicprofiler.garlic":"大蒜",
+  "command.vampirism.test.garlicprofiler.print":"％s:％s |％s",
+  "command.vampirism.test.garliccheck.strength":"大蒜強度:％s",
+  "command.vampirism.test.entity.notbiteable":"不適合％s",
+  "command.vampirism.test.village.no_village":"附近沒有村莊",
+  "command.vampirism.test.village.success":"成功將村莊轉換為派系％s",
+  "command.vampirism.argument.skill.notfound":"給定的技能％s不存在",
+  "command.vampirism.argument.action.notfound":"給定的動作％s不存在",
+  "command.vampirism.argument.faction.notfound":"給定的派系％s不存在",
+  "command.vampirism.argument.faction.notplayable":"您不能扮演％s",
+  "command.vampirism.base.gender.success":"已成功設置主標題顯示的性別",
+  "command.vampirism.base.lord.successful":"％s現在是％s主級％s",
+  "__comment":"commands_old",
+  "command.vampirism.base.vampire_biome.parse_dist":"無法解析最大距離。使用％s。",
+  "__comment":"實體",
+  "entity.vampirism.vampire_baron":"吸血鬼男爵",
+  "entity.vampirism.task_master_hunter":"獵人代表",
+  "entity.vampirism.task_master_vampire":"吸血鬼代表",
+  "entity.vampirism.vampire_minion":"吸血鬼小僕",
+  "entity.vampirism.hunter_minion":"獵人小兵",
+  "entity.vampirism.dummy_creature":"虛擬生物",
+  "__comment":"entities_text",
+  "entity.vampirism.vampire_baron.level":"級別％s",
+  "__comment":"舊",
+  "__comment":"實體",
+  "entity.vampirism.hunter_trainer":"吸血鬼獵人訓練師",
+  "entity.vampirism.hunter_trainer_dummy":"秘密獵人訓練師",
+  "entity.vampirism.advanced_vampire":"高級吸血鬼",
+  "entity.vampirism.advanced_hunter":"高級獵人",
+  "entity.vampirism.villager_angry":"憤怒的村民",
+  "entity.vampirism.vampire_hunter":"吸血鬼獵人",
+  "entity.vampirism.hunter":"吸血鬼獵人",
+  "entity.vampirism.vampire":"吸血鬼",
+  "entity.vampirism.blinding_bat":"蝙蝠",
+  "entity.vampirism.dracula":"Dracula",
+  "entity.vampirism.dead_mob":"死亡暴徒",
+  "entity.vampirism.portal_guard":"門衛",
+  "entity.vampirism.villager_converted":"吸血鬼村民",
+  "entity.vampirism.villager_vampire_faction":"吸血鬼專家",
+  "entity.vampirism.villager_hunter_faction":"獵人專家",
+  "entity.Villager.vampirism.hunter_priest":"煉金術士",
+  "entity.Villager.vampirism.vampire_expert":"吸血鬼專家",
+  "entity.minecraft.villager.vampirism.hunter_expert":"獵人專家",
+  "entity.minecraft.villager.vampirism.vampire_expert":"吸血鬼專家",
+  "entity.vampirism.advanced_vampire_imob":"高級吸血鬼",
+  "entity.vampirism.advanced_hunter_imob":"高級獵人",
+  "entity.vampirism.hunter_imob":"吸血鬼獵人",
+  "entity.vampirism.vampire_imob":"吸血鬼",
+  "__comment":"minioncommands",
+  "minion_task.vampirism.protect_lord":"捍衛主",
+  "minion_task.vampirism.nothing":"沒有",
+  "minion_task.vampirism.stay":"留在這裡",
+  "minion_task.vampirism.follow_lord":"關注",
+  "minion_task.vampirism.defend_area":"防禦區",
+  "minion_task.vampirism.collect_hunter_items":"收集資源",
+  "minion_task.vampirism.collect_hunter_items.start":"我將前往並蒐索資源",
+  "minion_task.vampirism.collect_blood":"收集血液",
+  "minion_task.vampirism.collect_blood.start":"S父,我將為你採血。",
+  "text.vampirism.minion.can_respawn":"我的主,我已經康復了（％s）",
+  "text.vampirism.minion.died":"我的主,我已經死了（％s）",
+  "text.vampirism.name":"名稱:",
+  "text.vampirism.minion.call_single":"通話單",
+  "text.vampirism.minion.call_all":"全部調用",
+  "text.vampirism.minion.respawn":"重生失敗",
+  "__comment":"任務",
+  "task.vampirism.feeding_adapter":"廚房實用程序",
+  "task.vampirism.vampire_minion_binding":"小兵控制",
+  "task.vampirism.vampire_minion_upgrade_simple":"小兵升級",
+  "task.vampirism.vampire_minion_upgrade_enhanced":"性能增強器",
+  "task.vampirism.vampire_minion_upgrade_special":"終極助推器",
+  "task.vampirism.vampire_lord1":"您值得嗎？",
+  "task.vampirism.vampire_lord1.reward":"成為吸血鬼領主",
+  "task.vampirism.vampire_lord2":"下一步",
+  "task.vampirism.vampire_lord2.reward":"第2級領主",
+  "task.vampirism.vampire_lord3":"再來一次",
+  "task.vampirism.vampire_lord3.reward":"三級領主",
+  "task.vampirism.vampire_lord4":"控制狂熱",
+  "task.vampirism.vampire_lord4.reward":"4級領主",
+  "task.vampirism.vampire_lord5":"女同性戀症",
+  "task.vampirism.vampire_lord5.reward":"5級領主",
+  "task.vampirism.hunter_minion_equipment":"適當的裝備",
+  "task.vampirism.hunter_minion_upgrade_simple":"升級",
+  "task.vampirism.hunter_minion_upgrade_enhanced":"更好的升級",
+  "task.vampirism.hunter_minion_upgrade_special":"一流的設備",
+  "task.vampirism.hunter_lord1":"你值得嗎？",
+  "task.vampirism.hunter_lord1.reward":"成為獵人之王",
+  "task.vampirism.hunter_lord2":"下一步",
+  "task.vampirism.hunter_lord2.reward":"第2級領主",
+  "task.vampirism.hunter_lord3":"再來一次",
+  "task.vampirism.hunter_lord3.reward":"三級領主",
+  "task.vampirism.hunter_lord4":"控制狂熱",
+  "task.vampirism.hunter_lord4.reward":"4級領主",
+  "task.vampirism.hunter_lord5":"女同性戀症",
+  "task.vampirism.hunter_lord5.reward":"5級領主",
+  "task.vampirism.fire_resistance1":"最終防火",
+  "task.vampirism.fire_resistance2":"抗性升級",
+  "task.vampirism.v_infect1":"桑古納雷吊具I",
+  "task.vampirism.v_infect2":"Sanguinare撒佈機II",
+  "task.vampirism.v_infect3":"Sanguinare撒佈機III",
+  "task.vampirism.v_capture1":"擴展區域I",
+  "task.vampirism.v_capture2":"擴展區域II",
+  "task.vampirism.v_kill1":"獵人狩獵我",
+  "task.vampirism.v_kill2":"獵人狩獵II",
+  "task.vampirism.h_kill1":"正在清洗I",
+  "task.vampirism.h_kill2":"清潔II",
+  "task.vampirism.h_kill3":"清潔III",
+  "task.vampirism.h_capture1":"鄉村保護I",
+  "task.vampirism.h_capture2":"鄉村保護II",
+  "task.vampirism.h_souls":"靈魂收集",
+  "task.vampirism.h_crossbow":"設備捐贈",
+  "task.vampirism.break_bones1":"破壞我的骨頭",
+  "task.vampirism.break_bones2":"破壞某些骨骼II",
+  "task.vampirism.break_bones3":"破壞某些骨骼III",
+  "task.vampirism.break_bones4":"破壞一些骨骼IV",
+  "task.vampirism.totem_top":"村莊控制",
+  "__comment":"統計",
+  "stat.vampirism.infected_creatures":"受Sanguinare感染的生物",
+  "stat.vampirism.interact_alchemical_cauldron":"與煉金大鍋的相互作用",
+  "stat.vampirism.weapon_table":"與武器表的互動",
+  "stat.vampirism.capture_village":"已捕獲敵對村莊",
+  "__comment":"標題",
+  "text.vampirism.lord_title.vampire.male1":"男爵",
+  "text.vampirism.lord_title.vampire.male2":"子爵",
+  "text.vampirism.lord_title.vampire.male3":"計數",
+  "text.vampirism.lord_title.vampire.male4":"公爵",
+  "text.vampirism.lord_title.vampire.male5":"王子",
+  "text.vampirism.lord_title.vampire.female1":"男爵夫人",
+  "text.vampirism.lord_title.vampire.female2":"子爵夫人",
+  "text.vampirism.lord_title.vampire.female3":"伯爵夫人",
+  "text.vampirism.lord_title.vampire.female4":"公爵夫人",
+  "text.vampirism.lord_title.vampire.female5":"公主",
+  "text.vampirism.lord_title.hunter.1":"中尉",
+  "text.vampirism.lord_title.hunter.2":"船長",
+  "text.vampirism.lord_title.hunter.3":"主要",
+  "text.vampirism.lord_title.hunter.4":"上校",
+  "text.vampirism.lord_title.hunter.5":"準將",
+  "text.vampirism.minion.stats.inventory_level":"庫存大小",
+  "text.vampirism.minion.stats.resource_level":"資源效率"
 }
