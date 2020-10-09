@@ -21,7 +21,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.DimensionType;
+import net.minecraft.world.World;
 
 import java.util.UUID;
 
@@ -60,7 +60,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.isGettingSundamage(vampire.getRepresentingEntity().world) && !ModItems.umbrella.equals(vampire.getRepresentingEntity().getHeldItemMainhand().getItem()) && vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().world) == EnumStrength.NONE && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && !vampire.getRepresentingPlayer().isInWater() && (VampirismConfig.SERVER.batModeInEnd.get() || !(vampire.getRepresentingPlayer().getEntityWorld().func_230315_m_().func_242725_p().equals(DimensionType.field_242712_c)));
+        return !vampire.isGettingSundamage(vampire.getRepresentingEntity().world) && !ModItems.umbrella.equals(vampire.getRepresentingEntity().getHeldItemMainhand().getItem()) && vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().world) == EnumStrength.NONE && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && !vampire.getRepresentingPlayer().isInWater() && (VampirismConfig.SERVER.batModeInEnd.get() || !(vampire.getRepresentingPlayer().getEntityWorld().func_234923_W_() == World.field_234920_i_));
     }
 
     @Override
@@ -121,7 +121,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         } else if (vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().world) != EnumStrength.NONE && !vampire.isRemote()) {
             vampire.getRepresentingEntity().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_garlic"), Util.DUMMY_UUID);
             return true;
-        } else if (!VampirismConfig.SERVER.batModeInEnd.get() && vampire.getRepresentingPlayer().getEntityWorld().func_230315_m_().func_242725_p().equals(DimensionType.field_242712_c)/*checkIfEnd*/) {
+        } else if (!VampirismConfig.SERVER.batModeInEnd.get() && vampire.getRepresentingPlayer().getEntityWorld().func_234923_W_() == World.field_234920_i_) {
             vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_end"), Util.DUMMY_UUID);
             return true;
         } else return vampire.getRepresentingPlayer().isInWater();
