@@ -74,9 +74,9 @@ public class ModBiomes {
             event.getSpawns().func_242575_a(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.vampire, BalanceMobProps.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 2));
             event.getSpawns().func_242575_a(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.advanced_vampire, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_SPAWN_PROBE, 1, 1));
         }
-        event.getGeneration().func_242513_a(GenerationStage.Decoration.UNDERGROUND_STRUCTURES, ModFeatures.vampire_dungeon.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).func_242729_a(VampirismConfig.BALANCE.vampireDungeonWeight.get()));
+        event.getGeneration().func_242513_a(GenerationStage.Decoration.UNDERGROUND_STRUCTURES, VampirismBiomeFeatures.vampire_dungeon);
         if (!VampirismConfig.SERVER.disableHunterTentGen.get() && VampirismAPI.worldGenRegistry().canStructureBeGeneratedInBiome(ModFeatures.hunter_camp.getRegistryName(), event.getName(), event.getCategory())) {
-            event.getGeneration().func_242516_a(ModFeatures.hunter_camp.func_236391_a_/*withConfiguration*/(IFeatureConfig.NO_FEATURE_CONFIG));
+            event.getGeneration().func_242516_a(VampirismBiomeFeatures.hunter_camp);
         }
 
 
