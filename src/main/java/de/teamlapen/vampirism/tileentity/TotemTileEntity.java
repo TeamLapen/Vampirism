@@ -819,7 +819,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             else
                 ((IVillageCaptureEntity) entity).attackVillage(new CaptureInfo(this));
         } else if (entity != null) {
-            LOGGER.warn("Creature registered for village capture does not implement IVillageCaptureEntity ({})", entity.getEntityString());
+            LOGGER.warn("Creature registered for village capture does not implement IVillageCaptureEntity ({})", entityType.getRegistryName());
         } else {
             LOGGER.info("Failed to spawn capture creature");
         }

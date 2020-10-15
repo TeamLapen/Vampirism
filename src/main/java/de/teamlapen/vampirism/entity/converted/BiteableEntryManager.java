@@ -2,12 +2,12 @@ package de.teamlapen.vampirism.entity.converted;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -60,7 +60,8 @@ public class BiteableEntryManager {
      */
     public @Nullable
     BiteableEntry calculate(@Nonnull CreatureEntity creature) {
-        ResourceLocation id = new ResourceLocation(creature.getEntityString());
+        EntityType<?> type = creature.getType();
+        ResourceLocation id = EntityType.getKey(type);
         if (blacklist.contains(id)) return null;
         if (!VampirismConfig.SERVER.autoCalculateEntityBlood.get() || !(creature instanceof AnimalEntity) || creature instanceof IVampire) {
             blacklist.add(id);
@@ -125,11 +126,11 @@ public class BiteableEntryManager {
      * @param creature for which a {@link BiteableEntry} is requested
      * @return {@code null} if resources aren't loaded or the creatures type is blacklisted.
      */
-    @SuppressWarnings("ConstantConditions")
     public @Nullable
     BiteableEntry get(CreatureEntity creature) {
         if (!initialized) return null;
-        ResourceLocation id = new ResourceLocation(creature.getEntityString());
+        EntityType<?> type = creature.getType();
+        ResourceLocation id = EntityType.getKey(type);
         if (biteableEntries.containsKey(id)) return biteableEntries.get(id);
         return calculated.getOrDefault(id, null);
     }
