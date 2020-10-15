@@ -60,7 +60,10 @@ public class BiteableEntryManager {
      */
     public @Nullable
     BiteableEntry calculate(@Nonnull CreatureEntity creature) {
-        ResourceLocation id = new ResourceLocation(creature.getEntityString());
+        EntityType<?> type = creature.getType();
+        @Nullable
+        ResourceLocation id = type.getRegistryName();
+        if (id == null) return null;
         if (blacklist.contains(id)) return null;
         if (!VampirismConfig.SERVER.autoCalculateEntityBlood.get() || !(creature instanceof AnimalEntity) || creature instanceof IVampire) {
             blacklist.add(id);
