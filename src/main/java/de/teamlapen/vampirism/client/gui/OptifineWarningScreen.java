@@ -18,8 +18,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class OptifineWarningScreen extends Screen {
-    private static final ITextComponent HEADER = (new StringTextComponent("Optifine + Shaders messes up world generation")).mergeStyle(TextFormatting.BOLD);
-    private static final ITextComponent TEXT = new StringTextComponent("Unfortunately, Optifine is breaking mods that introduce new biomes when you have shaders enabled.\n You can proceed, but be aware there might be crashes or broken worlds.\nPlease disable shaders or uninstall Optifine and restart the game.\nMessage by Vampirism");
+    private static final ITextComponent HEADER = (new StringTextComponent("A mod messes up world generation")).mergeStyle(TextFormatting.BOLD);
+    private static final ITextComponent TEXT = new StringTextComponent("Unfortunately, a mod is breaking world generation with modded biomes (like e.g. the Vampire Forest).\nThis can be Optifine when shaders are used, or a different mod.\n\nIf you are using Optifine + Shaders, either disable shaders or uninstall Optifine and restart the game\n\nIf you are not using Optifine + Shaders, you could use the mod Blame\nhttps://www.curseforge.com/minecraft/mc-mods/blame\nto figure out the offending mod.\n\nMessage by Vampirism");
     private static final ITextComponent CONFIRM = new StringTextComponent("Continue on my own risk");
     private static final ITextComponent ABORT = new StringTextComponent("Back to menu");
     private final Screen originalScreen;
