@@ -155,10 +155,18 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
     }
 
     public void loadData(CompoundNBT nbt) {
-        this.taskManager.readNBT(nbt);
+        if (this.taskManager != null) {
+            this.taskManager.readNBT(nbt);
+        } else {
+            LOGGER.debug("The player is loaded on the client side and therefore taskmaster related data is missing");
+        }
     }
 
     public void saveData(CompoundNBT nbt) {
-        this.taskManager.writeNBT(nbt);
+        if (this.taskManager != null) {
+            this.taskManager.writeNBT(nbt);
+        } else {
+            LOGGER.debug("The player is saved on the client side and therefore taskmaster related data is missing");
+        }
     }
 }
