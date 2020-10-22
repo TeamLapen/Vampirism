@@ -166,7 +166,7 @@ public class GuideBook implements IGuideBook {
         StringBuilder blocks = new StringBuilder();
         for (AltarPillarBlock.EnumPillarType t : AltarPillarBlock.EnumPillarType.values()) {
             if (t == AltarPillarBlock.EnumPillarType.NONE) continue;
-            blocks.append(translateComponent(t.fillerBlock.getTranslationKey())).append("(").append(t.getValue()).append("),");
+            blocks.append(translate(t.fillerBlock.getTranslationKey())).append("(").append(t.getValue()).append("),");
         }
         levelingPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "leveling.infusion.structure", blocks.toString())));
         String items = loc(ModItems.human_heart) + ", " + loc(ModItems.pure_blood_0) + ", " + loc(ModItems.vampire_book);
