@@ -42,7 +42,6 @@ dependencies {
     compileOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}") //For compile (not exported to POM)
     runtimeOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}") //For runtime (not exported to POM)
 
-
     //runtimeOnly fg.deobf("curse.maven:angel-of-vengeance:2810906")
 
 
@@ -56,6 +55,7 @@ minecraft {
         client {
             taskName 'runClient1'
             main 'net.minecraftforge.userdev.LaunchTesting'
+            property 'mixin.env.disableRefMap', 'true' //In case we have some (temporary) dependency on a mod using mixins.
             property 'forge.logging.console.level', 'debug'
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             workingDirectory project.file('run/client1').canonicalPath
@@ -73,6 +73,7 @@ minecraft {
         server {
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
+            property 'mixin.env.disableRefMap', 'true'
             workingDirectory project.file('run/server').canonicalPath
             jvmArg '-ea:de.teamlapen...'
 
@@ -90,6 +91,7 @@ minecraft {
             workingDirectory project.file('run/data').canonicalPath
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
+            property 'mixin.env.disableRefMap', 'true'
             args '--mod', 'vampirism', '--all', '--output', file('src/generated/resources/'),  '--existing', sourceSets.main.resources.srcDirs[0]
             mods {
                 vampirism {
