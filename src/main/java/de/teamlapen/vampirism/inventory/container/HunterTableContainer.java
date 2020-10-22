@@ -23,7 +23,6 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
@@ -34,7 +33,7 @@ import net.minecraftforge.fml.network.IContainerFactory;
  * Handles inventory setup  and "crafting"
  */
 public class HunterTableContainer extends InventoryContainer implements IInventoryChangedListener {
-    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Ingredient.fromItems(Items.BOOK), 15, 28), new SelectorInfo(Ingredient.fromItems(ModItems.vampire_fang), 42, 28), new SelectorInfo(Ingredient.fromTag(ModTags.Items.PURE_BLOOD), 69, 28), new SelectorInfo(Ingredient.fromItems(ModItems.vampire_book), 96, 28)};
+    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Items.BOOK, 15, 28), new SelectorInfo(ModItems.vampire_fang, 42, 28), new SelectorInfo(ModTags.Items.PURE_BLOOD, 69, 28), new SelectorInfo(ModItems.vampire_book, 96, 28)};
     private final SlotResult slotResult;
     private final int hunterLevel;
     private final HunterLevelingConf levelingConf = HunterLevelingConf.instance();

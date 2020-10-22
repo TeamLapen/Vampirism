@@ -11,11 +11,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.IWorldPosCallable;
 
 public class AltarInfusionContainer extends InventoryContainer {
-    public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Ingredient.fromTag(ModTags.Items.PURE_BLOOD), 44, 34), new SelectorInfo(Ingredient.fromItems(ModItems.human_heart), 80, 34), new SelectorInfo(Ingredient.fromItems(ModItems.vampire_book), 116, 34)};
+    public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(ModTags.Items.PURE_BLOOD, 44, 34), new SelectorInfo(ModItems.human_heart, 80, 34), new SelectorInfo(ModItems.vampire_book, 116, 34)};
 
     @Deprecated
     public AltarInfusionContainer(int id, PlayerInventory playerInventory) {

@@ -14,7 +14,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -25,7 +24,7 @@ import javax.annotation.Nullable;
  * Container for interacting with basic hunters to level up as a hunter
  */
 public class HunterBasicContainer extends InventoryContainer {
-    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Ingredient.fromItems(ModItems.vampire_blood_bottle), 27, 32)};
+    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(ModItems.vampire_blood_bottle, 27, 32)};
     private final IHunterPlayer player;
     @Nullable
     private final BasicHunterEntity entity;
