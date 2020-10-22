@@ -19,7 +19,6 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.Vec3d;
@@ -30,7 +29,7 @@ import javax.annotation.Nullable;
  * Container which handles hunter levelup at an hunter trainer
  */
 public class HunterTrainerContainer extends InventoryContainer implements IInventoryChangedListener {
-    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Ingredient.fromItems(Items.IRON_INGOT), 27, 26), new SelectorInfo(Ingredient.fromItems(Items.GOLD_INGOT), 57, 26), new SelectorInfo(Ingredient.fromTag(ModTags.Items.HUNTER_INTEL), 86, 26)};
+    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Items.IRON_INGOT, 27, 26), new SelectorInfo(Items.GOLD_INGOT, 57, 26), new SelectorInfo(ModTags.Items.HUNTER_INTEL, 86, 26)};
     private final PlayerEntity player;
     @Nullable
     private final HunterTrainerEntity entity;

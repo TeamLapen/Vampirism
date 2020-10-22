@@ -1,18 +1,20 @@
 package de.teamlapen.lib.lib.inventory;
 
-import com.mojang.datafixers.util.Either;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.function.Predicate;
 
 
@@ -144,7 +146,7 @@ public abstract class InventoryContainer extends Container {
 
 
     public static class SelectorInfo {
-        public final Either<Ingredient, Predicate<ItemStack>> ingredient;
+        public final Predicate<ItemStack> predicate;
         public final int xDisplay;
         public final int yDisplay;
         public final int stackLimit;
@@ -152,8 +154,8 @@ public abstract class InventoryContainer extends Container {
         @Nullable
         public final String background;
 
-        public SelectorInfo(Either<Ingredient, Predicate<ItemStack>> ingredient, int x, int y, boolean inverted, int limit, @Nullable String background) {
-            this.ingredient = ingredient;
+        public SelectorInfo(Predicate<ItemStack> predicate, int x, int y, boolean inverted, int limit, @Nullable String background) {
+            this.predicate = predicate;
             this.xDisplay = x;
             this.yDisplay = y;
             this.stackLimit = limit;
@@ -161,44 +163,44 @@ public abstract class InventoryContainer extends Container {
             this.background = background;
         }
 
-        public SelectorInfo(Ingredient ingredient, int x, int y) {
-            this(ingredient, x, y, false);
+        public SelectorInfo(Item item, int x, int y) {
+            this(item, x, y, false, 64, null);
         }
 
-        public SelectorInfo(Ingredient ingredient, int x, int y, boolean inverted) {
-            this(ingredient, x, y, inverted, 64);
+
+        public SelectorInfo(Item item, int x, int y, boolean inverted, int stackLimit, @Nullable String background) {
+            this(itemStack -> item.equals(itemStack.getItem()), x, y, inverted, stackLimit, background);
         }
 
-        public SelectorInfo(Ingredient ingredient, int x, int y, boolean inverted, int stackLimit) {
-            this(Either.left(ingredient), x, y, inverted, stackLimit, null);
+        public SelectorInfo(LazyOptional<Collection<Item>> lazyItemCollection, int x, int y, boolean inverted, int stackLimit, @Nullable String background) {
+            this(itemStack -> lazyItemCollection.map(list -> list.contains(itemStack.getItem())).orElse(false), x, y, inverted, stackLimit, background);
         }
 
-        public SelectorInfo(Ingredient ingredient, int x, int y, int stackLimit) {
-            this(Either.left(ingredient), x, y, false, stackLimit, null);
+        public SelectorInfo(Tag<Item> tag, int x, int y) {
+            this(tag, x, y, false, 64, null);
         }
 
-        public SelectorInfo(Predicate<ItemStack> ingredient, int x, int y) {
-            this(ingredient, x, y, false);
+
+        public SelectorInfo(Tag<Item> tag, int x, int y, boolean inverted, int stackLimit, @Nullable String background) {
+            this(itemStack -> tag.contains(itemStack.getItem()) || tag.getAllElements().isEmpty(), x, y, inverted, stackLimit, background);
         }
 
-        public SelectorInfo(Predicate<ItemStack> ingredient, int x, int y, boolean inverted) {
-            this(ingredient, x, y, inverted, 64);
+
+        public SelectorInfo(Predicate<ItemStack> predicate, int x, int y) {
+            this(predicate, x, y, false);
         }
 
-        public SelectorInfo(Predicate<ItemStack> ingredient, int x, int y, boolean inverted, int stackLimit) {
-            this(Either.right(ingredient), x, y, inverted, stackLimit, null);
+        public SelectorInfo(Predicate<ItemStack> predicate, int x, int y, boolean inverted) {
+            this(predicate, x, y, inverted, 64, null);
         }
 
-        public SelectorInfo(Predicate<ItemStack> ingredient, int x, int y, boolean inverted, int stackLimit, @Nullable String background) {
-            this(Either.right(ingredient), x, y, inverted, stackLimit, background);
-        }
 
-        public SelectorInfo(Predicate<ItemStack> ingredient, int x, int y, int stackLimit) {
-            this(Either.right(ingredient), x, y, false, stackLimit, null);
+        public SelectorInfo(Predicate<ItemStack> predicate, int x, int y, int stackLimit, @Nullable String background) {
+            this(predicate, x, y, false, stackLimit, background);
         }
 
         public boolean validate(ItemStack s) {
-            boolean result = ingredient.map(ingredient -> ingredient.test(s) || ingredient.hasNoMatchingItems(), function -> function.test(s));
+            boolean result = predicate.test(s);
             return result != inverted;
         }
 
