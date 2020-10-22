@@ -12,7 +12,6 @@ import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.IWorldPosCallable;
@@ -21,17 +20,27 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.IContainerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.*;
 
 /**
  * Table to create blood potions
  */
 public class BloodPotionTableContainer extends InventoryContainer {
-    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Ingredient.fromItems(ModItems.vampire_blood_bottle), 115, 55, 1), new SelectorInfo(Ingredient.fromItems(ModItems.vampire_blood_bottle), 137, 55, 1), new SelectorInfo(Ingredient.fromTag(ModTags.Items.GARLIC), 126, 14), new SelectorInfo(getSpecialIngredient(ModTags.Items.GARLIC, ModItems.vampire_blood_bottle), 101, 22, true)};
+    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(ModItems.vampire_blood_bottle, 115, 55, false, 1), new SelectorInfo(ModItems.vampire_blood_bottle, 137, 55, false, 1), new SelectorInfo(ModTags.Items.GARLIC, 126, 14), new SelectorInfo(getSpecialIngredient(ModTags.Items.GARLIC, ModItems.vampire_blood_bottle), 101, 22, true, 64)};
+
+    private static LazyOptional<Collection<Item>> getSpecialIngredient(ITag<Item> tag, Item... items) {
+        return LazyOptional.of(() -> {
+            Set<Item> set = new HashSet<>(tag.getAllElements());
+            Collections.addAll(set, items);
+            return set;
+        });
+    }
+
     private final HunterPlayer hunterPlayer;
     private final int max_crafting_time;
     private final boolean portable;
@@ -88,17 +97,6 @@ public class BloodPotionTableContainer extends InventoryContainer {
         return craftingTimer == 0 ? 0 : (1F - craftingTimer / (float) max_crafting_time);
     }
 
-    private static Ingredient getSpecialIngredient(ITag<Item> tag, Item... items) {
-        List<Item> d = tag.getAllElements();
-        ItemStack[] stacks = new ItemStack[d.size() + items.length];
-        for (int i = 0; i < items.length; i++) {
-            stacks[i] = new ItemStack(items[i]);
-        }
-        for (int i = 0; i < d.size(); i++) {
-            stacks[i + items.length] = new ItemStack(d.get(i));
-        }
-        return Ingredient.fromStacks(stacks);
-    }
 
     public IWorldPosCallable getWorldPosCallable() {
         return worldPos;
