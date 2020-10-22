@@ -65,7 +65,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
             ItemStack throwStack = stack.copy();
             throwStack.setCount(1);
             entityThrowable.setItem(throwStack);
-            entityThrowable.shoot(playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
+            entityThrowable.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
             worldIn.addEntity(entityThrowable);
         }
 
