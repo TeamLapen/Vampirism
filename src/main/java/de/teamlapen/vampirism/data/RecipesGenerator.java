@@ -209,7 +209,7 @@ public class RecipesGenerator extends RecipeProvider {
 
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.altar_infusion).patternLine("YZY").patternLine("ZZZ").key('Y', gold_ingot).key('Z', obsidian).addCriterion("has_gold", hasItem(gold_ingot)).build(consumer, vampire("altar_infusion"));
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.altar_inspiration).patternLine(" X ").patternLine("XYX").patternLine("ZZZ").key('X', glass).key('Y', glass_bottle).key('Z', iron_ingot).addCriterion("has_iron", hasItem(iron_ingot)).build(consumer, vampire("altar_inspiration"));
-        ShapedRecipeBuilder.shapedRecipe(ModBlocks.altar_pillar).patternLine("X X").patternLine("   ").patternLine("XXX").key('X', stone_bricks).addCriterion("has_stones", hasItem(stone_bricks)).build(consumer, vampire("altar_piller"));
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.altar_pillar).patternLine("X X").patternLine("   ").patternLine("XXX").key('X', stone_bricks).addCriterion("has_stones", hasItem(stone_bricks)).build(consumer, vampire("altar_pillar"));
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.altar_tip).patternLine(" X ").patternLine("XYX").key('X', iron_ingot).key('Y', iron_block).addCriterion("has_iron", hasItem(iron_ingot)).build(consumer, vampire("altar_tip"));
         ShapelessRecipeBuilder.shapelessRecipe(Items.GLASS_BOTTLE).addIngredient(blood_bottle).addCriterion("has_blood_bottle", hasItem(blood_bottle)).build(consumer, vampire("blood_bottle_to_glass"));
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.blood_container).patternLine("XYX").patternLine("YZY").patternLine("XYX").key('X', planks).key('Y', glass).key('Z', iron_ingot).addCriterion("has_iron", hasItem(iron_ingot)).build(consumer, vampire("blood_container"));
