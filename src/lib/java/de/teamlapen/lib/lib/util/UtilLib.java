@@ -170,7 +170,7 @@ public class UtilLib {
     public static @Nonnull
     Vector3d getItemPosition(LivingEntity entity, boolean mainHand) {
         boolean left = (mainHand ? entity.getPrimaryHand() : entity.getPrimaryHand().opposite()) == HandSide.LEFT;
-        boolean firstPerson = entity instanceof PlayerEntity && ((PlayerEntity) entity).isUser() && Minecraft.getInstance().gameSettings.func_243230_g().func_243192_a();
+        boolean firstPerson = entity instanceof PlayerEntity && ((PlayerEntity) entity).isUser() && Minecraft.getInstance().gameSettings.getPointOfView().func_243192_a();
         Vector3d dir = firstPerson ? entity.getForward() : Vector3d.fromPitchYaw(new Vector2f(entity.rotationPitch, entity.renderYawOffset));
         dir = dir.rotateYaw((float) (Math.PI / 5f) * (left ? 1f : -1f)).scale(0.75f);
         return dir.add(entity.getPosX(), entity.getPosY() + entity.getEyeHeight(), entity.getPosZ());
@@ -512,7 +512,7 @@ public class UtilLib {
     }
 
     private static ChunkPos isBiomeAt(ServerWorld world, int x, int z, List<Biome> biomes) {
-        BlockPos pos = (world.getChunkProvider()).getChunkGenerator().getBiomeProvider().func_225531_a_(x, world.getSeaLevel(), z, 32, b -> biomes.contains(b), new Random());//findBiomePosition
+        BlockPos pos = (world.getChunkProvider()).getChunkGenerator().getBiomeProvider().findBiomePosition(x, world.getSeaLevel(), z, 32, b -> biomes.contains(b), new Random());//findBiomePosition
         if (pos != null) {
             return new ChunkPos(pos.getX() >> 4, pos.getZ() >> 4);
         }

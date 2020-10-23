@@ -35,11 +35,19 @@ public class HunterTrainerScreen extends ContainerScreen<HunterTrainerContainer>
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(stack);
-        super.render(stack, mouseX, mouseY, partialTicks);
-        this.func_230459_a_(stack, mouseX, mouseY);
-
+    public void init() {
+        super.init();
+        int i = (this.width - this.xSize) / 2;
+        int j = (this.height - this.ySize) / 2;
+        ITextComponent name = new TranslationTextComponent("text.vampirism.level_up");
+        this.addButton(this.buttonLevelup = new Button(i + 120, j + 24, this.font.getStringPropertyWidth(name) + 5, 20, name, (context) -> {
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TRAINERLEVELUP, ""));
+            PlayerEntity player = Minecraft.getInstance().player;
+            UtilLib.spawnParticles(player.getEntityWorld(), ParticleTypes.ENCHANT, player.getPosX(), player.getPosY(), player.getPosZ(), 1, 1, 1, 100, 1);
+            player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_HARP, 4.0F, (1.0F + (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F) * 0.7F);
+            this.closeScreen();
+        }));
+        this.buttonLevelup.active = false;
     }
 
     @Override
@@ -52,19 +60,11 @@ public class HunterTrainerScreen extends ContainerScreen<HunterTrainerContainer>
     }
 
     @Override
-    public void init() {
-        super.init();
-        int i = (this.width - this.xSize) / 2;
-        int j = (this.height - this.ySize) / 2;
-        ITextComponent name = new TranslationTextComponent("text.vampirism.level_up");
-        this.addButton(this.buttonLevelup = new Button(i + 120, j + 24, this.font.func_238414_a_(name) + 5, 20, name, (context) -> {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TRAINERLEVELUP, ""));
-            PlayerEntity player = Minecraft.getInstance().player;
-            UtilLib.spawnParticles(player.getEntityWorld(), ParticleTypes.ENCHANT, player.getPosX(), player.getPosY(), player.getPosZ(), 1, 1, 1, 100, 1);
-            player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_HARP, 4.0F, (1.0F + (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F) * 0.7F);
-            this.closeScreen();
-        }));
-        this.buttonLevelup.active = false;
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(stack);
+        super.render(stack, mouseX, mouseY, partialTicks);
+        this.renderHoveredTooltip(stack, mouseX, mouseY);
+
     }
 
     @Override

@@ -126,7 +126,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    public void resetBrain(@Nonnull ServerWorld p_213770_1_) {
+    public void resetBrain(@Nonnull ServerWorld serverWorldIn) {
     }
 
     @Override

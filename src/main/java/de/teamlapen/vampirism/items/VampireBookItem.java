@@ -90,7 +90,7 @@ public class VampireBookItem extends VampirismItem {
 
                         Object lvt_7_1_;
                         try {
-                            ITextComponent var11 = ITextComponent.Serializer.func_240644_b_(s);
+                            ITextComponent var11 = ITextComponent.Serializer.getComponentFromJsonLenient(s);
                             lvt_7_1_ = TextComponentUtils.func_240645_a_(null, var11, player, 0);
                         } catch (Exception var9) {
                             lvt_7_1_ = new StringTextComponent(s);

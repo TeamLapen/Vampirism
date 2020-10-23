@@ -27,9 +27,9 @@ public class SundamageRegistry implements ISundamageRegistry {
     private final Set<ResourceLocation> noSundamageConfiguredBiomesIDs = new CopyOnWriteArraySet<>();
 
     public SundamageRegistry() {
-        sundamageDims.put(World.field_234918_g_, true);
-        sundamageDims.put(World.field_234919_h_, false);
-        sundamageDims.put(World.field_234920_i_, false);
+        sundamageDims.put(World.OVERWORLD, true);
+        sundamageDims.put(World.THE_NETHER, false);
+        sundamageDims.put(World.THE_END, false);
     }
 
 
@@ -68,13 +68,13 @@ public class SundamageRegistry implements ISundamageRegistry {
         List<? extends String> negative = VampirismConfig.SERVER.sundamageDimensionsOverrideNegative.get();
         for (String s : negative) {
             ResourceLocation id = new ResourceLocation(s); //Should be safe because config validates values?
-            RegistryKey<World> key = RegistryKey.func_240903_a_(Registry.WORLD_KEY, id);
+            RegistryKey<World> key = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, id);
             sundamageConfiguredDims.put(key, false);
         }
         List<? extends String> positive = VampirismConfig.SERVER.sundamageDimensionsOverridePositive.get();
         for (String s : positive) {
             ResourceLocation id = new ResourceLocation(s); //Should be safe because config validates values?
-            RegistryKey<World> key = RegistryKey.func_240903_a_(Registry.WORLD_KEY, id);
+            RegistryKey<World> key = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, id);
             sundamageConfiguredDims.put(key, true);
         }
 

@@ -19,8 +19,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class VillagerWithArmsModel<T extends VillagerEntity> extends VillagerModel<T> implements IHasArm {
-    private ModelRenderer leftArm;
-    private ModelRenderer rightArm;
+    private final ModelRenderer leftArm;
+    private final ModelRenderer rightArm;
 
     public VillagerWithArmsModel(float scale) {
         this(scale, 0F, 64, 64);
@@ -49,8 +49,8 @@ public class VillagerWithArmsModel<T extends VillagerEntity> extends VillagerMod
     }
 
     @Override
-    public void setRotationAngles(T entityIn, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_) {
-        super.setRotationAngles(entityIn, p_225597_2_, p_225597_3_, p_225597_4_, p_225597_5_, p_225597_6_);
+    public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
         this.leftArm.setRotationPoint(4, 3, -1);
         this.rightArm.setRotationPoint(-4, 3, -1);
         this.leftArm.rotateAngleX = -0.75F;

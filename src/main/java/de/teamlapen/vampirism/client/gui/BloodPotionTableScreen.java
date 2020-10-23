@@ -39,7 +39,7 @@ public class BloodPotionTableScreen extends ContainerScreen<BloodPotionTableCont
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
-        this.func_230459_a_(stack, mouseX, mouseY);
+        this.renderHoveredTooltip(stack, mouseX, mouseY);
 
     }
 
@@ -97,7 +97,7 @@ public class BloodPotionTableScreen extends ContainerScreen<BloodPotionTableCont
             int i = (this.width - this.xSize) / 2;
             int j = (this.height - this.ySize) / 2;
             for (ITextComponent hint : hints) {
-                for (IReorderingProcessor t : this.font.func_238425_b_(hint, 92)) {
+                for (IReorderingProcessor t : this.font.trimStringToWidth(hint, 92)) {
                     this.font.func_238422_b_(stack, t, i + 5, j + 28, Color.WHITE.getRGB());
                     j += this.font.FONT_HEIGHT;
                 }

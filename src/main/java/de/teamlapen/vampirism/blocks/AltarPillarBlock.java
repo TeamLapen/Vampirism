@@ -101,8 +101,8 @@ public class AltarPillarBlock extends VampirismBlock {
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> p_206840_1_) {
-        p_206840_1_.add(TYPE_PROPERTY);
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(TYPE_PROPERTY);
     }
 
     public enum EnumPillarType implements IStringSerializable {

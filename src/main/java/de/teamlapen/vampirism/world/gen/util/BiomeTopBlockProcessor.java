@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BiomeTopBlockProcessor extends StructureProcessor {
-    public static final Codec<BiomeTopBlockProcessor> CODEC = BlockState.BLOCKSTATE_CODEC.fieldOf("replace_block").xmap(BiomeTopBlockProcessor::new, (entry) -> entry.replaceBlock).codec();
+    public static final Codec<BiomeTopBlockProcessor> CODEC = BlockState.CODEC.fieldOf("replace_block").xmap(BiomeTopBlockProcessor::new, (entry) -> entry.replaceBlock).codec();
     private static final Map<Block, Block> streetBlocks = new HashMap<Block, Block>() {{
         put(Blocks.SAND, Blocks.SMOOTH_SANDSTONE);
         put(Blocks.GRASS_BLOCK, Blocks.GRASS_PATH);
@@ -33,7 +33,7 @@ public class BiomeTopBlockProcessor extends StructureProcessor {
     @Nullable
     public Template.BlockInfo process(@Nonnull IWorldReader worldReaderIn, @Nonnull BlockPos pos, @Nonnull BlockPos pos1, @Nonnull Template.BlockInfo blockInfo, Template.BlockInfo blockInfo1, @Nonnull PlacementSettings placementSettings, @Nullable Template template) {
         if (blockInfo1.state.equals(replaceBlock)) {
-            BlockState topBlock = worldReaderIn.getBiome(blockInfo1.pos).func_242440_e().func_242502_e().getTop();
+            BlockState topBlock = worldReaderIn.getBiome(blockInfo1.pos).getGenerationSettings().getSurfaceBuilderConfig().getTop();
             if(streetBlocks.containsKey(topBlock.getBlock())){
                 topBlock = streetBlocks.get(topBlock.getBlock()).getDefaultState();
             }

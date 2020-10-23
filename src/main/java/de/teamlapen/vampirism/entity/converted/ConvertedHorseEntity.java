@@ -54,8 +54,8 @@ public class ConvertedHorseEntity extends HorseEntity implements IConvertedCreat
     private ITextComponent name;
 
 
-    public ConvertedHorseEntity(EntityType<? extends HorseEntity> p_i50238_1_, World p_i50238_2_) {
-        super(p_i50238_1_, p_i50238_2_);
+    public ConvertedHorseEntity(EntityType<? extends HorseEntity> type, World worldIn) {
+        super(type, worldIn);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ConvertedHorseEntity extends HorseEntity implements IConvertedCreat
     }
 
     @Override
-    public boolean canDespawn(double p_213397_1_) {
+    public boolean canDespawn(double distanceToClosestPlayer) {
         return !isTame();
     }
 

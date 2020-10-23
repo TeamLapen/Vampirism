@@ -68,8 +68,8 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damageSource, float p_70097_2_) {
-        boolean flag = super.attackEntityFrom(damageSource, p_70097_2_);
+    public boolean attackEntityFrom(DamageSource damageSource, float amount) {
+        boolean flag = super.attackEntityFrom(damageSource, amount);
         if (flag) angryTimer += ANGRY_TICKS_PER_ATTACK;
         return flag;
     }

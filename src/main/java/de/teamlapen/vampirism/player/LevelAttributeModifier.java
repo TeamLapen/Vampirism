@@ -63,7 +63,7 @@ public class LevelAttributeModifier {
         if (evenIntOnly) {
             m = Math.round(m / 2) * 2;
         }
-        instance.applyPersistentModifier(new AttributeModifier(mod, (attribute.func_233754_c_/*getName*/() + " " + name + " Boost"), m, operation));
+        instance.applyPersistentModifier(new AttributeModifier(mod, (attribute.getAttributeName/*getName*/() + " " + name + " Boost"), m, operation));
     }
 
     /**

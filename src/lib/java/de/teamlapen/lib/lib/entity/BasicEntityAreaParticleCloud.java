@@ -64,8 +64,8 @@ public class BasicEntityAreaParticleCloud extends Entity {
         return this.getDataManager().get(PARTICLE);
     }
 
-    public void setParticle(IParticleData p_195059_1_) {
-        this.getDataManager().set(PARTICLE, p_195059_1_);
+    public void setParticle(IParticleData particleData) {
+        this.getDataManager().set(PARTICLE, particleData);
     }
 
 

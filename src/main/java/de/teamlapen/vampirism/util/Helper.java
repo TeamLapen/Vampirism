@@ -128,7 +128,7 @@ public class Helper {
 
     @Nonnull
     public static RegistryKey<World> getWorldKey(IWorld world) {
-        return world instanceof World ? ((World) world).func_234923_W_() : world instanceof IServerWorld ? ((IServerWorld) world).getWorld().func_234923_W_() : World.field_234918_g_;
+        return world instanceof World ? ((World) world).getDimensionKey() : world instanceof IServerWorld ? ((IServerWorld) world).getWorld().getDimensionKey() : World.OVERWORLD;
     }
 
     public static boolean canBecomeVampire(PlayerEntity player) {
@@ -196,7 +196,7 @@ public class Helper {
     }
 
     public static ResourceLocation getBiomeId(IBiomeReader world, Biome biome) {
-        return world.func_241828_r().func_243612_b(Registry.BIOME_KEY).getKey(biome);
+        return world.func_241828_r().getRegistry(Registry.BIOME_KEY).getKey(biome);
     }
 
     /**

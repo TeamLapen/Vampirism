@@ -19,7 +19,7 @@ public class FleeGarlicVampireGoal extends FleeGoal {
 
     @Override
     protected boolean isPositionAcceptable(World world, BlockPos pos) {
-        return theCreature.doesResistGarlic(Helper.getGarlicStrengthAt(world.func_234923_W_(), pos));
+        return theCreature.doesResistGarlic(Helper.getGarlicStrengthAt(world.getDimensionKey(), pos));
     }
 
     @Override

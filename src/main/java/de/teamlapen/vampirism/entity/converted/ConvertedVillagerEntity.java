@@ -164,11 +164,11 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
             brain.registerActivity(Activity.PLAY, VillagerTasks.play(f));
         } else {
             brain.setSchedule(ModVillage.converted_default);
-            brain.func_233700_a_(Activity.WORK, VillagerTasks.work(villagerprofession, 0.5F), ImmutableSet.of(Pair.of(MemoryModuleType.JOB_SITE, MemoryModuleStatus.VALUE_PRESENT)));
+            brain.registerActivity(Activity.WORK, VillagerTasks.work(villagerprofession, 0.5F), ImmutableSet.of(Pair.of(MemoryModuleType.JOB_SITE, MemoryModuleStatus.VALUE_PRESENT)));
         }
 
         brain.registerActivity(Activity.CORE, VillagerTasks.core(villagerprofession, f));
-        brain.func_233700_a_(Activity.MEET, VillagerTasks.meet(villagerprofession, 0.5F), ImmutableSet.of(Pair.of(MemoryModuleType.MEETING_POINT, MemoryModuleStatus.VALUE_PRESENT)));
+        brain.registerActivity(Activity.MEET, VillagerTasks.meet(villagerprofession, 0.5F), ImmutableSet.of(Pair.of(MemoryModuleType.MEETING_POINT, MemoryModuleStatus.VALUE_PRESENT)));
         brain.registerActivity(Activity.REST, VillagerTasks.rest(villagerprofession, f));
         brain.registerActivity(Activity.IDLE, VillagerTasks.idle(villagerprofession, f));
         brain.registerActivity(Activity.PANIC, VillagerTasks.panic(villagerprofession, f));

@@ -29,11 +29,18 @@ public class HunterBasicScreen extends ContainerScreen<HunterBasicContainer> {
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(stack);
-        super.render(stack, mouseX, mouseY, partialTicks);
-        this.func_230459_a_(stack, mouseX, mouseY);
+    public void init() {
+        super.init();
 
+        ITextComponent name = new TranslationTextComponent("text.vampirism.level_up");
+        int wid = this.font.getStringPropertyWidth(name) + 5;
+        int i = (this.xSize - wid) / 2;
+        int j = (this.height - this.ySize) / 2;
+        addButton(buttonLevelup = new Button(this.guiLeft + i, j + 50, wid, 20, name, (context) -> {
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.BASICHUNTERLEVELUP, ""));
+            this.closeScreen();
+        }));
+        buttonLevelup.active = false;
     }
 
     @Override
@@ -47,18 +54,11 @@ public class HunterBasicScreen extends ContainerScreen<HunterBasicContainer> {
     }
 
     @Override
-    public void init() {
-        super.init();
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(stack);
+        super.render(stack, mouseX, mouseY, partialTicks);
+        this.renderHoveredTooltip(stack, mouseX, mouseY);
 
-        ITextComponent name = new TranslationTextComponent("text.vampirism.level_up");
-        int wid = this.font.func_238414_a_(name) + 5;
-        int i = (this.xSize - wid) / 2;
-        int j = (this.height - this.ySize) / 2;
-        addButton(buttonLevelup = new Button(this.guiLeft + i, j + 50, wid, 20, name, (context) -> {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.BASICHUNTERLEVELUP, ""));
-            this.closeScreen();
-        }));
-        buttonLevelup.active = false;
     }
 
     @Override

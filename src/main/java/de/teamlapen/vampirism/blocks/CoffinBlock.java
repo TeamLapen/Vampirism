@@ -98,7 +98,7 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     @Nonnull
     @Override
-    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return shape;
     }
 
@@ -166,7 +166,7 @@ public class CoffinBlock extends VampirismBlockContainer {
                 return ActionResultType.SUCCESS;
             }
 
-            if (!BedBlock.func_235330_a_(worldIn)) {
+            if (!BedBlock.doesBedWork(worldIn)) {
                 worldIn.removeBlock(pos, false);
                 BlockPos blockpos = pos.offset(state.get(HORIZONTAL_FACING).getOpposite());
                 if (worldIn.getBlockState(blockpos).isIn(this)) {

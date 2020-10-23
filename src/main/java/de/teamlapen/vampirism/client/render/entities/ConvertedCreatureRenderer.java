@@ -28,12 +28,12 @@ public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureE
     }
 
     @Override
-    public void render(ConvertedCreatureEntity entity, float p_225623_2_, float p_225623_3_, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int p_225623_6_) {
+    public void render(ConvertedCreatureEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int packedLightIn) {
         CreatureEntity creature = entity.getOldCreature();
         if (creature != null) {
             creature.removed = false;
             renderOverlay = true;
-            this.renderManager.renderEntityStatic(creature, 0, 0, 0, 0, 0, matrixStack, renderTypeBuffer, p_225623_6_);
+            this.renderManager.renderEntityStatic(creature, 0, 0, 0, 0, 0, matrixStack, renderTypeBuffer, packedLightIn);
             renderOverlay = false;
             creature.removed = true;
         }

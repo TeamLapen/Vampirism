@@ -100,7 +100,7 @@ public class ModLakeFeature extends LakesFeature {
                                 BlockPos blockpos = p_241855_4_.add(i2, j4 - 1, j3);
                                 if (isDirt(p_241855_1_.getBlockState(blockpos).getBlock()) && p_241855_1_.getLightFor(LightType.SKY, p_241855_4_.add(i2, j4, j3)) > 0) {
                                     Biome biome = p_241855_1_.getBiome(blockpos);
-                                    p_241855_1_.setBlockState(blockpos, biome.func_242440_e().func_242502_e().getTop(), 2);
+                                    p_241855_1_.setBlockState(blockpos, biome.getGenerationSettings().getSurfaceBuilderConfig().getTop(), 2);
                                 }
                             }
                         }

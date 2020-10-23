@@ -150,7 +150,7 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
                 chunks[i++] = new ChunkPos(x + baseX, z + baseZ);
             }
         }
-        id = VampirismAPI.getGarlicChunkHandler(getWorld().func_234923_W_()).registerGarlicBlock(strength, chunks);
+        id = VampirismAPI.getGarlicChunkHandler(getWorld().getDimensionKey()).registerGarlicBlock(strength, chunks);
         registered = true;
 
     }
@@ -173,7 +173,7 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
 
     private void unregister() {
         if (registered) {
-            VampirismAPI.getGarlicChunkHandler(getWorld().func_234923_W_()).removeGarlicBlock(id);
+            VampirismAPI.getGarlicChunkHandler(getWorld().getDimensionKey()).removeGarlicBlock(id);
             registered = false;
         }
     }

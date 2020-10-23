@@ -67,16 +67,16 @@ public class ModWorld {
     //
     private static Pair<Map<String, List<Pair<JigsawPiece, Integer>>>, Map<String, JigsawPattern>> getStructures() {
         Map<String, JigsawPattern> patterns = new HashMap<String, JigsawPattern>() {{
-            put("plains", WorldGenRegistries.field_243656_h.func_241873_b(new ResourceLocation("village/plains/houses")).get());
-            put("desert", WorldGenRegistries.field_243656_h.func_241873_b(new ResourceLocation("village/desert/houses")).get());
-            put("savanna", WorldGenRegistries.field_243656_h.func_241873_b(new ResourceLocation("village/savanna/houses")).get());
-            put("taiga", WorldGenRegistries.field_243656_h.func_241873_b(new ResourceLocation("village/taiga/houses")).get());
-            put("snowy", WorldGenRegistries.field_243656_h.func_241873_b(new ResourceLocation("village/snowy/houses")).get());
-            put("plains_zombie", WorldGenRegistries.field_243656_h.func_241873_b(new ResourceLocation("village/plains/zombie/houses")).get());
-            put("desert_zombie", WorldGenRegistries.field_243656_h.func_241873_b(new ResourceLocation("village/desert/zombie/houses")).get());
-            put("savanna_zombie", WorldGenRegistries.field_243656_h.func_241873_b(new ResourceLocation("village/savanna/zombie/houses")).get());
-            put("taiga_zombie", WorldGenRegistries.field_243656_h.func_241873_b(new ResourceLocation("village/taiga/zombie/houses")).get());
-            put("snowy_zombie", WorldGenRegistries.field_243656_h.func_241873_b(new ResourceLocation("village/snowy/zombie/houses")).get());
+            put("plains", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/plains/houses")).get());
+            put("desert", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/desert/houses")).get());
+            put("savanna", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/savanna/houses")).get());
+            put("taiga", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/taiga/houses")).get());
+            put("snowy", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/snowy/houses")).get());
+            put("plains_zombie", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/plains/zombie/houses")).get());
+            put("desert_zombie", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/desert/zombie/houses")).get());
+            put("savanna_zombie", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/savanna/zombie/houses")).get());
+            put("taiga_zombie", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/taiga/zombie/houses")).get());
+            put("snowy_zombie", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/snowy/zombie/houses")).get());
         }};
 
         //biome string -> list of all JigsawPieces with weight
@@ -199,7 +199,7 @@ public class ModWorld {
         //write all Lists back to the specific JigsawPattern
         buildings.forEach((biome, list) -> patterns.get(biome).rawTemplates = ImmutableList.copyOf(list));
 
-        //sync all JigsawPattern JigsawPattern#field_214952_d (pairs piece with weight) with JigsawPattern#jigsawPieces (list of pieces * weights)
+        //sync all JigsawPattern JigsawPattern#rawTemplates (pairs piece with weight) with JigsawPattern#jigsawPieces (list of pieces * weights)
         patterns.values().forEach(pattern -> {
             pattern.jigsawPieces.clear();
             pattern.rawTemplates.forEach(pair -> {

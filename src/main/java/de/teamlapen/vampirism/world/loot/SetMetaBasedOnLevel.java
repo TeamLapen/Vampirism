@@ -36,15 +36,15 @@ public class SetMetaBasedOnLevel extends LootFunction {
 
     @Nonnull
     @Override
-    public LootFunctionType func_230425_b_() {
+    public LootFunctionType getFunctionType() {
         return ModLoot.set_meta_from_level;
     }
 
     public static class Serializer extends LootFunction.Serializer<SetMetaBasedOnLevel> {
 
         @Override
-        public void func_230424_a_(@Nonnull JsonObject json, @Nonnull SetMetaBasedOnLevel lootFunction, @Nonnull JsonSerializationContext context) {
-            super.func_230424_a_(json, lootFunction, context);
+        public void serialize(@Nonnull JsonObject json, @Nonnull SetMetaBasedOnLevel lootFunction, @Nonnull JsonSerializationContext context) {
+            super.serialize(json, lootFunction, context);
             json.add("max", RandomRanges.serialize(lootFunction.max, context));
             json.add("entity", context.serialize(lootFunction.target));
         }

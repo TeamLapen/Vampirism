@@ -94,7 +94,7 @@ public class NameSwordScreen extends Screen {
         }));
 
         this.listLines.clear();
-        this.listLines.addAll(this.font.func_238425_b_(this.text2, this.width - 50));
+        this.listLines.addAll(this.font.trimStringToWidth(this.text2, this.width - 50));
 
         this.nameField = new TextFieldWidget(this.font, this.width / 2 - 155 + 77, this.height / 6 + 70, 155, 20, new StringTextComponent("text_sword"));
         this.nameField.setTextColor(-1);

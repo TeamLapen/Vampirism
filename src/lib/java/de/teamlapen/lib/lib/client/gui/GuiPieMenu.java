@@ -143,7 +143,7 @@ public abstract class GuiPieMenu<T> extends Screen {
             } else {
                 this.minecraft
                         .player.movementInput.tickMovement(this.minecraft
-                        .player.func_228354_I_()); //shouldRenderSneaking
+                        .player.isForcedDown()); //shouldRenderSneaking
             }
         }
     }

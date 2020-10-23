@@ -38,12 +38,12 @@ public enum VampirismArmorMaterials implements IArmorMaterial {
         this.repairMaterial = new LazyValue<>(repairMaterial);
     }
 
-    public int getDamageReductionAmount(EquipmentSlotType p_200902_1_) {
-        return this.damageReductionAmountArray[p_200902_1_.getIndex()];
+    public int getDamageReductionAmount(EquipmentSlotType slotIn) {
+        return this.damageReductionAmountArray[slotIn.getIndex()];
     }
 
-    public int getDurability(EquipmentSlotType p_200896_1_) {
-        return MAX_DAMAGE_ARRAY[p_200896_1_.getIndex()] * this.maxDamageFactor;
+    public int getDurability(EquipmentSlotType slotIn) {
+        return MAX_DAMAGE_ARRAY[slotIn.getIndex()] * this.maxDamageFactor;
     }
 
     public int getEnchantability() {

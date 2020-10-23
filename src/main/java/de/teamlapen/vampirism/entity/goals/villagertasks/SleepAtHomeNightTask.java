@@ -35,21 +35,21 @@ public class SleepAtHomeNightTask extends Task<LivingEntity> {
         return false;
     }
 
-    protected void resetTask(ServerWorld p_212835_1_, LivingEntity p_212835_2_, long p_212835_3_) {
-        if (p_212835_2_.isSleeping()) {
-            p_212835_2_.wakeUp();
-            this.field_220552_a = p_212835_3_ + 40L;
+    protected void resetTask(ServerWorld worldIn, LivingEntity entityIn, long gameTimeIn) {
+        if (entityIn.isSleeping()) {
+            entityIn.wakeUp();
+            this.field_220552_a = gameTimeIn + 40L;
         }
 
     }
 
-    protected boolean shouldContinueExecuting(ServerWorld p_212834_1_, LivingEntity p_212834_2_, long p_212834_3_) {
-        Optional<GlobalPos> optional = p_212834_2_.getBrain().getMemory(MemoryModuleType.HOME);
+    protected boolean shouldContinueExecuting(ServerWorld worldIn, LivingEntity entityIn, long gameTimeIn) {
+        Optional<GlobalPos> optional = entityIn.getBrain().getMemory(MemoryModuleType.HOME);
         if (!optional.isPresent()) {
             return false;
         } else {
             BlockPos blockpos = optional.get().getPos();
-            return p_212834_2_.getBrain().hasActivity(Activity.REST) && p_212834_2_.getPosY() > (double) blockpos.getY() + 0.4D && blockpos.withinDistance(p_212834_2_.getPositionVec(), 1.14D);
+            return entityIn.getBrain().hasActivity(Activity.REST) && entityIn.getPosY() > (double) blockpos.getY() + 0.4D && blockpos.withinDistance(entityIn.getPositionVec(), 1.14D);
         }
     }
 
@@ -58,7 +58,7 @@ public class SleepAtHomeNightTask extends Task<LivingEntity> {
             return false;
         } else {
             GlobalPos globalpos = owner.getBrain().getMemory(MemoryModuleType.HOME).get();
-            if (!Objects.equals(worldIn.func_234923_W_(), globalpos.func_239646_a_())) {
+            if (!Objects.equals(worldIn.getDimensionKey(), globalpos.getDimension())) {
                 return false;
             } else {
                 BlockState blockstate = worldIn.getBlockState(globalpos.getPos());
@@ -67,9 +67,9 @@ public class SleepAtHomeNightTask extends Task<LivingEntity> {
         }
     }
 
-    protected void startExecuting(ServerWorld p_212831_1_, LivingEntity p_212831_2_, long p_212831_3_) {
-        if (p_212831_3_ > this.field_220552_a) {
-            p_212831_2_.startSleeping(p_212831_2_.getBrain().getMemory(MemoryModuleType.HOME).get().getPos());
+    protected void startExecuting(ServerWorld worldIn, LivingEntity entityIn, long gameTimeIn) {
+        if (gameTimeIn > this.field_220552_a) {
+            entityIn.startSleeping(entityIn.getBrain().getMemory(MemoryModuleType.HOME).get().getPos());
         }
 
     }

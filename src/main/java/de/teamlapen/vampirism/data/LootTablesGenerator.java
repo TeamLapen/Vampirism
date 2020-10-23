@@ -56,7 +56,7 @@ public class LootTablesGenerator extends LootTableProvider {
         for (ResourceLocation resourcelocation : Sets.difference(ModLootTables.getLootTables(), map.keySet())) {
             validationtracker.addProblem("Missing built-in table: " + resourcelocation);
         }
-        map.forEach((resourceLocation, lootTable) -> LootTableManager.func_227508_a_(validationtracker, resourceLocation, lootTable));
+        map.forEach((resourceLocation, lootTable) -> LootTableManager.validateLootTable(validationtracker, resourceLocation, lootTable));
     }
 
     private static class ModEntityLootTables extends EntityLootTables {
@@ -237,7 +237,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.registerLootTable(ModBlocks.totem_top_vampirism_vampire, dropping(ModBlocks.totem_top));
             this.registerDropSelfLootTable(ModBlocks.vampire_orchid);
             this.registerDropSelfLootTable(ModBlocks.weapon_table);
-            this.registerLootTable(ModBlocks.tent, func_218482_a());
+            this.registerLootTable(ModBlocks.tent, blockNoDrop());
             this.registerFlowerPot(ModBlocks.potted_vampire_orchid);
         }
 

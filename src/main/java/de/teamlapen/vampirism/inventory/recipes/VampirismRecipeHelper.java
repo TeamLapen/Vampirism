@@ -91,14 +91,14 @@ class VampirismRecipeHelper {
     /**
      * deserialize ingredients for shapeless recipes
      *
-     * @param p_199568_0_
+     * @param ingredientArray
      * @return
      */
-    static NonNullList<Ingredient> readIngredients(JsonArray p_199568_0_) {
+    static NonNullList<Ingredient> readIngredients(JsonArray ingredientArray) {
         NonNullList<Ingredient> nonnulllist = NonNullList.create();
 
-        for (int i = 0; i < p_199568_0_.size(); ++i) {
-            Ingredient ingredient = Ingredient.deserialize(p_199568_0_.get(i));
+        for (int i = 0; i < ingredientArray.size(); ++i) {
+            Ingredient ingredient = Ingredient.deserialize(ingredientArray.get(i));
             if (!ingredient.hasNoMatchingItems()) {
                 nonnulllist.add(ingredient);
             }
@@ -107,14 +107,14 @@ class VampirismRecipeHelper {
         return nonnulllist;
     }
 
-    static FluidStack deserializeFluid(JsonObject p_199798_0_) {
-        String s = JSONUtils.getString(p_199798_0_, "fluid");
+    static FluidStack deserializeFluid(JsonObject object) {
+        String s = JSONUtils.getString(object, "fluid");
         Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(s));
         if (fluid == null) throw new JsonSyntaxException("Unknown fluid '" + s + "'");
-        if (p_199798_0_.has("data")) {
+        if (object.has("data")) {
             throw new JsonParseException("Disallowed data tag found");
         } else {
-            int i = JSONUtils.getInt(p_199798_0_, "amount", 1);
+            int i = JSONUtils.getInt(object, "amount", 1);
             return new FluidStack(fluid, i);
         }
     }

@@ -49,8 +49,8 @@ public abstract class VampirismHunterArmor extends ArmorItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack p_77624_1_, @Nullable World p_77624_2_, List<ITextComponent> tooltip, ITooltipFlag p_77624_4_) {
-        super.addInformation(p_77624_1_, p_77624_2_, tooltip, p_77624_4_);
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
         PlayerEntity player = VampirismMod.proxy.getClientPlayer();
         if (player != null && Helper.isVampire(player)) {
             tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_vampires").mergeStyle(TextFormatting.RED));

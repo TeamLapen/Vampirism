@@ -48,7 +48,7 @@ public class WeaponTableScreen extends ContainerScreen<WeaponTableContainer> imp
             super.render(stack, mouseX, mouseY, partialTicks);
             this.recipeBookGui.func_230477_a_(stack, this.guiLeft, this.guiTop, true, partialTicks);
         }
-        this.func_230459_a_(stack, mouseX, mouseY);
+        this.renderHoveredTooltip(stack, mouseX, mouseY);
         this.recipeBookGui.func_238924_c_(stack, this.guiLeft, this.guiTop, mouseX, mouseY);
         this.setListenerDefault(this.recipeBookGui);
     }
@@ -122,11 +122,11 @@ public class WeaponTableScreen extends ContainerScreen<WeaponTableContainer> imp
         this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize - 18);
         this.children.add(this.recipeBookGui);
         this.setFocusedDefault(this.recipeBookGui);
-        this.addButton(new ImageButton(this.guiLeft + 5, this.height / 2 - 49, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (p_214076_1_) -> {
+        this.addButton(new ImageButton(this.guiLeft + 5, this.height / 2 - 49, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (button) -> {
             this.recipeBookGui.initSearchBar(this.widthTooNarrow);
             this.recipeBookGui.toggleVisibility();
             this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize - 18);
-            ((ImageButton) p_214076_1_).setPosition(this.guiLeft + 5, this.height / 2 - 49);
+            ((ImageButton) button).setPosition(this.guiLeft + 5, this.height / 2 - 49);
         }));
     }
 

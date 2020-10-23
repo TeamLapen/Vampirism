@@ -72,8 +72,8 @@ public class HeartSeekerItem extends VampirismVampireSword implements IItemWithT
 
 
     @Override
-    public boolean getIsRepairable(ItemStack p_82789_1_, ItemStack p_82789_2_) {
-        return this.tier == TIER.ULTIMATE && super.getIsRepairable(p_82789_1_, p_82789_2_);
+    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+        return this.tier == TIER.ULTIMATE && super.getIsRepairable(toRepair, repair);
     }
 
 }

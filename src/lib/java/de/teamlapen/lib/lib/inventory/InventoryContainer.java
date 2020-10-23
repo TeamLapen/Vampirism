@@ -34,8 +34,8 @@ public abstract class InventoryContainer extends Container {
         for (int i = 0; i < selectorInfos.length; i++) {
             this.addSlot(new SelectorSlot(inventory, i, selectorInfos[i]) {
                 @Override
-                public void onSlotChange(@Nonnull ItemStack p_75220_1_, @Nonnull ItemStack p_75220_2_) {
-                    super.onSlotChange(p_75220_1_, p_75220_2_);
+                public void onSlotChange(@Nonnull ItemStack oldStackIn, @Nonnull ItemStack newStackIn) {
+                    super.onSlotChange(oldStackIn, newStackIn);
                     InventoryContainer.this.onCraftMatrixChanged(this.inventory);
                 }
             });

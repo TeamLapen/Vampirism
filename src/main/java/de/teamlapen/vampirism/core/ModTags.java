@@ -49,7 +49,7 @@ public class ModTags {
         public static final ITag.INamedTag<EntityType<?>> VAMPIRE = tag("vampire");
 
         private static ITag.INamedTag<EntityType<?>> tag(ResourceLocation resourceLocation) {
-            return EntityTypeTags.func_232896_a_(resourceLocation.toString());
+            return EntityTypeTags.getTagById(resourceLocation.toString());
         }
 
         private static ITag.INamedTag<EntityType<?>> tag(String name) {

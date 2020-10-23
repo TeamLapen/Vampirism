@@ -22,13 +22,13 @@ public class RandomBlockState extends RuleEntry {
             return entry.locationPredicate;
         }), PosRuleTest.field_237102_c_.fieldOf("position_predicate").forGetter(entry -> {
             return entry.field_237109_d_;
-        }), BlockState.BLOCKSTATE_CODEC.fieldOf("output_state_1").forGetter(entry -> {
+        }), BlockState.CODEC.fieldOf("output_state_1").forGetter(entry -> {
             return entry.outputState;
-        }), BlockState.BLOCKSTATE_CODEC.fieldOf("output_state_2").forGetter(entry -> {
+        }), BlockState.CODEC.fieldOf("output_state_2").forGetter(entry -> {
             return entry.outputState2;
-        }), CompoundNBT.field_240597_a_.optionalFieldOf("output_nbt_1").forGetter(entry -> {
+        }), CompoundNBT.CODEC.optionalFieldOf("output_nbt_1").forGetter(entry -> {
             return Optional.ofNullable(entry.outputNbt);
-        }), CompoundNBT.field_240597_a_.optionalFieldOf("output_nbt_2").forGetter(entry -> {
+        }), CompoundNBT.CODEC.optionalFieldOf("output_nbt_2").forGetter(entry -> {
             return Optional.ofNullable(entry.outputNbt2);
         })).apply(instance, RandomBlockState::new);
     });

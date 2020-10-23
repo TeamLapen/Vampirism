@@ -49,12 +49,12 @@ public class StakeCondition implements ILootCondition {
 
         @Nonnull
         @Override
-        public StakeCondition func_230423_a_(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context) {
+        public StakeCondition deserialize(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context) {
             return new StakeCondition(JSONUtils.deserializeClass(json, "entity", context, LootContext.EntityTarget.class));
         }
 
         @Override
-        public void func_230424_a_(JsonObject json, StakeCondition value, JsonSerializationContext context) {
+        public void serialize(JsonObject json, StakeCondition value, JsonSerializationContext context) {
             json.add("entity", context.serialize(value.target));
 
         }

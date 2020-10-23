@@ -30,9 +30,9 @@ public class GarlicCheckCommand extends BasicCommand {
 
     private static int garlicCheck(CommandSource commandSource, ServerPlayerEntity asPlayer, boolean print) {
         if (commandSource.getEntity() != null && commandSource.getEntity() instanceof PlayerEntity)
-            commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.garliccheck.strength" + VampirismAPI.getGarlicChunkHandler(asPlayer.getEntityWorld().func_234923_W_()).getStrengthAtChunk(new ChunkPos(asPlayer.getPosition()))), true);
+            commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.garliccheck.strength" + VampirismAPI.getGarlicChunkHandler(asPlayer.getEntityWorld().getDimensionKey()).getStrengthAtChunk(new ChunkPos(asPlayer.getPosition()))), true);
         if (print)
-            ((GarlicChunkHandler) VampirismAPI.getGarlicChunkHandler(asPlayer.getEntityWorld().func_234923_W_())).printDebug(commandSource);
+            ((GarlicChunkHandler) VampirismAPI.getGarlicChunkHandler(asPlayer.getEntityWorld().getDimensionKey())).printDebug(commandSource);
         return 0;
     }
 }

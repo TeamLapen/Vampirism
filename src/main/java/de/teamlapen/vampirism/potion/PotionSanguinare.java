@@ -48,12 +48,12 @@ public class PotionSanguinare extends VampirismPotion {
     }
 
     @Override
-    public boolean isReady(int duration, int p_76397_2_) {
+    public boolean isReady(int duration, int amplifier) {
         return duration == 2;
     }
 
     @Override
-    public void performEffect(LivingEntity entity, int p_76394_2_) {
+    public void performEffect(LivingEntity entity, int amplifier) {
         if (entity.world.isRemote || !entity.isAlive()) return;
         if (entity instanceof CreatureEntity) {
             ExtendedCreature.getSafe(entity).ifPresent(IExtendedCreatureVampirism::makeVampire);

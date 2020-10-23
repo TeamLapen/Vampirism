@@ -188,10 +188,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     /**
      * Increases exhaustion level by supplied amount
      */
-    public void addExhaustion(float p_71020_1_) {
+    public void addExhaustion(float exhaustion) {
         if (!player.abilities.disableDamage && getLevel() > 0) {
             if (!isRemote()) {
-                bloodStats.addExhaustion(p_71020_1_);
+                bloodStats.addExhaustion(exhaustion);
             }
         }
     }

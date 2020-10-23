@@ -69,33 +69,33 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
     }
 
     @Override
-    public ShapedWeaponTableRecipeBuilder key(Character p_200469_1_, ITag<Item> p_200469_2_) {
-        return (ShapedWeaponTableRecipeBuilder) super.key(p_200469_1_, p_200469_2_);
+    public ShapedWeaponTableRecipeBuilder addCriterion(String name, ICriterionInstance criterionIn) {
+        return (ShapedWeaponTableRecipeBuilder) super.addCriterion(name, criterionIn);
     }
 
     @Override
-    public ShapedWeaponTableRecipeBuilder key(Character p_200462_1_, IItemProvider p_200462_2_) {
-        return (ShapedWeaponTableRecipeBuilder) super.key(p_200462_1_, p_200462_2_);
+    public ShapedWeaponTableRecipeBuilder key(Character symbol, IItemProvider itemIn) {
+        return (ShapedWeaponTableRecipeBuilder) super.key(symbol, itemIn);
     }
 
     @Override
-    public ShapedWeaponTableRecipeBuilder key(Character p_200471_1_, Ingredient p_200471_2_) {
-        return (ShapedWeaponTableRecipeBuilder) super.key(p_200471_1_, p_200471_2_);
+    public ShapedWeaponTableRecipeBuilder key(Character symbol, Ingredient ingredientIn) {
+        return (ShapedWeaponTableRecipeBuilder) super.key(symbol, ingredientIn);
     }
 
     @Override
-    public ShapedWeaponTableRecipeBuilder patternLine(String p_200472_1_) {
-        return (ShapedWeaponTableRecipeBuilder) super.patternLine(p_200472_1_);
+    public ShapedWeaponTableRecipeBuilder key(Character symbol, ITag<Item> tagIn) {
+        return (ShapedWeaponTableRecipeBuilder) super.key(symbol, tagIn);
     }
 
     @Override
-    public ShapedWeaponTableRecipeBuilder addCriterion(String p_200465_1_, ICriterionInstance p_200465_2_) {
-        return (ShapedWeaponTableRecipeBuilder) super.addCriterion(p_200465_1_, p_200465_2_);
+    public ShapedWeaponTableRecipeBuilder patternLine(String patternIn) {
+        return (ShapedWeaponTableRecipeBuilder) super.patternLine(patternIn);
     }
 
     @Override
-    public ShapedWeaponTableRecipeBuilder setGroup(String p_200473_1_) {
-        return (ShapedWeaponTableRecipeBuilder) super.setGroup(p_200473_1_);
+    public ShapedWeaponTableRecipeBuilder setGroup(String groupIn) {
+        return (ShapedWeaponTableRecipeBuilder) super.setGroup(groupIn);
     }
 
     @Override

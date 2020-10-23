@@ -44,10 +44,10 @@ public class AdvancedHunterRenderer extends BipedRenderer<AdvancedHunterEntity, 
     }
 
     @Override
-    protected void renderName(AdvancedHunterEntity p_225629_1_, ITextComponent p_225629_2_, MatrixStack p_225629_3_, IRenderTypeBuffer p_225629_4_, int p_225629_5_) {
-        double dist = this.renderManager.squareDistanceTo(p_225629_1_);
+    protected void renderName(AdvancedHunterEntity entityIn, ITextComponent displayNameIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+        double dist = this.renderManager.squareDistanceTo(entityIn);
         if (dist <= 256) {
-            super.renderName(p_225629_1_, p_225629_2_, p_225629_3_, p_225629_4_, p_225629_5_);
+            super.renderName(entityIn, displayNameIn, matrixStackIn, bufferIn, packedLightIn);
         }
     }
 

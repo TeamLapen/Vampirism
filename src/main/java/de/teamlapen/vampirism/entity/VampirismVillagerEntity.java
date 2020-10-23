@@ -67,10 +67,10 @@ public class VampirismVillagerEntity extends VillagerEntity {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource src, float p_70097_2_) {
+    public boolean attackEntityFrom(DamageSource src, float amount) {
         if (this.isInvulnerableTo(src)) {
             return false;
-        } else if (super.attackEntityFrom(src, p_70097_2_)) {
+        } else if (super.attackEntityFrom(src, amount)) {
             Entity entity = src.getTrueSource();
             if (entity instanceof LivingEntity) {
                 this.setAttackTarget((LivingEntity) entity);

@@ -44,12 +44,12 @@ public class TentSpawnerCondition implements ILootCondition {
 
         @Nonnull
         @Override
-        public TentSpawnerCondition func_230423_a_(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context) {
+        public TentSpawnerCondition deserialize(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context) {
             return INSTANCE;
         }
 
         @Override
-        public void func_230424_a_(@Nonnull JsonObject json, @Nonnull TentSpawnerCondition value, @Nonnull JsonSerializationContext context) {
+        public void serialize(@Nonnull JsonObject json, @Nonnull TentSpawnerCondition value, @Nonnull JsonSerializationContext context) {
 
         }
 

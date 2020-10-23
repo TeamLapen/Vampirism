@@ -114,8 +114,8 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
     }
 
     @Override
-    public boolean func_230044_c_() {
-        return baseModel.func_230044_c_();
+    public boolean isSideLit() {
+        return baseModel.isSideLit();
     }
 
     private static class CustomItemOverride extends ItemOverrideList {
@@ -125,7 +125,7 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
         }
 
         @Override
-        public IBakedModel func_239290_a_/*getModelWithOverrides*/(@Nonnull IBakedModel originalModel, @Nonnull ItemStack stack, ClientWorld world, LivingEntity entity) {
+        public IBakedModel getOverrideModel/*getModelWithOverrides*/(@Nonnull IBakedModel originalModel, @Nonnull ItemStack stack, ClientWorld world, LivingEntity entity) {
             if (originalModel instanceof BakedBloodContainerModel) {
                 if (stack.hasTag() && stack.getTag().contains("fluid")) {
                     FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag().getCompound("fluid"));

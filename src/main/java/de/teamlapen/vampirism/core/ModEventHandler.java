@@ -103,8 +103,8 @@ public class ModEventHandler {
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
         if (event.getWorld() instanceof World) {
-            VampirismAPI.getGarlicChunkHandler(((World) event.getWorld()).func_234923_W_()).clear();
-            TotemTileEntity.clearCacheForDimension(((World) event.getWorld()).func_234923_W_());
+            VampirismAPI.getGarlicChunkHandler(((World) event.getWorld()).getDimensionKey()).clear();
+            TotemTileEntity.clearCacheForDimension(((World) event.getWorld()).getDimensionKey());
         }
     }
 }

@@ -263,9 +263,9 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    protected ActionResultType func_230254_b_(PlayerEntity player, Hand p_184645_2_) { //processInteract
+    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) { //processInteract
         if (tryCureSanguinare(player)) return ActionResultType.SUCCESS;
-        return super.func_230254_b_(player, p_184645_2_);
+        return super.func_230254_b_(player, hand);
     }
 
     @Override

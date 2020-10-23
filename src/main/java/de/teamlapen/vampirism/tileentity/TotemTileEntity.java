@@ -233,38 +233,18 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
-        this.isDisabled = compound.getBoolean("isDisabled");
-        this.isComplete = compound.getBoolean("isComplete");
-        this.isInsideVillage = compound.getBoolean("isInsideVillage");
-        if (compound.contains("controllingFaction")) {
-            this.setControllingFaction(VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(compound.getString("controllingFaction"))));
-        } else {
-            this.setControllingFaction(null);
-        }
-        if (compound.contains("capturingFaction")) {
-            this.setCapturingFaction(VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(compound.getString("capturingFaction"))));
-            this.captureTimer = compound.getInt("captureTimer");
-            this.captureAbortTimer = compound.getInt("captureabortTimer");
-            this.phase = CAPTURE_PHASE.valueOf(compound.getString("phase"));
-            if (this.phase == CAPTURE_PHASE.PHASE_2 && compound.contains("defenderMax")) {
-                this.defenderMax = compound.getInt("defenderMax");
-                this.setupPhase2();
-            }
-        } else {
-            this.setCapturingFaction(null);
-        }
+    public void markDirty() {
         if (this.world != null) {
-            if (compound.contains("villageArea")) {
-                if (VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
-                    addVampireVillage(this.world.func_234923_W_(), this.pos, UtilLib.intToMB(compound.getIntArray("villageArea")));
+            super.markDirty();
+            this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 3);
+            if (this.village != null) {
+                if (this.controllingFaction == VReference.VAMPIRE_FACTION) {
+                    addVampireVillage(this.world.getDimensionKey()/*getDimension*/, this.village.getPos(), this.village.getBoundingBox());
                 } else {
-                    removeVampireVillage(this.world.func_234923_W_(), this.pos);
+                    removeVampireVillage(this.world.getDimensionKey(), this.village.getPos());
                 }
             }
         }
-        this.forceVillageUpdate = true;
     }
 
     @Override
@@ -304,18 +284,38 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void markDirty() {
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
+        this.isDisabled = compound.getBoolean("isDisabled");
+        this.isComplete = compound.getBoolean("isComplete");
+        this.isInsideVillage = compound.getBoolean("isInsideVillage");
+        if (compound.contains("controllingFaction")) {
+            this.setControllingFaction(VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(compound.getString("controllingFaction"))));
+        } else {
+            this.setControllingFaction(null);
+        }
+        if (compound.contains("capturingFaction")) {
+            this.setCapturingFaction(VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(compound.getString("capturingFaction"))));
+            this.captureTimer = compound.getInt("captureTimer");
+            this.captureAbortTimer = compound.getInt("captureabortTimer");
+            this.phase = CAPTURE_PHASE.valueOf(compound.getString("phase"));
+            if (this.phase == CAPTURE_PHASE.PHASE_2 && compound.contains("defenderMax")) {
+                this.defenderMax = compound.getInt("defenderMax");
+                this.setupPhase2();
+            }
+        } else {
+            this.setCapturingFaction(null);
+        }
         if (this.world != null) {
-            super.markDirty();
-            this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 3);
-            if (this.village != null) {
-                if (this.controllingFaction == VReference.VAMPIRE_FACTION) {
-                    addVampireVillage(this.world.func_234923_W_()/*getDimension*/, this.village.getPos(), this.village.getBoundingBox());
+            if (compound.contains("villageArea")) {
+                if (VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
+                    addVampireVillage(this.world.getDimensionKey(), this.pos, UtilLib.intToMB(compound.getIntArray("villageArea")));
                 } else {
-                    removeVampireVillage(this.world.func_234923_W_(), this.village.getPos());
+                    removeVampireVillage(this.world.getDimensionKey(), this.pos);
                 }
             }
         }
+        this.forceVillageUpdate = true;
     }
 
     @Nullable
@@ -326,7 +326,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
 
     @Override
     public void remove() {
-        removeVampireVillage(this.world.func_234923_W_(), this.pos);
+        removeVampireVillage(this.world.getDimensionKey(), this.pos);
         removeTotem(this.village);
         if (this.capturingFaction != null) {
             this.abortCapture(false);
@@ -612,7 +612,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                     boolean flag = false;
                     if (VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
                         if (!(world.getBlockState(pos.up()).getBlock() instanceof BushBlock)) {
-                            if (b.getBlock() == world.getBiome(pos).func_242440_e().func_242502_e().getTop().getBlock() && b.getBlock() != Blocks.SAND) {
+                            if (b.getBlock() == world.getBiome(pos).getGenerationSettings().getSurfaceBuilderConfig().getTop().getBlock() && b.getBlock() != Blocks.SAND) {
                                 world.removeBlock(pos.up(), false);
                                 world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState());
                                 if (world.getBlockState(pos.up()).getBlock() == Blocks.TALL_GRASS) {
@@ -623,7 +623,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                         }
                     } else if (controllingFaction == VReference.HUNTER_FACTION) {
                         if (b.getBlock() == ModBlocks.cursed_earth) {
-                            world.setBlockState(pos, world.getBiome(pos).func_242440_e().func_242502_e().getTop());
+                            world.setBlockState(pos, world.getBiome(pos).getGenerationSettings().getSurfaceBuilderConfig().getTop());
                             flag = true;
                         }
                     }

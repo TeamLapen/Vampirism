@@ -202,7 +202,7 @@ public class SkillsScreen extends Screen {
         int y = (this.height - display_height) / 2;
         this.font.func_243248_b(stack, title, x + 15, y + 5, 0xFFFFFFFF);
         ITextComponent points = new TranslationTextComponent("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
-        x = (this.width + display_width) / 2 - this.font.func_238414_a_(points);
+        x = (this.width + display_width) / 2 - this.font.getStringPropertyWidth(points);
         this.font.func_243248_b(stack, points, x - 15, y + 5, 0xFFFFFFFF);
     }
 
@@ -448,10 +448,10 @@ public class SkillsScreen extends Screen {
             ITextComponent desc = selected.getDescription();
             ISkillHandler.Result result = skillHandler.canSkillBeEnabled(selected);
 
-            int width_name = Math.max(this.font.func_238414_a_(name), 110);
+            int width_name = Math.max(this.font.getStringPropertyWidth(name), 110);
 
 
-            List<IReorderingProcessor> descLines = desc == null ? Collections.emptyList() : this.font.func_238425_b_(desc, width_name);
+            List<IReorderingProcessor> descLines = desc == null ? Collections.emptyList() : this.font.trimStringToWidth(desc, width_name);
             int height_desc = descLines.size() * this.font.FONT_HEIGHT;
 
             if (result == ISkillHandler.Result.ALREADY_ENABLED || result == ISkillHandler.Result.PARENT_NOT_ENABLED) {

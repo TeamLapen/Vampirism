@@ -73,7 +73,7 @@ public class TentBlock extends VampirismBlock {
             return ActionResultType.SUCCESS;
         }
 
-        if (!BedBlock.func_235330_a_(world)) {
+        if (!BedBlock.doesBedWork(world)) {
             world.removeBlock(pos, false);
             BlockPos blockpos = pos.offset(blockState.get(HORIZONTAL_FACING).getOpposite());
             if (world.getBlockState(blockpos).isIn(this)) {
@@ -124,7 +124,7 @@ public class TentBlock extends VampirismBlock {
         forWholeTent(blockPos, blockState, (direction, blockPos1) -> {
             world.destroyBlock(blockPos1, true);
             if (!world.isRemote) {
-                VampirismMod.dispatcher.sendToAllAround(new PlayEventPacket(1, blockPos1, Block.getStateId(world.getBlockState(blockPos1))), world.func_234923_W_(), blockPos1.getX(), blockPos1.getY(), blockPos1.getZ(), 64);
+                VampirismMod.dispatcher.sendToAllAround(new PlayEventPacket(1, blockPos1, Block.getStateId(world.getBlockState(blockPos1))), world.getDimensionKey(), blockPos1.getX(), blockPos1.getY(), blockPos1.getZ(), 64);
                 if (!playerEntity.isCreative()) {
                     spawnDrops(world.getBlockState(blockPos1), world, blockPos1, null, playerEntity, playerEntity.getHeldItemMainhand());
                 }

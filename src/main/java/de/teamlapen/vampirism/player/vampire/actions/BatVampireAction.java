@@ -60,7 +60,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.isGettingSundamage(vampire.getRepresentingEntity().world) && !ModItems.umbrella.equals(vampire.getRepresentingEntity().getHeldItemMainhand().getItem()) && vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().world) == EnumStrength.NONE && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && !vampire.getRepresentingPlayer().isInWater() && (VampirismConfig.SERVER.batModeInEnd.get() || !(vampire.getRepresentingPlayer().getEntityWorld().func_234923_W_() == World.field_234920_i_));
+        return !vampire.isGettingSundamage(vampire.getRepresentingEntity().world) && !ModItems.umbrella.equals(vampire.getRepresentingEntity().getHeldItemMainhand().getItem()) && vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().world) == EnumStrength.NONE && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && !vampire.getRepresentingPlayer().isInWater() && (VampirismConfig.SERVER.batModeInEnd.get() || !(vampire.getRepresentingPlayer().getEntityWorld().getDimensionKey() == World.THE_END));
     }
 
     @Override
@@ -121,7 +121,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         } else if (vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().world) != EnumStrength.NONE && !vampire.isRemote()) {
             vampire.getRepresentingEntity().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_garlic"), Util.DUMMY_UUID);
             return true;
-        } else if (!VampirismConfig.SERVER.batModeInEnd.get() && vampire.getRepresentingPlayer().getEntityWorld().func_234923_W_() == World.field_234920_i_) {
+        } else if (!VampirismConfig.SERVER.batModeInEnd.get() && vampire.getRepresentingPlayer().getEntityWorld().getDimensionKey() == World.THE_END) {
             vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_end"), Util.DUMMY_UUID);
             return true;
         } else return vampire.getRepresentingPlayer().isInWater();

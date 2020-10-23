@@ -34,7 +34,7 @@ public class HunterVillagerRenderer extends MobRenderer<VillagerEntity, Villager
      * Copied from VillagerRenderer
      */
     @Override
-    protected void preRenderCallback(VillagerEntity entity, MatrixStack matrixStack, float p_225620_3_) {
+    protected void preRenderCallback(VillagerEntity entity, MatrixStack matrixStack, float partialTickTime) {
         float s = 0.9375F;
         if (entity.isChild()) {
             s = (float) ((double) s * 0.5D);

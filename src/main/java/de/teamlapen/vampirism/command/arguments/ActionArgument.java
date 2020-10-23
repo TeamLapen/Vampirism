@@ -19,8 +19,8 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 public class ActionArgument implements ArgumentType<IAction> {
-    public static final DynamicCommandExceptionType ACTION_NOT_FOUND = new DynamicCommandExceptionType((p_208673_0_) -> {
-        return new TranslationTextComponent("command.vampirism.argument.action.notfound", p_208673_0_);
+    public static final DynamicCommandExceptionType ACTION_NOT_FOUND = new DynamicCommandExceptionType((particle) -> {
+        return new TranslationTextComponent("command.vampirism.argument.action.notfound", particle);
     });
     private static final Collection<String> EXAMPLES = Arrays.asList("action", "modid:action");
 

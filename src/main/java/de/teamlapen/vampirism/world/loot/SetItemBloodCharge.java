@@ -42,14 +42,14 @@ public class SetItemBloodCharge extends LootFunction {
 
     @Nonnull
     @Override
-    public LootFunctionType func_230425_b_() {
+    public LootFunctionType getFunctionType() {
         return ModLoot.set_item_blood_charge;
     }
 
     public static class Serializer extends LootFunction.Serializer<SetItemBloodCharge> {
         @Override
-        public void func_230424_a_(@Nonnull JsonObject object, @Nonnull SetItemBloodCharge lootFunction, @Nonnull JsonSerializationContext context) {
-            super.func_230424_a_(object, lootFunction, context);
+        public void serialize(@Nonnull JsonObject object, @Nonnull SetItemBloodCharge lootFunction, @Nonnull JsonSerializationContext context) {
+            super.serialize(object, lootFunction, context);
             object.add("charge", RandomRanges.serialize(lootFunction.charge, context));
 
         }

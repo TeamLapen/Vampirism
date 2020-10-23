@@ -59,7 +59,7 @@ public class ChurchAltarBlock extends HorizontalBlock {
 
     @Nonnull
     @Override
-    public VoxelShape getShape(BlockState blockState, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+    public VoxelShape getShape(BlockState blockState, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         Direction dir = blockState.get(FACING);
         if (dir == Direction.NORTH || dir == Direction.SOUTH) return SHAPEX;
         return SHAPEZ;

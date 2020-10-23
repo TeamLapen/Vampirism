@@ -53,7 +53,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     }
 
     public static boolean spawnPredicateVampireFog(IWorld world, BlockPos blockPos) {
-        return ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || (world instanceof World && TotemTileEntity.isInsideVampireAreaCached(((World) world).func_234923_W_(), blockPos));
+        return ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || (world instanceof World && TotemTileEntity.isInsideVampireAreaCached(((World) world).getDimensionKey(), blockPos));
     }
 
     public static boolean spawnPredicateCanSpawn(EntityType<? extends MobEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
