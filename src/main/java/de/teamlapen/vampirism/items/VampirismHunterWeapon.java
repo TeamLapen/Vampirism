@@ -48,7 +48,7 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
             tooltip.add(new StringTextComponent("").append(f == null ? new TranslationTextComponent("text.vampirism.all") : f.getNamePlural()).append(new StringTextComponent("@" + getMinLevel(stack))).mergeStyle(color));
             ISkill reqSkill = this.getRequiredSkill(stack);
             if (reqSkill != null) {
-                tooltip.add(new TranslationTextComponent("text.vampirism.required_skill", new TranslationTextComponent(reqSkill.getTranslationKey())).mergeStyle(color));
+                tooltip.add(new TranslationTextComponent("text.vampirism.required_skill", reqSkill.getName()).mergeStyle(color));
             }
         }
     }

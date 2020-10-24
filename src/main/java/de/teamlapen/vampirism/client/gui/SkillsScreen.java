@@ -444,7 +444,7 @@ public class SkillsScreen extends Screen {
             int m2MouseX = mouseX + 12;
             int m2MouseY = mouseY - 4;
 
-            ITextComponent name = new TranslationTextComponent(selected.getTranslationKey());
+            ITextComponent name = selected.getName();
             ITextComponent desc = selected.getDescription();
             ISkillHandler.Result result = skillHandler.canSkillBeEnabled(selected);
 

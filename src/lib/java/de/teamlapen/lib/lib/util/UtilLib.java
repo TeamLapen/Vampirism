@@ -25,9 +25,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -736,12 +734,5 @@ public class UtilLib {
         NINETY,
         HUNDRED_EIGHTY,
         TWO_HUNDRED_SEVENTY
-    }
-
-    public static ITextComponent addFormatting(ITextComponent component, TextFormatting format) {
-        if (component instanceof IFormattableTextComponent) {
-            ((IFormattableTextComponent) component).mergeStyle(format);
-        }
-        return component;
     }
 }

@@ -7,6 +7,8 @@ import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -21,7 +23,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
     private final IPlayableFaction<T> faction;
     private int renderRow;
     private int renderColumn;
-    private String translationKey;
+    private ITextComponent name;
 
     protected DefaultSkill(IPlayableFaction<T> faction) {
         this.faction = faction;
@@ -44,8 +46,19 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
     }
 
     @Override
+    public ITextComponent getName() {
+        return name == null ? name = new TranslationTextComponent(getTranslationKey()) : name;
+    }
+
+    public DefaultSkill<T> setName(ITextComponent name) {
+        this.name = name;
+        return this;
+    }
+
+    @Deprecated
+    @Override
     public String getTranslationKey() {
-        return translationKey == null ? translationKey = "skill." + getRegistryName().getNamespace() + "." + getRegistryName().getPath() : translationKey;
+        return "skill." + getRegistryName().getNamespace() + "." + getRegistryName().getPath();
     }
 
     @Override

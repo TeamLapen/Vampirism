@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -39,6 +40,14 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
     @OnlyIn(Dist.CLIENT)
     int getRenderRow();
 
+    default ITextComponent getName() {
+        return new TranslationTextComponent(getTranslationKey());
+    }
+
+    /**
+     * Use {@link ISkill#getName()}
+     */
+    @Deprecated
     String getTranslationKey();
 
     /**

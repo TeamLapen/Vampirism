@@ -213,7 +213,7 @@ public class InputEventPacket implements IMessage {
                                     NetworkHooks.openGui(player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new BloodPotionTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, new BlockPos(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()))), new TranslationTextComponent("container.crafting")), player.getPosition());
                                 }
                             } else {
-                                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", new TranslationTextComponent(HunterSkills.blood_potion_portable_crafting.getTranslationKey())), true);
+                                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", HunterSkills.blood_potion_portable_crafting.getName()), true);
                             }
                         } else {
                             player.sendStatusMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by", VReference.HUNTER_FACTION.getName()), true);

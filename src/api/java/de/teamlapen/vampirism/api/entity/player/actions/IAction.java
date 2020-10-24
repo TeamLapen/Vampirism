@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -28,6 +30,14 @@ public interface IAction extends IForgeRegistryEntry<IAction> {
     @Nonnull
     IPlayableFaction getFaction();
 
+    default ITextComponent getName() {
+        return new TranslationTextComponent(getTranslationKey());
+    }
+
+    /**
+     * Use {@link IAction#getName()}
+     */
+    @Deprecated
     String getTranslationKey();
 
     /**

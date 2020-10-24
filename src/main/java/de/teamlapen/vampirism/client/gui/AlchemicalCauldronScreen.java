@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.inventory.container.AlchemicalCauldronContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -50,7 +49,7 @@ public class AlchemicalCauldronScreen extends ContainerScreen<AlchemicalCauldron
 
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
-        ITextComponent name = new TranslationTextComponent("tile.vampirism.alchemical_cauldron.display", UtilLib.addFormatting(minecraft.player.getDisplayName(), (TextFormatting.DARK_BLUE)), ModBlocks.alchemical_cauldron.getTranslatedName());
+        ITextComponent name = new TranslationTextComponent("tile.vampirism.alchemical_cauldron.display", minecraft.player.getDisplayName().deepCopy().mergeStyle(TextFormatting.DARK_BLUE), ModBlocks.alchemical_cauldron.getTranslatedName());
         this.font.func_243248_b(stack, name, 5, 6.0F, 0x404040);
         this.font.func_243248_b(stack, this.playerInventory.getDisplayName(), (float) this.playerInventoryTitleX, (float) this.playerInventoryTitleY, 4210752);
     }

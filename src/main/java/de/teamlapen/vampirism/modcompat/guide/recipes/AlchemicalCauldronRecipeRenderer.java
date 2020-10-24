@@ -18,11 +18,11 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.ITextProperties;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 
-import java.awt.*;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRendererBase<AlchemicalCauldronRecipe> {
@@ -82,13 +82,14 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
             y += fontRenderer.FONT_HEIGHT + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {
-            StringBuilder skills = new StringBuilder();
+            ITextProperties newLine = new StringTextComponent("\n");
+            List<ITextProperties> skills = new ArrayList<>();
+            skills.add(new TranslationTextComponent("gui.vampirism.alchemical_cauldron.skill", "\n"));
             for (ISkill skill : recipe.getRequiredSkills()) {
-                skills.append("\n§o").append(UtilLib.translate(skill.getTranslationKey())).append("§r ");
-
+                skills.add(skill.getName().deepCopy().mergeStyle(TextFormatting.ITALIC));
+                skills.add(newLine);
             }
-            ITextProperties skillText = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.skill", skills.toString());
-            fontRenderer.func_238418_a_(skillText, guiLeft + 50, y, 100, Color.gray.getRGB());
+            fontRenderer.func_238418_a_(ITextProperties.func_240654_a_(skills), guiLeft + 50, y, 100, Color.gray.getRGB());
         }
     }
 

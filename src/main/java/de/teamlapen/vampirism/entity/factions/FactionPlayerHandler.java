@@ -249,7 +249,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (sync) {
             this.sync(false);
             if (boundAction1 != null)
-                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", new TranslationTextComponent(boundAction1.getTranslationKey()), "1"), true);
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", boundAction1.getName(), "1"), true);
         }
     }
 
@@ -258,7 +258,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (sync) {
             this.sync(false);
             if (boundAction2 != null)
-                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", new TranslationTextComponent(boundAction2.getTranslationKey()), "2"), true);
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", boundAction2.getName(), "2"), true);
         }
     }
 

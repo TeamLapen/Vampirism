@@ -99,6 +99,7 @@ public class ShapedWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRec
         return requiredLevel;
     }
 
+    @Nonnull
     @Override
     public ISkill[] getRequiredSkills() {
         return requiredSkills;

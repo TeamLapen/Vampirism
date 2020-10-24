@@ -9,7 +9,6 @@ import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
 import de.maxanier.guideapi.api.util.GuiHelper;
 import de.maxanier.guideapi.api.util.IngredientCycler;
 import de.maxanier.guideapi.gui.BaseScreen;
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -17,14 +16,13 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.ITextProperties;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.awt.*;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extends IRecipeRenderer.RecipeRendererBase<T> {
@@ -65,14 +63,15 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
             fontRenderer.func_243248_b(stack, level, guiLeft + 40, y, Color.gray.getRGB());
             y += fontRenderer.FONT_HEIGHT + 2;
         }
-        if (recipe.getRequiredSkills() != null && recipe.getRequiredSkills().length > 0) {
-            StringBuilder skills = new StringBuilder();
+        if (recipe.getRequiredSkills().length > 0) {
+            ITextProperties newLine = new StringTextComponent("\n");
+            List<ITextProperties> skills = new ArrayList<>();
+            skills.add(new TranslationTextComponent("gui.vampirism.hunter_weapon_table.skill", "\n"));
             for (ISkill skill : recipe.getRequiredSkills()) {
-                skills.append("\n§o").append(UtilLib.translate(skill.getTranslationKey())).append("§r ");
-
+                skills.add(skill.getName().deepCopy().mergeStyle(TextFormatting.ITALIC));
+                skills.add(newLine);
             }
-            ITextProperties skillText = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.skill", skills.toString());
-            fontRenderer.func_238418_a_(skillText, guiLeft + 40, y, 110, Color.gray.getRGB());
+            fontRenderer.func_238418_a_(ITextProperties.func_240654_a_(skills), guiLeft + 40, y, 110, Color.gray.getRGB());
         }
     }
 

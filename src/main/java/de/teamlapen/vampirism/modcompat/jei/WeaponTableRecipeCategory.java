@@ -19,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -60,13 +61,13 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
             y += minecraft.fontRenderer.FONT_HEIGHT + 2;
         }
         ISkill[] requiredSkills = recipe.getRequiredSkills();
-        if (requiredSkills != null && requiredSkills.length > 0) {
-            StringBuilder skills = new StringBuilder();
+        if (requiredSkills.length > 0) {
+            IFormattableTextComponent skillText = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.skill", " ");
+
             for (ISkill skill : recipe.getRequiredSkills()) {
-                skills.append(UtilLib.translate(skill.getTranslationKey())).append(" ");
+                skillText.append(skill.getName()).appendString(" ");
 
             }
-            ITextComponent skillText = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.skill", skills.toString());
             minecraft.fontRenderer.func_238418_a_(skillText, x, y, 132, Color.gray.getRGB());
 
 

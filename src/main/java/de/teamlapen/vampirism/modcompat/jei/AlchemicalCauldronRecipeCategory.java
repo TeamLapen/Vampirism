@@ -19,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -71,11 +72,11 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
             y += minecraft.fontRenderer.FONT_HEIGHT + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {
-            StringBuilder skills = new StringBuilder();
+            IFormattableTextComponent skillText = new TranslationTextComponent("gui.vampirism.alchemical_cauldron.skill", " ");
+
             for (ISkill s : recipe.getRequiredSkills()) {
-                skills.append(UtilLib.translate(s.getTranslationKey())).append(" ");
+                skillText.append(s.getName()).appendString(" ");
             }
-            ITextComponent skillText = new TranslationTextComponent("gui.vampirism.alchemical_cauldron.skill", skills.toString());
             minecraft.fontRenderer.func_238418_a_(skillText, x, y, 132, Color.gray.getRGB());
         }
     }

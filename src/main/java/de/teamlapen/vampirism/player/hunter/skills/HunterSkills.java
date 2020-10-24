@@ -63,7 +63,7 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_good_or_bad", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_identify_some", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad_2", true).setDescription(() -> new TranslationTextComponent("skill.vampirism.blood_potion_less_bad.desc")).setTranslationKey("skill.vampirism.blood_potion_less_bad"));
+        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad_2", true).setDescription(() -> new TranslationTextComponent("skill.vampirism.blood_potion_less_bad.desc")).setName(new TranslationTextComponent("skill.vampirism.blood_potion_less_0bad")));
         registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_portable_crafting", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_table", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("double_crossbow", true));

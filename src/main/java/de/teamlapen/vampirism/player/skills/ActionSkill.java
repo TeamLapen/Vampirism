@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.player.skills;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.Collection;
@@ -49,6 +50,12 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
         return action.getRegistryName();
     }
 
+    @Override
+    public ITextComponent getName() {
+        return action.getName();
+    }
+
+    @Deprecated
     @Override
     public String getTranslationKey() {
         return action.getTranslationKey();

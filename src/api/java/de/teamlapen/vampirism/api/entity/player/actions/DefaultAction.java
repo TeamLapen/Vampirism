@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -11,7 +13,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegistryEntry<IAction> implements IAction {
     private final IPlayableFaction<T> faction;
-    private String translationKey;
+    private ITextComponent name;
 
     /**
      * @param faction
@@ -47,8 +49,14 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
     }
 
     @Override
+    public ITextComponent getName() {
+        return name == null ? name = new TranslationTextComponent(getTranslationKey()) : name;
+    }
+
+    @Deprecated
+    @Override
     public String getTranslationKey() {
-        return translationKey == null ? translationKey = "action." + getRegistryName().getNamespace() + "." + getRegistryName().getPath() : translationKey;
+        return "action." + getRegistryName().getNamespace() + "." + getRegistryName().getPath();
     }
 
     /**

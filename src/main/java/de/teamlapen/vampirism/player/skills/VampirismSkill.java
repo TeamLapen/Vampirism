@@ -23,7 +23,6 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
     };
     private Consumer<T> deactivate = (T player) -> {
     };
-    private String translationKey = null;
 
     public VampirismSkill(IPlayableFaction<T> faction) {
         super(faction);
@@ -36,16 +35,6 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
 
     public VampirismSkill<T> setDescription(Supplier<ITextComponent> descriptionIn) {
         this.description = descriptionIn;
-        return this;
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return translationKey == null ? super.getTranslationKey() : translationKey;
-    }
-
-    public VampirismSkill<T> setTranslationKey(String translationKeyIn) {
-        translationKey = translationKeyIn;
         return this;
     }
 

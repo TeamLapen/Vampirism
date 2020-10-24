@@ -261,7 +261,7 @@ public class ModPlayerEventHandler {
             FactionPlayerHandler.getOpt(event.getPlayer()).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty()).ifPresent(fp -> {
                 IFaction<?> f = fp.getDisguisedAs();
                 if (f != null) {
-                    ITextComponent name = UtilLib.addFormatting(event.getDisplayname(), f.getChatColor());
+                    ITextComponent name = event.getDisplayname().deepCopy().mergeStyle(f.getChatColor());
                     if (fp instanceof IVampirePlayer && !fp.isDisguised() && ((IVampirePlayer) fp).isVampireLord()) {
                         name = new StringTextComponent("[" + UtilLib.translate("text.vampirism.lord") + "] ").mergeStyle(TextFormatting.RED).append(name);
                     }
@@ -343,7 +343,7 @@ public class ModPlayerEventHandler {
                 IFactionPlayer factionPlayer = handler.getCurrentFactionPlayer().orElse(null);
                 if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
                     if (message)
-                        player.sendStatusMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", new TranslationTextComponent(requiredSkill.getTranslationKey())), true);
+                        player.sendStatusMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", requiredSkill.getName()), true);
                     return false;
                 }
             }
