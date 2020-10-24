@@ -25,13 +25,13 @@ public class ScrollableListButton extends ExtendedButton {
     private boolean scrollerPressed;
     protected final Button[] elements;
     private final Consumer<Integer> pressConsumer;
-    private final String[] desc;
+    private final ITextComponent[] desc;
     private final boolean alternate;
 
     /**
      * @param height if not multiple of 20 will be adjusted
      */
-    public ScrollableListButton(int xPos, int yPos, int width, int height, int itemCount, String[] strings, ITextComponent displayString, Consumer<Integer> elementPressAction, boolean alternate) {
+    public ScrollableListButton(int xPos, int yPos, int width, int height, int itemCount, ITextComponent[] strings, ITextComponent displayString, Consumer<Integer> elementPressAction, boolean alternate) {
         super(xPos, yPos + 1, width, height = (height / 20) * 20, displayString, button -> {
         });
         if (strings.length < itemCount) throw new IllegalStateException("String array size must be >= itemCount");
@@ -103,9 +103,9 @@ public class ScrollableListButton extends ExtendedButton {
             this.elements[i].visible = itemCount > menuSize || i < itemCount;
             if (this.elements[i].visible) {
                 this.elements[i].render(mStack, mouseX, mouseY, partialTicks);
-                String desc = this.desc[this.scrolled + i];
-                int x = this.x + (this.width - 8) / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(desc) / 2;
-                Minecraft.getInstance().fontRenderer.drawStringWithShadow(mStack, desc, x, this.y + 6 + i * 20, this.elements[i].getFGColor());
+                ITextComponent desc = this.desc[this.scrolled + i];
+                int x = this.x + (this.width - 8) / 2 - Minecraft.getInstance().fontRenderer.getStringPropertyWidth(desc) / 2;
+                Minecraft.getInstance().fontRenderer.func_243246_a(mStack, desc, x, this.y + 6 + i * 20, this.elements[i].getFGColor());
             }
         }
     }
