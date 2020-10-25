@@ -5,11 +5,13 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.entity.Entity;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -54,6 +56,20 @@ public class AlchemicalFireBlock extends VampirismBlock {
             IParticleData type = i == 0 ? ParticleTypes.LARGE_SMOKE : i == 1 ? ParticleTypes.WITCH : rand.nextInt(10) == 0 ? ParticleTypes.FIREWORK : RedstoneParticleData.REDSTONE_DUST;
             worldIn.addParticle(type, d0, d1, d2, 0.0D, i == 2 ? 0.1D : 0.0D, 0.0D);
         }
+    }
+
+    @Override
+    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+        if (!entityIn.isImmuneToFire()) {
+            entityIn.forceFireTicks(entityIn.getFireTimer() + 1);
+            if (entityIn.getFireTimer() == 0) {
+                entityIn.setFire(8);
+            }
+
+            entityIn.attackEntityFrom(DamageSource.IN_FIRE, 1);
+        }
+
+        super.onEntityCollision(state, worldIn, pos, entityIn);
     }
 
 
