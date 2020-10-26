@@ -22,6 +22,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.profiler.IProfiler;
+import net.minecraft.util.Direction;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -102,16 +103,16 @@ public class Helper {
             } else {
                 int liquidBlocks = 0;
                 for (blockpos = blockpos.down(); blockpos.getY() > pos.getY(); blockpos = blockpos.down()) {
-                    BlockState iblockstate = world.getBlockState(blockpos);
-                    if (iblockstate.getOpacity(world, blockpos) > 0) {
-                        if (iblockstate.getMaterial().isLiquid()) {
-                            liquidBlocks++;
-                            if (liquidBlocks >= VampirismConfig.BALANCE.vpSundamageWaterBlocks.get()) {
-                                return false;
-                            }
-                        } else {
+                    BlockState state = world.getBlockState(blockpos);
+                    if (state.getMaterial().isLiquid()) { // if fluid than it propagates the light until `vpSundamageWaterBlocks`
+                        liquidBlocks++;
+                        if (liquidBlocks >= VampirismConfig.BALANCE.vpSundamageWaterBlocks.get()) {
                             return false;
                         }
+                    } else if (state.isSolid() && (state.isSolidSide(world, pos, Direction.DOWN) || state.isSolidSide(world, pos, Direction.UP))) { //solid block blocks the light (fence is solid too?)
+                        return false;
+                    } else if (state.getOpacity(world, blockpos) > 0) { //if not solid, but propagates no light
+                        return false;
                     }
                 }
                 return true;
