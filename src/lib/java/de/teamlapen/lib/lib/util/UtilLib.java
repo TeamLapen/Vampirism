@@ -13,6 +13,8 @@ import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.DyeColor;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.IParticleData;
@@ -36,6 +38,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.spawner.WorldEntitySpawner;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.ForgeI18n;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -749,5 +752,14 @@ public class UtilLib {
         NINETY,
         HUNDRED_EIGHTY,
         TWO_HUNDRED_SEVENTY
+    }
+
+    @Nullable
+    public static DyeColor getColorForItem(Item item) {
+        if (!Tags.Items.DYES.contains(item)) return null;
+        Optional<DyeColor> color = Arrays.stream(DyeColor.values()).filter(dye -> dye.getTag().contains(item)).findFirst();
+        if (color.isPresent()) return color.get();
+        LOGGER.warn("Could not determine color of {}", item.getRegistryName());
+        return null;
     }
 }
