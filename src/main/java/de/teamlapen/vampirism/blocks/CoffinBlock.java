@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import com.google.common.collect.ImmutableMap;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
@@ -11,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathType;
@@ -151,18 +153,21 @@ public class CoffinBlock extends VampirismBlockContainer {
             return ActionResultType.SUCCESS;
         } else {
             ItemStack heldItem = player.getHeldItem(hand);
-            if (!heldItem.isEmpty() && heldItem.getItem() instanceof DyeItem) {
-                CoffinTileEntity tile = (CoffinTileEntity) worldIn.getTileEntity(pos);
-                TileEntity other = state.get(PART) == CoffinPart.HEAD ? worldIn.getTileEntity(pos.offset(state.get(HORIZONTAL_FACING).getOpposite())) : worldIn.getTileEntity(pos.offset(state.get(HORIZONTAL_FACING)));
-                if (!(other instanceof CoffinTileEntity)) {
+            if (!heldItem.isEmpty()) {
+                DyeColor color = heldItem.getItem() instanceof DyeItem ? ((DyeItem) heldItem.getItem()).getDyeColor() : UtilLib.getColorForItem(heldItem.getItem());
+                if (color != null) {
+                    CoffinTileEntity tile = (CoffinTileEntity) worldIn.getTileEntity(pos);
+                    TileEntity other = state.get(PART) == CoffinPart.HEAD ? worldIn.getTileEntity(pos.offset(state.get(HORIZONTAL_FACING).getOpposite())) : worldIn.getTileEntity(pos.offset(state.get(HORIZONTAL_FACING)));
+                    if (!(other instanceof CoffinTileEntity)) {
+                        return ActionResultType.SUCCESS;
+                    }
+                    tile.changeColor(color);
+                    ((CoffinTileEntity) other).changeColor(color);
+                    if (!player.abilities.isCreativeMode) {
+                        heldItem.shrink(1);
+                    }
                     return ActionResultType.SUCCESS;
                 }
-                tile.changeColor(((DyeItem) heldItem.getItem()).getDyeColor());
-                ((CoffinTileEntity) other).changeColor(((DyeItem) heldItem.getItem()).getDyeColor());
-                if (!player.abilities.isCreativeMode) {
-                    heldItem.shrink(1);
-                }
-                return ActionResultType.SUCCESS;
             }
             if (state.get(PART) != CoffinPart.HEAD) {
                 pos = pos.offset(state.get(HORIZONTAL_FACING));
