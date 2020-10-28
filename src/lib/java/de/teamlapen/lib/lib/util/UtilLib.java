@@ -728,22 +728,8 @@ public class UtilLib {
     @Nullable
     public static DyeColor getColorForItem(Item item) {
         if (!Tags.Items.DYES.contains(item)) return null;
-        if (Tags.Items.DYES_BLACK.contains(item)) return DyeColor.BLACK;
-        if (Tags.Items.DYES_RED.contains(item)) return DyeColor.RED;
-        if (Tags.Items.DYES_GREEN.contains(item)) return DyeColor.GREEN;
-        if (Tags.Items.DYES_BROWN.contains(item)) return DyeColor.BROWN;
-        if (Tags.Items.DYES_BLUE.contains(item)) return DyeColor.BLUE;
-        if (Tags.Items.DYES_PURPLE.contains(item)) return DyeColor.PURPLE;
-        if (Tags.Items.DYES_CYAN.contains(item)) return DyeColor.CYAN;
-        if (Tags.Items.DYES_LIGHT_GRAY.contains(item)) return DyeColor.LIGHT_GRAY;
-        if (Tags.Items.DYES_GRAY.contains(item)) return DyeColor.GRAY;
-        if (Tags.Items.DYES_PINK.contains(item)) return DyeColor.PINK;
-        if (Tags.Items.DYES_LIME.contains(item)) return DyeColor.LIME;
-        if (Tags.Items.DYES_YELLOW.contains(item)) return DyeColor.YELLOW;
-        if (Tags.Items.DYES_LIGHT_BLUE.contains(item)) return DyeColor.LIGHT_BLUE;
-        if (Tags.Items.DYES_MAGENTA.contains(item)) return DyeColor.MAGENTA;
-        if (Tags.Items.DYES_ORANGE.contains(item)) return DyeColor.ORANGE;
-        if (Tags.Items.DYES_WHITE.contains(item)) return DyeColor.WHITE;
+        Optional<DyeColor> color = Arrays.stream(DyeColor.values()).filter(dye -> dye.getTag().contains(item)).findFirst();
+        if (color.isPresent()) return color.get();
         LOGGER.warn("Could not determine color of {}", item.getRegistryName());
         return null;
     }
