@@ -13,6 +13,8 @@ import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.DyeColor;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.IParticleData;
@@ -34,6 +36,7 @@ import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.spawner.WorldEntitySpawner;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.ForgeI18n;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -720,5 +723,28 @@ public class UtilLib {
         NINETY,
         HUNDRED_EIGHTY,
         TWO_HUNDRED_SEVENTY
+    }
+
+    @Nullable
+    public static DyeColor getColorForItem(Item item) {
+        if (!Tags.Items.DYES.contains(item)) return null;
+        if (Tags.Items.DYES_BLACK.contains(item)) return DyeColor.BLACK;
+        if (Tags.Items.DYES_RED.contains(item)) return DyeColor.RED;
+        if (Tags.Items.DYES_GREEN.contains(item)) return DyeColor.GREEN;
+        if (Tags.Items.DYES_BROWN.contains(item)) return DyeColor.BROWN;
+        if (Tags.Items.DYES_BLUE.contains(item)) return DyeColor.BLUE;
+        if (Tags.Items.DYES_PURPLE.contains(item)) return DyeColor.PURPLE;
+        if (Tags.Items.DYES_CYAN.contains(item)) return DyeColor.CYAN;
+        if (Tags.Items.DYES_LIGHT_GRAY.contains(item)) return DyeColor.LIGHT_GRAY;
+        if (Tags.Items.DYES_GRAY.contains(item)) return DyeColor.GRAY;
+        if (Tags.Items.DYES_PINK.contains(item)) return DyeColor.PINK;
+        if (Tags.Items.DYES_LIME.contains(item)) return DyeColor.LIME;
+        if (Tags.Items.DYES_YELLOW.contains(item)) return DyeColor.YELLOW;
+        if (Tags.Items.DYES_LIGHT_BLUE.contains(item)) return DyeColor.LIGHT_BLUE;
+        if (Tags.Items.DYES_MAGENTA.contains(item)) return DyeColor.MAGENTA;
+        if (Tags.Items.DYES_ORANGE.contains(item)) return DyeColor.ORANGE;
+        if (Tags.Items.DYES_WHITE.contains(item)) return DyeColor.WHITE;
+        LOGGER.warn("Could not determine color of {}", item.getRegistryName());
+        return null;
     }
 }
