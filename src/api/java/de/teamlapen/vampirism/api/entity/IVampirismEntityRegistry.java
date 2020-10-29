@@ -85,4 +85,13 @@ public interface IVampirismEntityRegistry {
      */
     @Nullable
     BiteableEntry getEntry(CreatureEntity creature);
+
+    /**
+     * checks if the entity type is blacklisted for blood calculation
+     * by non dynamic checks
+     *
+     * @param type the entity type
+     * @return weather it is blacklisted or not
+     */
+    boolean isEntityTypeBlacklistedByDefault(EntityType<?> type);
 }

@@ -42,6 +42,7 @@ public class ModCommands {
                             .then(LevelUpCommand.register())
                             .then(GenderCommand.register())
                             .then(BloodBarCommand.register())
+                            .then(BlacklistCommand.register())
             );
         }
 

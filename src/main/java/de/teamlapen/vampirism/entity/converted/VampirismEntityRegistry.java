@@ -165,6 +165,11 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         return biteableEntryManager.get(creature);
     }
 
+    @Override
+    public boolean isEntityTypeBlacklistedByDefault(EntityType<?> type) {
+        return biteableEntryManager.isEntityTypeBlacklistedByDefault(type);
+    }
+
     /**
      * Set the creator for Vampirism's default converting handler
      * FOR INTERNAL USAGE ONLY
