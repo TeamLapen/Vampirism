@@ -118,6 +118,8 @@ public class VampirismConfig {
         public final ForgeConfigSpec.IntValue villageSeparation;
         public final ForgeConfigSpec.BooleanValue villageModify;
 
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> blacklistedBloodEntity;
+
         public final ForgeConfigSpec.BooleanValue disableFangInfection;
         public final ForgeConfigSpec.BooleanValue disableMobBiteInfection;
         public final ForgeConfigSpec.BooleanValue disableHalloweenSpecial;
@@ -125,8 +127,6 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue disableHunterTentGen;
 
         public final ForgeConfigSpec.BooleanValue infoAboutGuideAPI;
-
-        public final ForgeConfigSpec.ConfigValue<List<? extends String>> blacklistedBloodEntity;
 
 
         Server(ForgeConfigSpec.Builder builder) {
@@ -162,6 +162,10 @@ public class VampirismConfig {
             villageSeparation = builder.comment("Village centers will be at least N chunks apart. Must be smaller than distance").defineInRange("villageSeparation", 8, 1, 100);
             builder.pop();
 
+            builder.push("entities");
+            blacklistedBloodEntity = builder.comment("Blacklist entities from auto calculated blood values").defineList("blacklistedBloodEntity", Collections.emptyList(), string -> string instanceof String && ResourceLocation.isResouceNameValid(((String) string)));
+            builder.pop();
+
             builder.push("cheats");
             unlockAllSkills = builder.comment("CHEAT: If enabled, you will be able to unlock all skills at max level").define("allSkillsAtMaxLevel", false);
             builder.pop();
@@ -173,7 +177,6 @@ public class VampirismConfig {
             disableMobBiteInfection = builder.comment("Prevent vampire mobs from infecting players when attacking").define("disableMobBiteInfection", false);
             disableVampireForestBiomes = builder.comment("Disable vampire forest biomes generation").define("disableVampireForest", false);
             disableHunterTentGen = builder.comment("Disable hunter camp generation").define("disableHunterTentGen", false);
-            blacklistedBloodEntity = builder.comment("Blacklist entities from auto calculated blood values").defineList("blacklistedBloodEntity", Collections.emptyList(), string -> string instanceof String && ResourceLocation.isResouceNameValid(((String) string)));
             builder.pop();
 
             builder.push("internal");
