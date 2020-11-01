@@ -21,6 +21,7 @@ import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.items.StakeItem;
+import de.teamlapen.vampirism.modcompat.IMCHandler;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
@@ -288,7 +289,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             return;
         }
 
-        if (Helper.isVampire(mc.player)) {
+        if (Helper.isVampire(mc.player) && !IMCHandler.requestedToDisableBloodbar) {
             event.setCanceled(true);
 
             if (mc.playerController.gameIsSurvivalOrAdventure()) {
