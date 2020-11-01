@@ -626,9 +626,16 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.controllingFaction = faction;
         this.baseColors = faction != null ? faction.getColor().getColorComponents(null) : DyeColor.WHITE.getColorComponentValues();
         if (this.world != null) {
-            Block b = this.getBlockState().getBlock();
+            BlockState oldBlockState = this.getBlockState();
+            Block b = oldBlockState.getBlock();
             boolean crafted = b instanceof TotemTopBlock && ((TotemTopBlock) b).isCrafted();
-            this.world.setBlockState(this.pos, (faction == null ? crafted ? ModBlocks.totem_top_crafted : ModBlocks.totem_top : crafted ? faction.getVillageData().getTotemTopBlock().getRight() : faction.getVillageData().getTotemTopBlock().getLeft()).getDefaultState(), 55);
+            BlockState newBlockState = (faction == null ? crafted ? ModBlocks.totem_top_crafted : ModBlocks.totem_top : crafted ? faction.getVillageData().getTotemTopBlock().getRight() : faction.getVillageData().getTotemTopBlock().getLeft()).getDefaultState();
+            try { //https://github.com/TeamLapen/Vampirism/issues/793 no idea what might cause this
+                this.world.setBlockState(this.pos, newBlockState, 55);
+            } catch (IllegalStateException e) {
+                LOGGER.error("Setting blockstate from {} to {}", oldBlockState, newBlockState);
+                LOGGER.error("Failed to set totem blockstate", e);
+            }
         }
     }
 
