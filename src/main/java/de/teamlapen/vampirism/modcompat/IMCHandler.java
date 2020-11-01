@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 public class IMCHandler {
     private final static Logger LOGGER = LogManager.getLogger();
+    public static boolean requestedToDisableBloodbar = false;
 
     public static void handleInterModMessage(InterModProcessEvent event) {
         IVampirismEntityRegistry entityRegistry = VampirismAPI.entityRegistry();
@@ -22,6 +23,10 @@ public class IMCHandler {
             } else {
                 LOGGER.error("Received invalid nosundamage-biome thing {} from {}", value, msg.getSenderModId());
             }
+        });
+        event.getIMCStream("disable-blood-bar"::equals).findAny().ifPresent((a) -> {
+            requestedToDisableBloodbar = true;
+            LOGGER.warn("{} requested to not render the vampire blood bar", a.getSenderModId());
         });
     }
 }

@@ -64,12 +64,10 @@ import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
-import java.io.File;
 import java.util.Optional;
 
 /**
@@ -158,10 +156,6 @@ public class VampirismMod {
 
         setupAPI1();
         setupAPI2();
-
-
-        File vampConfigDir = new File(FMLPaths.CONFIGDIR.get().toFile(), REFERENCE.MODID);
-
     }
 
     public VersionChecker.VersionInfo getVersionInfo() {
