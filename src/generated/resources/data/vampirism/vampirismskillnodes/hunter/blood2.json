@@ -1,7 +1,0 @@
-{
-  "parent": "vampirism:hunter/blood1",
-  "skills": [
-    "vampirism:blood_potion_less_bad",
-    "vampirism:blood_potion_good_or_bad"
-  ]
-}

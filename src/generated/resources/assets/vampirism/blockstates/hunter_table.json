@@ -76,7 +76,7 @@
     },
     {
       "when": {
-        "variant": "complete|cauldron|weapon_cauldron|potion_cauldron",
+        "variant": "complete|cauldron|potion_cauldron|weapon_cauldron",
         "facing": "north"
       },
       "apply": {
@@ -85,7 +85,7 @@
     },
     {
       "when": {
-        "variant": "complete|cauldron|weapon_cauldron|potion_cauldron",
+        "variant": "complete|cauldron|potion_cauldron|weapon_cauldron",
         "facing": "east"
       },
       "apply": {
@@ -95,7 +95,7 @@
     },
     {
       "when": {
-        "variant": "complete|cauldron|weapon_cauldron|potion_cauldron",
+        "variant": "complete|cauldron|potion_cauldron|weapon_cauldron",
         "facing": "south"
       },
       "apply": {
@@ -105,7 +105,7 @@
     },
     {
       "when": {
-        "variant": "complete|cauldron|weapon_cauldron|potion_cauldron",
+        "variant": "complete|cauldron|potion_cauldron|weapon_cauldron",
         "facing": "west"
       },
       "apply": {
@@ -115,7 +115,7 @@
     },
     {
       "when": {
-        "variant": "weapon|complete|weapon_potion|weapon_cauldron",
+        "variant": "complete|weapon_potion|weapon|weapon_cauldron",
         "facing": "north"
       },
       "apply": {
@@ -124,7 +124,7 @@
     },
     {
       "when": {
-        "variant": "weapon|complete|weapon_potion|weapon_cauldron",
+        "variant": "complete|weapon_potion|weapon|weapon_cauldron",
         "facing": "east"
       },
       "apply": {
@@ -134,7 +134,7 @@
     },
     {
       "when": {
-        "variant": "weapon|complete|weapon_potion|weapon_cauldron",
+        "variant": "complete|weapon_potion|weapon|weapon_cauldron",
         "facing": "south"
       },
       "apply": {
@@ -144,7 +144,7 @@
     },
     {
       "when": {
-        "variant": "weapon|complete|weapon_potion|weapon_cauldron",
+        "variant": "complete|weapon_potion|weapon|weapon_cauldron",
         "facing": "west"
       },
       "apply": {
