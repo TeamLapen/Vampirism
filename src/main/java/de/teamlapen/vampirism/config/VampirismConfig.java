@@ -10,13 +10,9 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.LogManager;
 
 import java.util.Collections;
 import java.util.List;
-
-import static net.minecraftforge.fml.Logging.CORE;
-import static net.minecraftforge.fml.loading.LogMarkers.FORGEMOD;
 
 public class VampirismConfig {
 
@@ -77,7 +73,6 @@ public class VampirismConfig {
 
     @SubscribeEvent
     public static void onLoad(final ModConfig.Loading configEvent) {
-        LogManager.getLogger().debug(FORGEMOD, "Loaded forge config file {}", configEvent.getConfig().getFileName());
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
 
@@ -86,7 +81,6 @@ public class VampirismConfig {
 
     @SubscribeEvent
     public static void onReload(final ModConfig.Reloading configEvent) {
-        LogManager.getLogger().fatal(CORE, "Forge config just got changed on the file system!");
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
         }
@@ -124,6 +118,8 @@ public class VampirismConfig {
         public final ForgeConfigSpec.IntValue villageSeparation;
         public final ForgeConfigSpec.BooleanValue villageModify;
 
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> blacklistedBloodEntity;
+
         public final ForgeConfigSpec.BooleanValue disableFangInfection;
         public final ForgeConfigSpec.BooleanValue disableMobBiteInfection;
         public final ForgeConfigSpec.BooleanValue disableHalloweenSpecial;
@@ -156,44 +152,20 @@ public class VampirismConfig {
 
             builder.push("sundamage");
             sundamageUnknownDimension = builder.comment("Whether vampires should receive sundamage in unknown dimensions").define("sundamageUnknownDimension", false);
-            sundamageDimensionsOverridePositive = builder.comment("Add the string id in quotes of any dimension (/vampirism currentDimension) you want to enforce sundamage for to this comma-separated list. Overrides defaults and values added by other mods").defineList("sundamageDimensionsOverridePositive", Collections.emptyList(), (o -> {
-                if (o instanceof String) {
-                    try {
-                        new ResourceLocation((String) o);
-                        return true;
-                    } catch (Exception ignored) {
-                    }
-                }
-                return false;
+            sundamageDimensionsOverridePositive = builder.comment("Add the string id in quotes of any dimension (/vampirism currentDimension) you want to enforce sundamage for to this comma-separated list. Overrides defaults and values added by other mods").defineList("sundamageDimensionsOverridePositive", Collections.emptyList(), string -> string instanceof String && ResourceLocation.isResouceNameValid(((String) string)));
 
-            }));
-
-            sundamageDimensionsOverrideNegative = builder.comment("Add the string id in quotes of any dimension (/vampirism currentDimension) you want to disable sundamage for to this comma-separated list. Overrides defaults and values added by other mods").defineList("sundamageDimensionsOverrideNegative", Collections.emptyList(), (object) -> {
-                if (object instanceof String) {
-                    try {
-                        new ResourceLocation((String) object);
-                        return true;
-                    } catch (Exception ignored) {
-                    }
-                }
-                return false;
-            });
-            sundamageDisabledBiomes = builder.comment("Additional biomes the player should not get sundamage in. Use biome ids e.g. 'minecraft:mesa'").defineList("sundamageDisabledBiomes", Collections.emptyList(), (object) -> {
-                if (object instanceof String) {
-                    try {
-                        new ResourceLocation((String) object);
-                        return true;
-                    } catch (Exception ignored) {
-                    }
-                }
-                return false;
-            });
+            sundamageDimensionsOverrideNegative = builder.comment("Add the string id in quotes of any dimension (/vampirism currentDimension) you want to disable sundamage for to this comma-separated list. Overrides defaults and values added by other mods").defineList("sundamageDimensionsOverrideNegative", Collections.emptyList(), string -> string instanceof String && ResourceLocation.isResouceNameValid(((String) string)));
+            sundamageDisabledBiomes = builder.comment("Additional biomes the player should not get sundamage in. Use biome ids e.g. 'minecraft:mesa'").defineList("sundamageDisabledBiomes", Collections.emptyList(), string -> string instanceof String && ResourceLocation.isResouceNameValid(((String) string)));
             builder.pop();
 
             builder.push("village");
             villageModify = builder.comment("Whether to modify the village world gen (size and frequency)").define("villageModify", true);
             villageDistance = builder.comment("Village distance").defineInRange("villageDistance", 32, 1, 100); //TODO 1.14 improve comment
             villageSeparation = builder.comment("Village centers will be at least N chunks apart. Must be smaller than distance").defineInRange("villageSeparation", 8, 1, 100);
+            builder.pop();
+
+            builder.push("entities");
+            blacklistedBloodEntity = builder.comment("Blacklist entities from predefined or auto calculated blood values").defineList("blacklistedBloodEntity", Collections.emptyList(), string -> string instanceof String && ResourceLocation.isResouceNameValid(((String) string)));
             builder.pop();
 
             builder.push("cheats");
@@ -207,7 +179,6 @@ public class VampirismConfig {
             disableMobBiteInfection = builder.comment("Prevent vampire mobs from infecting players when attacking").define("disableMobBiteInfection", false);
             disableVampireForest = builder.comment("Disable vampire forest generation").define("disableVampireForest", false);
             disableHunterTentGen = builder.comment("Disable hunter camp generation").define("disableHunterTentGen", false);
-
             builder.pop();
 
             builder.push("internal");
