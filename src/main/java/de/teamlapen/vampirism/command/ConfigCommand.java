@@ -28,19 +28,39 @@ import java.util.List;
 public class ConfigCommand extends BasicCommand {
 
     private static final SimpleCommandExceptionType NO_SELECTED_ENTITY = new SimpleCommandExceptionType(new TranslationTextComponent("command.vampirism.base.config.bloodvalues.blacklist.no_entity"));
+    private static final SimpleCommandExceptionType NO_CONFIG_TYPE = new SimpleCommandExceptionType(new TranslationTextComponent("command.vampirism.base.config.no_config"));
+    private static final SimpleCommandExceptionType NO_BLOOD_VALUE_TYPE = new SimpleCommandExceptionType(new TranslationTextComponent("command.vampirism.base.config.bloodvalues.no_type"));
+    private static final SimpleCommandExceptionType NO_BLOOD_VALUE_BLACKLIST_TYPE = new SimpleCommandExceptionType(new TranslationTextComponent("command.vampirism.base.config.bloodvalues.blacklist.no_type"));
+    private static final SimpleCommandExceptionType NO_SUN_DAMAGE_TYPE = new SimpleCommandExceptionType(new TranslationTextComponent("command.vampirism.base.config.sun_damage.no_type"));
+    private static final SimpleCommandExceptionType NO_SUN_DAMAGE_BLACKLIST_TYPE = new SimpleCommandExceptionType(new TranslationTextComponent("command.vampirism.base.config.sun_damage.blacklist.no_type"));
 
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("config")
                 .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                .executes(context -> {
+                    throw NO_CONFIG_TYPE.create();
+                })
                 .then(Commands.literal("bloodvalues")
+                        .executes(context -> {
+                            throw NO_BLOOD_VALUE_TYPE.create();
+                        })
                         .then(Commands.literal("blacklist")
+                                .executes(context -> {
+                                    throw NO_BLOOD_VALUE_BLACKLIST_TYPE.create();
+                                })
                                 .then(Commands.literal("entity")
                                         .executes(context -> blacklistEntity(context.getSource().asPlayer()))
                                         .then(Commands.argument("entity", EntitySummonArgument.entitySummon()).suggests(ModSuggestionProvider.ENTITIES)
                                                 .executes(context -> blacklistEntity(context.getSource().asPlayer(), EntitySummonArgument.getEntityId(context, "entity")))))))
                 .then(Commands.literal("sundamage")
+                        .executes(context -> {
+                            throw NO_SUN_DAMAGE_TYPE.create();
+                        })
                         .then(Commands.literal("blacklist")
+                                .executes(context -> {
+                                    throw NO_SUN_DAMAGE_BLACKLIST_TYPE.create();
+                                })
                                 .then(Commands.literal("biome")
                                         .executes(context -> blacklistBiome(context.getSource().asPlayer()))
                                         .then(Commands.argument("biome", BiomeArgument.biome()).suggests(ModSuggestionProvider.BIOMES)

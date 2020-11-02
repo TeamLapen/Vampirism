@@ -12,7 +12,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class BiomeArgument implements ArgumentType<ResourceLocation> {
     public static final DynamicCommandExceptionType BIOME_UNKNOWN_TYPE = new DynamicCommandExceptionType((id) -> {
-        return new TranslationTextComponent("command.vampirism.biome.notFound", id);
+        return new TranslationTextComponent("command.vampirism.biome.not_found", id);
     });
 
     public static BiomeArgument biome() {

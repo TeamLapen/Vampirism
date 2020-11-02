@@ -61,8 +61,9 @@ public class BiteableEntryManager {
      *
      * @return The created entry or null
      */
-    public @Nullable
-    BiteableEntry calculate(@Nonnull CreatureEntity creature) {
+    @Nullable
+    public BiteableEntry calculate(@Nonnull CreatureEntity creature) {
+        if (!VampirismConfig.SERVER.autoCalculateEntityBlood.get()) return null;
         EntityType<?> type = creature.getType();
         @Nullable
         ResourceLocation id = type.getRegistryName();
@@ -98,42 +99,20 @@ public class BiteableEntryManager {
     }
 
     /**
-     * checks if the entity type is blacklisted for blood calculation
-     * does not check if the entity is blacklisted in the server config ({@link #isEntityTypeBlacklisted(EntityType)})
-     *
-     * @param type the entity type
-     * @returns weather the entity type is blacklisted or not
-     */
-    public boolean isEntityTypeBlacklistedByDefault(EntityType<?> type) {
-        if (!VampirismConfig.SERVER.autoCalculateEntityBlood.get()) return true;
-        if (!(type.getClassification() != EntityClassification.MONSTER && type.getClassification() != EntityClassification.WATER_CREATURE))
-            return true;
-        if (ModTags.Entities.VAMPIRE.contains(type)) return true;
-        return false;
-    }
-
-    /**
-     * checks if the entity type is blacklisted for blood calculation
-     *
-     * @param type the entity type
-     * @returns weather the entity type is blacklisted or not
-     */
-    public boolean isEntityTypeBlacklisted(EntityType<?> type) {
-        if (isEntityTypeBlacklistedByDefault(type)) return true;
-        if (isConfigBlackListed(type.getRegistryName())) return true;
-        return false;
-    }
-
-    /**
      * checks if the creature entity is blacklisted
      *
      * @param creature the entity to check
      * @returns weather the entity is blacklisted or not
      */
     private boolean isEntityBlacklisted(CreatureEntity creature) {
-        if (isEntityTypeBlacklisted(creature.getType())) return true;
         if (!(creature instanceof AnimalEntity)) return true;
         if (creature instanceof IVampire) return true;
+        EntityType<?> type = creature.getType();
+        if (!(type.getClassification() == EntityClassification.MONSTER || type.getClassification() == EntityClassification.WATER_CREATURE))
+            return true;
+        if (ModTags.Entities.VAMPIRE.contains(type)) return true;
+        //noinspection ConstantConditions
+        if (isConfigBlackListed(type.getRegistryName())) return true;
         return false;
     }
 

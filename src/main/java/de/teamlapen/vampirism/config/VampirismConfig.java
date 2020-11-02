@@ -163,7 +163,7 @@ public class VampirismConfig {
             builder.pop();
 
             builder.push("entities");
-            blacklistedBloodEntity = builder.comment("Blacklist entities from auto calculated blood values").defineList("blacklistedBloodEntity", Collections.emptyList(), string -> string instanceof String && ResourceLocation.isResouceNameValid(((String) string)));
+            blacklistedBloodEntity = builder.comment("Blacklist entities from predefined or auto calculated blood values").defineList("blacklistedBloodEntity", Collections.emptyList(), string -> string instanceof String && ResourceLocation.isResouceNameValid(((String) string)));
             builder.pop();
 
             builder.push("cheats");
