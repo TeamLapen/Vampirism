@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -24,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 public class PagePotionTableMix extends Page {
@@ -125,8 +127,8 @@ public class PagePotionTableMix extends Page {
     private void deriveItemStacks(ExtendedPotionMix recipe) {
         input = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), recipe.input.get());
         output = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), recipe.output.get());
-        ingredients1 = Arrays.stream(recipe.reagent1.getMatchingStacks()).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent1Count)).toArray(ItemStack[]::new);
-        ingredients2 = Arrays.stream(recipe.reagent2.getMatchingStacks()).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent2Count)).toArray(ItemStack[]::new);
+        ingredients1 = recipe.reagent1.map(Ingredient::getMatchingStacks).map(Arrays::stream).orElse(Stream.empty()).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent1Count)).toArray(ItemStack[]::new);
+        ingredients2 = recipe.reagent2.map(Ingredient::getMatchingStacks).map(Arrays::stream).orElse(Stream.empty()).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent2Count)).toArray(ItemStack[]::new);
         if (ingredients1.length == 0) {
             ingredients1 = new ItemStack[]{ItemStack.EMPTY};
         }

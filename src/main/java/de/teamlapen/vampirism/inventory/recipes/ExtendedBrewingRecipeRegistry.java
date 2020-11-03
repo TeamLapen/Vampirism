@@ -70,7 +70,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
         Potion potion = PotionUtils.getPotionFromItem(bottle);
         Item item = bottle.getItem();
         for (ExtendedPotionMix mix : conversionMixes) {
-            if (mix.input.get() == potion && mix.reagent1.test(ingredient) && ingredient.getCount() >= mix.reagent1Count && (mix.reagent2Count <= 0 || (mix.reagent2.test(extraIngredient) && extraIngredient.getCount() >= mix.reagent2Count)) && mix.canBrew(capabilities)) {
+            if (mix.input.get() == potion && mix.reagent1.filter(i->i.test(ingredient)).isPresent() && ingredient.getCount() >= mix.reagent1Count && (mix.reagent2Count <= 0 || (mix.reagent2.filter(i->i.test(extraIngredient)).isPresent() && extraIngredient.getCount() >= mix.reagent2Count)) && mix.canBrew(capabilities)) {
                 return Optional.of(Triple.of(PotionUtils.addPotionToItemStack(new ItemStack(item), mix.output.get()), mix.reagent1Count, mix.reagent2Count));
             }
         }
@@ -94,7 +94,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
         if (stack.isEmpty()) return false;
 
         for (ExtendedPotionMix mix : conversionMixes) {
-            if (mix.reagent2.test(stack)) return true;
+            if (mix.reagent2.filter(i->i.test(stack)).isPresent()) return true;
 
         }
 
@@ -106,7 +106,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
         if (stack.isEmpty()) return false;
 
         for (ExtendedPotionMix mix : conversionMixes) {
-            if (mix.reagent1.test(stack)) return true;
+            if (mix.reagent1.filter(i->i.test(stack)).isPresent()) return true;
         }
         return BrewingRecipeRegistry.isValidIngredient(stack);
     }

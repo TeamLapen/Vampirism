@@ -5,16 +5,18 @@ import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class JEIPotionMix {
     public static Collection<JEIPotionMix> createFromMix(ExtendedPotionMix mix) {
-        List<ItemStack> in1 = Arrays.stream(mix.reagent1.getMatchingStacks()).map(ItemStack::copy).peek(s -> s.setCount(mix.reagent1Count)).filter(s -> !s.isEmpty()).collect(Collectors.toList());
-        List<ItemStack> in2 = Arrays.stream(mix.reagent2.getMatchingStacks()).map(ItemStack::copy).peek(s -> s.setCount(mix.reagent2Count)).filter(s -> !s.isEmpty()).collect(Collectors.toList());
+        List<ItemStack> in1 = mix.reagent1.map(Ingredient::getMatchingStacks).map(Arrays::stream).orElse(Stream.empty()).map(ItemStack::copy).peek(s -> s.setCount(mix.reagent1Count)).filter(s -> !s.isEmpty()).collect(Collectors.toList());
+        List<ItemStack> in2 = mix.reagent2.map(Ingredient::getMatchingStacks).map(Arrays::stream).orElse(Stream.empty()).map(ItemStack::copy).peek(s -> s.setCount(mix.reagent2Count)).filter(s -> !s.isEmpty()).collect(Collectors.toList());
         List<JEIPotionMix> recipes = new ArrayList<>(3);
         recipes.add(build(mix, Items.POTION, mix.input.get(), mix.output.get(), in1, in2));
         recipes.add(build(mix, Items.LINGERING_POTION, mix.input.get(), mix.output.get(), in1, in2));
