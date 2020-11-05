@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.tileentity.AltarInfusionTileEntity;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -12,7 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -101,6 +101,10 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
         AltarInfusionTileEntity te = (AltarInfusionTileEntity) worldIn.getTileEntity(pos);
         //If empty hand and can start -> StartAdvanced
         if (worldIn.isRemote || te == null) return ActionResultType.SUCCESS;
+        if (!Helper.isVampire(player)) {
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual.wrong_faction"), true);
+            return ActionResultType.SUCCESS;
+        }
         AltarInfusionTileEntity.Result result = te.canActivate(player, true);
         if (heldItem.isEmpty()) {
             if (result == AltarInfusionTileEntity.Result.OK) {
@@ -112,7 +116,7 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
         //If non empty hand or missing tileInventory -> open GUI
         if (!heldItem.isEmpty() || result == AltarInfusionTileEntity.Result.INVMISSING) {
             if (te.getCurrentPhase() != AltarInfusionTileEntity.PHASE.NOT_RUNNING) {
-                player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"), Util.DUMMY_UUID);
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"), true);
                 return ActionResultType.SUCCESS;
             }
             player.openContainer(te);
