@@ -74,12 +74,24 @@ public class PotionTableBlock extends VampirismBlockContainer {
         if (!worldIn.isRemote) {
             TileEntity tile = worldIn.getTileEntity(pos);
             if (tile instanceof PotionTableTileEntity) {
-                NetworkHooks.openGui((ServerPlayerEntity) player, (PotionTableTileEntity) tile, buffer -> buffer.writeBoolean(((PotionTableTileEntity) tile).isExtended()));
-                player.addStat(ModStats.interact_alchemical_cauldron);
+                if (((PotionTableTileEntity) tile).canOpen(player)) {
+                    NetworkHooks.openGui((ServerPlayerEntity) player, (PotionTableTileEntity) tile, buffer -> buffer.writeBoolean(((PotionTableTileEntity) tile).isExtended()));
+                    player.addStat(ModStats.interact_alchemical_cauldron);
+                }
             }
         }
 
         return true;
+    }
+
+    @Override
+    protected void clearContainer(BlockState state, World worldIn, BlockPos pos) {
+        TileEntity te = worldIn.getTileEntity(pos);
+        if (te instanceof PotionTableTileEntity) {
+            for (int i = 0; i < 8; ++i) {
+                this.dropItem(worldIn, pos, ((PotionTableTileEntity) te).removeStackFromSlot(i));
+            }
+        }
     }
 
     @Override

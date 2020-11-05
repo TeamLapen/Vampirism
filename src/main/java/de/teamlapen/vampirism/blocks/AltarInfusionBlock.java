@@ -6,9 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -24,7 +22,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
 /**
  * Altar of infusion
@@ -135,42 +132,7 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.getBlock() != newState.getBlock()) {
-            dropItems(worldIn, pos);
-
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
-        }
-    }
-
-    private void dropItems(World world, BlockPos pos) {
-        Random rand = new Random();
-
-        TileEntity tileEntity = world.getTileEntity(pos);
-        if (!(tileEntity instanceof IInventory)) {
-            return;
-        }
-        IInventory inventory = (IInventory) tileEntity;
-
-        for (int i = 0; i < inventory.getSizeInventory(); i++) {
-            ItemStack item = inventory.getStackInSlot(i);
-
-            if (!item.isEmpty()) {
-                float rx = rand.nextFloat() * 0.8F + 0.1F;
-                float ry = rand.nextFloat() * 0.8F + 0.1F;
-                float rz = rand.nextFloat() * 0.8F + 0.1F;
-
-                ItemEntity entityItem = new ItemEntity(world, pos.getX() + rx, pos.getY() + ry, pos.getZ() + rz, item.copy());
-
-                if (item.hasTag()) {
-                    entityItem.getItem().setTag(item.getTag().copy());
-                }
-
-                float factor = 0.05F;
-                entityItem.setMotion(rand.nextGaussian() * factor, rand.nextGaussian() * factor + 0.2F, rand.nextGaussian() * factor);
-                world.addEntity(entityItem);
-                inventory.setInventorySlotContents(i, ItemStack.EMPTY);
-            }
-        }
+    protected void clearContainer(BlockState state, World worldIn, BlockPos pos) {
+        dropInventoryTileEntityItems(worldIn, pos);
     }
 }
