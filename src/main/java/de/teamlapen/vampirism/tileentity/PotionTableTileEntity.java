@@ -121,10 +121,10 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
                         this.config.deriveFromHunter(hp);
                         return true;
                     } else {
-                        player.sendMessage(new TranslationTextComponent("text.vampirism.alchemical_cauldron.other", getOwnerName()));
+                        player.sendStatusMessage(new TranslationTextComponent("text.vampirism.alchemical_cauldron.other", getOwnerName()), true);
                     }
                 } else {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.alchemical_cauldron.cannot_use", getOwnerName()));
+                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.alchemical_cauldron.cannot_use", getOwnerName()), true);
                 }
                 return false;
 
