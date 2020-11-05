@@ -91,7 +91,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
     public Result canActivate(PlayerEntity player, boolean messagePlayer) {
         if (runningTick > 0) {
             if (messagePlayer)
-                player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"));
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"), true);
 
             return Result.ISRUNNING;
         }
@@ -101,15 +101,15 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         int requiredLevel = checkRequiredLevel();
         if (requiredLevel == -1) {
             if (messagePlayer)
-                player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_level_wrong"));
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_level_wrong"), true);
             return Result.WRONGLEVEL;
         } else if (player.getEntityWorld().isDaytime()) {
             if (messagePlayer)
-                player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_night_only"));
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_night_only"), true);
             return Result.NIGHTONLY;
         } else if (!checkStructureLevel(requiredLevel)) {
             if (messagePlayer)
-                player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_structure_wrong"));
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_structure_wrong"), true);
             tips = null;
             return Result.STRUCTUREWRONG;
         } else if (!checkItemRequirements(player, messagePlayer)) {

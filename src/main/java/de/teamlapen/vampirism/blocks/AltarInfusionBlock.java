@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.tileentity.AltarInfusionTileEntity;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -109,6 +110,10 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
         AltarInfusionTileEntity te = (AltarInfusionTileEntity) worldIn.getTileEntity(pos);
         //If empty hand and can start -> StartAdvanced
         if (worldIn.isRemote || te == null) return true;
+        if (!Helper.isVampire(player)) {
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual.wrong_faction"), true);
+            return true;
+        }
         AltarInfusionTileEntity.Result result = te.canActivate(player, true);
         if (heldItem.isEmpty()) {
             if (result == AltarInfusionTileEntity.Result.OK) {
@@ -120,7 +125,7 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
         //If non empty hand or missing tileInventory -> open GUI
         if (!heldItem.isEmpty() || result == AltarInfusionTileEntity.Result.INVMISSING) {
             if (te.getCurrentPhase() != AltarInfusionTileEntity.PHASE.NOT_RUNNING) {
-                player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"));
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"), true);
                 return true;
             }
             player.openContainer(te);
