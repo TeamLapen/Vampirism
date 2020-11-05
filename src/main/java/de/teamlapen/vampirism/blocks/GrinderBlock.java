@@ -119,6 +119,11 @@ public class GrinderBlock extends VampirismBlockContainer {
     }
 
     @Override
+    protected void clearContainer(BlockState state, World worldIn, BlockPos pos) {
+        dropInventoryTileEntityItems(worldIn, pos);
+    }
+
+    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.with(FACING, rot.rotate(state.get(FACING)));
     }
