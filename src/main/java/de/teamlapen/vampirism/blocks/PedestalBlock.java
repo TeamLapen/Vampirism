@@ -114,14 +114,11 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!world.isRemote && state.getBlock() != newState.getBlock()) {
-            PedestalTileEntity tile = getTileEntity(world, pos);
-            if (tile != null && tile.hasStack()) {
-                net.minecraft.inventory.InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.removeStack());
-            }
+    protected void clearContainer(BlockState state, World worldIn, BlockPos pos) {
+        PedestalTileEntity tile = getTileEntity(worldIn, pos);
+        if (tile != null && tile.hasStack()) {
+            dropItem(worldIn, pos, tile.removeStack());
         }
-        super.onReplaced(state, world, pos, newState, isMoving);
     }
 
     @Nullable
