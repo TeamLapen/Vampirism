@@ -96,47 +96,6 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
         onCraftMatrixChanged(invBasic);
     }
 
-    @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
-        ItemStack result = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack slotStack = slot.getStack();
-            result = slotStack.copy();
-            if (index == 4) {
-                if (!this.mergeItemStack(slotStack, 5, 41, true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (index >= 5) {
-                if (index < 32) {
-                    if (!this.mergeItemStack(slotStack, 0, 5, false)) {
-                        return ItemStack.EMPTY;
-                    } else if (this.mergeItemStack(slotStack, 32, 41, false)) {
-                        return ItemStack.EMPTY;
-                    }
-                } else {
-                    if (!this.mergeItemStack(slotStack, 0, 32, false)) {
-                        return ItemStack.EMPTY;
-                    }
-                }
-            } else if (!this.mergeItemStack(slotStack, 5, 41, false)) {
-                return ItemStack.EMPTY;
-            }
-
-            if (slotStack.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
-            } else {
-                slot.onSlotChanged();
-            }
-
-            if (slotStack.getCount() == result.getCount()) {
-                return ItemStack.EMPTY;
-            }
-
-            slot.onTake(playerEntity, slotStack);
-        }
-        return result;
-    }
 
     /**
      * Called when the resulting item is picked up

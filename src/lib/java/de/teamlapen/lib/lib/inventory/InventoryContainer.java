@@ -78,12 +78,23 @@ public abstract class InventoryContainer extends Container {
         if (slot != null && slot.getHasStack()) {
             ItemStack slotStack = slot.getStack();
             result = slotStack.copy();
-            if (index >= size && index < 27 + size) {
+            if (index < size) {
+                if (!this.mergeItemStack(slotStack, size, 36 + size, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (index >= size && index < 27 + size) {
+                if (!this.mergeItemStack(slotStack, 0, size, false)) {
+                    if (slotStack.isEmpty()) {
+                        return ItemStack.EMPTY;
+                    }
+                }
                 if (!this.mergeItemStack(slotStack, 27 + size, 36 + size, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (index >= 27 + size && index < 36 + size && !this.mergeItemStack(slotStack, size, 27 + size, false)) {
-                return ItemStack.EMPTY;
+            } else if (index >= 27 + size && index < 36 + size) {
+                if (!this.mergeItemStack(slotStack, 0, 27 + size, false)) {
+                    return ItemStack.EMPTY;
+                }
             }
 
             if (slotStack.isEmpty()) {
