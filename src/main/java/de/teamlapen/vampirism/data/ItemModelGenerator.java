@@ -106,6 +106,14 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModItems.pure_blood_2);
             add(ModItems.pure_blood_3);
             add(ModItems.pure_blood_4);
+            add(ModItems.vampire_minion_binding);
+            add(ModItems.vampire_minion_upgrade_simple);
+            add(ModItems.vampire_minion_upgrade_enhanced);
+            add(ModItems.vampire_minion_upgrade_special);
+            add(ModItems.hunter_minion_equipment);
+            add(ModItems.hunter_minion_upgrade_simple);
+            add(ModItems.hunter_minion_upgrade_enhanced);
+            add(ModItems.hunter_minion_upgrade_special);
         }};
         Map<Item, ResourceLocation> itemsWithTexture = new HashMap<Item, ResourceLocation>() {{
             put(ModItems.holy_water_bottle_normal, modLoc("item/holy_water_normal"));
