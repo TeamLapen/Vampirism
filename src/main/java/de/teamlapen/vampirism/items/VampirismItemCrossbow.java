@@ -23,6 +23,7 @@ import net.minecraft.item.ItemTier;
 import net.minecraft.util.*;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -162,6 +163,11 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      */
     protected boolean isIgnoreHurtTime(ItemStack crossbow) {
         return false;
+    }
+
+    @Override
+    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+        return Tags.Items.STRING.contains(repair.getItem()) || super.getIsRepairable(toRepair, repair);
     }
 
     /**

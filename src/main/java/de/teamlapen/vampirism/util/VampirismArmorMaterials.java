@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.util;
 
-import net.minecraft.block.Blocks;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;
+import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.LazyValue;
 import net.minecraft.util.SoundEvent;
@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 
 public enum VampirismArmorMaterials implements IArmorMaterial {
     OBSIDIAN("obsidian", 37, new int[]{2, 5, 6, 2}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.0F, () -> {
-        return Ingredient.fromItems(Blocks.OBSIDIAN);
+        return Ingredient.fromItems(Items.OBSIDIAN);
     });
 
     private static final int[] MAX_DAMAGE_ARRAY = new int[]{13, 15, 16, 11};

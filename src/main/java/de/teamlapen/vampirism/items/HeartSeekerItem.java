@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
@@ -70,10 +71,14 @@ public class HeartSeekerItem extends VampirismVampireSword implements IItemWithT
         return (float) (VampirismConfig.BALANCE.heartSeekerChargingFactor.get() * 2f / (getVampirismTier().ordinal() + 2f));
     }
 
-
     @Override
     public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-        return this.tier == TIER.ULTIMATE && super.getIsRepairable(toRepair, repair);
+        return (this.getVampirismTier() == TIER.NORMAL ? ModItems.blood_infused_iron_ingot : ModItems.blood_infused_enhanced_iron_ingot).equals( repair.getItem()) || super.getIsRepairable(toRepair, repair);
+    }
+
+    @Override
+    public float getXpRepairRatio(ItemStack stack) {
+        return this.getVampirismTier()==TIER.ULTIMATE ? super.getXpRepairRatio(stack)/2f : super.getXpRepairRatio(stack);
     }
 
 }
