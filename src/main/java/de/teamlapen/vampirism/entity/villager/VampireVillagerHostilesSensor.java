@@ -6,6 +6,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.sensor.VillagerHostilesSensor;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
@@ -15,6 +16,7 @@ public class VampireVillagerHostilesSensor extends VillagerHostilesSensor {
     public static final Map<EntityType<?>, Float> hostiles;
 
     static {
+        //Adding entries will probably not work outside Dev as func_220988_c is not called for some reason
         hostiles = Maps.newHashMap(VillagerHostilesSensor.enemyPresenceRange);
         hostiles.remove(EntityType.ZOMBIE);
         hostiles.remove(EntityType.ZOMBIE_VILLAGER);
@@ -23,13 +25,15 @@ public class VampireVillagerHostilesSensor extends VillagerHostilesSensor {
     }
 
     @Override
-    public boolean canNoticePresence(@Nonnull LivingEntity villager, LivingEntity hostile) { //public to avoid AT issues
-        float f = hostiles.get(hostile.getType());
+    public boolean canNoticePresence(@Nonnull LivingEntity villager, LivingEntity hostile) {
+        //func_220988_c is not checked first, so entries may not be present
+        @Nullable Float f = hostiles.get(hostile.getType()); //Careful about unboxing nullpointer
+        if (f == null) return false;
         return hostile.getDistanceSq(villager) <= (double) (f * f);
     }
 
     @Override
-    public boolean hasPresence(LivingEntity hostile) { //public to avoid AT issues
+    public boolean hasPresence(LivingEntity hostile) { //For some reason this method is not called (as it does not properly override somehow maybe) outside dev
         return hostiles.containsKey(hostile.getType());
     }
 
