@@ -26,6 +26,18 @@ license = "LGPL-3.0"
         versionRange="[${version},)"
         ordering="AFTER"
         side="BOTH"
+    [[dependencies.vampirism]]
+        modId = "guideapi-vp"
+        mandatory = false
+        versionRange = "[${guideapi_version},)"
+        ordering = "AFTER"
+        side = "BOTH"
+    [[dependencies.vampirism]]
+        modId = "jei"
+        mandatory = false
+        versionRange = "[${jei_version},)"
+        ordering = "AFTER"
+        side = "BOTH"
 [[mods]]
     modId="teamlapenlib"
     namespace="teamlapenlib"

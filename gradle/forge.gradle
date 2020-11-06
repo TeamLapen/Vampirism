@@ -160,7 +160,7 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         include 'META-INF/mods.toml'
 
-        expand 'version': project.mod_version, 'mcversion': minecraft_version, 'forge_version': forge_version
+        expand 'version': project.mod_version, 'mcversion': minecraft_version, 'forge_version': forge_version, 'jei_version': jei_version, 'guideapi_version': guideapi_version
     }
 
     outputs.upToDateWhen { false }
@@ -176,7 +176,6 @@ processResources {
 processLibResources {
     from(sourceSets.lib.resources.srcDirs) {
         include 'META-INF/mods.toml'
-
         expand 'version': project.mod_version, 'mcversion': minecraft_version, 'forge_version': forge_version
     }
     from(sourceSets.lib.resources.srcDirs) {
@@ -184,8 +183,6 @@ processLibResources {
     }
 
      outputs.upToDateWhen { false }
-    
-
 }
 
 
