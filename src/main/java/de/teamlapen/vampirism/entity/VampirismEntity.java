@@ -250,7 +250,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     }
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return CreatureEntity.registerAttributes().createMutableAttribute(Attributes.ATTACK_DAMAGE).createMutableAttribute(SharedMonsterAttributes.FOLLOW_RANGE, 16);
+        return CreatureEntity.registerAttributes().createMutableAttribute(Attributes.ATTACK_DAMAGE).createMutableAttribute(SharedMonsterAttributes.FOLLOW_RANGE, 16).createMutableAttribute(Attributes.ATTACK_KNOCKBACK);
     }
 
     protected void setDontDropEquipment() {
