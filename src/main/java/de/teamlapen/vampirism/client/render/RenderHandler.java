@@ -443,7 +443,7 @@ public class RenderHandler {
 
         this.mc.getFramebuffer().bindFramebuffer(false);
 
-
+        GlStateManager.enableDepthTest();
         GlStateManager.disableBlend();
 
 
