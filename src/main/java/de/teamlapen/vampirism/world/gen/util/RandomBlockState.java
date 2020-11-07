@@ -1,54 +1,68 @@
 package de.teamlapen.vampirism.world.gen.util;
 
-import com.mojang.datafixers.util.Pair;
+import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.gen.feature.template.AlwaysTrueTest;
-import net.minecraft.world.gen.feature.template.PosRuleTest;
 import net.minecraft.world.gen.feature.template.RuleEntry;
 import net.minecraft.world.gen.feature.template.RuleTest;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
+/**
+ * should only be used with {@link RandomStructureProcessor}
+ * <p>
+ * returns a random blockstate with nbt data for the given {@link #inputPredicate} and {@link #locationPredicate}
+ *
+ * @see RuleEntry
+ */
 public class RandomBlockState extends RuleEntry {
+    @SuppressWarnings("Convert2MethodRef")
+    public static final Codec<Pair<BlockState, Optional<CompoundNBT>>> PAIR_CODEC = RecordCodecBuilder.create((instance) -> {
+        return instance.group(BlockState.CODEC.fieldOf("state").forGetter(entry -> {
+            return entry.getLeft();
+        }), CompoundNBT.CODEC.optionalFieldOf("output_nbt").forGetter(entry -> {
+            return entry.getValue();
+        })).apply(instance, ImmutablePair::new);
+    });
     @SuppressWarnings("CodeBlock2Expr")
     public static final Codec<RandomBlockState> CODEC = RecordCodecBuilder.create((instance) -> {
         return instance.group(RuleTest.field_237127_c_.fieldOf("input_predicate").forGetter((getter) -> {
             return getter.inputPredicate;
         }), RuleTest.field_237127_c_.fieldOf("location_predicate").forGetter(entry -> {
             return entry.locationPredicate;
-        }), PosRuleTest.field_237102_c_.fieldOf("position_predicate").forGetter(entry -> {
-            return entry.field_237109_d_;
-        }), BlockState.CODEC.fieldOf("output_state_1").forGetter(entry -> {
-            return entry.outputState;
-        }), BlockState.CODEC.fieldOf("output_state_2").forGetter(entry -> {
-            return entry.outputState2;
-        }), CompoundNBT.CODEC.optionalFieldOf("output_nbt_1").forGetter(entry -> {
-            return Optional.ofNullable(entry.outputNbt);
-        }), CompoundNBT.CODEC.optionalFieldOf("output_nbt_2").forGetter(entry -> {
-            return Optional.ofNullable(entry.outputNbt2);
+        }), PAIR_CODEC.fieldOf("default_state").forGetter(entry -> {
+            return Pair.of(entry.outputState, Optional.ofNullable(entry.outputNbt));
+        }), PAIR_CODEC.listOf().fieldOf("states").forGetter(entry -> {
+            return Lists.newArrayList(entry.states);
         })).apply(instance, RandomBlockState::new);
     });
     private static final Random RNG = new Random();
 
-    private final BlockState outputState2;
-    private final CompoundNBT outputNbt2;
+    private final List<Pair<BlockState, Optional<CompoundNBT>>> states;
 
-    public RandomBlockState(RuleTest inputPredicate, RuleTest locationPredicate, BlockState outputState, BlockState outputState2) {
-        this(inputPredicate, locationPredicate, AlwaysTrueTest.field_237100_b_, outputState, outputState2, Optional.empty(), Optional.empty());
+    public RandomBlockState(RuleTest inputPredicate, RuleTest locationPredicate, BlockState defaultState, List<BlockState> outputStates) {
+        this(inputPredicate, locationPredicate, Pair.of(defaultState, Optional.empty()), outputStates.stream().map(state -> Pair.of(state, Optional.<CompoundNBT>empty())).collect(Collectors.toList()));
     }
 
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    public RandomBlockState(RuleTest inputPredicate, RuleTest locationPredicate, PosRuleTest posRuleTest, BlockState outputState, BlockState outputState2, Optional<CompoundNBT> outputNbt, Optional<CompoundNBT> outputNbt2) {
-        super(inputPredicate, locationPredicate, AlwaysTrueTest.field_237100_b_, outputState, outputNbt);
-        this.outputState2 = outputState2;
-        this.outputNbt2 = outputNbt2.orElse(null);
+    public RandomBlockState(RuleTest inputPredicate, RuleTest locationPredicate, Pair<BlockState, Optional<CompoundNBT>> defaultState, List<Pair<BlockState, Optional<CompoundNBT>>> states) {
+        super(inputPredicate, locationPredicate, AlwaysTrueTest.field_237100_b_, defaultState.getLeft(), defaultState.getRight());
+        this.states = states;
     }
 
-    public Pair<BlockState, CompoundNBT> getOutput(){
-        return RNG.nextBoolean() ? Pair.of(outputState2, outputNbt2) : Pair.of(super.getOutputState(), super.getOutputNbt());
+    public Pair<BlockState, Optional<CompoundNBT>> getOutput() {
+        if (!states.isEmpty()) {
+            int type = RNG.nextInt(states.size());
+            return states.get(type);
+        } else {
+            return Pair.of(this.outputState, Optional.ofNullable(outputNbt));
+        }
     }
 }
