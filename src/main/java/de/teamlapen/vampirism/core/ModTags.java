@@ -33,6 +33,9 @@ public class ModTags {
         public static final ITag.INamedTag<Item> GARLIC = tag(forge("crops/garlic"));
         public static final ITag.INamedTag<Item> HOLY_WATER = tag("holy_water");
         public static final ITag.INamedTag<Item> HOLY_WATER_SPLASH = tag("holy_water_splash");
+        public static final ITag.INamedTag<Item> CASTLE_STAIRS = tag("castle_stairs");
+        public static final ITag.INamedTag<Item> CASTLE_SLAPS = tag("castle_slaps");
+        public static final ITag.INamedTag<Item> CURSEDEARTH = tag("cursed_earth");
 
 
         private static ITag.INamedTag<Item> tag(ResourceLocation resourceLocation) {

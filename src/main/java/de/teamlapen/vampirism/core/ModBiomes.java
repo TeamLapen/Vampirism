@@ -32,7 +32,10 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 public class ModBiomes {
     @ObjectHolder("vampirism:vampire_forest")
     public static final Biome vampire_forest = getNull();
+    @ObjectHolder("vampirism:vampire_forest_hills")
+    public static final Biome vampire_forest_hills = getNull();
     public static final RegistryKey<Biome> VAMPIRE_FOREST_KEY = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, new ResourceLocation(REFERENCE.MODID, "vampire_forest"));
+    public static final RegistryKey<Biome> VAMPIRE_FOREST_HILLS_KEY = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, new ResourceLocation(REFERENCE.MODID, "vampire_forest_hills"));
 
 
     static void registerBiomes(IForgeRegistry<Biome> registry) {
@@ -43,22 +46,25 @@ public class ModBiomes {
         forestSpawnBuilder.withSpawner(EntityClassification.AMBIENT, new MobSpawnInfo.Spawners(ModEntities.blinding_bat, BalanceMobProps.mobProps.BLINDING_BAT_SPAWN_CHANCE, 2, 4));
         forestSpawnBuilder.withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.dummy_creature, BalanceMobProps.mobProps.DUMMY_CREATURE_SPAWN_CHANCE, 3, 6));
 
-        BiomeAmbience.Builder ambienceBuilder = new BiomeAmbience.Builder().setWaterColor(0xEE2505).setWaterFogColor(0xEE2505).setFogColor(0xE0A0A0).withSkyColor(0xA08080).withFoliageColor(0x1E1F1F).withGrassColor(0x1E1F1F).setMoodSound(MoodSoundAmbience.DEFAULT_CAVE);
+        BiomeAmbience.Builder ambienceBuilder = new BiomeAmbience.Builder().setWaterColor(0x7d0000).setWaterFogColor(0x7d0000).setFogColor(0x7d3535).withSkyColor(0x7d3535).withFoliageColor(0x1E1F1F).withGrassColor(0x1E1F1F).setMoodSound(MoodSoundAmbience.DEFAULT_CAVE);
         registry.register(getVampireForestBuilder(0.1F, 0.025F, forestSpawnBuilder, ambienceBuilder).build().setRegistryName(VAMPIRE_FOREST_KEY.getLocation()));
-
+        registry.register(getVampireForestBuilder(0.8f, 0.5f, forestSpawnBuilder, ambienceBuilder).build().setRegistryName(VAMPIRE_FOREST_HILLS_KEY.getLocation()));
 
         VampirismAPI.sundamageRegistry().addNoSundamageBiomes(VAMPIRE_FOREST_KEY.getLocation());
+        VampirismAPI.sundamageRegistry().addNoSundamageBiomes(VAMPIRE_FOREST_HILLS_KEY.getLocation());
     }
 
     /**
      * Only call from main thread / non parallel event
      */
     static void addBiomesToGeneratorUnsafe() {
-        if (!VampirismConfig.SERVER.disableVampireForest.get()) {
+        if (!VampirismConfig.SERVER.disableVampireForestBiomes.get()) {
             List<RegistryKey<Biome>> modList = new ArrayList<>(OverworldBiomeProvider.biomes);
             modList.add(VAMPIRE_FOREST_KEY);
+            modList.add(VAMPIRE_FOREST_HILLS_KEY);
             OverworldBiomeProvider.biomes = ImmutableList.copyOf(modList);
             BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_KEY, VampirismConfig.BALANCE.vampireForestWeight.get()));
+            BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_HILLS_KEY, VampirismConfig.BALANCE.vampireForestHillsWeight.get()));
         }
     }
 
