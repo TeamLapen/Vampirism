@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "vampirism:hunter/hunter_potion_table"
+      "vampirism:hunter/potion_table"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "vampirism:hunter/hunter_potion_table"
+        "recipe": "vampirism:hunter/potion_table"
       }
     }
   },

@@ -253,7 +253,7 @@ public class GuideBook implements IGuideBook {
 
         String train2 = "§l" + translate(base + "leveling.to_reach", "5+") + "§r\n";
         train2 += translate(base + "leveling.train2.text", loc(ModBlocks.hunter_table), loc(ModBlocks.weapon_table), loc(ModBlocks.potion_table), loc(ModBlocks.alchemical_cauldron));
-        levelingPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(new TranslationTextComponent(train2)), new ResourceLocation("guide.vampirism.blocks.hunter_table"), new ResourceLocation("guide.vampirism.blocks.weapon_table"), new ResourceLocation("guide.vampirism.blocks.alchemical_cauldron"), new ResourceLocation("guide.vampirism.blocks.blood_potion_table")));
+        levelingPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(new TranslationTextComponent(train2)), new ResourceLocation("guide.vampirism.blocks.hunter_table"), new ResourceLocation("guide.vampirism.blocks.weapon_table"), new ResourceLocation("guide.vampirism.blocks.alchemical_cauldron"), new ResourceLocation("guide.vampirism.blocks.potion_table")));
         PageTable.Builder builder = new PageTable.Builder(4);
         builder.addUnlocLine("text.vampirism.level", base + "leveling.train2.fang", loc(ModItems.pure_blood_0), loc(ModItems.vampire_book));
         for (int i = levelingConf.TABLE_MIN_LEVEL; i <= levelingConf.TABLE_MAX_LEVEL; i++) {
@@ -455,7 +455,7 @@ public class GuideBook implements IGuideBook {
         //Hunter
         ItemInfoBuilder.create(true, new ItemStack(ModItems.item_med_chair)).setFormats(loc(ModItems.injection_garlic), loc(ModItems.injection_sanguinare)).recipes("hunter/item_med_chair").build(entries);
         ItemInfoBuilder.create(ModBlocks.hunter_table).setFormats(loc(ModItems.hunter_intel_0)).setLinks(new ResourceLocation("guide.vampirism.hunter.leveling"), new ResourceLocation("guide.vampirism.items.hunter_intel")).recipes("hunter/hunter_table").build(entries);
-        ItemInfoBuilder.create(ModBlocks.weapon_table).recipes("hunter/hunter_weapon_table").build(entries);
+        ItemInfoBuilder.create(ModBlocks.weapon_table).recipes("hunter/weapon_table").build(entries);
         ItemInfoBuilder.create(ModBlocks.alchemical_cauldron).recipes("hunter/alchemical_cauldron").build(entries);
         int cn = VampirismConfig.BALANCE.hsGarlicDiffusorNormalDist.get() * 2 + 1;
         int ce = VampirismConfig.BALANCE.hsGarlicDiffusorEnhancedDist.get() * 2 + 1;
@@ -472,12 +472,12 @@ public class GuideBook implements IGuideBook {
 
     private static IPage[] generatePotionMixes() {
         IPage[] pages = new IPage[6];
-        pages[0] = new PagePotionTableMix( HunterSkills.durable_brewing.getName(), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.durable && !mix.concentrated && !mix.efficient).toArray(ExtendedPotionMix[]::new));
-        pages[1] = new PagePotionTableMix( HunterSkills.concentrated_brewing.getName(), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.concentrated && !mix.durable && !mix.efficient).toArray(ExtendedPotionMix[]::new));
-        pages[2] = new PagePotionTableMix( HunterSkills.durable_brewing.getName().deepCopy().appendString("\\n").append(HunterSkills.efficient_brewing.getName()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.durable && !mix.concentrated && mix.efficient).toArray(ExtendedPotionMix[]::new));
-        pages[3] = new PagePotionTableMix( HunterSkills.concentrated_brewing.getName().deepCopy().appendString("\\n").append(HunterSkills.efficient_brewing.getName()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.concentrated && !mix.durable && mix.efficient).toArray(ExtendedPotionMix[]::new));
-        pages[4] = new PagePotionTableMix( HunterSkills.master_brewer.getName(), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.master && !mix.durable && !mix.concentrated && !mix.efficient).toArray(ExtendedPotionMix[]::new));
-        pages[5] = new PagePotionTableMix(HunterSkills.master_brewer.getName().deepCopy().appendString("\\n").append(HunterSkills.efficient_brewing.getName()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.master && !mix.durable && !mix.concentrated && mix.efficient).toArray(ExtendedPotionMix[]::new));
+        pages[0] = new PagePotionTableMix(HunterSkills.durable_brewing.getName(), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.durable && !mix.concentrated && !mix.efficient).toArray(ExtendedPotionMix[]::new));
+        pages[1] = new PagePotionTableMix(HunterSkills.concentrated_brewing.getName(), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.concentrated && !mix.durable && !mix.efficient).toArray(ExtendedPotionMix[]::new));
+        pages[2] = new PagePotionTableMix(HunterSkills.durable_brewing.getName().deepCopy().appendString("\n").append(HunterSkills.efficient_brewing.getName()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.durable && !mix.concentrated && mix.efficient).toArray(ExtendedPotionMix[]::new));
+        pages[3] = new PagePotionTableMix(HunterSkills.concentrated_brewing.getName().deepCopy().appendString("\n").append(HunterSkills.efficient_brewing.getName()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.concentrated && !mix.durable && mix.efficient).toArray(ExtendedPotionMix[]::new));
+        pages[4] = new PagePotionTableMix(HunterSkills.master_brewer.getName(), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.master && !mix.durable && !mix.concentrated && !mix.efficient).toArray(ExtendedPotionMix[]::new));
+        pages[5] = new PagePotionTableMix(HunterSkills.master_brewer.getName().deepCopy().appendString("\n").append(HunterSkills.efficient_brewing.getName()), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.master && !mix.durable && !mix.concentrated && mix.efficient).toArray(ExtendedPotionMix[]::new));
         return pages;
     }
 

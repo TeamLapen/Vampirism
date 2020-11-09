@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "vampirism:hunter/hunter_crossbow_arrow_normal"
+      "vampirism:hunter/crossbow_arrow_normal"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "vampirism:hunter/hunter_crossbow_arrow_normal"
+        "recipe": "vampirism:hunter/crossbow_arrow_normal"
       }
     }
   },
