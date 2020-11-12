@@ -172,7 +172,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
         if (nbt.contains("home")) {
             saveHome = true;
             int[] h = nbt.getIntArray("home");
-            home = new AxisAlignedBB(h[0], h[1], h[2], h[3], h[4], h[5]);
+            this.setHome(new AxisAlignedBB(h[0], h[1], h[2], h[3], h[4], h[5]));
             if (nbt.contains("homeMovePrio")) {
                 this.setMoveTowardsRestriction(nbt.getInt("moveHomePrio"), true);
             }
