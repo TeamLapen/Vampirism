@@ -61,10 +61,11 @@ public class ModBiomes {
         if (!VampirismConfig.SERVER.disableVampireForestBiomes.get()) {
             List<RegistryKey<Biome>> modList = new ArrayList<>(OverworldBiomeProvider.biomes);
             modList.add(VAMPIRE_FOREST_KEY);
-            modList.add(VAMPIRE_FOREST_HILLS_KEY);
+            //TODO don't generate hills biome for now. Should be added as a hills variant at some point if supported by Forge
+//            modList.add(VAMPIRE_FOREST_HILLS_KEY);
             OverworldBiomeProvider.biomes = ImmutableList.copyOf(modList);
             BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_KEY, VampirismConfig.BALANCE.vampireForestWeight.get()));
-            BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_HILLS_KEY, VampirismConfig.BALANCE.vampireForestHillsWeight.get()));
+//            BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_HILLS_KEY, VampirismConfig.BALANCE.vampireForestHillsWeight.get()));
         }
     }
 
@@ -103,6 +104,6 @@ public class ModBiomes {
         VampirismBiomeFeatures.addVampireTrees(biomeGeneratorSettings);
 
         VampirismBiomeFeatures.addWaterSprings(biomeGeneratorSettings);
-        return new Biome.Builder().precipitation(Biome.RainType.RAIN).category(Biome.Category.FOREST).depth(depth).scale(scale).temperature(0.3F).downfall(0F).setEffects(ambienceBuilder.build()).withMobSpawnSettings(spawnBuilder.copy()).withGenerationSettings(biomeGeneratorSettings.build());
+        return new Biome.Builder().precipitation(Biome.RainType.NONE).category(Biome.Category.FOREST).depth(depth).scale(scale).temperature(0.3F).downfall(0F).setEffects(ambienceBuilder.build()).withMobSpawnSettings(spawnBuilder.copy()).withGenerationSettings(biomeGeneratorSettings.build());
     }
 }

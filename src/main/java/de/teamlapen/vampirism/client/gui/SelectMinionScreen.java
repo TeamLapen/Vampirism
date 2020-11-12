@@ -48,6 +48,6 @@ public class SelectMinionScreen extends Screen {
         if (action == RequestMinionSelectPacket.Action.CALL) {
             VampirismMod.dispatcher.sendToServer(new SelectMinionTaskPacket(selectedMinion, SelectMinionTaskPacket.RECALL));
         }
-        this.onClose();
+        this.closeScreen();
     }
 }

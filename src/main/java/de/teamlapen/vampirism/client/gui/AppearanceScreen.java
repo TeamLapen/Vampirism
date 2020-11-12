@@ -69,7 +69,7 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
         this.guiTop = (this.height - this.ySize) / 2;
 
         this.addButton(new Button(this.guiLeft + this.xSize - 80 - 10, this.guiTop + 152, 80, 20, new TranslationTextComponent("gui.done"), (context) -> {
-            this.onClose();
+            this.closeScreen();
         }));
         if (this.backScreen != null) {
             this.addButton(new Button(this.guiLeft + 10, this.guiTop + 152, 80, 20, new TranslationTextComponent("gui.back"), (context) -> {

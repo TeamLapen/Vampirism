@@ -157,7 +157,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
     public boolean keyReleased(int key, int scancode, int modifiers) {
         if (!editActions) {
             if (ModKeys.getKeyBinding(ModKeys.KEY.MINION).matchesKey(key, scancode) || ModKeys.getKeyBinding(ModKeys.KEY.ACTION).matchesKey(key, scancode)) {
-                onClose();
+                this.closeScreen();
                 if (getSelectedElement() >= 0) {
                     this.onElementSelected(elements.get(getSelectedElement()));
                 }
