@@ -50,12 +50,14 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.structure.Structure;
 
 import javax.annotation.Nonnull;
@@ -201,6 +203,11 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             LivingEntity target = getAttackTarget();
             int id = target == null ? 0 : target.getEntityId();
             this.updateWatchedId(id);
+            if (this.ticksExisted % 512 == 0 && this.getRNG().nextInt(500) == 0) { //Very very very randomly decide to walk to a random location
+                BlockPos randomDestination = new BlockPos(this.getRNG().nextInt(30000) - 15000, 100, this.getRNG().nextInt(30000) - 15000);
+                randomDestination = this.world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, randomDestination);
+                this.setHomeArea(randomDestination, 10);
+            }
         } else {
             targetAngle = 0;
             if (isSwingingArms()) {
