@@ -246,8 +246,7 @@ public abstract class GuiPieMenu<T> extends Screen {
     protected abstract KeyBinding getMenuKeyBinding();
 
     protected void selectedAndClose() {
-        closeScreen
-                ();
+        closeScreen();
         if (selectedElement >= 0) {
             this.onElementSelected(elements.get(selectedElement));
         }

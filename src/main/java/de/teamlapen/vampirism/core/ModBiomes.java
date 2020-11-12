@@ -97,6 +97,6 @@ public class ModBiomes {
         VampirismBiomeFeatures.addVampireTrees(biomeGeneratorSettings);
 
         VampirismBiomeFeatures.addWaterSprings(biomeGeneratorSettings);
-        return new Biome.Builder().precipitation(Biome.RainType.RAIN).category(Biome.Category.FOREST).depth(depth).scale(scale).temperature(0.3F).downfall(0F).setEffects(ambienceBuilder.build()).withMobSpawnSettings(spawnBuilder.copy()).withGenerationSettings(biomeGeneratorSettings.build());
+        return new Biome.Builder().precipitation(Biome.RainType.NONE).category(Biome.Category.FOREST).depth(depth).scale(scale).temperature(0.3F).downfall(0F).setEffects(ambienceBuilder.build()).withMobSpawnSettings(spawnBuilder.copy()).withGenerationSettings(biomeGeneratorSettings.build());
     }
 }
