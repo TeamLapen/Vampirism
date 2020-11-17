@@ -5,10 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.command.*;
-import de.teamlapen.vampirism.command.arguments.ActionArgument;
-import de.teamlapen.vampirism.command.arguments.FactionArgument;
-import de.teamlapen.vampirism.command.arguments.SkillArgument;
-import de.teamlapen.vampirism.command.arguments.TaskArgument;
+import de.teamlapen.vampirism.command.arguments.*;
 import de.teamlapen.vampirism.command.test.*;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.arguments.ArgumentSerializer;
@@ -80,5 +77,6 @@ public class ModCommands {
         ArgumentTypes.register("vampirism_skill", SkillArgument.class, new ArgumentSerializer<>(SkillArgument::new));
         ArgumentTypes.register("vampirism_action", ActionArgument.class, new ArgumentSerializer<>(ActionArgument::new));
         ArgumentTypes.register("vampirism_task", TaskArgument.class, new ArgumentSerializer<>(TaskArgument::new));
+        ArgumentTypes.register("vampirism_biome", BiomeArgument.class, new ArgumentSerializer<>(BiomeArgument::new));
     }
 }
