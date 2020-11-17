@@ -113,6 +113,10 @@ public class BloodValueLoader extends ReloadListener<Collection<ResourceLocation
                     }
                 }
             }
+        } catch (IOException e) {
+            throw e;
+        } catch (Exception e) {
+            LOGGER.error("Failed to load blood values from reader " + modId, e);
         } finally {
             if (br != null) {
                 br.close();
