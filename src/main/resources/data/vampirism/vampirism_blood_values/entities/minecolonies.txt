@@ -1,1 +1,1 @@
- minecolonies:citizen=15
+minecolonies:citizen=15
