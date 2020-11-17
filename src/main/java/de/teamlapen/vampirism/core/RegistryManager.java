@@ -67,7 +67,7 @@ public class RegistryManager implements IInitListener {
                 ModItems.registerCraftingRecipes();
                 ModPotions.registerPotionMixes();
                 ModAdvancements.registerAdvancements();
-                ModCommands.registerArgumentTypes();
+                event.enqueueWork(ModCommands::registerArgumentTypesUsage);
                 ModLoot.registerLootConditions();
                 ModLoot.registerLootFunctionType();
                 VampirismBiomeFeatures.init();
