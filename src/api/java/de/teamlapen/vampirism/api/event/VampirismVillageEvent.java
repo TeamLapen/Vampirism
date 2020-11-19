@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.api.event;
 
-import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.world.ITotem;
 import net.minecraft.block.BlockState;
@@ -145,32 +144,16 @@ public abstract class VampirismVillageEvent extends Event {
 
     /**
      * Fired when a normal villager should be converted to angry villager.
-     * You can set a custom replacement and cancel this event to make it take effect.
-     * The {@link #oldVillager} is probably not added to a world
+     * You can cancel this event to prevent vampirism behavior and replace the villager by yourself.
      */
     @Cancelable
     public static class MakeAggressive extends VampirismVillageEvent {
 
         private final VillagerEntity oldVillager;
-        private @Nullable
-        IVillageCaptureEntity captureVillager;
 
         public MakeAggressive(ITotem totem, @Nonnull VillagerEntity villager) {
             super(totem);
             this.oldVillager = villager;
-        }
-
-        @Nullable
-        public IVillageCaptureEntity getAggressiveVillager() {
-            return captureVillager;
-        }
-
-        /**
-         * Set the aggressive version of the old villager.
-         * Event has to be canceled for this to take effect
-         */
-        public void setAggressiveVillager(@Nullable IVillageCaptureEntity captureVillager) {
-            this.captureVillager = captureVillager;
         }
 
         /**

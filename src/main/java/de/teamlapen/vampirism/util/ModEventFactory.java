@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.util;
 
-import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.event.FactionEvent;
@@ -57,9 +56,9 @@ public class ModEventFactory {
         return MinecraftForge.EVENT_BUS.post(event);
     }
 
-    public static IVillageCaptureEntity fireMakeAggressive(@Nonnull ITotem totem, @Nonnull VillagerEntity entity) {
+    public static boolean fireMakeAggressive(@Nonnull ITotem totem, @Nonnull VillagerEntity entity) {
         VampirismVillageEvent.MakeAggressive event = new VampirismVillageEvent.MakeAggressive(totem, entity);
         MinecraftForge.EVENT_BUS.post(event);
-        return event.getAggressiveVillager();
+        return !event.isCanceled();
     }
 }

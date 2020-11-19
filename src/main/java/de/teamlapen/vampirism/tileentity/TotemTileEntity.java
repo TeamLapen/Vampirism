@@ -80,7 +80,7 @@ import java.util.*;
 import static de.teamlapen.vampirism.tileentity.TotemHelper.*;
 
 @ParametersAreNonnullByDefault
-public class TotemTileEntity extends TileEntity implements ITickableTileEntity, ITotem {//TODO 1.14 add village events
+public class TotemTileEntity extends TileEntity implements ITickableTileEntity, ITotem {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Random RNG = new Random();
     private static final ResourceLocation nonFactionTotem = new ResourceLocation("none");
@@ -393,8 +393,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         if (!this.world.isRemote) {
             List<VillagerEntity> villagerEntities = this.world.getEntitiesWithinAABB(VillagerEntity.class, this.getVillageArea());
             for (VillagerEntity villager : villagerEntities) {
-                IVillageCaptureEntity entity = ModEventFactory.fireMakeAggressive(this, villager);
-                if (entity == null) {
+                if (ModEventFactory.fireMakeAggressive(this, villager)) {
                     if (VReference.VAMPIRE_FACTION.equals(this.capturingFaction)) {
                         if (villager instanceof IFactionEntity) continue;
                         if (villager.getGrowingAge() < 0) continue;
@@ -402,8 +401,6 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                             makeAgressive(villager);
                         }
                     }
-                } else {
-                    this.world.addEntity((Entity) entity);
                 }
             }
         }
