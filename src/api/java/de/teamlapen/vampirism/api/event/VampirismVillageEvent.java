@@ -3,12 +3,10 @@ package de.teamlapen.vampirism.api.event;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.world.ITotem;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.World;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
@@ -169,20 +167,13 @@ public abstract class VampirismVillageEvent extends Event {
      * if result is {@link Result#DENY} the Vanilla code is skipped
      */
     @HasResult
-    public static class VillagerCaptureFinish extends VillagerCaptureFinishParent.Pre { //TODO 1.16 remove
-        public VillagerCaptureFinish(ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
-            super(totem, villagerIn, forced);
-        }
-    }
-
-    @HasResult
-    public static class VillagerCaptureFinishParent extends VampirismVillageEvent {//TODO 1.16 rename
+    public static abstract class VillagerCaptureFinish extends VampirismVillageEvent {
 
         @Nonnull
         private final List<VillagerEntity> villager;
         private final boolean forced;
 
-        public VillagerCaptureFinishParent(ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
+        public VillagerCaptureFinish(ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
             super(totem);
             villager = villagerIn;
             this.forced = forced;
@@ -200,44 +191,16 @@ public abstract class VampirismVillageEvent extends Event {
             return forced;
         }
 
-        public static class Post extends VillagerCaptureFinishParent {
+        public static class Post extends VillagerCaptureFinish {
             public Post(ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
                 super(totem, villagerIn, forced);
             }
         }
 
-        public static class Pre extends VillagerCaptureFinishParent {
+        public static class Pre extends VillagerCaptureFinish {
             public Pre(ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
                 super(totem, villagerIn, forced);
             }
-        }
-    }
-
-    /**
-     * Fired when a new Capture Entity should be spawned
-     */
-    @Deprecated
-    public static class SpawnCaptureEntity extends VampirismVillageEvent {//TODO 1.16 remove
-
-        private EntityType<? extends MobEntity> entity;
-
-        public SpawnCaptureEntity(ITotem totem) {
-            super(totem);
-        }
-
-        /**
-         * set the Entity to spawn
-         */
-        public void setEntity(EntityType<? extends MobEntity> entity) {
-            this.entity = entity;
-        }
-
-        /**
-         * @return {@link EntityType<?>} of the capture entity which should be spawned
-         */
-        @Nullable
-        public EntityType<? extends MobEntity> getEntity() {
-            return entity;
         }
     }
 
@@ -309,28 +272,5 @@ public abstract class VampirismVillageEvent extends Event {
         public void setMessage(String message) {
             this.message = message;
         }
-    }
-
-    /**
-     * fired when the village area is updated (used for vampire fog rendering & sundamage)
-     */
-    public static class UpdateBoundingBox extends VampirismVillageEvent { //TODO 1.16 remove
-
-        @Nonnull
-        private final MutableBoundingBox bb;
-
-        public UpdateBoundingBox(ITotem totem, @Nonnull MutableBoundingBox bb) {
-            super(totem);
-            this.bb = bb;
-        }
-
-        /**
-         * @return the bounding box of the village
-         */
-        @Nonnull
-        public MutableBoundingBox getBoundingBox() {
-            return bb;
-        }
-
     }
 }

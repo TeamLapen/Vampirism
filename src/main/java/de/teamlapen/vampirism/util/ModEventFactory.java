@@ -9,7 +9,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -20,13 +19,13 @@ import java.util.List;
 public class ModEventFactory {
 
     public static boolean fireVillagerCaptureEventPre(@Nonnull ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
-        VampirismVillageEvent.VillagerCaptureFinish event = new VampirismVillageEvent.VillagerCaptureFinish(totem, villagerIn, forced);
+        VampirismVillageEvent.VillagerCaptureFinish.Pre event = new VampirismVillageEvent.VillagerCaptureFinish.Pre(totem, villagerIn, forced);
         MinecraftForge.EVENT_BUS.post(event);
         return event.getResult().equals(Event.Result.DENY);
     }
 
     public static void fireVillagerCaptureEventPost(@Nonnull ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
-        MinecraftForge.EVENT_BUS.post(new VampirismVillageEvent.VillagerCaptureFinishParent.Post(totem, villagerIn, forced));
+        MinecraftForge.EVENT_BUS.post(new VampirismVillageEvent.VillagerCaptureFinish.Post(totem, villagerIn, forced));
     }
 
     public static VillagerEntity fireSpawnNewVillagerEvent(@Nonnull ITotem totem, @Nullable MobEntity oldEntity, @Nonnull VillagerEntity newEntity, boolean replaceOld, boolean converted) {
@@ -37,11 +36,6 @@ public class ModEventFactory {
 
     public static void fireReplaceVillageBlockEvent(@Nonnull ITotem totem, @Nonnull BlockState b, @Nonnull BlockPos pos) {
         VampirismVillageEvent.ReplaceBlock event = new VampirismVillageEvent.ReplaceBlock(totem, b, pos);
-        MinecraftForge.EVENT_BUS.post(event);
-    }
-
-    public static void fireUpdateBoundingBoxEvent(@Nonnull ITotem totem, @Nonnull MutableBoundingBox bb) { //TODO 1.16 remove
-        VampirismVillageEvent.UpdateBoundingBox event = new VampirismVillageEvent.UpdateBoundingBox(totem, bb);
         MinecraftForge.EVENT_BUS.post(event);
     }
 

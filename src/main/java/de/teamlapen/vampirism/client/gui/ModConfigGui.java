@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.gui;
 /*
  * Mod config gui
  *
- * TODO 1.13 migrate to new config system first
+ * TODO wait for forge config gui
  */
 /*
 @OnlyIn(Dist.CLIENT)
