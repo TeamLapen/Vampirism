@@ -11,6 +11,8 @@ import net.minecraft.world.storage.loot.conditions.LootConditionManager;
 import net.minecraft.world.storage.loot.functions.LootFunctionManager;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -22,6 +24,7 @@ import java.util.Set;
  * https://github.com/williewillus/Botania/blob/07f68b37da9ad3a246b95c042cd6c10bd91698d1/src/main/java/vazkii/botania/common/core/loot/LootHandler.java
  */
 public class ModLootTables {
+    private final static Logger LOGGER = LogManager.getLogger();
     private static final Set<ResourceLocation> LOOT_TABLES = Sets.newHashSet();
     private static final Map<String, ResourceLocation> INJECTION_TABLES = Maps.newHashMap();
 
@@ -72,9 +75,14 @@ public class ModLootTables {
         String name = event.getName().toString();
         if (name.startsWith(prefix)) {
             String file = name.substring(name.indexOf(prefix) + prefix.length());
-            if(INJECTION_TABLES.containsKey(file)){
-                event.getTable().addPool(getInjectPool(file));
-                injected++;
+            if(INJECTION_TABLES.containsKey(file)) {
+                try {
+                    event.getTable().addPool(getInjectPool(file));
+                    injected++;
+                } catch (NullPointerException e) {
+                    LOGGER.warn("Loottable {} is broken by some other mod. Cannot add Vampirism loot to it.", name);
+                }
+
             }
         }
     }

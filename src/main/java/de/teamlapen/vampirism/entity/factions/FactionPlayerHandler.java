@@ -412,11 +412,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             this.titleGender = nbt.getBoolean("title_gender");
         }
         if (nbt.contains("bound1")) {
-            LOGGER.info(new ResourceLocation(nbt.getString("bound1")));
             setBoundAction1(ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound1"))), false);
         }
         if (nbt.contains("bound2")) {
-            LOGGER.info(new ResourceLocation(nbt.getString("bound1")));
             setBoundAction2(ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound2"))), false);
         }
     }
