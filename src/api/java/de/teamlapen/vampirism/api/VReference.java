@@ -27,8 +27,8 @@ public class VReference {
      */
     public static final PlantType VAMPIRE_PLANT_TYPE = PlantType.get("vampirism_vampire");
     public static final DamageSource SUNDAMAGE = new DamageSource("sun").setDamageBypassesArmor().setMagicDamage();
-    public static final DamageSource VAMPIRE_ON_FIRE = new DamageSource("vampire_on_fire").setDamageBypassesArmor().setMagicDamage();
-    public static final DamageSource VAMPIRE_IN_FIRE = new DamageSource("vampire_in_fire").setMagicDamage();
+    public static final DamageSource VAMPIRE_ON_FIRE = new DamageSource("vampire_on_fire").setDamageBypassesArmor().setMagicDamage().setFireDamage();
+    public static final DamageSource VAMPIRE_IN_FIRE = new DamageSource("vampire_in_fire").setMagicDamage().setFireDamage();
     public static final DamageSource HOLY_WATER = new DamageSource("holy_water").setMagicDamage();
     public static final DamageSource NO_BLOOD = new DamageSource("blood_loss").setDamageBypassesArmor().setMagicDamage();
     /**
