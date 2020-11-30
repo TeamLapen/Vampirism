@@ -41,7 +41,7 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
     private final float[] SPEED_REDUCTION = new float[]{-0.025F, -0.1F, -0.05F, -0.025F};
 
     public ObsidianArmorItem(EquipmentSlotType equipmentSlotIn, TIER tier) {
-        super(baseRegName, tier.getName(), VampirismArmorMaterials.OBSIDIAN, equipmentSlotIn, new Properties().group(VampirismMod.creativeTab));
+        super(baseRegName, tier.getName(), VampirismArmorMaterials.OBSIDIAN, equipmentSlotIn, new Properties().group(VampirismMod.creativeTab).isImmuneToFire());
         this.tier = tier;
     }
 

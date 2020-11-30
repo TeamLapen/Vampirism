@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
@@ -63,10 +64,12 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> map = HashMultimap.create();
+        Multimap<Attribute, AttributeModifier> map = HashMultimap.create(); //TODO 1.17 build in constructor
         if (slot == this.getEquipmentSlot()) {
             map.put(SharedMonsterAttributes.ARMOR, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor modifier", this.getDamageReduction(slot.getIndex(), stack), AttributeModifier.Operation.ADDITION));
             map.put(SharedMonsterAttributes.ARMOR_TOUGHNESS, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor toughness", this.getToughness(slot.getIndex(), stack), AttributeModifier.Operation.ADDITION));
+            if (this.knockbackResistance > 0)
+                map.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor knockback resistance", (double) this.knockbackResistance, AttributeModifier.Operation.ADDITION));
         }
         return map;
     }

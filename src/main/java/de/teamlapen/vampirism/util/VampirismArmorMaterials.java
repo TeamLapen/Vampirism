@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 
 
 public enum VampirismArmorMaterials implements IArmorMaterial {
-    OBSIDIAN("obsidian", 37, new int[]{2, 5, 6, 2}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.0F, () -> {
+    OBSIDIAN("obsidian", 37, new int[]{2, 5, 6, 2}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.0F, 0.1f, () -> {
         return Ingredient.fromItems(Items.OBSIDIAN);
     });
 
@@ -26,15 +26,17 @@ public enum VampirismArmorMaterials implements IArmorMaterial {
     private final int enchantability;
     private final SoundEvent soundEvent;
     private final float toughness;
+    private final float knockbackResistance;
     private final LazyValue<Ingredient> repairMaterial;
 
-    VampirismArmorMaterials(String name, int maxDamageFactor, int[] damageReductionArray, int enchantability, SoundEvent sound, float toughness, Supplier<Ingredient> repairMaterial) {
+    VampirismArmorMaterials(String name, int maxDamageFactor, int[] damageReductionArray, int enchantability, SoundEvent sound, float toughness, float knockbackResistance, Supplier<Ingredient> repairMaterial) {
         this.name = name;
         this.maxDamageFactor = maxDamageFactor;
         this.damageReductionAmountArray = damageReductionArray;
         this.enchantability = enchantability;
         this.soundEvent = sound;
         this.toughness = toughness;
+        this.knockbackResistance = knockbackResistance;
         this.repairMaterial = new LazyValue<>(repairMaterial);
     }
 
@@ -71,7 +73,7 @@ public enum VampirismArmorMaterials implements IArmorMaterial {
 
     @Override
     public float getKnockbackResistance() {
-        return 0;//?
+        return this.knockbackResistance;
     }
 
 }
