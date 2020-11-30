@@ -362,6 +362,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             }
         });
         if (sync) sync(false);
+        player.refreshDisplayName();
         return true;
     }
 
