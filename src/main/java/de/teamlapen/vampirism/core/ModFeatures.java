@@ -68,7 +68,7 @@ public class ModFeatures {
     public static void registerStructureSeparation() {
         //https://github.com/MinecraftForge/MinecraftForge/pull/7232
         //https://github.com/MinecraftForge/MinecraftForge/pull/7331
-        Map<Structure<?>, StructureSeparationSettings> structureSettingsMapOverworld = DimensionSettings.func_242746_i().getStructures().func_236195_a_(); //TODO 1.16 Maybe check again when world gen/dimension stuff has stabilized in MC/Forge
+        Map<Structure<?>, StructureSeparationSettings> structureSettingsMapOverworld = DimensionSettings.func_242746_i().getStructures().func_236195_a_(); //TODO 1.17 check if any PR has been accepted
         structureSettingsMapOverworld.put(hunter_camp, HunterCampStructure.getSettings());
 
         if (VampirismConfig.SERVER.villageModify.get()) {

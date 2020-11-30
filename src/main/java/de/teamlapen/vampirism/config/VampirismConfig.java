@@ -160,7 +160,7 @@ public class VampirismConfig {
 
             builder.push("village");
             villageModify = builder.comment("Whether to modify the village world gen (size and frequency)").define("villageModify", true);
-            villageDistance = builder.comment("Village distance").defineInRange("villageDistance", 32, 1, 100); //TODO 1.14 improve comment
+            villageDistance = builder.comment("Village distance").defineInRange("villageDistance", 32, 1, 100); //TODO 1.17 improve comment
             villageSeparation = builder.comment("Village centers will be at least N chunks apart. Must be smaller than distance").defineInRange("villageSeparation", 8, 1, 100);
             builder.pop();
 

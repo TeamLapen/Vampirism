@@ -226,7 +226,6 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        LOGGER.info("Deserializing");//TODO
         IFaction<?> f = VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(nbt.getString("faction")));
         if (!(f instanceof IPlayableFaction)) {
             this.maxMinions = 0;
@@ -362,7 +361,6 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
 
     @Override
     public CompoundNBT serializeNBT() {
-        LOGGER.info("Serializing");//TODO
         CompoundNBT nbt = new CompoundNBT();
         nbt.putInt("max_minions", maxMinions);
         if (faction != null) {
@@ -457,7 +455,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
                 if (e instanceof MinionEntity) {
                     return Optional.of((MinionEntity<?>) e);
                 } else {
-                    LOGGER.warn("Retrieved entity is not a minion entity {}", e); //TODO check and remove or adjust
+                    LOGGER.warn("Retrieved entity is not a minion entity {}", e);
                 }
             }
         }
@@ -482,7 +480,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     private boolean recallMinion(MinionInfo i) {
         contactMinion(i.minionID, MinionEntity::recallMinion);
         if (i.isActive()) {
-            LOGGER.warn("Minion still active after recall");//TODO remove
+            LOGGER.debug("Minion still active after recall");
         }
         minionTokens[i.minionID] = Optional.empty();
         return !i.isDead();
@@ -517,7 +515,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
 
         void checkin() {
             if (this.entityId == -1) {
-                LOGGER.warn("Closing minion data for inactive minion"); //TODO check and remove
+                LOGGER.debug("Closing minion data for inactive minion");
             }
             this.entityId = -1;
             this.dimension = null;
