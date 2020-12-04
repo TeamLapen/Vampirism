@@ -252,7 +252,7 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     @Nonnull
     @Override
     public List<RecipeBookCategories> getRecipeBookCategories() {
-        return Lists.newArrayList(RecipeBookCategories.CRAFTING_MISC);
+        return Lists.newArrayList(RecipeBookCategories.UNKNOWN);
     }
 
     @Override

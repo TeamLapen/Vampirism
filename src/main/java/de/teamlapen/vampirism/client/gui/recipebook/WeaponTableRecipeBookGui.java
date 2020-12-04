@@ -18,7 +18,7 @@ import java.util.Optional;
 public class WeaponTableRecipeBookGui extends RecipeBookGui {
 
     @Override
-    public void updateCollections(boolean forceFirstPage) { //nearly copied from super method
+    public void updateCollections(boolean forceFirstPage) { //nearly copied from super method. Only added additional filter using faction player
         List<RecipeList> recipeLists = this.recipeBook.getRecipes(this.currentTab.func_201503_d());
         recipeLists.forEach((p_193944_1_) -> {
             p_193944_1_.canCraft(this.stackedContents, this.field_201522_g.getWidth(), this.field_201522_g.getHeight(), this.recipeBook);
