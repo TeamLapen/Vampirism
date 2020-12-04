@@ -19,6 +19,7 @@ public class PotionTableScreen extends ContainerScreen<PotionTableContainer> {
 
     public PotionTableScreen(PotionTableContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(screenContainer, inv, titleIn);
+        this.titleY = 5;
     }
 
     @Override

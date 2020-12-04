@@ -34,6 +34,7 @@ public class WeaponTableScreen extends ContainerScreen<WeaponTableContainer> imp
         super(inventorySlotsIn, inventoryPlayer, name);
         this.xSize = 196;
         this.ySize = 191;
+        this.playerInventoryTitleY = this.ySize - 94;
     }
 
     @Override

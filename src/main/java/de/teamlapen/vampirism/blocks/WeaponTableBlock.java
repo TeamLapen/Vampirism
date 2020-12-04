@@ -144,7 +144,7 @@ public class WeaponTableBlock extends VampirismBlock {
             if (!flag) {
 
                 if (canUse(player) && player instanceof ServerPlayerEntity) {
-                    NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new WeaponTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, pos)), new TranslationTextComponent("container.crafting")), pos);
+                    NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new WeaponTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, pos)), name), pos);
                 } else {
                     player.sendStatusMessage(new TranslationTextComponent("text.vampirism.weapon_table.cannot_use"), true);
                 }

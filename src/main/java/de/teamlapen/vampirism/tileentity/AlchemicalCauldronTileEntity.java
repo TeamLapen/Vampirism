@@ -85,13 +85,13 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
     @Nonnull
     @Override
     public ITextComponent getCustomName() {
-        return new TranslationTextComponent("tile.vampirism.alchemical_cauldron.name");
+        return new TranslationTextComponent("tile.vampirism.alchemical_cauldron");
     }
 
     @Nonnull
     @Override
     public ITextComponent getDisplayName() {
-        return new TranslationTextComponent("tile.vampirism.alchemical_cauldron.display", ownerName, new TranslationTextComponent("tile.vampirism.alchemical_cauldron.name"));
+        return new TranslationTextComponent("tile.vampirism.alchemical_cauldron.display", ownerName, new TranslationTextComponent("tile.vampirism.alchemical_cauldron"));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -266,6 +266,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
     private boolean canPlayerCook(AlchemicalCauldronRecipe recipe) {
         if (world == null) return false;
         if (recipeChecked == recipe) return true;
+        if (ownerID == null) return false;
         PlayerEntity playerEntity = this.world.getPlayerByUuid(ownerID);
         if (playerEntity == null || !playerEntity.isAlive()) return false;
         HunterPlayer hunter = HunterPlayer.get(playerEntity);
