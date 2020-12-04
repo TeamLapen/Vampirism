@@ -125,7 +125,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
         if (editActions && key == GLFW.GLFW_KEY_ESCAPE) {
             closeScreen();
             return true;
-        } else if (key == GLFW.GLFW_KEY_SPACE) {
+        } else if (key == GLFW.GLFW_KEY_SPACE && !this.editActions) { //TODO as long as minion tasks are not editable prevent switching to them
             if (FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
                 this.minecraft.displayGuiScreen(new SelectMinionTaskScreen());
             }
@@ -168,13 +168,16 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-        super.mouseReleased(mouseX, mouseY, mouseButton);
-        if (editActions && SELECTEDACTION != null) {
-            if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT && getSelectedElement() >= 0 && elements.get(getSelectedElement()) != fakeAction) {
-                switchActions(SELECTEDACTION, elements.get(getSelectedElement()));
-                updateElements();
+        if (editActions) {
+            if (SELECTEDACTION != null) {
+                if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT && getSelectedElement() >= 0 && elements.get(getSelectedElement()) != fakeAction) {
+                    switchActions(SELECTEDACTION, elements.get(getSelectedElement()));
+                    updateElements();
+                }
+                SELECTEDACTION = null;
             }
-            SELECTEDACTION = null;
+        } else {
+            super.mouseReleased(mouseX, mouseY, mouseButton);
         }
         return true;
     }
