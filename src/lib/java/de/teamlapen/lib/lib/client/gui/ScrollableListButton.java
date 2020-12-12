@@ -95,7 +95,7 @@ public class ScrollableListButton extends ExtendedButton {
             }
             blit(mStack, x + this.width - 7, y + i1, this.getBlitOffset(), (alternate ? 23 : 0) + 10 - 1, 0, 7, 27, 256, 256);
         } else {
-            blit(mStack, x + this.width - 7, y, this.getBlitOffset(), (alternate ? 23 : 0) + 10 + 6, 0, 7, this.elements.length == 1 ? 20 : 27, 256, 256);
+            //blit(mStack, x + this.width - 7, y, this.getBlitOffset(), (alternate ? 23 : 0) + 10 + 6, 0, 7, this.elements.length == 1 ? 20 : 27, 256, 256); Don't render (disabled) scroller if there are not enough items
         }
     }
 

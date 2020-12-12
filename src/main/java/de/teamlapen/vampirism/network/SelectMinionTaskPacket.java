@@ -70,7 +70,7 @@ public class SelectMinionTaskPacket implements IMessage {
         ctx.setPacketHandled(true);
     }
 
-    private static void printRecoveringMinions(ServerPlayerEntity player, List<IFormattableTextComponent> recoveringMinions) {
+    public static void printRecoveringMinions(ServerPlayerEntity player, List<IFormattableTextComponent> recoveringMinions) {
         if (recoveringMinions.size() == 1) {
             player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion_is_still_recovering", recoveringMinions.get(0)), true);
         } else if (recoveringMinions.size() > 1) {
