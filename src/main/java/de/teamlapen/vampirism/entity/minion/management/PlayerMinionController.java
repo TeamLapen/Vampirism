@@ -17,6 +17,7 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
@@ -145,7 +146,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
      */
     public Optional<Integer> claimMinionSlot(int id) {
         if (id < minionTokens.length) {
-            if (!minionTokens[id].isPresent() && !minions[id].isDead()) {
+            if (!minionTokens[id].isPresent() && !minions[id].isStillRecovering()) {
                 int t = rng.nextInt();
                 minionTokens[id] = Optional.of(t);
                 return minionTokens[id];
@@ -227,7 +228,6 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        LOGGER.info("Deserializing");//TODO
         IFaction<?> f = VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(nbt.getString("faction")));
         if (!(f instanceof IPlayableFaction)) {
             this.maxMinions = 0;
@@ -271,7 +271,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     public Collection<Integer> getCallableMinions() {
         List<Integer> ids = new ArrayList<>();
         for (int i = 0; i < minions.length; i++) {
-            if (!minions[i].isDead()) {
+            if (!minions[i].isStillRecovering()) {
                 ids.add(i);
             }
         }
@@ -282,6 +282,10 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         return this.lordID;
     }
 
+    public List<ITextComponent> getRecoveringMinionNames() {
+        return Arrays.stream(this.minions).filter(MinionInfo::isStillRecovering).map(i -> i.data).map(MinionData::getFormattedName).collect(Collectors.toList());
+    }
+
     /**
      * @return A collection of currently unclaimed and non dead minion slots
      */
@@ -289,7 +293,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         List<Integer> ids = new ArrayList<>();
         for (int i = 0; i < minionTokens.length; i++) {
             if (!minionTokens[i].isPresent()) {
-                if (!minions[i].isDead()) {
+                if (!minions[i].isStillRecovering()) {
                     ids.add(i);
                 }
             }
@@ -313,6 +317,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     public boolean hasMinions() {
         return this.minions.length > 0;
     }
+
 
     /**
      * Mark a minion as dead and as inactive.
@@ -363,7 +368,6 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
 
     @Override
     public CompoundNBT serializeNBT() {
-        LOGGER.info("Serializing");//TODO
         CompoundNBT nbt = new CompoundNBT();
         nbt.putInt("max_minions", maxMinions);
         if (faction != null) {
@@ -486,7 +490,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             LOGGER.warn("Minion still active after recall");//TODO remove
         }
         minionTokens[i.minionID] = Optional.empty();
-        return !i.isDead();
+        return !i.isStillRecovering();
 
     }
 
@@ -525,7 +529,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         }
 
         boolean checkout(int entityId, DimensionType dim) {
-            if (this.entityId != -1 || isDead()) {
+            if (this.entityId != -1 || isStillRecovering()) {
                 return false;
             }
             this.entityId = entityId;
@@ -537,7 +541,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             return entityId != -1;
         }
 
-        boolean isDead() {
+        boolean isStillRecovering() {
             return deathCooldown > 0;
         }
     }
