@@ -30,6 +30,10 @@ public class DefendAreaGoal extends TargetGoal {
         this.predicate = new EntityPredicate().setCustomPredicate(e -> entity.getAttackPredicate(true).test(e)).setUseInvisibilityCheck().setDistance(60);
     }
 
+    @Override
+    public boolean shouldContinueExecuting() {
+        return entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.defend_area).isPresent() && super.shouldContinueExecuting();
+    }
 
     @Override
     public boolean shouldExecute() {
