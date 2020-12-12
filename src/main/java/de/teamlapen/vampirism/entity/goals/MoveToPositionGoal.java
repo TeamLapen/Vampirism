@@ -56,7 +56,7 @@ public abstract class MoveToPositionGoal<T extends CreatureEntity> extends Goal 
 
     @Override
     public boolean shouldContinueExecuting() {
-        return !this.navigator.noPath() && this.getTargetPosition().distanceSq(this.entity.getPosition()) > this.minDist * minDist;
+        return this.getTargetPosition().distanceSq(this.entity.getPosition()) > this.minDist * minDist;
     }
 
     @Override
@@ -81,8 +81,8 @@ public abstract class MoveToPositionGoal<T extends CreatureEntity> extends Goal 
             if (doTeleport && (!flag || this.entity.getRNG().nextInt(8) == 0)) {
                 if (!(this.entity.getDistanceSq(target.getX(), target.getY(), target.getZ()) < maxDist * maxDist)) {
                     int i = target.getX() - 2;
-                    int j = target.getY() - 2;
-                    int k = target.getZ();
+                    int j = target.getZ() - 2;
+                    int k = target.getY();
 
                     for (int l = 0; l <= 4; ++l) {
                         for (int i1 = 0; i1 <= 4; ++i1) {

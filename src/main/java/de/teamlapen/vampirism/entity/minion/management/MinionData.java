@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.entity.minion.management;
 
 import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
-import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -112,7 +112,7 @@ public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
 
     @Override
     public int getMaxHealth() {
-        return VampirismConfig.BALANCE.miBaseHealth.get();
+        return (int) BalanceMobProps.mobProps.MINION_MAX_HEALTH;
     }
 
     @Override
