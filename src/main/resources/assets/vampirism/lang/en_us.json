@@ -223,6 +223,8 @@
   "text.vampirism.thanks": "Thanks",
   "text.vampirism.coming_back": "I’m coming back, my lord",
   "text.vampirism.sorry_i_died_while_doing": "My lord, I’m sorry but I died while fulfilling your task",
+  "text.vampirism.n_minions_are_still_recovering": "%s minions are still recovering",
+  "text.vampirism.minion_is_still_recovering": "%s is still recovering",
   "text.vampirism.current_task": "Current task",
   "text.vampirism.lord.become": "You are raised to the Vampire Lord",
   "text.vampirism.lord.other_player_become": "has defeated the current Vampire Lord and replaces him",

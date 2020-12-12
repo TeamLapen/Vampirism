@@ -18,6 +18,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -144,7 +145,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
      */
     public Optional<Integer> claimMinionSlot(int id) {
         if (id < minionTokens.length) {
-            if (!minionTokens[id].isPresent() && !minions[id].isDead()) {
+            if (!minionTokens[id].isPresent() && !minions[id].isStillRecovering()) {
                 int t = rng.nextInt();
                 minionTokens[id] = Optional.of(t);
                 return minionTokens[id];
@@ -269,7 +270,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     public Collection<Integer> getCallableMinions() {
         List<Integer> ids = new ArrayList<>();
         for (int i = 0; i < minions.length; i++) {
-            if (!minions[i].isDead()) {
+            if (!minions[i].isStillRecovering()) {
                 ids.add(i);
             }
         }
@@ -280,20 +281,8 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         return this.lordID;
     }
 
-    /**
-     * @return A collection of currently unclaimed and non dead minion slots
-     */
-    public Collection<Integer> getUnclaimedMinions() {
-        List<Integer> ids = new ArrayList<>();
-        for (int i = 0; i < minionTokens.length; i++) {
-            if (!minionTokens[i].isPresent()) {
-                if (!minions[i].isDead()) {
-                    ids.add(i);
-                }
-            }
-        }
-        return ids;
-
+    public List<IFormattableTextComponent> getRecoveringMinionNames() {
+        return Arrays.stream(this.minions).filter(MinionInfo::isStillRecovering).map(i -> i.data).map(MinionData::getFormattedName).collect(Collectors.toList());
     }
 
     /**
@@ -311,6 +300,23 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     public boolean hasMinions() {
         return this.minions.length > 0;
     }
+
+    /**
+     * @return A collection of currently unclaimed and non dead minion slots
+     */
+    public Collection<Integer> getUnclaimedMinions() {
+        List<Integer> ids = new ArrayList<>();
+        for (int i = 0; i < minionTokens.length; i++) {
+            if (!minionTokens[i].isPresent()) {
+                if (!minions[i].isStillRecovering()) {
+                    ids.add(i);
+                }
+            }
+        }
+        return ids;
+
+    }
+
 
     /**
      * Mark a minion as dead and as inactive.
@@ -483,7 +489,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             LOGGER.debug("Minion still active after recall");
         }
         minionTokens[i.minionID] = Optional.empty();
-        return !i.isDead();
+        return !i.isStillRecovering();
 
     }
 
@@ -522,7 +528,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         }
 
         boolean checkout(int entityId, RegistryKey<World> dim) {
-            if (this.entityId != -1 || isDead()) {
+            if (this.entityId != -1 || isStillRecovering()) {
                 return false;
             }
             this.entityId = entityId;
@@ -534,7 +540,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             return entityId != -1;
         }
 
-        boolean isDead() {
+        boolean isStillRecovering() {
             return deathCooldown > 0;
         }
     }
