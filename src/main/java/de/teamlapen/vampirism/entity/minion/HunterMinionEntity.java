@@ -356,6 +356,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
                     if (healthLevel >= MAX_LEVEL_HEALTH) return false;
                     healthLevel++;
                     ((HunterMinionEntity) entity).updateAttributes();
+                    entity.setHealth(entity.getMaxHealth());
                     return true;
                 case 2:
                     if (strengthLevel >= MAX_LEVEL_STRENGTH) return false;

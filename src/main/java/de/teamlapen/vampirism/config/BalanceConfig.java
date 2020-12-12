@@ -148,7 +148,6 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vaHalfInvulnerableThreshold;
     public final ForgeConfigSpec.BooleanValue vaHalfInvulnerableEnabled;
 
-    public final ForgeConfigSpec.IntValue miBaseHealth;
     public final ForgeConfigSpec.IntValue miResourceCooldown;
     public final ForgeConfigSpec.DoubleValue miResourceCooldownOfflineMult;
     public final ForgeConfigSpec.IntValue miDeathRecoveryTime;
@@ -340,7 +339,6 @@ public class BalanceConfig {
         builder.pop();
 
         builder.push("minions");
-        miBaseHealth = builder.comment("Base health of normal minion").defineInRange("baseHealth", 20, 1, Integer.MAX_VALUE);
         miResourceCooldown = builder.comment("Cooldown in ticks,before new resources are added in collect resource task types").defineInRange("resourceCooldown", 1200, 20, Integer.MAX_VALUE);
         miResourceCooldownOfflineMult = builder.comment("Cooldown multiplier for collect resource task types while player is offline").defineInRange("resourceCooldownOfflineMult", 4D, 1D, 100000D);
         miDeathRecoveryTime = builder.comment("Time in seconds a minion needs to recover from death.").defineInRange("miDeathRecoveryTime", 180, 1, Integer.MAX_VALUE / 100);
