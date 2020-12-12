@@ -92,7 +92,7 @@ public class ScrollableListButton extends GuiButtonExt {
             }
             blit(x + this.width - 7, y + i1, this.blitOffset, (alternate ? 23 : 0) + 10 - 1, 0, 7, 27, 256, 256);
         } else {
-            blit(x + this.width - 7, y, this.blitOffset, (alternate ? 23 : 0) + 10 + 6, 0, 7, this.elements.length == 1 ? 20 : 27, 256, 256);
+            //blit(x + this.width - 7, y, this.blitOffset, (alternate ? 23 : 0) + 10 + 6, 0, 7, this.elements.length == 1 ? 20 : 27, 256, 256);
         }
     }
 
