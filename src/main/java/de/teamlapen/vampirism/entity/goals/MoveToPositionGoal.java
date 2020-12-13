@@ -80,14 +80,14 @@ public abstract class MoveToPositionGoal<T extends CreatureEntity> extends Goal 
             boolean flag = this.navigator.tryMoveToXYZ(target.getX(), target.getY(), target.getZ(), this.followSpeed);
             if (doTeleport && (!flag || this.entity.getRNG().nextInt(8) == 0)) {
                 if (!(this.entity.getDistanceSq(target.getX(), target.getY(), target.getZ()) < maxDist * maxDist)) {
-                    int i = target.getX() - 2;
-                    int j = target.getZ() - 2;
-                    int k = target.getY();
+                    int sX = target.getX() - 2;
+                    int sZ = target.getZ() - 2;
+                    int sY = target.getY();
 
-                    for (int l = 0; l <= 4; ++l) {
-                        for (int i1 = 0; i1 <= 4; ++i1) {
-                            if ((l < 1 || i1 < 1 || l > 3 || i1 > 3) && this.canTeleportToBlock(new BlockPos(i + l, k - 1, j + i1))) {
-                                this.entity.setLocationAndAngles(((float) (i + l) + 0.5F), k, ((float) (j + i1) + 0.5F), this.entity.rotationYaw, this.entity.rotationPitch);
+                    for (int dX = 0; dX <= 4; ++dX) {
+                        for (int dZ = 0; dZ <= 4; ++dZ) {
+                            if ((dX < 1 || dZ < 1 || dX > 3 || dZ > 3) && this.canTeleportToBlock(new BlockPos(sX + dX, sY - 1, sZ + dZ))) {
+                                this.entity.setLocationAndAngles(((float) (sX + dX) + 0.5F), sY, ((float) (sZ + dZ) + 0.5F), this.entity.rotationYaw, this.entity.rotationPitch);
                                 this.navigator.clearPath();
                                 return;
                             }
