@@ -50,7 +50,7 @@ public abstract class VampirismVillageEvent extends Event {
     }
 
     public World getWorld() {
-        return this.totem.getWorld();
+        return this.totem.getTileWorld();
     }
 
     /**
