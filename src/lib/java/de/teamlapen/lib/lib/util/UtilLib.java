@@ -778,4 +778,8 @@ public class UtilLib {
         LOGGER.warn("Could not determine color of {}", item.getRegistryName());
         return null;
     }
+
+    public static boolean isValidResourceLocation(String loc) {
+        return ResourceLocation.tryCreate(loc) != null;
+    }
 }
