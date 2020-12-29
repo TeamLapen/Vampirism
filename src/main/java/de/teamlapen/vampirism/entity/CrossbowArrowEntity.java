@@ -96,6 +96,7 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
         }
     }
 
+    @Nonnull
     @Override
     protected ItemStack getArrowStack() {
         return arrowStack;

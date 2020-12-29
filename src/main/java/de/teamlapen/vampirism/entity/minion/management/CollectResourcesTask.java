@@ -39,7 +39,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     /**
      * @param faction If given, only available to this faction
      */
-    public CollectResourcesTask(@Nullable IPlayableFaction<?> faction, Function<Q, Integer> coolDownSupplier, List<WeightedRandomItem<ItemStack>> resources) {
+    public CollectResourcesTask(@Nullable IPlayableFaction<?> faction, @Nonnull Function<Q, Integer> coolDownSupplier, @Nonnull List<WeightedRandomItem<ItemStack>> resources) {
         this.coolDownSupplier = coolDownSupplier;
         this.resources = resources;
         this.faction = faction;

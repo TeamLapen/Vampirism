@@ -135,6 +135,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
                 buffer.writeBoolean(true);
                 recipe.fluid.left().get().write(buffer);
             } else {
+                assert recipe.fluid.right().isPresent();
                 buffer.writeBoolean(false);
                 recipe.fluid.right().get().writeToPacket(buffer);
             }

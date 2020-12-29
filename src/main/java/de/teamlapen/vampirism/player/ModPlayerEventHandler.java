@@ -393,8 +393,8 @@ public class ModPlayerEventHandler {
         //cancel the event and notify client about the failed block destroy.
         //also notify client about wrong destroyed neighbor blocks (bed)
         if (totemPos != null && event.getWorld().isBlockLoaded(totemPos)) {
-            TotemTileEntity totem = ((TotemTileEntity) event.getWorld().getTileEntity(totemPos));
-            if (totem.getControllingFaction() != null && VampirismAPI.getFactionPlayerHandler(event.getPlayer()).map(player -> player.getCurrentFaction() != totem.getControllingFaction()).orElse(true)) {
+            TileEntity totem = (event.getWorld().getTileEntity(totemPos));
+            if (totem instanceof TotemTileEntity && ((TotemTileEntity) totem).getControllingFaction() != null && VampirismAPI.getFactionPlayerHandler(event.getPlayer()).map(player -> player.getCurrentFaction() != ((TotemTileEntity) totem).getControllingFaction()).orElse(true)) {
                 event.setCanceled(true);
                 event.getPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.village.totem_destroy.fail_totem_faction"), true);
                 if (!positions.isEmpty()) {

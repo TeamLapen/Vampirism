@@ -82,7 +82,7 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
-        read(world.getBlockState(packet.getPos()), packet.getNbtCompound());
+        if (hasWorld()) read(world.getBlockState(packet.getPos()), packet.getNbtCompound());
     }
 
     @Override

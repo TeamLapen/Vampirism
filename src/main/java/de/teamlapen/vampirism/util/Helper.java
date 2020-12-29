@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
@@ -17,6 +18,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.tileentity.TotemHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -35,6 +37,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,13 +47,14 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 
 public class Helper {
 
 
     private final static Logger LOGGER = LogManager.getLogger();
-
+    private final static ResourceLocation EMPTY_ID = new ResourceLocation("null", "null");
     private static Method reflectionMethodExperiencePoints;
 
     /**
@@ -213,7 +217,7 @@ public class Helper {
         if (usingFaction != null && !playerHandler.isInFaction(usingFaction)) return false;
         if (playerHandler.getCurrentLevel() < reqLevel) return false;
         if (requiredSkill == null) return true;
-        return playerHandler.getCurrentFactionPlayer().map(fp -> fp.getSkillHandler()).map(s -> s.isSkillEnabled(requiredSkill)).orElse(false);
+        return playerHandler.getCurrentFactionPlayer().map(ISkillPlayer::getSkillHandler).map(s -> s.isSkillEnabled(requiredSkill)).orElse(false);
     }
 
     public static int getExperiencePoints(LivingEntity entity, PlayerEntity player) {
@@ -225,7 +229,7 @@ public class Helper {
         } catch (Exception e) {
             LOGGER.error("Failed to get experience points", e);
         }
-        return 0;
+        return 3; //return at least some XP points if there is an issue
     }
 
     /**
@@ -244,6 +248,25 @@ public class Helper {
             }
         }
         return false;
+    }
+
+    public static <T extends Entity> Optional<T> createEntity(@Nonnull EntityType<T> type, @Nonnull World world) {
+        T e = type.create(world);
+        if (e == null) {
+            LOGGER.warn("Failed to create entity of type {}", type.getRegistryName());
+            return Optional.empty();
+        }
+        return Optional.of(e);
+    }
+
+    @Nonnull
+    public static ResourceLocation getIDSafe(ForgeRegistryEntry<?> registryObject) {
+        ResourceLocation id = registryObject.getRegistryName();
+        if (id == null) {
+            LOGGER.warn("RegistryName not set for {}", registryObject);
+            return EMPTY_ID;
+        }
+        return id;
     }
 
 }

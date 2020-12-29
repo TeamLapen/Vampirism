@@ -43,7 +43,7 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
         int y = 40;
         minecraft.fontRenderer.func_243248_b(stack, task.getTranslation(), 1, 1, Color.gray.getRGB());
         IPlayableFaction<?> f = task.getFaction();
-        ITextComponent taskmasterComponent = f == null ? new TranslationTextComponent("text.vampirism.faction_representative") : new TranslationTextComponent(f.getVillageData().getTaskMasterEntity().getTranslationKey());
+        ITextComponent taskmasterComponent = f == null || f.getVillageData().getTaskMasterEntity() == null ? new TranslationTextComponent("text.vampirism.faction_representative") : new TranslationTextComponent(f.getVillageData().getTaskMasterEntity().getTranslationKey());
         ITextComponent text = new TranslationTextComponent("text.vampirism.task.reward_obtain", taskmasterComponent);
         y += UtilLib.renderMultiLine(minecraft.fontRenderer, stack, text, 160, x, y, Color.gray.getRGB());
 

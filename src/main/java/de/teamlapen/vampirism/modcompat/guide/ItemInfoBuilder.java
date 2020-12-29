@@ -6,6 +6,7 @@ import de.maxanier.guideapi.api.util.PageHelper;
 import de.maxanier.guideapi.entry.EntryItemStack;
 import de.maxanier.guideapi.page.PageBrewingRecipe;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,7 +28,7 @@ public class ItemInfoBuilder {
     public static ItemInfoBuilder create(Item... items) {
         assert items.length > 0;
         Item i0 = items[0];
-        String name = i0 instanceof IItemWithTier ? ((IItemWithTier) i0).getBaseRegName() : i0.getRegistryName().getPath();
+        String name = i0 instanceof IItemWithTier ? ((IItemWithTier) i0).getBaseRegName() : Helper.getIDSafe(i0).getPath();
         return new ItemInfoBuilder(Ingredient.fromItems(items), new ItemStack(i0), name, false);
     }
 
@@ -45,7 +46,7 @@ public class ItemInfoBuilder {
         assert stacks.length > 0;
         ItemStack i0 = stacks[0];
         Item item = i0.getItem();
-        String name = item instanceof IItemWithTier ? ((IItemWithTier) item).getBaseRegName() : item.getRegistryName().getPath();
+        String name = item instanceof IItemWithTier ? ((IItemWithTier) item).getBaseRegName() : Helper.getIDSafe(item).getPath();
         return new ItemInfoBuilder(Ingredient.fromStacks(stacks), i0, name, block);
     }
 
@@ -55,7 +56,7 @@ public class ItemInfoBuilder {
     public static ItemInfoBuilder create(Block... blocks) {
         assert blocks.length > 0;
         Block i0 = blocks[0];
-        String name = i0.getRegistryName().getPath();
+        String name = Helper.getIDSafe(i0).getPath();
         return new ItemInfoBuilder(Ingredient.fromItems(blocks), new ItemStack(i0), name, true);
     }
 
@@ -121,9 +122,8 @@ public class ItemInfoBuilder {
      * Builds the entry and adds it to the given map
      */
     public void build(Map<ResourceLocation, EntryAbstract> entries) {
-        ArrayList<IPage> pages = new ArrayList<>();
         String base = "guide.vampirism." + (block ? "blocks" : "items") + "." + name;
-        pages.addAll(PageHelper.pagesForLongText(GuideBook.translateComponent(base + ".text", formats), ingredient));
+        ArrayList<IPage> pages = new ArrayList<>(PageHelper.pagesForLongText(GuideBook.translateComponent(base + ".text", formats), ingredient));
         for (ResourceLocation id : recipes) {
             pages.add(GuideHelper.getRecipePage(id));
         }

@@ -151,7 +151,7 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        handleUpdateTag(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
+        if (hasWorld()) handleUpdateTag(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
     }
 
     @Nonnull

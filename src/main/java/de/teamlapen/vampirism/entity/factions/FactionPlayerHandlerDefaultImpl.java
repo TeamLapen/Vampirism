@@ -16,6 +16,7 @@ import java.util.Optional;
 /**
  * Default Implementation of {@link IFactionPlayerHandler} for the entity capability which is never used, since a default implementation, does not accept constructor parameter.
  */
+@SuppressWarnings("ConstantConditions")
 @Deprecated
 class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
 

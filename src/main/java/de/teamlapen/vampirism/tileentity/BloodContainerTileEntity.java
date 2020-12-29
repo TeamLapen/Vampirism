@@ -85,9 +85,11 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         FluidStack old = tank.getFluid();
-        this.read(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
-        if (!old.isEmpty() && !old.isFluidStackIdentical(tank.getFluid()) || old.isEmpty() && !tank.getFluid().isEmpty()) {
-            markDirty();
+        if (hasWorld()) {
+            this.read(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
+            if (!old.isEmpty() && !old.isFluidStackIdentical(tank.getFluid()) || old.isEmpty() && !tank.getFluid().isEmpty()) {
+                markDirty();
+            }
         }
     }
 

@@ -16,6 +16,7 @@ import java.util.function.Predicate;
 /**
  * * Default Implementation of {@link IHunterPlayer} for the entity capability which is never used, since a default implementation, does not accept constructor parameter.
  */
+@SuppressWarnings("ConstantConditions")
 @Deprecated
 class HunterPlayerDefaultImpl implements IHunterPlayer {
 

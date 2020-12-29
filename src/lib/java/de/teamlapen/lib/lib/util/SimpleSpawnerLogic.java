@@ -72,7 +72,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
     }
 
     public boolean setDelayToMin(int id) {
-        if (id == 1 && this.world.isRemote) {
+        if (id == 1 && (this.world == null || this.world.isRemote)) {
             this.spawnDelay = this.minSpawnDelay;
             return true;
         } else {
@@ -80,7 +80,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
         }
     }
 
-    public void setWorld(World worldIn) {
+    public void setWorld(@Nullable World worldIn) {
         this.world = worldIn;
     }
 
@@ -211,6 +211,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
     }
 
     protected AxisAlignedBB getSpawningBox() {
+        if (this.pos == null) return AxisAlignedBB.withSizeAtOrigin(0, 0, 0);
         return (new AxisAlignedBB(this.pos.getX(), this.pos.getY(), this.pos.getZ(), this.pos.getX() + 1, this.pos.getY() + 1, this.pos.getZ() + 1)).grow(this.spawnRange, this.spawnRange, this.spawnRange);
 
     }
@@ -229,7 +230,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
             this.spawnDelay = this.minSpawnDelay;
         } else {
             int i = this.maxSpawnDelay - this.minSpawnDelay;
-            this.spawnDelay = this.minSpawnDelay + this.world.rand.nextInt(i);
+            this.spawnDelay = this.minSpawnDelay + (this.world == null ? 0 : this.world.rand.nextInt(i));
         }
     }
 }

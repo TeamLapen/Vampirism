@@ -216,7 +216,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
+        if (this.hasWorld()) this.read(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
     }
 
     /**

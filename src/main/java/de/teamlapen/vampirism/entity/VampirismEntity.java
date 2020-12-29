@@ -14,7 +14,10 @@ import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.tileentity.TotemHelper;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
-import net.minecraft.entity.*;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.Goal;
@@ -325,14 +328,16 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
                     }
                 }
                 if (convert) {
-                    EntityType t = getIMobTypeOpt(!current);
-                    Entity newEntity = t.create(this.world);
-                    CompoundNBT nbt = new CompoundNBT();
-                    this.writeWithoutTypeId(nbt);
-                    newEntity.read(nbt);
-                    newEntity.setUniqueId(MathHelper.getRandomUUID(this.rand));
-                    this.remove();
-                    this.world.addEntity(newEntity);
+                    EntityType<?> t = getIMobTypeOpt(!current);
+                    Helper.createEntity(t, this.world).ifPresent(newEntity -> {
+                        CompoundNBT nbt = new CompoundNBT();
+                        this.writeWithoutTypeId(nbt);
+                        newEntity.read(nbt);
+                        newEntity.setUniqueId(MathHelper.getRandomUUID(this.rand));
+                        this.remove();
+                        this.world.addEntity(newEntity);
+                    });
+
                 }
             }
         }

@@ -23,6 +23,7 @@ import java.util.function.Predicate;
 /**
  * Default Implementation of {@link IVampirePlayer} for the entity capability which is never used, since a default implementation, does not accept constructor parameter.
  */
+@SuppressWarnings("ConstantConditions")
 @Deprecated
 class VampirePlayerDefaultImpl implements IVampirePlayer {
 

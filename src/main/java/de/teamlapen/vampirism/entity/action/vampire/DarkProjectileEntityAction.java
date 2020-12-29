@@ -20,7 +20,7 @@ public class DarkProjectileEntityAction<T extends CreatureEntity & IEntityAction
     public boolean activate(T entity) {
         LivingEntity shooter = entity.getRepresentingEntity();
 
-        Vector3d vec3dd = new Vector3d(entity.getAttackTarget().getPosX() - entity.getPosX(), entity.getAttackTarget().getPosY() - entity.getPosY(), entity.getAttackTarget().getPosZ() - entity.getPosZ());
+        Vector3d vec3dd = entity.getAttackTarget() != null ? new Vector3d(entity.getAttackTarget().getPosX() - entity.getPosX(), entity.getAttackTarget().getPosY() - entity.getPosY(), entity.getAttackTarget().getPosZ() - entity.getPosZ()) : Vector3d.ZERO;
         vec3dd.normalize();
 
         DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(shooter.getEntityWorld(), shooter.getPosX() + vec3dd.x * 1.0f, shooter.getPosY() + shooter.getEyeHeight() * 0.9f, shooter.getPosZ() + vec3dd.z * 1.0f, vec3dd.x, vec3dd.y, vec3dd.z);

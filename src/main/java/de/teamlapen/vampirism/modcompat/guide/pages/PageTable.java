@@ -114,6 +114,7 @@ public class PageTable extends Page {
             for (int i = 0; i < strings.length; i++) {
                 loc[i] = UtilLib.translate(strings[i]);
             }
+            //noinspection ConfusingArgumentToVarargsMethod
             return addLine(loc);
         }
 

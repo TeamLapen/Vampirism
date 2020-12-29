@@ -1044,7 +1044,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.handleUpdateTag(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
+        if (hasWorld()) this.handleUpdateTag(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
     }
 
     @OnlyIn(Dist.CLIENT)

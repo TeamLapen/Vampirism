@@ -83,6 +83,6 @@ public class VampireBookManager {
             CompoundNBT nbt = JsonToNBT.getTagFromJson(line);
             books.add(nbt);
         }
-        bookTags = books.toArray(new CompoundNBT[books.size()]);
+        bookTags = books.toArray(new CompoundNBT[0]);
     }
 }

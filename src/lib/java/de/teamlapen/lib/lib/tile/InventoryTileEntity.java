@@ -71,6 +71,7 @@ public abstract class InventoryTileEntity extends LockableTileEntity implements 
 
     @Override
     public boolean isUsableByPlayer(PlayerEntity player) {
+        if (!hasWorld()) return false;
         if (this.world.getTileEntity(this.pos) != this) {
             return false;
         } else {

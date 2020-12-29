@@ -162,7 +162,9 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         CompoundNBT nbt = pkt.getNbtCompound();
-        handleUpdateTag(this.world.getBlockState(pkt.getPos()), nbt);
+        if (hasWorld()) {
+            handleUpdateTag(this.world.getBlockState(pkt.getPos()), nbt);
+        }
     }
 
     public void setOwnerID(PlayerEntity player) {

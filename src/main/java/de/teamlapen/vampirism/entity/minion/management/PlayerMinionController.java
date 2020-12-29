@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -190,17 +191,20 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         if (type == null) {
             LOGGER.warn("Cannot create minion because type does not exist");
         } else {
-            MinionEntity<?> m = type.create(p.getEntityWorld());
-            if (faction == null || faction.isEntityOfFaction(m)) {
-                LOGGER.warn("Specified minion entity is of wrong faction. This: {} Minion: {}", faction, m.getFaction());
-                m.remove();
-            } else {
-                m.claimMinionSlot(id, this);
-                m.copyLocationAndAnglesFrom(p);
-                p.world.addEntity(m);
-                activateTask(id, MinionTasks.stay);
-                return m;
-            }
+            return Helper.createEntity(type, p.getEntityWorld()).map(m -> {
+                if (faction == null || faction.isEntityOfFaction(m)) {
+                    LOGGER.warn("Specified minion entity is of wrong faction. This: {} Minion: {}", faction, m.getFaction());
+                    m.remove();
+                    return null;
+                } else {
+                    m.claimMinionSlot(id, this);
+                    m.copyLocationAndAnglesFrom(p);
+                    p.world.addEntity(m);
+                    activateTask(id, MinionTasks.stay);
+                    return m;
+                }
+            }).orElse(null);
+
 
         }
         return null;

@@ -44,6 +44,7 @@ public class DummyBittenAnimalEntity extends MobEntity {
                     entity = EntityType.COW.create(world);
                     break;
             }
+            if (entity == null) return;
             entity.copyLocationAndAnglesFrom(this);
             ExtendedCreature.getSafe(entity).ifPresent(e -> {
                 if (e.canBecomeVampire()) {

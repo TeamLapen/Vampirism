@@ -84,6 +84,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        if (!hasWorld()) return;
         FluidStack old = tank.getFluid();
         this.read(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
         if (!old.isFluidStackIdentical(tank.getFluid())) {

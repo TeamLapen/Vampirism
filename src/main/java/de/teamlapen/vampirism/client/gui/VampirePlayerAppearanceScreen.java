@@ -21,6 +21,7 @@ import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
 public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity> {
@@ -50,7 +51,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
     @Override
     protected void init() {
         super.init();
-        this.color = FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::getCurrentFaction).map(IPlayableFaction::getColor).orElse(Color.gray).getRGBColorComponents(null);
+        this.color = FactionPlayerHandler.getOpt(Minecraft.getInstance().player).resolve().flatMap(fhp -> Optional.ofNullable(fhp.getCurrentFaction())).map(IPlayableFaction::getColor).orElse(Color.gray).getRGBColorComponents(null);
 
 
         this.fangType = VampirePlayer.getOpt(this.minecraft.player).map(VampirePlayer::getFangType).orElse(0);

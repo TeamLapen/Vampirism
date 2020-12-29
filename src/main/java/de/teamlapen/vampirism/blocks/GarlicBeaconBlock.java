@@ -93,9 +93,9 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, @Nullable ItemStack stack) {
+    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
         super.harvestBlock(worldIn, player, pos, state, te, stack);
-        if (te != null && te instanceof GarlicBeaconTileEntity) {
+        if (te instanceof GarlicBeaconTileEntity) {
             ((GarlicBeaconTileEntity) te).onTouched(player);
         }
     }

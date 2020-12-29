@@ -43,6 +43,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * Advanced vampire. Is strong. Represents supporters
@@ -338,8 +339,8 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(+BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH_PL * l);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(+BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE_PL * l);
+        Objects.requireNonNull(this.getAttribute(SharedMonsterAttributes.MAX_HEALTH)).setBaseValue(+BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH_PL * l);
+        Objects.requireNonNull(this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)).setBaseValue(+BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE_PL * l);
 
     }
 

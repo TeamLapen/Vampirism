@@ -189,7 +189,6 @@ public class ModBlocks {
 
     @Nonnull
     private static BlockItem itemBlock(@Nonnull Block block, @Nonnull Item.Properties props) {
-        assert block != null;
         BlockItem item = new BlockItem(block, props);
         item.setRegistryName(block.getRegistryName());
         return item;

@@ -45,16 +45,16 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
         this.capacity = capacity;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public FluidStack drain(FluidStack resource, FluidAction action) {
         if (container.getCount() != 1 || resource == null || resource.getAmount() <= 0 || !ModFluids.blood.equals(resource.getFluid())) {
-            return null;
+            return FluidStack.EMPTY;
         }
         return drain(resource.getAmount(), action);
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
         int currentAmt = getBlood(container);

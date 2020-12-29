@@ -992,9 +992,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     int blood = 0;
 
                     FluidStack drainable = handler.drain(new FluidStack(ModFluids.blood, need * VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.SIMULATE);
-                    if (drainable != null && drainable.getAmount() >= VReference.FOOD_TO_FLUID_BLOOD) {
+                    if (drainable.getAmount() >= VReference.FOOD_TO_FLUID_BLOOD) {
                         FluidStack drained = handler.drain((drainable.getAmount() / VReference.FOOD_TO_FLUID_BLOOD) * VReference.FOOD_TO_FLUID_BLOOD, IFluidHandler.FluidAction.EXECUTE);
-                        if (drained != null) {
+                        if (!drained.isEmpty()) {
                             blood = drained.getAmount() / VReference.FOOD_TO_FLUID_BLOOD;
                         }
                     }

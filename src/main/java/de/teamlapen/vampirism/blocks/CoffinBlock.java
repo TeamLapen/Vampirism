@@ -145,12 +145,12 @@ public class CoffinBlock extends VampirismBlockContainer {
             if (!heldItem.isEmpty()) {
                 DyeColor color = heldItem.getItem() instanceof DyeItem ? ((DyeItem) heldItem.getItem()).getDyeColor() : UtilLib.getColorForItem(heldItem.getItem());
                 if (color != null) {
-                    CoffinTileEntity tile = (CoffinTileEntity) worldIn.getTileEntity(pos);
+                    TileEntity tile = worldIn.getTileEntity(pos);
                     TileEntity other = state.get(PART) == CoffinPart.HEAD ? worldIn.getTileEntity(pos.offset(state.get(HORIZONTAL_FACING).getOpposite())) : worldIn.getTileEntity(pos.offset(state.get(HORIZONTAL_FACING)));
-                    if (!(other instanceof CoffinTileEntity)) {
+                    if (!(tile instanceof CoffinTileEntity) || !(other instanceof CoffinTileEntity)) {
                         return ActionResultType.SUCCESS;
                     }
-                    tile.changeColor(color);
+                    ((CoffinTileEntity) tile).changeColor(color);
                     ((CoffinTileEntity) other).changeColor(color);
                     if (!player.abilities.isCreativeMode) {
                         heldItem.shrink(1);

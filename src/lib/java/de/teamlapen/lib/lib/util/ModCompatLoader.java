@@ -40,6 +40,7 @@ public class ModCompatLoader implements IInitListener {
         availableModCompats.add(compat);
     }
 
+    @Nullable
     public List<IModCompat> getAvailableModCompats() {
         return availableModCompats;
     }

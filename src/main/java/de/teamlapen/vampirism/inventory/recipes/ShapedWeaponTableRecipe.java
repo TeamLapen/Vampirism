@@ -167,15 +167,15 @@ public class ShapedWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRec
             String group = JSONUtils.getString(json, "group", "");
             Map<String, Ingredient> map = VampirismRecipeHelper.deserializeKey(JSONUtils.getJsonObject(json, "key"));
             String[] astring = VampirismRecipeHelper.shrink(VampirismRecipeHelper.patternFromJson(JSONUtils.getJsonArray(json, "pattern"), MAX_HEIGHT));
-            int height = astring[0].length();
+            int width = astring[0].length();
             int length = astring.length;
-            NonNullList<Ingredient> ingredients = VampirismRecipeHelper.deserializeIngredients(astring, map, height, length);
+            NonNullList<Ingredient> ingredients = VampirismRecipeHelper.deserializeIngredients(astring, map, width, length);
             ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(JSONUtils.getJsonObject(json, "result"), true);
             int level = JSONUtils.getInt(json, "level", 1);
             ISkill[] skill = VampirismRecipeHelper.deserializeSkills(JSONUtils.getJsonArray(json, "skill", null));
             int lava = JSONUtils.getInt(json, "lava", 0);
 
-            return new ShapedWeaponTableRecipe(recipeId, group, height, length, ingredients, result, level, skill, lava);
+            return new ShapedWeaponTableRecipe(recipeId, group, width, length, ingredients, result, level, skill, lava);
         }
 
         @Override

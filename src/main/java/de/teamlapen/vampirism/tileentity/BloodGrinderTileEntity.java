@@ -59,7 +59,6 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
         this.itemHandlerOptional = LazyOptional.of(() -> itemHandler);
     }
 
-    @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if ((side != Direction.DOWN) && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {

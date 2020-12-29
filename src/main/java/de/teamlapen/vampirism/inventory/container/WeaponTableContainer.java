@@ -230,7 +230,7 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     private void slotChangedCraftingGrid(World worldIn, PlayerEntity playerIn, HunterPlayer hunter, CraftingInventory craftMatrixIn, CraftResultInventory craftResultIn) {
         if (!worldIn.isRemote) {
             ServerPlayerEntity entityplayermp = (ServerPlayerEntity) playerIn;
-            Optional<IWeaponTableRecipe> optional = worldIn.getServer().getRecipeManager().getRecipe(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, craftMatrixIn, worldIn);
+            Optional<IWeaponTableRecipe> optional = worldIn.getServer() == null ? Optional.empty() : worldIn.getServer().getRecipeManager().getRecipe(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, craftMatrixIn, worldIn);
             this.missingLava = false;
             craftResultIn.setInventorySlotContents(0, ItemStack.EMPTY);
             if (optional.isPresent()) {

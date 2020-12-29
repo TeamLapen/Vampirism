@@ -184,6 +184,7 @@ public class UtilLib {
 
         BlockPos behind = getPositionBehindEntity(entity, 2);
         MobEntity e = toSpawn.create(entity.getEntityWorld());
+        if (e == null) return null;
         World world = entity.getEntityWorld();
         e.setPosition(behind.getX(), entity.getPosY(), behind.getZ());
 
@@ -646,13 +647,12 @@ public class UtilLib {
                 rotatedShapes.add(Block.makeCuboidShape(8 + z1, y1 * 16, 8 - x1, 8 + z2, y2 * 16, 8 - x2));
         });
 
-        return rotatedShapes.stream().reduce((v1, v2) -> {
-            return VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR);
-        }).get();
+        return rotatedShapes.stream().reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).orElseGet(() -> Block.makeCuboidShape(0, 0, 0, 16, 16, 16));
     }
 
     public static String aiTaskListToStringDebug(GoalSelector tasks) {
         Collection c = ObfuscationReflectionHelper.getPrivateValue(GoalSelector.class, tasks, "executingTaskEntries");
+        if (c == null) return "Null";
         Iterator var1 = c.iterator();
         if (!var1.hasNext()) {
             return "[]";

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.CreatureEntity;
@@ -30,7 +31,7 @@ public class EntityCommand extends BasicCommand {
         List<Entity> l = asPlayer.getEntityWorld().getEntitiesWithinAABBExcludingEntity(asPlayer, asPlayer.getBoundingBox().grow(3, 2, 3));
         for (Entity entity : l) {
             if (entity instanceof CreatureEntity) {
-                ResourceLocation id = entity.getType().getRegistryName();
+                ResourceLocation id = Helper.getIDSafe(entity.getType());
                 commandSource.sendFeedback(new StringTextComponent(id.toString()), true);
             } else {
                 commandSource.sendFeedback(new TranslationTextComponent("Not biteable %s", entity.getClass().getName()), true);

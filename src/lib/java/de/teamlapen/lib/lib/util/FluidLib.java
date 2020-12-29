@@ -46,8 +46,7 @@ public class FluidLib {
 
     public static int getFluidAmount(@Nonnull IFluidHandler handler, @Nullable Fluid f) {
         FluidStack s = f == null ? handler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE) : handler.drain(new FluidStack(f, Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
-        if (s != null) return s.getAmount();
-        return 0;
+        return s.getAmount();
     }
 
 

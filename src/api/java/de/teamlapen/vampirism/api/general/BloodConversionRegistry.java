@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.api.general;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import de.teamlapen.vampirism.api.VReference;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
@@ -108,12 +107,10 @@ public class BloodConversionRegistry {
             return false;
         } else {
             if (item.isFood() && item.getFood().isMeat()) {
-                int value = MathHelper.clamp(item.getRegistryName().getPath().contains("cooked") ? 0 : item.getFood().getHealing() / 2, 0, 5);
+                int value = MathHelper.clamp((item.getRegistryName() != null && item.getRegistryName().getPath().contains("cooked")) ? 0 : item.getFood().getHealing() / 2, 0, 5);
                 if (value > 0) {
                     items_calculated.put(item.getRegistryName(), value);
                     return true;
-                } else {
-
                 }
             }
             items_blacklist.add(item.getRegistryName());

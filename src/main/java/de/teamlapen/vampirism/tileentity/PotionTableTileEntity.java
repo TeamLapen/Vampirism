@@ -219,6 +219,7 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
 
     @Override
     public boolean isUsableByPlayer(PlayerEntity player) {
+        if (!hasWorld()) return false;
         if (this.world.getTileEntity(this.pos) != this) {
             return false;
         } else {
@@ -274,7 +275,7 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
         }
 
         //Periodically update table capabilities if player is loaded
-        if (ownerID != null && this.world.getGameTime() % 64 == 0) {
+        if (ownerID != null && this.hasWorld() && this.world.getGameTime() % 64 == 0) {
             PlayerEntity owner = this.world.getPlayerByUuid(ownerID);
             if (owner != null) HunterPlayer.getOpt(owner).ifPresent(this.config::deriveFromHunter);
         }

@@ -22,7 +22,7 @@ public class DefendVillageGoal<T extends CreatureEntity & IVillageCaptureEntity>
         this.entityPredicate = new EntityPredicate() {
             @Override
             public boolean canTarget(@Nullable LivingEntity attackEntity, LivingEntity targetEntity) {
-                if (creature.getCaptureInfo().shouldForceTargets() && getTargetDistance() > 0) {
+                if (creature.getCaptureInfo() != null && creature.getCaptureInfo().shouldForceTargets() && getTargetDistance() > 0) {
                     setDistance(-1.0D);
                 } else if (getTargetDistance() < 0) {
                     setDistance(distance);

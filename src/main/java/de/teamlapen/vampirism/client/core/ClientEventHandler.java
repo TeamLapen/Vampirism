@@ -156,7 +156,7 @@ public class ClientEventHandler {
     @SubscribeEvent
     public void onGuiInit(GuiScreenEvent.InitGuiEvent.Pre event) {
         if (event.getGui() instanceof WorldSelectionScreen) {
-            if (DynamicRegistries.func_239770_b_().func_230521_a_(Registry.BIOME_KEY).get().getValueForKey(ModBiomes.VAMPIRE_FOREST_KEY) == null) {
+            if (DynamicRegistries.func_239770_b_().func_230521_a_(Registry.BIOME_KEY).map(r -> r.getValueForKey(ModBiomes.VAMPIRE_FOREST_KEY)).orElse(null) == null) {
                 if (!skipOptifineWarningOnce) {
                     event.setCanceled(true);
                     Minecraft.getInstance().displayGuiScreen(new OptifineWarningScreen(event.getGui()));

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -108,10 +109,11 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<SheepEntity> i
 
         @Override
         public ConvertedCreatureEntity createFrom(SheepEntity entity) {
-            ConvertedSheepEntity creature = ModEntities.converted_sheep.create(entity.getEntityWorld());
-            this.copyImportantStuff(creature, entity);
-            creature.setSheared(entity.getSheared());
-            return creature;
+            return Helper.createEntity(ModEntities.converted_sheep, entity.getEntityWorld()).map(creature -> {
+                this.copyImportantStuff(creature, entity);
+                creature.setSheared(entity.getSheared());
+                return creature;
+            }).orElse(null);
         }
     }
 

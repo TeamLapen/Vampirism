@@ -52,8 +52,10 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
     @Override
     public void markDirty() {
         super.markDirty();
-        BlockState state = world.getBlockState(pos);
-        this.world.notifyBlockUpdate(pos, state, state, 3);
+        if (hasWorld()) {
+            BlockState state = world.getBlockState(pos);
+            this.world.notifyBlockUpdate(pos, state, state, 3);
+        }
     }
 
     @Override
@@ -80,8 +82,10 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        CompoundNBT nbt = pkt.getNbtCompound();
-        handleUpdateTag(this.world.getBlockState(pkt.getPos()), nbt);
+        if (hasWorld()) {
+            CompoundNBT nbt = pkt.getNbtCompound();
+            handleUpdateTag(this.world.getBlockState(pkt.getPos()), nbt);
+        }
     }
 
     @Override
@@ -138,7 +142,7 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
 
 
     private void register() {
-        if (registered) {
+        if (registered || !hasWorld()) {
             return;
         }
         int baseX = (getPos().getX() >> 4);
@@ -172,7 +176,7 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
     }
 
     private void unregister() {
-        if (registered) {
+        if (registered && hasWorld()) {
             VampirismAPI.getGarlicChunkHandler(getWorld().getDimensionKey()).removeGarlicBlock(id);
             registered = false;
         }

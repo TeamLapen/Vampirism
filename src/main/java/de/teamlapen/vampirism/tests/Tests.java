@@ -128,7 +128,7 @@ public class Tests {
                     failed = true;
                 }
             } catch (IllegalAccessException e) {
-                LOGGER.error(String.format("Failed to check fields of class {}", clazz.getName()), e);
+                LOGGER.error(String.format("Failed to check fields of class %s", clazz.getName()), e);
                 return false;
             }
 

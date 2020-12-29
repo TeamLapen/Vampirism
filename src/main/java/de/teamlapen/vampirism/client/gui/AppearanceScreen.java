@@ -73,7 +73,8 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
         }));
         if (this.backScreen != null) {
             this.addButton(new Button(this.guiLeft + 10, this.guiTop + 152, 80, 20, new TranslationTextComponent("gui.back"), (context) -> {
-                this.minecraft.displayGuiScreen(this.backScreen);
+
+                if (this.minecraft != null) this.minecraft.displayGuiScreen(this.backScreen);
             }));
         }
     }
