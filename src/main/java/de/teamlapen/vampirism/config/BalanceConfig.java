@@ -3,8 +3,13 @@ package de.teamlapen.vampirism.config;
 
 import de.teamlapen.vampirism.api.VReference;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.ModList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class BalanceConfig {
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     //GENERAL
     public final ForgeConfigSpec.IntValue hunterTentDistance;
@@ -109,6 +114,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vpSundamage;
     public final ForgeConfigSpec.IntValue vpSundamageWaterBlocks;
     public final ForgeConfigSpec.DoubleValue vpFireVulnerabilityMaxMod;
+    public final ForgeConfigSpec.BooleanValue vpFireResistanceReplace;
 
     public final ForgeConfigSpec.IntValue vaFreezeCooldown;
     public final ForgeConfigSpec.BooleanValue vaFreezeEnabled;
@@ -156,6 +162,12 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue mbAdvancedVampireSpawnChance;
 
     BalanceConfig(ForgeConfigSpec.Builder builder) {
+        boolean iceAndFire = ModList.get().isLoaded("iceandfire");
+        if (iceAndFire) {
+            LOGGER.info("IceAndFire is loaded -> Adjusting default fire related configuration.");
+        }
+
+
         builder.comment("A ton of options which allow you to balance the mod to your desire");
         builder.push("balance");
 
@@ -289,7 +301,8 @@ public class BalanceConfig {
         vpSundamageNauseaMinLevel = builder.defineInRange("sundamageNauseaMinLevel", 3, 1, Integer.MAX_VALUE);
         vpSundamageWeaknessMinLevel = builder.defineInRange("sundamageWeaknessMinLevel", 2, 1, Integer.MAX_VALUE);
         vpSundamageWaterBlocks = builder.defineInRange("sundamageWaterblocks", 4, 1, 10);
-        vpFireVulnerabilityMaxMod = builder.defineInRange("fireVulnerabilityMod", 3d, 0.1, Double.MAX_VALUE);
+        vpFireVulnerabilityMaxMod = builder.comment("Multiply fire damage with this for vampires" + (iceAndFire ? " - Changed due to IceAndFire" : "")).defineInRange("fireVulnerabilityMod", iceAndFire ? 1.5d : 3d, 0.1, Double.MAX_VALUE);
+        vpFireResistanceReplace = builder.comment("Whether to replace the vanilla fire resistance potion for vampires with a custom one that only reduces damage but does not remove it" + (iceAndFire ? " - Changed due to IceAndFire" : "")).define("fireResistanceReplace", !iceAndFire);
         builder.pop();
 
         //Vampire actions
