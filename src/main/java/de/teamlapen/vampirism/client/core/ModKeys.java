@@ -42,6 +42,10 @@ import javax.annotation.Nullable;
 public class ModKeys {
 
     private static final Logger LOGGER = LogManager.getLogger(ModKeys.class);
+    /**
+     * Time between multiple action button presses in ms
+     */
+    private static final long ACTION_BUTTON_COOLDOWN = 500;
 
     private static final String CATEGORY = "keys.vampirism.category";
     private static final String SUCK_BLOOD = "keys.vampirism.suck";
@@ -96,6 +100,9 @@ public class ModKeys {
     }
 
     private boolean suckKeyDown = false;
+    private long lastAction1Trigger = 0;
+    private long lastAction2Trigger = 0;
+
 
     private ModKeys() {
 
@@ -134,15 +141,25 @@ public class ModKeys {
         } else if (keyPressed == KEY.VISION) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.VAMPIRE_VISION_TOGGLE, ""));
         } else if (keyPressed == KEY.ACTION1) {
-            PlayerEntity player = Minecraft.getInstance().player;
-            if (player.isAlive()) {
-                FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction1())));
+            long t = System.currentTimeMillis();
+            if (t - lastAction1Trigger > ACTION_BUTTON_COOLDOWN) {
+                lastAction1Trigger = System.currentTimeMillis();
+                PlayerEntity player = Minecraft.getInstance().player;
+                if (player.isAlive()) {
+                    FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction1())));
+                }
             }
+
         } else if (keyPressed == KEY.ACTION2) {
-            PlayerEntity player = Minecraft.getInstance().player;
-            if (player.isAlive()) {
-                FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction2())));
+            long t = System.currentTimeMillis();
+            if (t - lastAction2Trigger > ACTION_BUTTON_COOLDOWN) {
+                lastAction2Trigger = System.currentTimeMillis();
+                PlayerEntity player = Minecraft.getInstance().player;
+                if (player.isAlive()) {
+                    FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction2())));
+                }
             }
+
         } else if (keyPressed == KEY.MINION) {
             if (FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
                 Minecraft.getInstance().displayGuiScreen(new SelectMinionTaskScreen());
