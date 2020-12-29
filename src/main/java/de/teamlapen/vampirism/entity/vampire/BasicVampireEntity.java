@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -155,7 +156,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         }
 
         if (this.ticksExisted % 9 == 3) {
-            if (this.isPotionActive(Effects.FIRE_RESISTANCE)) {
+            if (VampirismConfig.BALANCE.vpFireResistanceReplace.get() && this.isPotionActive(Effects.FIRE_RESISTANCE)) {
                 EffectInstance fireResistance = this.removeActivePotionEffect(Effects.FIRE_RESISTANCE);
                 assert fireResistance != null;
                 onFinishedPotionEffect(fireResistance);
