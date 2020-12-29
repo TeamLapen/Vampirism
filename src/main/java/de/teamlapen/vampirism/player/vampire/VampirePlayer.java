@@ -706,7 +706,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
                 }
 
-                if (player.ticksExisted % 9 == 3 && player.isPotionActive(Effects.FIRE_RESISTANCE)) {
+                if (player.ticksExisted % 9 == 3 && VampirismConfig.BALANCE.vpFireResistanceReplace.get() && player.isPotionActive(Effects.FIRE_RESISTANCE)) {
                     EffectInstance fireResistance = player.getActivePotionEffect(Effects.FIRE_RESISTANCE);
                     player.addPotionEffect(new EffectInstance(ModEffects.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
                     player.removePotionEffect(Effects.FIRE_RESISTANCE);
