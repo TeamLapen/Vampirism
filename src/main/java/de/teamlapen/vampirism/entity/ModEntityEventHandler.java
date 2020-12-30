@@ -42,6 +42,7 @@ import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.village.PointOfInterest;
@@ -62,6 +63,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -76,6 +79,7 @@ public class ModEntityEventHandler {
     private boolean warnAboutCreeper = true;
     private boolean warnAboutZombie = true;
     private boolean warnAboutGolem = true;
+    private final Set<ResourceLocation> unknownZombies = new HashSet<>();
 
     @SubscribeEvent
     public void onAttachCapabilityEntity(AttachCapabilitiesEvent<Entity> event) {
@@ -199,7 +203,11 @@ public class ModEntityEventHandler {
                         } else if (type == EntityType.DROWNED) {
                             ((DrownedEntity) event.getEntity()).targetSelector.addGoal(2, new NearestAttackableTargetGoal<>((DrownedEntity) event.getEntity(), PlayerEntity.class, 10, true, false, entity -> ((DrownedEntity) event.getEntity()).shouldAttack(entity) && !Helper.isVampire(entity)));
                         } else if (type != EntityType.ZOMBIFIED_PIGLIN) {//Don't change zombified piglin as they are similar to pigmen
-                            LOGGER.warn("Unknown zombie entity type {} for zombie target task", type.getName());
+                            ResourceLocation unknownTypeId = Helper.getIDSafe(type);
+                            if (!unknownZombies.contains(unknownTypeId)) {
+                                LOGGER.info("Unknown zombie entity type {} for zombie target task", unknownTypeId.toString());
+                                unknownZombies.add(unknownTypeId);
+                            }
                         }
                     } else {
                         if (warnAboutZombie) {
