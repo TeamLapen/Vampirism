@@ -92,6 +92,7 @@
   "gui.vampirism.appearance": "Change your appearance",
   "gui.vampirism.appearance.fang": "Fang type",
   "gui.vampirism.appearance.eye": "Eye type",
+  "gui.vampirism.appearance.glowing_eye": "Glowing eyes",
   "gui.vampirism.taskmaster.item_req": "Items to acquire",
   "gui.vampirism.taskmaster.entity_req": "Entities to kill",
   "gui.vampirism.taskmaster.entity_tag_req": "Entity types to kill",

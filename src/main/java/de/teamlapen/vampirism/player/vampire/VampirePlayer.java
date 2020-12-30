@@ -1062,6 +1062,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             this.setFangType(data[0]);
             if (data.length > 1) {
                 this.setEyeType(data[1]);
+                if (data.length > 2) {
+                    this.setGlowingEyes(data[2] > 0);
+                }
             }
         }
     }
