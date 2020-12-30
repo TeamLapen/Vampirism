@@ -37,8 +37,8 @@
     },
     {
       "when": {
-        "facing": "north",
-        "variant": "complete|potion|potion_cauldron|weapon_potion"
+        "variant": "potion_cauldron|weapon_potion|potion|complete",
+        "facing": "north"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_bottle"
@@ -46,8 +46,8 @@
     },
     {
       "when": {
-        "facing": "east",
-        "variant": "complete|potion|potion_cauldron|weapon_potion"
+        "variant": "potion_cauldron|weapon_potion|potion|complete",
+        "facing": "east"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_bottle",
@@ -56,8 +56,8 @@
     },
     {
       "when": {
-        "facing": "south",
-        "variant": "complete|potion|potion_cauldron|weapon_potion"
+        "variant": "potion_cauldron|weapon_potion|potion|complete",
+        "facing": "south"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_bottle",
@@ -66,8 +66,8 @@
     },
     {
       "when": {
-        "facing": "west",
-        "variant": "complete|potion|potion_cauldron|weapon_potion"
+        "variant": "potion_cauldron|weapon_potion|potion|complete",
+        "facing": "west"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_bottle",
@@ -76,8 +76,8 @@
     },
     {
       "when": {
-        "facing": "north",
-        "variant": "cauldron|weapon_cauldron|complete|potion_cauldron"
+        "variant": "cauldron|potion_cauldron|weapon_cauldron|complete",
+        "facing": "north"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_garlic"
@@ -85,8 +85,8 @@
     },
     {
       "when": {
-        "facing": "east",
-        "variant": "cauldron|weapon_cauldron|complete|potion_cauldron"
+        "variant": "cauldron|potion_cauldron|weapon_cauldron|complete",
+        "facing": "east"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_garlic",
@@ -95,8 +95,8 @@
     },
     {
       "when": {
-        "facing": "south",
-        "variant": "cauldron|weapon_cauldron|complete|potion_cauldron"
+        "variant": "cauldron|potion_cauldron|weapon_cauldron|complete",
+        "facing": "south"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_garlic",
@@ -105,8 +105,8 @@
     },
     {
       "when": {
-        "facing": "west",
-        "variant": "cauldron|weapon_cauldron|complete|potion_cauldron"
+        "variant": "cauldron|potion_cauldron|weapon_cauldron|complete",
+        "facing": "west"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_garlic",
@@ -115,8 +115,8 @@
     },
     {
       "when": {
-        "facing": "north",
-        "variant": "weapon_cauldron|complete|weapon|weapon_potion"
+        "variant": "weapon_potion|weapon|weapon_cauldron|complete",
+        "facing": "north"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_hammer"
@@ -124,8 +124,8 @@
     },
     {
       "when": {
-        "facing": "east",
-        "variant": "weapon_cauldron|complete|weapon|weapon_potion"
+        "variant": "weapon_potion|weapon|weapon_cauldron|complete",
+        "facing": "east"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_hammer",
@@ -134,8 +134,8 @@
     },
     {
       "when": {
-        "facing": "south",
-        "variant": "weapon_cauldron|complete|weapon|weapon_potion"
+        "variant": "weapon_potion|weapon|weapon_cauldron|complete",
+        "facing": "south"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_hammer",
@@ -144,8 +144,8 @@
     },
     {
       "when": {
-        "facing": "west",
-        "variant": "weapon_cauldron|complete|weapon|weapon_potion"
+        "variant": "weapon_potion|weapon|weapon_cauldron|complete",
+        "facing": "west"
       },
       "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_hammer",
