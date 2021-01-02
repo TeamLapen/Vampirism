@@ -184,8 +184,8 @@ public class RenderHandler {
 
             boolean flag = true;
             if (entity instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) entity)) flag = false;
-
-            if (mc.player.getDistanceSq(entity) > VampirismConfig.BALANCE.vsBloodVisionDistSQ.get()) {
+            double dist = mc.player.getDistanceSq(entity);
+            if (dist > VampirismConfig.BALANCE.vsBloodVisionDistanceSq.get()) {
                 flag = false;
             }
             if (flag) {

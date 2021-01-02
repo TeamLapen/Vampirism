@@ -280,7 +280,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             protectionMod = amplifier >= 5 ? 0 : 1F / (2F + amplifier);
         }
 
-        return amount * protectionMod * (float) LevelAttributeModifier.calculateModifierValue(getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpFireVulnerabilityMaxMod.get(), 0.5);
+        return amount * protectionMod * (float) LevelAttributeModifier.calculateModifierValue(getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpFireVulnerabilityMod.get(), 0.5);
     }
 
     @Override

@@ -99,7 +99,7 @@ public class Helper {
                     BlockState state = world.getBlockState(blockpos);
                     if (state.getMaterial().isLiquid()) { // if fluid than it propagates the light until `vpSundamageWaterBlocks`
                         liquidBlocks++;
-                        if (liquidBlocks >= VampirismConfig.BALANCE.vpSundamageWaterBlocks.get()) {
+                        if (liquidBlocks >= VampirismConfig.BALANCE.vpSundamageWaterblocks.get()) {
                             return false;
                         }
                     } else if (state.isSolid() && (state.func_224755_d(world, pos, Direction.DOWN) || state.func_224755_d(world, pos, Direction.UP))) { //solid block blocks the light (fence is solid too?)

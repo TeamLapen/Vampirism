@@ -7,17 +7,19 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * Default implementation of ISkill. Handles entity modifiers and actions
  */
 public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegistryEntry<ISkill> implements ISkill {
 
-    private final Map<IAttribute, AttributeModifier> attributeModifierMap = new HashMap<>();
+    private final Map<IAttribute, LazyOptional<AttributeModifier>> attributeModifierMap = new HashMap<>();
     @Nullable
     private final IPlayableFaction<T> faction;//TODO 1.16 remove
     private int renderRow;
@@ -80,8 +82,13 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
     }
 
     public DefaultSkill<T> registerAttributeModifier(IAttribute attribute, String uuid, double amount, AttributeModifier.Operation operation) {
-        AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString(uuid), this.getRegistryName().toString(), amount, operation);
-        this.attributeModifierMap.put(attribute, attributemodifier);
+        final AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString(uuid), this.getRegistryName().toString(), amount, operation);
+        this.attributeModifierMap.put(attribute, LazyOptional.of(() -> attributemodifier));
+        return this;
+    }
+
+    public DefaultSkill<T> registerAttributeModifier(IAttribute attribute, String uuid, Supplier<Double> amountSupplier, AttributeModifier.Operation operation) {
+        this.attributeModifierMap.put(attribute, LazyOptional.of(() -> new AttributeModifier(UUID.fromString(uuid), this.getRegistryName().toString(), amountSupplier.get(), operation)));
         return this;
     }
 
@@ -116,11 +123,11 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
     }
 
     private void applyAttributesModifiersToEntity(PlayerEntity player) {
-        for (Map.Entry<IAttribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
+        for (Map.Entry<IAttribute, LazyOptional<AttributeModifier>> entry : this.attributeModifierMap.entrySet()) {
             IAttributeInstance iattributeinstance = player.getAttributes().getAttributeInstance(entry.getKey());
 
             if (iattributeinstance != null) {
-                AttributeModifier attributemodifier = entry.getValue();
+                AttributeModifier attributemodifier = entry.getValue().orElseThrow(IllegalStateException::new);
                 iattributeinstance.removeModifier(attributemodifier);
                 iattributeinstance.applyModifier(new AttributeModifier(attributemodifier.getID(), this.getRegistryName().toString(), attributemodifier.getAmount(), attributemodifier.getOperation()));
             }
@@ -139,11 +146,11 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
     }
 
     private void removeAttributesModifiersFromEntity(PlayerEntity player) {
-        for (Map.Entry<IAttribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
+        for (Map.Entry<IAttribute, LazyOptional<AttributeModifier>> entry : this.attributeModifierMap.entrySet()) {
             IAttributeInstance iattributeinstance = player.getAttributes().getAttributeInstance(entry.getKey());
 
             if (iattributeinstance != null) {
-                iattributeinstance.removeModifier(entry.getValue());
+                iattributeinstance.removeModifier(entry.getValue().orElseThrow(IllegalStateException::new));
             }
         }
     }
