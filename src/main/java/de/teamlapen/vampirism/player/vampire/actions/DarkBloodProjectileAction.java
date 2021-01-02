@@ -16,12 +16,12 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
 
     @Override
     public int getCooldown() {
-        return VampirismConfig.BALANCE.vaDarkBloodCooldown.get() * 20;
+        return VampirismConfig.BALANCE.vaDarkBloodProjectileCooldown.get() * 20;
     }
 
     @Override
     public boolean isEnabled() {
-        return VampirismConfig.BALANCE.vaDarkBloodEnabled.get();
+        return VampirismConfig.BALANCE.vaDarkBloodProjectileEnabled.get();
     }
 
     @Override
@@ -32,7 +32,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
 
         DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(shooter.getEntityWorld(), shooter.getPosX() + vec3d.x * 1.0f, shooter.getPosY() + shooter.getEyeHeight() * 0.9f, shooter.getPosZ() + vec3d.z * 1.0f, vec3d.x, vec3d.y, vec3d.z);
         projectile.setShooter(shooter);
-        projectile.setDamage(VampirismConfig.BALANCE.vaDarkBloodDamage.get().floatValue(), VampirismConfig.BALANCE.vaDarkBloodDamage.get().floatValue() * 0.5f);
+        projectile.setDamage(VampirismConfig.BALANCE.vaDarkBloodProjectileDamage.get().floatValue(), VampirismConfig.BALANCE.vaDarkBloodProjectileDamage.get().floatValue() * 0.5f);
 
         shooter.getEntityWorld().addEntity(projectile);
         return true;

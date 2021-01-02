@@ -36,6 +36,8 @@ import java.util.stream.Collectors;
 public class ModWorld {
     private static final Logger LOGGER = LogManager.getLogger();
     public static boolean debug = false;
+    private final static float TOTEM_PRESET_PERCENTAGE = 0.6f;
+    private final static int HUNTER_TRAINER_WEIGHT = 400;
 
 
     public static void initVillageStructures() {
@@ -167,7 +169,7 @@ public class ModWorld {
 
         buildings.forEach((name, list) -> {
             list.removeIf(pair -> pair.getFirst().toString().equals(singleJigsawString(REFERENCE.MODID + ":village/" + name.replace("_zombie", "") + "/houses/hunter_trainer")));
-            list.add(Pair.of(singleJigsawPiece("village/" + name.replace("_zombie", "") + "/houses/hunter_trainer", processors.getOrDefault(name, new StructureProcessorList(Collections.emptyList()))), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
+            list.add(Pair.of(singleJigsawPiece("village/" + name.replace("_zombie", "") + "/houses/hunter_trainer", processors.getOrDefault(name, new StructureProcessorList(Collections.emptyList()))), HUNTER_TRAINER_WEIGHT));
         });
     }
 
@@ -175,7 +177,7 @@ public class ModWorld {
      * adds totem to every village
      */
     private static void addTotem(Map<String, List<Pair<JigsawPiece, Integer>>> buildings) {
-        StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, VampirismConfig.BALANCE.viTotemPreSetPercentage.get().floatValue()), AlwaysTrueRuleTest.INSTANCE, ModBlocks.totem_top.getDefaultState(), TotemTopBlock.getBlocks().stream().filter(totem -> totem != ModBlocks.totem_top && !totem.isCrafted()).map(Block::getDefaultState).collect(Collectors.toList()))));
+        StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, TOTEM_PRESET_PERCENTAGE), AlwaysTrueRuleTest.INSTANCE, ModBlocks.totem_top.getDefaultState(), TotemTopBlock.getBlocks().stream().filter(totem -> totem != ModBlocks.totem_top && !totem.isCrafted()).map(Block::getDefaultState).collect(Collectors.toList()))));
         StructureProcessor totemTopBlock = new BiomeTopBlockProcessor(Blocks.BRICK_WALL.getDefaultState());
         JigsawPiece totem = singleJigsawPiece("village/totem", new StructureProcessorList(Lists.newArrayList(totemProcessor, totemTopBlock)));
         buildings.values().forEach(list -> list.removeIf(pair -> pair.getFirst().toString().equals(singleJigsawString(REFERENCE.MODID + ":village/totem"))));

@@ -180,7 +180,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
             boolean flag = true;
             if (entity instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) entity)) flag = false;
             double dist = mc.player.getDistanceSq(entity);
-            if (dist > VampirismConfig.BALANCE.vsBloodVisionDistSQ.get()) {
+            if (dist > VampirismConfig.BALANCE.vsBloodVisionDistanceSq.get()) {
                 flag = false;
             }
             if (flag) {

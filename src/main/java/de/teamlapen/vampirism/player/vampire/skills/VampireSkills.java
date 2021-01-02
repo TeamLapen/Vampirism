@@ -52,10 +52,10 @@ public class VampireSkills {
     public static final ISkill water_resistance = getNull();
 
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "Convert2MethodRef"})
     public static void registerVampireSkills(IForgeRegistry<ISkill> registry) {
         registry.register(new VampirismSkill.SimpleVampireSkill(VReference.VAMPIRE_FACTION.getID(), false));
-        registry.register(new VampirismSkill.SimpleVampireSkill("advanced_biter", false).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = true, player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = false).setHasDefaultDescription().registerAttributeModifier(ModAttributes.bite_damage, "A08CAB62-EE88-4DB9-8F62-E9EF108A4E87", VampirismConfig.BALANCE.vsBiteDamageMult.get(), AttributeModifier.Operation.MULTIPLY_BASE));
+        registry.register(new VampirismSkill.SimpleVampireSkill("advanced_biter", false).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = true, player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = false).setHasDefaultDescription().registerAttributeModifier(ModAttributes.bite_damage, "A08CAB62-EE88-4DB9-8F62-E9EF108A4E87", () -> VampirismConfig.BALANCE.vsBiteDamageMult.get(), AttributeModifier.Operation.MULTIPLY_BASE));
         registry.register(new ActionSkill<>("bat", VampireActions.bat, true));
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_charge", true));
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_vision", true).setToggleActions(player -> player.unlockVision(VReference.vision_bloodVision), player -> player.unUnlockVision(VReference.vision_bloodVision)));
@@ -64,8 +64,8 @@ public class VampireSkills {
         registry.register(new ActionSkill<>("dark_blood_projectile", VampireActions.dark_blood_projectile, true));
         registry.register(new ActionSkill<>("freeze", VampireActions.freeze, true));
         registry.register(new ActionSkill<>("half_invulnerable", VampireActions.half_invulnerable, true));
-        registry.register(new VampirismSkill.SimpleVampireSkill("less_blood_thirst", true).registerAttributeModifier(ModAttributes.blood_exhaustion, "980ad86f-fe76-433b-b26a-c4060e0e6751", VampirismConfig.BALANCE.vsThirstReduction1.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
-        registry.register(new VampirismSkill.SimpleVampireSkill("less_sundamage", false).registerAttributeModifier(ModAttributes.sundamage, "EB47EDC1-ED4E-4CD8-BDDC-BE40956042A2", VampirismConfig.BALANCE.vsSundamgeReduction1.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismSkill.SimpleVampireSkill("less_blood_thirst", true).registerAttributeModifier(ModAttributes.blood_exhaustion, "980ad86f-fe76-433b-b26a-c4060e0e6751", () -> VampirismConfig.BALANCE.vsBloodThirstReduction1.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismSkill.SimpleVampireSkill("less_sundamage", false).registerAttributeModifier(ModAttributes.sundamage, "EB47EDC1-ED4E-4CD8-BDDC-BE40956042A2", () -> VampirismConfig.BALANCE.vsSundamageReduction1.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
         registry.register(new VampirismSkill.SimpleVampireSkill("night_vision", false)
                 .setToggleActions(player -> {
                     player.unlockVision(VReference.vision_nightVision);
@@ -81,7 +81,7 @@ public class VampireSkills {
         registry.register(new VampirismSkill.SimpleVampireSkill("vampire_jump", false).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().setJumpBoost(VampirismConfig.BALANCE.vsJumpBoost.get() + 1), player -> ((VampirePlayer) player).getSpecialAttributes().setJumpBoost(0)));
         registry.register(new ActionSkill<>("vampire_rage", VampireActions.vampire_rage, true));
         registry.register(new ActionSkill<>("vampire_regeneration", VampireActions.regen, true));
-        registry.register(new VampirismSkill.SimpleVampireSkill("vampire_speed", false).registerAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, "96dc968d-818f-4271-8dbf-6b799d603ad8", VampirismConfig.BALANCE.vsSpeedBoost.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismSkill.SimpleVampireSkill("vampire_speed", false).registerAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, "96dc968d-818f-4271-8dbf-6b799d603ad8", () -> VampirismConfig.BALANCE.vsSpeedBoost.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
         registry.register(new VampirismSkill.SimpleVampireSkill("water_resistance", true).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().waterResistance = true, player -> ((VampirePlayer) player).getSpecialAttributes().waterResistance = false));
 
     }
