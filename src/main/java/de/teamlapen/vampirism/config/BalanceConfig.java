@@ -29,7 +29,6 @@ public class BalanceConfig {
     public final ForgeConfigSpec.BooleanValue zombieIgnoreVampire;
     public final ForgeConfigSpec.IntValue hunterTentMaxSpawn;
     public final ForgeConfigSpec.DoubleValue crossbowDamageMult;
-    public final ForgeConfigSpec.IntValue vampireDungeonWeight;
     public final ForgeConfigSpec.IntValue taskMasterMaxTaskAmount;
 
     public final ForgeConfigSpec.DoubleValue eaHealthThreshold;
@@ -83,19 +82,17 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue viPhase1Duration;
     public final ForgeConfigSpec.IntValue viNotifyDistanceSQ;
     public final ForgeConfigSpec.IntValue viForceTargetTime;
-    public final ForgeConfigSpec.IntValue viHunterTrainerWeight;
     public final ForgeConfigSpec.IntValue viTotemWeight;
-    public final ForgeConfigSpec.DoubleValue viTotemPreSetPercentage;
     public final ForgeConfigSpec.IntValue viMaxVillagerRespawn;
     public final ForgeConfigSpec.IntValue viMaxTotemRadius;
 
-    public final ForgeConfigSpec.DoubleValue vsSundamgeReduction1;
-    public final ForgeConfigSpec.DoubleValue vsThirstReduction1;
+    public final ForgeConfigSpec.DoubleValue vsSundamageReduction1;
+    public final ForgeConfigSpec.DoubleValue vsBloodThirstReduction1;
     public final ForgeConfigSpec.DoubleValue vsBiteDamageMult;
     public final ForgeConfigSpec.DoubleValue vsSwordFinisherMaxHealth;
     public final ForgeConfigSpec.IntValue vsJumpBoost;
     public final ForgeConfigSpec.DoubleValue vsSpeedBoost;
-    public final ForgeConfigSpec.IntValue vsBloodVisionDistSQ;
+    public final ForgeConfigSpec.IntValue vsBloodVisionDistanceSq;
     public final ForgeConfigSpec.BooleanValue vsDisableAvoidedByCreepers;
 
     public final ForgeConfigSpec.DoubleValue vpHealthMaxMod;
@@ -112,8 +109,8 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue vpSundamageNauseaMinLevel;
     public final ForgeConfigSpec.IntValue vpSundamageWeaknessMinLevel;
     public final ForgeConfigSpec.DoubleValue vpSundamage;
-    public final ForgeConfigSpec.IntValue vpSundamageWaterBlocks;
-    public final ForgeConfigSpec.DoubleValue vpFireVulnerabilityMaxMod;
+    public final ForgeConfigSpec.IntValue vpSundamageWaterblocks;
+    public final ForgeConfigSpec.DoubleValue vpFireVulnerabilityMod;
     public final ForgeConfigSpec.BooleanValue vpFireResistanceReplace;
 
     public final ForgeConfigSpec.IntValue vaFreezeCooldown;
@@ -139,15 +136,15 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue vaBatDuration;
     public final ForgeConfigSpec.BooleanValue vaBatEnabled;
     public final ForgeConfigSpec.DoubleValue vaBatHealthReduction;
-    public final ForgeConfigSpec.BooleanValue vaSummonBatEnabled;
-    public final ForgeConfigSpec.IntValue vaSummonBatCooldown;
-    public final ForgeConfigSpec.IntValue vaSummonBatCount;
+    public final ForgeConfigSpec.BooleanValue vaSummonBatsEnabled;
+    public final ForgeConfigSpec.IntValue vaSummonBatsCooldown;
+    public final ForgeConfigSpec.IntValue vaSummonBatsCount;
     public final ForgeConfigSpec.IntValue vaDisguiseDuration;
     public final ForgeConfigSpec.IntValue vaDisguiseCooldown;
     public final ForgeConfigSpec.BooleanValue vaDisguiseEnabled;
-    public final ForgeConfigSpec.IntValue vaDarkBloodCooldown;
-    public final ForgeConfigSpec.BooleanValue vaDarkBloodEnabled;
-    public final ForgeConfigSpec.DoubleValue vaDarkBloodDamage;
+    public final ForgeConfigSpec.IntValue vaDarkBloodProjectileCooldown;
+    public final ForgeConfigSpec.BooleanValue vaDarkBloodProjectileEnabled;
+    public final ForgeConfigSpec.DoubleValue vaDarkBloodProjectileDamage;
     public final ForgeConfigSpec.IntValue vaHalfInvulnerableCooldown;
     public final ForgeConfigSpec.IntValue vaHalfInvulnerableDuration;
     public final ForgeConfigSpec.IntValue vaHalfInvulnerableBloodCost;
@@ -193,10 +190,8 @@ public class BalanceConfig {
         zombieIgnoreVampire = builder.comment("If zombies should ignore vampires").define("zombieIgnoreVampire", true);
         hunterTentMaxSpawn = builder.comment("Maximum number of hunters that can spawn at one tent per day").defineInRange("hunterTentMaxSpawn", 4, 0, 20);
         crossbowDamageMult = builder.comment("The base damage dealt by crossbow arrows is multiplied by this").defineInRange("crossbowDamageMult", 1, 0.2, 5);
-        vampireDungeonWeight = builder.comment("Weight of the dungeon room. Vanilla is 8").defineInRange("vampireDungeonWeight", 2, 0, Integer.MAX_VALUE);
         taskMasterMaxTaskAmount = builder.comment("Maximum amount of task shown at a taskmaster, except unique tasks").defineInRange("taskMasterMaxTaskAmount", 3, 1, Integer.MAX_VALUE);
 
-        builder.pop();
 
         //Entity actions
         builder.push("entityActions");
@@ -209,7 +204,7 @@ public class BalanceConfig {
         eaRegenerationAmount = builder.comment("In percent").defineInRange("regenerationAmount", 40, 0, 100);
         eaRegenerationCooldown = builder.comment("In seconds").defineInRange("regenerationCooldown", 8, 0, Integer.MAX_VALUE);
         eaSpeedDuration = builder.comment("In seconds").defineInRange("speedDuration", 4, 0, Integer.MAX_VALUE);
-        eaSpeedCooldown = builder.comment("In seconds").defineInRange("speedCooldonw", 6, 1, Integer.MAX_VALUE);
+        eaSpeedCooldown = builder.comment("In seconds").defineInRange("speedCooldown", 6, 1, Integer.MAX_VALUE);
         eaSpeedAmount = builder.comment("Speed = basevalue * (1+ speedAmount)").defineInRange("speedAmount", 0.14, 0, 2);
         eaBatspawnAmount = builder.defineInRange("batspawnAmount", 4, 1, 10);
         eaBatspawnCooldown = builder.comment("In seconds").defineInRange("batspawnCooldown", 15, 1, Integer.MAX_VALUE);
@@ -227,8 +222,8 @@ public class BalanceConfig {
         //Hunter actions
         builder.push("hunterActions");
         haDisguiseEnabled = builder.define("disguiseEnabled", true);
-        haDisguiseVisibilityMod = builder.comment("If disguised the detection radius of mobs will be multiplied by this").defineInRange("disguiseInvisibilityMod", 0.1D, 0, 1);
-        haDisguiseInvisibleSQ = builder.comment("Squared distance as of which a disguised hunter is invisible").defineInRange("disguiseInvisibileSQ", 256, 1, Integer.MAX_VALUE);
+        haDisguiseVisibilityMod = builder.comment("If disguised the detection radius of mobs will be multiplied by this").defineInRange("disguiseVisibilityMod", 0.1D, 0, 1);
+        haDisguiseInvisibleSQ = builder.comment("Squared distance as of which a disguised hunter is invisible").defineInRange("disguiseInvisibleSQ", 256, 1, Integer.MAX_VALUE);
         haAwarenessEnabled = builder.define("awarenessEnabled", true);
         haAwarenessDuration = builder.comment("In ticks").defineInRange("awarenessDuration", Integer.MAX_VALUE, 1, Integer.MAX_VALUE);
         haAwarenessCooldown = builder.comment("In ticks").defineInRange("awarenessCooldown", 1, 1, Integer.MAX_VALUE);
@@ -263,9 +258,7 @@ public class BalanceConfig {
         viPhase1Duration = builder.comment("Duration of phase 1 of the capturing process in 2*seconds").defineInRange("phase1Duration", 80, 1, 1000);
         viNotifyDistanceSQ = builder.comment("Squared distance of village capture notification").defineInRange("notifyDistanceSQ", 40000, 0, 100000);
         viForceTargetTime = builder.comment("Time in 2*seconds in capture phase 2 after which the capture entities should find a target regardless of distance").defineInRange("forceTargetTime", 80, 1, 1000);
-        viHunterTrainerWeight = builder.comment("Weight of the Hunter Trainer Building inside the village").defineInRange("viHunterTrainerWeight", 400, 1, Integer.MAX_VALUE);
-        viTotemWeight = builder.comment("Weight of the Totem Building inside the Village").defineInRange("viTotemWeight", 20,1,Integer.MAX_VALUE);
-        viTotemPreSetPercentage = builder.comment("Percentage of totem which should be have a pre defined faction").defineInRange("viTotemPreSetPercentage", 0.60d, 0d, 1d);
+        viTotemWeight = builder.comment("Weight of the Totem Building inside the Village").defineInRange("viTotemWeight", 20, 1, Integer.MAX_VALUE);
         viMaxVillagerRespawn = builder.comment("Maximum of Villager the Totem can respawn").defineInRange("viMaxVillagerRespawn", 30, 0, Integer.MAX_VALUE);
         viMaxTotemRadius = builder.comment("Maximum range of a Totem to grow the village").defineInRange("viMaxTotemRadius", 100, 0, Integer.MAX_VALUE);
         builder.pop();
@@ -273,13 +266,13 @@ public class BalanceConfig {
 
         //Vampire skills
         builder.push("vampireSkills");
-        vsSundamgeReduction1 = builder.comment("Sundamage is multipled with (value+1)").defineInRange("sundamageReduction1", -0.3, -1, 0);
-        vsThirstReduction1 = builder.comment("Blood exhaustion is multiplied with (value+1)").defineInRange("bloodThirstReduction1", -0.4, -1, 0);
+        vsSundamageReduction1 = builder.comment("Sundamage is multipled with (value+1)").defineInRange("sundamageReduction1", -0.3, -1, 0);
+        vsBloodThirstReduction1 = builder.comment("Blood exhaustion is multiplied with (value+1)").defineInRange("bloodThirstReduction1", -0.4, -1, 0);
         vsBiteDamageMult = builder.comment("Bite damage is multiplied with (value+1)").defineInRange("biteDamageMult", 1d, 0, 100);
         vsSwordFinisherMaxHealth = builder.comment("The max relative health for sword finisher kill").defineInRange("swordFinisherMaxHealth", 0.25, 0, 1);
         vsJumpBoost = builder.comment("Similar to potion effect ampliofier (and -1 is normal)").defineInRange("jumpBoost", 1, -1, 5);
         vsSpeedBoost = builder.comment("Max speed is multiplied with (value+1)").defineInRange("speedBoost", 0.15, 0, 3);
-        vsBloodVisionDistSQ = builder.comment("Squared blood vision distance").defineInRange("bloodVisionDistanceSq", 1600, 5, Integer.MAX_VALUE);
+        vsBloodVisionDistanceSq = builder.comment("Squared blood vision distance").defineInRange("bloodVisionDistanceSq", 1600, 5, Integer.MAX_VALUE);
         vsDisableAvoidedByCreepers = builder.comment("Disables the effect of 'Avoided by creepers'. Can still be unlocked though.").define("disableAvoidedByCreepers", false);
         builder.pop();
 
@@ -300,8 +293,8 @@ public class BalanceConfig {
         vpSundamageNausea = builder.define("sundamageNausea", true);
         vpSundamageNauseaMinLevel = builder.defineInRange("sundamageNauseaMinLevel", 3, 1, Integer.MAX_VALUE);
         vpSundamageWeaknessMinLevel = builder.defineInRange("sundamageWeaknessMinLevel", 2, 1, Integer.MAX_VALUE);
-        vpSundamageWaterBlocks = builder.defineInRange("sundamageWaterblocks", 4, 1, 10);
-        vpFireVulnerabilityMaxMod = builder.comment("Multiply fire damage with this for vampires" + (iceAndFire ? " - Changed due to IceAndFire" : "")).defineInRange("fireVulnerabilityMod", iceAndFire ? 1.5d : 3d, 0.1, Double.MAX_VALUE);
+        vpSundamageWaterblocks = builder.defineInRange("sundamageWaterblocks", 4, 1, 10);
+        vpFireVulnerabilityMod = builder.comment("Multiply fire damage with this for vampires" + (iceAndFire ? " - Changed due to IceAndFire" : "")).defineInRange("fireVulnerabilityMod", iceAndFire ? 1.5d : 3d, 0.1, Double.MAX_VALUE);
         vpFireResistanceReplace = builder.comment("Whether to replace the vanilla fire resistance potion for vampires with a custom one that only reduces damage but does not remove it" + (iceAndFire ? " - Changed due to IceAndFire" : "")).define("fireResistanceReplace", !iceAndFire);
         builder.pop();
 
@@ -330,15 +323,15 @@ public class BalanceConfig {
         vaBatCooldown = builder.comment("In seconds").defineInRange("batCooldown", 0, 0, 10000);
         vaBatDuration = builder.comment("In seconds").defineInRange("batDuration", Integer.MAX_VALUE, 10, Integer.MAX_VALUE);
         vaBatHealthReduction = builder.comment("The player health will be reduced by this factor").defineInRange("batHealthReduction", 0.9, 0, 0.95);
-        vaSummonBatCooldown = builder.comment("In seconds").defineInRange("summonBatsCooldown", 300, 1, 10000);
-        vaSummonBatCount = builder.defineInRange("summonBatsCount", 16, 1, 100);
-        vaSummonBatEnabled = builder.define("summonBatEnabled", true);
+        vaSummonBatsCooldown = builder.comment("In seconds").defineInRange("summonBatsCooldown", 300, 1, 10000);
+        vaSummonBatsCount = builder.defineInRange("summonBatsCount", 16, 1, 100);
+        vaSummonBatsEnabled = builder.define("summonBatsEnabled", true);
         vaDisguiseCooldown = builder.comment("In seconds").defineInRange("disguiseCooldown", 60, 1, 10000);
         vaDisguiseDuration = builder.comment("In seconds").defineInRange("disguiseDuration", 60, 1, 10000);
         vaDisguiseEnabled = builder.define("disguiseEnabled", true);
-        vaDarkBloodCooldown = builder.comment("In seconds").defineInRange("darkBloodProjectileCooldown", 4, 1, 1000);
-        vaDarkBloodDamage = builder.defineInRange("darkBloodProjectileDamage", 6d, 0, 10000);
-        vaDarkBloodEnabled = builder.define("darkBloodProjectileEnabled", true);
+        vaDarkBloodProjectileCooldown = builder.comment("In seconds").defineInRange("darkBloodProjectileCooldown", 4, 1, 1000);
+        vaDarkBloodProjectileDamage = builder.defineInRange("darkBloodProjectileDamage", 6d, 0, 10000);
+        vaDarkBloodProjectileEnabled = builder.define("darkBloodProjectileEnabled", true);
         vaHalfInvulnerableCooldown = builder.defineInRange("halfInvulnerableCooldown", 60, 1, 10000);
         vaHalfInvulnerableDuration = builder.defineInRange("halfInvulnerableDuration", 30, 1, 10000);
         vaHalfInvulnerableThreshold = builder.comment("Damage threshold relative to players max health. Damage above this value will be ignored").defineInRange("halfInvulnerableThreshold", 0.4d, 0.0d, 1d);

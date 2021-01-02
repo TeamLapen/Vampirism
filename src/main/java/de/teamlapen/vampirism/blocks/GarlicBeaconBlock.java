@@ -59,7 +59,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
         }
 
         tooltip.add(new TranslationTextComponent("block.vampirism.garlic_beacon.tooltip1"));
-        int c = 1 + 2 * (type == Type.IMPROVED ? VampirismConfig.BALANCE.hsGarlicDiffusorEnhancedDist.get() : (type == Type.WEAK ? VampirismConfig.BALANCE.hsGarlicDiffusorWeakDist.get() : VampirismConfig.BALANCE.hsGarlicDiffusorNormalDist.get()));
+        int c = VampirismConfig.BALANCE.hsGarlicDiffusorEnhancedDist == null /* During game start config is not yet set*/ ? 1 : 1 + 2 * (type == Type.IMPROVED ? VampirismConfig.BALANCE.hsGarlicDiffusorEnhancedDist.get() : (type == Type.WEAK ? VampirismConfig.BALANCE.hsGarlicDiffusorWeakDist.get() : VampirismConfig.BALANCE.hsGarlicDiffusorNormalDist.get()));
         tooltip.add(new TranslationTextComponent("block.vampirism.garlic_beacon.tooltip2", c, c));
     }
 

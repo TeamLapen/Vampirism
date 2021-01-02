@@ -30,6 +30,6 @@ public class VampirismBiomeFeatures {
     }
 
     public static void addVampireDungeon(Biome biome) {
-        biome.addFeature(GenerationStage.Decoration.UNDERGROUND_STRUCTURES, ModFeatures.vampire_dungeon.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(Placement.DUNGEONS.configure(new ChanceConfig(VampirismConfig.BALANCE.vampireDungeonWeight.get()))));
+        biome.addFeature(GenerationStage.Decoration.UNDERGROUND_STRUCTURES, ModFeatures.vampire_dungeon.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(Placement.DUNGEONS.configure(new ChanceConfig(2 /*vanilla is 8*/))));
     }
 }

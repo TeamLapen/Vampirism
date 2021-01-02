@@ -37,7 +37,8 @@ import java.util.Map;
 public class ModWorld {
     private static final Logger LOGGER = LogManager.getLogger();
     public static boolean debug = false;
-
+    private final static float TOTEM_PRESET_PERCENTAGE = 0.6f;
+    private final static int HUNTER_TRAINER_WEIGHT = 400;
 
     static void modifyVillageSize(GenerationSettings settings) {
 
@@ -141,18 +142,18 @@ public class ModWorld {
         })));
 
         //add hunter trainer house to all village JigsawPattern lists with weight
-        buildings.get("desert").add(Pair.of(singleJigsawPiece("village/desert/houses/hunter_trainer"), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
-        buildings.get("plains").add(Pair.of(singleJigsawPiece("village/plains/houses/hunter_trainer"), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
-        buildings.get("savanna").add(Pair.of(singleJigsawPiece("village/savanna/houses/hunter_trainer"), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
-        buildings.get("snowy").add(Pair.of(singleJigsawPiece("village/snowy/houses/hunter_trainer"), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
-        buildings.get("taiga").add(Pair.of(singleJigsawPiece("village/taiga/houses/hunter_trainer"), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
-        buildings.get("desert_zombie").add(Pair.of(singleJigsawPiece("village/desert/houses/hunter_trainer", desertZombieProcessor), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
-        buildings.get("plains_zombie").add(Pair.of(singleJigsawPiece("village/plains/houses/hunter_trainer", plainsZombieProcessor), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
-        buildings.get("savanna_zombie").add(Pair.of(singleJigsawPiece("village/savanna/houses/hunter_trainer", savannaZombieProcessor), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
-        buildings.get("snowy_zombie").add(Pair.of(singleJigsawPiece("village/snowy/houses/hunter_trainer", snowyZombieProcessor), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
-        buildings.get("taiga_zombie").add(Pair.of(singleJigsawPiece("village/taiga/houses/hunter_trainer", taigaZombieProcessor), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
+        buildings.get("desert").add(Pair.of(singleJigsawPiece("village/desert/houses/hunter_trainer"), HUNTER_TRAINER_WEIGHT));
+        buildings.get("plains").add(Pair.of(singleJigsawPiece("village/plains/houses/hunter_trainer"), HUNTER_TRAINER_WEIGHT));
+        buildings.get("savanna").add(Pair.of(singleJigsawPiece("village/savanna/houses/hunter_trainer"), HUNTER_TRAINER_WEIGHT));
+        buildings.get("snowy").add(Pair.of(singleJigsawPiece("village/snowy/houses/hunter_trainer"), HUNTER_TRAINER_WEIGHT));
+        buildings.get("taiga").add(Pair.of(singleJigsawPiece("village/taiga/houses/hunter_trainer"), HUNTER_TRAINER_WEIGHT));
+        buildings.get("desert_zombie").add(Pair.of(singleJigsawPiece("village/desert/houses/hunter_trainer", desertZombieProcessor), HUNTER_TRAINER_WEIGHT));
+        buildings.get("plains_zombie").add(Pair.of(singleJigsawPiece("village/plains/houses/hunter_trainer", plainsZombieProcessor), HUNTER_TRAINER_WEIGHT));
+        buildings.get("savanna_zombie").add(Pair.of(singleJigsawPiece("village/savanna/houses/hunter_trainer", savannaZombieProcessor), HUNTER_TRAINER_WEIGHT));
+        buildings.get("snowy_zombie").add(Pair.of(singleJigsawPiece("village/snowy/houses/hunter_trainer", snowyZombieProcessor), HUNTER_TRAINER_WEIGHT));
+        buildings.get("taiga_zombie").add(Pair.of(singleJigsawPiece("village/taiga/houses/hunter_trainer", taigaZombieProcessor), HUNTER_TRAINER_WEIGHT));
         //totem JigsawPiece
-        StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, VampirismConfig.BALANCE.viTotemPreSetPercentage.get().floatValue()), AlwaysTrueRuleTest.INSTANCE, ModBlocks.totem_top.getDefaultState(), TotemTopBlock.getBlocks().stream().filter(totem -> totem != ModBlocks.totem_top && !totem.isCrafted()).map(Block::getDefaultState).toArray(BlockState[]::new))));
+        StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, TOTEM_PRESET_PERCENTAGE), AlwaysTrueRuleTest.INSTANCE, ModBlocks.totem_top.getDefaultState(), TotemTopBlock.getBlocks().stream().filter(totem -> totem != ModBlocks.totem_top && !totem.isCrafted()).map(Block::getDefaultState).toArray(BlockState[]::new))));
         StructureProcessor totemTopBlock = new BiomeTopBlockProcessor(Blocks.BRICK_WALL.getDefaultState());
         JigsawPiece totem = singleJigsawPiece("village/totem", Lists.newArrayList(totemProcessor, totemTopBlock), JigsawPattern.PlacementBehaviour.RIGID);
         //add totem to all village JigsawPattern lists

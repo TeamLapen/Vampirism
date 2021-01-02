@@ -21,7 +21,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     @Override
     public boolean activate(IVampirePlayer player) {
         PlayerEntity entityPlayer = player.getRepresentingPlayer();
-        for (int i = 0; i < VampirismConfig.BALANCE.vaSummonBatCount.get(); i++) {
+        for (int i = 0; i < VampirismConfig.BALANCE.vaSummonBatsCount.get(); i++) {
             BlindingBatEntity e = ModEntities.blinding_bat.create(entityPlayer.getEntityWorld());
             e.restrictLiveSpan();
             e.setIsBatHanging(false);
@@ -39,7 +39,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
 
     @Override
     public int getCooldown() {
-        return VampirismConfig.BALANCE.vaSummonBatCooldown.get() * 20;
+        return VampirismConfig.BALANCE.vaSummonBatsCooldown.get() * 20;
     }
 
     @Override
