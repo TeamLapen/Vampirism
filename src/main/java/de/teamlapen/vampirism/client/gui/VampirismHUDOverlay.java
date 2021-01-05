@@ -442,6 +442,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 if (vampire.getRepresentingPlayer().abilities.isCreativeMode || (effect != null && effect.getAmplifier() >= 4)) {
                     screenPercentage = Math.min(20, screenPercentage);
                 }
+                screenPercentage = Math.min(screenPercentage, VampirismConfig.BALANCE.vpMaxYellowBorderPercentage.get());
             } else {
                 screenPercentage = 0;
             }

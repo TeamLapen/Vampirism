@@ -33,6 +33,8 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue hunterTentMaxSpawn;
     public final ForgeConfigSpec.DoubleValue crossbowDamageMult;
     public final ForgeConfigSpec.IntValue taskMasterMaxTaskAmount;
+    public final ForgeConfigSpec.IntValue skillPointsPerLevel;
+    public final ForgeConfigSpec.BooleanValue allowInfiniteSpecialArrows;
 
     public final ForgeConfigSpec.DoubleValue eaHealthThreshold;
     public final ForgeConfigSpec.IntValue eaInvisibilityCooldown;
@@ -115,6 +117,8 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue vpSundamageWaterblocks;
     public final ForgeConfigSpec.DoubleValue vpFireVulnerabilityMod;
     public final ForgeConfigSpec.BooleanValue vpFireResistanceReplace;
+    public final ForgeConfigSpec.IntValue vpMaxYellowBorderPercentage;
+
 
     public final ForgeConfigSpec.IntValue vaFreezeCooldown;
     public final ForgeConfigSpec.BooleanValue vaFreezeEnabled;
@@ -193,6 +197,8 @@ public class BalanceConfig {
         hunterTentMaxSpawn = builder.comment("Maximum number of hunters that can spawn at one tent per day").defineInRange("hunterTentMaxSpawn", 4, 0, 20);
         crossbowDamageMult = builder.comment("The base damage dealt by crossbow arrows is multiplied by this").defineInRange("crossbowDamageMult", 1, 0.2, 5);
         taskMasterMaxTaskAmount = builder.comment("Maximum amount of task shown at a taskmaster, except unique tasks").defineInRange("taskMasterMaxTaskAmount", 3, 1, Integer.MAX_VALUE);
+        skillPointsPerLevel = builder.comment("Players receive n skill points for each leve-up. Anything except 1 is unbalanced.").defineInRange("skillPointsPerLevel", 1, 1, 20);
+        allowInfiniteSpecialArrows = builder.comment("Whether special crossbow arrows (e.g. spitfire) can be used with infinity enchantment").define("allowInfiniteSpecialArrows", false);
 
 
         //Entity actions
@@ -292,6 +298,7 @@ public class BalanceConfig {
         vpSundamageWaterblocks = builder.defineInRange("sundamageWaterblocks", 4, 1, 10);
         vpFireVulnerabilityMod = builder.comment("Multiply fire damage with this for vampires" + (iceAndFire ? " - Changed due to IceAndFire" : "")).defineInRange("fireVulnerabilityMod", iceAndFire ? 1.5d : 3d, 0.1, Double.MAX_VALUE);
         vpFireResistanceReplace = builder.comment("Whether to replace the vanilla fire resistance potion for vampires with a custom one that only reduces damage but does not remove it" + (iceAndFire ? " - Changed due to IceAndFire" : "")).define("fireResistanceReplace", !iceAndFire);
+        vpMaxYellowBorderPercentage = builder.comment("Defines the maximum extend the yellow border covers when the player is in the sun. 100 is default. 0 to disable completely").defineInRange("maxYellowBorderPercentage", 100, 0, 100);
 
         //Vampire actions
         builder.category("vampireActions", "va");

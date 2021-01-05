@@ -125,10 +125,12 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     @Override
     public int getLeftSkillPoints() {
         int level = player.getLevel();
+        int totalSkillPoints = level * VampirismConfig.BALANCE.skillPointsPerLevel.get();
+        int remainingSkillPoints = totalSkillPoints - enabledSkills.size();
         if (VampirismConfig.SERVER.unlockAllSkills.get() && level == player.getMaxLevel()) {
-            return 1;
+            return Math.max(remainingSkillPoints, 1);
         }
-        return player.getLevel() - enabledSkills.size();
+        return remainingSkillPoints;
     }
 
     @Override

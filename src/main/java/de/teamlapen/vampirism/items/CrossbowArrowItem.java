@@ -74,7 +74,7 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
      */
     @Override
     public boolean isCanBeInfinite() {
-        return type != EnumArrowType.VAMPIRE_KILLER && type != EnumArrowType.SPITFIRE;
+        return (type != EnumArrowType.VAMPIRE_KILLER && type != EnumArrowType.SPITFIRE) || VampirismConfig.BALANCE.allowInfiniteSpecialArrows.get();
     }
 
     /**
