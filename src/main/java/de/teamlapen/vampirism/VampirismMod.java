@@ -43,6 +43,7 @@ import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import de.teamlapen.vampirism.world.WorldGenManager;
+import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EntityClassification;
@@ -53,6 +54,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -139,11 +141,12 @@ public class VampirismMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::loadComplete);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::gatherData);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::finalizeConfiguration);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventHandler::onModelBakeEvent);
             FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         });
-        VampirismConfig.registerConfigs();
+        VampirismConfig.init();
         MinecraftForge.EVENT_BUS.register(this);
         addModCompats();
         registryManager = new RegistryManager();
@@ -275,6 +278,10 @@ public class VampirismMod {
             Tests.runBackgroundTests();
         }
         ModWorld.initVillageStructures();
+    }
+
+    private void finalizeConfiguration(RegistryEvent<Block> event) {
+        VampirismConfig.finalizeAndRegisterConfig();
     }
 
     private void setup(final FMLCommonSetupEvent event) {

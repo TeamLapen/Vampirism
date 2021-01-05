@@ -2,9 +2,10 @@ package de.teamlapen.vampirism.config;
 
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -14,6 +15,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class VampirismConfig {
 
@@ -34,11 +36,11 @@ public class VampirismConfig {
     public static final Common COMMON;
 
     public static final BalanceConfig BALANCE;
+    private static BalanceBuilder balanceBuilder;
 
     private static final ForgeConfigSpec clientSpec;
     private static final ForgeConfigSpec serverSpec;
     private static final ForgeConfigSpec commonSpec;
-    private static final ForgeConfigSpec balanceSpec;
 
     static {
         final Pair<Client, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Client::new);
@@ -59,12 +61,39 @@ public class VampirismConfig {
     }
 
     static {
-        final Pair<BalanceConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(BalanceConfig::new);
-        balanceSpec = specPair.getRight();
-        BALANCE = specPair.getLeft();
+        balanceBuilder = new BalanceBuilder();
+        BALANCE = new BalanceConfig(balanceBuilder);
     }
 
-    public static void registerConfigs() {
+    public static void init() {
+
+    }
+
+    @ThreadSafeAPI
+    public static <T extends BalanceBuilder.Conf> void addBalanceModification(String key, Consumer<T> modifier) {
+        if (balanceBuilder == null)
+            throw new IllegalStateException("Must add balance modifications during mod construction");
+        balanceBuilder.addBalanceModifier(key, modifier);
+    }
+
+    public static void finalizeAndRegisterConfig() {
+        /*
+        Build balance configuration
+         */
+        final Pair<BalanceConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure((builder) -> {
+            builder.comment("A ton of options which allow you to balance the mod to your desire");
+            builder.push("balance");
+            balanceBuilder.build(BALANCE, builder);
+            builder.pop();
+            return BALANCE;
+        });
+        ForgeConfigSpec balanceSpec = specPair.getRight();
+        if (VampirismMod.inDev) {
+            balanceBuilder.checkFields(BALANCE);
+        }
+        balanceBuilder = null;
+
+
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, commonSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, clientSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, serverSpec);

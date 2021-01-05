@@ -7,6 +7,9 @@ import net.minecraftforge.fml.ModList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Values are null until after RegistryEvent<Block>
+ */
 public class BalanceConfig {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -158,20 +161,19 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue mbVampireSpawnChance;
     public final ForgeConfigSpec.IntValue mbAdvancedVampireSpawnChance;
 
-    BalanceConfig(ForgeConfigSpec.Builder builder) {
+
+    BalanceConfig(BalanceBuilder builder) {
         boolean iceAndFire = ModList.get().isLoaded("iceandfire");
         if (iceAndFire) {
             LOGGER.info("IceAndFire is loaded -> Adjusting default fire related configuration.");
         }
 
-
-        builder.comment("A ton of options which allow you to balance the mod to your desire");
-        builder.push("balance");
-
+        //This is build using the intermediate builder to allow modification by addon mods.
+        //It is finalized and assigned during RegistryEvent<Block>
 
         //GENERAL
         builder.comment("General options");
-        builder.push("general");
+        builder.category("general", "");
 
         hunterTentDistance = builder.comment("In chunks. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentDistance", 6, 2, 4096);
         hunterTentSeparation = builder.comment("In chunks. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentSeparation", 2, 1, 4096);
@@ -194,7 +196,7 @@ public class BalanceConfig {
 
 
         //Entity actions
-        builder.push("entityActions");
+        builder.category("entityActions", "ea");
         eaHealthThreshold = builder.comment("Relative health a entity must have to use actions").defineInRange("healthThreshold", 0.3, 0, 1);
         eaInvisibilityCooldown = builder.comment("In seconds").defineInRange("invisibilityCooldown", 7, 1, Integer.MAX_VALUE);
         eaInvisibilityDuration = builder.comment("In seconds").defineInRange("invisibilityDuration", 4, 1, Integer.MAX_VALUE);
@@ -217,10 +219,9 @@ public class BalanceConfig {
         eaIgnoreSundamageDuration = builder.comment("In seconds").defineInRange("ignoreSundamageDuration", 5, 0, Integer.MAX_VALUE);
         eaGarlicCooldown = builder.comment("In seconds").defineInRange("garlicCooldown", 5, 1, Integer.MAX_VALUE);
         eaGarlicDuration = builder.comment("In seconds").defineInRange("garlicDuration", 5, 0, Integer.MAX_VALUE);
-        builder.pop();
 
         //Hunter actions
-        builder.push("hunterActions");
+        builder.category("hunterActions", "ha");
         haDisguiseEnabled = builder.define("disguiseEnabled", true);
         haDisguiseVisibilityMod = builder.comment("If disguised the detection radius of mobs will be multiplied by this").defineInRange("disguiseVisibilityMod", 0.1D, 0, 1);
         haDisguiseInvisibleSQ = builder.comment("Squared distance as of which a disguised hunter is invisible").defineInRange("disguiseInvisibleSQ", 256, 1, Integer.MAX_VALUE);
@@ -231,16 +232,14 @@ public class BalanceConfig {
         haPotionResistanceEnabled = builder.define("potionResistanceEnabled", true);
         haPotionResistanceDuration = builder.comment("In ticks").defineInRange("potionResistanceDuration", 400, 1, Integer.MAX_VALUE);
         haPotionResistanceCooldown = builder.comment("In ticks").defineInRange("potionResistanceCooldown", 1200, 1, Integer.MAX_VALUE);
-        builder.pop();
 
         //Hunter player
-        builder.push("hunterPlayer");
+        builder.category("hunterPlayer", "hp");
         hpStrengthMaxMod = builder.comment("Stringth = Old * (modifier+1").defineInRange("strengthMaxMod", 2d, 0.5d, 4d);
         hpStrengthType = builder.comment("0.5 for square root, 1 for linear").defineInRange("strengthType", 0.5d, 0.5d, 1);
-        builder.pop();
 
         //Hunter skills
-        builder.push("hunterSkills");
+        builder.category("hunterSkills", "hs");
         hsSmallAttackSpeedModifier = builder.comment("Basic skill - Weapon cooldown = 1/(oldvalue*(1+modifier))").defineInRange("smallAttackSpeedModifier", 0.2, 0, 3);
         hsMajorAttackSpeedModifier = builder.comment("Advanced skill - Weapon cooldown = 1/(oldvalue*(1+modifier)").defineInRange("majorAttackSpeedModifier", 0.4, 0, 3);
         hsInstantKill1FromBehind = builder.comment("First stake skill - If it is required to attack from behind to instant kill low level vampires").define("instantKill1FromBehind", false);
@@ -250,37 +249,32 @@ public class BalanceConfig {
         hsGarlicDiffusorNormalDist = builder.comment("The chunk radius a normal diffusor affects. 0 results in a one chunk area. Changing this only affects newly placed blocks").defineInRange("garlicDiffusorNormalDist", 0, 0, 5);
         hsGarlicDiffusorEnhancedDist = builder.comment("The chunk radius a enhanced diffusor affects. 0 results in a one chunk area. Changing this only affects newly placed blocks").defineInRange("garlicDiffusorEnhancedDist", 1, 0, 5);
         hsGarlicDiffusorWeakDist = builder.comment("The chunk radius a normal diffusor affects. 0 results in a one chunk area. Changing this only affects newly placed blocks").defineInRange("garlicDiffusorWeakDist", 2, 0, 5);
-        builder.pop();
 
         //Village
-        builder.push("village");
+        builder.category("village", "vi");
         viReplaceBlocks = builder.comment("Whether grass should slowly be replaced with cursed earth in vampire villages").define("replaceBlocks", true);
         viPhase1Duration = builder.comment("Duration of phase 1 of the capturing process in 2*seconds").defineInRange("phase1Duration", 80, 1, 1000);
         viNotifyDistanceSQ = builder.comment("Squared distance of village capture notification").defineInRange("notifyDistanceSQ", 40000, 0, 100000);
         viForceTargetTime = builder.comment("Time in 2*seconds in capture phase 2 after which the capture entities should find a target regardless of distance").defineInRange("forceTargetTime", 80, 1, 1000);
-        viHunterTrainerWeight = builder.comment("Weight of the Hunter Trainer Building inside the village").defineInRange("viHunterTrainerWeight", 400, 1, Integer.MAX_VALUE);
-        viTotemWeight = builder.comment("Weight of the Totem Building inside the Village").defineInRange("viTotemWeight", 20,1,Integer.MAX_VALUE);
-        viTotemPreSetPercentage = builder.comment("Percentage of totem which should be have a pre defined faction").defineInRange("viTotemPreSetPercentage", 0.60d, 0d, 1d);
-        viMaxVillagerRespawn = builder.comment("Maximum of Villager the Totem can respawn").defineInRange("viMaxVillagerRespawn", 30, 0, Integer.MAX_VALUE);
-        viMaxTotemRadius = builder.comment("Maximum range of a Totem to grow the village").defineInRange("viMaxTotemRadius", 100, 0, Integer.MAX_VALUE);
-        builder.pop();
+        viTotemWeight = builder.comment("Weight of the Totem Building inside the Village").defineInRange("totemWeight", 20, 1, Integer.MAX_VALUE);
+        viMaxVillagerRespawn = builder.comment("Maximum of Villager the Totem can respawn").defineInRange("maxVillagerRespawn", 30, 0, Integer.MAX_VALUE);
+        viMaxTotemRadius = builder.comment("Maximum range of a Totem to grow the village").defineInRange("maxTotemRadius", 100, 0, Integer.MAX_VALUE);
 
 
         //Vampire skills
-        builder.push("vampireSkills");
-        vsSundamgeReduction1 = builder.comment("Sundamage is multipled with (value+1)").defineInRange("sundamageReduction1", -0.3, -1, 0);
-        vsThirstReduction1 = builder.comment("Blood exhaustion is multiplied with (value+1)").defineInRange("bloodThirstReduction1", -0.4, -1, 0);
+        builder.category("vampireSkills", "vs");
+        vsSundamageReduction1 = builder.comment("Sundamage is multipled with (value+1)").defineInRange("sundamageReduction1", -0.3, -1, 0);
+        vsBloodThirstReduction1 = builder.comment("Blood exhaustion is multiplied with (value+1)").defineInRange("bloodThirstReduction1", -0.4, -1, 0);
         vsBiteDamageMult = builder.comment("Bite damage is multiplied with (value+1)").defineInRange("biteDamageMult", 1d, 0, 100);
         vsSwordFinisherMaxHealth = builder.comment("The max relative health for sword finisher kill").defineInRange("swordFinisherMaxHealth", 0.25, 0, 1);
         vsJumpBoost = builder.comment("Similar to potion effect ampliofier (and -1 is normal)").defineInRange("jumpBoost", 1, -1, 5);
         vsSpeedBoost = builder.comment("Max speed is multiplied with (value+1)").defineInRange("speedBoost", 0.15, 0, 3);
         vsBloodVisionDistanceSq = builder.comment("Squared blood vision distance").defineInRange("bloodVisionDistanceSq", 1600, 5, Integer.MAX_VALUE);
         vsDisableAvoidedByCreepers = builder.comment("Disables the effect of 'Avoided by creepers'. Can still be unlocked though.").define("disableAvoidedByCreepers", false);
-        builder.pop();
 
 
         //Vampire Player
-        builder.push("vampirePlayer");
+        builder.category("vampirePlayer", "vp");
         vpHealthMaxMod = builder.defineInRange("healthMaxMod", 16, 0.5, 40);
         vpStrengthMaxMod = builder.defineInRange("strengthMaxMod", 1, 0.5, 2);
         vpSpeedMaxMod = builder.defineInRange("speedMaxMod", 0.3, 0, 5);
@@ -298,10 +292,9 @@ public class BalanceConfig {
         vpSundamageWaterblocks = builder.defineInRange("sundamageWaterblocks", 4, 1, 10);
         vpFireVulnerabilityMod = builder.comment("Multiply fire damage with this for vampires" + (iceAndFire ? " - Changed due to IceAndFire" : "")).defineInRange("fireVulnerabilityMod", iceAndFire ? 1.5d : 3d, 0.1, Double.MAX_VALUE);
         vpFireResistanceReplace = builder.comment("Whether to replace the vanilla fire resistance potion for vampires with a custom one that only reduces damage but does not remove it" + (iceAndFire ? " - Changed due to IceAndFire" : "")).define("fireResistanceReplace", !iceAndFire);
-        builder.pop();
 
         //Vampire actions
-        builder.push("vampireActions");
+        builder.category("vampireActions", "va");
         vaFreezeCooldown = builder.comment("In seconds").defineInRange("freezeCooldown", 60, 1, Integer.MAX_VALUE);
         vaFreezeDuration = builder.comment("In seconds").defineInRange("freezeDuration", 6, 1, 30);
         vaFreezeEnabled = builder.define("freezeEnabled", true);
@@ -339,20 +332,16 @@ public class BalanceConfig {
         vaHalfInvulnerableThreshold = builder.comment("Damage threshold relative to players max health. Damage above this value will be ignored").defineInRange("halfInvulnerableThreshold", 0.4d, 0.0d, 1d);
         vaHalfInvulnerableBloodCost = builder.defineInRange("halfInvulnerableBloodCost", 4, 0, 1000);
         vaHalfInvulnerableEnabled = builder.define("halfInvulnerableEnabled", true);
-        builder.pop();
 
-        builder.push("mobs");
+        builder.category("mobs", "mb");
         mbVampireSpawnChance = builder.comment("Vampire spawn chance/weight (e.g. Zombie: 100)").defineInRange("vampireSpawnChance", 75, 0, 100000);
         mbAdvancedVampireSpawnChance = builder.comment("Advanceed vampire spawn chance/weight (e.g. Zombie: 100)").defineInRange("advancedVampireSpawnChance", 19, 0, 100000);
-        builder.pop();
 
-        builder.push("minions");
+        builder.category("minions", "mi");
         miResourceCooldown = builder.comment("Cooldown in ticks,before new resources are added in collect resource task types").defineInRange("resourceCooldown", 1200, 20, Integer.MAX_VALUE);
         miResourceCooldownOfflineMult = builder.comment("Cooldown multiplier for collect resource task types while player is offline").defineInRange("resourceCooldownOfflineMult", 4D, 1D, 100000D);
-        miDeathRecoveryTime = builder.comment("Time in seconds a minion needs to recover from death.").defineInRange("miDeathRecoveryTime", 180, 1, Integer.MAX_VALUE / 100);
-        builder.pop();
+        miDeathRecoveryTime = builder.comment("Time in seconds a minion needs to recover from death.").defineInRange("deathRecoveryTime", 180, 1, Integer.MAX_VALUE / 100);
 
-        builder.pop();
 
     }
 
