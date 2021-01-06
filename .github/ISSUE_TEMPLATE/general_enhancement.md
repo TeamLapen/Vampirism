@@ -4,8 +4,8 @@ about: Don't use, unless suggest something unrelated to mod functionality (like 
 title: ''
 labels: unconfirmed, TODO
 assignees: ''
-
 ---
+
 Don't use if any other template is suitable.
 This is mainly for internal use.
 
