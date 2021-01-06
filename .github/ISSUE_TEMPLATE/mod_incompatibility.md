@@ -1,8 +1,8 @@
 ---
-name: Bug report
-about: Create a report to help us improve
-title: "[Bug]"
-labels: bug, unconfirmed
+name: Mod incompatibility
+about: Use this if there is a bug/problem with another mod
+title: "[Modcompat]"
+labels: bug, modcompat, unconfirmed
 assignees: ''
 
 ---
@@ -12,12 +12,13 @@ assignees: ''
 <!-- These are comments and will not be shown -->
 
 ## Versions
-<!-- Please specify the Minecraft, Forge and Vampirism version your are using. "DO NOT USE LATEST"  -->
+<!-- Please specify the Minecraft, Forge and Vampirism version your are using. DO NOT USE "LATEST"  -->
 
 - Minecraft: 
-- Forge: 
+- Forge:  
 - Vampirism: 
-
+- Incompatible mod: 
+- Link to mod: 
 
 - ModPack: N/A
 
