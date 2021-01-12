@@ -23,6 +23,7 @@ import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
+import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import de.teamlapen.vampirism.items.BloodBottleItem;
 import de.teamlapen.vampirism.modcompat.guide.pages.PageHolderWithLinks;
 import de.teamlapen.vampirism.modcompat.guide.pages.PagePotionTableMix;
@@ -364,6 +365,11 @@ public class GuideBook implements IGuideBook {
 
         ArrayList<IPage> vampireBaronPages = new ArrayList<>();
         vampireBaronPages.add(new PageEntity(ModEntities.vampire_baron));
+        vampireBaronPages.add(new PageEntity((world) -> {
+            VampireBaronEntity baron = ModEntities.vampire_baron.create(world);
+            baron.setLady(true);
+            return baron;
+        }, ModEntities.vampire_baron.getName()));
         vampireBaronPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "vampire_baron.text", loc(ModItems.pure_blood_0))));
         GuideHelper.addLinks(vampireBaronPages, new ResourceLocation("guide.vampirism.world.vampire_forest"));
         entries.put(new ResourceLocation(base + "vampire_baron"), new EntryText(vampireBaronPages, ModEntities.vampire_baron.getName()));
@@ -409,7 +415,7 @@ public class GuideBook implements IGuideBook {
         ItemInfoBuilder.create(ModItems.vampire_fang).build(entries);
         ItemInfoBuilder.create(ModItems.human_heart).build(entries);
         ItemInfoBuilder.create(ModItems.pure_blood_0, ModItems.pure_blood_1, ModItems.pure_blood_2, ModItems.pure_blood_3, ModItems.pure_blood_4).setFormats(translateComponent(ModEntities.vampire_baron.getTranslationKey())).build(entries);
-        ItemInfoBuilder.create(ModItems.vampire_blood_bottle).setFormats(translateComponent(ModEntities.vampire.getTranslationKey()), loc(ModItems.stake), translateComponent(ModEntities.advanced_vampire.getTranslationKey())).build(entries);
+        ItemInfoBuilder.create(ModItems.vampire_blood_bottle).setFormats(translateComponent(ModEntities.vampire.getTranslationKey()), translateComponent(ModEntities.advanced_vampire.getTranslationKey(), loc(ModItems.stake))).build(entries);
         ItemInfoBuilder.create(ModItems.vampire_book).build(entries);
         //Vampire
         ItemInfoBuilder.create(false, BloodBottleItem.getStackWithDamage(BloodBottleItem.AMOUNT)).build(entries);

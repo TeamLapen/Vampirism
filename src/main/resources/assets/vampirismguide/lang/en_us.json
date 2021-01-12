@@ -119,7 +119,7 @@
   "guide.vampirism.items.item_garlic.text": "Can be found in some villages. You can cultivate it similar to carrots.",
   "guide.vampirism.items.pitchfork.text": "Deals a lot of damage",
   "guide.vampirism.items.vampire_book.text": "Can be found in dungeons, mineshafts, pyramids and other loot chests. Rarely dropped by advanced vampires and advanced hunters. Required to level up as a Vampire.",
-  "guide.vampirism.items.vampire_blood_bottle.text": "Dropped by %s if killed with a %s or by %s. Can be used for blood potions and more.",
+  "guide.vampirism.items.vampire_blood_bottle.text": "Dropped by %s or %s if killed with a %s . Can be used for blood potions and more.",
   "guide.vampirism.items.crossbows": "Crossbows",
   "guide.vampirism.items.crossbows.text": "There are several different crossbows, some of them require special skills to be crafted or used. They use %s. (The tech bows use %s).\\n§4Crossbows can only be used by Vampire Hunters.§r",
   "guide.vampirism.items.crossbow_arrow_normal.text": "Used in crossbows.",
