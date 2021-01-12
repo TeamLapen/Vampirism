@@ -149,6 +149,10 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         return getDataManager().get(LADY);
     }
 
+    public void setLady(boolean lady) {
+        getDataManager().set(LADY, lady);
+    }
+
     @Override
     public int getLevel() {
         return getDataManager().get(LEVEL);
