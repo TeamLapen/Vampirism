@@ -115,7 +115,8 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
 
         if (!flag && this.isAlive() && !player.isSneaking()) {
             if (!this.world.isRemote) {
-                if (HunterLevelingConf.instance().isLevelValidForTrainer(HunterPlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0) + 1)) {
+                int levelCorrect = HunterLevelingConf.instance().isLevelValidForTrainer(HunterPlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0) + 1);
+                if (levelCorrect == 0) {
                     if (trainee == null) {
                         player.openContainer(new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new HunterTrainerContainer(id, playerInventory, this), name));
                         this.trainee = player;
@@ -124,8 +125,10 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
                         player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"), Util.DUMMY_UUID);
                     }
 
-                } else {
+                } else if (levelCorrect == -1) {
                     player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_trainer.trainer_level_wrong"), Util.DUMMY_UUID);
+                } else {
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_trainer.trainer_level_to_high"), Util.DUMMY_UUID);
                 }
 
             }

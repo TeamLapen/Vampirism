@@ -421,6 +421,7 @@
   "skill.vampirism.concentrated_durable_brewing.desc": "Long and Strong is finally possible",
   "__comment": "interaction",
   "text.vampirism.hunter_trainer.trainer_level_wrong": "I don’t train hunters as inexperienced as you are. Look for someone less experienced",
+  "text.vampirism.hunter_trainer.trainer_level_to_high": "I cannot teach you anything new",
   "text.vampirism.potion_table.other": "This potion table belongs to %s. You should not use it",
   "text.vampirism.potion_table.cannot_use": "You have not learned how to use this",
   "text.vampirism.alchemical_cauldron.other": "This cauldron belongs to %s. You should not use it.",

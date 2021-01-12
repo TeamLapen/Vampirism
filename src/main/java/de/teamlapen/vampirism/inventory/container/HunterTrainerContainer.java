@@ -60,7 +60,7 @@ public class HunterTrainerContainer extends InventoryContainer implements IInven
     public boolean canLevelup() {
         int targetLevel = FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION) + 1;
         HunterLevelingConf levelingConf = HunterLevelingConf.instance();
-        if (!levelingConf.isLevelValidForTrainer(targetLevel)) return false;
+        if (levelingConf.isLevelValidForTrainer(targetLevel) != 0) return false;
         int[] req = levelingConf.getItemRequirementsForTrainer(targetLevel);
         int level = levelingConf.getHunterIntelMetaForLevel(targetLevel);
         missing = InventoryHelper.checkItems(inventory, new Item[]{Items.IRON_INGOT, Items.GOLD_INGOT, HunterIntelItem.getIntelForLevel(level)}, new int[]{req[0], req[1], 1}, (supplied, required) -> supplied.equals(required) || (supplied instanceof HunterIntelItem && required instanceof HunterIntelItem && ((HunterIntelItem) supplied).getLevel() >= ((HunterIntelItem) required).getLevel()));

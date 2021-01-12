@@ -68,7 +68,7 @@ public class HunterLevelingConf {
     }
 
     public int[] getItemRequirementsForTrainer(int targetLevel) {
-        if (!isLevelValidForTrainer(targetLevel)) {
+        if (isLevelValidForTrainer(targetLevel) != 0) {
             throw new IllegalArgumentException("Cannot use the trainer with the given target level " + targetLevel);
         }
         switch (targetLevel) {
@@ -148,8 +148,10 @@ public class HunterLevelingConf {
 
     /**
      * Checks if a hunter player can reach the given level using the hunter trainer
+     *
+     * @return -1 if level too low, 0 if correct, 1 if target level too high
      */
-    public boolean isLevelValidForTrainer(int targetLevel) {
-        return targetLevel >= TABLE_MIN_LEVEL && targetLevel <= TABLE_MAX_LEVEL;
+    public int isLevelValidForTrainer(int targetLevel) {
+        return targetLevel >= TABLE_MIN_LEVEL ? (targetLevel <= TABLE_MAX_LEVEL ? 0 : 1) : -1;
     }
 }
