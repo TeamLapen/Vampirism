@@ -327,19 +327,10 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public void onRenderWorldLast(RenderWorldLastEvent event) {
-
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onRenderWorldLast(RenderGameOverlayEvent.Pre event) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
         if ((screenPercentage > 0 || screenBottomPercentage > 0) && VampirismConfig.CLIENT.renderScreenOverlay.get()) {
-            // Set the working matrix/layer to a layer directly on the screen/in front of
-            // the player
-            // int factor=scaledresolution.getScaleFactor();
-            GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT, Minecraft.IS_RUNNING_ON_MAC);
-            GlStateManager.matrixMode(GL11.GL_PROJECTION);
-            GlStateManager.loadIdentity();
-            GlStateManager.ortho(0.0D, this.mc.mainWindow.getScaledWidth(), this.mc.mainWindow.getScaledHeight(), 0.0D, 1D, -1D);
-            GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-            GlStateManager.loadIdentity();
             GlStateManager.pushMatrix();
             GL11.glDisable(GL11.GL_DEPTH_TEST);
             int w = (this.mc.mainWindow.getScaledWidth());
@@ -403,7 +394,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 }
 
             }
-            GL11.glEnable(GL11.GL_DEPTH_TEST);
             GlStateManager.popMatrix();
         }
 
