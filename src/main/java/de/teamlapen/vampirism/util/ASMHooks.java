@@ -22,6 +22,10 @@ public class ASMHooks {
     public static final Attribute attribute_blood_exhaustion = getNull();
     @ObjectHolder("vampirism:bite_damage")
     public static final Attribute attribute_bite_damage = getNull();
+    /**
+     * Used by mixins as a fast check if reduced blood vision is enabled
+     */
+    public static boolean enforcingGlowing_bloodVision = false;
 
 
     /**

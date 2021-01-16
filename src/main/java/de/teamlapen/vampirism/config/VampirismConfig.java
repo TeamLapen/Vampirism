@@ -284,6 +284,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue collectStats;
         public final ForgeConfigSpec.ConfigValue<String> integrationsNotifier;
         public final ForgeConfigSpec.BooleanValue useVanillaCampfire;
+        public final ForgeConfigSpec.BooleanValue optifineBloodvisionWarning;
 
 
         Common(ForgeConfigSpec.Builder builder) {
@@ -292,8 +293,10 @@ public class VampirismConfig {
             versionCheck = builder.comment("Check for new versions of Vampirism on startup").define("versionCheck", true);
             collectStats = builder.comment("Send mod version, MC version and mod count to mod author").define("collectStats", true);
             useVanillaCampfire = builder.comment("Use the vanilla campfire block instead of Vampirism's much cooler one").define("useVanillaCampfire", false);
-
+            builder.push("internal");
             integrationsNotifier = builder.comment("INTERNAL - Set to 'never' if you don't want to be notified about integration mods").define("integrationsNotifier", "");
+            optifineBloodvisionWarning = builder.comment("INTERNAL").define("optifineBloodvisionWarning", false);
+            builder.pop();
             builder.pop();
         }
 
