@@ -45,7 +45,7 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
     @Override
     public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (!attacker.getEntityWorld().isRemote) {
-            if (target instanceof IVampireMob) {
+            if (target instanceof IVampireMob || target instanceof PlayerEntity) {
                 if (canKillInstant(target, attacker)) {
                     DamageSource dmg = attacker instanceof PlayerEntity ? DamageSource.causePlayerDamage((PlayerEntity) attacker) : DamageSource.causeMobDamage(attacker);
                     dmg = dmg.setDamageBypassesArmor();
