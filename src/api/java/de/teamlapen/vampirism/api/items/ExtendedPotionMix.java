@@ -34,7 +34,7 @@ public class ExtendedPotionMix {
     }
 
     public boolean canBrew(IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities cap) {
-        return (!master || cap.isMasterBrewing()) && (!durable || cap.isDurableBrewing()) && (!concentrated || cap.isConcentratedBrewing()) && (!efficient || !cap.isEfficientBrewing());
+        return (!master || cap.isMasterBrewing()) && (!durable || cap.isDurableBrewing()) && (!concentrated || cap.isConcentratedBrewing()) && (!efficient || cap.isEfficientBrewing());
     }
 
 
