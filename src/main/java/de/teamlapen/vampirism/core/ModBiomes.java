@@ -16,6 +16,7 @@ import net.minecraft.world.biome.provider.OverworldBiomeProvider;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -52,6 +53,8 @@ public class ModBiomes {
 
         VampirismAPI.sundamageRegistry().addNoSundamageBiomes(VAMPIRE_FOREST_KEY.getLocation());
         VampirismAPI.sundamageRegistry().addNoSundamageBiomes(VAMPIRE_FOREST_HILLS_KEY.getLocation());
+
+        BiomeDictionary.addTypes(VAMPIRE_FOREST_KEY, BiomeDictionary.Type.OVERWORLD, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
     }
 
     /**
