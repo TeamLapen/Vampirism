@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
@@ -12,7 +13,6 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.tileentity.TotemHelper;
 import de.teamlapen.vampirism.util.ASMHooks;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.OptifineHandler;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.FogRenderer;
