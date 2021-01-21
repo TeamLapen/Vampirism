@@ -35,7 +35,7 @@ public class SelectMinionTaskPacket implements IMessage {
             PlayerMinionController controller = MinionWorldData.getData(ctx.getSender().server).getOrCreateController(fp);
             if (RECALL.equals(msg.taskID)) {
                 if (msg.minionID < 0) {
-                    Collection<Integer> ids = controller.recallMinions();
+                    Collection<Integer> ids = controller.recallMinions(false);
                     for (Integer id : ids) {
                         controller.createMinionEntityAtPlayer(id, ctx.getSender());
                     }
