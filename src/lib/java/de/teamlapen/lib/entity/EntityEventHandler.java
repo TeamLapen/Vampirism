@@ -9,6 +9,7 @@ import de.teamlapen.lib.network.UpdateEntityPacket;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -39,12 +40,6 @@ public class EntityEventHandler {
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (event.getEntity().getEntityWorld().isRemote) {
-            if ((event.getEntity() instanceof PlayerEntity && ((PlayerEntity) event.getEntity()).isUser() && HelperRegistry.getSyncablePlayerCaps().size() > 0)) {
-                VampLib.dispatcher.sendToServer(new RequestPlayerUpdatePacket());
-            }
-        }
-
         if (event.getEntity() instanceof PlayerEntity) {
             for (Capability listener : listeners) {
 
@@ -92,6 +87,13 @@ public class EntityEventHandler {
             (event.getEntity().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onPlayerClone(event.getOriginal(), event.isWasDeath()));
         }
 
+    }
+
+    @SubscribeEvent
+    public void onPlayerLoggedInClient(ClientPlayerNetworkEvent.LoggedInEvent event) {
+        if (HelperRegistry.getSyncablePlayerCaps().size() > 0) {
+            VampLib.dispatcher.sendToServer(new RequestPlayerUpdatePacket());
+        }
     }
 
     @SubscribeEvent
