@@ -461,7 +461,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
 
     public int getMaxMinions() {
-        return currentLordLevel;
+        return currentLordLevel * VampirismConfig.BALANCE.miMinionPerLordLevel.get();
     }
 
     private static class Storage implements Capability.IStorage<IFactionPlayerHandler> {
