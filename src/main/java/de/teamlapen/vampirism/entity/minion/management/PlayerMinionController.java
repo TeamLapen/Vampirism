@@ -354,12 +354,13 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
      * Recalls all minions.
      * Corresponding entities are removed if present, tokens are invalidated  and slots are released
      *
+     * @param force Include minions with locked task
      * @return A list of minions ids that can be reclaimed
      */
-    public Collection<Integer> recallMinions() {
+    public Collection<Integer> recallMinions(boolean force) {
         List<Integer> ids = new ArrayList<>(minions.length);
         for (MinionInfo minion : minions) {
-            if (recallMinion(minion)) {
+            if ((force || !minion.data.isTaskLocked()) && recallMinion(minion)) {
                 ids.add(minion.minionID);
             }
         }
