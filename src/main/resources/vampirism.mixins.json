@@ -6,7 +6,8 @@
   "mixins": [
     "MixinAccessors$LivingEntityExperienceAccessor",
     "MixinEntity",
-    "MixinLivingEntity"
+    "MixinLivingEntity",
+    "MixinPlayerEntity"
   ],
   "injectors": {
     "defaultRequire": 1
