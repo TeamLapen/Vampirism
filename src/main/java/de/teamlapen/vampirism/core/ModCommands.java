@@ -67,6 +67,7 @@ public class ModCommands {
                             .then(CaptureVillageCommand.register())
                             .then(MinionCommand.register())
                             .then(TaskCommand.register())
+                            .then(ForcePlayerSyncCommand.register())
             );
         }
     }

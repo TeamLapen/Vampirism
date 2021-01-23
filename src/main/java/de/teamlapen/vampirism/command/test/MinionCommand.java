@@ -99,7 +99,7 @@ public class MinionCommand extends BasicCommand {
         FactionPlayerHandler fph = FactionPlayerHandler.get(p);
         if (fph.getMaxMinions() > 0) {
             PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
-            Collection<Integer> ids = controller.recallMinions();
+            Collection<Integer> ids = controller.recallMinions(true);
             for (Integer id : ids) {
                 controller.createMinionEntityAtPlayer(id, p);
             }

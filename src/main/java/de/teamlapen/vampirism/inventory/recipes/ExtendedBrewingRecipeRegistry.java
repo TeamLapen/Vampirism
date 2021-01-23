@@ -69,10 +69,21 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
         if (ingredient.isEmpty()) return Optional.empty();
         Potion potion = PotionUtils.getPotionFromItem(bottle);
         Item item = bottle.getItem();
+        //Collect mixes that can be brewed with the given ingredients and capabilities
+        List<ExtendedPotionMix> possibleResults = new ArrayList<>();
         for (ExtendedPotionMix mix : conversionMixes) {
-            if (mix.input.get() == potion && mix.reagent1.filter(i->i.test(ingredient)).isPresent() && ingredient.getCount() >= mix.reagent1Count && (mix.reagent2Count <= 0 || (mix.reagent2.filter(i->i.test(extraIngredient)).isPresent() && extraIngredient.getCount() >= mix.reagent2Count)) && mix.canBrew(capabilities)) {
-                return Optional.of(Triple.of(PotionUtils.addPotionToItemStack(new ItemStack(item), mix.output.get()), mix.reagent1Count, mix.reagent2Count));
+            if (mix.input.get() == potion && mix.reagent1.filter(i -> i.test(ingredient)).isPresent() && ingredient.getCount() >= mix.reagent1Count && (mix.reagent2Count <= 0 || (mix.reagent2.filter(i -> i.test(extraIngredient)).isPresent() && extraIngredient.getCount() >= mix.reagent2Count)) && mix.canBrew(capabilities)) {
+                possibleResults.add(mix);
             }
+        }
+        if (!possibleResults.isEmpty()) {
+            //Make sure to use the efficient version if multiple mixes have been found
+            possibleResults.sort((mix1, mix2) ->
+                    mix1.efficient ? (mix2.efficient ? 0 : -1) : (mix2.efficient ? 1 : 0)
+            );
+            ExtendedPotionMix mix = possibleResults.get(0);
+            return Optional.of(Triple.of(PotionUtils.addPotionToItemStack(new ItemStack(item), mix.output.get()), mix.reagent1Count, mix.reagent2Count));
+
         }
         ItemStack output = BrewingRecipeRegistry.getOutput(bottle, ingredient);
         return output.isEmpty() ? Optional.empty() : Optional.of(Triple.of(output, 1, 0));

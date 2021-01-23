@@ -77,7 +77,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
             for (ISkill s : recipe.getRequiredSkills()) {
                 skillText.append(s.getName()).appendString(" ");
             }
-            minecraft.fontRenderer.func_238418_a_(skillText, x, y, 132, Color.gray.getRGB());
+            y += UtilLib.renderMultiLine(minecraft.fontRenderer, stack, skillText, 132, x, y, Color.gray.getRGB());
         }
     }
 

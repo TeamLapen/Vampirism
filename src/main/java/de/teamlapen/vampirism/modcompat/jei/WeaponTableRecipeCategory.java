@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
@@ -52,7 +53,10 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
         int y = 80;
         Minecraft minecraft = Minecraft.getInstance();
         if (recipe.getRequiredLavaUnits() > 0) {
+            RenderSystem.pushMatrix();
+            RenderSystem.multMatrix(stack.getLast().getMatrix());
             minecraft.getItemRenderer().renderItemIntoGUI(lavaStack, 83, 13);
+            RenderSystem.popMatrix();
         }
         if (recipe.getRequiredLevel() > 1) {
             ITextComponent level = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
@@ -68,8 +72,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
                 skillText.append(skill.getName()).appendString(" ");
 
             }
-            minecraft.fontRenderer.func_238418_a_(skillText, x, y, 132, Color.gray.getRGB());
-
+            y += UtilLib.renderMultiLine(minecraft.fontRenderer, stack, skillText, 132, x, y, Color.gray.getRGB());
 
         }
     }

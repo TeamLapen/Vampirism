@@ -1,11 +1,13 @@
 package de.teamlapen.lib;
 
+import de.teamlapen.lib.entity.ClientEntityEventHandler;
 import de.teamlapen.lib.entity.EntityEventHandler;
 import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.network.LibraryPacketDispatcher;
 import de.teamlapen.lib.proxy.ClientProxy;
 import de.teamlapen.lib.proxy.CommonProxy;
 import de.teamlapen.lib.proxy.IProxy;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
@@ -51,5 +53,6 @@ public class VampLib {
     private void processIMC(final InterModProcessEvent event) {
         HelperRegistry.finish();
         MinecraftForge.EVENT_BUS.register(new EntityEventHandler(HelperRegistry.getEventListenerCaps()));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> MinecraftForge.EVENT_BUS.register(new ClientEntityEventHandler()));//Could register in constructor, just keeping it here for consistency
     }
 }

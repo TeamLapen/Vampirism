@@ -4,6 +4,7 @@ package de.teamlapen.vampirism.core;
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.util.ConfigurableStructureSeparationSettings;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.gen.features.ModLakeFeature;
 import de.teamlapen.vampirism.world.gen.features.VampireDungeonFeature;
@@ -65,15 +66,19 @@ public class ModFeatures {
 
     }
 
+
+    /**
+     * Not safe to run in parallel with other mods
+     */
     public static void registerStructureSeparation() {
         //https://github.com/MinecraftForge/MinecraftForge/pull/7232
         //https://github.com/MinecraftForge/MinecraftForge/pull/7331
         Map<Structure<?>, StructureSeparationSettings> structureSettingsMapOverworld = DimensionSettings.func_242746_i().getStructures().func_236195_a_(); //TODO 1.17 check if any PR has been accepted
-        structureSettingsMapOverworld.put(hunter_camp, HunterCampStructure.getSettings());
+        structureSettingsMapOverworld.put(hunter_camp, new ConfigurableStructureSeparationSettings(VampirismConfig.BALANCE.hunterTentDistance, VampirismConfig.BALANCE.hunterTentSeparation, 14357719));
 
-        if (VampirismConfig.SERVER.villageModify.get()) {
+        if (VampirismConfig.COMMON.villageModify.get()) {
             LOGGER.info("Replacing vanilla village structure separation settings for the overworld dimension preset");
-            structureSettingsMapOverworld.put(Structure.field_236382_r_, new StructureSeparationSettings(VampirismConfig.SERVER.villageDistance.get(), VampirismConfig.SERVER.villageSeparation.get(), DimensionStructuresSettings.field_236191_b_.get(Structure.field_236382_r_).func_236673_c_()));
+            structureSettingsMapOverworld.put(Structure.field_236382_r_, new ConfigurableStructureSeparationSettings(VampirismConfig.SERVER.villageDistance, VampirismConfig.SERVER.villageSeparation, DimensionStructuresSettings.field_236191_b_.get(Structure.field_236381_q_).func_236673_c_()));
         } else {
             LOGGER.trace("Not modifying village");
         }

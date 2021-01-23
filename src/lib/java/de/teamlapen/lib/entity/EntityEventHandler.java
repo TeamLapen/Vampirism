@@ -4,7 +4,6 @@ import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
-import de.teamlapen.lib.network.RequestPlayerUpdatePacket;
 import de.teamlapen.lib.network.UpdateEntityPacket;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -39,12 +38,6 @@ public class EntityEventHandler {
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (event.getEntity().getEntityWorld().isRemote) {
-            if ((event.getEntity() instanceof PlayerEntity && ((PlayerEntity) event.getEntity()).isUser() && HelperRegistry.getSyncablePlayerCaps().size() > 0)) {
-                VampLib.dispatcher.sendToServer(new RequestPlayerUpdatePacket());
-            }
-        }
-
         if (event.getEntity() instanceof PlayerEntity) {
             for (Capability listener : listeners) {
 

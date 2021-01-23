@@ -161,6 +161,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue miResourceCooldown;
     public final ForgeConfigSpec.DoubleValue miResourceCooldownOfflineMult;
     public final ForgeConfigSpec.IntValue miDeathRecoveryTime;
+    public final ForgeConfigSpec.IntValue miMinionPerLordLevel;
 
     public final ForgeConfigSpec.IntValue mbVampireSpawnChance;
     public final ForgeConfigSpec.IntValue mbAdvancedVampireSpawnChance;
@@ -348,7 +349,7 @@ public class BalanceConfig {
         miResourceCooldown = builder.comment("Cooldown in ticks,before new resources are added in collect resource task types").defineInRange("resourceCooldown", 1200, 20, Integer.MAX_VALUE);
         miResourceCooldownOfflineMult = builder.comment("Cooldown multiplier for collect resource task types while player is offline").defineInRange("resourceCooldownOfflineMult", 4D, 1D, 100000D);
         miDeathRecoveryTime = builder.comment("Time in seconds a minion needs to recover from death.").defineInRange("deathRecoveryTime", 180, 1, Integer.MAX_VALUE / 100);
-
+        miMinionPerLordLevel = builder.comment("How many minions a player can have per lord level. Probably don't want to go very high").defineInRange("minionPerLordLevel", 1, 0, 100);
 
     }
 
