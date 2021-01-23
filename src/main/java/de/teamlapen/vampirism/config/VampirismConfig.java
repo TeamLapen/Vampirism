@@ -146,7 +146,6 @@ public class VampirismConfig {
 
         public final ForgeConfigSpec.IntValue villageDistance;
         public final ForgeConfigSpec.IntValue villageSeparation;
-        public final ForgeConfigSpec.BooleanValue villageModify;
 
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> blacklistedBloodEntity;
 
@@ -189,7 +188,6 @@ public class VampirismConfig {
             builder.pop();
 
             builder.push("village");
-            villageModify = builder.comment("Whether to modify the village world gen (size and frequency)").define("villageModify", true);
             villageDistance = builder.comment("Village distance").defineInRange("villageDistance", 32, 1, 100); //TODO 1.17 improve comment
             villageSeparation = builder.comment("Village centers will be at least N chunks apart. Must be smaller than distance").defineInRange("villageSeparation", 8, 1, 100);
             builder.pop();
@@ -283,7 +281,8 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue versionCheck;
         public final ForgeConfigSpec.BooleanValue collectStats;
         public final ForgeConfigSpec.ConfigValue<String> integrationsNotifier;
-        public final ForgeConfigSpec.BooleanValue useVanillaCampfire;
+        public final ForgeConfigSpec.BooleanValue useVanillaCampfire; //TODO 1.17 move to Server config
+        public final ForgeConfigSpec.BooleanValue villageModify;
 
 
         Common(ForgeConfigSpec.Builder builder) {
@@ -294,6 +293,8 @@ public class VampirismConfig {
             useVanillaCampfire = builder.comment("Use the vanilla campfire block instead of Vampirism's much cooler one").define("useVanillaCampfire", false);
 
             integrationsNotifier = builder.comment("INTERNAL - Set to 'never' if you don't want to be notified about integration mods").define("integrationsNotifier", "");
+            villageModify = builder.comment("Whether to modify the village world gen (size and frequency), based on world config").define("villageModify", true);
+
             builder.pop();
         }
 

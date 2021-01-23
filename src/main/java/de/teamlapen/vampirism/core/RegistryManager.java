@@ -72,6 +72,7 @@ public class RegistryManager implements IInitListener {
                 ModLoot.registerLootFunctionType();
                 VampirismBiomeFeatures.init();
             case LOAD_COMPLETE:
+                event.enqueueWork(ModFeatures::registerStructureSeparation);
                 if (ModEffects.checkNightVision()) {
                     ModEffects.fixNightVisionEffecTypes();
                 }
