@@ -283,6 +283,8 @@ public class VampirismConfig {
         public final ForgeConfigSpec.ConfigValue<String> integrationsNotifier;
         public final ForgeConfigSpec.BooleanValue useVanillaCampfire; //TODO 1.17 move to Server config
         public final ForgeConfigSpec.BooleanValue villageModify;
+        public final ForgeConfigSpec.BooleanValue optifineBloodvisionWarning;
+
 
 
         Common(ForgeConfigSpec.Builder builder) {
@@ -291,10 +293,11 @@ public class VampirismConfig {
             versionCheck = builder.comment("Check for new versions of Vampirism on startup").define("versionCheck", true);
             collectStats = builder.comment("Send mod version, MC version and mod count to mod author").define("collectStats", true);
             useVanillaCampfire = builder.comment("Use the vanilla campfire block instead of Vampirism's much cooler one").define("useVanillaCampfire", false);
-
-            integrationsNotifier = builder.comment("INTERNAL - Set to 'never' if you don't want to be notified about integration mods").define("integrationsNotifier", "");
             villageModify = builder.comment("Whether to modify the village world gen (size and frequency), based on world config").define("villageModify", true);
-
+            //builder.push("internal"); //TODO 1.17
+            integrationsNotifier = builder.comment("INTERNAL - Set to 'never' if you don't want to be notified about integration mods").define("integrationsNotifier", "");
+            optifineBloodvisionWarning = builder.comment("INTERNAL").define("optifineBloodvisionWarning", false);
+            //builder.pop(); //TODO 1.17
             builder.pop();
         }
 

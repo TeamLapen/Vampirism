@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
@@ -10,6 +11,7 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.tileentity.TotemHelper;
+import de.teamlapen.vampirism.util.ASMHooks;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -52,7 +54,6 @@ import java.util.function.Predicate;
  */
 @OnlyIn(Dist.CLIENT)
 public class RenderHandler implements ISelectiveResourceReloadListener {
-    private static final ResourceLocation saturation1 = new ResourceLocation(REFERENCE.MODID + ":shaders/saturation1.json");
     private static final int ENTITY_NEAR_SQ_DISTANCE = 100;
     @Nonnull
     private final Minecraft mc;
@@ -83,14 +84,14 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
      * Store the last used framebuffer size to be able to rebind shader buffer when size changes
      */
     private int displayHeight, displayWidth;
-    private boolean isInsideBloodVisionRendering = false;
+    private boolean reducedBloodVision = false;
 
     @Nullable
     private Shader blur1, blur2, blit0;
+    private boolean isInsideBloodVisionRendering = false;
 
     public RenderHandler(@Nonnull Minecraft mc) {
         this.mc = mc;
-
     }
 
     @Nullable
@@ -173,8 +174,25 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     }
 
     @SubscribeEvent
+    public void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
+        if (shouldRenderBloodVision()) {
+            reducedBloodVision = OptifineHandler.isShaders();
+            if (!reducedBloodVision) {
+                if (displayHeight != mc.getMainWindow().getFramebufferHeight() || displayWidth != mc.getMainWindow().getFramebufferWidth()) {
+                    this.displayHeight = mc.getMainWindow().getFramebufferHeight();
+                    this.displayWidth = mc.getMainWindow().getFramebufferWidth();
+                    this.updateFramebufferSize(this.displayWidth, this.displayHeight);
+                }
+                adjustBloodVisionShaders(getBloodVisionProgress((float) event.getRenderPartialTicks()));
+            } else {
+                ASMHooks.enforcingGlowing_bloodVision = true;
+            }
+        }
+    }
+
+    @SubscribeEvent
     public void onRenderLivingPost(RenderLivingEvent.Post event) {
-        if (!isInsideBloodVisionRendering && shouldRenderBloodVision()) {
+        if (!isInsideBloodVisionRendering && shouldRenderBloodVision() && !reducedBloodVision) {
             Entity entity = event.getEntity();
 
             boolean flag = true;
@@ -210,13 +228,24 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
                 isInsideBloodVisionRendering = false;
 
             }
-
         }
     }
 
     @SubscribeEvent
-    public void onWorldLoad(WorldEvent.Load event) {
-        this.bloodVisionTicks = 0;//Reset blood vision on world load
+    public void onRenderWorldLast(RenderWorldLastEvent event) {
+        ASMHooks.enforcingGlowing_bloodVision = false;
+        if (mc.world == null) return;
+
+        /*
+         * DO NOT USE partial ticks from event. They are bugged: https://github.com/MinecraftForge/MinecraftForge/issues/6380
+         */
+        float partialTicks = mc.getRenderPartialTicks();
+
+
+        if (shouldRenderBloodVision() && !reducedBloodVision) {
+            this.blurShader.render(partialTicks);
+            if (this.bloodVisionBuffer != null) this.bloodVisionBuffer.finish();
+        }
     }
 
     @SubscribeEvent
@@ -265,26 +294,8 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     }
 
     @SubscribeEvent
-    public void onRenderWorldLast(RenderWorldLastEvent event) {
-        if (mc.world == null) return;
-
-        /*
-         * DO NOT USE partial ticks from event. They are bugged: https://github.com/MinecraftForge/MinecraftForge/issues/6380
-         */
-        float partialTicks = mc.getRenderPartialTicks();
-
-
-        if (displayHeight != mc.getMainWindow().getFramebufferHeight() || displayWidth != mc.getMainWindow().getFramebufferWidth()) {
-            this.displayHeight = mc.getMainWindow().getFramebufferHeight();
-            this.displayWidth = mc.getMainWindow().getFramebufferWidth();
-            this.updateFramebufferSize(this.displayWidth, this.displayHeight);
-        }
-
-        if (shouldRenderBloodVision()) {
-            adjustBloodVisionShaders(getBloodVisionProgress(partialTicks));
-            this.blurShader.render(partialTicks);
-            if (this.bloodVisionBuffer != null) this.bloodVisionBuffer.finish();
-        }
+    public void onWorldLoad(WorldEvent.Load event) {
+        this.bloodVisionTicks = 0;//Reset blood vision on world load
     }
 
     @Override
@@ -329,7 +340,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         }
     }
 
-    private boolean shouldRenderBloodVision() {
+    public boolean shouldRenderBloodVision() {
         return this.bloodVisionTicks > 0 && this.blurShader != null && this.mc.player != null;
     }
 

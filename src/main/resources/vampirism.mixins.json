@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "de.teamlapen.vampirism.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "vampirism.refmap.json",
+  "mixins": [
+    "MixinAccessors$LivingEntityExperienceAccessor",
+    "MixinEntity",
+    "MixinLivingEntity",
+    "MixinPlayerEntity"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

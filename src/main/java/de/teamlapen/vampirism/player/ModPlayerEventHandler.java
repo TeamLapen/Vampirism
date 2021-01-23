@@ -285,13 +285,6 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onPlayerVisibilityCheck(PlayerEvent.Visibility event) {
-        if (HunterPlayer.getOpt(event.getPlayer()).map(HunterPlayer::getSpecialAttributes).map(HunterPlayerSpecialAttribute::isDisguised).orElse(false)) {
-            event.modifyVisibility(VampirismConfig.BALANCE.haDisguiseVisibilityMod.get());
-        }
-    }
-
-    @SubscribeEvent
     public void sleepTimeCheck(SleepingTimeCheckEvent event) {
         if (Helper.isVampire(event.getPlayer())) {
             event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getPlayer().world.getBlockState(blockPos).getBlock() instanceof CoffinBlock ? event.getPlayer().world.isDaytime() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));

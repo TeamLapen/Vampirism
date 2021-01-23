@@ -53,7 +53,6 @@ import net.minecraft.world.GameType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
@@ -329,23 +328,12 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public void onRenderWorldLast(RenderWorldLastEvent event) {
-
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onRenderWorldLast(RenderGameOverlayEvent.Pre event) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
         if ((screenPercentage > 0 || screenBottomPercentage > 0) && VampirismConfig.CLIENT.renderScreenOverlay.get()) {
-            // Set the working matrix/layer to a layer directly on the screen/in front of
-            // the player
-            // int factor=scaledresolution.getScaleFactor();
-            GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT, Minecraft.IS_RUNNING_ON_MAC);
-            //Setup a new matrix stack as vanilla currently does as well for rendering the GUI
-            MatrixStack stack = new MatrixStack();
+            MatrixStack stack = event.getMatrixStack();
             stack.push();
-            RenderSystem.matrixMode(GL11.GL_PROJECTION);
-            RenderSystem.loadIdentity();
-            RenderSystem.ortho(0.0D, this.mc.getMainWindow().getScaledWidth(), this.mc.getMainWindow().getScaledHeight(), 0.0D, 1D, -1D);
-            RenderSystem.matrixMode(GL11.GL_MODELVIEW);
-            RenderSystem.loadIdentity();
-            GL11.glDisable(GL11.GL_DEPTH_TEST);
             int w = (this.mc.getMainWindow().getScaledWidth());
             int h = (this.mc.getMainWindow().getScaledHeight());
             if (fullScreen) {
@@ -408,7 +396,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 }
 
             }
-            GL11.glEnable(GL11.GL_DEPTH_TEST);
             stack.pop();
         }
     }

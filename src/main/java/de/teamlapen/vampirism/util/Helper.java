@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.mixin.MixinAccessors;
 import de.teamlapen.vampirism.tileentity.TotemHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -36,7 +37,6 @@ import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
@@ -221,15 +221,7 @@ public class Helper {
     }
 
     public static int getExperiencePoints(LivingEntity entity, PlayerEntity player) {
-        try {
-            if (reflectionMethodExperiencePoints == null) {
-                reflectionMethodExperiencePoints = ObfuscationReflectionHelper.findMethod(LivingEntity.class, SRGNAMES.MobEntity_getExperiencePoints, PlayerEntity.class); //mcpbot cannot find the mapping for LivingEntity#getExperiencePoints, but MobEntity overrides it
-            }
-            return (int) reflectionMethodExperiencePoints.invoke(entity, player);
-        } catch (Exception e) {
-            LOGGER.error("Failed to get experience points", e);
-        }
-        return 3; //return at least some XP points if there is an issue
+        return ((MixinAccessors.LivingEntityExperienceAccessor) entity).accessGetExperiencePoints(player); //Use mixin instead of AT since AT does not want to work for this specific method for some reason
     }
 
     /**
