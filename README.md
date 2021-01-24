@@ -65,19 +65,38 @@ vampirism_version=1.0.3
 ```
 
 #### Rerun Gradle setup commands
-Please run the commands that you used to setup your development environment again.
-E.g. `gradlew` or `gradlew build --refresh-dependencies`
+
+Please run the commands that you used to setup your development environment again. E.g. `gradlew`
+or `gradlew build --refresh-dependencies`
 Refresh/Restart your IDE afterwards.
 
+#### Run Vampirism in a deobfuscated environment
+
+Since Vampirism uses **mixins** and they try to use the obfuscated mappings by default it is currently required to
+disable the mixin for mixin based mods. Therefore, you currently have to set the Java system
+property `mixin.env.disableRefMap` to `true` when running Vampirism in dev. This can e.g. be achieved by
+adding             
+`property 'mixin.env.disableRefMap', 'true'`
+to your run configurations in your `build.gradle` and then regenerate your IDE run configurations (`genIntelliJRuns` or
+similar)
+
+If you run into issues with the mixins you can also set `mixin.env.ignoreRequired` to `true`. However, not all of
+Vampirism will work correctly then.
+
 #### Examples
+
 Checkout this example project: https://github.com/TeamLapen/VampirismAPIExample
 
-If you want to create an addon which access all of Vampirism's classes, not just the API, checkout this https://github.com/TeamLapen/VampirismAddonExample and consider contacting maxanier.
+If you want to create an addon which access all of Vampirism's classes, not just the API, checkout
+this https://github.com/TeamLapen/VampirismAddonExample and consider contacting maxanier.
 
 ## Code Structure
-The _master branch_ serves as the main development branch. Besides that there is a branch with the latest stable release code, it receives bugfixes which are usually cherry-pick merged in to the master branch.
-There also is a 1.9 branch which might be up-to-date with the latest release branch (for 1.10).
-The source code is currently divided into three parts, which might be split in the future.
+
+The _master branch_ serves as the main development branch. Besides that there is a branch with the latest stable release
+code, it receives bugfixes which are usually cherry-pick merged in to the master branch. There also is a 1.9 branch
+which might be up-to-date with the latest release branch (for 1.10). The source code is currently divided into three
+parts, which might be split in the future.
+
 #### Vampirism
 Located in de.teamlapen.vampirism  
 Contains the mod source code. Depends on the other two parts.  
