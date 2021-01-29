@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.client.gui.ExtendedGui;
 import de.teamlapen.lib.lib.util.FluidLib;
+import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
@@ -329,7 +330,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onRenderWorldLast(RenderGameOverlayEvent.Pre event) {
+    public void onRenderGameOverlay(RenderGameOverlayEvent.Pre event) {
         if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
         if ((screenPercentage > 0 || screenBottomPercentage > 0) && VampirismConfig.CLIENT.renderScreenOverlay.get()) {
             MatrixStack stack = event.getMatrixStack();
@@ -382,7 +383,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     bw = Math.round(w / (float) 8 * screenPercentage / 100);
 
                     this.fillGradient(stack, 0, 0, w, bh, screenColor, 0x000);
-                    this.fillGradient(stack, 0, h - bh, w, h, 0x00000000, screenColor);
+                    if (!OptifineHandler.isShaders())
+                        this.fillGradient(stack, 0, h - bh, w, h, 0x00000000, screenColor);
                     this.fillGradient2(stack, 0, 0, bw, h, 0x000000, screenColor);
                     this.fillGradient2(stack, w - bw, 0, w, h, screenColor, 0x00);
                 } else { //If here screenBottomPercentage has to be >0
