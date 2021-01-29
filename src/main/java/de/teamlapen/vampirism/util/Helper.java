@@ -221,7 +221,7 @@ public class Helper {
     }
 
     public static int getExperiencePoints(LivingEntity entity, PlayerEntity player) {
-        return ((LivingEntityAccessor) entity).accessGetExperiencePoints(player); //Use mixin instead of AT since AT does not want to work for this specific method for some reason
+        return ((LivingEntityAccessor) entity).invokeGetExperiencePoints_vampirism(player); //Use mixin instead of AT since AT does not want to work for this specific method for some reason
     }
 
     /**
