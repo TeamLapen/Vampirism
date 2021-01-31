@@ -136,6 +136,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         currentLordLevel = oldP.currentLordLevel;
         this.boundAction1 = oldP.boundAction1;
         this.boundAction2 = oldP.boundAction2;
+        this.titleGender = oldP.titleGender;
         notifyFaction(oldP.currentFaction, oldP.currentLevel);
     }
 
@@ -365,6 +366,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     public boolean setTitleGender(boolean female) {
         if (titleGender == null || female != this.titleGender) {
             this.titleGender = female;
+            player.refreshDisplayName();
             if (!player.world.isRemote()) {
                 sync(true);
             }
@@ -451,6 +453,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (getBoundAction1() != null) nbt.putString("bound1", getBoundAction1().getRegistryName().toString());
         if (getBoundAction2() != null) nbt.putString("bound2", getBoundAction2().getRegistryName().toString());
         if (titleGender != null) nbt.putBoolean("title_gender", titleGender);
+        //Don't forget to also add things to copyFrom
     }
 
     private void sync(boolean all) {
