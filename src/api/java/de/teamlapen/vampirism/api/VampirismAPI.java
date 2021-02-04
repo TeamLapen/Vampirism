@@ -21,6 +21,8 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class for core api methods
@@ -45,6 +47,17 @@ public class VampirismAPI {
     private static IEntityActionManager entityActionManager;
     private static IWorldGenManager worldGenRegistry;
     private static IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry;
+
+    private static boolean init;
+    private static List<Runnable> apiRunnables = new ArrayList<>();
+
+    public static void runAPIDependent(Runnable runnable) {
+        if (init) {
+            runnable.run();
+        } else {
+            apiRunnables.add(runnable);
+        }
+    }
 
     public static ISkillManager skillManager() {
         return skillManager;
@@ -110,7 +123,8 @@ public class VampirismAPI {
         entityActionManager = entityActionManagerIn;
         worldGenRegistry = worldGenRegistryIn;
         extendedBrewingRecipeRegistry = extendedBrewingRecipeRegistryIn;
-
+        init = true;
+        apiRunnables.forEach(Runnable::run);
     }
 
     /**
