@@ -114,6 +114,15 @@ public class VampirismAPI {
     }
 
     /**
+     * FOR FUTURE INTERNAL USE ONLY
+     * Called once Vampirism has finished preparing the API and it is ready to use.
+     */
+    @Deprecated
+    public static void onSetupComplete() {
+
+    }
+
+    /**
      * Setup the API accessors
      * FOR INTERNAL USAGE ONLY
      */

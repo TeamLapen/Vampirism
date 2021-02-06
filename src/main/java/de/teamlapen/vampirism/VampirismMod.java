@@ -155,8 +155,8 @@ public class VampirismMod {
         MinecraftForge.EVENT_BUS.register(registryManager);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, ModBiomes::onBiomeLoadingEventAdditions);
 
-        setupAPI1();
-        setupAPI2();
+        prepareAPI();
+
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");
         }
@@ -225,8 +225,6 @@ public class VampirismMod {
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
-        finishAPI1();
-
 
         HelperRegistry.registerPlayerEventReceivingCapability(VampirePlayer.CAP, VampirePlayer.class);
         HelperRegistry.registerPlayerEventReceivingCapability(HunterPlayer.CAP, HunterPlayer.class);
@@ -238,16 +236,10 @@ public class VampirismMod {
     }
 
     /**
-     * Finish during init
+     * Finish API during InterModProcessEvent
      */
-    private void finishAPI1() {
+    private void finishAPI() {
         ((FactionRegistry) VampirismAPI.factionRegistry()).finish();
-    }
-
-    /**
-     * Finish during post-init
-     */
-    private void finishAPI2() {
         ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).finishRegistration();
     }
 
@@ -273,14 +265,36 @@ public class VampirismMod {
         modCompatLoader.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
     }
 
-    private void processIMC(final InterModProcessEvent event) {
-        finishAPI2();
-        registryManager.onInitStep(IInitListener.Step.PROCESS_IMC, event);
-        IMCHandler.handleInterModMessage(event);
-        if (inDev) {
-            Tests.runBackgroundTests();
-        }
-        ModWorld.initVillageStructures();
+    /**
+     * Called during constructor to setup the API as well as VReference
+     */
+    private void prepareAPI() {
+        FactionRegistry factionRegistry = new FactionRegistry();
+        SundamageRegistry sundamageRegistry = new SundamageRegistry();
+        VampirismEntityRegistry biteableRegistry = new VampirismEntityRegistry();
+        ActionManager actionManager = new ActionManager();
+        SkillManager skillManager = new SkillManager();
+        GeneralRegistryImpl generalRegistry = new GeneralRegistryImpl();
+        ActionManagerEntity entityActionManager = new ActionManagerEntity();
+        WorldGenManager worldGenRegistry = new WorldGenManager();
+        ExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry = new ExtendedBrewingRecipeRegistry();
+
+        biteableRegistry.setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new);
+        VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, entityActionManager, worldGenRegistry, extendedBrewingRecipeRegistry);
+        VampirismAPI.setUpAccessors(new GarlicChunkHandler.Provider());
+
+
+        VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction(REFERENCE.VAMPIRE_PLAYER_KEY, IVampirePlayer.class, Color.MAGENTA.darker().darker(), true, () -> VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL, REFERENCE.HIGHEST_VAMPIRE_LORD, LordTitles::getVampireTitle, new VampireVillageData());
+        VReference.VAMPIRE_FACTION.setChatColor(TextFormatting.DARK_PURPLE).setTranslationKeys("text.vampirism.vampire", "text.vampirism.vampires");
+        VReference.HUNTER_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction(REFERENCE.HUNTER_PLAYER_KEY, IHunterPlayer.class, Color.BLUE, false, () -> HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL, REFERENCE.HIGHEST_HUNTER_LORD, LordTitles::getHunterTitle, new HunterVillageData());
+        VReference.HUNTER_FACTION.setChatColor(TextFormatting.BLUE).setTranslationKeys("text.vampirism.hunter", "text.vampirism.hunters");
+        VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;
+        VReference.VAMPIRE_CREATURE_TYPE = VAMPIRE_CREATURE_TYPE;
+        VReference.VAMPIRE_CREATURE_ATTRIBUTE = VAMPIRE_CREATURE_ATTRIBUTE;
+        VReference.vision_nightVision = VampirismAPI.vampireVisionRegistry().registerVision("nightVision", new NightVision());
+        VReference.vision_bloodVision = VampirismAPI.vampireVisionRegistry().registerVision("bloodVision", new BloodVision());
+
+        VampirismAPI.onSetupComplete();
     }
 
     private void finalizeConfiguration(RegistryEvent<Block> event) {
@@ -294,7 +308,6 @@ public class VampirismMod {
         ExtendedCreature.registerCapability();
         VampirismWorld.registerCapability();
         modCompatLoader.onInitStep(IInitListener.Step.COMMON_SETUP, event);
-        setupAPI3();
 
         dispatcher.registerPackets();
         registryManager.onInitStep(IInitListener.Step.COMMON_SETUP, event);
@@ -321,45 +334,16 @@ public class VampirismMod {
 
     }
 
-    /**
-     * Called during construction
-     */
-    private void setupAPI1() {
-        FactionRegistry factionRegistry = new FactionRegistry();
-        SundamageRegistry sundamageRegistry = new SundamageRegistry();
-        VampirismEntityRegistry biteableRegistry = new VampirismEntityRegistry();
-        ActionManager actionManager = new ActionManager();
-        SkillManager skillManager = new SkillManager();
-        GeneralRegistryImpl generalRegistry = new GeneralRegistryImpl();
-        ActionManagerEntity entityActionManager = new ActionManagerEntity();
-        WorldGenManager worldGenRegistry = new WorldGenManager();
-        ExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry = new ExtendedBrewingRecipeRegistry();
-
-        biteableRegistry.setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new);
-        VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, entityActionManager, worldGenRegistry, extendedBrewingRecipeRegistry);
-        VampirismAPI.setUpAccessors(new GarlicChunkHandler.Provider());
+    private void processIMC(final InterModProcessEvent event) {
+        finishAPI();
+        registryManager.onInitStep(IInitListener.Step.PROCESS_IMC, event);
+        IMCHandler.handleInterModMessage(event);
+        if (inDev) {
+            Tests.runBackgroundTests();
+        }
+        ModWorld.initVillageStructures();
     }
 
-    /**
-     * Setup API during mod contruction before configs are loaded
-     */
-    private void setupAPI2() {
-        VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction(REFERENCE.VAMPIRE_PLAYER_KEY, IVampirePlayer.class, Color.MAGENTA.darker().darker(), true, () -> VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL, REFERENCE.HIGHEST_VAMPIRE_LORD, LordTitles::getVampireTitle, new VampireVillageData());
-        VReference.VAMPIRE_FACTION.setChatColor(TextFormatting.DARK_PURPLE).setTranslationKeys("text.vampirism.vampire", "text.vampirism.vampires");
-        VReference.HUNTER_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction(REFERENCE.HUNTER_PLAYER_KEY, IHunterPlayer.class, Color.BLUE, false, () -> HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL, REFERENCE.HIGHEST_HUNTER_LORD, LordTitles::getHunterTitle, new HunterVillageData());
-        VReference.HUNTER_FACTION.setChatColor(TextFormatting.BLUE).setTranslationKeys("text.vampirism.hunter", "text.vampirism.hunters");
-        VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;
-        VReference.VAMPIRE_CREATURE_TYPE = VAMPIRE_CREATURE_TYPE;
-        VReference.VAMPIRE_CREATURE_ATTRIBUTE = VAMPIRE_CREATURE_ATTRIBUTE;
-    }
-
-    /**
-     * Setup API during pre-init after configs are loaded
-     */
-    private void setupAPI3() {
-        VReference.vision_nightVision = VampirismAPI.vampireVisionRegistry().registerVision("nightVision", new NightVision());
-        VReference.vision_bloodVision = VampirismAPI.vampireVisionRegistry().registerVision("bloodVision", new BloodVision());
-    }
 
     private void setupClient(FMLClientSetupEvent event) {
         registryManager.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
