@@ -4,6 +4,7 @@ package de.teamlapen.vampirism.core;
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.mixin.DimensionStructureSettingsAccessor;
 import de.teamlapen.vampirism.util.ConfigurableStructureSeparationSettings;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.gen.features.ModLakeFeature;
@@ -12,6 +13,8 @@ import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampStructure;
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
+import net.minecraft.util.RegistryKey;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.DimensionSettings;
 import net.minecraft.world.gen.GenerationStage;
@@ -27,6 +30,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ModFeatures {
@@ -73,14 +77,39 @@ public class ModFeatures {
     public static void registerStructureSeparation() {
         //https://github.com/MinecraftForge/MinecraftForge/pull/7232
         //https://github.com/MinecraftForge/MinecraftForge/pull/7331
-        Map<Structure<?>, StructureSeparationSettings> structureSettingsMapOverworld = DimensionSettings.func_242746_i().getStructures().func_236195_a_(); //TODO 1.17 check if any PR has been accepted
-        structureSettingsMapOverworld.put(hunter_camp, new ConfigurableStructureSeparationSettings(VampirismConfig.BALANCE.hunterTentDistance, VampirismConfig.BALANCE.hunterTentSeparation, 14357719));
-
+        DimensionStructuresSettings settings = DimensionSettings.func_242746_i().getStructures();
+        //Copy/Overwrite
+        Map<Structure<?>, StructureSeparationSettings> structureSettingsMapOverworld = new HashMap<>(settings.func_236195_a_()); //TODO 1.17 check if any PR has been accepted
+        addStructureSeparationSettings(structureSettingsMapOverworld);
         if (VampirismConfig.COMMON.villageModify.get()) {
             LOGGER.info("Replacing vanilla village structure separation settings for the overworld dimension preset");
             structureSettingsMapOverworld.put(Structure.field_236382_r_, new ConfigurableStructureSeparationSettings(VampirismConfig.SERVER.villageDistance, VampirismConfig.SERVER.villageSeparation, DimensionStructuresSettings.field_236191_b_.get(Structure.field_236381_q_).func_236673_c_()));
         } else {
             LOGGER.trace("Not modifying village");
         }
+        ((DimensionStructureSettingsAccessor) settings).setStructureSeparation_vampirism(structureSettingsMapOverworld);
+    }
+
+    /**
+     * Make sure a given world (that is being loaded) has our structure separation settings.
+     * Datapack worlds might generate without them otherwise.
+     *
+     * @param settings
+     */
+    public static void checkWorldStructureSeparation(RegistryKey<World> dimension, boolean flatWorld, DimensionStructuresSettings settings) {
+        if (dimension.compareTo(World.OVERWORLD) == 0 || flatWorld) return;
+        if (!VampirismConfig.COMMON.enforceTentGeneration.get()) return;
+        //Copy/Overwrite
+        Map<Structure<?>, StructureSeparationSettings> structureSettings = new HashMap<>(settings.func_236195_a_());
+        if (!structureSettings.containsKey(hunter_camp)) {
+            LOGGER.info("Cannot find hunter camp configuration for loaded world -> Adding");
+            structureSettings.put(hunter_camp, new StructureSeparationSettings(VampirismConfig.BALANCE.hunterTentSeparation.get(), VampirismConfig.BALANCE.hunterTentSeparation.get(), 14357719));
+        }
+        ((DimensionStructureSettingsAccessor) settings).setStructureSeparation_vampirism(structureSettings);
+    }
+
+    private static void addStructureSeparationSettings(Map<Structure<?>, StructureSeparationSettings> settings) {
+        settings.put(hunter_camp, new ConfigurableStructureSeparationSettings(VampirismConfig.BALANCE.hunterTentDistance, VampirismConfig.BALANCE.hunterTentSeparation, 14357719));
+
     }
 }

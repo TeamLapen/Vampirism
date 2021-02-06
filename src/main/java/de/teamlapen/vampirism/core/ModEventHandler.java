@@ -26,6 +26,9 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.FlatChunkGenerator;
+import net.minecraft.world.server.ServerChunkProvider;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -110,6 +113,16 @@ public class ModEventHandler {
         if (event.getWorld() instanceof World) {
             VampirismAPI.getGarlicChunkHandler(((World) event.getWorld()).getDimensionKey()).clear();
             TotemHelper.clearCacheForDimension(((World) event.getWorld()).getDimensionKey());
+        }
+    }
+
+    @SubscribeEvent
+    public void onWorldLoad(WorldEvent.Load event) {
+        if (event.getWorld() instanceof ServerWorld) {
+            ServerWorld w = (ServerWorld) event.getWorld();
+            ServerChunkProvider p = w.getChunkProvider();
+            ModFeatures.checkWorldStructureSeparation(w.getDimensionKey(), p.getChunkGenerator() instanceof FlatChunkGenerator, p.getChunkGenerator().func_235957_b_());
+
         }
     }
 

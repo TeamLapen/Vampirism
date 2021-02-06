@@ -140,7 +140,6 @@ public class VampirismConfig {
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDimensionsOverrideNegative;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDisabledBiomes;
 
-
         public final ForgeConfigSpec.IntValue villageDistance;
         public final ForgeConfigSpec.IntValue villageSeparation;
 
@@ -278,6 +277,7 @@ public class VampirismConfig {
         //Common server
         public final ForgeConfigSpec.BooleanValue autoConvertGlassBottles;
         public final ForgeConfigSpec.BooleanValue umbrella;
+        public final ForgeConfigSpec.BooleanValue enforceTentGeneration;
 
 
         Common(ForgeConfigSpec.Builder builder) {
@@ -295,6 +295,7 @@ public class VampirismConfig {
             builder.comment("Affects all worlds. This is only considered on server (or in singleplayer), but Forge requires us to put it here").push("common-server");
             autoConvertGlassBottles = builder.comment("Whether glass bottles should be automatically be converted to blood bottles when needed").define("autoConvertGlassBottles", true);
             umbrella = builder.comment("If enabled adds a craftable umbrella that can be used to slowly walk though sunlight without taking damage").define("umbrella", false);
+            enforceTentGeneration = builder.comment("Enforce tent generation in any overworld world, even if they were not included in modded or datapack world-types on purpose. Does not affect Server#disableTentGeneration or disable tent generation itself.").define("enforceOverworldTentGeneration", true);
             builder.pop();
         }
 
