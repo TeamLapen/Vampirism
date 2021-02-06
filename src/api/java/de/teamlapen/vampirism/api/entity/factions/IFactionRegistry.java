@@ -69,7 +69,7 @@ public interface IFactionRegistry {
     Predicate<LivingEntity> getPredicate(IFaction<?> thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, @Nullable IFaction<?> otherFaction);
 
     /**
-     * Create and registerAdvancements a non playable faction. Has to be called during InterModEnqueueEvent
+     * Create and registerAdvancements a non playable faction. Must be called before InterModProccessEvent e.g. during InterModEnqueueEvent
      *
      * @param id              Faction id e.g. for level command
      * @param entityInterface Interface all entities implement
@@ -81,7 +81,7 @@ public interface IFactionRegistry {
     <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral);
 
     /**
-     * Create and registerAdvancements a non playable faction. Has to be called during InterModEnqueueEvent
+     * Create and registerAdvancements a non playable faction. Must be called before InterModProccessEvent e.g. during InterModEnqueueEvent
      *
      * @param id                 Faction id e.g. for level command
      * @param entityInterface    Interface all entities implement
@@ -96,7 +96,7 @@ public interface IFactionRegistry {
     /**
      * Use {@link IFactionRegistry#registerPlayableFaction(ResourceLocation, Class, Color, boolean, NonNullSupplier, int, int, BiFunction, IVillageFactionData)} instead
      * <p>
-     * Create and registerAdvancements a playable faction. Has to be called during InterModEnqueueEvent
+     * Create and registerAdvancements a playable faction. Must be called before InterModProccessEvent e.g. during InterModEnqueueEvent
      *
      * @param id                       Faction id e.g. for level command
      * @param entityInterface          Interface all entities or (the given capability for players) implement
@@ -111,7 +111,7 @@ public interface IFactionRegistry {
     <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel);
 
     /**
-     * Create and registerAdvancements a playable faction. Has to be called during InterModEnqueueEvent
+     * Create and registerAdvancements a playable faction. Must be called before InterModProccessEvent e.g. during InterModEnqueueEvent
      *
      * @param id                       Faction id e.g. for level command
      * @param entityInterface          Interface all entities or (the given capability for players) implement
