@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.world.FactionPointOfInterestType;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.RegistryKey;
@@ -218,6 +219,15 @@ public class TotemHelper {
         return totemPositions.get(pos);
     }
 
+    @Nullable
+    public static BlockPos getTotemNearPos(ServerWorld world, BlockPos pos) {
+        Collection<PointOfInterest> points = world.getPointOfInterestManager().func_219146_b(p -> true, pos, 25, PointOfInterestManager.Status.ANY).collect(Collectors.toList());
+        if (!points.isEmpty()) {
+            return getTotemPosition(points);
+        }
+        return null;
+    }
+
     /**
      * forces a village totem to a specific faction
      *
@@ -372,5 +382,17 @@ public class TotemHelper {
     @Nullable
     public static AxisAlignedBB getAABBAroundPOIs(@Nonnull Set<PointOfInterest> pois) {
         return pois.stream().map(poi -> new AxisAlignedBB(poi.getPos()).grow(25)).reduce(AxisAlignedBB::union).orElse(null);
+    }
+
+    public static void ringBell(World world, @Nullable PlayerEntity player) {
+        if (!world.isRemote) {
+            BlockPos pos = getTotemNearPos(((ServerWorld) world), player.getPosition());
+            if (pos != null) {
+                TileEntity te = world.getTileEntity(pos);
+                if (te instanceof TotemTileEntity) {
+                    ((TotemTileEntity) te).ringBell(player);
+                }
+            }
+        }
     }
 }

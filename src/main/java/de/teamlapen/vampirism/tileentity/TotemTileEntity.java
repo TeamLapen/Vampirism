@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.api.world.ITotem;
@@ -45,6 +46,8 @@ import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -771,6 +774,21 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
 
     private enum CAPTURE_PHASE {
         PHASE_1_NEUTRAL, PHASE_1_OPPOSITE, PHASE_2
+    }
+
+    public void ringBell(@Nullable PlayerEntity playerEntity){
+        if (this.capturingFaction != null) {
+            IPlayableFaction<?> faction = FactionPlayerHandler.get(playerEntity).getCurrentFaction();
+            boolean defender = faction == this.controllingFaction;
+            boolean attacker = faction == this.capturingFaction;
+            List<LivingEntity> entities = this.world.getEntitiesWithinAABB(LivingEntity.class, getVillageArea());
+            for (LivingEntity entity : entities) {
+                if (!(entity instanceof IVillageCaptureEntity))continue;
+                else if (attacker && this.capturingFaction == VampirismAPI.factionRegistry().getFaction(entity)) continue;
+                else if (defender && this.controllingFaction == VampirismAPI.factionRegistry().getFaction(entity)) continue;
+                entity.addPotionEffect(new EffectInstance(Effects.GLOWING, 120));
+            }
+        }
     }
 
     private void informEntitiesAboutCaptureStop() {
