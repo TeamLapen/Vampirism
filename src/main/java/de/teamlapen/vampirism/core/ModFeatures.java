@@ -4,6 +4,7 @@ package de.teamlapen.vampirism.core;
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.mixin.DimensionStructureSettingsAccessor;
 import de.teamlapen.vampirism.util.ConfigurableStructureSeparationSettings;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.gen.features.ModLakeFeature;
@@ -13,7 +14,6 @@ import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampStructur
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
 import net.minecraft.util.RegistryKey;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.DimensionSettings;
@@ -30,6 +30,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ModFeatures {
@@ -76,7 +77,9 @@ public class ModFeatures {
     public static void registerStructureSeparation() {
         //https://github.com/MinecraftForge/MinecraftForge/pull/7232
         //https://github.com/MinecraftForge/MinecraftForge/pull/7331
-        Map<Structure<?>, StructureSeparationSettings> structureSettingsMapOverworld = DimensionSettings.func_242746_i().getStructures().func_236195_a_(); //TODO 1.17 check if any PR has been accepted
+        DimensionStructuresSettings settings = DimensionSettings.func_242746_i().getStructures();
+        //Copy/Overwrite
+        Map<Structure<?>, StructureSeparationSettings> structureSettingsMapOverworld = new HashMap<>(settings.func_236195_a_()); //TODO 1.17 check if any PR has been accepted
         addStructureSeparationSettings(structureSettingsMapOverworld);
         if (VampirismConfig.COMMON.villageModify.get()) {
             LOGGER.info("Replacing vanilla village structure separation settings for the overworld dimension preset");
@@ -84,6 +87,7 @@ public class ModFeatures {
         } else {
             LOGGER.trace("Not modifying village");
         }
+        ((DimensionStructureSettingsAccessor) settings).setStructureSeparation_vampirism(structureSettingsMapOverworld);
     }
 
     /**
@@ -92,14 +96,18 @@ public class ModFeatures {
      *
      * @param settings
      */
-    public static void checkWorldStructureSeparation(RegistryKey<World> dimension, DimensionType dimensionType, DimensionStructuresSettings settings) {
-        if (dimension.compareTo(World.OVERWORLD) != 0) return;
-        Map<Structure<?>, StructureSeparationSettings> structureSettings = settings.func_236195_a_();
+    public static void checkWorldStructureSeparation(RegistryKey<World> dimension, boolean flatWorld, DimensionStructuresSettings settings) {
+        if (dimension.compareTo(World.OVERWORLD) == 0 && flatWorld) return;
+        if (dimension.compareTo(World.OVERWORLD) == 0 || !VampirismConfig.SERVER.worldGenDimensionWhitelist.get().contains(dimension.getLocation().toString())) {
+            return;
+        }
+        //Copy/Overwrite
+        Map<Structure<?>, StructureSeparationSettings> structureSettings = new HashMap<>(settings.func_236195_a_());
         if (!structureSettings.containsKey(hunter_camp)) {
             LOGGER.info("Cannot find hunter camp configuration for loaded world -> Adding");
             structureSettings.put(hunter_camp, new StructureSeparationSettings(VampirismConfig.BALANCE.hunterTentSeparation.get(), VampirismConfig.BALANCE.hunterTentSeparation.get(), 14357719));
         }
-
+        ((DimensionStructureSettingsAccessor) settings).setStructureSeparation_vampirism(structureSettings);
     }
 
     private static void addStructureSeparationSettings(Map<Structure<?>, StructureSeparationSettings> settings) {
