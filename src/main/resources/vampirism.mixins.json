@@ -5,6 +5,7 @@
   "refmap": "vampirism.refmap.json",
   "mixins": [
     "LivingEntityAccessor",
+    "MixinBellBlock",
     "MixinEntity",
     "MixinLivingEntity",
     "MixinPlayerEntity"
