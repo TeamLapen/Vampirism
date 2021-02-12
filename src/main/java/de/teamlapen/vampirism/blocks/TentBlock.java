@@ -10,10 +10,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.network.PlayEventPacket;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import net.minecraft.block.BedBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
@@ -153,6 +150,16 @@ public class TentBlock extends VampirismBlock {
             }
         }
 
+    }
+
+    @Override
+    public void onBlockExploded(BlockState state, World world, BlockPos pos, Explosion explosion) {
+        forWholeTent(pos, state, (di, pos1) -> {
+            if (world.getBlockState(pos1).getBlock() instanceof TentBlock) {
+                world.setBlockState(pos1, Blocks.AIR.getDefaultState(), 3);
+                getBlock().onExplosionDestroy(world, pos1, explosion);
+            }
+        });
     }
 
     @Override
