@@ -10,7 +10,11 @@ import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.stream.Collectors;
 
 
 public class PotionResistanceHunterAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
@@ -53,11 +57,7 @@ public class PotionResistanceHunterAction extends DefaultHunterAction implements
     public boolean onUpdate(IHunterPlayer player) {
         if (!(player.getRepresentingEntity().ticksExisted % 3 == 0)) {
             Collection<EffectInstance> effects = player.getRepresentingEntity().getActivePotionEffects();
-            for (EffectInstance instance : effects) {
-                if (shouldRemove(instance.getPotion())) {
-                    player.getRepresentingPlayer().removePotionEffect(instance.getPotion());
-                }
-            }
+            effects.stream().filter(instance -> shouldRemove(instance.getPotion())).collect(Collectors.toList()).forEach(s -> player.getRepresentingPlayer().removePotionEffect(s.getPotion()));
         }
         return false;
     }
