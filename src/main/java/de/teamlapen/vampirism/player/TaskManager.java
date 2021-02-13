@@ -138,6 +138,20 @@ public class TaskManager implements ITaskManager {
         }
     }
 
+    @Override
+    public void resetUniqueTask(Task task) {
+        if (!task.isUnique()) return;
+        this.completedTasks.remove(task);
+        this.stats.computeIfPresent(UNIQUE_TASKS, (k, m) -> {
+            m.remove(task);
+            return m;
+        });
+        this.acceptedTasks.computeIfPresent(UNIQUE_TASKS, (k, s) -> {
+            s.remove(task);
+            return s;
+        });
+    }
+
     // task filter -----------------------------------------------------------------------------------------------------
 
     /**

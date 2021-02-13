@@ -13,19 +13,17 @@ public class TaskCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("tasks")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
-                .then(Commands.literal("clear")
-                        .executes(context -> {
-                            return clearTasks(context.getSource().asPlayer());
-                        }))
-                .then(Commands.literal("refreshTaskList")
-                        .executes(context -> {
-                            return refreshTasksList(context.getSource().asPlayer());
-                        }))
-                .then(Commands.literal("resetTaskList")
-                        .executes(context -> {
-                            return resetTasksList(context.getSource().asPlayer());
-                        }));
+
+                .then(Commands.literal("clear").requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                        .executes(context -> clearTasks(context.getSource().asPlayer())))
+                .then(Commands.literal("refreshTaskList").requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                        .executes(context -> refreshTasksList(context.getSource().asPlayer())))
+                .then(Commands.literal("resetTaskList").requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                        .executes(context -> resetTasksList(context.getSource().asPlayer())))
+                .then(Commands.literal("resetLordTasks") //TODO require cheat as well in next version
+                        .executes(context -> resetLordTasks(context.getSource().asPlayer()))
+                );
+
     }
 
     private static int refreshTasksList(ServerPlayerEntity playerEntity) {
@@ -45,4 +43,8 @@ public class TaskCommand extends BasicCommand {
         return 0;
     }
 
+    private static int resetLordTasks(ServerPlayerEntity playerEntity) {
+        FactionPlayerHandler.getOpt(playerEntity).ifPresent(fph -> fph.resetLordTasks(fph.getLordLevel()));
+        return 0;
+    }
 }
