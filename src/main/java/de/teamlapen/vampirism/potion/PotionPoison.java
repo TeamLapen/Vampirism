@@ -22,7 +22,7 @@ public class PotionPoison extends VampirismEffect {
 
     @Override
     public void performEffect(LivingEntity entityLivingBaseIn, int amplifier) {
-        if (entityLivingBaseIn.getHealth() > 1f) {
+        if (entityLivingBaseIn.getHealth() > 1f || amplifier >= 5) {
             entityLivingBaseIn.attackEntityFrom(DamageSource.MAGIC, 1.0f);
         }
     }

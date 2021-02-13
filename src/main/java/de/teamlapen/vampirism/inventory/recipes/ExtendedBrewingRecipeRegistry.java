@@ -5,6 +5,8 @@ import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.ThrowablePotionItem;
+import net.minecraft.potion.EffectType;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.NonNullList;
@@ -68,6 +70,9 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
         if (bottle.isEmpty() || bottle.getCount() != 1) return Optional.empty();
         if (ingredient.isEmpty()) return Optional.empty();
         Potion potion = PotionUtils.getPotionFromItem(bottle);
+        if (bottle.getItem() instanceof ThrowablePotionItem && potion.getEffects().stream().anyMatch(a -> a.getPotion().getEffectType() != EffectType.HARMFUL)) {
+            return Optional.empty();
+        }
         Item item = bottle.getItem();
         //Collect mixes that can be brewed with the given ingredients and capabilities
         List<ExtendedPotionMix> possibleResults = new ArrayList<>();
