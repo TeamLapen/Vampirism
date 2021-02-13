@@ -11,4 +11,10 @@ public class VampirismPotion extends Potion {
         super(baseName, effects);
         this.setRegistryName(REFERENCE.MODID, regName);
     }
+
+    public static class GarlicInfusedPotion extends VampirismPotion {
+        public GarlicInfusedPotion(String regName, @Nullable String baseName, EffectInstance... effects) {
+            super(regName, baseName, effects);
+        }
+    }
 }

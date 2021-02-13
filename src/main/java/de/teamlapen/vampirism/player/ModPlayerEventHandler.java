@@ -28,6 +28,7 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.player.vampire.actions.BatVampireAction;
+import de.teamlapen.vampirism.potion.VampirismPotion;
 import de.teamlapen.vampirism.tileentity.TotemHelper;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.Helper;
@@ -39,9 +40,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.PotionItem;
+import net.minecraft.item.ThrowablePotionItem;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.play.server.SChangeBlockPacket;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -153,6 +157,14 @@ public class ModPlayerEventHandler {
             if (event.getItem().getItem() instanceof GarlicBreadItem) {
                 if (!event.getEntity().getEntityWorld().isRemote) {
                     DamageHandler.affectVampireGarlicDirect(event.getEntity() instanceof IVampire ? (IVampire) event.getEntity() : VampirePlayer.get((PlayerEntity) event.getEntity()), EnumStrength.MEDIUM);
+                }
+            }
+        }
+        if (!Helper.isHunter(event.getEntity())) {
+            ItemStack stack = event.getItem();
+            if (stack.getItem() instanceof PotionItem && !(stack.getItem() instanceof ThrowablePotionItem)) {
+                if (PotionUtils.getPotionFromItem(stack) instanceof VampirismPotion.GarlicInfusedPotion) {
+                    event.getEntityLiving().addPotionEffect(new EffectInstance(ModEffects.poison, Integer.MAX_VALUE, 5));
                 }
             }
         }

@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.potion.EffectType;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
 
@@ -19,8 +20,10 @@ public class JEIPotionMix {
         List<ItemStack> in2 = mix.reagent2.map(Ingredient::getMatchingStacks).map(Arrays::stream).orElse(Stream.empty()).map(ItemStack::copy).peek(s -> s.setCount(mix.reagent2Count)).filter(s -> !s.isEmpty()).collect(Collectors.toList());
         List<JEIPotionMix> recipes = new ArrayList<>(3);
         recipes.add(build(mix, Items.POTION, mix.input.get(), mix.output.get(), in1, in2));
-        recipes.add(build(mix, Items.LINGERING_POTION, mix.input.get(), mix.output.get(), in1, in2));
-        recipes.add(build(mix, Items.SPLASH_POTION, mix.input.get(), mix.output.get(), in1, in2));
+        if (mix.output.get().getEffects().stream().noneMatch(s -> s.getPotion().getEffectType() != EffectType.HARMFUL)) {
+            recipes.add(build(mix, Items.LINGERING_POTION, mix.input.get(), mix.output.get(), in1, in2));
+            recipes.add(build(mix, Items.SPLASH_POTION, mix.input.get(), mix.output.get(), in1, in2));
+        }
         return recipes;
     }
 
