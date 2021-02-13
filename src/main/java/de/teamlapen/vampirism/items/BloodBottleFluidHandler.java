@@ -65,7 +65,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
             /*
              might cause crashes with other mods, although this is probably legit as forge does something similar in {@link net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack.SwapEmpty}
              */
-            if (getBlood(container) == 0 && VampirismConfig.SERVER.autoConvertGlassBottles.get()) {
+            if (getBlood(container) == 0 && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
                 container = new ItemStack(Items.GLASS_BOTTLE);
             }
         }

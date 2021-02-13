@@ -123,19 +123,16 @@ public class VampirismConfig {
     public static class Server {
 
         public final ForgeConfigSpec.BooleanValue enforceRenderForestFog;
-        public final ForgeConfigSpec.IntValue coffinSleepPercentage;
         public final ForgeConfigSpec.BooleanValue batModeInEnd;
         public final ForgeConfigSpec.BooleanValue unlockAllSkills;
         public final ForgeConfigSpec.BooleanValue pvpOnlyBetweenFactions;
         public final ForgeConfigSpec.IntValue sunscreenBeaconDistance;
         public final ForgeConfigSpec.BooleanValue sunscreenBeaconMineable;
         public final ForgeConfigSpec.BooleanValue autoCalculateEntityBlood;
-        public final ForgeConfigSpec.BooleanValue autoConvertGlassBottles;
         public final ForgeConfigSpec.BooleanValue playerCanTurnPlayer;
         public final ForgeConfigSpec.BooleanValue factionColorInChat;
         public final ForgeConfigSpec.BooleanValue lordPrefixInChat;
         public final ForgeConfigSpec.EnumValue<IMobOptions> entityIMob;
-        public final ForgeConfigSpec.BooleanValue umbrella;
         public final ForgeConfigSpec.BooleanValue infectCreaturesSanguinare;
 
         public final ForgeConfigSpec.BooleanValue sundamageUnknownDimension;
@@ -151,8 +148,6 @@ public class VampirismConfig {
 
         public final ForgeConfigSpec.BooleanValue disableFangInfection;
         public final ForgeConfigSpec.BooleanValue disableMobBiteInfection;
-        public final ForgeConfigSpec.BooleanValue disableHalloweenSpecial;
-        public final ForgeConfigSpec.BooleanValue disableVampireForestBiomes;
         public final ForgeConfigSpec.BooleanValue disableHunterTentGen;
 
         public final ForgeConfigSpec.BooleanValue oldVampireBiomeGen;
@@ -165,18 +160,15 @@ public class VampirismConfig {
                     .push("server");
 
             enforceRenderForestFog = builder.comment("Prevent clients from disabling the vampire forest fog").define("enforceForestFog", true);
-            coffinSleepPercentage = builder.comment("Percentage of players that have to lay in a coffin to make it night.  Be careful with values below 51 if e.g. Morpheus is installed").defineInRange("coffinSleepPercentage", 100, 1, 100);
             batModeInEnd = builder.comment("If vampires can convert to a bat in the End").define("batModeInEnd", false);
             pvpOnlyBetweenFactions = builder.comment("If PVP should only be allowed between factions. PVP has to be enabled in the server properties for this. Not guaranteed to always protect player from teammates").define("pvpOnlyBetweenFactions", false);
             sunscreenBeaconDistance = builder.comment("Block radius the sunscreen beacon affects").defineInRange("sunscreenBeaconDistance", 32, 1, 40000);
             sunscreenBeaconMineable = builder.comment("Whether the suncreen beacon can be mined in survival").define("sunscreenBeaconMineable", false);
             autoCalculateEntityBlood = builder.comment("Calculate the blood level for unknown creatures based on their size").define("autoCalculateEntityBlood", true);
-            autoConvertGlassBottles = builder.comment("Whether glass bottles should be automatically be converted to blood bottles when needed").define("autoConvertGlassBottles", true);
             playerCanTurnPlayer = builder.comment("Whether players can infect other players").define("playersCanTurnPlayers", true);
             factionColorInChat = builder.comment("Whether to color player names in chat based on their current faction").define("factionColorInChat", true);
             lordPrefixInChat = builder.comment("Whether to add a prefix title based on the current lord level to the player names").define("lordPrefixInChat", true);
             entityIMob = builder.comment("Changes if entities are recognized as hostile by other mods. See https://github.com/TeamLapen/Vampirism/issues/199. Smart falls back to Never on servers ").defineEnum("entitiesIMob", IMobOptions.SMART);
-            umbrella = builder.comment("If enabled adds a craftable umbrella that can be used to slowly walk though sunlight without taking damage").define("umbrella", false);
             infectCreaturesSanguinare = builder.comment("If enabled, creatures are infected with Sanguinare Vampirism first instead of immediately being converted to a vampire when their blood is sucked dry").define("infectCreaturesSanguinare", false);
 
             builder.push("sundamage");
@@ -184,7 +176,7 @@ public class VampirismConfig {
             sundamageDimensionsOverridePositive = builder.comment("Add the string id in quotes of any dimension (/vampirism currentDimension) you want to enforce sundamage for to this comma-separated list. Overrides defaults and values added by other mods").defineList("sundamageDimensionsOverridePositive", Collections.emptyList(), string -> string instanceof String && UtilLib.isValidResourceLocation(((String) string)));
 
             sundamageDimensionsOverrideNegative = builder.comment("Add the string id in quotes of any dimension (/vampirism currentDimension) you want to disable sundamage for to this comma-separated list. Overrides defaults and values added by other mods").defineList("sundamageDimensionsOverrideNegative", Collections.emptyList(), string -> string instanceof String && UtilLib.isValidResourceLocation(((String) string)));
-            sundamageDisabledBiomes = builder.comment("Additional biomes the player should not get sundamage in. Use biome ids e.g. 'minecraft:mesa'").defineList("sundamageDisabledBiomes", Collections.emptyList(), string -> string instanceof String && UtilLib.isValidResourceLocation(((String) string)));
+            sundamageDisabledBiomes = builder.comment("Additional biomes the player should not get sundamage in. Use biome ids e.g. [\"minecraft:mesa\", \"minecraft:plains\"]").defineList("sundamageDisabledBiomes", Collections.emptyList(), string -> string instanceof String && UtilLib.isValidResourceLocation(((String) string)));
             builder.pop();
 
             builder.push("village");
@@ -203,9 +195,7 @@ public class VampirismConfig {
             builder.comment("Disabling these things might reduce fun or interfere with gameplay");
             builder.push("disable");
             disableFangInfection = builder.comment("Disable vampire fangs being usable to infect yourself").define("disableFangInfection", false);
-            disableHalloweenSpecial = builder.comment("Disable Halloween special event").define("disableHalloweenSpecialEvent", false);
             disableMobBiteInfection = builder.comment("Prevent vampire mobs from infecting players when attacking").define("disableMobBiteInfection", false);
-            disableVampireForestBiomes = builder.comment("Disable vampire forest biomes generation").define("disableVampireForest", false);
             disableHunterTentGen = builder.comment("Disable hunter camp generation").define("disableHunterTentGen", false);
             builder.pop();
 
@@ -285,10 +275,13 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue villageModify;
         public final ForgeConfigSpec.BooleanValue optifineBloodvisionWarning;
 
+        //Common server
+        public final ForgeConfigSpec.BooleanValue autoConvertGlassBottles;
+        public final ForgeConfigSpec.BooleanValue umbrella;
 
 
         Common(ForgeConfigSpec.Builder builder) {
-            builder.comment("Common configuration settings")
+            builder.comment("Common configuration settings. Most other configuration can be found in the world (server)configuration folder")
                     .push("common");
             versionCheck = builder.comment("Check for new versions of Vampirism on startup").define("versionCheck", true);
             collectStats = builder.comment("Send mod version, MC version and mod count to mod author").define("collectStats", true);
@@ -298,6 +291,10 @@ public class VampirismConfig {
             integrationsNotifier = builder.comment("INTERNAL - Set to 'never' if you don't want to be notified about integration mods").define("integrationsNotifier", "");
             optifineBloodvisionWarning = builder.comment("INTERNAL").define("optifineBloodvisionWarning", false);
             //builder.pop(); //TODO 1.17
+            builder.pop();
+            builder.comment("Affects all worlds. This is only considered on server (or in singleplayer), but Forge requires us to put it here").push("common-server");
+            autoConvertGlassBottles = builder.comment("Whether glass bottles should be automatically be converted to blood bottles when needed").define("autoConvertGlassBottles", true);
+            umbrella = builder.comment("If enabled adds a craftable umbrella that can be used to slowly walk though sunlight without taking damage").define("umbrella", false);
             builder.pop();
         }
 

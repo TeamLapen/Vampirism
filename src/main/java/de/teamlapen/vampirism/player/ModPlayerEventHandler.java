@@ -208,7 +208,7 @@ public class ModPlayerEventHandler {
             if (!heldStack.isEmpty() && heldStack.getCount() == 1) {
                 boolean glasBottle = Items.GLASS_BOTTLE.equals(heldStack.getItem());
                 boolean bloodBottle = ModItems.blood_bottle.equals(heldStack.getItem());
-                if (bloodBottle || (glasBottle && VampirismConfig.SERVER.autoConvertGlassBottles.get())) {
+                if (bloodBottle || (glasBottle && VampirismConfig.COMMON.autoConvertGlassBottles.get())) {
                     Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
                     BlockState state = event.getWorld().getBlockState(event.getPos());
                     boolean convert = false;

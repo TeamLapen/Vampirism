@@ -61,7 +61,6 @@ public class ModBiomes {
      * Only call from main thread / non parallel event
      */
     static void addBiomesToGeneratorUnsafe() {
-        if (!VampirismConfig.SERVER.disableVampireForestBiomes.get()) {
             List<RegistryKey<Biome>> modList = new ArrayList<>(OverworldBiomeProvider.biomes);
             modList.add(VAMPIRE_FOREST_KEY);
             //TODO don't generate hills biome for now. Should be added as a hills variant at some point if supported by Forge
@@ -69,7 +68,7 @@ public class ModBiomes {
             OverworldBiomeProvider.biomes = ImmutableList.copyOf(modList);
             BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_KEY, VampirismConfig.BALANCE.vampireForestWeight.get()));
 //            BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_HILLS_KEY, VampirismConfig.BALANCE.vampireForestHillsWeight.get()));
-        }
+
     }
 
     /**
@@ -84,7 +83,7 @@ public class ModBiomes {
             event.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.advanced_vampire, VampirismConfig.BALANCE.mbAdvancedVampireSpawnChance.get() , 1, 1));
         }
         event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_STRUCTURES, VampirismBiomeFeatures.vampire_dungeon);
-        if (!VampirismConfig.SERVER.disableHunterTentGen.get() && VampirismAPI.worldGenRegistry().canStructureBeGeneratedInBiome(ModFeatures.hunter_camp.getRegistryName(), event.getName(), event.getCategory())) {
+        if (VampirismAPI.worldGenRegistry().canStructureBeGeneratedInBiome(ModFeatures.hunter_camp.getRegistryName(), event.getName(), event.getCategory())) {
             event.getGeneration().withStructure(VampirismBiomeFeatures.hunter_camp);
         }
 
