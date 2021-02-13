@@ -40,8 +40,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.PotionItem;
-import net.minecraft.item.ThrowablePotionItem;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.play.server.SChangeBlockPacket;
 import net.minecraft.potion.EffectInstance;
@@ -162,8 +160,8 @@ public class ModPlayerEventHandler {
         }
         if (!Helper.isHunter(event.getEntity())) {
             ItemStack stack = event.getItem();
-            if (stack.getItem() instanceof PotionItem && !(stack.getItem() instanceof ThrowablePotionItem)) {
-                if (PotionUtils.getPotionFromItem(stack) instanceof VampirismPotion.GarlicInfusedPotion) {
+            if (stack.getItem() == Items.POTION) {
+                if (PotionUtils.getPotionFromItem(stack) instanceof VampirismPotion.HunterPotion) {
                     event.getEntityLiving().addPotionEffect(new EffectInstance(ModEffects.poison, Integer.MAX_VALUE, 5));
                 }
             }

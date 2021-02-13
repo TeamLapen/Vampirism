@@ -9,7 +9,8 @@
     "MixinBellBlock",
     "MixinEntity",
     "MixinLivingEntity",
-    "MixinPlayerEntity"
+    "MixinPlayerEntity",
+    "MixinPotionBrewing"
   ],
   "injectors": {
     "defaultRequire": 1

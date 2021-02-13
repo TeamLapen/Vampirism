@@ -70,7 +70,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
         if (bottle.isEmpty() || bottle.getCount() != 1) return Optional.empty();
         if (ingredient.isEmpty()) return Optional.empty();
         Potion potion = PotionUtils.getPotionFromItem(bottle);
-        if (bottle.getItem() instanceof ThrowablePotionItem && potion.getEffects().stream().anyMatch(a -> a.getPotion().getEffectType() != EffectType.HARMFUL)) {
+        if (bottle.getItem() instanceof ThrowablePotionItem && potion.getEffects().stream().anyMatch(a -> a.getPotion().getEffectType() == EffectType.BENEFICIAL)) {
             return Optional.empty();
         }
         Item item = bottle.getItem();
