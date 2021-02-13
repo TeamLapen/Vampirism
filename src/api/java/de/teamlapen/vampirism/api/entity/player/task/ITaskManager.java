@@ -63,6 +63,11 @@ public interface ITaskManager {
     void reset();
 
     /**
+     * Completely reset the given unique task.
+     */
+    void resetUniqueTask(Task task);
+
+    /**
      * checks if the task was completed by the player
      *
      * @param task the task to check
