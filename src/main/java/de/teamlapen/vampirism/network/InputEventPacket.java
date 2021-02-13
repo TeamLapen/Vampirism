@@ -170,12 +170,12 @@ public class InputEventPacket implements IMessage {
                     factionPlayerOpt.ifPresent(factionPlayer -> {
                         ISkillHandler skillHandler = factionPlayer.getSkillHandler();
                         skillHandler.resetSkills();
-                        if (!VampirismMod.inDev && !VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion()) {
+//                        if (!VampirismMod.inDev && !VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion()) {
                             int l = factionPlayer.getLevel();
                             if (l > 1) {
                                 FactionPlayerHandler.get(player).setFactionLevel(factionPlayer.getFaction(), l - 1);
                             }
-                        }
+//                        }
                         if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
                             HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, factionPlayer.getRepresentingPlayer(), false);
                         }
