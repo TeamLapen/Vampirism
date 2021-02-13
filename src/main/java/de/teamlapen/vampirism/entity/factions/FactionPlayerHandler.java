@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
+import de.teamlapen.vampirism.player.tasks.reward.LordLevelReward;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.ModEventFactory;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -347,9 +348,22 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return this.setLordLevel(level, true);
     }
 
+    /**
+     * Reset all lord task that should be available for players at the given lord level
+     *
+     * @param minLevel the lord level the player now has
+     */
+    public void resetLordTasks(int minLevel) {
+        ModRegistries.TASKS.getValues().stream().filter(task -> task.isUnique() && task.getReward() instanceof LordLevelReward && ((LordLevelReward) task.getReward()).targetLevel > minLevel).forEach(task -> getCurrentFactionPlayer().map(IFactionPlayer::getTaskManager).ifPresent(manager -> manager.resetUniqueTask(task)));
+    }
+
     private boolean setLordLevel(int level, boolean sync) {
         if (level > 0 && (currentFaction == null || currentLevel != currentFaction.getHighestReachableLevel() || level > currentFaction.getHighestLordLevel())) {
             return false;
+        }
+        if (level < this.currentLordLevel) {
+            //Downleveling -> Reset tasks
+            resetLordTasks(level);
         }
 
         this.currentLordLevel = level;
