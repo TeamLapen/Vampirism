@@ -37,9 +37,9 @@ public class ConfigCondition implements ICondition {
     private Supplier<Boolean> getTester(String option) {
         switch (option){
             case "auto_convert":
-                return VampirismConfig.SERVER.autoConvertGlassBottles::get;
+                return VampirismConfig.COMMON.autoConvertGlassBottles::get;
             case "umbrella":
-                return VampirismConfig.SERVER.umbrella::get;
+                return VampirismConfig.COMMON.umbrella::get;
             default:
                 throw new JsonSyntaxException("Unknown config option: " + option);
         }

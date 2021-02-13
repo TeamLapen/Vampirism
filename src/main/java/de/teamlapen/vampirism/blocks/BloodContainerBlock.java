@@ -119,7 +119,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit) {
-        if (!FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, hit.getFace()) && playerIn.getHeldItem(hand).getItem().equals(Items.GLASS_BOTTLE) && VampirismConfig.SERVER.autoConvertGlassBottles.get()) {
+        if (!FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, hit.getFace()) && playerIn.getHeldItem(hand).getItem().equals(Items.GLASS_BOTTLE) && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
             FluidUtil.getFluidHandler(worldIn, pos, hit.getFace()).ifPresent((fluidHandler -> {
                 if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.blood)) {
                     ItemStack glass = playerIn.getHeldItem(hand);

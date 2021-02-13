@@ -130,7 +130,7 @@ public class BloodHelper {
             }
         }
         ItemStack glas = getGlassBottleInHotbar(player.inventory);
-        if (!glas.isEmpty() && VampirismConfig.SERVER.autoConvertGlassBottles.get()) {
+        if (!glas.isEmpty() && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
             ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle, 1);
             int filled = fill(bloodBottle, amt, IFluidHandler.FluidAction.EXECUTE);
             if (filled == 0) {
