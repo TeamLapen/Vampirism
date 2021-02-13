@@ -1,5 +1,6 @@
 package de.teamlapen.lib.util;
 
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,6 +21,12 @@ public class OptifineHandler {
 
     public static boolean isOptifineLoaded() {
         if (didCheck) return isLoaded;
+        if (!FMLEnvironment.dist.isClient()) { //Only check on client side
+            isLoaded = false;
+            method_isShaders = null;
+            didCheck = true;
+            return false;
+        }
         try {
             Class<?> configClass = Class.forName("net.optifine.Config");
             isLoaded = true; //If no exception is thrown the class is present and we expect Optifine to be active
