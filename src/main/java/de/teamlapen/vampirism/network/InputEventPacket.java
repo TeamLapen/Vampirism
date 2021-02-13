@@ -169,18 +169,24 @@ public class InputEventPacket implements IMessage {
                     break;
                 case RESETSKILL:
                     factionPlayerOpt.ifPresent(factionPlayer -> {
-                        ISkillHandler skillHandler = factionPlayer.getSkillHandler();
-                        skillHandler.resetSkills();
-//                        if (!VampirismMod.inDev && !VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion()) {
-                            int l = factionPlayer.getLevel();
-                            if (l > 1) {
-                                FactionPlayerHandler.get(player).setFactionLevel(factionPlayer.getFaction(), l - 1);
+                        FactionPlayerHandler.getOpt(player).ifPresent(fph -> {
+                            ISkillHandler skillHandler = factionPlayer.getSkillHandler();
+                            skillHandler.resetSkills();
+                            if (!VampirismMod.inDev && !VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion()) {
+                                int l = factionPlayer.getLevel();
+                                int lordLevel = fph.getLordLevel();
+                                if (lordLevel > 0) {
+                                    fph.setLordLevel(lordLevel - 1);
+                                } else if (l > 1) {
+                                    fph.setFactionLevel(factionPlayer.getFaction(), l - 1);
+                                }
                             }
-//                        }
-                        if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
-                            HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, factionPlayer.getRepresentingPlayer(), false);
-                        }
-                        player.sendStatusMessage(new TranslationTextComponent("text.vampirism.skill.skills_reset"), true);
+                            if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
+                                HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, factionPlayer.getRepresentingPlayer(), false);
+                            }
+                            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.skill.skills_reset"), true);
+                        });
+
                     });
                     break;
                 case TRAINERLEVELUP:
