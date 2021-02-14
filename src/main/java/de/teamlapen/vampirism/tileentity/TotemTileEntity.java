@@ -783,9 +783,11 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             boolean attacker = faction == this.capturingFaction;
             List<LivingEntity> entities = this.world.getEntitiesWithinAABB(LivingEntity.class, getVillageArea());
             for (LivingEntity entity : entities) {
-                if (!(entity instanceof IVillageCaptureEntity))continue;
-                else if (attacker && this.capturingFaction == VampirismAPI.factionRegistry().getFaction(entity)) continue;
-                else if (defender && this.controllingFaction == VampirismAPI.factionRegistry().getFaction(entity)) continue;
+                IFaction<?> f = VampirismAPI.factionRegistry().getFaction(entity);
+                if (f == null) continue;
+                if (entity instanceof ICaptureIgnore) continue;
+                else if (attacker && this.capturingFaction == f) continue;
+                else if (defender && this.controllingFaction == f) continue;
                 entity.addPotionEffect(new EffectInstance(Effects.GLOWING, 120));
             }
         }
