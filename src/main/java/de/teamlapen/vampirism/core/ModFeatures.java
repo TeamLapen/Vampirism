@@ -97,10 +97,8 @@ public class ModFeatures {
      * @param settings
      */
     public static void checkWorldStructureSeparation(RegistryKey<World> dimension, boolean flatWorld, DimensionStructuresSettings settings) {
-        if (dimension.compareTo(World.OVERWORLD) == 0 && flatWorld) return;
-        if (dimension.compareTo(World.OVERWORLD) == 0 || !VampirismConfig.SERVER.worldGenDimensionWhitelist.get().contains(dimension.getLocation().toString())) {
-            return;
-        }
+        if (dimension.compareTo(World.OVERWORLD) == 0 || flatWorld) return;
+        if (!VampirismConfig.COMMON.enforceTentGeneration.get()) return;
         //Copy/Overwrite
         Map<Structure<?>, StructureSeparationSettings> structureSettings = new HashMap<>(settings.func_236195_a_());
         if (!structureSettings.containsKey(hunter_camp)) {
