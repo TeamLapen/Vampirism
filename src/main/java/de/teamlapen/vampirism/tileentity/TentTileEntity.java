@@ -83,7 +83,7 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
 
         if (spawn) {
             if (!this.world.isRemote && this.world.getGameTime() % 64 == 0) {
-                if (UtilLib.isInsideStructure(this.world, this.pos, Structure.field_236381_q_)) {
+                if (UtilLib.isInsideStructure(this.world, this.pos, Structure.VILLAGE)) {
                     this.spawn = false; //Disable spawning inside villages
                 }
             }

@@ -34,7 +34,7 @@ public class VampireDungeonFeature extends DungeonsFeature {
 
 
     /**
-     * copied from {@link net.minecraft.world.gen.feature.DungeonsFeature#func_241855_a}
+     * copied from {@link net.minecraft.world.gen.feature.DungeonsFeature#generate}
      * <p>
      * - changed {@link Blocks#MOSSY_COBBLESTONE} to {@link ModBlocks#castle_block_dark_brick} and {@link ModBlocks#castle_block_dark_brick_bloody}
      * - changed {@link Blocks#COBBLESTONE} to {@link Blocks#SPRUCE_PLANKS}
@@ -42,7 +42,7 @@ public class VampireDungeonFeature extends DungeonsFeature {
      * - changed {@link DungeonsFeature#getRandomDungeonMob(Random)} to {@link ModEntities#vampire}
      */
     @Override
-    public boolean func_241855_a(ISeedReader worldIn, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) {
+    public boolean generate(ISeedReader worldIn, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) {
         int j = rand.nextInt(2) + 2;
         int k = -j - 1;
         int l = j + 1;

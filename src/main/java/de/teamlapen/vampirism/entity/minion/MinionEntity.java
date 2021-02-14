@@ -300,8 +300,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     @Nonnull
     @Override
-    public EntitySize getSize(@Nonnull Pose p_213305_1_) {
-        return super.getSize(p_213305_1_).scale(getScale());
+    public EntitySize getSize(@Nonnull Pose poseIn) {
+        return super.getSize(poseIn).scale(getScale());
     }
 
     public boolean isTaskLocked() {
@@ -358,8 +358,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void onDeath(@Nonnull DamageSource p_70645_1_) {
-        super.onDeath(p_70645_1_);
+    public void onDeath(@Nonnull DamageSource cause) {
+        super.onDeath(cause);
         if (this.playerMinionController != null) {
             this.getLordOpt().map(ILordPlayer::getPlayer).ifPresent(p -> p.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.died", this.getDisplayName()), true));
             this.playerMinionController.markDeadAndReleaseMinionSlot(minionId, token);

@@ -167,7 +167,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                     return false;
                 }
                 if (this.world.isBlockPresent(getPosition()) && worldIn instanceof ServerWorld) {
-                    BlockPos nearestVillage = ((ServerWorld) worldIn).func_241117_a_(Structure.field_236381_q_, getPosition(), 1, false);
+                    BlockPos nearestVillage = ((ServerWorld) worldIn).func_241117_a_(Structure.VILLAGE, getPosition(), 1, false);
                     if (nearestVillage != null && nearestVillage.withinDistance(getPosition(), 50)) {
                         if (getRNG().nextInt(60) != 0) {
                             return false;

@@ -48,8 +48,8 @@ public class ModFeatures {
     public static final IStructurePieceType hunter_camp_special = IStructurePieceType.register(HunterCampPieces.SpecialBlock::new, REFERENCE.MODID + ":hunter_camp_craftingtable");
 
     //structure proccesor
-    public static final IStructureProcessorType<RandomStructureProcessor> random_selector = IStructureProcessorType.func_237139_a_/*register*/(REFERENCE.MODID+":random_selector", RandomStructureProcessor.CODEC);
-    public static final IStructureProcessorType<BiomeTopBlockProcessor> biome_based = IStructureProcessorType.func_237139_a_/*register*/(REFERENCE.MODID+":biome_based", BiomeTopBlockProcessor.CODEC);
+    public static final IStructureProcessorType<RandomStructureProcessor> random_selector = IStructureProcessorType.register/*register*/(REFERENCE.MODID+":random_selector", RandomStructureProcessor.CODEC);
+    public static final IStructureProcessorType<BiomeTopBlockProcessor> biome_based = IStructureProcessorType.register/*register*/(REFERENCE.MODID+":biome_based", BiomeTopBlockProcessor.CODEC);
 
 
     static void registerFeatures(IForgeRegistry<Feature<?>> registry) {
@@ -58,8 +58,8 @@ public class ModFeatures {
     }
 
     static void registerStructures(IForgeRegistry<Structure<?>> registry) {
-        Structure.field_236385_u_.put(hunter_camp, GenerationStage.Decoration.SURFACE_STRUCTURES);
-        Structure.field_236365_a_.put(REFERENCE.MODID + ":hunter_camp", hunter_camp);
+        Structure.STRUCTURE_DECORATION_STAGE_MAP.put(hunter_camp, GenerationStage.Decoration.SURFACE_STRUCTURES);
+        Structure.NAME_STRUCTURE_BIMAP.put(REFERENCE.MODID + ":hunter_camp", hunter_camp);
         registry.register(hunter_camp.setRegistryName(REFERENCE.MODID, "hunter_camp"));
     }
 
@@ -83,7 +83,7 @@ public class ModFeatures {
         addStructureSeparationSettings(structureSettingsMapOverworld);
         if (VampirismConfig.COMMON.villageModify.get()) {
             LOGGER.info("Replacing vanilla village structure separation settings for the overworld dimension preset");
-            structureSettingsMapOverworld.put(Structure.field_236382_r_, new ConfigurableStructureSeparationSettings(VampirismConfig.SERVER.villageDistance, VampirismConfig.SERVER.villageSeparation, DimensionStructuresSettings.field_236191_b_.get(Structure.field_236381_q_).func_236673_c_()));
+            structureSettingsMapOverworld.put(Structure.NETHER_FOSSIL, new ConfigurableStructureSeparationSettings(VampirismConfig.SERVER.villageDistance, VampirismConfig.SERVER.villageSeparation, DimensionStructuresSettings.field_236191_b_.get(Structure.VILLAGE).func_236673_c_()));
         } else {
             LOGGER.trace("Not modifying village");
         }

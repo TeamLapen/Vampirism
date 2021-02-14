@@ -411,7 +411,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             }
         });
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, ZombieEntity.class, true, true));
-        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, Structure.field_236381_q_)));        //Also check the priority of tasks that are dynamically added. See top of class
+        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, Structure.VILLAGE)));        //Also check the priority of tasks that are dynamically added. See top of class
     }
 
     private int getWatchedId() {

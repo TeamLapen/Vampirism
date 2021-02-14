@@ -711,7 +711,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             }
         }
         AxisAlignedBB totem = TotemHelper.getAABBAroundPOIs(this.village);
-        StructureStart<?> start = UtilLib.getStructureStartAt(this.world,this.pos,Structure.field_236381_q_);
+        StructureStart<?> start = UtilLib.getStructureStartAt(this.world,this.pos,Structure.VILLAGE);
         if (start!=null&&start!=StructureStart.DUMMY&&start.isValid()) {
             totem = UtilLib.MBtoAABB(start.getBoundingBox());
         }

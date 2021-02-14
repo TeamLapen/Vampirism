@@ -165,8 +165,8 @@ public class TotemHelper {
             ignoreOtherTotem = false;
         }
 
-        StructureStart<?> structure1 = UtilLib.getStructureStartAt(world,totem,Structure.field_236381_q_);
-        StructureStart<?> structure2 = UtilLib.getStructureStartAt(world,conflicting,Structure.field_236381_q_);
+        StructureStart<?> structure1 = UtilLib.getStructureStartAt(world,totem,Structure.VILLAGE);
+        StructureStart<?> structure2 = UtilLib.getStructureStartAt(world,conflicting,Structure.VILLAGE);
 
         if ((structure1== StructureStart.DUMMY || !structure1.isValid()) && (structure2 != StructureStart.DUMMY && structure2.isValid())) { //the first totem wins the POIs if located in natural village, other looses then
             ignoreOtherTotem = false;
@@ -335,7 +335,7 @@ public class TotemHelper {
      * @return flag which requirements are met
      */
     public static int isVillage(Set<PointOfInterest> pointOfInterests, ServerWorld world, BlockPos totemPos, boolean hasInteraction) {
-        if (UtilLib.getStructureStartAt(world,totemPos, Structure.field_236381_q_) != StructureStart.DUMMY) {
+        if (UtilLib.getStructureStartAt(world,totemPos, Structure.VILLAGE) != StructureStart.DUMMY) {
             return 7;
         }
         return isVillage(getVillageStats(pointOfInterests, world), hasInteraction);

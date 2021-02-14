@@ -19,8 +19,8 @@ import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 
 public class TaskArgument implements ArgumentType<Task> {
-    public static final DynamicCommandExceptionType TASK_NOT_FOUND = new DynamicCommandExceptionType((p_208673_0_) -> {
-        return new TranslationTextComponent("command.vampirism.argument.task.notfound", p_208673_0_);
+    public static final DynamicCommandExceptionType TASK_NOT_FOUND = new DynamicCommandExceptionType((particle) -> {
+        return new TranslationTextComponent("command.vampirism.argument.task.notfound", particle);
     });
     private static final Collection<String> EXAMPLES = Collections.singletonList("modid:task");
 
