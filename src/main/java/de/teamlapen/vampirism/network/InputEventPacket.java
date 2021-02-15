@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
@@ -24,6 +25,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -170,8 +172,8 @@ public class InputEventPacket implements IMessage {
                 case RESETSKILL:
                     factionPlayerOpt.ifPresent(factionPlayer -> {
                         FactionPlayerHandler.getOpt(player).ifPresent(fph -> {
-                            ISkillHandler skillHandler = factionPlayer.getSkillHandler();
-                            skillHandler.resetSkills();
+                            ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
+                            player.addPotionEffect(new EffectInstance(ModEffects.oblivion, Integer.MAX_VALUE, 5));
                             if (!VampirismMod.inDev && !VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion()) {
                                 int l = factionPlayer.getLevel();
                                 int lordLevel = fph.getLordLevel();

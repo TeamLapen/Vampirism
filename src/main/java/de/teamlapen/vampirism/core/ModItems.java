@@ -193,6 +193,8 @@ public class ModItems {
     public static final MinionUpgradeItem vampire_minion_upgrade_enhanced = getNull();
     public static final MinionUpgradeItem vampire_minion_upgrade_special = getNull();
 
+    public static final OblivionItem oblivion_potion = getNull();
+
 
     static void registerCraftingRecipes() {
         // Brewing
@@ -399,6 +401,8 @@ public class ModItems {
         registry.register(new MinionUpgradeItem("vampire_minion_upgrade_simple", 1, 2, VReference.VAMPIRE_FACTION));
         registry.register(new MinionUpgradeItem("vampire_minion_upgrade_enhanced", 3, 4, VReference.VAMPIRE_FACTION));
         registry.register(new MinionUpgradeItem("vampire_minion_upgrade_special", 5, 6, VReference.VAMPIRE_FACTION));
+
+        registry.register(new OblivionItem("oblivion_potion", creativeTabProps()));
 
         if (VampirismMod.inDataGen) {
             registry.register(new DummyItem().setRegistryName("guideapi-vp", "vampirism-guidebook"));
