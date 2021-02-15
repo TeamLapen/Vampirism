@@ -21,7 +21,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
@@ -177,21 +176,6 @@ public class SkillsScreen extends Screen {
                 SkillNode root = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(faction.getID());
                 addToList(skillNodes, root);
 
-                Button resetSkills = this.addButton(new Button((this.width - display_width) / 2 + 24 + 40, this.height / 2 + 74, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
-                    boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
-                    ConfirmScreen resetGui = new ConfirmScreen((cxt) -> {
-                        if (cxt) {
-                            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
-                            Minecraft.getInstance().displayGuiScreen(this);
-                        } else {
-                            Minecraft.getInstance().displayGuiScreen(this);
-                        }
-                    }, new TranslationTextComponent("gui.vampirism.reset_skills.title"), new TranslationTextComponent("gui.vampirism.reset_skills." + (test ? "desc_test" : "desc")));
-                    Minecraft.getInstance().displayGuiScreen(resetGui);
-                }));
-                if(factionPlayer.getLevel() < 2) {
-                    resetSkills.active = false;
-                }
                 if (Helper.isVampire(minecraft.player)) {
                     this.addButton(new ImageButton((this.width - display_width) / 2 + 10 + 22, this.height / 2 + 74, 20, 20, 72, 202, 20, BACKGROUND, 256, 256, (context) -> {
                         Minecraft.getInstance().displayGuiScreen(new VampirePlayerAppearanceScreen(this));
