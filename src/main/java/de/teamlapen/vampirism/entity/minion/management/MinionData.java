@@ -169,6 +169,10 @@ public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
         return false;
     }
 
+    public boolean removeStats(MinionEntity<?> entity) {
+        return false;
+    }
+
     protected ResourceLocation getDataType() {
         return new ResourceLocation("");
     }

@@ -363,6 +363,18 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
+        public boolean removeStats(MinionEntity<?> entity) {
+            assert entity instanceof VampireMinionEntity;
+            this.inventoryLevel = 0;
+            this.healthLevel = 0;
+            this.strengthLevel = 0;
+            this.speedLevel = 0;
+            this.getInventory().setAvailableSize(getInventorySize());
+            ((VampireMinionEntity) entity).updateAttributes();
+            return true;
+        }
+
+        @Override
         protected ResourceLocation getDataType() {
             return ID;
         }

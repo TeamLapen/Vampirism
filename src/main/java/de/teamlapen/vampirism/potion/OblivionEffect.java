@@ -61,7 +61,13 @@ public class OblivionEffect extends VampirismEffect {
                         entityLivingBaseIn.removePotionEffect(ModEffects.oblivion);
                     }
                 });
-            }
+            }/* else if (entityLivingBaseIn instanceof MinionEntity<?>) {
+                Optional<? extends MinionData> data = ((MinionEntity<?>) entityLivingBaseIn).getMinionData();
+                data.ifPresent(s -> {
+                    s.removeStats(((MinionEntity<?>) entityLivingBaseIn));
+                });
+                entityLivingBaseIn.re
+            }*/
         }
     }
 

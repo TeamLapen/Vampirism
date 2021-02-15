@@ -375,6 +375,18 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
+        public boolean removeStats(MinionEntity<?> entity) {
+            assert entity instanceof HunterMinionEntity;
+            this.inventoryLevel = 0;
+            this.healthLevel = 0;
+            this.strengthLevel = 0;
+            this.resourceEfficiencyLevel = 0;
+            this.getInventory().setAvailableSize(getInventorySize());
+            ((HunterMinionEntity) entity).updateAttributes();
+            return true;
+        }
+
+        @Override
         protected ResourceLocation getDataType() {
             return ID;
         }
