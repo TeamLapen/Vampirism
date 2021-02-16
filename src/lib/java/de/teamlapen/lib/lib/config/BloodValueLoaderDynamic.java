@@ -2,8 +2,13 @@ package de.teamlapen.lib.lib.config;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import de.teamlapen.lib.lib.util.LogUtil;
+import de.teamlapen.lib.lib.util.ResourceLocationTypeAdapter;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.dimension.DimensionType;
@@ -13,8 +18,10 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -22,12 +29,14 @@ import java.util.function.Supplier;
 public class BloodValueLoaderDynamic extends BloodValueLoader {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final List<BloodValueLoaderDynamic> LOADER = Lists.newArrayList();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(new TypeToken<ResourceLocation>() {
+    }.getType(), new ResourceLocationTypeAdapter()).create();
 
     /**
      * File to save dynamically calculated values to
      */
-    private @Nullable
-    static File bloodValueWorldFile;
+    @Nullable
+    private File bloodValueWorldFile;
     private final Consumer<Map<ResourceLocation, Integer>> addCalculatedValues;
     private final Supplier<Map<ResourceLocation, Integer>> getCalculatedValues;
     private final String name;
@@ -63,10 +72,10 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
      */
     private void loadDynamicBloodValues(File f) {
         try {
-            Map<ResourceLocation, Integer> saved = loadBloodValuesFromReader(new InputStreamReader(new FileInputStream(f)), f.getName());
-            this.addCalculatedValues.accept(saved);
-        } catch (IOException e) {
-            LOGGER.error(LogUtil.CONFIG, "[ModCompat]Could not read saved {} blood values from world from file {} {}", name, f, e);
+            Optional<Map<ResourceLocation, Integer>> saved = loadBloodValues(new InputStreamReader(new FileInputStream(f)));
+            saved.ifPresent(this.addCalculatedValues);
+        } catch (IOException | JsonIOException e) {
+            LOGGER.error(LogUtil.CONFIG, "Could not read saved " + name + " blood values from world from file " + f, e);
         }
     }
 
@@ -80,38 +89,43 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
             if (f.getParentFile() != null) f.getParentFile().mkdirs();
         }
         try {
-            if (!writeBloodValues(new FileWriter(f), values, "Dynamically calculated blood values - DON'T EDIT")) {
-                LOGGER.warn(LogUtil.CONFIG, "Could not write calculated {} values to file", name);
-            }
-        } catch (IOException e) {
-            LOGGER.error(LogUtil.CONFIG, "Failed to write calculated blood values to file", e);
+            writeBloodValues(new FileWriter(f), values, "Dynamically calculated blood values - DON'T EDIT");
+        } catch (IOException | JsonSyntaxException e) {
+            LOGGER.warn(LogUtil.CONFIG, "Could not write calculated " + name + " values to file", e);
         }
     }
 
-    private static boolean writeBloodValues(Writer w, Map<ResourceLocation, Integer> values, String comment) throws IOException {
+    private static void writeBloodValues(Writer w, Map<ResourceLocation, Integer> values, String comment) throws IOException, JsonIOException {
         BufferedWriter bw = null;
         try {
             bw = new BufferedWriter(w);
             bw.write('#');
             bw.write(comment);
             bw.newLine();
-            for (Map.Entry<ResourceLocation, Integer> entry : values.entrySet()) {
-                bw.write(entry.getKey().toString());
-                bw.write('=');
-                bw.write(String.valueOf(entry.getValue()));
-                bw.newLine();
-            }
+            bw.write(GSON.toJson(values));
             bw.flush();
-            return true;
-        } catch (IOException e) {
-            LOGGER.error(LogUtil.CONFIG, "Failed to write blood values", e);
         } finally {
             if (bw != null) {
                 bw.close();
             }
             w.close();
         }
-        return false;
+    }
+
+    private static Optional<Map<ResourceLocation, Integer>> loadBloodValues(Reader r) throws IOException, JsonSyntaxException {
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(r);
+            br.readLine();
+            Type s = new TypeToken<Map<ResourceLocation, Integer>>() {
+            }.getType();
+            return Optional.ofNullable(GSON.fromJson(br, s));
+        } finally {
+            if (br != null) {
+                br.close();
+            }
+            r.close();
+        }
     }
 
     public static List<BloodValueLoaderDynamic> getDynamicBloodLoader() {
