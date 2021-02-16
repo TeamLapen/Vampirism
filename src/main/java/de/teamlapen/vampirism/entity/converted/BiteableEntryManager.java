@@ -108,7 +108,7 @@ public class BiteableEntryManager {
         if (!(creature instanceof AnimalEntity)) return true;
         if (creature instanceof IVampire) return true;
         EntityType<?> type = creature.getType();
-        if (!(type.getClassification() == EntityClassification.MONSTER || type.getClassification() == EntityClassification.WATER_CREATURE))
+        if (type.getClassification() == EntityClassification.MONSTER || type.getClassification() == EntityClassification.WATER_CREATURE)
             return true;
         if (ModTags.Entities.VAMPIRE.contains(type)) return true;
         //noinspection ConstantConditions
