@@ -52,9 +52,10 @@ public class BloodValueLoader extends ReloadListener<Collection<ResourceLocation
             Map<ResourceLocation, Integer> values_tmp = loadBloodValuesFromDataPack(location, modId, resourceManagerIn);
             if (values_tmp != null) {
                 values.putAll(values_tmp);
-                LOGGER.info(LogUtil.CONFIG, "Loaded {} blood values for {} with {} from {}", values_tmp.size(), this.type, this.getClass().getName(), modId);
+                LOGGER.debug(LogUtil.CONFIG, "Loaded {} {} blood values from {}", values_tmp.size(), this.type, modId);
             }
         }
+        LOGGER.info(LogUtil.CONFIG, "Loaded {} {} blood values", values.size(), this.type);
         consumer.accept(values, multiplier != 0 ? multiplier : 1);
     }
 

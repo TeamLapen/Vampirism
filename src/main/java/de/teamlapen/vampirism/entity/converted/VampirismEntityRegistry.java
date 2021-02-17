@@ -105,10 +105,11 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
                 continue;
             }
             blood = Math.round(blood * bloodValueMultiplier);
-            LOGGER.info(" Registering convertible {} with blood {} and handler {}", entry.getKey().getName().getString(), blood, entry.getValue().getClass().getName());
+            LOGGER.debug("Registering convertible {} with blood {} and handler {}", entry.getKey().getName().getString(), blood, entry.getValue().getClass().getName());
             BiteableEntry biteEntry = new BiteableEntry(blood, (entry.getValue() == null ? defaultHandler : entry.getValue()));
             biteables.put(id, biteEntry);
         }
+        LOGGER.info("Registered {} convertibles", biteables.size());
         for (Map.Entry<ResourceLocation, Integer> entry : valuesIn.entrySet()) {
             int blood = Math.abs(Math.round(entry.getValue() * bloodValueMultiplier));
             if (blood == 0) {
