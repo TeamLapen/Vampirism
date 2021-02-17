@@ -13,6 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -198,14 +199,14 @@ public class TotemHelper {
      * @param pois collection of {@link PointOfInterest} to search for a totem position
      * @return the registered totem position or {@code null} if no totem exists
      */
-    @Nullable
-    public static BlockPos getTotemPosition(Collection<PointOfInterest> pois) {
+    @Nonnull
+    public static Optional<BlockPos> getTotemPosition(Collection<PointOfInterest> pois) {
         for (PointOfInterest pointOfInterest : pois) {
             if (totemPositions.containsKey(pointOfInterest.getPos())) {
-                return totemPositions.get(pointOfInterest.getPos());
+                return Optional.of(totemPositions.get(pointOfInterest.getPos()));
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     /**
@@ -219,13 +220,29 @@ public class TotemHelper {
         return totemPositions.get(pos);
     }
 
-    @Nullable
-    public static BlockPos getTotemNearPos(ServerWorld world, BlockPos pos) {
+    @Nonnull
+    public static Optional<BlockPos> getTotemPosNearPos(ServerWorld world, BlockPos pos) {
         Collection<PointOfInterest> points = world.getPointOfInterestManager().func_219146_b(p -> true, pos, 25, PointOfInterestManager.Status.ANY).collect(Collectors.toList());
         if (!points.isEmpty()) {
             return getTotemPosition(points);
         }
-        return null;
+        return Optional.empty();
+    }
+
+    @Nonnull
+    public static Optional<TotemTileEntity> getTotemNearPos(ServerWorld world, BlockPos posSource, boolean mustBeLoaded) {
+        Optional<BlockPos> posOpt = getTotemPosNearPos(world, posSource);
+        if (mustBeLoaded) {
+            posOpt = posOpt.filter(pos -> world.getChunkProvider().isChunkLoaded(new ChunkPos(pos)));
+        }
+        return posOpt.map(pos -> {
+            TileEntity tile = world.getTileEntity(pos);
+            if (tile instanceof TotemTileEntity) {
+                return ((TotemTileEntity) tile);
+            } else {
+                return null;
+            }
+        });
     }
 
     /**
@@ -277,7 +294,7 @@ public class TotemHelper {
     }
 
     /**
-     * use {@link #isVillage(Set, World, boolean)}
+     * use {@link #isVillage(Set, ServerWorld, BlockPos, boolean)}
      * <p>
      *
      * flag & 1 != 0 :
@@ -386,13 +403,8 @@ public class TotemHelper {
 
     public static void ringBell(World world, @Nullable PlayerEntity player) {
         if (!world.isRemote) {
-            BlockPos pos = getTotemNearPos(((ServerWorld) world), player.getPosition());
-            if (pos != null) {
-                TileEntity te = world.getTileEntity(pos);
-                if (te instanceof TotemTileEntity) {
-                    ((TotemTileEntity) te).ringBell(player);
-                }
-            }
+            Optional<TotemTileEntity> tile = getTotemNearPos(((ServerWorld) world), player.getPosition(), false);
+            tile.ifPresent(s -> s.ringBell(player));
         }
     }
 }
