@@ -28,23 +28,26 @@ import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.client.gui.GuiUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.*;
+import java.util.Random;
 
 /**
  * Gui screen which displays the skills available to the players and allows him to unlock some.
@@ -343,7 +346,6 @@ public class SkillsScreen extends Screen {
                 int xp = findHorizontalNodeCenter(node.getParent()) - offsetX + 11;
                 int yp = node.getParent().getElements()[0].getRenderRow() * skill_width - offsetY + 11;
 
-                int unlockstate = skillHandler.isNodeEnabled(node) ? 0 : skillHandler.isNodeEnabled(node.getParent()) ? 1 : -1;
                 int color = 0xff000000;
                 if (skillHandler.isNodeEnabled(node)) {
                     color = 0xffa0a0a0;
@@ -396,20 +398,19 @@ public class SkillsScreen extends Screen {
                 int y = skill.getRenderRow() * skill_width - offsetY;
 
                 if (x >= -skill_width && y >= -skill_width && (float) x <= 224.0F * this.zoomOut && (float) y <= 155.0F * this.zoomOut) {
-                    int unlockstate = skillHandler.isSkillEnabled(skill) ? 0 : skillHandler.isNodeEnabled(node) ? -1 : skillHandler.canSkillBeEnabled(skill) == ISkillHandler.Result.OK ? 1 : 2;
 
-                    if (unlockstate == 0) {
+                    if (skillHandler.isSkillEnabled(skill)) {
                         float f5 = 1F;
                         RenderSystem.color4f(f5, f5, f5, 1.0F);
-                    } else if (unlockstate == 1) {
+                    } else if (skillHandler.canSkillBeEnabled(skill) == ISkillHandler.Result.OK) {
                         float f6 = 0.6F;
                         RenderSystem.color4f(f6, f6, f6, 1.0F);
-                    } else if (unlockstate == 2) {
-                        float f7 = 0.3F;
-                        RenderSystem.color4f(f7, f7, f7, 1.0F);
-                    } else if (unlockstate == -1) {
+                    } else if (skillHandler.isNodeEnabled(node)) {
                         float f8 = 0.2F;
                         RenderSystem.color4f(f8, f8, f8, 1.0F);
+                    } else {
+                        float f7 = 0.3F;
+                        RenderSystem.color4f(f7, f7, f7, 1.0F);
                     }
 
                     this.minecraft.getTextureManager().bindTexture(BACKGROUND);
@@ -465,51 +466,41 @@ public class SkillsScreen extends Screen {
         if (selected != null) {
             stack.push();
             stack.translate(0, 0, 1); //Render tooltips in front of buttons
-            int m2MouseX = mouseX + 12;
-            int m2MouseY = mouseY - 4;
 
-            ITextComponent name = selected.getName();
+            List<ITextComponent> tooltips = new ArrayList<>();
+
+            ITextComponent name = selected.getName().copyRaw().mergeStyle(TextFormatting.GRAY);
             ITextComponent desc = selected.getDescription();
+
+            tooltips.add(name);
+            if (desc != null) {
+                tooltips.add(desc.copyRaw().mergeStyle(TextFormatting.DARK_GRAY));
+            }
+
             ISkillHandler.Result result = skillHandler.canSkillBeEnabled(selected);
 
             int width_name = Math.max(this.font.getStringPropertyWidth(name), 110);
 
-
-            List<IReorderingProcessor> descLines = desc == null ? Collections.emptyList() : this.font.trimStringToWidth(desc, width_name);
-            int height_desc = descLines.size() * this.font.FONT_HEIGHT;
-
             List<ISkill> lockingSkills = null;
-            int lockingColor = 0xFF000000;
+            TextFormatting lockingColor = TextFormatting.BLACK;
             if (selectedNode.getLockingNodes().length != 0) {
                 lockingSkills = skillHandler.getLockingSkills(selectedNode);
-                height_desc += 12 * (lockingSkills.size() + 1);
-                lockingColor = result == ISkillHandler.Result.ALREADY_ENABLED ? 0xff808080 : lockingSkills.stream().anyMatch(skill -> skillHandler.isSkillEnabled(skill)) ? 0xFFA32228 : 0xFFFBAE00;
-            }
-            int locking_desc = height_desc;
-            if (result == ISkillHandler.Result.ALREADY_ENABLED || result == ISkillHandler.Result.PARENT_NOT_ENABLED || result == ISkillHandler.Result.LOCKED_BY_OTHER_NODE) {
-                height_desc += 12;
-            }
-            this.fillGradient(stack, m2MouseX - 3, m2MouseY - 3, m2MouseX + width_name + 3, m2MouseY + height_desc + 3 + 12, -1073741824, -1073741824);
-
-            this.font.func_243246_a(stack, name, (float) m2MouseX, (float) m2MouseY, 0xff808080);
-
-            int j = 0;
-            for (IReorderingProcessor t : descLines) {
-                this.font.func_238422_b_(stack, t, m2MouseX, m2MouseY + 12 + j, 0xff505050);
-                j += this.font.FONT_HEIGHT;
+                lockingColor = result == ISkillHandler.Result.ALREADY_ENABLED ? TextFormatting.DARK_GRAY : lockingSkills.stream().anyMatch(skill -> skillHandler.isSkillEnabled(skill)) ? TextFormatting.DARK_RED : TextFormatting.YELLOW;
             }
             if (lockingSkills != null) {
-                this.font.func_243248_b(stack, new TranslationTextComponent("text.vampirism.skill.excluding"), m2MouseX, m2MouseY + locking_desc - 12 * lockingSkills.size() + 3, lockingColor);
-                for (int i = 0; i < lockingSkills.size(); i++) {
-                    this.font.func_243248_b(stack, new StringTextComponent("  ").append(lockingSkills.get(i).getName()), m2MouseX, m2MouseY + locking_desc - i * 12 + 3, lockingColor);
+                tooltips.add(new TranslationTextComponent("text.vampirism.skill.excluding").mergeStyle(lockingColor));
+                for (ISkill lockingSkill : lockingSkills) {
+                    tooltips.add(new StringTextComponent("  ").append(lockingSkill.getName().deepCopy().mergeStyle(lockingColor)));
                 }
             }
 
             if (result == ISkillHandler.Result.ALREADY_ENABLED) {
-                this.font.func_243246_a(stack, new TranslationTextComponent("text.vampirism.skill.unlocked"), m2MouseX, m2MouseY + height_desc + 3, 0xFFFBAE00);
+                tooltips.add(new TranslationTextComponent("text.vampirism.skill.unlocked").mergeStyle(TextFormatting.GOLD));
             } else if (result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
-                this.font.func_243246_a(stack, new TranslationTextComponent("text.vampirism.skill.unlock_parent_first"), m2MouseX, m2MouseY + height_desc + 3, 0xFFA32228);
+                tooltips.add(new TranslationTextComponent("text.vampirism.skill.unlock_parent_first").mergeStyle(TextFormatting.DARK_RED));
             }
+            GuiUtils.drawHoveringText(stack, tooltips, mouseX, mouseY, width, height, width_name, -1073741824, -1073741824, -1073741824, this.font);
+
             stack.pop();
         }
 
