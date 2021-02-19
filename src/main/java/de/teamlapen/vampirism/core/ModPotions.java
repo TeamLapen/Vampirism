@@ -12,6 +12,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -67,10 +68,7 @@ public class ModPotions {
     public static final VampirismPotion long_strong_health_boost = getNull();
     public static final VampirismPotion resistance = getNull();
     public static final VampirismPotion long_resistance = getNull();
-    public static final VampirismPotion very_long_resistance = getNull();
     public static final VampirismPotion strong_resistance = getNull();
-    public static final VampirismPotion very_strong_resistance = getNull();
-    public static final VampirismPotion long_strong_resistance = getNull();
 
     //Vampire
     public static final VampirismPotion vampire_fire_resistance = getNull();
@@ -125,9 +123,6 @@ public class ModPotions {
         registry.register(new VampirismPotion("resistance", null, new EffectInstance(Effects.RESISTANCE, 1800)));
         registry.register(new VampirismPotion("long_resistance", "resistance", new EffectInstance(Effects.RESISTANCE, 4800)));
         registry.register(new VampirismPotion("strong_resistance", "resistance", new EffectInstance(Effects.RESISTANCE, 400, 1)));
-        registry.register(new VampirismPotion("very_long_resistance", "resistance", new EffectInstance(Effects.RESISTANCE, 48000)));
-        registry.register(new VampirismPotion("very_strong_resistance", "resistance", new EffectInstance(Effects.RESISTANCE, 400, 2)));
-        registry.register(new VampirismPotion("long_strong_resistance", "resistance", new EffectInstance(Effects.RESISTANCE, 1800, 1)));
 
         //Vampire
         registry.register(new VampirismPotion("vampire_fire_resistance", null, new EffectInstance(ModEffects.fire_protection, 3600, 5)));
@@ -192,10 +187,6 @@ public class ModPotions {
         master(resistance, Ingredient.fromItems(Items.GOLDEN_APPLE), 20, 10);
         durable(resistance, long_resistance);
         strong(resistance, strong_resistance);
-        veryDurable(long_resistance, very_long_resistance);
-        veryStrong(strong_resistance, very_strong_resistance);
-        veryDurable(very_strong_resistance, long_strong_resistance);
-        veryStrong(very_long_resistance, long_strong_resistance);
     }
 
     private static void durable(Potion in, Potion out) {
@@ -219,4 +210,14 @@ public class ModPotions {
     }
 
 
+    public static void fixMappings(RegistryEvent.MissingMappings<Potion> event) {
+        event.getAllMappings().forEach(missingMapping -> {
+            String key = missingMapping.key.toString();
+            if (key.equals("vampirism:long_strong_resistance") || key.equals("vampirism:very_long_resistance")) {
+                missingMapping.remap(ModPotions.long_resistance);
+            } else if (key.equals("vampirism:very_strong_resistance")) {
+                missingMapping.remap(ModPotions.strong_resistance);
+            }
+        });
+    }
 }
