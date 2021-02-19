@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.world.biome;
 
 import com.google.common.collect.ImmutableList;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFeatures;
+import de.teamlapen.vampirism.mixin.FlatGenerationSettingsAccessor;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
@@ -41,6 +43,8 @@ public class VampirismBiomeFeatures {
     }
 
     public static void init() {
+        if (VampirismConfig.COMMON.enforceTentGeneration.get())
+            FlatGenerationSettingsAccessor.getStructures_vampirism().put(ModFeatures.hunter_camp, hunter_camp);
     }
 
 

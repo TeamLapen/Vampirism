@@ -180,8 +180,8 @@ public class BalanceConfig {
         builder.comment("General options");
         builder.category("general", "");
 
-        hunterTentDistance = builder.comment("In chunks. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentDistance", 6, 2, 4096);
-        hunterTentSeparation = builder.comment("In chunks. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentSeparation", 2, 1, 4096);
+        hunterTentDistance = builder.comment("Desired maximum distance in chunks between tents. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentDistance", 6, 2, 4096);
+        hunterTentSeparation = builder.comment("Desired minimum distance in chunks between tents. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentSeparation", 2, 1, 4096);
         vampireForestWeight = builder.defineInRange("vampireForestWeight", 3, 1, Integer.MAX_VALUE);
         vampireForestHillsWeight = builder.defineInRange("vampireForestHillsWeight", 3, 1, Integer.MAX_VALUE);
         canCancelSanguinare = builder.comment("If the sanguinare effect can be canceled by milk").define("canCancelSanguinare", true);

@@ -83,7 +83,7 @@ public class ModFeatures {
         addStructureSeparationSettings(structureSettingsMapOverworld);
         if (VampirismConfig.COMMON.villageModify.get()) {
             LOGGER.info("Replacing vanilla village structure separation settings for the overworld dimension preset");
-            structureSettingsMapOverworld.put(Structure.NETHER_FOSSIL, new ConfigurableStructureSeparationSettings(VampirismConfig.SERVER.villageDistance, VampirismConfig.SERVER.villageSeparation, DimensionStructuresSettings.field_236191_b_.get(Structure.VILLAGE).func_236673_c_()));
+            structureSettingsMapOverworld.put(Structure.VILLAGE, new ConfigurableStructureSeparationSettings(VampirismConfig.SERVER.villageDistance, VampirismConfig.SERVER.villageSeparation, DimensionStructuresSettings.field_236191_b_.get(Structure.VILLAGE).func_236673_c_()));
         } else {
             LOGGER.trace("Not modifying village");
         }
@@ -97,13 +97,19 @@ public class ModFeatures {
      * @param settings
      */
     public static void checkWorldStructureSeparation(RegistryKey<World> dimension, boolean flatWorld, DimensionStructuresSettings settings) {
-        if (dimension.compareTo(World.OVERWORLD) == 0 || flatWorld) return;
+        if (dimension.compareTo(World.OVERWORLD) != 0 || flatWorld) return;
         if (!VampirismConfig.COMMON.enforceTentGeneration.get()) return;
         //Copy/Overwrite
         Map<Structure<?>, StructureSeparationSettings> structureSettings = new HashMap<>(settings.func_236195_a_());
         if (!structureSettings.containsKey(hunter_camp)) {
             LOGGER.info("Cannot find hunter camp configuration for loaded world -> Adding");
-            structureSettings.put(hunter_camp, new StructureSeparationSettings(VampirismConfig.BALANCE.hunterTentSeparation.get(), VampirismConfig.BALANCE.hunterTentSeparation.get(), 14357719));
+            int dist = VampirismConfig.BALANCE.hunterTentDistance.get();
+            int sep = VampirismConfig.BALANCE.hunterTentSeparation.get();
+            if (dist <= sep) {
+                LOGGER.warn("Hunter tent distance must be larger than separation. Adjusting");
+                dist = sep + 1;
+            }
+            structureSettings.put(hunter_camp, new StructureSeparationSettings(dist, sep, 14357719));
         }
         ((DimensionStructureSettingsAccessor) settings).setStructureSeparation_vampirism(structureSettings);
     }

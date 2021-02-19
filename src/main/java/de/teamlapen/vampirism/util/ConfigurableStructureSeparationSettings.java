@@ -12,8 +12,13 @@ public class ConfigurableStructureSeparationSettings extends StructureSeparation
     private final ForgeConfigSpec.IntValue separationConf;
 
 
+    /**
+     * @param distanceConf   Maximum distance between spawn attempts in chunks
+     * @param separationConf Minimum distance between spawn attempts in chunks
+     * @param salt           Must be Unique
+     */
     public ConfigurableStructureSeparationSettings(ForgeConfigSpec.IntValue distanceConf, ForgeConfigSpec.IntValue separationConf, int salt) {
-        super(distanceConf.get(), separationConf.get(), salt); //At this point the config is probably not loaded yet
+        super(distanceConf.get() <= separationConf.get() ? separationConf.get() + 1 : distanceConf.get(), separationConf.get(), salt); //At this point the config is probably not loaded yet
         this.distanceConf = distanceConf;
         this.separationConf = separationConf;
     }
