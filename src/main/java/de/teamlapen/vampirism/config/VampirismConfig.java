@@ -179,8 +179,8 @@ public class VampirismConfig {
             builder.pop();
 
             builder.push("village");
-            villageDistance = builder.comment("Village distance").defineInRange("villageDistance", 32, 1, 100); //TODO 1.17 improve comment
-            villageSeparation = builder.comment("Village centers will be at least N chunks apart. Must be smaller than distance").defineInRange("villageSeparation", 8, 1, 100);
+            villageDistance = builder.comment("Desired maximum distance between villages in chunks").defineInRange("villageDistance", 26, 1, 100);
+            villageSeparation = builder.comment("Minimum distance between villages in chunks. Must be smaller than distance").defineInRange("villageSeparation", 6, 1, 100);
             builder.pop();
 
             builder.push("entities");
