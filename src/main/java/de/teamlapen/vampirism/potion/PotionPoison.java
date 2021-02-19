@@ -7,6 +7,8 @@ import net.minecraft.util.DamageSource;
 
 public class PotionPoison extends VampirismEffect {
 
+    public static int DEADLY_AMPLIFIER = 4;
+
     public PotionPoison(String name, int potionColor) {
         super(name, EffectType.HARMFUL, potionColor);
     }
@@ -22,8 +24,8 @@ public class PotionPoison extends VampirismEffect {
 
     @Override
     public void performEffect(LivingEntity entityLivingBaseIn, int amplifier) {
-        if (entityLivingBaseIn.getHealth() > 1f || amplifier >= 5) {
-            entityLivingBaseIn.attackEntityFrom(DamageSource.MAGIC, 1.0f);
+        if (entityLivingBaseIn.getHealth() > 1f || amplifier >= DEADLY_AMPLIFIER) {
+            entityLivingBaseIn.attackEntityFrom(DamageSource.MAGIC, amplifier + 1);
         }
     }
 }

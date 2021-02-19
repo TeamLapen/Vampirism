@@ -243,6 +243,11 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
+    public void onMissingMappingsPotions(RegistryEvent.MissingMappings<Potion> event) {
+        ModPotions.fixMappings(event);
+    }
+
+    @SubscribeEvent
     public void onRegisterTasks(RegistryEvent.Register<Task> event) {
         ModTasks.registerTasks(event.getRegistry());
     }

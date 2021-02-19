@@ -13,6 +13,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.NonNullSupplier;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -69,11 +70,7 @@ public class ModPotions {
     public static final HunterPotion long_strong_health_boost = getNull();
     public static final HunterPotion resistance = getNull();
     public static final HunterPotion long_resistance = getNull();
-    public static final HunterPotion very_long_resistance = getNull();
     public static final HunterPotion strong_resistance = getNull();
-    public static final HunterPotion very_strong_resistance = getNull();
-    public static final HunterPotion long_strong_resistance = getNull();
-
     //Vampire
     public static final VampirismPotion vampire_fire_resistance = getNull();
     public static final VampirismPotion long_vampire_fire_resistance = getNull();
@@ -82,14 +79,14 @@ public class ModPotions {
         registry.register(new HunterPotion("very_long_slow_falling", "slow_falling", new EffectInstance(Effects.SLOW_FALLING, 48000)));
         registry.register(new HunterPotion("long_luck", "luck", new EffectInstance(Effects.LUCK, 60000)));
         registry.register(new HunterPotion("very_long_weakness", "weakness", new EffectInstance(Effects.WEAKNESS, 48000)));
-        registry.register(new HunterPotion("very_strong_strength", "strength", new EffectInstance(Effects.STRENGTH, 1800, 2)));
+        registry.register(new HunterPotion("very_strong_strength", "strength", new EffectInstance(Effects.STRENGTH, 1200, 2)));
         registry.register(new HunterPotion("very_long_strength", "strength", new EffectInstance(Effects.STRENGTH, 96000)));
-        registry.register(new HunterPotion("long_strong_strength", "strength", new EffectInstance(Effects.STRENGTH, 9600, 1)));
+        registry.register(new HunterPotion("long_strong_strength", "strength", new EffectInstance(Effects.STRENGTH, 4800, 1)));
         registry.register(new HunterPotion("very_strong_regeneration", "regeneration", new EffectInstance(Effects.REGENERATION, 450, 2)));
         registry.register(new HunterPotion("very_long_regeneration", "regeneration", new EffectInstance(Effects.REGENERATION, 18000)));
-        registry.register(new HunterPotion("long_strong_regeneration", "regeneration", new EffectInstance(Effects.REGENERATION, 1800, 1)));
+        registry.register(new HunterPotion("long_strong_regeneration", "regeneration", new EffectInstance(Effects.REGENERATION, 1200, 1)));
         registry.register(new HunterPotion("very_strong_poison", "poison", new EffectInstance(Effects.POISON, 432, 2)));
-        registry.register(new HunterPotion("long_strong_poison", "poison", new EffectInstance(Effects.POISON, 1800, 1)));
+        registry.register(new HunterPotion("long_strong_poison", "poison", new EffectInstance(Effects.POISON, 1200, 1)));
         registry.register(new HunterPotion("very_long_poison", "poison", new EffectInstance(Effects.POISON, 18000)));
         registry.register(new HunterPotion("very_strong_harming", "harming", new EffectInstance(Effects.INSTANT_DAMAGE, 1, 2)));
         registry.register(new HunterPotion("very_strong_healing", "healing", new EffectInstance(Effects.INSTANT_HEALTH, 1, 2)));
@@ -97,7 +94,7 @@ public class ModPotions {
         registry.register(new HunterPotion("very_strong_slowness", "slowness", new EffectInstance(Effects.SLOWNESS, 400, 5)));
         registry.register(new HunterPotion("very_long_slowness", "slowness", new EffectInstance(Effects.SLOWNESS, 48000)));
         registry.register(new HunterPotion("long_strong_slowness", "slowness", new EffectInstance(Effects.SLOWNESS, 4800, 3)));
-        registry.register(new HunterPotion("very_strong_swiftness", "swiftness", new EffectInstance(Effects.SPEED, 1800, 2)));
+        registry.register(new HunterPotion("very_strong_swiftness", "swiftness", new EffectInstance(Effects.SPEED, 1200, 2)));
         registry.register(new HunterPotion("very_long_swiftness", "swiftness", new EffectInstance(Effects.SPEED, 48000)));
         registry.register(new HunterPotion("long_strong_swiftness", "swiftness", new EffectInstance(Effects.SPEED, 4800, 1)));
         registry.register(new HunterPotion("very_long_fire_resistance", "fire_resistance", new EffectInstance(Effects.FIRE_RESISTANCE, 96000)));
@@ -106,30 +103,27 @@ public class ModPotions {
         registry.register(new HunterPotion("long_strong_leaping", "leaping", new EffectInstance(Effects.JUMP_BOOST, 9600, 1)));
         registry.register(new HunterPotion("very_long_invisibility", "invisibility", new EffectInstance(Effects.INVISIBILITY, 96000)));
         registry.register(new HunterPotion("very_long_night_vision", "night_vision", new EffectInstance(Effects.NIGHT_VISION, 96000)));
-        registry.register(new HunterPotion("nausea", null, new EffectInstance(Effects.NAUSEA, 1800)));
-        registry.register(new HunterPotion("long_nausea", "nausea", new EffectInstance(Effects.NAUSEA, 4800)));
-        registry.register(new HunterPotion("very_long_nausea", "nausea", new EffectInstance(Effects.NAUSEA, 48000)));
-        registry.register(new HunterPotion("thirst", null, new EffectInstance(ModEffects.thirst, 1800)));
+        registry.register(new HunterPotion("nausea", null, new EffectInstance(Effects.NAUSEA, 1200)));
+        registry.register(new HunterPotion("long_nausea", "nausea", new EffectInstance(Effects.NAUSEA, 2400)));
+        registry.register(new HunterPotion("very_long_nausea", "nausea", new EffectInstance(Effects.NAUSEA, 24000)));
+        registry.register(new HunterPotion("thirst", null, new EffectInstance(ModEffects.thirst, 1200)));
         registry.register(new HunterPotion("long_thirst", "thirst", new EffectInstance(ModEffects.thirst, 4800)));
         registry.register(new HunterPotion("strong_thirst", "thirst", new EffectInstance(ModEffects.thirst, 400, 1)));
-        registry.register(new HunterPotion("very_long_thirst", "thirst", new EffectInstance(ModEffects.thirst, 48000)));
-        registry.register(new HunterPotion("very_strong_thirst", "thirst", new EffectInstance(ModEffects.thirst, 1800, 2)));
+        registry.register(new HunterPotion("very_long_thirst", "thirst", new EffectInstance(ModEffects.thirst, 24000)));
+        registry.register(new HunterPotion("very_strong_thirst", "thirst", new EffectInstance(ModEffects.thirst, 1200, 2)));
         registry.register(new HunterPotion("long_strong_thirst", "thirst", new EffectInstance(ModEffects.thirst, 9600, 1)));
-        registry.register(new HunterPotion("blindness", null, new EffectInstance(Effects.BLINDNESS, 1800)));
+        registry.register(new HunterPotion("blindness", null, new EffectInstance(Effects.BLINDNESS, 1200)));
         registry.register(new HunterPotion("long_blindness", "blindness", new EffectInstance(Effects.BLINDNESS, 4800)));
-        registry.register(new HunterPotion("very_long_blindness", "blindness", new EffectInstance(Effects.BLINDNESS, 48000)));
-        registry.register(new HunterPotion("health_boost", null, new EffectInstance(Effects.HEALTH_BOOST, 1800)));
+        registry.register(new HunterPotion("very_long_blindness", "blindness", new EffectInstance(Effects.BLINDNESS, 24000)));
+        registry.register(new HunterPotion("health_boost", null, new EffectInstance(Effects.HEALTH_BOOST, 1200)));
         registry.register(new HunterPotion("long_health_boost", "health_boost", new EffectInstance(Effects.HEALTH_BOOST, 4800)));
         registry.register(new HunterPotion("strong_health_boost", "health_boost", new EffectInstance(Effects.HEALTH_BOOST, 400, 1)));
         registry.register(new HunterPotion("very_long_health_boost", "health_boost", new EffectInstance(Effects.HEALTH_BOOST, 48000)));
         registry.register(new HunterPotion("very_strong_health_boost", "health_boost", new EffectInstance(Effects.HEALTH_BOOST, 400, 2)));
-        registry.register(new HunterPotion("long_strong_health_boost", "health_boost", new EffectInstance(Effects.HEALTH_BOOST, 1800, 1)));
+        registry.register(new HunterPotion("long_strong_health_boost", "health_boost", new EffectInstance(Effects.HEALTH_BOOST, 1200, 1)));
         registry.register(new HunterPotion("resistance", null, new EffectInstance(Effects.RESISTANCE, 1800)));
         registry.register(new HunterPotion("long_resistance", "resistance", new EffectInstance(Effects.RESISTANCE, 4800)));
         registry.register(new HunterPotion("strong_resistance", "resistance", new EffectInstance(Effects.RESISTANCE, 400, 1)));
-        registry.register(new HunterPotion("very_long_resistance", "resistance", new EffectInstance(Effects.RESISTANCE, 48000)));
-        registry.register(new HunterPotion("very_strong_resistance", "resistance", new EffectInstance(Effects.RESISTANCE, 400, 2)));
-        registry.register(new HunterPotion("long_strong_resistance", "resistance", new EffectInstance(Effects.RESISTANCE, 1800, 1)));
 
         //Vampire
         registry.register(new VampirismPotion("vampire_fire_resistance", null, new EffectInstance(ModEffects.fire_protection, 3600, 5)));
@@ -194,10 +188,6 @@ public class ModPotions {
         master(resistance, ()->Ingredient.fromItems(Items.GOLDEN_APPLE), 20, 10);
         durable(resistance, long_resistance);
         strong(resistance, strong_resistance);
-        veryDurable(long_resistance, very_long_resistance);
-        veryStrong(strong_resistance, very_strong_resistance);
-        veryDurable(very_strong_resistance, long_strong_resistance);
-        veryStrong(very_long_resistance, long_strong_resistance);
     }
 
     private static void durable(Potion in, Potion out) {
@@ -213,7 +203,7 @@ public class ModPotions {
     }
 
     private static void veryStrong(Potion in, Potion out) {
-        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(()->Ingredient.fromItems(Items.GLOWSTONE), 64, 32).blood().concentrated().build());
+        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.fromItems(Items.GLOWSTONE), 64, 32).blood().concentrated().build());
     }
 
     private static void master(Potion out, NonNullSupplier<Ingredient> in, int count, int countReduced) {
@@ -221,4 +211,14 @@ public class ModPotions {
     }
 
 
+    public static void fixMappings(RegistryEvent.MissingMappings<Potion> event) {
+        event.getAllMappings().forEach(missingMapping -> {
+            String key = missingMapping.key.toString();
+            if (key.equals("vampirism:long_strong_resistance") || key.equals("vampirism:very_long_resistance")) {
+                missingMapping.remap(ModPotions.long_resistance);
+            } else if (key.equals("vampirism:very_strong_resistance")) {
+                missingMapping.remap(ModPotions.strong_resistance);
+            }
+        });
+    }
 }

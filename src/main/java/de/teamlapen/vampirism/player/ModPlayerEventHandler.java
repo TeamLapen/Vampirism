@@ -28,6 +28,7 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.player.vampire.actions.BatVampireAction;
+import de.teamlapen.vampirism.potion.PotionPoison;
 import de.teamlapen.vampirism.potion.VampirismPotion;
 import de.teamlapen.vampirism.tileentity.TotemHelper;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
@@ -162,7 +163,7 @@ public class ModPlayerEventHandler {
             ItemStack stack = event.getItem();
             if (stack.getItem() == Items.POTION) {
                 if (PotionUtils.getPotionFromItem(stack) instanceof VampirismPotion.HunterPotion) {
-                    event.getEntityLiving().addPotionEffect(new EffectInstance(ModEffects.poison, Integer.MAX_VALUE, 5));
+                    event.getEntityLiving().addPotionEffect(new EffectInstance(ModEffects.poison, Integer.MAX_VALUE, PotionPoison.DEADLY_AMPLIFIER));
                 }
             }
         }
