@@ -70,7 +70,8 @@ minecraft {
         client2 {
             parent runs.client
             taskName 'runClient2'
-            args '--username', 'Dev2'
+            arg '--username=Dev2'
+            arg '-mixin.config=vampirism.mixins.json'
 
         }
         server {
