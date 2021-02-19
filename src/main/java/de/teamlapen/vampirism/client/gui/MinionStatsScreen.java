@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.network.UpgradeMinionStatPacket;
@@ -10,18 +12,21 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
 public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEntity<T>> extends Screen {
 
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/appearance.png");
+    private static final ResourceLocation RESET = new ResourceLocation(REFERENCE.MODID, "textures/gui/reset.png");
 
 
     protected final Q entity;
@@ -89,6 +94,30 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
             statButtons.add(button);
             button.visible = false;
         }
+
+        Button reset = this.addButton(new ImageButton(this.guiLeft + 225, this.guiTop + 8, 20, 20, 0, 0, 20, RESET, 20, 40, (context) -> {
+            VampirismMod.dispatcher.sendToServer(new UpgradeMinionStatPacket(entity.getEntityId(), -1));
+            context.active = entity.getMinionData().map(data -> data.getInventory().hasAny(Collections.singleton(ModItems.oblivion_potion)) && data.hasUsedSkillPoints()).orElse(false);
+        }, (Button p_onTooltip_1_, MatrixStack p_onTooltip_2_, int p_onTooltip_3_, int p_onTooltip_4_) -> {
+            MinionStatsScreen.this.renderTooltip(p_onTooltip_2_, p_onTooltip_1_.getMessage(), p_onTooltip_3_, p_onTooltip_4_);
+        }, new TranslationTextComponent("text.vampirism.minion.reset_stats")) {
+            @Override
+            public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+                if (this.visible) {
+                    this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+                    if (!this.active) {
+                        RenderSystem.color4f(0.65f, 0.65f, 0.65f, 1);
+                    }
+                    super.renderButton(matrixStack, mouseX, mouseY, partialTicks);
+                }
+            }
+
+            @Override
+            public boolean isHovered() {
+                return this.active && super.isHovered();
+            }
+        });
+        reset.active = entity.getMinionData().map(data -> data.getInventory().hasAny(Collections.singleton(ModItems.oblivion_potion)) && data.hasUsedSkillPoints()).orElse(false);
     }
 
     protected void renderGuiBackground(MatrixStack mStack) {

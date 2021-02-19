@@ -170,4 +170,23 @@ public class InventoryHelper {
         return -1;
     }
 
+    public static boolean removeItemFromInventory(IInventory inventory, ItemStack item) {
+        int i = item.getCount();
+
+        for (int j = 0; j < inventory.getSizeInventory(); ++j) {
+            ItemStack itemstack = inventory.getStackInSlot(j);
+            if (itemstack.getItem().equals(item.getItem())) {
+                if (itemstack.getCount() >= i) {
+                    itemstack.shrink(i);
+                    return true;
+                } else {
+                    i += itemstack.getCount();
+                    itemstack.shrink(i);
+                }
+            }
+        }
+
+        return i <= 0;
+    }
+
 }
