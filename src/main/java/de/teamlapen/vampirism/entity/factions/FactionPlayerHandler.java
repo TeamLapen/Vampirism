@@ -380,7 +380,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     public boolean setTitleGender(boolean female) {
         if (titleGender == null || female != this.titleGender) {
             this.titleGender = female;
-            player.refreshDisplayName();
             if (!player.world.isRemote()) {
                 sync(true);
             }
