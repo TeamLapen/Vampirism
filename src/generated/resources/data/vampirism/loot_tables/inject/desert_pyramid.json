@@ -7,7 +7,12 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "weight": 25,
+          "weight": 15,
+          "name": "vampirism:item_garlic"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 20,
           "functions": [
             {
               "function": "minecraft:set_damage",
