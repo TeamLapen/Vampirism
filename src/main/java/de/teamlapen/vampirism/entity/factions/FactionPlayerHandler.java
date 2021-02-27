@@ -339,6 +339,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (player instanceof ServerPlayerEntity) {
             ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayerEntity) player, currentFaction, currentLevel);
         }
+        player.refreshDisplayName();
         return true;
 
     }
@@ -374,12 +375,14 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             }
         });
         if (sync) sync(false);
+        player.refreshDisplayName();
         return true;
     }
 
     public boolean setTitleGender(boolean female) {
         if (titleGender == null || female != this.titleGender) {
             this.titleGender = female;
+            player.refreshDisplayName();
             if (!player.world.isRemote()) {
                 sync(true);
             }
