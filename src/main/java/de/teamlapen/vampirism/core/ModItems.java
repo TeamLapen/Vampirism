@@ -224,8 +224,8 @@ public class ModItems {
 
     static void registerItems(IForgeRegistry<Item> registry) {
         registry.register(new VampireFangItem());
-        registry.register(new VampirismItemBloodFood("human_heart", (new Food.Builder()).hunger(20).saturation(1.5F).build()));
-        registry.register(new VampirismItemBloodFood("weak_human_heart", (new Food.Builder()).hunger(10).saturation(0.9F).build()));
+        registry.register(new VampirismItemBloodFood("human_heart", (new Food.Builder()).hunger(20).saturation(1.5F).build(), new Food.Builder().hunger(5).saturation(1f).build()));
+        registry.register(new VampirismItemBloodFood("weak_human_heart", (new Food.Builder()).hunger(10).saturation(0.9F).build(), new Food.Builder().hunger(3).saturation(1f).build()));
         registry.register(new BloodBottleItem());
         registry.register(new TentItem(true));
         registry.register(new TentItem(false));
