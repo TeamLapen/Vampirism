@@ -83,7 +83,7 @@ public class ModBiomes {
             event.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.advanced_vampire, VampirismConfig.BALANCE.mbAdvancedVampireSpawnChance.get(), 1, 1));
         }
         Biome.Category cat = event.getCategory();
-        if (cat != Biome.Category.NETHER && cat != Biome.Category.THEEND && cat != Biome.Category.OCEAN) {
+        if (cat != Biome.Category.NETHER && cat != Biome.Category.THEEND && cat != Biome.Category.OCEAN && cat != Biome.Category.NONE) {
             event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_STRUCTURES, VampirismBiomeFeatures.vampire_dungeon);
         }
 
