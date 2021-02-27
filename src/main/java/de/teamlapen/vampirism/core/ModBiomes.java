@@ -79,10 +79,14 @@ public class ModBiomes {
     public static void onBiomeLoadingEventAdditions(BiomeLoadingEvent event) {
         List<MobSpawnInfo.Spawners> monsterList = event.getSpawns().getSpawner(EntityClassification.MONSTER);
         if (monsterList != null && monsterList.stream().anyMatch(spawners -> spawners.type == EntityType.ZOMBIE)) {
-            event.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.vampire, VampirismConfig.BALANCE.mbVampireSpawnChance.get() , 1, 2));
-            event.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.advanced_vampire, VampirismConfig.BALANCE.mbAdvancedVampireSpawnChance.get() , 1, 1));
+            event.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.vampire, VampirismConfig.BALANCE.mbVampireSpawnChance.get(), 1, 2));
+            event.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.advanced_vampire, VampirismConfig.BALANCE.mbAdvancedVampireSpawnChance.get(), 1, 1));
         }
-        event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_STRUCTURES, VampirismBiomeFeatures.vampire_dungeon);
+        Biome.Category cat = event.getCategory();
+        if (cat != Biome.Category.NETHER && cat != Biome.Category.THEEND && cat != Biome.Category.OCEAN) {
+            event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_STRUCTURES, VampirismBiomeFeatures.vampire_dungeon);
+        }
+
         if (VampirismAPI.worldGenRegistry().canStructureBeGeneratedInBiome(ModFeatures.hunter_camp.getRegistryName(), event.getName(), event.getCategory())) {
             event.getGeneration().withStructure(VampirismBiomeFeatures.hunter_camp);
         }
