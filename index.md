@@ -8,7 +8,7 @@ title: Vampirism - An overview
 ## General
 
 The following is supposed to give you an quick overview over the major features of Vampirism.  
-There are small features, adjustments or tweaks which are not mentioned here (advancements, some loot gen, mob interaction and more).
+There are small features, adjustments or tweaks which are not mentioned here (advancements, loot generation, mob interaction and much more).
 
 ### Mobs
 
@@ -21,7 +21,7 @@ They are named after people who contributed to this mod.
 Vampire hunter spawn in small camps generated around the world. They hunt vampires, but usually stay close to their tent.  
 They also spawn in different levels and sometimes there is an advanced hunter in the camp.
 <p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/vampire_forest_baron.jpg" width="90%"/></p>
-Vampire barons appear in the vampire forest. They are very strong and have abulic minions that fight for them.  
+Vampire barons appear in the vampire forest. They are very strong and grow fangs when angered. 
 They do not like other powerful vampires in their territory, so they attack vampire players and other barons.
 <p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/vampire_mobs.jpg" width="90%"/></p>
 In the vampire forest there are vampire versions of the vanilla mobs.  
@@ -31,13 +31,17 @@ If you suck all of a creature's blood it might also turn into a vampire version.
 <p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/village.png" width="90%"/></p>
 Villages play an important role in Vampirism, since there are many blood-rich villagers there.  
 Vampirism (slightly) increases the density and size of villages in the world.  
-There are usually some vampire hunter watching the village to protect the villagers from vampires.  
-The more villagers are killed by vampires (or fed of) the more hunter come around. If it get's to wild, some of the villagers will get angry and get their pitchforks to defend themselves.  
+
+<p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/vampire_village.jpg" width="90%"/></p>
+
+Villagers can be captured and controlled by vampires or hunters. The controlling faction will have benefits in the village like fog to prevent sun damage or better trades.
+
+
 
 ### Configuration
 <p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/config.png" width="90%"/></p>
-Many aspects of the game are configurable. Instead of modifying the configuration files you can also use the ingame menu.  
-Almost all balance related values are configurable in the balance section. After an update players are asked if they want to override their modified values with the (potentially) updated ones. This does not affect the general configuration.
+Many aspects of the game are configurable. Instead of modifying the configuration files you can also use the ingame menu (Only in Minecraft 1.12).  
+Almost all balance related values are configurable in the balance section. For more information see here: https://github.com/TeamLapen/Vampirism/wiki/Configuration
 
 ### Items and Blocks
 <p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/item_overview.png" width="90%"/></p>
@@ -82,3 +86,19 @@ There are three different new armor types for hunter. They all come in three tie
 <p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/med_chair.jpg" width="90%"/></p>
 <p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/hunter_trainer_house.png" width="90%"/></p>
 A special chair can be found alongside a trainer in a special village building. These are required for leveling up as a hunter.
+
+
+
+## Lord and Minions
+
+After reaching the highest level as vampire or hunter you can become a vampire lord or a master hunter and obtain different ranks. Therefore, they must complete tasks for a vampire/hunter faction representative.
+
+<p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/vampire_representative.jpg" width="30%"/>
+<img src="https://teamlapen.github.io/Vampirism/img/vampire_representative_screen.jpg" width="60%"/></p>
+
+The higher your rank, the more minions you can control. Minions can be equipped with weapons and armor, store items in their inventory and be leveled up. You can give your minions various tasks like defend an area, collect resources or follow you.
+
+<p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/minions.jpg" width="90%"/></p>
+<p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/minion_inventory.png" width="90%"/></p>
+
+<p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/minions_abilities.png" width="90%"/></p>
