@@ -81,13 +81,20 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IVampirePlayer {
 
     private static final Logger LOGGER = LogManager.getLogger(VampirePlayer.class);
+    private final static int FEED_TIMER = 20;
+
+    /**
+     * Keys for NBT values
+     */
     private final static String KEY_EYE = "eye_type";
     private final static String KEY_FANGS = "fang_type";
     private final static String KEY_GLOWING_EYES = "glowing_eyes";
     private final static String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
     private final static String KEY_VISION = "vision";
-    private final static String KEY_VICTIM_ID = "feed_victim";
-    private final static int FEED_TIMER = 20;
+    private final static String KEY_FEED_VICTIM_ID = "feed_victim";
+    private final static String KEY_WING_COUNTER = "wing";
+
+
     @CapabilityInject(IVampirePlayer.class)
     public static Capability<IVampirePlayer> CAP = getNull();
 
@@ -152,7 +159,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private boolean wasDead = false;
     private final List<IVampireVision> unlockedVisions = new ArrayList<>();
     private IVampireVision activatedVision = null;
-
+    private int wing_counter = 0;
     private int feed_victim = -1;
     private BITE_TYPE feed_victim_bite_type;
     private int feedBiteTickCounter = 0;
@@ -251,9 +258,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     player.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 25, 4, false, false));
 
                     CompoundNBT nbt = new CompoundNBT();
-                    nbt.putInt(KEY_VICTIM_ID, feed_victim);
+                    nbt.putInt(KEY_FEED_VICTIM_ID, feed_victim);
                     sync(nbt, true);
-
                 }
             } else {
                 LOGGER.warn("Entity sent by client is not in reach " + entityId);
@@ -331,7 +337,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (player.isPotionActive(Effects.SLOWNESS)) player.removePotionEffect(Effects.SLOWNESS);
         if (sync) {
             CompoundNBT nbt = new CompoundNBT();
-            nbt.putInt(KEY_VICTIM_ID, feed_victim);
+            nbt.putInt(KEY_FEED_VICTIM_ID, feed_victim);
             sync(nbt, true);
         }
     }
@@ -439,7 +445,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         } else {
             return VampirismAPI.factionRegistry().getPredicate(getFaction(), ignoreDisguise);
         }
-
     }
 
     @Override
@@ -455,6 +460,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public int getTicksInSun() {
         return ticksInSun;
+    }
+
+    public int getWingCounter() {
+        return this.wing_counter;
     }
 
     @Override
@@ -677,7 +686,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             activatedVision.tick(this);
         }
 
-
         if (!isRemote()) {
             if (level > 0) {
                 boolean sync = false;
@@ -702,8 +710,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                             player.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 80, 0));
                         }
                     }
-
-
                 }
 
                 if (player.ticksExisted % 9 == 3 && VampirismConfig.BALANCE.vpFireResistanceReplace.get() && player.isPotionActive(Effects.FIRE_RESISTANCE)) {
@@ -741,8 +747,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             } else {
                 ticksInSun = 0;
             }
-
-
         } else {
             if (level > 0) {
                 actionHandler.updateActions();
@@ -768,10 +772,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 }
             }
             VampirismMod.proxy.handleSleepClient(player);
-
         }
         if (feed_victim == -1) {
             feedBiteTickCounter = 0;
+        }
+        if (wing_counter > 0) {
+            --wing_counter;
         }
         world.getProfiler().endSection();
     }
@@ -787,9 +793,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 }
                 player.world.getProfiler().endSection();
             }
-//            if (getSpecialAttributes().bat) {
-//                BatVampireAction.updatePlayerBatSize(player);
-//            }
         }
     }
 
@@ -801,7 +804,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         nbt.putBoolean(KEY_GLOWING_EYES, glowingEyes);
         actionHandler.saveToNbt(nbt);
         skillHandler.saveToNbt(nbt);
-
     }
 
 
@@ -862,6 +864,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         activateVision(id == -1 ? null : unlockedVisions.get(id));
     }
 
+    public void triggerWings() {
+        this.wing_counter = 1200;
+        this.sync(true);
+    }
+
     @Override
     public void unUnlockVision(@Nonnull IVampireVision vision) {
         if (vision.equals(activatedVision)) {
@@ -914,8 +921,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (nbt.contains(KEY_GLOWING_EYES)) {
             setGlowingEyes(nbt.getBoolean(KEY_GLOWING_EYES));
         }
-        if (nbt.contains(KEY_VICTIM_ID)) {
-            feed_victim = nbt.getInt(KEY_VICTIM_ID);
+        if (nbt.contains(KEY_FEED_VICTIM_ID)) {
+            feed_victim = nbt.getInt(KEY_FEED_VICTIM_ID);
+        }
+        if (nbt.contains(KEY_WING_COUNTER)) {
+            wing_counter = nbt.getInt(KEY_WING_COUNTER);
         }
         bloodStats.loadUpdate(nbt);
         actionHandler.readUpdateFromServer(nbt);
@@ -932,9 +942,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 }
             }
             activateVision(vision);
-
         }
-
     }
 
     @Override
@@ -943,7 +951,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         nbt.putInt(KEY_EYE, getEyeType());
         nbt.putInt(KEY_FANGS, getFangType());
         nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());
-        nbt.putInt(KEY_VICTIM_ID, feed_victim);
+        nbt.putInt(KEY_FEED_VICTIM_ID, feed_victim);
+        nbt.putInt(KEY_WING_COUNTER, wing_counter);
         bloodStats.writeUpdate(nbt);
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);
@@ -977,7 +986,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 player.attackEntityFrom(DamageSource.causeThornsDamage(entity), damage);
             }
         }
-
     }
 
     private void biteBlock(@Nonnull BlockPos pos, @Nonnull BlockState blockState, @Nullable TileEntity tileEntity) {
@@ -1003,8 +1011,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
                         CompoundNBT updatePacket = bloodStats.writeUpdate(new CompoundNBT());
                         sync(updatePacket, true);
-
-
                     }
                 });
 
@@ -1141,10 +1147,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             return;
         }
         e.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20, 7, false, false));
-
         player.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 25, 4, false, false));
 
-        //ModParticles.spawnParticleClient(player.world, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, player.getEntityId(), true), e.posX , e.posY + e.getEyeHeight()/2, e.posZ, 10, 0.1F, player.getRNG());
         ModParticles.spawnParticlesServer(player.world, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, player.getEntityId(), true), e.getPosX(), e.getPosY() + e.getEyeHeight() / 2, e.getPosZ(), 10, 0.1f, 0.1f, 0.1f, 0);
 
         if (!biteFeed(e)) {

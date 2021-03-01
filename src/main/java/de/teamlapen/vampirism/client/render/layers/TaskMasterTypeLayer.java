@@ -30,13 +30,7 @@ public class TaskMasterTypeLayer<T extends MobEntity & IDefaultTaskMasterEntity>
             VillagerModel<T> m = getEntityModel();
             renderCutoutModel(m, this.deriveTypeTextureOverlay(Registry.VILLAGER_TYPE.getKey(type)), matrixStackIn, bufferIn, packedLightIn, entityIn, 1.0F, 1.0F, 1.0F);
             renderCutoutModel(m, additionalOverlay, matrixStackIn, bufferIn, packedLightIn, entityIn, 1.0F, 1.0F, 1.0F);
-
         }
-    }
-
-
-    public boolean shouldCombineTextures() {
-        return true;
     }
 
     private ResourceLocation deriveTypeTextureOverlay(ResourceLocation id) {

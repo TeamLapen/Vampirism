@@ -32,9 +32,9 @@ public class PlayerFaceOverlayLayer<T extends MobEntity & IPlayerOverlay, M exte
     }
 
     @Override
-    public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, T entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(MatrixStack stack, IRenderTypeBuffer buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         ResourceLocation loc = DefaultPlayerSkin.getDefaultSkinLegacy();
-        GameProfile prof = entityIn.getOverlayPlayerProfile();
+        GameProfile prof = entity.getOverlayPlayerProfile();
         if (prof != null) {
             Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(prof);
             if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
@@ -42,11 +42,11 @@ public class PlayerFaceOverlayLayer<T extends MobEntity & IPlayerOverlay, M exte
             }
 
         }
-        IVertexBuilder vertexBuilder = bufferIn.getBuffer(RenderType.getEntityCutoutNoCull(loc));
+        IVertexBuilder vertexBuilder = buffer.getBuffer(RenderType.getEntityCutoutNoCull(loc));
         this.getEntityModel().bipedHead.showModel = true;
         this.getEntityModel().bipedHeadwear.showModel = true;
-        this.getEntityModel().bipedHead.render(matrixStackIn, vertexBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
-        this.getEntityModel().bipedHeadwear.render(matrixStackIn, vertexBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+        this.getEntityModel().bipedHead.render(stack, vertexBuilder, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+        this.getEntityModel().bipedHeadwear.render(stack, vertexBuilder, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
         this.getEntityModel().bipedHead.showModel = false;
         this.getEntityModel().bipedHeadwear.showModel = false;
 

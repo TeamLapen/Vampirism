@@ -10,11 +10,13 @@ import de.teamlapen.vampirism.client.gui.*;
 import de.teamlapen.vampirism.client.render.RenderHandler;
 import de.teamlapen.vampirism.client.render.layers.VampireEntityLayer;
 import de.teamlapen.vampirism.client.render.layers.VampirePlayerHeadLayer;
+import de.teamlapen.vampirism.client.render.layers.WingsLayer;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.player.skills.ClientSkillTreeManager;
 import de.teamlapen.vampirism.player.skills.SkillTree;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -53,6 +55,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static de.teamlapen.vampirism.blocks.TentBlock.FACING;
 import static de.teamlapen.vampirism.blocks.TentBlock.POSITION;
@@ -146,32 +149,15 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void onInitStep(Step step, ParallelDispatchEvent event) {
-        super.onInitStep(step, event);
-        switch (step) {
-            case CLIENT_SETUP:
-                ModEntitiesRender.registerEntityRenderer(((FMLClientSetupEvent) event).getMinecraftSupplier());
-                ModKeys.register();
-                registerSubscriptions();
-                SelectActionScreen.loadActionOrder();
-                ModBlocksRender.register();
-                break;
-            case LOAD_COMPLETE:
-                ModBlocksRender.registerColors();
-                ModItemsRender.registerColors();
-                ModParticleFactories.registerFactories();
-                event.enqueueWork(ModScreens::registerScreensUnsafe);
-                skillTreeManager.init();
-                registerVampireEntityOverlays();
-                break;
-            default:
-                break;
-        }
+    public void renderScreenFullColor(int ticksOn, int ticksOff, int color) {
+        if (overlay != null) overlay.makeRenderFullColor(ticksOn, ticksOff, color);
     }
 
     @Override
-    public void renderScreenFullColor(int ticksOn, int ticksOff, int color) {
-        if (overlay != null) overlay.makeRenderFullColor(ticksOn, ticksOff, color);
+    public void handlePlayEventPacket(PlayEventPacket msg) {
+        if (msg.type == 1) {
+            spawnParticles(Minecraft.getInstance().world, msg.pos, Block.getStateById(msg.stateId));
+        }
     }
 
     private void registerSubscriptions() {
@@ -210,11 +196,12 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handlePlayEventPacket(PlayEventPacket msg) {
-        switch (msg.type) {
-            case 1:
-                spawnParticles(Minecraft.getInstance().world, msg.pos, Block.getStateById(msg.stateId));
-                break;
+    public void handleTaskStatusPacket(TaskStatusPacket msg) {
+        Container container = Objects.requireNonNull(Minecraft.getInstance().player).openContainer;
+        if (msg.containerId == container.windowId && container instanceof TaskBoardContainer) {
+            msg.visibleTasks.addAll(msg.notAcceptedTasks);
+            msg.visibleTasks.addAll(msg.completableTasks);
+            ((TaskBoardContainer) container).init(msg.completableTasks, (List<Task>) msg.visibleTasks, msg.notAcceptedTasks, msg.completedRequirements, msg.taskBoardId);
         }
     }
 
@@ -255,12 +242,27 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handleTaskStatusPacket(TaskStatusPacket msg) {
-        Container container = Minecraft.getInstance().player.openContainer;
-        if (msg.containerId == container.windowId && container instanceof TaskBoardContainer) {
-            msg.visibleTasks.addAll(msg.notAcceptedTasks);
-            msg.visibleTasks.addAll(msg.completableTasks);
-            ((TaskBoardContainer)container).init(msg.completableTasks, (List<Task>)msg.visibleTasks, msg.notAcceptedTasks,msg.completedRequirements, msg.taskBoardId);
+    public void onInitStep(Step step, ParallelDispatchEvent event) {
+        super.onInitStep(step, event);
+        switch (step) {
+            case CLIENT_SETUP:
+                ModEntitiesRender.registerEntityRenderer(((FMLClientSetupEvent) event).getMinecraftSupplier());
+                ModKeys.register();
+                registerSubscriptions();
+                SelectActionScreen.loadActionOrder();
+                ModBlocksRender.register();
+                ((FMLClientSetupEvent) event).getMinecraftSupplier().get().getRenderManager().getSkinMap().forEach((k, r) -> r.addLayer(new WingsLayer<>(r, player -> VampirePlayer.getOpt(player).map(VampirePlayer::getWingCounter).filter(i -> i > 0).isPresent(), (e, m) -> m.bipedBody)));
+                break;
+            case LOAD_COMPLETE:
+                ModBlocksRender.registerColors();
+                ModItemsRender.registerColors();
+                ModParticleFactories.registerFactories();
+                event.enqueueWork(ModScreens::registerScreensUnsafe);
+                skillTreeManager.init();
+                registerVampireEntityOverlays();
+                break;
+            default:
+                break;
         }
     }
 

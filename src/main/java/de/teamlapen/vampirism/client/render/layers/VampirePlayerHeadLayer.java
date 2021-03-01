@@ -36,7 +36,7 @@ public class VampirePlayerHeadLayer extends LayerRenderer<AbstractClientPlayerEn
     }
 
     @Override
-    public void render(MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, AbstractClientPlayerEntity player, float v, float v1, float v2, float v3, float v4, float v5) {
+    public void render(MatrixStack stack, IRenderTypeBuffer iRenderTypeBuffer, int i, AbstractClientPlayerEntity player, float v, float v1, float v2, float v3, float v4, float v5) {
         if (!VampirismConfig.CLIENT.renderVampireEyes.get() || !player.isAlive()) return;
         VampirePlayer vampirePlayer = VampirePlayer.get(player);
         if (vampirePlayer.getLevel() > 0 && !vampirePlayer.isDisguised() && !player.isInvisible()) {
@@ -46,9 +46,9 @@ public class VampirePlayerHeadLayer extends LayerRenderer<AbstractClientPlayerEn
             IVertexBuilder vertexBuilderEye = iRenderTypeBuffer.getBuffer(eyeRenderType);
             int packerOverlay = LivingRenderer.getPackedOverlay(player, 0);
             ModelRenderer head = this.getEntityModel().bipedHead;
-            head.render(matrixStack, vertexBuilderEye, i, packerOverlay);
+            head.render(stack, vertexBuilderEye, i, packerOverlay);
             IVertexBuilder vertexBuilderFang = iRenderTypeBuffer.getBuffer(RenderType.getEntityCutoutNoCull(fangOverlays[fangType]));
-            head.render(matrixStack, vertexBuilderFang, i, packerOverlay);
+            head.render(stack, vertexBuilderFang, i, packerOverlay);
 
 
         }

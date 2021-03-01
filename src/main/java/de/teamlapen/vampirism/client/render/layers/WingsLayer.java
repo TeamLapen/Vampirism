@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.render.layers;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.teamlapen.vampirism.client.model.WingModel;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
@@ -10,6 +11,7 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.function.BiFunction;
@@ -35,18 +37,21 @@ public class WingsLayer<T extends LivingEntity, Q extends EntityModel<T>> extend
 
 
     @Override
-    public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, T entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        if (!entityIn.isInvisible() && predicateRender.test(entityIn)) {
-            this.model.copyRotationFromBody(bodyPartFunction.apply(entityIn, this.getEntityModel()));
+    public void render(MatrixStack stack, IRenderTypeBuffer buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+        if (!entity.isInvisible() && predicateRender.test(entity)) {
+            this.model.copyRotationFromBody(bodyPartFunction.apply(entity, this.getEntityModel()));
             float s = 1f;
-            if (entityIn instanceof VampireBaronEntity) {
-                s = ((VampireBaronEntity) entityIn).getEnragedProgress();
+            if (entity instanceof VampireBaronEntity) {
+                s = ((VampireBaronEntity) entity).getEnragedProgress();
+            } else if (entity instanceof PlayerEntity) { //In case we are using the player model for rendering the baron
+                int ticks = VampirePlayer.getOpt((PlayerEntity) entity).map(VampirePlayer::getWingCounter).orElse(0);
+                s = ticks > 20 ? (ticks > 1180 ? 1f - (ticks - 1180) / 20f : 1f) : ticks / 20f;
             }
-            matrixStackIn.push();
-            matrixStackIn.translate(0f, 0, 0.02f);
-            matrixStackIn.scale(s, s, s);
-            renderCopyCutoutModel(this.getEntityModel(), model, texture, matrixStackIn, bufferIn, packedLightIn, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, partialTicks, 1, 1, 1);
-            matrixStackIn.pop();
+            stack.push();
+            stack.translate(0f, 0, 0.02f);
+            stack.scale(s, s, s);
+            renderCopyCutoutModel(this.getEntityModel(), model, texture, stack, buffer, packedLight, entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, partialTicks, 1, 1, 1);
+            stack.pop();
         }
     }
 
