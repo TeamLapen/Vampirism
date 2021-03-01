@@ -100,7 +100,6 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
         VampirePlayer vampire = VampirePlayer.get(playerIn);
         if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
 
-
         if (vampire.getBloodStats().needsBlood()) {
             playerIn.setActiveHand(handIn);
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
@@ -131,7 +130,6 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
             player.stopActiveHand();
             return;
         }
-
 
         if (blood > 0 && count == 1) {
             Hand activeHand = player.getActiveHand();
