@@ -93,12 +93,12 @@ A special chair can be found alongside a trainer in a special village building. 
 
 After reaching the highest level as vampire or hunter you can become a vampire lord or a master hunter and obtain different ranks. Therefore, they must complete tasks for a vampire/hunter faction representative.
 
-<p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/vampire_representative.jpg" width="30%"/>
+<p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/vampire_representative.png" width="30%"/>
 <img src="https://teamlapen.github.io/Vampirism/img/vampire_representative_screen.jpg" width="60%"/></p>
 
 The higher your rank, the more minions you can control. Minions can be equipped with weapons and armor, store items in their inventory and be leveled up. You can give your minions various tasks like defend an area, collect resources or follow you.
 
 <p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/minions.jpg" width="90%"/></p>
-<p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/minion_inventory.png" width="90%"/></p>
+<p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/minion_inventory.jpg" width="90%"/></p>
 
-<p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/minions_abilities.png" width="90%"/></p>
+<p style="text-align:center;"><img src="https://teamlapen.github.io/Vampirism/img/minions_abilities.jpg" width="90%"/></p>
