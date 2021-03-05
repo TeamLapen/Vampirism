@@ -200,6 +200,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         for (ISkill skill : old) {
             disableSkill(skill);
         }
+        VampirismMod.proxy.resetSkillScreenCache();
     }
 
     public void resetSkills() {
