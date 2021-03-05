@@ -474,7 +474,7 @@ public class SkillsScreen extends Screen {
 
             tooltips.add(name);
             if (desc != null) {
-                tooltips.add(desc.copyRaw().mergeStyle(TextFormatting.DARK_GRAY));
+                tooltips.add(desc.deepCopy().mergeStyle(TextFormatting.DARK_GRAY));
             }
 
             ISkillHandler.Result result = skillHandler.canSkillBeEnabled(selected);
