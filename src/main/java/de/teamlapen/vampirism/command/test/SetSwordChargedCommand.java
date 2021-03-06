@@ -18,7 +18,7 @@ public class SetSwordChargedCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("setSwordCharged")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
                 .then(Commands.argument("charge", FloatArgumentType.floatArg(0))
                         .executes(context -> {
                             return setSwordCharged(context.getSource(), context.getSource().asPlayer(), FloatArgumentType.getFloat(context, "charge"));
