@@ -13,8 +13,8 @@ After being bitten by a vampire or manually injecting some vampire blood you get
 
 For a more detailed description head over to the Minecraft forums or the Curseforge page.
 ## Links
-[Curseforge Project](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire)
-[Downloads](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire/files)  
+[Curseforge Project](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire)  
+[Downloads](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire/files)   
 [Help to translate](https://crowdin.com/project/vampirism)
 
 ## People
@@ -92,10 +92,10 @@ this https://github.com/TeamLapen/VampirismAddonExample and consider contacting 
 
 ## Code Structure
 
-The _master branch_ serves as the main development branch. Besides that there is a branch with the latest stable release
-code, it receives bugfixes which are usually cherry-pick merged in to the master branch. There also is a 1.9 branch
-which might be up-to-date with the latest release branch (for 1.10). The source code is currently divided into three
-parts, which might be split in the future.
+The _minecraft_version_ branch serves as the main development branch. There might be older (stable) branches for the
+same MC version postfixed with the Vampirism main version.  
+It may receive bugfixes until the latest branch is released.  
+The source code is currently divided into three parts, which might be split in the future.
 
 #### Vampirism
 Located in de.teamlapen.vampirism  
