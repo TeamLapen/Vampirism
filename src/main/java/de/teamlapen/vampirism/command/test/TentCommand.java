@@ -19,19 +19,20 @@ public class TentCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("tent")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
-                .executes(context -> {
-                    return tent(context.getSource(), context.getSource().asPlayer());
-                });
+                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
+                .executes(context -> tent(context.getSource(), context.getSource().asPlayer(), false))
+                .then(Commands.literal("advanced")
+                        .executes(context -> tent(context.getSource(), context.getSource().asPlayer(), true)));
     }
 
-    private static int tent(CommandSource commandSource, ServerPlayerEntity asPlayer) {
+    private static int tent(CommandSource commandSource, ServerPlayerEntity asPlayer, boolean advanced) {
         RayTraceResult result = UtilLib.getPlayerLookingSpot(asPlayer, 5);
         if (result != null && result.getType() == RayTraceResult.Type.BLOCK) {
 
             TileEntity tent = asPlayer.getEntityWorld().getTileEntity(((BlockRayTraceResult) result).getPos());
             if (tent != null && tent instanceof TentTileEntity) {
                 ((TentTileEntity) tent).setSpawn(true);
+                if (advanced) ((TentTileEntity) tent).setAdvanced(true);
                 commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.tent.success"), false);
             }
 

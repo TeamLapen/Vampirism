@@ -149,7 +149,8 @@ public class SimpleSpawnerLogic<T extends Entity> {
                     return;
                 }
 
-                if ((this.world.getGameTime()) % 24000 < this.spawnedLast) {
+
+                if ((this.world.getGameTime()) > this.spawnedLast + 24000) {
                     this.spawnedToday = 0;
                     this.flag = true;
                 }
@@ -159,13 +160,13 @@ public class SimpleSpawnerLogic<T extends Entity> {
                 boolean flag1 = false;
 
                 for (int i = 0; i < this.spawnCount; ++i) {
-                    T entity = (T) this.getEntityType().create(this.world);
+                    T entity = this.getEntityType().create(this.world);
 
                     if (entity == null) {
                         break;
                     }
 
-                    int j = this.world.getEntitiesWithinAABB(entity.getClass(), getSpawningBox()).size();
+                    int j = this.world.getEntitiesWithinAABB(entity.getClass(), getSpawningBox().grow(5)).size();
 
                     if (j >= this.maxNearbyEntities) {
                         this.resetTimer();
@@ -189,7 +190,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
                 if (flag1) {
                     this.resetTimer();
                     this.spawnedToday++;
-                    this.spawnedLast = this.world.getGameTime() % 24000;
+                    this.spawnedLast = this.world.getGameTime();
                 }
             }
         }

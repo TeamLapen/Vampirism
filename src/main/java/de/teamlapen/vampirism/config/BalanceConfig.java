@@ -342,7 +342,7 @@ public class BalanceConfig {
 
         builder.push("mobs");
         mbVampireSpawnChance = builder.comment("Vampire spawn chance/weight (e.g. Zombie: 100)").defineInRange("vampireSpawnChance", 75, 0, 100000);
-        mbAdvancedVampireSpawnChance = builder.comment("Advanceed vampire spawn chance/weight (e.g. Zombie: 100)").defineInRange("advancedVampireSpawnChance", 19, 0, 100000);
+        mbAdvancedVampireSpawnChance = builder.comment("Advanceed vampire spawn chance/weight (e.g. Zombie: 100)").defineInRange("advancedVampireSpawnChance", 23, 0, 100000);
         builder.pop();
 
         builder.push("minions");
