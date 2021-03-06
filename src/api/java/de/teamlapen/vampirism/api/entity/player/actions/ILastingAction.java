@@ -5,8 +5,11 @@ package de.teamlapen.vampirism.api.entity.player.actions;
  */
 public interface ILastingAction<T extends IActionPlayer> extends IAction {
     /**
+     * TODO 1.17 remove
+     *
      * @return Whether the cooldown should be reduced (by the remaining time) if the action is deactivated prematurely. Not reasonable if duration is (much) longer than cooldown.
      */
+    @Deprecated
     default boolean allowReducedCooldown() {
         return getDuration(0) <= getCooldown();
     }
