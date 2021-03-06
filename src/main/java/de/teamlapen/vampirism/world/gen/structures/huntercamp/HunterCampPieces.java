@@ -85,16 +85,16 @@ public abstract class HunterCampPieces extends StructurePiece {
         public void buildComponent(StructurePiece componentIn, List<StructurePiece> listIn, Random rand) {
             //adds 1-4 tent or crafting table elements to the structure (max 1 per direction && max 1 crafting table)
             @Nonnull List<Direction> directions = Lists.newArrayList(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
-            if (rand.nextInt(4) == 0) {
+            if (rand.nextInt(3) == 0) {
+                this.advanced = true;
                 //advanced
-                listIn.add(getTentComponent(rand, directions, advanced));
-                listIn.add(getTentComponent(rand, directions, advanced));
+                listIn.add(getTentComponent(rand, directions, true));
+                listIn.add(getTentComponent(rand, directions, false));
                 int i = rand.nextInt(4);
                 if (i < 2)
                     listIn.add(getComponent(rand, directions, true));
                 if (i < 1)
                     listIn.add(getComponent(rand, directions, true));
-                this.advanced = true;
             } else {
                 //normal
                 listIn.add(getTentComponent(rand, directions, false));

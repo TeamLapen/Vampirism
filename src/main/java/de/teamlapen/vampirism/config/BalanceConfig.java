@@ -343,7 +343,7 @@ public class BalanceConfig {
 
         builder.category("mobs", "mb");
         mbVampireSpawnChance = builder.comment("Vampire spawn chance/weight (e.g. Zombie: 100)").defineInRange("vampireSpawnChance", 75, 0, 100000);
-        mbAdvancedVampireSpawnChance = builder.comment("Advanceed vampire spawn chance/weight (e.g. Zombie: 100)").defineInRange("advancedVampireSpawnChance", 19, 0, 100000);
+        mbAdvancedVampireSpawnChance = builder.comment("Advanceed vampire spawn chance/weight (e.g. Zombie: 100)").defineInRange("advancedVampireSpawnChance", 23, 0, 100000);
 
         builder.category("minions", "mi");
         miResourceCooldown = builder.comment("Cooldown in ticks,before new resources are added in collect resource task types").defineInRange("resourceCooldown", 1500, 20, Integer.MAX_VALUE);
