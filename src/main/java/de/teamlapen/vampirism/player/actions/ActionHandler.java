@@ -1,11 +1,6 @@
 package de.teamlapen.vampirism.player.actions;
 
 import com.google.common.collect.ImmutableList;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import it.unimi.dsi.fastutil.objects.ObjectSet;
-
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
@@ -13,6 +8,10 @@ import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.util.Permissions;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -249,9 +248,9 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         ResourceLocation id = action.getRegistryName();
         if (activeTimers.containsKey(id)) {
             int cooldown = action.getCooldown();
-            if (((ILastingAction) action).allowReducedCooldown()) {
-                cooldown -= activeTimers.get(id);
-            }
+            int leftTime = activeTimers.get(id);
+            int duration = ((ILastingAction) action).getDuration(player.getLevel());
+            cooldown -= cooldown * (leftTime / (float) duration / 2f);
             ((ILastingAction<T>) action).onDeactivated(player);
             activeTimers.remove(id);
             cooldownTimers.put(id, Math.max(cooldown, 1));//Entries should to be at least 1
