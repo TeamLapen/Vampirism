@@ -20,9 +20,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.fml.client.gui.GuiUtils;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
@@ -35,7 +38,7 @@ import java.util.stream.Collectors;
  * Gui which is used to select vampire actions
  */
 @OnlyIn(Dist.CLIENT)
-public class SelectActionScreen extends GuiPieMenu<IAction> {
+public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO rename to ActionSelectScreen
     public final static List<IAction> ACTIONORDER = Lists.newArrayList();
     public static IAction SELECTEDACTION;
     /**
@@ -109,7 +112,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) { //mouseClicked
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         if (editActions && getSelectedElement() >= 0) {
             if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 if (elements.get(getSelectedElement()) != fakeAction) {
@@ -117,10 +120,10 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
                 } else {
                     closeScreen();
                 }
-            } else if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).matchesMouseKey(mouseButton)) {
+            } else if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).matchesMouseKey(mouseButton) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).getKeyModifier().isActive(KeyConflictContext.GUI)) {
                 FactionPlayerHandler.get(minecraft.player).setBoundAction1(elements.get(getSelectedElement()), true);
                 return true;
-            } else if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).matchesMouseKey(mouseButton)) {
+            } else if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).matchesMouseKey(mouseButton) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).getKeyModifier().isActive(KeyConflictContext.GUI)) {
                 FactionPlayerHandler.get(minecraft.player).setBoundAction2(elements.get(getSelectedElement()), true);
                 return true;
             }
@@ -143,14 +146,16 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
             if (elements.get(getSelectedElement()) == fakeAction) {
                 return true;
             }
-            if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).matchesKey(key, scancode)) {
+            KeyBinding keyBinding1 = ModKeys.getKeyBinding(ModKeys.KEY.ACTION1);
+            KeyBinding keyBinding2 = ModKeys.getKeyBinding(ModKeys.KEY.ACTION2);
+            if (keyBinding1.matchesKey(key, scancode) && keyBinding1.getKeyModifier().isActive(KeyConflictContext.GUI)) {
                 FactionPlayerHandler.get(minecraft.player).setBoundAction1(elements.get(getSelectedElement()), true);
                 if (!editActions) {
                     GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
                     closeScreen();
                 }
                 return true;
-            } else if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).matchesKey(key, scancode)) {
+            } else if (keyBinding2.matchesKey(key, scancode) && keyBinding2.getKeyModifier().isActive(KeyConflictContext.GUI)) {
                 FactionPlayerHandler.get(Minecraft.getInstance().player).setBoundAction2(elements.get(getSelectedElement()), true);
                 if (!editActions) {
                     GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
@@ -198,6 +203,12 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
             SELECTEDACTION = null;
         }
         super.closeScreen();
+    }
+
+    @Override
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        super.render(stack, mouseX, mouseY, partialTicks);
+        GuiUtils.drawHoveringText(stack, Lists.newArrayList(new TranslationTextComponent("gui.vampirism.action_select.action_binding"), ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).func_238171_j_().copyRaw().mergeStyle(TextFormatting.AQUA), ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).func_238171_j_().copyRaw().mergeStyle(TextFormatting.AQUA)), 0, ((int) (this.height * 0.8)), width, height, this.width / 4, this.font);
     }
 
     @Override

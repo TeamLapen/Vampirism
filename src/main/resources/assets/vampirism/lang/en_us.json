@@ -108,6 +108,7 @@
   "gui.vampirism.taskmaster.text.vampirism_hunter": "Fellow hunter,\nto support the local hunter community, there are several tasks you can complete. You will be rewarded upon completion. Please browse the available tasks and accept any you like.",
   "gui.vampirism.taskmaster.not_accepted": "Not accepted yet",
   "gui.vampirism.minion_stats": "Minion Stats",
+  "gui.vampirism.action_select.action_binding": "Press action keybinding to bind actions",
   "enchantment.vampirism.arrow_frugality": "Arrow Frugality",
   "enchantment.vampirism.vampire_slayer": "Vampire Slayer",
   "enchantment.vampirism.crossbow_infinity": "Crossbow Infinity",
