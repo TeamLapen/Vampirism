@@ -18,7 +18,7 @@ public class SetSwordTrainedCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("setSwordTrained")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
                 .then(Commands.argument("train", FloatArgumentType.floatArg(0))
                         .executes(context -> {
                             return setSwordCharged(context.getSource(), context.getSource().asPlayer(), FloatArgumentType.getFloat(context, "train"));

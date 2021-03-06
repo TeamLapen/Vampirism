@@ -30,7 +30,7 @@ public class TaskCommand extends BasicCommand {
                         .executes(context -> refreshTasksList(context.getSource().asPlayer())))
                 .then(Commands.literal("resetTaskList").requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
                         .executes(context -> resetTasksList(context.getSource().asPlayer())))
-                .then(Commands.literal("resetLordTasks") //TODO require cheat as well in next version
+                .then(Commands.literal("resetLordTasks").requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
                         .executes(context -> resetLordTasks(context.getSource().asPlayer()))
                 );
 

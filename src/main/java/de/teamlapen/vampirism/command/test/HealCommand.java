@@ -13,7 +13,7 @@ public class HealCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("heal")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
                 .executes(context -> {
                     return heal(context.getSource().asPlayer());
                 });
