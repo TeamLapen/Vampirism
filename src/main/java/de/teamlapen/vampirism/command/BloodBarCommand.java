@@ -20,7 +20,7 @@ public class BloodBarCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("bloodBar")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
                 .then(Commands.literal("fill")
                         .executes(context -> setBloodBar(Integer.MAX_VALUE, Lists.newArrayList(context.getSource().asPlayer())))
                         .then(Commands.argument("player", EntityArgument.players())
