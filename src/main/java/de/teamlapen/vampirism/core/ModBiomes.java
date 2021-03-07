@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.core;
 
-import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -12,7 +11,6 @@ import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.*;
-import net.minecraft.world.biome.provider.OverworldBiomeProvider;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
@@ -22,7 +20,6 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
@@ -61,11 +58,9 @@ public class ModBiomes {
      * Only call from main thread / non parallel event
      */
     static void addBiomesToGeneratorUnsafe() {
-            List<RegistryKey<Biome>> modList = new ArrayList<>(OverworldBiomeProvider.biomes);
-            modList.add(VAMPIRE_FOREST_KEY);
             //TODO don't generate hills biome for now. Should be added as a hills variant at some point if supported by Forge
-//            modList.add(VAMPIRE_FOREST_HILLS_KEY);
-            OverworldBiomeProvider.biomes = ImmutableList.copyOf(modList);
+            BiomeManager.addAdditionalOverworldBiomes(VAMPIRE_FOREST_KEY);
+            //BiomeManager.addAdditionalOverworldBiomes(VAMPIRE_FOREST_HILLS_KEY);
             BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_KEY, VampirismConfig.BALANCE.vampireForestWeight.get()));
 //            BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_HILLS_KEY, VampirismConfig.BALANCE.vampireForestHillsWeight.get()));
 
