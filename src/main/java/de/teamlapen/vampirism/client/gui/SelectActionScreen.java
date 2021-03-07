@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * Gui which is used to select vampire actions
  */
 @OnlyIn(Dist.CLIENT)
-public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO rename to ActionSelectScreen
+public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename to ActionSelectScreen
     public final static List<IAction> ACTIONORDER = Lists.newArrayList();
     public static IAction SELECTEDACTION;
     /**
@@ -208,7 +208,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO rename to A
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
-        GuiUtils.drawHoveringText(stack, Lists.newArrayList(new TranslationTextComponent("gui.vampirism.action_select.action_binding"), ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).func_238171_j_().copyRaw().mergeStyle(TextFormatting.AQUA), ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).func_238171_j_().copyRaw().mergeStyle(TextFormatting.AQUA)), 0, ((int) (this.height * 0.8)), width, height, this.width / 4, this.font);
+        if(editActions)GuiUtils.drawHoveringText(stack, Lists.newArrayList(new TranslationTextComponent("gui.vampirism.action_select.action_binding"), ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).func_238171_j_().copyRaw().mergeStyle(TextFormatting.AQUA), ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).func_238171_j_().copyRaw().mergeStyle(TextFormatting.AQUA)), 0, ((int) (this.height * 0.8)), width, height, this.width / 4, this.font);
     }
 
     @Override
