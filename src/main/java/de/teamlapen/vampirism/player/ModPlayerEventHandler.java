@@ -43,7 +43,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.play.server.SChangeBlockPacket;
+import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
@@ -162,7 +164,8 @@ public class ModPlayerEventHandler {
         if (!Helper.isHunter(event.getEntity())) {
             ItemStack stack = event.getItem();
             if (stack.getItem() == Items.POTION) {
-                if (PotionUtils.getPotionFromItem(stack) instanceof VampirismPotion.HunterPotion) {
+                Potion p =PotionUtils.getPotionFromItem(stack);
+                if (p instanceof VampirismPotion.HunterPotion && p.getEffects().stream().map(EffectInstance::getPotion).anyMatch(Effect::isBeneficial)) {
                     event.getEntityLiving().addPotionEffect(new EffectInstance(ModEffects.poison, Integer.MAX_VALUE, PotionPoison.DEADLY_AMPLIFIER));
                 }
             }

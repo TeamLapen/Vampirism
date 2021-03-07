@@ -21,6 +21,9 @@ import net.minecraft.client.renderer.model.IUnbakedModel;
 import net.minecraft.client.renderer.model.ModelRotation;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -162,7 +165,7 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onToolTip(ItemTooltipEvent event) {
-            if (VampirismPotion.isHunterPotion(event.getItemStack(), true).isPresent() && (event.getPlayer() == null || !Helper.isHunter(event.getPlayer()))) {
+            if (VampirismPotion.isHunterPotion(event.getItemStack(), true).map(Potion::getEffects).map(effectInstances -> effectInstances.stream().map(EffectInstance::getPotion).anyMatch(Effect::isBeneficial)).orElse(false) && (event.getPlayer() == null || !Helper.isHunter(event.getPlayer()))) {
                 event.getToolTip().add(new TranslationTextComponent("text.vampirism.hunter_potion.deadly").mergeStyle(TextFormatting.DARK_RED));
             }
 
