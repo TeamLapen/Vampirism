@@ -16,11 +16,12 @@ import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.vampire.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.passive.BatEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.LogManager;
@@ -159,30 +160,36 @@ public class ModEntities {
         EntitySpawnPlacementRegistry.register(villager_converted, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canSpawnOn);
     }
 
-    static void registerEntityTypeAttributes() {
-        GlobalEntityTypeAttributes.put(advanced_hunter, AdvancedHunterEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(advanced_hunter_imob, AdvancedHunterEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(advanced_vampire, AdvancedVampireEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(advanced_vampire_imob, AdvancedVampireEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(blinding_bat, BatEntity.func_234175_m_().create());
-        GlobalEntityTypeAttributes.put(converted_creature, BasicVampireEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(converted_creature_imob, BasicVampireEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(converted_horse, ConvertedHorseEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(converted_sheep, BasicVampireEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(dummy_creature, BasicVampireEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(hunter, BasicHunterEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(hunter_imob, BasicHunterEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(hunter_trainer, HunterTrainerEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(hunter_trainer_dummy, HunterTrainerEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(vampire, BasicVampireEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(vampire_imob, BasicVampireEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(vampire_baron, VampireBaronEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(villager_angry, AggressiveVillagerEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(villager_converted, ConvertedVillagerEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(hunter_minion, HunterMinionEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(vampire_minion, VampireMinionEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(task_master_hunter, HunterTaskMasterEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(task_master_vampire, VampireTaskMasterEntity.getAttributeBuilder().create());
+    static void onRegisterEntityTypeAttributes(EntityAttributeCreationEvent event){
+        event.put(advanced_hunter, AdvancedHunterEntity.getAttributeBuilder().create());
+        event.put(advanced_hunter_imob, AdvancedHunterEntity.getAttributeBuilder().create());
+        event.put(advanced_vampire, AdvancedVampireEntity.getAttributeBuilder().create());
+        event.put(advanced_vampire_imob, AdvancedVampireEntity.getAttributeBuilder().create());
+        event.put(blinding_bat, BatEntity.func_234175_m_().create());
+        event.put(converted_creature, BasicVampireEntity.getAttributeBuilder().create());
+        event.put(converted_creature_imob, BasicVampireEntity.getAttributeBuilder().create());
+        event.put(converted_horse, ConvertedHorseEntity.getAttributeBuilder().create());
+        event.put(converted_sheep, BasicVampireEntity.getAttributeBuilder().create());
+        event.put(dummy_creature, BasicVampireEntity.getAttributeBuilder().create());
+        event.put(hunter, BasicHunterEntity.getAttributeBuilder().create());
+        event.put(hunter_imob, BasicHunterEntity.getAttributeBuilder().create());
+        event.put(hunter_trainer, HunterTrainerEntity.getAttributeBuilder().create());
+        event.put(hunter_trainer_dummy, HunterTrainerEntity.getAttributeBuilder().create());
+        event.put(vampire, BasicVampireEntity.getAttributeBuilder().create());
+        event.put(vampire_imob, BasicVampireEntity.getAttributeBuilder().create());
+        event.put(vampire_baron, VampireBaronEntity.getAttributeBuilder().create());
+        event.put(villager_angry, AggressiveVillagerEntity.getAttributeBuilder().create());
+        event.put(villager_converted, ConvertedVillagerEntity.getAttributeBuilder().create());
+        event.put(hunter_minion, HunterMinionEntity.getAttributeBuilder().create());
+        event.put(vampire_minion, VampireMinionEntity.getAttributeBuilder().create());
+        event.put(task_master_hunter, HunterTaskMasterEntity.getAttributeBuilder().create());
+        event.put(task_master_vampire, VampireTaskMasterEntity.getAttributeBuilder().create());
+    }
+
+    static void onModifyEntityTypeAttributes(EntityAttributeModificationEvent event){
+        event.add(EntityType.PLAYER,ModAttributes.sundamage);
+        event.add(EntityType.PLAYER,ModAttributes.blood_exhaustion);
+        event.add(EntityType.PLAYER,ModAttributes.bite_damage);
 
     }
 

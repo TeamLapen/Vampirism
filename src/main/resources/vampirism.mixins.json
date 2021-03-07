@@ -10,7 +10,6 @@
     "MixinBellBlock",
     "MixinEntity",
     "MixinLivingEntity",
-    "MixinPlayerEntity",
     "MixinPotionBrewing"
   ],
   "injectors": {

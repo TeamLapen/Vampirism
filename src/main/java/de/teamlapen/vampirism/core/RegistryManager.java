@@ -38,6 +38,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ObjectHolderRegistry;
 
 
@@ -50,8 +51,9 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onBuildRegistries(RegistryEvent.NewRegistry event) {
-
         ModRegistries.init();
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(ModEntities::onModifyEntityTypeAttributes);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(ModEntities::onRegisterEntityTypeAttributes);
     }
 
     @Override
@@ -62,7 +64,6 @@ public class RegistryManager implements IInitListener {
                 ModFeatures.registerIgnoredBiomesForStructures();
                 ModEntities.registerConvertibles();
                 ModEntities.registerSpawns();
-                ModEntities.registerEntityTypeAttributes();
                 ModEntities.registerCustomExtendedCreatures();
                 ModItems.registerCraftingRecipes();
                 ModPotions.registerPotionMixes();
