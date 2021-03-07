@@ -44,10 +44,8 @@ import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Gui screen which displays the skills available to the players and allows him to unlock some.
@@ -78,6 +76,8 @@ public class SkillsScreen extends Screen {
     @Nullable
     private ITextComponent lordTitle;
     private int lordLevel;
+
+    private final Map<ISkill, List<ITextComponent>> skillToolTipsCache = new HashMap<>();
 
     public SkillsScreen() {
         super(new TranslationTextComponent("screen.vampirism.skills"));
@@ -467,38 +467,40 @@ public class SkillsScreen extends Screen {
             stack.push();
             stack.translate(0, 0, 1); //Render tooltips in front of buttons
 
-            List<ITextComponent> tooltips = new ArrayList<>();
+            List<ITextComponent> tooltips = skillToolTipsCache.computeIfAbsent(selected, (skill) -> new ArrayList<>());
 
-            ITextComponent name = selected.getName().copyRaw().mergeStyle(TextFormatting.GRAY);
-            ITextComponent desc = selected.getDescription();
+            if (tooltips.isEmpty()) {
+                ITextComponent name = selected.getName().copyRaw().mergeStyle(TextFormatting.GRAY);
+                ITextComponent desc = selected.getDescription();
 
-            tooltips.add(name);
-            if (desc != null) {
-                tooltips.add(desc.copyRaw().mergeStyle(TextFormatting.DARK_GRAY));
-            }
+                tooltips.add(name);
+                if (desc != null) {
+                    tooltips.add(desc.deepCopy().mergeStyle(TextFormatting.DARK_GRAY));
+                }
 
-            ISkillHandler.Result result = skillHandler.canSkillBeEnabled(selected);
+                ISkillHandler.Result result = skillHandler.canSkillBeEnabled(selected);
 
-            int width_name = Math.max(this.font.getStringPropertyWidth(name), 110);
+                List<ISkill> lockingSkills = null;
+                TextFormatting lockingColor = TextFormatting.BLACK;
+                if (selectedNode.getLockingNodes().length != 0) {
+                    lockingSkills = skillHandler.getLockingSkills(selectedNode);
+                    lockingColor = result == ISkillHandler.Result.ALREADY_ENABLED ? TextFormatting.DARK_GRAY : lockingSkills.stream().anyMatch(skill -> skillHandler.isSkillEnabled(skill)) ? TextFormatting.DARK_RED : TextFormatting.YELLOW;
+                }
+                if (lockingSkills != null) {
+                    tooltips.add(new TranslationTextComponent("text.vampirism.skill.excluding").mergeStyle(lockingColor));
+                    for (ISkill lockingSkill : lockingSkills) {
+                        tooltips.add(new StringTextComponent("  ").append(lockingSkill.getName().deepCopy().mergeStyle(lockingColor)));
+                    }
+                }
 
-            List<ISkill> lockingSkills = null;
-            TextFormatting lockingColor = TextFormatting.BLACK;
-            if (selectedNode.getLockingNodes().length != 0) {
-                lockingSkills = skillHandler.getLockingSkills(selectedNode);
-                lockingColor = result == ISkillHandler.Result.ALREADY_ENABLED ? TextFormatting.DARK_GRAY : lockingSkills.stream().anyMatch(skill -> skillHandler.isSkillEnabled(skill)) ? TextFormatting.DARK_RED : TextFormatting.YELLOW;
-            }
-            if (lockingSkills != null) {
-                tooltips.add(new TranslationTextComponent("text.vampirism.skill.excluding").mergeStyle(lockingColor));
-                for (ISkill lockingSkill : lockingSkills) {
-                    tooltips.add(new StringTextComponent("  ").append(lockingSkill.getName().deepCopy().mergeStyle(lockingColor)));
+                if (result == ISkillHandler.Result.ALREADY_ENABLED) {
+                    tooltips.add(new TranslationTextComponent("text.vampirism.skill.unlocked").mergeStyle(TextFormatting.GOLD));
+                } else if (result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
+                    tooltips.add(new TranslationTextComponent("text.vampirism.skill.unlock_parent_first").mergeStyle(TextFormatting.DARK_RED));
                 }
             }
+            int width_name = Math.max(this.font.getStringPropertyWidth(tooltips.get(0)), 110);
 
-            if (result == ISkillHandler.Result.ALREADY_ENABLED) {
-                tooltips.add(new TranslationTextComponent("text.vampirism.skill.unlocked").mergeStyle(TextFormatting.GOLD));
-            } else if (result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
-                tooltips.add(new TranslationTextComponent("text.vampirism.skill.unlock_parent_first").mergeStyle(TextFormatting.DARK_RED));
-            }
             GuiUtils.drawHoveringText(stack, tooltips, mouseX, mouseY, width, height, width_name, -1073741824, -1073741824, -1073741824, this.font);
 
             stack.pop();
@@ -535,6 +537,10 @@ public class SkillsScreen extends Screen {
 
     private void playSoundEffect(SoundEvent event, float pitch) {
         minecraft.getSoundHandler().play(SimpleSound.master(event, 1.0F));
+    }
+
+    public void resetToolTipCache() {
+        skillToolTipsCache.clear();
     }
 
 }

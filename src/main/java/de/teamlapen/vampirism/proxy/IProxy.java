@@ -72,4 +72,7 @@ public interface IProxy extends IInitListener {
     default void handleRequestMinionSelect(RequestMinionSelectPacket.Action action, List<Pair<Integer, ITextComponent>> minions) {
     }
 
+    default void resetSkillScreenCache() {
+    }
+
 }

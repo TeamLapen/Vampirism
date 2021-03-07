@@ -266,4 +266,10 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
+    @Override
+    public void resetSkillScreenCache() {
+        if (Minecraft.getInstance().currentScreen instanceof SkillsScreen) {
+            ((SkillsScreen) Minecraft.getInstance().currentScreen).resetToolTipCache();
+        }
+    }
 }
