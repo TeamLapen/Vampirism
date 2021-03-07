@@ -40,7 +40,9 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.spawner.WorldEntitySpawner;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.event.entity.living.LivingConversionEvent;
 import net.minecraftforge.fml.ForgeI18n;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -781,5 +783,17 @@ public class UtilLib {
 
     public static boolean isValidResourceLocation(String loc) {
         return ResourceLocation.tryCreate(loc) != null;
+    }
+
+    /**
+     * Replace an entity with a new one. Removes the old ones, adds the new one to the same world. Fires the respective Forge event
+     * @param old To be removed
+     * @param replacement To be added
+     */
+    public static void replaceEntity(LivingEntity old, LivingEntity replacement){
+        World w = old.getEntityWorld();
+        MinecraftForge.EVENT_BUS.post(new LivingConversionEvent.Post(old,replacement));
+        w.addEntity(replacement);
+        old.remove();
     }
 }

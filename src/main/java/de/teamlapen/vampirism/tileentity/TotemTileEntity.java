@@ -204,8 +204,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     //support methods --------------------------------------------------------------------------------------------------
     public static void makeAgressive(VillagerEntity villager) {
         AggressiveVillagerEntity hunter = AggressiveVillagerEntity.makeHunter(villager);
-        villager.getEntityWorld().addEntity(hunter);
-        villager.remove();
+        UtilLib.replaceEntity(villager, hunter);
     }
 
     private void abortCapture(boolean notifyPlayer) {
@@ -880,8 +879,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             newVillager.setHomePosAndDistance(oldEntity.getHomePosition(), (int) oldEntity.getMaximumHomeDistance());
         }
         newVillager = ModEventFactory.fireSpawnNewVillagerEvent(this, oldEntity, newVillager, true, poisonousBlood);
-        oldEntity.remove();
-        this.world.addEntity(newVillager);
+        UtilLib.replaceEntity(oldEntity, newVillager);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -985,9 +983,13 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             newEntity.copyLocationAndAnglesFrom(oldEntity);
         }
         newEntity.setUniqueId(MathHelper.getRandomUUID());
-        if (replaceOld) oldEntity.remove();
         assert this.world != null;
-        this.world.addEntity(newEntity);
+        if(replaceOld){
+            UtilLib.replaceEntity(oldEntity,newEntity);
+        }
+        else{
+            this.world.addEntity(newEntity);
+        }
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -1004,8 +1006,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
 
     @SuppressWarnings("ConstantConditions")
     public void updateTrainer(boolean toDummy) {
-        List<Entity> trainer;
-        EntityType<?> entityType;
+        List<VampirismEntity> trainer;
+        EntityType<? extends VampirismEntity> entityType;
         if (toDummy) {
             trainer = this.world.getEntitiesWithinAABB(HunterTrainerEntity.class, this.getVillageArea());
             entityType = ModEntities.hunter_trainer_dummy;
@@ -1013,14 +1015,13 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             trainer = this.world.getEntitiesWithinAABB(DummyHunterTrainerEntity.class, this.getVillageArea());
             entityType = ModEntities.hunter_trainer;
         }
-        for (Entity oldEntity : trainer) {
-            Entity newEntity = entityType.create(this.world);
+        for (VampirismEntity oldEntity : trainer) {
+            VampirismEntity newEntity = entityType.create(this.world);
             if(newEntity == null) continue;
             newEntity.copyDataFromOld(oldEntity);
             newEntity.setUniqueId(MathHelper.getRandomUUID());
-            oldEntity.remove();
             newEntity.setInvulnerable(true);
-            world.addEntity(newEntity);
+            UtilLib.replaceEntity(oldEntity, newEntity);
         }
     }
 

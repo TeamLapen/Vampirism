@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
@@ -200,9 +201,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             blood = 0;
             IConvertedCreature c = VampirismAPI.entityRegistry().convert(entity);
             if (c != null) {
-                Entity e = (Entity) c;
-                entity.remove();
-                entity.getEntityWorld().addEntity(e);
+                UtilLib.replaceEntity(entity, (CreatureEntity)c);
             }
             return c;
         }

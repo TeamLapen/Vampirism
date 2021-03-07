@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
@@ -43,7 +44,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     /**
      * Creates a hunter villager as an copy to the given villager
      *
-     * @param villager Is not modified
+     * @param villager Is not modified or removed
      */
     public static AggressiveVillagerEntity makeHunter(@Nonnull VillagerEntity villager) {
         AggressiveVillagerEntity hunter = ModEntities.villager_angry.create(villager.world);
@@ -138,8 +139,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
         this.writeWithoutTypeId(nbt);
         villager.read(nbt);
         villager.setUniqueId(MathHelper.getRandomUUID(this.rand));
-        world.addEntity(villager);
-        this.remove();
+        UtilLib.replaceEntity(this, villager);
     }
 
     @Override

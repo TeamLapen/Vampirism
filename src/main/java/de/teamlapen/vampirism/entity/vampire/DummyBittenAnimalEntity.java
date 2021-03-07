@@ -55,8 +55,6 @@ public class DummyBittenAnimalEntity extends MobEntity {
                 }
             });
 
-
-
             this.remove();
 
         }

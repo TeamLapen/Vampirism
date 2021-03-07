@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.IEntityWithHome;
 import de.teamlapen.vampirism.api.entity.IVampirismEntity;
@@ -14,10 +15,7 @@ import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.tileentity.TotemHelper;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.Goal;
@@ -215,6 +213,11 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
         return SoundEvents.ENTITY_HOSTILE_HURT;
     }
 
+    /**
+     *
+     * @param iMob Whether we want the iMob or non iMob variant
+     * @return Must be LivingEntity type
+     */
     protected EntityType<?> getIMobTypeOpt(boolean iMob) {
         return this.getType();
     }
@@ -334,8 +337,8 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
                         this.writeWithoutTypeId(nbt);
                         newEntity.read(nbt);
                         newEntity.setUniqueId(MathHelper.getRandomUUID(this.rand));
-                        this.remove();
-                        this.world.addEntity(newEntity);
+                        assert newEntity instanceof LivingEntity;
+                        UtilLib.replaceEntity(this, (LivingEntity) newEntity);
                     });
 
                 }

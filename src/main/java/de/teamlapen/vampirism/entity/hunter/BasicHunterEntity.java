@@ -283,8 +283,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                             minion.copyLocationAndAnglesFrom(this);
                             minion.markAsConverted();
                             controller.activateTask(0, MinionTasks.stay);
-                            this.world.addEntity(minion);
-                            this.remove();
+                            UtilLib.replaceEntity(this,minion);
 
                         } else {
                             LOGGER.warn("Wrong faction for minion");
