@@ -401,7 +401,7 @@ public class TotemHelper {
         return pois.stream().map(poi -> new AxisAlignedBB(poi.getPos()).grow(25)).reduce(AxisAlignedBB::union).orElse(null);
     }
 
-    public static void ringBell(World world, @Nullable PlayerEntity player) {
+    public static void ringBell(World world, @Nonnull PlayerEntity player) {
         if (!world.isRemote) {
             Optional<TotemTileEntity> tile = getTotemNearPos(((ServerWorld) world), player.getPosition(), false);
             tile.ifPresent(s -> s.ringBell(player));
