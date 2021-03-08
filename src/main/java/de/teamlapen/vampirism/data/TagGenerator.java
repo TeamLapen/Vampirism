@@ -6,22 +6,23 @@ import net.minecraft.data.*;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.data.ExistingFileHelper;
 
 import javax.annotation.Nonnull;
 
 public class TagGenerator {
 
-    public static void register(DataGenerator generator) {
-        BlockTagsProvider blockTagsProvider = new ModBlockTagsProvider(generator);
+    public static void register(DataGenerator generator, ExistingFileHelper helper) {
+        BlockTagsProvider blockTagsProvider = new ModBlockTagsProvider(generator,helper);
         generator.addProvider(blockTagsProvider);
-        generator.addProvider(new ModItemTagsProvider(generator, blockTagsProvider));
-        generator.addProvider(new ModEntityTypeTagsProvider(generator));
-        generator.addProvider(new ModFluidTagsProvider(generator));
+        generator.addProvider(new ModItemTagsProvider(generator, blockTagsProvider, helper));
+        generator.addProvider(new ModEntityTypeTagsProvider(generator, helper));
+        generator.addProvider(new ModFluidTagsProvider(generator, helper));
     }
 
     public static class ModBlockTagsProvider extends BlockTagsProvider {
-        public ModBlockTagsProvider(DataGenerator dataGenerator) {
-            super(dataGenerator);
+        public ModBlockTagsProvider(DataGenerator dataGenerator, ExistingFileHelper helper) {
+            super(dataGenerator, REFERENCE.MODID, helper);
         }
 
         @Nonnull
@@ -47,8 +48,8 @@ public class TagGenerator {
     }
 
     public static class ModItemTagsProvider extends ItemTagsProvider {
-        public ModItemTagsProvider(DataGenerator dataGenerator, BlockTagsProvider blockTagsProvider) {
-            super(dataGenerator, blockTagsProvider);
+        public ModItemTagsProvider(DataGenerator dataGenerator, BlockTagsProvider blockTagsProvider, ExistingFileHelper helper) {
+            super(dataGenerator, blockTagsProvider, REFERENCE.MODID, helper);
         }
 
         @Nonnull
@@ -81,8 +82,8 @@ public class TagGenerator {
     }
 
     public static class ModEntityTypeTagsProvider extends EntityTypeTagsProvider {
-        public ModEntityTypeTagsProvider(DataGenerator dataGenerator) {
-            super(dataGenerator);
+        public ModEntityTypeTagsProvider(DataGenerator dataGenerator, ExistingFileHelper helper) {
+            super(dataGenerator, REFERENCE.MODID, helper);
         }
 
         @Override
@@ -95,8 +96,8 @@ public class TagGenerator {
     }
 
     public static class ModFluidTagsProvider extends FluidTagsProvider {
-        public ModFluidTagsProvider(DataGenerator generatorIn) {
-            super(generatorIn);
+        public ModFluidTagsProvider(DataGenerator generatorIn, ExistingFileHelper helper) {
+            super(generatorIn, REFERENCE.MODID, helper);
         }
 
         @Override

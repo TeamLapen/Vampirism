@@ -247,7 +247,7 @@ public class VampirismMod {
         registryManager.onGatherData(event);
         DataGenerator gen = event.getGenerator();
         if (event.includeServer()) {
-            TagGenerator.register(gen);
+            TagGenerator.register(gen, event.getExistingFileHelper());
             gen.addProvider(new LootTablesGenerator(gen));
             gen.addProvider(new AdvancementGenerator(gen));
             gen.addProvider(new RecipesGenerator(gen));
