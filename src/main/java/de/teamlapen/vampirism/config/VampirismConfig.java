@@ -134,6 +134,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue lordPrefixInChat;
         public final ForgeConfigSpec.EnumValue<IMobOptions> entityIMob;
         public final ForgeConfigSpec.BooleanValue infectCreaturesSanguinare;
+        public final ForgeConfigSpec.BooleanValue preventRenderingDebugBoundingBoxes;
 
         public final ForgeConfigSpec.BooleanValue sundamageUnknownDimension;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDimensionsOverridePositive;
@@ -169,6 +170,7 @@ public class VampirismConfig {
             lordPrefixInChat = builder.comment("Whether to add a prefix title based on the current lord level to the player names").define("lordPrefixInChat", true);
             entityIMob = builder.comment("Changes if entities are recognized as hostile by other mods. See https://github.com/TeamLapen/Vampirism/issues/199. Smart falls back to Never on servers ").defineEnum("entitiesIMob", IMobOptions.SMART);
             infectCreaturesSanguinare = builder.comment("If enabled, creatures are infected with Sanguinare Vampirism first instead of immediately being converted to a vampire when their blood is sucked dry").define("infectCreaturesSanguinare", false);
+            preventRenderingDebugBoundingBoxes = builder.comment("Prevent players from enabling the rendering of debug bounding boxes. This can allow them to see certain entities they are not supposed to see (e.g. disguised hunter").define("preventDebugBoundingBoxes",false);
 
             builder.push("sundamage");
             sundamageUnknownDimension = builder.comment("Whether vampires should receive sundamage in unknown dimensions").define("sundamageUnknownDimension", false);

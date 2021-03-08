@@ -188,6 +188,9 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
                 ASMHooks.enforcingGlowing_bloodVision = true;
             }
         }
+        if(VampirismConfig.SERVER.preventRenderingDebugBoundingBoxes.get()){
+            Minecraft.getInstance().getRenderManager().setDebugBoundingBox(false);
+        }
     }
 
     @SubscribeEvent
