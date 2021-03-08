@@ -16,6 +16,6 @@ public class MixinBellBlock {
 
     @Inject(method = "attemptRing", at = @At(value = "RETURN", ordinal = 0))
     public void ringTotem(World world, BlockState state, BlockRayTraceResult result, PlayerEntity player, boolean canRingBell, CallbackInfoReturnable<Boolean> cir){
-        TotemHelper.ringBell(world, player);
+        if(player!=null)TotemHelper.ringBell(world, player);
     }
 }
