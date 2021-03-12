@@ -120,7 +120,7 @@ public class ItemModelGenerator extends ItemModelProvider {
             put(ModItems.item_med_chair, modLoc("item/med_chair"));
             put(ModItems.item_tent_spawner, modLoc("item/item_tent"));
             put(ModItems.pure_salt, modLoc("item/holy_salt"));
-            put(ModItems.vampire_book, mcLoc("item/written_book"));
+            put(ModItems.vampire_book, modLoc("item/vampire_book"));
         }};
 
         blocks.forEach(this::block);
