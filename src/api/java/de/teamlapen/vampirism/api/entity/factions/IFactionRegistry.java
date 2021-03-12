@@ -61,7 +61,7 @@ public interface IFactionRegistry {
      * @param thisFaction    The friendly faction
      * @param player         If players should be selected
      * @param mob            If non players should be selected
-     * @param neutralPlayer  If neutral playsers should be selected
+     * @param neutralPlayer  If neutral players should be selected
      * @param ignoreDisguise If disguised players should still be counted for their actual faction (disguised vampires will still be detected as vampires)
      * @param otherFaction   If this is not null, only entities of this faction are selected.
      * @return
