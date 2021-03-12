@@ -66,7 +66,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     private MeleeAttackGoal meleeGoal;
 
     public HunterMinionEntity(EntityType<? extends VampirismEntity> type, World world) {
-        super(type, world, VampirismAPI.factionRegistry().getPredicate(VReference.HUNTER_FACTION, true, true, true, false, null).or(e -> !(e instanceof IFactionEntity) && (e instanceof IMob)));
+        super(type, world, VampirismAPI.factionRegistry().getPredicate(VReference.HUNTER_FACTION, true, true, false, false, null).or(e -> !(e instanceof IFactionEntity) && (e instanceof IMob)));
     }
 
     @Nonnull
