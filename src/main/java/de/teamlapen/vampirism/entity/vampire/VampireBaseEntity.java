@@ -31,8 +31,6 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.*;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nonnull;
 import java.util.Random;
@@ -166,14 +164,14 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                 if (worldIn.getBrightness(getPosition()) > 0.5 && rand.nextInt(5) != 0) {
                     return false;
                 }
-                if (this.world.isBlockPresent(getPosition()) && worldIn instanceof ServerWorld) {
-                    BlockPos nearestVillage = ((ServerWorld) worldIn).func_241117_a_(Structure.VILLAGE, getPosition(), 1, false);
-                    if (nearestVillage != null && nearestVillage.withinDistance(getPosition(), 50)) {
-                        if (getRNG().nextInt(60) != 0) {
-                            return false;
-                        }
-                    }
-                }
+//                if (this.world.isBlockPresent(getPosition()) && worldIn instanceof ServerWorld) { //TODO maybe reintroduce. Reduce radius to 0. Check profiler
+//                    BlockPos nearestVillage = ((ServerWorld) worldIn).func_241117_a_(Structure.VILLAGE, getPosition(), 1, false);
+//                    if (nearestVillage != null && nearestVillage.withinDistance(getPosition(), 50)) {
+//                        if (getRNG().nextInt(60) != 0) {
+//                            return false;
+//                        }
+//                    }
+//                }
                 if (spawnRestriction.level >= SpawnRestriction.SPECIAL.level) {
                     if (!getCanSpawnHereRestricted(worldIn)) {
                         return false;
