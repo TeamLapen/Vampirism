@@ -10,9 +10,13 @@ import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @OnlyIn(Dist.CLIENT)
 public class VampireMinionRenderer extends BipedRenderer<VampireMinionEntity, MinionModel<VampireMinionEntity>> {
@@ -21,7 +25,10 @@ public class VampireMinionRenderer extends BipedRenderer<VampireMinionEntity, Mi
 
     public VampireMinionRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new MinionModel<>(0F), 0.5F);
-        textures = Minecraft.getInstance().getResourceManager().getAllResourceLocations("textures/entity/vampire", s -> s.endsWith(".png")).stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())).toArray(ResourceLocation[]::new);
+        IResourceManager rm = Minecraft.getInstance().getResourceManager();
+        Collection<ResourceLocation> allTexs= new ArrayList<>(rm.getAllResourceLocations("textures/entity/vampire", s -> s.endsWith(".png")));
+        allTexs.addAll(rm.getAllResourceLocations("textures/entity/minion/vampire", s -> s.endsWith(".png")));
+        textures = allTexs.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())).toArray(ResourceLocation[]::new);
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
         this.addLayer(new BipedArmorLayer<>(this, new BipedModel<>(0.5f), new BipedModel<>(1f)));
         this.getEntityModel().bipedBody.showModel = this.getEntityModel().bipedBodyWear.showModel = false;
