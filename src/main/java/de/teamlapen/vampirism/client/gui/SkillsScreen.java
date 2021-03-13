@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
@@ -22,6 +23,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
+import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
@@ -30,6 +32,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -44,7 +47,6 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.awt.Color;
 import java.util.List;
 import java.util.*;
@@ -185,6 +187,25 @@ public class SkillsScreen extends Screen {
                 SkillNode root = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(faction.getID());
                 addToList(skillNodes, root);
 
+                Button resetSkills = this.addButton(new Button((this.width - display_width) / 2 + 24 + 40, this.height / 2 + 74, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
+                    boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
+                    ConfirmScreen resetGui = new ConfirmScreen((cxt) -> {
+                        if (cxt) {
+                            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
+                            Minecraft.getInstance().displayGuiScreen(this);
+                        } else {
+                            Minecraft.getInstance().displayGuiScreen(this);
+                        }
+                    }, new TranslationTextComponent("gui.vampirism.reset_skills.title"), new TranslationTextComponent("gui.vampirism.reset_skills." + (test ? "desc_test" : "desc")));
+                    Minecraft.getInstance().displayGuiScreen(resetGui);
+                }, (button, stack, mouseX, mouseY) -> {
+                    if (!minecraft.player.inventory.hasItemStack(new ItemStack(ModItems.oblivion_potion))) {
+                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("test.vampirism.skills.reset_req", ModItems.oblivion_potion.getName()), mouseX, mouseY);
+                    }
+                }));
+                if(factionPlayer.getLevel() < 2 || !minecraft.player.inventory.hasItemStack(new ItemStack(ModItems.oblivion_potion))) {
+                    resetSkills.active = false;
+                }
                 if (Helper.isVampire(minecraft.player)) {
                     this.addButton(new ImageButton((this.width - display_width) / 2 + 10 + 22, this.height / 2 + 74, 20, 20, 72, 202, 20, BACKGROUND, 256, 256, (context) -> {
                         Minecraft.getInstance().displayGuiScreen(new VampirePlayerAppearanceScreen(this));
