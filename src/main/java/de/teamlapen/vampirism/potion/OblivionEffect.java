@@ -20,6 +20,7 @@ public class OblivionEffect extends VampirismEffect {
         super(name, effectType, potionColor);
     }
 
+    @Nonnull
     @Override
     public ITextComponent getDisplayName() {
         return super.getDisplayName();
@@ -27,7 +28,7 @@ public class OblivionEffect extends VampirismEffect {
 
     @Override
     public boolean isReady(int duration, int amplifier) {
-        return duration % (20 * amplifier) == 0;
+        return duration % (20 * (amplifier+1)) == 0;
     }
 
     @Override

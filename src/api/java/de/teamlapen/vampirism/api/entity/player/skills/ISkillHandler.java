@@ -42,6 +42,37 @@ public interface ISkillHandler<T extends ISkillPlayer<?>> {
     void resetSkills();
 
     enum Result {
-        OK, ALREADY_ENABLED, PARENT_NOT_ENABLED, NOT_FOUND, NO_POINTS, OTHER_NODE_SKILL, LOCKED_BY_OTHER_NODE
+        /**
+         * can be enabled
+         */
+        OK,
+        /**
+         * Skill is already enabled
+         */
+        ALREADY_ENABLED,
+        /**
+         * Skill can not be enabled, because the parent skill is not unlocked
+         */
+        PARENT_NOT_ENABLED,
+        /**
+         * the skill could not be found in the skilltree
+         */
+        NOT_FOUND,
+        /**
+         * Skill points are missing to unlock the skill
+         */
+        NO_POINTS,
+        /**
+         * Skill is locked, because the sibling is unlocked
+         */
+        OTHER_NODE_SKILL,
+        /**
+         * Skill is locked, because the referenced locking skill is unlocked
+         */
+        LOCKED_BY_OTHER_NODE,
+        /**
+         * Skill is locked, because the player is not in a state of unlocking skills
+         */
+        LOCKED_BY_PLAYER_STATE
     }
 }

@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -40,6 +41,9 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     @Override
     public Result canSkillBeEnabled(ISkill skill) {
+        if (player.getRepresentingPlayer().getActivePotionEffect(ModEffects.oblivion) != null) {
+            return Result.LOCKED_BY_PLAYER_STATE;
+        }
         if (isSkillEnabled(skill)) {
             return Result.ALREADY_ENABLED;
         }

@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
@@ -24,17 +25,18 @@ import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.text.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.gui.GuiUtils;
@@ -43,6 +45,7 @@ import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.awt.Color;
 import java.util.List;
 import java.util.*;
 
@@ -95,11 +98,10 @@ public class SkillsScreen extends Screen {
 
 
         this.drawSkills(stack, mouseX, mouseY, partialTicks);
-        RenderSystem.disableLighting();
-        RenderSystem.disableDepthTest();
+
+        this.drawDisableText(stack);
+
         this.drawTitle(stack);
-        RenderSystem.enableLighting();
-        RenderSystem.enableDepthTest();
     }
 
     @Override
@@ -121,14 +123,8 @@ public class SkillsScreen extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         boolean retur = super.mouseClicked(mouseX, mouseY, mouseButton);
         if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT && selected != null) {
-            if (skillHandler.canSkillBeEnabled(selected) == ISkillHandler.Result.OK) {
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, selected.getRegistryName().toString()));
-                playSoundEffect(SoundEvents.ENTITY_PLAYER_LEVELUP, 0.7F);
-                return true;
-            } else {
-                playSoundEffect(SoundEvents.BLOCK_NOTE_BLOCK_BASS, 0.5F);
-                return true;
-            }
+            this.unlockSkill();
+            return true;
         }
         return retur;
     }
@@ -151,6 +147,19 @@ public class SkillsScreen extends Screen {
             super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
         }
         return false;
+    }
+
+    private void unlockSkill(){
+        if (canUnlockSkill()) {
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, selected.getRegistryName().toString()));
+            playSoundEffect(SoundEvents.ENTITY_PLAYER_LEVELUP, 0.7F);
+        } else {
+            playSoundEffect(SoundEvents.BLOCK_NOTE_BLOCK_BASS, 0.5F);
+        }
+    }
+
+    private boolean canUnlockSkill(){
+        return skillHandler.canSkillBeEnabled(selected) == ISkillHandler.Result.OK;
     }
 
     @Override
@@ -206,10 +215,14 @@ public class SkillsScreen extends Screen {
             title = new TranslationTextComponent("text.vampirism.skills.gui_title");
         }        int x = (this.width - display_width) / 2;
         int y = (this.height - display_height) / 2;
-        this.font.func_243248_b(stack, title, x + 15, y + 5, 0xFFFFFFFF);
-        ITextComponent points = new TranslationTextComponent("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
+        this.font.func_238407_a_(stack, title.func_241878_f(), x + 15, y + 5, 0xFFFFFFFF);
+        IFormattableTextComponent points = new TranslationTextComponent("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
+        if (this.minecraft.player.getActivePotionEffect(ModEffects.oblivion) != null) {
+            points.mergeStyle(TextFormatting.DARK_RED);
+        }
         x = (this.width + display_width) / 2 - this.font.getStringPropertyWidth(points);
-        this.font.func_243248_b(stack, points, x - 15, y + 5, 0xFFFFFFFF);
+//        this.font.func_243248_b(stack, points, x - 15, y + 5, 0xFFFFFFFF);
+        this.font.func_238407_a_(stack, points.func_241878_f(), x - 15, y + 5, 0xFFFFFFFF);
     }
 
     /**
@@ -231,6 +244,43 @@ public class SkillsScreen extends Screen {
         displayX = MathHelper.clamp(displayX, (-400 - displayXWidth)  / zoomOut + (zoomOut - 2.0F) * (-1) * 250, (-400 + displayXWidth) / zoomOut + (zoomOut - 2.0F) * (-1) * 250);
         displayXNew = displayX;
         displayYNew = displayY;
+    }
+
+    private void drawDisableText(MatrixStack mStack) {
+        if (this.minecraft.player.getActivePotionEffect(ModEffects.oblivion) == null) return;
+        int tooltipX = (this.width - this.display_width) / 2 + 19 + 3;
+        int tooltipY = (this.height - this.display_height) / 2 + 4+19;
+        int tooltipTextWidth = this.display_width -19-19-6;
+        int tooltipHeight =17;
+        int backgroundColor=0xF0aa0808;//0xF0550404;;
+        int borderColorStart = 0x505f0c0c;;
+        int borderColorEnd = (borderColorStart & 0xFEFEFE) >> 1 | borderColorStart & 0xFF000000;
+        int zLevel = this.getBlitOffset();
+
+        mStack.push();
+        Matrix4f mat = mStack.getLast().getMatrix();
+        GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 4, tooltipX + tooltipTextWidth + 3, tooltipY - 3, backgroundColor, backgroundColor);
+        GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY + tooltipHeight + 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 4, backgroundColor, backgroundColor);
+        GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
+        GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 4, tooltipY - 3, tooltipX - 3, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
+        GuiUtils.drawGradientRect(mat, zLevel, tooltipX + tooltipTextWidth + 3, tooltipY - 3, tooltipX + tooltipTextWidth + 4, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
+        GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3 + 1, tooltipX - 3 + 1, tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
+        GuiUtils.drawGradientRect(mat, zLevel, tooltipX + tooltipTextWidth + 2, tooltipY - 3 + 1, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
+        GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3 + 1, borderColorStart, borderColorStart);
+        GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY + tooltipHeight + 2, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
+
+        IRenderTypeBuffer.Impl renderType = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
+        mStack.translate(0.0D, 0.0D, zLevel);
+
+        ITextComponent f = new TranslationTextComponent("text.vampirism.skill.unlock_unavailable").mergeStyle(TextFormatting.WHITE);
+
+        IReorderingProcessor s = LanguageMap.getInstance().func_241870_a(f);
+
+
+        font.func_238416_a_(s, (float)tooltipX + (tooltipTextWidth/2) - this.font.getStringPropertyWidth(f)/2, (float)tooltipY + (tooltipHeight/2) - 3, -1, true, mat, renderType, false, 0, 15728880);
+
+        renderType.finish();
+        mStack.pop();
     }
 
     private void drawSkills(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
