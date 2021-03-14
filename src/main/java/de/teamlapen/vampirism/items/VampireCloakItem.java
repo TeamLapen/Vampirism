@@ -57,7 +57,7 @@ public class VampireCloakItem extends ArmorItem implements IFactionExclusiveItem
     @OnlyIn(Dist.CLIENT)
     @Override
     public BipedModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, BipedModel _default) {
-        return new CloakModel();
+        return new CloakModel<>();
     }
 
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
@@ -75,7 +75,7 @@ public class VampireCloakItem extends ArmorItem implements IFactionExclusiveItem
     public void onArmorTick(ItemStack stack, World world, PlayerEntity player) {
         super.onArmorTick(stack, world, player);
         if (player.ticksExisted % 16 == 8) {
-            if (Helper.isHunter(player)) {
+            if (!Helper.isVampire(player)) {
                 player.addPotionEffect(new EffectInstance(ModEffects.poison, 20, 1));
             }
         }

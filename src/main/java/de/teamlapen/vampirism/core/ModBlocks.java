@@ -19,7 +19,6 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
