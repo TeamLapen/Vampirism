@@ -4,8 +4,11 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
+import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
@@ -41,7 +44,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class VampirismVampireSword extends VampirismItemWeapon implements IBloodChargeable, IFactionExclusiveItem {
+public abstract class VampirismVampireSword extends VampirismItemWeapon implements IBloodChargeable, IFactionExclusiveItem, IFactionLevelItem {
 
 
     public static final String DO_NOT_NAME_STRING = "DO_NOT_NAME";
@@ -66,13 +69,11 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
+        this.addFactionLevelToolTip(stack,worldIn,tooltip,flagIn,VampirismMod.proxy.getClientPlayer());
         float charged = getCharged(stack);
         float trained = getTrained(stack, VampirismMod.proxy.getClientPlayer());
         tooltip.add(new TranslationTextComponent("text.vampirism.sword_charged").append(new StringTextComponent(" " + ((int) Math.ceil(charged * 100f)) + "%")).mergeStyle(TextFormatting.DARK_AQUA));
         tooltip.add(new TranslationTextComponent("text.vampirism.sword_trained").append(new StringTextComponent(" " + ((int) Math.ceil(trained * 100f)) + "%")).mergeStyle(TextFormatting.DARK_AQUA));
-        if (Minecraft.getInstance().player != null && !Helper.isVampire(Minecraft.getInstance().player)) {
-            tooltip.add(new TranslationTextComponent("text.vampirism.can_only_be_used_by", VReference.VAMPIRE_FACTION.getNamePlural()));
-        }
     }
 
     @Nonnull
@@ -325,5 +326,22 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     @Override
     public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
         return !Helper.isVampire(player);
+    }
+
+    @Override
+    public int getMinLevel(@Nonnull ItemStack stack) {
+        return 0;
+    }
+
+    @Nullable
+    @Override
+    public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public IPlayableFaction getUsingFaction(@Nonnull ItemStack stack) {
+        return VReference.VAMPIRE_FACTION;
     }
 }
