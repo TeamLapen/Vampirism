@@ -29,6 +29,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -220,7 +221,7 @@ public class InputEventPacket implements IMessage {
                         }
                     } else if (!org.apache.commons.lang3.StringUtils.isBlank(name)) {
                         ItemStack stack = player.getHeldItemMainhand();
-                        stack.setDisplayName(new StringTextComponent(name));
+                        stack.setDisplayName(new StringTextComponent(name).mergeStyle(TextFormatting.AQUA));
                     }
                     break;
                 case SELECT_CALL_MINION:
