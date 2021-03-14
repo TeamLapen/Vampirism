@@ -52,7 +52,6 @@ public class VampireBookItem extends VampirismItem {
 
     @Override
     public ITextComponent getDisplayName(ItemStack stack) {
-        ITextComponent name;
         if (stack.hasTag()) {
             CompoundNBT nbttagcompound = stack.getTag();
             String s = nbttagcompound.getString("title");
