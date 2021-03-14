@@ -251,6 +251,7 @@
   "text.vampirism.action.disallowed": "You cannot use this action here and now",
   "text.vampirism.poisonous_to_vampires": "Poisonous to vampires",
   "text.vampirism.poisonous_to_hunter": "Poisonous to hunter",
+  "text.vampirism.poisonous_to_non": "Poisonous to non %s",
   "text.vampirism.deals_more_damage_to": "Deals %s percent more damage against %s",
   "text.vampirism.liquid_container": "Any liquid container",
   "text.vampirism.translators": "None",

@@ -50,9 +50,7 @@ public class VampireCloakItem extends ArmorItem implements IFactionExclusiveItem
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         PlayerEntity playerEntity = VampirismMod.proxy.getClientPlayer();
-        if (playerEntity != null && Helper.isHunter(playerEntity)) {
-            tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_hunter").mergeStyle(TextFormatting.RED));
-        }
+        this.addFactionPoisonousToolTip(stack,worldIn,tooltip,flagIn,playerEntity);
     }
 
     @Nullable

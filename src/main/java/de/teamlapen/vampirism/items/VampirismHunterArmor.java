@@ -24,8 +24,6 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -57,9 +55,7 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         PlayerEntity player = VampirismMod.proxy.getClientPlayer();
-        if (player != null && Helper.isVampire(player)) {
-            tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_vampires").mergeStyle(TextFormatting.RED));
-        }
+        addFactionPoisonousToolTip(stack,worldIn, tooltip, flagIn, player);
     }
 
     @Override
