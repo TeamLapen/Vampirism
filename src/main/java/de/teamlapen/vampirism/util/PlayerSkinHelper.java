@@ -2,9 +2,17 @@ package de.teamlapen.vampirism.util;
 
 import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.properties.Property;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.tileentity.SkullTileEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -14,7 +22,7 @@ import java.util.function.Consumer;
 
 public class PlayerSkinHelper {
 
-    private static final ExecutorService THREAD_POOL = new ThreadPoolExecutor(0, 5, 1L, TimeUnit.MINUTES, new LinkedBlockingQueue());
+    private static final ExecutorService THREAD_POOL = new ThreadPoolExecutor(0, 5, 1L, TimeUnit.MINUTES, new LinkedBlockingQueue<>());
 
 
     /**
@@ -51,5 +59,23 @@ public class PlayerSkinHelper {
             callback.accept(input);
         }
 
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static void obtainPlayerSkinPropertiesAsync(final GameProfile input, Consumer<Pair<ResourceLocation, Boolean>> callback) {
+        updateGameProfileAsync(input, p -> {
+            ResourceLocation loc;
+            boolean alex;
+            Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(p);
+            if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
+                MinecraftProfileTexture t = map.get(MinecraftProfileTexture.Type.SKIN);
+                loc = Minecraft.getInstance().getSkinManager().loadSkin(t, MinecraftProfileTexture.Type.SKIN);
+                alex = "slim".equals(t.getMetadata("model"));
+            } else {
+                loc = DefaultPlayerSkin.getDefaultSkin(p.getId());
+                alex = "slim".equals(DefaultPlayerSkin.getSkinType(p.getId()));
+            }
+            callback.accept(Pair.of(loc, alex));
+        });
     }
 }

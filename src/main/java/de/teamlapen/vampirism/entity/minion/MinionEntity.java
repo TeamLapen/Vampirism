@@ -39,10 +39,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -51,8 +48,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -90,8 +89,9 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * Only valid and nonnull if playerMinionController !=null
      */
     protected T minionData;
+
     @Nullable
-    private GameProfile skinProfile;
+    private Pair<ResourceLocation, Boolean> skinDetails;
     /**
      * Only valid if playerMinionController !=null
      */
@@ -277,16 +277,14 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return this.minionData == null ? Optional.empty() : Optional.of(minionId);
     }
 
-    @Nullable
-    @Override
-    public GameProfile getOverlayPlayerProfile() {
-        if (skinProfile == null) {
+    public Optional<Pair<ResourceLocation, Boolean>> getOverlayPlayerProperties() {
+        if (skinDetails == null) {
             this.getLordID().ifPresent(id -> {
-                skinProfile = new GameProfile(id, "Dummy");
-                PlayerSkinHelper.updateGameProfileAsync(skinProfile, (profile) -> this.skinProfile = profile);
+                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> PlayerSkinHelper.obtainPlayerSkinPropertiesAsync(new GameProfile(id, "Dummy"), p -> this.skinDetails = p));
             });
+            skinDetails = PENDING_PROP;
         }
-        return skinProfile;
+        return Optional.of(skinDetails);
     }
 
     @Override

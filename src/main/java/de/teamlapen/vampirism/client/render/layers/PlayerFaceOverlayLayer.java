@@ -1,11 +1,8 @@
 package de.teamlapen.vampirism.client.render.layers;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.BipedRenderer;
@@ -17,8 +14,7 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.util.Map;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Renders an overlay over the entities face
@@ -33,15 +29,7 @@ public class PlayerFaceOverlayLayer<T extends MobEntity & IPlayerOverlay, M exte
 
     @Override
     public void render(MatrixStack stack, IRenderTypeBuffer buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        ResourceLocation loc = DefaultPlayerSkin.getDefaultSkinLegacy();
-        GameProfile prof = entity.getOverlayPlayerProfile();
-        if (prof != null) {
-            Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(prof);
-            if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-                loc = Minecraft.getInstance().getSkinManager().loadSkin(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
-            }
-
-        }
+        ResourceLocation loc = entity.getOverlayPlayerProperties().map(Pair::getLeft).orElse(DefaultPlayerSkin.getDefaultSkinLegacy());
         IVertexBuilder vertexBuilder = buffer.getBuffer(RenderType.getEntityCutoutNoCull(loc));
         this.getEntityModel().bipedHead.showModel = true;
         this.getEntityModel().bipedHeadwear.showModel = true;
