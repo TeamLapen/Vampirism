@@ -56,7 +56,7 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
 
         this.skinType = this.entity.getVampireType();
         this.useLordSkin = this.entity.shouldRenderLordSkin();
-        typeList = this.addButton(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 43 + 19, 99, 5, ((VampireMinionRenderer) Minecraft.getInstance().getRenderManager().getRenderer(this.entity)).getTextureLength(), null, new TranslationTextComponent("gui.vampirism.minion_appearance.skin"), this::skin, false));
+        typeList = this.addButton(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 43 + 19, 99, 4, ((VampireMinionRenderer) Minecraft.getInstance().getRenderManager().getRenderer(this.entity)).getTextureLength(), null, new TranslationTextComponent("gui.vampirism.minion_appearance.skin"), this::skin, false));
         typeButton = this.addButton(new ExtendedButton(this.typeList.x, this.typeList.y - 20, this.typeList.getWidth() + 1, 20, new StringTextComponent(""), (button1 -> {
             setListVisibility(!typeList.visible);
         })));
