@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "vampirism.refmap.json",
   "mixins": [
+    "AgeableModelAccessor",
     "DimensionStructureSettingsAccessor",
     "FlatGenerationSettingsAccessor",
     "LivingEntityAccessor",

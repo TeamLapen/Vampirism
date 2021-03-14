@@ -19,7 +19,6 @@ import de.teamlapen.vampirism.util.IPlayerOverlay;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import de.teamlapen.vampirism.util.SupporterManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -33,6 +32,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -40,10 +40,13 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Advanced vampire. Is strong. Represents supporters
@@ -67,9 +70,12 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
      */
     private int followingEntities = 0;
 
+    /**
+     * Overlay player texture and if slim (true)
+     */
     @OnlyIn(Dist.CLIENT)
     @Nullable
-    private GameProfile facePlayerProfile;
+    private Pair<ResourceLocation, Boolean> skinDetails;
 
     public AdvancedVampireEntity(EntityType<? extends AdvancedVampireEntity> type, World world) {
         super(type, world, true);
@@ -153,16 +159,16 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     private ICaptureAttributes villageAttributes;
 
     @OnlyIn(Dist.CLIENT)
-    @Nullable
     @Override
-    public GameProfile getOverlayPlayerProfile() {
-        if (this.facePlayerProfile == null) {
+    @Nullable
+    public Optional<Pair<ResourceLocation, Boolean>> getOverlayPlayerProperties() {
+        if (skinDetails == null) {
             String name = getTextureName();
-            if (name == null) return null;
-            facePlayerProfile = new GameProfile(null, name);
-            PlayerSkinHelper.updateGameProfileAsync(facePlayerProfile, (profile) -> Minecraft.getInstance().execute(() -> AdvancedVampireEntity.this.facePlayerProfile = profile));
+            if (name == null) return Optional.empty();
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> PlayerSkinHelper.obtainPlayerSkinPropertiesAsync(new GameProfile(null, name), p -> this.skinDetails = p));
+            skinDetails = PENDING_PROP;
         }
-        return facePlayerProfile;
+        return Optional.of(skinDetails);
     }
 
     @Nullable
