@@ -4,7 +4,6 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "vampirism.refmap.json",
   "mixins": [
-    "AgeableModelAccessor",
     "DimensionStructureSettingsAccessor",
     "FlatGenerationSettingsAccessor",
     "LivingEntityAccessor",
@@ -12,6 +11,9 @@
     "MixinEntity",
     "MixinLivingEntity",
     "MixinPotionBrewing"
+  ],
+  "client": [
+    "AgeableModelAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
