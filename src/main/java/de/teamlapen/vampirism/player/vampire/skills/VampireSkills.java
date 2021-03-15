@@ -11,9 +11,8 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -31,7 +30,6 @@ public class VampireSkills {
     public static final ISkill blood_charge = getNull();
     public static final ISkill blood_vision = getNull();
     public static final ISkill blood_vision_garlic = getNull();
-    public static final ISkill creeper_avoided = getNull();
     public static final ISkill dark_blood_projectile = getNull();
     public static final ISkill freeze = getNull();
     public static final ISkill half_invulnerable = getNull();
@@ -60,7 +58,6 @@ public class VampireSkills {
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_charge", true));
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_vision", true).setToggleActions(player -> player.unlockVision(VReference.vision_bloodVision), player -> player.unUnlockVision(VReference.vision_bloodVision)));
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_vision_garlic", true).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().blood_vision_garlic = true, player -> ((VampirePlayer) player).getSpecialAttributes().blood_vision_garlic = false));
-        registry.register(new VampirismSkill.SimpleVampireSkill("creeper_avoided", false).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().avoided_by_creepers = true, player -> ((VampirePlayer) player).getSpecialAttributes().avoided_by_creepers = false).setDescription(() -> VampirismConfig.BALANCE.vsDisableAvoidedByCreepers.get() ? new StringTextComponent("Disabled by admin").mergeStyle(TextFormatting.RED) : null));
         registry.register(new ActionSkill<>("dark_blood_projectile", VampireActions.dark_blood_projectile, true));
         registry.register(new ActionSkill<>("freeze", VampireActions.freeze, true));
         registry.register(new ActionSkill<>("half_invulnerable", VampireActions.half_invulnerable, true));
@@ -84,5 +81,13 @@ public class VampireSkills {
         registry.register(new VampirismSkill.SimpleVampireSkill("vampire_speed", false).registerAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, "96dc968d-818f-4271-8dbf-6b799d603ad8", () -> VampirismConfig.BALANCE.vsSpeedBoost.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
         registry.register(new VampirismSkill.SimpleVampireSkill("water_resistance", true).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().waterResistance = true, player -> ((VampirePlayer) player).getSpecialAttributes().waterResistance = false));
 
+    }
+
+    public static void fixMappings(RegistryEvent.MissingMappings<ISkill> event) {
+        event.getAllMappings().forEach(missingMapping -> {
+            if ("vampirism:creeper_avoided".equals(missingMapping.key.toString())) {
+                missingMapping.ignore();
+            }
+        });
     }
 }

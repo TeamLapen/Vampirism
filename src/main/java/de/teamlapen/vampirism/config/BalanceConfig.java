@@ -30,6 +30,9 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue heartSeekerUsageFactor;
     public final ForgeConfigSpec.BooleanValue golemAttackNonVillageFaction;
     public final ForgeConfigSpec.BooleanValue zombieIgnoreVampire;
+    public final ForgeConfigSpec.BooleanValue skeletonIgnoreVampire;
+    public final ForgeConfigSpec.BooleanValue creeperIgnoreVampire;
+
     public final ForgeConfigSpec.IntValue hunterTentMaxSpawn;
     public final ForgeConfigSpec.DoubleValue crossbowDamageMult;
     public final ForgeConfigSpec.IntValue taskMasterMaxTaskAmount;
@@ -98,7 +101,6 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue vsJumpBoost;
     public final ForgeConfigSpec.DoubleValue vsSpeedBoost;
     public final ForgeConfigSpec.IntValue vsBloodVisionDistanceSq;
-    public final ForgeConfigSpec.BooleanValue vsDisableAvoidedByCreepers;
 
     public final ForgeConfigSpec.DoubleValue vpHealthMaxMod;
     public final ForgeConfigSpec.DoubleValue vpStrengthMaxMod;
@@ -194,7 +196,9 @@ public class BalanceConfig {
         heartSeekerUsageFactor = builder.comment("The percentage of stored blood used for every hit with the normal heart seeker vampire sword").defineInRange("heartSeekerUsageFactor", 0.5, 0, 100d);
         dropOrchidFromLeavesChance = builder.comment("Drop orchid every n times breaking a leave in the vampire forest").defineInRange("dropOrchidFromLeavesChance", 25, 1, Integer.MAX_VALUE);
         golemAttackNonVillageFaction = builder.comment("If iron golems should attack faction NPCs if in a village with a different faction").define("golemAttackNonVillageFaction", true);
-        zombieIgnoreVampire = builder.comment("If zombies should ignore vampires").define("zombieIgnoreVampire", true);
+        zombieIgnoreVampire = builder.comment("Whether zombies should ignore vampires").define("zombieIgnoreVampire", true);
+        skeletonIgnoreVampire = builder.comment("Whether skeletons should ignore vampires").define("skeletonIgnoreVampire", true);
+        creeperIgnoreVampire = builder.comment("Whether creepers should ignore vampires").define("creeperIgnoreVampire", true);
         hunterTentMaxSpawn = builder.comment("Maximum number of hunters that can spawn at one tent per day").defineInRange("hunterTentMaxSpawn", 4, 0, 20);
         crossbowDamageMult = builder.comment("The base damage dealt by crossbow arrows is multiplied by this").defineInRange("crossbowDamageMult", 1, 0.2, 5);
         taskMasterMaxTaskAmount = builder.comment("Maximum amount of task shown at a taskmaster, except unique tasks").defineInRange("taskMasterMaxTaskAmount", 3, 1, Integer.MAX_VALUE);
@@ -277,7 +281,6 @@ public class BalanceConfig {
         vsJumpBoost = builder.comment("Similar to potion effect ampliofier (and -1 is normal)").defineInRange("jumpBoost", 1, -1, 5);
         vsSpeedBoost = builder.comment("Max speed is multiplied with (value+1)").defineInRange("speedBoost", 0.15, 0, 3);
         vsBloodVisionDistanceSq = builder.comment("Squared blood vision distance").defineInRange("bloodVisionDistanceSq", 1600, 5, Integer.MAX_VALUE);
-        vsDisableAvoidedByCreepers = builder.comment("Disables the effect of 'Avoided by creepers'. Can still be unlocked though.").define("disableAvoidedByCreepers", false);
 
 
         //Vampire Player

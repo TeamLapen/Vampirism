@@ -241,7 +241,9 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onMissingMappingsSkills(RegistryEvent.MissingMappings<ISkill> event) {
         HunterSkills.fixMappings(event);
+        VampireSkills.fixMappings(event);
     }
+
 
     @SubscribeEvent
     public void onMissingMappingsPotions(RegistryEvent.MissingMappings<Potion> event) {

@@ -25,6 +25,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -74,7 +75,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     private MeleeAttackGoal meleeGoal;
 
     public HunterMinionEntity(EntityType<? extends VampirismEntity> type, World world) {
-        super(type, world, VampirismAPI.factionRegistry().getPredicate(VReference.HUNTER_FACTION, true, true, false, false, null).or(e -> !(e instanceof IFactionEntity) && (e instanceof IMob)));
+        super(type, world, VampirismAPI.factionRegistry().getPredicate(VReference.HUNTER_FACTION, true, true, false, false, null).or(e -> !(e instanceof IFactionEntity) && (e instanceof IMob) && !(e instanceof CreeperEntity)));
     }
 
     @Nonnull
