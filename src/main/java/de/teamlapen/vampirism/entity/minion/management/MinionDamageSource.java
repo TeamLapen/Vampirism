@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.minion.management;
 
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -11,11 +12,13 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 
 public class MinionDamageSource extends EntityDamageSource {
 
+    @Nonnull
     protected final MinionEntity<?> minionEntity;
     @Nullable
     protected final PlayerEntity playerEntity;
@@ -24,6 +27,18 @@ public class MinionDamageSource extends EntityDamageSource {
         super("mob", minion);
         this.minionEntity = minion;
         this.playerEntity = minion.getLordOpt().map(ILordPlayer::getPlayer).orElse(null);
+    }
+
+    @Override
+    @Nullable
+    public Entity getImmediateSource() {
+        return this.minionEntity;
+    }
+
+    @Override
+    @Nullable
+    public Entity getTrueSource() {
+        return this.playerEntity;
     }
 
     @Override
