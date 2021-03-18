@@ -32,7 +32,8 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     public static final EntitySize BAT_SIZE = EntitySize.fixed(0.8f, 0.6f);
 
 
-    public final UUID healthModifierUUID = UUID.fromString("4392fccb-4bfd-4290-b2e6-5cc91429053c");
+    private final UUID armorModifierUUID = UUID.fromString("4392fccb-4bfd-4290-b2e6-5cc91439053c");
+    private final UUID armorToughnessModifierUUID = UUID.fromString("6d3df16d-85e4-4b99-b2fc-301818697a6d");
     private final float PLAYER_WIDTH = 0.6F;
     private final float PLAYER_HEIGHT = 1.8F;
 
@@ -43,14 +44,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     @Override
     public boolean activate(IVampirePlayer vampire) {
         PlayerEntity player = vampire.getRepresentingPlayer();
-        float oldMax = player.getMaxHealth();
-        float oldHealth = player.getHealth();
         setModifier(player, true);
-        float newMax = player.getMaxHealth();
-        float mult = newMax / oldMax;
-        float newHealth = mult * oldHealth;
-        if (newHealth < 1) newHealth = 1;
-        player.setHealth(newHealth);
         updatePlayer((VampirePlayer) vampire, true);
         if (player instanceof ServerPlayerEntity) {
             ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.BAT);
@@ -88,13 +82,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     @Override
     public void onDeactivated(IVampirePlayer vampire) {
         PlayerEntity player = vampire.getRepresentingPlayer();
-        float oldMax = player.getMaxHealth();
-        float oldHealth = player.getHealth();
         setModifier(player, false);
-        float newMax = player.getMaxHealth();
-        float mult = newMax / oldMax;
-        float newHealth = mult * oldHealth;
-        player.setHealth(newHealth);
         if (!player.isOnGround()) {
             player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 20, 100, false, false));
         }
@@ -137,9 +125,13 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     private void setModifier(PlayerEntity player, boolean enabled) {
         if (enabled) {
 
-            ModifiableAttributeInstance health = player.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
-            if (health.getModifier(healthModifierUUID) == null) {
-                health.applyPersistentModifier(new AttributeModifier(healthModifierUUID, "Bat Health Reduction", -VampirismConfig.BALANCE.vaBatHealthReduction.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+            ModifiableAttributeInstance armorAttributeInst = player.getAttribute(SharedMonsterAttributes.ARMOR);
+            if (armorAttributeInst.getModifier(armorModifierUUID) == null) {
+                armorAttributeInst.applyPersistentModifier(new AttributeModifier(armorModifierUUID, "Bat Armor Disabled", -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            }
+            ModifiableAttributeInstance armorToughnessAttributeInst = player.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS);
+            if (armorToughnessAttributeInst.getModifier(armorToughnessModifierUUID) == null) {
+                armorToughnessAttributeInst.applyPersistentModifier(new AttributeModifier(armorToughnessModifierUUID, "Bat Armor Disabled", -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
 
             player.abilities.allowFlying = true;
@@ -149,10 +141,15 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         } else {
 
             // Health modifier
-            ModifiableAttributeInstance health = player.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
-            AttributeModifier m = health.getModifier(healthModifierUUID);
+            ModifiableAttributeInstance armorAttributeInst = player.getAttribute(SharedMonsterAttributes.ARMOR);
+            AttributeModifier m = armorAttributeInst.getModifier(armorModifierUUID);
             if (m != null) {
-                health.removeModifier(m);
+                armorAttributeInst.removeModifier(m);
+            }
+            ModifiableAttributeInstance armorToughnessAttributeInst = player.getAttribute(SharedMonsterAttributes.ARMOR);
+            AttributeModifier m2 = armorToughnessAttributeInst.getModifier(armorModifierUUID);
+            if (m2 != null) {
+                armorToughnessAttributeInst.removeModifier(m2);
             }
 
             if (!player.abilities.isCreativeMode) {

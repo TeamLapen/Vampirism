@@ -48,6 +48,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -188,11 +189,12 @@ public class ModPlayerEventHandler {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onLivingHeal(LivingHealEvent event) {
-        if (event.getEntityLiving() instanceof PlayerEntity) {
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onLivingHurt(LivingHurtEvent event) {
+        DamageSource d = event.getSource();
+        if (!d.isDamageAbsolute() && !d.isUnblockable() && event.getEntityLiving() instanceof PlayerEntity) {
             if (VampirePlayer.getOpt((PlayerEntity) event.getEntityLiving()).map(VampirePlayer::getSpecialAttributes).map(s -> s.bat).orElse(false)) {
-                event.setAmount(event.getAmount() * 0.1F);
+                event.setAmount(event.getAmount() * 2);
             }
         }
     }
