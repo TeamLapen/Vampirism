@@ -412,7 +412,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             screenColor = 0x80ba1836;
             fullScreen = false;
         } else {
-            screenPercentage = (int) Math.max(0F, (screenPercentage / 20F) * 19F);
+            screenPercentage = (int) Math.max(0F, (screenPercentage / 20F) * 10F); //Fade out any (previously applied) screen overlay until we hit 0
         }
     }
 

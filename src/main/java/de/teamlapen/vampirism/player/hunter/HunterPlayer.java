@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.items.ObsidianArmorItem;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
+import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
@@ -183,6 +184,13 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
             return ObsidianArmorItem.isFullyEquipped(player);
         }
         return false;
+    }
+
+    @Override
+    public void breakDisguise() {
+        if (actionHandler.isActionActive(HunterActions.disguise_hunter)) {
+            actionHandler.toggleAction(HunterActions.disguise_hunter);
+        }
     }
 
     @Override

@@ -28,6 +28,11 @@ class HunterPlayerDefaultImpl implements IHunterPlayer {
     }
 
     @Override
+    public void breakDisguise() {
+
+    }
+
+    @Override
     public boolean canLeaveFaction() {
         return false;
     }

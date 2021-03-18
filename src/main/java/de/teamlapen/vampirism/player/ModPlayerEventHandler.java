@@ -24,7 +24,6 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.items.GarlicBreadItem;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.player.vampire.actions.BatVampireAction;
@@ -107,9 +106,10 @@ public class ModPlayerEventHandler {
     public void onAttackEntity(AttackEntityEvent event) {
         PlayerEntity player = event.getPlayer();
         if (player.isAlive()) {
-            if (VampirePlayer.get(player).getSpecialAttributes().bat || HunterPlayer.get(player).getSpecialAttributes().isDisguised()) {
+            if (VampirePlayer.get(player).getSpecialAttributes().bat) {
                 event.setCanceled(true);
             }
+            HunterPlayer.getOpt(player).ifPresent(HunterPlayer::breakDisguise);
             if (!checkItemUsePerm(player.getHeldItemMainhand(), player)) {
                 event.setCanceled(true);
             }
@@ -118,12 +118,20 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
+    public void onBlockBreak(BlockEvent.BreakEvent event) {
+        if (event.getPlayer() != null) {
+            HunterPlayer.getOpt(event.getPlayer()).ifPresent(HunterPlayer::breakDisguise);
+        }
+    }
+
+    @SubscribeEvent
     public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
         if (!(event.getEntity() instanceof PlayerEntity) || !event.getEntity().isAlive()) return;
         try {
-            if (VampirePlayer.get((PlayerEntity) event.getEntity()).getSpecialAttributes().bat || HunterPlayer.get((PlayerEntity) event.getEntity()).getSpecialAttributes().isDisguised()) {
+            if (VampirePlayer.get((PlayerEntity) event.getEntity()).getSpecialAttributes().bat) {
                 event.setCanceled(true);
             }
+            HunterPlayer.getOpt((PlayerEntity) event.getEntity()).ifPresent(HunterPlayer::breakDisguise);
         } catch (Exception e) {
             // Added try catch to prevent any exception in case some other mod uses auto placers or so
         }
@@ -131,7 +139,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (VampirePlayer.getOpt(event.getPlayer()).map(VampirePlayer::getSpecialAttributes).map(s -> s.bat).orElse(false) || HunterPlayer.getOpt(event.getPlayer()).map(HunterPlayer::getSpecialAttributes).map(HunterPlayerSpecialAttribute::isDisguised).orElse(false)) {
+        if (VampirePlayer.getOpt(event.getPlayer()).map(VampirePlayer::getSpecialAttributes).map(s -> s.bat).orElse(false)) {
             event.setCanceled(true);
         } else if ((ModBlocks.garlic_beacon_normal.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_weak.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_improved.equals(event.getState().getBlock())) && VampirePlayer.getOpt(event.getPlayer()).map(VampirismPlayer::getLevel).orElse(0) > 0) {
             event.setNewSpeed(event.getOriginalSpeed() * 0.1F);
@@ -147,12 +155,16 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onItemUse(LivingEntityUseItemEvent.Start event) {
-        if (event.getEntity() instanceof PlayerEntity && (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(VampirePlayer::getSpecialAttributes).map(s -> s.bat).orElse(false) || HunterPlayer.getOpt((PlayerEntity) event.getEntity()).map(HunterPlayer::getSpecialAttributes).map(HunterPlayerSpecialAttribute::isDisguised).orElse(false))) {
-            event.setCanceled(true);
+        if (event.getEntity() instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) event.getEntity();
+            if (VampirePlayer.getOpt(player).map(VampirePlayer::getSpecialAttributes).map(s -> s.bat).orElse(false)) {
+                event.setCanceled(true);
+            }
+            if (!checkItemUsePerm(event.getItem(), player)) {
+                event.setCanceled(true);
+            }
         }
-        if (event.getEntity() instanceof PlayerEntity && !checkItemUsePerm(event.getItem(), (PlayerEntity) event.getEntityLiving())) {
-            event.setCanceled(true);
-        }
+
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -181,6 +193,9 @@ public class ModPlayerEventHandler {
             if (event.getEntity().isAlive() && !FactionPlayerHandler.getOpt((PlayerEntity) event.getEntity()).map(h -> h.onEntityAttacked(event.getSource(), event.getAmount())).orElse(false)) {
                 event.setCanceled(true);
             }
+        }
+        if (event.getSource().getTrueSource() instanceof PlayerEntity) {
+            HunterPlayer.getOpt((PlayerEntity) event.getSource().getTrueSource()).ifPresent(HunterPlayer::breakDisguise);
         }
     }
 

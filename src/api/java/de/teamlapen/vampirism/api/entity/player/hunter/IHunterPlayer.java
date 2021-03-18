@@ -16,4 +16,8 @@ public interface IHunterPlayer extends IFactionPlayer<IHunterPlayer>, IHunter {
         return VReference.HUNTER_FACTION;
     }
 
+    /**
+     * Call when the player does something that would break their disguise (Call regardless of the current disguise state)
+     */
+    void breakDisguise();
 }
