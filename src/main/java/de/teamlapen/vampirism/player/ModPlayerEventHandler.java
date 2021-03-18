@@ -41,6 +41,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.ThrowablePotionItem;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.play.server.SChangeBlockPacket;
 import net.minecraft.potion.Effect;
@@ -48,6 +49,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -259,6 +261,16 @@ public class ModPlayerEventHandler {
                         event.getPlayer().setHeldItem(hand, heldStack);
                     }
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerRightClickItem(PlayerInteractEvent.RightClickItem event) {
+        if (event.getSide().isServer() && event.getItemStack().getItem() instanceof ThrowablePotionItem) {
+            if (VampirePlayer.getOpt(event.getPlayer()).map(VampirePlayer::getSpecialAttributes).map(a -> a.bat).orElse(false)) {
+                event.setCancellationResult(ActionResultType.FAIL);
+                event.setCanceled(true);
             }
         }
     }
