@@ -274,7 +274,7 @@ public class BalanceConfig {
 
         //Vampire skills
         builder.category("vampireSkills", "vs");
-        vsSundamageReduction1 = builder.comment("Sundamage is multipled with (value+1)").defineInRange("sundamageReduction1", -0.3, -1, 0);
+        vsSundamageReduction1 = builder.comment("Sundamage is multipled with (value+1)").defineInRange("sundamageReduction1", -0.5, -1, 0);
         vsBloodThirstReduction1 = builder.comment("Blood exhaustion is multiplied with (value+1)").defineInRange("bloodThirstReduction1", -0.4, -1, 0);
         vsBiteDamageMult = builder.comment("Bite damage is multiplied with (value+1)").defineInRange("biteDamageMult", 1d, 0, 100);
         vsSwordFinisherMaxHealth = builder.comment("The max relative health for sword finisher kill").defineInRange("swordFinisherMaxHealth", 0.25, 0, 1);
