@@ -32,7 +32,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -80,6 +79,8 @@ public class SkillsScreen extends Screen {
     @Nullable
     private ITextComponent lordTitle;
     private int lordLevel;
+
+    private Button resetSkills;
 
     private final Map<ISkill, List<ITextComponent>> skillToolTipsCache = new HashMap<>();
 
@@ -187,23 +188,26 @@ public class SkillsScreen extends Screen {
                 SkillNode root = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(faction.getID());
                 addToList(skillNodes, root);
 
-                Button resetSkills = this.addButton(new Button((this.width - display_width) / 2 + 24 + 40, this.height / 2 + 74, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
+                resetSkills = this.addButton(new Button((this.width - display_width) / 2 + 24 + 40, this.height / 2 + 74, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
                     boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
                     ConfirmScreen resetGui = new ConfirmScreen((cxt) -> {
+                        if (factionPlayer.getLevel() < 2 || minecraft.player.inventory.count(ModItems.oblivion_potion) <= 1) {
+                            context.active = false;
+                        }
                         if (cxt) {
                             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
-                            Minecraft.getInstance().displayGuiScreen(this);
-                        } else {
-                            Minecraft.getInstance().displayGuiScreen(this);
                         }
+                        Minecraft.getInstance().displayGuiScreen(this);
                     }, new TranslationTextComponent("gui.vampirism.reset_skills.title"), new TranslationTextComponent("gui.vampirism.reset_skills." + (test ? "desc_test" : "desc")));
                     Minecraft.getInstance().displayGuiScreen(resetGui);
                 }, (button, stack, mouseX, mouseY) -> {
-                    if (!minecraft.player.inventory.hasItemStack(new ItemStack(ModItems.oblivion_potion))) {
-                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("test.vampirism.skills.reset_req", ModItems.oblivion_potion.getName()), mouseX, mouseY);
+                    if (button.active) {
+                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_consume", ModItems.oblivion_potion.getName()), mouseX, mouseY);
+                    } else {
+                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_req", ModItems.oblivion_potion.getName()), mouseX, mouseY);
                     }
                 }));
-                if(factionPlayer.getLevel() < 2 || !minecraft.player.inventory.hasItemStack(new ItemStack(ModItems.oblivion_potion))) {
+                if (factionPlayer.getLevel() < 2 || minecraft.player.inventory.count(ModItems.oblivion_potion) <= 0) {
                     resetSkills.active = false;
                 }
                 if (Helper.isVampire(minecraft.player)) {
@@ -273,8 +277,8 @@ public class SkillsScreen extends Screen {
         int tooltipY = (this.height - this.display_height) / 2 + 4+19;
         int tooltipTextWidth = this.display_width -19-19-6;
         int tooltipHeight =17;
-        int backgroundColor=0xF0aa0808;//0xF0550404;;
-        int borderColorStart = 0x505f0c0c;;
+        int backgroundColor = 0xF0aa0808;//0xF0550404;;
+        int borderColorStart = 0x505f0c0c;
         int borderColorEnd = (borderColorStart & 0xFEFEFE) >> 1 | borderColorStart & 0xFF000000;
         int zLevel = this.getBlitOffset();
 

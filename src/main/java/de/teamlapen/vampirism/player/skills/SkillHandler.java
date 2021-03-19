@@ -15,10 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -230,7 +227,26 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         dirty = false;
     }
 
-    private SkillNode getRootNode() {
+    public SkillNode getRootNode() {
         return VampirismMod.proxy.getSkillTree(player.isRemote()).getRootNodeForFaction(faction.getID());
+    }
+
+    public Optional<SkillNode> anyLastNode() {
+        SkillNode rootNode = getRootNode();
+        Queue<SkillNode> queue = new ArrayDeque<>();
+        queue.add(rootNode);
+
+        for (SkillNode skillNode = queue.poll(); skillNode != null; skillNode = queue.poll()) {
+            List<SkillNode> child = skillNode.getChildren().stream().filter(this::isNodeEnabled).collect(Collectors.toList());
+            if (child.isEmpty()) {
+                if (skillNode == rootNode) {
+                    skillNode = null;
+                }
+                return Optional.ofNullable(skillNode);
+            } else {
+                queue.addAll(child);
+            }
+        }
+        return Optional.empty();
     }
 }

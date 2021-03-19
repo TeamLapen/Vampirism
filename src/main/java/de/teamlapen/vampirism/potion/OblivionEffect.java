@@ -4,15 +4,16 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.skills.SkillNode;
-import de.teamlapen.vampirism.player.skills.SkillTreeManager;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectType;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Optional;
 
 public class OblivionEffect extends VampirismEffect {
 
@@ -28,7 +29,8 @@ public class OblivionEffect extends VampirismEffect {
 
     @Override
     public boolean isReady(int duration, int amplifier) {
-        return duration % (20 * (amplifier+1)) == 0;
+        int a = (100 / (amplifier + 1));
+        return duration % a == 0;
     }
 
     @Override
@@ -37,38 +39,17 @@ public class OblivionEffect extends VampirismEffect {
             if (entityLivingBaseIn instanceof PlayerEntity) {
                 FactionPlayerHandler.getOpt(((PlayerEntity) entityLivingBaseIn)).map(FactionPlayerHandler::getCurrentFactionPlayer).flatMap(factionPlayer -> factionPlayer).ifPresent(factionPlayer -> {
                     ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
-                    SkillNode rootNode = SkillTreeManager.getInstance().getSkillTree().getRootNodeForFaction(factionPlayer.getFaction().getID());
-                    List<SkillNode> lastUnlockedNode = new ArrayList<>();
-                    Queue<SkillNode> nodeQueue = new ArrayDeque<>();
-                    nodeQueue.add(rootNode);
-
-                    for (SkillNode skillNode = nodeQueue.poll(); skillNode != null; skillNode = nodeQueue.poll()) {
-                        List<SkillNode> children = skillNode.getChildren();
-                        if (children.isEmpty() || children.stream().flatMap(node -> Arrays.stream(node.getElements())).noneMatch(skillHandler::isSkillEnabled)) {
-                            lastUnlockedNode.add(skillNode);
-                        } else {
-                            nodeQueue.addAll(children);
-                        }
-                    }
-
-                    lastUnlockedNode.removeIf(SkillNode::isRoot);
-
-                    if (!lastUnlockedNode.isEmpty()) {
-                        SkillNode n = lastUnlockedNode.get(entityLivingBaseIn.getRNG().nextInt(lastUnlockedNode.size()));
-                        for (ISkill element : n.getElements()) {
+                    Optional<SkillNode> nodeOPT = ((SkillHandler<?>) skillHandler).anyLastNode();
+                    if (nodeOPT.isPresent()) {
+                        for (ISkill element : nodeOPT.get().getElements()) {
                             skillHandler.disableSkill(element);
                         }
                     } else {
                         entityLivingBaseIn.removePotionEffect(ModEffects.oblivion);
+                        ((PlayerEntity) entityLivingBaseIn).sendStatusMessage(new TranslationTextComponent("text.vampirism.skill.skills_reset"), true);
                     }
                 });
-            }/* else if (entityLivingBaseIn instanceof MinionEntity<?>) {
-                Optional<? extends MinionData> data = ((MinionEntity<?>) entityLivingBaseIn).getMinionData();
-                data.ifPresent(s -> {
-                    s.removeStats(((MinionEntity<?>) entityLivingBaseIn));
-                });
-                entityLivingBaseIn.re
-            }*/
+            }
         }
     }
 

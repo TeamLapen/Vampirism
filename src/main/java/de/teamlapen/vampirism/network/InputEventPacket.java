@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -28,7 +27,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -173,7 +171,8 @@ public class InputEventPacket implements IMessage {
 
                     break;
                 case RESETSKILL:
-                    OblivionItem.applyEffect(factionPlayerOpt, null);
+                    InventoryHelper.removeItemFromInventory(player.inventory, new ItemStack(ModItems.oblivion_potion));
+                    factionPlayerOpt.ifPresent(OblivionItem::applyEffect);
                     break;
                 case TRAINERLEVELUP:
                     if (player.openContainer instanceof HunterTrainerContainer) {
