@@ -16,7 +16,6 @@ import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -32,6 +31,7 @@ import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -113,23 +113,33 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (editActions && getSelectedElement() >= 0) {
-            if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                if (elements.get(getSelectedElement()) != fakeAction) {
-                    SELECTEDACTION = elements.get(getSelectedElement());
-                } else {
-                    closeScreen();
+        if (getSelectedElement() >= 0) {
+            if (editActions) {
+                if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                    if (elements.get(getSelectedElement()) != fakeAction) {
+                        SELECTEDACTION = elements.get(getSelectedElement());
+                    } else {
+                        closeScreen();
+                    }
                 }
-            } else if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).matchesMouseKey(mouseButton) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).getKeyModifier().isActive(KeyConflictContext.GUI)) {
-                FactionPlayerHandler.get(minecraft.player).setBoundAction1(elements.get(getSelectedElement()), true);
-                return true;
-            } else if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).matchesMouseKey(mouseButton) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).getKeyModifier().isActive(KeyConflictContext.GUI)) {
-                FactionPlayerHandler.get(minecraft.player).setBoundAction2(elements.get(getSelectedElement()), true);
+
+            }
+            if (checkBinding(binding -> binding.matchesMouseKey(mouseButton))) {
                 return true;
             }
-
         }
         return super.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    private boolean checkBinding(Function<KeyBinding, Boolean> func) {
+        if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION1)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).getKeyModifier().isActive(KeyConflictContext.GUI)) {
+            setBounding1();
+            return true;
+        } else if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION2)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).getKeyModifier().isActive(KeyConflictContext.GUI)) {
+            setBounding2();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -138,7 +148,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
             closeScreen();
             return true;
         } else if (key == GLFW.GLFW_KEY_SPACE && !this.editActions) { //TODO as long as minion tasks are not editable prevent switching to them
-            if (FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
+            if (FactionPlayerHandler.getOpt(minecraft.player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
                 this.minecraft.displayGuiScreen(new SelectMinionTaskScreen());
             }
         }
@@ -146,25 +156,27 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
             if (elements.get(getSelectedElement()) == fakeAction) {
                 return true;
             }
-            KeyBinding keyBinding1 = ModKeys.getKeyBinding(ModKeys.KEY.ACTION1);
-            KeyBinding keyBinding2 = ModKeys.getKeyBinding(ModKeys.KEY.ACTION2);
-            if (keyBinding1.matchesKey(key, scancode) && keyBinding1.getKeyModifier().isActive(KeyConflictContext.GUI)) {
-                FactionPlayerHandler.get(minecraft.player).setBoundAction1(elements.get(getSelectedElement()), true);
-                if (!editActions) {
-                    GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
-                    closeScreen();
-                }
-                return true;
-            } else if (keyBinding2.matchesKey(key, scancode) && keyBinding2.getKeyModifier().isActive(KeyConflictContext.GUI)) {
-                FactionPlayerHandler.get(Minecraft.getInstance().player).setBoundAction2(elements.get(getSelectedElement()), true);
-                if (!editActions) {
-                    GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
-                    closeScreen();
-                }
+            if (checkBinding(binding -> binding.matchesKey(key, scancode))) {
                 return true;
             }
         }
         return super.keyPressed(key, scancode, modifiers);
+    }
+
+    private void setBounding1() {
+        FactionPlayerHandler.get(minecraft.player).setBoundAction1(elements.get(getSelectedElement()), true);
+        if (!editActions) {
+            GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
+            closeScreen();
+        }
+    }
+
+    private void setBounding2() {
+        FactionPlayerHandler.get(minecraft.player).setBoundAction2(elements.get(getSelectedElement()), true);
+        if (!editActions) {
+            GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
+            closeScreen();
+        }
     }
 
     @Override
