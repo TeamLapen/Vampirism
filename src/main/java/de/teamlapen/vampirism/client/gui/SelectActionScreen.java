@@ -138,6 +138,9 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
         } else if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION2)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).getKeyModifier().isActive(KeyConflictContext.GUI)) {
             setBounding2();
             return true;
+        } else if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION3)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION3).getKeyModifier().isActive(KeyConflictContext.GUI)) {
+            setBounding3();
+            return true;
         }
         return false;
     }
@@ -173,6 +176,14 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
 
     private void setBounding2() {
         FactionPlayerHandler.get(minecraft.player).setBoundAction2(elements.get(getSelectedElement()), true);
+        if (!editActions) {
+            GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
+            closeScreen();
+        }
+    }
+
+    private void setBounding3() {
+        FactionPlayerHandler.get(minecraft.player).setBoundAction3(elements.get(getSelectedElement()), true);
         if (!editActions) {
             GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
             closeScreen();

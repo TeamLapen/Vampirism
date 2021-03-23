@@ -246,7 +246,7 @@ public class BalanceConfig {
 
         //Hunter player
         builder.category("hunterPlayer", "hp");
-        hpStrengthMaxMod = builder.comment("Stringth = Old * (modifier+1").defineInRange("strengthMaxMod", 2d, 0.5d, 4d);
+        hpStrengthMaxMod = builder.comment("Strength = Old * (modifier+1").defineInRange("strengthMaxMod", 0.5, 0d, 4d);
         hpStrengthType = builder.comment("0.5 for square root, 1 for linear").defineInRange("strengthType", 0.5d, 0.5d, 1);
 
         //Hunter skills

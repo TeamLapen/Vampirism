@@ -55,6 +55,8 @@ public class ModKeys {
     private static final String SWITCH_VISION = "keys.vampirism.vision";
     private static final String ACTIVATE_ACTION1 = "keys.vampirism.action1";
     private static final String ACTIVATE_ACTION2 = "keys.vampirism.action2";
+    private static final String ACTIVATE_ACTION3 = "keys.vampirism.action3";
+
     private static final String MINION_TASK = "keys.vampirism.minion_task";
 
     private static final KeyBinding SUCK = new KeyBinding(SUCK_BLOOD, KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
@@ -63,6 +65,8 @@ public class ModKeys {
     private static final KeyBinding VISION = new KeyBinding(SWITCH_VISION, KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_N, CATEGORY);
     private static final KeyBinding ACTION1 = new KeyBinding(ACTIVATE_ACTION1, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_1, CATEGORY);
     private static final KeyBinding ACTION2 = new KeyBinding(ACTIVATE_ACTION2, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_2, CATEGORY);
+    private static final KeyBinding ACTION3 = new KeyBinding(ACTIVATE_ACTION3, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_3, CATEGORY);
+
     private static final KeyBinding MINION = new KeyBinding(MINION_TASK, KeyConflictContext.IN_GAME, InputMappings.INPUT_INVALID, CATEGORY);
 
     @Nonnull
@@ -80,6 +84,8 @@ public class ModKeys {
                 return ACTION1;
             case ACTION2:
                 return ACTION2;
+            case ACTION3:
+                return ACTION3;
             case MINION:
                 return MINION;
             default:
@@ -96,12 +102,14 @@ public class ModKeys {
         ClientRegistry.registerKeyBinding(VISION);
         ClientRegistry.registerKeyBinding(ACTION1);
         ClientRegistry.registerKeyBinding(ACTION2);
+        ClientRegistry.registerKeyBinding(ACTION3);
         ClientRegistry.registerKeyBinding(MINION);
     }
 
     private boolean suckKeyDown = false;
     private long lastAction1Trigger = 0;
     private long lastAction2Trigger = 0;
+    private long lastAction3Trigger = 0;
 
 
     private ModKeys() {
@@ -160,6 +168,16 @@ public class ModKeys {
                 }
             }
 
+        } else if (keyPressed == KEY.ACTION3) {
+            long t = System.currentTimeMillis();
+            if (t - lastAction3Trigger > ACTION_BUTTON_COOLDOWN) {
+                lastAction3Trigger = System.currentTimeMillis();
+                PlayerEntity player = Minecraft.getInstance().player;
+                if (player.isAlive()) {
+                    FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction3())));
+                }
+            }
+
         } else if (keyPressed == KEY.MINION) {
             if (FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
                 Minecraft.getInstance().displayGuiScreen(new SelectMinionTaskScreen());
@@ -187,6 +205,8 @@ public class ModKeys {
             return KEY.ACTION1;
         } else if (ACTION2.isKeyDown()) {
             return KEY.ACTION2;
+        } else if (ACTION3.isKeyDown()) {
+            return KEY.ACTION3;
         } else if (MINION.isKeyDown()) {
             return KEY.MINION;
         }
@@ -210,6 +230,6 @@ public class ModKeys {
     }
 
     public enum KEY {
-        SUCK, UNKNOWN, ACTION, SKILL, VISION, ACTION1, ACTION2, MINION
+        SUCK, UNKNOWN, ACTION, SKILL, VISION, ACTION1, ACTION2, ACTION3, MINION
     }
 }

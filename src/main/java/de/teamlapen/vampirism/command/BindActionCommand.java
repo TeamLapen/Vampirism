@@ -20,7 +20,7 @@ public class BindActionCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("bind-action")
                 .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ALL))
-                .then(Commands.argument("shortcutnumber", IntegerArgumentType.integer(1, 2))
+                .then(Commands.argument("shortcutnumber", IntegerArgumentType.integer(1, 3))
                         .then(Commands.argument("action", ActionArgument.actions())
                                 .executes(context -> bindAction(context, context.getSource().asPlayer(), IntegerArgumentType.getInteger(context, "shortcutnumber"), ActionArgument.getAction(context, "action")))))
                 .then(Commands.literal("help")
@@ -32,6 +32,8 @@ public class BindActionCommand extends BasicCommand {
             FactionPlayerHandler.get(asPlayer).setBoundAction1(action, true);
         } else if (number == 2) {
             FactionPlayerHandler.get(asPlayer).setBoundAction2(action, true);
+        } else if (number == 3) {
+            FactionPlayerHandler.get(asPlayer).setBoundAction3(action, true);
         }
         context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.bind_action.success", action.getName(), number), false);
         return 0;

@@ -111,6 +111,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     private IAction boundAction1;
     @Nullable
     private IAction boundAction2;
+    @Nullable
+    private IAction boundAction3;
 
     private FactionPlayerHandler(PlayerEntity player) {
         this.player = player;
@@ -137,6 +139,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         currentLordLevel = oldP.currentLordLevel;
         this.boundAction1 = oldP.boundAction1;
         this.boundAction2 = oldP.boundAction2;
+        this.boundAction3 = oldP.boundAction3;
         this.titleGender = oldP.titleGender;
         notifyFaction(oldP.currentFaction, oldP.currentLevel);
     }
@@ -149,6 +152,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     @Nullable
     public IAction getBoundAction2() {
         return boundAction2;
+    }
+
+    @Nullable
+    public IAction getBoundAction3() {
+        return boundAction3;
     }
 
     @Override
@@ -228,6 +236,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (nbt.contains("bound2")) {
             setBoundAction2(ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound2"))), false);
         }
+        if (nbt.contains("bound3")) {
+            setBoundAction3(ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound3"))), false);
+        }
         notifyFaction(old, oldLevel);
     }
 
@@ -289,6 +300,15 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             this.sync(false);
             if (boundAction2 != null)
                 player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", boundAction2.getName(), "2"), true);
+        }
+    }
+
+    public void setBoundAction3(@Nullable IAction boundAction3, boolean sync) {
+        this.boundAction3 = boundAction3;
+        if (sync) {
+            this.sync(false);
+            if (boundAction3 != null)
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", boundAction3.getName(), "3"), true);
         }
     }
 
@@ -406,6 +426,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         nbt.putBoolean("title_gender", titleGender != null && titleGender);
         if (getBoundAction1() != null) nbt.putString("bound1", getBoundAction1().getRegistryName().toString());
         if (getBoundAction2() != null) nbt.putString("bound2", getBoundAction2().getRegistryName().toString());
+        if (getBoundAction3() != null) nbt.putString("bound3", getBoundAction3().getRegistryName().toString());
+
     }
 
     private IPlayableFaction<? extends IFactionPlayer<?>> getFactionFromKey(ResourceLocation key) {
@@ -437,6 +459,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (nbt.contains("bound2")) {
             setBoundAction2(ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound2"))), false);
         }
+        if (nbt.contains("bound3")) {
+            setBoundAction3(ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound3"))), false);
+        }
     }
 
     /**
@@ -460,7 +485,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
 
     private void saveNBTData(CompoundNBT nbt) {
-        //Don't forget to also add things to copyFrom
+        //Don't forget to also add things to copyFrom !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if (currentFaction != null) {
             nbt.putString("faction", currentFaction.getID().toString());
             nbt.putInt("level", currentLevel);
@@ -468,8 +493,10 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
         if (getBoundAction1() != null) nbt.putString("bound1", getBoundAction1().getRegistryName().toString());
         if (getBoundAction2() != null) nbt.putString("bound2", getBoundAction2().getRegistryName().toString());
+        if (getBoundAction3() != null) nbt.putString("bound3", getBoundAction3().getRegistryName().toString());
+
         if (titleGender != null) nbt.putBoolean("title_gender", titleGender);
-        //Don't forget to also add things to copyFrom
+        //Don't forget to also add things to copyFrom !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
     private void sync(boolean all) {
