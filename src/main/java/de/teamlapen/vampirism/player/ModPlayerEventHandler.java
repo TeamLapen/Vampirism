@@ -38,6 +38,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.ThrowablePotionItem;
@@ -150,6 +151,13 @@ public class ModPlayerEventHandler {
     public void onItemRightClick(PlayerInteractEvent.RightClickItem event) {
         if (!checkItemUsePerm(event.getItemStack(), event.getPlayer())) {
             event.setCanceled(true);
+        }
+
+        if ((event.getItemStack().getItem() instanceof ThrowablePotionItem || event.getItemStack().getItem() instanceof CrossbowItem)) {
+            if (VampirePlayer.getOpt(event.getPlayer()).map(VampirePlayer::getSpecialAttributes).map(a -> a.bat).orElse(false)) {
+                event.setCancellationResult(ActionResultType.func_233537_a_(event.getWorld().isRemote()));
+                event.setCanceled(true);
+            }
         }
     }
 
@@ -279,17 +287,6 @@ public class ModPlayerEventHandler {
             }
         }
     }
-
-    @SubscribeEvent
-    public void onPlayerRightClickItem(PlayerInteractEvent.RightClickItem event) {
-        if (event.getSide().isServer() && event.getItemStack().getItem() instanceof ThrowablePotionItem) {
-            if (VampirePlayer.getOpt(event.getPlayer()).map(VampirePlayer::getSpecialAttributes).map(a -> a.bat).orElse(false)) {
-                event.setCancellationResult(ActionResultType.FAIL);
-                event.setCanceled(true);
-            }
-        }
-    }
-
     @SubscribeEvent
     public void onPlayerLeftLickedBlock(PlayerInteractEvent.LeftClickBlock event) {
         assert event.getFace() != null;
