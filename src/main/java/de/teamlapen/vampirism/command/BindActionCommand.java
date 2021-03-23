@@ -28,13 +28,7 @@ public class BindActionCommand extends BasicCommand {
     }
 
     private static int bindAction(CommandContext<CommandSource> context, ServerPlayerEntity asPlayer, int number, IAction action) {
-        if (number == 1) {
-            FactionPlayerHandler.get(asPlayer).setBoundAction1(action, true);
-        } else if (number == 2) {
-            FactionPlayerHandler.get(asPlayer).setBoundAction2(action, true);
-        } else if (number == 3) {
-            FactionPlayerHandler.get(asPlayer).setBoundAction3(action, true);
-        }
+        FactionPlayerHandler.get(asPlayer).setBoundAction(number, action, true);
         context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.bind_action.success", action.getName(), number), false);
         return 0;
     }

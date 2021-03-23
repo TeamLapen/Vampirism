@@ -154,7 +154,7 @@ public class ModKeys {
                 lastAction1Trigger = System.currentTimeMillis();
                 PlayerEntity player = Minecraft.getInstance().player;
                 if (player.isAlive()) {
-                    FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction1())));
+                    FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(1))));
                 }
             }
 
@@ -164,7 +164,7 @@ public class ModKeys {
                 lastAction2Trigger = System.currentTimeMillis();
                 PlayerEntity player = Minecraft.getInstance().player;
                 if (player.isAlive()) {
-                    FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction2())));
+                    FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(2))));
                 }
             }
 
@@ -174,7 +174,7 @@ public class ModKeys {
                 lastAction3Trigger = System.currentTimeMillis();
                 PlayerEntity player = Minecraft.getInstance().player;
                 if (player.isAlive()) {
-                    FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction3())));
+                    FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(3))));
                 }
             }
 

@@ -133,13 +133,13 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
 
     private boolean checkBinding(Function<KeyBinding, Boolean> func) {
         if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION1)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).getKeyModifier().isActive(KeyConflictContext.GUI)) {
-            setBounding1();
+            setBounding(1);
             return true;
         } else if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION2)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).getKeyModifier().isActive(KeyConflictContext.GUI)) {
-            setBounding2();
+            setBounding(2);
             return true;
         } else if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION3)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION3).getKeyModifier().isActive(KeyConflictContext.GUI)) {
-            setBounding3();
+            setBounding(3);
             return true;
         }
         return false;
@@ -166,24 +166,8 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
         return super.keyPressed(key, scancode, modifiers);
     }
 
-    private void setBounding1() {
-        FactionPlayerHandler.get(minecraft.player).setBoundAction1(elements.get(getSelectedElement()), true);
-        if (!editActions) {
-            GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
-            closeScreen();
-        }
-    }
-
-    private void setBounding2() {
-        FactionPlayerHandler.get(minecraft.player).setBoundAction2(elements.get(getSelectedElement()), true);
-        if (!editActions) {
-            GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
-            closeScreen();
-        }
-    }
-
-    private void setBounding3() {
-        FactionPlayerHandler.get(minecraft.player).setBoundAction3(elements.get(getSelectedElement()), true);
+    private void setBounding(int id) {
+        FactionPlayerHandler.get(minecraft.player).setBoundAction(id, elements.get(getSelectedElement()), true);
         if (!editActions) {
             GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
             closeScreen();

@@ -17,6 +17,8 @@ import de.teamlapen.vampirism.util.ModEventFactory;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
 import de.teamlapen.vampirism.world.MinionWorldData;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -107,12 +109,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     @Nullable
     private Boolean titleGender = null;
 
-    @Nullable
-    private IAction boundAction1;
-    @Nullable
-    private IAction boundAction2;
-    @Nullable
-    private IAction boundAction3;
+    @Nonnull
+    private final Int2ObjectMap<IAction> boundActions = new Int2ObjectArrayMap<>();
 
     private FactionPlayerHandler(PlayerEntity player) {
         this.player = player;
@@ -137,26 +135,32 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         currentFaction = oldP.currentFaction;
         currentLevel = oldP.currentLevel;
         currentLordLevel = oldP.currentLordLevel;
-        this.boundAction1 = oldP.boundAction1;
-        this.boundAction2 = oldP.boundAction2;
-        this.boundAction3 = oldP.boundAction3;
+        this.boundActions.putAll(oldP.boundActions);
         this.titleGender = oldP.titleGender;
         notifyFaction(oldP.currentFaction, oldP.currentLevel);
     }
 
+    /**
+     * @see #getBoundAction(int)
+     */
+    @Deprecated
     @Nullable
-    public IAction getBoundAction1() {
-        return boundAction1;
+    public IAction getBoundAction1() { //TODO 1.17 remove
+        return getBoundAction(1);
+    }
+
+    /**
+     * @see #getBoundAction(int)
+     */
+    @Deprecated
+    @Nullable
+    public IAction getBoundAction2() { //TODO 1.17 remove
+        return getBoundAction(2);
     }
 
     @Nullable
-    public IAction getBoundAction2() {
-        return boundAction2;
-    }
-
-    @Nullable
-    public IAction getBoundAction3() {
-        return boundAction3;
+    public IAction getBoundAction(int id) {
+        return this.boundActions.get(id);
     }
 
     @Override
@@ -208,40 +212,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return currentLordLevel == 0 || currentFaction == null ? null : currentFaction.getLordTitle(currentLordLevel, titleGender != null && titleGender);
     }
 
-    @Override
-    public void loadUpdateFromNBT(CompoundNBT nbt) {
-        IPlayableFaction<? extends IFactionPlayer<?>> old = currentFaction;
-        int oldLevel = currentLevel;
-        String f = nbt.getString("faction");
-        if ("null".equals(f)) {
-            currentFaction = null;
-            currentLevel = 0;
-            currentLordLevel = 0;
-        } else {
-            currentFaction = getFactionFromKey(new ResourceLocation(f));
-            if (currentFaction == null) {
-                LOGGER.error("Cannot find faction {} on client. You have to register factions on both sides!", f);
-                currentLevel = 0;
-            } else {
-                currentLevel = nbt.getInt("level");
-                currentLordLevel = nbt.getInt("lord_level");
-            }
-        }
-        if (nbt.contains("title_gender")) {
-            this.titleGender = nbt.getBoolean("title_gender");
-        }
-        if (nbt.contains("bound1")) {
-            setBoundAction1(ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound1"))), false);
-        }
-        if (nbt.contains("bound2")) {
-            setBoundAction2(ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound2"))), false);
-        }
-        if (nbt.contains("bound3")) {
-            setBoundAction3(ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound3"))), false);
-        }
-        notifyFaction(old, oldLevel);
-    }
-
     @Nonnull
     @Override
     public PlayerEntity getPlayer() {
@@ -285,30 +255,33 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return true;
     }
 
-    public void setBoundAction1(@Nullable IAction boundAction1, boolean sync) {
-        this.boundAction1 = boundAction1;
-        if (sync) {
-            this.sync(false);
-            if (boundAction1 != null)
-                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", boundAction1.getName(), "1"), true);
-        }
+    /**
+     * @see #setBoundAction(int, IAction, boolean)
+     */
+    @Deprecated
+    public void setBoundAction1(@Nullable IAction boundAction1, boolean sync) { //TODO 1.17 remove
+        this.setBoundAction(1, boundAction1, sync);
     }
 
-    public void setBoundAction2(@Nullable IAction boundAction2, boolean sync) {
-        this.boundAction2 = boundAction2;
-        if (sync) {
-            this.sync(false);
-            if (boundAction2 != null)
-                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", boundAction2.getName(), "2"), true);
-        }
+    /**
+     * @see #setBoundAction(int, IAction, boolean)
+     */
+    @Deprecated
+    public void setBoundAction2(@Nullable IAction boundAction2, boolean sync) { //TODO 1.17 remove
+        this.setBoundAction(2, boundAction2, sync);
     }
 
-    public void setBoundAction3(@Nullable IAction boundAction3, boolean sync) {
-        this.boundAction3 = boundAction3;
+    public void setBoundAction(int id, @Nullable IAction boundAction, boolean sync) {
+        if (boundAction == null) {
+            this.boundActions.remove(id);
+        } else {
+            this.boundActions.put(id, boundAction);
+        }
         if (sync) {
             this.sync(false);
-            if (boundAction3 != null)
-                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", boundAction3.getName(), "3"), true);
+            if (boundAction != null) {
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", boundAction.getName(), id), true);
+            }
         }
     }
 
@@ -424,19 +397,65 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         nbt.putInt("level", currentLevel);
         nbt.putInt("lord_level", currentLordLevel);
         nbt.putBoolean("title_gender", titleGender != null && titleGender);
-        if (getBoundAction1() != null) nbt.putString("bound1", getBoundAction1().getRegistryName().toString());
-        if (getBoundAction2() != null) nbt.putString("bound2", getBoundAction2().getRegistryName().toString());
-        if (getBoundAction3() != null) nbt.putString("bound3", getBoundAction3().getRegistryName().toString());
+        CompoundNBT bounds = new CompoundNBT();
+        for (Int2ObjectMap.Entry<IAction> entry : this.boundActions.int2ObjectEntrySet()) {
+            bounds.putInt(entry.getValue().getRegistryName().toString(), entry.getIntKey());
+        }
+        nbt.put("bound_actions", bounds);
 
     }
 
-    private IPlayableFaction<? extends IFactionPlayer<?>> getFactionFromKey(ResourceLocation key) {
-        for (IPlayableFaction p : VampirismAPI.factionRegistry().getPlayableFactions()) {
-            if (p.getID().equals(key)) {
-                return p;
+    @Override
+    public void loadUpdateFromNBT(CompoundNBT nbt) {
+        IPlayableFaction<? extends IFactionPlayer<?>> old = currentFaction;
+        int oldLevel = currentLevel;
+        String f = nbt.getString("faction");
+        if ("null".equals(f)) {
+            currentFaction = null;
+            currentLevel = 0;
+            currentLordLevel = 0;
+        } else {
+            currentFaction = getFactionFromKey(new ResourceLocation(f));
+            if (currentFaction == null) {
+                LOGGER.error("Cannot find faction {} on client. You have to register factions on both sides!", f);
+                currentLevel = 0;
+            } else {
+                currentLevel = nbt.getInt("level");
+                currentLordLevel = nbt.getInt("lord_level");
             }
         }
-        return null;
+        if (nbt.contains("title_gender")) {
+            this.titleGender = nbt.getBoolean("title_gender");
+        }
+        if (nbt.contains("bound1")) {
+            this.boundActions.put(1, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound1"))));
+        }
+        if (nbt.contains("bound2")) {
+            this.boundActions.put(2, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound2"))));
+        }
+        if (nbt.contains("bound3")) {
+            this.boundActions.put(3, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound3"))));
+        }
+
+        CompoundNBT bounds = nbt.getCompound("bound_actions");
+        for (String s : bounds.keySet()) {
+            int id = bounds.getInt(s);
+            IAction action = ModRegistries.ACTIONS.getValue(new ResourceLocation(s));
+            this.boundActions.put(id, action);
+        }
+
+        notifyFaction(old, oldLevel);
+    }
+
+    private void saveNBTData(CompoundNBT nbt) {
+        //Don't forget to also add things to copyFrom !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if (currentFaction != null) {
+            nbt.putString("faction", currentFaction.getID().toString());
+            nbt.putInt("level", currentLevel);
+            nbt.putInt("lord_level", currentLordLevel);
+        }
+        if (titleGender != null) nbt.putBoolean("title_gender", titleGender);
+        //Don't forget to also add things to copyFrom !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
     private void loadNBTData(CompoundNBT nbt) {
@@ -454,14 +473,30 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             this.titleGender = nbt.getBoolean("title_gender");
         }
         if (nbt.contains("bound1")) {
-            setBoundAction1(ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound1"))), false);
+            this.boundActions.put(1, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound1"))));
         }
         if (nbt.contains("bound2")) {
-            setBoundAction2(ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound2"))), false);
+            this.boundActions.put(2, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound2"))));
         }
         if (nbt.contains("bound3")) {
-            setBoundAction3(ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound3"))), false);
+            this.boundActions.put(3, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound3"))));
         }
+
+        CompoundNBT bounds = nbt.getCompound("bound_actions");
+        for (String s : bounds.keySet()) {
+            int id = bounds.getInt(s);
+            IAction action = ModRegistries.ACTIONS.getValue(new ResourceLocation(s));
+            this.boundActions.put(id, action);
+        }
+    }
+
+    private IPlayableFaction<? extends IFactionPlayer<?>> getFactionFromKey(ResourceLocation key) {
+        for (IPlayableFaction p : VampirismAPI.factionRegistry().getPlayableFactions()) {
+            if (p.getID().equals(key)) {
+                return p;
+            }
+        }
+        return null;
     }
 
     /**
@@ -483,21 +518,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.FACTION_CRITERIA, currentFaction == null ? 0 : currentFaction.getID().hashCode());
     }
 
-
-    private void saveNBTData(CompoundNBT nbt) {
-        //Don't forget to also add things to copyFrom !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        if (currentFaction != null) {
-            nbt.putString("faction", currentFaction.getID().toString());
-            nbt.putInt("level", currentLevel);
-            nbt.putInt("lord_level", currentLordLevel);
-        }
-        if (getBoundAction1() != null) nbt.putString("bound1", getBoundAction1().getRegistryName().toString());
-        if (getBoundAction2() != null) nbt.putString("bound2", getBoundAction2().getRegistryName().toString());
-        if (getBoundAction3() != null) nbt.putString("bound3", getBoundAction3().getRegistryName().toString());
-
-        if (titleGender != null) nbt.putBoolean("title_gender", titleGender);
-        //Don't forget to also add things to copyFrom !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    }
 
     private void sync(boolean all) {
         HelperLib.sync(this, player, all);
