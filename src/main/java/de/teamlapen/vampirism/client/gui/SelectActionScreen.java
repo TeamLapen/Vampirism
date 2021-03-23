@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.network.ActionBindingPacket;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.settings.KeyBinding;
@@ -131,20 +132,6 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
         return super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
-    private boolean checkBinding(Function<KeyBinding, Boolean> func) {
-        if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION1)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).getKeyModifier().isActive(KeyConflictContext.GUI)) {
-            setBounding(1);
-            return true;
-        } else if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION2)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).getKeyModifier().isActive(KeyConflictContext.GUI)) {
-            setBounding(2);
-            return true;
-        } else if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION3)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION3).getKeyModifier().isActive(KeyConflictContext.GUI)) {
-            setBounding(3);
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public boolean keyPressed(int key, int scancode, int modifiers) {
         if (editActions && key == GLFW.GLFW_KEY_ESCAPE) {
@@ -156,9 +143,6 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
             }
         }
         if (getSelectedElement() >= 0) {
-            if (elements.get(getSelectedElement()) == fakeAction) {
-                return true;
-            }
             if (checkBinding(binding -> binding.matchesKey(key, scancode))) {
                 return true;
             }
@@ -166,8 +150,27 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
         return super.keyPressed(key, scancode, modifiers);
     }
 
-    private void setBounding(int id) {
-        FactionPlayerHandler.get(minecraft.player).setBoundAction(id, elements.get(getSelectedElement()), true);
+    private boolean checkBinding(Function<KeyBinding, Boolean> func) {
+        if (elements.get(getSelectedElement()) == fakeAction) {
+            return true;
+        }
+        if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION1)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).getKeyModifier().isActive(KeyConflictContext.GUI)) {
+            setBinding(1);
+            return true;
+        } else if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION2)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).getKeyModifier().isActive(KeyConflictContext.GUI)) {
+            setBinding(2);
+            return true;
+        } else if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION3)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION3).getKeyModifier().isActive(KeyConflictContext.GUI)) {
+            setBinding(3);
+            return true;
+        }
+        return false;
+    }
+
+    private void setBinding(int id) {
+        IAction action = elements.get(getSelectedElement());
+        FactionPlayerHandler.get(minecraft.player).setBoundAction(id, action, false, true);
+        VampirismMod.dispatcher.sendToServer(new ActionBindingPacket(id, action));
         if (!editActions) {
             GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
             closeScreen();

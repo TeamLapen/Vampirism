@@ -256,32 +256,32 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     /**
-     * @see #setBoundAction(int, IAction, boolean)
+     * @see #setBoundAction(int, IAction, boolean, boolean)
      */
     @Deprecated
     public void setBoundAction1(@Nullable IAction boundAction1, boolean sync) { //TODO 1.17 remove
-        this.setBoundAction(1, boundAction1, sync);
+        this.setBoundAction(1, boundAction1, sync, true);
     }
 
     /**
-     * @see #setBoundAction(int, IAction, boolean)
+     * @see #setBoundAction(int, IAction, boolean, boolean)
      */
     @Deprecated
     public void setBoundAction2(@Nullable IAction boundAction2, boolean sync) { //TODO 1.17 remove
-        this.setBoundAction(2, boundAction2, sync);
+        this.setBoundAction(2, boundAction2, sync, true);
     }
 
-    public void setBoundAction(int id, @Nullable IAction boundAction, boolean sync) {
+    public void setBoundAction(int id, @Nullable IAction boundAction, boolean sync, boolean notify) {
         if (boundAction == null) {
             this.boundActions.remove(id);
         } else {
             this.boundActions.put(id, boundAction);
         }
+        if (notify) {
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", boundAction != null ? boundAction.getName() : "none", id), true);
+        }
         if (sync) {
             this.sync(false);
-            if (boundAction != null) {
-                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", boundAction.getName(), id), true);
-            }
         }
     }
 
@@ -397,12 +397,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         nbt.putInt("level", currentLevel);
         nbt.putInt("lord_level", currentLordLevel);
         nbt.putBoolean("title_gender", titleGender != null && titleGender);
-        CompoundNBT bounds = new CompoundNBT();
-        for (Int2ObjectMap.Entry<IAction> entry : this.boundActions.int2ObjectEntrySet()) {
-            bounds.putInt(entry.getValue().getRegistryName().toString(), entry.getIntKey());
-        }
-        nbt.put("bound_actions", bounds);
-
+        this.writeBoundActions(nbt);
     }
 
     @Override
@@ -427,23 +422,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (nbt.contains("title_gender")) {
             this.titleGender = nbt.getBoolean("title_gender");
         }
-        if (nbt.contains("bound1")) {
-            this.boundActions.put(1, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound1"))));
-        }
-        if (nbt.contains("bound2")) {
-            this.boundActions.put(2, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound2"))));
-        }
-        if (nbt.contains("bound3")) {
-            this.boundActions.put(3, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound3"))));
-        }
-
-        CompoundNBT bounds = nbt.getCompound("bound_actions");
-        for (String s : bounds.keySet()) {
-            int id = bounds.getInt(s);
-            IAction action = ModRegistries.ACTIONS.getValue(new ResourceLocation(s));
-            this.boundActions.put(id, action);
-        }
-
+        this.loadBoundActions(nbt);
         notifyFaction(old, oldLevel);
     }
 
@@ -455,6 +434,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             nbt.putInt("lord_level", currentLordLevel);
         }
         if (titleGender != null) nbt.putBoolean("title_gender", titleGender);
+
+        writeBoundActions(nbt);
         //Don't forget to also add things to copyFrom !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
@@ -472,6 +453,18 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (nbt.contains("title_gender")) {
             this.titleGender = nbt.getBoolean("title_gender");
         }
+        loadBoundActions(nbt);
+    }
+
+    private void writeBoundActions(CompoundNBT nbt) {
+        CompoundNBT bounds = new CompoundNBT();
+        for (Int2ObjectMap.Entry<IAction> entry : this.boundActions.int2ObjectEntrySet()) {
+            bounds.putString(String.valueOf(entry.getIntKey()), entry.getValue().getRegistryName().toString());
+        }
+        nbt.put("bound_actions", bounds);
+    }
+
+    private void loadBoundActions(CompoundNBT nbt) {
         if (nbt.contains("bound1")) {
             this.boundActions.put(1, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound1"))));
         }
@@ -481,11 +474,10 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (nbt.contains("bound3")) {
             this.boundActions.put(3, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound3"))));
         }
-
         CompoundNBT bounds = nbt.getCompound("bound_actions");
         for (String s : bounds.keySet()) {
-            int id = bounds.getInt(s);
-            IAction action = ModRegistries.ACTIONS.getValue(new ResourceLocation(s));
+            int id = Integer.parseInt(s);
+            IAction action = ModRegistries.ACTIONS.getValue(new ResourceLocation(bounds.getString(s)));
             this.boundActions.put(id, action);
         }
     }

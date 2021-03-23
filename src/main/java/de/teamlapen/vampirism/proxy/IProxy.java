@@ -75,4 +75,7 @@ public interface IProxy extends IInitListener {
     default void resetSkillScreenCache() {
     }
 
+    default void handleActionBindingPacket(ActionBindingPacket msg, PlayerEntity playerEntity) {
+    }
+
 }
