@@ -592,11 +592,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         this.applyEntityAttributes();
         if (!isRemote()) {
             ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.VAMPIRE_LEVEL_CRITERIA, newLevel);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpSpeedMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpStrengthMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpSpeedMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpStrengthMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ARMOR, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpResistanceMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, false);
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, true);
             if (player.getHealth() > player.getMaxHealth()) player.setHealth(player.getMaxHealth());
-            LevelAttributeModifier.applyModifier(player, ModAttributes.blood_exhaustion, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
+            LevelAttributeModifier.applyModifier(player, ModAttributes.blood_exhaustion, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
             if (newLevel > 13) {
                 bloodStats.setMaxBlood(40);
             } else if (newLevel > 9) {

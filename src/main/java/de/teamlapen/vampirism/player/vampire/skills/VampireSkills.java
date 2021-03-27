@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -48,6 +49,8 @@ public class VampireSkills {
     public static final ISkill vampire_regeneration = getNull();
     public static final ISkill vampire_speed = getNull();
     public static final ISkill water_resistance = getNull();
+    public static final ISkill vampire_attack_speed = getNull();
+    public static final ISkill vampire_attack_damage = getNull();
 
 
     @SuppressWarnings({"deprecation", "Convert2MethodRef"})
@@ -80,7 +83,12 @@ public class VampireSkills {
         registry.register(new ActionSkill<>("vampire_regeneration", VampireActions.regen, true));
         registry.register(new VampirismSkill.SimpleVampireSkill("vampire_speed", false).registerAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, "96dc968d-818f-4271-8dbf-6b799d603ad8", () -> VampirismConfig.BALANCE.vsSpeedBoost.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
         registry.register(new VampirismSkill.SimpleVampireSkill("water_resistance", true).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().waterResistance = true, player -> ((VampirePlayer) player).getSpecialAttributes().waterResistance = false));
-
+        //Config null, so cannot get method ref
+        //noinspection Convert2MethodRef
+        registry.register(new VampirismSkill.SimpleVampireSkill("vampire_attack_speed", false).registerAttributeModifier(Attributes.ATTACK_SPEED, "d4aa1d08-5e0e-4946-86dc-95a1e6f5be20", () -> VampirismConfig.BALANCE.vsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        //Config null, so cannot get method ref
+        //noinspection Convert2MethodRef
+        registry.register(new VampirismSkill.SimpleVampireSkill("vampire_attack_damage", false).registerAttributeModifier(Attributes.ATTACK_DAMAGE, "f2acc818-dc3a-4696-ba63-c3294290ad86", () -> VampirismConfig.BALANCE.vsSmallAttackDamageModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
     }
 
     public static void fixMappings(RegistryEvent.MissingMappings<ISkill> event) {

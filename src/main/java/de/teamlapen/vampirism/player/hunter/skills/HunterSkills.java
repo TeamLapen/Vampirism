@@ -30,13 +30,13 @@ public class HunterSkills {
     public static final ISkill basic_alchemy = getNull();
     public static final ISkill double_crossbow = getNull();
     public static final ISkill enhanced_armor = getNull();
-    public static final ISkill enhanced_crossbow = getNull();
     public static final ISkill enhanced_weapons = getNull();
     public static final ISkill garlic_beacon = getNull();
     public static final ISkill garlic_beacon_improved = getNull();
     public static final ISkill holy_water_enhanced = getNull();
     public static final ISkill hunter_attack_speed = getNull();
     public static final ISkill hunter_attack_speed_advanced = getNull();
+    public static final ISkill hunter_attack_damage = getNull();
     public static final ISkill hunter_awareness = getNull();
     public static final ISkill hunter_disguise = getNull();
     public static final ISkill purified_garlic = getNull();
@@ -59,17 +59,19 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("basic_alchemy", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("double_crossbow", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_armor", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_crossbow", false));
-        registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_weapons", false));
+        registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_weapons", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("garlic_beacon", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("garlic_beacon_improved", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("holy_water_enhanced", true));
         //Config null, so cannot get method ref
         //noinspection Convert2MethodRef
-        registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_speed", false).registerAttributeModifier(Attributes.ATTACK_SPEED/*ATTACK_SPEED*/, "8dd2f8cc-6ae1-4db1-9e14-96b4c74d7bf2", () -> VampirismConfig.BALANCE.hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_speed", false).registerAttributeModifier(Attributes.ATTACK_SPEED, "8dd2f8cc-6ae1-4db1-9e14-96b4c74d7bf2", () -> VampirismConfig.BALANCE.hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
         //Config null, so cannot get method ref
         //noinspection Convert2MethodRef
-        registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_speed_advanced", true).registerAttributeModifier(Attributes.ATTACK_SPEED/*ATTACK_SPEED*/, "d9311f44-a4ba-4ef4-83f2-9274ae1a827e", () -> VampirismConfig.BALANCE.hsMajorAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_speed_advanced", true).registerAttributeModifier(Attributes.ATTACK_SPEED, "d9311f44-a4ba-4ef4-83f2-9274ae1a827e", () -> VampirismConfig.BALANCE.hsMajorAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        //Config null, so cannot get method ref
+        //noinspection Convert2MethodRef
+        registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_damage", true).registerAttributeModifier(Attributes.ATTACK_DAMAGE, "ffafd115-96e2-4d08-9588-d1bc9be0d902", () -> VampirismConfig.BALANCE.hsSmallAttackDamageModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
         registry.register(new ActionSkill<IHunterPlayer>("hunter_awareness", HunterActions.awareness_hunter, true));
         registry.register(new ActionSkill<IHunterPlayer>("hunter_disguise", HunterActions.disguise_hunter, true));
         registry.register(new VampirismSkill.SimpleHunterSkill("purified_garlic", true));

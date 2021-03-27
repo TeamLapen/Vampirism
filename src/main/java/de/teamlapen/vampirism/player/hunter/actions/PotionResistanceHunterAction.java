@@ -5,15 +5,11 @@ import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.stream.Collectors;
 
 
@@ -45,7 +41,6 @@ public class PotionResistanceHunterAction extends DefaultHunterAction implements
 
     @Override
     public void onDeactivated(IHunterPlayer player) {
-        ((HunterPlayer) player).getSpecialAttributes().resetVampireNearby();
     }
 
     @Override

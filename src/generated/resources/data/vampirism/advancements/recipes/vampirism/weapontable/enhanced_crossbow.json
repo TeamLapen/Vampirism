@@ -9,7 +9,7 @@
     "has_skill": {
       "trigger": "vampirism:skill_unlocked",
       "conditions": {
-        "skill": "vampirism:enhanced_crossbow"
+        "skill": "vampirism:enhanced_weapons"
       }
     },
     "has_the_recipe": {

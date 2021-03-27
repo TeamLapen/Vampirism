@@ -78,6 +78,7 @@ public class BalanceConfig {
 
     public final ForgeConfigSpec.DoubleValue hsSmallAttackSpeedModifier;
     public final ForgeConfigSpec.DoubleValue hsMajorAttackSpeedModifier;
+    public final ForgeConfigSpec.DoubleValue hsSmallAttackDamageModifier;
     public final ForgeConfigSpec.BooleanValue hsInstantKill1FromBehind;
     public final ForgeConfigSpec.DoubleValue hsInstantKill1MaxHealth;
     public final ForgeConfigSpec.IntValue hsInstantKill2MaxHealth;
@@ -101,9 +102,12 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue vsJumpBoost;
     public final ForgeConfigSpec.DoubleValue vsSpeedBoost;
     public final ForgeConfigSpec.IntValue vsBloodVisionDistanceSq;
+    public final ForgeConfigSpec.DoubleValue vsSmallAttackDamageModifier;
+    public final ForgeConfigSpec.DoubleValue vsSmallAttackSpeedModifier;
 
     public final ForgeConfigSpec.DoubleValue vpHealthMaxMod;
     public final ForgeConfigSpec.DoubleValue vpStrengthMaxMod;
+    public final ForgeConfigSpec.DoubleValue vpResistanceMaxMod;
     public final ForgeConfigSpec.DoubleValue vpSpeedMaxMod;
     public final ForgeConfigSpec.DoubleValue vpExhaustionMaxMod;
     public final ForgeConfigSpec.DoubleValue vpBasicBloodExhaustionMod;
@@ -253,6 +257,7 @@ public class BalanceConfig {
         builder.category("hunterSkills", "hs");
         hsSmallAttackSpeedModifier = builder.comment("Basic skill - Weapon cooldown = 1/(oldvalue*(1+modifier))").defineInRange("smallAttackSpeedModifier", 0.2, 0, 3);
         hsMajorAttackSpeedModifier = builder.comment("Advanced skill - Weapon cooldown = 1/(oldvalue*(1+modifier)").defineInRange("majorAttackSpeedModifier", 0.4, 0, 3);
+        hsSmallAttackDamageModifier = builder.comment("Increase damage - Attack damage = oldValue * (1+modifier)").defineInRange("smallAttackDamageModifier", 0.3d, 0, 2);
         hsInstantKill1FromBehind = builder.comment("First stake skill - If it is required to attack from behind to instant kill low level vampires").define("instantKill1FromBehind", false);
         hsInstantKill1MaxHealth = builder.comment("First stake skill -The maximal relative health a entity may have to be instantly killed").defineInRange("instantKill1MaxHealth", 0.35, 0, 1);
         hsInstantKill2MaxHealth = builder.comment("Second stake skill - The max (not the actual) health of an entity that can be one hit killed from behind").defineInRange("instantKill2MaxHealth", 200, 0, Integer.MAX_VALUE);
@@ -281,12 +286,15 @@ public class BalanceConfig {
         vsJumpBoost = builder.comment("Similar to potion effect ampliofier (and -1 is normal)").defineInRange("jumpBoost", 1, -1, 5);
         vsSpeedBoost = builder.comment("Max speed is multiplied with (value+1)").defineInRange("speedBoost", 0.15, 0, 3);
         vsBloodVisionDistanceSq = builder.comment("Squared blood vision distance").defineInRange("bloodVisionDistanceSq", 1600, 5, Integer.MAX_VALUE);
+        vsSmallAttackDamageModifier = builder.comment("Damage = oldValue * (1+modifier)").defineInRange("smallAttackDamageModifier", 0.3d, 0, 2d);
+        vsSmallAttackSpeedModifier = builder.comment("Basic skill - Weapon cooldown = 1/(oldvalue*(1+modifier))").defineInRange("smallAttackSpeedModifier", 0.2, 0, 3);
 
 
         //Vampire Player
         builder.category("vampirePlayer", "vp");
         vpHealthMaxMod = builder.defineInRange("healthMaxMod", 16, 0.5, 40);
-        vpStrengthMaxMod = builder.defineInRange("strengthMaxMod", 1, 0.5, 2);
+        vpStrengthMaxMod = builder.defineInRange("strengthMaxMod", 0.25, 0, 2);
+        vpResistanceMaxMod = builder.defineInRange("resistanceMaxMod", 4d, 0, 20);
         vpSpeedMaxMod = builder.defineInRange("speedMaxMod", 0.3, 0, 5);
         vpExhaustionMaxMod = builder.defineInRange("exhaustionMaxMod", 1.0, 0, 10);
         vpBasicBloodExhaustionMod = builder.comment("Blood exhaustion is multiplied with this value").defineInRange("basicBloodExhaustionMod", 0.7, 0, 5);

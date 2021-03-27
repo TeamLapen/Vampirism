@@ -21,13 +21,16 @@ import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -48,6 +51,14 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
         ((GroundPathNavigator) this.getNavigator()).setBreakDoors(true);
 
         this.setDontDropEquipment();
+    }
+
+    @Override
+    public boolean attackEntityFrom(DamageSource source, float amount) {
+//        if(VampirismMod.inDev){
+        ServerLifecycleHooks.getCurrentServer().sendMessage(new StringTextComponent("Damage: " + amount + " from " + source.toString()), Util.DUMMY_UUID);
+//        }
+        return super.attackEntityFrom(source, amount);
     }
 
     @Override
