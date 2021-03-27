@@ -560,17 +560,18 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 player.attackEntityFrom(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amt));
                 return true;
             }
-        }
-        if (getSpecialAttributes().half_invulnerable) {
-            if (amt >= getRepresentingEntity().getMaxHealth() * VampirismConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
-                if (useBlood(VampirismConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
-                    return true;
-                } else {
-                    this.actionHandler.toggleAction(VampireActions.half_invulnerable);
+            endFeeding(true);
+            if (getSpecialAttributes().half_invulnerable) {
+                if (amt >= getRepresentingEntity().getMaxHealth() * VampirismConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
+                    if (useBlood(VampirismConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
+                        return true;
+                    } else {
+                        this.actionHandler.toggleAction(VampireActions.half_invulnerable);
+                    }
                 }
             }
         }
-        endFeeding(true);
+
         return false;
     }
 
