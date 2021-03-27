@@ -97,7 +97,6 @@ public class BalanceConfig {
 
     public final ForgeConfigSpec.DoubleValue vsSundamageReduction1;
     public final ForgeConfigSpec.DoubleValue vsBloodThirstReduction1;
-    public final ForgeConfigSpec.DoubleValue vsBiteDamageMult;
     public final ForgeConfigSpec.DoubleValue vsSwordFinisherMaxHealth;
     public final ForgeConfigSpec.IntValue vsJumpBoost;
     public final ForgeConfigSpec.DoubleValue vsSpeedBoost;
@@ -112,7 +111,6 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vpExhaustionMaxMod;
     public final ForgeConfigSpec.DoubleValue vpBasicBloodExhaustionMod;
     public final ForgeConfigSpec.BooleanValue vpBloodUsagePeaceful;
-    public final ForgeConfigSpec.IntValue vpBiteDamage;
     public final ForgeConfigSpec.DoubleValue vpPlayerBloodSaturation;
     public final ForgeConfigSpec.IntValue vpSanguinareAverageDuration;
     public final ForgeConfigSpec.IntValue vpSundamageMinLevel;
@@ -281,7 +279,6 @@ public class BalanceConfig {
         builder.category("vampireSkills", "vs");
         vsSundamageReduction1 = builder.comment("Sundamage is multipled with (value+1)").defineInRange("sundamageReduction1", -0.5, -1, 0);
         vsBloodThirstReduction1 = builder.comment("Blood exhaustion is multiplied with (value+1)").defineInRange("bloodThirstReduction1", -0.4, -1, 0);
-        vsBiteDamageMult = builder.comment("Bite damage is multiplied with (value+1)").defineInRange("biteDamageMult", 1d, 0, 100);
         vsSwordFinisherMaxHealth = builder.comment("The max relative health for sword finisher kill").defineInRange("swordFinisherMaxHealth", 0.25, 0, 1);
         vsJumpBoost = builder.comment("Similar to potion effect ampliofier (and -1 is normal)").defineInRange("jumpBoost", 1, -1, 5);
         vsSpeedBoost = builder.comment("Max speed is multiplied with (value+1)").defineInRange("speedBoost", 0.15, 0, 3);
@@ -299,7 +296,6 @@ public class BalanceConfig {
         vpExhaustionMaxMod = builder.defineInRange("exhaustionMaxMod", 1.0, 0, 10);
         vpBasicBloodExhaustionMod = builder.comment("Blood exhaustion is multiplied with this value").defineInRange("basicBloodExhaustionMod", 0.7, 0, 5);
         vpBloodUsagePeaceful = builder.comment("Whether blood is consumed in peaceful gamemode").define("bloodUsagePeaceful", false);
-        vpBiteDamage = builder.defineInRange("biteDamage", 4, 0, Integer.MAX_VALUE);
         vpPlayerBloodSaturation = builder.defineInRange("playerBloodSaturation", 1.5, 0.3, 10);
         vpSanguinareAverageDuration = builder.defineInRange("sanguinareAverageDuration", 900, 1, 10000);
         vpSundamage = builder.defineInRange("sundamage", 7d, 1, Double.MAX_VALUE);

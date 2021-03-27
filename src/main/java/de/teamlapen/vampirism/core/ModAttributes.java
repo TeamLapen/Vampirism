@@ -24,6 +24,7 @@ public class ModAttributes {
     /**
      * Allows modifying bite damage.
      * Registered for EntityPlayer
+     * TODO 1.17 remove
      */
     public static final RangedAttribute bite_damage = getNull();
 

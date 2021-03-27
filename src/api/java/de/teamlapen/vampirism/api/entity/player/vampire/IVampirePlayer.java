@@ -89,6 +89,6 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     void unlockVision(@Nonnull IVampireVision vision);
 
     enum BITE_TYPE {
-        ATTACK, ATTACK_HUNTER, SUCK_BLOOD_CREATURE, SUCK_BLOOD_PLAYER, SUCK_BLOOD_HUNTER_PLAYER, SUCK_BLOOD, NONE, HUNTER_CREATURE
+        @Deprecated ATTACK /* TODO 1.17 remove*/, @Deprecated ATTACK_HUNTER /* TODO 1.17 remove*/, SUCK_BLOOD_CREATURE, SUCK_BLOOD_PLAYER, SUCK_BLOOD_HUNTER_PLAYER, SUCK_BLOOD, NONE, HUNTER_CREATURE
     }
 }

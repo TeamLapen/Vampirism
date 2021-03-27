@@ -56,7 +56,7 @@ public class VampireSkills {
     @SuppressWarnings({"deprecation", "Convert2MethodRef"})
     public static void registerVampireSkills(IForgeRegistry<ISkill> registry) {
         registry.register(new VampirismSkill.SimpleVampireSkill(VReference.VAMPIRE_FACTION.getID(), false));
-        registry.register(new VampirismSkill.SimpleVampireSkill("advanced_biter", false).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = true, player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = false).setHasDefaultDescription().registerAttributeModifier(ModAttributes.bite_damage, "A08CAB62-EE88-4DB9-8F62-E9EF108A4E87", () -> VampirismConfig.BALANCE.vsBiteDamageMult.get(), AttributeModifier.Operation.MULTIPLY_BASE));
+        registry.register(new VampirismSkill.SimpleVampireSkill("advanced_biter", false).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = true, player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = false).setHasDefaultDescription());
         registry.register(new ActionSkill<>("bat", VampireActions.bat, true));
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_charge", true));
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_vision", true).setToggleActions(player -> player.unlockVision(VReference.vision_bloodVision), player -> player.unUnlockVision(VReference.vision_bloodVision)));
