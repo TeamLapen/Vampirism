@@ -129,7 +129,7 @@ public class ModPlayerEventHandler {
     public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
         if (!(event.getEntity() instanceof PlayerEntity) || !event.getEntity().isAlive()) return;
         try {
-            if (VampirePlayer.get((PlayerEntity) event.getEntity()).getSpecialAttributes().bat) {
+            if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(v->v.isDBNO()|| v.getSpecialAttributes().bat).orElse(false)) {
                 event.setCanceled(true);
             }
             HunterPlayer.getOpt((PlayerEntity) event.getEntity()).ifPresent(HunterPlayer::breakDisguise);
@@ -140,7 +140,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (VampirePlayer.getOpt(event.getPlayer()).map(VampirePlayer::getSpecialAttributes).map(s -> s.bat).orElse(false)) {
+        if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(v->v.isDBNO()|| v.getSpecialAttributes().bat).orElse(false)) {
             event.setCanceled(true);
         } else if ((ModBlocks.garlic_beacon_normal.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_weak.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_improved.equals(event.getState().getBlock())) && VampirePlayer.getOpt(event.getPlayer()).map(VampirismPlayer::getLevel).orElse(0) > 0) {
             event.setNewSpeed(event.getOriginalSpeed() * 0.1F);
@@ -154,7 +154,7 @@ public class ModPlayerEventHandler {
         }
 
         if ((event.getItemStack().getItem() instanceof ThrowablePotionItem || event.getItemStack().getItem() instanceof CrossbowItem)) {
-            if (VampirePlayer.getOpt(event.getPlayer()).map(VampirePlayer::getSpecialAttributes).map(a -> a.bat).orElse(false)) {
+            if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(v->v.isDBNO()|| v.getSpecialAttributes().bat).orElse(false)) {
                 event.setCancellationResult(ActionResultType.func_233537_a_(event.getWorld().isRemote()));
                 event.setCanceled(true);
             }
@@ -165,7 +165,7 @@ public class ModPlayerEventHandler {
     public void onItemUse(LivingEntityUseItemEvent.Start event) {
         if (event.getEntity() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) event.getEntity();
-            if (VampirePlayer.getOpt(player).map(VampirePlayer::getSpecialAttributes).map(s -> s.bat).orElse(false)) {
+            if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(v->v.isDBNO()|| v.getSpecialAttributes().bat).orElse(false)) {
                 event.setCanceled(true);
             }
             if (!checkItemUsePerm(event.getItem(), player)) {
@@ -204,6 +204,14 @@ public class ModPlayerEventHandler {
         }
         if (event.getSource().getTrueSource() instanceof PlayerEntity) {
             HunterPlayer.getOpt((PlayerEntity) event.getSource().getTrueSource()).ifPresent(HunterPlayer::breakDisguise);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onLivingDeathFirst(LivingDeathEvent event) {
+        if (event.getEntity() instanceof PlayerEntity) {
+            if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(v -> v.canDieOrDBNO(event.getSource())).orElse(false))
+                event.setCanceled(true);
         }
     }
 

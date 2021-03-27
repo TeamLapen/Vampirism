@@ -29,6 +29,8 @@ public interface IProxy extends IInitListener {
     @Nullable
     Entity getMouseOverEntity();
 
+    default void showDBNOScreen(){}
+
     default float getRenderPartialTick() {
         return 1F;
     }

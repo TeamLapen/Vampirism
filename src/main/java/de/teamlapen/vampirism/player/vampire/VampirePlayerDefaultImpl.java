@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.IWorld;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -199,6 +200,16 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     @Override
     public void unlockVision(@Nonnull IVampireVision vision) {
 
+    }
+
+    @Override
+    public boolean canDieOrDBNO(DamageSource source) {
+        return false;
+    }
+
+    @Override
+    public boolean isDBNO() {
+        return false;
     }
 
     @Override

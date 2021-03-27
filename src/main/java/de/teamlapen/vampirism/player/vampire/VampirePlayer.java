@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.player.vampire;
 
+import com.google.common.collect.Sets;
+import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -32,9 +34,7 @@ import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
 import de.teamlapen.vampirism.util.*;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -69,6 +69,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
@@ -91,6 +92,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private final static String KEY_VISION = "vision";
     private final static String KEY_FEED_VICTIM_ID = "feed_victim";
     private final static String KEY_WING_COUNTER = "wing";
+    private final static String KEY_DBNO_TIMER = "dbno";
 
 
     @CapabilityInject(IVampirePlayer.class)
@@ -161,6 +163,17 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private int feed_victim = -1;
     private BITE_TYPE feed_victim_bite_type;
     private int feedBiteTickCounter = 0;
+    private static final Set<String> set = Sets.newHashSet("lightningBolt", "onFire", "cramming", "fall", "flyIntoWall", "magic", "wither", "anvil", "falling_block", "dragon_breath", "sweetBerryBush", "mob", "player", "trident", "arrow", "fireworks", "fireBall", "witherSkull", "explosion", "explosion.player", "thrown", "indirectMagic");
+    /**
+     * >=0 if DBNO, counts downwards, if == 0, can resurrect
+     */
+    private int dbnoTimer = -1;
+    /**
+     * Only set on data load.
+     * Will be active when player rejoined world after being in DBNO state.
+     * Will kill player next tick (and remove invulnerable)
+     */
+    private boolean wasDBNO = false;
 
     public VampirePlayer(PlayerEntity player) {
         super(player);
@@ -513,6 +526,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         glowingEyes = nbt.getBoolean(KEY_GLOWING_EYES);
         actionHandler.loadFromNbt(nbt);
         skillHandler.loadFromNbt(nbt);
+        if (nbt.getBoolean("wasDBNO")) wasDBNO = true;
+
     }
 
     @Override
@@ -555,8 +570,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
         if (getLevel() > 0) {
+            if (isDBNO() && set.contains(src.damageType)) { //TODO check stake etc.
+                if (src.getTrueSource() != null && src.getTrueSource() instanceof MobEntity && ((MobEntity) src.getTrueSource()).getAttackTarget() == player) {
+                    ((MobEntity) src.getTrueSource()).setAttackTarget(null);
+                }
+                return true;
+            }
             if (DamageSource.ON_FIRE.equals(src)) {
-
                 player.attackEntityFrom(VReference.VAMPIRE_ON_FIRE, calculateFireDamage(amt));
                 return true;
             } else if (DamageSource.IN_FIRE.equals(src) || DamageSource.LAVA.equals(src)) {
@@ -646,6 +666,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public void onPlayerLoggedOut() {
         endFeeding(false);
+        if(this.isDBNO()){
+            this.dbnoTimer = -1;
+            this.player.attackEntityFrom(DamageSource.GENERIC,10000);
+        }
     }
 
     /**
@@ -674,6 +698,19 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public void onUpdate() {
         World world = player.getEntityWorld();
         world.getProfiler().startSection("vampirism_vampirePlayer");
+        if (wasDBNO) {
+            wasDBNO = false;
+            this.player.attackEntityFrom(DamageSource.GENERIC, 100000);
+            return;
+        }
+        else if(this.dbnoTimer>=0){
+            if(dbnoTimer>0){
+                dbnoTimer--;
+            }
+            player.setMotion(0, Math.min(0, player.getMotion().getY()), 0);
+            player.setForcedPose(Pose.DYING);
+            return;
+        }
         super.onUpdate();
         int level = getLevel();
         if (level > 0) {
@@ -809,6 +846,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         nbt.putBoolean(KEY_GLOWING_EYES, glowingEyes);
         actionHandler.saveToNbt(nbt);
         skillHandler.saveToNbt(nbt);
+        if (isDBNO()) nbt.putBoolean("wasDBNO", true);
     }
 
 
@@ -932,6 +970,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (nbt.contains(KEY_WING_COUNTER)) {
             wing_counter = nbt.getInt(KEY_WING_COUNTER);
         }
+        if(nbt.contains(KEY_DBNO_TIMER)){
+            boolean wasDBNOClient = isDBNO();
+            dbnoTimer = nbt.getInt(KEY_DBNO_TIMER);
+            if(!wasDBNOClient && isDBNO()){
+                VampirismMod.proxy.showDBNOScreen();
+            }
+        }
         bloodStats.loadUpdate(nbt);
         actionHandler.readUpdateFromServer(nbt);
         skillHandler.readUpdateFromServer(nbt);
@@ -962,6 +1007,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);
         nbt.putInt(KEY_VISION, activatedVision == null ? -1 : ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
+        nbt.putInt(KEY_DBNO_TIMER, dbnoTimer);
     }
 
     private void applyEntityAttributes() {
@@ -1152,6 +1198,38 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
             this.getActionHandler().extendActionTimer(VampireActions.vampire_rage,bonus);
         }
+    }
+
+    @Override
+    public boolean canDieOrDBNO(DamageSource source) {
+        if (set.contains(source.getDamageType())) {
+            if (!source.canHarmInCreative()) { //TODO check holy water and stake
+                this.dbnoTimer = 100;
+                this.player.setHealth(0.5f);
+                this.player.setForcedPose(Pose.DYING);
+                CompoundNBT nbt = new CompoundNBT();
+                nbt.putInt(KEY_DBNO_TIMER,dbnoTimer);
+                HelperLib.sync(this,nbt,player,true);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isDBNO(){
+        return this.dbnoTimer >=0;
+    }
+
+    public void resurrect(){
+        //TODO if(this.dbnoTimer==0){
+        this.dbnoTimer=-1;
+        this.player.setHealth(Math.max(0.5f,bloodStats.getBloodLevel()-1));
+        this.bloodStats.removeBlood(bloodStats.getBloodLevel()-1,true);
+        this.player.setForcedPose(null);
+        this.sync(true);
+
+        //}
     }
 
     private static class Storage implements Capability.IStorage<IVampirePlayer> {
