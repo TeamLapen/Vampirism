@@ -331,10 +331,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * Cleanly ends biting process
      */
     public void endFeeding(boolean sync) {
-        if (feed_victim != -1)
+        if (feed_victim != -1 || feed_victim_bite_type !=null){
             feed_victim = -1;
-        feed_victim_bite_type = null;
-        if (player.isPotionActive(Effects.SLOWNESS)) player.removePotionEffect(Effects.SLOWNESS);
+            feed_victim_bite_type = null;
+            if (player.isPotionActive(Effects.SLOWNESS)) player.removePotionEffect(Effects.SLOWNESS);
+        }
         if (sync) {
             CompoundNBT nbt = new CompoundNBT();
             nbt.putInt(KEY_FEED_VICTIM_ID, feed_victim);
