@@ -12,31 +12,23 @@ import java.util.function.Function;
 
 public class Refinement extends ForgeRegistryEntry<IRefinement> implements IRefinement {
 
-    private final TYPE type;
     private final Attribute attribute;
     private final Function<UUID, AttributeModifier> modifier;
 
     public Refinement(Attribute attribute, Function<UUID, AttributeModifier> modifier) {
-        this.type = TYPE.ATTRIBUTE;
         this.attribute = attribute;
         this.modifier = modifier;
     }
 
     public Refinement() {
-        this.type = TYPE.SKILL;
         this.attribute = null;
         this.modifier = null;
     }
 
-    @Nonnull
-    @Override
-    public TYPE getType() {
-        return type;
-    }
 
     @Override
     public AttributeModifier createAttributeModifier(UUID uuid) {
-        return this.modifier.apply(uuid);
+        return this.modifier==null?null:this.modifier.apply(uuid);
     }
 
     @Nullable

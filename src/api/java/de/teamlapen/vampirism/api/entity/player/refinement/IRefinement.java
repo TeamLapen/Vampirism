@@ -10,8 +10,6 @@ import java.util.UUID;
 
 public interface IRefinement extends IForgeRegistryEntry<IRefinement> {
 
-    @Nonnull
-    TYPE getType();
 
     @Nullable
     AttributeModifier createAttributeModifier(UUID uuid);
@@ -21,8 +19,4 @@ public interface IRefinement extends IForgeRegistryEntry<IRefinement> {
 
     @Nonnull
     String getDescriptionKey();
-
-    enum TYPE {
-        SKILL, ATTRIBUTE
-    }
 }

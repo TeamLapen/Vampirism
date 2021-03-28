@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModRegistries;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -36,7 +37,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     private final IPlayableFaction<T> faction;
     private boolean dirty = false;
     private final IRefinementSet[] appliedRefinementSets = new IRefinementSet[3];
-    private final Set<IRefinement> skillRefinements = new HashSet<>();
+    private final Set<IRefinement> activeRefinements = new HashSet<>();
     private final Map<IRefinement, List<AttributeModifier>> refinementModifier = new HashMap<>();
 
     public SkillHandler(T player, IPlayableFaction<T> faction) {
@@ -309,16 +310,18 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         if (set != null) {
             Collection<IRefinement> refinements = set.getRefinements();
             for (IRefinement refinement : refinements) {
-                if (refinement.getType() == IRefinement.TYPE.SKILL) {
-                    this.skillRefinements.add(refinement);
-                } else {
+                this.activeRefinements.add(refinement);
                     if(!this.player.isRemote()){
-                        AttributeModifier m = refinement.createAttributeModifier(UUID.randomUUID());
-                        this.refinementModifier.computeIfAbsent(refinement, (key) -> new ArrayList<>()).add(m);
-                        this.player.getRepresentingPlayer().getAttribute(refinement.getAttribute()).applyNonPersistentModifier(m);
+                        Attribute a = refinement.getAttribute();
+                        if(a!=null) {
+                            AttributeModifier m = refinement.createAttributeModifier(UUID.randomUUID());
+                            this.refinementModifier.computeIfAbsent(refinement, (key) -> new ArrayList<>()).add(m);
+                            this.player.getRepresentingPlayer().getAttribute(a).applyNonPersistentModifier(m);
+                        }
+
                     }
 
-                }
+
             }
         }
     }
@@ -327,17 +330,13 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         IRefinementSet set = this.appliedRefinementSets[slot];
         if(set!=null){
             for (IRefinement refinement : set.getRefinements()) {
-                if (refinement.getType() == IRefinement.TYPE.SKILL) {
-                    this.skillRefinements.remove(refinement);
-                } else {
+                    this.activeRefinements.remove(refinement);
                     if(!this.player.isRemote()){
                         List<AttributeModifier> modifiers = this.refinementModifier.get(refinement);
                         if (modifiers != null && !modifiers.isEmpty()) {
                             this.player.getRepresentingPlayer().getAttribute(refinement.getAttribute()).removeModifier(modifiers.remove(0));
                         }
                     }
-
-                }
             }
         }
     }
