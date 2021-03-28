@@ -312,9 +312,12 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
                 if (refinement.getType() == IRefinement.TYPE.SKILL) {
                     this.skillRefinements.add(refinement);
                 } else {
-                    AttributeModifier m = refinement.createAttributeModifier(UUID.randomUUID());
-                    this.refinementModifier.computeIfAbsent(refinement, (key) -> new ArrayList<>()).add(m);
-                    this.player.getRepresentingPlayer().getAttribute(refinement.getAttribute()).applyNonPersistentModifier(m);
+                    if(!this.player.isRemote()){
+                        AttributeModifier m = refinement.createAttributeModifier(UUID.randomUUID());
+                        this.refinementModifier.computeIfAbsent(refinement, (key) -> new ArrayList<>()).add(m);
+                        this.player.getRepresentingPlayer().getAttribute(refinement.getAttribute()).applyNonPersistentModifier(m);
+                    }
+
                 }
             }
         }
@@ -327,10 +330,13 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
                 if (refinement.getType() == IRefinement.TYPE.SKILL) {
                     this.skillRefinements.remove(refinement);
                 } else {
-                    List<AttributeModifier> modifiers = this.refinementModifier.get(refinement);
-                    if (modifiers != null && !modifiers.isEmpty()) {
-                        this.player.getRepresentingPlayer().getAttribute(refinement.getAttribute()).removeModifier(modifiers.remove(0));
+                    if(!this.player.isRemote()){
+                        List<AttributeModifier> modifiers = this.refinementModifier.get(refinement);
+                        if (modifiers != null && !modifiers.isEmpty()) {
+                            this.player.getRepresentingPlayer().getAttribute(refinement.getAttribute()).removeModifier(modifiers.remove(0));
+                        }
                     }
+
                 }
             }
         }
