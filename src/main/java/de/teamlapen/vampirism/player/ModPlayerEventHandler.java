@@ -210,7 +210,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onLivingDeathFirst(LivingDeathEvent event) {
         if (event.getEntity() instanceof PlayerEntity) {
-            if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(v -> v.canDieOrDBNO(event.getSource())).orElse(false))
+            if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(v -> v.onDeadlyHit(event.getSource())).orElse(false))
                 event.setCanceled(true);
         }
     }

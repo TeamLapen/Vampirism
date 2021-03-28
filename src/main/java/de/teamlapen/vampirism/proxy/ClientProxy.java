@@ -43,7 +43,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -98,9 +97,9 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void showDBNOScreen() {
+    public void showDBNOScreen(@Nullable ITextComponent deathMessage) {
             if(!Minecraft.getInstance().player.getShouldBeDead()){
-                Minecraft.getInstance().displayGuiScreen(new DBNOScreen(new StringTextComponent("test")));
+                Minecraft.getInstance().displayGuiScreen(new DBNOScreen(deathMessage));
             }
     }
 

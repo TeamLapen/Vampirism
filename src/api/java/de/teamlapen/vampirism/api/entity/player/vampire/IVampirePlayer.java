@@ -96,7 +96,7 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      * @param source The lethal damage source
      * @return Whether death event should be cancel
      */
-    boolean canDieOrDBNO(DamageSource source);
+    boolean onDeadlyHit(DamageSource source);
 
     /**
      *

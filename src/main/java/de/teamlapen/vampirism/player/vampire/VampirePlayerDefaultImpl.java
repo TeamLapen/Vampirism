@@ -203,7 +203,7 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
-    public boolean canDieOrDBNO(DamageSource source) {
+    public boolean onDeadlyHit(DamageSource source) {
         return false;
     }
 

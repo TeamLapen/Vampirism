@@ -71,7 +71,10 @@ public class InputEventPacket implements IMessage {
     public static final String NAME_ITEM = "ni";
     public static final String SELECT_CALL_MINION = "sm";
     public static final String TOGGLE_LOCK_MINION_TASK = "lt";
+    public static final String RESURRECT = "rst";
+    public static final String DIE = "die";
     public static final String OPEN_VAMPIRISM_MENU = "ovm";
+
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String SPLIT = "&";
@@ -262,6 +265,13 @@ public class InputEventPacket implements IMessage {
                             fPlayer.getTaskManager().openVampirismMenu();
                         }
                     });
+                    break;
+                case RESURRECT:
+                    VampirePlayer.getOpt(player).ifPresent(VampirePlayer::tryResurrect);
+                    break;
+                case DIE:
+                    player.attackEntityFrom(DamageSource.GENERIC,10000);
+                    break;
             }
             ctx.setPacketHandled(true);
         });

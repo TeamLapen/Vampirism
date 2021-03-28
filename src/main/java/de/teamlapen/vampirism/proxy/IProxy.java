@@ -29,7 +29,7 @@ public interface IProxy extends IInitListener {
     @Nullable
     Entity getMouseOverEntity();
 
-    default void showDBNOScreen(){}
+    default void showDBNOScreen(@Nullable ITextComponent deathMessage){}
 
     default float getRenderPartialTick() {
         return 1F;
