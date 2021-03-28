@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.network.ActionBindingPacket;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -118,10 +119,10 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
                     closeScreen();
                 }
             } else if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).matchesMouseKey(mouseButton)) {
-                FactionPlayerHandler.get(minecraft.player).setBoundAction1(elements.get(getSelectedElement()), true);
+                VampirismMod.dispatcher.sendToServer(new ActionBindingPacket(1,elements.get(getSelectedElement())));
                 return true;
             } else if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).matchesMouseKey(mouseButton)) {
-                FactionPlayerHandler.get(minecraft.player).setBoundAction2(elements.get(getSelectedElement()), true);
+                VampirismMod.dispatcher.sendToServer(new ActionBindingPacket(2,elements.get(getSelectedElement())));
                 return true;
             }
 
@@ -144,14 +145,14 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
                 return true;
             }
             if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).matchesKey(key, scancode)) {
-                FactionPlayerHandler.get(minecraft.player).setBoundAction1(elements.get(getSelectedElement()), true);
+                VampirismMod.dispatcher.sendToServer(new ActionBindingPacket(1,elements.get(getSelectedElement())));
                 if (!editActions) {
                     GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
                     closeScreen();
                 }
                 return true;
             } else if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).matchesKey(key, scancode)) {
-                FactionPlayerHandler.get(Minecraft.getInstance().player).setBoundAction2(elements.get(getSelectedElement()), true);
+                VampirismMod.dispatcher.sendToServer(new ActionBindingPacket(2,elements.get(getSelectedElement())));
                 if (!editActions) {
                     GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
                     closeScreen();
