@@ -25,4 +25,6 @@ public interface IRefinementSet extends IForgeRegistryEntry<IRefinementSet> {
     @Nonnull
     IFaction<?> getFaction();
 
+    int getColor();
+
 }

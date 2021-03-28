@@ -18,19 +18,22 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
 
     private final Set<IRefinement> refinements;
     private final Rarity rarity;
+    private final int color;
     private TextComponent name;
     private final WeightedRandomItem<IRefinementSet> weightedRandom;
 
-    public RefinementSet(Rarity rarity, Set<IRefinement> refinements) {
+    public RefinementSet(Rarity rarity, int color, Set<IRefinement> refinements) {
         this.refinements = refinements;
         this.rarity = rarity;
         this.weightedRandom = createWeightedRandom();
+        this.color = color;
     }
 
-    public RefinementSet(Rarity rarity, IRefinement... refinements) {
+    public RefinementSet(Rarity rarity, int color, IRefinement... refinements) {
         this.refinements = Sets.newHashSet(refinements);
         this.rarity = rarity;
         this.weightedRandom = createWeightedRandom();
+        this.color = color;
     }
 
     @Nonnull
@@ -80,13 +83,18 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
         return new WeightedRandomItem<>(this, value);
     }
 
+    @Override
+    public int getColor() {
+        return color;
+    }
+
     public static class VampireRefinementSet extends RefinementSet {
-        public VampireRefinementSet(Rarity rarity, Set<IRefinement> refinements) {
-            super(rarity, refinements);
+        public VampireRefinementSet(Rarity rarity, int color, Set<IRefinement> refinements) {
+            super(rarity,color, refinements);
         }
 
-        public VampireRefinementSet(Rarity rarity, IRefinement... refinements) {
-            super(rarity, refinements);
+        public VampireRefinementSet(Rarity rarity, int color, IRefinement... refinements) {
+            super(rarity,color, refinements);
         }
 
         @Nonnull
