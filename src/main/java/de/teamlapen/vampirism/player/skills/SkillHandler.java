@@ -11,9 +11,7 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModRegistries;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -278,23 +276,22 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     }
 
     @Override
-    public void equipRefinementItem(ItemStack stack, PlayerEntity player) {
+    public boolean equipRefinementItem(ItemStack stack) {
         if (stack.getItem() instanceof IRefinementItem) {
             IRefinementItem refinementItem = ((IRefinementItem) stack.getItem());
-            IRefinementSet newSet = refinementItem.getRefinementSet(stack);
-            FactionPlayerHandler.getOpt(player).ifPresent(p -> {
-                if (p.getCurrentFaction() == newSet.getFaction()) {
-                    IRefinementItem.EquipmentSlotType setSlot = refinementItem.getSlotType();
+            @Nullable IRefinementSet newSet = refinementItem.getRefinementSet(stack);
+            IRefinementItem.EquipmentSlotType setSlot = refinementItem.getSlotType();
 
-                    removeRefinementSet(setSlot.getSlot());
-                    applyRefinementSet(newSet, setSlot.getSlot());
-                    stack.shrink(1);
-                    this.dirty = true;
-                }
-            });
+            removeRefinementSet(setSlot.getSlot());
+            this.dirty = true;
 
-
+            if (newSet != null && newSet.getFaction() == faction) {
+                applyRefinementSet(newSet, setSlot.getSlot());
+            }
+            return true;
         }
+
+        return false;
     }
 
     @Override
@@ -320,13 +317,15 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     private void removeRefinementSet(int slot) {
         IRefinementSet set = this.appliedRefinementSets[slot];
-        for (IRefinement refinement : set.getRefinements()) {
-            if (refinement.getType() == IRefinement.TYPE.SKILL) {
-                this.skillRefinements.remove(refinement);
-            } else {
-                List<AttributeModifier> modifiers = this.refinementModifier.get(refinement);
-                if (modifiers != null && !modifiers.isEmpty()) {
-                    this.player.getRepresentingPlayer().getAttribute(refinement.getAttribute()).removeModifier(modifiers.remove(0));
+        if(set!=null){
+            for (IRefinement refinement : set.getRefinements()) {
+                if (refinement.getType() == IRefinement.TYPE.SKILL) {
+                    this.skillRefinements.remove(refinement);
+                } else {
+                    List<AttributeModifier> modifiers = this.refinementModifier.get(refinement);
+                    if (modifiers != null && !modifiers.isEmpty()) {
+                        this.player.getRepresentingPlayer().getAttribute(refinement.getAttribute()).removeModifier(modifiers.remove(0));
+                    }
                 }
             }
         }

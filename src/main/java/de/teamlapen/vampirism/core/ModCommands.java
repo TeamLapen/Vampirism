@@ -68,6 +68,7 @@ public class ModCommands {
                             .then(MinionCommand.register())
                             .then(TaskCommand.register())
                             .then(ForcePlayerSyncCommand.register())
+                            .then(GiveAccessoriesCommand.register())
             );
         }
     }
@@ -79,6 +80,7 @@ public class ModCommands {
         ArgumentTypes.register("vampirism_faction", FactionArgument.class, new ArgumentSerializer<>(FactionArgument::new));
         ArgumentTypes.register("vampirism_skill", SkillArgument.class, new ArgumentSerializer<>(SkillArgument::new));
         ArgumentTypes.register("vampirism_action", ActionArgument.class, new ArgumentSerializer<>(ActionArgument::new));
+        ArgumentTypes.register("vampirism_refinement_set",RefinementSetArgument.class, new ArgumentSerializer<>(RefinementSetArgument::new));
         ArgumentTypes.register("vampirism_task", TaskArgument.class, new ArgumentSerializer<>(TaskArgument::new));
         ArgumentTypes.register("vampirism_biome", BiomeArgument.class, new ArgumentSerializer<>(BiomeArgument::new));
     }

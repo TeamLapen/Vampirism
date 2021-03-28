@@ -11,7 +11,9 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ModRefinementSets {
 
     public static void registerRefinementSets(IForgeRegistry<IRefinementSet> registry) {
+        //TODO think of cool registry names
         registry.register(new RefinementSet.VampireRefinementSet(Rarity.COMMON, ModRefinements.refinement_armor).setRegistryName(REFERENCE.MODID, "armor_refinement_set"));
+        registry.register(new RefinementSet.VampireRefinementSet(Rarity.COMMON, ModRefinements.half_invulnerable).setRegistryName(REFERENCE.MODID, "vampire_half_invulnerability"));
         registry.register(new RefinementSet.VampireRefinementSet(Rarity.COMMON, ModRefinements.refinement_health).setRegistryName(REFERENCE.MODID, "health_refinement_set"));
         registry.register(new RefinementSet.VampireRefinementSet(Rarity.COMMON, ModRefinements.refinement_speed).setRegistryName(REFERENCE.MODID, "speed_refinement_set"));
         registry.register(new RefinementSet.VampireRefinementSet(Rarity.RARE, ModRefinements.refinement_speed, ModRefinements.refinement_armor, ModRefinements.refinement_health).setRegistryName(REFERENCE.MODID, "attribute_refinement_set"));
