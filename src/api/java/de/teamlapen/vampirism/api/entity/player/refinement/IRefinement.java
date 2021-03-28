@@ -12,7 +12,12 @@ public interface IRefinement extends IForgeRegistryEntry<IRefinement> {
 
 
     @Nullable
-    AttributeModifier createAttributeModifier(UUID uuid);
+    AttributeModifier createAttributeModifier(UUID uuid, double value);
+
+    double getModifierValue();
+
+    @Nullable
+    UUID getUUID();
 
     @Nullable
     Attribute getAttribute();
