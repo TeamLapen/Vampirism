@@ -185,9 +185,13 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         }
 
         if (nbt.contains("refinement_set")) {
-            for (String id : nbt.getCompound("refinement_set").keySet()) {
+            CompoundNBT setsNBT = nbt.getCompound("refinement_set");
+            for (String id : setsNBT.keySet()) {
                 int i = Integer.parseInt(id);
-                IRefinementSet set = ModRegistries.REFINEMENT_SETS.getValue(new ResourceLocation(nbt.getString(id)));
+                String key = setsNBT.getString(id);
+                if("none".equals(key))continue;
+                ResourceLocation setId = new ResourceLocation(key);
+                IRefinementSet set = ModRegistries.REFINEMENT_SETS.getValue(setId);
                 this.applyRefinementSet(set, i);
             }
         }
@@ -220,12 +224,13 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         }
 
         if (nbt.contains("refinement_set")) {
-            for (String id : nbt.getCompound("refinement_set").keySet()) {
+            CompoundNBT setsNBT = nbt.getCompound("refinement_set");
+            for (String id : setsNBT.keySet()) {
                 int i = Integer.parseInt(id);
-                String setName = nbt.getString(id);
+                String setName = setsNBT.getString(id);
                 IRefinementSet set = null;
                 if (!"none".equals(setName)) {
-                    set = ModRegistries.REFINEMENT_SETS.getValue(new ResourceLocation(nbt.getString(id)));
+                    set = ModRegistries.REFINEMENT_SETS.getValue(new ResourceLocation(setName));
                 }
                 IRefinementSet oldSet = this.appliedRefinementSets[i];
                 if (oldSet != set) {
