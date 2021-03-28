@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -192,6 +193,10 @@ public class ModItems {
     public static final MinionUpgradeItem vampire_minion_upgrade_simple = getNull();
     public static final MinionUpgradeItem vampire_minion_upgrade_enhanced = getNull();
     public static final MinionUpgradeItem vampire_minion_upgrade_special = getNull();
+
+    public static final RefinementItem amulet = getNull();
+    public static final RefinementItem ring = getNull();
+    public static final RefinementItem obi_belt = getNull();
 
 
     static void registerCraftingRecipes() {
@@ -399,6 +404,10 @@ public class ModItems {
         registry.register(new MinionUpgradeItem("vampire_minion_upgrade_simple", 1, 2, VReference.VAMPIRE_FACTION));
         registry.register(new MinionUpgradeItem("vampire_minion_upgrade_enhanced", 3, 4, VReference.VAMPIRE_FACTION));
         registry.register(new MinionUpgradeItem("vampire_minion_upgrade_special", 5, 6, VReference.VAMPIRE_FACTION));
+
+        registry.register(new RefinementItem(creativeTabProps(), IRefinementItem.EquipmentSlotType.AMULET).setRegistryName(REFERENCE.MODID, "amulet"));
+        registry.register(new RefinementItem(creativeTabProps(), IRefinementItem.EquipmentSlotType.RING).setRegistryName(REFERENCE.MODID, "ring"));
+        registry.register(new RefinementItem(creativeTabProps(), IRefinementItem.EquipmentSlotType.OBI_BELT).setRegistryName(REFERENCE.MODID, "obi_belt"));
 
         if (VampirismMod.inDataGen) {
             registry.register(new DummyItem().setRegistryName("guideapi-vp", "vampirism-guidebook"));

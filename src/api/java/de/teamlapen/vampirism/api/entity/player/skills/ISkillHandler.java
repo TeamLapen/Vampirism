@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
 
+import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
+import net.minecraft.item.ItemStack;
+
 /**
  * Handles the players skills
  */
@@ -40,6 +43,10 @@ public interface ISkillHandler<T extends ISkillPlayer<?>> {
      * Reset all skills but reactivate the root skill of the faction
      */
     void resetSkills();
+
+    void equipRefinementItem(ItemStack stack);
+
+    boolean isRefinementEquipped(IRefinement refinement);
 
     enum Result {
         OK, ALREADY_ENABLED, PARENT_NOT_ENABLED, NOT_FOUND, NO_POINTS, OTHER_NODE_SKILL, LOCKED_BY_OTHER_NODE
