@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 
 
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -44,7 +45,7 @@ public interface ISkillHandler<T extends ISkillPlayer<?>> {
      */
     void resetSkills();
 
-    void equipRefinementItem(ItemStack stack);
+    void equipRefinementItem(ItemStack stack, PlayerEntity player);
 
     boolean isRefinementEquipped(IRefinement refinement);
 

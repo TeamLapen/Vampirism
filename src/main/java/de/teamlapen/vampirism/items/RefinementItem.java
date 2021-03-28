@@ -1,12 +1,14 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.util.WeightedRandomItem;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.player.refinements.RefinementSet;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
@@ -38,8 +40,9 @@ public class RefinementItem extends Item implements IRefinementItem {
         return ModRegistries.REFINEMENT_SETS.getValue(new ResourceLocation(refinementsNBT));
     }
 
-    public static ItemStack applyRefinementSet(ItemStack stack) {
-        List<WeightedRandomItem<RefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream().map(a -> ((RefinementSet) a).getRandom()).collect(Collectors.toList());
+    public static ItemStack applyRefinementSet(ItemStack stack, IFaction<?> faction) {
+        List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream().filter(set -> set.getFaction() == faction).filter(a -> a.getRarity() != Rarity.EPIC).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
+        if (sets.isEmpty()) return stack;
         return applyRefinementSet(stack, WeightedRandom.getRandomItem(RANDOM, sets).getItem());
     }
 

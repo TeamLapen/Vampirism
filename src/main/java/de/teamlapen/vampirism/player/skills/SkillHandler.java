@@ -11,7 +11,9 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -276,15 +278,21 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     }
 
     @Override
-    public void equipRefinementItem(ItemStack stack) {
+    public void equipRefinementItem(ItemStack stack, PlayerEntity player) {
         if (stack.getItem() instanceof IRefinementItem) {
             IRefinementItem refinementItem = ((IRefinementItem) stack.getItem());
             IRefinementSet newSet = refinementItem.getRefinementSet(stack);
-            IRefinementItem.EquipmentSlotType setSlot = refinementItem.getSlotType();
+            FactionPlayerHandler.getOpt(player).ifPresent(p -> {
+                if (p.getCurrentFaction() == newSet.getFaction()) {
+                    IRefinementItem.EquipmentSlotType setSlot = refinementItem.getSlotType();
 
-            removeRefinementSet(setSlot.getSlot());
-            applyRefinementSet(newSet, setSlot.getSlot());
-            this.dirty = true;
+                    removeRefinementSet(setSlot.getSlot());
+                    applyRefinementSet(newSet, setSlot.getSlot());
+                    stack.shrink(1);
+                    this.dirty = true;
+                }
+            });
+
 
         }
     }
