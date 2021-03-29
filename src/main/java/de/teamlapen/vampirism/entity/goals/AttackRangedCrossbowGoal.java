@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.goals;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.VampirismEntity;
@@ -8,6 +9,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
+import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nonnull;
 import java.util.EnumSet;
@@ -132,7 +134,13 @@ public class AttackRangedCrossbowGoal<T extends VampirismEntity & AttackRangedCr
         double dist = MathHelper.sqrt(sx * sx + sz * sz);
         entityArrow.shoot(sx, sy + dist * 0.2, sz, 1.6F, (float) (13 - target.getEntityWorld().getDifficulty().getId() * 4));
         this.entity.playSound(ModSounds.crossbow, 0.5F, 1);
-        this.entity.getEntityWorld().addEntity(entityArrow);
+        try{
+            this.entity.getEntityWorld().addEntity(entityArrow);
+        }catch (ClassCastException e){
+            //https://github.com/TeamLapen/Vampirism/issues/889
+            entityArrow.remove();
+            LogManager.getLogger().warn("{} failed to attack with crossbow due to error {} probably cause by 'Not enough items' https://www.curseforge.com/minecraft/mc-mods/not-enough-enchantments/issues/6",this.entity,e);
+        }
     }
 
     public interface IAttackWithCrossbow {
