@@ -154,11 +154,19 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (editActions && mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT && getSelectedElement() >= 0) {
-            if (elements.get(getSelectedElement()) != fakeAction) {
-                SELECTEDACTION = elements.get(getSelectedElement());
-            } else {
-                onClose();
+        if (editActions && getSelectedElement() >= 0) {
+            if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                if (elements.get(getSelectedElement()) != fakeAction) {
+                    SELECTEDACTION = elements.get(getSelectedElement());
+                } else {
+                    onClose();
+                }
+            } else if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).matchesMouseKey(mouseButton)) {
+                FactionPlayerHandler.get(minecraft.player).setBoundAction1(elements.get(getSelectedElement()), true);
+                return true;
+            } else if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).matchesMouseKey(mouseButton)) {
+                FactionPlayerHandler.get(minecraft.player).setBoundAction2(elements.get(getSelectedElement()), true);
+                return true;
             }
         }
         return super.mouseClicked(mouseX, mouseY, mouseButton);
