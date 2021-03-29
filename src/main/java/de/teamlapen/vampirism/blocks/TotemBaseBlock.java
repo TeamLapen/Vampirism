@@ -6,6 +6,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.IFluidState;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -50,12 +51,16 @@ public class TotemBaseBlock extends VampirismBlock {
 
     @Override
     public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
-        BlockState up = world.getBlockState(pos.up());
-        if (up.getBlock() instanceof TotemTopBlock) {
-            if (!up.getBlock().removedByPlayer(up, world, pos.up(), player, willHarvest, fluid)) {
+        BlockPos up = pos.up();
+        BlockState upState = world.getBlockState(pos.up());
+        if (upState.getBlock() instanceof TotemTopBlock) {
+            TileEntity upTE = world.getTileEntity(pos.up());
+            if (!upState.getBlock().removedByPlayer(upState, world, pos.up(), player, willHarvest, fluid)) {
                 return false;
             }
-            Block.spawnDrops(state, world, pos);
+            if (willHarvest) {
+                Block.spawnDrops(upState.getBlockState(), world, up, upTE);
+            }
         }
         return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
     }
