@@ -12,6 +12,8 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
+import de.teamlapen.vampirism.inventory.container.VampirismContainer;
+import de.teamlapen.vampirism.network.TaskPacket;
 import de.teamlapen.vampirism.network.TaskStatusPacket;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import net.minecraft.entity.EntityType;
@@ -21,6 +23,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,6 +58,9 @@ public class TaskManager implements ITaskManager {
 
     @Nonnull
     private final Map<UUID, Map<Task, Map<ResourceLocation, Integer>>> stats = Maps.newHashMap();
+
+    @Nonnull
+    private final Map<UUID, TaskBoardInfo> taskBoardInfos = new HashMap<>();
 
     public TaskManager(@Nonnull IFactionPlayer<?> factionPlayer, @Nonnull IPlayableFaction<?> faction) {
         this.faction = faction;
@@ -115,6 +121,7 @@ public class TaskManager implements ITaskManager {
         Set<Task> selectedTasks = new HashSet<>(getTasks(taskBoardId));
         selectedTasks.addAll(getUniqueTasks());
         this.updateClient(taskBoardId, getCompletedRequirements(taskBoardId, selectedTasks), reduceToCompletableTasks(taskBoardId, selectedTasks), reduceToNotAcceptedTasks(taskBoardId, selectedTasks), selectedTasks);
+        this.taskBoardInfos.compute(taskBoardId, (key, value) -> value == null ? new TaskBoardInfo(key, this.player.getPosition()) : value.updatePos(this.player.getPosition()));
     }
 
     @Override
@@ -122,6 +129,13 @@ public class TaskManager implements ITaskManager {
         Set<Task> selectedTasks = new HashSet<>(this.getTasks(taskBoardId));
         selectedTasks.addAll(getUniqueTasks());
         this.updateClient(taskBoardId, getCompletedRequirements(taskBoardId, selectedTasks), reduceToCompletableTasks(taskBoardId, selectedTasks), reduceToNotAcceptedTasks(taskBoardId, selectedTasks), selectedTasks);
+    }
+
+    @Override
+    public void openVampirismMenu() {
+        if (player.openContainer instanceof VampirismContainer) {
+            VampirismMod.dispatcher.sendTo(new TaskPacket(player.openContainer.windowId, taskBoardInfos, tasks, stats), player);
+        }
     }
 
     @Override
@@ -590,6 +604,29 @@ public class TaskManager implements ITaskManager {
                 }
                 this.stats.put(UUID.fromString(taskBoardId), tasks);
             }
+        }
+    }
+
+    public static class TaskBoardInfo {
+        private BlockPos lastSeenPos;
+        private final UUID taskBoardId;
+
+        public TaskBoardInfo(@Nonnull UUID taskBoardId, @Nonnull BlockPos lastSeenPos) {
+            this.lastSeenPos = lastSeenPos;
+            this.taskBoardId = taskBoardId;
+        }
+
+        public TaskBoardInfo updatePos(@Nonnull BlockPos newPos) {
+            this.lastSeenPos = newPos;
+            return this;
+        }
+
+        public BlockPos getLastSeenPos() {
+            return lastSeenPos;
+        }
+
+        public UUID getTaskBoardId() {
+            return taskBoardId;
         }
     }
 

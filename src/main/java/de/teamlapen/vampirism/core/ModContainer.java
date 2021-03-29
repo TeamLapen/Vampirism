@@ -21,6 +21,7 @@ public class ModContainer {
     public static final ContainerType<MinionContainer> minion = getNull();
     public static final ContainerType<TaskBoardContainer> task_master = getNull();
     public static final ContainerType<PotionTableContainer> extended_potion_table = getNull();
+    public static final ContainerType<VampirismContainer> vampirism = getNull();
 
 
     static void registerContainer(IForgeRegistry<ContainerType<?>> registry) {
@@ -34,5 +35,6 @@ public class ModContainer {
         registry.register(new ContainerType<>(new MinionContainer.Factory()).setRegistryName(REFERENCE.MODID, "minion"));
         registry.register(new ContainerType<>(TaskBoardContainer::new).setRegistryName(REFERENCE.MODID, "task_master"));
         registry.register(new ContainerType<>(new PotionTableContainer.Factory()).setRegistryName(REFERENCE.MODID, "extended_potion_table"));
+        registry.register(new ContainerType<>(VampirismContainer::new).setRegistryName(REFERENCE.MODID, "vampirism"));
     }
 }

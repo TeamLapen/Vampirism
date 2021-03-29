@@ -14,7 +14,6 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.skills.SkillNode;
-import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -25,7 +24,6 @@ import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -193,15 +191,6 @@ public class SkillsScreen extends Screen {
                 if(factionPlayer.getLevel() < 2) {
                     resetSkills.active = false;
                 }
-                if (Helper.isVampire(minecraft.player)) {
-                    this.addButton(new ImageButton((this.width - display_width) / 2 + 10 + 22, this.height / 2 + 74, 20, 20, 72, 202, 20, BACKGROUND, 256, 256, (context) -> {
-                        Minecraft.getInstance().displayGuiScreen(new VampirePlayerAppearanceScreen(this));
-                    }));
-                }
-                this.addButton(new ImageButton((this.width - display_width) / 2 + 10, this.height / 2 + 74, 20, 20, 52, 202, 20, BACKGROUND, 256, 256, (context) -> {
-                    IPlayableFaction<?> factionNew = FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFaction();
-                    Minecraft.getInstance().displayGuiScreen(new SelectActionScreen(factionNew.getColor(), true));
-                }));
             });
 
         });
