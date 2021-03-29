@@ -155,6 +155,10 @@ public class TotemHelper {
         TotemTileEntity totem1 = ((TotemTileEntity) world.getTileEntity(totem));
         TotemTileEntity totem2 = ((TotemTileEntity) world.getTileEntity(conflicting));
 
+        if (totem2 != null){
+            return;
+        }
+
         boolean ignoreOtherTotem = true;
 
         //noinspection ConstantConditions
@@ -188,9 +192,19 @@ public class TotemHelper {
      * @param pois the related {@link PointOfInterest}s
      * @param pos  the position of the totem
      */
-    public static void removeTotem(Collection<PointOfInterest> pois, BlockPos pos) {
+    public static void removeTotem(Collection<PointOfInterest> pois, BlockPos pos, boolean removeTotem) {
         pois.forEach(pointOfInterest -> totemPositions.remove(pointOfInterest.getPos(), pos));
-        totemPositions.remove(pos);
+        if (removeTotem) {
+            totemPositions.remove(pos);
+        }
+    }
+
+    /**
+     * @see #removeTotem(Collection, BlockPos, boolean)
+     */
+    @Deprecated
+    public static void removeTotem(Collection<PointOfInterest> pois, BlockPos pos) {
+        removeTotem(pois, pos, true);
     }
 
     /**
