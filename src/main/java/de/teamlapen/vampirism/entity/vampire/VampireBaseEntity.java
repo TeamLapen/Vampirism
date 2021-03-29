@@ -121,14 +121,14 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                 if (worldIn.getDimension().isDaytime() && rand.nextInt(5) != 0) {
                     return false;
                 }
-                if (this.world.isBlockPresent(getPosition()) && worldIn instanceof World) {
-                    BlockPos nearestVillage = ((World) worldIn).findNearestStructure("Village", getPosition(), 1, false);
-                    if (nearestVillage != null && nearestVillage.withinDistance(getPosition(), 50)) {
-                        if (getRNG().nextInt(60) != 0) {
-                            return false;
-                        }
-                    }
-                }
+//                if (this.world.isBlockPresent(getPosition()) && worldIn instanceof World) {
+//                    BlockPos nearestVillage = ((World) worldIn).findNearestStructure("Village", getPosition(), 1, false);
+//                    if (nearestVillage != null && nearestVillage.withinDistance(getPosition(), 50)) {
+//                        if (getRNG().nextInt(60) != 0) {
+//                            return false;
+//                        }
+//                    }
+//                }
                 if (spawnRestriction.level >= SpawnRestriction.SPECIAL.level) {
                     if (!getCanSpawnHereRestricted(worldIn)) {
                         return false;
