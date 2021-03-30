@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -102,8 +103,9 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 
         if (!flag && this.isAlive() && !player.isSneaking()) {
-            if (!this.world.isRemote) {
-                if (HunterLevelingConf.instance().isLevelValidForTrainer(HunterPlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0) + 1)) {
+            int lvl= HunterPlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0);
+            if (!this.world.isRemote && lvl>0) {
+                if (HunterLevelingConf.instance().isLevelValidForTrainer(lvl+ 1)) {
                     if (trainee == null) {
                         player.openContainer(new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new HunterTrainerContainer(id, playerInventory, this), name));
                         this.trainee = player;
