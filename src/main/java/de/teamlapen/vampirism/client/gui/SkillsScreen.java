@@ -23,6 +23,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.RenderHelper;
@@ -460,6 +461,13 @@ public class SkillsScreen extends Screen {
         RenderSystem.enableTexture();
         super.render(mouseX, mouseY, partialTicks);
 
+        //Don't render skill tooltip when hovering over button
+        for (Widget button : this.buttons) {
+            if(button.isHovered()){
+                newSelected=null;
+                newSelectedNode=null;
+            }
+        }
         //Draw information for selected skill
         selected = newSelected;
         selectedNode = newSelectedNode;
