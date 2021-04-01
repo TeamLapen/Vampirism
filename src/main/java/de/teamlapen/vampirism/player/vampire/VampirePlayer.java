@@ -580,7 +580,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
         if (getLevel() > 0) {
-            if (isDBNO() && VampirismConfig.BALANCE.vpImmortalFromDamageSources.get().contains(src.damageType)) { //TODO check stake etc.
+            if (isDBNO() && !Helper.canKillVampires(src)) { //TODO check stake etc.
                 if (src.getTrueSource() != null && src.getTrueSource() instanceof MobEntity && ((MobEntity) src.getTrueSource()).getAttackTarget() == player) {
                     ((MobEntity) src.getTrueSource()).setAttackTarget(null);
                 }
@@ -715,10 +715,14 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         else if(this.dbnoTimer>=0){
             if(dbnoTimer>0){
-                dbnoTimer--;
+                if(--dbnoTimer==0){
+                    CompoundNBT nbt = new CompoundNBT();
+                    nbt.putInt(KEY_DBNO_TIMER,0);
+                    HelperLib.sync(this, nbt, player, false);
+                }
             }
             player.setMotion(0, Math.min(0, player.getMotion().getY()), 0);
-            player.setForcedPose(Pose.DYING);
+            player.setForcedPose(Pose.SLEEPING);
             return;
         }
         super.onUpdate();
@@ -987,7 +991,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             boolean wasDBNOClient = isDBNO();
             dbnoTimer = nbt.getInt(KEY_DBNO_TIMER);
             if(!wasDBNOClient && isDBNO()){
-                VampirismMod.proxy.showDBNOScreen(dbnoMessage);
+                VampirismMod.proxy.showDBNOScreen(player, dbnoMessage);
             }
             else if(wasDBNOClient && !isDBNO()){
                 this.player.setForcedPose(null);
@@ -1236,11 +1240,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public boolean onDeadlyHit(DamageSource source) {
-        if (VampirismConfig.BALANCE.vpImmortalFromDamageSources.get().contains(source.getDamageType())) {
-            if (!source.canHarmInCreative()) { //TODO check holy water and stake
-                this.dbnoTimer = 100;
+        if (!this.player.isPotionActive(ModEffects.neonatal)&&!Helper.canKillVampires(source)){
+                this.dbnoTimer = getDbnoDuration();
                 this.player.setHealth(0.5f);
-                this.player.setForcedPose(Pose.DYING);
+                this.player.setForcedPose(Pose.SLEEPING);
                 resetNearbyTargetingMobs();
                 boolean flag = player.world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES);
                 if (flag) {
@@ -1251,7 +1254,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 if(dbnoMessage!=null)nbt.putString(KEY_DBNO_MSG, ITextComponent.Serializer.toJson(dbnoMessage));
                 HelperLib.sync(this,nbt,player,true);
                 return true;
-            }
         }
         return false;
     }
@@ -1262,15 +1264,32 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     public void tryResurrect(){
-        //TODO if(this.dbnoTimer==0){
-        this.dbnoTimer=-1;
-        this.dbnoMessage = null;
-        this.player.setHealth(Math.max(0.5f,bloodStats.getBloodLevel()-1));
-        this.bloodStats.removeBlood(bloodStats.getBloodLevel()-1,true);
-        this.player.setForcedPose(null);
-        this.sync(true);
+        if(this.dbnoTimer==0){
+            this.dbnoTimer=-1;
+            this.dbnoMessage = null;
+            this.player.setHealth(Math.max(0.5f,bloodStats.getBloodLevel()-1));
+            this.bloodStats.removeBlood(bloodStats.getBloodLevel()-1,true);
+            this.player.setForcedPose(null);
+            this.sync(true);
+            this.player.addPotionEffect(new EffectInstance(ModEffects.neonatal,VampirismConfig.BALANCE.vpNeonatalDuration.get()*20));
+        }
+        else{
+            if(this.isRemote()){
+                this.dbnoTimer=-1;
+            }
+            else{
+                //If client thinks it is alive again, tell it to die again
+                this.sync(false);
+            }
+        }
+    }
 
-        //}
+    public int getDbnoTimer(){
+        return this.dbnoTimer;
+    }
+
+    public int getDbnoDuration(){
+        return VampirismConfig.BALANCE.vpDbnoDuration.get() * 20;
     }
 
     private static class Storage implements Capability.IStorage<IVampirePlayer> {

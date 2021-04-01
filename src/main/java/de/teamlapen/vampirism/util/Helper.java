@@ -14,7 +14,10 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBiomes;
+import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.items.CrossbowArrowItem;
+import de.teamlapen.vampirism.items.StakeItem;
 import de.teamlapen.vampirism.mixin.LivingEntityAccessor;
 import de.teamlapen.vampirism.tileentity.TotemHelper;
 import net.minecraft.block.BlockState;
@@ -26,7 +29,10 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.DoubleNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.DoubleNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.profiler.IProfiler;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
@@ -274,6 +280,29 @@ public class Helper {
         }
 
         return listnbt;
+    }
+
+    /**
+     * Check if
+     * @return Whether the given damage source can kill a vampire player or go to DBNO state instead
+     */
+    public static boolean canKillVampires(DamageSource source) {
+        if (!source.canHarmInCreative()) {
+            if (VampirismConfig.BALANCE.vpImmortalFromDamageSources.get().contains(source.getDamageType())) {
+                if(source.getImmediateSource() instanceof LivingEntity){
+                    if(((LivingEntity) source.getImmediateSource()).getHeldItemMainhand().getItem() instanceof StakeItem){ //Maybe use all IVampireFinisher??
+                        return true;
+                    }
+                }
+                else if(source.getImmediateSource() instanceof CrossbowArrowEntity){
+                    if(((CrossbowArrowEntity) source.getImmediateSource()).getArrowType() == CrossbowArrowItem.EnumArrowType.VAMPIRE_KILLER){
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+        return true;
     }
 
 }

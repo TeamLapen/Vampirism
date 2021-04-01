@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.items.CrossbowArrowItem;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
@@ -102,6 +103,9 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
         return arrowStack;
     }
 
+    public CrossbowArrowItem.EnumArrowType getArrowType(){
+        return arrowStack.getItem() instanceof CrossbowArrowItem ? ((CrossbowArrowItem)arrowStack.getItem()).getType() : CrossbowArrowItem.EnumArrowType.NORMAL;
+    }
 
     @Override
     protected void func_230299_a_(BlockRayTraceResult blockRayTraceResult) { //onHitBlock

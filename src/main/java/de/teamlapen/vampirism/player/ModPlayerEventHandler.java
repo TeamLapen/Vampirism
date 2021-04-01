@@ -63,10 +63,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.SleepingTimeCheckEvent;
+import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.SleepFinishedTimeEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -144,6 +141,13 @@ public class ModPlayerEventHandler {
             event.setCanceled(true);
         } else if ((ModBlocks.garlic_beacon_normal.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_weak.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_improved.equals(event.getState().getBlock())) && VampirePlayer.getOpt(event.getPlayer()).map(VampirismPlayer::getLevel).orElse(0) > 0) {
             event.setNewSpeed(event.getOriginalSpeed() * 0.1F);
+        }
+    }
+
+    @SubscribeEvent
+    public void onItemPickupPre(EntityItemPickupEvent event){
+        if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(VampirePlayer::isDBNO).orElse(false)) {
+            event.setCanceled(true);
         }
     }
 
