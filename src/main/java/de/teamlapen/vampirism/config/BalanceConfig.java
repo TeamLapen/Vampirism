@@ -26,8 +26,8 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue holyWaterBlindnessDuration;
     public final ForgeConfigSpec.IntValue dropOrchidFromLeavesChance;
     public final ForgeConfigSpec.DoubleValue holyWaterTierDamageInc;
-    public final ForgeConfigSpec.DoubleValue heartSeekerChargingFactor;
-    public final ForgeConfigSpec.DoubleValue heartSeekerUsageFactor;
+    public final ForgeConfigSpec.DoubleValue vampireSwordChargingFactor;
+    public final ForgeConfigSpec.DoubleValue vampireSwordBloodUsageFactor;
     public final ForgeConfigSpec.BooleanValue golemAttackNonVillageFaction;
     public final ForgeConfigSpec.BooleanValue zombieIgnoreVampire;
     public final ForgeConfigSpec.BooleanValue skeletonIgnoreVampire;
@@ -194,8 +194,8 @@ public class BalanceConfig {
         holyWaterTierDamageInc = builder.comment("Holy water damage is multiplied with this value for each tier above normal").defineInRange("holyWaterTierDamageInc", 2d, 1d, 10d);
         holyWaterNauseaDuration = builder.comment("Duration of the nausea effect caused by enhanced or special holy water (ticks)").defineInRange("holyWaterNauseaDuration", 200, 0, 1000);
         holyWaterBlindnessDuration = builder.comment("Duration of the blindness effect caused by special holy water (ticks)").defineInRange("holyWaterBlindnessDuration", 160, 0, 1000);
-        heartSeekerChargingFactor = builder.comment("The blood mB to charge percentage of the normal heart seeker vampire sword").defineInRange("heartSeekerChargingFactor", 0.05 / (double) VReference.FOOD_TO_FLUID_BLOOD, 0d, 1d);
-        heartSeekerUsageFactor = builder.comment("The percentage of stored blood used for every hit with the normal heart seeker vampire sword").defineInRange("heartSeekerUsageFactor", 0.5, 0, 100d);
+        vampireSwordChargingFactor = builder.comment("The blood mB to charge percentage of the normal vampire sword").defineInRange("vampireSwordChargingFactor", 0.05 / (double) VReference.FOOD_TO_FLUID_BLOOD, 0d, 1d);
+        vampireSwordBloodUsageFactor = builder.comment("The percentage of stored blood used for every hit with a normal vampire sword").defineInRange("vampireSwordBloodUsageFactor", 0.5, 0, 100d);
         dropOrchidFromLeavesChance = builder.comment("Drop orchid every n times breaking a leave in the vampire forest").defineInRange("dropOrchidFromLeavesChance", 25, 1, Integer.MAX_VALUE);
         golemAttackNonVillageFaction = builder.comment("If iron golems should attack faction NPCs if in a village with a different faction").define("golemAttackNonVillageFaction", true);
         zombieIgnoreVampire = builder.comment("Whether zombies should ignore vampires").define("zombieIgnoreVampire", true);
