@@ -104,8 +104,18 @@ public class PureBloodItem extends VampirismItem {
                 v.drinkBlood(50, 0.3f, false);
                 entityLiving.addPotionEffect(new EffectInstance(ModEffects.saturation));
                 stack.shrink(1);
+                checkWingConditions(v);
             });
         }
         return stack;
+    }
+
+    private void checkWingConditions(VampirePlayer p) {
+        net.minecraft.entity.player.PlayerEntity e = p.getRepresentingPlayer();
+        if (!e.abilities.isCreativeMode && !e.world.isRemote()) {
+            if (e.getItemStackFromSlot(net.minecraft.inventory.EquipmentSlotType.CHEST).getItem() instanceof VampireCloakItem) {
+                p.triggerWings();
+            }
+        }
     }
 }
