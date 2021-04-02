@@ -20,8 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -30,11 +28,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-/**
- * Item Cloak
- *
- * @author cheaterpaul
- */
 public class VampireCloakItem extends ArmorItem implements IFactionExclusiveItem {
 
     private final String registeredName = "vampire_cloak";
@@ -57,7 +50,7 @@ public class VampireCloakItem extends ArmorItem implements IFactionExclusiveItem
     @OnlyIn(Dist.CLIENT)
     @Override
     public BipedModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, BipedModel _default) {
-        return new CloakModel<>();
+        return CloakModel.getRotatedCloak();
     }
 
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
