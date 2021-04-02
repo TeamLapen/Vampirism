@@ -10,58 +10,68 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class CloakModel<T extends LivingEntity> extends BipedModel<T> {
-    ModelRenderer cloakback;
-    ModelRenderer leftlong;
-    ModelRenderer rightmedium;
-    ModelRenderer leftmedium;
-    ModelRenderer rightshort;
-    ModelRenderer leftshort;
-    ModelRenderer rightlong;
-    ModelRenderer shoulderright;
-    ModelRenderer shoulderleft;
+
+    private static CloakModel<LivingEntity> cloakItemModel;
+
+    public static CloakModel<LivingEntity> getRotatedCloak(){
+        if(cloakItemModel==null){
+            cloakItemModel=new CloakModel<>();
+        }
+        return cloakItemModel;
+    }
+
+    private final ModelRenderer cloakback;
+    private final ModelRenderer leftlong;
+    private final ModelRenderer rightmedium;
+    private final ModelRenderer leftmedium;
+    private final ModelRenderer rightshort;
+    private final ModelRenderer leftshort;
+    private final ModelRenderer rightlong;
+    private final ModelRenderer shoulderright;
+    private final ModelRenderer shoulderleft;
 
     public CloakModel() {
         super(0.0F, 0.0F, 64, 64);
         cloakback = new ModelRenderer(this, 0, 48);
-        cloakback.addBox(-4F, 0F, 0F, 8, 15, 1);
+        cloakback.addBox(-4F, 0F, 2F, 8, 15, 1);
         cloakback.setRotationPoint(0F, 0.2F, 2F);
         cloakback.mirror = true;
         setRotation(cloakback, 0.0872665F, 0F, 0F);
         leftlong = new ModelRenderer(this, 18, 48);
-        leftlong.addBox(4F, 0F, 0F, 1, 15, 1);
+        leftlong.addBox(4F, 0F, 2F, 1, 15, 1);
         leftlong.setRotationPoint(0F, 0.2F, 2F);
         leftlong.mirror = true;
         setRotation(leftlong, 0.0872665F, 0F, 0F);
         rightmedium = new ModelRenderer(this, 22, 50);
-        rightmedium.addBox(-5F, 0F, -1F, 1, 13, 1);
+        rightmedium.addBox(-5F, 0F, 1F, 1, 13, 1);
         rightmedium.setRotationPoint(0F, 0.2F, 2F);
         setRotation(rightmedium, 0.0872665F, 0F, 0F);
         leftmedium = new ModelRenderer(this, 22, 50);
-        leftmedium.addBox(4F, 0F, -1F, 1, 13, 1);
+        leftmedium.addBox(4F, 0F, 1F, 1, 13, 1);
         leftmedium.setRotationPoint(0F, 0.2F, 2F);
         leftmedium.mirror = true;
         setRotation(leftmedium, 0.0872665F, 0F, 0F);
         rightshort = new ModelRenderer(this, 26, 52);
-        rightshort.addBox(-5F, 0F, -2F, 1, 11, 1);
+        rightshort.addBox(-5F, 0F, 0F, 1, 11, 1);
         rightshort.setRotationPoint(0F, 0.2F, 2F);
         setRotation(rightshort, 0.0872665F, 0F, 0F);
         leftshort = new ModelRenderer(this, 26, 52);
-        leftshort.addBox(4F, 0F, -2F, 1, 11, 1);
+        leftshort.addBox(4F, 0F, 0F, 1, 11, 1);
         leftshort.setRotationPoint(0F, 0.2F, 2F);
         leftshort.mirror = true;
         setRotation(leftshort, 0.0872665F, 0F, 0F);
         rightlong = new ModelRenderer(this, 18, 48);
-        rightlong.addBox(-5F, 0F, 0F, 1, 15, 1);
+        rightlong.addBox(-5F, 0F, 2F, 1, 15, 1);
         rightlong.setRotationPoint(0F, 0.2F, 2F);
         setRotation(rightlong, 0.0872665F, 0F, 0F);
         shoulderright = new ModelRenderer(this, 30, 60);
-        shoulderright.addBox(0F, 0F, 0F, 1, 1, 3);
+        shoulderright.addBox(-4F, 0F, 0F, 1, 1, 3);
         shoulderright.setRotationPoint(-5F, 0F, 0F);
         setRotation(shoulderright, 0F, 0F, 0F);
         shoulderleft = new ModelRenderer(this, 30, 60);
-        shoulderleft.addBox(0F, 0F, 0F, 1, 1, 3);
-        shoulderleft.setRotationPoint(4F, 0F, 0F);
-        shoulderleft.mirror = true;
+        shoulderleft.addBox(3F, 0F, 0F, 1, 1, 3);
+        shoulderleft.setRotationPoint(-5F, 0F, 0F);
+        shoulderleft.mirror=true;
         setRotation(shoulderleft, 0F, 0F, 0F);
     }
 
@@ -106,7 +116,10 @@ public class CloakModel<T extends LivingEntity> extends BipedModel<T> {
 
     @Override
     protected Iterable<ModelRenderer> getBodyParts() {
-        return ImmutableList.of(cloakback, leftlong, rightmedium, leftmedium, rightshort, leftshort, rightlong, shoulderright, shoulderleft);
+        //We have to abuse this method to set the rotation angles since Forge and vanilla don't provide a better way.
+        ImmutableList<ModelRenderer> l =  ImmutableList.of(cloakback, leftlong, rightmedium, leftmedium, rightshort, leftshort, rightlong, shoulderright, shoulderleft);
+        l.forEach(p->p.copyModelAngles(this.bipedBody));
+        return l;
     }
 
 
