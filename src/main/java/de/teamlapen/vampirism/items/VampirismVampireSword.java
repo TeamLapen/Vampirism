@@ -115,6 +115,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
 
     @Override
     public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        //Vampire Finisher skill
         if (attacker instanceof PlayerEntity && target.getHealth() <= target.getMaxHealth() * VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() && !Helper.isVampire(target)) {
             if (VampirePlayer.getOpt((PlayerEntity) attacker).map(VampirePlayer::getSkillHandler).map(h -> h.isSkillEnabled(VampireSkills.sword_finisher)).orElse(false)) {
                 DamageSource dmg = DamageSource.causePlayerDamage((PlayerEntity) attacker).setDamageBypassesArmor();
@@ -124,8 +125,31 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
                 ModParticles.spawnParticlesServer(target.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xE02020), center.x, center.y, center.z, 15, 0.5, 0.5, 0.5, 0);
             }
         }
+        //Update training on kill
+        if (target.getHealth() <= 0.0f && Helper.isVampire(attacker)) {
+            float trained = getTrained(stack, attacker);
+            int exp = target instanceof PlayerEntity ? 10 : (attacker instanceof PlayerEntity ? (Helper.getExperiencePoints(target, (PlayerEntity) attacker)) : 5);
+            trained += exp / 5f * (1.0f - trained) / 15f;
+            setTrained(stack, attacker, trained);
+        }
+        //Consume blood
+        float charged = getCharged(stack);
+        charged -= getChargeUsage();
+        setCharged(stack, charged);
+        attacker.setHeldItem(Hand.MAIN_HAND, stack);
+
         return super.hitEntity(stack, target, attacker);
     }
+
+    /**
+     * //TODO 1.17 make abstract
+     * @return The amount of charge consumed per hit
+     */
+    protected float getChargeUsage(){
+        return 0;
+    }
+
+
 
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {

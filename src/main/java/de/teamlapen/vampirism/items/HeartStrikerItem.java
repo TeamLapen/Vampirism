@@ -4,13 +4,9 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
-import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -53,23 +49,13 @@ public class HeartStrikerItem extends VampirismVampireSword implements IItemWith
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (target.getHealth() <= 0.0f && Helper.isVampire(attacker)) {
-            float trained = getTrained(stack, attacker);
-            int exp = target instanceof PlayerEntity ? 10 : (attacker instanceof PlayerEntity ? (Helper.getExperiencePoints(target, (PlayerEntity) attacker)) : 5);
-            trained += exp / 5f * (1.0f - trained) / 15f;
-            setTrained(stack, attacker, trained);
-        }
-        float charged = getCharged(stack);
-        charged -= VampirismConfig.BALANCE.heartSeekerUsageFactor.get() / 100f * (getVampirismTier().ordinal() + 2) / 2f;
-        setCharged(stack, charged);
-        attacker.setHeldItem(Hand.MAIN_HAND, stack);
-        return super.hitEntity(stack, target, attacker);
+    protected float getChargeUsage() {
+        return (float) ((VampirismConfig.BALANCE.vampireSwordBloodUsageFactor.get() / 100f) * (getVampirismTier().ordinal() + 2) / 2f);
     }
 
     @Override
     protected float getChargingFactor(ItemStack stack) {
-        return (float) (VampirismConfig.BALANCE.heartSeekerChargingFactor.get() * 2f / (getVampirismTier().ordinal() + 2f));
+        return (float) (VampirismConfig.BALANCE.vampireSwordChargingFactor.get() * 2f / (getVampirismTier().ordinal() + 2f));
     }
 
     @Override
