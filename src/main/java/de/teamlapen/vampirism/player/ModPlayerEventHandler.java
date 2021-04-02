@@ -36,6 +36,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.CrossbowItem;
@@ -353,6 +354,10 @@ public class ModPlayerEventHandler {
                 if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(vampire -> vampire.getSpecialAttributes().bat).orElse(false)) {
                     event.setNewSize(BatVampireAction.BAT_SIZE);
                     event.setNewEyeHeight(BatVampireAction.BAT_EYE_HEIGHT);
+                }
+                else if(VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(VampirePlayer::isDBNO).orElse(false)){
+                    event.setNewSize(EntitySize.fixed(0.6f,0.95f));
+                    event.setNewEyeHeight(0.725f);
                 }
             }
         }

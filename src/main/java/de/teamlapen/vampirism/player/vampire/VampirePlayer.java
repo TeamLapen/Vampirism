@@ -722,7 +722,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 }
             }
             player.setMotion(0, Math.min(0, player.getMotion().getY()), 0);
-            player.setForcedPose(Pose.SLEEPING);
             return;
         }
         super.onUpdate();
@@ -992,9 +991,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             dbnoTimer = nbt.getInt(KEY_DBNO_TIMER);
             if(!wasDBNOClient && isDBNO()){
                 VampirismMod.proxy.showDBNOScreen(player, dbnoMessage);
+                player.setForcedPose(Pose.SLEEPING);
+                player.recalculateSize();
             }
             else if(wasDBNOClient && !isDBNO()){
-                this.player.setForcedPose(null);
+                player.setForcedPose(null);
+                player.recalculateSize();
             }
         }
 
@@ -1270,6 +1272,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             this.player.setHealth(Math.max(0.5f,bloodStats.getBloodLevel()-1));
             this.bloodStats.removeBlood(bloodStats.getBloodLevel()-1,true);
             this.player.setForcedPose(null);
+            this.player.recalculateSize();
             this.sync(true);
             this.player.addPotionEffect(new EffectInstance(ModEffects.neonatal,VampirismConfig.BALANCE.vpNeonatalDuration.get()*20));
         }
