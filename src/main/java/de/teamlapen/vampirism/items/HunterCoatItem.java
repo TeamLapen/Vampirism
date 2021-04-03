@@ -21,13 +21,22 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
 
     private final static String baseRegName = "hunter_coat";
 
-    public static boolean isFullyEquipped(PlayerEntity player) {
+    /**
+     * Checks if the player has this armor fully equipped
+     * @return if fully equipped the tier of the worst item, otherwise null
+     */
+    @Nullable
+    public static TIER isFullyEquipped(PlayerEntity player) {
+        int minLevel  = 1000 ;
         for (ItemStack stack : player.inventory.armorInventory) {
             if (stack.isEmpty() || !(stack.getItem() instanceof HunterCoatItem)) {
-                return false;
+                return null;
+            }
+            else{
+                minLevel = Math.min(minLevel, ((HunterCoatItem) stack.getItem()).getVampirismTier().ordinal());
             }
         }
-        return true;
+        return IItemWithTier.TIER.values()[minLevel];
     }
 
     private final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{3, 7, 9, 3};

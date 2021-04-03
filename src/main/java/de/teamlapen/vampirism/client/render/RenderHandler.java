@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.render;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
+import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.items.HunterCoatItem;
@@ -199,7 +200,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
             Entity entity = event.getEntity();
 
             boolean flag = true;
-            if (entity instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) entity)) flag = false;
+            if (entity instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) entity)!=null) flag = false;
             double dist = mc.player.getDistanceSq(entity);
             if (dist > VampirismConfig.BALANCE.vsBloodVisionDistanceSq.get()) {
                 flag = false;
@@ -255,8 +256,15 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     public void onRenderLivingPre(RenderLivingEvent.Pre<PlayerEntity, PlayerModel<PlayerEntity>> event) {
         LivingEntity entity = event.getEntity();
         if (entity instanceof PlayerEntity && HunterPlayer.getOpt((PlayerEntity) entity).map(HunterPlayer::getSpecialAttributes).map(HunterPlayerSpecialAttribute::isDisguised).orElse(false)) {
-            if (this.mc.player != null && entity.getDistanceSq(this.mc.player) > 4) {
+            double dist = this.mc.player == null ? 0 : entity.getDistanceSq(this.mc.player);
+            if (dist > 64) {
                 event.setCanceled(true);
+            }
+            else if(dist>16){
+                IItemWithTier.TIER hunterCoatTier = HunterCoatItem.isFullyEquipped((PlayerEntity) entity);
+                if(hunterCoatTier== IItemWithTier.TIER.ENHANCED||hunterCoatTier == IItemWithTier.TIER.ULTIMATE){
+                    event.setCanceled(true);
+                }
             }
         }
     }

@@ -31,7 +31,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
         for (LivingEntity e : l) {
             if (player.equals(e)) continue;
             if (e instanceof BlindingBatEntity) continue;
-            if (e instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) e)) continue;
+            if (e instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) e)!=null) continue;
             int dur = VampirismConfig.BALANCE.vaFreezeDuration.get();
             e.addPotionEffect(new EffectInstance(ModEffects.freeze, dur * 20));
             ModParticles.spawnParticlesServer(player.getEntityWorld(), new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_2"), 20, 0xF0F0F0, 0.4F), e.getPosX(), e.getPosY(), e.getPosZ(), 20, 1, 1, 1, 0);

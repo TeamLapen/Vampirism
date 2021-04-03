@@ -236,7 +236,7 @@ public class BalanceConfig {
         //Hunter actions
         builder.category("hunterActions", "ha");
         haDisguiseEnabled = builder.define("disguiseEnabled", true);
-        haDisguiseVisibilityMod = builder.comment("If disguised the detection radius of mobs will be multiplied by this").defineInRange("disguiseVisibilityMod", 0.1D, 0, 1);
+        haDisguiseVisibilityMod = builder.comment("If disguised the detection radius of mobs will be multiplied by this").defineInRange("disguiseVisibilityMod", 0.2D, 0, 1);
         haDisguiseInvisibleSQ = builder.comment("Squared distance as of which a disguised hunter is invisible").defineInRange("disguiseInvisibleSQ", 256, 1, Integer.MAX_VALUE);
         haAwarenessEnabled = builder.define("awarenessEnabled", true);
         haAwarenessDuration = builder.comment("In ticks").defineInRange("awarenessDuration", Integer.MAX_VALUE, 1, Integer.MAX_VALUE);
