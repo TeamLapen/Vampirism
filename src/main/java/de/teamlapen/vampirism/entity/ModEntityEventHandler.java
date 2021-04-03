@@ -20,6 +20,7 @@ import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.tileentity.TotemHelper;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
@@ -39,6 +40,7 @@ import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -286,6 +288,13 @@ public class ModEntityEventHandler {
             if(hunterCoatTier== IItemWithTier.TIER.ENHANCED || hunterCoatTier== IItemWithTier.TIER.ULTIMATE){
                 event.setLootingLevel(Math.min(event.getLootingLevel()+1 , 3));
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onEntityEquipmentChange(LivingEquipmentChangeEvent event){
+        if(event.getSlot().getSlotType() == EquipmentSlotType.Group.ARMOR && event.getEntity() instanceof PlayerEntity){
+            VampirePlayer.getOpt((PlayerEntity) event.getEntity()).ifPresent(VampirePlayer::requestNaturalArmorUpdate);
         }
     }
 }

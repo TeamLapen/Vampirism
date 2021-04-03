@@ -110,7 +110,6 @@ public class BalanceConfig {
 
     public final ForgeConfigSpec.DoubleValue vpHealthMaxMod;
     public final ForgeConfigSpec.DoubleValue vpStrengthMaxMod;
-    public final ForgeConfigSpec.DoubleValue vpResistanceMaxMod;
     public final ForgeConfigSpec.DoubleValue vpSpeedMaxMod;
     public final ForgeConfigSpec.DoubleValue vpExhaustionMaxMod;
     public final ForgeConfigSpec.DoubleValue vpBasicBloodExhaustionMod;
@@ -312,7 +311,6 @@ public class BalanceConfig {
         builder.category("vampirePlayer", "vp");
         vpHealthMaxMod = builder.defineInRange("healthMaxMod", 16, 0.5, 40);
         vpStrengthMaxMod = builder.defineInRange("strengthMaxMod", 0.25, 0, 2);
-        vpResistanceMaxMod = builder.defineInRange("resistanceMaxMod", 4d, 0, 20);
         vpSpeedMaxMod = builder.defineInRange("speedMaxMod", 0.3, 0, 5);
         vpExhaustionMaxMod = builder.defineInRange("exhaustionMaxMod", 1.0, 0, 10);
         vpBasicBloodExhaustionMod = builder.comment("Blood exhaustion is multiplied with this value").defineInRange("basicBloodExhaustionMod", 0.7, 0, 5);
