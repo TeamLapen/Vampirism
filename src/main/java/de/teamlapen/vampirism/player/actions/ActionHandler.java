@@ -350,6 +350,14 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         nbt.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
     }
 
+    @Override
+    public void extendActionTimer(@Nonnull ILastingAction action, int duration) {
+        int i = activeTimers.getOrDefault(action.getRegistryName(),-1);
+        if(i>0){
+            activeTimers.put(action.getRegistryName(),i+duration);
+        }
+    }
+
     private void loadTimerMapFromNBT(CompoundNBT nbt, Object2IntMap<ResourceLocation> map) {
         for (String key : nbt.keySet()) {
             ResourceLocation id = new ResourceLocation(key);

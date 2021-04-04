@@ -83,4 +83,10 @@ public interface IActionHandler<T extends IActionPlayer> {
      * @param actions
      */
     void unlockActions(Collection<IAction> actions);
+
+    /**
+     * If active, the remaining duration is extended by the giving duration
+     * @param action
+     */
+    void extendActionTimer(@Nonnull ILastingAction action, int duration);
 }
