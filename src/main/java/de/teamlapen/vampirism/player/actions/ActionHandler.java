@@ -75,7 +75,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         for (ResourceLocation r : activeTimers.keySet()) {
             ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(r);
             assert action != null;
-            int cooldown = action.getCooldown();
+            int cooldown = action.getCooldown(player);
             cooldownTimers.put(r, cooldown);
             action.onDeactivated(player);
         }
@@ -96,10 +96,10 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     @Override
     public float getPercentageForAction(@Nonnull IAction action) {
         if (activeTimers.containsKey(action.getRegistryName())) {
-            return activeTimers.get(action.getRegistryName()) / ((float) ((ILastingAction) action).getDuration(player.getLevel()));
+            return activeTimers.get(action.getRegistryName()) / ((float) ((ILastingAction) action).getDuration(player));
         }
         if (cooldownTimers.containsKey(action.getRegistryName())) {
-            return -cooldownTimers.get(action.getRegistryName()) / (float) action.getCooldown();
+            return -cooldownTimers.get(action.getRegistryName()) / (float) action.getCooldown(player);
         }
         return 0f;
     }
@@ -247,9 +247,9 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
 
         ResourceLocation id = action.getRegistryName();
         if (activeTimers.containsKey(id)) {
-            int cooldown = action.getCooldown();
+            int cooldown = action.getCooldown(player);
             int leftTime = activeTimers.get(id);
-            int duration = ((ILastingAction) action).getDuration(player.getLevel());
+            int duration = ((ILastingAction) action).getDuration(player);
             cooldown -= cooldown * (leftTime / (float) duration / 2f);
             ((ILastingAction<T>) action).onDeactivated(player);
             activeTimers.remove(id);
@@ -266,9 +266,9 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             if (r == IAction.PERM.ALLOWED) {
                 if (action.onActivated(player)) {
                     if (action instanceof ILastingAction) {
-                        activeTimers.put(id, ((ILastingAction) action).getDuration(player.getLevel()));
+                        activeTimers.put(id, ((ILastingAction) action).getDuration(player));
                     } else {
-                        cooldownTimers.put(id, action.getCooldown());
+                        cooldownTimers.put(id, action.getCooldown(player));
                     }
                     dirty = true;
                 }
@@ -321,7 +321,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             assert action != null;
             if (newtimer == 0) {
                 action.onDeactivated(player);
-                cooldownTimers.put(entry.getKey(), action.getCooldown());
+                cooldownTimers.put(entry.getKey(), action.getCooldown(player));
                 it.remove();//Do not access entry after this
                 dirty = true;
             } else {

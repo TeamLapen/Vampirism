@@ -47,7 +47,7 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
          * It is not ideal because it might seem somewhat inconsistent to the player, but at least it definitively removes the slowness effect added by this skill and at the same time does not allow to cancel long lasting effects.
          */
         if (player.getRepresentingPlayer().isPotionActive(Effects.SLOWNESS)) {
-            if (player.getRepresentingPlayer().getActivePotionEffect(Effects.SLOWNESS).getDuration() < getDuration(player.getLevel())) {
+            if (player.getRepresentingPlayer().getActivePotionEffect(Effects.SLOWNESS).getDuration() < getDuration(player)) {
                 player.getRepresentingPlayer().removePotionEffect(Effects.SLOWNESS);
             }
         }
@@ -68,7 +68,7 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     protected boolean activate(IVampirePlayer playerIn) {
         ((VampirePlayer) playerIn).getSpecialAttributes().half_invulnerable = true;
         playerIn.getRepresentingPlayer().addPotionEffect(
-                new EffectInstance(Effects.SLOWNESS, getDuration(playerIn.getLevel()) - 1, 1, false, false));
+                new EffectInstance(Effects.SLOWNESS, getDuration(playerIn) - 1, 1, false, false));
         return true;
     }
 
