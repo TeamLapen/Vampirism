@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "vampirism:item/vampire_ring_layer0",
+    "layer1": "vampirism:item/vampire_ring_layer1"
+  }
+}
