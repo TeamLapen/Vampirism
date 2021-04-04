@@ -19,6 +19,10 @@ public class ModRefinements {
     public static final Refinement refinement_speed = getNull();
     public static final Refinement refinement_health = getNull();
     public static final Refinement half_invulnerable = getNull();
+    public static final Refinement teleport = getNull();
+    public static final Refinement sword_finisher = getNull();
+    public static final Refinement summon_bats = getNull();
+    public static final Refinement rage_fury = getNull();
 
 
     public static void registerRefinements(IForgeRegistry<IRefinement> registry) {
@@ -26,5 +30,9 @@ public class ModRefinements {
         registry.register(new Refinement(Attributes.MOVEMENT_SPEED, UUID.fromString("7181faa0-7267-4497-baab-98e57ec5d8db"),2,(uuid, value) -> new AttributeModifier(uuid, "refinement_speed", value, AttributeModifier.Operation.ADDITION)).setRegistryName(REFERENCE.MODID,"refinement_speed"));
         registry.register(new Refinement(Attributes.MAX_HEALTH, UUID.fromString("e8275eaf-87ed-4898-b7ea-622006318d58"), 2, (uuid, value) -> new AttributeModifier(uuid, "refinement_health", value, AttributeModifier.Operation.ADDITION)).setRegistryName(REFERENCE.MODID,"refinement_health"));
         registry.register(new Refinement().setRegistryName(REFERENCE.MODID, "half_invulnerable"));
+        registry.register(new Refinement().setRegistryName(REFERENCE.MODID, "teleport"));
+        registry.register(new Refinement().setRegistryName(REFERENCE.MODID, "sword_finisher"));
+        registry.register(new Refinement().setRegistryName(REFERENCE.MODID, "summon_bats"));
+        registry.register(new Refinement().setRegistryName(REFERENCE.MODID, "rage_fury"));
     }
 }

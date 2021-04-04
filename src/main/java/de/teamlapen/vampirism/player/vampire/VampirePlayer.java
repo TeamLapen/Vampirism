@@ -1159,6 +1159,15 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             endFeeding(true);
     }
 
+    @Override
+    public void onEntityKilled(LivingEntity victim, DamageSource src) {
+        if(this.getSkillHandler().isRefinementEquipped(ModRefinements.rage_fury)){
+            //No need to check if rage active, extending only has an effect when already active
+            int bonus = victim instanceof PlayerEntity ? 200 : 100;
+            this.getActionHandler().extendActionTimer(VampireActions.vampire_rage,bonus);
+        }
+    }
+
     private static class Storage implements Capability.IStorage<IVampirePlayer> {
         @Override
         public void readNBT(Capability<IVampirePlayer> capability, IVampirePlayer instance, Direction side, INBT nbt) {

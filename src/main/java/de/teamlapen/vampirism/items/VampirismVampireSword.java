@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
+import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
 import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -115,8 +116,9 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
 
     @Override
     public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (attacker instanceof PlayerEntity && target.getHealth() <= target.getMaxHealth() * VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() && !Helper.isVampire(target)) {
-            if (VampirePlayer.getOpt((PlayerEntity) attacker).map(VampirePlayer::getSkillHandler).map(h -> h.isSkillEnabled(VampireSkills.sword_finisher)).orElse(false)) {
+        if(attacker instanceof PlayerEntity&& !Helper.isVampire(target)){
+            double relTh = VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() * VampirePlayer.getOpt((PlayerEntity) attacker).map(VampirePlayer::getSkillHandler).map(h -> h.isSkillEnabled(VampireSkills.sword_finisher) ? (h.isRefinementEquipped(ModRefinements.sword_finisher) ? 1.25 : 1 ): 0).orElse(0d);
+            if (relTh>0 && target.getHealth() <= target.getMaxHealth() * relTh ) {
                 DamageSource dmg = DamageSource.causePlayerDamage((PlayerEntity) attacker).setDamageBypassesArmor();
                 target.attackEntityFrom(dmg, 10000F);
                 Vector3d center = Vector3d.copy(target.getPosition());
@@ -124,6 +126,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
                 ModParticles.spawnParticlesServer(target.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xE02020), center.x, center.y, center.z, 15, 0.5, 0.5, 0.5, 0);
             }
         }
+
         return super.hitEntity(stack, target, attacker);
     }
 

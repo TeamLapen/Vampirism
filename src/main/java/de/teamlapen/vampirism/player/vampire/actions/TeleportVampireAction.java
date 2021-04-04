@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.player.vampire.actions;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.entity.AreaParticleCloudEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -26,7 +28,10 @@ public class TeleportVampireAction extends DefaultVampireAction {
     @Override
     public boolean activate(IVampirePlayer vampire) {
         PlayerEntity player = vampire.getRepresentingPlayer();
-        RayTraceResult target = UtilLib.getPlayerLookingSpot(player, VampirismConfig.BALANCE.vaTeleportMaxDistance.get());
+        int dist = VampirismConfig.BALANCE.vaTeleportMaxDistance.get();
+        if(vampire.getSkillHandler().isRefinementEquipped(ModRefinements.teleport))
+            dist = (int) (dist*1.5d);
+        RayTraceResult target = UtilLib.getPlayerLookingSpot(player, dist);
         double ox = player.getPosX();
         double oy = player.getPosY();
         double oz = player.getPosZ();
@@ -83,6 +88,11 @@ public class TeleportVampireAction extends DefaultVampireAction {
     @Override
     public int getCooldown() {
         return VampirismConfig.BALANCE.vaTeleportCooldown.get() * 20;
+    }
+
+    @Override
+    public int getCooldown(IFactionPlayer player) {
+        return (int) ((player.getSkillHandler().isRefinementEquipped(ModRefinements.teleport) ? 0.5 : 1) * getCooldown());
     }
 
     @Override
