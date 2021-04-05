@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.refinements.RefinementSet;
@@ -27,15 +28,15 @@ import java.util.stream.Collectors;
 public class VampireRefinementItem extends Item implements IRefinementItem {
 
     private static final Random RANDOM = new Random();
-    private final EquipmentSlotType type;
+    private final AccessorySlotType type;
 
-    public VampireRefinementItem(Properties properties, EquipmentSlotType type) {
+    public VampireRefinementItem(Properties properties, AccessorySlotType type) {
         super(properties.maxStackSize(1));
         this.type = type;
     }
 
     @Override
-    public EquipmentSlotType getSlotType() {
+    public AccessorySlotType getSlotType() {
         return this.type;
     }
 
@@ -58,15 +59,49 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 
-    public static ItemStack applyRandomRefinementSet(ItemStack stack, IFaction<?> faction) {
+    public static ItemStack getRandomRefinementItem(IFaction<?> faction) {
         List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream().filter(set -> set.getFaction() == faction).filter(a -> a.getRarity() != Rarity.EPIC).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
-        if (sets.isEmpty()) return stack;
-        return applyRefinementSet(stack, WeightedRandom.getRandomItem(RANDOM, sets).getItem());
+        if (sets.isEmpty()) return ItemStack.EMPTY;
+        IRefinementSet s = WeightedRandom.getRandomItem(RANDOM,sets).getItem();
+        AccessorySlotType t = s.getSlotType().orElseGet(()->{
+            switch (RANDOM.nextInt(3)){
+                case 0:
+                    return AccessorySlotType.OBI_BELT;
+                case 1:
+                    return AccessorySlotType.RING;
+            }
+           return AccessorySlotType.AMULET;
+        });
+        VampireRefinementItem i  = getItemForType(t);
+        ItemStack stack= new ItemStack(i);
+        if(i.applyRefinementSet(stack,s)){
+            return stack;
+        }
+        return ItemStack.EMPTY;
     }
 
-    public static ItemStack applyRefinementSet(ItemStack stack, IRefinementSet set) {
-        CompoundNBT tag = stack.getOrCreateTag();
-        tag.putString("refinement_set", set.getRegistryName().toString());
-        return stack;
+    public static VampireRefinementItem getItemForType(AccessorySlotType type){
+        switch (type){
+            case AMULET:
+                return ModItems.amulet;
+            case RING:
+                return ModItems.ring;
+            default:
+                return ModItems.obi_belt;
+        }
+    }
+
+    /**
+     * Apply refinement set to the given stack.
+     * Note: Not all refinements can be applied to all accessory slot types
+     * @return Whether the set was successfully applied
+     */
+    public boolean applyRefinementSet(ItemStack stack, IRefinementSet set) {
+        if(set.getSlotType().map(t -> t==type).orElse(true)){
+            CompoundNBT tag = stack.getOrCreateTag();
+            tag.putString("refinement_set", set.getRegistryName().toString());
+            return true;
+        }
+        return false;
     }
 }

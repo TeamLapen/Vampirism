@@ -405,9 +405,9 @@ public class ModItems {
         registry.register(new MinionUpgradeItem("vampire_minion_upgrade_enhanced", 3, 4, VReference.VAMPIRE_FACTION));
         registry.register(new MinionUpgradeItem("vampire_minion_upgrade_special", 5, 6, VReference.VAMPIRE_FACTION));
 
-        registry.register(new VampireRefinementItem(creativeTabProps(), IRefinementItem.EquipmentSlotType.AMULET).setRegistryName(REFERENCE.MODID, "amulet"));
-        registry.register(new VampireRefinementItem(creativeTabProps(), IRefinementItem.EquipmentSlotType.RING).setRegistryName(REFERENCE.MODID, "ring"));
-        registry.register(new VampireRefinementItem(creativeTabProps(), IRefinementItem.EquipmentSlotType.OBI_BELT).setRegistryName(REFERENCE.MODID, "obi_belt"));
+        registry.register(new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.AMULET).setRegistryName(REFERENCE.MODID, "amulet"));
+        registry.register(new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.RING).setRegistryName(REFERENCE.MODID, "ring"));
+        registry.register(new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.OBI_BELT).setRegistryName(REFERENCE.MODID, "obi_belt"));
 
         if (VampirismMod.inDataGen) {
             registry.register(new DummyItem().setRegistryName("guideapi-vp", "vampirism-guidebook"));

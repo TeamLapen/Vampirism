@@ -6,12 +6,15 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
+import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.item.Rarity;
-import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.Set;
 
 public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> implements IRefinementSet {
@@ -19,8 +22,11 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
     private final Set<IRefinement> refinements;
     private final Rarity rarity;
     private final int color;
-    private TextComponent name;
+    private ITextComponent name;
+    private ITextComponent desc;
     private final WeightedRandomItem<IRefinementSet> weightedRandom;
+    @Nullable
+    private IRefinementItem.AccessorySlotType restrictedType;
 
     public RefinementSet(Rarity rarity, int color, Set<IRefinement> refinements) {
         this.refinements = refinements;
@@ -36,6 +42,13 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
         this.color = color;
     }
 
+    /**
+     * Specify the one and only accessory type this refinement can be put on
+     */
+    public void onlyFor(IRefinementItem.AccessorySlotType restrictedType){
+        this.restrictedType=restrictedType;
+    }
+
     @Nonnull
     @Override
     public Set<IRefinement> getRefinements() {
@@ -44,14 +57,14 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
 
     @Nonnull
     @Override
-    public TextComponent getName() {
-        return this.name != null? this.name: (this.name= new TranslationTextComponent(getTranslationKey()));
+    public ITextComponent getName() {
+        return this.name != null? this.name: (this.name= new TranslationTextComponent("refinement_set." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()));
     }
 
     @Nonnull
     @Override
-    public String getTranslationKey() {
-        return "refinement_set." + getRegistryName().getNamespace() + "." + getRegistryName().getPath();
+    public ITextComponent getDescription() {
+        return this.desc != null? this.desc: (this.desc= new TranslationTextComponent("refinement_set." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()+".desc"));
     }
 
     @Nonnull
@@ -62,6 +75,11 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
 
     public WeightedRandomItem<IRefinementSet> getWeightedRandom() {
         return weightedRandom;
+    }
+
+    @Override
+    public Optional<IRefinementItem.AccessorySlotType> getSlotType() {
+        return Optional.ofNullable(restrictedType);
     }
 
     private WeightedRandomItem<IRefinementSet> createWeightedRandom() {

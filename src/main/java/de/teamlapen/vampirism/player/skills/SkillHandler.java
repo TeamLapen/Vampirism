@@ -287,7 +287,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         if (stack.getItem() instanceof IRefinementItem) {
             IRefinementItem refinementItem = ((IRefinementItem) stack.getItem());
             @Nullable IRefinementSet newSet = refinementItem.getRefinementSet(stack);
-            IRefinementItem.EquipmentSlotType setSlot = refinementItem.getSlotType();
+            IRefinementItem.AccessorySlotType setSlot = refinementItem.getSlotType();
 
             removeRefinementSet(setSlot.getSlot());
             this.dirty = true;

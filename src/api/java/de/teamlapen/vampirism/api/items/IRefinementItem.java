@@ -5,16 +5,16 @@ import net.minecraft.item.ItemStack;
 
 public interface IRefinementItem {
 
-    EquipmentSlotType getSlotType();
+    AccessorySlotType getSlotType();
 
     IRefinementSet getRefinementSet(ItemStack stack);
 
-    enum EquipmentSlotType {
+    enum AccessorySlotType {
         AMULET(0), RING(1), OBI_BELT(2);
 
         private final int slot;
 
-        EquipmentSlotType(int slot) {
+        AccessorySlotType(int slot) {
             this.slot = slot;
         }
 
