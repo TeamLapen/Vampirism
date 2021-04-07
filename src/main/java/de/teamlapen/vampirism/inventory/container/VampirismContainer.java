@@ -9,12 +9,12 @@ import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskActionPacket;
 import de.teamlapen.vampirism.player.TaskManager;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
@@ -31,6 +31,8 @@ import java.util.function.Function;
 
 public class VampirismContainer extends InventoryContainer implements TaskContainer {
 
+    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(stack -> true, 58, 8), new SelectorInfo(stack -> true, 58, 26), new SelectorInfo(stack -> true, 58, 44)};
+
     public Map<UUID, Set<Task>> completableTasks = new HashMap<>();
     public Map<UUID, TaskManager.TaskBoardInfo> taskBoardInfos = new HashMap<>();
     public Map<UUID, Set<Task>> tasks = new HashMap<>();
@@ -41,11 +43,13 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
 
     private Runnable listener;
 
+    private final NonNullList<ItemStack> refinementStacks = NonNullList.withSize(3, ItemStack.EMPTY);
+
     public VampirismContainer(int id, PlayerInventory playerInventory) {
-        super(ModContainer.vampirism, id, playerInventory, IWorldPosCallable.DUMMY, new Inventory(3), RemovingSelectorSlot::new, new SelectorInfo(stack -> true, 58, 8), new SelectorInfo(stack -> true, 58, 26), new SelectorInfo(stack -> true, 58, 44));
+        super(ModContainer.vampirism, id, playerInventory, IWorldPosCallable.DUMMY, new Inventory(3), RemovingSelectorSlot::new, SELECTOR_INFOS);
         this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction"));
         this.factionColor = factionPlayer.getFaction().getChatColor();
-        addPlayerSlots(playerInventory, 37, 124);
+        this.addPlayerSlots(playerInventory, 37, 124);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -57,6 +61,14 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
         if (this.listener != null) {
             this.listener.run();
         }
+    }
+
+    public void setRefinement(int slot, ItemStack stack) {
+        this.refinementStacks.set(slot, stack);
+    }
+
+    public NonNullList<ItemStack> getRefinementStacks() {
+        return refinementStacks;
     }
 
     @Override
@@ -137,33 +149,15 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
         return false;
     }
 
-    public static class RemovingSelectorSlot extends SelectorSlot {
+    private static class RemovingSelectorSlot extends SelectorSlot {
+
         public RemovingSelectorSlot(IInventory inventoryIn, int index, SelectorInfo info, Consumer<IInventory> refreshInvFunc, Function<Integer, Boolean> activeFunc) {
             super(inventoryIn, index, info, refreshInvFunc, activeFunc);
         }
 
         @Override
-        public boolean canTakeStack(@Nonnull PlayerEntity playerIn) {
-            return false;
-        }
-
-        @Override
-        public void onSlotChange(ItemStack oldStackIn, ItemStack newStackIn) {
-            super.onSlotChange(oldStackIn, newStackIn);
-            oldStackIn.shrink(1);
-        }
-
-        @Nonnull
-        @Override
-        public ItemStack onTake(@Nonnull PlayerEntity thePlayer, @Nonnull ItemStack stack) {
-            return super.onTake(thePlayer, stack);
-        }
-
-
-        @Override
         public void putStack(@Nonnull ItemStack stack) {
-            this.inventory.getStackInSlot(this.slotNumber).shrink(1);
-            super.putStack(stack);
+            ((VampirismContainer) this.getS()).setRefinement(this.getSlotIndex(), stack);
         }
     }
 

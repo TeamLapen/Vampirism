@@ -20,6 +20,8 @@ import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -94,6 +96,16 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
+
+        for (int i = 0; i < this.container.getRefinementStacks().size(); i++) {
+            ItemStack stack = this.container.getRefinementStacks().get(i);
+            Slot slot = this.container.getSlot(i);
+            int x = slot.xPos + this.guiLeft;
+            int y = slot.yPos + this.guiTop;
+            this.itemRenderer.renderItemAndEffectIntoGUI(this.minecraft.player, stack, x, y);
+            this.itemRenderer.renderItemOverlayIntoGUI(this.font, stack, x, y, null);
+        }
+
         this.oldMouseX = mouseX;
         this.oldMouseY = mouseY;
         this.list.renderToolTip(matrixStack, mouseX, mouseY);
