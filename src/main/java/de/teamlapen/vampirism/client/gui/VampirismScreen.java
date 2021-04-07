@@ -7,6 +7,7 @@ import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWithDummyWidget;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.inventory.container.VampirismContainer;
 import de.teamlapen.vampirism.player.TaskManager;
 import de.teamlapen.vampirism.util.Helper;
@@ -39,7 +40,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
 
     private int oldMouseX;
     private int oldMouseY;
-    private ScrollableListWidget<TaskItem.TaskInfo> list;
+    private ScrollableListWidget<TaskContainer.TaskInfo> list;
     private final IFactionPlayer<?> factionPlayer;
 
     public VampirismScreen(VampirismContainer container, PlayerInventory playerInventory, ITextComponent titleIn) {
@@ -86,7 +87,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
     }
 
     public void refreshTasks() {
-        this.list.setItems(this.container.tasks.entrySet().stream().flatMap(a -> a.getValue().stream().map(b -> new TaskItem.TaskInfo(b, a.getKey()))).collect(Collectors.toList()));
+        this.list.setItems(this.container.tasks.entrySet().stream().flatMap(a -> a.getValue().stream().map(b -> new TaskContainer.TaskInfo(b, a.getKey()))).collect(Collectors.toList()));
     }
 
     @Override
@@ -119,16 +120,16 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
 
         private ImageButton button;
 
-        public TaskItem(TaskInfo item, ScrollableListWithDummyWidget<TaskInfo> list, boolean isDummy, VampirismScreen screen, IFactionPlayer<?> factionPlayer) {
+        public TaskItem(TaskContainer.TaskInfo item, ScrollableListWithDummyWidget<TaskContainer.TaskInfo> list, boolean isDummy, VampirismScreen screen, IFactionPlayer<?> factionPlayer) {
             super(item, list, isDummy, screen, factionPlayer);
-            if (!item.getTask().isUnique()) {
+            if (!item.task.isUnique()) {
                 this.button = new ImageButton(0, 0, 8, 11, 0, 229, 11, TASKMASTER_GUI_TEXTURE, 256, 256, this::onClick, this::onTooltip, StringTextComponent.EMPTY);
             }
         }
 
         @Override
-        public void renderItem(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int yOffset, int mouseX, int mouseY, float partialTicks, float zLevel) {
-            super.renderItem(matrixStack, x, y, listWidth, listHeight, itemHeight, yOffset, mouseX, mouseY, partialTicks, zLevel);
+        public void renderItem(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
+            super.renderItem(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, partialTicks, zLevel);
             if (this.button != null) {
                 this.button.x = x + listWidth - 13;
                 this.button.y = y + 5;
@@ -137,17 +138,17 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         }
 
         @Override
-        public void renderItemToolTip(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int yOffset, int mouseX, int mouseY, float zLevel) {
+        public void renderItemToolTip(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
             if (this.button != null && this.button.isHovered()) {
                 this.button.renderToolTip(matrixStack, mouseX, mouseY);
             } else {
-                super.renderItemToolTip(matrixStack, x, y, listWidth, listHeight, itemHeight, yOffset, mouseX, mouseY, zLevel);
+                super.renderItemToolTip(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, zLevel);
             }
         }
 
         @Override
         public boolean onClick(double mouseX, double mouseY) {
-            if (this.button != null && !this.isDummy && this.button.x > mouseX && this.button.x < mouseX + this.button.getWidth() && this.button.y > mouseY && this.button.y < mouseY + this.button.getHeightRealms()) { //TODO coords check is not right (atm true for left above)
+            if (this.button != null && !this.isDummy && mouseX > this.button.x && mouseX < this.button.x + this.button.getWidth() && mouseY > this.button.y && mouseY < this.button.y + this.button.getHeightRealms()) {
                 this.button.onClick(mouseX, mouseY);
                 return true;
             } else {
@@ -156,14 +157,14 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         }
 
         private void onTooltip(Button button, MatrixStack matrixStack, int mouseX, int mouseY) {
-            TaskManager.TaskBoardInfo info = container.taskBoardInfos.get(this.item.getTaskBoard());
+            TaskManager.TaskBoardInfo info = container.taskBoardInfos.get(this.item.taskBoard);
             if (info != null) {
                 VampirismScreen.this.renderWrappedToolTip(matrixStack, Collections.singletonList(new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos").append(new StringTextComponent("[" + info.getLastSeenPos().getCoordinatesAsString() + "]").mergeStyle(TextFormatting.GREEN))), mouseX, mouseY, font);
             }
         }
 
         private void onClick(Button button) {
-            TaskManager.TaskBoardInfo info = container.taskBoardInfos.get(this.item.getTaskBoard());
+            TaskManager.TaskBoardInfo info = container.taskBoardInfos.get(this.item.taskBoard);
             if (info != null) {
                 BlockPos pos = info.getLastSeenPos();
                 PlayerEntity player = this.factionPlayer.getRepresentingPlayer();

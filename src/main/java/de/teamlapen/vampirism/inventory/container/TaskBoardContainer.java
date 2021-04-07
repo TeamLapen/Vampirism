@@ -8,8 +8,6 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.client.gui.TaskBoardScreen;
-import de.teamlapen.vampirism.client.gui.TaskContainer;
-import de.teamlapen.vampirism.client.gui.widget.TaskItem;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskActionPacket;
@@ -175,22 +173,22 @@ public class TaskBoardContainer extends Container implements TaskContainer {
     }
 
     @Override
-    public boolean isTaskNotAccepted(TaskItem.TaskInfo taskInfo) {
-        return isTaskNotAccepted(taskInfo.getTask());
+    public boolean isTaskNotAccepted(TaskInfo taskInfo) {
+        return isTaskNotAccepted(taskInfo.task);
     }
 
     @Override
-    public boolean canCompleteTask(TaskItem.TaskInfo taskInfo) {
-        return canCompleteTask(taskInfo.getTask());
+    public boolean canCompleteTask(TaskInfo taskInfo) {
+        return canCompleteTask(taskInfo.task);
     }
 
     @Override
-    public boolean pressButton(TaskItem.TaskInfo taskInfo) {
+    public boolean pressButton(TaskInfo taskInfo) {
         return false;
     }
 
     @Override
-    public TaskAction buttonAction(TaskItem.TaskInfo taskInfo) {
+    public TaskAction buttonAction(TaskInfo taskInfo) {
         if (canCompleteTask(taskInfo)) {
             return TaskContainer.TaskAction.COMPLETE;
         } else if (isTaskNotAccepted(taskInfo)) {
@@ -201,22 +199,22 @@ public class TaskBoardContainer extends Container implements TaskContainer {
     }
 
     @Override
-    public boolean isCompleted(TaskItem.TaskInfo item) {
-        return isCompleted(item.getTask());
+    public boolean isCompleted(TaskInfo item) {
+        return isCompleted(item.task);
     }
 
     @Override
-    public boolean areRequirementsCompleted(TaskItem.TaskInfo task, TaskRequirement.Type type) {
-        return areRequirementsCompleted(task.getTask(), type);
+    public boolean areRequirementsCompleted(TaskInfo task, TaskRequirement.Type type) {
+        return areRequirementsCompleted(task.task, type);
     }
 
     @Override
-    public int getRequirementStatus(TaskItem.TaskInfo taskInfo, TaskRequirement.Requirement<?> requirement) {
-        return getRequirementStatus(taskInfo.getTask(), requirement);
+    public int getRequirementStatus(TaskInfo taskInfo, TaskRequirement.Requirement<?> requirement) {
+        return getRequirementStatus(taskInfo.task, requirement);
     }
 
     @Override
-    public boolean isRequirementCompleted(TaskItem.TaskInfo taskInfo, TaskRequirement.Requirement<?> requirement) {
-        return isRequirementCompleted(taskInfo.getTask(), requirement);
+    public boolean isRequirementCompleted(TaskInfo taskInfo, TaskRequirement.Requirement<?> requirement) {
+        return isRequirementCompleted(taskInfo.task, requirement);
     }
 }

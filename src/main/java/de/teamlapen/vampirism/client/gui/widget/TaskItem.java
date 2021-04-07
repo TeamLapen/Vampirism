@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.client.gui.widget;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWithDummyWidget;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -11,7 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.client.gui.ExtendedScreen;
-import de.teamlapen.vampirism.client.gui.TaskContainer;
+import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -38,9 +37,13 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
-public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListWithDummyWidget.ListItem<TaskItem.TaskInfo> {
+/**
+ * Element for {@link ScrollableListWithDummyWidget} that presents a {@link Task}
+ *
+ * @param <T>
+ */
+public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListWithDummyWidget.ListItem<TaskContainer.TaskInfo> {
     protected static final ResourceLocation TASKMASTER_GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/taskmaster.png");
     protected static final ITextComponent REWARD = new TranslationTextComponent("gui.vampirism.taskmaster.reward").mergeStyle(TextFormatting.UNDERLINE);
     protected static final ITextComponent REQUIREMENT = new TranslationTextComponent("gui.vampirism.taskmaster.requirement").mergeStyle(TextFormatting.UNDERLINE);
@@ -55,10 +58,10 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     protected final IFactionPlayer<?> factionPlayer;
     private final TaskActionButton taskButton;
 
-    private final Map<TaskInfo, List<ITextComponent>> toolTips = Maps.newHashMap();
+    private final Map<TaskContainer.TaskInfo, List<ITextComponent>> toolTips = Maps.newHashMap();
 
 
-    public TaskItem(TaskItem.TaskInfo item, ScrollableListWithDummyWidget<TaskItem.TaskInfo> list, boolean isDummy, T screen, IFactionPlayer<?> factionPlayer) {
+    public TaskItem(TaskContainer.TaskInfo item, ScrollableListWithDummyWidget<TaskContainer.TaskInfo> list, boolean isDummy, T screen, IFactionPlayer<?> factionPlayer) {
         super(item, list, isDummy);
         this.screen = screen;
         this.factionPlayer = factionPlayer;
@@ -66,9 +69,11 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     }
 
     @Override
-    public void renderItem(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int yOffset, int mouseX, int mouseY, float partialTicks, float zLevel) {
+    public void renderItem(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
         //render background
-        this.colorTask(matrixStack, x, y, listWidth, listHeight, itemHeight, yOffset, mouseX, mouseY, partialTicks, zLevel);
+        RenderSystem.enableDepthTest();
+
+        this.colorTask();
         Minecraft.getInstance().textureManager.bindTexture(TASKMASTER_GUI_TEXTURE);
         AbstractGui.blit(matrixStack, x, y, this.screen.getBlitOffset(), 17, 187, 136, 21, 256, 256);
         AbstractGui.blit(matrixStack, x + 132, y, this.screen.getBlitOffset(), 17 + 133, 187, 136 - 133, 21, 256, 256);
@@ -77,10 +82,13 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         //render name
         Optional<IReorderingProcessor> text = Optional.ofNullable(this.screen.font.trimStringToWidth(this.item.task.getTranslation(), 131).get(0));
         text.ifPresent(t -> this.screen.font.func_238422_b_(matrixStack, t, x + 4, y + 7, 3419941));//(6839882 & 16711422) >> 1 //8453920 //4226832
+
+        RenderSystem.disableDepthTest();
+
     }
 
     @Override
-    public void renderDummy(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int yOffset, int mouseX, int mouseY, float partialTicks, float zLevel) {
+    public void renderDummy(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
         //render background
         RenderSystem.enableDepthTest();
         GuiUtils.drawContinuousTexturedBox(matrixStack, TASKMASTER_GUI_TEXTURE, x, y, 17, 208, listWidth, itemHeight, 136, 21, 3, 3, 3, 3, zLevel);
@@ -114,14 +122,16 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
                     break;
             }
         }
-
+        //render task button
         this.taskButton.x = x + listWidth - 17;
         this.taskButton.y = y + 4;
-        this.taskButton.visible = true;
         this.taskButton.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
-    private void colorTask(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int yOffset, int mouseX, int mouseY, float partialTicks, float zLevel) {
+    /**
+     * sets OpenGL colors based on task and completion
+     */
+    private void colorTask() {
         TaskContainer container = TaskItem.this.screen.getTaskContainer();
         if (container.isCompleted(this.item)) {
             RenderSystem.color4f(0.4f, 0.4f, 0.4f, 1);
@@ -160,7 +170,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     }
 
     @Override
-    public void renderItemToolTip(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int yOffset, int mouseX, int mouseY, float zLevel) {
+    public void renderItemToolTip(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
         //default task tooltips
         List<ITextComponent> toolTips = this.toolTips.getOrDefault(this.item, Lists.newArrayList());
         if (toolTips.isEmpty()) {
@@ -170,7 +180,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     }
 
     @Override
-    public void renderDummyToolTip(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int yOffset, int mouseX, int mouseY, float zLevel) {
+    public void renderDummyToolTip(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
         if (mouseX >= x + 3 + 113 - 21 + 1 && mouseX < x + 3 + 113 - 21 + 16 + 1 && mouseY >= y + 2 && mouseY < y + 2 + 16) {
             TaskReward reward = this.item.task.getReward();
             if (reward instanceof ItemReward) {
@@ -188,7 +198,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         this.taskButton.renderToolTip(matrixStack, mouseX, mouseY);
     }
 
-    private void generateTaskToolTip(TaskInfo taskInfo, List<ITextComponent> toolTips) {
+    private void generateTaskToolTip(TaskContainer.TaskInfo taskInfo, List<ITextComponent> toolTips) {
         Task task = taskInfo.task;
         toolTips.clear();
         toolTips.add(task.getTranslation().copyRaw().mergeStyle(this.screen.getTaskContainer().getFactionColor()));
@@ -317,30 +327,10 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         this.screen.func_243308_b(mStack, tooltips, x, y);
     }
 
-    public static class TaskInfo {
-
-        private final Task task;
-        private final UUID taskBoard;
-
-        public TaskInfo(Task task, UUID taskBoard) {
-            this.task = task;
-            this.taskBoard = taskBoard;
-        }
-
-        public Task getTask() {
-            return task;
-        }
-
-        public UUID getTaskBoard() {
-            return taskBoard;
-        }
-    }
-
     private class TaskActionButton extends ImageButton {
 
         public TaskActionButton(int xPos, int yPos) {
             super(xPos, yPos, 14, 13, 0, 0, 0, TASKMASTER_GUI_TEXTURE, 0, 0, TaskItem.this::clickButton, new StringTextComponent(""));
-            this.visible = false;
         }
 
         @Override
@@ -361,9 +351,9 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         @Override
         public void renderButton(@Nonnull MatrixStack mStack, int mouseX, int mouseY, float p_renderButton_3_) {
             TaskContainer.TaskAction action = TaskItem.this.screen.getTaskContainer().buttonAction(TaskItem.this.item);
+            RenderSystem.enableDepthTest();
             Minecraft minecraft = Minecraft.getInstance();
             minecraft.getTextureManager().bindTexture(TASKMASTER_GUI_TEXTURE);
-            GlStateManager.disableDepthTest();
             int j;
             switch (action) {
                 case ACCEPT:
@@ -378,7 +368,8 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
             }
 
             blit(mStack, this.x, this.y, (float) j, (float) (this.isHovered ? 13 : 0), this.width, this.height, 256, 256);
-            GlStateManager.enableDepthTest();
+            RenderSystem.disableDepthTest();
+
         }
     }
 
