@@ -37,10 +37,7 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
     private static final ResourceLocation TASKMASTER_GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/taskmaster.png");
@@ -114,7 +111,7 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
                     } else {
                         this.container.abortTask(task);
                     }
-                    this.generateTaskToolTip(task, this.toolTips.get(task));
+                    this.generateTaskToolTip(task, this.toolTips.getOrDefault(task, new ArrayList<>()));
                 }
             }));
             k += 21;
@@ -475,7 +472,7 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
             y += 10;
         }
 
-        this.setBlitOffset(0);;
+        this.setBlitOffset(0);
         this.itemRenderer.zLevel = 0.0F;
         RenderSystem.enableLighting();
         RenderSystem.enableDepthTest();

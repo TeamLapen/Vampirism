@@ -16,10 +16,13 @@ import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
 import de.teamlapen.vampirism.network.TaskPacket;
 import de.teamlapen.vampirism.network.TaskStatusPacket;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
@@ -544,6 +547,18 @@ public class TaskManager implements ITaskManager {
             }
             compoundNBT.put("stats", stats);
         }
+        //taskinfos
+        if (!this.taskBoardInfos.isEmpty()) {
+            ListNBT infos = new ListNBT();
+            for (Map.Entry<UUID, TaskBoardInfo> infoEntry : this.taskBoardInfos.entrySet()) {
+                CompoundNBT info = new CompoundNBT();
+                BlockPos pos = infoEntry.getValue().getLastSeenPos();
+                info.put("pos", Helper.newDoubleNBTList(pos.getX(), pos.getY(), pos.getZ()));
+                info.putUniqueId("id", infoEntry.getKey());
+                infos.add(info);
+            }
+            compoundNBT.put("taskBoardInfos", infos);
+        }
     }
 
     public void readNBT(@Nonnull CompoundNBT compoundNBT) {
@@ -604,6 +619,15 @@ public class TaskManager implements ITaskManager {
                     tasks.put(ModRegistries.TASKS.getValue(new ResourceLocation(taskRegistryName)), requirements);
                 }
                 this.stats.put(UUID.fromString(taskBoardId), tasks);
+            }
+        }
+        //taskboardinfos
+        if (compoundNBT.contains("taskBoardInfos")) {
+            ListNBT list = compoundNBT.getList("taskBoardInfos", 10);
+            for (INBT inbt : list) {
+                ListNBT pos = ((CompoundNBT) inbt).getList("pos", 6);
+                TaskBoardInfo info = new TaskBoardInfo(((CompoundNBT) inbt).getUniqueId("id"), new BlockPos(pos.getDouble(0), pos.getDouble(1), pos.getDouble(2)));
+                this.taskBoardInfos.put(info.getTaskBoardId(), info);
             }
         }
     }

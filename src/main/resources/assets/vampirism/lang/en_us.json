@@ -110,6 +110,8 @@
   "gui.vampirism.taskmaster.not_accepted": "Not accepted yet",
   "gui.vampirism.minion_stats": "Minion Stats",
   "gui.vampirism.action_select.action_binding": "Press action keybinding to bind actions",
+  "gui.vampirism.vampirism_menu.last_known_pos": "Last known position: ",
+  "gui.vampirism.vampirism_menu.distance": " (%s blocks away)",
   "enchantment.vampirism.arrow_frugality": "Arrow Frugality",
   "enchantment.vampirism.vampire_slayer": "Vampire Slayer",
   "enchantment.vampirism.crossbow_infinity": "Crossbow Infinity",
