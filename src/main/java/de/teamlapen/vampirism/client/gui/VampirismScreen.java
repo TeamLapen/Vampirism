@@ -49,18 +49,8 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         this.ySize = display_height;
         this.playerInventoryTitleX = 36;
         this.playerInventoryTitleY = this.ySize - 93;
-        this.container.setListener(this::refreshTasks);
+        this.container.setReloadListener(this::refreshTasks);
         this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().get();
-    }
-
-    @Override
-    public ItemRenderer getItemRenderer() {
-        return this.itemRenderer;
-    }
-
-    @Override
-    public TaskContainer getTaskContainer() {
-        return this.container;
     }
 
     @Override
@@ -88,6 +78,16 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
 
     public void refreshTasks() {
         this.list.setItems(this.container.tasks.entrySet().stream().flatMap(a -> a.getValue().stream().map(b -> new TaskContainer.TaskInfo(b, a.getKey()))).collect(Collectors.toList()));
+    }
+
+    @Override
+    public ItemRenderer getItemRenderer() {
+        return this.itemRenderer;
+    }
+
+    @Override
+    public TaskContainer getTaskContainer() {
+        return this.container;
     }
 
     @Override

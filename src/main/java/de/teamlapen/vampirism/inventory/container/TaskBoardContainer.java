@@ -58,6 +58,9 @@ public class TaskBoardContainer extends Container implements TaskContainer {
     private Map<Task, Map<ResourceLocation, Integer>> completedRequirements;
     private UUID taskBoardId;
 
+    @Nullable
+    private Runnable listener;
+
     public TaskBoardContainer(int id, PlayerInventory playerInventory) {
         super(ModContainer.task_master, id);
         //noinspection OptionalGetWithoutIsPresent
@@ -78,6 +81,18 @@ public class TaskBoardContainer extends Container implements TaskContainer {
         this.completedRequirements = completedRequirements;
         this.taskBoardId = taskBoardId;
         this.notAcceptedTasks.addAll(notAcceptedTasks);
+        if (this.listener != null) {
+            this.listener.run();
+        }
+    }
+
+    @Override
+    public void setReloadListener(@Nullable Runnable listener) {
+        this.listener = listener;
+    }
+
+    public UUID getTaskBoardId() {
+        return taskBoardId;
     }
 
     @Override
@@ -85,68 +100,22 @@ public class TaskBoardContainer extends Container implements TaskContainer {
         return FactionPlayerHandler.getOpt(playerIn).map(player -> player.getCurrentFaction() != null).orElse(false);
     }
 
-    public boolean canCompleteTask(Task task) {
-        return this.completableTasks.contains(task);
-    }
-
-    public boolean isTaskNotAccepted(Task task) {
-        return this.notAcceptedTasks.contains(task);
-    }
-
-    public boolean isRequirementCompleted(Task task, TaskRequirement.Requirement<?> requirement) {
-        if (this.isCompleted(task)) return true;
-        if (this.completedRequirements != null) {
-            if (this.completedRequirements.containsKey(task)) {
-                return this.completedRequirements.get(task).containsKey(requirement.getId()) && this.completedRequirements.get(task).get(requirement.getId()) >= requirement.getAmount(this.factionPlayer);
-            }
-        }
-        return false;
-    }
-
-    public boolean areRequirementsCompleted(Task task, TaskRequirement.Type type) {
-        if (this.isCompleted(task)) return true;
-        if (this.completedRequirements != null) {
-            if (this.completedRequirements.containsKey(task)) {
-                for (TaskRequirement.Requirement<?> requirement : task.getRequirement().requirements().get(type)) {
-                    if (!this.completedRequirements.get(task).containsKey(requirement.getId()) || this.completedRequirements.get(task).get(requirement.getId()) < requirement.getAmount(this.factionPlayer)) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public int getRequirementStatus(Task task, TaskRequirement.Requirement<?> requirement) {
-        assert this.completedRequirements != null;
-        if (this.completedRequirements.containsKey(task)) {
-            return this.completedRequirements.get(task).get(requirement.getId());
-        } else {
-            return requirement.getAmount(this.factionPlayer);
+    public void completeTask(TaskInfo taskInfo) {
+        if (this.completableTasks.contains(taskInfo.task)) {
+            VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.task, taskInfo.taskBoard, TaskContainer.TaskAction.COMPLETE));
+            this.completedTasks.add(taskInfo.task);
+            this.completableTasks.remove(taskInfo.task);
         }
     }
 
-    public void completeTask(Task task) {
-        if (this.canCompleteTask(task)) {
-            VampirismMod.dispatcher.sendToServer(new TaskActionPacket(task, taskBoardId, TaskContainer.TaskAction.COMPLETE));
-            this.completedTasks.add(task);
-            this.completableTasks.remove(task);
-        }
+    public void acceptTask(TaskInfo taskInfo) {
+        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.task, taskInfo.taskBoard, TaskContainer.TaskAction.ACCEPT));
+        this.notAcceptedTasks.remove(taskInfo.task);
     }
 
-    public void acceptTask(Task task) {
-        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(task, taskBoardId, TaskContainer.TaskAction.ACCEPT));
-        this.notAcceptedTasks.remove(task);
-    }
-
-    public void abortTask(Task task) {
-        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(task, taskBoardId, TaskContainer.TaskAction.ABORT));
-        this.notAcceptedTasks.add(task);
-    }
-
-    public boolean isCompleted(Task task) {
-        return this.completedTasks.contains(task);
+    public void abortTask(TaskInfo taskInfo) {
+        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.task, taskInfo.taskBoard, TaskContainer.TaskAction.ABORT));
+        this.notAcceptedTasks.add(taskInfo.task);
     }
 
     public int size() {
@@ -174,17 +143,28 @@ public class TaskBoardContainer extends Container implements TaskContainer {
 
     @Override
     public boolean isTaskNotAccepted(TaskInfo taskInfo) {
-        return isTaskNotAccepted(taskInfo.task);
+        return this.notAcceptedTasks.contains(taskInfo.task);
     }
 
     @Override
     public boolean canCompleteTask(TaskInfo taskInfo) {
-        return canCompleteTask(taskInfo.task);
+        return this.completableTasks.contains(taskInfo.task);
     }
 
     @Override
     public boolean pressButton(TaskInfo taskInfo) {
-        return false;
+        switch (buttonAction(taskInfo)) {
+            case COMPLETE:
+                completeTask(taskInfo);
+                break;
+            case ABORT:
+                abortTask(taskInfo);
+                break;
+            case ACCEPT:
+                acceptTask(taskInfo);
+                break;
+        }
+        return true;
     }
 
     @Override
@@ -200,21 +180,43 @@ public class TaskBoardContainer extends Container implements TaskContainer {
 
     @Override
     public boolean isCompleted(TaskInfo item) {
-        return isCompleted(item.task);
+        return this.completedTasks.contains(item.task);
     }
 
     @Override
     public boolean areRequirementsCompleted(TaskInfo task, TaskRequirement.Type type) {
-        return areRequirementsCompleted(task.task, type);
+        if (this.completedTasks.contains(task.task)) return true;
+        if (this.completedRequirements != null) {
+            if (this.completedRequirements.containsKey(task.task)) {
+                for (TaskRequirement.Requirement<?> requirement : task.task.getRequirement().requirements().get(type)) {
+                    if (!this.completedRequirements.get(task.task).containsKey(requirement.getId()) || this.completedRequirements.get(task.task).get(requirement.getId()) < requirement.getAmount(this.factionPlayer)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public int getRequirementStatus(TaskInfo taskInfo, TaskRequirement.Requirement<?> requirement) {
-        return getRequirementStatus(taskInfo.task, requirement);
+        assert this.completedRequirements != null;
+        if (this.completedRequirements.containsKey(taskInfo.task)) {
+            return this.completedRequirements.get(taskInfo.task).get(requirement.getId());
+        } else {
+            return requirement.getAmount(this.factionPlayer);
+        }
     }
 
     @Override
     public boolean isRequirementCompleted(TaskInfo taskInfo, TaskRequirement.Requirement<?> requirement) {
-        return isRequirementCompleted(taskInfo.task, requirement);
+        if (this.completedTasks.contains(taskInfo.task)) return true;
+        if (this.completedRequirements != null) {
+            if (this.completedRequirements.containsKey(taskInfo.task)) {
+                return this.completedRequirements.get(taskInfo.task).containsKey(requirement.getId()) && this.completedRequirements.get(taskInfo.task).get(requirement.getId()) >= requirement.getAmount(this.factionPlayer);
+            }
+        }
+        return false;
     }
 }

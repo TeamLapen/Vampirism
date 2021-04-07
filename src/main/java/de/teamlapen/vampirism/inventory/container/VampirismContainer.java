@@ -21,6 +21,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -58,7 +59,8 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
         }
     }
 
-    public void setListener(Runnable listener) {
+    @Override
+    public void setReloadListener(@Nullable Runnable listener) {
         this.listener = listener;
     }
 

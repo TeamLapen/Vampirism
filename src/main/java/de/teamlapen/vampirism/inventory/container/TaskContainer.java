@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 public interface TaskContainer {
@@ -53,6 +54,11 @@ public interface TaskContainer {
      * @return whether task requirement of the {@link TaskInfo#task} are completed at the task giver {@link TaskInfo#taskBoard}
      */
     boolean isRequirementCompleted(TaskInfo taskInfo, TaskRequirement.Requirement<?> requirement);
+
+    /**
+     * @param listener the listener will be run if the container got updated
+     */
+    void setReloadListener(@Nullable Runnable listener);
 
     enum TaskAction {
         /**
