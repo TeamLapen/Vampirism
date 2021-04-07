@@ -9,10 +9,10 @@ import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
+import de.teamlapen.vampirism.client.gui.TaskContainer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
-import de.teamlapen.vampirism.inventory.container.VampirismContainer;
 import de.teamlapen.vampirism.network.TaskPacket;
 import de.teamlapen.vampirism.network.TaskStatusPacket;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
@@ -24,6 +24,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -133,8 +134,8 @@ public class TaskManager implements ITaskManager {
 
     @Override
     public void openVampirismMenu() {
-        if (player.openContainer instanceof VampirismContainer) {
-            VampirismMod.dispatcher.sendTo(new TaskPacket(player.openContainer.windowId, taskBoardInfos, tasks, stats), player);
+        if (player.openContainer instanceof TaskContainer) {
+            VampirismMod.dispatcher.sendTo(new TaskPacket(player.openContainer.windowId, taskBoardInfos, this.acceptedTasks, this.acceptedTasks.entrySet().stream().map(enty -> Pair.of(enty.getKey(), reduceToCompletableTasks(enty.getKey(), new HashSet<>(enty.getValue())))).collect(Collectors.toMap(Pair::getKey, Pair::getValue)), this.acceptedTasks.entrySet().stream().map(enty -> Pair.of(enty.getKey(), getCompletedRequirements(enty.getKey(), enty.getValue()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue))), player);
         }
     }
 

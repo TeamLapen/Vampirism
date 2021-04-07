@@ -18,12 +18,20 @@ public class TaskPacket implements IMessage {
         buffer.writeVarInt(msg.containerId);
         buffer.writeVarInt(msg.taskBoardInfos.size());
         buffer.writeVarInt(msg.tasks.size());
+        buffer.writeVarInt(msg.completableTasks.size());
         buffer.writeVarInt(msg.completedRequirements.size());
         msg.taskBoardInfos.forEach((uuid, info) -> {
             buffer.writeUniqueId(uuid);
             buffer.writeBlockPos(info.getLastSeenPos());
         });
         msg.tasks.forEach((uuid, tasks) -> {
+            buffer.writeUniqueId(uuid);
+            buffer.writeVarInt(tasks.size());
+            tasks.forEach(task -> {
+                buffer.writeResourceLocation(task.getRegistryName());
+            });
+        });
+        msg.completableTasks.forEach((uuid, tasks) -> {
             buffer.writeUniqueId(uuid);
             buffer.writeVarInt(tasks.size());
             tasks.forEach(task -> {
@@ -48,6 +56,7 @@ public class TaskPacket implements IMessage {
         int containerId = buffer.readVarInt();
         int infoSize = buffer.readVarInt();
         int taskIdSize = buffer.readVarInt();
+        int completableSize = buffer.readVarInt();
         int statSize = buffer.readVarInt();
         Map<UUID, TaskManager.TaskBoardInfo> taskBoardInfos = new HashMap<>();
         for (int i = 0; i < infoSize; i++) {
@@ -63,6 +72,16 @@ public class TaskPacket implements IMessage {
                 task.add(ModRegistries.TASKS.getValue(buffer.readResourceLocation()));
             }
             tasks.put(uuid, task);
+        }
+        Map<UUID, Set<Task>> completableTasks = new HashMap<>();
+        for (int i = 0; i < completableSize; i++) {
+            UUID uuid = buffer.readUniqueId();
+            Set<Task> task = new HashSet<>();
+            int taskSize = buffer.readVarInt();
+            for (int i1 = 0; i1 < taskSize; i1++) {
+                task.add(ModRegistries.TASKS.getValue(buffer.readResourceLocation()));
+            }
+            completableTasks.put(uuid, task);
         }
         Map<UUID, Map<Task, Map<ResourceLocation, Integer>>> completedRequirements = new HashMap<>();
         for (int i = 0; i < statSize; i++) {
@@ -80,7 +99,7 @@ public class TaskPacket implements IMessage {
             }
             completedRequirements.put(uuid, taskRequirements);
         }
-        return new TaskPacket(containerId, taskBoardInfos, tasks, completedRequirements);
+        return new TaskPacket(containerId, taskBoardInfos, tasks, completableTasks, completedRequirements);
     }
 
     public static void handle(final TaskPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
@@ -93,11 +112,13 @@ public class TaskPacket implements IMessage {
     public final Map<UUID, TaskManager.TaskBoardInfo> taskBoardInfos;
     public final Map<UUID, Set<Task>> tasks;
     public final Map<UUID, Map<Task, Map<ResourceLocation, Integer>>> completedRequirements;
+    public final Map<UUID, Set<Task>> completableTasks;
 
-    public TaskPacket(int containerId, Map<UUID, TaskManager.TaskBoardInfo> taskBoardInfos, Map<UUID, Set<Task>> tasks, Map<UUID, Map<Task, Map<ResourceLocation, Integer>>> completedRequirements) {
+    public TaskPacket(int containerId, Map<UUID, TaskManager.TaskBoardInfo> taskBoardInfos, Map<UUID, Set<Task>> tasks, Map<UUID, Set<Task>> completableTasks, Map<UUID, Map<Task, Map<ResourceLocation, Integer>>> completedRequirements) {
         this.containerId = containerId;
         this.taskBoardInfos = taskBoardInfos;
         this.tasks = tasks;
         this.completedRequirements = completedRequirements;
+        this.completableTasks = completableTasks;
     }
 }
