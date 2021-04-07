@@ -14,9 +14,12 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
- * make sure that {@link net.minecraft.client.gui.INestedGuiEventHandler#mouseDragged(double, double, int, double, double)} is being called
+ * This Widget does everything by itself except:
+ * - {@link #mouseDragged(double, double, int, double, double)} must be called in {@link net.minecraft.client.gui.screen.Screen#mouseDragged(double, double, int, double, double)}
+ * - {@link #renderToolTip(MatrixStack, int, int)} must be called in {@link net.minecraft.client.gui.screen.Screen#render(MatrixStack, int, int, float)}
  */
 public class ScrollableListWidget<T> extends ExtendedButton {
 
@@ -31,11 +34,19 @@ public class ScrollableListWidget<T> extends ExtendedButton {
     private double scrolledD;
     private boolean scrollerClicked;
     private final boolean canScroll = true;
+    private final Supplier<Collection<T>> baseValueSupplier;
 
-    public ScrollableListWidget(int xPos, int yPos, int width, int height, int itemHeight, ItemCreator<T> itemSupplier) {
-        super(xPos, yPos, width, height, new StringTextComponent(""), (button) ->{});
+    public ScrollableListWidget(int xPos, int yPos, int width, int height, int itemHeight, @Nonnull Supplier<Collection<T>> baseValueSupplier, @Nonnull ItemCreator<T> itemSupplier) {
+        super(xPos, yPos, width, height, new StringTextComponent(""), (button) -> {
+        });
         this.itemHeight = itemHeight;
         this.itemSupplier = itemSupplier;
+        this.baseValueSupplier = baseValueSupplier;
+        this.refresh();
+    }
+
+    public void refresh() {
+        this.setItems(this.baseValueSupplier.get());
     }
 
     public void setItems(@Nonnull Collection<T> elements) {

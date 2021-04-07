@@ -4,6 +4,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.function.Supplier;
 
 /**
  * This is a {@link ScrollableListWidget} that supports a dummy element.
@@ -19,8 +21,8 @@ public class ScrollableListWithDummyWidget<T> extends ScrollableListWidget<T> {
     @Nonnull
     private final ItemCreator<T> itemCreator;
 
-    public ScrollableListWithDummyWidget(int xPos, int yPos, int width, int height, int itemHeight, @Nonnull ItemCreator<T> itemSupplier) {
-        super(xPos, yPos, width, height, itemHeight, (item, list) -> itemSupplier.apply(item, (ScrollableListWithDummyWidget<T>) list, false));
+    public ScrollableListWithDummyWidget(int xPos, int yPos, int width, int height, int itemHeight, Supplier<Collection<T>> baseValueSupplier, @Nonnull ItemCreator<T> itemSupplier) {
+        super(xPos, yPos, width, height, itemHeight, baseValueSupplier, (item, list) -> itemSupplier.apply(item, (ScrollableListWithDummyWidget<T>) list, false));
         this.itemCreator = itemSupplier;
     }
 

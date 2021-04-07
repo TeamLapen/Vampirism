@@ -15,9 +15,13 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.Collection;
 import java.util.stream.Collectors;
 
+@OnlyIn(Dist.CLIENT)
 public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> implements ExtendedScreen {
     private static final ResourceLocation TASKMASTER_GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/taskmaster.png");
     private final IFactionPlayer<?> factionPlayer;
@@ -31,17 +35,17 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> impleme
         this.ySize = 181;
         //noinspection OptionalGetWithoutIsPresent
         this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().get();
-        this.container.setReloadListener(this::refreshTasks);
+        this.container.setReloadListener(() -> this.list.refresh());
     }
 
     @Override
     protected void init() {
         super.init();
-        this.addButton(list = new ScrollableListWithDummyWidget<>(this.guiLeft + 16, this.guiTop + 16, 145, 149, 21, (item, list1, isDummy) -> new TaskItem(item, list1, isDummy, this, this.factionPlayer)));
+        this.addButton(list = new ScrollableListWithDummyWidget<>(this.guiLeft + 16, this.guiTop + 16, 145, 149, 21, this::taskSupplier, (item, list1, isDummy) -> new TaskItem<>(item, list1, isDummy, this, this.factionPlayer)));
     }
 
-    public void refreshTasks() {
-        this.list.setItems(this.container.getVisibleTasks().stream().map(a -> new TaskContainer.TaskInfo(a, this.container.getTaskBoardId())).collect(Collectors.toList()));
+    public Collection<TaskContainer.TaskInfo> taskSupplier() {
+        return this.container.getVisibleTasks().stream().map(a -> new TaskContainer.TaskInfo(a, this.container.getTaskBoardId())).collect(Collectors.toList());
     }
 
     @Override

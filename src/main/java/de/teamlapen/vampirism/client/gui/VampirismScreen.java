@@ -27,6 +27,7 @@ import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         this.ySize = display_height;
         this.playerInventoryTitleX = 36;
         this.playerInventoryTitleY = this.ySize - 93;
-        this.container.setReloadListener(this::refreshTasks);
+        this.container.setReloadListener(() -> this.list.refresh());
         this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().get();
     }
 
@@ -72,12 +73,12 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
             button.active = false;
             button.visible = false;
         }
-        this.addButton(list = new ScrollableListWithDummyWidget<>(this.guiLeft + 83, this.guiTop + 7, 145, 104, 21, (item, list1, isDummy) -> new TaskItem(item, list1, isDummy, this, this.factionPlayer)));
+        this.addButton(list = new ScrollableListWithDummyWidget<>(this.guiLeft + 83, this.guiTop + 7, 145, 104, 21, this::refreshTasks, (item, list1, isDummy) -> new TaskItem(item, list1, isDummy, this, this.factionPlayer)));
 
     }
 
-    public void refreshTasks() {
-        this.list.setItems(this.container.tasks.entrySet().stream().flatMap(a -> a.getValue().stream().map(b -> new TaskContainer.TaskInfo(b, a.getKey()))).collect(Collectors.toList()));
+    public Collection<TaskContainer.TaskInfo> refreshTasks() {
+        return this.container.tasks.entrySet().stream().flatMap(a -> a.getValue().stream().map(b -> new TaskContainer.TaskInfo(b, a.getKey()))).collect(Collectors.toList());
     }
 
     @Override
@@ -96,6 +97,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         this.oldMouseX = mouseX;
         this.oldMouseY = mouseY;
         this.list.renderToolTip(matrixStack, mouseX, mouseY);
+        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
     }
 
     @Override
