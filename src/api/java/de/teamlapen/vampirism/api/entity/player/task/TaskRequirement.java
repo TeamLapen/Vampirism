@@ -89,32 +89,38 @@ public class TaskRequirement {
         /**
          * based on {@link net.minecraft.stats.Stats.CUSTOM} stat increase
          */
-        STATS(true),
+        STATS(true, "gui.vampirism.taskmaster.stat_req"),
         /**
          * based on item in inventory
          */
-        ITEMS(false),
+        ITEMS(false, "gui.vampirism.taskmaster.item_req"),
         /**
          * based on {@link net.minecraft.stats.Stats.ENTITY_KILLED} stat increased
          */
-        ENTITY(true),
+        ENTITY(true, "gui.vampirism.taskmaster.entity_req"),
         /**
          * based on {@link net.minecraft.stats.Stats.ENTITY_KILLED} stat increased, but for multiple entities.
          */
-        ENTITY_TAG(true),
+        ENTITY_TAG(true, "gui.vampirism.taskmaster.entity_tag_req"),
         /**
          * based on boolean supplier
          */
-        BOOLEAN(false);
+        BOOLEAN(false, "gui.vampirism.taskmaster.bool_req");
 
-        private boolean statBased;
+        private final boolean statBased;
+        private final String translationKey;
 
-        Type(boolean statBased) {
+        Type(boolean statBased, String translationKey) {
             this.statBased = statBased;
+            this.translationKey = translationKey;
         }
 
         public boolean isStatBased() {
             return statBased;
+        }
+
+        public String getTranslationKey() {
+            return translationKey;
         }
     }
 

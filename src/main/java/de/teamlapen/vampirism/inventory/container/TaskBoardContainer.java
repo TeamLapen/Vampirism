@@ -8,6 +8,8 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.client.gui.TaskBoardScreen;
+import de.teamlapen.vampirism.client.gui.TaskContainer;
+import de.teamlapen.vampirism.client.gui.widget.TaskItem;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskActionPacket;
@@ -28,7 +30,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 
-public class TaskBoardContainer extends Container {
+public class TaskBoardContainer extends Container implements TaskContainer {
 
     /**
      * all tasks that can be completed by the player
@@ -129,19 +131,19 @@ public class TaskBoardContainer extends Container {
 
     public void completeTask(Task task) {
         if (this.canCompleteTask(task)) {
-            VampirismMod.dispatcher.sendToServer(new TaskActionPacket(task, taskBoardId, TaskAction.COMPLETE));
+            VampirismMod.dispatcher.sendToServer(new TaskActionPacket(task, taskBoardId, TaskContainer.TaskAction.COMPLETE));
             this.completedTasks.add(task);
             this.completableTasks.remove(task);
         }
     }
 
     public void acceptTask(Task task) {
-        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(task, taskBoardId, TaskAction.ACCEPT));
+        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(task, taskBoardId, TaskContainer.TaskAction.ACCEPT));
         this.notAcceptedTasks.remove(task);
     }
 
     public void abortTask(Task task) {
-        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(task, taskBoardId, TaskAction.ABORT));
+        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(task, taskBoardId, TaskContainer.TaskAction.ABORT));
         this.notAcceptedTasks.add(task);
     }
 
@@ -172,7 +174,49 @@ public class TaskBoardContainer extends Container {
         return this.factionPlayer.getFaction();
     }
 
-    public enum TaskAction {
-        COMPLETE, ACCEPT, ABORT
+    @Override
+    public boolean isTaskNotAccepted(TaskItem.TaskInfo taskInfo) {
+        return isTaskNotAccepted(taskInfo.getTask());
+    }
+
+    @Override
+    public boolean canCompleteTask(TaskItem.TaskInfo taskInfo) {
+        return canCompleteTask(taskInfo.getTask());
+    }
+
+    @Override
+    public boolean pressButton(TaskItem.TaskInfo taskInfo) {
+        return false;
+    }
+
+    @Override
+    public TaskAction buttonAction(TaskItem.TaskInfo taskInfo) {
+        if (canCompleteTask(taskInfo)) {
+            return TaskContainer.TaskAction.COMPLETE;
+        } else if (isTaskNotAccepted(taskInfo)) {
+            return TaskContainer.TaskAction.ACCEPT;
+        } else {
+            return TaskContainer.TaskAction.ABORT;
+        }
+    }
+
+    @Override
+    public boolean isCompleted(TaskItem.TaskInfo item) {
+        return isCompleted(item.getTask());
+    }
+
+    @Override
+    public boolean areRequirementsCompleted(TaskItem.TaskInfo task, TaskRequirement.Type type) {
+        return areRequirementsCompleted(task.getTask(), type);
+    }
+
+    @Override
+    public int getRequirementStatus(TaskItem.TaskInfo taskInfo, TaskRequirement.Requirement<?> requirement) {
+        return getRequirementStatus(taskInfo.getTask(), requirement);
+    }
+
+    @Override
+    public boolean isRequirementCompleted(TaskItem.TaskInfo taskInfo, TaskRequirement.Requirement<?> requirement) {
+        return isRequirementCompleted(taskInfo.getTask(), requirement);
     }
 }
