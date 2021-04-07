@@ -6,6 +6,7 @@ import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWithDummyWidget;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.inventory.container.VampirismContainer;
@@ -59,24 +60,42 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
     @Override
     protected void init() {
         super.init();
+        this.addButton(list = new ScrollableListWithDummyWidget<>(this.guiLeft + 83, this.guiTop + 7, 145, 104, 21, this::refreshTasks, (item, list1, isDummy) -> new TaskItem(item, list1, isDummy, this, this.factionPlayer)));
+
         this.addButton(new ImageButton(this.guiLeft + 5, this.guiTop + 90, 20, 20, 40, 205, 20, BACKGROUND, 256, 256, context -> {
             if (this.minecraft.player.isAlive() && FactionPlayerHandler.get(this.minecraft.player).getCurrentFaction() != null) {
-                Minecraft.getInstance().displayGuiScreen(new SkillsScreen());
+                Minecraft.getInstance().displayGuiScreen(new SkillsScreen(this));
             }
-        }));
+        }, (button, matrixStack, mouseX, mouseY) -> {
+            this.renderTooltip(matrixStack, new TranslationTextComponent("gui.vampirism.vampirism_menu.skill_screen"), mouseX, mouseY);
+        }, StringTextComponent.EMPTY));
+
         this.addButton(new ImageButton(this.guiLeft + 26, this.guiTop + 90, 20, 20, 0, 205, 20, BACKGROUND, 256, 256, (context) -> {
             IPlayableFaction<?> factionNew = FactionPlayerHandler.get(this.minecraft.player).getCurrentFaction();
             Minecraft.getInstance().displayGuiScreen(new SelectActionScreen(factionNew.getColor(), true));
-        }));
+        }, (button, matrixStack, mouseX, mouseY) -> {
+            this.renderTooltip(matrixStack, new TranslationTextComponent("gui.vampirism.vampirism_menu.edit_actions"), mouseX, mouseY);
+        }, StringTextComponent.EMPTY));
+
         Button button = this.addButton(new ImageButton(this.guiLeft + 47, this.guiTop + 90, 20, 20, 20, 205, 20, BACKGROUND, 256, 256, (context) -> {
             Minecraft.getInstance().displayGuiScreen(new VampirePlayerAppearanceScreen(this));
-        }));
+        }, (button1, matrixStack, mouseX, mouseY) -> {
+            this.renderTooltip(matrixStack, new TranslationTextComponent("gui.vampirism.vampirism_menu.appearance_menu"), mouseX, mouseY);
+        }, StringTextComponent.EMPTY));
         if (!Helper.isVampire(minecraft.player)) {
             button.active = false;
             button.visible = false;
         }
-        this.addButton(list = new ScrollableListWithDummyWidget<>(this.guiLeft + 83, this.guiTop + 7, 145, 104, 21, this::refreshTasks, (item, list1, isDummy) -> new TaskItem(item, list1, isDummy, this, this.factionPlayer)));
 
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (ModKeys.getKeyBinding(ModKeys.KEY.SKILL).matchesKey(keyCode, scanCode)) {
+            this.closeScreen();
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     public Collection<TaskContainer.TaskInfo> refreshTasks() {

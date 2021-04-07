@@ -75,13 +75,20 @@ public class SkillsScreen extends Screen {
     @Nullable
     private ITextComponent lordTitle;
     private int lordLevel;
+    @Nullable
+    private final Screen backScreen;
 
     private final Map<ISkill, List<ITextComponent>> skillToolTipsCache = new HashMap<>();
 
     public SkillsScreen() {
+        this(null);
+    }
+
+    public SkillsScreen(@Nullable Screen backScreen) {
         super(new TranslationTextComponent("screen.vampirism.skills"));
         this.width = display_width;
         this.height = display_height;
+        this.backScreen = backScreen;
     }
 
     @Override
@@ -155,7 +162,14 @@ public class SkillsScreen extends Screen {
 
     @Override
     public void init() {
-        this.addButton(new Button(this.width / 2 + 24, this.height / 2 + 74, 80, 20, new TranslationTextComponent("gui.done"), (context) -> {
+        int guiLeft = (this.width - display_width) / 2;
+        int guiTop = (this.height - display_height) / 2;
+        if (this.backScreen != null) {
+            this.addButton(new Button(guiLeft + 5, guiTop + 175, 80, 20, new TranslationTextComponent("gui.back"), (context) -> {
+                this.minecraft.displayGuiScreen(this.backScreen);
+            }));
+        }
+        this.addButton(new Button(guiLeft + 171, guiTop + 175, 80, 20, new TranslationTextComponent("gui.done"), (context) -> {
             this.minecraft.displayGuiScreen(null);
         }));
         FactionPlayerHandler.getOpt(minecraft.player).ifPresent(fph -> {
@@ -176,7 +190,7 @@ public class SkillsScreen extends Screen {
                 SkillNode root = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(faction.getID());
                 addToList(skillNodes, root);
 
-                Button resetSkills = this.addButton(new Button((this.width - display_width) / 2 + 24 + 40, this.height / 2 + 74, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
+                Button resetSkills = this.addButton(new Button(guiLeft + 88, guiTop + 175, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
                     boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
                     ConfirmScreen resetGui = new ConfirmScreen((cxt) -> {
                         if (cxt) {
