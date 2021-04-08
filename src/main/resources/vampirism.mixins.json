@@ -9,7 +9,11 @@
     "LivingEntityAccessor",
     "MixinBellBlock",
     "MixinEntity",
+    "MixinLivingEntity",
     "MixinPotionBrewing"
+  ],
+  "client": [
+    "AgeableModelAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

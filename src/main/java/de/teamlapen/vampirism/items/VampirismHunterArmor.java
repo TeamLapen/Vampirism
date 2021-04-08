@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.client.util.ITooltipFlag;
@@ -24,8 +24,6 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -57,9 +55,7 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         PlayerEntity player = VampirismMod.proxy.getClientPlayer();
-        if (player != null && Helper.isVampire(player)) {
-            tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_vampires").mergeStyle(TextFormatting.RED));
-        }
+        addFactionPoisonousToolTip(stack,worldIn, tooltip, flagIn, player);
     }
 
     @Override
@@ -77,7 +73,7 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
     @Override
     public void onArmorTick(ItemStack stack, World world, PlayerEntity player) {
         if (player.ticksExisted % 16 == 8) {
-            if (Helper.isVampire(player)) {
+            if (FactionPlayerHandler.getOpt(player).map(a -> a.getCurrentFaction() != null && !VReference.HUNTER_FACTION.equals(a.getCurrentFaction())).orElse(false)) {
                 player.addPotionEffect(new EffectInstance(ModEffects.poison, 20, 1));
             }
         }

@@ -14,7 +14,6 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.skills.SkillNode;
-import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -23,8 +22,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -76,13 +75,20 @@ public class SkillsScreen extends Screen {
     @Nullable
     private ITextComponent lordTitle;
     private int lordLevel;
+    @Nullable
+    private final Screen backScreen;
 
     private final Map<ISkill, List<ITextComponent>> skillToolTipsCache = new HashMap<>();
 
     public SkillsScreen() {
+        this(null);
+    }
+
+    public SkillsScreen(@Nullable Screen backScreen) {
         super(new TranslationTextComponent("screen.vampirism.skills"));
         this.width = display_width;
         this.height = display_height;
+        this.backScreen = backScreen;
     }
 
     @Override
@@ -156,7 +162,14 @@ public class SkillsScreen extends Screen {
 
     @Override
     public void init() {
-        this.addButton(new Button(this.width / 2 + 24, this.height / 2 + 74, 80, 20, new TranslationTextComponent("gui.done"), (context) -> {
+        int guiLeft = (this.width - display_width) / 2;
+        int guiTop = (this.height - display_height) / 2;
+        if (this.backScreen != null) {
+            this.addButton(new Button(guiLeft + 5, guiTop + 175, 80, 20, new TranslationTextComponent("gui.back"), (context) -> {
+                this.minecraft.displayGuiScreen(this.backScreen);
+            }));
+        }
+        this.addButton(new Button(guiLeft + 171, guiTop + 175, 80, 20, new TranslationTextComponent("gui.done"), (context) -> {
             this.minecraft.displayGuiScreen(null);
         }));
         FactionPlayerHandler.getOpt(minecraft.player).ifPresent(fph -> {
@@ -177,7 +190,7 @@ public class SkillsScreen extends Screen {
                 SkillNode root = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(faction.getID());
                 addToList(skillNodes, root);
 
-                Button resetSkills = this.addButton(new Button((this.width - display_width) / 2 + 24 + 40, this.height / 2 + 74, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
+                Button resetSkills = this.addButton(new Button(guiLeft + 88, guiTop + 175, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
                     boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
                     ConfirmScreen resetGui = new ConfirmScreen((cxt) -> {
                         if (cxt) {
@@ -192,15 +205,6 @@ public class SkillsScreen extends Screen {
                 if(factionPlayer.getLevel() < 2) {
                     resetSkills.active = false;
                 }
-                if (Helper.isVampire(minecraft.player)) {
-                    this.addButton(new ImageButton((this.width - display_width) / 2 + 10 + 22, this.height / 2 + 74, 20, 20, 72, 202, 20, BACKGROUND, 256, 256, (context) -> {
-                        Minecraft.getInstance().displayGuiScreen(new VampirePlayerAppearanceScreen(this));
-                    }));
-                }
-                this.addButton(new ImageButton((this.width - display_width) / 2 + 10, this.height / 2 + 74, 20, 20, 52, 202, 20, BACKGROUND, 256, 256, (context) -> {
-                    IPlayableFaction<?> factionNew = FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFaction();
-                    Minecraft.getInstance().displayGuiScreen(new SelectActionScreen(factionNew.getColor(), true));
-                }));
             });
 
         });
@@ -460,6 +464,13 @@ public class SkillsScreen extends Screen {
         RenderSystem.enableTexture();
         super.render(stack, mouseX, mouseY, partialTicks);
 
+        //Don't render skill tooltip when hovering over button
+        for (Widget button : this.buttons) {
+            if(button.isHovered()){
+                newSelected=null;
+                newSelectedNode=null;
+            }
+        }
         //Draw information for selected skill
         selected = newSelected;
         selectedNode = newSelectedNode;

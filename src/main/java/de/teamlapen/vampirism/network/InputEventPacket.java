@@ -16,11 +16,16 @@ import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
 import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
+import de.teamlapen.vampirism.inventory.container.VampirismContainer;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.world.MinionWorldData;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
@@ -29,6 +34,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -37,6 +43,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -61,6 +68,7 @@ public class InputEventPacket implements IMessage {
     public static final String NAME_ITEM = "ni";
     public static final String SELECT_CALL_MINION = "sm";
     public static final String TOGGLE_LOCK_MINION_TASK = "lt";
+    public static final String OPEN_VAMPIRISM_MENU = "ovm";
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String SPLIT = "&";
@@ -220,7 +228,7 @@ public class InputEventPacket implements IMessage {
                         }
                     } else if (!org.apache.commons.lang3.StringUtils.isBlank(name)) {
                         ItemStack stack = player.getHeldItemMainhand();
-                        stack.setDisplayName(new StringTextComponent(name));
+                        stack.setDisplayName(new StringTextComponent(name).mergeStyle(TextFormatting.AQUA));
                     }
                     break;
                 case SELECT_CALL_MINION:
@@ -250,7 +258,25 @@ public class InputEventPacket implements IMessage {
                         LOGGER.error("Receiving invalid param {} for {}", msg.param, msg.action);
                     }
                     break;
+                case OPEN_VAMPIRISM_MENU:
+                    factionPlayerOpt.ifPresent(fPlayer -> {
+                        if (player.isAlive()) {
+                            player.openContainer(new INamedContainerProvider() {
+                                @Nonnull
+                                @Override
+                                public ITextComponent getDisplayName() {
+                                    return new TranslationTextComponent("");
+                                }
 
+                                @Nonnull
+                                @Override
+                                public Container createMenu(int i, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity playerEntity) {
+                                    return new VampirismContainer(i, playerInventory);
+                                }
+                            });
+                            fPlayer.getTaskManager().openVampirismMenu();
+                        }
+                    });
             }
             ctx.setPacketHandled(true);
         });

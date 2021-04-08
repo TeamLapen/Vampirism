@@ -1,6 +1,7 @@
 {
   "parent": "vampirism:vampire/defensive4",
   "skills": [
-    "vampirism:teleport"
+    "vampirism:vampire_attack_damage",
+    "vampirism:vampire_jump"
   ]
 }

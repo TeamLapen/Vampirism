@@ -20,8 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -30,11 +28,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-/**
- * Item Cloak
- *
- * @author cheaterpaul
- */
 public class VampireCloakItem extends ArmorItem implements IFactionExclusiveItem {
 
     private final String registeredName = "vampire_cloak";
@@ -50,16 +43,14 @@ public class VampireCloakItem extends ArmorItem implements IFactionExclusiveItem
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         PlayerEntity playerEntity = VampirismMod.proxy.getClientPlayer();
-        if (playerEntity != null && Helper.isHunter(playerEntity)) {
-            tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_hunter").mergeStyle(TextFormatting.RED));
-        }
+        this.addFactionPoisonousToolTip(stack,worldIn,tooltip,flagIn,playerEntity);
     }
 
     @Nullable
     @OnlyIn(Dist.CLIENT)
     @Override
     public BipedModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, BipedModel _default) {
-        return new CloakModel();
+        return CloakModel.getRotatedCloak();
     }
 
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
@@ -77,7 +68,7 @@ public class VampireCloakItem extends ArmorItem implements IFactionExclusiveItem
     public void onArmorTick(ItemStack stack, World world, PlayerEntity player) {
         super.onArmorTick(stack, world, player);
         if (player.ticksExisted % 16 == 8) {
-            if (Helper.isHunter(player)) {
+            if (!Helper.isVampire(player)) {
                 player.addPotionEffect(new EffectInstance(ModEffects.poison, 20, 1));
             }
         }

@@ -28,6 +28,7 @@ public class LevelAttributeModifier {
         modifiers.put(Attributes.MAX_HEALTH, UUID.fromString("56C17EFE-E3EC-4E27-A12F-99D2FE927B70"));
         modifiers.put(ModAttributes.blood_exhaustion, UUID.fromString("4504ccfa-dfdc-11e5-b86d-9a79f06e9478"));
         modifiers.put(Attributes.ATTACK_SPEED, UUID.fromString("37a4f596-2ff8-45e5-b074-c91df218f26b"));
+        modifiers.put(Attributes.ARMOR, UUID.fromString("84769cda-82dd-46f8-8069-15d659b29408"));
     }
 
     /**

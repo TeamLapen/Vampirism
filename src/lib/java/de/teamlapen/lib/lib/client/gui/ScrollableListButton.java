@@ -16,10 +16,13 @@ import java.util.function.Consumer;
 
 /**
  * add this buttons first and render them last and call {@link #mouseDragged(double, double, int, double, double)}
+ *
+ * use {@link de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget}
  */
+@Deprecated
 public class ScrollableListButton extends ExtendedButton {
 
-    private static final ResourceLocation MISC = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/misc.png");
+    private static final ResourceLocation MISC = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/scrollablelist.png");
     protected final int menuSize;
     protected int itemCount;
     protected int scrolled;

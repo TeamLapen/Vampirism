@@ -62,6 +62,9 @@ public interface IProxy extends IInitListener {
     default void handleTaskStatusPacket(TaskStatusPacket msg) {
     }
 
+    default void handleTaskPacket(TaskPacket msg) {
+    }
+
     void renderScreenFullColor(int ticksOn, int ticksOff, int color);
 
     /**

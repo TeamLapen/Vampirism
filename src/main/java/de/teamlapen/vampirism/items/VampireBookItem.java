@@ -8,6 +8,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.item.WritableBookItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -39,7 +40,7 @@ public class VampireBookItem extends VampirismItem {
     }
 
     public VampireBookItem() {
-        super(regName, new Properties().maxStackSize(1).group(VampirismMod.creativeTab));
+        super(regName, new Properties().rarity(Rarity.UNCOMMON).maxStackSize(1).group(VampirismMod.creativeTab));
     }
 
     @Override

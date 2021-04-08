@@ -24,5 +24,6 @@ public class ModScreens {
         ScreenManager.<MinionContainer, MinionScreen>registerFactory(ModContainer.minion, MinionScreen::new);
         ScreenManager.registerFactory(ModContainer.task_master, TaskBoardScreen::new);
         ScreenManager.registerFactory(ModContainer.extended_potion_table, PotionTableScreen::new);
+        ScreenManager.registerFactory(ModContainer.vampirism, VampirismScreen::new);
     }
 }

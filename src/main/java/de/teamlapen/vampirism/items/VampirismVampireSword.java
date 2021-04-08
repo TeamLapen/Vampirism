@@ -4,8 +4,11 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
+import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModRefinements;
@@ -14,7 +17,6 @@ import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
@@ -31,6 +33,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -41,7 +44,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class VampirismVampireSword extends VampirismItemWeapon implements IBloodChargeable, IFactionExclusiveItem {
+public abstract class VampirismVampireSword extends VampirismItemWeapon implements IBloodChargeable, IFactionExclusiveItem, IFactionLevelItem {
 
 
     public static final String DO_NOT_NAME_STRING = "DO_NOT_NAME";
@@ -66,13 +69,11 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
+        this.addFactionLevelToolTip(stack,worldIn,tooltip,flagIn,VampirismMod.proxy.getClientPlayer());
         float charged = getCharged(stack);
         float trained = getTrained(stack, VampirismMod.proxy.getClientPlayer());
-        tooltip.add(new TranslationTextComponent("text.vampirism.sword_charged").append(new StringTextComponent(" " + ((int) Math.ceil(charged * 100f)) + "%")));
-        tooltip.add(new TranslationTextComponent("text.vampirism.sword_trained").append(new StringTextComponent(" " + ((int) Math.ceil(trained * 100f)) + "%")));
-        if (Minecraft.getInstance().player != null && !Helper.isVampire(Minecraft.getInstance().player)) {
-            tooltip.add(new TranslationTextComponent("text.vampirism.can_only_be_used_by", VReference.VAMPIRE_FACTION.getNamePlural()));
-        }
+        tooltip.add(new TranslationTextComponent("text.vampirism.sword_charged").append(new StringTextComponent(" " + ((int) Math.ceil(charged * 100f)) + "%")).mergeStyle(TextFormatting.DARK_AQUA));
+        tooltip.add(new TranslationTextComponent("text.vampirism.sword_trained").append(new StringTextComponent(" " + ((int) Math.ceil(trained * 100f)) + "%")).mergeStyle(TextFormatting.DARK_AQUA));
     }
 
     @Nonnull
@@ -116,6 +117,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
 
     @Override
     public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        //Vampire Finisher skill
         if(attacker instanceof PlayerEntity&& !Helper.isVampire(target)){
             double relTh = VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() * VampirePlayer.getOpt((PlayerEntity) attacker).map(VampirePlayer::getSkillHandler).map(h -> h.isSkillEnabled(VampireSkills.sword_finisher) ? (h.isRefinementEquipped(ModRefinements.sword_finisher) ? 1.25 : 1 ): 0).orElse(0d);
             if (relTh>0 && target.getHealth() <= target.getMaxHealth() * relTh ) {
@@ -126,9 +128,31 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
                 ModParticles.spawnParticlesServer(target.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xE02020), center.x, center.y, center.z, 15, 0.5, 0.5, 0.5, 0);
             }
         }
+        //Update training on kill
+        if (target.getHealth() <= 0.0f && Helper.isVampire(attacker)) {
+            float trained = getTrained(stack, attacker);
+            int exp = target instanceof PlayerEntity ? 10 : (attacker instanceof PlayerEntity ? (Helper.getExperiencePoints(target, (PlayerEntity) attacker)) : 5);
+            trained += exp / 5f * (1.0f - trained) / 15f;
+            setTrained(stack, attacker, trained);
+        }
+        //Consume blood
+        float charged = getCharged(stack);
+        charged -= getChargeUsage();
+        setCharged(stack, charged);
+        attacker.setHeldItem(Hand.MAIN_HAND, stack);
 
         return super.hitEntity(stack, target, attacker);
     }
+
+    /**
+     * //TODO 1.17 make abstract
+     * @return The amount of charge consumed per hit
+     */
+    protected float getChargeUsage(){
+        return 0;
+    }
+
+
 
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
@@ -327,5 +351,22 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     @Override
     public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
         return !Helper.isVampire(player);
+    }
+
+    @Override
+    public int getMinLevel(@Nonnull ItemStack stack) {
+        return 0;
+    }
+
+    @Nullable
+    @Override
+    public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public IPlayableFaction getUsingFaction(@Nonnull ItemStack stack) {
+        return VReference.VAMPIRE_FACTION;
     }
 }

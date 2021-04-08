@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:vampire/defensive5",
+  "skills": [
+    "vampirism:teleport"
+  ]
+}

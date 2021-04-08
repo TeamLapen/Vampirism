@@ -11,6 +11,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.Rarity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -108,7 +109,7 @@ public class ModBlocks {
         registry.register(itemBlock(garlic_beacon_normal));
         registry.register(itemBlock(garlic_beacon_weak));
         registry.register(itemBlock(hunter_table));
-        registry.register(itemBlock(sunscreen_beacon));
+        registry.register(itemBlock(sunscreen_beacon, new Item.Properties().group(VampirismMod.creativeTab).rarity(Rarity.EPIC)));
         registry.register(itemBlock(totem_base));
         registry.register(itemBlock(totem_top));
         registry.register(itemBlock(totem_top_crafted));

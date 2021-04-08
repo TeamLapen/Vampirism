@@ -26,8 +26,8 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue holyWaterBlindnessDuration;
     public final ForgeConfigSpec.IntValue dropOrchidFromLeavesChance;
     public final ForgeConfigSpec.DoubleValue holyWaterTierDamageInc;
-    public final ForgeConfigSpec.DoubleValue heartSeekerChargingFactor;
-    public final ForgeConfigSpec.DoubleValue heartSeekerUsageFactor;
+    public final ForgeConfigSpec.DoubleValue vampireSwordChargingFactor;
+    public final ForgeConfigSpec.DoubleValue vampireSwordBloodUsageFactor;
     public final ForgeConfigSpec.BooleanValue golemAttackNonVillageFaction;
     public final ForgeConfigSpec.BooleanValue zombieIgnoreVampire;
     public final ForgeConfigSpec.BooleanValue skeletonIgnoreVampire;
@@ -78,6 +78,7 @@ public class BalanceConfig {
 
     public final ForgeConfigSpec.DoubleValue hsSmallAttackSpeedModifier;
     public final ForgeConfigSpec.DoubleValue hsMajorAttackSpeedModifier;
+    public final ForgeConfigSpec.DoubleValue hsSmallAttackDamageModifier;
     public final ForgeConfigSpec.BooleanValue hsInstantKill1FromBehind;
     public final ForgeConfigSpec.DoubleValue hsInstantKill1MaxHealth;
     public final ForgeConfigSpec.IntValue hsInstantKill2MaxHealth;
@@ -96,19 +97,20 @@ public class BalanceConfig {
 
     public final ForgeConfigSpec.DoubleValue vsSundamageReduction1;
     public final ForgeConfigSpec.DoubleValue vsBloodThirstReduction1;
-    public final ForgeConfigSpec.DoubleValue vsBiteDamageMult;
     public final ForgeConfigSpec.DoubleValue vsSwordFinisherMaxHealth;
     public final ForgeConfigSpec.IntValue vsJumpBoost;
     public final ForgeConfigSpec.DoubleValue vsSpeedBoost;
     public final ForgeConfigSpec.IntValue vsBloodVisionDistanceSq;
+    public final ForgeConfigSpec.DoubleValue vsSmallAttackDamageModifier;
+    public final ForgeConfigSpec.DoubleValue vsSmallAttackSpeedModifier;
 
     public final ForgeConfigSpec.DoubleValue vpHealthMaxMod;
     public final ForgeConfigSpec.DoubleValue vpStrengthMaxMod;
+    public final ForgeConfigSpec.DoubleValue vpResistanceMaxMod;
     public final ForgeConfigSpec.DoubleValue vpSpeedMaxMod;
     public final ForgeConfigSpec.DoubleValue vpExhaustionMaxMod;
     public final ForgeConfigSpec.DoubleValue vpBasicBloodExhaustionMod;
     public final ForgeConfigSpec.BooleanValue vpBloodUsagePeaceful;
-    public final ForgeConfigSpec.IntValue vpBiteDamage;
     public final ForgeConfigSpec.DoubleValue vpPlayerBloodSaturation;
     public final ForgeConfigSpec.IntValue vpSanguinareAverageDuration;
     public final ForgeConfigSpec.IntValue vpSundamageMinLevel;
@@ -192,8 +194,8 @@ public class BalanceConfig {
         holyWaterTierDamageInc = builder.comment("Holy water damage is multiplied with this value for each tier above normal").defineInRange("holyWaterTierDamageInc", 2d, 1d, 10d);
         holyWaterNauseaDuration = builder.comment("Duration of the nausea effect caused by enhanced or special holy water (ticks)").defineInRange("holyWaterNauseaDuration", 200, 0, 1000);
         holyWaterBlindnessDuration = builder.comment("Duration of the blindness effect caused by special holy water (ticks)").defineInRange("holyWaterBlindnessDuration", 160, 0, 1000);
-        heartSeekerChargingFactor = builder.comment("The blood mB to charge percentage of the normal heart seeker vampire sword").defineInRange("heartSeekerChargingFactor", 0.05 / (double) VReference.FOOD_TO_FLUID_BLOOD, 0d, 1d);
-        heartSeekerUsageFactor = builder.comment("The percentage of stored blood used for every hit with the normal heart seeker vampire sword").defineInRange("heartSeekerUsageFactor", 0.5, 0, 100d);
+        vampireSwordChargingFactor = builder.comment("The blood mB to charge percentage of the normal vampire sword").defineInRange("vampireSwordChargingFactor", 0.05 / (double) VReference.FOOD_TO_FLUID_BLOOD, 0d, 1d);
+        vampireSwordBloodUsageFactor = builder.comment("The percentage of stored blood used for every hit with a normal vampire sword").defineInRange("vampireSwordBloodUsageFactor", 0.5, 0, 100d);
         dropOrchidFromLeavesChance = builder.comment("Drop orchid every n times breaking a leave in the vampire forest").defineInRange("dropOrchidFromLeavesChance", 25, 1, Integer.MAX_VALUE);
         golemAttackNonVillageFaction = builder.comment("If iron golems should attack faction NPCs if in a village with a different faction").define("golemAttackNonVillageFaction", true);
         zombieIgnoreVampire = builder.comment("Whether zombies should ignore vampires").define("zombieIgnoreVampire", true);
@@ -234,7 +236,7 @@ public class BalanceConfig {
         //Hunter actions
         builder.category("hunterActions", "ha");
         haDisguiseEnabled = builder.define("disguiseEnabled", true);
-        haDisguiseVisibilityMod = builder.comment("If disguised the detection radius of mobs will be multiplied by this").defineInRange("disguiseVisibilityMod", 0.1D, 0, 1);
+        haDisguiseVisibilityMod = builder.comment("If disguised the detection radius of mobs will be multiplied by this").defineInRange("disguiseVisibilityMod", 0.2D, 0, 1);
         haDisguiseInvisibleSQ = builder.comment("Squared distance as of which a disguised hunter is invisible").defineInRange("disguiseInvisibleSQ", 256, 1, Integer.MAX_VALUE);
         haAwarenessEnabled = builder.define("awarenessEnabled", true);
         haAwarenessDuration = builder.comment("In ticks").defineInRange("awarenessDuration", Integer.MAX_VALUE, 1, Integer.MAX_VALUE);
@@ -253,6 +255,7 @@ public class BalanceConfig {
         builder.category("hunterSkills", "hs");
         hsSmallAttackSpeedModifier = builder.comment("Basic skill - Weapon cooldown = 1/(oldvalue*(1+modifier))").defineInRange("smallAttackSpeedModifier", 0.2, 0, 3);
         hsMajorAttackSpeedModifier = builder.comment("Advanced skill - Weapon cooldown = 1/(oldvalue*(1+modifier)").defineInRange("majorAttackSpeedModifier", 0.4, 0, 3);
+        hsSmallAttackDamageModifier = builder.comment("Increase damage - Attack damage = oldValue * (1+modifier)").defineInRange("smallAttackDamageModifier", 0.3d, 0, 2);
         hsInstantKill1FromBehind = builder.comment("First stake skill - If it is required to attack from behind to instant kill low level vampires").define("instantKill1FromBehind", false);
         hsInstantKill1MaxHealth = builder.comment("First stake skill -The maximal relative health a entity may have to be instantly killed").defineInRange("instantKill1MaxHealth", 0.35, 0, 1);
         hsInstantKill2MaxHealth = builder.comment("Second stake skill - The max (not the actual) health of an entity that can be one hit killed from behind").defineInRange("instantKill2MaxHealth", 200, 0, Integer.MAX_VALUE);
@@ -276,22 +279,23 @@ public class BalanceConfig {
         builder.category("vampireSkills", "vs");
         vsSundamageReduction1 = builder.comment("Sundamage is multipled with (value+1)").defineInRange("sundamageReduction1", -0.5, -1, 0);
         vsBloodThirstReduction1 = builder.comment("Blood exhaustion is multiplied with (value+1)").defineInRange("bloodThirstReduction1", -0.4, -1, 0);
-        vsBiteDamageMult = builder.comment("Bite damage is multiplied with (value+1)").defineInRange("biteDamageMult", 1d, 0, 100);
         vsSwordFinisherMaxHealth = builder.comment("The max relative health for sword finisher kill").defineInRange("swordFinisherMaxHealth", 0.25, 0, 1);
         vsJumpBoost = builder.comment("Similar to potion effect ampliofier (and -1 is normal)").defineInRange("jumpBoost", 1, -1, 5);
         vsSpeedBoost = builder.comment("Max speed is multiplied with (value+1)").defineInRange("speedBoost", 0.15, 0, 3);
         vsBloodVisionDistanceSq = builder.comment("Squared blood vision distance").defineInRange("bloodVisionDistanceSq", 1600, 5, Integer.MAX_VALUE);
+        vsSmallAttackDamageModifier = builder.comment("Damage = oldValue * (1+modifier)").defineInRange("smallAttackDamageModifier", 0.3d, 0, 2d);
+        vsSmallAttackSpeedModifier = builder.comment("Basic skill - Weapon cooldown = 1/(oldvalue*(1+modifier))").defineInRange("smallAttackSpeedModifier", 0.2, 0, 3);
 
 
         //Vampire Player
         builder.category("vampirePlayer", "vp");
         vpHealthMaxMod = builder.defineInRange("healthMaxMod", 16, 0.5, 40);
-        vpStrengthMaxMod = builder.defineInRange("strengthMaxMod", 1, 0.5, 2);
+        vpStrengthMaxMod = builder.defineInRange("strengthMaxMod", 0.25, 0, 2);
+        vpResistanceMaxMod = builder.defineInRange("resistanceMaxMod", 4d, 0, 20);
         vpSpeedMaxMod = builder.defineInRange("speedMaxMod", 0.3, 0, 5);
         vpExhaustionMaxMod = builder.defineInRange("exhaustionMaxMod", 1.0, 0, 10);
         vpBasicBloodExhaustionMod = builder.comment("Blood exhaustion is multiplied with this value").defineInRange("basicBloodExhaustionMod", 0.7, 0, 5);
         vpBloodUsagePeaceful = builder.comment("Whether blood is consumed in peaceful gamemode").define("bloodUsagePeaceful", false);
-        vpBiteDamage = builder.defineInRange("biteDamage", 4, 0, Integer.MAX_VALUE);
         vpPlayerBloodSaturation = builder.defineInRange("playerBloodSaturation", 1.5, 0.3, 10);
         vpSanguinareAverageDuration = builder.defineInRange("sanguinareAverageDuration", 900, 1, 10000);
         vpSundamage = builder.defineInRange("sundamage", 7d, 1, Double.MAX_VALUE);

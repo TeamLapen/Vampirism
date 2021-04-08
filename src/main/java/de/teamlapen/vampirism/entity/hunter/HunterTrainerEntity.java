@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
@@ -21,13 +22,16 @@ import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -48,6 +52,14 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
         ((GroundPathNavigator) this.getNavigator()).setBreakDoors(true);
 
         this.setDontDropEquipment();
+    }
+
+    @Override
+    public boolean attackEntityFrom(DamageSource source, float amount) {
+//        if(VampirismMod.inDev){
+        ServerLifecycleHooks.getCurrentServer().sendMessage(new StringTextComponent("Damage: " + amount + " from " + source.toString()), Util.DUMMY_UUID);
+//        }
+        return super.attackEntityFrom(source, amount);
     }
 
     @Override
@@ -114,8 +126,9 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 
         if (!flag && this.isAlive() && !player.isSneaking()) {
-            if (!this.world.isRemote) {
-                int levelCorrect = HunterLevelingConf.instance().isLevelValidForTrainer(HunterPlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0) + 1);
+            int lvl=HunterPlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0);
+            if (!this.world.isRemote && lvl>0) {
+                int levelCorrect = HunterLevelingConf.instance().isLevelValidForTrainer(lvl+ 1);
                 if (levelCorrect == 0) {
                     if (trainee == null) {
                         player.openContainer(new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new HunterTrainerContainer(id, playerInventory, this), name));

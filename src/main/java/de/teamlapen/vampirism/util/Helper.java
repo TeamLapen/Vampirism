@@ -24,6 +24,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.DoubleNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.util.Direction;
 import net.minecraft.util.RegistryKey;
@@ -259,6 +261,19 @@ public class Helper {
             return EMPTY_ID;
         }
         return id;
+    }
+
+    /**
+     * blockpos to nbt
+     */
+    public static ListNBT newDoubleNBTList(double... numbers) {
+        ListNBT listnbt = new ListNBT();
+
+        for (double d0 : numbers) {
+            listnbt.add(DoubleNBT.valueOf(d0));
+        }
+
+        return listnbt;
     }
 
 }

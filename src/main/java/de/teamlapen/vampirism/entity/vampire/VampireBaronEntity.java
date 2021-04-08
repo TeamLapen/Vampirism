@@ -90,7 +90,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
                 float pld = (this.getLevel() + 1) - VampirePlayer.getOpt((PlayerEntity) entity).map(VampirismPlayer::getLevel).orElse(0) / 3f;
                 tm = pld + 1;
                 mr = pld < 1.5f ? 1 : (pld < 3 ? 2 : 3);
-                if (HunterCoatItem.isFullyEquipped((PlayerEntity) entity)) {
+                if (HunterCoatItem.isFullyEquipped((PlayerEntity) entity)!=null) {
                     tm *= 0.5F;
                 }
             }

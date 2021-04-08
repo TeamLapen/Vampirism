@@ -18,7 +18,6 @@ import de.teamlapen.vampirism.util.IPlayerOverlay;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import de.teamlapen.vampirism.util.SupporterManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -35,6 +34,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -42,9 +42,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * Advanced hunter. Is strong. Represents supporters
@@ -58,9 +61,12 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     private final int MAX_LEVEL = 1;
     private final int MOVE_TO_RESTRICT_PRIO = 3;
 
+    /**
+     * Overlay player texture and if slim (true)
+     */
     @OnlyIn(Dist.CLIENT)
     @Nullable
-    private GameProfile facePlayerProfile;
+    private Pair<ResourceLocation, Boolean> skinDetails;
 
 
     /**
@@ -147,17 +153,17 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         return "none".equals(senderName) ? super.getName() : new StringTextComponent(senderName);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    @Nullable
+
     @Override
-    public GameProfile getOverlayPlayerProfile() {
-        if (this.facePlayerProfile == null) {
+    @Nullable
+    public Optional<Pair<ResourceLocation, Boolean>> getOverlayPlayerProperties() {
+        if (skinDetails == null) {
             String name = getTextureName();
-            if (name == null) return null;
-            facePlayerProfile = new GameProfile(null, name);
-            PlayerSkinHelper.updateGameProfileAsync(facePlayerProfile, (profile) -> Minecraft.getInstance().execute(() -> AdvancedHunterEntity.this.facePlayerProfile = profile));
+            if (name == null) return Optional.empty();
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> PlayerSkinHelper.obtainPlayerSkinPropertiesAsync(new GameProfile(null, name), p -> this.skinDetails = p));
+            skinDetails = PENDING_PROP;
         }
-        return facePlayerProfile;
+        return Optional.of(skinDetails);
     }
 
     @Nullable

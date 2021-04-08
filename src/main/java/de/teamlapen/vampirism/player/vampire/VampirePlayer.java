@@ -21,7 +21,6 @@ import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.fluids.BloodHelper;
-import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
@@ -62,7 +61,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -245,10 +243,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (e instanceof LivingEntity) {
             if (e.getDistance(player) <= player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1) {
                 feed_victim_bite_type = determineBiteType((LivingEntity) e);
-                if (feed_victim_bite_type == BITE_TYPE.ATTACK || feed_victim_bite_type == BITE_TYPE.ATTACK_HUNTER || feed_victim_bite_type == BITE_TYPE.HUNTER_CREATURE) {
-                    biteAttack((LivingEntity) e, feed_victim_bite_type == BITE_TYPE.ATTACK_HUNTER);
-                } else if (feed_victim_bite_type == BITE_TYPE.NONE) {
-                    return;
+                if (feed_victim_bite_type == BITE_TYPE.NONE) {
+                } else if (feed_victim_bite_type == BITE_TYPE.HUNTER_CREATURE) {
+                    player.addPotionEffect(new EffectInstance(ModEffects.poison, 60));
+                    if (player instanceof ServerPlayerEntity) {
+                        ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.POISONOUS_BITE);
+                    }
                 } else {
                     if (feed_victim == -1) feedBiteTickCounter = 0;
 
@@ -309,9 +309,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             if (!UtilLib.canReallySee(entity, player, false) && VampirePlayer.getOpt((PlayerEntity) entity).map(v -> v.canBeBitten(this)).orElse(false)) {
                 return hunter ? BITE_TYPE.SUCK_BLOOD_HUNTER_PLAYER : BITE_TYPE.SUCK_BLOOD_PLAYER;
 
-            } else return hunter ? BITE_TYPE.ATTACK_HUNTER : BITE_TYPE.ATTACK;
+            } else return BITE_TYPE.NONE;
         }
-        return BITE_TYPE.ATTACK;
+        return BITE_TYPE.NONE;
     }
 
     @Override
@@ -331,10 +331,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * Cleanly ends biting process
      */
     public void endFeeding(boolean sync) {
-        if (feed_victim != -1)
+        if (feed_victim != -1 || feed_victim_bite_type !=null){
             feed_victim = -1;
-        feed_victim_bite_type = null;
-        if (player.isPotionActive(Effects.SLOWNESS)) player.removePotionEffect(Effects.SLOWNESS);
+            feed_victim_bite_type = null;
+            if (player.isPotionActive(Effects.SLOWNESS)) player.removePotionEffect(Effects.SLOWNESS);
+        }
         if (sync) {
             CompoundNBT nbt = new CompoundNBT();
             nbt.putInt(KEY_FEED_VICTIM_ID, feed_victim);
@@ -561,6 +562,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 return true;
             }
         }
+        endFeeding(true);
         if (getSpecialAttributes().half_invulnerable) {
             if (amt >= getRepresentingEntity().getMaxHealth() * (this.skillHandler.isRefinementEquipped(ModRefinements.half_invulnerable) ? 2:1) * VampirismConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
                 if (useBlood(VampirismConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
@@ -570,7 +572,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 }
             }
         }
-        endFeeding(true);
+
         return false;
     }
 
@@ -592,11 +594,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         this.applyEntityAttributes();
         if (!isRemote()) {
             ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.VAMPIRE_LEVEL_CRITERIA, newLevel);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpSpeedMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpStrengthMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpSpeedMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpStrengthMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ARMOR, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpResistanceMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, false);
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, true);
             if (player.getHealth() > player.getMaxHealth()) player.setHealth(player.getMaxHealth());
-            LevelAttributeModifier.applyModifier(player, ModAttributes.blood_exhaustion, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
+            LevelAttributeModifier.applyModifier(player, ModAttributes.blood_exhaustion, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
             if (newLevel > 13) {
                 bloodStats.setMaxBlood(40);
             } else if (newLevel > 9) {
@@ -962,31 +965,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private void applyEntityAttributes() {
         player.getAttribute(ModAttributes.sundamage).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
         player.getAttribute(ModAttributes.blood_exhaustion).setBaseValue(VampirismConfig.BALANCE.vpExhaustionMaxMod.get());
-        player.getAttribute(ModAttributes.bite_damage).setBaseValue(VampirismConfig.BALANCE.vpExhaustionMaxMod.get());
+        player.getAttribute(ModAttributes.bite_damage).setBaseValue(0);
     }
 
-    /**
-     * Executes attack logic if the bite is used against a hostile mob or a hunter
-     *
-     * @param entity The entity to attack
-     * @param hunter Is the entity a hunter?
-     */
-    private void biteAttack(LivingEntity entity, boolean hunter) {
-        if (!PermissionAPI.hasPermission(player, Permissions.BITE_PLAYER)) return;
-        float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getAttribute(ModAttributes.bite_damage).getValue();
-        entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
-        if (hunter || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) {
-            player.addPotionEffect(new EffectInstance(ModEffects.poison, 60));
-            if (player instanceof ServerPlayerEntity) {
-                ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.POISONOUS_BITE);
-            }
-        }
-        if (hunter) {
-            if (entity instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) entity)) {
-                player.attackEntityFrom(DamageSource.causeThornsDamage(entity), damage);
-            }
-        }
-    }
 
     private void biteBlock(@Nonnull BlockPos pos, @Nonnull BlockState blockState, @Nullable TileEntity tileEntity) {
         if (isRemote()) return;

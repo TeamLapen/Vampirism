@@ -1,6 +1,7 @@
 {
   "parent": "vampirism:hunter/skill4",
   "skills": [
-    "vampirism:hunter_disguise"
+    "vampirism:hunter_attack_speed",
+    "vampirism:hunter_attack_damage"
   ]
 }

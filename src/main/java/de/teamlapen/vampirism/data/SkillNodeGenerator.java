@@ -74,8 +74,8 @@ public class SkillNodeGenerator implements IDataProvider {
         //hunter
         {
             ResourceLocation skill2 = SkillNodeBuilder.hunter(modId("hunter"), HunterSkills.stake1).build(consumer, modId("skill2"));
-            ResourceLocation skill3 = SkillNodeBuilder.hunter(skill2, HunterSkills.hunter_attack_speed).build(consumer, modId("skill3"));
-            ResourceLocation skill4 = SkillNodeBuilder.hunter(skill3, HunterSkills.weapon_table).build(consumer, modId("skill4"));
+            ResourceLocation skill3 = SkillNodeBuilder.hunter(skill2, HunterSkills.weapon_table).build(consumer, modId("skill3"));
+            ResourceLocation skill4 = SkillNodeBuilder.hunter(skill3, HunterSkills.hunter_disguise).build(consumer, modId("skill4"));
 
             ResourceLocation alchemy1 = SkillNodeBuilder.hunter(skill4, HunterSkills.basic_alchemy).build(consumer, modId("alchemy1"));
             ResourceLocation alchemy2 = SkillNodeBuilder.hunter(alchemy1, HunterSkills.garlic_beacon).build(consumer, modId("alchemy2"));
@@ -91,9 +91,9 @@ public class SkillNodeGenerator implements IDataProvider {
             ResourceLocation potion5 = SkillNodeBuilder.hunter(potion4, HunterSkills.potion_resistance).build(consumer, modId("potion5"));
             ResourceLocation potion6 = SkillNodeBuilder.hunter(potion5, HunterSkills.concentrated_durable_brewing).build(consumer, modId("potion6"));
 
-            ResourceLocation weapon1 = SkillNodeBuilder.hunter(skill4, HunterSkills.hunter_disguise).build(consumer, modId("weapon1"));
-            ResourceLocation weapon2 = SkillNodeBuilder.hunter(weapon1, HunterSkills.hunter_attack_speed_advanced, HunterSkills.double_crossbow).build(consumer, modId("weapon2"));
-            ResourceLocation weapon3 = SkillNodeBuilder.hunter(weapon2, HunterSkills.enhanced_weapons, HunterSkills.enhanced_crossbow).build(consumer, modId("weapon3"));
+            ResourceLocation weapon1 = SkillNodeBuilder.hunter(skill4, HunterSkills.hunter_attack_speed, HunterSkills.hunter_attack_damage).build(consumer, modId("weapon1"));
+            ResourceLocation weapon2 = SkillNodeBuilder.hunter(weapon1, HunterSkills.double_crossbow).build(consumer, modId("weapon2"));
+            ResourceLocation weapon3 = SkillNodeBuilder.hunter(weapon2, HunterSkills.hunter_attack_speed_advanced, HunterSkills.enhanced_weapons).build(consumer, modId("weapon3"));
             ResourceLocation weapon4 = SkillNodeBuilder.hunter(weapon3, HunterSkills.enhanced_armor).build(consumer, modId("weapon4"));
             ResourceLocation weapon5 = SkillNodeBuilder.hunter(weapon4, HunterSkills.tech_weapons).build(consumer, modId("weapon5"));
             ResourceLocation weapon6 = SkillNodeBuilder.hunter(weapon5, HunterSkills.stake2).build(consumer, modId("weapon6"));
@@ -120,10 +120,11 @@ public class SkillNodeGenerator implements IDataProvider {
             ResourceLocation offensive6 = SkillNodeBuilder.vampire(offensive5, VampireSkills.freeze).build(consumer, modId("offensive6"));
 
             ResourceLocation defensive1 = SkillNodeBuilder.vampire(skill4, VampireSkills.sunscreen).build(consumer, modId("defensive1"));
-            ResourceLocation defensive2 = SkillNodeBuilder.vampire(defensive1, VampireSkills.vampire_jump, VampireSkills.vampire_speed).build(consumer, modId("defensive2"));
+            ResourceLocation defensive2 = SkillNodeBuilder.vampire(defensive1, VampireSkills.vampire_attack_speed, VampireSkills.vampire_speed).build(consumer, modId("defensive2"));
             ResourceLocation defensive3 = SkillNodeBuilder.vampire(defensive2, VampireSkills.blood_vision).build(consumer, modId("defensive3"));
             ResourceLocation defensive4 = SkillNodeBuilder.vampire(defensive3, VampireSkills.vampire_forest_fog, VampireSkills.blood_vision_garlic).build(consumer, modId("defensive4"));
-            ResourceLocation defensive5 = SkillNodeBuilder.vampire(defensive4, VampireSkills.teleport).build(consumer, modId("defensive5"));
+            ResourceLocation defensive5 = SkillNodeBuilder.vampire(defensive4, VampireSkills.vampire_attack_damage, VampireSkills.vampire_jump).build(consumer, modId("defensive5"));
+            ResourceLocation defensive6 = SkillNodeBuilder.vampire(defensive5, VampireSkills.teleport).build(consumer, modId("defensive6"));
 
         }
 

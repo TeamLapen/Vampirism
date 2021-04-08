@@ -19,6 +19,8 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 
@@ -28,8 +30,11 @@ public abstract class InventoryContainer extends Container {
     protected final IInventory inventory;
     private final int size;
 
-
     public InventoryContainer(ContainerType<? extends InventoryContainer> containerType, int id, PlayerInventory playerInventory, IWorldPosCallable worldPos, @Nonnull IInventory inventory, SelectorInfo... selectorInfos) {
+        this(containerType, id, playerInventory, worldPos, inventory, SelectorSlot::new, selectorInfos);
+    }
+
+    public InventoryContainer(ContainerType<? extends InventoryContainer> containerType, int id, PlayerInventory playerInventory, IWorldPosCallable worldPos, @Nonnull IInventory inventory, SelectorSlotFactory factory, SelectorInfo... selectorInfos) {
         this(containerType, id, worldPos, inventory, selectorInfos.length);
 
         if (inventory.getSizeInventory() < selectorInfos.length) {
@@ -37,18 +42,9 @@ public abstract class InventoryContainer extends Container {
         }
         inventory.openInventory(playerInventory.player);
         for (int i = 0; i < selectorInfos.length; i++) {
-            this.addSlot(new SelectorSlot(inventory, i, selectorInfos[i]) {
-                @Override
-                public void onSlotChange(@Nonnull ItemStack oldStackIn, @Nonnull ItemStack newStackIn) {
-                    super.onSlotChange(oldStackIn, newStackIn);
-                    InventoryContainer.this.onCraftMatrixChanged(this.inventory);
-                }
-
-                @Override
-                public boolean isEnabled() {
-                    return InventoryContainer.this.isSlotEnabled(this.slotNumber);
-                }
-            });
+            SelectorSlot slot = factory.create(inventory, i, selectorInfos[i], this::onCraftMatrixChanged, this::isSlotEnabled);
+            slot.setS(this);
+            this.addSlot(slot);
         }
 
     }
@@ -136,10 +132,15 @@ public abstract class InventoryContainer extends Container {
     public static class SelectorSlot extends Slot {
 
         private final SelectorInfo info;
+        private final Function<Integer, Boolean> activeFunc;
+        private final Consumer<IInventory> refreshInvFunc;
+        private InventoryContainer s;
 
-        public SelectorSlot(IInventory inventoryIn, int index, SelectorInfo info) {
+        public SelectorSlot(IInventory inventoryIn, int index, SelectorInfo info, Consumer<IInventory> refreshInvFunc, Function<Integer, Boolean> activeFunc) {
             super(inventoryIn, index, info.xDisplay, info.yDisplay);
             this.info = info;
+            this.activeFunc = activeFunc;
+            this.refreshInvFunc = refreshInvFunc;
         }
 
         @Override
@@ -152,6 +153,24 @@ public abstract class InventoryContainer extends Container {
             return info.validate(stack);
         }
 
+        @Override
+        public void onSlotChange(ItemStack oldStackIn, ItemStack newStackIn) {
+            super.onSlotChange(oldStackIn, newStackIn);
+            this.refreshInvFunc.accept(this.inventory);
+        }
+
+        public void setS(InventoryContainer s) {
+            this.s = s;
+        }
+
+        public InventoryContainer getS() {
+            return s;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return activeFunc.apply(this.slotNumber);
+        }
 
         @Nullable
         @OnlyIn(Dist.CLIENT)
@@ -160,6 +179,11 @@ public abstract class InventoryContainer extends Container {
             return info.background;
         }
 
+    }
+
+    @FunctionalInterface
+    public interface SelectorSlotFactory {
+        SelectorSlot create(IInventory inventoryIn, int index, SelectorInfo info, Consumer<IInventory> refreshInvFunc, Function<Integer, Boolean> activeFunc);
     }
 
 

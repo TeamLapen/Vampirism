@@ -11,6 +11,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -37,8 +38,8 @@ public class AlchemicalFireItem extends VampirismItem {
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslationTextComponent("item.vampirism.item_alchemical_fire.desc1"));
-        tooltip.add(new TranslationTextComponent("item.vampirism.item_alchemical_fire.desc2"));
+        tooltip.add(new TranslationTextComponent("item.vampirism.item_alchemical_fire.desc1").mergeStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent("item.vampirism.item_alchemical_fire.desc2").mergeStyle(TextFormatting.GRAY));
     }
 
     @Override

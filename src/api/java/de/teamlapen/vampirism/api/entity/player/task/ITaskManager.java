@@ -20,6 +20,11 @@ public interface ITaskManager {
     void updateTaskMasterScreen(UUID taskBoardId);
 
     /**
+     * sends task information to the vampirism container
+     */
+    void openVampirismMenu();
+
+    /**
      * checks if the task is unlocked and can be completed
      * cleans the task board from the task
      * <p>
