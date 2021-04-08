@@ -10,7 +10,9 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.items.VampireRefinementItem;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
@@ -306,15 +308,38 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         return this.refinementModifier.containsKey(refinement);
     }
 
+    @Override
+    public ItemStack[] createRefinementItems() {
+        ItemStack[] items = new ItemStack[this.appliedRefinementSets.length];
+        for (int i = 0; i < this.appliedRefinementSets.length; i++) {
+            if (this.appliedRefinementSets[i] != null) {
+                VampireRefinementItem item;
+                switch (i) {
+                    case 0:
+                        item = ModItems.amulet;
+                        break;
+                    case 1:
+                        item = ModItems.ring;
+                        break;
+                    default:
+                        item = ModItems.obi_belt;
+                }
+                items[i] = new ItemStack(item);
+                item.applyRefinementSet(items[i], this.appliedRefinementSets[i]);
+            }
+        }
+        return items;
+    }
+
     private void applyRefinementSet(@Nullable IRefinementSet set, int slot) {
         this.appliedRefinementSets[slot] = set;
         if (set != null) {
             Collection<IRefinement> refinements = set.getRefinements();
             for (IRefinement refinement : refinements) {
                 this.activeRefinements.add(refinement);
-                    if(!this.player.isRemote()){
-                        Attribute a = refinement.getAttribute();
-                        if(a!=null) {
+                if (!this.player.isRemote()) {
+                    Attribute a = refinement.getAttribute();
+                    if (a != null) {
                             ModifiableAttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(a);
                             double value = refinement.getModifierValue();
                             AttributeModifier t = attributeInstance.getModifier(refinement.getUUID());
@@ -322,8 +347,8 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
                                 attributeInstance.removeModifier(t);
                                 value += t.getAmount();
                             }
-                            t = refinement.createAttributeModifier(t.getID(), value);
-                            this.refinementModifier.put(refinement, t);
+                        t = refinement.createAttributeModifier(refinement.getUUID(), value);
+                        this.refinementModifier.put(refinement, t);
                             attributeInstance.applyNonPersistentModifier(t);
                         }
 

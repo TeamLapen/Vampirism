@@ -43,7 +43,7 @@ public abstract class InventoryContainer extends Container {
         inventory.openInventory(playerInventory.player);
         for (int i = 0; i < selectorInfos.length; i++) {
             SelectorSlot slot = factory.create(inventory, i, selectorInfos[i], this::onCraftMatrixChanged, this::isSlotEnabled);
-            slot.setS(this);
+            slot.setContainer(this);
             this.addSlot(slot);
         }
 
@@ -134,7 +134,7 @@ public abstract class InventoryContainer extends Container {
         private final SelectorInfo info;
         private final Function<Integer, Boolean> activeFunc;
         private final Consumer<IInventory> refreshInvFunc;
-        private InventoryContainer s;
+        private InventoryContainer container;
 
         public SelectorSlot(IInventory inventoryIn, int index, SelectorInfo info, Consumer<IInventory> refreshInvFunc, Function<Integer, Boolean> activeFunc) {
             super(inventoryIn, index, info.xDisplay, info.yDisplay);
@@ -159,12 +159,12 @@ public abstract class InventoryContainer extends Container {
             this.refreshInvFunc.accept(this.inventory);
         }
 
-        public void setS(InventoryContainer s) {
-            this.s = s;
+        public void setContainer(InventoryContainer container) {
+            this.container = container;
         }
 
-        public InventoryContainer getS() {
-            return s;
+        public InventoryContainer getContainer() {
+            return container;
         }
 
         @Override

@@ -23,6 +23,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -129,6 +130,17 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         this.oldMouseY = mouseY;
         this.list.renderToolTip(matrixStack, mouseX, mouseY);
         this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
+        this.renderHoveredRefinementTooltip(matrixStack, mouseX, mouseY);
+    }
+
+    protected void renderHoveredRefinementTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
+        if (this.minecraft.player.inventory.getItemStack().isEmpty() && this.hoveredSlot != null) {
+            int index = this.hoveredSlot.getSlotIndex();
+            NonNullList<ItemStack> list = this.container.getRefinementStacks();
+            if (index < list.size() && index >= 0) {
+                this.renderTooltip(matrixStack, list.get(index), mouseX, mouseY);
+            }
+        }
     }
 
     @Override
