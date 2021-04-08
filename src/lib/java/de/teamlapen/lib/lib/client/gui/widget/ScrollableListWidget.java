@@ -33,7 +33,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
     private int scrolled;
     private double scrolledD;
     private boolean scrollerClicked;
-    private final boolean canScroll = true;
+    private boolean canScroll = true;
     private final Supplier<Collection<T>> baseValueSupplier;
 
     public ScrollableListWidget(int xPos, int yPos, int width, int height, int itemHeight, @Nonnull Supplier<Collection<T>> baseValueSupplier, @Nonnull ItemCreator<T> itemSupplier) {
@@ -74,23 +74,16 @@ public class ScrollableListWidget<T> extends ExtendedButton {
 
     public void removeItem(T element) {
         this.listItems.removeIf(item -> item.item == element);
-//        if (this.scrolled > this.listItems.size() * this.itemHeight - this.height) {
-//            this.setScrolled(this.listItems.size() * this.itemHeight - this.height);
-//        }
         this.setCanScroll();
     }
 
     public void removeItem(ListItem<T> item) {
         this.listItems.remove(item);
-//        int sc = this.listItems.size() * this.itemHeight - this.height;
-//        if (this.scrolled > sc && sc >0) {
-//            this.setScrolled(sc);
-//        }
         this.setCanScroll();
     }
 
     private void setCanScroll() {
-//        this.canScroll = this.listItems.size() * this.itemHeight > this.height;;
+        this.canScroll = this.listItems.size() * this.itemHeight > this.height;
     }
 
     private void setScrolled(int scrolled) {
