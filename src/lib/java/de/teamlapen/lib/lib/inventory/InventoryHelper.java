@@ -189,4 +189,15 @@ public class InventoryHelper {
         return i <= 0;
     }
 
+    public static ItemStack getFirst(IInventory inventory, Item set) {
+        for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+            ItemStack itemstack = inventory.getStackInSlot(i);
+            if (set == itemstack.getItem() && itemstack.getCount() > 0) {
+                return itemstack;
+            }
+        }
+
+        return null;
+    }
+
 }
