@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -32,6 +33,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -191,11 +193,12 @@ public class SkillsScreen extends Screen {
                 resetSkills = this.addButton(new Button((this.width - display_width) / 2 + 24 + 40, this.height / 2 + 74, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
                     boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
                     ConfirmScreen resetGui = new ConfirmScreen((cxt) -> {
-                        if (factionPlayer.getLevel() < 2 || minecraft.player.inventory.count(ModItems.oblivion_potion) <= 1) {
-                            context.active = false;
-                        }
                         if (cxt) {
                             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
+                            InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().inventory, new ItemStack(ModItems.oblivion_potion)); //server syncs after the screen is closed
+                        }
+                        if (factionPlayer.getLevel() < 2 || minecraft.player.inventory.count(ModItems.oblivion_potion) <= 1) {
+                            context.active = false;
                         }
                         Minecraft.getInstance().displayGuiScreen(this);
                     }, new TranslationTextComponent("gui.vampirism.reset_skills.title"), new TranslationTextComponent("gui.vampirism.reset_skills." + (test ? "desc_test" : "desc")));

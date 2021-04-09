@@ -271,6 +271,7 @@
   "text.vampirism.taskmaster.no_tasks": "No tasks available at the moment",
   "text.vampirism.taskmaster.no_tasks_unique": "There are no task left",
   "text.vampirism.warning_optifine_bloodvision": "You appear to be running Optifine with shaders. Blood vision won't work with that. Therefore a substitute glowing effect is used. Not all shaders actually render the glowing effect though.",
+  "text.vampirism.oblivion_potion.resets_skills": "Resets skills on consume",
   "__comment": "task_entity_tags",
   "tasks.vampirism.vampirism:hunter": "Hunter entities",
   "tasks.vampirism.vampirism:advanced_hunter": "Advanced hunters",
