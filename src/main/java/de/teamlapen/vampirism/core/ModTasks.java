@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.PotionUtils;
+import net.minecraft.potion.Potions;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -87,6 +88,8 @@ public class ModTasks {
         registry.register(TaskBuilder.builder().addRequirement("skeleton", EntityType.SKELETON, 10).setReward(new ItemStack(Items.CHAINMAIL_HELMET)).build("break_bones4"));
         registry.register(TaskBuilder.builder().unlockedBy(new LvlUnlocker(5)).addRequirement("obsidian", new ItemStack(Items.OBSIDIAN, 32)).addRequirement("diamond", new ItemStack(Items.DIAMOND, 1)).addRequirement("zombie", EntityType.ZOMBIE, 32).setReward(new ItemStack(ModBlocks.totem_top_crafted)).build("totem_top"));
 
+        registry.register(TaskBuilder.builder().addRequirement("poison", PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.POISON)).addRequirement("vampire_blood", new ItemStack(ModItems.vampire_blood_bottle)).setReward(new ItemStack(ModItems.oblivion_potion)).build("oblivion_potion1"));
+        registry.register(TaskBuilder.builder().addRequirement("poison", PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.POISON)).addRequirement("vampire_blood", new ItemStack(ModItems.vampire_blood_bottle)).setReward(new ItemStack(ModItems.oblivion_potion)).build("oblivion_potion2"));
 
     }
 }
