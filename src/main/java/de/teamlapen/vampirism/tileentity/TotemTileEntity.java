@@ -222,7 +222,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     public void remove() {
         //noinspection ConstantConditions
         TotemHelper.removeVampireVillage(this.world.getDimensionKey(), this.pos);
-        TotemHelper.removeTotem(this.village, this.pos, true);
+        TotemHelper.removeTotem(this.world.getDimensionKey(), this.village, this.pos, true);
         if (this.capturingFaction != null) {
             this.abortCapture(false);
         } else {
@@ -369,7 +369,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             }
         }else if (!(this.isDisabled = !TotemHelper.addTotem((ServerWorld) this.world, points, this.pos))) {
             this.village.removeIf(points::contains);
-            TotemHelper.removeTotem(this.village, this.pos, false);
+            TotemHelper.removeTotem(this.world.getDimensionKey(), this.village, this.pos, false);
             this.village = points;
         } else {
             this.village = Collections.emptySet();

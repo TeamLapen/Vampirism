@@ -399,10 +399,11 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void blockDestroyed(BlockEvent.BreakEvent event) {
+        if (!(event.getWorld() instanceof World)) return;
         //don't allow player to destroy blocks with PointOfInterests that are owned by a totem with different faction as the player
         if (event.getPlayer().isCreative()) return;
         Set<BlockPos> positions = new HashSet<>();
-        BlockPos totemPos = TotemHelper.getTotemPosition(event.getPos());
+        BlockPos totemPos = TotemHelper.getTotemPosition(((World) event.getWorld()).getDimensionKey(), event.getPos());
         Block block = event.getState().getBlock();
         //if the blockstate does not have a POI, but another blockstate of the specific block eg. the bed, search for the blockstate in a 3x3x3 radius
         //or the other way around
