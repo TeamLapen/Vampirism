@@ -155,20 +155,26 @@ public class InventoryHelper {
      * @return the slot id or -1 if none found
      */
     public static int getFirstSuitableSlotToAdd(NonNullList<ItemStack> inventory, ItemStack stack, int invLimit) {
+        return getFirstSuitableSlotToAdd(inventory, inventory.size(), stack, invLimit);
+    }
+
+    public static int getFirstSuitableSlotToAdd(NonNullList<ItemStack> inventory, int inventorySize, ItemStack stack, int invLimit) {
+        assert inventory.size() >= inventorySize;
         if (!stack.isDamaged() && stack.isStackable()) {
-            for (int i = 0; i < inventory.size(); ++i) {
+            for (int i = 0; i < inventorySize; ++i) {
                 if (InventoryHelper.canMergeStacks(inventory.get(i), stack, invLimit)) {
                     return i;
                 }
             }
         }
-        for (int i = 0; i < inventory.size(); ++i) {
+        for (int i = 0; i < inventorySize; ++i) {
             if (inventory.get(i).isEmpty()) {
                 return i;
             }
         }
         return -1;
     }
+
 
     public static boolean removeItemFromInventory(IInventory inventory, ItemStack item) {
         int i = item.getCount();

@@ -18,9 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
@@ -192,24 +190,26 @@ public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
         Optional<MinionInventory> invOpt = entity.getMinionData().map(MinionData::getInventory);
         if (invOpt.isPresent()) {
             MinionInventory inv = invOpt.get();
-//            List<ItemStack> stacks = new ArrayList<>();
-//            for (int i = 6 + getDefaultInventorySize(); i < inv.getSizeInventory(); i++) {
-//                ItemStack stack = inv.removeStackFromSlot(i);
-//                if (!stack.isEmpty()) {
-//                    stacks.add(stack);
-//                }
-//            }
+            List<ItemStack> stacks = new ArrayList<>();
+            for (int i = 6 + getDefaultInventorySize(); i < inv.getSizeInventory(); ++i) {
+                ItemStack stack = inv.removeStackFromSlot(i);
+                if (!stack.isEmpty()) {
+                    stacks.add(stack);
+                }
+            }
             inv.setAvailableSize(getInventorySize());
-//            for (ItemStack stack : stacks) {
-//                inv.addItemStack(stack);
-//                if (!stack.isEmpty()) {
-//                    entity.getLordOpt().ifPresent(l -> l.getPlayer().addItemStackToInventory(stack));
-//                    if (!stack.isEmpty()){
-//                        entity.entityDropItem(stack);
-//                    }
-//                }
-//
-//            }
+            for (ItemStack stack : stacks) {
+                if (!stack.isEmpty()) {
+                    inv.addItemStack(stack);
+                    if (!stack.isEmpty()) {
+                        entity.getLordOpt().ifPresent(lord -> {
+                            if (!lord.getPlayer().addItemStackToInventory(stack)) {
+                                entity.entityDropItem(stack);
+                            }
+                        });
+                    }
+                }
+            }
         }
     }
 
