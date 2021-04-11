@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.inventory.container.VampirismContainer;
-import de.teamlapen.vampirism.player.TaskManager;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -33,7 +32,6 @@ import net.minecraft.util.text.event.HoverEvent;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 public class VampirismScreen extends ContainerScreen<VampirismContainer> implements ExtendedScreen {
 
@@ -100,7 +98,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
     }
 
     public Collection<TaskContainer.TaskInfo> refreshTasks() {
-        return this.container.tasks.entrySet().stream().flatMap(a -> a.getValue().stream().map(b -> new TaskContainer.TaskInfo(b, a.getKey()))).collect(Collectors.toList());
+        return this.container.getTaskInfos();
     }
 
     @Override
@@ -214,20 +212,19 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         }
 
         private void onTooltip(Button button, MatrixStack matrixStack, int mouseX, int mouseY) {
-            TaskManager.TaskBoardInfo info = container.taskBoardInfos.get(this.item.taskBoard);
-            if (info != null) {
-                VampirismScreen.this.renderWrappedToolTip(matrixStack, Collections.singletonList(new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos").append(new StringTextComponent("[" + info.getLastSeenPos().getCoordinatesAsString() + "]").mergeStyle(TextFormatting.GREEN))), mouseX, mouseY, font);
+            BlockPos blockPos = container.taskWrapper.get(this.item.taskBoard).getLastSeenPos();
+            if (blockPos != BlockPos.ZERO) {
+                VampirismScreen.this.renderWrappedToolTip(matrixStack, Collections.singletonList(new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos").append(new StringTextComponent("[" + blockPos.getCoordinatesAsString() + "]").mergeStyle(TextFormatting.GREEN))), mouseX, mouseY, font);
             }
         }
 
         private void onClick(Button button) {
-            TaskManager.TaskBoardInfo info = container.taskBoardInfos.get(this.item.taskBoard);
-            if (info != null) {
-                BlockPos pos = info.getLastSeenPos();
+            BlockPos info = container.taskWrapper.get(this.item.taskBoard).getLastSeenPos();
+            if (info != BlockPos.ZERO) {
                 PlayerEntity player = this.factionPlayer.getRepresentingPlayer();
-                int i = MathHelper.floor(getDistance(player.getPosition().getX(), player.getPosition().getZ(), pos.getX(), pos.getZ()));
-                ITextComponent itextcomponent = TextComponentUtils.wrapWithSquareBrackets(new TranslationTextComponent("chat.coordinates", pos.getX(), "~", pos.getZ())).modifyStyle((p_241055_1_) -> {
-                    return p_241055_1_.setFormatting(TextFormatting.GREEN).setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tp @s " + pos.getX() + " ~ " + pos.getZ())).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslationTextComponent("chat.coordinates.tooltip")));
+                int i = MathHelper.floor(getDistance(player.getPosition().getX(), player.getPosition().getZ(), info.getX(), info.getZ()));
+                ITextComponent itextcomponent = TextComponentUtils.wrapWithSquareBrackets(new TranslationTextComponent("chat.coordinates", info.getX(), "~", info.getZ())).modifyStyle((p_241055_1_) -> {
+                    return p_241055_1_.setFormatting(TextFormatting.GREEN).setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tp @s " + info.getX() + " ~ " + info.getZ())).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslationTextComponent("chat.coordinates.tooltip")));
                 });
                 player.sendStatusMessage(new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos").append(itextcomponent).append(new TranslationTextComponent("gui.vampirism.vampirism_menu.distance", i)), false);
             }

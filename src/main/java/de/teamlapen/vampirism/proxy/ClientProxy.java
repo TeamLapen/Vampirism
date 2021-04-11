@@ -210,7 +210,7 @@ public class ClientProxy extends CommonProxy {
     public void handleTaskPacket(TaskPacket msg) {
         Container container = Minecraft.getInstance().player.openContainer;
         if (msg.containerId == container.windowId && container instanceof VampirismContainer) {
-            ((VampirismContainer) container).init(msg.taskBoardInfos, msg.tasks, msg.completableTasks, msg.completedRequirements);
+            ((VampirismContainer) container).init(msg.taskWrappers, msg.completableTasks, msg.completedRequirements);
         }
     }
 

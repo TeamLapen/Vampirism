@@ -23,12 +23,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class VampirismContainer extends InventoryContainer implements TaskContainer {
 
@@ -37,9 +35,8 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
             new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.RING, 58, 26),
             new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.OBI_BELT, 58, 44)};
 
+    public Map<UUID, TaskManager.TaskWrapper> taskWrapper = new HashMap<>();
     public Map<UUID, Set<Task>> completableTasks = new HashMap<>();
-    public Map<UUID, TaskManager.TaskBoardInfo> taskBoardInfos = new HashMap<>();
-    public Map<UUID, Set<Task>> tasks = new HashMap<>();
     public Map<UUID, Map<Task, Map<ResourceLocation, Integer>>> completedRequirements = new HashMap<>();
 
     private final IFactionPlayer<?> factionPlayer;
@@ -63,9 +60,8 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void init(@Nonnull Map<UUID, TaskManager.TaskBoardInfo> taskBoardInfos, @Nonnull Map<UUID, Set<Task>> tasks, @Nonnull Map<UUID, Set<Task>> completableTasks, @Nonnull Map<UUID, Map<Task, Map<ResourceLocation, Integer>>> completedRequirements) {
-        this.taskBoardInfos = taskBoardInfos;
-        this.tasks = tasks;
+    public void init(@Nonnull Map<UUID, TaskManager.TaskWrapper> taskWrapper, @Nonnull Map<UUID, Set<Task>> completableTasks, @Nonnull Map<UUID, Map<Task, Map<ResourceLocation, Integer>>> completedRequirements) {
+        this.taskWrapper = taskWrapper;
         this.completedRequirements = completedRequirements;
         this.completableTasks = completableTasks;
         if (this.listener != null) {
@@ -80,6 +76,10 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
 
     public NonNullList<ItemStack> getRefinementStacks() {
         return refinementStacks;
+    }
+
+    public Collection<TaskInfo> getTaskInfos() {
+        return this.taskWrapper.values().stream().flatMap(wrapper -> wrapper.getTasks().stream().map(task -> new TaskInfo(task, wrapper.getId()))).collect(Collectors.toList());
     }
 
     @Override
@@ -101,7 +101,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     @Override
     public boolean pressButton(TaskInfo taskInfo) {
         VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.task, taskInfo.taskBoard, TaskAction.ABORT));
-        this.tasks.get(taskInfo.taskBoard).remove(taskInfo.task);
+        this.taskWrapper.get(taskInfo.taskBoard).getTasks().remove(taskInfo.task);
         if (this.listener != null) {
             this.listener.run();
         }
