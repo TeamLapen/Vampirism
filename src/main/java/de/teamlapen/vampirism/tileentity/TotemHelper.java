@@ -156,7 +156,7 @@ public class TotemHelper {
         TotemTileEntity totem1 = ((TotemTileEntity) world.getTileEntity(totem));
         TotemTileEntity totem2 = ((TotemTileEntity) world.getTileEntity(conflicting));
 
-        if (totem2 != null){
+        if (totem2 == null) {
             return;
         }
 

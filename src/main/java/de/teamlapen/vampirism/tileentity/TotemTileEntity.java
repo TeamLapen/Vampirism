@@ -347,7 +347,6 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     public void updateTileStatus() {
         if(!(this.world instanceof ServerWorld))return;
 
-        //noinspection ConstantConditions
         Block b = this.world.getBlockState(this.pos).getBlock();
         if (!(this.isComplete = b instanceof TotemTopBlock && this.world.getBlockState(this.pos.down()).getBlock().equals(ModBlocks.totem_base)))
             return;
@@ -1094,6 +1093,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     @OnlyIn(Dist.CLIENT)
     public float shouldRenderBeam() {
         if (!this.isComplete || isDisabled || !isInsideVillage) return 0f;
+        if (this.capturingFaction == null) return 0f;
         //noinspection ConstantConditions
         int i = (int) (this.world.getGameTime() - this.beamRenderCounter);
         this.beamRenderCounter = this.world.getGameTime();
