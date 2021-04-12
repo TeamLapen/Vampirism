@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskActionPacket;
@@ -18,6 +19,7 @@ import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -43,6 +45,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     private final TextFormatting factionColor;
 
     private Runnable listener;
+    private final World world;
 
     private final NonNullList<ItemStack> refinementStacks = NonNullList.withSize(3, ItemStack.EMPTY);
 
@@ -57,6 +60,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
                 this.refinementStacks.set(i, sets[i]);
             }
         }
+        this.world = playerInventory.player.world;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -79,7 +83,8 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     }
 
     public Collection<TaskInfo> getTaskInfos() {
-        return this.taskWrapper.values().stream().flatMap(wrapper -> wrapper.getTasks().stream().map(task -> new TaskInfo(task, wrapper.getId()))).collect(Collectors.toList());
+        long targetTime = VampirismConfig.BALANCE.taskDuration.get() * 60 * 20;
+        return this.taskWrapper.values().stream().flatMap(wrapper -> wrapper.getAcceptedTasks().stream().map(task -> new TaskInfo(task, wrapper.getId(), () -> targetTime - (this.world.getGameTime() - wrapper.getTaskTimeStamp(task))))).collect(Collectors.toList());
     }
 
     @Override
@@ -95,13 +100,13 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
 
     @Override
     public boolean canCompleteTask(TaskInfo taskInfo) {
-        return this.completableTasks.containsKey(taskInfo.taskBoard) && this.completableTasks.get(taskInfo.taskBoard).contains(taskInfo.task);
+        return this.completableTasks.containsKey(taskInfo.taskBoard) && this.completableTasks.get(taskInfo.taskBoard).contains(taskInfo.task) && taskInfo.remainingTime.get() > 0;
     }
 
     @Override
     public boolean pressButton(TaskInfo taskInfo) {
-        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.task, taskInfo.taskBoard, TaskAction.ABORT));
-        this.taskWrapper.get(taskInfo.taskBoard).getTasks().remove(taskInfo.task);
+        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.task, taskInfo.taskBoard, buttonAction(taskInfo)));
+        this.taskWrapper.get(taskInfo.taskBoard).removeTask(taskInfo.task, false);
         if (this.listener != null) {
             this.listener.run();
         }
@@ -110,7 +115,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
 
     @Override
     public TaskAction buttonAction(TaskInfo taskInfo) {
-        return TaskContainer.TaskAction.ABORT;
+        return taskInfo.task.isUnique() || taskInfo.remainingTime.get() > 0 ? TaskContainer.TaskAction.ABORT : TaskAction.REMOVE;
     }
 
     @Override

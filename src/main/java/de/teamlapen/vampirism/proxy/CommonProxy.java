@@ -4,6 +4,7 @@ package de.teamlapen.vampirism.proxy;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
+import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.network.ActionBindingPacket;
 import de.teamlapen.vampirism.network.AppearancePacket;
 import de.teamlapen.vampirism.network.TaskActionPacket;
@@ -47,15 +48,15 @@ public abstract class CommonProxy implements IProxy {
     @Override
     public void handleTaskActionPacket(TaskActionPacket msg, PlayerEntity playerEntity) {
         FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> {
-            switch (msg.action){
+            switch (msg.action) {
                 case COMPLETE:
                     factionPlayer.getTaskManager().completeTask(msg.entityId, msg.task);
                     break;
                 case ACCEPT:
                     factionPlayer.getTaskManager().acceptTask(msg.entityId, msg.task);
                     break;
-                case ABORT:
-                    factionPlayer.getTaskManager().abortTask(msg.entityId, msg.task);
+                default:
+                    factionPlayer.getTaskManager().abortTask(msg.entityId, msg.task, msg.action == TaskContainer.TaskAction.REMOVE);
                     break;
             }
         }));

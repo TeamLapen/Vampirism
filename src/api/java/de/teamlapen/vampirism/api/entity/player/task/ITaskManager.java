@@ -50,9 +50,13 @@ public interface ITaskManager {
      *
      * @param taskBoardId the id of the task board
      * @param task        the aborted task
+     * @param remove      whether the task should be removed from the task list
      * @implNote does not sync changes to the client
      */
-    void abortTask(UUID taskBoardId, @Nonnull Task task);
+    void abortTask(UUID taskBoardId, @Nonnull Task task, boolean remove);
+
+    @Deprecated
+    void abortTask(UUID taskBoardId, @Nonnull Task task); //TODO 1.17 remove
 
     /**
      * checks if the task board has available tasks

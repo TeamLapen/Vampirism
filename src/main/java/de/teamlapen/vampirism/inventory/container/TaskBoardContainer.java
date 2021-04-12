@@ -8,23 +8,23 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.client.gui.TaskBoardScreen;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskActionPacket;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -47,6 +47,8 @@ public class TaskBoardContainer extends Container implements TaskContainer {
     private final List<Task> visibleTasks = Lists.newArrayList();
     @Nonnull
     private final Set<Task> notAcceptedTasks = Sets.newHashSet();
+    @Nonnull
+    private Map<Task, Long> taskTimeStamp = new HashMap<>();
     @Nonnull
     private final TextFormatting factionColor;
     @Nonnull
@@ -73,14 +75,16 @@ public class TaskBoardContainer extends Container implements TaskContainer {
      * @param visibleTasks          updated unlocked tasks
      * @param notAcceptedTasks      updated not accepted tasks
      * @param completedRequirements updated completed requirements
+     * @param taskTimeStamp
      */
     @OnlyIn(Dist.CLIENT)
-    public void init(@Nonnull Set<Task> completableTasks, @Nonnull List<Task> visibleTasks, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Map<Task, Map<ResourceLocation, Integer>> completedRequirements, UUID taskBoardId) {
+    public void init(@Nonnull Set<Task> completableTasks, @Nonnull List<Task> visibleTasks, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Map<Task, Map<ResourceLocation, Integer>> completedRequirements, UUID taskBoardId, Map<Task, Long> taskTimeStamp) {
         this.completableTasks.addAll(completableTasks);
         this.visibleTasks.addAll(visibleTasks.stream().filter(task -> !this.visibleTasks.contains(task)).sorted((task1, task2) -> (this.completableTasks.contains(task1) && !this.completableTasks.contains(task2)) || (!completableTasks.contains(task1) && !this.completedTasks.contains(task1) && this.completedTasks.contains(task2)) ? -1 : 0).collect(Collectors.toList()));
         this.completedRequirements = completedRequirements;
         this.taskBoardId = taskBoardId;
         this.notAcceptedTasks.addAll(notAcceptedTasks);
+        this.taskTimeStamp = taskTimeStamp;
         if (this.listener != null) {
             this.listener.run();
         }
@@ -98,25 +102,6 @@ public class TaskBoardContainer extends Container implements TaskContainer {
     @Override
     public boolean canInteractWith(@Nonnull PlayerEntity playerIn) {
         return FactionPlayerHandler.getOpt(playerIn).map(player -> player.getCurrentFaction() != null).orElse(false);
-    }
-
-    public void completeTask(TaskInfo taskInfo) {
-        if (this.completableTasks.contains(taskInfo.task)) {
-            VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.task, taskInfo.taskBoard, TaskContainer.TaskAction.COMPLETE));
-            this.completedTasks.add(taskInfo.task);
-            this.completableTasks.remove(taskInfo.task);
-            this.visibleTasks.remove(taskInfo.task);
-        }
-    }
-
-    public void acceptTask(TaskInfo taskInfo) {
-        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.task, taskInfo.taskBoard, TaskContainer.TaskAction.ACCEPT));
-        this.notAcceptedTasks.remove(taskInfo.task);
-    }
-
-    public void abortTask(TaskInfo taskInfo) {
-        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.task, taskInfo.taskBoard, TaskContainer.TaskAction.ABORT));
-        this.notAcceptedTasks.add(taskInfo.task);
     }
 
     public int size() {
@@ -149,33 +134,39 @@ public class TaskBoardContainer extends Container implements TaskContainer {
 
     @Override
     public boolean canCompleteTask(TaskInfo taskInfo) {
-        return this.completableTasks.contains(taskInfo.task);
+        return this.completableTasks.contains(taskInfo.task) && taskInfo.remainingTime.get() > 0;
     }
 
     @Override
     public boolean pressButton(TaskInfo taskInfo) {
-        switch (buttonAction(taskInfo)) {
+        TaskAction action = buttonAction(taskInfo);
+        switch (action) {
             case COMPLETE:
-                completeTask(taskInfo);
-                break;
-            case ABORT:
-                abortTask(taskInfo);
+                this.completedTasks.add(taskInfo.task);
+                this.completableTasks.remove(taskInfo.task);
+                this.visibleTasks.remove(taskInfo.task);
                 break;
             case ACCEPT:
-                acceptTask(taskInfo);
+                this.notAcceptedTasks.remove(taskInfo.task);
+                break;
+            default:
+                this.notAcceptedTasks.add(taskInfo.task);
                 break;
         }
+        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.task, taskInfo.taskBoard, action));
         return true;
     }
 
     @Override
     public TaskAction buttonAction(TaskInfo taskInfo) {
         if (canCompleteTask(taskInfo)) {
-            return TaskContainer.TaskAction.COMPLETE;
+            return TaskAction.COMPLETE;
         } else if (isTaskNotAccepted(taskInfo)) {
-            return TaskContainer.TaskAction.ACCEPT;
+            return TaskAction.ACCEPT;
+        } else if (!taskInfo.task.isUnique() && taskInfo.remainingTime.get() <= 0) {
+            return TaskAction.REMOVE;
         } else {
-            return TaskContainer.TaskAction.ABORT;
+            return TaskAction.ABORT;
         }
     }
 
@@ -219,5 +210,11 @@ public class TaskBoardContainer extends Container implements TaskContainer {
             }
         }
         return false;
+    }
+
+    public Collection<TaskInfo> getTaskInfos() {
+        long targetTime = VampirismConfig.BALANCE.taskDuration.get() * 60 * 20;
+        World world = Minecraft.getInstance().player.world;
+        return this.getVisibleTasks().stream().map(a -> new TaskContainer.TaskInfo(a, this.getTaskBoardId(), () -> targetTime - (world.getGameTime() - this.taskTimeStamp.getOrDefault(a, 0L)))).collect(Collectors.toList());
     }
 }

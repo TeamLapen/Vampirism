@@ -23,6 +23,7 @@ public class TaskStatusPacket implements IMessage {
     public final Map<Task, Map<ResourceLocation, Integer>> completedRequirements;
     public final int containerId;
     public final UUID taskBoardId;
+    public final Map<Task, Long> taskTimeStamp;
 
     /**
      * @param completableTasks      all visible task that are completable
@@ -31,14 +32,16 @@ public class TaskStatusPacket implements IMessage {
      * @param completedRequirements all requirements of the visible tasks that are already completed
      * @param containerId           the id of the {@link de.teamlapen.vampirism.inventory.container.TaskBoardContainer}
      * @param taskBoardId           the task board id
+     * @param taskTimeStamp
      */
-    public TaskStatusPacket(Set<Task> completableTasks, Collection<Task> visibleTasks, Set<Task> notAcceptedTasks, Map<Task, Map<ResourceLocation, Integer>> completedRequirements, int containerId, UUID taskBoardId) {
+    public TaskStatusPacket(Set<Task> completableTasks, Collection<Task> visibleTasks, Set<Task> notAcceptedTasks, Map<Task, Map<ResourceLocation, Integer>> completedRequirements, int containerId, UUID taskBoardId, Map<Task, Long> taskTimeStamp) {
         this.completableTasks = completableTasks;
         this.visibleTasks = visibleTasks;
         this.notAcceptedTasks = notAcceptedTasks;
         this.completedRequirements = completedRequirements;
         this.containerId = containerId;
         this.taskBoardId = taskBoardId;
+        this.taskTimeStamp = taskTimeStamp;
     }
 
     static void encode(@Nonnull TaskStatusPacket msg, @Nonnull PacketBuffer buf) {
@@ -48,17 +51,19 @@ public class TaskStatusPacket implements IMessage {
         buf.writeVarInt(msg.completableTasks.size());
         buf.writeVarInt(msg.visibleTasks.size());
         buf.writeVarInt(msg.completedRequirements.size());
-        msg.completableTasks.forEach(res -> buf.writeString(Objects.requireNonNull(res.getRegistryName()).toString()));
-        msg.visibleTasks.forEach(res -> buf.writeString(Objects.requireNonNull(res.getRegistryName()).toString()));
-        msg.notAcceptedTasks.forEach(res -> buf.writeString(Objects.requireNonNull(res.getRegistryName()).toString()));
+        buf.writeVarInt(msg.taskTimeStamp.size());
+        msg.completableTasks.forEach(res -> buf.writeResourceLocation(res.getRegistryName()));
+        msg.visibleTasks.forEach(res -> buf.writeResourceLocation(res.getRegistryName()));
+        msg.notAcceptedTasks.forEach(res -> buf.writeResourceLocation(res.getRegistryName()));
         msg.completedRequirements.forEach(((task, resourceLocations) -> {
             buf.writeVarInt(resourceLocations.size());
-            buf.writeString(Objects.requireNonNull(task.getRegistryName()).toString());
+            buf.writeResourceLocation(task.getRegistryName());
             resourceLocations.forEach(((resourceLocation, integer) -> {
-                buf.writeString(resourceLocation.toString());
+                buf.writeResourceLocation(resourceLocation);
                 buf.writeVarInt(integer);
             }));
         }));
+        msg.taskTimeStamp.forEach(((task, aLong) -> buf.writeResourceLocation(task.getRegistryName()).writeVarLong(aLong)));
     }
 
     static TaskStatusPacket decode(@Nonnull PacketBuffer buf) {
@@ -68,29 +73,34 @@ public class TaskStatusPacket implements IMessage {
         int completableSize = buf.readVarInt();
         int visibleSize = buf.readVarInt();
         int completedReqSize = buf.readVarInt();
+        int taskTimeStampSize = buf.readVarInt();
         Set<Task> completable = Sets.newHashSet();
         for (int i = 0; i < completableSize; i++) {
-            completable.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
+            completable.add(ModRegistries.TASKS.getValue(buf.readResourceLocation()));
         }
         List<Task> visible = Lists.newArrayList();
         for (int i = 0; i < visibleSize; i++) {
-            visible.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
+            visible.add(ModRegistries.TASKS.getValue(buf.readResourceLocation()));
         }
         Set<Task> notAccepted = Sets.newHashSet();
         for (int i = 0; i < notAcceptedSize; i++) {
-            notAccepted.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
+            notAccepted.add(ModRegistries.TASKS.getValue(buf.readResourceLocation()));
         }
         Map<Task, Map<ResourceLocation, Integer>> completedRequirements = Maps.newHashMapWithExpectedSize(completedReqSize);
-        for(int i = 0; i < completedReqSize;++i) {
+        for (int i = 0; i < completedReqSize; ++i) {
             int l = buf.readVarInt();
-            Task task = ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString()));
+            Task task = ModRegistries.TASKS.getValue(buf.readResourceLocation());
             Map<ResourceLocation, Integer> req = Maps.newHashMapWithExpectedSize(l);
-            for(; l>0;--l) {
-                req.put(new ResourceLocation(buf.readString()), buf.readVarInt());
+            for (; l > 0; --l) {
+                req.put(buf.readResourceLocation(), buf.readVarInt());
             }
-            completedRequirements.put(task,req);
+            completedRequirements.put(task, req);
         }
-        return new TaskStatusPacket(completable,visible, notAccepted,completedRequirements, containerId, taskBoardId);
+        Map<Task, Long> taskTimeStamp = Maps.newHashMapWithExpectedSize(taskTimeStampSize);
+        for (int i = 0; i < taskTimeStampSize; i++) {
+            taskTimeStamp.put(ModRegistries.TASKS.getValue(buf.readResourceLocation()), buf.readVarLong());
+        }
+        return new TaskStatusPacket(completable, visible, notAccepted, completedRequirements, containerId, taskBoardId, taskTimeStamp);
     }
 
     public static void handle(final TaskStatusPacket msg, @Nonnull Supplier<NetworkEvent.Context> contextSupplier) {
