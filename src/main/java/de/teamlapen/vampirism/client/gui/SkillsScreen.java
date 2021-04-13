@@ -24,7 +24,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
@@ -191,18 +190,11 @@ public class SkillsScreen extends Screen {
                 addToList(skillNodes, root);
 
                 resetSkills = this.addButton(new Button((this.width - display_width) / 2 + 24 + 40, this.height / 2 + 74, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
-                    boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
-                    ConfirmScreen resetGui = new ConfirmScreen((cxt) -> {
-                        if (cxt) {
-                            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
-                            InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().inventory, new ItemStack(ModItems.oblivion_potion)); //server syncs after the screen is closed
-                        }
-                        if (factionPlayer.getLevel() < 2 || minecraft.player.inventory.count(ModItems.oblivion_potion) <= 1) {
-                            context.active = false;
-                        }
-                        Minecraft.getInstance().displayGuiScreen(this);
-                    }, new TranslationTextComponent("gui.vampirism.reset_skills.title"), new TranslationTextComponent("gui.vampirism.reset_skills." + (test ? "desc_test" : "desc")));
-                    Minecraft.getInstance().displayGuiScreen(resetGui);
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
+                    InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().inventory, new ItemStack(ModItems.oblivion_potion)); //server syncs after the screen is closed
+                    if (factionPlayer.getLevel() < 2 || minecraft.player.inventory.count(ModItems.oblivion_potion) <= 1) {
+                        context.active = false;
+                    }
                 }, (button, stack, mouseX, mouseY) -> {
                     if (button.active) {
                         SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_consume", ModItems.oblivion_potion.getName()), mouseX, mouseY);

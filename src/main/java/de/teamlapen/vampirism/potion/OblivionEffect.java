@@ -8,11 +8,16 @@ import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.skills.SkillNode;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectType;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 public class OblivionEffect extends VampirismEffect {
@@ -29,14 +34,23 @@ public class OblivionEffect extends VampirismEffect {
 
     @Override
     public boolean isReady(int duration, int amplifier) {
-        int a = (100 / (amplifier + 1));
-        return duration % a == 0;
+        return duration % getTickDuration(amplifier) == 0;
+    }
+
+    private int getTickDuration(int amplifier) {
+        return (1000 / (amplifier +1));
+    }
+
+    @Override
+    public List<ItemStack> getCurativeItems() {
+        return Collections.emptyList();
     }
 
     @Override
     public void performEffect(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
         if (!entityLivingBaseIn.getEntityWorld().isRemote) {
             if (entityLivingBaseIn instanceof PlayerEntity) {
+                entityLivingBaseIn.addPotionEffect(new EffectInstance(Effects.NAUSEA,getTickDuration(amplifier),5,false,false,false, null));
                 FactionPlayerHandler.getOpt(((PlayerEntity) entityLivingBaseIn)).map(FactionPlayerHandler::getCurrentFactionPlayer).flatMap(factionPlayer -> factionPlayer).ifPresent(factionPlayer -> {
                     ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
                     Optional<SkillNode> nodeOPT = ((SkillHandler<?>) skillHandler).anyLastNode();

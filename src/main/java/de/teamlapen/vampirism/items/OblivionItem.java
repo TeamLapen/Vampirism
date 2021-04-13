@@ -36,7 +36,7 @@ public class OblivionItem extends VampirismItem {
             ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
             if (((SkillHandler<?>) skillHandler).getRootNode().getChildren().stream().flatMap(a -> Arrays.stream(a.getElements())).noneMatch(skillHandler::isSkillEnabled))
                 return;
-            player.addPotionEffect(new EffectInstance(ModEffects.oblivion, Integer.MAX_VALUE, 5));
+            player.addPotionEffect(new EffectInstance(ModEffects.oblivion, Integer.MAX_VALUE, 4));
             if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst) {
                 HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, factionPlayer.getRepresentingPlayer(), false);
             }

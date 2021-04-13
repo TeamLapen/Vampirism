@@ -186,8 +186,9 @@ public class InventoryHelper {
                     itemstack.shrink(i);
                     return true;
                 } else {
-                    i += itemstack.getCount();
+                    int l = itemstack.getCount();
                     itemstack.shrink(i);
+                    i -= l;
                 }
             }
         }
