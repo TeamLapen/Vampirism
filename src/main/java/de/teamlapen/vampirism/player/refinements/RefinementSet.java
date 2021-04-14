@@ -45,8 +45,9 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
     /**
      * Specify the one and only accessory type this refinement can be put on
      */
-    public void onlyFor(IRefinementItem.AccessorySlotType restrictedType){
+    public RefinementSet onlyFor(IRefinementItem.AccessorySlotType restrictedType){
         this.restrictedType=restrictedType;
+        return this;
     }
 
     @Nonnull
