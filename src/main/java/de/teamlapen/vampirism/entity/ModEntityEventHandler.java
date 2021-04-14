@@ -34,7 +34,6 @@ import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
-import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.IronGolemEntity;
@@ -70,8 +69,6 @@ public class ModEntityEventHandler {
     private boolean skipAttackDamageOnceServer = false;
     private boolean skipAttackDamageOnceClient = false;
 
-    private boolean warnAboutCreeper = true;
-    private boolean warnAboutZombie = true;
     private boolean warnAboutGolem = true;
     private final Set<ResourceLocation> unknownZombies = new HashSet<>();
 
@@ -189,25 +186,7 @@ public class ModEntityEventHandler {
             if (VampirismConfig.BALANCE.creeperIgnoreVampire.get()) {
                 if (event.getEntity() instanceof CreeperEntity) {
                     ((CreeperEntity) event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>((CreeperEntity) event.getEntity(), PlayerEntity.class, 20, 1.1, 1.3, Helper::isVampire));
-                    makeVampireFriendly("creeper", (CreeperEntity) event.getEntity(), NearestAttackableTargetGoal.class, PlayerEntity.class, 1, (entity, predicate) -> new NearestAttackableTargetGoal<>(entity, PlayerEntity.class, 10, true, false, predicate), type -> type == EntityType.CREEPER);
-
                     return;
-                }
-            }
-
-            //Zombie AI changes
-            if (VampirismConfig.BALANCE.zombieIgnoreVampire.get()) {
-                if (event.getEntity() instanceof ZombieEntity) {
-                    makeVampireFriendly("zombie", (ZombieEntity) event.getEntity(), NearestAttackableTargetGoal.class, PlayerEntity.class, 2, (entity, predicate) -> entity instanceof DrownedEntity ? new NearestAttackableTargetGoal<>(entity, PlayerEntity.class, 10, true, false, predicate.and(((DrownedEntity) entity)::shouldAttack)) : new NearestAttackableTargetGoal<>(entity, PlayerEntity.class, 10, true, false, predicate), type -> type == EntityType.ZOMBIE || type == EntityType.HUSK || type == EntityType.ZOMBIE_VILLAGER || type == EntityType.DROWNED);
-                    //Also replace attack villager task for entities that have it
-                    makeVampireFriendly("villager zombie", (ZombieEntity) event.getEntity(), NearestAttackableTargetGoal.class, AbstractVillagerEntity.class, 3, (entity, predicate) -> new NearestAttackableTargetGoal<>(entity, AbstractVillagerEntity.class, 10, true, false, predicate), type -> type == EntityType.ZOMBIE || type == EntityType.HUSK || type == EntityType.ZOMBIE_VILLAGER || type == EntityType.DROWNED);
-                    return;
-                }
-            }
-
-            if (VampirismConfig.BALANCE.skeletonIgnoreVampire.get()) {
-                if (event.getEntity() instanceof SkeletonEntity) {
-                    makeVampireFriendly("skeleton", (SkeletonEntity) event.getEntity(), NearestAttackableTargetGoal.class, PlayerEntity.class, 2, (entity, predicate) -> new NearestAttackableTargetGoal<PlayerEntity>(entity, PlayerEntity.class, 10, true, false, predicate), type -> type == EntityType.SKELETON);
                 }
             }
 
@@ -285,6 +264,17 @@ public class ModEntityEventHandler {
             IItemWithTier.TIER hunterCoatTier = HunterCoatItem.isFullyEquipped((PlayerEntity) event.getDamageSource().getTrueSource());
             if(hunterCoatTier== IItemWithTier.TIER.ENHANCED || hunterCoatTier== IItemWithTier.TIER.ULTIMATE){
                 event.setLootingLevel(Math.min(event.getLootingLevel()+1 , 3));
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onEntitySetAttackTarget(LivingSetAttackTargetEvent event){
+        if(event.getEntityLiving() instanceof ZombieEntity || event.getEntityLiving() instanceof SkeletonEntity || event.getEntityLiving() instanceof CreeperEntity){
+            if(event.getEntityLiving().getRevengeTarget()!=event.getTarget()){
+                if(Helper.isVampire(event.getTarget())){
+                    ((MonsterEntity) event.getEntityLiving()).setAttackTarget(null);
+                }
             }
         }
     }
