@@ -81,6 +81,7 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
 
     private void hat(int type) {
         this.entity.setHatType(this.hatType = type);
+        setHatListVisibility(false);
     }
 
     private void onNameChanged(String newName) {

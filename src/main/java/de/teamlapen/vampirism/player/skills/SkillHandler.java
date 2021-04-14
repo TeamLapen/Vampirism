@@ -305,7 +305,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     @Override
     public boolean isRefinementEquipped(IRefinement refinement) {
-        return this.refinementModifier.containsKey(refinement);
+        return this.activeRefinements.contains(refinement);
     }
 
     @Override

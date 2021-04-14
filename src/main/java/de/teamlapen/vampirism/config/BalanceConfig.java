@@ -170,6 +170,19 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue mbVampireSpawnChance;
     public final ForgeConfigSpec.IntValue mbAdvancedVampireSpawnChance;
 
+    // Refinements
+    public final ForgeConfigSpec.DoubleValue sword_trained_amount;
+    public final ForgeConfigSpec.IntValue blood_charge_speed;
+    public final ForgeConfigSpec.DoubleValue freeze_duration;
+    public final ForgeConfigSpec.DoubleValue vista;
+    public final ForgeConfigSpec.DoubleValue dark_blood_projectile_damage;
+    public final ForgeConfigSpec.DoubleValue dark_blood_projectile_aoe_cooldown;
+    public final ForgeConfigSpec.IntValue dark_blood_projectile_aoe_range;
+    public final ForgeConfigSpec.DoubleValue sun_screen_duration;
+    public final ForgeConfigSpec.IntValue rage_fury;
+    public final ForgeConfigSpec.DoubleValue teleport_distance;
+    public final ForgeConfigSpec.DoubleValue half_invulnerable;
+    public final ForgeConfigSpec.DoubleValue sword_finisher;
 
     BalanceConfig(BalanceBuilder builder) {
         boolean iceAndFire = ModList.get().isLoaded("iceandfire");
@@ -358,6 +371,18 @@ public class BalanceConfig {
         miDeathRecoveryTime = builder.comment("Time in seconds a minion needs to recover from death.").defineInRange("deathRecoveryTime", 180, 1, Integer.MAX_VALUE / 100);
         miMinionPerLordLevel = builder.comment("How many minions a player can have per lord level. Probably don't want to go very high").defineInRange("minionPerLordLevel", 1, 0, 100);
 
+        builder.category("refinements", "");
+        sword_trained_amount = builder.defineInRange("sword_trained_amount", 1.2D, 1D, Integer.MAX_VALUE);
+        blood_charge_speed = builder.defineInRange("blood_charge_speed", 3, 2, Integer.MAX_VALUE);
+        freeze_duration = builder.defineInRange("freeze_duration", 1.4D, 1D, Integer.MAX_VALUE);
+        vista = builder.defineInRange("vista", 1D, 0D, 10D);
+        dark_blood_projectile_damage = builder.defineInRange("dark_blood_projectile_damage", 1.5D, 1D, Integer.MAX_VALUE);
+        dark_blood_projectile_aoe_cooldown = builder.defineInRange("dark_blood_projectile_aoe_cooldown", 2D, 1D, Integer.MAX_VALUE);
+        dark_blood_projectile_aoe_range = builder.comment("squared").defineInRange("dark_blood_projectile_aoe_range", 16, 0, Integer.MAX_VALUE);
+        sun_screen_duration = builder.defineInRange("sun_screen_duration", 1.5D, 1, Double.MAX_VALUE);
+        rage_fury = builder.defineInRange("rage_fury", 100, 0, Integer.MAX_VALUE);
+        teleport_distance = builder.defineInRange("teleport_distance", 1.5, 1, Double.MAX_VALUE);
+        half_invulnerable = builder.defineInRange("half_invulnerable", 0.7, 0, 2);
+        sword_finisher = builder.defineInRange("sword_finisher", 1.25, 1, Double.MAX_VALUE);
     }
-
 }
