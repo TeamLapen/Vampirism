@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.lib.HelperLib;
+import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
@@ -10,12 +11,14 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
 import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
+import de.teamlapen.vampirism.items.OblivionItem;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -169,26 +172,8 @@ public class InputEventPacket implements IMessage {
 
                     break;
                 case RESETSKILL:
-                    factionPlayerOpt.ifPresent(factionPlayer -> {
-                        FactionPlayerHandler.getOpt(player).ifPresent(fph -> {
-                            ISkillHandler skillHandler = factionPlayer.getSkillHandler();
-                            skillHandler.resetSkills();
-                            if (!VampirismMod.inDev && !VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion()) {
-                                int l = factionPlayer.getLevel();
-                                int lordLevel = fph.getLordLevel();
-                                if (lordLevel > 0) {
-                                    fph.setLordLevel(lordLevel - 1);
-                                } else if (l > 1) {
-                                    fph.setFactionLevel(factionPlayer.getFaction(), l - 1);
-                                }
-                            }
-                            if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
-                                HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, factionPlayer.getRepresentingPlayer(), false);
-                            }
-                            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.skill.skills_reset"), true);
-                        });
-
-                    });
+                    InventoryHelper.removeItemFromInventory(player.inventory, new ItemStack(ModItems.oblivion_potion));
+                    factionPlayerOpt.ifPresent(OblivionItem::applyEffect);
                     break;
                 case TRAINERLEVELUP:
                     if (player.openContainer instanceof HunterTrainerContainer) {

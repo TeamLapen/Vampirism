@@ -155,19 +155,56 @@ public class InventoryHelper {
      * @return the slot id or -1 if none found
      */
     public static int getFirstSuitableSlotToAdd(NonNullList<ItemStack> inventory, ItemStack stack, int invLimit) {
+        return getFirstSuitableSlotToAdd(inventory, inventory.size(), stack, invLimit);
+    }
+
+    public static int getFirstSuitableSlotToAdd(NonNullList<ItemStack> inventory, int inventorySize, ItemStack stack, int invLimit) {
+        assert inventory.size() >= inventorySize;
         if (!stack.isDamaged() && stack.isStackable()) {
-            for (int i = 0; i < inventory.size(); ++i) {
+            for (int i = 0; i < inventorySize; ++i) {
                 if (InventoryHelper.canMergeStacks(inventory.get(i), stack, invLimit)) {
                     return i;
                 }
             }
         }
-        for (int i = 0; i < inventory.size(); ++i) {
+        for (int i = 0; i < inventorySize; ++i) {
             if (inventory.get(i).isEmpty()) {
                 return i;
             }
         }
         return -1;
+    }
+
+
+    public static boolean removeItemFromInventory(IInventory inventory, ItemStack item) {
+        int i = item.getCount();
+
+        for (int j = 0; j < inventory.getSizeInventory(); ++j) {
+            ItemStack itemstack = inventory.getStackInSlot(j);
+            if (itemstack.getItem().equals(item.getItem())) {
+                if (itemstack.getCount() >= i) {
+                    itemstack.shrink(i);
+                    return true;
+                } else {
+                    int l = itemstack.getCount();
+                    itemstack.shrink(i);
+                    i -= l;
+                }
+            }
+        }
+
+        return i <= 0;
+    }
+
+    public static ItemStack getFirst(IInventory inventory, Item set) {
+        for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+            ItemStack itemstack = inventory.getStackInSlot(i);
+            if (set == itemstack.getItem() && itemstack.getCount() > 0) {
+                return itemstack;
+            }
+        }
+
+        return null;
     }
 
 }

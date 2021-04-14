@@ -1,10 +1,13 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
+import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.config.BalanceMobProps;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
@@ -15,8 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
@@ -164,8 +166,62 @@ public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
 
     /**
      * Called on server side to upgrade a stat of the given id
+     *
+     * @param statId -1 if stats are to be reset
+     * @return if attributes where changed and a sync is required
      */
     public boolean upgradeStat(int statId, MinionEntity<?> entity) {
+        if (statId == -1) {
+            resetStats(entity);
+            return true;
+        }
+        return false;
+    }
+
+    public void resetStats(MinionEntity<?> entity) {
+        entity.getInventory().ifPresent(inv -> {
+            if (!InventoryHelper.removeItemFromInventory(inv, new ItemStack(ModItems.oblivion_potion))) {
+                entity.getLordOpt().ifPresent(lord -> InventoryHelper.removeItemFromInventory(lord.getPlayer().inventory, new ItemStack(ModItems.oblivion_potion)));
+            }
+        });
+    }
+
+    public void shrinkInventory(MinionEntity<?> entity) {
+        Optional<MinionInventory> invOpt = entity.getMinionData().map(MinionData::getInventory);
+        if (invOpt.isPresent()) {
+            MinionInventory inv = invOpt.get();
+            List<ItemStack> stacks = new ArrayList<>();
+            for (int i = 6 + getDefaultInventorySize(); i < inv.getSizeInventory(); ++i) {
+                ItemStack stack = inv.removeStackFromSlot(i);
+                if (!stack.isEmpty()) {
+                    stacks.add(stack);
+                }
+            }
+            inv.setAvailableSize(getInventorySize());
+            for (ItemStack stack : stacks) {
+                if (!stack.isEmpty()) {
+                    inv.addItemStack(stack);
+                    if (!stack.isEmpty()) {
+                        entity.getLordOpt().ifPresent(lord -> {
+                            if (!lord.getPlayer().addItemStackToInventory(stack)) {
+                                entity.entityDropItem(stack);
+                            }
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    public int getDefaultInventorySize() {
+        return 9;
+    }
+
+    public int getInventorySize() {
+        return getDefaultInventorySize();
+    }
+
+    public boolean hasUsedSkillPoints() {
         return false;
     }
 

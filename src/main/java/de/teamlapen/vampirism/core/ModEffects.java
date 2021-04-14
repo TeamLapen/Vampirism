@@ -18,6 +18,7 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
  */
 @ObjectHolder(REFERENCE.MODID)
 public class ModEffects {
+    private static final Logger LOGGER = LogManager.getLogger();
 
     public static final Effect sanguinare = getNull();
     public static final Effect thirst = getNull();
@@ -28,7 +29,7 @@ public class ModEffects {
     public static final Effect garlic = getNull();
     public static final Effect poison = getNull();
     public static final Effect freeze = getNull();
-    private static final Logger LOGGER = LogManager.getLogger(ModEffects.class);
+    public static final Effect oblivion = getNull();
     private static Effect modded_night_vision;  //Substituted version
     private static Effect vanilla_night_vision; //Vanilla night vision instance
 
@@ -45,6 +46,7 @@ public class ModEffects {
         registry.register(new VampirismEffect("garlic", EffectType.HARMFUL, 0xFFFFFF));
         registry.register(new PotionPoison("poison", 0x4E9331));
         registry.register(new PotionFreeze("freeze"));
+        registry.register(new OblivionEffect("oblivion", EffectType.NEUTRAL, 0x4E9331));
     }
 
     static void fixNightVisionEffecTypes() {
