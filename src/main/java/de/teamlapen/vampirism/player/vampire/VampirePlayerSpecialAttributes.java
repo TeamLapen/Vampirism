@@ -12,7 +12,7 @@ public class VampirePlayerSpecialAttributes {
     public boolean bat = false;
     public boolean blood_vision = false;
     public boolean half_invulnerable = false;
-    public boolean increasedVampireFogDistance;
+    public boolean increasedVampireFogDistance = true;
     public boolean waterResistance;
     public boolean advanced_biter = false;
     public boolean blood_vision_garlic;

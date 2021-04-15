@@ -126,7 +126,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         if (mc.player.ticksExisted % 10 == 0) {
             if ((VampirismConfig.CLIENT.renderVampireForestFog.get() || VampirismConfig.SERVER.enforceRenderForestFog.get()) && (Helper.isEntityInVampireBiome(mc.player) || TotemHelper.isInsideVampireAreaCached(mc.world.getDimensionKey(), mc.player.getPosition()))) {
                 insideFog = true;
-                vampireBiomeFogDistanceMultiplier = vampire.getSpecialAttributes().increasedVampireFogDistance ? 2 : 1;
+                vampireBiomeFogDistanceMultiplier = vampire.getLevel() > 0 ? 2 : 1;
             } else {
                 insideFog = false;
             }
