@@ -135,7 +135,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
 
     protected void renderHoveredRefinementTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
         if (this.minecraft.player.inventory.getItemStack().isEmpty() && this.hoveredSlot != null) {
-            int index = this.hoveredSlot.getSlotIndex();
+            int index = this.hoveredSlot.slotNumber;
             NonNullList<ItemStack> list = this.container.getRefinementStacks();
             if (index < list.size() && index >= 0) {
                 this.renderTooltip(matrixStack, list.get(index), mouseX, mouseY);
