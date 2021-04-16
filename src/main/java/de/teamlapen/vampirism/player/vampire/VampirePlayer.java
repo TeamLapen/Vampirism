@@ -1266,7 +1266,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     armorAtt.applyNonPersistentModifier(new AttributeModifier(NATURAL_ARMOR_UUID,"Natural Vampire Armor",targetArmor, AttributeModifier.Operation.ADDITION));
                 }
                 if(modToughness != null && targetToughness!=modToughness.getAmount()){
-                    armorAtt.removeModifier(modToughness);
+                    toughnessAtt.removeModifier(modToughness);
                     modToughness=null;
                 }
                 if(targetToughness!=0&&modToughness==null){
