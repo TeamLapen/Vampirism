@@ -340,44 +340,43 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
                 if (!this.player.isRemote()) {
                     Attribute a = refinement.getAttribute();
                     if (a != null) {
-                            ModifiableAttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(a);
-                            double value = refinement.getModifierValue();
-                            AttributeModifier t = attributeInstance.getModifier(refinement.getUUID());
-                            if (t != null) {
-                                attributeInstance.removeModifier(t);
-                                value += t.getAmount();
-                            }
+                        ModifiableAttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(a);
+                        double value = refinement.getModifierValue();
+                        AttributeModifier t = attributeInstance.getModifier(refinement.getUUID());
+                        if (t != null) {
+                            attributeInstance.removeModifier(t);
+                            value += t.getAmount();
+                        }
                         t = refinement.createAttributeModifier(refinement.getUUID(), value);
                         this.refinementModifier.put(refinement, t);
-                            attributeInstance.applyNonPersistentModifier(t);
-                        }
-
+                        attributeInstance.applyNonPersistentModifier(t);
                     }
-
-
+                }
             }
         }
     }
 
     private void removeRefinementSet(int slot) {
         IRefinementSet set = this.appliedRefinementSets[slot];
-        if(set!=null){
-            for (IRefinement refinement : set.getRefinements()) {
-                    this.activeRefinements.remove(refinement);
-                    if(!this.player.isRemote()){
-                        Attribute a = refinement.getAttribute();
-                        if (a != null) {
-                            ModifiableAttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(a);
-                            AttributeModifier modifier = this.refinementModifier.remove(refinement);
-                            double value = modifier.getAmount() - refinement.getModifierValue();
-                            attributeInstance.removeModifier(modifier);
-                            if (value > 0) {
-                                attributeInstance.applyNonPersistentModifier(modifier = refinement.createAttributeModifier(modifier.getID(), value));
-                                this.refinementModifier.put(refinement, modifier);
-                                this.activeRefinements.add(refinement);
-                            }
+        if(set != null) {
+            Collection<IRefinement> refinements = set.getRefinements();
+            for (IRefinement refinement : refinements) {
+                this.activeRefinements.remove(refinement);
+                if(!this.player.isRemote()) {
+                    Attribute a = refinement.getAttribute();
+                    if (a != null) {
+                        ModifiableAttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(a);
+                        AttributeModifier modifier = this.refinementModifier.get(refinement);
+                        double value = modifier.getAmount() - refinement.getModifierValue();
+                        this.refinementModifier.remove(refinement);
+                        attributeInstance.removeModifier(modifier);
+                        if (value != 0) {
+                            attributeInstance.applyNonPersistentModifier(modifier = refinement.createAttributeModifier(modifier.getID(), value));
+                            this.refinementModifier.put(refinement, modifier);
+                            this.activeRefinements.add(refinement);
                         }
                     }
+                }
             }
         }
     }

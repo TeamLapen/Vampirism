@@ -27,7 +27,7 @@ public class Refinement extends ForgeRegistryEntry<IRefinement> implements IRefi
     public Refinement() {
         this.attribute = null;
         this.modifier = null;
-        this.baseValue =0;
+        this.baseValue = 0;
         this.uuid = null;
     }
 

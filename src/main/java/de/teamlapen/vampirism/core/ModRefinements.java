@@ -75,12 +75,12 @@ public class ModRefinements {
                 registry.register(new Refinement(Attributes.ARMOR, UUID.fromString("b6286930-a32f-4a85-a73e-3ee4624de9c5"), -3, (uuid, value) -> new AttributeModifier(uuid, "refinement_armor_debuff", value, AttributeModifier.Operation.ADDITION)).setRegistryName(REFERENCE.MODID, "n_armor3"));
             }
             {
-                registry.register(new Refinement(Attributes.MOVEMENT_SPEED, UUID.fromString("7181faa0-7267-4497-baab-98e57ec5d8db"), 0.05, (uuid, value) -> new AttributeModifier(uuid, "refinement_speed", value, AttributeModifier.Operation.MULTIPLY_BASE)).setRegistryName(REFERENCE.MODID, "speed1"));
-                registry.register(new Refinement(Attributes.MOVEMENT_SPEED, UUID.fromString("e924ca0b-d55f-421d-b153-3f7907a855b4"), 0.1, (uuid, value) -> new AttributeModifier(uuid, "refinement_speed", value, AttributeModifier.Operation.MULTIPLY_BASE)).setRegistryName(REFERENCE.MODID, "speed2"));
-                registry.register(new Refinement(Attributes.MOVEMENT_SPEED, UUID.fromString("e81e7082-4673-4a65-8178-8a70279dfb5e"), 0.15, (uuid, value) -> new AttributeModifier(uuid, "refinement_speed", value, AttributeModifier.Operation.MULTIPLY_BASE)).setRegistryName(REFERENCE.MODID, "speed3"));
-                registry.register(new Refinement(Attributes.MOVEMENT_SPEED, UUID.fromString("aa945420-8f38-4b43-a5c0-9cc2ee2aaad6"), -0.05, (uuid, value) -> new AttributeModifier(uuid, "refinement_speed_debuff", value, AttributeModifier.Operation.MULTIPLY_BASE)).setRegistryName(REFERENCE.MODID, "n_speed1"));
-                registry.register(new Refinement(Attributes.MOVEMENT_SPEED, UUID.fromString("f0ab98ed-5839-4ef4-9868-9516cd9b58f3"), -0.1, (uuid, value) -> new AttributeModifier(uuid, "refinement_speed_debuff", value, AttributeModifier.Operation.MULTIPLY_BASE)).setRegistryName(REFERENCE.MODID, "n_speed2"));
-                registry.register(new Refinement(Attributes.MOVEMENT_SPEED, UUID.fromString("2c20aa81-f7fe-40af-9220-0e435e7cef17"), -0.15, (uuid, value) -> new AttributeModifier(uuid, "refinement_speed_debuff", value, AttributeModifier.Operation.MULTIPLY_BASE)).setRegistryName(REFERENCE.MODID, "n_speed3"));
+                registry.register(new Refinement(Attributes.MOVEMENT_SPEED, UUID.fromString("7181faa0-7267-4497-baab-98e57ec5d8db"), 0.025, (uuid, value) -> new AttributeModifier(uuid, "refinement_speed", value, AttributeModifier.Operation.MULTIPLY_BASE)).setRegistryName(REFERENCE.MODID, "speed1"));
+                registry.register(new Refinement(Attributes.MOVEMENT_SPEED, UUID.fromString("e924ca0b-d55f-421d-b153-3f7907a855b4"), 0.05, (uuid, value) -> new AttributeModifier(uuid, "refinement_speed", value, AttributeModifier.Operation.MULTIPLY_BASE)).setRegistryName(REFERENCE.MODID, "speed2"));
+                registry.register(new Refinement(Attributes.MOVEMENT_SPEED, UUID.fromString("e81e7082-4673-4a65-8178-8a70279dfb5e"), 0.075, (uuid, value) -> new AttributeModifier(uuid, "refinement_speed", value, AttributeModifier.Operation.MULTIPLY_BASE)).setRegistryName(REFERENCE.MODID, "speed3"));
+                registry.register(new Refinement(Attributes.MOVEMENT_SPEED, UUID.fromString("aa945420-8f38-4b43-a5c0-9cc2ee2aaad6"), -0.025, (uuid, value) -> new AttributeModifier(uuid, "refinement_speed_debuff", value, AttributeModifier.Operation.MULTIPLY_BASE)).setRegistryName(REFERENCE.MODID, "n_speed1"));
+                registry.register(new Refinement(Attributes.MOVEMENT_SPEED, UUID.fromString("f0ab98ed-5839-4ef4-9868-9516cd9b58f3"), -0.05, (uuid, value) -> new AttributeModifier(uuid, "refinement_speed_debuff", value, AttributeModifier.Operation.MULTIPLY_BASE)).setRegistryName(REFERENCE.MODID, "n_speed2"));
+                registry.register(new Refinement(Attributes.MOVEMENT_SPEED, UUID.fromString("2c20aa81-f7fe-40af-9220-0e435e7cef17"), -0.075, (uuid, value) -> new AttributeModifier(uuid, "refinement_speed_debuff", value, AttributeModifier.Operation.MULTIPLY_BASE)).setRegistryName(REFERENCE.MODID, "n_speed3"));
             }
             {
                 registry.register(new Refinement(Attributes.MAX_HEALTH, UUID.fromString("a1dd8cca-9283-461a-a33c-59dcee1967eb"), 1, (uuid, value) -> new AttributeModifier(uuid, "refinement_health", value, AttributeModifier.Operation.ADDITION)).setRegistryName(REFERENCE.MODID, "health1"));
@@ -118,6 +118,7 @@ public class ModRefinements {
             registry.register(newRefinement("dark_blood_projectile_penetration"));
             registry.register(newRefinement("dark_blood_projectile_multi_shot"));
             registry.register(newRefinement("dark_blood_projectile_aoe"));
+            registry.register(newRefinement("dark_blood_projectile_damage"));
             registry.register(newRefinement("vista"));
             registry.register(newRefinement("freeze_duration"));
             registry.register(newRefinement("blood_charge_speed"));

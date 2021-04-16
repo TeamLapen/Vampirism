@@ -750,6 +750,7 @@
   "command.vampirism.test.give_accessories.help": "Specify accessory type <1-3> and registry name of refinement set",
   "command.vampirism.test.give_accessories.success": "Successfully created accessory item",
   "command.vampirism.test.give_accessories.incompatible": "Specified refinement set is incompatible to the specified slot type",
+  "command.vampirism.test.give_accessories.no_item": "No accessory could be found for your faction",
   "command.vampirism.argument.skill.notfound": "The given skill %s does not exist",
   "command.vampirism.argument.action.notfound": "The given action %s does not exist",
   "command.vampirism.argument.faction.notfound": "The given faction %s does not exist",
