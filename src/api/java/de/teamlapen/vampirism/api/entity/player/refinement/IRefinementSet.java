@@ -18,9 +18,6 @@ public interface IRefinementSet extends IForgeRegistryEntry<IRefinementSet> {
     @Nonnull
     ITextComponent getName();
 
-    @Nonnull
-    ITextComponent getDescription();
-
     /**
      *
      * @return The accessory type this can be on, or empty if all

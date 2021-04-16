@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.util.WeightedRandomItem;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
@@ -9,6 +10,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.refinements.RefinementSet;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,6 +20,10 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -33,6 +39,26 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
     public VampireRefinementItem(Properties properties, AccessorySlotType type) {
         super(properties.maxStackSize(1));
         this.type = type;
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+        IRefinementSet set = getRefinementSet(stack);
+        if (set != null) {
+            for (IRefinement refinement : set.getRefinements()) {
+                tooltip.add(new StringTextComponent(" - ").append(new TranslationTextComponent(refinement.getDescriptionKey()).mergeStyle(TextFormatting.GRAY)));
+            }
+        }
+    }
+
+    @Override
+    public ITextComponent getDisplayName(ItemStack stack) {
+        IRefinementSet set = getRefinementSet(stack);
+        if (set == null) {
+            return super.getDisplayName(stack);
+        }
+        return new TranslationTextComponent(this.getTranslationKey() + ".of").appendString(" ").append(set.getName()).mergeStyle(set.getRarity().color);
     }
 
     @Override

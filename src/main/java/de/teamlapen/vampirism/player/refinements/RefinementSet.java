@@ -64,12 +64,6 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
 
     @Nonnull
     @Override
-    public ITextComponent getDescription() {
-        return this.desc != null? this.desc: (this.desc= new TranslationTextComponent("refinement_set." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()+".desc"));
-    }
-
-    @Nonnull
-    @Override
     public Rarity getRarity() {
         return this.rarity;
     }
