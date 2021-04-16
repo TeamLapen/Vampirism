@@ -129,6 +129,10 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue vpDbnoDuration;
     public final ForgeConfigSpec.IntValue vpNeonatalDuration;
     public final ForgeConfigSpec.IntValue vpNaturalArmorRegenDuration;
+    public final ForgeConfigSpec.IntValue vpNaturalArmorBaseValue;
+    public final ForgeConfigSpec.IntValue vpNaturalArmorIncrease;
+    public final ForgeConfigSpec.IntValue vpNaturalArmorToughnessIncrease;
+    public final ForgeConfigSpec.BooleanValue vpArmorPenalty;
 
 
     public final ForgeConfigSpec.IntValue vaFreezeCooldown;
@@ -331,6 +335,10 @@ public class BalanceConfig {
         vpDbnoDuration = builder.comment("Base cooldown before a downed vampire can resurrect. In sec.").defineInRange("dbnoDuration",10,1,1000);
         vpNeonatalDuration = builder.comment("Base duration of neonatal effect after resurrection. In sec.").defineInRange("neonatalDuration", 60, 1,Integer.MAX_VALUE);
         vpNaturalArmorRegenDuration = builder.comment("The duration it takes for the vampire natural armor to fully regenerate after respawn. In seconds").defineInRange("naturalArmorRegenDuration",240,1,2400);
+        vpNaturalArmorBaseValue = builder.comment("The base value of natural armor every vampire has at level 1").defineInRange("naturalArmorBaseValue",10,0,100);
+        vpNaturalArmorIncrease = builder.comment("The amount of natural armor a max level vampire has in addition to the base value").defineInRange("naturalArmorIncrease",10,0,100);
+        vpNaturalArmorToughnessIncrease = builder.comment("The amount of natural armor toughness a max level vampire has").defineInRange("naturalArmorToughnessIncrease",8,0,100);
+        vpArmorPenalty = builder.comment("Whether vampire have a reduced speed and attack boost when wearing heavy armor").define("armorPenalty",true);
 
         //Vampire actions
         builder.category("vampireActions", "va");

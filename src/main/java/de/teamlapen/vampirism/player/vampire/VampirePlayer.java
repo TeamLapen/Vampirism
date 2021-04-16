@@ -1227,11 +1227,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     public static double getNaturalArmorValue(int lvl){
-        return lvl > 0 ? 10 + (lvl/(double)REFERENCE.HIGHEST_VAMPIRE_LEVEL)*10:0;
+        return lvl > 0 ? VampirismConfig.BALANCE.vpNaturalArmorBaseValue.get() + (lvl/(double)REFERENCE.HIGHEST_VAMPIRE_LEVEL)*VampirismConfig.BALANCE.vpNaturalArmorIncrease.get():0;
     }
 
     public static double getNaturalArmorToughnessValue(int lvl){
-        return  (lvl/(double)REFERENCE.HIGHEST_VAMPIRE_LEVEL)*8;
+        return  (lvl/(double)REFERENCE.HIGHEST_VAMPIRE_LEVEL)*VampirismConfig.BALANCE.vpNaturalArmorToughnessIncrease.get();
     }
 
     public void updateNaturalArmor(){
@@ -1272,7 +1272,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 if(targetToughness!=0&&modToughness==null){
                     toughnessAtt.applyNonPersistentModifier(new AttributeModifier(NATURAL_ARMOR_TOUGHNESS_UUID,"Natural Vampire Armor Toughness",targetToughness, AttributeModifier.Operation.ADDITION));
                 }
-                applyLevelModifiersB(baseArmor>7);
+                applyLevelModifiersB(VampirismConfig.BALANCE.vpArmorPenalty.get() && baseArmor > 7);
 
             }
         }
