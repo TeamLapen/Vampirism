@@ -623,7 +623,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             actionHandler.onActionsReactivated();
             ticksInSun = 0;
             if (wasDead) {
-                player.addPotionEffect(new EffectInstance(ModEffects.sunscreen, 400, 4, true, false));
+                player.addPotionEffect(new EffectInstance(ModEffects.sunscreen, 400, 4, false, false));
+                player.addPotionEffect(new EffectInstance(ModEffects.armor_regeneration, VampirismConfig.BALANCE.vpNaturalArmorRegenDuration.get()*20,0,false,false));
+                requestNaturalArmorUpdate();
                 player.setHealth(player.getMaxHealth());
                 bloodStats.setBloodLevel(bloodStats.getMaxBlood());
             }
@@ -1246,6 +1248,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 AttributeModifier modArmor = armorAtt.getModifier(NATURAL_ARMOR_UUID);
                 AttributeModifier modToughness = toughnessAtt.getModifier(NATURAL_ARMOR_TOUGHNESS_UUID);
                 double naturalArmor = getNaturalArmorValue(lvl);
+                EffectInstance armorRegen = player.getActivePotionEffect(ModEffects.armor_regeneration);
+                double armorRegenerationMod = armorRegen == null ? 0 : armorRegen.getDuration() / ((double)VampirismConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20);
+                naturalArmor *= (1-0.5*armorRegenerationMod); //Modify natural armor between 50% and 100% depending on the armor regen state
                 double naturalToughness = getNaturalArmorToughnessValue(lvl);
                 AttributeModifier finalModArmor = modArmor;
                 double baseArmor = armorAtt.getOrCreateModifiersByOperation(AttributeModifier.Operation.ADDITION).stream().filter(m -> m != finalModArmor).map(AttributeModifier::getAmount).mapToDouble(Double::doubleValue).sum();

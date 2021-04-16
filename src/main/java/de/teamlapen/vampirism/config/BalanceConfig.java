@@ -128,6 +128,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> vpImmortalFromDamageSources;
     public final ForgeConfigSpec.IntValue vpDbnoDuration;
     public final ForgeConfigSpec.IntValue vpNeonatalDuration;
+    public final ForgeConfigSpec.IntValue vpNaturalArmorRegenDuration;
 
 
     public final ForgeConfigSpec.IntValue vaFreezeCooldown;
@@ -329,6 +330,7 @@ public class BalanceConfig {
         vpImmortalFromDamageSources = builder.comment("List of damage source types that the player does not die from (immediately)").defineList("immortalFromDamageSources", Lists.asList("player","mob",new String[]{"lightningBolt", "onFire", "cramming", "fall", "flyIntoWall", "magic", "wither", "anvil", "falling_block", "dragon_breath", "sweetBerryBush", "trident", "arrow", "fireworks", "fireBall", "witherSkull", "explosion", "explosion.player", "thrown", "indirectMagic", "vampire_on_fire"}),s->s instanceof String);
         vpDbnoDuration = builder.comment("Base cooldown before a downed vampire can resurrect. In sec.").defineInRange("dbnoDuration",10,1,1000);
         vpNeonatalDuration = builder.comment("Base duration of neonatal effect after resurrection. In sec.").defineInRange("neonatalDuration", 60, 1,Integer.MAX_VALUE);
+        vpNaturalArmorRegenDuration = builder.comment("The duration it takes for the vampire natural armor to fully regenerate after respawn. In seconds").defineInRange("naturalArmorRegenDuration",240,1,2400);
 
         //Vampire actions
         builder.category("vampireActions", "va");
