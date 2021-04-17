@@ -126,6 +126,12 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
             this.itemRenderer.renderItemOverlayIntoGUI(this.font, stack, x, y, null);
         }
 
+        if (this.list.isEmpty()) {
+            ITextComponent text = new TranslationTextComponent("gui.vampirism.vampirism_menu.no_tasks").mergeStyle(TextFormatting.WHITE);
+            int width = this.font.getStringPropertyWidth(text);
+            this.font.func_243246_a(matrixStack, text, this.guiLeft + 152 - (width/2), this.guiTop + 52, 0);
+        }
+
         this.oldMouseX = mouseX;
         this.oldMouseY = mouseY;
         this.list.renderToolTip(matrixStack, mouseX, mouseY);

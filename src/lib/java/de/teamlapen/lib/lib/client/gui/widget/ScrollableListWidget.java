@@ -49,6 +49,10 @@ public class ScrollableListWidget<T> extends ExtendedButton {
         this.setItems(this.baseValueSupplier.get());
     }
 
+    public boolean isEmpty() {
+        return this.listItems.isEmpty();
+    }
+
     public void setItems(@Nonnull Collection<T> elements) {
         this.listItems.clear();
         elements.forEach(item -> this.listItems.add(this.itemSupplier.apply(item, this)));
