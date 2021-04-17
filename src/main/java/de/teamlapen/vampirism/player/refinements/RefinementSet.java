@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
-import net.minecraft.item.Rarity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
@@ -31,15 +30,12 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
     public RefinementSet(Rarity rarity, int color, Set<IRefinement> refinements) {
         this.refinements = refinements;
         this.rarity = rarity;
-        this.weightedRandom = createWeightedRandom();
+        this.weightedRandom = new WeightedRandomItem<>(this, this.rarity.weight);
         this.color = color;
     }
 
     public RefinementSet(Rarity rarity, int color, IRefinement... refinements) {
-        this.refinements = Sets.newHashSet(refinements);
-        this.rarity = rarity;
-        this.weightedRandom = createWeightedRandom();
-        this.color = color;
+        this(rarity, color, Sets.newHashSet(refinements));
     }
 
     /**
@@ -75,25 +71,6 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
     @Override
     public Optional<IRefinementItem.AccessorySlotType> getSlotType() {
         return Optional.ofNullable(restrictedType);
-    }
-
-    private WeightedRandomItem<IRefinementSet> createWeightedRandom() {
-        int value;
-        switch (this.rarity) {
-            case UNCOMMON:
-                value=4;
-                break;
-            case COMMON:
-                value=2;
-                break;
-            case RARE:
-                value=1;
-                break;
-            default:
-                value=0;
-                break;
-        }
-        return new WeightedRandomItem<>(this, value);
     }
 
     @Override
