@@ -1,12 +1,11 @@
 package de.teamlapen.vampirism.advancements;
 
-import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.advancements.PlayerAdvancements;
+import net.minecraft.advancements.criterion.AbstractCriterionTrigger;
 import net.minecraft.advancements.criterion.CriterionInstance;
 import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -18,16 +17,11 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
 public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Instance> {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "faction");
 
     private final static Logger LOGGER = LogManager.getLogger();
-
-    public TriggerFaction() {
-        super(ID, Listeners::new);
-    }
 
     public static Instance builder(@Nullable IPlayableFaction<?> faction, int level){
         return new Instance(faction, level);
@@ -35,7 +29,7 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
 
     @Nonnull
     @Override
-    public Instance deserialize(JsonObject json, ConditionArrayParser parser) {
+    protected Instance deserializeTrigger(JsonObject json, @Nonnull EntityPredicate.AndPredicate entityPredicate, @Nonnull ConditionArrayParser conditionsParser) {
         IPlayableFaction<?> faction = null;
         if (json.has("faction")) {
             ResourceLocation id = new ResourceLocation(json.get("faction").getAsString());
@@ -55,15 +49,15 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
      * Trigger this criterion
      */
     public void trigger(ServerPlayerEntity playerMP, IPlayableFaction<?> faction, int level) {
-        Listeners listeners = (Listeners) this.listenersForPlayers.get(playerMP.getAdvancements());
-        if (listeners != null) {
-            listeners.trigger(faction, level);
-        }
+        this.triggerListeners(playerMP, (instance -> {
+            return instance.test(faction, level);
+        }));
     }
 
+    @Nonnull
     @Override
-    public void removeAllListeners(@Nonnull PlayerAdvancements playerAdvancementsIn) {
-        this.listenersForPlayers.remove(playerAdvancementsIn);
+    public ResourceLocation getId() {
+        return ID;
     }
 
     static class Instance extends CriterionInstance {
@@ -77,7 +71,7 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
             this.level = level;
         }
 
-        public boolean trigger(IPlayableFaction<?> faction, int level) {
+        public boolean test(IPlayableFaction<?> faction, int level) {
             if (this.faction == null || this.faction.equals(faction)) {
                 return level >= this.level;
             }
@@ -86,39 +80,12 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
 
         @Nonnull
         @Override
-        public JsonObject serialize(ConditionArraySerializer serializer) {
+        public JsonObject serialize(@Nonnull ConditionArraySerializer serializer) {
             JsonObject json = super.serialize(serializer);
             json.addProperty("faction", faction == null ? "null" : faction.getID().toString());
             json.addProperty("level", level);
             return json;
         }
 
-    }
-
-    static class Listeners extends GenericListeners<TriggerFaction.Instance> {
-
-        Listeners(PlayerAdvancements playerAdvancementsIn) {
-            super(playerAdvancementsIn);
-        }
-
-        void trigger(IPlayableFaction<?> faction, int level) {
-            List<Listener<Instance>> list = null;
-
-            for (Listener<Instance> listener : this.playerListeners) {
-                if ((listener.getCriterionInstance()).trigger(faction, level)) {
-                    if (list == null) {
-                        list = Lists.newArrayList();
-                    }
-
-                    list.add(listener);
-                }
-            }
-
-            if (list != null) {
-                for (Listener<Instance> listener1 : list) {
-                    listener1.grantCriterion(this.playerAdvancements);
-                }
-            }
-        }
     }
 }

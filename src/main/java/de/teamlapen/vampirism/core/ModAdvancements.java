@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.advancements.SkillUnlockedTrigger;
 import de.teamlapen.vampirism.advancements.TriggerFaction;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.ICriterionInstance;
 import net.minecraft.advancements.ICriterionTrigger;
 
 /**
@@ -19,7 +20,7 @@ public class ModAdvancements {
     public static final SkillUnlockedTrigger TRIGGER_SKILL_UNLOCKED = register(new SkillUnlockedTrigger());
 
 
-    private static <T extends ICriterionTrigger> T register(T trigger) {
+    private static <Z extends ICriterionInstance, T extends ICriterionTrigger<Z>> T register(T trigger) {
         return CriteriaTriggers.register(trigger);
     }
 

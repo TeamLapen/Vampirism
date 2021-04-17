@@ -1,11 +1,10 @@
 package de.teamlapen.vampirism.advancements;
 
-import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.util.REFERENCE;
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.advancements.PlayerAdvancements;
+import net.minecraft.advancements.criterion.AbstractCriterionTrigger;
 import net.minecraft.advancements.criterion.CriterionInstance;
 import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -16,17 +15,11 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class SkillUnlockedTrigger extends AbstractCriterionTrigger<SkillUnlockedTrigger.Instance> {
-
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "skill_unlocked");
-
-    public SkillUnlockedTrigger() {
-        super(ID, Listeners::new);
-    }
 
     public static Instance builder(ISkill skill) {
         return new Instance(skill);
@@ -37,14 +30,18 @@ public class SkillUnlockedTrigger extends AbstractCriterionTrigger<SkillUnlocked
     }
 
     public void trigger(ServerPlayerEntity player, ISkill skill) {
-        Listeners listeners = (Listeners) this.listenersForPlayers.get(player.getAdvancements());
-        if (listeners != null) {
-            listeners.trigger(skill);
-        }
+        this.triggerListeners(player, (instance -> {
+            return instance.test(skill);
+        }));
     }
 
     @Override
-    public Instance deserialize(JsonObject json, ConditionArrayParser parser) {
+    public ResourceLocation getId() {
+        return ID;
+    }
+
+    @Override
+    protected Instance deserializeTrigger(JsonObject json, EntityPredicate.AndPredicate entityPredicate, ConditionArrayParser conditionsParser) {
         return new Instance(new ResourceLocation(JSONUtils.getString(json, "skill")));
     }
 
@@ -71,32 +68,6 @@ public class SkillUnlockedTrigger extends AbstractCriterionTrigger<SkillUnlocked
             JsonObject jsonObject = super.serialize(serializer);
             jsonObject.addProperty("skill", skillId.toString());
             return jsonObject;
-        }
-    }
-
-    static class Listeners extends GenericListeners<Instance> {
-
-        public Listeners(PlayerAdvancements playerAdvancementsIn) {
-            super(playerAdvancementsIn);
-        }
-
-        void trigger(ISkill skill) {
-            List<Listener<Instance>> list = null;
-
-            for (Listener<Instance> listener : this.playerListeners) {
-                if (listener.getCriterionInstance().test(skill)) {
-                    if (list == null) {
-                        list = Lists.newArrayList();
-                    }
-                    list.add(listener);
-                }
-            }
-
-            if (list != null) {
-                for (Listener<Instance> listener : list) {
-                    listener.grantCriterion(this.playerAdvancements);
-                }
-            }
         }
     }
 }
