@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.vampirism.client.gui.GarlicBeaconScreen;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.tileentity.GarlicBeaconTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -24,8 +26,10 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -68,6 +72,13 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
         GarlicBeaconTileEntity tile = new GarlicBeaconTileEntity();
         tile.setType(type);
+        int bootTime = VampirismConfig.BALANCE.garlicDiffusorStartupTime.get()*20;
+        if(worldIn instanceof ServerWorld){
+            if(((ServerWorld) worldIn).getPlayers().size()<=1){
+                bootTime >>= 2; // /4
+            }
+        }
+        tile.setNewBootDelay(bootTime);
         return tile;
     }
 
@@ -124,7 +135,15 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
             }
             return ActionResultType.SUCCESS;
         }
-        return ActionResultType.PASS;
+        else{
+            if(world.isRemote){
+                GarlicBeaconTileEntity t = getTile(world, pos);
+                if (t != null) {
+                    DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().displayGuiScreen(new GarlicBeaconScreen(t,getTranslatedName())));
+                }
+            }
+        }
+        return ActionResultType.SUCCESS;
     }
 
     @Override

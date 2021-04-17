@@ -33,6 +33,7 @@ import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.PotionSanguinareEffect;
 import de.teamlapen.vampirism.util.ModEventFactory;
+import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -183,11 +184,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             super.markDirty();
             this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 3);
             if (!this.village.isEmpty()) {
-                if (this.controllingFaction == VReference.VAMPIRE_FACTION) {
-                    TotemHelper.addVampireVillage(this.world.getDimensionKey(), this.pos, this.getVillageArea());
-                } else {
-                    TotemHelper.removeVampireVillage(this.world.getDimensionKey(), this.pos);
-                }
+                VampirismWorld.getOpt(this.world).ifPresent(vw->vw.updateArtificialFogBoundingBox(this.pos,this.controllingFaction == VReference.VAMPIRE_FACTION?this.getVillageArea() : null ));
             }
         }
     }
@@ -221,7 +218,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     @Override
     public void remove() {
         //noinspection ConstantConditions
-        TotemHelper.removeVampireVillage(this.world.getDimensionKey(), this.pos);
+        VampirismWorld.getOpt(this.world).ifPresent(vw->vw.updateArtificialFogBoundingBox(this.pos, null ));
         TotemHelper.removeTotem(this.world.getDimensionKey(), this.village, this.pos, true);
         if (this.capturingFaction != null) {
             this.abortCapture(false);
@@ -329,11 +326,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         }
         if (this.world != null) {
             if (compound.contains("villageArea")) {
-                if (VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
-                    TotemHelper.addVampireVillage(this.world.getDimensionKey(), this.pos, UtilLib.intToBB(compound.getIntArray("villageArea")));
-                } else {
-                    TotemHelper.removeVampireVillage(this.world.getDimensionKey(), this.pos);
-                }
+                VampirismWorld.getOpt(this.world).ifPresent(vw->vw.updateArtificialFogBoundingBox(this.pos,this.controllingFaction == VReference.VAMPIRE_FACTION ? UtilLib.intToBB(compound.getIntArray("villageArea")) : null ));
             }
         }
         this.forceVillageUpdate = true;

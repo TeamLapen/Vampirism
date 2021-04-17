@@ -128,7 +128,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @Override
     public EnumStrength isGettingGarlicDamage(IWorld iWorld, boolean forceRefresh) {
         if (forceRefresh) {
-            garlicCache = Helper.getGarlicStrength(this, Helper.getWorldKey(iWorld));
+            garlicCache = Helper.getGarlicStrength(this, iWorld);
         }
         return garlicCache;
     }

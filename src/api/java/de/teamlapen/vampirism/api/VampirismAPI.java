@@ -11,14 +11,19 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
 import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
+import de.teamlapen.vampirism.api.world.IVampirismWorld;
 import de.teamlapen.vampirism.api.world.IWorldGenManager;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RegistryKey;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import javax.annotation.Nonnull;
 
@@ -35,11 +40,14 @@ public class VampirismAPI {
     @SuppressWarnings("FieldMayBeFinal")
     @CapabilityInject(IFactionPlayerHandler.class)
     private static Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = null;
+    @SuppressWarnings("FieldMayBeFinal")
+    @CapabilityInject(IVampirismWorld.class)
+    private static Capability<IVampirismWorld> CAP_WORLD = null;
+
     private static IFactionRegistry factionRegistry;
     private static ISundamageRegistry sundamageRegistry;
     private static IVampirismEntityRegistry entityRegistry;
     private static IVampireVisionRegistry vampireVisionRegistry;
-    private static IGarlicChunkHandler.Provider garlicHandlerProvider;
     private static ISkillManager skillManager;
     private static IActionManager actionManager;
     private static IEntityActionManager entityActionManager;
@@ -122,14 +130,6 @@ public class VampirismAPI {
 
     }
 
-    /**
-     * Setup the API accessors
-     * FOR INTERNAL USAGE ONLY
-     */
-    public static void setUpAccessors(IGarlicChunkHandler.Provider garlicChunkHandlerProv) {
-        garlicHandlerProvider = garlicChunkHandlerProv;
-    }
-
 
     /**
      * @param player
@@ -148,12 +148,56 @@ public class VampirismAPI {
     }
 
     /**
+     * Use getVampirismWorld instead
+     * TODO 1.17 remove
      * @return The {@link IGarlicChunkHandler} for the given world
      */
+    @Deprecated
     @Nonnull
     public static IGarlicChunkHandler getGarlicChunkHandler(RegistryKey<World> world) {
-        return garlicHandlerProvider.getHandler(world);
+        World w=  DistExecutor.safeRunForDist(()->()->{
+            MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+            if(server!=null){
+                return server.getWorld(world);
+            }
+           return ClientHelper.getAndCheckWorld(world);
+        },()->()-> ServerLifecycleHooks.getCurrentServer().getWorld(world));
+        if(w!=null){
+            return w.getCapability(CAP_WORLD).map(iw->(IGarlicChunkHandler)iw).orElse(dummyGarlicChunkHandler);
+        }
+        return dummyGarlicChunkHandler;
     }
+
+    public static LazyOptional<IVampirismWorld> getVampirismWorld(World w){
+        return w.getCapability(CAP_WORLD);
+    }
+
+    /**
+     * TODO 1.17 remove
+     */
+    @Deprecated
+    private static final IGarlicChunkHandler dummyGarlicChunkHandler = new IGarlicChunkHandler() {
+        @Override
+        public void clear() {
+
+        }
+
+        @Nonnull
+        @Override
+        public EnumStrength getStrengthAtChunk(ChunkPos pos) {
+            return EnumStrength.NONE;
+        }
+
+        @Override
+        public int registerGarlicBlock(EnumStrength strength, ChunkPos... pos) {
+            return 0;
+        }
+
+        @Override
+        public void removeGarlicBlock(int id) {
+
+        }
+    };
 
 
 }

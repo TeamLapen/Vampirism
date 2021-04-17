@@ -38,6 +38,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue taskMasterMaxTaskAmount;
     public final ForgeConfigSpec.IntValue skillPointsPerLevel;
     public final ForgeConfigSpec.BooleanValue allowInfiniteSpecialArrows;
+    public final ForgeConfigSpec.IntValue garlicDiffusorStartupTime;
 
     public final ForgeConfigSpec.DoubleValue eaHealthThreshold;
     public final ForgeConfigSpec.IntValue eaInvisibilityCooldown;
@@ -206,7 +207,7 @@ public class BalanceConfig {
         taskMasterMaxTaskAmount = builder.comment("Maximum amount of task shown at a taskmaster, except unique tasks").defineInRange("taskMasterMaxTaskAmount", 3, 1, Integer.MAX_VALUE);
         skillPointsPerLevel = builder.comment("Players receive n skill points for each leve-up. Anything except 1 is unbalanced.").defineInRange("skillPointsPerLevel", 1, 1, 20);
         allowInfiniteSpecialArrows = builder.comment("Whether special crossbow arrows (e.g. spitfire) can be used with infinity enchantment").define("allowInfiniteSpecialArrows", false);
-
+        garlicDiffusorStartupTime =  builder.comment("Delay in seconds before a newly placed garlic diffusor becomes active. *0.25 in Singleplayer").defineInRange("garlicDiffusorStartupTime",5*20,1,10000);
 
         //Entity actions
         builder.category("entityActions", "ea");

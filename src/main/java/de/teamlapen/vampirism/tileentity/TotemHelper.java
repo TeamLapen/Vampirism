@@ -2,10 +2,12 @@ package de.teamlapen.vampirism.tileentity;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.world.FactionPointOfInterestType;
+import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -14,7 +16,6 @@ import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -41,10 +42,7 @@ public class TotemHelper {
     public static final int MIN_VILLAGER = 4;
 
     private static final Logger LOGGER = LogManager.getLogger();
-    /**
-     * stores all BoundingBoxes of vampire controlled villages per dimension, mapped from totem positions
-     */
-    private static final HashMap<RegistryKey<World>, Map<BlockPos, MutableBoundingBox>> vampireVillages = Maps.newHashMap();
+
 
     /**
      * saves the position of a {@link PointOfInterest} to the related village totem position
@@ -57,49 +55,52 @@ public class TotemHelper {
     private static final Map<RegistryKey<World>, Map<BlockPos, Set<PointOfInterest>>> poiSets = Maps.newHashMap();
 
     /**
-     * cleans the vampire village cache
-     *
-     * @param dimension the dimension to be cleaned
-     */
-    public static void clearCacheForDimension(RegistryKey<World> dimension) {
-        vampireVillages.remove(dimension);
-    }
-
-    /**
+     * TODO 1.17 remove
+     * use {@link VampirismWorld} directly
      * adds a vampire village
      *
      * @param dimension dimension of the village totem
      * @param pos       position of the village totem
      * @param box       bounding box of the village
      */
+    @Deprecated
     public static void addVampireVillage(RegistryKey<World> dimension, BlockPos pos, AxisAlignedBB box) {
-        updateVampireBoundingBox(dimension, pos, box);
+        World w =VampLib.proxy.getWorldFromKey(dimension);
+        if(w!=null){
+            VampirismWorld.getOpt(w).ifPresent(vw -> vw.updateArtificialFogBoundingBox(pos,box));
+        }
     }
 
     /**
+     * TODO 1.17 remove
+     * use {@link VampirismWorld} directly
      * removes a vampire village
      *
      * @param dimension dimension of the village totem
      * @param pos       position of the village totem
      */
+    @Deprecated
     public static void removeVampireVillage(RegistryKey<World> dimension, BlockPos pos) {
-        updateVampireBoundingBox(dimension, pos, null);
+        World w =VampLib.proxy.getWorldFromKey(dimension);
+        if(w!=null){
+            VampirismWorld.getOpt(w).ifPresent(vw -> vw.updateArtificialFogBoundingBox(pos,null));
+        }
     }
 
     /**
+     * TODO 1.17 remove
+     * Use {@link VampirismWorld#isInsideArtificialVampireFogArea(BlockPos)}
      * checks if the position is in a vampire village
      *
      * @param dimension dimension of the pos
      * @param blockPos  pos to check
      * @return true if in a vampire controlled village otherwise false
      */
+    @Deprecated
     public static boolean isInsideVampireAreaCached(RegistryKey<World> dimension, BlockPos blockPos) {
-        if (vampireVillages.containsKey(dimension)) {
-            for (Map.Entry<BlockPos, MutableBoundingBox> entry : vampireVillages.get(dimension).entrySet()) {
-                if (entry.getValue().isVecInside(blockPos)) {
-                    return true;
-                }
-            }
+        World w =VampLib.proxy.getWorldFromKey(dimension);
+        if(w!=null){
+            return VampirismWorld.getOpt(w).map(vw -> vw.isInsideArtificialVampireFogArea(blockPos)).orElse(false);
         }
         return false;
     }
@@ -423,21 +424,7 @@ public class TotemHelper {
         }};
     }
 
-    /**
-     * adds/updates/removes the bounding box of a vampire village to the global field {@link #vampireVillages}
-     *
-     * @param dimension dimension of the village totem
-     * @param totemPos  position of the village totem
-     * @param box       new bounding box of the village or null if the area should be removed
-     */
-    public static void updateVampireBoundingBox(@Nonnull RegistryKey<World> dimension, @Nonnull BlockPos totemPos, @Nullable AxisAlignedBB box) {
-        Map<BlockPos, MutableBoundingBox> map = vampireVillages.computeIfAbsent(dimension, dimension1 -> new HashMap<>());
-        if (box == null) {
-            map.remove(totemPos);
-        } else {
-            map.put(totemPos, UtilLib.AABBtoMB(box));
-        }
-    }
+
 
     /**
      * creates a bounding box for the given {@link PointOfInterest}s
