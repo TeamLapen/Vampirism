@@ -59,7 +59,7 @@ public class VampireActionTrigger extends AbstractCriterionTrigger<VampireAction
     }
 
     public enum Action {
-        SNIPED_IN_BAT, POISONOUS_BITE, PERFORM_RITUAL_INFUSION, BAT, SUCK_BLOOD, NONE
+        SNIPED_IN_BAT, POISONOUS_BITE, PERFORM_RITUAL_INFUSION, BAT, SUCK_BLOOD, NONE, KILL_FROZEN_HUNTER
     }
 
     static class Instance extends CriterionInstance {

@@ -159,6 +159,12 @@ public class AdvancementGenerator extends AdvancementProvider {
                     .withParent(first_blood)
                     .withCriterion("flower", VampireActionTrigger.builder(VampireActionTrigger.Action.POISONOUS_BITE))
                     .register(consumer, REFERENCE.MODID + ":vampire/yuck");
+            Advancement freeze_kill = Advancement.Builder.builder()
+                    .withDisplay(new DisplayInfo(new ItemStack(Items.CLOCK), new TranslationTextComponent("advancement.vampirism.freeze_kill"), new TranslationTextComponent("advancement.vampirism.freeze_kill.desc"), null, FrameType.TASK, true, true, true))
+                    .withParent(first_blood)
+                    .withCriterion("kill", VampireActionTrigger.builder(VampireActionTrigger.Action.KILL_FROZEN_HUNTER))
+                    .register(consumer, REFERENCE.MODID + ":vampire/freeze_kill");
+
         }
     }
 

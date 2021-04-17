@@ -60,6 +60,8 @@
   "advancement.vampirism.yuck.desc": "Suck blood from an undead creature",
   "advancement.vampirism.sniped": "Sniped!",
   "advancement.vampirism.sniped.dec": "Get sniped while in bat mode",
+  "advancement.vampirism.freeze_kill": "Useless... Useless...",
+  "advancement.vampirism.freeze_kill.desc": "Kill a vampire hunter while he is frozen",
   "effect.vampirism.sunscreen": "Sunscreen",
   "effect.vampirism.thirst": "Thirst",
   "effect.vampirism.poison": "Toxicant",

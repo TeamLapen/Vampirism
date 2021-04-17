@@ -1,11 +1,16 @@
 package de.teamlapen.vampirism.entity.hunter;
 
+import de.teamlapen.vampirism.advancements.VampireActionTrigger;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
+import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.VampirismEntity;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -70,5 +75,13 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
     public void makeCampHunter(BlockPos pos) {
         super.setHome(new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1).grow(10));
         this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
+    }
+
+    @Override
+    public void onDeath(DamageSource cause) {
+        super.onDeath(cause);
+        if (cause.getTrueSource() instanceof ServerPlayerEntity && Helper.isVampire(((PlayerEntity) cause.getTrueSource())) && this.getActivePotionEffect(ModEffects.freeze) != null) {
+            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayerEntity) cause.getTrueSource()), VampireActionTrigger.Action.KILL_FROZEN_HUNTER);
+        }
     }
 }
