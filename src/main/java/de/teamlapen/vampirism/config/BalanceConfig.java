@@ -241,7 +241,7 @@ public class BalanceConfig {
         haAwarenessEnabled = builder.define("awarenessEnabled", true);
         haAwarenessDuration = builder.comment("In ticks").defineInRange("awarenessDuration", Integer.MAX_VALUE, 1, Integer.MAX_VALUE);
         haAwarenessCooldown = builder.comment("In ticks").defineInRange("awarenessCooldown", 1, 1, Integer.MAX_VALUE);
-        haAwarenessRadius = builder.comment("Radius in which vampires should be detected").defineInRange("awarenessRadius", 18, 0, 50);
+        haAwarenessRadius = builder.comment("Radius in which vampires should be detected").defineInRange("awarenessRadius", 25, 0, 50);
         haPotionResistanceEnabled = builder.define("potionResistanceEnabled", true);
         haPotionResistanceDuration = builder.comment("In ticks").defineInRange("potionResistanceDuration", 400, 1, Integer.MAX_VALUE);
         haPotionResistanceCooldown = builder.comment("In ticks").defineInRange("potionResistanceCooldown", 1200, 1, Integer.MAX_VALUE);
