@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
-import de.teamlapen.vampirism.api.entity.minion.DefaultMinionTask;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,6 +16,7 @@ public class StayTask extends DefaultMinionTask<StayTask.Desc, MinionData> {
     @Nullable
     @Override
     public Desc activateTask(@Nullable PlayerEntity lord, @Nullable IMinionEntity minion, MinionData inventory) {
+        this.triggerAdvancements(lord);
         BlockPos pos = minion != null ? minion.getRepresentingEntity().getPosition() : (lord != null ? lord.getPosition() : null);
         return pos == null ? null : new Desc(pos);
     }

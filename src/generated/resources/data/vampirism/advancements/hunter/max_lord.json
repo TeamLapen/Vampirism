@@ -1,30 +1,27 @@
 {
-  "parent": "vampirism:hunter/stake",
+  "parent": "vampirism:hunter/max_level",
   "display": {
     "icon": {
-      "item": "vampirism:item_garlic"
+      "item": "vampirism:hunter_minion_upgrade_special"
     },
     "title": {
-      "translate": "advancement.vampirism.max_level_hunter"
+      "translate": "advancement.vampirism.max_lord_hunter"
     },
     "description": {
-      "translate": "advancement.vampirism.max_level_hunter.desc"
+      "translate": "advancement.vampirism.max_lord_hunter"
     },
-    "frame": "goal",
+    "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": true
-  },
-  "rewards": {
-    "experience": 100
   },
   "criteria": {
     "level": {
       "trigger": "vampirism:faction",
       "conditions": {
-        "type": "LEVEL",
+        "type": "LORD",
         "faction": "vampirism:hunter",
-        "level": 14
+        "level": 5
       }
     }
   },

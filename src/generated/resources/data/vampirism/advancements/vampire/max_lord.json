@@ -1,30 +1,27 @@
 {
-  "parent": "vampirism:vampire/bat",
+  "parent": "vampirism:vampire/max_level",
   "display": {
     "icon": {
-      "item": "vampirism:vampire_fang"
+      "item": "vampirism:vampire_minion_upgrade_special"
     },
     "title": {
-      "translate": "advancement.vampirism.max_level_vampire"
+      "translate": "advancement.vampirism.max_lord_vampire"
     },
     "description": {
-      "translate": "advancement.vampirism.max_level_vampire.desc"
+      "translate": "advancement.vampirism.max_lord_vampire"
     },
-    "frame": "goal",
+    "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": true
-  },
-  "rewards": {
-    "experience": 100
   },
   "criteria": {
     "level": {
       "trigger": "vampirism:faction",
       "conditions": {
-        "type": "LEVEL",
+        "type": "LORD",
         "faction": "vampirism:vampire",
-        "level": 14
+        "level": 5
       }
     }
   },

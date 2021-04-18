@@ -1,5 +1,5 @@
 {
-  "parent": "vampirism:vampire/first_blood",
+  "parent": "vampirism:vampire/blood_cult",
   "display": {
     "icon": {
       "item": "minecraft:clock"

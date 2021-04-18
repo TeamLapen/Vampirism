@@ -2,10 +2,12 @@ package de.teamlapen.vampirism.data;
 
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.advancements.HunterActionTrigger;
+import de.teamlapen.vampirism.advancements.MinionTaskTrigger;
 import de.teamlapen.vampirism.advancements.TriggerFaction;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.criterion.*;
@@ -24,7 +26,7 @@ public class AdvancementGenerator extends AdvancementProvider {
     public AdvancementGenerator(DataGenerator generatorIn) {
         super(generatorIn);
         MainAdvancements main = new MainAdvancements();
-        this.advancements = ImmutableList.of(main, new HunterAdvancements(main::getRoot), new VampireAdvancements(main::getRoot));
+        this.advancements = ImmutableList.of(main, new HunterAdvancements(main::getRoot), new VampireAdvancements(main::getRoot), new MinionAdvancements(main::getRoot));
     }
 
     private static class HunterAdvancements implements Consumer<Consumer<Advancement>> {
@@ -67,6 +69,11 @@ public class AdvancementGenerator extends AdvancementProvider {
                     .withCriterion("advanced", InventoryChangeTrigger.Instance.forItems(ModItems.enhanced_tech_crossbow))
                     .withRequirementsStrategy(IRequirementsStrategy.AND)
                     .register(consumer, REFERENCE.MODID + ":hunter/technology");
+            Advancement max_lord = Advancement.Builder.builder()
+                    .withDisplay(ModItems.hunter_minion_upgrade_special, new TranslationTextComponent("advancement.vampirism.max_lord_hunter"), new TranslationTextComponent("advancement.vampirism.max_lord_hunter"), null, FrameType.CHALLENGE, true, true, true)
+                    .withParent(max_level)
+                    .withCriterion("level", TriggerFaction.lord(VReference.HUNTER_FACTION, 5))
+                    .register(consumer, REFERENCE.MODID + ":hunter/max_lord");
         }
     }
 
@@ -161,10 +168,53 @@ public class AdvancementGenerator extends AdvancementProvider {
                     .register(consumer, REFERENCE.MODID + ":vampire/yuck");
             Advancement freeze_kill = Advancement.Builder.builder()
                     .withDisplay(new DisplayInfo(new ItemStack(Items.CLOCK), new TranslationTextComponent("advancement.vampirism.freeze_kill"), new TranslationTextComponent("advancement.vampirism.freeze_kill.desc"), null, FrameType.TASK, true, true, true))
-                    .withParent(first_blood)
+                    .withParent(blood_cult)
                     .withCriterion("kill", VampireActionTrigger.builder(VampireActionTrigger.Action.KILL_FROZEN_HUNTER))
                     .register(consumer, REFERENCE.MODID + ":vampire/freeze_kill");
+            Advancement max_lord = Advancement.Builder.builder()
+                    .withDisplay(ModItems.vampire_minion_upgrade_special, new TranslationTextComponent("advancement.vampirism.max_lord_vampire"), new TranslationTextComponent("advancement.vampirism.max_lord_vampire"), null, FrameType.CHALLENGE, true, true, true)
+                    .withParent(max_level)
+                    .withCriterion("level", TriggerFaction.lord(VReference.VAMPIRE_FACTION, 5))
+                    .register(consumer, REFERENCE.MODID + ":vampire/max_lord");
 
+        }
+    }
+
+    private static class MinionAdvancements implements Consumer<Consumer<Advancement>> {
+
+        private final Supplier<Advancement> root;
+
+        public MinionAdvancements(Supplier<Advancement> root) {
+            this.root = root;
+        }
+
+        @Override
+        public void accept(Consumer<Advancement> consumer) {
+            Advancement become_lord = Advancement.Builder.builder()
+                    .withDisplay(Items.PAPER, new TranslationTextComponent("advancement.vampirism.become_lord"), new TranslationTextComponent("advancement.vampirism.become_lord"), null, FrameType.TASK, true, true, true)
+                    .withParent(root.get())
+                    .withCriterion("level", TriggerFaction.lord(null, 1))
+                    .register(consumer, REFERENCE.MODID + ":minion/become_lord");
+            Advancement collect_blood = Advancement.Builder.builder()
+                    .withDisplay(ModItems.blood_bottle, new TranslationTextComponent("advancement.vampirism.collect_blood"), new TranslationTextComponent("advancement.vampirism.collect_blood.desc"), null, FrameType.TASK, true, true, true)
+                    .withParent(become_lord)
+                    .withCriterion("task", MinionTaskTrigger.tasks(MinionTasks.collect_blood))
+                    .register(consumer, REFERENCE.MODID + ":minion/collect_blood");
+            Advancement collect_hunter_items = Advancement.Builder.builder()
+                    .withDisplay(Items.GOLD_NUGGET, new TranslationTextComponent("advancement.vampirism.collect_hunter_items"), new TranslationTextComponent("advancement.vampirism.collect_hunter_items.desc"), null, FrameType.TASK, true, true, true)
+                    .withParent(become_lord)
+                    .withCriterion("task", MinionTaskTrigger.tasks(MinionTasks.collect_hunter_items))
+                    .register(consumer, REFERENCE.MODID + ":minion/collect_hunter_items");
+            Advancement protect_lord = Advancement.Builder.builder()
+                    .withDisplay(Items.SHIELD, new TranslationTextComponent("advancement.vampirism.protect_lord"), new TranslationTextComponent("advancement.vampirism.protect_lord.desc"), null, FrameType.TASK, true, true, true)
+                    .withParent(become_lord)
+                    .withCriterion("task", MinionTaskTrigger.tasks(MinionTasks.protect_lord))
+                    .register(consumer, REFERENCE.MODID + ":minion/protect_lord");
+            Advancement defend_area = Advancement.Builder.builder()
+                    .withDisplay(Items.SHIELD, new TranslationTextComponent("advancement.vampirism.defend_area"), new TranslationTextComponent("advancement.vampirism.defend_area.desc"), null, FrameType.TASK, true, true, true)
+                    .withParent(become_lord)
+                    .withCriterion("task", MinionTaskTrigger.tasks(MinionTasks.defend_area))
+                    .register(consumer, REFERENCE.MODID + ":minion/defend_area");
         }
     }
 
