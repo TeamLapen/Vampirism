@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.data;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.AltarPillarBlock;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.GarlicBlock;
@@ -87,7 +88,11 @@ public class LootTablesGenerator extends LootTableProvider {
                             .addEntry(ItemLootEntry.builder(ModItems.vampire_blood_bottle).weight(1))
                             .addEntry(ItemLootEntry.builder(ModItems.blood_bottle).weight(1).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.5f, 1.0f))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(1f, 1f)))))
                     .addLootPool(LootPool.builder().name("special").acceptCondition(RandomChanceWithLooting.builder(0.05f, 0.01f)).rolls(ConstantRange.of(1))
-                            .addEntry(ItemLootEntry.builder(ModItems.vampire_book).weight(1).acceptFunction(AddBookNbt.builder())));
+                            .addEntry(ItemLootEntry.builder(ModItems.vampire_book).weight(1).acceptFunction(AddBookNbt.builder())))
+                    .addLootPool(LootPool.builder().name("refinement_item").rolls(ConstantRange.of(1)).acceptCondition(RandomChanceWithLooting.builder(0.05f, 0.01f))
+                            .addEntry(ItemLootEntry.builder(ModItems.amulet).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .addEntry(ItemLootEntry.builder(ModItems.ring).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .addEntry(ItemLootEntry.builder(ModItems.obi_belt).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION))));
             this.registerLootTable(ModEntities.advanced_vampire, advanced_vampire);
             this.registerLootTable(ModEntities.advanced_vampire_imob, advanced_vampire);
             this.registerLootTable(ModEntities.blinding_bat, LootTable.builder());
@@ -101,7 +106,11 @@ public class LootTablesGenerator extends LootTableProvider {
                     .addLootPool(LootPool.builder().name("general").rolls(ConstantRange.of(1)).acceptCondition(KilledByPlayer.builder()).acceptCondition(RandomChanceWithLooting.builder(0.33f, 0.05f))
                             .addEntry(ItemLootEntry.builder(ModItems.vampire_fang).weight(1)))
                     .addLootPool(LootPool.builder().name("special").rolls(ConstantRange.of(1)).acceptCondition(StakeCondition.builder(LootContext.EntityTarget.KILLER_PLAYER)).acceptCondition(RandomChanceWithLooting.builder(0.5f, 0.05f))
-                            .addEntry(ItemLootEntry.builder(ModItems.vampire_blood_bottle).weight(1)));
+                            .addEntry(ItemLootEntry.builder(ModItems.vampire_blood_bottle).weight(1)))
+                    .addLootPool(LootPool.builder().name("refinement_item").rolls(ConstantRange.of(1)).acceptCondition(RandomChanceWithLooting.builder(0.02f, 0.01f))
+                            .addEntry(ItemLootEntry.builder(ModItems.amulet).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .addEntry(ItemLootEntry.builder(ModItems.ring).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .addEntry(ItemLootEntry.builder(ModItems.obi_belt).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION))));
             this.registerLootTable(ModEntities.vampire, vampire);
             this.registerLootTable(ModEntities.vampire_imob, vampire);
             this.registerLootTable(ModEntities.vampire_baron, LootTable.builder()
@@ -119,7 +128,11 @@ public class LootTablesGenerator extends LootTableProvider {
                     .addLootPool(LootPool.builder().name("general").rolls(ConstantRange.of(1)).acceptCondition(KilledByPlayer.builder()).acceptCondition(RandomChanceWithLooting.builder(0.33f, 0.005f))
                             .addEntry(ItemLootEntry.builder(ModItems.human_heart).weight(1)))
                     .addLootPool(LootPool.builder().name("special").rolls(ConstantRange.of(1)).acceptCondition(KilledByPlayer.builder()).acceptCondition(RandomChanceWithLooting.builder(0.25f, 0.05f))
-                            .addEntry(ItemLootEntry.builder(ModItems.holy_salt).weight(1)));
+                            .addEntry(ItemLootEntry.builder(ModItems.holy_salt).weight(1)))
+                    .addLootPool(LootPool.builder().name("refinement_item").rolls(ConstantRange.of(1)).acceptCondition(RandomChanceWithLooting.builder(0.05f, 0.02f))
+                            .addEntry(ItemLootEntry.builder(ModItems.amulet).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .addEntry(ItemLootEntry.builder(ModItems.ring).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .addEntry(ItemLootEntry.builder(ModItems.obi_belt).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION))));
             this.registerLootTable(ModEntities.hunter, hunter);
             this.registerLootTable(ModEntities.hunter_imob, hunter);
             this.registerLootTable(ModEntities.villager_angry, LootTable.builder());
@@ -186,7 +199,11 @@ public class LootTablesGenerator extends LootTableProvider {
                             .addEntry(ItemLootEntry.builder(ModItems.heart_seeker_ultimate).weight(9).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.6f, 0.99f))).acceptFunction(SetItemBloodCharge.builder(RandomValueRange.of(500f, 2000f))))
                             .addEntry(ItemLootEntry.builder(ModItems.heart_striker_enhanced).weight(21).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.6f, 0.99f))).acceptFunction(SetItemBloodCharge.builder(RandomValueRange.of(500f, 2000f))))
                             .addEntry(ItemLootEntry.builder(ModItems.heart_striker_ultimate).weight(9).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.6f, 0.99f))).acceptFunction(SetItemBloodCharge.builder(RandomValueRange.of(500f, 2000f))))
-                            .addEntry(EmptyLootEntry.func_216167_a().weight(40))));
+                            .addEntry(EmptyLootEntry.func_216167_a().weight(40)))
+                    .addLootPool(LootPool.builder().name("refinement_item").rolls(ConstantRange.of(3))
+                            .addEntry(ItemLootEntry.builder(ModItems.amulet).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .addEntry(ItemLootEntry.builder(ModItems.ring).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .addEntry(ItemLootEntry.builder(ModItems.obi_belt).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))));
         }
     }
 
@@ -293,7 +310,12 @@ public class LootTablesGenerator extends LootTableProvider {
                             .addEntry(ItemLootEntry.builder(ModItems.holy_salt).weight(50))
                             .addEntry(ItemLootEntry.builder(ModItems.holy_water_bottle_normal).weight(20))
                             .addEntry(ItemLootEntry.builder(ModItems.holy_water_bottle_enhanced).weight(20))
-                            .addEntry(ItemLootEntry.builder(ModItems.holy_water_bottle_ultimate).weight(10))));
+                            .addEntry(ItemLootEntry.builder(ModItems.holy_water_bottle_ultimate).weight(10)))
+                    .addLootPool(LootPool.builder().name("refinement_item").rolls(ConstantRange.of(1))
+                            .addEntry(ItemLootEntry.builder(ModItems.amulet).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .addEntry(ItemLootEntry.builder(ModItems.ring).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .addEntry(ItemLootEntry.builder(ModItems.obi_belt).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION))))
+            );
             consumer.accept(ModLootTables.desert_pyramid, LootTable.builder()
                     .addLootPool(LootPool.builder().name("main").rolls(ConstantRange.of(1))
                             .addEntry(ItemLootEntry.builder(ModItems.item_garlic).weight(15))
@@ -305,7 +327,12 @@ public class LootTablesGenerator extends LootTableProvider {
                             .addEntry(ItemLootEntry.builder(ModItems.obsidian_armor_chest_ultimate).weight(7).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.3f, 0.9f))))
                             .addEntry(ItemLootEntry.builder(ModItems.obsidian_armor_legs_ultimate).weight(7).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.3f, 0.9f))))
                             .addEntry(ItemLootEntry.builder(ModItems.obsidian_armor_feet_ultimate).weight(7).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.3f, 0.9f))))
-                            .addEntry(EmptyLootEntry.func_216167_a().weight(72))));
+                            .addEntry(EmptyLootEntry.func_216167_a().weight(72)))
+                    .addLootPool(LootPool.builder().name("refinement_item").rolls(ConstantRange.of(1))
+                            .addEntry(ItemLootEntry.builder(ModItems.amulet).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .addEntry(ItemLootEntry.builder(ModItems.ring).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .addEntry(ItemLootEntry.builder(ModItems.obi_belt).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION))))
+            );
             consumer.accept(ModLootTables.jungle_temple, LootTable.builder()
                     .addLootPool(LootPool.builder().name("main").rolls(ConstantRange.of(2))
                             .addEntry(ItemLootEntry.builder(ModItems.item_garlic).weight(20))
@@ -324,7 +351,12 @@ public class LootTablesGenerator extends LootTableProvider {
                             .addEntry(ItemLootEntry.builder(ModItems.hunter_coat_chest_ultimate).weight(7).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.3f, 0.9f))))
                             .addEntry(ItemLootEntry.builder(ModItems.hunter_coat_legs_ultimate).weight(7).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.3f, 0.9f))))
                             .addEntry(ItemLootEntry.builder(ModItems.hunter_coat_feet_ultimate).weight(7).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.3f, 0.9f))))
-                            .addEntry(EmptyLootEntry.func_216167_a().weight(72))));
+                            .addEntry(EmptyLootEntry.func_216167_a().weight(72)))
+                    .addLootPool(LootPool.builder().name("refinement_item").rolls(ConstantRange.of(1))
+                            .addEntry(ItemLootEntry.builder(ModItems.amulet).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .addEntry(ItemLootEntry.builder(ModItems.ring).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .addEntry(ItemLootEntry.builder(ModItems.obi_belt).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION))))
+            );
             consumer.accept(ModLootTables.stronghold_corridor, LootTable.builder()
                     .addLootPool(LootPool.builder().name("main").rolls(ConstantRange.of(2))
                             .addEntry(ItemLootEntry.builder(ModItems.item_garlic).weight(50))
@@ -346,10 +378,19 @@ public class LootTablesGenerator extends LootTableProvider {
                             .addEntry(ItemLootEntry.builder(ModItems.heart_seeker_enhanced).weight(10).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.3f, 0.9f))))
                             .addEntry(ItemLootEntry.builder(ModItems.heart_striker_enhanced).weight(10).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.3f, 0.9f))))
                             .addEntry(EmptyLootEntry.func_216167_a().weight(80)))
+                    .addLootPool(LootPool.builder().name("refinement_item").rolls(ConstantRange.of(3))
+                            .addEntry(ItemLootEntry.builder(ModItems.amulet).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .addEntry(ItemLootEntry.builder(ModItems.ring).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .addEntry(ItemLootEntry.builder(ModItems.obi_belt).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION))))
             );
             consumer.accept(ModLootTables.stronghold_library, LootTable.builder()
                     .addLootPool(LootPool.builder().name("main").rolls(ConstantRange.of(1))
-                            .addEntry(ItemLootEntry.builder(ModItems.vampire_book).weight(1).acceptFunction(AddBookNbt.builder()))));
+                            .addEntry(ItemLootEntry.builder(ModItems.vampire_book).weight(1).acceptFunction(AddBookNbt.builder())))
+                    .addLootPool(LootPool.builder().name("refinement_item").rolls(ConstantRange.of(3))
+                            .addEntry(ItemLootEntry.builder(ModItems.amulet).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .addEntry(ItemLootEntry.builder(ModItems.ring).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .addEntry(ItemLootEntry.builder(ModItems.obi_belt).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION))))
+            );
         }
     }
 

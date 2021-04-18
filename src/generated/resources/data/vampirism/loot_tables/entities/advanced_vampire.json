@@ -54,6 +54,49 @@
           "looting_multiplier": 0.01
         }
       ]
+    },
+    {
+      "name": "refinement_item",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "vampirism:add_refinement_set",
+              "faction": "vampirism:vampire"
+            }
+          ],
+          "name": "vampirism:amulet"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "vampirism:add_refinement_set",
+              "faction": "vampirism:vampire"
+            }
+          ],
+          "name": "vampirism:ring"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "vampirism:add_refinement_set",
+              "faction": "vampirism:vampire"
+            }
+          ],
+          "name": "vampirism:obi_belt"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance_with_looting",
+          "chance": 0.05,
+          "looting_multiplier": 0.01
+        }
+      ]
     }
   ]
 }
