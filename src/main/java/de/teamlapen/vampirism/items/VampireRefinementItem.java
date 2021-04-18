@@ -105,6 +105,12 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
         return ItemStack.EMPTY;
     }
 
+    public static IRefinementSet getRandomRefinementForItem(@Nullable IFaction<?> faction, VampireRefinementItem stack) {
+        List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream().filter(set -> faction == null || set.getFaction() == faction).filter(set -> set.getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
+        if (sets.isEmpty()) return null;
+        return WeightedRandom.getRandomItem(RANDOM, sets).getItem();
+    }
+
     public static VampireRefinementItem getItemForType(AccessorySlotType type){
         switch (type){
             case AMULET:
