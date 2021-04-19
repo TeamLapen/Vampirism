@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.player.tasks.TaskBuilder;
 import de.teamlapen.vampirism.player.tasks.reward.LordLevelReward;
+import de.teamlapen.vampirism.player.tasks.reward.RefinementItemReward;
 import de.teamlapen.vampirism.player.tasks.unlock.LordLvlUnlocker;
 import de.teamlapen.vampirism.player.tasks.unlock.LvlUnlocker;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -87,6 +88,8 @@ public class ModTasks {
         registry.register(TaskBuilder.builder().addRequirement("skeleton", EntityType.SKELETON, 10).setReward(new ItemStack(Items.CHAINMAIL_HELMET)).build("break_bones4"));
         registry.register(TaskBuilder.builder().unlockedBy(new LvlUnlocker(5)).addRequirement("obsidian", new ItemStack(Items.OBSIDIAN, 32)).addRequirement("diamond", new ItemStack(Items.DIAMOND, 1)).addRequirement("zombie", EntityType.ZOMBIE, 32).setReward(new ItemStack(ModBlocks.totem_top_crafted)).build("totem_top"));
 
-
+        //vampire refinement items
+        registry.register(TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement("hunter", ModTags.Entities.ADVANCED_HUNTER, 8).setReward(new RefinementItemReward(VReference.VAMPIRE_FACTION, null)).build("random_refinement1"));
+        registry.register(TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement("barons", ModEntities.vampire_baron, 3).setReward(new RefinementItemReward(VReference.VAMPIRE_FACTION, null)).build("random_refinement2"));
     }
 }

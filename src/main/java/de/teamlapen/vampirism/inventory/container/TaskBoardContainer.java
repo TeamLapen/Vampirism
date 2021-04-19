@@ -105,6 +105,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
             VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.task, taskInfo.taskBoard, TaskContainer.TaskAction.COMPLETE));
             this.completedTasks.add(taskInfo.task);
             this.completableTasks.remove(taskInfo.task);
+            this.visibleTasks.remove(taskInfo.task);
         }
     }
 

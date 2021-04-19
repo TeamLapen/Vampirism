@@ -8,7 +8,8 @@ import javax.annotation.Nonnull;
 
 public class ItemReward implements TaskReward {
 
-    private final @Nonnull ItemStack reward;
+    @Nonnull
+    protected final ItemStack reward;
 
     public ItemReward(@Nonnull ItemStack reward) {
         this.reward = reward;
