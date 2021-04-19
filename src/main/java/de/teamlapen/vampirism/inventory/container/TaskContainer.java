@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.inventory.container;
 
+import com.google.common.base.Objects;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import net.minecraft.util.text.TextFormatting;
@@ -93,5 +94,17 @@ public interface TaskContainer {
             this.taskBoard = taskBoard;
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            TaskInfo taskInfo = (TaskInfo) o;
+            return Objects.equal(task, taskInfo.task) && Objects.equal(taskBoard, taskInfo.taskBoard);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(task, taskBoard);
+        }
     }
 }

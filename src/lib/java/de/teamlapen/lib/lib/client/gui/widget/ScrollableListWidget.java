@@ -29,7 +29,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
     private final int itemHeight;
     private final int scrollerWidth = 9;
 
-    private final List<ListItem<T>> listItems = new ArrayList<>();
+    protected final List<ListItem<T>> listItems = new ArrayList<>();
     private int scrolled;
     private double scrolledD;
     private boolean scrollerClicked;
@@ -71,7 +71,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
     /**
      * adds the newElement after the afterElement in this list
      */
-    public void addItem(@Nonnull ListItem<T> newElement, @Nonnull ListItem<T> afterElement) {
+    protected void addItem(@Nonnull ListItem<T> newElement, @Nonnull ListItem<T> afterElement) {
         this.listItems.add(this.listItems.indexOf(afterElement) + 1, newElement);
         this.setCanScroll();
     }
@@ -81,7 +81,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
         this.setCanScroll();
     }
 
-    public void removeItem(ListItem<T> item) {
+    protected void removeItem(ListItem<T> item) {
         this.listItems.remove(item);
         this.setCanScroll();
     }

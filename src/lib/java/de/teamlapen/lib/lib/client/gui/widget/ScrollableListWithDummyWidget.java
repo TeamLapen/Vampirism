@@ -26,10 +26,20 @@ public class ScrollableListWithDummyWidget<T> extends ScrollableListWidget<T> {
         this.itemCreator = itemSupplier;
     }
 
+    @Override
+    public void refresh() {
+        super.refresh();
+        if (this.dummyItem != null) {
+            this.listItems.stream().filter(l -> l.item.equals(this.dummyItem.item)).findAny().ifPresent(a -> {
+                this.addItem(this.dummyItem, a);
+            });
+        }
+    }
+
     protected void clickItem(@Nonnull ListItem<T> listItem) {
         boolean flag = false;
         if (this.dummyItem != null) {
-            flag = listItem.item == this.dummyItem.item;
+            flag = listItem.item.equals(this.dummyItem.item);
             this.removeItem(this.dummyItem);
             this.dummyItem = null;
         }
