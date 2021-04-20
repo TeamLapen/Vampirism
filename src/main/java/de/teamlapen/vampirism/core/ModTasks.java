@@ -12,6 +12,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.PotionUtils;
+import net.minecraft.potion.Potions;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -87,6 +88,14 @@ public class ModTasks {
         registry.register(TaskBuilder.builder().addRequirement("skeleton", EntityType.SKELETON, 10).setReward(new ItemStack(Items.CHAINMAIL_BOOTS)).build("break_bones3"));
         registry.register(TaskBuilder.builder().addRequirement("skeleton", EntityType.SKELETON, 10).setReward(new ItemStack(Items.CHAINMAIL_HELMET)).build("break_bones4"));
         registry.register(TaskBuilder.builder().unlockedBy(new LvlUnlocker(5)).addRequirement("obsidian", new ItemStack(Items.OBSIDIAN, 32)).addRequirement("diamond", new ItemStack(Items.DIAMOND, 1)).addRequirement("zombie", EntityType.ZOMBIE, 32).setReward(new ItemStack(ModBlocks.totem_top_crafted)).build("totem_top"));
+
+        registry.register(TaskBuilder.builder().unlockedBy(new LvlUnlocker(1,3)).addRequirement("poison", PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.POISON)).addRequirement("vampire_blood", new ItemStack(ModItems.pure_blood_0)).setReward(new ItemStack(ModItems.oblivion_potion)).build("oblivion_potion_pure_blood_1"));
+        registry.register(TaskBuilder.builder().unlockedBy(new LvlUnlocker(4,6)).addRequirement("poison", PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.POISON)).addRequirement("vampire_blood", new ItemStack(ModItems.pure_blood_1)).setReward(new ItemStack(ModItems.oblivion_potion)).build("oblivion_potion_pure_blood_2"));
+        registry.register(TaskBuilder.builder().unlockedBy(new LvlUnlocker(7,9)).addRequirement("poison", PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.POISON)).addRequirement("vampire_blood", new ItemStack(ModItems.pure_blood_2)).setReward(new ItemStack(ModItems.oblivion_potion)).build("oblivion_potion_pure_blood_3"));
+        registry.register(TaskBuilder.builder().unlockedBy(new LvlUnlocker(10,12)).addRequirement("poison", PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.POISON)).addRequirement("vampire_blood", new ItemStack(ModItems.pure_blood_3)).setReward(new ItemStack(ModItems.oblivion_potion)).build("oblivion_potion_pure_blood_4"));
+        registry.register(TaskBuilder.builder().unlockedBy(new LvlUnlocker(13,14)).addRequirement("poison", PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.POISON)).addRequirement("vampire_blood", new ItemStack(ModItems.pure_blood_4)).setReward(new ItemStack(ModItems.oblivion_potion)).build("oblivion_potion_pure_blood_5"));
+
+        registry.register(TaskBuilder.builder().addRequirement("poison", PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.POISON)).addRequirement("vampire_blood", new ItemStack(ModItems.vampire_blood_bottle)).setReward(new ItemStack(ModItems.oblivion_potion)).build("oblivion_potion"));
 
         //vampire refinement items
         registry.register(TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement("hunter", ModTags.Entities.ADVANCED_HUNTER, 8).setReward(new RefinementItemReward(VReference.VAMPIRE_FACTION, null)).build("random_refinement1"));

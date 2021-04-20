@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.entity.minion.management;
 
 import de.teamlapen.lib.util.WeightedRandomItem;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.minion.DefaultMinionTask;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
@@ -47,11 +46,13 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
 
     @Override
     public Desc<Q> activateTask(@Nullable PlayerEntity lord, @Nullable IMinionEntity minion, Q data) {
+        this.triggerAdvancements(lord);
         if (minion != null) {
             minion.recallMinion();
         }
-        if (lord != null)
+        if (lord != null) {
             lord.sendStatusMessage(new TranslationTextComponent(Util.makeTranslationKey("minion_task", getRegistryName()) + ".start"), true);
+        }
         return new Desc<>(this, this.coolDownSupplier.apply(data), lord != null ? lord.getUniqueID() : null);
     }
 

@@ -1,17 +1,19 @@
 package de.teamlapen.vampirism.player.hunter.actions;
 
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 
-import java.util.List;
-
 public class AwarenessHunterAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
+
+    private final EntityPredicate vampirePredicate = new EntityPredicate().setCustomPredicate(VampirismAPI.factionRegistry().getPredicate(VReference.HUNTER_FACTION, true,true,false,false,VReference.VAMPIRE_FACTION));
 
     public AwarenessHunterAction() {
         super();
@@ -44,7 +46,7 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
 
     @Override
     public void onDeactivated(IHunterPlayer player) {
-        ((HunterPlayer) player).getSpecialAttributes().resetVampireNearby();
+        ((HunterPlayer) player).getSpecialAttributes().nearbyVampire(0);
     }
 
     @Override
@@ -54,13 +56,13 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
 
     @Override
     public boolean onUpdate(IHunterPlayer player) {
-        if (!(player.getRepresentingEntity().ticksExisted % 20 == 0)) {
-            if (((HunterPlayer) player).getSpecialAttributes().isVampireNearby())
-                ((HunterPlayer) player).getSpecialAttributes().nearbyVampire();
-        } else if (nearbyVampire(player)) {
-            ((HunterPlayer) player).getSpecialAttributes().nearbyVampire();
-        } else {
-            ((HunterPlayer) player).getSpecialAttributes().resetVampireNearby();
+        if(player.getRepresentingEntity().getEntityWorld().isRemote()&&player.getRepresentingEntity().ticksExisted % 8 == 0){
+            double dist = nearbyVampire(player);
+            double p=0;
+            if(dist!=Double.MAX_VALUE){
+                p=1f-(dist/(float)VampirismConfig.BALANCE.haAwarenessRadius.get());
+            }
+            ((HunterPlayer)player).getSpecialAttributes().nearbyVampire(p);
         }
         return false;
     }
@@ -71,16 +73,13 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
         return true;
     }
 
-    private boolean nearbyVampire(IHunterPlayer player) {
+    private double nearbyVampire(IHunterPlayer player) {
         int r = VampirismConfig.BALANCE.haAwarenessRadius.get();
-        List<LivingEntity> entities = player.getRepresentingEntity().getEntityWorld().getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(player.getRepresentingEntity().getPosX() - r, player.getRepresentingEntity().getPosY()
+        LivingEntity closestVampire = player.getRepresentingEntity().getEntityWorld().func_225318_b(LivingEntity.class,vampirePredicate,null,player.getRepresentingEntity().getPosX(),player.getRepresentingEntity().getPosY(),player.getRepresentingEntity().getPosZ(), new AxisAlignedBB(player.getRepresentingEntity().getPosX() - r, player.getRepresentingEntity().getPosY()
                 - r + 1, player.getRepresentingEntity().getPosZ()
                 - r, player.getRepresentingEntity().getPosX() + r, player.getRepresentingEntity().getPosY() + r + 1, player.getRepresentingEntity().getPosZ() + r));
-        for (LivingEntity e : entities) {
-            if (Helper.isVampire(e))
-                return true;
-        }
-        return false;
+        if(closestVampire!=null)return closestVampire.getDistance(player.getRepresentingEntity());
+        return Double.MAX_VALUE;
     }
 
 }

@@ -332,7 +332,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 //        }
         sync(!Objects.equals(old, currentFaction));
         if (player instanceof ServerPlayerEntity) {
-            ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayerEntity) player, currentFaction, currentLevel);
+            ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayerEntity) player, currentFaction, currentLevel, currentLordLevel);
         }
         player.refreshDisplayName();
         return true;
@@ -369,6 +369,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
                 c.setMaxMinions(this.currentFaction, this.getMaxMinions());
             }
         });
+        if (player instanceof ServerPlayerEntity) {
+            ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayerEntity) player, currentFaction, currentLevel, currentLordLevel);
+        }
         if (sync) sync(false);
         player.refreshDisplayName();
         return true;

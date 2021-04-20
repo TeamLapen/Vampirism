@@ -42,7 +42,6 @@ public class VampireSkills {
     public static final ISkill sword_finisher = getNull();
     public static final ISkill teleport = getNull();
     public static final ISkill vampire_disguise = getNull();
-    public static final ISkill vampire_forest_fog = getNull();
     public static final ISkill vampire_invisibility = getNull();
     public static final ISkill vampire_jump = getNull();
     public static final ISkill vampire_rage = getNull();
@@ -76,7 +75,6 @@ public class VampireSkills {
         registry.register(new VampirismSkill.SimpleVampireSkill("sword_finisher", true).setDescription(() -> new TranslationTextComponent("skill.vampirism.sword_finisher.desc", (int) (VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() * 100))));
         registry.register(new ActionSkill<>("teleport", VampireActions.teleport, true));
         registry.register(new ActionSkill<>("vampire_disguise", VampireActions.disguise_vampire, true));
-        registry.register(new VampirismSkill.SimpleVampireSkill("vampire_forest_fog", true).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().increasedVampireFogDistance = true, player -> ((VampirePlayer) player).getSpecialAttributes().increasedVampireFogDistance = false));
         registry.register(new ActionSkill<>("vampire_invisibility", VampireActions.vampire_invisibility));
         registry.register(new VampirismSkill.SimpleVampireSkill("vampire_jump", false).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().setJumpBoost(VampirismConfig.BALANCE.vsJumpBoost.get() + 1), player -> ((VampirePlayer) player).getSpecialAttributes().setJumpBoost(0)));
         registry.register(new ActionSkill<>("vampire_rage", VampireActions.vampire_rage, true));

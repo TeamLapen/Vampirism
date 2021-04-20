@@ -80,6 +80,9 @@ public class SkillCommand extends BasicCommand {
             case LOCKED_BY_OTHER_NODE:
                 commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.locked"), false);
                 return 0;
+            case LOCKED_BY_PLAYER_STATE:
+                commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.locked_player_state"), false);
+                return 0;
             default:
         }
         return 0;

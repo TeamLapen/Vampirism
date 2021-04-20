@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
@@ -51,6 +52,9 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     @Override
     public Result canSkillBeEnabled(ISkill skill) {
+        if (player.getRepresentingPlayer().getActivePotionEffect(ModEffects.oblivion) != null) {
+            return Result.LOCKED_BY_PLAYER_STATE;
+        }
         if (isSkillEnabled(skill)) {
             return Result.ALREADY_ENABLED;
         }
@@ -295,8 +299,27 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         dirty = false;
     }
 
-    private SkillNode getRootNode() {
+    public SkillNode getRootNode() {
         return VampirismMod.proxy.getSkillTree(player.isRemote()).getRootNodeForFaction(faction.getID());
+    }
+
+    public Optional<SkillNode> anyLastNode() {
+        SkillNode rootNode = getRootNode();
+        Queue<SkillNode> queue = new ArrayDeque<>();
+        queue.add(rootNode);
+
+        for (SkillNode skillNode = queue.poll(); skillNode != null; skillNode = queue.poll()) {
+            List<SkillNode> child = skillNode.getChildren().stream().filter(this::isNodeEnabled).collect(Collectors.toList());
+            if (child.isEmpty()) {
+                if (skillNode == rootNode) {
+                    skillNode = null;
+                }
+                return Optional.ofNullable(skillNode);
+            } else {
+                queue.addAll(child);
+            }
+        }
+        return Optional.empty();
     }
 
     @Override

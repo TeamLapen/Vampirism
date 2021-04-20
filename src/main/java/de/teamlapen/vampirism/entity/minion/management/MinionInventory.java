@@ -37,7 +37,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
     public void addItemStack(@Nonnull ItemStack stack) {
 
         while (!stack.isEmpty()) {
-            int slot = InventoryHelper.getFirstSuitableSlotToAdd(inventory, stack, this.getInventoryStackLimit());
+            int slot = InventoryHelper.getFirstSuitableSlotToAdd(inventory, this.getSizeInventory() - 6 /*access only main inventory*/, stack, this.getInventoryStackLimit());
             if (slot == -1) {
                 break;
             }

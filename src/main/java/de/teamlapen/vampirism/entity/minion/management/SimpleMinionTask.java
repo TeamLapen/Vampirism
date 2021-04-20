@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
-import de.teamlapen.vampirism.api.entity.minion.DefaultMinionTask;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,6 +14,7 @@ public class SimpleMinionTask extends DefaultMinionTask<IMinionTask.NoDesc<Minio
     @Nullable
     @Override
     public NoDesc<MinionData> activateTask(@Nullable PlayerEntity lord, @Nullable IMinionEntity minion, MinionData data) {
+        this.triggerAdvancements(lord);
         return new NoDesc<>(this);
     }
 

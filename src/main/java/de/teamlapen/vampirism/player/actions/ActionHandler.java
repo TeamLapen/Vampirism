@@ -79,6 +79,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             cooldownTimers.put(r, cooldown);
             action.onDeactivated(player);
         }
+        this.activeTimers.clear();
     }
 
     @Override

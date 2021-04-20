@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.player.hunter;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.advancements.VampireActionTrigger;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -8,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.items.ObsidianArmorItem;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
@@ -15,12 +17,14 @@ import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.DamageSource;
@@ -177,6 +181,9 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     public void onDeath(DamageSource src) {
         super.onDeath(src);
         actionHandler.deactivateAllActions();
+        if (src.getTrueSource() instanceof ServerPlayerEntity && Helper.isVampire(((PlayerEntity) src.getTrueSource())) && this.getRepresentingPlayer().getActivePotionEffect(ModEffects.freeze) != null) {
+            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayerEntity) src.getTrueSource()), VampireActionTrigger.Action.KILL_FROZEN_HUNTER);
+        }
     }
 
     @Override

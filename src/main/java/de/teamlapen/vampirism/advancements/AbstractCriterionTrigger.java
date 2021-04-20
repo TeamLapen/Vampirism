@@ -21,7 +21,8 @@ import java.util.function.Function;
  *
  * @param <T>
  */
-public abstract class AbstractCriterionTrigger<T extends ICriterionInstance> implements ICriterionTrigger<T> {
+@Deprecated
+public abstract class AbstractCriterionTrigger<T extends ICriterionInstance> implements ICriterionTrigger<T> { //TODO 1.17 remove
 
     protected final Map<PlayerAdvancements, GenericListeners<T>> listenersForPlayers = Maps.newHashMap();
     private final ResourceLocation id;

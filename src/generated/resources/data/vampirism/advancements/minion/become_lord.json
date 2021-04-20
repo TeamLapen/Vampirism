@@ -2,32 +2,32 @@
   "parent": "vampirism:main/root",
   "display": {
     "icon": {
-      "item": "vampirism:vampire_fang"
+      "item": "minecraft:paper"
     },
     "title": {
-      "translate": "advancement.vampirism.become_vampire"
+      "translate": "advancement.vampirism.become_lord"
     },
     "description": {
-      "translate": "advancement.vampirism.become_vampire.desc"
+      "translate": "advancement.vampirism.become_lord"
     },
     "frame": "task",
     "show_toast": true,
-    "announce_to_chat": false,
-    "hidden": false
+    "announce_to_chat": true,
+    "hidden": true
   },
   "criteria": {
-    "main": {
+    "level": {
       "trigger": "vampirism:faction",
       "conditions": {
-        "type": "LEVEL",
-        "faction": "vampirism:vampire",
+        "type": "LORD",
+        "faction": "null",
         "level": 1
       }
     }
   },
   "requirements": [
     [
-      "main"
+      "level"
     ]
   ]
 }

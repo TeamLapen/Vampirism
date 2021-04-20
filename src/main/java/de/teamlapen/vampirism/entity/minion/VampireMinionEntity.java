@@ -278,8 +278,10 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             return this.inventoryLevel;
         }
 
+        @Override
         public int getInventorySize() {
-            return inventoryLevel == 1 ? 12 : (inventoryLevel == 2 ? 15 : 9);
+            int size = getDefaultInventorySize();
+            return inventoryLevel == 1 ? size + 3 : (inventoryLevel == 2 ? size + 6 : size);
         }
 
         public int getLevel() {
@@ -332,6 +334,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
         @Override
         public boolean upgradeStat(int statId, MinionEntity<?> entity) {
+            if (super.upgradeStat(statId, entity)) return true;
             if (getRemainingStatPoints() == 0) {
                 LOGGER.warn("Cannot upgrade minion stat as no stat points are left");
                 return false;
@@ -362,6 +365,23 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
                     LOGGER.warn("Cannot upgrade minion stat {} as it does not exist", statId);
                     return false;
             }
+        }
+
+        @Override
+        public void resetStats(MinionEntity<?> entity) {
+            assert entity instanceof VampireMinionEntity;
+            super.resetStats(entity);
+            this.inventoryLevel = 0;
+            this.healthLevel = 0;
+            this.strengthLevel = 0;
+            this.speedLevel = 0;
+            this.getInventory().setAvailableSize(getInventorySize());
+            ((VampireMinionEntity) entity).updateAttributes();
+        }
+
+        @Override
+        public boolean hasUsedSkillPoints() {
+            return this.inventoryLevel + this.healthLevel + this.strengthLevel + this.speedLevel > 0;
         }
 
         @Override
