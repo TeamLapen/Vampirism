@@ -179,6 +179,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     public void onDeath(DamageSource src) {
+        super.onDeath(src);
         actionHandler.deactivateAllActions();
         if (src.getTrueSource() instanceof ServerPlayerEntity && Helper.isVampire(((PlayerEntity) src.getTrueSource())) && this.getRepresentingPlayer().getActivePotionEffect(ModEffects.freeze) != null) {
             ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayerEntity) src.getTrueSource()), VampireActionTrigger.Action.KILL_FROZEN_HUNTER);

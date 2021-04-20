@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.client.gui.SelectActionScreen;
 import de.teamlapen.vampirism.client.gui.SelectMinionTaskScreen;
-import de.teamlapen.vampirism.client.gui.SkillsScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -142,10 +141,7 @@ public class ModKeys {
                 }
             }
         } else if (keyPressed == KEY.SKILL) {
-            PlayerEntity player = Minecraft.getInstance().player;
-            if (player.isAlive() && FactionPlayerHandler.get(player).getCurrentFaction() != null) {
-                Minecraft.getInstance().displayGuiScreen(new SkillsScreen());
-            }
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.OPEN_VAMPIRISM_MENU,""));
         } else if (keyPressed == KEY.VISION) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.VAMPIRE_VISION_TOGGLE, ""));
         } else if (keyPressed == KEY.ACTION1) {

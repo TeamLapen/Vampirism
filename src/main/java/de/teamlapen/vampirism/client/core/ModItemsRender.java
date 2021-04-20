@@ -1,9 +1,11 @@
 package de.teamlapen.vampirism.client.core;
 
+import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.ArmorOfSwiftnessItem;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
+import de.teamlapen.vampirism.items.VampireRefinementItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraftforge.api.distmarker.Dist;
@@ -45,5 +47,16 @@ public class ModItemsRender {
         colors.register((state, tintIndex) -> {
             return 0x2e0606;
         }, ModBlocks.bloody_spruce_leaves);
+        colors.register((stack, tintIndex) -> {
+            if(tintIndex == 1){
+                if(stack.getItem() instanceof VampireRefinementItem){
+                    IRefinementSet set = ((VampireRefinementItem) stack.getItem()).getRefinementSet(stack);
+                    if(set!=null){
+                        return set.getColor();
+                    }
+                }
+            }
+            return 0xFFFFFF;
+        }, ModItems.amulet, ModItems.ring, ModItems.obi_belt);
     }
 }

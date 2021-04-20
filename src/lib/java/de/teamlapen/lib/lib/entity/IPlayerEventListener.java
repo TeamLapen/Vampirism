@@ -1,6 +1,7 @@
 package de.teamlapen.lib.lib.entity;
 
 
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.RegistryKey;
@@ -24,6 +25,13 @@ public interface IPlayerEventListener {
      * @return If true the damage will be canceled
      */
     boolean onEntityAttacked(DamageSource src, float amt);
+
+    /**
+     * Called when the player killed an living entity
+     * @param victim The killed entity
+     * @param src The lethal damage source
+     */
+    default void onEntityKilled(LivingEntity victim, DamageSource src){}
 
     void onJoinWorld();
 

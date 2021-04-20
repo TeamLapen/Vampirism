@@ -21,9 +21,19 @@ public interface IAction extends IForgeRegistryEntry<IAction> {
     PERM canUse(IFactionPlayer player);
 
     /**
+     * //TODO 1.17 remove
+     * Use IFactionPlayer sensitive version
      * @return Cooldown time in ticks until the action can be used again
      */
+    @Deprecated
     int getCooldown();
+
+    /**
+     * @return Cooldown time in ticks until the action can be used again
+     */
+    default int getCooldown(IFactionPlayer player){
+        return getCooldown();
+    }
 
     /**
      * @return the faction, which players can use this action

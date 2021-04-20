@@ -448,6 +448,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
     }
 
+    @Nonnull
     @Override
     public ISkillHandler<IVampirePlayer> getSkillHandler() {
         return skillHandler;
@@ -541,6 +542,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public void onDeath(DamageSource src) {
+        super.onDeath(src);
         if (actionHandler.isActionActive(VampireActions.bat) && src.getImmediateSource() instanceof ProjectileEntity) {
             if (player instanceof ServerPlayerEntity) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.SNIPED_IN_BAT);
@@ -561,14 +563,14 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 player.attackEntityFrom(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amt));
                 return true;
             }
-            endFeeding(true);
-            if (getSpecialAttributes().half_invulnerable) {
-                if (amt >= getRepresentingEntity().getMaxHealth() * VampirismConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
-                    if (useBlood(VampirismConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
-                        return true;
-                    } else {
-                        this.actionHandler.toggleAction(VampireActions.half_invulnerable);
-                    }
+        }
+        endFeeding(true);
+        if (getSpecialAttributes().half_invulnerable) {
+            if (amt >= getRepresentingEntity().getMaxHealth() * (this.skillHandler.isRefinementEquipped(ModRefinements.half_invulnerable) ? VampirismConfig.BALANCE.half_invulnerable.get():1) * VampirismConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
+                if (useBlood(VampirismConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
+                    return true;
+                } else {
+                    this.actionHandler.toggleAction(VampireActions.half_invulnerable);
                 }
             }
         }
@@ -1138,6 +1140,18 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
         if (!(e.getDistance(player) <= player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue() + 1) || e.getHealth() == 0f)
             endFeeding(true);
+    }
+
+    @Override
+    public void onEntityKilled(LivingEntity victim, DamageSource src) {
+        if(this.getSkillHandler().isRefinementEquipped(ModRefinements.rage_fury)){
+            //No need to check if rage active, extending only has an effect when already active
+            int bonus = VampirismConfig.BALANCE.rage_fury.get();
+            if (victim instanceof PlayerEntity) {
+                bonus *= 2;
+            }
+            this.getActionHandler().extendActionTimer(VampireActions.vampire_rage,bonus);
+        }
     }
 
     private static class Storage implements Capability.IStorage<IVampirePlayer> {

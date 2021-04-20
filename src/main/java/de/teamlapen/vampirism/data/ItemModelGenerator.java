@@ -215,6 +215,11 @@ public class ItemModelGenerator extends ItemModelProvider {
         withExistingParent(ModItems.hunter_intel_8, modLoc("item/hunter_intel"));
         withExistingParent(ModItems.hunter_intel_9, modLoc("item/hunter_intel"));
 
+        item(ModItems.ring, modLoc("item/vampire_ring_layer0"), modLoc("item/vampire_ring_layer1"));
+        item(ModItems.amulet, modLoc("item/vampire_amulet_layer0"), modLoc("item/vampire_amulet_layer1"));
+        item(ModItems.obi_belt, modLoc("item/vampire_obi_belt_layer0"), modLoc("item/vampire_obi_belt_layer1"));
+
+
 
         singleTexture("blood_bottle", mcLoc("item/generated"), "layer0", modLoc("item/blood_bottle_0"))
                 .override().predicate(mcLoc("damage"), 0f).model(withExistingParent("blood_bottle_0", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_0"))).end()

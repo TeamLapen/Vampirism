@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModParticles;
+import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.entity.BlindingBatEntity;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.particle.GenericParticleData;
@@ -32,8 +33,11 @@ public class FreezeVampireAction extends DefaultVampireAction {
             if (player.equals(e)) continue;
             if (e instanceof BlindingBatEntity) continue;
             if (e instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) e)!=null) continue;
-            int dur = VampirismConfig.BALANCE.vaFreezeDuration.get();
-            e.addPotionEffect(new EffectInstance(ModEffects.freeze, dur * 20));
+            int dur = VampirismConfig.BALANCE.vaFreezeDuration.get() * 20;
+            if (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.freeze_duration)) {
+                dur *= VampirismConfig.BALANCE.freeze_duration.get();
+            }
+            e.addPotionEffect(new EffectInstance(ModEffects.freeze, dur));
             ModParticles.spawnParticlesServer(player.getEntityWorld(), new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_2"), 20, 0xF0F0F0, 0.4F), e.getPosX(), e.getPosY(), e.getPosZ(), 20, 1, 1, 1, 0);
         }
         return l.size() > 0;

@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.api.entity.player.actions;
 
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+
 /**
  * Action with a duration which is updated every tick
  */
@@ -15,10 +17,20 @@ public interface ILastingAction<T extends IActionPlayer> extends IAction {
     }
 
     /**
+     * TODO 1.17 remove
+     * Use IFactionPlayer sensitive version
      * @param level Player's faction level
      * @return Skill duration in ticks
      */
+    @Deprecated
     int getDuration(int level);
+
+    /**
+     * @return Skill duration in ticks
+     */
+    default int getDuration(IFactionPlayer player){
+        return getDuration(player.getLevel());
+    }
 
     /**
      * Called on the server after the action was activated on server side.

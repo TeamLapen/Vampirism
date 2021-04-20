@@ -1,9 +1,11 @@
 package de.teamlapen.vampirism.player.vampire.actions;
 
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.BlindingBatEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,9 +23,15 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     @Override
     public boolean activate(IVampirePlayer player) {
         PlayerEntity entityPlayer = player.getRepresentingPlayer();
-        for (int i = 0; i < VampirismConfig.BALANCE.vaSummonBatsCount.get(); i++) {
+        boolean refined = player.getSkillHandler().isRefinementEquipped(ModRefinements.summon_bats);
+        int amount =  VampirismConfig.BALANCE.vaSummonBatsCount.get();
+        if(amount>1&&refined){
+            amount=amount/2;
+        }
+        for (int i = 0; i < amount; i++) {
             BlindingBatEntity e = ModEntities.blinding_bat.create(entityPlayer.getEntityWorld());
             e.restrictLiveSpan();
+            if(refined)e.setTargeting();
             e.setIsBatHanging(false);
             e.copyLocationAndAnglesFrom(player.getRepresentingPlayer());
             player.getRepresentingPlayer().getEntityWorld().addEntity(e);
@@ -34,7 +42,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer player) {
-        return player.getActionHandler().isActionActive(VampireActions.bat);
+        return player.getActionHandler().isActionActive(VampireActions.bat) || player.getSkillHandler().isRefinementEquipped(ModRefinements.summon_bats);
     }
 
     @Override
@@ -43,7 +51,12 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     }
 
     @Override
+    public int getCooldown(IFactionPlayer player) {
+        return (int) ((player.getSkillHandler().isRefinementEquipped(ModRefinements.summon_bats) ? 0.7 : 1)*getCooldown());
+    }
+
+    @Override
     public boolean isEnabled() {
-        return VampirismConfig.BALANCE.vaSunscreenEnabled.get();
+        return VampirismConfig.BALANCE.vaSummonBatsEnabled.get();
     }
 }

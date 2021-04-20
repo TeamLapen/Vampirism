@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.player.vampire.actions;
 
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModRefinements;
 import net.minecraft.potion.EffectInstance;
 
 /**
@@ -18,7 +20,7 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
 
     @Override
     public boolean activate(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().addPotionEffect(new EffectInstance(ModEffects.sunscreen, getDuration(vampire.getLevel()), 3, false, false));
+        vampire.getRepresentingPlayer().addPotionEffect(new EffectInstance(ModEffects.sunscreen, getDuration(vampire), 3, false, false));
         return true;
     }
 
@@ -30,6 +32,15 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
     @Override
     public int getDuration(int level) {
         return 20 * (VampirismConfig.BALANCE.vaSunscreenDuration.get());
+    }
+
+    @Override
+    public int getDuration(IFactionPlayer player) {
+        int duration = 20 * (VampirismConfig.BALANCE.vaSunscreenDuration.get());
+        if (player.getSkillHandler().isRefinementEquipped(ModRefinements.sun_screen)){
+            duration *= VampirismConfig.BALANCE.sun_screen_duration.get();
+        }
+        return duration;
     }
 
     @Override

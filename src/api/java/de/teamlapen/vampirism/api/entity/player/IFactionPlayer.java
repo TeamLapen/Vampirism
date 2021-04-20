@@ -40,6 +40,9 @@ public interface IFactionPlayer<T extends IFactionPlayer<?>> extends IFactionEnt
     @Nullable
     IFaction getDisguisedAs();
 
+    /**
+     * null on client & @Nonnull on server
+     */
     @Nonnull
     ITaskManager getTaskManager();
 

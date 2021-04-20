@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.player.tasks.TaskBuilder;
 import de.teamlapen.vampirism.player.tasks.reward.LordLevelReward;
+import de.teamlapen.vampirism.player.tasks.reward.RefinementItemReward;
 import de.teamlapen.vampirism.player.tasks.unlock.LordLvlUnlocker;
 import de.teamlapen.vampirism.player.tasks.unlock.LvlUnlocker;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -96,5 +97,8 @@ public class ModTasks {
 
         registry.register(TaskBuilder.builder().addRequirement("poison", PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.POISON)).addRequirement("vampire_blood", new ItemStack(ModItems.vampire_blood_bottle)).setReward(new ItemStack(ModItems.oblivion_potion)).build("oblivion_potion"));
 
+        //vampire refinement items
+        registry.register(TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement("hunter", ModTags.Entities.ADVANCED_HUNTER, 8).setReward(new RefinementItemReward(VReference.VAMPIRE_FACTION, null)).build("random_refinement1"));
+        registry.register(TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement("barons", ModEntities.vampire_baron, 3).setReward(new RefinementItemReward(VReference.VAMPIRE_FACTION, null)).build("random_refinement2"));
     }
 }

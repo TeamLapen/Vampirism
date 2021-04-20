@@ -15,6 +15,42 @@
           "name": "vampirism:vampire_book"
         }
       ]
+    },
+    {
+      "name": "refinement_item",
+      "rolls": 3,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "vampirism:add_refinement_set",
+              "faction": "vampirism:vampire"
+            }
+          ],
+          "name": "vampirism:amulet"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "vampirism:add_refinement_set",
+              "faction": "vampirism:vampire"
+            }
+          ],
+          "name": "vampirism:ring"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "vampirism:add_refinement_set",
+              "faction": "vampirism:vampire"
+            }
+          ],
+          "name": "vampirism:obi_belt"
+        }
+      ]
     }
   ]
 }

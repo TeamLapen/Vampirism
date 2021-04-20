@@ -12,15 +12,22 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
+import de.teamlapen.vampirism.inventory.container.TaskContainer;
+import de.teamlapen.vampirism.network.TaskPacket;
 import de.teamlapen.vampirism.network.TaskStatusPacket;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,6 +62,9 @@ public class TaskManager implements ITaskManager {
 
     @Nonnull
     private final Map<UUID, Map<Task, Map<ResourceLocation, Integer>>> stats = Maps.newHashMap();
+
+    @Nonnull
+    private final Map<UUID, TaskBoardInfo> taskBoardInfos = new HashMap<>();
 
     public TaskManager(@Nonnull IFactionPlayer<?> factionPlayer, @Nonnull IPlayableFaction<?> faction) {
         this.faction = faction;
@@ -115,6 +125,7 @@ public class TaskManager implements ITaskManager {
         Set<Task> selectedTasks = new HashSet<>(getTasks(taskBoardId));
         selectedTasks.addAll(getUniqueTasks());
         this.updateClient(taskBoardId, getCompletedRequirements(taskBoardId, selectedTasks), reduceToCompletableTasks(taskBoardId, selectedTasks), reduceToNotAcceptedTasks(taskBoardId, selectedTasks), selectedTasks);
+        this.taskBoardInfos.compute(taskBoardId, (key, value) -> value == null ? new TaskBoardInfo(key, this.player.getPosition()) : value.updatePos(this.player.getPosition()));
     }
 
     @Override
@@ -122,6 +133,13 @@ public class TaskManager implements ITaskManager {
         Set<Task> selectedTasks = new HashSet<>(this.getTasks(taskBoardId));
         selectedTasks.addAll(getUniqueTasks());
         this.updateClient(taskBoardId, getCompletedRequirements(taskBoardId, selectedTasks), reduceToCompletableTasks(taskBoardId, selectedTasks), reduceToNotAcceptedTasks(taskBoardId, selectedTasks), selectedTasks);
+    }
+
+    @Override
+    public void openVampirismMenu() {
+        if (player.openContainer instanceof TaskContainer) {
+            VampirismMod.dispatcher.sendTo(new TaskPacket(player.openContainer.windowId, taskBoardInfos, this.acceptedTasks, this.acceptedTasks.entrySet().stream().map(enty -> Pair.of(enty.getKey(), reduceToCompletableTasks(enty.getKey(), new HashSet<>(enty.getValue())))).collect(Collectors.toMap(Pair::getKey, Pair::getValue)), this.acceptedTasks.entrySet().stream().map(enty -> Pair.of(enty.getKey(), getCompletedRequirements(enty.getKey(), enty.getValue()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue))), player);
+        }
     }
 
     @Override
@@ -529,6 +547,18 @@ public class TaskManager implements ITaskManager {
             }
             compoundNBT.put("stats", stats);
         }
+        //taskinfos
+        if (!this.taskBoardInfos.isEmpty()) {
+            ListNBT infos = new ListNBT();
+            for (Map.Entry<UUID, TaskBoardInfo> infoEntry : this.taskBoardInfos.entrySet()) {
+                CompoundNBT info = new CompoundNBT();
+                BlockPos pos = infoEntry.getValue().getLastSeenPos();
+                info.put("pos", Helper.newDoubleNBTList(pos.getX(), pos.getY(), pos.getZ()));
+                info.putUniqueId("id", infoEntry.getKey());
+                infos.add(info);
+            }
+            compoundNBT.put("taskBoardInfos", infos);
+        }
     }
 
     public void readNBT(@Nonnull CompoundNBT compoundNBT) {
@@ -590,6 +620,38 @@ public class TaskManager implements ITaskManager {
                 }
                 this.stats.put(UUID.fromString(taskBoardId), tasks);
             }
+        }
+        //taskboardinfos
+        if (compoundNBT.contains("taskBoardInfos")) {
+            ListNBT list = compoundNBT.getList("taskBoardInfos", 10);
+            for (INBT inbt : list) {
+                ListNBT pos = ((CompoundNBT) inbt).getList("pos", 6);
+                TaskBoardInfo info = new TaskBoardInfo(((CompoundNBT) inbt).getUniqueId("id"), new BlockPos(pos.getDouble(0), pos.getDouble(1), pos.getDouble(2)));
+                this.taskBoardInfos.put(info.getTaskBoardId(), info);
+            }
+        }
+    }
+
+    public static class TaskBoardInfo {
+        private BlockPos lastSeenPos;
+        private final UUID taskBoardId;
+
+        public TaskBoardInfo(@Nonnull UUID taskBoardId, @Nonnull BlockPos lastSeenPos) {
+            this.lastSeenPos = lastSeenPos;
+            this.taskBoardId = taskBoardId;
+        }
+
+        public TaskBoardInfo updatePos(@Nonnull BlockPos newPos) {
+            this.lastSeenPos = newPos;
+            return this;
+        }
+
+        public BlockPos getLastSeenPos() {
+            return lastSeenPos;
+        }
+
+        public UUID getTaskBoardId() {
+            return taskBoardId;
         }
     }
 

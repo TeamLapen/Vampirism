@@ -68,6 +68,11 @@ public class EntityEventHandler {
                 (event.getEntity().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onDeath(event.getSource()));
             }
         }
+        if(event.getSource().getTrueSource() instanceof PlayerEntity){
+            for (Capability listener : listeners) {
+                (event.getEntity().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onEntityKilled(event.getEntityLiving(),event.getSource()));
+            }
+        }
     }
 
     @SubscribeEvent

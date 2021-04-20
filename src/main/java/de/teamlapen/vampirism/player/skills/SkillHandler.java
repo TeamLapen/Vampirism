@@ -3,18 +3,28 @@ package de.teamlapen.vampirism.player.skills;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
+import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.items.VampireRefinementItem;
+import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,6 +40,10 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     private final T player;
     private final IPlayableFaction<T> faction;
     private boolean dirty = false;
+    private final IRefinementSet[] appliedRefinementSets = new IRefinementSet[3];
+    private final int[] refinementSetDamage = new int[3];
+    private final Set<IRefinement> activeRefinements = new HashSet<>();
+    private final Map<IRefinement, AttributeModifier> refinementModifier = new HashMap<>();
 
     public SkillHandler(T player, IPlayableFaction<T> faction) {
         this.player = player;
@@ -167,41 +181,79 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     }
 
     public void loadFromNbt(CompoundNBT nbt) {
-        if (!nbt.contains("skills")) return;
-        for (String id : nbt.getCompound("skills").keySet()) {
-            ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(id));
-            if (skill == null) {
-                LOGGER.warn("Skill {} does not exist anymore", id);
-                continue;
-            }
-            enableSkill(skill);
+        if (nbt.contains("skills")) {
+            for (String id : nbt.getCompound("skills").keySet()) {
+                ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(id));
+                if (skill == null) {
+                    LOGGER.warn("Skill {} does not exist anymore", id);
+                    continue;
+                }
+                enableSkill(skill);
 
+            }
+        }
+
+        if (nbt.contains("refinement_set")) {
+            CompoundNBT setsNBT = nbt.getCompound("refinement_set");
+            for (String id : setsNBT.keySet()) {
+                int i = Integer.parseInt(id);
+                CompoundNBT setNBT = setsNBT.getCompound(id);
+                String setName = setNBT.getString("id");
+                int damage = setNBT.getInt("damage");
+                if("none".equals(setName))continue;
+                ResourceLocation setId = new ResourceLocation(setName);
+                IRefinementSet set = ModRegistries.REFINEMENT_SETS.getValue(setId);
+                this.applyRefinementSet(set, i);
+                this.refinementSetDamage[i] = damage;
+            }
         }
 
     }
 
     public void readUpdateFromServer(CompoundNBT nbt) {
-        if (!nbt.contains("skills")) return;
-        //noinspection unchecked
-        List<ISkill> old = (List<ISkill>) enabledSkills.clone();
-        for (String id : nbt.getCompound("skills").keySet()) {
-            ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(id));
-            if (skill == null) {
-                LOGGER.error("Skill {} does not exist on client!!!", id);
-                continue;
-            }
-            if (old.contains(skill)) {
-                old.remove(skill);
-            } else {
-                enableSkill(skill);
-            }
+        if (nbt.contains("skills")) {
+
+            //noinspection unchecked
+            List<ISkill> old = (List<ISkill>) enabledSkills.clone();
+            for (String id : nbt.getCompound("skills").keySet()) {
+                ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(id));
+                if (skill == null) {
+                    LOGGER.error("Skill {} does not exist on client!!!", id);
+                    continue;
+                }
+                if (old.contains(skill)) {
+                    old.remove(skill);
+                } else {
+                    enableSkill(skill);
+                }
 
 
+            }
+            for (ISkill skill : old) {
+                disableSkill(skill);
+            }
+            VampirismMod.proxy.resetSkillScreenCache();
         }
-        for (ISkill skill : old) {
-            disableSkill(skill);
+
+        if (nbt.contains("refinement_set")) {
+            CompoundNBT setsNBT = nbt.getCompound("refinement_set");
+            for (String id : setsNBT.keySet()) {
+                int i = Integer.parseInt(id);
+                CompoundNBT setNBT = setsNBT.getCompound(id);
+                String setName = setNBT.getString("id");
+                int damage = setNBT.getInt("damage");
+                IRefinementSet set = null;
+                if (!"none".equals(setName)) {
+                    set = ModRegistries.REFINEMENT_SETS.getValue(new ResourceLocation(setName));
+                }
+                IRefinementSet oldSet = this.appliedRefinementSets[i];
+                if (oldSet != set) {
+                    this.removeRefinementSet(i);
+                    this.applyRefinementSet(set, i);
+                }
+                this.refinementSetDamage[i] = damage;
+            }
         }
-        VampirismMod.proxy.resetSkillScreenCache();
     }
 
     public void resetSkills() {
@@ -215,6 +267,16 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
             skills.putBoolean(skill.getRegistryName().toString(), true);
         }
         nbt.put("skills", skills);
+        CompoundNBT refinements = new CompoundNBT();
+        for (int i = 0; i < this.appliedRefinementSets.length; ++i) {
+            CompoundNBT setNbt = new CompoundNBT();
+            IRefinementSet set = this.appliedRefinementSets[i];
+            int damage = this.refinementSetDamage[i];
+            setNbt.putString("id", set != null? set.getRegistryName().toString(): "none");
+            setNbt.putInt("damage", damage);
+            refinements.put(String.valueOf(i), setNbt);
+        }
+        nbt.put("refinement_set", refinements);
 
     }
 
@@ -224,6 +286,16 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
             skills.putBoolean(skill.getRegistryName().toString(), true);
         }
         nbt.put("skills", skills);
+        CompoundNBT refinements = new CompoundNBT();
+        for (int i = 0; i < this.appliedRefinementSets.length; ++i) {
+            CompoundNBT setNbt = new CompoundNBT();
+            IRefinementSet set = this.appliedRefinementSets[i];
+            int damage = this.refinementSetDamage[i];
+            setNbt.putString("id", set != null? set.getRegistryName().toString(): "none");
+            setNbt.putInt("damage", damage);
+            refinements.put(String.valueOf(i), setNbt);
+        }
+        nbt.put("refinement_set", refinements);
         dirty = false;
     }
 
@@ -248,5 +320,116 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public boolean equipRefinementItem(ItemStack stack) {
+        if (stack.getItem() instanceof IRefinementItem) {
+            IRefinementItem refinementItem = ((IRefinementItem) stack.getItem());
+            @Nullable IRefinementSet newSet = refinementItem.getRefinementSet(stack);
+            IRefinementItem.AccessorySlotType setSlot = refinementItem.getSlotType();
+
+            removeRefinementSet(setSlot.getSlot());
+            this.dirty = true;
+
+            if (newSet != null && newSet.getFaction() == faction) {
+                applyRefinementSet(newSet, setSlot.getSlot());
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean isRefinementEquipped(IRefinement refinement) {
+        return this.activeRefinements.contains(refinement);
+    }
+
+    @Override
+    public void damageRefinements() {
+        for (int i = 0; i < this.refinementSetDamage.length; i++) {
+            if (this.appliedRefinementSets[i] == null)continue;
+            int damage = 40 + (this.appliedRefinementSets[i].getRarity().weight - 1) * 10 + this.getPlayer().getRepresentingPlayer().getRNG().nextInt(60);
+            if ((this.refinementSetDamage[i] += damage) >= VampireRefinementItem.MAX_DAMAGE) {
+                this.removeRefinementSet(i);
+            }
+        }
+    }
+
+    @Override
+    public ItemStack[] createRefinementItems() {
+        ItemStack[] items = new ItemStack[this.appliedRefinementSets.length];
+        for (int i = 0; i < this.appliedRefinementSets.length; i++) {
+            if (this.appliedRefinementSets[i] != null) {
+                VampireRefinementItem item;
+                switch (i) {
+                    case 0:
+                        item = ModItems.amulet;
+                        break;
+                    case 1:
+                        item = ModItems.ring;
+                        break;
+                    default:
+                        item = ModItems.obi_belt;
+                }
+                items[i] = new ItemStack(item);
+                item.applyRefinementSet(items[i], this.appliedRefinementSets[i]);
+                items[i].setDamage(this.refinementSetDamage[i]);
+            }
+        }
+        return items;
+    }
+
+    private void applyRefinementSet(@Nullable IRefinementSet set, int slot) {
+        this.appliedRefinementSets[slot] = set;
+        this.refinementSetDamage[slot] = 0;
+        if (set != null) {
+            Collection<IRefinement> refinements = set.getRefinements();
+            for (IRefinement refinement : refinements) {
+                this.activeRefinements.add(refinement);
+                if (!this.player.isRemote()) {
+                    Attribute a = refinement.getAttribute();
+                    if (a != null) {
+                        ModifiableAttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(a);
+                        double value = refinement.getModifierValue();
+                        AttributeModifier t = attributeInstance.getModifier(refinement.getUUID());
+                        if (t != null) {
+                            attributeInstance.removeModifier(t);
+                            value += t.getAmount();
+                        }
+                        t = refinement.createAttributeModifier(refinement.getUUID(), value);
+                        this.refinementModifier.put(refinement, t);
+                        attributeInstance.applyNonPersistentModifier(t);
+                    }
+                }
+            }
+        }
+    }
+
+    private void removeRefinementSet(int slot) {
+        IRefinementSet set = this.appliedRefinementSets[slot];
+        this.appliedRefinementSets[slot] = null;
+        if(set != null) {
+            Collection<IRefinement> refinements = set.getRefinements();
+            for (IRefinement refinement : refinements) {
+                this.activeRefinements.remove(refinement);
+                if(!this.player.isRemote()) {
+                    Attribute a = refinement.getAttribute();
+                    if (a != null) {
+                        ModifiableAttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(a);
+                        AttributeModifier modifier = this.refinementModifier.get(refinement);
+                        double value = modifier.getAmount() - refinement.getModifierValue();
+                        this.refinementModifier.remove(refinement);
+                        attributeInstance.removeModifier(modifier);
+                        if (value != 0) {
+                            attributeInstance.applyNonPersistentModifier(modifier = refinement.createAttributeModifier(modifier.getID(), value));
+                            this.refinementModifier.put(refinement, modifier);
+                            this.activeRefinements.add(refinement);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

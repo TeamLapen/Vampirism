@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
 
+import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
+import net.minecraft.item.ItemStack;
+
 /**
  * Handles the players skills
  */
@@ -40,6 +43,21 @@ public interface ISkillHandler<T extends ISkillPlayer<?>> {
      * Reset all skills but reactivate the root skill of the faction
      */
     void resetSkills();
+
+    /**
+     * Equip the refinement set from the given stack to the appropriate slot
+     * If no set is present or it is from the wrong faction, the old set for the slot will be removed, but no new set will be added
+     *
+     * @param stack
+     * @return Whether the item wass equipped
+     */
+    boolean equipRefinementItem(ItemStack stack);
+
+    boolean isRefinementEquipped(IRefinement refinement);
+
+    ItemStack[] createRefinementItems();
+
+    void damageRefinements();
 
     enum Result {
         /**
