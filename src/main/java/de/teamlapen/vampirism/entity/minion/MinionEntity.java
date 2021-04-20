@@ -33,6 +33,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.UseAction;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
@@ -321,6 +322,30 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             LOGGER.warn("Minion without lord.");
             this.remove();
         }
+        if (this.ticksExisted % 20 == 0) {
+            this.consumeOffhand();
+        }
+    }
+
+    protected void consumeOffhand() {
+        if (this.targetSelector.getRunningGoals().findAny().isPresent()) return;
+        ItemStack stack = this.getInventory().map(i -> i.getStackInSlot(1)).orElse(ItemStack.EMPTY);
+        if (stack.isEmpty()) return;
+        if (!(stack.getUseAction() == UseAction.DRINK || stack.getUseAction() == UseAction.EAT)) return;
+        boolean fullHealth = this.getHealth() == this.getMaxHealth();
+        if (stack.isFood() && fullHealth && !stack.getItem().getFood().canEatWhenFull()) return;
+        this.setActiveHand(Hand.OFF_HAND);
+        this.rotationYaw = this.rotationYawHead;
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack onFoodEaten(@Nonnull World world, @Nonnull ItemStack stack) {
+        if (stack.isFood()) {
+            float healAmount = stack.getItem().getFood().getHealing() / 2f;
+            this.heal(healAmount);
+        }
+        return super.onFoodEaten(world, stack);
     }
 
     @OnlyIn(Dist.CLIENT)

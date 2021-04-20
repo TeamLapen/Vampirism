@@ -99,7 +99,9 @@ public class HunterEquipmentModel<T extends MobEntity> extends BipedModel<T> {
 
     public void setWeapons(StakeType type) {
         stakeRight.showModel = type == StakeType.ONLY;
-        stake.showModel = axeBlade1.showModel = axeBlade2.showModel = axeShaft.showModel = type == StakeType.FULL;
+        boolean axe = type == StakeType.FULL || type == StakeType.AXE_ONLY;
+        axeBlade1.showModel = axeBlade2.showModel = axeShaft.showModel = axe;
+        stake.showModel = type == StakeType.FULL;
     }
 
 
@@ -115,6 +117,6 @@ public class HunterEquipmentModel<T extends MobEntity> extends BipedModel<T> {
 
 
     public enum StakeType {
-        NONE, ONLY, FULL
+        NONE, ONLY, FULL, AXE_ONLY
     }
 }

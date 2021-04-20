@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.blocks.CastleStairsBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.goals.GolemTargetNonVillageFactionGoal;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
+import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
@@ -42,6 +43,8 @@ import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.PotionItem;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
@@ -295,6 +298,21 @@ public class ModEntityEventHandler {
     public void onEntityEquipmentChange(LivingEquipmentChangeEvent event){
         if(event.getSlot().getSlotType() == EquipmentSlotType.Group.ARMOR && event.getEntity() instanceof PlayerEntity){
             VampirePlayer.getOpt((PlayerEntity) event.getEntity()).ifPresent(VampirePlayer::requestNaturalArmorUpdate);
+        }
+    }
+
+    @SubscribeEvent
+    public void onItemUseFinish(LivingEntityUseItemEvent.Finish event) {
+        if (event.getEntity() instanceof MinionEntity) {
+            if (event.getItem().getItem() instanceof PotionItem) {
+                ItemStack stack = event.getResultStack();
+                stack.shrink(1);
+                if (stack.isEmpty()){
+                    event.setResultStack(new ItemStack(Items.GLASS_BOTTLE));
+                    return;
+                }
+                ((MinionEntity<?>) event.getEntity()).getInventory().ifPresent(inv -> inv.addItemStack(new ItemStack(Items.GLASS_BOTTLE)));
+            }
         }
     }
 }

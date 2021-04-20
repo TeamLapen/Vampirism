@@ -149,6 +149,11 @@ public abstract class InventoryContainer extends Container {
         }
 
         @Override
+        public int getSlotStackLimit() {
+            return info.stackLimit;
+        }
+
+        @Override
         public boolean isItemValid(ItemStack stack) {
             return info.validate(stack);
         }
