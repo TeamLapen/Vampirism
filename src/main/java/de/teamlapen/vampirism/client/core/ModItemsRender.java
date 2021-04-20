@@ -57,6 +57,6 @@ public class ModItemsRender {
                 }
             }
             return 0xFFFFFF;
-        }, ModItems.amulet,ModItems.ring);
+        }, ModItems.amulet, ModItems.ring, ModItems.obi_belt);
     }
 }

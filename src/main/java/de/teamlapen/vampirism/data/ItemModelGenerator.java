@@ -217,6 +217,7 @@ public class ItemModelGenerator extends ItemModelProvider {
 
         item(ModItems.ring, modLoc("item/vampire_ring_layer0"), modLoc("item/vampire_ring_layer1"));
         item(ModItems.amulet, modLoc("item/vampire_amulet_layer0"), modLoc("item/vampire_amulet_layer1"));
+        item(ModItems.obi_belt, modLoc("item/vampire_obi_belt_layer0"), modLoc("item/vampire_obi_belt_layer1"));
 
 
 
