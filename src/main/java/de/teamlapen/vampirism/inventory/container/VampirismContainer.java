@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
-import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskActionPacket;
@@ -83,8 +82,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     }
 
     public Collection<TaskInfo> getTaskInfos() {
-        long targetTime = VampirismConfig.BALANCE.taskDuration.get() * 60 * 20;
-        return this.taskWrapper.values().stream().flatMap(wrapper -> wrapper.getAcceptedTasks().stream().map(task -> new TaskInfo(task, wrapper.getId(), () -> targetTime - (this.world.getGameTime() - wrapper.getTaskTimeStamp(task))))).collect(Collectors.toList());
+        return this.taskWrapper.values().stream().flatMap(wrapper -> wrapper.getAcceptedTasks().stream().map(task -> new TaskInfo(task, wrapper.getId(), () ->  wrapper.getTaskTimeStamp(task) - this.world.getGameTime()))).collect(Collectors.toList());
     }
 
     @Override

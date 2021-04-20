@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.client.gui.TaskBoardScreen;
-import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskActionPacket;
@@ -213,8 +212,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
     }
 
     public Collection<TaskInfo> getTaskInfos() {
-        long targetTime = VampirismConfig.BALANCE.taskDuration.get() * 60 * 20;
         World world = Minecraft.getInstance().player.world;
-        return this.getVisibleTasks().stream().map(a -> new TaskContainer.TaskInfo(a, this.getTaskBoardId(), () -> targetTime - (world.getGameTime() - this.taskTimeStamp.getOrDefault(a, 0L)))).collect(Collectors.toList());
+        return this.getVisibleTasks().stream().map(a -> new TaskContainer.TaskInfo(a, this.getTaskBoardId(), () -> this.taskTimeStamp.getOrDefault(a, 0L) - world.getGameTime())).collect(Collectors.toList());
     }
 }

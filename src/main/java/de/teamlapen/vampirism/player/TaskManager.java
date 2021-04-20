@@ -77,7 +77,7 @@ public class TaskManager implements ITaskManager {
 
     @Override
     public void acceptTask(UUID taskBoardId, @Nonnull Task task) {
-        this.taskWrapperMap.computeIfAbsent(task.isUnique() ? UNIQUE_TASKS : taskBoardId, TaskWrapper::new).acceptTask(task, this.player.world.getGameTime());
+        this.taskWrapperMap.computeIfAbsent(task.isUnique() ? UNIQUE_TASKS : taskBoardId, TaskWrapper::new).acceptTask(task, this.player.world.getGameTime() + VampirismConfig.BALANCE.taskDuration.get() * 1200);
         this.updateStats(taskBoardId, task);
         this.updateTaskMasterScreen(taskBoardId);
     }
@@ -542,7 +542,7 @@ public class TaskManager implements ITaskManager {
                 entityIdNBT.keySet().forEach((taskId -> {
                     Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
                     if (task != null) {
-                        wrapper.acceptTask(task, this.player.world.getGameTime());
+                        wrapper.acceptTask(task, this.player.world.getGameTime() + VampirismConfig.BALANCE.taskDuration.get() * 1200 * 4);
                     }
                 }));
             });
