@@ -39,9 +39,8 @@ public class VampirismEffect extends Effect {
         return false;
     }
 
-
     @Override
     public List<ItemStack> getCurativeItems() {
-        return (this == ModEffects.neonatal || this == ModEffects.disguise_as_vampire) ? Collections.emptyList() : super.getCurativeItems();
+        return (this == ModEffects.armor_regeneration || this == ModEffects.neonatal || this == ModEffects.disguise_as_vampire) ? Collections.emptyList() : super.getCurativeItems();
     }
 }
