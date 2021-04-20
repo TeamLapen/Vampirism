@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.DamageSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -99,6 +100,10 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
         copyFrom(original);
     }
 
+    @Override
+    public void onDeath(DamageSource src) {
+        this.getSkillHandler().damageRefinements();
+    }
 
     /**
      * Sync all data

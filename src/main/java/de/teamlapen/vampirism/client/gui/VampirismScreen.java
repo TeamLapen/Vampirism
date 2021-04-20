@@ -144,7 +144,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
             int index = this.hoveredSlot.slotNumber;
             NonNullList<ItemStack> list = this.container.getRefinementStacks();
             if (index < list.size() && index >= 0) {
-                if (this.minecraft.player.inventory.getItemStack().isEmpty()) {
+                if (this.minecraft.player.inventory.getItemStack().isEmpty() && !list.get(index).isEmpty()) {
                     this.renderTooltip(matrixStack, list.get(index), mouseX, mouseY);
                 } else {
                     if (!list.get(index).isEmpty() && this.container.getSlot(index).isItemValid(this.minecraft.player.inventory.getItemStack())) {

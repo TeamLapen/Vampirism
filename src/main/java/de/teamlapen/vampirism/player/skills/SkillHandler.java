@@ -40,6 +40,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     private final IPlayableFaction<T> faction;
     private boolean dirty = false;
     private final IRefinementSet[] appliedRefinementSets = new IRefinementSet[3];
+    private final int[] refinementSetDamage = new int[3];
     private final Set<IRefinement> activeRefinements = new HashSet<>();
     private final Map<IRefinement, AttributeModifier> refinementModifier = new HashMap<>();
 
@@ -192,11 +193,14 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
             CompoundNBT setsNBT = nbt.getCompound("refinement_set");
             for (String id : setsNBT.keySet()) {
                 int i = Integer.parseInt(id);
-                String key = setsNBT.getString(id);
-                if("none".equals(key))continue;
-                ResourceLocation setId = new ResourceLocation(key);
+                CompoundNBT setNBT = setsNBT.getCompound(id);
+                String setName = setNBT.getString("id");
+                int damage = setNBT.getInt("damage");
+                if("none".equals(setName))continue;
+                ResourceLocation setId = new ResourceLocation(setName);
                 IRefinementSet set = ModRegistries.REFINEMENT_SETS.getValue(setId);
                 this.applyRefinementSet(set, i);
+                this.refinementSetDamage[i] = damage;
             }
         }
 
@@ -231,7 +235,9 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
             CompoundNBT setsNBT = nbt.getCompound("refinement_set");
             for (String id : setsNBT.keySet()) {
                 int i = Integer.parseInt(id);
-                String setName = setsNBT.getString(id);
+                CompoundNBT setNBT = setsNBT.getCompound(id);
+                String setName = setNBT.getString("id");
+                int damage = setNBT.getInt("damage");
                 IRefinementSet set = null;
                 if (!"none".equals(setName)) {
                     set = ModRegistries.REFINEMENT_SETS.getValue(new ResourceLocation(setName));
@@ -241,6 +247,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
                     this.removeRefinementSet(i);
                     this.applyRefinementSet(set, i);
                 }
+                this.refinementSetDamage[i] = damage;
             }
         }
     }
@@ -258,8 +265,12 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         nbt.put("skills", skills);
         CompoundNBT refinements = new CompoundNBT();
         for (int i = 0; i < this.appliedRefinementSets.length; ++i) {
+            CompoundNBT setNbt = new CompoundNBT();
             IRefinementSet set = this.appliedRefinementSets[i];
-            refinements.putString(String.valueOf(i), set != null? set.getRegistryName().toString(): "none");
+            int damage = this.refinementSetDamage[i];
+            setNbt.putString("id", set != null? set.getRegistryName().toString(): "none");
+            setNbt.putInt("damage", damage);
+            refinements.put(String.valueOf(i), setNbt);
         }
         nbt.put("refinement_set", refinements);
 
@@ -273,8 +284,12 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         nbt.put("skills", skills);
         CompoundNBT refinements = new CompoundNBT();
         for (int i = 0; i < this.appliedRefinementSets.length; ++i) {
+            CompoundNBT setNbt = new CompoundNBT();
             IRefinementSet set = this.appliedRefinementSets[i];
-            refinements.putString(String.valueOf(i), set != null? set.getRegistryName().toString(): "none");
+            int damage = this.refinementSetDamage[i];
+            setNbt.putString("id", set != null? set.getRegistryName().toString(): "none");
+            setNbt.putInt("damage", damage);
+            refinements.put(String.valueOf(i), setNbt);
         }
         nbt.put("refinement_set", refinements);
         dirty = false;
@@ -309,6 +324,17 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     }
 
     @Override
+    public void damageRefinements() {
+        for (int i = 0; i < this.refinementSetDamage.length; i++) {
+            if (this.appliedRefinementSets[i] == null)continue;
+            int damage = 40 + (this.appliedRefinementSets[i].getRarity().weight - 1) * 10 + this.getPlayer().getRepresentingPlayer().getRNG().nextInt(60);
+            if ((this.refinementSetDamage[i] += damage) >= VampireRefinementItem.MAX_DAMAGE) {
+                this.removeRefinementSet(i);
+            }
+        }
+    }
+
+    @Override
     public ItemStack[] createRefinementItems() {
         ItemStack[] items = new ItemStack[this.appliedRefinementSets.length];
         for (int i = 0; i < this.appliedRefinementSets.length; i++) {
@@ -326,6 +352,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
                 }
                 items[i] = new ItemStack(item);
                 item.applyRefinementSet(items[i], this.appliedRefinementSets[i]);
+                items[i].setDamage(this.refinementSetDamage[i]);
             }
         }
         return items;
@@ -333,6 +360,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     private void applyRefinementSet(@Nullable IRefinementSet set, int slot) {
         this.appliedRefinementSets[slot] = set;
+        this.refinementSetDamage[slot] = 0;
         if (set != null) {
             Collection<IRefinement> refinements = set.getRefinements();
             for (IRefinement refinement : refinements) {
@@ -358,6 +386,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     private void removeRefinementSet(int slot) {
         IRefinementSet set = this.appliedRefinementSets[slot];
+        this.appliedRefinementSets[slot] = null;
         if(set != null) {
             Collection<IRefinement> refinements = set.getRefinements();
             for (IRefinement refinement : refinements) {

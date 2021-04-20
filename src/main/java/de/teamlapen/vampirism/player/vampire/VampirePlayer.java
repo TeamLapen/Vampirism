@@ -542,6 +542,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public void onDeath(DamageSource src) {
+        super.onDeath(src);
         if (actionHandler.isActionActive(VampireActions.bat) && src.getImmediateSource() instanceof ProjectileEntity) {
             if (player instanceof ServerPlayerEntity) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.SNIPED_IN_BAT);

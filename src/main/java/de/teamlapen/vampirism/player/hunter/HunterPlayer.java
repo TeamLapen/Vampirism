@@ -175,6 +175,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     public void onDeath(DamageSource src) {
+        super.onDeath(src);
         actionHandler.deactivateAllActions();
     }
 

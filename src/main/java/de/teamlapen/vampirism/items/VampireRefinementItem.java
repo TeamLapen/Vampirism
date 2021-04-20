@@ -32,11 +32,12 @@ import java.util.stream.Collectors;
 
 public class VampireRefinementItem extends Item implements IRefinementItem {
 
+    public static final int MAX_DAMAGE = 500;
     private static final Random RANDOM = new Random();
     private final AccessorySlotType type;
 
     public VampireRefinementItem(Properties properties, AccessorySlotType type) {
-        super(properties.maxStackSize(1));
+        super(properties.defaultMaxDamage(MAX_DAMAGE).setNoRepair());
         this.type = type;
     }
 
