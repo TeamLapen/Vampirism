@@ -202,7 +202,7 @@ public class ClientProxy extends CommonProxy {
         if (msg.containerId == container.windowId && container instanceof TaskBoardContainer) {
             msg.visibleTasks.addAll(msg.notAcceptedTasks);
             msg.visibleTasks.addAll(msg.completableTasks);
-            ((TaskBoardContainer) container).init(msg.completableTasks, (List<Task>) msg.visibleTasks, msg.notAcceptedTasks, msg.completedRequirements, msg.taskBoardId);
+            ((TaskBoardContainer) container).init(msg.completableTasks, (List<Task>) msg.visibleTasks, msg.notAcceptedTasks, msg.completedRequirements, msg.taskBoardId, msg.taskTimeStamp);
         }
     }
 
@@ -210,7 +210,7 @@ public class ClientProxy extends CommonProxy {
     public void handleTaskPacket(TaskPacket msg) {
         Container container = Minecraft.getInstance().player.openContainer;
         if (msg.containerId == container.windowId && container instanceof VampirismContainer) {
-            ((VampirismContainer) container).init(msg.taskBoardInfos, msg.tasks, msg.completableTasks, msg.completedRequirements);
+            ((VampirismContainer) container).init(msg.taskWrappers, msg.completableTasks, msg.completedRequirements);
         }
     }
 

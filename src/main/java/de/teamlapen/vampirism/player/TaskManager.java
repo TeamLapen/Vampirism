@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.player;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -21,8 +20,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.StringNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
@@ -32,6 +32,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,27 +45,12 @@ public class TaskManager implements ITaskManager {
     private final IPlayableFaction<?> faction;
     @Nonnull
     private final ServerPlayerEntity player;
-
     @Nonnull
     private final IFactionPlayer<?> factionPlayer;
-
     @Nonnull
     private final Set<Task> completedTasks = new HashSet<>();
     @Nonnull
-    private final Map<UUID, Set<Task>> tasks = new HashMap<>();
-    @Nonnull
-    private final Map<UUID, Integer> lessTasks = new HashMap<>();
-    @Nonnull
-    private final Map<UUID, Integer> taskAmount = new HashMap<>();
-
-    @Nonnull
-    private final Map<UUID, Set<Task>> acceptedTasks = new HashMap<>();
-
-    @Nonnull
-    private final Map<UUID, Map<Task, Map<ResourceLocation, Integer>>> stats = Maps.newHashMap();
-
-    @Nonnull
-    private final Map<UUID, TaskBoardInfo> taskBoardInfos = new HashMap<>();
+    private final Map<UUID, TaskWrapper> taskWrapperMap = new HashMap<>();
 
     public TaskManager(@Nonnull IFactionPlayer<?> factionPlayer, @Nonnull IPlayableFaction<?> faction) {
         this.faction = faction;
@@ -78,14 +64,11 @@ public class TaskManager implements ITaskManager {
     public void completeTask(UUID taskBoardId, @Nonnull Task task) {
         UUID tmpId = task.isUnique() ? UNIQUE_TASKS : taskBoardId;
         if (!canCompleteTask(taskBoardId, task)) return;
-        if (task.getRequirement().isHasStatBasedReq()) {
-            this.stats.get(tmpId).remove(task);
-        }
-        this.acceptedTasks.get(tmpId).remove(task);
         this.completedTasks.add(task);
-        this.tasks.get(tmpId).remove(task);
+        TaskWrapper wrapper = this.taskWrapperMap.get(tmpId);
+        wrapper.removeTask(task, true);
         if (!task.isUnique()) {
-            this.lessTasks.compute(taskBoardId, (id, value) -> value == null ? 1 : value + 1);
+            ++wrapper.lessTasks;
         }
         this.removeRequirements(task);
         this.applyRewards(task);
@@ -94,52 +77,21 @@ public class TaskManager implements ITaskManager {
 
     @Override
     public void acceptTask(UUID taskBoardId, @Nonnull Task task) {
-        this.acceptedTasks.compute(task.isUnique() ? UNIQUE_TASKS : taskBoardId, (id, tasks) -> {
-            if (tasks == null) {
-                return Sets.newHashSet(task);
-            } else {
-                tasks.add(task);
-                return tasks;
-            }
-        });
+        this.taskWrapperMap.computeIfAbsent(task.isUnique() ? UNIQUE_TASKS : taskBoardId, TaskWrapper::new).acceptTask(task, this.player.world.getGameTime() + VampirismConfig.BALANCE.taskDuration.get() * 1200);
+        this.updateStats(taskBoardId, task);
+        this.updateTaskMasterScreen(taskBoardId);
+    }
+
+    @Override
+    public void abortTask(UUID taskBoardId, @Nonnull Task task, boolean remove) {
+        TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(task.isUnique() ? UNIQUE_TASKS : taskBoardId, TaskWrapper::new);
+        wrapper.removeTask(task, remove);
         this.updateTaskMasterScreen(taskBoardId);
     }
 
     @Override
     public void abortTask(UUID taskBoardId, @Nonnull Task task) {
-        this.acceptedTasks.compute(task.isUnique() ? UNIQUE_TASKS : taskBoardId, (id, tasks) -> {
-            if (tasks != null) {
-                tasks.remove(task);
-                this.stats.computeIfPresent(task.isUnique() ? UNIQUE_TASKS : taskBoardId, (entityId1, tasks1) -> {
-                    tasks1.remove(task);
-                    return tasks1;
-                });
-            }
-            return tasks;
-        });
-        this.updateTaskMasterScreen(taskBoardId);
-    }
-
-    @Override
-    public void openTaskMasterScreen(UUID taskBoardId) {
-        Set<Task> selectedTasks = new HashSet<>(getTasks(taskBoardId));
-        selectedTasks.addAll(getUniqueTasks());
-        this.updateClient(taskBoardId, getCompletedRequirements(taskBoardId, selectedTasks), reduceToCompletableTasks(taskBoardId, selectedTasks), reduceToNotAcceptedTasks(taskBoardId, selectedTasks), selectedTasks);
-        this.taskBoardInfos.compute(taskBoardId, (key, value) -> value == null ? new TaskBoardInfo(key, this.player.getPosition()) : value.updatePos(this.player.getPosition()));
-    }
-
-    @Override
-    public void updateTaskMasterScreen(UUID taskBoardId) {
-        Set<Task> selectedTasks = new HashSet<>(this.getTasks(taskBoardId));
-        selectedTasks.addAll(getUniqueTasks());
-        this.updateClient(taskBoardId, getCompletedRequirements(taskBoardId, selectedTasks), reduceToCompletableTasks(taskBoardId, selectedTasks), reduceToNotAcceptedTasks(taskBoardId, selectedTasks), selectedTasks);
-    }
-
-    @Override
-    public void openVampirismMenu() {
-        if (player.openContainer instanceof TaskContainer) {
-            VampirismMod.dispatcher.sendTo(new TaskPacket(player.openContainer.windowId, taskBoardInfos, this.acceptedTasks, this.acceptedTasks.entrySet().stream().map(enty -> Pair.of(enty.getKey(), reduceToCompletableTasks(enty.getKey(), new HashSet<>(enty.getValue())))).collect(Collectors.toMap(Pair::getKey, Pair::getValue)), this.acceptedTasks.entrySet().stream().map(enty -> Pair.of(enty.getKey(), getCompletedRequirements(enty.getKey(), enty.getValue()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue))), player);
-        }
+        abortTask(taskBoardId, task, false);
     }
 
     @Override
@@ -147,12 +99,35 @@ public class TaskManager implements ITaskManager {
         return !(getTasks(taskBoardId).isEmpty() && getUniqueTasks().isEmpty());
     }
 
+    @Override
+    public void openTaskMasterScreen(UUID taskBoardId) {
+        TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(taskBoardId, TaskWrapper::new);
+        Set<Task> selectedTasks = new HashSet<>(getTasks(taskBoardId));
+        selectedTasks.addAll(getUniqueTasks());
+        this.updateClient(taskBoardId, getCompletedRequirements(taskBoardId, selectedTasks), reduceToCompletableTasks(taskBoardId, selectedTasks), reduceToNotAcceptedTasks(taskBoardId, selectedTasks), selectedTasks, this.taskWrapperMap.get(taskBoardId).taskTimeStamp);
+        wrapper.lastSeenPos = this.player.getPosition();
+    }
+
+    @Override
+    public void updateTaskMasterScreen(UUID taskBoardId) {
+        Set<Task> selectedTasks = new HashSet<>(this.getTasks(taskBoardId));
+        selectedTasks.addAll(getUniqueTasks());
+        this.updateClient(taskBoardId, getCompletedRequirements(taskBoardId, selectedTasks), reduceToCompletableTasks(taskBoardId, selectedTasks), reduceToNotAcceptedTasks(taskBoardId, selectedTasks), selectedTasks, this.taskWrapperMap.get(taskBoardId).taskTimeStamp);
+    }
+
+    @Override
+    public void openVampirismMenu() {
+        if (player.openContainer instanceof TaskContainer) {
+            VampirismMod.dispatcher.sendTo(new TaskPacket(player.openContainer.windowId, this.taskWrapperMap, this.taskWrapperMap.entrySet().stream().map(entry -> Pair.of(entry.getKey(), reduceToCompletableTasks(entry.getKey(), entry.getValue().getAcceptedTasks()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue)), this.taskWrapperMap.values().stream().map(wrapper -> Pair.of(wrapper.id, getCompletedRequirements(wrapper.id, wrapper.tasks))).collect(Collectors.toMap(Pair::getKey, Pair::getValue))), player);
+        }
+    }
+
     /**
      * syncs all shown task for a specific task board to the client
      */
-    private void updateClient(UUID taskBoardId, @Nonnull Map<Task, Map<ResourceLocation, Integer>> requirements, @Nonnull Set<Task> completable, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Set<Task> available) {
+    private void updateClient(UUID taskBoardId, @Nonnull Map<Task, Map<ResourceLocation, Integer>> requirements, @Nonnull Set<Task> completable, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Set<Task> available, Map<Task, Long> taskTimeStamp) {
         if (player.openContainer instanceof TaskBoardContainer) {
-            VampirismMod.dispatcher.sendTo(new TaskStatusPacket(completable, available, notAcceptedTasks, requirements, player.openContainer.windowId, taskBoardId), player);
+            VampirismMod.dispatcher.sendTo(new TaskStatusPacket(completable, available, notAcceptedTasks, requirements, player.openContainer.windowId, taskBoardId, taskTimeStamp), player);
         }
     }
 
@@ -160,14 +135,8 @@ public class TaskManager implements ITaskManager {
     public void resetUniqueTask(Task task) {
         if (!task.isUnique()) return;
         this.completedTasks.remove(task);
-        this.stats.computeIfPresent(UNIQUE_TASKS, (k, m) -> {
-            m.remove(task);
-            return m;
-        });
-        this.acceptedTasks.computeIfPresent(UNIQUE_TASKS, (k, s) -> {
-            s.remove(task);
-            return s;
-        });
+        TaskWrapper wrapper = this.taskWrapperMap.get(UNIQUE_TASKS);
+        wrapper.removeTask(task, false);
     }
 
     // task filter -----------------------------------------------------------------------------------------------------
@@ -199,8 +168,9 @@ public class TaskManager implements ITaskManager {
      * @return whether the task can be completed or not
      */
     public boolean canCompleteTask(UUID taskBoardId, @Nonnull Task task) {
-        if (!isTaskUnlocked(task))
-            return false;
+        if (!isTaskUnlocked(task)) return false;
+        TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(task.isUnique() ? UNIQUE_TASKS : taskBoardId, TaskWrapper::new);
+        if (!wrapper.isTimeEnough(task, this.player.world.getGameTime())) return false;
         for (TaskRequirement.Requirement<?> requirement : task.getRequirement().getAll()) {
             if (!checkStat(taskBoardId, task, requirement)) {
                 return false;
@@ -217,7 +187,8 @@ public class TaskManager implements ITaskManager {
      * @return whether the task is accepted or not
      */
     private boolean isTaskNotAccepted(UUID taskBoardId, @Nonnull Task task) {
-        return !this.acceptedTasks.getOrDefault(task.isUnique() ? UNIQUE_TASKS : taskBoardId, Collections.emptySet()).contains(task);
+        TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(task.isUnique() ? UNIQUE_TASKS : taskBoardId, TaskWrapper::new);
+        return !wrapper.getAcceptedTasks().contains(task);
     }
 
     @Override
@@ -246,11 +217,12 @@ public class TaskManager implements ITaskManager {
     @Override
     public void reset() {
         this.completedTasks.clear();
-        this.stats.clear();
-        this.tasks.clear();
-        this.completedTasks.clear();
-        this.acceptedTasks.clear();
-        this.lessTasks.clear();
+        this.taskWrapperMap.values().forEach(wrapper -> {
+            wrapper.lessTasks = 0;
+            wrapper.taskTimeStamp.clear();
+            wrapper.tasks.clear();
+            wrapper.stats.clear();
+        });
     }
 
     /**
@@ -264,22 +236,23 @@ public class TaskManager implements ITaskManager {
 
     @Override
     public void updateTaskLists() {
-        for (Map.Entry<UUID, Set<Task>> entrySet : this.tasks.entrySet()) {
-            if (entrySet.getKey() == UNIQUE_TASKS) continue;
-            Set<Task> accepted = this.acceptedTasks.get(entrySet.getKey());
-            if (accepted == null || accepted.isEmpty()) {
-                tasks.get(entrySet.getKey()).clear();
+        for (TaskWrapper value : this.taskWrapperMap.values()) {
+            if (value.id == UNIQUE_TASKS) continue;
+            if (value.getAcceptedTasks().isEmpty()) {
+                value.tasks.clear();
                 continue;
             }
-            entrySet.getValue().removeIf(task -> !accepted.contains(task));
+            value.tasks.removeIf(task -> !value.getAcceptedTasks().contains(task));
         }
     }
 
     @Override
     public void resetTaskLists() {
-        this.acceptedTasks.clear();
-        this.lessTasks.clear();
-        this.taskAmount.clear();
+        this.taskWrapperMap.values().forEach(wrapper -> {
+            wrapper.getAcceptedTasks().clear();
+            wrapper.lessTasks = 0;
+            wrapper.taskAmount = -1;
+        });
         this.updateTaskLists();
     }
 
@@ -295,19 +268,18 @@ public class TaskManager implements ITaskManager {
      * @return all visible tasks for the task board
      */
     private Set<Task> getTasks(UUID taskBoardId) {
-        Set<Task> selectedTasks = this.tasks.getOrDefault(taskBoardId, new HashSet<>());
-        if (!selectedTasks.isEmpty()) {
-            this.removeLockedTasks(taskBoardId, selectedTasks);
+        TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(taskBoardId, TaskWrapper::new);
+        if (!wrapper.tasks.isEmpty()) {
+            this.removeLockedTasks(taskBoardId, wrapper.tasks);
         }
-        int neededTaskAmount = this.taskAmount.getOrDefault(taskBoardId, player.getRNG().nextInt(VampirismConfig.BALANCE.taskMasterMaxTaskAmount.get()) + 1) - lessTasks.getOrDefault(taskBoardId, 0);
-        if (selectedTasks.size() < neededTaskAmount) {
+        wrapper.taskAmount = wrapper.taskAmount < 0 ? player.getRNG().nextInt(VampirismConfig.BALANCE.taskMasterMaxTaskAmount.get()) + 1 - wrapper.lessTasks : wrapper.taskAmount;
+        if (wrapper.tasks.size() < wrapper.taskAmount) {
             List<Task> tasks = new ArrayList<>(ModRegistries.TASKS.getValues());
             Collections.shuffle(tasks);
-            selectedTasks.addAll(tasks.stream().filter(this::matchesFaction).filter(task -> !task.isUnique()).filter(this::isTaskUnlocked).limit(neededTaskAmount - selectedTasks.size()).collect(Collectors.toList()));
+            wrapper.tasks.addAll(tasks.stream().filter(this::matchesFaction).filter(task -> !task.isUnique()).filter(this::isTaskUnlocked).limit(wrapper.taskAmount - wrapper.tasks.size()).collect(Collectors.toList()));
         }
-        this.tasks.put(taskBoardId, selectedTasks);
-        this.updateStats(taskBoardId, selectedTasks);
-        return selectedTasks;
+        this.updateStats(taskBoardId, wrapper.tasks);
+        return wrapper.tasks;
     }
 
     /**
@@ -318,12 +290,13 @@ public class TaskManager implements ITaskManager {
      * @return all visible unique tasks
      */
     private Set<Task> getUniqueTasks() {
-        Set<Task> uniqueTasks = this.tasks.getOrDefault(UNIQUE_TASKS, new HashSet<>());
+        TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(UNIQUE_TASKS, TaskWrapper::new);
+        Set<Task> uniqueTasks = wrapper.tasks;
         if (!uniqueTasks.isEmpty()) {
             this.removeLockedTasks(UNIQUE_TASKS, uniqueTasks);
         }
         uniqueTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(this::matchesFaction).filter(Task::isUnique).filter(task -> !this.completedTasks.contains(task)).filter(this::isTaskUnlocked).collect(Collectors.toSet()));
-        this.tasks.put(UNIQUE_TASKS, uniqueTasks);
+        wrapper.tasks.addAll(uniqueTasks);
         this.updateStats(UNIQUE_TASKS, uniqueTasks);
         return uniqueTasks;
     }
@@ -395,9 +368,10 @@ public class TaskManager implements ITaskManager {
      * @param tasks       the task to be checked
      */
     private void removeLockedTasks(UUID taskBoardId, @Nonnull Collection<Task> tasks) {
+        TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(taskBoardId, TaskWrapper::new);
         tasks.removeIf(task -> {
             if (!this.isTaskUnlocked(task)) {
-                this.stats.getOrDefault(taskBoardId, Collections.emptyMap()).remove(task);
+                wrapper.stats.remove(task);
                 return true;
             }
             return false;
@@ -420,24 +394,25 @@ public class TaskManager implements ITaskManager {
         if (task.isUnique()) {
             taskBoardId = UNIQUE_TASKS;
         }
+        TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(taskBoardId, TaskWrapper::new);
         if (isTaskNotAccepted(taskBoardId, task)) return 0;
         int neededStat = 0;
         int actualStat = 0;
         switch (requirement.getType()) {
             case STATS:
                 actualStat = this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) requirement.getStat(this.factionPlayer)));
-                neededStat = this.stats.get(taskBoardId).get(task).get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
+                neededStat = wrapper.stats.get(task).get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
                 break;
             case ENTITY:
                 actualStat = this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat(this.factionPlayer)));
-                neededStat = this.stats.get(taskBoardId).get(task).get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
+                neededStat = wrapper.stats.get(task).get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
                 break;
             case ENTITY_TAG:
                 //noinspection unchecked
                 for (EntityType<?> type : ((ITag.INamedTag<EntityType<?>>) requirement.getStat(this.factionPlayer)).getAllElements()) {
                     actualStat += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
                 }
-                neededStat = this.stats.get(taskBoardId).get(task).get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
+                neededStat = wrapper.stats.get(task).get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
                 break;
             case ITEMS:
                 ItemStack stack = ((ItemRequirement) requirement).getItemStack();
@@ -468,10 +443,13 @@ public class TaskManager implements ITaskManager {
      * @param task        the task to be updated
      */
     private void updateStats(UUID taskBoardId, @Nonnull Task task) {
+        if (task.isUnique()) {
+            taskBoardId = UNIQUE_TASKS;
+        }
         if (isTaskNotAccepted(taskBoardId, task)) return;
         if (!task.getRequirement().isHasStatBasedReq()) return;
-        Map<Task, Map<ResourceLocation, Integer>> taskStats = this.stats.getOrDefault(task.isUnique() ? UNIQUE_TASKS : taskBoardId, new HashMap<>());
-        Map<ResourceLocation, Integer> reqStats = taskStats.getOrDefault(task, new HashMap<>());
+        TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(taskBoardId, TaskWrapper::new);
+        Map<ResourceLocation, Integer> reqStats = wrapper.stats.getOrDefault(task, new HashMap<>());
         for (TaskRequirement.Requirement<?> requirement : task.getRequirement().getAll()) {
             switch (requirement.getType()) {
                 case STATS:
@@ -491,8 +469,7 @@ public class TaskManager implements ITaskManager {
                 default:
             }
         }
-        taskStats.put(task, reqStats);
-        this.stats.put(task.isUnique() ? UNIQUE_TASKS : taskBoardId, taskStats);
+        wrapper.stats.put(task, reqStats);
     }
 
     // save/load -------------------------------------------------------------------------------------------------------
@@ -504,64 +481,24 @@ public class TaskManager implements ITaskManager {
             this.completedTasks.forEach((task) -> tasksNBT.putBoolean(Objects.requireNonNull(task.getRegistryName()).toString(), true));
             compoundNBT.put("completedTasks", tasksNBT);
         }
-        //tasks
-        if (!this.tasks.isEmpty()) {
-            CompoundNBT tasksNBT = new CompoundNBT();
-            this.tasks.forEach((entityId, tasks) -> {
-                CompoundNBT entityIdNBT = new CompoundNBT();
-                tasks.forEach(task -> entityIdNBT.putBoolean(Objects.requireNonNull(task.getRegistryName()).toString(), true));
-                tasksNBT.put(entityId.toString(), entityIdNBT);
-            });
-            compoundNBT.put("tasks", tasksNBT);
-        }
-        //less tasks
-        if (!this.lessTasks.isEmpty()) {
-            CompoundNBT tasksNBT = new CompoundNBT();
-            this.lessTasks.forEach((entityId, tasks) -> tasksNBT.putInt(entityId.toString(), tasks));
-            compoundNBT.put("lessTasks", tasksNBT);
-        }
-        //accepted tasks
-        if (!this.acceptedTasks.isEmpty()) {
-            CompoundNBT tasksNBT = new CompoundNBT();
-            this.acceptedTasks.forEach((entityId, tasks) -> {
-                CompoundNBT entityIdNBT = new CompoundNBT();
-                tasks.forEach(task -> entityIdNBT.putBoolean(Objects.requireNonNull(task.getRegistryName()).toString(), true));
-                tasksNBT.put(entityId.toString(), entityIdNBT);
-            });
-            compoundNBT.put("acceptedTasks", tasksNBT);
-        }
-        //stats
-        if (!this.stats.isEmpty()) {
-            CompoundNBT stats = new CompoundNBT();
-            for (Map.Entry<UUID, Map<Task, Map<ResourceLocation, Integer>>> taskBoardEntries : this.stats.entrySet()) {
-                CompoundNBT board = new CompoundNBT();
-                for (Map.Entry<Task, Map<ResourceLocation, Integer>> taskEntries : taskBoardEntries.getValue().entrySet()) {
-                    CompoundNBT task = new CompoundNBT();
-                    for (Map.Entry<ResourceLocation, Integer> requirementEntries : taskEntries.getValue().entrySet()) {
-                        task.putInt(requirementEntries.getKey().toString(), requirementEntries.getValue());
-                    }
-                    //noinspection ConstantConditions
-                    board.put(taskEntries.getKey().getRegistryName().toString(), task);
-                }
-                stats.put(taskBoardEntries.getKey().toString(), board);
-            }
-            compoundNBT.put("stats", stats);
-        }
-        //taskinfos
-        if (!this.taskBoardInfos.isEmpty()) {
+
+
+        if (!this.taskWrapperMap.isEmpty()) {
             ListNBT infos = new ListNBT();
-            for (Map.Entry<UUID, TaskBoardInfo> infoEntry : this.taskBoardInfos.entrySet()) {
-                CompoundNBT info = new CompoundNBT();
-                BlockPos pos = infoEntry.getValue().getLastSeenPos();
-                info.put("pos", Helper.newDoubleNBTList(pos.getX(), pos.getY(), pos.getZ()));
-                info.putUniqueId("id", infoEntry.getKey());
-                infos.add(info);
-            }
-            compoundNBT.put("taskBoardInfos", infos);
+            this.taskWrapperMap.forEach((a, b) -> infos.add(b.writeNBT(new CompoundNBT())));
+            compoundNBT.put("taskWrapper", infos);
         }
     }
 
     public void readNBT(@Nonnull CompoundNBT compoundNBT) {
+        if (compoundNBT.contains("taskWrapper")) {
+            ListNBT infos = compoundNBT.getList("taskWrapper", 10);
+            for (int i = 0; i < infos.size(); i++) {
+                CompoundNBT nbt = infos.getCompound(i);
+                TaskWrapper wrapper = TaskWrapper.readNBT(nbt);
+                this.taskWrapperMap.put(wrapper.id, wrapper);
+            }
+        }
         //completed tasks
         if (compoundNBT.contains("completedTasks")) {
             compoundNBT.getCompound("completedTasks").keySet().forEach(taskId -> {
@@ -571,10 +508,14 @@ public class TaskManager implements ITaskManager {
                 }
             });
         }
+
+        //TODO 1.17 remove following lines
+
         //tasks
         if (compoundNBT.contains("tasks")) {
-            compoundNBT.getCompound("tasks").keySet().forEach(taskBoardId -> {
-                CompoundNBT entityIdNBT = compoundNBT.getCompound("tasks").getCompound(taskBoardId);
+            compoundNBT.getCompound("tasks").keySet().forEach(taskBoardIdStr -> {
+                TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(UUID.fromString(taskBoardIdStr), TaskWrapper::new);
+                CompoundNBT entityIdNBT = compoundNBT.getCompound("tasks").getCompound(taskBoardIdStr);
                 Set<Task> tasks = new HashSet<>();
                 entityIdNBT.keySet().forEach((taskId -> {
                     Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
@@ -582,76 +523,262 @@ public class TaskManager implements ITaskManager {
                         tasks.add(task);
                     }
                 }));
-                this.tasks.put(UUID.fromString(taskBoardId), tasks);
+                wrapper.tasks.addAll(tasks);
             });
         }
         //less tasks
         if (compoundNBT.contains("lessTasks")) {
             CompoundNBT lessTasksNBT = compoundNBT.getCompound("lessTasks");
-            lessTasksNBT.keySet().forEach(taskBoardId -> this.lessTasks.put(UUID.fromString(taskBoardId), lessTasksNBT.getInt(taskBoardId)));
+            lessTasksNBT.keySet().forEach(taskBoardId -> {
+                TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(UUID.fromString(taskBoardId), TaskWrapper::new);
+                wrapper.lessTasks = (lessTasksNBT.getInt(taskBoardId));
+            });
         }
         //accepted tasks
         if (compoundNBT.contains("acceptedTasks")) {
             compoundNBT.getCompound("acceptedTasks").keySet().forEach(taskBoardId -> {
+                TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(UUID.fromString(taskBoardId), TaskWrapper::new);
                 CompoundNBT entityIdNBT = compoundNBT.getCompound("acceptedTasks").getCompound(taskBoardId);
-                Set<Task> tasks = new HashSet<>();
                 entityIdNBT.keySet().forEach((taskId -> {
                     Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
                     if (task != null) {
-                        tasks.add(task);
+                        wrapper.acceptTask(task, this.player.world.getGameTime() + VampirismConfig.BALANCE.taskDuration.get() * 1200 * 4);
                     }
                 }));
-                this.acceptedTasks.put(UUID.fromString(taskBoardId), tasks);
             });
         }
         //stats
         if (compoundNBT.contains("stats")) {
             CompoundNBT stats = compoundNBT.getCompound("stats");
             for (String taskBoardId : stats.keySet()) {
+                TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(UUID.fromString(taskBoardId), TaskWrapper::new);
                 CompoundNBT taskBoardNBT = stats.getCompound(taskBoardId);
-                Map<Task, Map<ResourceLocation, Integer>> tasks = new HashMap<>();
                 for (String taskRegistryName : taskBoardNBT.keySet()) {
                     CompoundNBT taskNBT = taskBoardNBT.getCompound(taskRegistryName);
                     Map<ResourceLocation, Integer> requirements = new HashMap<>();
                     for (String requirementString : taskNBT.keySet()) {
                         requirements.put(new ResourceLocation(requirementString), taskNBT.getInt(requirementString));
                     }
-                    tasks.put(ModRegistries.TASKS.getValue(new ResourceLocation(taskRegistryName)), requirements);
+                    wrapper.stats.put(ModRegistries.TASKS.getValue(new ResourceLocation(taskRegistryName)), requirements);
                 }
-                this.stats.put(UUID.fromString(taskBoardId), tasks);
-            }
-        }
-        //taskboardinfos
-        if (compoundNBT.contains("taskBoardInfos")) {
-            ListNBT list = compoundNBT.getList("taskBoardInfos", 10);
-            for (INBT inbt : list) {
-                ListNBT pos = ((CompoundNBT) inbt).getList("pos", 6);
-                TaskBoardInfo info = new TaskBoardInfo(((CompoundNBT) inbt).getUniqueId("id"), new BlockPos(pos.getDouble(0), pos.getDouble(1), pos.getDouble(2)));
-                this.taskBoardInfos.put(info.getTaskBoardId(), info);
             }
         }
     }
 
-    public static class TaskBoardInfo {
+    public static class TaskWrapper {
+
+        private final UUID id;
+        private int lessTasks;
+        private int taskAmount;
+        @Nullable
         private BlockPos lastSeenPos;
-        private final UUID taskBoardId;
+        @Nonnull
+        private final Set<Task> tasks;
+        @Nonnull
+        private final Map<Task, Long> taskTimeStamp;
+        @Nonnull
+        private final Map<Task, Map<ResourceLocation, Integer>> stats;
 
-        public TaskBoardInfo(@Nonnull UUID taskBoardId, @Nonnull BlockPos lastSeenPos) {
+        public TaskWrapper(UUID id) {
+            this.id = id;
+            this.lessTasks = 0;
+            this.taskAmount = -1;
+            this.tasks = new HashSet<>();
+            this.stats = new HashMap<>();
+            this.lastSeenPos = null;
+            this.taskTimeStamp = new HashMap<>();
+        }
+
+        public TaskWrapper(UUID id, int lessTasks, int taskAmount, @Nonnull Set<Task> tasks, @Nonnull Map<Task, Long> acceptedTasks, @Nonnull Map<Task, Map<ResourceLocation, Integer>> stats, @Nullable BlockPos lastSeenPos) {
+            this.id = id;
+            this.lessTasks = lessTasks;
+            this.taskAmount = taskAmount;
+            this.tasks = tasks;
+            this.stats = stats;
             this.lastSeenPos = lastSeenPos;
-            this.taskBoardId = taskBoardId;
+            this.taskTimeStamp = acceptedTasks;
         }
 
-        public TaskBoardInfo updatePos(@Nonnull BlockPos newPos) {
-            this.lastSeenPos = newPos;
-            return this;
+        public UUID getId() {
+            return id;
         }
 
-        public BlockPos getLastSeenPos() {
-            return lastSeenPos;
+        @Nonnull
+        public Optional<BlockPos> getLastSeenPos() {
+            return Optional.ofNullable(lastSeenPos);
         }
 
-        public UUID getTaskBoardId() {
-            return taskBoardId;
+        /**
+         * This returns a {@link Map#keySet()}, which means that adding elements is not supported.
+         */
+        @Nonnull
+        public Set<Task> getAcceptedTasks() {
+            return this.taskTimeStamp.keySet();
+        }
+
+        public void acceptTask(Task task, long timeStamp) {
+            this.taskTimeStamp.put(task, timeStamp);
+        }
+
+        public void removeTask(Task task, boolean delete) {
+            if (delete) {
+                this.tasks.remove(task);
+            }
+            this.taskTimeStamp.remove(task);
+            this.stats.remove(task);
+        }
+
+        @Nonnull
+        public Set<Task> getTasks() {
+            return tasks;
+        }
+
+        public boolean isTimeEnough(Task task, long gameTime) {
+            if (this.id != UNIQUE_TASKS) {
+                if (this.taskTimeStamp.containsKey(task)) {
+                    return this.taskTimeStamp.get(task) + VampirismConfig.BALANCE.taskDuration.get() >= gameTime;
+                }
+            }
+            return true;
+        }
+
+        public long getTaskTimeStamp(Task task) {
+            return taskTimeStamp.getOrDefault(task, 0L);
+        }
+
+        public CompoundNBT writeNBT(@Nonnull CompoundNBT nbt) {
+            nbt.putUniqueId("id", this.id);
+            nbt.putInt("lessTasks", this.lessTasks);
+            nbt.putInt("taskAmount", this.taskAmount);
+
+            ListNBT tasks = new ListNBT();
+            this.tasks.forEach(task -> tasks.add(StringNBT.valueOf(task.getRegistryName().toString())));
+            nbt.put("tasks", tasks);
+
+            ListNBT acceptedTasks = new ListNBT();
+            this.taskTimeStamp.forEach((task, time) -> {
+                CompoundNBT taskNBT = new CompoundNBT();
+                taskNBT.putString("task", task.getRegistryName().toString());
+                taskNBT.putLong("time", time);
+            });
+            nbt.put("acceptedTasks", acceptedTasks);
+
+            ListNBT stats = new ListNBT();
+            this.stats.forEach((task, statEntry) -> {
+                CompoundNBT entry = new CompoundNBT();
+                entry.putString("task", task.getRegistryName().toString());
+                ListNBT values = new ListNBT();
+                statEntry.forEach((stat, value) -> {
+                    CompoundNBT statNbt = new CompoundNBT();
+                    statNbt.putString("stat", stat.toString());
+                    statNbt.putInt("value", value);
+                    values.add(statNbt);
+                });
+                entry.put("statEntry", values);
+                stats.add(entry);
+            });
+            nbt.put("stats", stats);
+
+            BlockPos pos = lastSeenPos;
+            nbt.put("pos", Helper.newDoubleNBTList(pos.getX(), pos.getY(), pos.getZ()));
+
+            return nbt;
+        }
+
+        public static TaskWrapper readNBT(@Nonnull CompoundNBT nbt) {
+            UUID id = nbt.getUniqueId("id");
+            int lessTasks = nbt.getInt("lessTasks");
+            int taskAmount = nbt.getInt("taskAmount");
+            Set<Task> tasks = new HashSet<>();
+            Map<Task, Long> acceptedTasks = new HashMap<>();
+            Map<Task, Map<ResourceLocation, Integer>> stats = new HashMap<>();
+            BlockPos taskBoardInfo = null;
+            if (nbt.contains("pos")) {
+                ListNBT pos = nbt.getList("pos", 6);
+                taskBoardInfo = new BlockPos(pos.getDouble(0), pos.getDouble(1), pos.getDouble(2));
+            }
+
+            ListNBT tasksNBT = nbt.getList("tasks", 8);
+            for (int i = 0; i < tasksNBT.size(); i++) {
+                tasks.add(ModRegistries.TASKS.getValue(new ResourceLocation(tasksNBT.getString(i))));
+            }
+
+            ListNBT acceptedTasksNBT = nbt.getList("acceptedTasks", 10);
+            for (int i = 0; i < acceptedTasksNBT.size(); i++) {
+                CompoundNBT tasknbt = acceptedTasksNBT.getCompound(i);
+                acceptedTasks.put(ModRegistries.TASKS.getValue(new ResourceLocation(acceptedTasksNBT.getString(i))), tasknbt.getLong("time"));
+            }
+
+            ListNBT statsNBT = nbt.getList("stats", 10);
+            for (int i = 0; i < statsNBT.size(); i++) {
+                CompoundNBT entry = statsNBT.getCompound(i);
+                Task task = ModRegistries.TASKS.getValue(new ResourceLocation(entry.getString("task")));
+                ListNBT statEntry = entry.getList("statEntry", 10);
+                Map<ResourceLocation, Integer> taskStats = new HashMap<>();
+                for (int i1 = 0; i1 < statEntry.size(); i1++) {
+                    CompoundNBT statNBT = statEntry.getCompound(i1);
+                    ResourceLocation stat = new ResourceLocation(statNBT.getString("stat"));
+                    int value = statNBT.getInt("value");
+                    taskStats.put(stat, value);
+                }
+                stats.put(task, taskStats);
+            }
+            return new TaskWrapper(id, lessTasks, taskAmount, tasks, acceptedTasks, stats, taskBoardInfo);
+        }
+
+        public void encode(PacketBuffer buffer) {
+            buffer.writeUniqueId(this.id);
+            buffer.writeVarInt(this.lessTasks);
+            buffer.writeVarInt(this.taskAmount);
+            buffer.writeBoolean(this.lastSeenPos != null);
+            if (this.lastSeenPos != null) {
+                buffer.writeBlockPos(this.lastSeenPos);
+            }
+            buffer.writeVarInt(this.tasks.size());
+            buffer.writeVarInt(this.taskTimeStamp.size());
+            buffer.writeVarInt(this.stats.size());
+            this.tasks.forEach(task -> buffer.writeResourceLocation(task.getRegistryName()));
+            this.taskTimeStamp.forEach((task, time) -> buffer.writeResourceLocation(task.getRegistryName()).writeVarLong(time));
+            this.stats.forEach((task, stats) -> {
+                buffer.writeResourceLocation(task.getRegistryName());
+                buffer.writeVarInt(stats.size());
+                stats.forEach((stat, value) -> {
+                    buffer.writeResourceLocation(stat);
+                    buffer.writeVarInt(value);
+                });
+            });
+        }
+
+        public static TaskWrapper decode(PacketBuffer buffer) {
+            UUID id = buffer.readUniqueId();
+            int lessTasks = buffer.readVarInt();
+            int taskAmount = buffer.readVarInt();
+            BlockPos pos = null;
+            if (buffer.readBoolean()) {
+                pos = buffer.readBlockPos();
+            }
+            int tasksSize = buffer.readVarInt();
+            int acceptedTasksSize = buffer.readVarInt();
+            int statsSize = buffer.readVarInt();
+            Set<Task> tasks = new HashSet<>();
+            for (int i = 0; i < tasksSize; i++) {
+                tasks.add(ModRegistries.TASKS.getValue(buffer.readResourceLocation()));
+            }
+            Map<Task, Long> acceptedTasks = new HashMap<>();
+            for (int i = 0; i < acceptedTasksSize; i++) {
+                acceptedTasks.put(ModRegistries.TASKS.getValue(buffer.readResourceLocation()), buffer.readVarLong());
+            }
+            Map<Task, Map<ResourceLocation, Integer>> stats = new HashMap<>();
+            for (int i = 0; i < statsSize; i++) {
+                Task task = ModRegistries.TASKS.getValue(buffer.readResourceLocation());
+                Map<ResourceLocation, Integer> taskStats = new HashMap<>();
+                int taskStatSize = buffer.readVarInt();
+                for (int i1 = 0; i1 < taskStatSize; i1++) {
+                    taskStats.put(buffer.readResourceLocation(), buffer.readVarInt());
+                }
+                stats.put(task, taskStats);
+            }
+            return new TaskWrapper(id, lessTasks, taskAmount, tasks, acceptedTasks, stats, pos);
         }
     }
 

@@ -8,6 +8,7 @@ import net.minecraft.util.text.TextFormatting;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public interface TaskContainer {
 
@@ -65,15 +66,29 @@ public interface TaskContainer {
         /**
          * The task can be completed
          */
-        COMPLETE,
+        COMPLETE("gui.vampirism.taskmaster.complete_task"),
         /**
          * The task can be accepted
          */
-        ACCEPT,
+        ACCEPT("gui.vampirism.taskmaster.accept_task"),
         /**
          * The task can be aborted
          */
-        ABORT
+        ABORT("gui.vampirism.taskmaster.abort_task"),
+        /**
+         * The task can only be removed
+         */
+        REMOVE("gui.vampirism.taskmaster.remove_task");
+
+        private final String translationKey;
+
+        TaskAction(String translationKey) {
+            this.translationKey = translationKey;
+        }
+
+        public String getTranslationKey() {
+            return translationKey;
+        }
     }
 
     class TaskInfo {
@@ -89,9 +104,13 @@ public interface TaskContainer {
         @Nonnull
         public final UUID taskBoard;
 
-        public TaskInfo(@Nonnull Task task, @Nonnull UUID taskBoard) {
+        @Nonnull
+        public Supplier<Long> remainingTime;
+
+        public TaskInfo(@Nonnull Task task, @Nonnull UUID taskBoard, @Nonnull Supplier<Long> remainingTime) {
             this.task = task;
             this.taskBoard = taskBoard;
+            this.remainingTime = remainingTime;
         }
 
         @Override

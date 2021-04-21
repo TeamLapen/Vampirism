@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.client.gui.ExtendedScreen;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
@@ -50,9 +51,6 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     protected static final ITextComponent REQUIREMENT_STRIKE = REQUIREMENT.copyRaw().mergeStyle(TextFormatting.STRIKETHROUGH);
     protected static final ItemStack SKULL_ITEM = new ItemStack(Blocks.SKELETON_SKULL);
     protected static final ItemStack PAPER = new ItemStack(Items.PAPER);
-    protected static final ITextComponent SUBMIT = new TranslationTextComponent("gui.vampirism.taskmaster.complete_task");
-    protected static final ITextComponent ACCEPT = new TranslationTextComponent("gui.vampirism.taskmaster.accept_task");
-    protected static final ITextComponent ABORT = new TranslationTextComponent("gui.vampirism.taskmaster.abort_task");
 
     protected final T screen;
     protected final IFactionPlayer<?> factionPlayer;
@@ -82,6 +80,31 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         //render name
         Optional<IReorderingProcessor> text = Optional.ofNullable(this.screen.font.trimStringToWidth(this.item.task.getTranslation(), 131).get(0));
         text.ifPresent(t -> this.screen.font.func_238422_b_(matrixStack, t, x + 4, y + 7, 3419941));//(6839882 & 16711422) >> 1 //8453920 //4226832
+
+        if (!this.screen.getTaskContainer().isTaskNotAccepted(this.item) && !this.item.task.isUnique()) {
+            long remainingTime = this.item.remainingTime.get();
+            ITextComponent msg;
+            if (remainingTime >= 0) {
+                remainingTime = remainingTime / 20;
+                long hours = remainingTime / 60 / 60;
+                long minutes = remainingTime / 60 % (60);
+                long seconds = remainingTime % (60);
+                String time = "" + hours + ":";
+                if (minutes < 10) time += "0";
+                time += minutes + ":";
+                if (seconds < 10) time += "0";
+                time += seconds;
+                msg = new StringTextComponent(time);
+            } else {
+                msg = new TranslationTextComponent("text.vampirism.task_failed");
+            }
+            int width = this.screen.font.getStringPropertyWidth(msg);
+            int color = 11184810;
+            if (remainingTime < VampirismConfig.BALANCE.taskDuration.get() * 60 * 0.1) {
+                color = 16733525;
+            }
+            this.screen.font.func_243246_a(matrixStack, msg, x + 134 - width, y + 12, color);
+        }
 
         RenderSystem.disableDepthTest();
 
@@ -137,6 +160,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
             RenderSystem.color4f(0.4f, 0.4f, 0.4f, 1);
         } else {
             boolean isUnique = this.item.task.isUnique();
+            boolean remainsTime = this.item.remainingTime.get() > 0;
             if (container.canCompleteTask(this.item)) {
                 if (isUnique) {
                     RenderSystem.color4f(1f, 0.855859375f, 0, 1);
@@ -149,6 +173,8 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
                 } else {
                     RenderSystem.color4f(0.55f, 0.55f, 0.55f, 1);
                 }
+            } else if (!isUnique && !remainsTime) {
+                RenderSystem.color4f(1f, 85 / 255f, 85 / 255f, 1);
             } else {
                 if (isUnique) {
                     RenderSystem.color4f(1f, 0.9f, 0.6f, 1f);
@@ -344,7 +370,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         public void renderToolTip(@Nonnull MatrixStack mStack, int mouseX, int mouseY) {
             if (this.isHovered && this.visible) {
                 TaskContainer.TaskAction action = TaskItem.this.screen.getTaskContainer().buttonAction(TaskItem.this.item);
-                TaskItem.this.screen.renderTooltip(mStack, (action == TaskContainer.TaskAction.ACCEPT ? ACCEPT : action == TaskContainer.TaskAction.ABORT ? ABORT : SUBMIT), mouseX, mouseY);
+                TaskItem.this.screen.renderTooltip(mStack, new TranslationTextComponent(action.getTranslationKey()), mouseX, mouseY);
             }
         }
 

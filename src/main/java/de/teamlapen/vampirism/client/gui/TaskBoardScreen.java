@@ -19,7 +19,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @OnlyIn(Dist.CLIENT)
 public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> implements ExtendedScreen {
@@ -45,7 +44,7 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> impleme
     }
 
     public Collection<TaskContainer.TaskInfo> taskSupplier() {
-        return this.container.getVisibleTasks().stream().map(a -> new TaskContainer.TaskInfo(a, this.container.getTaskBoardId())).collect(Collectors.toList());
+        return this.container.getTaskInfos();
     }
 
     @Override
