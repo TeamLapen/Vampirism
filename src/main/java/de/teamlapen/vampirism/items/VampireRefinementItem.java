@@ -47,7 +47,7 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
             for (IRefinement refinement : set.getRefinements()) {
-                tooltip.add(new StringTextComponent(" - ").append(new TranslationTextComponent(refinement.getDescriptionKey()).mergeStyle(TextFormatting.GRAY)));
+                tooltip.add(new StringTextComponent(" - ").append(refinement.getDescription()).mergeStyle(TextFormatting.GRAY));
             }
         }
     }
