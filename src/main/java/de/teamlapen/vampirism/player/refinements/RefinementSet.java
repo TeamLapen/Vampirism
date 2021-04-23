@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.player.refinements;
 
-import com.google.common.collect.Sets;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.util.WeightedRandomItem;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -35,7 +35,7 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
     }
 
     public RefinementSet(Rarity rarity, int color, IRefinement... refinements) {
-        this(rarity, color, Sets.newHashSet(refinements));
+        this(rarity, color, UtilLib.newSortedSet(refinements));
     }
 
     /**
