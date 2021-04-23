@@ -7,14 +7,14 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWithDummyWidget;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
+import de.teamlapen.vampirism.api.entity.player.task.ITaskRewardInstance;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
-import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.client.gui.ExtendedScreen;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
-import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
+import de.teamlapen.vampirism.player.tasks.reward.ItemRewardInstance;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -119,9 +119,9 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         RenderSystem.disableDepthTest();
 
         //render content
-        TaskReward reward = this.item.getTask().getReward();
-        if (reward instanceof ItemReward) {
-            ItemStack stack = ((ItemReward) reward).getReward();
+        ITaskRewardInstance reward = this.item.getReward();
+        if (reward instanceof ItemRewardInstance) {
+            ItemStack stack = ((ItemRewardInstance) reward).getReward();
             this.screen.getItemRenderer().renderItemAndEffectIntoGUI(stack, x + 3 + 113 - 21, y + 2);
             this.screen.getItemRenderer().renderItemOverlayIntoGUI(this.screen.font, stack, x + 3 + 113 - 21, y + 2, "" + Math.min(stack.getCount(), stack.getMaxStackSize()));
         } else {
@@ -209,9 +209,9 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     @Override
     public void renderDummyToolTip(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
         if (mouseX >= x + 3 + 113 - 21 + 1 && mouseX < x + 3 + 113 - 21 + 16 + 1 && mouseY >= y + 2 && mouseY < y + 2 + 16) {
-            TaskReward reward = this.item.getTask().getReward();
-            if (reward instanceof ItemReward) {
-                this.renderItemTooltip(matrixStack, ((ItemReward) reward).getReward(), mouseX, mouseY, REWARD, false, null);
+            ITaskRewardInstance reward = this.item.getReward();
+            if (reward instanceof ItemRewardInstance) {
+                this.renderItemTooltip(matrixStack, ((ItemRewardInstance) reward).getReward(), mouseX, mouseY, REWARD, false, null);
             } else {
                 this.renderItemTooltip(matrixStack, this.item.getTask(), mouseX, mouseY);
             }

@@ -13,6 +13,8 @@ import de.teamlapen.vampirism.network.TaskPacket;
 import de.teamlapen.vampirism.network.TaskStatusPacket;
 import de.teamlapen.vampirism.player.tasks.TaskInstance;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
+import de.teamlapen.vampirism.player.tasks.reward.ItemRewardInstance;
+import de.teamlapen.vampirism.player.tasks.reward.LordLevelReward;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -29,10 +31,28 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class TaskManager implements ITaskManager {
     private static final UUID UNIQUE_TASKS = UUID.fromString("e2c6068a-8f0e-4d5b-822a-38ad6ecf98c9");
+    private static final Map<ResourceLocation, Pair<Function<CompoundNBT, ITaskRewardInstance>, Function<PacketBuffer, ITaskRewardInstance>>> TASK_REWARD_SUPPLIER = new HashMap<ResourceLocation, Pair<Function<CompoundNBT, ITaskRewardInstance>, Function<PacketBuffer, ITaskRewardInstance>>>() {{
+        put(LordLevelReward.ID, Pair.of(LordLevelReward::readNbt, LordLevelReward::decode));
+        put(ItemRewardInstance.ID, Pair.of(ItemRewardInstance::readNbt, ItemRewardInstance::decode));
+    }};
+
+    public static void registerTaskReward(ResourceLocation id, Pair<Function<CompoundNBT,ITaskRewardInstance>, Function<PacketBuffer, ITaskRewardInstance>> functions){
+        if (TASK_REWARD_SUPPLIER.containsKey(id)) throw new IllegalStateException("This id is already registered: " + id);
+        TASK_REWARD_SUPPLIER.put(id, functions);
+    }
+
+    public static ITaskRewardInstance createReward(ResourceLocation id, CompoundNBT nbt) {
+        return TASK_REWARD_SUPPLIER.get(id).getKey().apply(nbt);
+    }
+
+    public static ITaskRewardInstance createReward(ResourceLocation id, PacketBuffer buffer) {
+        return TASK_REWARD_SUPPLIER.get(id).getValue().apply(buffer);
+    }
 
     @Nonnull
     private final IPlayableFaction<?> faction;
@@ -186,7 +206,7 @@ public class TaskManager implements ITaskManager {
      * applies the reward of the given taskInstance
      */
     public void applyRewards(@Nonnull ITaskInstance taskInstance) {
-        taskInstance.getTask().getReward().applyReward(this.factionPlayer);
+        taskInstance.getReward().applyReward(this.factionPlayer);
     }
 
     // general ---------------------------------------------------------------------------------------------------------
@@ -251,7 +271,7 @@ public class TaskManager implements ITaskManager {
         if (wrapper.tasks.size() < wrapper.taskAmount) {
             List<Task> tasks = new ArrayList<>(ModRegistries.TASKS.getValues());
             Collections.shuffle(tasks);
-            wrapper.tasks.putAll(tasks.stream().filter(this::matchesFaction).filter(task -> !task.isUnique()).filter(this::isTaskUnlocked).limit(wrapper.taskAmount - wrapper.tasks.size()).map(task -> new TaskInstance(task, taskBoardId)).collect(Collectors.toMap(TaskInstance::getId, t ->t)));
+            wrapper.tasks.putAll(tasks.stream().filter(this::matchesFaction).filter(task -> !task.isUnique()).filter(this::isTaskUnlocked).limit(wrapper.taskAmount - wrapper.tasks.size()).map(task -> new TaskInstance(task, taskBoardId, this.factionPlayer)).collect(Collectors.toMap(TaskInstance::getId, t ->t)));
         }
         this.updateStats(wrapper.getTaskInstances());
         return wrapper.getTaskInstances();
@@ -271,7 +291,7 @@ public class TaskManager implements ITaskManager {
             this.removeLockedTasks(uniqueTasks.values());
         }
         Collection<Task> tasks = uniqueTasks.values().stream().map(ITaskInstance::getTask).collect(Collectors.toSet());
-        uniqueTasks.putAll(ModRegistries.TASKS.getValues().stream().filter(this::matchesFaction).filter(Task::isUnique).filter(task -> !tasks.contains(task)).filter(task -> !this.completedTasks.contains(task)).filter(this::isTaskUnlocked).map(task -> new TaskInstance(task, UNIQUE_TASKS)).collect(Collectors.toMap(TaskInstance::getId, a ->a)));
+        uniqueTasks.putAll(ModRegistries.TASKS.getValues().stream().filter(this::matchesFaction).filter(Task::isUnique).filter(task -> !tasks.contains(task)).filter(task -> !this.completedTasks.contains(task)).filter(this::isTaskUnlocked).map(task -> new TaskInstance(task, UNIQUE_TASKS, this.factionPlayer)).collect(Collectors.toMap(TaskInstance::getId, a ->a)));
         wrapper.tasks.putAll(uniqueTasks);
         this.updateStats(uniqueTasks.values());
         return uniqueTasks.values();
@@ -468,7 +488,7 @@ public class TaskManager implements ITaskManager {
                         tasks.add(task);
                     }
                 }));
-                wrapper.tasks.putAll(tasks.stream().map(t -> new TaskInstance(t,wrapper.id)).collect(Collectors.toMap(TaskInstance::getId, t->t)));
+                wrapper.tasks.putAll(tasks.stream().map(t -> new TaskInstance(t,wrapper.id, this.factionPlayer)).collect(Collectors.toMap(TaskInstance::getId, t->t)));
             });
         }
         //less tasks
@@ -519,7 +539,7 @@ public class TaskManager implements ITaskManager {
         @Nullable
         private BlockPos lastSeenPos;
         @Nonnull
-        private final Map<UUID,ITaskInstance> tasks;
+        private final Map<UUID, ITaskInstance> tasks;
 
         public TaskWrapper(UUID id) {
             this.id = id;
@@ -593,6 +613,7 @@ public class TaskManager implements ITaskManager {
             ListNBT tasks = new ListNBT();
             this.tasks.forEach((id,task) -> tasks.add(task.writeNBT(new CompoundNBT())));
             nbt.put("tasks", tasks);
+            nbt.putInt("tasksSize", this.tasks.size());
 
             BlockPos pos = lastSeenPos;
             if (pos != null) {
@@ -613,8 +634,9 @@ public class TaskManager implements ITaskManager {
                 taskBoardInfo = new BlockPos(pos.getDouble(0), pos.getDouble(1), pos.getDouble(2));
             }
 
-            ListNBT tasksNBT = nbt.getList("tasks", 8);
-            for (int i = 0; i < tasksNBT.size(); i++) {
+            int taskSize = nbt.getInt("tasksSize");
+            ListNBT tasksNBT = nbt.getList("tasks", 10);
+            for (int i = 0; i < taskSize; i++) {
                 TaskInstance ins = TaskInstance.readNBT(tasksNBT.getCompound(i));
                 tasks.put(ins.getId(), ins);
             }

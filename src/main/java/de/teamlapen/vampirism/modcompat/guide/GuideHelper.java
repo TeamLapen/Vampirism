@@ -19,6 +19,7 @@ import de.teamlapen.vampirism.modcompat.guide.recipes.AlchemicalCauldronRecipeRe
 import de.teamlapen.vampirism.modcompat.guide.recipes.ShapedWeaponTableRecipeRenderer;
 import de.teamlapen.vampirism.modcompat.guide.recipes.ShapelessWeaponTableRecipeRenderer;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
+import de.teamlapen.vampirism.player.tasks.reward.ItemRewardInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
@@ -117,7 +118,8 @@ public class GuideHelper {
      */
     public static PageItemStack createItemTaskDescription(Task task) {
         assert task.getReward() instanceof ItemReward;
-        ItemStack reward = ((ItemReward) task.getReward()).getReward();
+        ItemRewardInstance ins = ((ItemReward) task.getReward()).createInstance(null);
+        ItemStack reward = ins.getReward();
         List<ITextProperties> text = new ArrayList<>();
         StringTextComponent newLine = new StringTextComponent("\n");
         IPlayableFaction<?> f = task.getFaction();

@@ -35,13 +35,9 @@ public class RefinementItemReward extends ItemReward {
         this.rarity = refinementRarity;
     }
 
-
     @Override
-    public void applyReward(IFactionPlayer<?> player) {
-        ItemStack stack = createItem();
-        if (!player.getRepresentingPlayer().addItemStackToInventory(stack)) {
-            player.getRepresentingPlayer().dropItem(stack, true);
-        }
+    public ItemRewardInstance createInstance(IFactionPlayer<?> player) {
+        return new ItemRewardInstance(createItem());
     }
 
     protected ItemStack createItem() {

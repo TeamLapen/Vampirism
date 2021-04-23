@@ -124,8 +124,8 @@ public class TaskBuilder {
     @Nonnull
     public Task build(ResourceLocation registryName) {
         if (requirement.isEmpty()) throw new IllegalStateException("The task " + registryName + " needs requirements");
-        return new Task(this.variant, this.faction, new TaskRequirement(this.requirement), this.reward == null ? player -> {
-        } : this.reward, this.unlocker.toArray(new TaskUnlocker[]{}), this.useDescription).setRegistryName(registryName);
+        if (reward == null) throw new IllegalStateException("The task " + registryName + " needs a reward");
+        return new Task(this.variant, this.faction, new TaskRequirement(this.requirement), this.reward, this.unlocker.toArray(new TaskUnlocker[]{}), this.useDescription).setRegistryName(registryName);
     }
 
     protected String modId() {

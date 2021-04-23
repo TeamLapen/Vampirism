@@ -90,7 +90,7 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
     public void setIngredients(Task recipe, IIngredients ingredients) {
         TaskReward reward = recipe.getReward();
         if (reward instanceof ItemReward) {
-            ingredients.setOutput(VanillaTypes.ITEM, ((ItemReward) reward).getReward());
+            ingredients.setOutput(VanillaTypes.ITEM, ((ItemReward) reward).createInstance(null).getReward());
         }
     }
 

@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ItemReward implements TaskReward {
 
@@ -22,8 +23,8 @@ public class ItemReward implements TaskReward {
         }
     }
 
-    @Nonnull
-    public ItemStack getReward() {
-        return reward.copy();
+    @Override
+    public ItemRewardInstance createInstance(@Nullable IFactionPlayer<?> player) {
+        return new ItemRewardInstance(reward);
     }
 }

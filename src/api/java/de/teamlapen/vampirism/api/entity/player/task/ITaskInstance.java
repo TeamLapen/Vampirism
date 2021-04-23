@@ -30,6 +30,8 @@ public interface ITaskInstance {
      */
     void startTask(long timeStamp);
 
+    ITaskRewardInstance getReward();
+
     /**
      * gets the time this instance is not longer available
      *

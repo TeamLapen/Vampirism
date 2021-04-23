@@ -1,9 +1,12 @@
 package de.teamlapen.vampirism.player.tasks;
 
 import com.google.common.base.Objects;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
+import de.teamlapen.vampirism.api.entity.player.task.ITaskRewardInstance;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.player.TaskManager;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -26,22 +29,26 @@ public class TaskInstance implements ITaskInstance {
     private boolean accepted;
     private long taskTimeStamp;
     private boolean completed;
+    @Nonnull
+    private final ITaskRewardInstance reward;
 
-    public TaskInstance(@Nonnull Task task,@Nonnull UUID taskGiver) {
+    public TaskInstance(@Nonnull Task task, @Nonnull UUID taskGiver, @Nonnull IFactionPlayer<?> player) {
         this.task = task;
         this.taskGiver = taskGiver;
         this.instanceId = UUID.randomUUID();
         this.stats = new HashMap<>();
         this.taskTimeStamp = -1;
+        this.reward = this.task.getReward().createInstance(player);
     }
 
-    public TaskInstance(@Nonnull UUID taskGiver, @Nonnull Task task, @Nonnull Map<ResourceLocation, Integer> stats, boolean accepted, long taskTimeStamp, @Nonnull UUID instanceId) {
+    private TaskInstance(@Nonnull UUID taskGiver, @Nonnull Task task, @Nonnull Map<ResourceLocation, Integer> stats, boolean accepted, long taskTimeStamp, @Nonnull UUID instanceId, @Nonnull ITaskRewardInstance taskRewardInstance) {
         this.taskGiver = taskGiver;
         this.task = task;
         this.stats = stats;
         this.accepted = accepted;
         this.taskTimeStamp = taskTimeStamp;
         this.instanceId = instanceId;
+        this.reward = taskRewardInstance;
     }
 
     @Nonnull
@@ -64,6 +71,12 @@ public class TaskInstance implements ITaskInstance {
     public void startTask(long timestamp) {
         this.taskTimeStamp = timestamp;
         this.accepted = true;
+    }
+
+    @Nonnull
+    @Override
+    public ITaskRewardInstance getReward() {
+        return this.reward;
     }
 
     public void aboardTask() {
@@ -111,6 +124,8 @@ public class TaskInstance implements ITaskInstance {
             stats.putInt(loc.toString(), amount);
         });
         nbt.put("stats", stats);
+        nbt.putString("rewardId", this.reward.getId().toString());
+        this.reward.writeNBT(nbt);
         return nbt;
     }
 
@@ -125,7 +140,9 @@ public class TaskInstance implements ITaskInstance {
         statsNBT.keySet().forEach(name -> {
             stats.put(new ResourceLocation(name), statsNBT.getInt(name));
         });
-        return new TaskInstance(id, task, stats, accepted, taskTimer, insId);
+        ResourceLocation rewardId = new ResourceLocation(nbt.getString("rewardId"));
+        ITaskRewardInstance reward = TaskManager.createReward(rewardId, nbt);
+        return new TaskInstance(id, task, stats, accepted, taskTimer, insId, reward);
     }
 
     public void encode(PacketBuffer buffer) {
@@ -139,6 +156,8 @@ public class TaskInstance implements ITaskInstance {
             buffer.writeResourceLocation(loc);
             buffer.writeVarInt(val);
         });
+        buffer.writeResourceLocation(this.reward.getId());
+        this.reward.encode(buffer);
     }
 
     public static TaskInstance decode(PacketBuffer buffer) {
@@ -152,7 +171,9 @@ public class TaskInstance implements ITaskInstance {
         for (int i = 0; i < statsAmount; i++) {
             stats.put(buffer.readResourceLocation(), buffer.readVarInt());
         }
-        return new TaskInstance(id, task,stats, accepted, taskTimer, insId);
+        ResourceLocation rewardId = buffer.readResourceLocation();
+        ITaskRewardInstance reward = TaskManager.createReward(rewardId, buffer);
+        return new TaskInstance(id, task,stats, accepted, taskTimer, insId, reward);
     }
 
     @Override
