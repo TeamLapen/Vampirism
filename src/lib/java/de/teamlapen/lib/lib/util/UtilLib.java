@@ -796,4 +796,14 @@ public class UtilLib {
         w.addEntity(replacement);
         old.remove();
     }
+
+    /**
+     * Creates a LinkedHashSet from the given elements.
+     * It isn't a {@link SortedSet} but should keep the order anyway
+     */
+    public static <T> Set<T> newSortedSet(T... elements){
+        Set<T> s = new LinkedHashSet<>();
+        Collections.addAll(s,elements);
+        return s;
+    }
 }
