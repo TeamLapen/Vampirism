@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.DamageSource;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -87,6 +88,21 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      * @param vision
      */
     void unlockVision(@Nonnull IVampireVision vision);
+
+    /**
+     * Check if the player should not die.
+     * Initiates DBNO state if death prevented
+     *
+     * @param source The lethal damage source
+     * @return Whether death event should be cancel
+     */
+    boolean onDeadlyHit(DamageSource source);
+
+    /**
+     *
+     * @return Whether the player is in DBNO state (invulnerable to most damage, but unable to do things)
+     */
+    boolean isDBNO();
 
     enum BITE_TYPE {
         @Deprecated ATTACK /* TODO 1.17 remove*/, @Deprecated ATTACK_HUNTER /* TODO 1.17 remove*/, SUCK_BLOOD_CREATURE, SUCK_BLOOD_PLAYER, SUCK_BLOOD_HUNTER_PLAYER, SUCK_BLOOD, NONE, HUNTER_CREATURE

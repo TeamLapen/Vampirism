@@ -36,6 +36,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.CrossbowItem;
@@ -63,10 +64,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.SleepingTimeCheckEvent;
+import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.SleepFinishedTimeEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -129,7 +127,7 @@ public class ModPlayerEventHandler {
     public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
         if (!(event.getEntity() instanceof PlayerEntity) || !event.getEntity().isAlive()) return;
         try {
-            if (VampirePlayer.get((PlayerEntity) event.getEntity()).getSpecialAttributes().bat) {
+            if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(v->v.isDBNO()|| v.getSpecialAttributes().bat).orElse(false)) {
                 event.setCanceled(true);
             }
             HunterPlayer.getOpt((PlayerEntity) event.getEntity()).ifPresent(HunterPlayer::breakDisguise);
@@ -140,10 +138,17 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (VampirePlayer.getOpt(event.getPlayer()).map(VampirePlayer::getSpecialAttributes).map(s -> s.bat).orElse(false)) {
+        if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(v->v.isDBNO()|| v.getSpecialAttributes().bat).orElse(false)) {
             event.setCanceled(true);
         } else if ((ModBlocks.garlic_beacon_normal.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_weak.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_improved.equals(event.getState().getBlock())) && VampirePlayer.getOpt(event.getPlayer()).map(VampirismPlayer::getLevel).orElse(0) > 0) {
             event.setNewSpeed(event.getOriginalSpeed() * 0.1F);
+        }
+    }
+
+    @SubscribeEvent
+    public void onItemPickupPre(EntityItemPickupEvent event){
+        if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(VampirePlayer::isDBNO).orElse(false)) {
+            event.setCanceled(true);
         }
     }
 
@@ -154,7 +159,7 @@ public class ModPlayerEventHandler {
         }
 
         if ((event.getItemStack().getItem() instanceof ThrowablePotionItem || event.getItemStack().getItem() instanceof CrossbowItem)) {
-            if (VampirePlayer.getOpt(event.getPlayer()).map(VampirePlayer::getSpecialAttributes).map(a -> a.bat).orElse(false)) {
+            if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(v->v.isDBNO()|| v.getSpecialAttributes().bat).orElse(false)) {
                 event.setCancellationResult(ActionResultType.func_233537_a_(event.getWorld().isRemote()));
                 event.setCanceled(true);
             }
@@ -165,7 +170,7 @@ public class ModPlayerEventHandler {
     public void onItemUse(LivingEntityUseItemEvent.Start event) {
         if (event.getEntity() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) event.getEntity();
-            if (VampirePlayer.getOpt(player).map(VampirePlayer::getSpecialAttributes).map(s -> s.bat).orElse(false)) {
+            if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(v->v.isDBNO()|| v.getSpecialAttributes().bat).orElse(false)) {
                 event.setCanceled(true);
             }
             if (!checkItemUsePerm(event.getItem(), player)) {
@@ -204,6 +209,14 @@ public class ModPlayerEventHandler {
         }
         if (event.getSource().getTrueSource() instanceof PlayerEntity) {
             HunterPlayer.getOpt((PlayerEntity) event.getSource().getTrueSource()).ifPresent(HunterPlayer::breakDisguise);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onLivingDeathFirst(LivingDeathEvent event) {
+        if (event.getEntity() instanceof PlayerEntity) {
+            if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(v -> v.onDeadlyHit(event.getSource())).orElse(false))
+                event.setCanceled(true);
         }
     }
 
@@ -341,6 +354,10 @@ public class ModPlayerEventHandler {
                 if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(vampire -> vampire.getSpecialAttributes().bat).orElse(false)) {
                     event.setNewSize(BatVampireAction.BAT_SIZE);
                     event.setNewEyeHeight(BatVampireAction.BAT_EYE_HEIGHT);
+                }
+                else if(VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(VampirePlayer::isDBNO).orElse(false)){
+                    event.setNewSize(EntitySize.fixed(0.6f,0.95f));
+                    event.setNewEyeHeight(0.725f);
                 }
             }
         }

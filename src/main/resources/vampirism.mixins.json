@@ -10,6 +10,7 @@
     "MixinBellBlock",
     "MixinEntity",
     "MixinLivingEntity",
+    "MixinEntityPredicate",
     "MixinPotionBrewing"
   ],
   "client": [

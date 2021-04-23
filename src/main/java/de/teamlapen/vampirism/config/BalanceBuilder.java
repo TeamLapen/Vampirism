@@ -7,11 +7,10 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * Intermediate builder stage for Vampirism's balance configuration ({@link BalanceConfig})
@@ -158,6 +157,14 @@ public class BalanceBuilder {
         return null;
     }
 
+    /**
+     * @return null, for drop-in replacement
+     */
+    public ForgeConfigSpec.ConfigValue<List<? extends String>> defineList(String name, List<String> defaultValues, Predicate<Object> validator){
+        add(new BalanceBuilder.StringList(name,defaultValues,validator));
+        return null;
+    }
+
     private void add(Conf c) {
         if (currentComment != null) {
             c.comment(currentComment);
@@ -275,5 +282,36 @@ public class BalanceBuilder {
         public void setDefaultValue(int defaultValue) {
             this.defaultValue = defaultValue;
         }
+    }
+
+    /**
+     * Builds a {@link net.minecraftforge.common.ForgeConfigSpec.IntValue}
+     */
+    public static class StringList extends Conf {
+        private final List<String> defaultValue;
+        private final Predicate<Object> elementValidator;
+
+        StringList(String name, List<String> defaultValue, Predicate<Object> validator) {
+            super(name);
+            this.defaultValue = new ArrayList<>(defaultValue);
+            this.elementValidator = validator;
+        }
+
+        @Override
+        public ForgeConfigSpec.ConfigValue<?> buildInternal(ForgeConfigSpec.Builder builder) {
+            return builder.defineList(name, Collections.unmodifiableList(defaultValue), elementValidator);
+        }
+
+        public void removeValue(String s){
+            defaultValue.remove(s);
+        }
+
+        public void addValue(String s){
+            if(elementValidator.test(s)){
+                defaultValue.add(s);
+            }
+        }
+
+
     }
 }

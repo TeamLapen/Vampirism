@@ -96,6 +96,13 @@ public class ClientProxy extends CommonProxy {
         return Minecraft.getInstance().player;
     }
 
+    @Override
+    public void showDBNOScreen(PlayerEntity playerEntity, @Nullable ITextComponent deathMessage) {
+            if(playerEntity == Minecraft.getInstance().player && !playerEntity.getShouldBeDead()){
+                Minecraft.getInstance().displayGuiScreen(new DBNOScreen(deathMessage));
+            }
+    }
+
     @Nullable
     @Override
     public Entity getMouseOverEntity() {

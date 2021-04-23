@@ -1,11 +1,14 @@
 package de.teamlapen.vampirism.config;
 
 
+import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.VReference;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.List;
 
 /**
  * Values are null until after RegistryEvent<Block>
@@ -123,6 +126,9 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vpFireVulnerabilityMod;
     public final ForgeConfigSpec.BooleanValue vpFireResistanceReplace;
     public final ForgeConfigSpec.IntValue vpMaxYellowBorderPercentage;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> vpImmortalFromDamageSources;
+    public final ForgeConfigSpec.IntValue vpDbnoDuration;
+    public final ForgeConfigSpec.IntValue vpNeonatalDuration;
 
 
     public final ForgeConfigSpec.IntValue vaFreezeCooldown;
@@ -322,6 +328,9 @@ public class BalanceConfig {
         vpFireVulnerabilityMod = builder.comment("Multiply fire damage with this for vampires" + (iceAndFire ? " - Changed due to IceAndFire" : "")).defineInRange("fireVulnerabilityMod", iceAndFire ? 1.5d : 3d, 0.1, Double.MAX_VALUE);
         vpFireResistanceReplace = builder.comment("Whether to replace the vanilla fire resistance potion for vampires with a custom one that only reduces damage but does not remove it" + (iceAndFire ? " - Changed due to IceAndFire" : "")).define("fireResistanceReplace", !iceAndFire);
         vpMaxYellowBorderPercentage = builder.comment("Defines the maximum extend the yellow border covers when the player is in the sun. 100 is default. 0 to disable completely").defineInRange("maxYellowBorderPercentage", 100, 0, 100);
+        vpImmortalFromDamageSources = builder.comment("List of damage source types that the player does not die from (immediately)").defineList("immortalFromDamageSources", Lists.asList("player","mob",new String[]{"lightningBolt", "onFire", "cramming", "fall", "flyIntoWall", "magic", "wither", "anvil", "falling_block", "dragon_breath", "sweetBerryBush", "trident", "arrow", "fireworks", "fireBall", "witherSkull", "explosion", "explosion.player", "thrown", "indirectMagic", "vampire_on_fire"}),s->s instanceof String);
+        vpDbnoDuration = builder.comment("Base cooldown before a downed vampire can resurrect. In sec.").defineInRange("dbnoDuration",10,1,1000);
+        vpNeonatalDuration = builder.comment("Base duration of neonatal effect after resurrection. In sec.").defineInRange("neonatalDuration", 60, 1,Integer.MAX_VALUE);
 
         //Vampire actions
         builder.category("vampireActions", "va");

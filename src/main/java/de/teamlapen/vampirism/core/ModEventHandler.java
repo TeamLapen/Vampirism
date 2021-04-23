@@ -108,6 +108,10 @@ public class ModEventHandler {
         }
     }
 
+    public void onPlayerDisconnect(PlayerEvent.PlayerLoggedOutEvent event) {
+
+    }
+
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
         if (event.getWorld() instanceof World) {

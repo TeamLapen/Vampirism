@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.player.vampire;
 
+import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -32,10 +33,10 @@ import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
 import de.teamlapen.vampirism.util.*;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.goal.PrioritizedGoal;
+import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -50,8 +51,11 @@ import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeMod;
@@ -91,6 +95,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private final static String KEY_VISION = "vision";
     private final static String KEY_FEED_VICTIM_ID = "feed_victim";
     private final static String KEY_WING_COUNTER = "wing";
+    private final static String KEY_DBNO_TIMER = "dbno";
+    private final static String KEY_DBNO_MSG = "dbno_msg";
 
 
     @CapabilityInject(IVampirePlayer.class)
@@ -161,6 +167,21 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private int feed_victim = -1;
     private BITE_TYPE feed_victim_bite_type;
     private int feedBiteTickCounter = 0;
+    /**
+     * >=0 if DBNO, counts downwards, if == 0, can resurrect
+     */
+    private int dbnoTimer = -1;
+    /**
+     * Only set on data load.
+     * Will be active when player rejoined world after being in DBNO state.
+     * Will kill player next tick (and remove invulnerable)
+     */
+    private boolean wasDBNO = false;
+    /**
+     * The original death message from the event that sent the player to DBNO state
+     */
+    @Nullable
+    private ITextComponent dbnoMessage;
 
     public VampirePlayer(PlayerEntity player) {
         super(player);
@@ -513,6 +534,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         glowingEyes = nbt.getBoolean(KEY_GLOWING_EYES);
         actionHandler.loadFromNbt(nbt);
         skillHandler.loadFromNbt(nbt);
+        if (nbt.getBoolean("wasDBNO")) wasDBNO = true;
+
     }
 
     @Override
@@ -550,13 +573,20 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         actionHandler.deactivateAllActions();
         wasDead = true;
+        dbnoTimer=-1;
+        dbnoMessage=null;
     }
 
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
         if (getLevel() > 0) {
+            if (isDBNO() && !Helper.canKillVampires(src)) { //TODO check stake etc.
+                if (src.getTrueSource() != null && src.getTrueSource() instanceof MobEntity && ((MobEntity) src.getTrueSource()).getAttackTarget() == player) {
+                    ((MobEntity) src.getTrueSource()).setAttackTarget(null);
+                }
+                return true;
+            }
             if (DamageSource.ON_FIRE.equals(src)) {
-
                 player.attackEntityFrom(VReference.VAMPIRE_ON_FIRE, calculateFireDamage(amt));
                 return true;
             } else if (DamageSource.IN_FIRE.equals(src) || DamageSource.LAVA.equals(src)) {
@@ -646,6 +676,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public void onPlayerLoggedOut() {
         endFeeding(false);
+        if(this.isDBNO()){
+            this.dbnoTimer = -1;
+            this.player.attackEntityFrom(DamageSource.GENERIC,10000);
+        }
     }
 
     /**
@@ -674,6 +708,22 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public void onUpdate() {
         World world = player.getEntityWorld();
         world.getProfiler().startSection("vampirism_vampirePlayer");
+        if (wasDBNO) {
+            wasDBNO = false;
+            this.player.attackEntityFrom(DamageSource.GENERIC, 100000);
+            return;
+        }
+        else if(this.dbnoTimer>=0){
+            if(dbnoTimer>0){
+                if(--dbnoTimer==0){
+                    CompoundNBT nbt = new CompoundNBT();
+                    nbt.putInt(KEY_DBNO_TIMER,0);
+                    HelperLib.sync(this, nbt, player, false);
+                }
+            }
+            player.setMotion(0, Math.min(0, player.getMotion().getY()), 0);
+            return;
+        }
         super.onUpdate();
         int level = getLevel();
         if (level > 0) {
@@ -809,6 +859,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         nbt.putBoolean(KEY_GLOWING_EYES, glowingEyes);
         actionHandler.saveToNbt(nbt);
         skillHandler.saveToNbt(nbt);
+        if (isDBNO()) nbt.putBoolean("wasDBNO", true);
     }
 
 
@@ -932,6 +983,23 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (nbt.contains(KEY_WING_COUNTER)) {
             wing_counter = nbt.getInt(KEY_WING_COUNTER);
         }
+        if(nbt.contains(KEY_DBNO_MSG)){
+            dbnoMessage = ITextComponent.Serializer.getComponentFromJson(nbt.getString(KEY_DBNO_MSG));
+        }
+        if(nbt.contains(KEY_DBNO_TIMER)){
+            boolean wasDBNOClient = isDBNO();
+            dbnoTimer = nbt.getInt(KEY_DBNO_TIMER);
+            if(!wasDBNOClient && isDBNO()){
+                VampirismMod.proxy.showDBNOScreen(player, dbnoMessage);
+                player.setForcedPose(Pose.SLEEPING);
+                player.recalculateSize();
+            }
+            else if(wasDBNOClient && !isDBNO()){
+                player.setForcedPose(null);
+                player.recalculateSize();
+            }
+        }
+
         bloodStats.loadUpdate(nbt);
         actionHandler.readUpdateFromServer(nbt);
         skillHandler.readUpdateFromServer(nbt);
@@ -962,6 +1030,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);
         nbt.putInt(KEY_VISION, activatedVision == null ? -1 : ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
+        nbt.putInt(KEY_DBNO_TIMER, dbnoTimer);
+        if(dbnoMessage!=null)nbt.putString(KEY_DBNO_MSG, ITextComponent.Serializer.toJson(dbnoMessage));
     }
 
     private void applyEntityAttributes() {
@@ -1152,6 +1222,77 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
             this.getActionHandler().extendActionTimer(VampireActions.vampire_rage,bonus);
         }
+    }
+
+
+    /**
+     * Make sure no nearby mob continues targets the player
+     */
+    private void resetNearbyTargetingMobs(){
+        AxisAlignedBB axisalignedbb = (new AxisAlignedBB(player.getPosition())).grow(32.0D, 10.0D, 32.0D);
+        player.world.getLoadedEntitiesWithinAABB(MobEntity.class, axisalignedbb).forEach(e->{
+            if(e.getAttackTarget()==player){
+                e.targetSelector.getRunningGoals().filter(g->g.getGoal() instanceof TargetGoal).forEach(PrioritizedGoal::resetTask);
+            }
+            if(e instanceof IAngerable){
+                ((IAngerable) e).func_233681_b_(player);
+            }
+        });
+    }
+
+    @Override
+    public boolean onDeadlyHit(DamageSource source) {
+        if (!this.player.isPotionActive(ModEffects.neonatal)&&!Helper.canKillVampires(source)){
+                this.dbnoTimer = getDbnoDuration();
+                this.player.setHealth(0.5f);
+                this.player.setForcedPose(Pose.SLEEPING);
+                resetNearbyTargetingMobs();
+                boolean flag = player.world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES);
+                if (flag) {
+                    dbnoMessage = player.getCombatTracker().getDeathMessage();
+                }
+                CompoundNBT nbt = new CompoundNBT();
+                nbt.putInt(KEY_DBNO_TIMER,dbnoTimer);
+                if(dbnoMessage!=null)nbt.putString(KEY_DBNO_MSG, ITextComponent.Serializer.toJson(dbnoMessage));
+                HelperLib.sync(this,nbt,player,true);
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isDBNO(){
+        return this.dbnoTimer >=0;
+    }
+
+    public void tryResurrect(){
+        if(this.dbnoTimer==0){
+            this.dbnoTimer=-1;
+            this.dbnoMessage = null;
+            this.player.setHealth(Math.max(0.5f,bloodStats.getBloodLevel()-1));
+            this.bloodStats.removeBlood(bloodStats.getBloodLevel()-1,true);
+            this.player.setForcedPose(null);
+            this.player.recalculateSize();
+            this.sync(true);
+            this.player.addPotionEffect(new EffectInstance(ModEffects.neonatal,VampirismConfig.BALANCE.vpNeonatalDuration.get()*20));
+        }
+        else{
+            if(this.isRemote()){
+                this.dbnoTimer=-1;
+            }
+            else{
+                //If client thinks it is alive again, tell it to die again
+                this.sync(false);
+            }
+        }
+    }
+
+    public int getDbnoTimer(){
+        return this.dbnoTimer;
+    }
+
+    public int getDbnoDuration(){
+        return VampirismConfig.BALANCE.vpDbnoDuration.get() * 20;
     }
 
     private static class Storage implements Capability.IStorage<IVampirePlayer> {

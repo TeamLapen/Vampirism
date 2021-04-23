@@ -29,6 +29,11 @@ public interface IProxy extends IInitListener {
     @Nullable
     Entity getMouseOverEntity();
 
+    /**
+     * Shows a DBNO state with the given death message if the passed player is the client player
+     */
+    default void showDBNOScreen(PlayerEntity player, @Nullable ITextComponent deathMessage){}
+
     default float getRenderPartialTick() {
         return 1F;
     }
