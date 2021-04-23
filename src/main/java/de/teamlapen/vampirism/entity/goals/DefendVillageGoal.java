@@ -29,7 +29,7 @@ public class DefendVillageGoal<T extends CreatureEntity & IVillageCaptureEntity>
                 }
                 return super.canTarget(attackEntity, targetEntity);
             }
-        }.setCustomPredicate(VampirismAPI.factionRegistry().getPredicate(creature.getFaction(), false));
+        }.setCustomPredicate(VampirismAPI.factionRegistry().getPredicate(creature.getFaction(), false)).setLineOfSiteRequired()/*actually does the opposite -> no line of sight required*/;
     }
 
     @Override
