@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
@@ -290,7 +291,7 @@ public class Helper {
         if (!source.canHarmInCreative()) {
             if (VampirismConfig.BALANCE.vpImmortalFromDamageSources.get().contains(source.getDamageType())) {
                 if(source.getImmediateSource() instanceof LivingEntity){
-                    if(((LivingEntity) source.getImmediateSource()).getHeldItemMainhand().getItem() instanceof StakeItem){ //Maybe use all IVampireFinisher??
+                    if(source.getImmediateSource() instanceof IHunterMob || ((LivingEntity) source.getImmediateSource()).getHeldItemMainhand().getItem() instanceof StakeItem){ //Maybe use all IVampireFinisher??
                         return true;
                     }
                 }
