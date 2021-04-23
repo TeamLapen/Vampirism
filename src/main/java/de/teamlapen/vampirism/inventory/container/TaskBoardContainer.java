@@ -1,13 +1,12 @@
 package de.teamlapen.vampirism.inventory.container;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.api.entity.player.task.Task;
+import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
-import de.teamlapen.vampirism.client.gui.TaskBoardScreen;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskActionPacket;
@@ -17,14 +16,12 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public class TaskBoardContainer extends Container implements TaskContainer {
@@ -33,21 +30,9 @@ public class TaskBoardContainer extends Container implements TaskContainer {
      * all tasks that can be completed by the player
      */
     @Nonnull
-    private final Set<Task> completableTasks = Sets.newHashSet();
-    /**
-     * all tasks that have been completed and should not be displayed
-     */
+    private final Set<UUID> completableTasks = Sets.newHashSet();
     @Nonnull
-    private final Set<Task> completedTasks = Sets.newHashSet();
-    /**
-     * all tasks that should be displayed in the {@link TaskBoardScreen}
-     */
-    @Nonnull
-    private final List<Task> visibleTasks = Lists.newArrayList();
-    @Nonnull
-    private final Set<Task> notAcceptedTasks = Sets.newHashSet();
-    @Nonnull
-    private Map<Task, Long> taskTimeStamp = new HashMap<>();
+    private final List<ITaskInstance> taskInstances = new ArrayList<>();
     @Nonnull
     private final TextFormatting factionColor;
     @Nonnull
@@ -56,7 +41,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
      * all task requirements that are completed
      */
     @Nullable
-    private Map<Task, Map<ResourceLocation, Integer>> completedRequirements;
+    private Map<UUID, Map<ResourceLocation, Integer>> completedRequirements;
     private UUID taskBoardId;
 
     @Nullable
@@ -70,20 +55,15 @@ public class TaskBoardContainer extends Container implements TaskContainer {
     }
 
     /**
-     * @param completableTasks      updated possible tasks
-     * @param visibleTasks          updated unlocked tasks
-     * @param notAcceptedTasks      updated not accepted tasks
      * @param completedRequirements updated completed requirements
-     * @param taskTimeStamp
      */
     @OnlyIn(Dist.CLIENT)
-    public void init(@Nonnull Set<Task> completableTasks, @Nonnull List<Task> visibleTasks, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Map<Task, Map<ResourceLocation, Integer>> completedRequirements, UUID taskBoardId, Map<Task, Long> taskTimeStamp) {
+    public void init(@Nonnull Set<ITaskInstance> available, Set<UUID> completableTasks, Map<UUID, Map<ResourceLocation, Integer>> completedRequirements, UUID taskBoardId) {
+        this.taskInstances.clear();
+        this.taskInstances.addAll(available);
         this.completableTasks.addAll(completableTasks);
-        this.visibleTasks.addAll(visibleTasks.stream().filter(task -> !this.visibleTasks.contains(task)).sorted((task1, task2) -> (this.completableTasks.contains(task1) && !this.completableTasks.contains(task2)) || (!completableTasks.contains(task1) && !this.completedTasks.contains(task1) && this.completedTasks.contains(task2)) ? -1 : 0).collect(Collectors.toList()));
         this.completedRequirements = completedRequirements;
         this.taskBoardId = taskBoardId;
-        this.notAcceptedTasks.addAll(notAcceptedTasks);
-        this.taskTimeStamp = taskTimeStamp;
         if (this.listener != null) {
             this.listener.run();
         }
@@ -104,16 +84,16 @@ public class TaskBoardContainer extends Container implements TaskContainer {
     }
 
     public int size() {
-        return this.visibleTasks.size();
+        return this.taskInstances.size();
     }
 
     @Nonnull
-    public List<Task> getVisibleTasks() {
-        return this.visibleTasks;
+    public List<ITaskInstance> getVisibleTasks() {
+        return this.taskInstances;
     }
 
-    public Task getTask(int i) {
-        return this.visibleTasks.get(i);
+    public ITaskInstance getTask(int i) {
+        return this.taskInstances.get(i);
     }
 
     @Nonnull
@@ -127,42 +107,39 @@ public class TaskBoardContainer extends Container implements TaskContainer {
     }
 
     @Override
-    public boolean isTaskNotAccepted(TaskInfo taskInfo) {
-        return this.notAcceptedTasks.contains(taskInfo.task);
+    public boolean canCompleteTask(@Nonnull ITaskInstance taskInfo) {
+        return this.completableTasks.contains(taskInfo.getId()) && this.factionPlayer.getRepresentingPlayer().world.getGameTime() < taskInfo.getTaskTimeStamp();
     }
 
     @Override
-    public boolean canCompleteTask(TaskInfo taskInfo) {
-        return this.completableTasks.contains(taskInfo.task) && taskInfo.remainingTime.get() > 0;
-    }
-
-    @Override
-    public boolean pressButton(TaskInfo taskInfo) {
+    public void pressButton(@Nonnull ITaskInstance taskInfo) {
         TaskAction action = buttonAction(taskInfo);
         switch (action) {
             case COMPLETE:
-                this.completedTasks.add(taskInfo.task);
-                this.completableTasks.remove(taskInfo.task);
-                this.visibleTasks.remove(taskInfo.task);
+                taskInfo.complete();
+                this.completableTasks.remove(taskInfo.getId());
+                this.taskInstances.remove(taskInfo);
                 break;
             case ACCEPT:
-                this.notAcceptedTasks.remove(taskInfo.task);
+                taskInfo.startTask(Minecraft.getInstance().world.getGameTime() + VampirismConfig.BALANCE.taskDuration.get() * 1200);
                 break;
             default:
-                this.notAcceptedTasks.add(taskInfo.task);
+                taskInfo.aboardTask();
                 break;
         }
-        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.task, taskInfo.taskBoard, action));
-        return true;
+        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), action));
+        if (this.listener != null) {
+            this.listener.run();
+        }
     }
 
     @Override
-    public TaskAction buttonAction(TaskInfo taskInfo) {
+    public TaskAction buttonAction(@Nonnull ITaskInstance taskInfo) {
         if (canCompleteTask(taskInfo)) {
             return TaskAction.COMPLETE;
         } else if (isTaskNotAccepted(taskInfo)) {
             return TaskAction.ACCEPT;
-        } else if (!taskInfo.task.isUnique() && taskInfo.remainingTime.get() <= 0) {
+        } else if (!taskInfo.isUnique() && this.factionPlayer.getRepresentingPlayer().world.getGameTime() < taskInfo.getTaskTimeStamp()) {
             return TaskAction.REMOVE;
         } else {
             return TaskAction.ABORT;
@@ -170,17 +147,18 @@ public class TaskBoardContainer extends Container implements TaskContainer {
     }
 
     @Override
-    public boolean isCompleted(TaskInfo item) {
-        return this.completedTasks.contains(item.task);
+    public boolean isCompleted(@Nonnull ITaskInstance item) {
+        return item.isCompleted();
     }
 
     @Override
-    public boolean areRequirementsCompleted(TaskInfo task, TaskRequirement.Type type) {
-        if (this.completedTasks.contains(task.task)) return true;
+    public boolean areRequirementsCompleted(@Nonnull ITaskInstance task, @Nonnull TaskRequirement.Type type) {
+        if (task.isCompleted()) return true;
+        if (this.completableTasks.contains(task.getId())) return true;
         if (this.completedRequirements != null) {
-            if (this.completedRequirements.containsKey(task.task)) {
-                for (TaskRequirement.Requirement<?> requirement : task.task.getRequirement().requirements().get(type)) {
-                    if (!this.completedRequirements.get(task.task).containsKey(requirement.getId()) || this.completedRequirements.get(task.task).get(requirement.getId()) < requirement.getAmount(this.factionPlayer)) {
+            if (this.completedRequirements.containsKey(task.getId())) {
+                for (TaskRequirement.Requirement<?> requirement : task.getTask().getRequirement().requirements().get(type)) {
+                    if (!this.completedRequirements.get(task.getId()).containsKey(requirement.getId()) || this.completedRequirements.get(task.getId()).get(requirement.getId()) < requirement.getAmount(this.factionPlayer)) {
                         return false;
                     }
                 }
@@ -191,28 +169,24 @@ public class TaskBoardContainer extends Container implements TaskContainer {
     }
 
     @Override
-    public int getRequirementStatus(TaskInfo taskInfo, TaskRequirement.Requirement<?> requirement) {
+    public int getRequirementStatus(@Nonnull ITaskInstance taskInfo, @Nonnull TaskRequirement.Requirement<?> requirement) {
         assert this.completedRequirements != null;
-        if (this.completedRequirements.containsKey(taskInfo.task)) {
-            return this.completedRequirements.get(taskInfo.task).get(requirement.getId());
+        if (this.completedRequirements.containsKey(taskInfo.getId())) {
+            return this.completedRequirements.get(taskInfo.getId()).get(requirement.getId());
         } else {
             return requirement.getAmount(this.factionPlayer);
         }
     }
 
     @Override
-    public boolean isRequirementCompleted(TaskInfo taskInfo, TaskRequirement.Requirement<?> requirement) {
-        if (this.completedTasks.contains(taskInfo.task)) return true;
+    public boolean isRequirementCompleted(@Nonnull ITaskInstance taskInfo, @Nonnull TaskRequirement.Requirement<?> requirement) {
+        if (taskInfo.isCompleted()) return true;
         if (this.completedRequirements != null) {
-            if (this.completedRequirements.containsKey(taskInfo.task)) {
-                return this.completedRequirements.get(taskInfo.task).containsKey(requirement.getId()) && this.completedRequirements.get(taskInfo.task).get(requirement.getId()) >= requirement.getAmount(this.factionPlayer);
+            if (this.completedRequirements.containsKey(taskInfo.getId())) {
+                return this.completedRequirements.get(taskInfo.getId()).containsKey(requirement.getId()) && this.completedRequirements.get(taskInfo.getId()).get(requirement.getId()) >= requirement.getAmount(this.factionPlayer);
             }
         }
         return false;
     }
 
-    public Collection<TaskInfo> getTaskInfos() {
-        World world = Minecraft.getInstance().player.world;
-        return this.getVisibleTasks().stream().map(a -> new TaskContainer.TaskInfo(a, this.getTaskBoardId(), () -> this.taskTimeStamp.getOrDefault(a, 0L) - world.getGameTime())).collect(Collectors.toList());
-    }
 }

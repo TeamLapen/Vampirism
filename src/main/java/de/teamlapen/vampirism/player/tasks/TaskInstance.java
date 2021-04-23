@@ -1,0 +1,170 @@
+package de.teamlapen.vampirism.player.tasks;
+
+import com.google.common.base.Objects;
+import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
+import de.teamlapen.vampirism.api.entity.player.task.Task;
+import de.teamlapen.vampirism.core.ModRegistries;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+public class TaskInstance implements ITaskInstance {
+
+    @Nonnull
+    private final UUID taskGiver;
+    @Nonnull
+    private final Task task;
+    @Nonnull
+    private final UUID instanceId;
+    @Nonnull
+    private final Map<ResourceLocation, Integer> stats;
+    private boolean accepted;
+    private long taskTimeStamp;
+    private boolean completed;
+
+    public TaskInstance(@Nonnull Task task,@Nonnull UUID taskGiver) {
+        this.task = task;
+        this.taskGiver = taskGiver;
+        this.instanceId = UUID.randomUUID();
+        this.stats = new HashMap<>();
+        this.taskTimeStamp = -1;
+    }
+
+    public TaskInstance(@Nonnull UUID taskGiver, @Nonnull Task task, @Nonnull Map<ResourceLocation, Integer> stats, boolean accepted, long taskTimeStamp, @Nonnull UUID instanceId) {
+        this.taskGiver = taskGiver;
+        this.task = task;
+        this.stats = stats;
+        this.accepted = accepted;
+        this.taskTimeStamp = taskTimeStamp;
+        this.instanceId = instanceId;
+    }
+
+    @Nonnull
+    public UUID getId() {
+        return instanceId;
+    }
+
+    public void complete(){
+        this.completed = true;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public boolean isUnique(){
+        return this.task.isUnique();
+    }
+
+    public void startTask(long timestamp) {
+        this.taskTimeStamp = timestamp;
+        this.accepted = true;
+    }
+
+    public void aboardTask() {
+        this.accepted = false;
+        this.stats.clear();
+        this.taskTimeStamp = -1;
+    }
+
+    public long getTaskTimeStamp() {
+        return taskTimeStamp;
+    }
+
+    @Nonnull
+    public Task getTask() {
+        return task;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    @Override
+    public UUID getTaskBoard() {
+        return this.taskGiver;
+    }
+
+    public void setStats(@Nonnull Map<ResourceLocation, Integer> newStats) {
+        this.stats.clear();
+        this.stats.putAll(newStats);
+    }
+
+    @Nonnull
+    public Map<ResourceLocation, Integer> getStats() {
+        return stats;
+    }
+
+    public CompoundNBT writeNBT(@Nonnull CompoundNBT nbt) {
+        nbt.putUniqueId("id", this.taskGiver);
+        nbt.putString("task", this.task.getRegistryName().toString());
+        nbt.putUniqueId("insId", this.instanceId);
+        nbt.putBoolean("accepted", this.accepted);
+        nbt.putLong("taskTimer", this.taskTimeStamp);
+        CompoundNBT stats = new CompoundNBT();
+        this.stats.forEach((loc, amount) -> {
+            stats.putInt(loc.toString(), amount);
+        });
+        nbt.put("stats", stats);
+        return nbt;
+    }
+
+    public static TaskInstance readNBT(@Nonnull CompoundNBT nbt) {
+        UUID id = nbt.getUniqueId("id");
+        Task task = ModRegistries.TASKS.getValue(new ResourceLocation(nbt.getString("task")));
+        UUID insId = nbt.getUniqueId("insId");
+        boolean accepted = nbt.getBoolean("accepted");
+        long taskTimer = nbt.getLong("taskTimer");
+        CompoundNBT statsNBT = nbt.getCompound("stats");
+        Map<ResourceLocation, Integer> stats = new HashMap<>();
+        statsNBT.keySet().forEach(name -> {
+            stats.put(new ResourceLocation(name), statsNBT.getInt(name));
+        });
+        return new TaskInstance(id, task, stats, accepted, taskTimer, insId);
+    }
+
+    public void encode(PacketBuffer buffer) {
+        buffer.writeUniqueId(this.taskGiver);
+        buffer.writeResourceLocation(this.task.getRegistryName());
+        buffer.writeUniqueId(this.instanceId);
+        buffer.writeBoolean(this.accepted);
+        buffer.writeVarLong(this.taskTimeStamp);
+        buffer.writeVarInt(this.stats.size());
+        this.stats.forEach((loc, val) -> {
+            buffer.writeResourceLocation(loc);
+            buffer.writeVarInt(val);
+        });
+    }
+
+    public static TaskInstance decode(PacketBuffer buffer) {
+        UUID id = buffer.readUniqueId();
+        Task task = ModRegistries.TASKS.getValue(buffer.readResourceLocation());
+        UUID insId = buffer.readUniqueId();
+        boolean accepted = buffer.readBoolean();
+        long taskTimer = buffer.readVarLong();
+        int statsAmount = buffer.readVarInt();
+        Map<ResourceLocation, Integer> stats = new HashMap<>();
+        for (int i = 0; i < statsAmount; i++) {
+            stats.put(buffer.readResourceLocation(), buffer.readVarInt());
+        }
+        return new TaskInstance(id, task,stats, accepted, taskTimer, insId);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TaskInstance instance = (TaskInstance) o;
+        return accepted == instance.accepted && taskTimeStamp == instance.taskTimeStamp && Objects.equal(taskGiver, instance.taskGiver) && Objects.equal(instanceId, instance.instanceId) && Objects.equal(task, instance.task) && Objects.equal(stats, instance.stats);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(taskGiver, task, instanceId);
+    }
+}

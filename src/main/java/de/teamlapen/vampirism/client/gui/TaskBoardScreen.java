@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWithDummyWidget;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.client.gui.widget.TaskItem;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
@@ -25,7 +26,7 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> impleme
     private static final ResourceLocation TASKMASTER_GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/taskmaster.png");
     private final IFactionPlayer<?> factionPlayer;
 
-    private ScrollableListWidget<TaskContainer.TaskInfo> list;
+    private ScrollableListWidget<ITaskInstance> list;
 
 
     public TaskBoardScreen(TaskBoardContainer container, PlayerInventory playerInventory, ITextComponent containerName) {
@@ -43,8 +44,8 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> impleme
         this.addButton(list = new ScrollableListWithDummyWidget<>(this.guiLeft + 16, this.guiTop + 16, 145, 149, 21, this::taskSupplier, (item, list1, isDummy) -> new TaskItem<>(item, list1, isDummy, this, this.factionPlayer)));
     }
 
-    public Collection<TaskContainer.TaskInfo> taskSupplier() {
-        return this.container.getTaskInfos();
+    public Collection<ITaskInstance> taskSupplier() {
+        return this.container.getVisibleTasks();
     }
 
     @Override
