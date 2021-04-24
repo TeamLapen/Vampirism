@@ -6,6 +6,7 @@ import de.teamlapen.lib.LIBREFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
@@ -34,6 +35,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
     private double scrolledD;
     private boolean scrollerClicked;
     private boolean canScroll = true;
+    private double scrollSpeed = 1D;
     private final Supplier<Collection<T>> baseValueSupplier;
 
     public ScrollableListWidget(int xPos, int yPos, int width, int height, int itemHeight, @Nonnull Supplier<Collection<T>> baseValueSupplier, @Nonnull ItemCreator<T> itemSupplier) {
@@ -43,6 +45,20 @@ public class ScrollableListWidget<T> extends ExtendedButton {
         this.itemSupplier = itemSupplier;
         this.baseValueSupplier = baseValueSupplier;
         this.refresh();
+    }
+
+    public ScrollableListWidget(int xPos, int yPos, int width, int height, int itemHeight, @Nonnull Supplier<Collection<T>> baseValueSupplier, @Nonnull ItemCreator<T> itemSupplier, ITextComponent name) {
+        super(xPos, yPos, width, height, name, (button) -> {
+        });
+        this.itemHeight = itemHeight;
+        this.itemSupplier = itemSupplier;
+        this.baseValueSupplier = baseValueSupplier;
+        this.refresh();
+    }
+
+    public ScrollableListWidget<T> scrollSpeed(double scrollSpeed) {
+        this.scrollSpeed = scrollSpeed;
+        return this;
     }
 
     public void refresh() {
@@ -96,6 +112,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        if (!this.visible)return;
 
         RenderSystem.pushMatrix();
         RenderSystem.enableDepthTest();
@@ -166,8 +183,9 @@ public class ScrollableListWidget<T> extends ExtendedButton {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        if (!this.visible) return false;
         if (this.canScroll) {
-            this.scrolled = MathHelper.clamp(this.scrolled + 4 * ((int) -delta), 0, this.listItems.size() * this.itemHeight - this.height + 2);
+            this.scrolled = MathHelper.clamp(this.scrolled + 4 * ((int) -(delta * this.scrollSpeed)), 0, this.listItems.size() * this.itemHeight - this.height + 2);
             this.scrolledD = scrolled;
             return true;
         }
@@ -176,7 +194,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if(this.canScroll && this.scrollerClicked) {
+        if(this.visible && this.canScroll && this.scrollerClicked) {
             double perc = (dragY/(this.height-27));
             double s = (this.listItems.size() * this.itemHeight - this.height) * perc;
             this.scrolledD += s;
@@ -189,6 +207,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (!this.visible) return false;
         this.scrolledD = this.scrolled;
         if (mouseX > this.x && mouseX < this.x + this.width && mouseY > this.y && mouseY < this.y + this.height) {
             if (mouseX > this.x + this.width - this.scrollerWidth) {
@@ -274,8 +293,12 @@ public class ScrollableListWidget<T> extends ExtendedButton {
          * @param itemHeight height of the list item
          */
         public void render(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
+            int v = 66;
+            if (mouseX > x && mouseX < x + listWidth && mouseY > y &&mouseY < y+itemHeight) {
+                v = 86;
+            }
             RenderSystem.enableDepthTest();
-            GuiUtils.drawContinuousTexturedBox(matrixStack, WIDGETS, x, y, 0, 66, listWidth + 1, itemHeight, 200, 20, 3, 3, 3, 3, zLevel);
+            GuiUtils.drawContinuousTexturedBox(matrixStack, WIDGETS, x, y, 0, v, listWidth + 1, itemHeight, 200, 20, 3, 3, 3, 3, zLevel);
             RenderSystem.disableDepthTest();
         }
 

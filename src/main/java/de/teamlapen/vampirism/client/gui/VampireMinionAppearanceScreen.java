@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
-import de.teamlapen.lib.lib.client.gui.ScrollableListButton;
+import de.teamlapen.lib.lib.client.gui.widget.ScrollableArrayTextComponentList;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.render.entities.VampireMinionRenderer;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
@@ -24,7 +24,7 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
     private int skinType;
     private boolean useLordSkin;
     private boolean isMinionSpecificSkin;
-    private ScrollableListButton typeList;
+    private ScrollableArrayTextComponentList typeList;
     private ExtendedButton typeButton;
     private CheckboxButton lordSkinButton;
     private TextFieldWidget nameWidget;
@@ -66,8 +66,8 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
             this.skinType = this.skinType % this.normalSkinCount;
         }
         this.useLordSkin = this.entity.shouldRenderLordSkin();
-        typeList = this.addButton(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 43 + 19, 99, 4, this.normalSkinCount + this.minionSkinCount, null, new TranslationTextComponent("gui.vampirism.minion_appearance.skin"), this::skin, false));
-        typeButton = this.addButton(new ExtendedButton(this.typeList.x, this.typeList.y - 20, this.typeList.getWidth() + 1, 20, new StringTextComponent(""), (button1 -> {
+        this.typeList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 43 + 19, 99,80,20, this.normalSkinCount + this.minionSkinCount, new TranslationTextComponent("gui.vampirism.minion_appearance.skin"), this::skin));
+        this.typeButton = this.addButton(new ExtendedButton(this.typeList.x, this.typeList.y - 20, this.typeList.getWidth() + 1, 20, new StringTextComponent(""), (button1 -> {
             setListVisibility(!typeList.visible);
         })));
 
@@ -97,5 +97,13 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
         boolean minionSpecific = type >= normalSkinCount;
         this.entity.setVampireType(this.skinType = type, this.isMinionSpecificSkin = minionSpecific);
         setListVisibility(false);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (!this.typeList.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
+            return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        }
+        return true;
     }
 }

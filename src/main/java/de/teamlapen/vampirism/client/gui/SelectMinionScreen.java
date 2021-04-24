@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.teamlapen.lib.lib.client.gui.ScrollableListButton;
+import de.teamlapen.lib.lib.client.gui.widget.ScrollableArrayTextComponentList;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.RequestMinionSelectPacket;
 import de.teamlapen.vampirism.network.SelectMinionTaskPacket;
@@ -20,6 +20,7 @@ public class SelectMinionScreen extends Screen {
     private final Integer[] minionIds;
     private final ITextComponent[] minionNames;
     private final RequestMinionSelectPacket.Action action;
+    private ScrollableArrayTextComponentList list;
 
     public SelectMinionScreen(RequestMinionSelectPacket.Action a, List<Pair<Integer, ITextComponent>> minions) {
         super(new StringTextComponent(""));
@@ -40,7 +41,7 @@ public class SelectMinionScreen extends Screen {
 
         int w = 100;
         int maxH = 5;
-        this.addButton(new ScrollableListButton((this.width - w) / 2, (this.height - maxH * 20) / 2, w, Math.min(maxH, 20 * minionNames.length), minionNames.length, minionNames, new StringTextComponent(""), this::onMinionSelected, false));
+        this.list = this.addButton(new ScrollableArrayTextComponentList((this.width - w) / 2, (this.height - maxH * 20) / 2, w, Math.min(maxH * 20, 20 * minionNames.length), 20, () -> this.minionNames, SelectMinionScreen.this::onMinionSelected));
     }
 
     private void onMinionSelected(int id) {
@@ -49,5 +50,13 @@ public class SelectMinionScreen extends Screen {
             VampirismMod.dispatcher.sendToServer(new SelectMinionTaskPacket(selectedMinion, SelectMinionTaskPacket.RECALL));
         }
         this.closeScreen();
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (!this.list.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
+            return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        }
+        return true;
     }
 }

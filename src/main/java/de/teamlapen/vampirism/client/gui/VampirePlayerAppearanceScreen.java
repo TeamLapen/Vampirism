@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
-import de.teamlapen.lib.lib.client.gui.ScrollableListButton;
+import de.teamlapen.lib.lib.client.gui.widget.ScrollableArrayTextComponentList;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -34,8 +34,8 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
     private int fangType;
     private int eyeType;
     private boolean glowingEyes;
-    private ScrollableListButton eyeList;
-    private ScrollableListButton fangList;
+    private ScrollableArrayTextComponentList eyeList;
+    private ScrollableArrayTextComponentList fangList;
     private ExtendedButton eyeButton;
     private ExtendedButton fangButton;
     private CheckboxButton glowingEyesButton;
@@ -61,8 +61,8 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
         this.eyeType = VampirePlayer.getOpt(this.minecraft.player).map(VampirePlayer::getEyeType).orElse(0);
         this.glowingEyes = VampirePlayer.getOpt(this.minecraft.player).map(VampirePlayer::getGlowingEyes).orElse(false);
 
-        this.eyeList = this.addButton(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 5, REFERENCE.EYE_TYPE_COUNT, null, new TranslationTextComponent("gui.vampirism.appearance.eye"), this::eye, false));
-        this.fangList = this.addButton(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 4, REFERENCE.FANG_TYPE_COUNT, null, new TranslationTextComponent("gui.vampirism.appearance.fang"), this::fang, false));
+        this.eyeList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100,20,REFERENCE.EYE_TYPE_COUNT, new TranslationTextComponent("gui.vampirism.appearance.eye"),this::eye));
+        this.fangList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80,20,REFERENCE.FANG_TYPE_COUNT, new TranslationTextComponent("gui.vampirism.appearance.fang"),this::fang));
         this.eyeButton = this.addButton(new ExtendedButton(eyeList.x, eyeList.y - 20, eyeList.getWidth() + 1, 20, new StringTextComponent(""), (b) -> {
             this.setEyeListVisibility(!eyeList.visible);
         }));
@@ -79,6 +79,16 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
         });
         this.setEyeListVisibility(false);
         this.setFangListVisibility(false);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (!this.fangList.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
+            if (!this.eyeList.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
+                return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            }
+        }
+        return true;
     }
 
     @Override

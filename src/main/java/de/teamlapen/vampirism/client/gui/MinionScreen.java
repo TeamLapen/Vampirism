@@ -2,7 +2,8 @@ package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
-import de.teamlapen.lib.lib.client.gui.ScrollableListButton;
+import de.teamlapen.lib.lib.client.gui.widget.ScrollableArrayTextComponentList;
+import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.inventory.container.MinionContainer;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -14,7 +15,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -30,7 +30,7 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
 
     private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/minion_inventory.png");
     private final int extraSlots;
-    private ScrollableListButton taskList;
+    private ScrollableListWidget taskList;
     private Button taskButton;
     private Button appearanceButton;
     private Button statButton;
@@ -80,7 +80,7 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
         this.lockActionButton.setLocked(this.container.isTaskLocked());
         ITextComponent[] taskNames = Arrays.stream(container.getAvailableTasks()).map(IMinionTask::getName).toArray(ITextComponent[]::new);
 
-        this.taskList = this.addButton(new ScrollableListButton(this.guiLeft + 119, this.guiTop + 19 + 19, 87, Math.min(3,  taskNames.length), taskNames.length, taskNames, new StringTextComponent(""), this::selectTask, false));
+        this.taskList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 120, this.guiTop + 19 + 19, 86,Math.min(3* 20, taskNames.length * 20), 20, () -> taskNames, this::selectTask).scrollSpeed(2D));
         this.taskList.visible = false;
         this.taskButton = this.addButton(new ExtendedButton(this.guiLeft + 119, this.guiTop + 19, 88, 20, getActiveTaskName(), (button -> {
             this.taskList.visible = !this.taskList.visible;
