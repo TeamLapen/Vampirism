@@ -130,6 +130,7 @@
   "gui.vampirism.dbno.die": "Give up",
   "gui.vampirism.dbno.resurrect": "Resurrect",
   "gui.vampirism.vampirism_menu.last_known_pos": "Last known position: ",
+  "gui.vampirism.vampirism_menu.last_known_pos.unknown": "Unknown",
   "gui.vampirism.vampirism_menu.distance": " (%s blocks away)",
   "gui.vampirism.vampirism_menu.skill_screen": "Skill Screen",
   "gui.vampirism.vampirism_menu.edit_actions": "Edit Actions",
