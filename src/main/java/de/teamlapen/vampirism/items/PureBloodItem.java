@@ -113,7 +113,7 @@ public class PureBloodItem extends VampirismItem {
     private void checkWingConditions(VampirePlayer p) {
         net.minecraft.entity.player.PlayerEntity e = p.getRepresentingPlayer();
         if (!e.abilities.isCreativeMode && !e.world.isRemote()) {
-            if (e.getItemStackFromSlot(net.minecraft.inventory.EquipmentSlotType.CHEST).getItem() instanceof VampireCloakItem) {
+            if (e.getItemStackFromSlot(net.minecraft.inventory.EquipmentSlotType.CHEST).getItem() instanceof VampireClothingItem) {
                 p.triggerWings();
             }
         }

@@ -18,7 +18,6 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -28,15 +27,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class VampireCloakItem extends ArmorItem implements IFactionExclusiveItem {
 
-    private final String registeredName = "vampire_cloak";
-    private final EnumCloakColor color;
+public class VampireClothingItem extends ArmorItem implements IFactionExclusiveItem {
+    private final String regName;
 
-    public VampireCloakItem(EnumCloakColor color) {
-        super(ArmorMaterial.LEATHER, EquipmentSlotType.CHEST, new Properties().defaultMaxDamage(0).group(VampirismMod.creativeTab));
-        this.setRegistryName(REFERENCE.MODID, registeredName + "_" + color.getName());
-        this.color = color;
+
+    public VampireClothingItem(EquipmentSlotType slotType, String regName) {
+        super(ArmorMaterial.LEATHER, slotType, new Properties().defaultMaxDamage(0).group(VampirismMod.creativeTab));
+        this.regName = regName;
+        this.setRegistryName(REFERENCE.MODID, regName);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -46,6 +45,11 @@ public class VampireCloakItem extends ArmorItem implements IFactionExclusiveItem
         this.addFactionPoisonousToolTip(stack,worldIn,tooltip,flagIn,playerEntity);
     }
 
+    @Override
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
+        return String.format(REFERENCE.MODID + ":textures/models/armor/%s.png", regName);
+    }
+
     @Nullable
     @OnlyIn(Dist.CLIENT)
     @Override
@@ -53,10 +57,6 @@ public class VampireCloakItem extends ArmorItem implements IFactionExclusiveItem
         return CloakModel.getRotatedCloak();
     }
 
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
-        return String.format(REFERENCE.MODID + ":textures/models/armor/%s/%s_%s", registeredName, registeredName,
-                color.getName() + ".png");
-    }
 
     @Nonnull
     @Override
@@ -74,27 +74,6 @@ public class VampireCloakItem extends ArmorItem implements IFactionExclusiveItem
         }
     }
 
-    public enum EnumCloakColor implements IStringSerializable {
-        REDBLACK("red_black"), BLACKRED("black_red"), BLACKWHITE("black_white"), WHITEBLACK(
-                "white_black"), BLACKBLUE("black_blue");
 
 
-        private final String name;
-
-        EnumCloakColor(String nameIn) {
-            this.name = nameIn;
-        }
-
-        @Override
-        public String getString() {
-            return this.name;
-        }
-
-
-        public String getName() {
-            return getString();
-        }
-
-
-    }
 }

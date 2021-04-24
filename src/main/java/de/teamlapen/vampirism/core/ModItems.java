@@ -164,11 +164,11 @@ public class ModItems {
     public static final StakeItem stake = getNull();
     public static final VampirismItem tech_crossbow_ammo_package = getNull();
 
-    public static final VampireCloakItem vampire_cloak_black_blue = getNull();
-    public static final VampireCloakItem vampire_cloak_black_red = getNull();
-    public static final VampireCloakItem vampire_cloak_black_white = getNull();
-    public static final VampireCloakItem vampire_cloak_red_black = getNull();
-    public static final VampireCloakItem vampire_cloak_white_black = getNull();
+    public static final ColoredVampireClothingItem vampire_cloak_black_blue = getNull();
+    public static final ColoredVampireClothingItem vampire_cloak_black_red = getNull();
+    public static final ColoredVampireClothingItem vampire_cloak_black_white = getNull();
+    public static final ColoredVampireClothingItem vampire_cloak_red_black = getNull();
+    public static final ColoredVampireClothingItem vampire_cloak_white_black = getNull();
 
     public static final VampireBloodBottleItem vampire_blood_bottle = getNull();
     public static final VampireBookItem vampire_book = getNull();
@@ -378,11 +378,11 @@ public class ModItems {
         registry.register(new VampirismItem("blood_infused_enhanced_iron_ingot", creativeTabProps()));
         registry.register(new VampirismItem("soul_orb_vampire", creativeTabProps()));
 
-        registry.register(new VampireCloakItem(VampireCloakItem.EnumCloakColor.REDBLACK));
-        registry.register(new VampireCloakItem(VampireCloakItem.EnumCloakColor.BLACKBLUE));
-        registry.register(new VampireCloakItem(VampireCloakItem.EnumCloakColor.BLACKRED));
-        registry.register(new VampireCloakItem(VampireCloakItem.EnumCloakColor.BLACKWHITE));
-        registry.register(new VampireCloakItem(VampireCloakItem.EnumCloakColor.WHITEBLACK));
+        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.REDBLACK));
+        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak",ColoredVampireClothingItem.EnumClothingColor.BLACKBLUE));
+        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak",ColoredVampireClothingItem.EnumClothingColor.BLACKRED));
+        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak",ColoredVampireClothingItem.EnumClothingColor.BLACKWHITE));
+        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak",ColoredVampireClothingItem.EnumClothingColor.WHITEBLACK));
 
         registry.register(new SpawnEggItem(ModEntities.vampire, 0x8B15A3, 0xa735e3, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_spawn_egg"));
         registry.register(new SpawnEggItem(ModEntities.hunter, 0x2d05f2, 0x2600e0, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_hunter_spawn_egg"));
