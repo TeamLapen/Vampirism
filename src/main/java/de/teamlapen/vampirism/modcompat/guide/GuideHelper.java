@@ -19,9 +19,9 @@ import de.teamlapen.vampirism.modcompat.guide.recipes.AlchemicalCauldronRecipeRe
 import de.teamlapen.vampirism.modcompat.guide.recipes.ShapedWeaponTableRecipeRenderer;
 import de.teamlapen.vampirism.modcompat.guide.recipes.ShapelessWeaponTableRecipeRenderer;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
-import de.teamlapen.vampirism.player.tasks.reward.ItemRewardInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
@@ -118,8 +118,7 @@ public class GuideHelper {
      */
     public static PageItemStack createItemTaskDescription(Task task) {
         assert task.getReward() instanceof ItemReward;
-        ItemRewardInstance ins = ((ItemReward) task.getReward()).createInstance(null);
-        ItemStack reward = ins.getReward();
+        Ingredient ingredient = Ingredient.fromStacks(((ItemReward) task.getReward()).getAllPossibleRewards().stream());
         List<ITextProperties> text = new ArrayList<>();
         StringTextComponent newLine = new StringTextComponent("\n");
         IPlayableFaction<?> f = task.getFaction();
@@ -141,6 +140,6 @@ public class GuideHelper {
         } else {
             text.add(new TranslationTextComponent("text.vampirism.task.prerequisites.none"));
         }
-        return new PageItemStack(ITextProperties.func_240654_a_(text), reward);
+        return new PageItemStack(ITextProperties.func_240654_a_(text), ingredient);
     }
 }

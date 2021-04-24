@@ -6,6 +6,8 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
 public class ItemReward implements TaskReward {
 
@@ -21,6 +23,10 @@ public class ItemReward implements TaskReward {
         if (!player.getRepresentingPlayer().addItemStackToInventory(this.reward.copy())) {
             player.getRepresentingPlayer().dropItem(this.reward.copy(), true);
         }
+    }
+
+    public List<ItemStack> getAllPossibleRewards() {
+        return Collections.singletonList(reward);
     }
 
     @Override
