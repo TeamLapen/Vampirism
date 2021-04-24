@@ -35,12 +35,10 @@ import de.teamlapen.vampirism.util.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.ai.goal.TargetGoal;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -60,7 +58,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.GameRules;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeMod;
@@ -1250,7 +1247,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 double naturalArmor = getNaturalArmorValue(lvl);
                 EffectInstance armorRegen = player.getActivePotionEffect(ModEffects.armor_regeneration);
                 double armorRegenerationMod = armorRegen == null ? 0 : armorRegen.getDuration() / ((double)VampirismConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20);
-                naturalArmor *= (1-0.5*armorRegenerationMod); //Modify natural armor between 50% and 100% depending on the armor regen state
+                naturalArmor *= (1-0.75*armorRegenerationMod); //Modify natural armor between 25% and 100% depending on the armor regen state
                 double naturalToughness = getNaturalArmorToughnessValue(lvl);
                 AttributeModifier finalModArmor = modArmor;
                 double baseArmor = armorAtt.getOrCreateModifiersByOperation(AttributeModifier.Operation.ADDITION).stream().filter(m -> m != finalModArmor).map(AttributeModifier::getAmount).mapToDouble(Double::doubleValue).sum();
