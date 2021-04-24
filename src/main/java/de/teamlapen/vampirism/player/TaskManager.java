@@ -140,7 +140,9 @@ public class TaskManager implements ITaskManager {
         if (!task.isUnique()) return;
         this.completedTasks.remove(task);
         TaskWrapper wrapper = this.taskWrapperMap.get(UNIQUE_TASKS);
-        wrapper.tasks.values().removeIf(ins -> ins.getTask() == task);
+        if (wrapper != null) {
+            wrapper.tasks.values().removeIf(ins -> ins.getTask() == task);
+        }
     }
 
     // task filter -----------------------------------------------------------------------------------------------------
