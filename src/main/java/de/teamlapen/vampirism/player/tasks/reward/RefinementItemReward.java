@@ -56,7 +56,7 @@ public class RefinementItemReward extends ItemReward {
         IRefinementItem.AccessorySlotType slot = (item).getSlotType();
         List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream()
                 .filter(set -> this.faction == null || set.getFaction() == faction)
-                .filter(set-> this.rarity == null|| set.getRarity() == this.rarity)
+                .filter(set-> this.rarity == null || set.getRarity().ordinal() >= this.rarity.ordinal())
                 .filter(set -> set.getSlotType().map(slot1 -> slot1 == slot).orElse(true))
                 .map(set -> ((RefinementSet) set).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return new ItemStack(item);

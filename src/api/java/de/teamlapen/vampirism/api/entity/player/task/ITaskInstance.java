@@ -49,6 +49,8 @@ public interface ITaskInstance {
      */
     UUID getTaskBoard();
 
+    long getTaskDuration();
+
     /**
      * whether the instance is completed or not
      */

@@ -26,6 +26,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -89,7 +90,7 @@ public class TaskManager implements ITaskManager {
 
     @Override
     public void acceptTask(UUID taskBoardId, @Nonnull UUID taskInstance) {
-        ITaskInstance ins = this.taskWrapperMap.get(taskBoardId).acceptTask(taskInstance,this.player.world.getGameTime() + VampirismConfig.BALANCE.taskDuration.get() * 1200);
+        ITaskInstance ins = this.taskWrapperMap.get(taskBoardId).acceptTask(taskInstance,this.player.world.getGameTime() + getTaskTimeConfig() * 1200L);
         this.updateStats(ins);
     }
 
@@ -211,6 +212,13 @@ public class TaskManager implements ITaskManager {
 
     // general ---------------------------------------------------------------------------------------------------------
 
+    public int getTaskTimeConfig(){
+        if (ServerLifecycleHooks.getCurrentServer().isDedicatedServer()){
+            return VampirismConfig.BALANCE.taskDurationDedicatedServer.get();
+        }
+        return VampirismConfig.BALANCE.taskDurationSinglePlayer.get();
+    }
+
     @Override
     public void reset() {
         this.completedTasks.clear();
@@ -271,7 +279,7 @@ public class TaskManager implements ITaskManager {
         if (wrapper.tasks.size() < wrapper.taskAmount) {
             List<Task> tasks = new ArrayList<>(ModRegistries.TASKS.getValues());
             Collections.shuffle(tasks);
-            wrapper.tasks.putAll(tasks.stream().filter(this::matchesFaction).filter(task -> !task.isUnique()).filter(this::isTaskUnlocked).limit(wrapper.taskAmount - wrapper.tasks.size()).map(task -> new TaskInstance(task, taskBoardId, this.factionPlayer)).collect(Collectors.toMap(TaskInstance::getId, t ->t)));
+            wrapper.tasks.putAll(tasks.stream().filter(this::matchesFaction).filter(task -> !task.isUnique()).filter(this::isTaskUnlocked).limit(wrapper.taskAmount - wrapper.tasks.size()).map(task -> new TaskInstance(task, taskBoardId, this.factionPlayer, this.getTaskTimeConfig() * 1200L)).collect(Collectors.toMap(TaskInstance::getId, t ->t)));
         }
         this.updateStats(wrapper.getTaskInstances());
         return wrapper.getTaskInstances();
@@ -291,7 +299,7 @@ public class TaskManager implements ITaskManager {
             this.removeLockedTasks(uniqueTasks.values());
         }
         Collection<Task> tasks = uniqueTasks.values().stream().map(ITaskInstance::getTask).collect(Collectors.toSet());
-        uniqueTasks.putAll(ModRegistries.TASKS.getValues().stream().filter(this::matchesFaction).filter(Task::isUnique).filter(task -> !tasks.contains(task)).filter(task -> !this.completedTasks.contains(task)).filter(this::isTaskUnlocked).map(task -> new TaskInstance(task, UNIQUE_TASKS, this.factionPlayer)).collect(Collectors.toMap(TaskInstance::getId, a ->a)));
+        uniqueTasks.putAll(ModRegistries.TASKS.getValues().stream().filter(this::matchesFaction).filter(Task::isUnique).filter(task -> !tasks.contains(task)).filter(task -> !this.completedTasks.contains(task)).filter(this::isTaskUnlocked).map(task -> new TaskInstance(task, UNIQUE_TASKS, this.factionPlayer, 0)).collect(Collectors.toMap(TaskInstance::getId, a ->a)));
         wrapper.tasks.putAll(uniqueTasks);
         this.updateStats(uniqueTasks.values());
         return uniqueTasks.values();
@@ -488,7 +496,7 @@ public class TaskManager implements ITaskManager {
                         tasks.add(task);
                     }
                 }));
-                wrapper.tasks.putAll(tasks.stream().map(t -> new TaskInstance(t,wrapper.id, this.factionPlayer)).collect(Collectors.toMap(TaskInstance::getId, t->t)));
+                wrapper.tasks.putAll(tasks.stream().map(t -> new TaskInstance(t,wrapper.id, this.factionPlayer, this.getTaskTimeConfig() * 1200L * 4)).collect(Collectors.toMap(TaskInstance::getId, t->t)));
             });
         }
         //less tasks
@@ -507,7 +515,7 @@ public class TaskManager implements ITaskManager {
                 entityIdNBT.keySet().forEach((taskId -> {
                     Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
                     if (task != null) {
-                        wrapper.acceptTask(task, this.player.world.getGameTime() + VampirismConfig.BALANCE.taskDuration.get() * 1200 * 4);
+                        wrapper.acceptTask(task, this.player.world.getGameTime() + getTaskTimeConfig() * 1200L * 4);
                     }
                 }));
             });

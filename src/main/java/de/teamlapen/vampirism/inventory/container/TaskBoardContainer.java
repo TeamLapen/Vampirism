@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
-import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskActionPacket;
@@ -121,7 +120,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
                 this.taskInstances.remove(taskInfo);
                 break;
             case ACCEPT:
-                taskInfo.startTask(Minecraft.getInstance().world.getGameTime() + VampirismConfig.BALANCE.taskDuration.get() * 1200);
+                taskInfo.startTask(Minecraft.getInstance().world.getGameTime() + taskInfo.getTaskDuration());
                 break;
             default:
                 taskInfo.aboardTask();
@@ -139,7 +138,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
             return TaskAction.COMPLETE;
         } else if (isTaskNotAccepted(taskInfo)) {
             return TaskAction.ACCEPT;
-        } else if (!taskInfo.isUnique() && this.factionPlayer.getRepresentingPlayer().world.getGameTime() < taskInfo.getTaskTimeStamp()) {
+        } else if (!taskInfo.isUnique() && this.factionPlayer.getRepresentingPlayer().world.getGameTime() > taskInfo.getTaskTimeStamp()) {
             return TaskAction.REMOVE;
         } else {
             return TaskAction.ABORT;

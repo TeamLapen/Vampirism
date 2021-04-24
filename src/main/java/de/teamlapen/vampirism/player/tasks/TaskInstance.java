@@ -31,17 +31,19 @@ public class TaskInstance implements ITaskInstance {
     private boolean completed;
     @Nonnull
     private final ITaskRewardInstance reward;
+    private final long taskDuration;
 
-    public TaskInstance(@Nonnull Task task, @Nonnull UUID taskGiver, @Nonnull IFactionPlayer<?> player) {
+    public TaskInstance(@Nonnull Task task, @Nonnull UUID taskGiver, @Nonnull IFactionPlayer<?> player, long taskDuration) {
         this.task = task;
         this.taskGiver = taskGiver;
         this.instanceId = UUID.randomUUID();
         this.stats = new HashMap<>();
         this.taskTimeStamp = -1;
+        this.taskDuration = taskDuration;
         this.reward = this.task.getReward().createInstance(player);
     }
 
-    private TaskInstance(@Nonnull UUID taskGiver, @Nonnull Task task, @Nonnull Map<ResourceLocation, Integer> stats, boolean accepted, long taskTimeStamp, @Nonnull UUID instanceId, @Nonnull ITaskRewardInstance taskRewardInstance) {
+    private TaskInstance(@Nonnull UUID taskGiver, @Nonnull Task task, @Nonnull Map<ResourceLocation, Integer> stats, boolean accepted, long taskTimeStamp, @Nonnull UUID instanceId, @Nonnull ITaskRewardInstance taskRewardInstance, long taskDuration) {
         this.taskGiver = taskGiver;
         this.task = task;
         this.stats = stats;
@@ -49,6 +51,7 @@ public class TaskInstance implements ITaskInstance {
         this.taskTimeStamp = taskTimeStamp;
         this.instanceId = instanceId;
         this.reward = taskRewardInstance;
+        this.taskDuration = taskDuration;
     }
 
     @Nonnull
@@ -71,6 +74,10 @@ public class TaskInstance implements ITaskInstance {
     public void startTask(long timestamp) {
         this.taskTimeStamp = timestamp;
         this.accepted = true;
+    }
+
+    public long getTaskDuration() {
+        return taskDuration;
     }
 
     @Nonnull
@@ -126,6 +133,7 @@ public class TaskInstance implements ITaskInstance {
         nbt.put("stats", stats);
         nbt.putString("rewardId", this.reward.getId().toString());
         this.reward.writeNBT(nbt);
+        nbt.putLong("taskDuration", this.taskDuration);
         return nbt;
     }
 
@@ -142,7 +150,8 @@ public class TaskInstance implements ITaskInstance {
         });
         ResourceLocation rewardId = new ResourceLocation(nbt.getString("rewardId"));
         ITaskRewardInstance reward = TaskManager.createReward(rewardId, nbt);
-        return new TaskInstance(id, task, stats, accepted, taskTimer, insId, reward);
+        long taskDuration = nbt.getLong("taskDuration");
+        return new TaskInstance(id, task, stats, accepted, taskTimer, insId, reward, taskDuration);
     }
 
     public void encode(PacketBuffer buffer) {
@@ -158,6 +167,7 @@ public class TaskInstance implements ITaskInstance {
         });
         buffer.writeResourceLocation(this.reward.getId());
         this.reward.encode(buffer);
+        buffer.writeVarLong(this.taskDuration);
     }
 
     public static TaskInstance decode(PacketBuffer buffer) {
@@ -173,7 +183,8 @@ public class TaskInstance implements ITaskInstance {
         }
         ResourceLocation rewardId = buffer.readResourceLocation();
         ITaskRewardInstance reward = TaskManager.createReward(rewardId, buffer);
-        return new TaskInstance(id, task,stats, accepted, taskTimer, insId, reward);
+        long taskDuration = buffer.readVarLong();
+        return new TaskInstance(id, task,stats, accepted, taskTimer, insId, reward, taskDuration);
     }
 
     @Override

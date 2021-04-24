@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.api.entity.player.task.ITaskRewardInstance;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.client.gui.ExtendedScreen;
-import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.player.tasks.reward.ItemRewardInstance;
@@ -80,7 +79,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
 
         //render name
         Optional<IReorderingProcessor> text = Optional.ofNullable(this.screen.font.trimStringToWidth(this.item.getTask().getTranslation(), 131).get(0));
-        text.ifPresent(t -> this.screen.font.func_238422_b_(matrixStack, t, x + 4, y + 7, 3419941));//(6839882 & 16711422) >> 1 //8453920 //4226832
+        text.ifPresent(t -> this.screen.font.func_238422_b_(matrixStack, t, x + 2, y + 4, 3419941));//(6839882 & 16711422) >> 1 //8453920 //4226832
 
         if (!this.screen.getTaskContainer().isTaskNotAccepted(this.item) && !this.item.isUnique()) {
             long remainingTime = this.item.getTaskTimeStamp() - Minecraft.getInstance().world.getGameTime();
@@ -101,7 +100,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
             }
             int width = this.screen.font.getStringPropertyWidth(msg);
             int color = 11184810;
-            if (remainingTime < VampirismConfig.BALANCE.taskDuration.get() * 60 * 0.1) {
+            if (remainingTime < this.item.getTaskDuration() /20 * 0.1) {
                 color = 16733525;
             }
             this.screen.font.func_243246_a(matrixStack, msg, x + 134 - width, y + 12, color);

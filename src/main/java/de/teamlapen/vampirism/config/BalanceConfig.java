@@ -39,7 +39,8 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue hunterTentMaxSpawn;
     public final ForgeConfigSpec.DoubleValue crossbowDamageMult;
     public final ForgeConfigSpec.IntValue taskMasterMaxTaskAmount;
-    public final ForgeConfigSpec.IntValue taskDuration;
+    public final ForgeConfigSpec.IntValue taskDurationSinglePlayer;
+    public final ForgeConfigSpec.IntValue taskDurationDedicatedServer;
     public final ForgeConfigSpec.IntValue skillPointsPerLevel;
     public final ForgeConfigSpec.BooleanValue allowInfiniteSpecialArrows;
 
@@ -224,7 +225,8 @@ public class BalanceConfig {
         hunterTentMaxSpawn = builder.comment("Maximum number of hunters that can spawn at one tent per day").defineInRange("hunterTentMaxSpawn", 4, 0, 20);
         crossbowDamageMult = builder.comment("The base damage dealt by crossbow arrows is multiplied by this").defineInRange("crossbowDamageMult", 1, 0.2, 5);
         taskMasterMaxTaskAmount = builder.comment("Maximum amount of task shown at a taskmaster, except unique tasks").defineInRange("taskMasterMaxTaskAmount", 3, 1, Integer.MAX_VALUE);
-        taskDuration = builder.comment("Duration a task can be completed. In Minutes").defineInRange("taskDuration", 60, 1, Integer.MAX_VALUE);
+        taskDurationSinglePlayer = builder.comment("Duration a task can be completed in a singleplayer world. In Minutes").defineInRange("taskDurationSinglePlayer", 120, 1, Integer.MAX_VALUE);
+        taskDurationDedicatedServer = builder.comment("Duration a task can be completed on a dedicated server. In Minutes").defineInRange("taskDurationDedicatedServer", 1440, 1, Integer.MAX_VALUE);
         skillPointsPerLevel = builder.comment("Players receive n skill points for each leve-up. Anything except 1 is unbalanced.").defineInRange("skillPointsPerLevel", 1, 1, 20);
         allowInfiniteSpecialArrows = builder.comment("Whether special crossbow arrows (e.g. spitfire) can be used with infinity enchantment").define("allowInfiniteSpecialArrows", false);
 
