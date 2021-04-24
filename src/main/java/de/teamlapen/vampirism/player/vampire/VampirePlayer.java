@@ -35,6 +35,8 @@ import de.teamlapen.vampirism.util.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.entity.player.PlayerEntity;
@@ -73,6 +75,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
@@ -98,6 +101,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private final static String KEY_DBNO_TIMER = "dbno";
     private final static String KEY_DBNO_MSG = "dbno_msg";
 
+    public final static UUID NATURAL_ARMOR_UUID = UUID.fromString("17dcf6d2-30ac-4730-b16a-528353d0abe5");
+    public final static UUID NATURAL_ARMOR_TOUGHNESS_UUID = UUID.fromString("efa8ae3b-0918-473c-b99c-774feeb71b29");
 
     @CapabilityInject(IVampirePlayer.class)
     public static Capability<IVampirePlayer> CAP = getNull();
@@ -167,6 +172,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private int feed_victim = -1;
     private BITE_TYPE feed_victim_bite_type;
     private int feedBiteTickCounter = 0;
+    private boolean forceNaturalArmorUpdate;
     /**
      * >=0 if DBNO, counts downwards, if == 0, can resurrect
      */
@@ -614,7 +620,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             actionHandler.onActionsReactivated();
             ticksInSun = 0;
             if (wasDead) {
-                player.addPotionEffect(new EffectInstance(ModEffects.sunscreen, 400, 4, true, false));
+                player.addPotionEffect(new EffectInstance(ModEffects.sunscreen, 400, 4, false, false));
+                player.addPotionEffect(new EffectInstance(ModEffects.armor_regeneration, VampirismConfig.BALANCE.vpNaturalArmorRegenDuration.get()*20,0,false,false));
+                requestNaturalArmorUpdate();
                 player.setHealth(player.getMaxHealth());
                 bloodStats.setBloodLevel(bloodStats.getMaxBlood());
             }
@@ -626,12 +634,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         this.applyEntityAttributes();
         if (!isRemote()) {
             ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.VAMPIRE_LEVEL_CRITERIA, newLevel);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpSpeedMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpStrengthMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ARMOR, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpResistanceMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, false);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, true);
+            applyLevelModifiersA();
+            applyLevelModifiersB(false);
             if (player.getHealth() > player.getMaxHealth()) player.setHealth(player.getMaxHealth());
-            LevelAttributeModifier.applyModifier(player, ModAttributes.blood_exhaustion, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+            updateNaturalArmor();
             if (newLevel > 13) {
                 bloodStats.setMaxBlood(40);
             } else if (newLevel > 9) {
@@ -797,6 +803,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 if (feed_victim != -1 && feedBiteTickCounter++ >= FEED_TIMER) {
                     updateFeeding();
                     feedBiteTickCounter = 0;
+                }
+
+                if(forceNaturalArmorUpdate|| player.ticksExisted % 128 ==0){
+                   updateNaturalArmor();
+                   forceNaturalArmorUpdate=false;
                 }
 
             } else {
@@ -1210,6 +1221,81 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
         if (!(e.getDistance(player) <= player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue() + 1) || e.getHealth() == 0f)
             endFeeding(true);
+    }
+
+    public static double getNaturalArmorValue(int lvl){
+        return lvl > 0 ? VampirismConfig.BALANCE.vpNaturalArmorBaseValue.get() + (lvl/(double)REFERENCE.HIGHEST_VAMPIRE_LEVEL)*VampirismConfig.BALANCE.vpNaturalArmorIncrease.get():0;
+    }
+
+    public static double getNaturalArmorToughnessValue(int lvl){
+        return  (lvl/(double)REFERENCE.HIGHEST_VAMPIRE_LEVEL)*VampirismConfig.BALANCE.vpNaturalArmorToughnessIncrease.get();
+    }
+
+    public void updateNaturalArmor(){
+        ModifiableAttributeInstance armorAtt = player.getAttribute(Attributes.ARMOR);
+        ModifiableAttributeInstance toughnessAtt = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
+        if(armorAtt!=null&&toughnessAtt!=null){
+
+            int lvl = getLevel();
+            if(lvl==0){
+                armorAtt.removeModifier(NATURAL_ARMOR_UUID);
+                toughnessAtt.removeModifier(NATURAL_ARMOR_TOUGHNESS_UUID);
+            }
+            else{
+                AttributeModifier modArmor = armorAtt.getModifier(NATURAL_ARMOR_UUID);
+                AttributeModifier modToughness = toughnessAtt.getModifier(NATURAL_ARMOR_TOUGHNESS_UUID);
+                double naturalArmor = getNaturalArmorValue(lvl);
+                EffectInstance armorRegen = player.getActivePotionEffect(ModEffects.armor_regeneration);
+                double armorRegenerationMod = armorRegen == null ? 0 : armorRegen.getDuration() / ((double)VampirismConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20);
+                naturalArmor *= (1-0.75*armorRegenerationMod); //Modify natural armor between 25% and 100% depending on the armor regen state
+                double naturalToughness = getNaturalArmorToughnessValue(lvl);
+                AttributeModifier finalModArmor = modArmor;
+                double baseArmor = armorAtt.getOrCreateModifiersByOperation(AttributeModifier.Operation.ADDITION).stream().filter(m -> m != finalModArmor).map(AttributeModifier::getAmount).mapToDouble(Double::doubleValue).sum();
+                AttributeModifier finalModToughness = modToughness;
+                double baseToughness = toughnessAtt.getOrCreateModifiersByOperation(AttributeModifier.Operation.ADDITION).stream().filter(m -> m != finalModToughness).map(AttributeModifier::getAmount).mapToDouble(Double::doubleValue).sum();
+                double targetArmor = Math.max(0,naturalArmor-baseArmor);
+                double targetToughness = Math.max(0, naturalToughness-baseToughness);
+                if(modArmor != null && targetArmor!=modArmor.getAmount()){
+                    armorAtt.removeModifier(modArmor);
+                    modArmor=null;
+                }
+                if(targetArmor!=0&&modArmor==null){
+                    armorAtt.applyNonPersistentModifier(new AttributeModifier(NATURAL_ARMOR_UUID,"Natural Vampire Armor",targetArmor, AttributeModifier.Operation.ADDITION));
+                }
+                if(modToughness != null && targetToughness!=modToughness.getAmount()){
+                    toughnessAtt.removeModifier(modToughness);
+                    modToughness=null;
+                }
+                if(targetToughness!=0&&modToughness==null){
+                    toughnessAtt.applyNonPersistentModifier(new AttributeModifier(NATURAL_ARMOR_TOUGHNESS_UUID,"Natural Vampire Armor Toughness",targetToughness, AttributeModifier.Operation.ADDITION));
+                }
+                applyLevelModifiersB(VampirismConfig.BALANCE.vpArmorPenalty.get() && baseArmor > 7);
+
+            }
+        }
+    }
+
+    /**
+     * Request an update to the player natural armor next tick
+     */
+    public void requestNaturalArmorUpdate(){
+        this.forceNaturalArmorUpdate = true;
+    }
+
+    /**
+     * Apply the armor unaffected level scaled entity attribute modifiers
+     */
+    private void applyLevelModifiersA(){
+        LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, true);
+        LevelAttributeModifier.applyModifier(player, ModAttributes.blood_exhaustion, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+    }
+
+    /**
+     * Apply the armor affected level scaled entity attribute modifiers
+     */
+    private void applyLevelModifiersB(boolean heavyArmor){
+        LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpSpeedMaxMod.get() * (heavyArmor?0.5f:1), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+        LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpStrengthMaxMod.get() * (heavyArmor?0.5f:1), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
     }
 
     @Override

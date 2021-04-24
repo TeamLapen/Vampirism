@@ -110,7 +110,6 @@ public class BalanceConfig {
 
     public final ForgeConfigSpec.DoubleValue vpHealthMaxMod;
     public final ForgeConfigSpec.DoubleValue vpStrengthMaxMod;
-    public final ForgeConfigSpec.DoubleValue vpResistanceMaxMod;
     public final ForgeConfigSpec.DoubleValue vpSpeedMaxMod;
     public final ForgeConfigSpec.DoubleValue vpExhaustionMaxMod;
     public final ForgeConfigSpec.DoubleValue vpBasicBloodExhaustionMod;
@@ -129,6 +128,11 @@ public class BalanceConfig {
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> vpImmortalFromDamageSources;
     public final ForgeConfigSpec.IntValue vpDbnoDuration;
     public final ForgeConfigSpec.IntValue vpNeonatalDuration;
+    public final ForgeConfigSpec.IntValue vpNaturalArmorRegenDuration;
+    public final ForgeConfigSpec.IntValue vpNaturalArmorBaseValue;
+    public final ForgeConfigSpec.IntValue vpNaturalArmorIncrease;
+    public final ForgeConfigSpec.IntValue vpNaturalArmorToughnessIncrease;
+    public final ForgeConfigSpec.BooleanValue vpArmorPenalty;
 
 
     public final ForgeConfigSpec.IntValue vaFreezeCooldown;
@@ -312,7 +316,6 @@ public class BalanceConfig {
         builder.category("vampirePlayer", "vp");
         vpHealthMaxMod = builder.defineInRange("healthMaxMod", 16, 0.5, 40);
         vpStrengthMaxMod = builder.defineInRange("strengthMaxMod", 0.25, 0, 2);
-        vpResistanceMaxMod = builder.defineInRange("resistanceMaxMod", 4d, 0, 20);
         vpSpeedMaxMod = builder.defineInRange("speedMaxMod", 0.3, 0, 5);
         vpExhaustionMaxMod = builder.defineInRange("exhaustionMaxMod", 1.0, 0, 10);
         vpBasicBloodExhaustionMod = builder.comment("Blood exhaustion is multiplied with this value").defineInRange("basicBloodExhaustionMod", 0.7, 0, 5);
@@ -331,6 +334,11 @@ public class BalanceConfig {
         vpImmortalFromDamageSources = builder.comment("List of damage source types that the player does not die from (immediately)").defineList("immortalFromDamageSources", Lists.asList("player","mob",new String[]{"lightningBolt", "onFire", "cramming", "fall", "flyIntoWall", "magic", "wither", "anvil", "falling_block", "dragon_breath", "sweetBerryBush", "trident", "arrow", "fireworks", "fireBall", "witherSkull", "explosion", "explosion.player", "thrown", "indirectMagic", "vampire_on_fire"}),s->s instanceof String);
         vpDbnoDuration = builder.comment("Base cooldown before a downed vampire can resurrect. In sec.").defineInRange("dbnoDuration",10,1,1000);
         vpNeonatalDuration = builder.comment("Base duration of neonatal effect after resurrection. In sec.").defineInRange("neonatalDuration", 60, 1,Integer.MAX_VALUE);
+        vpNaturalArmorRegenDuration = builder.comment("The duration it takes for the vampire natural armor to fully regenerate after respawn. In seconds").defineInRange("naturalArmorRegenDuration",240,1,2400);
+        vpNaturalArmorBaseValue = builder.comment("The base value of natural armor every vampire has at level 1").defineInRange("naturalArmorBaseValue",10,0,100);
+        vpNaturalArmorIncrease = builder.comment("The amount of natural armor a max level vampire has in addition to the base value").defineInRange("naturalArmorIncrease",10,0,100);
+        vpNaturalArmorToughnessIncrease = builder.comment("The amount of natural armor toughness a max level vampire has").defineInRange("naturalArmorToughnessIncrease",8,0,100);
+        vpArmorPenalty = builder.comment("Whether vampire have a reduced speed and attack boost when wearing heavy armor").define("armorPenalty",true);
 
         //Vampire actions
         builder.category("vampireActions", "va");
