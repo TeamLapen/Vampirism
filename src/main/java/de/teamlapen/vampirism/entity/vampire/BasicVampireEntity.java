@@ -457,37 +457,30 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                     FactionPlayerHandler.getOpt(player).ifPresent(fph -> {
                         if (fph.getMaxMinions() > 0) {
                             ItemStack heldItem = player.getHeldItem(hand);
-
-                            if (this.getLevel() > 0) {
-                                if (heldItem.getItem() == ModItems.vampire_minion_binding) {
-                                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.unavailable"), true);
-                                }
-                            } else {
-                                boolean freeSlot = MinionWorldData.getData(player.world).map(data -> data.getOrCreateController(fph)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
-                                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.available"), true);
-                                if (heldItem.getItem() == ModItems.vampire_minion_binding) {
-                                    if (!freeSlot) {
-                                        player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.no_free_slot"), true);
-                                    } else {
-                                        String key;
-                                        switch (this.getRNG().nextInt(3)) {
-                                            case 0:
-                                                key = "text.vampirism.basic_vampire.minion.start_serving1";
-                                                break;
-                                            case 1:
-                                                key = "text.vampirism.basic_vampire.minion.start_serving2";
-                                                break;
-                                            default:
-                                                key = "text.vampirism.basic_vampire.minion.start_serving3";
-                                                break;
-                                        }
-                                        player.sendStatusMessage(new TranslationTextComponent(key),false);
-                                        convertToMinion(player);
-                                        if (!player.abilities.isCreativeMode) heldItem.shrink(1);
+                            boolean freeSlot = MinionWorldData.getData(player.world).map(data -> data.getOrCreateController(fph)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
+                            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.available"), true);
+                            if (heldItem.getItem() == ModItems.vampire_minion_binding) {
+                                if (!freeSlot) {
+                                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.no_free_slot"), true);
+                                } else {
+                                    String key;
+                                    switch (this.getRNG().nextInt(3)) {
+                                        case 0:
+                                            key = "text.vampirism.basic_vampire.minion.start_serving1";
+                                            break;
+                                        case 1:
+                                            key = "text.vampirism.basic_vampire.minion.start_serving2";
+                                            break;
+                                        default:
+                                            key = "text.vampirism.basic_vampire.minion.start_serving3";
+                                            break;
                                     }
-                                } else if (freeSlot) {
-                                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.require_binding", UtilLib.translate(ModItems.vampire_minion_binding.getTranslationKey())), true);
+                                    player.sendStatusMessage(new TranslationTextComponent(key),false);
+                                    convertToMinion(player);
+                                    if (!player.abilities.isCreativeMode) heldItem.shrink(1);
                                 }
+                            } else if (freeSlot) {
+                                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.require_binding", UtilLib.translate(ModItems.vampire_minion_binding.getTranslationKey())), true);
                             }
                         }
                     });
