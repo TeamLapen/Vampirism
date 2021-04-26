@@ -101,8 +101,11 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         return this.getMinionData().map(d -> d.type).map(t -> Math.max(0, t)).orElse(0);
     }
 
-    public void setVampireType(int type) {
-        getMinionData().ifPresent(d -> d.type = type);
+    public void setVampireType(int type, boolean minionSkin) {
+        getMinionData().ifPresent(d -> {
+            d.type = type;
+            d.minionSkin = minionSkin;
+        });
     }
 
     @Nonnull
@@ -173,6 +176,13 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         return this.getMinionData().map(d -> d.useLordSkin).orElse(false);
     }
 
+    /**
+     * @return Whether the selected skin is from the minion specific pool or a generic vampire skin
+     */
+    public boolean hasMinionSpecificSkin(){
+        return this.getMinionData().map(d -> d.minionSkin).orElse(false);
+    }
+
     @Override
     public boolean useBlood(int amt, boolean allowPartial) {
         return false;
@@ -233,6 +243,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         public static final int MAX_LEVEL_SPEED = 3;
         private int type;
         private boolean useLordSkin;
+        private boolean minionSkin;
         /**
          * Should be between 0 and {@link VampireMinionData#MAX_LEVEL}
          */
@@ -247,6 +258,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             this.type = type;
             this.useLordSkin = useLordSkin;
             this.level = 0;
+            this.minionSkin = false;
         }
 
         private VampireMinionData() {
@@ -263,6 +275,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             healthLevel = nbt.getInt("l_he");
             strengthLevel = nbt.getInt("l_str");
             speedLevel = nbt.getInt("l_spe");
+            minionSkin = nbt.getBoolean("ms");
         }
 
         @Override
@@ -305,7 +318,8 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             this.setName(newName);
             if (data.length >= 2) {
                 this.type = data[0];
-                this.useLordSkin = data[1] == 1;
+                this.useLordSkin = (data[1] & 0b1) == 1;
+                this.minionSkin = (data[1] &0b10) == 0b10;
             }
         }
 
@@ -319,6 +333,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             tag.putInt("l_he", healthLevel);
             tag.putInt("l_str", strengthLevel);
             tag.putInt("l_spe", speedLevel);
+            tag.putBoolean("ms",minionSkin);
         }
 
         /**

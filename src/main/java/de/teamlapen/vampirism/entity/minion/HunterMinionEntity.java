@@ -102,9 +102,11 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         return this.getMinionData().map(d -> d.type).map(t -> Math.max(0, t)).orElse(0);
     }
 
-    public void setHunterType(int type) {
-        assert type >= 0;
-        this.getMinionData().ifPresent(d -> d.type = type);
+    public void setHunterType(int type, boolean minionSkin) {
+        getMinionData().ifPresent(d -> {
+            d.type = type;
+            d.minionSkin = minionSkin;
+        });
     }
 
     @Override
@@ -151,6 +153,13 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
     public boolean shouldRenderLordSkin() {
         return this.getMinionData().map(d -> d.useLordSkin).orElse(false);
+    }
+
+    /**
+     * @return Whether the selected skin is from the minion specific pool or a generic vampire skin
+     */
+    public boolean hasMinionSpecificSkin(){
+        return this.getMinionData().map(d -> d.minionSkin).orElse(false);
     }
 
     @Override
@@ -238,6 +247,8 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         private int type;
         private int hat;
         private boolean useLordSkin;
+        private boolean minionSkin;
+
         /**
          * Should be between 0 and {@link HunterMinionData#MAX_LEVEL}
          */
@@ -253,6 +264,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             this.hat = hat;
             this.useLordSkin = useLordSkin;
             this.level = 0;
+            this.minionSkin=false;
         }
 
         private HunterMinionData() {
@@ -270,6 +282,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             healthLevel = nbt.getInt("l_he");
             strengthLevel = nbt.getInt("l_str");
             resourceEfficiencyLevel = nbt.getInt("l_res");
+            minionSkin = nbt.getBoolean("ms");
 
         }
 
@@ -314,7 +327,8 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             if (data.length >= 3) {
                 type = data[0];
                 hat = data[1];
-                useLordSkin = data[2] == 1;
+                this.useLordSkin = (data[1] & 0b1) == 1;
+                this.minionSkin = (data[1] & 0b10) == 0b10;
             }
         }
 
@@ -329,6 +343,8 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             tag.putInt("l_str", strengthLevel);
             tag.putInt("l_res", resourceEfficiencyLevel);
             tag.putBoolean("use_lord_skin", useLordSkin);
+            tag.putBoolean("ms",minionSkin);
+
         }
 
         /**

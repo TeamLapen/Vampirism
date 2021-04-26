@@ -25,12 +25,15 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
     private int skinType;
     private int hatType;
     private boolean useLordSkin;
+    private boolean isMinionSpecificSkin;
     private ScrollableListButton skinList;
     private ScrollableListButton hatList;
     private ExtendedButton skinButton;
     private ExtendedButton hatButton;
     private CheckboxButton useLordSkinButton;
     private TextFieldWidget nameWidget;
+    private int normalSkinCount;
+    private int minionSkinCount;
 
     public HunterMinionAppearanceScreen(HunterMinionEntity minion, Screen backScreen) {
         super(NAME, minion, backScreen);
@@ -42,7 +45,7 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
         if (name.isEmpty()) {
             name = new TranslationTextComponent("text.vampirism.minion").toString() + entity.getMinionId().orElse(0);
         }
-        VampirismMod.dispatcher.sendToServer(new AppearancePacket(this.entity.getEntityId(), name, this.skinType, this.hatType, useLordSkin ? 1 : 0));
+        VampirismMod.dispatcher.sendToServer(new AppearancePacket(this.entity.getEntityId(), name, this.skinType, (isMinionSpecificSkin ? 0b10 : 0b0) | (useLordSkin ? 0b1 : 0b0)));
         super.onClose();
     }
 
@@ -55,10 +58,17 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
         this.nameWidget.setTextColor(-1);
         this.nameWidget.setMaxStringLength(MinionData.MAX_NAME_LENGTH);
         this.nameWidget.setResponder(this::onNameChanged);
-        this.skinType = this.entity.getHunterType();
+        this.normalSkinCount = ((HunterMinionRenderer) Minecraft.getInstance().getRenderManager().getRenderer(this.entity)).getHunterTextureCount();
+        this.minionSkinCount = ((HunterMinionRenderer) Minecraft.getInstance().getRenderManager().getRenderer(this.entity)).getMinionSpecificTextureCount();
+        this.isMinionSpecificSkin = this.entity.hasMinionSpecificSkin();
+        if(this.isMinionSpecificSkin) {
+            this.skinType = this.skinType % this.minionSkinCount;
+        } else{
+            this.skinType = this.skinType % this.normalSkinCount;
+        }
         this.hatType = this.entity.getHatType();
         this.useLordSkin = this.entity.shouldRenderLordSkin();
-        this.skinList = this.addButton(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 43 + 19, 99, 5, ((HunterMinionRenderer) Minecraft.getInstance().getRenderManager().getRenderer(this.entity)).getTextureLength(), null, new TranslationTextComponent("gui.vampirism.minion_appearance.skin"), this::skin, false));
+        this.skinList = this.addButton(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 43 + 19, 99, 5,this.normalSkinCount + this.minionSkinCount, null, new TranslationTextComponent("gui.vampirism.minion_appearance.skin"), this::skin, false));
         this.hatList = this.addButton(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 64 + 19, 99, 3, 3, null, new TranslationTextComponent("gui.vampirism.minion_appearance.hat"), this::hat, false));
         this.skinButton = this.addButton(new ExtendedButton(skinList.x, skinList.y - 20, skinList.getWidth() + 1, 20, new StringTextComponent(""), (b) -> {
             setSkinListVisibility(!skinList.visible);
@@ -104,7 +114,8 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
     }
 
     private void skin(int type) {
-        this.entity.setHunterType(this.skinType = type);
+        boolean minionSpecific = type >= normalSkinCount;
+        this.entity.setHunterType(this.skinType = type, this.isMinionSpecificSkin = minionSpecific);
         setSkinListVisibility(false);
     }
 }

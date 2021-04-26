@@ -20,7 +20,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.function.IntFunction;
 
 /**
  * There are differently looking level 0 hunters.
@@ -29,16 +28,19 @@ import java.util.function.IntFunction;
 @OnlyIn(Dist.CLIENT)
 public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, PlayerModel<HunterMinionEntity>> {
     private final Pair<ResourceLocation, Boolean>[] textures;
+    private final Pair<ResourceLocation, Boolean>[] minionSpecificTextures;
+
 
     public HunterMinionRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new PlayerModel<>(0.5f, false), new PlayerModel<>(0.5f, true), 0.5F);
         IResourceManager rm = Minecraft.getInstance().getResourceManager();
-        Collection<ResourceLocation> allTexs = new ArrayList<>(rm.getAllResourceLocations("textures/entity/hunter", s -> s.endsWith(".png")));
-        allTexs.addAll(rm.getAllResourceLocations("textures/entity/minion/hunter", s -> s.endsWith(".png")));
-        textures = allTexs.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())).map(r -> {
-            boolean b = r.getPath().endsWith("slim.png");
-            return Pair.of(r, b);
-        }).toArray((IntFunction<Pair<ResourceLocation, Boolean>[]>) Pair[]::new);
+        Collection<ResourceLocation> hunterTextures = new ArrayList<>(rm.getAllResourceLocations("textures/entity/hunter", s -> s.endsWith(".png")));
+        Collection<ResourceLocation> minionsTextures = new ArrayList<>(rm.getAllResourceLocations("textures/entity/minion/hunter", s -> s.endsWith(".png")));
+        textures = separateSlimTextures(hunterTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
+        if(textures.length==0){
+            throw new IllegalStateException("Must have at least one hunter texture: vampirism:textures/entity/hunter/hunter.png");
+        }
+        minionSpecificTextures = separateSlimTextures(minionsTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
         this.addLayer(new HunterEquipmentLayer<>(this, hunterMinionEntity -> hunterMinionEntity.getItemStackFromSlot(EquipmentSlotType.MAINHAND).isEmpty() ? HunterEquipmentModel.StakeType.FULL : HunterEquipmentModel.StakeType.NONE, HunterMinionEntity::getHatType));
         this.addLayer(new BipedArmorLayer<>(this, new BipedModel<>(0.5f), new BipedModel<>(1f)));
@@ -46,7 +48,11 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
 
     @Override
     protected Pair<ResourceLocation, Boolean> determineTextureAndModel(HunterMinionEntity entity) {
-        return textures[entity.getHunterType() % textures.length];
+        Pair<ResourceLocation, Boolean> p = (entity.hasMinionSpecificSkin() && this.minionSpecificTextures.length >0) ? minionSpecificTextures[entity.getHunterType() % minionSpecificTextures.length] : textures[entity.getHunterType() % textures.length];
+        if (entity.shouldRenderLordSkin()) {
+            return entity.getOverlayPlayerProperties().map(Pair::getRight).map(b -> Pair.of(p.getLeft(), b)).orElse(p);
+        }
+        return p;
     }
 
     @Override
@@ -59,8 +65,12 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
         super.renderSelected(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
-    public int getTextureLength() {
+    public int getHunterTextureCount() {
         return this.textures.length;
+    }
+
+    public int getMinionSpecificTextureCount(){
+        return this.minionSpecificTextures.length;
     }
 
     @Override

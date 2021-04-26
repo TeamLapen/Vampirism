@@ -9,6 +9,9 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.function.IntFunction;
+import java.util.stream.Stream;
+
 
 public abstract class DualBipedRenderer<T extends MobEntity, M extends BipedModel<T>> extends BipedRenderer<T, M> {
     private final M modelA;
@@ -39,5 +42,15 @@ public abstract class DualBipedRenderer<T extends MobEntity, M extends BipedMode
 
     protected void renderSelected(T entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+    }
+
+    /**
+     * @return Array of texture and slim status
+     */
+    protected Pair<ResourceLocation,Boolean>[] separateSlimTextures(Stream<ResourceLocation> set){
+        return set.map(r -> {
+            boolean b = r.getPath().endsWith("slim.png");
+            return Pair.of(r, b);
+        }).toArray((IntFunction<Pair<ResourceLocation, Boolean>[]>) Pair[]::new);
     }
 }

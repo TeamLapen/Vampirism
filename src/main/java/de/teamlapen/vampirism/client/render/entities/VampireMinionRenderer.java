@@ -17,22 +17,25 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.function.IntFunction;
 
 @OnlyIn(Dist.CLIENT)
 public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity, PlayerModel<VampireMinionEntity>> {
 
     private final Pair<ResourceLocation, Boolean>[] textures;
+    private final Pair<ResourceLocation, Boolean>[] minionSpecificTextures;
+
 
     public VampireMinionRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new PlayerModel<>(0F, false), new PlayerModel<>(0f, true), 0.5F);
         IResourceManager rm = Minecraft.getInstance().getResourceManager();
-        Collection<ResourceLocation> allTexs = new ArrayList<>(rm.getAllResourceLocations("textures/entity/vampire", s -> s.endsWith(".png")));
-        allTexs.addAll(rm.getAllResourceLocations("textures/entity/minion/vampire", s -> s.endsWith(".png")));
-        textures = allTexs.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())).map(r -> {
-            boolean b = r.getPath().endsWith("slim.png");
-            return Pair.of(r, b);
-        }).toArray((IntFunction<Pair<ResourceLocation, Boolean>[]>) Pair[]::new);
+        Collection<ResourceLocation> vampireTextures = new ArrayList<>(rm.getAllResourceLocations("textures/entity/vampire", s -> s.endsWith(".png")));
+        Collection<ResourceLocation> minionsTextures = new ArrayList<>(rm.getAllResourceLocations("textures/entity/minion/vampire", s -> s.endsWith(".png")));
+        textures = separateSlimTextures(vampireTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
+        if(textures.length==0){
+            throw new IllegalStateException("Must have at least one vampire texture: vampirism:textures/entity/vampire/vampire.png");
+        }
+        minionSpecificTextures = separateSlimTextures(minionsTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
+
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
         this.addLayer(new BipedArmorLayer<>(this, new BipedModel<>(0.5f), new BipedModel<>(1f)));
         this.getEntityModel().bipedBody.showModel = this.getEntityModel().bipedBodyWear.showModel = false;
@@ -43,7 +46,7 @@ public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity
 
     @Override
     protected Pair<ResourceLocation, Boolean> determineTextureAndModel(VampireMinionEntity entity) {
-        Pair<ResourceLocation, Boolean> p = textures[entity.getVampireType() % textures.length];
+        Pair<ResourceLocation, Boolean> p = (entity.hasMinionSpecificSkin() && this.minionSpecificTextures.length >0) ? minionSpecificTextures[entity.getVampireType() % minionSpecificTextures.length] : textures[entity.getVampireType() % textures.length];
         if (entity.shouldRenderLordSkin()) {
             return entity.getOverlayPlayerProperties().map(Pair::getRight).map(b -> Pair.of(p.getLeft(), b)).orElse(p);
         }
@@ -58,7 +61,12 @@ public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity
         //matrixStackIn.translate(0,off,0f);
     }
 
-    public int getTextureLength() {
+    public int getVampireTextureCount() {
         return this.textures.length;
     }
+
+    public int getMinionSpecificTextureCount(){
+        return this.minionSpecificTextures.length;
+    }
+
 }
