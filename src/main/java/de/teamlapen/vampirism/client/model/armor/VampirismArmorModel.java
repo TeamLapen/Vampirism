@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.client.model;
+package de.teamlapen.vampirism.client.model.armor;
 
 import com.google.common.collect.Iterables;
 import net.minecraft.client.renderer.entity.model.BipedModel;

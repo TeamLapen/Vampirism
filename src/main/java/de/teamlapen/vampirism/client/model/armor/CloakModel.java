@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.client.model;
+package de.teamlapen.vampirism.client.model.armor;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.renderer.model.ModelRenderer;

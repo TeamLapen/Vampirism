@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.client.model;
+package de.teamlapen.vampirism.client.model.armor;
 
 /**
  * TODO

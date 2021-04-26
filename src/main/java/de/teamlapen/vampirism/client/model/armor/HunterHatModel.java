@@ -1,16 +1,13 @@
-package de.teamlapen.vampirism.client.model;
+package de.teamlapen.vampirism.client.model.armor;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 
 @OnlyIn(Dist.CLIENT)
-public class HunterHatModel<T extends LivingEntity> extends BipedModel<T> {
+public class HunterHatModel extends VampirismArmorModel {
     public static final HunterHatModel hat0 = new HunterHatModel(0);
     public static final HunterHatModel hat1 = new HunterHatModel(1);
     private ModelRenderer hatTop;
@@ -18,7 +15,7 @@ public class HunterHatModel<T extends LivingEntity> extends BipedModel<T> {
 
 
     public HunterHatModel(int type) {
-        super(0.0F, 0.0F, 64, 64);
+        super( 64, 64);
         if (type == 1) {
             hatTop = new ModelRenderer(this, 0, 31);
             hatTop.addBox(-4F, -14F, -4F, 8, 5, 8);
@@ -48,17 +45,9 @@ public class HunterHatModel<T extends LivingEntity> extends BipedModel<T> {
     }
 
     @Override
-    public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) { //setRotationAngles
-        super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        hatRim.copyModelAngles(super.bipedHead);
-        hatTop.copyModelAngles(super.bipedHead);
+    protected Iterable<ModelRenderer> getHeadModels() {
+        return ImmutableList.of(hatTop, hatRim);
     }
-
-    @Override
-    protected Iterable<ModelRenderer> getHeadParts() {
-        return Iterables.concat(super.getHeadParts(), ImmutableList.of(hatTop, hatRim));
-    }
-
 
     @Override
     public void setVisible(boolean invisible) {
