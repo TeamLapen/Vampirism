@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.model;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.MathHelper;
@@ -9,13 +8,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class CloakModel<T extends LivingEntity> extends BipedModel<T> {
+public class CloakModel extends VampirismArmorModel {
 
-    private static CloakModel<LivingEntity> cloakItemModel;
+    private static CloakModel cloakItemModel;
 
-    public static CloakModel<LivingEntity> getRotatedCloak(){
+    public static CloakModel getRotatedCloak(){
         if(cloakItemModel==null){
-            cloakItemModel=new CloakModel<>();
+            cloakItemModel=new CloakModel();
         }
         return cloakItemModel;
     }
@@ -31,7 +30,7 @@ public class CloakModel<T extends LivingEntity> extends BipedModel<T> {
     private final ModelRenderer shoulderleft;
 
     public CloakModel() {
-        super(0.0F, 0.0F, 64, 64);
+        super(64, 64);
         cloakback = new ModelRenderer(this, 0, 48);
         cloakback.addBox(-4F, 0F, 2F, 8, 15, 1);
         cloakback.setRotationPoint(0F, 0.2F, 2F);
@@ -76,8 +75,11 @@ public class CloakModel<T extends LivingEntity> extends BipedModel<T> {
     }
 
     @Override
-    public void setRotationAngles(T entity, float f, float f1, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setRotationAngles(LivingEntity entity, float f, float f1, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setRotationAngles(entity, f, f1, ageInTicks, netHeadYaw, headPitch);
+        //Isn't use afaik
+
+
         boolean flag = entity != null && entity.getTicksElytraFlying() > 4;
 
         float f6 = 1.0F;
@@ -115,13 +117,9 @@ public class CloakModel<T extends LivingEntity> extends BipedModel<T> {
     }
 
     @Override
-    protected Iterable<ModelRenderer> getBodyParts() {
-        //We have to abuse this method to set the rotation angles since Forge and vanilla don't provide a better way.
-        ImmutableList<ModelRenderer> l =  ImmutableList.of(cloakback, leftlong, rightmedium, leftmedium, rightshort, leftshort, rightlong, shoulderright, shoulderleft);
-        l.forEach(p->p.copyModelAngles(this.bipedBody));
-        return l;
+    protected Iterable<ModelRenderer> getBodyModels() {
+        return   ImmutableList.of(cloakback, leftlong, rightmedium, leftmedium, rightshort, leftshort, rightlong, shoulderright, shoulderleft);
     }
-
 
     private void setRotation(ModelRenderer model, float x, float y, float z) {
         model.rotateAngleX = x;

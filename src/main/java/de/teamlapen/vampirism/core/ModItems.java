@@ -201,6 +201,10 @@ public class ModItems {
     public static final VampireRefinementItem ring = getNull();
     public static final VampireRefinementItem obi_belt = getNull();
 
+    public static final VampireClothingItem vampire_clothing_head = getNull();
+    public static final VampireClothingItem vampire_clothing_legs = getNull();
+    public static final VampireClothingItem vampire_clothing_feet = getNull();
+
 
     static void registerCraftingRecipes() {
         // Brewing
@@ -413,6 +417,10 @@ public class ModItems {
         registry.register(new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.AMULET).setRegistryName(REFERENCE.MODID, "amulet"));
         registry.register(new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.RING).setRegistryName(REFERENCE.MODID, "ring"));
         registry.register(new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.OBI_BELT).setRegistryName(REFERENCE.MODID, "obi_belt"));
+
+        registry.register(new VampireClothingItem(EquipmentSlotType.HEAD,"vampire_clothing_head"));
+        registry.register(new VampireClothingItem(EquipmentSlotType.LEGS, "vampire_clothing_legs"));
+        registry.register(new VampireClothingItem(EquipmentSlotType.FEET, "vampire_clothing_feet"));
 
         if (VampirismMod.inDataGen) {
             registry.register(new DummyItem().setRegistryName("guideapi-vp", "vampirism-guidebook"));

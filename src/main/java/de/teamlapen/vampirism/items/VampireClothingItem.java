@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
-import de.teamlapen.vampirism.client.model.CloakModel;
+import de.teamlapen.vampirism.client.model.DummyClothingModel;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -33,7 +33,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
 
 
     public VampireClothingItem(EquipmentSlotType slotType, String regName) {
-        super(ArmorMaterial.LEATHER, slotType, new Properties().defaultMaxDamage(0).group(VampirismMod.creativeTab));
+        super(ArmorMaterial.LEATHER, slotType, new Properties().defaultMaxDamage(ArmorMaterial.IRON.getDurability(slotType)).group(VampirismMod.creativeTab));
         this.regName = regName;
         this.setRegistryName(REFERENCE.MODID, regName);
     }
@@ -54,7 +54,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
     @OnlyIn(Dist.CLIENT)
     @Override
     public BipedModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, BipedModel _default) {
-        return CloakModel.getRotatedCloak();
+        return DummyClothingModel.getArmorModel();
     }
 
 
