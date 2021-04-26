@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.player.tasks.TaskBuilder;
 import de.teamlapen.vampirism.player.tasks.reward.LordLevelReward;
@@ -13,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
+import net.minecraft.stats.Stats;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -98,7 +100,9 @@ public class ModTasks {
         registry.register(TaskBuilder.builder().addRequirement("poison", PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.POISON)).addRequirement("vampire_blood", new ItemStack(ModItems.vampire_blood_bottle)).setReward(new ItemStack(ModItems.oblivion_potion)).build("oblivion_potion"));
 
         //vampire refinement items
-        registry.register(TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement("hunter", ModTags.Entities.ADVANCED_HUNTER, 8).setReward(new RefinementItemReward(VReference.VAMPIRE_FACTION, null)).build("random_refinement1"));
-        registry.register(TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement("barons", ModEntities.vampire_baron, 3).setReward(new RefinementItemReward(VReference.VAMPIRE_FACTION, null)).build("random_refinement2"));
+        registry.register(TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement("hunter", ModTags.Entities.ADVANCED_HUNTER, 10).addRequirement("gold", new ItemStack(Items.GOLD_INGOT, 2)).setReward(new RefinementItemReward(VReference.VAMPIRE_FACTION)).build("random_refinement1"));
+        registry.register(TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement("barons", ModEntities.vampire_baron, 3).addRequirement("gold", new ItemStack(Items.GOLD_INGOT, 2)).setReward(new RefinementItemReward(VReference.VAMPIRE_FACTION)).build("random_refinement2"));
+        registry.register(TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement("trades", Stats.TRADED_WITH_VILLAGER, 15).addRequirement("gold", new ItemStack(Items.GOLD_INGOT, 2)).setReward(new RefinementItemReward(VReference.VAMPIRE_FACTION)).build("random_refinement3"));
+        registry.register(TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement("raid", Stats.RAID_WIN, 1).setReward(new RefinementItemReward(VReference.VAMPIRE_FACTION, IRefinementSet.Rarity.RARE)).build("random_rare_refinement"));
     }
 }

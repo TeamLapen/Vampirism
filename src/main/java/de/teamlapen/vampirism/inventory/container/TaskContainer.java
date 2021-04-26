@@ -1,41 +1,40 @@
 package de.teamlapen.vampirism.inventory.container;
 
-import com.google.common.base.Objects;
-import de.teamlapen.vampirism.api.entity.player.task.Task;
+import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.UUID;
-import java.util.function.Supplier;
 
 public interface TaskContainer {
 
     /**
-     * @return whether the {@link TaskInfo#task} is not accepted at the task giver {@link TaskInfo#taskBoard}
+     * @return whether the {@link ITaskInstance#getTask()} is not accepted at the task giver {@link ITaskInstance#getTaskBoard()}
      */
-    boolean isTaskNotAccepted(TaskInfo taskInfo);
+    default boolean isTaskNotAccepted(@Nonnull ITaskInstance taskInfo) {
+        return !taskInfo.isAccepted();
+    }
 
     /**
-     * @return whether the {@link TaskInfo#task} can be completed at the task giver {@link TaskInfo#taskBoard}
+     * @return whether the {@link ITaskInstance#getTask()} can be completed at the task giver {@link ITaskInstance#getTaskBoard()}
      */
-    boolean canCompleteTask(TaskInfo taskInfo);
+    boolean canCompleteTask(@Nonnull ITaskInstance taskInfo);
 
     /**
-     * perform the action after the button for this {@link TaskInfo#task} has been pressed for the task giver {@link TaskInfo#taskBoard}
+     * perform the action after the button for this {@link ITaskInstance#getTask()} has been pressed for the task giver {@link ITaskInstance#getTaskBoard()}
      */
-    boolean pressButton(TaskInfo taskInfo);
+    void pressButton(@Nonnull ITaskInstance taskInfo);
 
     /**
-     * @return what action should be performed when pressing the button in the dummy task of the task giver {@link TaskInfo#taskBoard}
+     * @return what action should be performed when pressing the button in the dummy task of the task giver {@link ITaskInstance#getTaskBoard()}
      */
-    TaskAction buttonAction(TaskInfo taskInfo);
+    TaskAction buttonAction(@Nonnull ITaskInstance taskInfo);
 
     /**
-     * @return {@code true} if the task is already completed at the task giver {@link TaskInfo#taskBoard}
+     * @return {@code true} if the task is already completed at the task giver {@link ITaskInstance#getTaskBoard()}
      */
-    boolean isCompleted(TaskInfo item);
+    boolean isCompleted(@Nonnull ITaskInstance item);
 
     /**
      * @return chat color of the faction
@@ -43,19 +42,19 @@ public interface TaskContainer {
     TextFormatting getFactionColor();
 
     /**
-     * @return whether all task requirements of the specific type are completed for the {@link TaskInfo#task} at the task giver {@link TaskInfo#taskBoard}
+     * @return whether all task requirements of the specific type are completed for the {@link ITaskInstance#getTask()} at the task giver {@link ITaskInstance#getTaskBoard()}
      */
-    boolean areRequirementsCompleted(TaskInfo task, TaskRequirement.Type type);
+    boolean areRequirementsCompleted(@Nonnull ITaskInstance task, @Nonnull TaskRequirement.Type type);
 
     /**
-     * @return the progress of the requirement for the {@link TaskInfo#task} at the task giver {@link TaskInfo#taskBoard}
+     * @return the progress of the requirement for the {@link ITaskInstance#getTask()} at the task giver {@link ITaskInstance#getTaskBoard()}
      */
-    int getRequirementStatus(TaskInfo taskInfo, TaskRequirement.Requirement<?> requirement);
+    int getRequirementStatus(@Nonnull ITaskInstance taskInfo, @Nonnull TaskRequirement.Requirement<?> requirement);
 
     /**
-     * @return whether task requirement of the {@link TaskInfo#task} are completed at the task giver {@link TaskInfo#taskBoard}
+     * @return whether task requirement of the {@link ITaskInstance#getTask()} are completed at the task giver {@link ITaskInstance#getTaskBoard()}
      */
-    boolean isRequirementCompleted(TaskInfo taskInfo, TaskRequirement.Requirement<?> requirement);
+    boolean isRequirementCompleted(@Nonnull ITaskInstance taskInfo, @Nonnull TaskRequirement.Requirement<?> requirement);
 
     /**
      * @param listener the listener will be run if the container got updated
@@ -80,50 +79,16 @@ public interface TaskContainer {
          */
         REMOVE("gui.vampirism.taskmaster.remove_task");
 
+        @Nonnull
         private final String translationKey;
 
-        TaskAction(String translationKey) {
+        TaskAction(@Nonnull String translationKey) {
             this.translationKey = translationKey;
         }
 
+        @Nonnull
         public String getTranslationKey() {
             return translationKey;
-        }
-    }
-
-    class TaskInfo {
-
-        /**
-         * the task
-         */
-        @Nonnull
-        public final Task task;
-        /**
-         * the id og the task giver
-         */
-        @Nonnull
-        public final UUID taskBoard;
-
-        @Nonnull
-        public Supplier<Long> remainingTime;
-
-        public TaskInfo(@Nonnull Task task, @Nonnull UUID taskBoard, @Nonnull Supplier<Long> remainingTime) {
-            this.task = task;
-            this.taskBoard = taskBoard;
-            this.remainingTime = remainingTime;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            TaskInfo taskInfo = (TaskInfo) o;
-            return Objects.equal(task, taskInfo.task) && Objects.equal(taskBoard, taskInfo.taskBoard);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hashCode(task, taskBoard);
         }
     }
 }

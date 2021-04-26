@@ -25,6 +25,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
@@ -53,12 +54,17 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
     }
 
     @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
+    public ITextComponent getDisplayName(@Nonnull ItemStack stack) {
         IRefinementSet set = getRefinementSet(stack);
         if (set == null) {
             return super.getDisplayName(stack);
         }
         return new TranslationTextComponent(this.getTranslationKey() + ".of").appendString(" ").append(set.getName()).mergeStyle(set.getRarity().color);
+    }
+
+    @Override
+    public boolean isEnchantable(@Nonnull ItemStack stack) {
+        return false;
     }
 
     @Override

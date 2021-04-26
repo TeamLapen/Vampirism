@@ -18,7 +18,7 @@ public class ParentUnlocker implements TaskUnlocker {
 
     @Override
     public boolean isUnlocked(IFactionPlayer<?> playerEntity) {
-        return playerEntity.getTaskManager().isTaskCompleted(parent.get());
+        return playerEntity.getTaskManager().wasTaskCompleted(parent.get());
     }
 
     @Override

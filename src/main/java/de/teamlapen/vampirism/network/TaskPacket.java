@@ -2,8 +2,6 @@ package de.teamlapen.vampirism.network;
 
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.player.task.Task;
-import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.player.TaskManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -22,19 +20,17 @@ public class TaskPacket implements IMessage {
         msg.completableTasks.forEach((uuid, tasks) -> {
             buffer.writeUniqueId(uuid);
             buffer.writeVarInt(tasks.size());
-            tasks.forEach(task -> {
-                buffer.writeResourceLocation(task.getRegistryName());
-            });
+            tasks.forEach(buffer::writeUniqueId);
         });
         msg.completedRequirements.forEach(((uuid, taskMapMap) -> {
             buffer.writeUniqueId(uuid);
             buffer.writeVarInt(taskMapMap.size());
             taskMapMap.forEach((task, data) -> {
-                buffer.writeResourceLocation(task.getRegistryName());
+                buffer.writeUniqueId(task);
                 buffer.writeVarInt(data.size());
-                data.forEach((loc, value) -> {
+                data.forEach((loc, val) -> {
                     buffer.writeResourceLocation(loc);
-                    buffer.writeVarInt(value);
+                    buffer.writeVarInt(val);
                 });
             });
         }));
@@ -46,25 +42,25 @@ public class TaskPacket implements IMessage {
         int completableSize = buffer.readVarInt();
         int statSize = buffer.readVarInt();
         int taskWrapperSIze = buffer.readVarInt();
-        Map<UUID, Set<Task>> completableTasks = new HashMap<>();
+        Map<UUID, Set<UUID>> completableTasks = new HashMap<>();
         for (int i = 0; i < completableSize; i++) {
             UUID uuid = buffer.readUniqueId();
-            Set<Task> task = new HashSet<>();
+            Set<UUID> task = new HashSet<>();
             int taskSize = buffer.readVarInt();
             for (int i1 = 0; i1 < taskSize; i1++) {
-                task.add(ModRegistries.TASKS.getValue(buffer.readResourceLocation()));
+                task.add(buffer.readUniqueId());
             }
             completableTasks.put(uuid, task);
         }
-        Map<UUID, Map<Task, Map<ResourceLocation, Integer>>> completedRequirements = new HashMap<>();
+        Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements = new HashMap<>();
         for (int i = 0; i < statSize; i++) {
             UUID uuid = buffer.readUniqueId();
-            Map<Task, Map<ResourceLocation, Integer>> taskRequirements = new HashMap<>();
+            Map<UUID, Map<ResourceLocation, Integer>> taskRequirements = new HashMap<>();
             int taskRequirementSize = buffer.readVarInt();
             for (int i1 = 0; i1 < taskRequirementSize; i1++) {
-                Task task = ModRegistries.TASKS.getValue(buffer.readResourceLocation());
-                Map<ResourceLocation, Integer> requirements = new HashMap<>();
+                UUID task = buffer.readUniqueId();
                 int requirementSize = buffer.readVarInt();
+                Map<ResourceLocation, Integer> requirements = new HashMap<>();
                 for (int i2 = 0; i2 < requirementSize; i2++) {
                     requirements.put(buffer.readResourceLocation(), buffer.readVarInt());
                 }
@@ -87,12 +83,12 @@ public class TaskPacket implements IMessage {
     }
 
     public final int containerId;
-    public final Map<UUID, Map<Task, Map<ResourceLocation, Integer>>> completedRequirements;
-    public final Map<UUID, Set<Task>> completableTasks;
+    public final Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements;
+    public final Map<UUID, Set<UUID>> completableTasks;
 
     public final Map<UUID, TaskManager.TaskWrapper> taskWrappers;
 
-    public TaskPacket(int containerId, Map<UUID, TaskManager.TaskWrapper> taskWrappers, Map<UUID, Set<Task>> completableTasks, Map<UUID, Map<Task, Map<ResourceLocation, Integer>>> completedRequirements) {
+    public TaskPacket(int containerId, Map<UUID, TaskManager.TaskWrapper> taskWrappers, Map<UUID, Set<UUID>> completableTasks, Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) {
         this.containerId = containerId;
         this.taskWrappers = taskWrappers;
         this.completedRequirements = completedRequirements;

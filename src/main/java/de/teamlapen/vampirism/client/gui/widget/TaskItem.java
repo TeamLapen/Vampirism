@@ -6,14 +6,14 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWithDummyWidget;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
+import de.teamlapen.vampirism.api.entity.player.task.ITaskRewardInstance;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
-import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.client.gui.ExtendedScreen;
-import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
-import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
+import de.teamlapen.vampirism.player.tasks.reward.ItemRewardInstance;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -44,7 +44,7 @@ import java.util.Optional;
  *
  * @param <T>
  */
-public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListWithDummyWidget.ListItem<TaskContainer.TaskInfo> {
+public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListWithDummyWidget.ListItem<ITaskInstance> {
     protected static final ResourceLocation TASKMASTER_GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/taskmaster.png");
     protected static final ITextComponent REWARD = new TranslationTextComponent("gui.vampirism.taskmaster.reward").mergeStyle(TextFormatting.UNDERLINE);
     protected static final ITextComponent REQUIREMENT = new TranslationTextComponent("gui.vampirism.taskmaster.requirement").mergeStyle(TextFormatting.UNDERLINE);
@@ -56,10 +56,10 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     protected final IFactionPlayer<?> factionPlayer;
     private final TaskActionButton taskButton;
 
-    private final Map<TaskContainer.TaskInfo, List<ITextComponent>> toolTips = Maps.newHashMap();
+    private final Map<ITaskInstance, List<ITextComponent>> toolTips = Maps.newHashMap();
 
 
-    public TaskItem(TaskContainer.TaskInfo item, ScrollableListWithDummyWidget<TaskContainer.TaskInfo> list, boolean isDummy, T screen, IFactionPlayer<?> factionPlayer) {
+    public TaskItem(ITaskInstance item, ScrollableListWithDummyWidget<ITaskInstance> list, boolean isDummy, T screen, IFactionPlayer<?> factionPlayer) {
         super(item, list, isDummy);
         this.screen = screen;
         this.factionPlayer = factionPlayer;
@@ -78,11 +78,11 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         RenderSystem.color4f(1, 1, 1, 1);
 
         //render name
-        Optional<IReorderingProcessor> text = Optional.ofNullable(this.screen.font.trimStringToWidth(this.item.task.getTranslation(), 131).get(0));
-        text.ifPresent(t -> this.screen.font.func_238422_b_(matrixStack, t, x + 4, y + 7, 3419941));//(6839882 & 16711422) >> 1 //8453920 //4226832
+        Optional<IReorderingProcessor> text = Optional.ofNullable(this.screen.font.trimStringToWidth(this.item.getTask().getTranslation(), 131).get(0));
+        text.ifPresent(t -> this.screen.font.func_238422_b_(matrixStack, t, x + 2, y + 4, 3419941));//(6839882 & 16711422) >> 1 //8453920 //4226832
 
-        if (!this.screen.getTaskContainer().isTaskNotAccepted(this.item) && !this.item.task.isUnique()) {
-            long remainingTime = this.item.remainingTime.get();
+        if (!this.screen.getTaskContainer().isTaskNotAccepted(this.item) && !this.item.isUnique()) {
+            long remainingTime = this.item.getTaskTimeStamp() - Minecraft.getInstance().world.getGameTime();
             ITextComponent msg;
             if (remainingTime >= 0) {
                 remainingTime = remainingTime / 20;
@@ -100,7 +100,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
             }
             int width = this.screen.font.getStringPropertyWidth(msg);
             int color = 11184810;
-            if (remainingTime < VampirismConfig.BALANCE.taskDuration.get() * 60 * 0.1) {
+            if (remainingTime < this.item.getTaskDuration() /20 * 0.1) {
                 color = 16733525;
             }
             this.screen.font.func_243246_a(matrixStack, msg, x + 134 - width, y + 12, color);
@@ -118,15 +118,15 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         RenderSystem.disableDepthTest();
 
         //render content
-        TaskReward reward = this.item.task.getReward();
-        if (reward instanceof ItemReward) {
-            ItemStack stack = ((ItemReward) reward).getReward();
+        ITaskRewardInstance reward = this.item.getReward();
+        if (reward instanceof ItemRewardInstance) {
+            ItemStack stack = ((ItemRewardInstance) reward).getReward();
             this.screen.getItemRenderer().renderItemAndEffectIntoGUI(stack, x + 3 + 113 - 21, y + 2);
             this.screen.getItemRenderer().renderItemOverlayIntoGUI(this.screen.font, stack, x + 3 + 113 - 21, y + 2, "" + Math.min(stack.getCount(), stack.getMaxStackSize()));
         } else {
             this.screen.getItemRenderer().renderItemAndEffectIntoGUI(PAPER, x + 3 + 113 - 21, y + 2);
         }
-        List<TaskRequirement.Requirement<?>> requirements = this.item.task.getRequirement().getAll();
+        List<TaskRequirement.Requirement<?>> requirements = this.item.getTask().getRequirement().getAll();
         for (int i = 0; i < requirements.size(); i++) {
             TaskRequirement.Requirement<?> requirement = requirements.get(i);
             switch (requirement.getType()) {
@@ -159,8 +159,8 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         if (container.isCompleted(this.item)) {
             RenderSystem.color4f(0.4f, 0.4f, 0.4f, 1);
         } else {
-            boolean isUnique = this.item.task.isUnique();
-            boolean remainsTime = this.item.remainingTime.get() > 0;
+            boolean isUnique = this.item.isUnique();
+            boolean remainsTime = this.item.getTaskTimeStamp() - Minecraft.getInstance().world.getGameTime() > 0;
             if (container.canCompleteTask(this.item)) {
                 if (isUnique) {
                     RenderSystem.color4f(1f, 0.855859375f, 0, 1);
@@ -208,24 +208,24 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     @Override
     public void renderDummyToolTip(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
         if (mouseX >= x + 3 + 113 - 21 + 1 && mouseX < x + 3 + 113 - 21 + 16 + 1 && mouseY >= y + 2 && mouseY < y + 2 + 16) {
-            TaskReward reward = this.item.task.getReward();
-            if (reward instanceof ItemReward) {
-                this.renderItemTooltip(matrixStack, ((ItemReward) reward).getReward(), mouseX, mouseY, REWARD, false, null);
+            ITaskRewardInstance reward = this.item.getReward();
+            if (reward instanceof ItemRewardInstance) {
+                this.renderItemTooltip(matrixStack, ((ItemRewardInstance) reward).getReward(), mouseX, mouseY, REWARD, false, null);
             } else {
-                this.renderItemTooltip(matrixStack, this.item.task, mouseX, mouseY);
+                this.renderItemTooltip(matrixStack, this.item.getTask(), mouseX, mouseY);
             }
         }
-        List<TaskRequirement.Requirement<?>> requirements = this.item.task.getRequirement().getAll();
+        List<TaskRequirement.Requirement<?>> requirements = this.item.getTask().getRequirement().getAll();
         for (int i = 0; i < requirements.size(); i++) {
             if (mouseX >= x + 3 + 3 + i * 20 && mouseX < x + 3 + 16 + 3 + i * 20 && mouseY >= y + 2 && mouseY < y + 2 + 16) {
-                this.renderRequirementTool(matrixStack, this.item.task, requirements.get(i), mouseX, mouseY);
+                this.renderRequirementTool(matrixStack, this.item, requirements.get(i), mouseX, mouseY);
             }
         }
         this.taskButton.renderToolTip(matrixStack, mouseX, mouseY);
     }
 
-    private void generateTaskToolTip(TaskContainer.TaskInfo taskInfo, List<ITextComponent> toolTips) {
-        Task task = taskInfo.task;
+    private void generateTaskToolTip(ITaskInstance taskInfo, List<ITextComponent> toolTips) {
+        Task task = taskInfo.getTask();
         toolTips.clear();
         toolTips.add(task.getTranslation().copyRaw().mergeStyle(this.screen.getTaskContainer().getFactionColor()));
         if (task.useDescription()) {
@@ -260,7 +260,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
                             break;
                         case ENTITY_TAG:
                             //noinspection unchecked
-                            desc = new TranslationTextComponent("tasks.vampirism." + ((ITag.INamedTag<EntityType<?>>) requirement.getStat(this.factionPlayer)).getName().toString()).appendString(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
+                            desc = new TranslationTextComponent("tasks.vampirism." + ((ITag.INamedTag<EntityType<?>>) requirement.getStat(this.factionPlayer)).getName()).appendString(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
                             break;
                         default:
                             desc = new TranslationTextComponent(task.getTranslationKey() + ".req." + requirement.getId().toString().replace(':', '.'));
@@ -306,7 +306,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         return list1;
     }
 
-    private void renderRequirementTool(MatrixStack mStack, Task task, TaskRequirement.Requirement<?> requirement, int x, int y) {
+    private void renderRequirementTool(MatrixStack mStack, ITaskInstance task, TaskRequirement.Requirement<?> requirement, int x, int y) {
         boolean notAccepted = this.screen.getTaskContainer().isTaskNotAccepted(this.item);
         boolean completed = this.screen.getTaskContainer().isRequirementCompleted(this.item, requirement);
         int completedAmount = this.screen.getTaskContainer().getRequirementStatus(this.item, requirement);
@@ -342,10 +342,10 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         this.screen.renderWrappedToolTip(mStack, tooltips, x, y, this.screen.font);
     }
 
-    private void renderDefaultRequirementToolTip(MatrixStack mStack, Task task, TaskRequirement.Requirement<?> requirement, int x, int y, boolean strikeThrough) {
+    private void renderDefaultRequirementToolTip(MatrixStack mStack, ITaskInstance task, TaskRequirement.Requirement<?> requirement, int x, int y, boolean strikeThrough) {
         List<ITextComponent> tooltips = Lists.newArrayList();
         tooltips.add((strikeThrough ? REQUIREMENT_STRIKE : REQUIREMENT));
-        IFormattableTextComponent text = new TranslationTextComponent(task.getTranslationKey() + ".req." + requirement.getId().toString().replace(':', '.'));
+        IFormattableTextComponent text = new TranslationTextComponent(task.getTask().getTranslationKey() + ".req." + requirement.getId().toString().replace(':', '.'));
         if (strikeThrough) {
             text.mergeStyle(TextFormatting.STRIKETHROUGH);
         }

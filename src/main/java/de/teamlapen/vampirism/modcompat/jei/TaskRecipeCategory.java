@@ -25,7 +25,9 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import java.awt.*;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TaskRecipeCategory implements IRecipeCategory<Task> {
     private final IDrawable background;
@@ -90,7 +92,7 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
     public void setIngredients(Task recipe, IIngredients ingredients) {
         TaskReward reward = recipe.getReward();
         if (reward instanceof ItemReward) {
-            ingredients.setOutput(VanillaTypes.ITEM, ((ItemReward) reward).getReward());
+            ingredients.setOutputs(VanillaTypes.ITEM, ((ItemReward) reward).getAllPossibleRewards());
         }
     }
 
@@ -100,6 +102,6 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
         IGuiItemStackGroup guiItemStackGroup = recipeLayout.getItemStacks();
         guiItemStackGroup.init(craftOutputSlot, false, 75, 14);
         List<List<ItemStack>> outputs = ingredients.getOutputs(VanillaTypes.ITEM);
-        guiItemStackGroup.set(craftOutputSlot, outputs.get(0));
+        guiItemStackGroup.set(craftOutputSlot, outputs.stream().flatMap(Collection::stream).collect(Collectors.toList()));
     }
 }

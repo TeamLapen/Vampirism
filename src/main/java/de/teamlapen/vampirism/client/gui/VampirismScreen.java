@@ -6,6 +6,7 @@ import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWithDummyWidget;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
@@ -42,7 +43,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
 
     private int oldMouseX;
     private int oldMouseY;
-    private ScrollableListWidget<TaskContainer.TaskInfo> list;
+    private ScrollableListWidget<ITaskInstance> list;
     private final IFactionPlayer<?> factionPlayer;
 
     public VampirismScreen(VampirismContainer container, PlayerInventory playerInventory, ITextComponent titleIn) {
@@ -96,7 +97,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
-    public Collection<TaskContainer.TaskInfo> refreshTasks() {
+    public Collection<ITaskInstance> refreshTasks() {
         return this.container.getTaskInfos();
     }
 
@@ -174,9 +175,9 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
 
         private ImageButton button;
 
-        public TaskItem(TaskContainer.TaskInfo item, ScrollableListWithDummyWidget<TaskContainer.TaskInfo> list, boolean isDummy, VampirismScreen screen, IFactionPlayer<?> factionPlayer) {
+        public TaskItem(ITaskInstance item, ScrollableListWithDummyWidget<ITaskInstance> list, boolean isDummy, VampirismScreen screen, IFactionPlayer<?> factionPlayer) {
             super(item, list, isDummy, screen, factionPlayer);
-            if (!item.task.isUnique()) {
+            if (!item.isUnique()) {
                 this.button = new ImageButton(0, 0, 8, 11, 0, 229, 11, TASKMASTER_GUI_TEXTURE, 256, 256, this::onClick, this::onTooltip, StringTextComponent.EMPTY);
             }
         }
@@ -211,21 +212,24 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         }
 
         private void onTooltip(Button button, MatrixStack matrixStack, int mouseX, int mouseY) {
-            container.taskWrapper.get(this.item.taskBoard).getLastSeenPos().ifPresent(pos -> {
-                VampirismScreen.this.renderWrappedToolTip(matrixStack, Collections.singletonList(new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos").append(new StringTextComponent("[" + pos.getCoordinatesAsString() + "]").mergeStyle(TextFormatting.GREEN))), mouseX, mouseY, font);
-            });
+            ITextComponent position = container.taskWrapper.get(this.item.getTaskBoard()).getLastSeenPos().map(pos -> new StringTextComponent("[" + pos.getCoordinatesAsString() + "]").mergeStyle(TextFormatting.GREEN)).orElseGet(() -> new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos.unknown").mergeStyle(TextFormatting.GOLD));
+
+            VampirismScreen.this.renderWrappedToolTip(matrixStack, Collections.singletonList(new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos").append(position)), mouseX, mouseY, font);
+
         }
 
         private void onClick(Button button) {
-            container.taskWrapper.get(this.item.taskBoard).getLastSeenPos().ifPresent(pos -> {
-                PlayerEntity player = this.factionPlayer.getRepresentingPlayer();
+            PlayerEntity player = this.factionPlayer.getRepresentingPlayer();
+            ITextComponent position = container.taskWrapper.get(this.item.getTaskBoard()).getLastSeenPos().map(pos -> {
                 int i = MathHelper.floor(getDistance(player.getPosition().getX(), player.getPosition().getZ(), pos.getX(), pos.getZ()));
-                ITextComponent itextcomponent = TextComponentUtils.wrapWithSquareBrackets(new TranslationTextComponent("chat.coordinates", pos.getX(), "~", pos.getZ())).modifyStyle((p_241055_1_) -> {
+                IFormattableTextComponent itextcomponent = TextComponentUtils.wrapWithSquareBrackets(new TranslationTextComponent("chat.coordinates", pos.getX(), "~", pos.getZ())).modifyStyle((p_241055_1_) -> {
                     return p_241055_1_.setFormatting(TextFormatting.GREEN).setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tp @s " + pos.getX() + " ~ " + pos.getZ())).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslationTextComponent("chat.coordinates.tooltip")));
                 });
-                player.sendStatusMessage(new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos").append(itextcomponent).append(new TranslationTextComponent("gui.vampirism.vampirism_menu.distance", i)), false);
-            });
-        }
+                return itextcomponent.append(new TranslationTextComponent("gui.vampirism.vampirism_menu.distance", i));
+            }).orElseGet(() -> new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos.unknown").mergeStyle(TextFormatting.GOLD));
+            player.sendStatusMessage(new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos").append(position), false);
+
+    }
 
         private float getDistance(int x1, int z1, int x2, int z2) {
             int i = x2 - x1;

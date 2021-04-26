@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.api.entity.player.task;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 
-@FunctionalInterface
 public interface TaskReward {
 
     /**
@@ -10,5 +9,8 @@ public interface TaskReward {
      *
      * @param player the player which completed the task
      */
+    @Deprecated
     void applyReward(IFactionPlayer<?> player);
+
+    ITaskRewardInstance createInstance(IFactionPlayer<?> player);
 }
