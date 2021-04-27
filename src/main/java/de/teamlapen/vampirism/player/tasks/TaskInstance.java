@@ -12,6 +12,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -137,9 +138,14 @@ public class TaskInstance implements ITaskInstance {
         return nbt;
     }
 
+    /**
+     * @return {@code null} if the task does not exist
+     */
+    @Nullable
     public static TaskInstance readNBT(@Nonnull CompoundNBT nbt) {
-        UUID id = nbt.getUniqueId("id");
         Task task = ModRegistries.TASKS.getValue(new ResourceLocation(nbt.getString("task")));
+        if (task == null) return null;
+        UUID id = nbt.getUniqueId("id");
         UUID insId = nbt.getUniqueId("insId");
         boolean accepted = nbt.getBoolean("accepted");
         long taskTimer = nbt.getLong("taskTimer");

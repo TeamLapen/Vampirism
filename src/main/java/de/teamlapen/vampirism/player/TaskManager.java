@@ -253,11 +253,7 @@ public class TaskManager implements ITaskManager {
 
     @Override
     public void resetTaskLists() {
-        this.taskWrapperMap.values().forEach(wrapper -> {
-            wrapper.getAcceptedTasks().clear();
-            wrapper.lessTasks = 0;
-            wrapper.taskAmount = -1;
-        });
+        this.taskWrapperMap.values().forEach(TaskWrapper::reset);
         this.updateTaskLists();
     }
 
@@ -535,7 +531,9 @@ public class TaskManager implements ITaskManager {
                         requirements.put(new ResourceLocation(requirementString), taskNBT.getInt(requirementString));
                     }
                     Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskRegistryName));
-                    wrapper.getTaskInstances().stream().filter(ins -> ins.getTask() == task).forEach(ins -> ins.setStats(requirements));
+                    if (task != null) {
+                        wrapper.getTaskInstances().stream().filter(ins -> ins.getTask() == task).forEach(ins -> ins.setStats(requirements));
+                    }
                 }
             }
         }
@@ -582,6 +580,12 @@ public class TaskManager implements ITaskManager {
         @Nonnull
         public Set<ITaskInstance> getAcceptedTasks() {
             return this.tasks.values().stream().filter(ITaskInstance::isAccepted).collect(Collectors.toSet());
+        }
+
+        private void reset() {
+            this.tasks.clear();
+            this.lessTasks = 0;
+            this.taskAmount = -1;
         }
 
         @Deprecated
@@ -648,7 +652,9 @@ public class TaskManager implements ITaskManager {
             ListNBT tasksNBT = nbt.getList("tasks", 10);
             for (int i = 0; i < taskSize; i++) {
                 TaskInstance ins = TaskInstance.readNBT(tasksNBT.getCompound(i));
-                tasks.put(ins.getId(), ins);
+                if (ins != null) {
+                    tasks.put(ins.getId(), ins);
+                }
             }
             return new TaskWrapper(id, lessTasks, taskAmount, tasks, taskBoardInfo);
         }

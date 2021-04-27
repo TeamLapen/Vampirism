@@ -227,7 +227,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue renderVampireEyes;
         public final ForgeConfigSpec.BooleanValue renderVampireForestFog;
         public final ForgeConfigSpec.BooleanValue renderScreenOverlay;
-        public final ForgeConfigSpec.ConfigValue<String> actionOrder;
+        public final ForgeConfigSpec.ConfigValue<String> actionOrder;//TODO 1.17 make List<? extends String>
         public final ForgeConfigSpec.BooleanValue disableFovChange;
         public final ForgeConfigSpec.BooleanValue disableBloodVisionRendering;
 
