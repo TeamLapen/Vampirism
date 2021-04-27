@@ -68,8 +68,8 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
         }
         this.hatType = this.entity.getHatType();
         this.useLordSkin = this.entity.shouldRenderLordSkin();
-        this.skinList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 43 + 19, 99,80,20, this.normalSkinCount + this.minionSkinCount,new TranslationTextComponent("gui.vampirism.minion_appearance.skin"), this::skin));
-        this.hatList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 64 + 19, 99,60,20, 3, new TranslationTextComponent("gui.vampirism.minion_appearance.hat"), this::hat));
+        this.skinList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 43 + 19, 99,80,20, this.normalSkinCount + this.minionSkinCount,new TranslationTextComponent("gui.vampirism.minion_appearance.skin"), this::skin, this::previewSkin));
+        this.hatList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 64 + 19, 99,60,20, 3, new TranslationTextComponent("gui.vampirism.minion_appearance.hat"), this::hat, this::previewHat));
         this.skinButton = this.addButton(new ExtendedButton(skinList.x, skinList.y - 20, skinList.getWidth() + 1, 20, new StringTextComponent(""), (b) -> {
             setSkinListVisibility(!skinList.visible);
         }));
@@ -92,6 +92,16 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
     private void hat(int type) {
         this.entity.setHatType(this.hatType = type);
         setHatListVisibility(false);
+    }
+
+    private void previewHat(int type, boolean hovered) {
+        if (hovered) {
+            this.entity.setHatType(type);
+        } else {
+            if (this.entity.getHatType() == type) {
+                this.entity.setHatType(this.hatType);
+            }
+        }
     }
 
     private void onNameChanged(String newName) {
@@ -117,6 +127,17 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
         boolean minionSpecific = type >= normalSkinCount;
         this.entity.setHunterType(this.skinType = type, this.isMinionSpecificSkin = minionSpecific);
         setSkinListVisibility(false);
+    }
+
+    private void previewSkin(int type, boolean hovered) {
+        boolean minionSpecific = type >= normalSkinCount;
+        if (hovered) {
+            this.entity.setHunterType(type, minionSpecific);
+        } else {
+            if (this.entity.getHunterType() == type && this.entity.hasMinionSpecificSkin() == minionSpecific) {
+                this.entity.setHunterType(this.skinType, this.isMinionSpecificSkin);
+            }
+        }
     }
 
     @Override

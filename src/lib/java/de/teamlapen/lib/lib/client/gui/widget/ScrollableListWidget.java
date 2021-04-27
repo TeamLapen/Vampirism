@@ -294,7 +294,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
          */
         public void render(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
             int v = 66;
-            if (mouseX > x && mouseX < x + listWidth && mouseY > y &&mouseY < y+itemHeight) {
+            if (mouseX >= x && mouseX < x + listWidth && mouseY >= y &&mouseY < y+itemHeight) {
                 v = 86;
             }
             RenderSystem.enableDepthTest();

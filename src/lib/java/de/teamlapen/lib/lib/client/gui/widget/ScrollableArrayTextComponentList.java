@@ -8,9 +8,11 @@ import net.minecraft.util.text.TextComponent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -23,6 +25,10 @@ public class ScrollableArrayTextComponentList extends ScrollableListWidget<Pair<
 
     public ScrollableArrayTextComponentList(int xPos, int yPos, int width, int height, int itemHeight, int valueAmount, TextComponent baseName, @Nonnull Consumer<Integer> buttonPressed) {
         super(xPos, yPos, width, height, itemHeight, () -> getItems(createTextArray(valueAmount, baseName)),(item, list) -> new TextComponentItem<>(item, list, buttonPressed), baseName);
+    }
+
+    public ScrollableArrayTextComponentList(int xPos, int yPos, int width, int height, int itemHeight, int valueAmount, TextComponent baseName, @Nonnull Consumer<Integer> buttonPressed, @Nullable BiConsumer<Integer, Boolean> onHover) {
+        super(xPos, yPos, width, height, itemHeight, () -> getItems(createTextArray(valueAmount, baseName)),(item, list) -> new TextComponentItem<>(item, list, buttonPressed, onHover), baseName);
     }
 
     private static Collection<Pair<Integer, ITextComponent>> getItems(Supplier<ITextComponent[]> baseValueSupplier){
@@ -42,10 +48,20 @@ public class ScrollableArrayTextComponentList extends ScrollableListWidget<Pair<
 
         @Nonnull
         private final Consumer<T> onClick;
+        @Nullable
+        private final BiConsumer<T, Boolean> onHover;
+        private boolean hovered;
 
         public TextComponentItem(@Nonnull Pair<T,ITextComponent> item, @Nonnull ScrollableListWidget<Pair<T,ITextComponent>> list, @Nonnull Consumer<T> onClick) {
             super(item, list);
             this.onClick = onClick;
+            this.onHover = null;
+        }
+
+        public TextComponentItem(@Nonnull Pair<T,ITextComponent> item, @Nonnull ScrollableListWidget<Pair<T,ITextComponent>> list, @Nonnull Consumer<T> onClick, @Nullable BiConsumer<T, Boolean> onHover) {
+            super(item, list);
+            this.onClick = onClick;
+            this.onHover = onHover;
         }
 
         @Override
@@ -59,11 +75,21 @@ public class ScrollableArrayTextComponentList extends ScrollableListWidget<Pair<
 
             Minecraft.getInstance().fontRenderer.func_243246_a(matrixStack, this.item.getRight(), x + (listWidth/2) - (width/2), y + 7,-1);
 
+            if (this.onHover != null) {
+                boolean newHovered = mouseX >= x && mouseX < x + listWidth && mouseY >= y && mouseY < y + itemHeight;
+                if (newHovered != this.hovered) {
+                    this.onHover(this.hovered = newHovered);
+                }
+            }
+        }
+
+        protected void onHover(boolean hovered) {
+            this.onHover.accept(this.item.getLeft(), hovered);
         }
 
         @Override
         public boolean onClick(double mouseX, double mouseY) {
-            onClick.accept(this.item.getLeft());
+            this.onClick.accept(this.item.getLeft());
             return true;
         }
     }

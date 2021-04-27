@@ -66,7 +66,7 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
             this.skinType = this.skinType % this.normalSkinCount;
         }
         this.useLordSkin = this.entity.shouldRenderLordSkin();
-        this.typeList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 43 + 19, 99,80,20, this.normalSkinCount + this.minionSkinCount, new TranslationTextComponent("gui.vampirism.minion_appearance.skin"), this::skin));
+        this.typeList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 43 + 19, 99,80,20, this.normalSkinCount + this.minionSkinCount, new TranslationTextComponent("gui.vampirism.minion_appearance.skin"), this::skin, this::previewSkin));
         this.typeButton = this.addButton(new ExtendedButton(this.typeList.x, this.typeList.y - 20, this.typeList.getWidth() + 1, 20, new StringTextComponent(""), (button1 -> {
             setListVisibility(!typeList.visible);
         })));
@@ -97,6 +97,17 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
         boolean minionSpecific = type >= normalSkinCount;
         this.entity.setVampireType(this.skinType = type, this.isMinionSpecificSkin = minionSpecific);
         setListVisibility(false);
+    }
+
+    private void previewSkin(int type, boolean hovered) {
+        boolean minionSpecific = type >= normalSkinCount;
+        if (hovered) {
+            this.entity.setVampireType(type, minionSpecific);
+        } else {
+            if (this.entity.getVampireType() == type && this.entity.hasMinionSpecificSkin() == minionSpecific) {
+                this.entity.setVampireType(this.skinType, this.isMinionSpecificSkin);
+            }
+        }
     }
 
     @Override

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableArrayTextComponentList;
+import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -19,6 +20,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -34,8 +36,8 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
     private int fangType;
     private int eyeType;
     private boolean glowingEyes;
-    private ScrollableArrayTextComponentList eyeList;
-    private ScrollableArrayTextComponentList fangList;
+    private ScrollableListWidget<Pair<Integer, ITextComponent>> eyeList;
+    private ScrollableListWidget<Pair<Integer, ITextComponent>> fangList;
     private ExtendedButton eyeButton;
     private ExtendedButton fangButton;
     private CheckboxButton glowingEyesButton;
@@ -61,8 +63,8 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
         this.eyeType = VampirePlayer.getOpt(this.minecraft.player).map(VampirePlayer::getEyeType).orElse(0);
         this.glowingEyes = VampirePlayer.getOpt(this.minecraft.player).map(VampirePlayer::getGlowingEyes).orElse(false);
 
-        this.eyeList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100,20,REFERENCE.EYE_TYPE_COUNT, new TranslationTextComponent("gui.vampirism.appearance.eye"),this::eye));
-        this.fangList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80,20,REFERENCE.FANG_TYPE_COUNT, new TranslationTextComponent("gui.vampirism.appearance.fang"),this::fang));
+        this.eyeList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100,20,REFERENCE.EYE_TYPE_COUNT, new TranslationTextComponent("gui.vampirism.appearance.eye"),this::eye, this::hoverEye).scrollSpeed(2));
+        this.fangList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80,20,REFERENCE.FANG_TYPE_COUNT, new TranslationTextComponent("gui.vampirism.appearance.fang"),this::fang, this::hoverFang));
         this.eyeButton = this.addButton(new ExtendedButton(eyeList.x, eyeList.y - 20, eyeList.getWidth() + 1, 20, new StringTextComponent(""), (b) -> {
             this.setEyeListVisibility(!eyeList.visible);
         }));
@@ -109,6 +111,30 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
         VampirePlayer.getOpt(this.minecraft.player).ifPresent(vampire -> {
             vampire.setFangType(this.fangType = fangType);
             setFangListVisibility(false);
+        });
+    }
+
+    private void hoverEye(int eyeType, boolean hovered) {
+        VampirePlayer.getOpt(this.minecraft.player).ifPresent(vampire -> {
+            if (hovered) {
+                vampire.setEyeType(eyeType);
+            } else {
+                if (vampire.getEyeType() == eyeType) {
+                    vampire.setEyeType(this.eyeType);
+                }
+            }
+        });
+    }
+
+    private void hoverFang(int fangType, boolean hovered) {
+        VampirePlayer.getOpt(this.minecraft.player).ifPresent(vampire -> {
+            if (hovered) {
+                vampire.setFangType(fangType);
+            } else {
+                if (vampire.getFangType() == fangType) {
+                    vampire.setFangType(this.fangType);
+                }
+            }
         });
     }
 
