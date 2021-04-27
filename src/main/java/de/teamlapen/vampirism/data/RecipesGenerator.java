@@ -245,6 +245,8 @@ public class RecipesGenerator extends RecipeProvider {
 
         //noinspection ConstantConditions
         ConditionalRecipe.builder().addCondition(new ModLoadedCondition("guideapi-vp")).addRecipe((consumer1 -> ShapelessRecipeBuilder.shapelessRecipe(ForgeRegistries.ITEMS.getValue(new ResourceLocation("guideapi-vp", "vampirism-guidebook"))).addIngredient(vampire_fang).addIngredient(book).addCriterion("has_fang", hasItem(vampire_fang)).build(consumer1, modId("general/guidebook")))).build(consumer, modId("general/guidebook"));
+
+        ShapedRecipeBuilder.shapedRecipe(ModItems.cure_apple).patternLine("YXY").patternLine("YZY").patternLine("YYY").key('Y', Items.GOLD_NUGGET).key('Z', Items.APPLE).key('X', ModItems.injection_zombie_blood).addCriterion("has_apple", hasItem(Items.APPLE)).addCriterion("has_zombie_blood", hasItem(ModItems.injection_zombie_blood)).build(consumer, general("cure_item"));
     }
 
     @Nonnull

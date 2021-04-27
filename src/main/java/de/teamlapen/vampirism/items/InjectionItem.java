@@ -40,7 +40,7 @@ public class InjectionItem extends VampirismItem {
 
 
     public enum TYPE implements IStringSerializable {
-        EMPTY("empty"), GARLIC("garlic"), SANGUINARE("sanguinare");
+        EMPTY("empty"), GARLIC("garlic"), SANGUINARE("sanguinare"), ZOMBIE_BLOOD("zombie_blood");
 
         private final String name;
 

@@ -1,10 +1,7 @@
 package de.teamlapen.vampirism.data;
 
 import com.google.common.collect.ImmutableList;
-import de.teamlapen.vampirism.advancements.HunterActionTrigger;
-import de.teamlapen.vampirism.advancements.MinionTaskTrigger;
-import de.teamlapen.vampirism.advancements.TriggerFaction;
-import de.teamlapen.vampirism.advancements.VampireActionTrigger;
+import de.teamlapen.vampirism.advancements.*;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
@@ -74,6 +71,11 @@ public class AdvancementGenerator extends AdvancementProvider {
                     .withParent(max_level)
                     .withCriterion("level", TriggerFaction.lord(VReference.HUNTER_FACTION, 5))
                     .register(consumer, REFERENCE.MODID + ":hunter/max_lord");
+            Advancement cure_vampire = Advancement.Builder.builder()
+                    .withDisplay(ModItems.cure_apple, new TranslationTextComponent("advancement.vampirism.cure_vampire_villager"), new TranslationTextComponent("advancement.vampirism.cure_vampire_villager"),null , FrameType.TASK, true, true, true )
+                    .withParent(become_hunter)
+                    .withCriterion("cure", CuredVampireVillagerTrigger.Instance.any())
+                    .register(consumer, REFERENCE.MODID + ":hunter/cure_vampire_villager");
         }
     }
 

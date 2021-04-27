@@ -16,6 +16,7 @@ public class ModAdvancements {
     public static final HunterActionTrigger TRIGGER_HUNTER_ACTION = register(new HunterActionTrigger());
     public static final SkillUnlockedTrigger TRIGGER_SKILL_UNLOCKED = register(new SkillUnlockedTrigger());
     public static final MinionTaskTrigger TRIGGER_MINION_ACTION = register(new MinionTaskTrigger());
+    public static final CuredVampireVillagerTrigger TRIGGER_CURED_VAMPIRE_VILLAGER = register(new CuredVampireVillagerTrigger());
 
 
     private static <Z extends ICriterionInstance, T extends ICriterionTrigger<Z>> T register(T trigger) {

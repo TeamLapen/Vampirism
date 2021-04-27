@@ -78,6 +78,7 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModItems.injection_empty);
             add(ModItems.injection_garlic);
             add(ModItems.injection_sanguinare);
+            add(ModItems.injection_zombie_blood);
             add(ModItems.obsidian_armor_chest_normal);
             add(ModItems.obsidian_armor_chest_enhanced);
             add(ModItems.obsidian_armor_chest_ultimate);
@@ -116,6 +117,7 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModItems.hunter_minion_upgrade_enhanced);
             add(ModItems.hunter_minion_upgrade_special);
             add(ModItems.oblivion_potion);
+            add(ModItems.cure_apple);
         }};
         Map<Item, ResourceLocation> itemsWithTexture = new HashMap<Item, ResourceLocation>() {{
             put(ModItems.holy_water_bottle_normal, modLoc("item/holy_water_normal"));

@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
+import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModVillage;
@@ -19,9 +20,13 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
+import net.minecraft.block.BedBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleStatus;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
@@ -30,36 +35,53 @@ import net.minecraft.entity.ai.brain.schedule.Schedule;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.ai.brain.task.VillagerTasks;
+import net.minecraft.entity.merchant.IReputationType;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
+import net.minecraft.entity.monster.ZombieVillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.MerchantOffer;
 import net.minecraft.item.MerchantOffers;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTDynamicOps;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.scoreboard.Team;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * Vampire Villager
  */
 public class ConvertedVillagerEntity extends VampirismVillagerEntity implements IConvertedCreature<VillagerEntity> {
+    private static final DataParameter<Boolean> CONVERTING = EntityDataManager.createKey(ZombieVillagerEntity.class, DataSerializers.BOOLEAN);
     public static final List<SensorType<? extends Sensor<? super VillagerEntity>>> SENSOR_TYPES;
     private EnumStrength garlicCache = EnumStrength.NONE;
     private boolean sundamageCache;
     private int bloodTimer = 0;
+    private int conversionTime;
+    private UUID converstionStarter;
 
     static {
         SENSOR_TYPES = Lists.newArrayList(VillagerEntity.SENSOR_TYPES);
@@ -69,6 +91,16 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
 
     public ConvertedVillagerEntity(EntityType<? extends ConvertedVillagerEntity> type, World worldIn) {
         super(type, worldIn);
+    }
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+        this.dataManager.register(CONVERTING, false);
+    }
+
+    public boolean isConverting() {
+        return this.getDataManager().get(CONVERTING);
     }
 
     /**
@@ -146,6 +178,14 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
 
     @Override
     public void livingTick() {
+        if (!this.world.isRemote && this.isAlive() && this.isConverting()) {
+            int i = this.getConversionProgress();
+            this.conversionTime -= i;
+            if (this.conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(this, EntityType.VILLAGER, (timer) -> this.conversionTime = timer)) {
+                this.cureVampire((ServerWorld)this.world);
+            }
+        }
+
         if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 1) {
             isGettingGarlicDamage(world, true);
         }
@@ -240,6 +280,104 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         if (rnd.nextFloat() < prop) {
             list.add(new MerchantOffer(stack, new ItemStack(Items.EMERALD, emeralds), 8, 2, 0.2F));
         }
+    }
+
+    @Override
+    public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
+        ItemStack itemstack = player.getHeldItem(hand);
+        if (itemstack.getItem() != ModItems.cure_apple) return super.func_230254_b_(player, hand);
+        if (!this.isPotionActive(Effects.WEAKNESS)) return ActionResultType.CONSUME;
+        if (!player.abilities.isCreativeMode){
+            itemstack.shrink(1);
+        }
+        if (!world.isRemote){
+            this.startConverting(player.getUniqueID(), this.rand.nextInt(2401)+2400);
+        }
+        return ActionResultType.SUCCESS;
+    }
+
+    @Override
+    public void writeAdditional(@Nonnull CompoundNBT compound) {
+        super.writeAdditional(compound);
+        compound.putInt("ConversionTime", this.isConverting() ? this.conversionTime : -1);
+        if (this.converstionStarter != null) {
+            compound.putUniqueId("ConversionPlayer", this.converstionStarter);
+        }
+    }
+
+    @Override
+    public void readAdditional(@Nonnull CompoundNBT compound) {
+        super.readAdditional(compound);
+        if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1) {
+            this.startConverting(compound.hasUniqueId("ConversionPlayer") ? compound.getUniqueId("ConversionPlayer") : null, compound.getInt("ConversionTime"));
+        }
+    }
+
+    private void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn) {
+        this.converstionStarter = conversionStarterIn;
+        this.conversionTime = conversionTimeIn;
+        this.getDataManager().set(CONVERTING, true);
+        this.removePotionEffect(Effects.WEAKNESS);
+        this.world.setEntityState(this, (byte)16);
+    }
+
+    @Override
+    public void handleStatusUpdate(byte id) {
+        if (id == 16) {
+            if (!this.isSilent()) {
+                this.world.playSound(this.getPosX(), this.getPosYEye(), this.getPosZ(), SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
+            }
+        } else {
+            super.handleStatusUpdate(id);
+        }
+    }
+
+    private int getConversionProgress() {
+        int i = 1;
+        if (this.rand.nextFloat() < 0.01F) {
+            int j = 0;
+            BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
+            for(int k = (int)this.getPosX() - 4; k < (int)this.getPosX() + 4 && j < 14; ++k) {
+                for(int l = (int)this.getPosY() - 4; l < (int)this.getPosY() + 4 && j < 14; ++l) {
+                    for(int i1 = (int)this.getPosZ() - 4; i1 < (int)this.getPosZ() + 4 && j < 14; ++i1) {
+                        Block block = this.world.getBlockState(blockpos$mutable.setPos(k, l, i1)).getBlock();
+                        if (block == Blocks.IRON_BARS || block instanceof BedBlock) {
+                            if (this.rand.nextFloat() < 0.3F) {
+                                ++i;
+                            }
+                            ++j;
+                        }
+                    }
+                }
+            }
+        }
+        return i;
+    }
+
+    private void cureVampire(ServerWorld world) {
+        VillagerEntity villager = this.func_233656_b_(EntityType.VILLAGER, false);
+
+        villager.renderYawOffset = this.renderYawOffset;
+        villager.rotationYawHead = this.rotationYawHead;
+
+        villager.setVillagerData(this.getVillagerData());
+        villager.setGossips(this.getGossip().write(NBTDynamicOps.INSTANCE).getValue());
+        villager.setOffers(this.getOffers());
+        villager.setXp(this.getXp());
+        villager.onInitialSpawn(world, world.getDifficultyForLocation(villager.getPosition()), SpawnReason.CONVERSION, null, null);
+        if (this.converstionStarter != null) {
+            PlayerEntity playerentity = world.getPlayerByUuid(this.converstionStarter);
+            if (playerentity instanceof ServerPlayerEntity) {
+                ModAdvancements.TRIGGER_CURED_VAMPIRE_VILLAGER.trigger((ServerPlayerEntity)playerentity, this, villager);
+                world.updateReputation(IReputationType.ZOMBIE_VILLAGER_CURED, playerentity, villager);
+            }
+        }
+
+        villager.addPotionEffect(new EffectInstance(Effects.NAUSEA, 200, 0));
+        if (!this.isSilent()) {
+            world.playEvent(null, 1027, this.getPosition(), 0);
+        }
+        net.minecraftforge.event.ForgeEventFactory.onLivingConvert(this, villager);
     }
 
     public static class ConvertingHandler implements IConvertingHandler<VillagerEntity> {

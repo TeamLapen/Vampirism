@@ -126,6 +126,9 @@ public class ModItems {
     public static final InjectionItem injection_empty = getNull();
     public static final InjectionItem injection_garlic = getNull();
     public static final InjectionItem injection_sanguinare = getNull();
+    public static final InjectionItem injection_zombie_blood = getNull();
+
+    public static final VampirismItem cure_apple = getNull();
 
     public static final BucketItem impure_blood_bucket = getNull();
     public static final GarlicItem item_garlic = getNull();
@@ -256,6 +259,7 @@ public class ModItems {
         registry.register(new InjectionItem(InjectionItem.TYPE.GARLIC));
         registry.register(new InjectionItem(InjectionItem.TYPE.SANGUINARE));
         registry.register(new InjectionItem(InjectionItem.TYPE.EMPTY));
+        registry.register(new InjectionItem(InjectionItem.TYPE.ZOMBIE_BLOOD));
 
         registry.register(new PitchforkItem());
         SimpleCrossbowItem basic_crossbow = new SimpleCrossbowItem("basic_crossbow", 1, 20, 300);
@@ -421,6 +425,8 @@ public class ModItems {
         registry.register(new VampireClothingItem(EquipmentSlotType.HEAD,"vampire_clothing_head"));
         registry.register(new VampireClothingItem(EquipmentSlotType.LEGS, "vampire_clothing_legs"));
         registry.register(new VampireClothingItem(EquipmentSlotType.FEET, "vampire_clothing_feet"));
+
+        registry.register(new VampirismItem("cure_apple", creativeTabProps().rarity(Rarity.RARE)));
 
         if (VampirismMod.inDataGen) {
             registry.register(new DummyItem().setRegistryName("guideapi-vp", "vampirism-guidebook"));
