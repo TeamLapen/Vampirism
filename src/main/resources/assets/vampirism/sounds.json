@@ -71,5 +71,11 @@
     "sounds": [
       "vampirism:fx/grinder"
     ]
+  },
+  "task_complete": {
+    "category": "master",
+    "sounds": [
+      "vampirism:fx/task_complete"
+    ]
   }
 }

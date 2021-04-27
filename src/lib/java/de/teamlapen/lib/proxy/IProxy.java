@@ -21,6 +21,9 @@ public interface IProxy {
     @Nonnull
     ISoundReference createSoundReference(SoundEvent event, SoundCategory category, BlockPos pos, float volume, float pinch);
 
+    @Nonnull
+    ISoundReference createMasterSoundReference(SoundEvent event, float volume, float pinch);
+
     /**
      * Create a server and client friendly reference for a sound.
      * This only does something on client side, but does not throw a Class Cast exception on server side.

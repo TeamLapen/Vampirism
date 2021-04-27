@@ -21,6 +21,7 @@ public class ModSounds {
     public static final SoundEvent bat_swarm = getNull();
     public static final SoundEvent boiling = getNull();
     public static final SoundEvent grinder = getNull();
+    public static final SoundEvent task_complete = getNull();
 
 
     static void registerSounds(IForgeRegistry<SoundEvent> registry) {
@@ -32,6 +33,7 @@ public class ModSounds {
         registry.register(create("bat_swarm"));
         registry.register(create("boiling"));
         registry.register(create("grinder"));
+        registry.register(create("task_complete"));
     }
 
     private static SoundEvent create(String soundNameIn) {

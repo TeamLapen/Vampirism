@@ -62,6 +62,12 @@ public class ClientProxy extends CommonProxy {
 
     @Nonnull
     @Override
+    public ISoundReference createMasterSoundReference(SoundEvent event, float volume, float pinch) {
+        return new SoundReference(SimpleSound.master(event, volume, pinch));
+    }
+
+    @Nonnull
+    @Override
     public ISoundReference createSoundReference(SoundEvent event, SoundCategory category, double x, double y, double z, float volume, float pinch) {
         return new SoundReference(new SimpleSound(event, category, volume, pinch, (float) x, (float) y, (float) z));
     }

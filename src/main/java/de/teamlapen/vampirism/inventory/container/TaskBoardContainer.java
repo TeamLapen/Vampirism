@@ -1,12 +1,14 @@
 package de.teamlapen.vampirism.inventory.container;
 
 import com.google.common.collect.Sets;
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.core.ModContainer;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskActionPacket;
 import net.minecraft.client.Minecraft;
@@ -118,6 +120,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
                 taskInfo.complete();
                 this.completableTasks.remove(taskInfo.getId());
                 this.taskInstances.remove(taskInfo);
+                VampLib.proxy.createMasterSoundReference(ModSounds.task_complete,1,1).startPlaying();
                 break;
             case ACCEPT:
                 taskInfo.startTask(Minecraft.getInstance().world.getGameTime() + taskInfo.getTaskDuration());

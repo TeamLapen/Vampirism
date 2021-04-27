@@ -17,6 +17,13 @@ public class CommonProxy implements IProxy {
 
     @Nonnull
     @Override
+    public ISoundReference createMasterSoundReference(SoundEvent event, float volume, float pinch) {
+        LOGGER.warn("Created sound reference server side. Nothing will happen");
+        return new ISoundReference.Dummy();
+    }
+
+    @Nonnull
+    @Override
     public ISoundReference createSoundReference(SoundEvent event, SoundCategory category, BlockPos pos, float volume, float pinch) {
         LOGGER.warn("Created sound reference server side. Nothing will happen");
         return new ISoundReference.Dummy();
