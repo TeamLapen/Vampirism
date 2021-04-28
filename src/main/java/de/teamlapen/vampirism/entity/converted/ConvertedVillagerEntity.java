@@ -389,6 +389,8 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
             ConvertedVillagerEntity converted = ModEntities.villager_converted.create(entity.world);
             converted.read(nbt);
             converted.setUniqueId(MathHelper.getRandomUUID(converted.rand));
+            converted.renderYawOffset = entity.renderYawOffset;
+            converted.rotationYawHead = entity.rotationYawHead;
             return converted;
         }
     }

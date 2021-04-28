@@ -92,5 +92,7 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
         converted.setEntityCreature(entity);
         converted.updateEntityAttributes();
         converted.setHealth(converted.getMaxHealth() / 3 * 2);
+        converted.renderYawOffset = entity.renderYawOffset;
+        converted.rotationYawHead = entity.rotationYawHead;
     }
 }
