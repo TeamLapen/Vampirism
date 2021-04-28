@@ -56,14 +56,15 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
 
     @Override
     protected ActionResultType func_230254_b_(@Nonnull PlayerEntity playerEntity, @Nonnull Hand hand) {
-        if (this.world.isRemote) return ActionResultType.SUCCESS;
+        if (this.world.isRemote) return Helper.isVampire(playerEntity)?ActionResultType.SUCCESS:ActionResultType.PASS;
         if (Helper.isVampire(playerEntity) && interactor == null) {
             if (this.processInteraction(playerEntity, this)) {
                 this.getNavigator().clearPath();
                 this.interactor = playerEntity;
             }
+            return ActionResultType.SUCCESS;
         }
-        return ActionResultType.SUCCESS;
+        return ActionResultType.PASS;
     }
 
     @Override

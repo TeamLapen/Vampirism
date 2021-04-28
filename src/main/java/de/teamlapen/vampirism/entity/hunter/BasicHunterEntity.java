@@ -338,7 +338,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     @Override
     protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) { //proccessInteract
-        if (tryCureSanguinare(player)) return ActionResultType.SUCCESS;
+        if (hand == Hand.MAIN_HAND && tryCureSanguinare(player)) return ActionResultType.SUCCESS;
         int hunterLevel = HunterPlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0);
         if (this.isAlive() && !player.isSneaking()) {
             if (!world.isRemote) {
@@ -350,6 +350,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                     } else {
                         player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"), Util.DUMMY_UUID);
                     }
+                    return ActionResultType.SUCCESS;
                 } else if (hunterLevel > 0) {
                     FactionPlayerHandler.getOpt(player).ifPresent(fph -> {
                         if (fph.getMaxMinions() > 0) {
@@ -378,10 +379,10 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                             player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_hunter.cannot_train_you_any_further"), false);
                         }
                     });
+                    return ActionResultType.SUCCESS;
                 }
 
             }
-            return ActionResultType.SUCCESS;
         }
         return super.func_230254_b_(player, hand);
     }

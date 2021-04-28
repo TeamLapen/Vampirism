@@ -454,7 +454,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             if (!world.isRemote) {
                 int vampireLevel = FactionPlayerHandler.getOpt(player).map(fph -> fph.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0);
                 if (vampireLevel > 0) {
-                    FactionPlayerHandler.getOpt(player).ifPresent(fph -> {
+                    return FactionPlayerHandler.getOpt(player).map (fph -> {
                         if (fph.getMaxMinions() > 0) {
                             ItemStack heldItem = player.getHeldItem(hand);
                             boolean freeSlot = MinionWorldData.getData(player.world).map(data -> data.getOrCreateController(fph)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
@@ -482,11 +482,13 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                             } else if (freeSlot) {
                                 player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.require_binding", UtilLib.translate(ModItems.vampire_minion_binding.getTranslationKey())), true);
                             }
+                            return ActionResultType.SUCCESS;
                         }
-                    });
+                        return ActionResultType.PASS;
+                    }).orElse(ActionResultType.PASS);
                 }
             }
-            return ActionResultType.SUCCESS;
+            return ActionResultType.PASS;
         }
         return super.func_230254_b_(player, hand);
     }

@@ -200,6 +200,10 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
         }
     }
 
+    protected void disableImobConversion(){
+        this.doImobConversion=false;
+    }
+
     protected SoundEvent getDeathSound() {
         return SoundEvents.ENTITY_HOSTILE_DEATH;
     }
