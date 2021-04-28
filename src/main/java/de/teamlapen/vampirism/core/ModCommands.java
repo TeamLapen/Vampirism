@@ -69,6 +69,7 @@ public class ModCommands {
                             .then(TaskCommand.register())
                             .then(ForcePlayerSyncCommand.register())
                             .then(GiveAccessoriesCommand.register())
+                            .then(SummonDummy.register())
             );
         }
     }
