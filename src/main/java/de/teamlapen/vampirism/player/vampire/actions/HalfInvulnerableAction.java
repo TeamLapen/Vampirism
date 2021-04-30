@@ -40,17 +40,7 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     @Override
     public void onDeactivated(IVampirePlayer player) {
         ((VampirePlayer) player).getSpecialAttributes().half_invulnerable = false;
-        /*
-         * We have a difficult situation here.
-         * We want to remove the slowness effect this skill adds if the skill is terminated prematurely, but at the same time we do not want to make this a way to get rid of long lasting slowness effects added by other things.
-         * Since we cannot determine what added what, current solution is to only remove the potion effect if the remaining duration is shorter than the maximum duration of this skill.
-         * It is not ideal because it might seem somewhat inconsistent to the player, but at least it definitively removes the slowness effect added by this skill and at the same time does not allow to cancel long lasting effects.
-         */
-        if (player.getRepresentingPlayer().isPotionActive(Effects.SLOWNESS)) {
-            if (player.getRepresentingPlayer().getActivePotionEffect(Effects.SLOWNESS).getDuration() < getDuration(player)) {
-                player.getRepresentingPlayer().removePotionEffect(Effects.SLOWNESS);
-            }
-        }
+        removePotionEffect(player, Effects.SLOWNESS);
     }
 
     @Override
@@ -65,10 +55,9 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     }
 
     @Override
-    protected boolean activate(IVampirePlayer playerIn) {
-        ((VampirePlayer) playerIn).getSpecialAttributes().half_invulnerable = true;
-        playerIn.getRepresentingPlayer().addPotionEffect(
-                new EffectInstance(Effects.SLOWNESS, getDuration(playerIn) - 1, 1, false, false));
+    protected boolean activate(IVampirePlayer vampire) {
+        ((VampirePlayer) vampire).getSpecialAttributes().half_invulnerable = true;
+        addEffectInstance(vampire, new EffectInstance(Effects.SLOWNESS, getDuration(vampire) - 1, 1, false, false));
         return true;
     }
 

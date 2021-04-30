@@ -14,13 +14,9 @@ import net.minecraft.potion.EffectInstance;
  */
 public class SunscreenVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
-    public SunscreenVampireAction() {
-        super();
-    }
-
     @Override
     public boolean activate(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().addPotionEffect(new EffectInstance(ModEffects.sunscreen, getDuration(vampire), 3, false, false));
+        addEffectInstance(vampire, new EffectInstance(ModEffects.sunscreen, getDuration(vampire), 3, false, false));
         return true;
     }
 
@@ -55,7 +51,7 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
 
     @Override
     public void onDeactivated(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().removePotionEffect(ModEffects.sunscreen);
+        removePotionEffect(vampire, ModEffects.sunscreen);
     }
 
     @Override

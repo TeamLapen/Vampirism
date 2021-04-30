@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.api.entity.player.actions;
 
+import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
@@ -68,4 +71,23 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
      * @return Whether the action was successfully activated. !Does not give any feedback to the user!
      */
     protected abstract boolean activate(T player);
+
+    public void removePotionEffect(T player, Effect effect) {
+        EffectInstance ins = player.getRepresentingPlayer().getActivePotionEffect(effect);
+        while (ins != null) {
+            EffectInstanceWithSource insM = ((EffectInstanceWithSource) ins);
+            if (insM.hasSource()) {
+                if (insM.getSource().equals(this.getRegistryName())) {
+                    insM.removeEffect();
+                    break;
+                }
+            }
+            ins = insM.getHiddenEffect();
+        }
+    }
+
+    public void addEffectInstance(T player, EffectInstance instance) {
+        ((EffectInstanceWithSource) instance).setSource(this.getRegistryName());
+        player.getRepresentingPlayer().addPotionEffect(instance);
+    }
 }

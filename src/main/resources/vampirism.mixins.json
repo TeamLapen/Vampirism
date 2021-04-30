@@ -8,9 +8,10 @@
     "FlatGenerationSettingsAccessor",
     "LivingEntityAccessor",
     "MixinBellBlock",
+    "MixinEffectInstance",
     "MixinEntity",
-    "MixinLivingEntity",
     "MixinEntityPredicate",
+    "MixinLivingEntity",
     "MixinPotionBrewing"
   ],
   "client": [

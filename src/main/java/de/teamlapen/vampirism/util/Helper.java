@@ -30,8 +30,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.DoubleNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.DoubleNBT;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
