@@ -22,6 +22,7 @@ import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.fluids.BloodHelper;
+import de.teamlapen.vampirism.mixin.ArmorItemAccessor;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
@@ -72,10 +73,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
@@ -102,7 +100,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private final static String KEY_DBNO_MSG = "dbno_msg";
 
     public final static UUID NATURAL_ARMOR_UUID = UUID.fromString("17dcf6d2-30ac-4730-b16a-528353d0abe5");
-    public final static UUID NATURAL_ARMOR_TOUGHNESS_UUID = UUID.fromString("efa8ae3b-0918-473c-b99c-774feeb71b29");
 
     @CapabilityInject(IVampirePlayer.class)
     public static Capability<IVampirePlayer> CAP = getNull();
@@ -586,7 +583,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
         if (getLevel() > 0) {
-            if (isDBNO() && !Helper.canKillVampires(src)) { //TODO check stake etc.
+            if (isDBNO() && !Helper.canKillVampires(src)) {
                 if (src.getTrueSource() != null && src.getTrueSource() instanceof MobEntity && ((MobEntity) src.getTrueSource()).getAttackTarget() == player) {
                     ((MobEntity) src.getTrueSource()).setAttackTarget(null);
                 }
@@ -1241,20 +1238,19 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             int lvl = getLevel();
             if(lvl==0){
                 armorAtt.removeModifier(NATURAL_ARMOR_UUID);
-                toughnessAtt.removeModifier(NATURAL_ARMOR_TOUGHNESS_UUID);
+                toughnessAtt.removeModifier(NATURAL_ARMOR_UUID);
             }
             else{
                 AttributeModifier modArmor = armorAtt.getModifier(NATURAL_ARMOR_UUID);
-                AttributeModifier modToughness = toughnessAtt.getModifier(NATURAL_ARMOR_TOUGHNESS_UUID);
+                AttributeModifier modToughness = toughnessAtt.getModifier(NATURAL_ARMOR_UUID);
                 double naturalArmor = getNaturalArmorValue(lvl);
                 EffectInstance armorRegen = player.getActivePotionEffect(ModEffects.armor_regeneration);
                 double armorRegenerationMod = armorRegen == null ? 0 : armorRegen.getDuration() / ((double)VampirismConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20);
                 naturalArmor *= (1-0.75*armorRegenerationMod); //Modify natural armor between 25% and 100% depending on the armor regen state
                 double naturalToughness = getNaturalArmorToughnessValue(lvl);
-                AttributeModifier finalModArmor = modArmor;
-                double baseArmor = armorAtt.getOrCreateModifiersByOperation(AttributeModifier.Operation.ADDITION).stream().filter(m -> m != finalModArmor).map(AttributeModifier::getAmount).mapToDouble(Double::doubleValue).sum();
-                AttributeModifier finalModToughness = modToughness;
-                double baseToughness = toughnessAtt.getOrCreateModifiersByOperation(AttributeModifier.Operation.ADDITION).stream().filter(m -> m != finalModToughness).map(AttributeModifier::getAmount).mapToDouble(Double::doubleValue).sum();
+                List<UUID> armorItemModifiers = Arrays.asList(ArmorItemAccessor.getModifierUUID_vampirism());
+                double baseArmor = armorAtt.getOrCreateModifiersByOperation(AttributeModifier.Operation.ADDITION).stream().filter(m -> armorItemModifiers.contains(m.getID())).map(AttributeModifier::getAmount).mapToDouble(Double::doubleValue).sum();
+                double baseToughness = toughnessAtt.getOrCreateModifiersByOperation(AttributeModifier.Operation.ADDITION).stream().filter(m -> armorItemModifiers.contains(m.getID())).map(AttributeModifier::getAmount).mapToDouble(Double::doubleValue).sum();
                 double targetArmor = Math.max(0,naturalArmor-baseArmor);
                 double targetToughness = Math.max(0, naturalToughness-baseToughness);
                 if(modArmor != null && targetArmor!=modArmor.getAmount()){
@@ -1269,7 +1265,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     modToughness=null;
                 }
                 if(targetToughness!=0&&modToughness==null){
-                    toughnessAtt.applyNonPersistentModifier(new AttributeModifier(NATURAL_ARMOR_TOUGHNESS_UUID,"Natural Vampire Armor Toughness",targetToughness, AttributeModifier.Operation.ADDITION));
+                    toughnessAtt.applyNonPersistentModifier(new AttributeModifier(NATURAL_ARMOR_UUID,"Natural Vampire Armor Toughness",targetToughness, AttributeModifier.Operation.ADDITION));
                 }
                 applyLevelModifiersB(VampirismConfig.BALANCE.vpArmorPenalty.get() && baseArmor > 7);
 
@@ -1330,7 +1326,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public boolean onDeadlyHit(DamageSource source) {
-        if (!this.player.isPotionActive(ModEffects.neonatal)&&!Helper.canKillVampires(source)){
+        if (getLevel()>0&&!this.player.isPotionActive(ModEffects.neonatal)&&!Helper.canKillVampires(source)){
                 this.dbnoTimer = getDbnoDuration();
                 this.player.setHealth(0.5f);
                 this.player.setForcedPose(Pose.SLEEPING);

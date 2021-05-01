@@ -31,7 +31,7 @@ public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTie
 
 
     public HunterAxeItem(TIER tier) {
-        super(regName + "_" + tier.getName(), ItemTier.IRON, 8, -3.4f, new Properties().group(VampirismMod.creativeTab));
+        super(regName + "_" + tier.getName(), ItemTier.IRON, 10, -2.9f, new Properties().group(VampirismMod.creativeTab));
         this.tier = tier;
         this.setTranslation_key(regName);
     }

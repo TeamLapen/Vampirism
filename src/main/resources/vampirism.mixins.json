@@ -4,13 +4,14 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "vampirism.refmap.json",
   "mixins": [
+    "ArmorItemAccessor",
     "DimensionStructureSettingsAccessor",
     "FlatGenerationSettingsAccessor",
     "LivingEntityAccessor",
     "MixinBellBlock",
     "MixinEntity",
-    "MixinLivingEntity",
     "MixinEntityPredicate",
+    "MixinLivingEntity",
     "MixinPotionBrewing"
   ],
   "client": [

@@ -79,7 +79,7 @@ public class ModPotions {
         registry.register(new HunterPotion("very_long_slow_falling", "slow_falling", new EffectInstance(Effects.SLOW_FALLING, 48000)));
         registry.register(new HunterPotion("long_luck", "luck", new EffectInstance(Effects.LUCK, 60000)));
         registry.register(new HunterPotion("very_long_weakness", "weakness", new EffectInstance(Effects.WEAKNESS, 48000)));
-        registry.register(new HunterPotion("very_strong_strength", "strength", new EffectInstance(Effects.STRENGTH, 1200, 2)));
+        registry.register(new HunterPotion("very_strong_strength", "strength", new EffectInstance(Effects.STRENGTH, 600, 2)));
         registry.register(new HunterPotion("very_long_strength", "strength", new EffectInstance(Effects.STRENGTH, 96000)));
         registry.register(new HunterPotion("long_strong_strength", "strength", new EffectInstance(Effects.STRENGTH, 4800, 1)));
         registry.register(new HunterPotion("very_strong_regeneration", "regeneration", new EffectInstance(Effects.REGENERATION, 450, 2)));

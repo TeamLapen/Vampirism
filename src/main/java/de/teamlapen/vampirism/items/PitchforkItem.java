@@ -12,7 +12,6 @@ public class PitchforkItem extends VampirismItemWeapon {
     private final static String regName = "pitchfork";
 
     public PitchforkItem() {
-        super(regName, ItemTier.IRON, 8, -3, new Properties().group(VampirismMod.creativeTab));
-
+        super(regName, ItemTier.IRON, 6, -3, new Properties().group(VampirismMod.creativeTab));
     }
 }

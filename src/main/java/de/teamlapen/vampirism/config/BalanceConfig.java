@@ -275,14 +275,14 @@ public class BalanceConfig {
 
         //Hunter player
         builder.category("hunterPlayer", "hp");
-        hpStrengthMaxMod = builder.comment("Strength = Old * (modifier+1").defineInRange("strengthMaxMod", 0.5, 0d, 4d);
+        hpStrengthMaxMod = builder.comment("Strength = Old * (modifier+1").defineInRange("strengthMaxMod", 0.3d, 0d, 4d);
         hpStrengthType = builder.comment("0.5 for square root, 1 for linear").defineInRange("strengthType", 0.5d, 0.5d, 1);
 
         //Hunter skills
         builder.category("hunterSkills", "hs");
         hsSmallAttackSpeedModifier = builder.comment("Basic skill - Weapon cooldown = 1/(oldvalue*(1+modifier))").defineInRange("smallAttackSpeedModifier", 0.2, 0, 3);
         hsMajorAttackSpeedModifier = builder.comment("Advanced skill - Weapon cooldown = 1/(oldvalue*(1+modifier)").defineInRange("majorAttackSpeedModifier", 0.4, 0, 3);
-        hsSmallAttackDamageModifier = builder.comment("Increase damage - Attack damage = oldValue * (1+modifier)").defineInRange("smallAttackDamageModifier", 0.3d, 0, 2);
+        hsSmallAttackDamageModifier = builder.comment("Increase damage - Added to base damage").defineInRange("smallAttackDamageModifier", 1d, 0, 10);
         hsInstantKill1FromBehind = builder.comment("First stake skill - If it is required to attack from behind to instant kill low level vampires").define("instantKill1FromBehind", false);
         hsInstantKill1MaxHealth = builder.comment("First stake skill -The maximal relative health a entity may have to be instantly killed").defineInRange("instantKill1MaxHealth", 0.35, 0, 1);
         hsInstantKill2MaxHealth = builder.comment("Second stake skill - The max (not the actual) health of an entity that can be one hit killed from behind").defineInRange("instantKill2MaxHealth", 200, 0, Integer.MAX_VALUE);
@@ -310,14 +310,14 @@ public class BalanceConfig {
         vsJumpBoost = builder.comment("Similar to potion effect ampliofier (and -1 is normal)").defineInRange("jumpBoost", 1, -1, 5);
         vsSpeedBoost = builder.comment("Max speed is multiplied with (value+1)").defineInRange("speedBoost", 0.15, 0, 3);
         vsBloodVisionDistanceSq = builder.comment("Squared blood vision distance").defineInRange("bloodVisionDistanceSq", 1600, 5, Integer.MAX_VALUE);
-        vsSmallAttackDamageModifier = builder.comment("Damage = oldValue * (1+modifier)").defineInRange("smallAttackDamageModifier", 0.3d, 0, 2d);
-        vsSmallAttackSpeedModifier = builder.comment("Basic skill - Weapon cooldown = 1/(oldvalue*(1+modifier))").defineInRange("smallAttackSpeedModifier", 0.2, 0, 3);
+        vsSmallAttackDamageModifier = builder.comment("Damage added to base damage").defineInRange("smallAttackDamageModifier", 1d, 0, 10d);
+        vsSmallAttackSpeedModifier = builder.comment("Basic skill - Weapon cooldown = 1/(oldvalue*(1+modifier))").defineInRange("smallAttackSpeedModifier", 0.15, 0, 3);
 
 
         //Vampire Player
         builder.category("vampirePlayer", "vp");
         vpHealthMaxMod = builder.defineInRange("healthMaxMod", 16, 0.5, 40);
-        vpStrengthMaxMod = builder.defineInRange("strengthMaxMod", 0.25, 0, 2);
+        vpStrengthMaxMod = builder.defineInRange("strengthMaxMod", 0.15, 0, 2);
         vpSpeedMaxMod = builder.defineInRange("speedMaxMod", 0.3, 0, 5);
         vpExhaustionMaxMod = builder.defineInRange("exhaustionMaxMod", 1.0, 0, 10);
         vpBasicBloodExhaustionMod = builder.comment("Blood exhaustion is multiplied with this value").defineInRange("basicBloodExhaustionMod", 0.7, 0, 5);

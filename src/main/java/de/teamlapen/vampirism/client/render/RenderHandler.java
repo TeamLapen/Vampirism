@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRefinements;
-import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
@@ -313,6 +312,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
             m.bipedLeftArm.showModel=false;
             m.bipedLeftArmwear.showModel=false;
             m.bipedRightLeg.showModel=false;
+            m.bipedLeftLeg.showModel=false;
             m.bipedRightLegwear.showModel=false;
             m.bipedLeftLegwear.showModel=false;
         }

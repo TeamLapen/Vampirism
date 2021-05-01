@@ -18,9 +18,9 @@ import java.util.List;
 public class HeartStrikerItem extends VampirismVampireSword implements IItemWithTier {
 
     public static final String regName = "heart_striker";
-    private final static int[] DAMAGE_TIER = {8, 9, 11};
-    private final static float[] UNTRAINED_SPEED_TIER = {-4.2f, -3.9f, -3.6f};
-    private final static float[] TRAINED_SPEED_TIER = {-1.6f, -1.5f, -1.4f};
+    private final static int[] DAMAGE_TIER = {8, 9, 10};
+    private final static float[] UNTRAINED_SPEED_TIER = {-3.8f, -3.7f, -3.6f};
+    private final static float[] TRAINED_SPEED_TIER = {-2.4f, -2.3f, -2.2f};
     private final TIER tier;
 
     public HeartStrikerItem(TIER tier) {

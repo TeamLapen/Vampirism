@@ -60,7 +60,7 @@ public class ModRefinementSets {
             registry.register(uncommonV("armor3_n_health3", ModRefinements.armor3, ModRefinements.n_health3));
             registry.register(uncommonV("health3_n_damage2", ModRefinements.health3, ModRefinements.n_damage2));
             registry.register(uncommonV("attack_speed3_n_armor2", ModRefinements.attack_speed3, ModRefinements.n_armor2));
-            registry.register(uncommonV("damage3_n_speed2", ModRefinements.damage3, ModRefinements.n_speed2));
+            registry.register(uncommonV("damage3_n_speed2", ModRefinements.damage3, ModRefinements.n_speed3));
             registry.register(uncommonV("speed3_n_damage2", ModRefinements.speed3, ModRefinements.n_damage2));
 
             //default skill upgrades
@@ -92,7 +92,7 @@ public class ModRefinementSets {
             registry.register(rareV("health3_n_armor1", ModRefinements.health3, ModRefinements.n_armor1));
             registry.register(rareV("attack_speed3_n_speed1", ModRefinements.attack_speed3, ModRefinements.n_speed1));
             registry.register(rareV("speed1_armor1_health1", ModRefinements.speed1, ModRefinements.armor1, ModRefinements.health1));
-            registry.register(rareV("damage3_n_armor1", ModRefinements.damage3, ModRefinements.n_armor1));
+            registry.register(rareV("damage3_n_armor1", ModRefinements.damage3, ModRefinements.n_armor2));
             registry.register(rareV("speed3_n_attack_speed1", ModRefinements.speed3, ModRefinements.n_attack_speed1));
             registry.register(rareV("damage1_attack_speed1", ModRefinements.damage1, ModRefinements.attack_speed1));
 

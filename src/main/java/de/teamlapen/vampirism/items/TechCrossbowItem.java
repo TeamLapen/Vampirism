@@ -153,7 +153,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
 
     @Override
     protected int getCooldown(PlayerEntity player, ItemStack stack) {
-        return 2;
+        return 8;
     }
 
     @Override

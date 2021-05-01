@@ -86,7 +86,7 @@ public class VampireSkills {
         registry.register(new VampirismSkill.SimpleVampireSkill("vampire_attack_speed", false).registerAttributeModifier(Attributes.ATTACK_SPEED, "d4aa1d08-5e0e-4946-86dc-95a1e6f5be20", () -> VampirismConfig.BALANCE.vsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
         //Config null, so cannot get method ref
         //noinspection Convert2MethodRef
-        registry.register(new VampirismSkill.SimpleVampireSkill("vampire_attack_damage", false).registerAttributeModifier(Attributes.ATTACK_DAMAGE, "f2acc818-dc3a-4696-ba63-c3294290ad86", () -> VampirismConfig.BALANCE.vsSmallAttackDamageModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismSkill.SimpleVampireSkill("vampire_attack_damage", false).registerAttributeModifier(Attributes.ATTACK_DAMAGE, "f2acc818-dc3a-4696-ba63-c3294290ad86", () -> VampirismConfig.BALANCE.vsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADDITION));
     }
 
     public static void fixMappings(RegistryEvent.MissingMappings<ISkill> event) {
