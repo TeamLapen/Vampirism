@@ -16,9 +16,9 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
     @Override
     public boolean activate(IVampirePlayer vampire) {
         int duration =  getDuration(vampire);
-        vampire.getRepresentingPlayer().addPotionEffect(new EffectInstance(Effects.SPEED, duration, 2, false, false));
-        vampire.getRepresentingPlayer().addPotionEffect(new EffectInstance(Effects.STRENGTH, duration, 0, false, false));
-        vampire.getRepresentingPlayer().addPotionEffect(new EffectInstance(Effects.HASTE, duration, 0, false, false));
+        addEffectInstance(vampire, new EffectInstance(Effects.SPEED, duration, 2, false, false));
+        addEffectInstance(vampire, new EffectInstance(Effects.STRENGTH, duration, 0, false, false));
+        addEffectInstance(vampire, new EffectInstance(Effects.HASTE, duration, 0, false, false));
 
         return true;
     }
@@ -50,9 +50,9 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
 
     @Override
     public void onDeactivated(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().removePotionEffect(Effects.SPEED);
-        vampire.getRepresentingPlayer().removePotionEffect(Effects.STRENGTH);
-        vampire.getRepresentingPlayer().removePotionEffect(Effects.HASTE);
+        removePotionEffect(vampire, Effects.SPEED);
+        removePotionEffect(vampire, Effects.STRENGTH);
+        removePotionEffect(vampire, Effects.HASTE);
     }
 
     @Override
