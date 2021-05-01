@@ -54,7 +54,7 @@ public class MixinEffectInstance implements EffectInstanceWithSource {
     }
 
     @Inject(method = "writeInternal(Lnet/minecraft/nbt/CompoundNBT;)V", at = @At("TAIL"))
-    private void writeInternale_vampirism(CompoundNBT nbt, CallbackInfo ci){
+    private void writeInternal_vampirism(CompoundNBT nbt, CallbackInfo ci){
         if (source != null) {
             nbt.putString("source", source.toString());
         }
