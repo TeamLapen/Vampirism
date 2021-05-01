@@ -202,10 +202,12 @@ public class SkillsScreen extends Screen {
                 SkillNode root = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(faction.getID());
                 addToList(skillNodes, root);
 
+                boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
+
                 resetSkills = this.addButton(new Button(guiLeft + 88, guiTop + 175, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
                     InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().inventory, new ItemStack(ModItems.oblivion_potion)); //server syncs after the screen is closed
-                    if (factionPlayer.getLevel() < 2 || minecraft.player.inventory.count(ModItems.oblivion_potion) <= 1) {
+                    if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.count(ModItems.oblivion_potion) <= 1) && !test) {
                         context.active = false;
                     }
                 }, (button, stack, mouseX, mouseY) -> {
@@ -215,7 +217,7 @@ public class SkillsScreen extends Screen {
                         SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_req", ModItems.oblivion_potion.getName()), mouseX, mouseY);
                     }
                 }));
-                if (factionPlayer.getLevel() < 2 || minecraft.player.inventory.count(ModItems.oblivion_potion) <= 0) {
+                if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.count(ModItems.oblivion_potion) <= 0) && !test) {
                     resetSkills.active = false;
                 }
             });
