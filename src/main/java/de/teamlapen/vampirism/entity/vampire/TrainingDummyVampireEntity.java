@@ -50,14 +50,13 @@ public class TrainingDummyVampireEntity extends BasicVampireEntity {
     }
 
     @Override
-    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) { //proccessInteract
+    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) { //processInteract
         if (!this.world.isRemote && hand == Hand.MAIN_HAND) {
-
             if (startTicks == 0) {
                 player.sendStatusMessage(new StringTextComponent("Start recording"), false);
                 this.startTicks = this.ticksExisted;
             } else {
-                player.sendStatusMessage(new StringTextComponent("Damage: " + damageTaken + " - DPS: " + damageTaken / ((float) (this.ticksExisted - this.startTicks))), false);
+                player.sendStatusMessage(new StringTextComponent("Damage: " + damageTaken + " - DPS: " + (damageTaken / ((float) (this.ticksExisted - this.startTicks)) * 20f)), false);
                 this.remove();
             }
         }
