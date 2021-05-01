@@ -59,6 +59,11 @@ public interface ISkillHandler<T extends ISkillPlayer<?>> {
 
     void damageRefinements();
 
+    /**
+     * remove all equipped refinements
+     */
+    void resetRefinements();
+
     enum Result {
         /**
          * can be enabled

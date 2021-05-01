@@ -222,11 +222,13 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
             } else {
                 skillHandler.disableAllSkills();
                 actionHandler.resetTimers();
+                this.skillHandler.resetRefinements();
             }
 
         } else {
             if (level == 0) {
                 actionHandler.resetTimers();
+                this.skillHandler.resetRefinements();
             }
         }
 

@@ -657,6 +657,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             } else {
                 actionHandler.resetTimers();
                 skillHandler.disableAllSkills();
+                this.skillHandler.resetRefinements();
             }
         } else {
             if (oldLevel == 0) {
@@ -668,6 +669,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     player.removePotionEffect(Effects.NIGHT_VISION);
                 }
                 actionHandler.resetTimers();
+                this.skillHandler.resetRefinements();
             }
         }
     }

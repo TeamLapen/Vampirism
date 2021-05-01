@@ -432,4 +432,11 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
             }
         }
     }
+
+    @Override
+    public void resetRefinements() {
+        for (int i = 0; i < this.appliedRefinementSets.length; i++) {
+            this.removeRefinementSet(i);
+        }
+    }
 }
