@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
@@ -37,10 +37,8 @@ public class HunterTrainerScreen extends ContainerScreen<HunterTrainerContainer>
     @Override
     public void init() {
         super.init();
-        int i = (this.width - this.xSize) / 2;
-        int j = (this.height - this.ySize) / 2;
         ITextComponent name = new TranslationTextComponent("text.vampirism.level_up");
-        this.addButton(this.buttonLevelup = new Button(i + 120, j + 24, this.font.getStringPropertyWidth(name) + 5, 20, name, (context) -> {
+        this.addButton(this.buttonLevelup = new Button(this.guiLeft + 120, this.guiTop + 24, this.font.getStringPropertyWidth(name) + 5, 20, name, (context) -> {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TRAINERLEVELUP, ""));
             PlayerEntity player = Minecraft.getInstance().player;
             UtilLib.spawnParticles(player.getEntityWorld(), ParticleTypes.ENCHANT, player.getPosX(), player.getPosY(), player.getPosZ(), 1, 1, 1, 100, 1);
@@ -69,11 +67,9 @@ public class HunterTrainerScreen extends ContainerScreen<HunterTrainerContainer>
 
     @Override
     protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float var1, int var2, int var3) {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(altarGuiTextures);
-        int k = (this.width - this.xSize) / 2;
-        int l = (this.height - this.ySize) / 2;
-        this.blit(stack, k, l, 0, 0, this.xSize, this.ySize);
+        this.blit(stack, this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
     }
 
     @Override
