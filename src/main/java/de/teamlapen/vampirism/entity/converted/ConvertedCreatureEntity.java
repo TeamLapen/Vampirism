@@ -4,10 +4,11 @@ import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
-import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
+import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.goals.AttackMeleeNoSunGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
@@ -22,24 +23,28 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * Converted creature class.
  * Contains (stores and syncs) a normal Entity for rendering purpose
  */
-public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBaseEntity implements IConvertedCreature<T>, ISyncable {
+public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBaseEntity implements ICurableConvertedCreature<T>, ISyncable {
     private final static Logger LOGGER = LogManager.getLogger(ConvertedCreatureEntity.class);
 
     public static boolean spawnPredicate(EntityType<? extends ConvertedCreatureEntity> entityType, IWorld iWorld, SpawnReason spawnReason, BlockPos blockPos, Random random) {
@@ -51,10 +56,18 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     private boolean canDespawn = false;
     @Nullable
     private ITextComponent name;
+    private int conversionTime;
+    private UUID converstionStarter;
 
     public ConvertedCreatureEntity(EntityType<? extends ConvertedCreatureEntity> type, World world) {
         super(type, world, false);
         this.enableImobConversion();
+    }
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+        this.registerConvertingData(this);
     }
 
     @Override
@@ -156,6 +169,9 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         if (nbt.contains("converted_canDespawn")) {
             canDespawn = nbt.getBoolean("converted_canDespawn");
         }
+        if (nbt.contains("ConversionTime", 99) && nbt.getInt("ConversionTime") > -1) {
+            this.startConverting(nbt.hasUniqueId("ConversionPlayer") ? nbt.getUniqueId("ConversionPlayer") : null, nbt.getInt("ConversionTime"),this);
+        }
     }
 
     @Override
@@ -213,7 +229,10 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         super.writeAdditional(nbt);
         writeOldEntityToNBT(nbt);
         nbt.putBoolean("converter_canDespawn", canDespawn);
-
+        nbt.putInt("ConversionTime", this.isConverting(this) ? this.conversionTime : -1);
+        if (this.converstionStarter != null) {
+            nbt.putUniqueId("ConversionPlayer", this.converstionStarter);
+        }
     }
 
     @Override
@@ -318,6 +337,45 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
             }
         }
 
+    }
+
+    @Override
+    public void livingTick() {
+        if (!this.world.isRemote && this.isAlive() && this.isConverting(this)) {
+            int i = this.getConversionProgress(this);
+            this.conversionTime -= i;
+            if (this.conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(this, EntityType.VILLAGER, (timer) -> this.conversionTime = timer)) {
+                this.cureEntity((ServerWorld)this.world, this, ((EntityType<T>) entityCreature.getType()));
+            }
+        }
+        super.livingTick();
+    }
+
+    @Nonnull
+    @Override
+    protected ActionResultType func_230254_b_(PlayerEntity player, @Nonnull Hand hand) {
+        ItemStack stack = player.getHeldItem(hand);
+        if (stack.getItem() != ModItems.cure_apple) return super.func_230254_b_(player, hand);
+        return interactWithCureItem(player, stack, this);
+    }
+
+    @Override
+    public void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, CreatureEntity entity) {
+        ICurableConvertedCreature.super.startConverting(conversionStarterIn, conversionTimeIn, entity);
+        this.converstionStarter = conversionStarterIn;
+        this.conversionTime = conversionTimeIn;
+    }
+
+    @Override
+    public void handleStatusUpdate(byte id) {
+        if (!handleSound(id, this)){
+            super.handleStatusUpdate(id);
+        }
+    }
+
+    @Override
+    public T createCuredEntity(CreatureEntity entity, EntityType<T> newType) {
+        return this.entityCreature;
     }
 
     public static class IMob extends ConvertedCreatureEntity implements net.minecraft.entity.monster.IMob {
