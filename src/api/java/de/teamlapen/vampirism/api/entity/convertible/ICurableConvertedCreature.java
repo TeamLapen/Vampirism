@@ -7,9 +7,8 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.monster.ZombieVillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ActionResultType;
@@ -22,9 +21,20 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
+/**
+ * Enables the option to cure a {@link IConvertedCreature}
+ *
+ * to implement this feature there are some requirements:<p>
+ * - override {@link #startConverting} to save the conversion started and conversion time <p>
+ * - create a {@link DataParameter<Boolean> } the is returned by {@link #getConvertingDataParam()}<p>
+ * - call {@link #registerConvertingData(CreatureEntity)} in {@link MobEntity#registerData()}<p>
+ * - call {@link #interactWithCureItem(PlayerEntity, ItemStack, CreatureEntity)} in {@link MobEntity#func_230254_b_(PlayerEntity, Hand)} if the cure item is in the players hand<p>
+ * - call {@link #handleSound(byte, CreatureEntity)} in {@link MobEntity#handleStatusUpdate(byte)}<p>
+ * - check in {@link MobEntity#livingTick()} if the conversion timer has ended. If so call {@link #cureEntity(ServerWorld, CreatureEntity, EntityType)}<p>
+ */
 public interface ICurableConvertedCreature<T extends CreatureEntity> extends IConvertedCreature<T> {
 
-    DataParameter<Boolean> CONVERTING = EntityDataManager.createKey(ZombieVillagerEntity.class, DataSerializers.BOOLEAN);
+    DataParameter<Boolean> getConvertingDataParam();
 
     /**
      * called in {@link #interactWithCureItem(PlayerEntity, ItemStack, CreatureEntity)} override to save values to attributes
@@ -34,7 +44,7 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
      * @param entity the entity that extends this interface
      */
     default void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @Nonnull CreatureEntity entity){
-        entity.getDataManager().set(CONVERTING, true);
+        entity.getDataManager().set(this.getConvertingDataParam(), true);
         entity.removePotionEffect(Effects.WEAKNESS);
         entity.world.setEntityState(entity, (byte)16);
     }
@@ -45,7 +55,7 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
      * @param entity the entity that extends this interface
      */
     default void registerConvertingData(@Nonnull CreatureEntity entity) {
-        entity.getDataManager().register(CONVERTING, false);
+        entity.getDataManager().register(this.getConvertingDataParam(), false);
     }
 
     /**
@@ -53,7 +63,7 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
      * @return if the entity is in progress of converting
      */
     default boolean isConverting(CreatureEntity entity) {
-        return entity.getDataManager().get(CONVERTING);
+        return entity.getDataManager().get(this.getConvertingDataParam());
     }
 
     /**
@@ -130,7 +140,7 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
      * @return the new entity
      */
     default T createCuredEntity(CreatureEntity entity, EntityType<T> newType) {
-        return entity.func_233656_b_(newType, false);
+        return newType.create(entity.world);
     }
 
     /**
@@ -146,8 +156,12 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
      */
     default T cureEntity(ServerWorld world, CreatureEntity entity, EntityType<T> newType) {
         T newEntity = createCuredEntity(entity, newType);
+        newEntity.read(entity.writeWithoutTypeId(new CompoundNBT()));
         newEntity.renderYawOffset = entity.renderYawOffset;
         newEntity.rotationYawHead = entity.rotationYawHead;
+        newEntity.setUniqueId(UUID.randomUUID());
+        entity.remove();
+        entity.world.addEntity(newEntity);
         newEntity.onInitialSpawn(world, world.getDifficultyForLocation(newEntity.getPosition()), SpawnReason.CONVERSION, null, null);
         newEntity.addPotionEffect(new EffectInstance(Effects.NAUSEA, 200, 0));
         if (!entity.isSilent()) {

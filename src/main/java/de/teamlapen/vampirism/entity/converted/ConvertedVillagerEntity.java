@@ -41,6 +41,9 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTDynamicOps;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.scoreboard.Team;
@@ -64,6 +67,7 @@ import java.util.UUID;
  */
 public class ConvertedVillagerEntity extends VampirismVillagerEntity implements ICurableConvertedCreature<VillagerEntity> {
     public static final List<SensorType<? extends Sensor<? super VillagerEntity>>> SENSOR_TYPES;
+    private static final DataParameter<Boolean> CONVERTING = EntityDataManager.createKey(ConvertedVillagerEntity.class, DataSerializers.BOOLEAN);
     private EnumStrength garlicCache = EnumStrength.NONE;
     private boolean sundamageCache;
     private int bloodTimer = 0;
@@ -78,6 +82,11 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
 
     public ConvertedVillagerEntity(EntityType<? extends ConvertedVillagerEntity> type, World worldIn) {
         super(type, worldIn);
+    }
+
+    @Override
+    public DataParameter<Boolean> getConvertingDataParam() {
+        return CONVERTING;
     }
 
     @Override

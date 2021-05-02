@@ -25,9 +25,8 @@ import java.util.List;
  * Allows converted sheep to be sheared
  */
 public class ConvertedSheepEntity extends ConvertedCreatureEntity<SheepEntity> implements net.minecraftforge.common.IForgeShearable {
-
-
     private final static DataParameter<Byte> COAT = EntityDataManager.createKey(ConvertedSheepEntity.class, DataSerializers.BYTE);
+
     private Boolean lastSheared = null;
 
     public ConvertedSheepEntity(EntityType<? extends ConvertedSheepEntity> type, World world) {
@@ -108,7 +107,7 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<SheepEntity> i
         }
 
         @Override
-        public ConvertedCreatureEntity createFrom(SheepEntity entity) {
+        public ConvertedCreatureEntity<SheepEntity> createFrom(SheepEntity entity) {
             return Helper.createEntity(ModEntities.converted_sheep, entity.getEntityWorld()).map(creature -> {
                 this.copyImportantStuff(creature, entity);
                 creature.setSheared(entity.getSheared());

@@ -6,10 +6,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.*;
-import de.teamlapen.vampirism.entity.converted.ConvertedCreatureEntity;
-import de.teamlapen.vampirism.entity.converted.ConvertedHorseEntity;
-import de.teamlapen.vampirism.entity.converted.ConvertedSheepEntity;
-import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
+import de.teamlapen.vampirism.entity.converted.*;
 import de.teamlapen.vampirism.entity.hunter.*;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
@@ -47,6 +44,7 @@ public class ModEntities {
     public static final EntityType<ConvertedCreatureEntity> converted_creature;
     public static final EntityType<ConvertedCreatureEntity.IMob> converted_creature_imob = getNull();
     public static final EntityType<ConvertedSheepEntity> converted_sheep = getNull();
+    public static final EntityType<ConvertedCowEntity> converted_cow = getNull();
     public static final EntityType<ConvertedHorseEntity> converted_horse = getNull();
     public static final EntityType<CrossbowArrowEntity> crossbow_arrow = getNull();
     public static final EntityType<DarkBloodProjectileEntity> dark_blood_projectile = getNull();
@@ -97,8 +95,7 @@ public class ModEntities {
         Function<String, ResourceLocation> overlay = (String name) -> new ResourceLocation(REFERENCE.MODID, String.format("textures/entity/vanilla/%s_overlay.png", name));
         IVampirismEntityRegistry registry = VampirismAPI.entityRegistry();
 
-        registry.addConvertible(EntityType.COW, overlay.apply("cow"));
-        registry.addConvertible(EntityType.HORSE, overlay.apply("horse"));
+        registry.addConvertible(EntityType.COW, overlay.apply("cow"), new ConvertedCowEntity.ConvertingHandler());
         registry.addConvertible(EntityType.LLAMA, overlay.apply("llama"));
         registry.addConvertible(EntityType.OCELOT, overlay.apply("cat"));
         registry.addConvertible(EntityType.PANDA, overlay.apply("panda"));
@@ -120,6 +117,7 @@ public class ModEntities {
         registry.register(converted_creature);
         registry.register(prepareEntityType("converted_creature_imob", EntityType.Builder.create(ConvertedCreatureEntity.IMob::new, EntityClassification.CREATURE), false));
         registry.register(prepareEntityType("converted_sheep", EntityType.Builder.create(ConvertedSheepEntity::new, EntityClassification.CREATURE).size(0.9F, 1.3F), false));
+        registry.register(prepareEntityType("converted_cow", EntityType.Builder.create(ConvertedCowEntity::new, EntityClassification.CREATURE).size(0.9F, 1.4F), false));
         registry.register(prepareEntityType("crossbow_arrow", EntityType.Builder.<CrossbowArrowEntity>create(CrossbowArrowEntity::new, EntityClassification.MISC).size(0.5F, 0.5F).setCustomClientFactory((spawnEntity, world) -> new CrossbowArrowEntity(ModEntities.crossbow_arrow, world)), false));
         registry.register(prepareEntityType("dark_blood_projectile", EntityType.Builder.<DarkBloodProjectileEntity>create(DarkBloodProjectileEntity::new, EntityClassification.MISC).size(0.6F, 1.95F).immuneToFire().setCustomClientFactory((spawnEntity, world) -> new DarkBloodProjectileEntity(ModEntities.dark_blood_projectile, world)), false));
         registry.register(dummy_creature);
@@ -151,6 +149,7 @@ public class ModEntities {
         EntitySpawnPlacementRegistry.register(dummy_creature, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, DummyBittenAnimalEntity::spawnPredicate);
         EntitySpawnPlacementRegistry.register(converted_creature, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ConvertedCreatureEntity::spawnPredicate);
         EntitySpawnPlacementRegistry.register(converted_sheep, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ConvertedCreatureEntity::spawnPredicate);
+        EntitySpawnPlacementRegistry.register(converted_cow, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ConvertedCreatureEntity::spawnPredicate);
         EntitySpawnPlacementRegistry.register(hunter_trainer, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canSpawnOn);
         EntitySpawnPlacementRegistry.register(hunter_trainer_dummy, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canSpawnOn);
         EntitySpawnPlacementRegistry.register(vampire, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, VampireBaseEntity::spawnPredicateVampire);
@@ -170,6 +169,7 @@ public class ModEntities {
         event.put(converted_creature_imob, BasicVampireEntity.getAttributeBuilder().create());
         event.put(converted_horse, ConvertedHorseEntity.getAttributeBuilder().create());
         event.put(converted_sheep, BasicVampireEntity.getAttributeBuilder().create());
+        event.put(converted_cow, BasicVampireEntity.getAttributeBuilder().create());
         event.put(dummy_creature, BasicVampireEntity.getAttributeBuilder().create());
         event.put(hunter, BasicHunterEntity.getAttributeBuilder().create());
         event.put(hunter_imob, BasicHunterEntity.getAttributeBuilder().create());

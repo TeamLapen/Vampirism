@@ -23,6 +23,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
@@ -45,7 +48,9 @@ import java.util.UUID;
  * Contains (stores and syncs) a normal Entity for rendering purpose
  */
 public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBaseEntity implements ICurableConvertedCreature<T>, ISyncable {
-    private final static Logger LOGGER = LogManager.getLogger(ConvertedCreatureEntity.class);
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final DataParameter<Boolean> CONVERTING = EntityDataManager.createKey(ConvertedCreatureEntity.class, DataSerializers.BOOLEAN);
+
 
     public static boolean spawnPredicate(EntityType<? extends ConvertedCreatureEntity> entityType, IWorld iWorld, SpawnReason spawnReason, BlockPos blockPos, Random random) {
         return (iWorld.getBlockState(blockPos.down()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.down()).getBlock() == ModBlocks.cursed_earth) && iWorld.getLightSubtracted(blockPos, 0) > 8;
@@ -62,6 +67,11 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     public ConvertedCreatureEntity(EntityType<? extends ConvertedCreatureEntity> type, World world) {
         super(type, world, false);
         this.enableImobConversion();
+    }
+
+    @Override
+    public DataParameter<Boolean> getConvertingDataParam() {
+        return CONVERTING;
     }
 
     @Override
@@ -375,7 +385,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
 
     @Override
     public T createCuredEntity(CreatureEntity entity, EntityType<T> newType) {
-        return this.entityCreature;
+        return ICurableConvertedCreature.super.createCuredEntity(entity, newType);
     }
 
     public static class IMob extends ConvertedCreatureEntity implements net.minecraft.entity.monster.IMob {

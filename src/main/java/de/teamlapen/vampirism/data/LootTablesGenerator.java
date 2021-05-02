@@ -99,6 +99,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.registerLootTable(ModEntities.converted_creature, LootTable.builder());
             this.registerLootTable(ModEntities.converted_creature_imob, LootTable.builder());
             this.registerLootTable(ModEntities.converted_sheep, LootTable.builder());
+            this.registerLootTable(ModEntities.converted_cow, LootTable.builder());
             this.registerLootTable(ModEntities.converted_horse, LootTable.builder());
             this.registerLootTable(ModEntities.dummy_creature, LootTable.builder());
             this.registerLootTable(ModEntities.hunter_trainer, LootTable.builder());
