@@ -31,6 +31,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.network.IContainerFactory;
 
 import javax.annotation.Nonnull;
@@ -235,7 +236,7 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
             craftResultIn.setInventorySlotContents(0, ItemStack.EMPTY);
             if (optional.isPresent()) {
                 IWeaponTableRecipe recipe = optional.get();
-                if (craftResultIn.canUseRecipe(worldIn, entityplayermp, recipe) && recipe.getRequiredLevel() <= hunter.getLevel() && Helper.areSkillsEnabled(hunter.getSkillHandler(), recipe.getRequiredSkills())) {
+                if ( (craftResultIn.canUseRecipe(worldIn, entityplayermp, recipe) || ModList.get().isLoaded("fastbench")) && recipe.getRequiredLevel() <= hunter.getLevel() && Helper.areSkillsEnabled(hunter.getSkillHandler(), recipe.getRequiredSkills())) {
                     this.worldPos.consume((world, pos) -> {
                         if (world.getBlockState(pos).get(WeaponTableBlock.LAVA) >= recipe.getRequiredLavaUnits()) {
                             craftResultIn.setInventorySlotContents(0, recipe.getCraftingResult(craftMatrixIn));
