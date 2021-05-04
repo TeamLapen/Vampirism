@@ -8,6 +8,7 @@ import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
@@ -33,7 +34,7 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
 
     @Override
     public boolean shouldContinueExecuting() {
-        return creature.getEntity().isAlive() && creature.getEntity().getBoundingBox().intersects(getBiteBoundingBox()) && this.timer > 0;
+        return this.timer > 0 && creature.getEntity().isAlive() && creature.getEntity().getBoundingBox().intersects(getBiteBoundingBox());
     }
 
     @Override
@@ -55,7 +56,7 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
                 if (!vampire.getEntitySenses().canSee(o) || o.hasCustomName()) {
                     continue;
                 }
-                if (ExtendedCreature.getSafe(o).filter(creature -> creature.canBeBitten(vampire) && !creature.hasPoisonousBlood()).map(creature -> {
+                if (ExtendedCreature.getSafe(o).filter(this::canFeed).map(creature -> {
                     this.creature = creature;
                     return true;
                 }).orElse(false)) {
@@ -80,13 +81,19 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
 
         timer--;
         if (timer == 1) {
-            int amount = creature.onBite(vampire);
-            vampire.playSound(ModSounds.player_bite, 1, 1);
-            vampire.drinkBlood(amount, creature.getBloodSaturation());
+            if(canFeed(creature)){
+                int amount = creature.onBite(vampire);
+                vampire.playSound(ModSounds.player_bite, 1, 1);
+                vampire.drinkBlood(amount, creature.getBloodSaturation());
+            }
         }
     }
 
     protected AxisAlignedBB getBiteBoundingBox() {
         return vampire.getBoundingBox().grow(0.5, 0.7, 0.5);
+    }
+
+    protected boolean canFeed(IExtendedCreatureVampirism entity){
+        return entity.canBeBitten(vampire) && ! entity.hasPoisonousBlood() && (!(entity.getEntity() instanceof VillagerEntity) || entity.getBlood() > (entity.getMaxBlood()/2f));
     }
 }
