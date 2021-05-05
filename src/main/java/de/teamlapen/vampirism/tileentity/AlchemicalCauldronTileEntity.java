@@ -16,7 +16,7 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -36,6 +36,8 @@ import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,6 +47,8 @@ import java.util.UUID;
  * slots:  0: liquid, 1: ingredient, 2: result, 3: fuel
  */
 public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
+    private static final Logger LOGGER = LogManager.getLogger();
+
     private static final int[] SLOTS_DOWN = new int[]{0, 1, 2};
     private static final int[] SLOTS_UP = new int[]{0};
     private static final int[] SLOTS_WEST = new int[]{1};
@@ -55,6 +59,8 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
     @Nullable
     private String ownerName;
     private AlchemicalCauldronRecipe recipeChecked;
+
+    private boolean warnedRecipeType = false;
 
     public AlchemicalCauldronTileEntity() {
         super(ModTiles.alchemical_cauldron, ModRecipes.ALCHEMICAL_CAULDRON_TYPE);
@@ -188,8 +194,19 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
         if (!this.world.isRemote) {
             ItemStack itemstackFuel = this.items.get(3);
             if (this.isBurning() || !itemstackFuel.isEmpty() && !this.items.get(0).isEmpty() && !this.items.get(1).isEmpty()) {
-                AlchemicalCauldronRecipe irecipe = this.world.getRecipeManager().getRecipe((IRecipeType<AlchemicalCauldronRecipe>) this.recipeType, this, this.world).orElse(null);
-                if (!this.isBurning() && this.canSmelt(irecipe) && this.canPlayerCook(irecipe)) {
+                AlchemicalCauldronRecipe cauldronRecipe = null;
+                IRecipe<?> irecipe = this.world.getRecipeManager().getRecipe( this.recipeType, this, this.world).orElse(null);
+                if(irecipe instanceof AlchemicalCauldronRecipe){
+                    cauldronRecipe = (AlchemicalCauldronRecipe) irecipe;
+                }
+                else{
+                    if(!warnedRecipeType){
+                        LOGGER.error("Got an unexpected/illegal recipe for recipe type {}. This might break the AlchemicalCauldron and is caused by another mod",this.recipeType);
+                        warnedRecipeType = true;
+                    }
+                }
+
+                if (!this.isBurning() && this.canSmelt(cauldronRecipe) && this.canPlayerCook(cauldronRecipe)) {
                     furnaceData.set(0, this.getBurnTime(itemstackFuel)); //Set burn time
                     furnaceData.set(1, furnaceData.get(0));
                     if (this.isBurning()) {
@@ -206,12 +223,12 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
                     }
                 }
 
-                if (this.isBurning() && this.canSmelt(irecipe) && this.canPlayerCook(irecipe)) {
+                if (this.isBurning() && this.canSmelt(cauldronRecipe) && this.canPlayerCook(cauldronRecipe)) {
                     furnaceData.set(2, furnaceData.get(2) + 1); //Increase cook time
                     if (furnaceData.get(2) == furnaceData.get(3)) { //If finished
                         furnaceData.set(2, 0);
                         furnaceData.set(3, this.getCookTime());
-                        this.finishCooking(irecipe);
+                        this.finishCooking(cauldronRecipe);
                         dirty = true;
                     }
                 } else {
