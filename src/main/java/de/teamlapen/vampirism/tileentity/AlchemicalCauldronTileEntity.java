@@ -206,7 +206,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
                     }
                 }
 
-                if (!this.isBurning() && this.canSmelt(cauldronRecipe) && this.canPlayerCook(cauldronRecipe)) {
+                if (cauldronRecipe != null && !this.isBurning() && this.canSmelt(cauldronRecipe) && this.canPlayerCook(cauldronRecipe)) {
                     furnaceData.set(0, this.getBurnTime(itemstackFuel)); //Set burn time
                     furnaceData.set(1, furnaceData.get(0));
                     if (this.isBurning()) {
@@ -223,7 +223,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
                     }
                 }
 
-                if (this.isBurning() && this.canSmelt(cauldronRecipe) && this.canPlayerCook(cauldronRecipe)) {
+                if (cauldronRecipe != null && this.isBurning() && this.canSmelt(cauldronRecipe) && this.canPlayerCook(cauldronRecipe)) {
                     furnaceData.set(2, furnaceData.get(2) + 1); //Increase cook time
                     if (furnaceData.get(2) == furnaceData.get(3)) { //If finished
                         furnaceData.set(2, 0);
@@ -282,7 +282,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
         return new TranslationTextComponent("tile.vampirism.alchemical_cauldron");
     }
 
-    private boolean canPlayerCook(AlchemicalCauldronRecipe recipe) {
+    private boolean canPlayerCook(@Nonnull AlchemicalCauldronRecipe recipe) {
         if (world == null) return false;
         if (recipeChecked == recipe) return true;
         if (ownerID == null) return false;
