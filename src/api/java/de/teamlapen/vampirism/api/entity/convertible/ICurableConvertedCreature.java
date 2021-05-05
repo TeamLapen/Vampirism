@@ -3,7 +3,10 @@ package de.teamlapen.vampirism.api.entity.convertible;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.*;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.monster.ZombieVillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -162,7 +165,6 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
         newEntity.setUniqueId(UUID.randomUUID());
         entity.remove();
         entity.world.addEntity(newEntity);
-        newEntity.onInitialSpawn(world, world.getDifficultyForLocation(newEntity.getPosition()), SpawnReason.CONVERSION, null, null);
         newEntity.addPotionEffect(new EffectInstance(Effects.NAUSEA, 200, 0));
         if (!entity.isSilent()) {
             world.playEvent(null, 1027, entity.getPosition(), 0);
