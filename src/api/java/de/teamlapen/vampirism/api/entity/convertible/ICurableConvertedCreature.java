@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.entity.convertible;
 
+import de.teamlapen.vampirism.api.VampirismAPI;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -169,6 +170,9 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
         if (!entity.isSilent()) {
             world.playEvent(null, 1027, entity.getPosition(), 0);
         }
+        VampirismAPI.getExtendedCreatureVampirism(newEntity).ifPresent(creature -> {
+            creature.setBlood(1);
+        });
         net.minecraftforge.event.ForgeEventFactory.onLivingConvert(entity, newEntity);
         return newEntity;
     }
