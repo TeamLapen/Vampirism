@@ -62,7 +62,7 @@ public class ConvertedHorseEntity extends HorseEntity implements ICurableConvert
     @Nullable
     private ITextComponent name;
     private int conversionTime;
-    private UUID converstionStarter;
+    private UUID conversationStarter;
 
 
     public ConvertedHorseEntity(EntityType<? extends HorseEntity> type, World worldIn) {
@@ -268,7 +268,7 @@ public class ConvertedHorseEntity extends HorseEntity implements ICurableConvert
     @Override
     public void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @Nonnull CreatureEntity entity) {
         ICurableConvertedCreature.super.startConverting(conversionStarterIn, conversionTimeIn, entity);
-        this.converstionStarter = conversionStarterIn;
+        this.conversationStarter = conversionStarterIn;
         this.conversionTime = conversionTimeIn;
     }
 
@@ -276,8 +276,8 @@ public class ConvertedHorseEntity extends HorseEntity implements ICurableConvert
     public void writeAdditional(@Nonnull CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putInt("ConversionTime", this.isConverting(this) ? this.conversionTime : -1);
-        if (this.converstionStarter != null) {
-            compound.putUniqueId("ConversionPlayer", this.converstionStarter);
+        if (this.conversationStarter != null) {
+            compound.putUniqueId("ConversionPlayer", this.conversationStarter);
         }
     }
 

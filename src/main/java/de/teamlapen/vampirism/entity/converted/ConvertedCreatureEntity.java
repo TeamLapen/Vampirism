@@ -62,7 +62,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     @Nullable
     private ITextComponent name;
     private int conversionTime;
-    private UUID converstionStarter;
+    private UUID conversationStarter;
 
     public ConvertedCreatureEntity(EntityType<? extends ConvertedCreatureEntity> type, World world) {
         super(type, world, false);
@@ -240,8 +240,8 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         writeOldEntityToNBT(nbt);
         nbt.putBoolean("converter_canDespawn", canDespawn);
         nbt.putInt("ConversionTime", this.isConverting(this) ? this.conversionTime : -1);
-        if (this.converstionStarter != null) {
-            nbt.putUniqueId("ConversionPlayer", this.converstionStarter);
+        if (this.conversationStarter != null) {
+            nbt.putUniqueId("ConversionPlayer", this.conversationStarter);
         }
     }
 
@@ -360,6 +360,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         super.livingTick();
     }
 
+
     @Nonnull
     @Override
     protected ActionResultType func_230254_b_(PlayerEntity player, @Nonnull Hand hand) {
@@ -371,7 +372,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     @Override
     public void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, CreatureEntity entity) {
         ICurableConvertedCreature.super.startConverting(conversionStarterIn, conversionTimeIn, entity);
-        this.converstionStarter = conversionStarterIn;
+        this.conversationStarter = conversionStarterIn;
         this.conversionTime = conversionTimeIn;
     }
 
@@ -384,7 +385,8 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
 
     @Override
     public T createCuredEntity(CreatureEntity entity, EntityType<T> newType) {
-        return ICurableConvertedCreature.super.createCuredEntity(entity, newType);
+        this.entityCreature.revive();
+        return this.entityCreature;
     }
 
     public static class IMob extends ConvertedCreatureEntity implements net.minecraft.entity.monster.IMob {

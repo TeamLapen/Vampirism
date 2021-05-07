@@ -72,7 +72,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     private boolean sundamageCache;
     private int bloodTimer = 0;
     private int conversionTime;
-    private UUID converstionStarter;
+    private UUID conversationStarter;
 
     static {
         SENSOR_TYPES = Lists.newArrayList(VillagerEntity.SENSOR_TYPES);
@@ -254,8 +254,8 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     public void writeAdditional(@Nonnull CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putInt("ConversionTime", this.isConverting(this) ? this.conversionTime : -1);
-        if (this.converstionStarter != null) {
-            compound.putUniqueId("ConversionPlayer", this.converstionStarter);
+        if (this.conversationStarter != null) {
+            compound.putUniqueId("ConversionPlayer", this.conversationStarter);
         }
     }
 
@@ -270,7 +270,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @Override
     public void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, CreatureEntity entity) {
         ICurableConvertedCreature.super.startConverting(conversionStarterIn, conversionTimeIn, entity);
-        this.converstionStarter = conversionStarterIn;
+        this.conversationStarter = conversionStarterIn;
         this.conversionTime = conversionTimeIn;
     }
 
@@ -288,8 +288,8 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         villager.setGossips(this.getGossip().write(NBTDynamicOps.INSTANCE).getValue());
         villager.setOffers(this.getOffers());
         villager.setXp(this.getXp());
-        if (this.converstionStarter != null) {
-            PlayerEntity playerentity = world.getPlayerByUuid(this.converstionStarter);
+        if (this.conversationStarter != null) {
+            PlayerEntity playerentity = world.getPlayerByUuid(this.conversationStarter);
             if (playerentity instanceof ServerPlayerEntity) {
                 ModAdvancements.TRIGGER_CURED_VAMPIRE_VILLAGER.trigger((ServerPlayerEntity)playerentity, this, villager);
                 world.updateReputation(IReputationType.ZOMBIE_VILLAGER_CURED, playerentity, villager);

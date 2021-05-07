@@ -111,7 +111,12 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
      * @return the new entity
      */
     default T createCuredEntity(CreatureEntity entity, EntityType<T> newType) {
-        return newType.create(entity.world);
+        T newEntity = newType.create(entity.world);
+        newEntity.read(entity.writeWithoutTypeId(new CompoundNBT()));
+        newEntity.renderYawOffset = entity.renderYawOffset;
+        newEntity.rotationYawHead = entity.rotationYawHead;
+        newEntity.setUniqueId(UUID.randomUUID());
+        return newEntity;
     }
 
     /**
@@ -127,10 +132,6 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
      */
     default T cureEntity(ServerWorld world, CreatureEntity entity, EntityType<T> newType) {
         T newEntity = createCuredEntity(entity, newType);
-        newEntity.read(entity.writeWithoutTypeId(new CompoundNBT()));
-        newEntity.renderYawOffset = entity.renderYawOffset;
-        newEntity.rotationYawHead = entity.rotationYawHead;
-        newEntity.setUniqueId(UUID.randomUUID());
         entity.remove();
         entity.world.addEntity(newEntity);
         newEntity.addPotionEffect(new EffectInstance(Effects.NAUSEA, 200, 0));
