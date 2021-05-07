@@ -397,13 +397,13 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         @Override
         public void resetStats(MinionEntity<?> entity) {
             assert entity instanceof HunterMinionEntity;
-            super.resetStats(entity);
             this.inventoryLevel = 0;
             this.healthLevel = 0;
             this.strengthLevel = 0;
             this.resourceEfficiencyLevel = 0;
             this.shrinkInventory(entity);
             ((HunterMinionEntity) entity).updateAttributes();
+            super.resetStats(entity);
         }
 
         @Override

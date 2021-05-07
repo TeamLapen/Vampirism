@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.LivingEntity;
@@ -29,11 +30,14 @@ public class VampirismItemBloodFood extends VampirismItem {
             assert stack.getItem().getFood() != null;//Don't shrink stack before retrieving food
             PlayerEntity player = (PlayerEntity) entityLiving;
             VampirePlayer.getOpt(player).ifPresent(v -> v.drinkBlood(vampireFood.getHealing(), vampireFood.getSaturation()));
-            worldIn.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
-            entityLiving.onFoodEaten(worldIn, stack); //Shrinks stack and applies human food effects
-            if (!Helper.isVampire(player)) {
-                player.addPotionEffect(new EffectInstance(Effects.NAUSEA, 20 * 20));
-            }
+        }
+        if (entityLiving instanceof IVampire) {
+            ((IVampire) entityLiving).drinkBlood(vampireFood.getHealing(), vampireFood.getSaturation());
+        }
+        worldIn.playSound(null, entityLiving.getPosX(), entityLiving.getPosY(), entityLiving.getPosZ(), SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+        entityLiving.onFoodEaten(worldIn, stack); //Shrinks stack and applies human food effects
+        if (!Helper.isVampire(entityLiving)) {
+            entityLiving.addPotionEffect(new EffectInstance(Effects.NAUSEA, 20 * 20));
         }
         return stack;
     }

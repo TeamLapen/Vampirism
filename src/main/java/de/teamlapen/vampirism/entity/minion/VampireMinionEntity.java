@@ -385,13 +385,13 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         @Override
         public void resetStats(MinionEntity<?> entity) {
             assert entity instanceof VampireMinionEntity;
-            super.resetStats(entity);
             this.inventoryLevel = 0;
             this.healthLevel = 0;
             this.strengthLevel = 0;
             this.speedLevel = 0;
             this.getInventory().setAvailableSize(getInventorySize());
             ((VampireMinionEntity) entity).updateAttributes();
+            super.resetStats(entity);
         }
 
         @Override

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
+import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
@@ -184,6 +185,7 @@ public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
                 entity.getLordOpt().ifPresent(lord -> InventoryHelper.removeItemFromInventory(lord.getPlayer().inventory, new ItemStack(ModItems.oblivion_potion)));
             }
         });
+        HelperLib.sync(entity);
     }
 
     public void shrinkInventory(MinionEntity<?> entity) {

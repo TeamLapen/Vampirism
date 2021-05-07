@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
@@ -73,6 +74,9 @@ public class OblivionItem extends VampirismItem {
         stack.shrink(1);
         if (entityLiving instanceof PlayerEntity) {
             FactionPlayerHandler.getOpt(((PlayerEntity) entityLiving)).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty()).ifPresent(OblivionItem::applyEffect);
+        }
+        if (entityLiving instanceof MinionEntity) {
+            ((MinionEntity<?>) entityLiving).getMinionData().ifPresent(d -> d.upgradeStat(-1,(MinionEntity<?>) entityLiving));
         }
         return stack;
     }
