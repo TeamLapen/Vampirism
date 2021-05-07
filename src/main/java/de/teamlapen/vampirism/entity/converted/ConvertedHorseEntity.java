@@ -212,8 +212,7 @@ public class ConvertedHorseEntity extends HorseEntity implements ICurableConvert
     @Override
     public void livingTick() {
         if (!this.world.isRemote && this.isAlive() && this.isConverting(this)) {
-            int i = this.getConversionProgress(this);
-            this.conversionTime -= i;
+            --this.conversionTime;
             if (this.conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(this, EntityType.HORSE, (timer) -> this.conversionTime = timer)) {
                 this.cureEntity((ServerWorld)this.world, this, EntityType.HORSE);
             }

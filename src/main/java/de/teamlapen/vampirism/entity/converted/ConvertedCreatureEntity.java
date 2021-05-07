@@ -352,8 +352,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     @Override
     public void livingTick() {
         if (!this.world.isRemote && this.isAlive() && this.isConverting(this)) {
-            int i = this.getConversionProgress(this);
-            this.conversionTime -= i;
+            --this.conversionTime;
             if (this.conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(this, EntityType.VILLAGER, (timer) -> this.conversionTime = timer)) {
                 this.cureEntity((ServerWorld)this.world, this, ((EntityType<T>) entityCreature.getType()));
             }

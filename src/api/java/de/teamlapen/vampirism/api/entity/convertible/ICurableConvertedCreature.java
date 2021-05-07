@@ -1,14 +1,10 @@
 package de.teamlapen.vampirism.api.entity.convertible;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
-import net.minecraft.block.BedBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.monster.ZombieVillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -18,7 +14,6 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nonnull;
@@ -84,7 +79,7 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
             stack.shrink(1);
         }
         if (!entity.world.isRemote){
-            this.startConverting(player.getUniqueID(), entity.getRNG().nextInt(100)+100, entity);
+            this.startConverting(player.getUniqueID(), entity.getRNG().nextInt(2400)+2400, entity);
         }
         return ActionResultType.SUCCESS;
     }
@@ -104,34 +99,6 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
             return true;
         }
         return false;
-    }
-
-    /**
-     * @see ZombieVillagerEntity#getConversionProgress()
-     *
-     * @param entity the entity that extends this interface
-     * @return the progress
-     */
-    default int getConversionProgress(CreatureEntity entity) {
-        int i = 1;
-        if (entity.getRNG().nextFloat() < 0.01F) {
-            int j = 0;
-            BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
-            for(int k = (int)entity.getPosX() - 4; k < (int)entity.getPosX() + 4 && j < 14; ++k) {
-                for(int l = (int)entity.getPosY() - 4; l < (int)entity.getPosY() + 4 && j < 14; ++l) {
-                    for(int i1 = (int)entity.getPosZ() - 4; i1 < (int)entity.getPosZ() + 4 && j < 14; ++i1) {
-                        Block block = entity.world.getBlockState(blockpos$mutable.setPos(k, l, i1)).getBlock();
-                        if (block == Blocks.IRON_BARS || block instanceof BedBlock) {
-                            if (entity.getRNG().nextFloat() < 0.3F) {
-                                ++i;
-                            }
-                            ++j;
-                        }
-                    }
-                }
-            }
-        }
-        return i;
     }
 
     /**
