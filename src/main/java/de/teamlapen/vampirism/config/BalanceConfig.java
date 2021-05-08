@@ -182,19 +182,18 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue mbVampireSpawnChance;
     public final ForgeConfigSpec.IntValue mbAdvancedVampireSpawnChance;
 
-    // Refinements
-    public final ForgeConfigSpec.DoubleValue rfSword_trained_amount;
-    public final ForgeConfigSpec.IntValue vrBlood_charge_speed;
-    public final ForgeConfigSpec.DoubleValue vrFreeze_duration;
+    public final ForgeConfigSpec.DoubleValue vrSwordTrainingSpeedMod;
+    public final ForgeConfigSpec.IntValue vrBloodChargeSpeedMod;
+    public final ForgeConfigSpec.DoubleValue vrFreezeDurationMod;
     public final ForgeConfigSpec.DoubleValue vrVistaMod;
     public final ForgeConfigSpec.DoubleValue vrDarkBloodProjectileDamageMod;
-    public final ForgeConfigSpec.DoubleValue dark_blood_projectile_aoe_cooldown;
-    public final ForgeConfigSpec.IntValue dark_blood_projectile_aoe_range;
-    public final ForgeConfigSpec.DoubleValue sun_screen_duration;
-    public final ForgeConfigSpec.IntValue rage_fury;
-    public final ForgeConfigSpec.DoubleValue teleport_distance;
-    public final ForgeConfigSpec.DoubleValue half_invulnerable;
-    public final ForgeConfigSpec.DoubleValue sword_finisher;
+    public final ForgeConfigSpec.DoubleValue vrDarkBloodProjectileAOECooldownMod;
+    public final ForgeConfigSpec.IntValue vrDarkBloodProjectileAOERange;
+    public final ForgeConfigSpec.DoubleValue vrSunscreenDurationMod;
+    public final ForgeConfigSpec.IntValue vrRageFuryDurationBonus;
+    public final ForgeConfigSpec.DoubleValue vrTeleportDistanceMod;
+    public final ForgeConfigSpec.DoubleValue vrHalfInvulnerableThresholdMod;
+    public final ForgeConfigSpec.DoubleValue vrSwordFinisherThresholdMod;
 
     BalanceConfig(BalanceBuilder builder) {
         boolean iceAndFire = ModList.get().isLoaded("iceandfire");
@@ -392,18 +391,18 @@ public class BalanceConfig {
         miDeathRecoveryTime = builder.comment("Time in seconds a minion needs to recover from death.").defineInRange("deathRecoveryTime", 180, 1, Integer.MAX_VALUE / 100);
         miMinionPerLordLevel = builder.comment("How many minions a player can have per lord level. Probably don't want to go very high").defineInRange("minionPerLordLevel", 1, 0, 100);
 
-        builder.category("refinements", "");
-        rfSword_trained_amount = builder.defineInRange("sword_trained_amount", 1.2D, 1D, Integer.MAX_VALUE);
-        vrBlood_charge_speed = builder.defineInRange("blood_charge_speed", 3, 2, Integer.MAX_VALUE);
-        vrFreeze_duration = builder.defineInRange("freeze_duration", 1.4D, 1D, Integer.MAX_VALUE);
-        vrVistaMod = builder.defineInRange("vista", 1D, 0D, 10D);
-        vrDarkBloodProjectileDamageMod = builder.defineInRange("dark_blood_projectile_damage", 1.5D, 1D, Integer.MAX_VALUE);
-        dark_blood_projectile_aoe_cooldown = builder.defineInRange("dark_blood_projectile_aoe_cooldown", 2D, 1D, Integer.MAX_VALUE);
-        dark_blood_projectile_aoe_range = builder.comment("squared").defineInRange("dark_blood_projectile_aoe_range", 16, 0, Integer.MAX_VALUE);
-        sun_screen_duration = builder.defineInRange("sun_screen_duration", 1.5D, 1, Double.MAX_VALUE);
-        rage_fury = builder.defineInRange("rage_fury", 100, 0, Integer.MAX_VALUE);
-        teleport_distance = builder.defineInRange("teleport_distance", 1.5, 1, Double.MAX_VALUE);
-        half_invulnerable = builder.defineInRange("half_invulnerable", 0.7, 0, 2);
-        sword_finisher = builder.defineInRange("sword_finisher", 1.25, 1, Double.MAX_VALUE);
+        builder.category("vampire_refinements", "vr");
+        vrSwordTrainingSpeedMod = builder.defineInRange("swordTrainedSpeedMod", 1.2D, 1D, Integer.MAX_VALUE);
+        vrBloodChargeSpeedMod = builder.defineInRange("bloodChargeSpeedMod", 3, 2, Integer.MAX_VALUE);
+        vrFreezeDurationMod = builder.defineInRange("freezeDurationMod", 1.4D, 1D, Integer.MAX_VALUE);
+        vrVistaMod = builder.defineInRange("vistaMod", 1D, 0D, 10D);
+        vrDarkBloodProjectileDamageMod = builder.defineInRange("darkBloodProjectileDamageMod", 1.5D, 1D, Integer.MAX_VALUE);
+        vrDarkBloodProjectileAOECooldownMod = builder.defineInRange("darkBloodProjectileAOECooldownMod", 2D, 1D, Integer.MAX_VALUE);
+        vrDarkBloodProjectileAOERange = builder.comment("squared value").defineInRange("darkBloodProjectileAOERange", 16, 0, Integer.MAX_VALUE);
+        vrSunscreenDurationMod = builder.defineInRange("sunscreenDurationMod", 1.5D, 1, Double.MAX_VALUE);
+        vrRageFuryDurationBonus = builder.comment("For every kill the rage duration is extended by this amount. In seconds.").defineInRange("rageFuryDurationBonus", 5, 0, Integer.MAX_VALUE);
+        vrTeleportDistanceMod = builder.defineInRange("teleportDistanceMod", 1.5, 1, Double.MAX_VALUE);
+        vrHalfInvulnerableThresholdMod = builder.comment("Threshold for attacks that are considered high damage is multiplied by this value").defineInRange("halfInvulnerableThresholdMod", 0.7, 0, 2);
+        vrSwordFinisherThresholdMod = builder.comment("Threshold for instant kill is modified by this amount").defineInRange("swordFinisherThresholdMod", 1.25, 1, Double.MAX_VALUE);
     }
 }

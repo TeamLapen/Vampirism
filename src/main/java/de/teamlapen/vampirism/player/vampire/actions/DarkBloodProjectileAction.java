@@ -26,7 +26,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
     public int getCooldown(IFactionPlayer player) {
         int cooldown = VampirismConfig.BALANCE.vaDarkBloodProjectileCooldown.get() * 20;
         if (player.getSkillHandler().isRefinementEquipped(ModRefinements.dark_blood_projectile_aoe)) {
-            cooldown *= VampirismConfig.BALANCE.dark_blood_projectile_aoe_cooldown.get();
+            cooldown *= VampirismConfig.BALANCE.vrDarkBloodProjectileAOECooldownMod.get();
         }
         return cooldown;
     }
@@ -43,7 +43,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
         float directDamage = VampirismConfig.BALANCE.vaDarkBloodProjectileDamage.get().floatValue();
         float indirectDamage = directDamage * 0.5f;
         if (player.getSkillHandler().isRefinementEquipped(ModRefinements.dark_blood_projectile_damage)) {
-            float modifier = VampirismConfig.BALANCE.dark_blood_projectile_damage.get().floatValue();
+            float modifier = VampirismConfig.BALANCE.vrDarkBloodProjectileDamageMod.get().floatValue();
             directDamage *= modifier;
             indirectDamage *= modifier;
         }
@@ -56,7 +56,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
                 entity.excludeShooter();
                 if (i==0) {
                     entity.setDamage(0, directDamage);
-                    entity.explode(null, VampirismConfig.BALANCE.dark_blood_projectile_aoe_range.get());
+                    entity.explode(null, VampirismConfig.BALANCE.vrDarkBloodProjectileAOERange.get());
                     entity.setDamage(0, 0);
                 }
             }

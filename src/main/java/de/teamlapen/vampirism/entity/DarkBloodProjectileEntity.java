@@ -33,7 +33,7 @@ import java.util.List;
 public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
 
     protected float directDamage = 4;
-    protected float indirecDamage = 2;
+    protected float indirectDamage = 2;
     private boolean initialNoClip = false;
     private float motionFactor = 0.97f;
     private boolean excludeShooter = false;
@@ -83,7 +83,7 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         this.directDamage = compound.getFloat("direct_damage");
-        this.indirecDamage = compound.getFloat("indirect_damage");
+        this.indirectDamage = compound.getFloat("indirect_damage");
         this.gothrough = compound.getBoolean("gothrough");
         this.maxTicks = compound.getInt("max_ticks");
     }
@@ -94,7 +94,7 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
      */
     public void setDamage(float direct, float indirect) {
         directDamage = direct;
-        indirecDamage = indirect;
+        indirectDamage = indirect;
     }
 
     /**
@@ -114,7 +114,7 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putFloat("direct_damage", directDamage);
-        compound.putFloat("indirect_damage", indirecDamage);
+        compound.putFloat("indirect_damage", indirectDamage);
         compound.putBoolean("gothrough", gothrough);
         compound.putInt("max_ticks", maxTicks);
     }
@@ -217,7 +217,7 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
             if (e instanceof LivingEntity && e.getDistanceSq(this) < distanceSq) {
                 LivingEntity entity = (LivingEntity) e;
                 entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 200, 1));
-                entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, func_234616_v_()), indirecDamage);
+                entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, func_234616_v_()), indirectDamage);
             }
         }
     }
