@@ -126,6 +126,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue batModeInEnd;
         public final ForgeConfigSpec.BooleanValue unlockAllSkills;
         public final ForgeConfigSpec.BooleanValue pvpOnlyBetweenFactions;
+        public final ForgeConfigSpec.BooleanValue pvpOnlyBetweenFactionsIncludeHumans;
         public final ForgeConfigSpec.IntValue sunscreenBeaconDistance;
         public final ForgeConfigSpec.BooleanValue sunscreenBeaconMineable;
         public final ForgeConfigSpec.BooleanValue autoCalculateEntityBlood;
@@ -162,6 +163,7 @@ public class VampirismConfig {
             enforceRenderForestFog = builder.comment("Prevent clients from disabling the vampire forest fog").define("enforceForestFog", true);
             batModeInEnd = builder.comment("If vampires can convert to a bat in the End").define("batModeInEnd", false);
             pvpOnlyBetweenFactions = builder.comment("If PVP should only be allowed between factions. PVP has to be enabled in the server properties for this. Not guaranteed to always protect player from teammates").define("pvpOnlyBetweenFactions", false);
+            pvpOnlyBetweenFactionsIncludeHumans = builder.comment("If pvpOnlyBetweenFactions is enabled, this decides whether human players can be attacked and attack others").define("pvpOnlyBetweenFactionsIncludeHumans", false);
             sunscreenBeaconDistance = builder.comment("Block radius the sunscreen beacon affects").defineInRange("sunscreenBeaconDistance", 32, 1, 40000);
             sunscreenBeaconMineable = builder.comment("Whether the suncreen beacon can be mined in survival").define("sunscreenBeaconMineable", false);
             autoCalculateEntityBlood = builder.comment("Calculate the blood level for unknown creatures based on their size").define("autoCalculateEntityBlood", true);

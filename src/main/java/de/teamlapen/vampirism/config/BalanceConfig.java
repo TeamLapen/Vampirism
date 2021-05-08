@@ -110,7 +110,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vsSmallAttackSpeedModifier;
 
     public final ForgeConfigSpec.DoubleValue vpHealthMaxMod;
-    public final ForgeConfigSpec.DoubleValue vpStrengthMaxMod;
+    public final ForgeConfigSpec.DoubleValue vpAttackSpeedMaxMod;
     public final ForgeConfigSpec.DoubleValue vpSpeedMaxMod;
     public final ForgeConfigSpec.DoubleValue vpExhaustionMaxMod;
     public final ForgeConfigSpec.DoubleValue vpBasicBloodExhaustionMod;
@@ -183,11 +183,11 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue mbAdvancedVampireSpawnChance;
 
     // Refinements
-    public final ForgeConfigSpec.DoubleValue sword_trained_amount;
-    public final ForgeConfigSpec.IntValue blood_charge_speed;
-    public final ForgeConfigSpec.DoubleValue freeze_duration;
-    public final ForgeConfigSpec.DoubleValue vista;
-    public final ForgeConfigSpec.DoubleValue dark_blood_projectile_damage;
+    public final ForgeConfigSpec.DoubleValue rfSword_trained_amount;
+    public final ForgeConfigSpec.IntValue vrBlood_charge_speed;
+    public final ForgeConfigSpec.DoubleValue vrFreeze_duration;
+    public final ForgeConfigSpec.DoubleValue vrVistaMod;
+    public final ForgeConfigSpec.DoubleValue vrDarkBloodProjectileDamageMod;
     public final ForgeConfigSpec.DoubleValue dark_blood_projectile_aoe_cooldown;
     public final ForgeConfigSpec.IntValue dark_blood_projectile_aoe_range;
     public final ForgeConfigSpec.DoubleValue sun_screen_duration;
@@ -317,7 +317,7 @@ public class BalanceConfig {
         //Vampire Player
         builder.category("vampirePlayer", "vp");
         vpHealthMaxMod = builder.defineInRange("healthMaxMod", 16, 0.5, 40);
-        vpStrengthMaxMod = builder.defineInRange("strengthMaxMod", 0.15, 0, 2);
+        vpAttackSpeedMaxMod = builder.defineInRange("attackSpeedMaxMod", 0.15, 0, 2);
         vpSpeedMaxMod = builder.defineInRange("speedMaxMod", 0.3, 0, 5);
         vpExhaustionMaxMod = builder.defineInRange("exhaustionMaxMod", 1.0, 0, 10);
         vpBasicBloodExhaustionMod = builder.comment("Blood exhaustion is multiplied with this value").defineInRange("basicBloodExhaustionMod", 0.7, 0, 5);
@@ -334,7 +334,7 @@ public class BalanceConfig {
         vpFireResistanceReplace = builder.comment("Whether to replace the vanilla fire resistance potion for vampires with a custom one that only reduces damage but does not remove it" + (iceAndFire ? " - Changed due to IceAndFire" : "")).define("fireResistanceReplace", !iceAndFire);
         vpMaxYellowBorderPercentage = builder.comment("Defines the maximum extend the yellow border covers when the player is in the sun. 100 is default. 0 to disable completely").defineInRange("maxYellowBorderPercentage", 100, 0, 100);
         vpImmortalFromDamageSources = builder.comment("List of damage source types that the player does not die from (immediately)").defineList("immortalFromDamageSources", Lists.asList("player","mob",new String[]{"lightningBolt", "onFire", "cramming", "fall", "flyIntoWall", "magic", "wither", "anvil", "falling_block", "dragon_breath", "sweetBerryBush", "trident", "arrow", "fireworks", "fireBall", "witherSkull", "explosion", "explosion.player", "thrown", "indirectMagic", "vampire_on_fire"}),s->s instanceof String);
-        vpDbnoDuration = builder.comment("Base cooldown before a downed vampire can resurrect. In sec.").defineInRange("dbnoDuration",10,1,1000);
+        vpDbnoDuration = builder.comment("Base cooldown before a downed vampire can resurrect. In sec.").defineInRange("dbnoDuration",30,1,1000);
         vpNeonatalDuration = builder.comment("Base duration of neonatal effect after resurrection. In sec.").defineInRange("neonatalDuration", 60, 1,Integer.MAX_VALUE);
         vpNaturalArmorRegenDuration = builder.comment("The duration it takes for the vampire natural armor to fully regenerate after respawn. In seconds").defineInRange("naturalArmorRegenDuration",240,1,2400);
         vpNaturalArmorBaseValue = builder.comment("The base value of natural armor every vampire has at level 1").defineInRange("naturalArmorBaseValue",10,0,100);
@@ -393,11 +393,11 @@ public class BalanceConfig {
         miMinionPerLordLevel = builder.comment("How many minions a player can have per lord level. Probably don't want to go very high").defineInRange("minionPerLordLevel", 1, 0, 100);
 
         builder.category("refinements", "");
-        sword_trained_amount = builder.defineInRange("sword_trained_amount", 1.2D, 1D, Integer.MAX_VALUE);
-        blood_charge_speed = builder.defineInRange("blood_charge_speed", 3, 2, Integer.MAX_VALUE);
-        freeze_duration = builder.defineInRange("freeze_duration", 1.4D, 1D, Integer.MAX_VALUE);
-        vista = builder.defineInRange("vista", 1D, 0D, 10D);
-        dark_blood_projectile_damage = builder.defineInRange("dark_blood_projectile_damage", 1.5D, 1D, Integer.MAX_VALUE);
+        rfSword_trained_amount = builder.defineInRange("sword_trained_amount", 1.2D, 1D, Integer.MAX_VALUE);
+        vrBlood_charge_speed = builder.defineInRange("blood_charge_speed", 3, 2, Integer.MAX_VALUE);
+        vrFreeze_duration = builder.defineInRange("freeze_duration", 1.4D, 1D, Integer.MAX_VALUE);
+        vrVistaMod = builder.defineInRange("vista", 1D, 0D, 10D);
+        vrDarkBloodProjectileDamageMod = builder.defineInRange("dark_blood_projectile_damage", 1.5D, 1D, Integer.MAX_VALUE);
         dark_blood_projectile_aoe_cooldown = builder.defineInRange("dark_blood_projectile_aoe_cooldown", 2D, 1D, Integer.MAX_VALUE);
         dark_blood_projectile_aoe_range = builder.comment("squared").defineInRange("dark_blood_projectile_aoe_range", 16, 0, Integer.MAX_VALUE);
         sun_screen_duration = builder.defineInRange("sun_screen_duration", 1.5D, 1, Double.MAX_VALUE);

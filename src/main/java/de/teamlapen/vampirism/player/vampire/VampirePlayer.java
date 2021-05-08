@@ -1293,7 +1293,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      */
     private void applyLevelModifiersB(boolean heavyArmor){
         LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpSpeedMaxMod.get() * (heavyArmor?0.5f:1), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
-        LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpStrengthMaxMod.get() * (heavyArmor?0.5f:1), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+        LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_SPEED, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpAttackSpeedMaxMod.get() * (heavyArmor?0.5f:1), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
     }
 
     @Override

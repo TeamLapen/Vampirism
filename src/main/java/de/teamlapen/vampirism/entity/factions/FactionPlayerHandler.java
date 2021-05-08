@@ -249,7 +249,10 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (VampirismConfig.SERVER.pvpOnlyBetweenFactions.get() && src instanceof EntityDamageSource) {
             if (src.getTrueSource() instanceof PlayerEntity) {
                 FactionPlayerHandler other = get((PlayerEntity) src.getTrueSource());
-                return this.currentFaction == null || !this.currentFaction.equals(other.currentFaction);
+                if(this.currentFaction == null || other.currentFaction == null){
+                    return VampirismConfig.SERVER.pvpOnlyBetweenFactionsIncludeHumans.get();
+                }
+                return !this.currentFaction.equals(other.currentFaction);
             }
         }
         return true;

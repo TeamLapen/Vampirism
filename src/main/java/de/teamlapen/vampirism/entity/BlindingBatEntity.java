@@ -100,7 +100,7 @@ public class BlindingBatEntity extends BatEntity {
                 targetingMob=true;
             }
             if(e!=null){
-                Vector3d diff = e.getPositionVec().add(0,1.5,0).subtract(this.getPositionVec());
+                Vector3d diff = e.getPositionVec().add(0,e.getEyeHeight(),0).subtract(this.getPositionVec());
                 double dist = diff.length();
                 if(dist<20){
                     Vector3d mov = diff.scale(0.15/dist);
