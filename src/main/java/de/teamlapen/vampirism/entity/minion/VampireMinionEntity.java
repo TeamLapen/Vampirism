@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.VampirismEntity;
+import de.teamlapen.vampirism.entity.goals.FleeSunVampireGoal;
 import de.teamlapen.vampirism.entity.goals.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
@@ -244,6 +245,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         super.registerGoals();
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(3, new RestrictSunVampireGoal<>(this));
+        this.goalSelector.addGoal(8, new FleeSunVampireGoal<>(this, 1, true));
     }
 
     private void updateAttributes() {
