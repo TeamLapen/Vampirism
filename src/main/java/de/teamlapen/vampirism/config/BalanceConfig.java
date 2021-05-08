@@ -392,7 +392,7 @@ public class BalanceConfig {
         miMinionPerLordLevel = builder.comment("How many minions a player can have per lord level. Probably don't want to go very high").defineInRange("minionPerLordLevel", 1, 0, 100);
 
         builder.category("vampire_refinements", "vr");
-        vrSwordTrainingSpeedMod = builder.defineInRange("swordTrainedSpeedMod", 1.2D, 1D, Integer.MAX_VALUE);
+        vrSwordTrainingSpeedMod = builder.defineInRange("swordTrainingSpeedMod", 1.2D, 1D, Integer.MAX_VALUE);
         vrBloodChargeSpeedMod = builder.defineInRange("bloodChargeSpeedMod", 3, 2, Integer.MAX_VALUE);
         vrFreezeDurationMod = builder.defineInRange("freezeDurationMod", 1.4D, 1D, Integer.MAX_VALUE);
         vrVistaMod = builder.defineInRange("vistaMod", 1D, 0D, 10D);

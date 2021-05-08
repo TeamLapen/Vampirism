@@ -364,7 +364,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             ResourceLocation id = new ResourceLocation(key);
             IAction action = ModRegistries.ACTIONS.getValue(id);
             if (action == null) {
-                LOGGER.warn("Did not find action with key %s", key);
+                LOGGER.warn("Did not find action with key {}", key);
             } else {
                 map.put(id, nbt.getInt(key));
             }

@@ -112,7 +112,7 @@ public class BalanceBuilder {
             for (Field declaredField : BalanceConfig.class.getDeclaredFields()) {
                 declaredField.setAccessible(true);
                 if (declaredField.get(config) == null) {
-                    throw new IllegalStateException("Config value " + declaredField.getName() + "is not set");
+                    throw new IllegalStateException("Config value " + declaredField.getName() + " is not set");
                 }
             }
         } catch (IllegalAccessException e) {

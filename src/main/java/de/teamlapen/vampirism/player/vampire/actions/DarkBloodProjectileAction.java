@@ -56,8 +56,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
                 entity.excludeShooter();
                 if (i==0) {
                     entity.setDamage(0, directDamage);
-                    entity.explode(null, VampirismConfig.BALANCE.vrDarkBloodProjectileAOERange.get());
-                    entity.setDamage(0, 0);
+                    entity.explode(VampirismConfig.BALANCE.vrDarkBloodProjectileAOERange.get(),null);
                 }
             }
         } else {
