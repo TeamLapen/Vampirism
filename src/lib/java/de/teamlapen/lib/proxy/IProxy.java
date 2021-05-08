@@ -3,12 +3,15 @@ package de.teamlapen.lib.proxy;
 import de.teamlapen.lib.network.UpdateEntityPacket;
 import de.teamlapen.lib.util.ISoundReference;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 
 public interface IProxy {
@@ -42,5 +45,11 @@ public interface IProxy {
 
     default void handleUpdateEntityPacket(UpdateEntityPacket msg) {
     }
+
+    /**
+     * Try to obtain the world from the given key. Null if not loaded or not accessible (on client)
+     */
+    @Nullable
+    World getWorldFromKey(RegistryKey<World> dimension);
 
 }

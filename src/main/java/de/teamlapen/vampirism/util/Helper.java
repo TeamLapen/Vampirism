@@ -20,7 +20,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
 import de.teamlapen.vampirism.items.StakeItem;
 import de.teamlapen.vampirism.mixin.LivingEntityAccessor;
-import de.teamlapen.vampirism.tileentity.TotemHelper;
+import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -85,7 +85,7 @@ public class Helper {
                         try {
                             ResourceLocation biome = getBiomeId(world, pos);
                             if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biome)) {
-                                if (!TotemHelper.isInsideVampireAreaCached(worldKey, new BlockPos(entity.getPosX(), entity.getPosY() + 1, entity.getPosZ()))) { //For some reason client returns different value for #getPosition than server
+                                if(world instanceof World && !VampirismWorld.getOpt((World) world).map(vw->vw.isInsideArtificialVampireFogArea(new BlockPos(entity.getPosX(), entity.getPosY() + 1, entity.getPosZ()))).orElse(false)){
                                     if (profiler != null) profiler.endSection();
                                     return true;
                                 }
@@ -131,14 +131,35 @@ public class Helper {
         }
     }
 
+    /**
+     * Use IWorld version
+     * TODO 1.17 remove
+     */
+    @Deprecated
     @Nonnull
     public static EnumStrength getGarlicStrength(Entity e, RegistryKey<World> world) {
         return getGarlicStrengthAt(world, e.getPosition());
     }
 
+    /**
+     * Use IWorld version
+     * TODO 1.17 remove
+     */
+    @Deprecated
     @Nonnull
     public static EnumStrength getGarlicStrengthAt(RegistryKey<World> world, BlockPos pos) {
         return VampirismAPI.getGarlicChunkHandler(world).getStrengthAtChunk(new ChunkPos(pos));
+    }
+
+
+    @Nonnull
+    public static EnumStrength getGarlicStrength(Entity e, IWorld world) {
+        return getGarlicStrengthAt(world, e.getPosition());
+    }
+
+    @Nonnull
+    public static EnumStrength getGarlicStrengthAt(IWorld world, BlockPos pos) {
+        return world instanceof World ? VampirismAPI.getVampirismWorld((World) world).map(vw->vw.getStrengthAtChunk(new ChunkPos(pos))).orElse(EnumStrength.NONE) : EnumStrength.NONE;
     }
 
     @Nonnull
@@ -200,6 +221,15 @@ public class Helper {
         ResourceLocation biomeId = getBiomeId(w, b);
         Objects.requireNonNull(biomeId, "Cannot determine id of local biome");
         return ModBiomes.vampire_forest.getRegistryName().equals(biomeId) || ModBiomes.vampire_forest_hills.getRegistryName().equals(biomeId);
+    }
+
+    /**
+     * @return Whether the entity is in a vampire fog area (does not check for vampire biome)
+     */
+    public static boolean isEntityInArtificalVampireFogArea(Entity e){
+        if(e==null) return false;
+        World w = e.getEntityWorld();
+        return  VampirismWorld.getOpt(w).map(vh->vh.isInsideArtificialVampireFogArea(e.getPosition())).orElse(false);
     }
 
     public static ResourceLocation getBiomeId(Entity e) {

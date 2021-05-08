@@ -12,9 +12,9 @@ import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.particle.GenericParticleData;
-import de.teamlapen.vampirism.tileentity.TotemHelper;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
+import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -52,7 +52,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     }
 
     public static boolean spawnPredicateVampireFog(IWorld world, BlockPos blockPos) {
-        return ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || ModBiomes.vampire_forest_hills.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || (world instanceof World && TotemHelper.isInsideVampireAreaCached(((World) world).getDimensionKey(), blockPos));
+        return ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || ModBiomes.vampire_forest_hills.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || (world instanceof World && VampirismWorld.getOpt((World) world).map(vh->vh.isInsideArtificialVampireFogArea(blockPos)).orElse(false));
     }
 
     public static boolean spawnPredicateCanSpawn(EntityType<? extends MobEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {

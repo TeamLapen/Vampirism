@@ -112,7 +112,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     @Override
     public EnumStrength isGettingGarlicDamage(IWorld iWorld, boolean forcerefresh) {
         if (forcerefresh) {
-            garlicCache = Helper.getGarlicStrength(this, Helper.getWorldKey(iWorld));
+            garlicCache = Helper.getGarlicStrength(this, iWorld);
         }
         return garlicCache;
     }

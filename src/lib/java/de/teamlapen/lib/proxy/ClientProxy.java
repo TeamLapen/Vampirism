@@ -11,10 +11,12 @@ import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -118,5 +120,18 @@ public class ClientProxy extends CommonProxy {
                 }
             }
         }
+    }
+
+    @Override
+    public World getWorldFromKey(RegistryKey<World> world) {
+        World serverWorld = super.getWorldFromKey(world);
+        if(serverWorld!=null)return serverWorld;
+        World clientWorld = Minecraft.getInstance().world;
+        if(clientWorld!=null){
+            if(clientWorld.getDimensionKey().equals(world)){
+                return clientWorld;
+            }
+        }
+        return null;
     }
 }

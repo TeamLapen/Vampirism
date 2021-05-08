@@ -1,9 +1,7 @@
 package de.teamlapen.vampirism.api.world;
 
 import de.teamlapen.vampirism.api.EnumStrength;
-import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
@@ -13,11 +11,13 @@ import javax.annotation.Nonnull;
 public interface IGarlicChunkHandler {
 
     /**
-     * Clear all emitters. E.g. at world unload
+     * TODO 1.17 remove
      */
+    @Deprecated
     void clear();
 
     /**
+     * TODO 1.17 rename
      * @return The garlic strength at the given position
      */
     @Nonnull
@@ -38,18 +38,4 @@ public interface IGarlicChunkHandler {
      * @param id The unique hash obtained during registration
      */
     void removeGarlicBlock(int id);
-
-    /**
-     * FOR INTERNAL USAGE ONLY
-     */
-    @Deprecated
-    interface Provider {
-        /**
-         * Clear all garlic chunk handlers. E.g. at client stop.
-         */
-        void clear();
-
-        @Nonnull
-        IGarlicChunkHandler getHandler(RegistryKey<World> world);
-    }
 }

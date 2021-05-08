@@ -21,6 +21,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 
 
+/**
+ * TODO 1.17 refractor garlic diffusor
+ */
 public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileEntity {
     private int id;
     private EnumStrength strength = EnumStrength.MEDIUM;
@@ -28,6 +31,9 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
     private int r = 1;
     private boolean registered = false;
     private int fueled = 0;
+    private int bootTimer;
+    private int maxBootTimer;
+    private static final int FUEL_DURATION = 20*60*2;
 
 
     public GarlicBeaconTileEntity() {
@@ -63,12 +69,17 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
         super.read(state, compound);
         r = compound.getInt("radius");
         defaultStrength = EnumStrength.getFromStrenght(compound.getInt("strength"));
+        bootTimer = compound.getInt("boot_timer");
         setFueledTime(compound.getInt("fueled"));
     }
 
     public void onFueled() {
-        setFueledTime(20 * 60);//*20);
+        setFueledTime(FUEL_DURATION);
         this.markDirty();
+    }
+
+    public float getFueledState(){
+        return this.fueled/(float)FUEL_DURATION;
     }
 
     public void onTouched(PlayerEntity player) {
@@ -85,6 +96,9 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
         if (hasWorld()) {
             CompoundNBT nbt = pkt.getNbtCompound();
             handleUpdateTag(this.world.getBlockState(pkt.getPos()), nbt);
+            if(isActive()){
+                register(); //Register in case we weren't active before. Shouldn't have an effect when already registered
+            }
         }
     }
 
@@ -115,7 +129,13 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
 
     @Override
     public void tick() {
-        if (fueled > 0) {
+        if(bootTimer>0){
+            if(--bootTimer==0){
+                this.markDirty();
+                register();
+            }
+        }
+        else if (fueled > 0) {
             if (fueled == 1) {
                 setFueledTime(0);
                 this.markDirty();
@@ -125,10 +145,26 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
         }
     }
 
+    public boolean isActive(){
+        return bootTimer == 0;
+    }
+
+    public float getBootProgress(){
+        return bootTimer>0 ? (1-(bootTimer/(float)maxBootTimer)) : 1f;
+    }
+
+    public void setNewBootDelay(int delayTicks){
+        this.bootTimer  = delayTicks;
+        this.maxBootTimer = delayTicks;
+    }
+
+
     @Override
     public void validate() {
         super.validate();
-        register();
+        if(isActive()){
+            register();
+        }
     }
 
     @Override
@@ -137,6 +173,9 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
         compound.putInt("radius", r);
         compound.putInt("strength", defaultStrength.getStrength());
         compound.putInt("fueled", fueled);
+        if(bootTimer!=0){
+            compound.putInt("boot_timer",bootTimer);
+        }
         return compound;
     }
 
@@ -154,8 +193,8 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
                 chunks[i++] = new ChunkPos(x + baseX, z + baseZ);
             }
         }
-        id = VampirismAPI.getGarlicChunkHandler(getWorld().getDimensionKey()).registerGarlicBlock(strength, chunks);
-        registered = true;
+        id = VampirismAPI.getVampirismWorld(getWorld()).map(vw->vw.registerGarlicBlock(strength, chunks)).orElse(0);
+        registered = i!=0;
 
     }
 
@@ -177,7 +216,7 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
 
     private void unregister() {
         if (registered && hasWorld()) {
-            VampirismAPI.getGarlicChunkHandler(getWorld().getDimensionKey()).removeGarlicBlock(id);
+            VampirismAPI.getVampirismWorld(getWorld()).ifPresent(vw->vw.removeGarlicBlock(id));
             registered = false;
         }
     }
