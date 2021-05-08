@@ -4,11 +4,13 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
+import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.SoulOrbEntity;
@@ -29,22 +31,29 @@ import net.minecraft.entity.passive.horse.HorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 
-public class ConvertedHorseEntity extends HorseEntity implements IConvertedCreature<HorseEntity> {
-
+public class ConvertedHorseEntity extends HorseEntity implements ICurableConvertedCreature<HorseEntity> {
+    private static final DataParameter<Boolean> CONVERTING = EntityDataManager.createKey(ConvertedHorseEntity.class, DataSerializers.BOOLEAN);
     protected boolean vulnerableToFire = true;
     private EnumStrength garlicCache = EnumStrength.NONE;
     private HorseEntity entityCreature;
@@ -52,10 +61,23 @@ public class ConvertedHorseEntity extends HorseEntity implements IConvertedCreat
     private boolean dropSoul = false;
     @Nullable
     private ITextComponent name;
+    private int conversionTime;
+    private UUID conversationStarter;
 
 
     public ConvertedHorseEntity(EntityType<? extends HorseEntity> type, World worldIn) {
         super(type, worldIn);
+    }
+
+    @Override
+    public DataParameter<Boolean> getConvertingDataParam() {
+        return CONVERTING;
+    }
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+        this.registerConvertingData(this);
     }
 
     @Override
@@ -94,6 +116,14 @@ public class ConvertedHorseEntity extends HorseEntity implements IConvertedCreat
         return AbstractHorseEntity.func_234237_fg_()
                 .createMutableAttribute(SharedMonsterAttributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG)
                 .createMutableAttribute(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+    }
+
+    @Nonnull
+    @Override
+    public ActionResultType func_230254_b_(@Nonnull PlayerEntity player, @Nonnull Hand hand) {
+        ItemStack stack = player.getHeldItem(hand);
+        if (stack.getItem() != ModItems.cure_apple) return super.func_230254_b_(player, hand);
+        return interactWithCureItem(player, stack, this);
     }
 
     @Override
@@ -181,6 +211,12 @@ public class ConvertedHorseEntity extends HorseEntity implements IConvertedCreat
 
     @Override
     public void livingTick() {
+        if (!this.world.isRemote && this.isAlive() && this.isConverting(this)) {
+            --this.conversionTime;
+            if (this.conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(this, EntityType.HORSE, (timer) -> this.conversionTime = timer)) {
+                this.cureEntity((ServerWorld)this.world, this, EntityType.HORSE);
+            }
+        }
         if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 1) {
             isGettingGarlicDamage(this.world, true);
         }
@@ -211,6 +247,13 @@ public class ConvertedHorseEntity extends HorseEntity implements IConvertedCreat
     }
 
     @Override
+    public void handleStatusUpdate(byte id) {
+        if (!handleSound(id, this)){
+            super.handleStatusUpdate(id);
+        }
+    }
+
+    @Override
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, CreatureEntity.class, 10, 1, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION)));
@@ -220,6 +263,30 @@ public class ConvertedHorseEntity extends HorseEntity implements IConvertedCreat
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, false, false, false, null)));
+    }
+
+    @Override
+    public void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @Nonnull CreatureEntity entity) {
+        ICurableConvertedCreature.super.startConverting(conversionStarterIn, conversionTimeIn, entity);
+        this.conversationStarter = conversionStarterIn;
+        this.conversionTime = conversionTimeIn;
+    }
+
+    @Override
+    public void writeAdditional(@Nonnull CompoundNBT compound) {
+        super.writeAdditional(compound);
+        compound.putInt("ConversionTime", this.isConverting(this) ? this.conversionTime : -1);
+        if (this.conversationStarter != null) {
+            compound.putUniqueId("ConversionPlayer", this.conversationStarter);
+        }
+    }
+
+    @Override
+    public void readAdditional(@Nonnull CompoundNBT compound) {
+        super.readAdditional(compound);
+        if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1) {
+            this.startConverting(compound.hasUniqueId("ConversionPlayer") ? compound.getUniqueId("ConversionPlayer") : null, compound.getInt("ConversionTime"),this);
+        }
     }
 
     public static class ConvertingHandler extends DefaultConvertingHandler<HorseEntity> {
@@ -239,6 +306,8 @@ public class ConvertedHorseEntity extends HorseEntity implements IConvertedCreat
         protected void copyImportantStuff(ConvertedHorseEntity converted, HorseEntity entity) {
             CompoundNBT nbt = new CompoundNBT();
             entity.writeWithoutTypeId(nbt);
+            converted.renderYawOffset = entity.renderYawOffset;
+            converted.rotationYawHead = entity.rotationYawHead;
             converted.read(nbt);
             converted.setHealth(converted.getMaxHealth() / 3 * 2);
         }

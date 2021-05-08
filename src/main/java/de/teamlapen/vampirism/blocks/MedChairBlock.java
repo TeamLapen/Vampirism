@@ -33,6 +33,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -60,6 +61,7 @@ public class MedChairBlock extends VampirismBlock {
     }
 
 
+    @Nonnull
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));
@@ -70,76 +72,96 @@ public class MedChairBlock extends VampirismBlock {
         return new ItemStack(ModItems.item_med_chair);
     }
 
+    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
         return state.get(PART) == EnumPart.BOTTOM ? SHAPE_BOTTOM : SHAPE_TOP;
     }
 
+    @Nonnull
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-
-        ItemStack stack = player.getHeldItem(hand);
-        boolean garlic = stack.getItem().equals(ModItems.injection_garlic);
-        boolean sanguinare = stack.getItem().equals(ModItems.injection_sanguinare);
-        if ((garlic || sanguinare) && player.isAlive()) {
-            IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            IPlayableFaction faction = handler.getCurrentFaction();
-            boolean used = false;
-            if (garlic) {
-                if (handler.canJoin(VReference.HUNTER_FACTION)) {
-                    if (world.isRemote) {
-                        VampirismMod.proxy.renderScreenFullColor(4, 30, 0xBBBBBBFF);
-                    } else {
-                        handler.joinFaction(VReference.HUNTER_FACTION);
-                        player.addPotionEffect(new EffectInstance(ModEffects.poison, 200, 1));
-                    }
-                    used = true;
-                } else if (faction != null) {
-                    if (!world.isRemote) {
-                        player.sendMessage(new TranslationTextComponent("text.vampirism.med_chair_other_faction", faction.getName()), Util.DUMMY_UUID);
-                    }
-
-                }
-            } else if (sanguinare) {
-                if (VReference.HUNTER_FACTION.equals(faction)) {
-                    VampirismMod.proxy.displayRevertBackScreen();
-                    used = true;
-                } else if (faction == null) {
-                    if (handler.canJoin(VReference.VAMPIRE_FACTION)) {
-                        if (VampirismConfig.SERVER.disableFangInfection.get()) {
-                            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.deactivated_by_serveradmin"), true);
-                        } else {
-                            PotionSanguinare.addRandom(player, true);
-                            player.addPotionEffect(new EffectInstance(ModEffects.poison, 60));
-                            used = true;
-                        }
-                    }
-                } else if (VReference.VAMPIRE_FACTION.equals(faction)) {
-                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.already_vampire"), false);
-                }
-            }
-            if (used) {
+    public ActionResultType onBlockActivated(@Nonnull BlockState state, @Nonnull World world, @Nonnull BlockPos pos, PlayerEntity player, @Nonnull Hand hand, @Nonnull BlockRayTraceResult hit) {
+        if (player.isAlive()) {
+            ItemStack stack = player.getHeldItem(hand);
+            if (handleInjections(player, world, stack)) {
                 stack.shrink(1);
                 if (stack.isEmpty()) {
                     player.inventory.deleteStack(stack);
                 }
             }
-
-        } else {
-            if (world.isRemote)
-                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.need_item_to_use", new TranslationTextComponent((new ItemStack(ModItems.injection_garlic).getTranslationKey()))), true);
+        } else if (world.isRemote) {
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.need_item_to_use", new TranslationTextComponent((new ItemStack(ModItems.injection_garlic).getTranslationKey()))), true);
         }
-
         return ActionResultType.SUCCESS;
     }
 
+    private boolean handleInjections(PlayerEntity player, World world, ItemStack stack) {
+        IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
+        IPlayableFaction<?> faction = handler.getCurrentFaction();
+        if (stack.getItem().equals(ModItems.injection_garlic)) {
+            return handleGarlicInjection(player, world, handler, faction);
+        }
+        if (stack.getItem().equals(ModItems.injection_sanguinare)) {
+            return handleSanguinareInjection(player, handler, faction);
+        }
+        if (stack.getItem().equals(ModItems.injection_zombie_blood)) {
+            return handleZombieBloodInjection(player);
+        }
+        return false;
+    }
+
+    private boolean handleGarlicInjection(@Nonnull PlayerEntity player, @Nonnull World world, @Nonnull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction){
+        if (handler.canJoin(VReference.HUNTER_FACTION)) {
+            if (world.isRemote) {
+                VampirismMod.proxy.renderScreenFullColor(4, 30, 0xBBBBBBFF);
+            } else {
+                handler.joinFaction(VReference.HUNTER_FACTION);
+                player.addPotionEffect(new EffectInstance(ModEffects.poison, 200, 1));
+            }
+            return true;
+        } else if (currentFaction != null) {
+            if (!world.isRemote) {
+                player.sendMessage(new TranslationTextComponent("text.vampirism.med_chair_other_faction", currentFaction.getName()), Util.DUMMY_UUID);
+            }
+        }
+        return false;
+    }
+
+    private boolean handleSanguinareInjection(@Nonnull PlayerEntity player, @Nonnull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
+        if (VReference.VAMPIRE_FACTION.equals(currentFaction)) {
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.already_vampire"), false);
+            return false;
+        }
+        if (VReference.HUNTER_FACTION.equals(currentFaction)) {
+            VampirismMod.proxy.displayRevertBackScreen();
+            return true;
+        }
+        if (currentFaction == null) {
+            if (handler.canJoin(VReference.VAMPIRE_FACTION)) {
+                if (VampirismConfig.SERVER.disableFangInfection.get()) {
+                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.deactivated_by_serveradmin"), true);
+                } else {
+                    PotionSanguinare.addRandom(player, true);
+                    player.addPotionEffect(new EffectInstance(ModEffects.poison, 60));
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean handleZombieBloodInjection(@Nonnull PlayerEntity player) {
+        player.addPotionEffect(new EffectInstance(ModEffects.poison, 200));
+        return true;
+    }
+
     @Override
-    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
+    public void harvestBlock(@Nonnull World worldIn, @Nonnull PlayerEntity player, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable TileEntity te, @Nonnull ItemStack stack) {
         super.harvestBlock(worldIn, player, pos, Blocks.AIR.getDefaultState(), te, stack);
     }
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+    public void onBlockHarvested(@Nonnull World worldIn, @Nonnull BlockPos pos, BlockState state, @Nonnull PlayerEntity player) {
         EnumPart part = state.get(PART);
         BlockPos other;
         Direction dir = state.get(FACING);
@@ -162,6 +184,7 @@ public class MedChairBlock extends VampirismBlock {
         super.onBlockHarvested(worldIn, pos, state, player);
     }
 
+    @Nonnull
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.with(FACING, rot.rotate(state.get(FACING)));
@@ -191,6 +214,7 @@ public class MedChairBlock extends VampirismBlock {
             this.meta = meta;
         }
 
+        @Nonnull
         @Override
         public String getString() {
             return name;

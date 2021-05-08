@@ -37,6 +37,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.CrossbowItem;
@@ -462,5 +463,14 @@ public class ModPlayerEventHandler {
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onPlayerInteract(PlayerInteractEvent.EntityInteract event) {
+        if (!(event.getTarget().getType() == EntityType.ZOMBIE)) return;
+        ItemStack stack = event.getPlayer().getHeldItem(event.getHand());
+        if (stack.getItem() != ModItems.injection_empty) return;
+        event.getPlayer().setHeldItem(event.getHand(), new ItemStack(ModItems.injection_zombie_blood));
+        event.setCanceled(true);
     }
 }

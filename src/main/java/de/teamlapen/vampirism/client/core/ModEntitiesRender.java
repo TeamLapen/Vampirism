@@ -32,6 +32,7 @@ public class ModEntitiesRender {
             return renderer;
         });
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_sheep, ConvertedCreatureRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_cow, ConvertedCreatureRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter, BasicHunterRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter_imob, BasicHunterRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.vampire, BasicVampireRenderer::new);
