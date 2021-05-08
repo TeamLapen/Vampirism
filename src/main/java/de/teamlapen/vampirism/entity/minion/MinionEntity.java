@@ -314,6 +314,9 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             if (this.rand.nextInt(900) == 0 && this.deathTime == 0) {
                 this.heal(1.0F);
             }
+            if (this.ticksExisted % 20 == 0) {
+                this.consumeOffhand();
+            }
         }
         if (convertCounter > 0) {
             convertCounter--;
@@ -322,20 +325,21 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             LOGGER.warn("Minion without lord.");
             this.remove();
         }
-        if (this.ticksExisted % 20 == 0) {
-            this.consumeOffhand();
-        }
     }
 
     protected void consumeOffhand() {
+        if (isHandActive()) return;
         if (this.targetSelector.getRunningGoals().findAny().isPresent()) return;
         ItemStack stack = this.getInventory().map(i -> i.getStackInSlot(1)).orElse(ItemStack.EMPTY);
-        if (stack.isEmpty()) return;
-        if (!(stack.getUseAction() == UseAction.DRINK || stack.getUseAction() == UseAction.EAT)) return;
-        boolean fullHealth = this.getHealth() == this.getMaxHealth();
-        if (stack.isFood() && fullHealth && !stack.getItem().getFood().canEatWhenFull()) return;
+        if (!canConsume(stack))return;
         this.setActiveHand(Hand.OFF_HAND);
         this.rotationYaw = this.rotationYawHead;
+    }
+
+    protected boolean canConsume(ItemStack stack) {
+        if (!(stack.getUseAction() == UseAction.DRINK || stack.getUseAction() == UseAction.EAT)) return false;
+        if (stack.isEmpty()) return false;
+        return true;
     }
 
     @Nonnull

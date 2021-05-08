@@ -229,6 +229,14 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
     }
 
+    @Override
+    protected boolean canConsume(ItemStack stack) {
+        if (!super.canConsume(stack))return false;
+        boolean fullHealth = this.getHealth() == this.getMaxHealth();
+        if (stack.isFood() && fullHealth && !stack.getItem().getFood().canEatWhenFull()) return false;
+        return true;
+    }
+
     private void updateAttributes() {
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(HunterMinionData::getHealthLevel).orElse(0));
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE + BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE_PL * getMinionData().map(HunterMinionData::getStrengthLevel).orElse(0));

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.fluids.BloodHelper;
@@ -108,8 +109,19 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
         return new ActionResult<>(ActionResultType.PASS, stack);
     }
 
+    @Nonnull
     @Override
-    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
+    public ItemStack onItemUseFinish(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull LivingEntity entityLiving) {
+        if (entityLiving instanceof IVampire) {
+            int blood = BloodHelper.getBlood(stack);
+            int drink = Math.min(blood, MULTIPLIER);
+            ItemStack[] result = new ItemStack[1];
+            int amt = BloodHelper.drain(stack,drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> {
+                result[0] = containerStack;
+            });
+            ((IVampire) entityLiving).drinkBlood(amt/MULTIPLIER, 0, false);
+            return result[0];
+        }
         return FluidUtil.getFluidHandler(stack).map(IFluidHandlerItem::getContainer).orElse(super.onItemUseFinish(stack, worldIn, entityLiving));
     }
 
@@ -120,6 +132,7 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
 
     @Override
     public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
+        if (player instanceof IVampire) return;
         if (!(player instanceof PlayerEntity) || !player.isAlive()) {
             player.stopActiveHand();
             return;

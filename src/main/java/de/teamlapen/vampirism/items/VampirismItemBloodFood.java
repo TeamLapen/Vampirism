@@ -33,9 +33,11 @@ public class VampirismItemBloodFood extends VampirismItem {
         }
         if (entityLiving instanceof IVampire) {
             ((IVampire) entityLiving).drinkBlood(vampireFood.getHealing(), vampireFood.getSaturation());
+            stack.shrink(1);
+        } else {
+            entityLiving.onFoodEaten(worldIn, stack); //Shrinks stack and applies human food effects
         }
         worldIn.playSound(null, entityLiving.getPosX(), entityLiving.getPosY(), entityLiving.getPosZ(), SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
-        entityLiving.onFoodEaten(worldIn, stack); //Shrinks stack and applies human food effects
         if (!Helper.isVampire(entityLiving)) {
             entityLiving.addPotionEffect(new EffectInstance(Effects.NAUSEA, 20 * 20));
         }

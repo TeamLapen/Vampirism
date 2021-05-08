@@ -19,7 +19,9 @@ import de.teamlapen.vampirism.entity.goals.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
+import de.teamlapen.vampirism.items.BloodBottleItem;
 import de.teamlapen.vampirism.items.MinionUpgradeItem;
+import de.teamlapen.vampirism.items.VampirismItemBloodFood;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
@@ -84,7 +86,13 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
     @Override
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
+        this.heal(amt/3f); //blood bottle = 900 amt = 9 amt = 2.5 health
+    }
 
+    @Nonnull
+    @Override
+    public ItemStack onFoodEaten(@Nonnull World world, @Nonnull ItemStack stack) {
+        return stack;
     }
 
     @Override
@@ -110,8 +118,8 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
     @Nonnull
     @Override
-    public EnumStrength isGettingGarlicDamage(IWorld iWorld, boolean forcerefresh) {
-        if (forcerefresh) {
+    public EnumStrength isGettingGarlicDamage(IWorld iWorld, boolean forceRefresh) {
+        if (forceRefresh) {
             garlicCache = Helper.getGarlicStrength(this, iWorld);
         }
         return garlicCache;
@@ -218,6 +226,17 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             }
         }
         return super.func_230254_b_(player, hand);
+    }
+
+    @Override
+    protected boolean canConsume(ItemStack stack) {
+        if(!super.canConsume(stack)) return false;
+        if ((stack.isFood() && !(stack.getItem() instanceof VampirismItemBloodFood))) return false;
+        boolean fullHealth = this.getHealth() == this.getMaxHealth();
+        if (fullHealth && (stack.isFood() && stack.getItem() instanceof VampirismItemBloodFood)) return false;
+        if (stack.getItem() instanceof BloodBottleItem && stack.getDamage() == 0)return false;
+        if (fullHealth && stack.getItem() instanceof BloodBottleItem) return false;
+        return true;
     }
 
     @Override
