@@ -70,6 +70,7 @@ public class ModCommands {
                             .then(ForcePlayerSyncCommand.register())
                             .then(GiveAccessoriesCommand.register())
                             .then(SummonDummy.register())
+                            .then(GiveBannerCommand.register())
             );
         }
     }

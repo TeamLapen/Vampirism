@@ -35,8 +35,8 @@ public class ModEffects {
     public static final Effect neonatal = getNull();
     public static final Effect oblivion = getNull();
     public static final Effect armor_regeneration = getNull();
-    public static final Effect bad_omen_vampirism_hunter = getNull();
-    public static final Effect bad_omen_vampirism_vampire = getNull();
+    public static final Effect bad_omen_hunter = getNull();
+    public static final Effect bad_omen_vampire = getNull();
 
     private static Effect modded_night_vision;  //Substituted version
     private static Effect vanilla_night_vision; //Vanilla night vision instance

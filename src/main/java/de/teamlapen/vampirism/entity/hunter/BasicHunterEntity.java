@@ -27,6 +27,7 @@ import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.util.HunterVillageData;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.entity.*;
@@ -551,6 +552,9 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Nullable
     @Override
     public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        if ((reason == SpawnReason.NATURAL|| reason == SpawnReason.STRUCTURE ) && this.getRNG().nextInt(50) == 0) {
+            this.setItemStackToSlot(EquipmentSlotType.HEAD, HunterVillageData.createBanner());
+        }
         ILivingEntityData livingData = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 
         if (this.getRNG().nextInt(4) == 0) {

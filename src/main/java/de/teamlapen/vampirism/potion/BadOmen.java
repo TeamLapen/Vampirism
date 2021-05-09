@@ -17,7 +17,7 @@ public abstract class BadOmen extends Effect {
 
     public BadOmen(String modID, ResourceLocation faction) {
         super(EffectType.NEUTRAL, 745784);
-        this.setRegistryName(modID, "bad_omen_" + faction.toString().replace(":", "_"));
+        this.setRegistryName(modID, "bad_omen_" + faction.getPath());
     }
 
     @Override
@@ -36,8 +36,10 @@ public abstract class BadOmen extends Effect {
                 return;
             }
             TotemHelper.getTotemNearPos(serverWorld, entityLivingBaseIn.getPosition(),true).ifPresent(totem -> {
-                totem.initiateCapture(getFaction(), null);
-                entityLivingBaseIn.removePotionEffect(this);
+                if (totem.getControllingFaction() != getFaction()) {
+                    totem.initiateCapture(getFaction(), null);
+                    entityLivingBaseIn.removePotionEffect(this);
+                }
             });
         }
     }

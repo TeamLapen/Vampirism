@@ -714,11 +714,12 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.villageAreaReduced = totem.grow(-30,-10,-30);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void initiateCapture(PlayerEntity player) {
         if (!player.isAlive()) return;
         initiateCapture(FactionPlayerHandler.get(player).getCurrentFaction(), player::sendStatusMessage);
     }
-        @SuppressWarnings("ConstantConditions")
+
     public void initiateCapture(IFaction<?> faction, @Nullable BiConsumer<ITextComponent, Boolean> feedback) {
         this.updateTileStatus();
         if (!this.capturePreconditions(faction, feedback == null? (a,b)->{}:feedback)) return;
