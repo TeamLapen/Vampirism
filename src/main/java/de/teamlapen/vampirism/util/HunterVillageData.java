@@ -33,7 +33,7 @@ public class HunterVillageData implements IVillageFactionData {
     @Override
     public List<CaptureEntityEntry> getCaptureEntries() {
         if(this.captureEntityEntries == null) {
-            this.captureEntityEntries = Lists.newArrayList(new CaptureEntityEntry(ModEntities.hunter, 10), new CaptureEntityEntry(ModEntities.advanced_hunter, 2));
+            this.captureEntityEntries = Lists.newArrayList(new CaptureEntityEntry(ModEntities.hunter, 10)/*, new CaptureEntityEntry(ModEntities.advanced_hunter, 2)*/);
         }
         return this.captureEntityEntries;
     }
