@@ -11,11 +11,14 @@ import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.network.play.server.SUpdateBossInfoPacket;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.BossInfo;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class CustomBossInfoOverlay extends AbstractGui {
     private static final ResourceLocation GUI_BARS_TEXTURES = new ResourceLocation("textures/gui/bars.png");
@@ -64,16 +67,18 @@ public class CustomBossInfoOverlay extends AbstractGui {
 
     private void render(MatrixStack stack, int k, int j, MultiBossInfo value) {
         int textureStart = 0;
-        List<MultiBossInfo.Entry> s = value.getEntries().values().stream().sorted(Comparator.comparingInt(MultiBossInfo.Entry::getOrdinal)).collect(Collectors.toList());
+        List<BossInfo.Color> s = value.getColors();
+        Map<BossInfo.Color, Float> perc = value.getEntries();
         for (int i = 0; i < s.size(); i++) {
-            MultiBossInfo.Entry entry = s.get(i);
-            int width = (int) (entry.getPercentage() * 182);
+            if (textureStart >= 182) break;
+            BossInfo.Color color = s.get(i);
+            int width = (int) (perc.getOrDefault(color,0f) * 182);
             if (i == s.size()-1) {
                 if (textureStart + width < 182){
                     width = 182 - textureStart;
                 }
             }
-            this.blit(stack, k + textureStart, j, textureStart, entry.getColor().ordinal() * 5 * 2 +5, width, 5);
+            this.blit(stack, k + textureStart, j, textureStart, color.ordinal() * 5 * 2 +5, width, 5);
             textureStart+=width;
         }
     }

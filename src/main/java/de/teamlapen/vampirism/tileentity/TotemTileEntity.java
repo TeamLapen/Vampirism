@@ -33,7 +33,6 @@ import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.PotionSanguinareEffect;
 import de.teamlapen.vampirism.util.ModEventFactory;
-import de.teamlapen.vampirism.world.MultiBossInfo;
 import de.teamlapen.vampirism.world.ServerMultiBossInfo;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.block.Block;
@@ -69,7 +68,6 @@ import net.minecraft.world.BossInfo;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureStart;
-import net.minecraft.world.server.ServerBossInfo;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -131,10 +129,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private CAPTURE_PHASE phase;
     private int captureTimer;
     private int captureDuration;
-    private int defenderMax;
     private int captureForceTargetTimer;
-    private int currentDefender;
-    private int currentAttacker;
 
     //client attributes
     private @OnlyIn(Dist.CLIENT)
@@ -144,8 +139,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private float[] baseColors = DyeColor.WHITE.getColorComponentValues();
     private float[] progressColor = DyeColor.WHITE.getColorComponentValues();
 
-    private final ServerBossInfo captureInfo = new ServerBossInfo(new TranslationTextComponent("text.vampirism.village.bossinfo.capture"), BossInfo.Color.YELLOW, BossInfo.Overlay.PROGRESS);
-    private final ServerMultiBossInfo captureInfo2 = new ServerMultiBossInfo(new TranslationTextComponent("text.vampirism.village.bossinfo.capture"), BossInfo.Overlay.PROGRESS);
+    private final ServerMultiBossInfo captureInfo = new ServerMultiBossInfo(new TranslationTextComponent("text.vampirism.village.bossinfo.capture"), BossInfo.Overlay.PROGRESS, BossInfo.Color.RED, BossInfo.Color.WHITE, BossInfo.Color.BLUE);
 
     public TotemTileEntity() {
         super(ModTiles.totem);
@@ -217,7 +211,6 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         if (notifyPlayer)
             notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.village_capture_aborted"));
         this.updateBossinfoPlayers(null);
-        this.defenderMax = 0;
         this.markDirty();
     }
 
@@ -297,9 +290,6 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             compound.putInt("captureTimer", this.captureTimer);
             compound.putInt("captureAbortTimer", this.captureDuration);
             compound.putString("phase", this.phase.name());
-            if (this.phase == CAPTURE_PHASE.PHASE_2) {
-                compound.putInt("defenderMax", this.defenderMax);
-            }
         }
         if (!village.isEmpty()) {
             compound.putIntArray("villageArea", UtilLib.bbToInt(this.getVillageArea()));
@@ -323,8 +313,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             this.captureTimer = compound.getInt("captureTimer");
             this.captureDuration = compound.getInt("captureabortTimer");
             this.phase = CAPTURE_PHASE.valueOf(compound.getString("phase"));
-            if (this.phase == CAPTURE_PHASE.PHASE_2 && compound.contains("defenderMax")) {
-                this.defenderMax = compound.getInt("defenderMax");
+            if (this.phase == CAPTURE_PHASE.PHASE_2) {
                 this.setupPhase2();
             }
         } else {
@@ -462,13 +451,17 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                 if (time % 40 == 0) {
                     List<LivingEntity> entities = this.world.getEntitiesWithinAABB(LivingEntity.class, getVillageArea());
                     this.updateBossinfoPlayers(entities);
-                    this.currentAttacker = 0; //include player
+                    int currentAttacker = 0; //include player
                     int attackerPlayer = 0;
-                    this.currentDefender = 0; //include player
+                    int currentDefender = 0; //include player
                     int defenderPlayer = 0;
                     int neutral = 0;
                     float attackerStrength = 0f;
                     float defenderStrength = 0f;
+                    float attackerHealth = 0;
+                    float attackerMaxHealth = 0;
+                    float defenderHealth = 0;
+                    float defenderMaxHealth = 0;
 
                     //count entities
                     CaptureInfo captureInfo = new CaptureInfo(this);
@@ -477,15 +470,19 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                         if (faction == null) continue;
                         if (entity instanceof ICaptureIgnore) continue;
                         if (this.capturingFaction.equals(faction)) {
-                            this.currentAttacker++;
+                            currentAttacker++;
                             attackerStrength += this.getStrength(entity);
+                            attackerMaxHealth += entity.getMaxHealth();
+                            attackerHealth += entity.getHealth();
                             if (entity instanceof PlayerEntity) attackerPlayer++;
                             if (entity instanceof IVillageCaptureEntity) {
                                 ((IVillageCaptureEntity) entity).attackVillage(captureInfo);
                             }
                         } else if (faction.equals(this.controllingFaction)) {
-                            this.currentDefender++;
+                            currentDefender++;
                             defenderStrength += this.getStrength(entity);
+                            defenderMaxHealth += entity.getMaxHealth();
+                            defenderHealth += entity.getHealth();
                             if (entity instanceof PlayerEntity) defenderPlayer++;
                             if (entity instanceof IVillageCaptureEntity) {
                                 ((IVillageCaptureEntity) entity).defendVillage(captureInfo);
@@ -516,7 +513,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                                     captureTimer = 1;
                                     this.setupPhase2();
                                     this.markDirty();
-                                    this.notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.almost_captured", this.currentDefender));
+                                    this.notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.almost_captured", currentDefender));
                                 } else {
                                     if (captureTimer % 2 == 0) {
                                         if (attackerStrength * 1.1f > defenderStrength) {
@@ -528,11 +525,11 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                                 }
                                 break;
                             case PHASE_2:
-                                if ( this.currentDefender == 0) {
+                                if ( currentDefender == 0) {
                                     captureTimer++;
                                     if (captureTimer > 4)
                                         this.completeCapture(true, false);
-                                } else if (this.currentAttacker == 0) {
+                                } else if (currentAttacker == 0) {
                                     captureTimer++;
                                     if (captureTimer > 4)
                                         this.abortCapture(true);
@@ -543,7 +540,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                             default:
                                 break;
                         }
-                        this.handleBossBar(this.currentDefender);
+                        this.handleBossBar(defenderMaxHealth, defenderHealth, attackerMaxHealth, attackerHealth);
                     }
                 }
             }
@@ -733,12 +730,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.captureTimer = 0;
         this.captureForceTargetTimer = 0;
         this.setCapturingFaction(faction);
-//        this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.bossinfo.capture"));
-//        this.captureInfo.setColor(BossInfo.Color.YELLOW);
-//        this.captureInfo.setPercent(0f);
-        this.captureInfo2.setName(new TranslationTextComponent("text.vampirism.village.bossinfo.capture"));
-        this.captureInfo2.setEntries(new MultiBossInfo.Entry(new ResourceLocation("attack"), BossInfo.Color.RED, 0.1f,0), new MultiBossInfo.Entry(new ResourceLocation("neutral"), BossInfo.Color.WHITE, 0.8f,1), new MultiBossInfo.Entry(new ResourceLocation("defend"), BossInfo.Color.BLUE, 0.1f,2));
-        this.defenderMax = 0;
+        this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.bossinfo.capture"));
 
         if (this.controllingFaction == null) {
             this.phase = CAPTURE_PHASE.PHASE_1_NEUTRAL;
@@ -761,20 +753,18 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
      * @param includedPlayerEntities List of player entities to be included. May contain other non player entities
      */
     private void updateBossinfoPlayers(@Nullable List<LivingEntity> includedPlayerEntities) {
-        Set<ServerPlayerEntity> oldList = new HashSet<>(captureInfo2.getPlayers());
+        Set<ServerPlayerEntity> oldList = new HashSet<>(captureInfo.getPlayers());
         if (includedPlayerEntities != null) {
             for (LivingEntity entity : includedPlayerEntities) {
                 if (entity instanceof ServerPlayerEntity) {
                     if (!oldList.remove(entity)) {
-//                        captureInfo.addPlayer((ServerPlayerEntity) entity);
-                        captureInfo2.addPlayer(((ServerPlayerEntity) entity));
+                        captureInfo.addPlayer(((ServerPlayerEntity) entity));
                     }
                 }
             }
         }
         for (ServerPlayerEntity player : oldList) {
-//            captureInfo.removePlayer(player);
-            captureInfo2.removePlayer(player);
+            captureInfo.removePlayer(player);
         }
     }
 
@@ -818,7 +808,6 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             LOGGER.warn("No village capture entity registered for {}", faction);
             return;
         }
-        //noinspection ConstantConditions
         MobEntity entity = entityType.create(this.world);
         if (entity instanceof VampireBaseEntity)
             ((VampireBaseEntity) entity).setSpawnRestriction(VampireBaseEntity.SpawnRestriction.SIMPLE);
@@ -841,30 +830,29 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     private void setupPhase2() {
-        if (this.phase != CAPTURE_PHASE.PHASE_2)
+        if (this.phase != CAPTURE_PHASE.PHASE_2) {
             this.phase = CAPTURE_PHASE.PHASE_2;
-//        this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.defender_remaining"));
-//        this.captureInfo.setColor(BossInfo.Color.WHITE);
-        this.captureInfo2.setName(new TranslationTextComponent("text.vampirism.village.defender_remaining"));
+            this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.defender_remaining"));
+        }
     }
 
-    private void handleBossBar(int defenderLeft) {
-        if (phase == CAPTURE_PHASE.PHASE_1_NEUTRAL || phase == CAPTURE_PHASE.PHASE_1_OPPOSITE) {
-//            captureInfo.setPercent(this.captureTimer / (float) VampirismConfig.BALANCE.viPhase1Duration.get());
-            float perc = this.captureTimer / (float) VampirismConfig.BALANCE.viPhase1Duration.get();
-            int max = this.currentAttacker  + this.currentDefender;
-            captureInfo2.setEntries(new MultiBossInfo.Entry(new ResourceLocation("attack"), BossInfo.Color.RED, perc * this.currentAttacker/max,1), new MultiBossInfo.Entry(new ResourceLocation("neutral"), BossInfo.Color.WHITE, 1-perc,2), new MultiBossInfo.Entry(new ResourceLocation("defend"), BossInfo.Color.BLUE,perc * this.currentDefender/max,3));
-        } else if (phase == CAPTURE_PHASE.PHASE_2) {
-            if (defenderMax != 0) {
-                if (defenderLeft > defenderMax) defenderMax = defenderLeft;
-//                captureInfo.setPercent((float) defenderLeft / (float) defenderMax);
-            } else {
-                defenderMax = defenderLeft;
-                this.setupPhase2();
-            }
-            int max = this.currentAttacker  + this.currentDefender;
-            captureInfo2.setEntries(new MultiBossInfo.Entry(new ResourceLocation("attack"), BossInfo.Color.RED, (float) this.currentAttacker/max,1), new MultiBossInfo.Entry(new ResourceLocation("defend"), BossInfo.Color.BLUE,(float) this.currentDefender/max,2));
+    private void handleBossBar(float defenderMaxHealth, float defenderHealth, float attackerMaxHealth, float attackerHealth) {
+        float neutralPerc;
+        switch (this.phase){
+            case PHASE_1_NEUTRAL:
+            case PHASE_1_OPPOSITE:
+                neutralPerc = this.captureTimer / (float) VampirismConfig.BALANCE.viPhase1Duration.get();
+                break;
+            case PHASE_2:
+                neutralPerc = 1f;
+                this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.defender_remaining"));
+                break;
+            default:
+                neutralPerc = 0;
+                break;
         }
+        float max = defenderMaxHealth + attackerMaxHealth;
+        this.captureInfo.setPercentage(neutralPerc * attackerHealth /max, 1-neutralPerc, neutralPerc * defenderHealth /max);
     }
 
     @Nullable

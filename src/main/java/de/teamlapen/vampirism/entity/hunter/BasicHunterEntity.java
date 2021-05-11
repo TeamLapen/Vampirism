@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismEntity;
@@ -48,6 +49,7 @@ import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -473,6 +475,16 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         if (entityActionHandler != null) {
             entityActionHandler.write(nbt);
         }
+    }
+
+    @Override
+    public void onDeath(DamageSource cause) {
+        if (cause.getTrueSource() instanceof PlayerEntity && this.villageAttributes == null) {
+            if (ItemStack.areItemStacksEqual(this.getItemStackFromSlot(EquipmentSlotType.HEAD), HunterVillageData.createBanner())) {
+                ((PlayerEntity) cause.getTrueSource()).addPotionEffect(new EffectInstance(ModEffects.bad_omen_hunter, 120000,0,false,false, true));
+            }
+        }
+        super.onDeath(cause);
     }
 
     //Entityactions ----------------------------------------------------------------------------------------------------

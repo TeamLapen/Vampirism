@@ -5,32 +5,32 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.world.MultiBossInfo;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateBossInfoPacket;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.BossInfo;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class UpdateMultiBossInfoPacket implements IMessage {
-    protected Map<ResourceLocation, MultiBossInfo.Entry> entries;
-    private UUID uniqueId;
-    private SUpdateBossInfoPacket.Operation operation;
+    private final UUID uniqueId;
+    private final SUpdateBossInfoPacket.Operation operation;
     private ITextComponent name;
+    protected List<BossInfo.Color> colors;
+    protected Map<BossInfo.Color,Float> entries;
 
     public UpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation operation, MultiBossInfo data) {
         this.uniqueId = data.getUniqueId();
         this.operation = operation;
         this.name = data.getName();
+        this.colors = data.getColors();
         this.entries = data.getEntries();
     }
 
     private UpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation operation, UUID uuid) {
         this.uniqueId = uuid;
         this.operation = operation;
+        this.entries = new LinkedHashMap<>();
     }
 
     public SUpdateBossInfoPacket.Operation getOperation() {
@@ -45,8 +45,12 @@ public class UpdateMultiBossInfoPacket implements IMessage {
         return name;
     }
 
-    public Map<ResourceLocation, MultiBossInfo.Entry> getEntries() {
+    public Map<BossInfo.Color, Float> getEntries() {
         return entries;
+    }
+
+    public List<BossInfo.Color> getColors() {
+        return colors;
     }
 
     static void encode(UpdateMultiBossInfoPacket msg, PacketBuffer buf) {
@@ -55,13 +59,13 @@ public class UpdateMultiBossInfoPacket implements IMessage {
         switch (msg.operation) {
             case ADD:
                 buf.writeTextComponent(msg.name);
+                buf.writeVarInt(msg.colors.size());
+                msg.colors.forEach(buf::writeEnumValue);
             case UPDATE_PCT:
                 buf.writeVarInt(msg.entries.size());
-                for (MultiBossInfo.Entry value : msg.entries.values()) {
-                    buf.writeResourceLocation(value.getId());
-                    buf.writeEnumValue(value.getColor());
-                    buf.writeFloat(value.getPercentage());
-                    buf.writeVarInt(value.getOrdinal());
+                for (Map.Entry<BossInfo.Color, Float> value : msg.entries.entrySet()) {
+                    buf.writeEnumValue(value.getKey());
+                    buf.writeFloat(value.getValue());
                 }
                 break;
             case UPDATE_NAME:
@@ -74,19 +78,22 @@ public class UpdateMultiBossInfoPacket implements IMessage {
         UUID uuid = buf.readUniqueId();
         SUpdateBossInfoPacket.Operation operation = buf.readEnumValue(SUpdateBossInfoPacket.Operation.class);
         UpdateMultiBossInfoPacket packet = new UpdateMultiBossInfoPacket(operation, uuid);
-        packet.entries = new LinkedHashMap<>();
         switch (operation) {
             case ADD:
                 packet.name = buf.readTextComponent();
-            case UPDATE_PCT:
-                Map<ResourceLocation, MultiBossInfo.Entry> entries = new LinkedHashMap<>();
                 int size = buf.readVarInt();
+                List<BossInfo.Color> colors = new LinkedList<>();
                 for (int i = 0; i < size; i++) {
-                    ResourceLocation id = buf.readResourceLocation();
+                    colors.add(buf.readEnumValue(BossInfo.Color.class));
+                }
+                packet.colors = colors;
+            case UPDATE_PCT:
+                Map<BossInfo.Color,Float> entries = new LinkedHashMap<>();
+                int size2 = buf.readVarInt();
+                for (int i = 0; i < size2; i++) {
                     BossInfo.Color color = buf.readEnumValue(BossInfo.Color.class);
                     float perc =buf.readFloat();
-                    int ordinal = buf.readVarInt();
-                    entries.put(id, new MultiBossInfo.Entry(id, color, perc,ordinal ));
+                    entries.put(color, perc);
                 }
                 packet.entries = entries;
                 break;

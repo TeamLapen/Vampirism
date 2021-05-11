@@ -463,7 +463,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Override
     public void onDeath(DamageSource cause) {
-        if (cause.getTrueSource() instanceof PlayerEntity) {
+        if (cause.getTrueSource() instanceof PlayerEntity && this.villageAttributes == null) {
             if (ItemStack.areItemStacksEqual(this.getItemStackFromSlot(EquipmentSlotType.HEAD), VampireVillageData.createBanner())) {
                 ((PlayerEntity) cause.getTrueSource()).addPotionEffect(new EffectInstance(ModEffects.bad_omen_vampire, 120000,0,false,false, true));
             }

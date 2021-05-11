@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.UpdateMultiBossInfoPacket;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.play.server.SUpdateBossInfoPacket;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.BossInfo;
@@ -18,7 +17,7 @@ public class ServerMultiBossInfo extends MultiBossInfo {
     private boolean visible = true;
 
 
-    public ServerMultiBossInfo(ITextComponent nameIn, BossInfo.Overlay overlayIn, MultiBossInfo.Entry... entries) {
+    public ServerMultiBossInfo(ITextComponent nameIn, BossInfo.Overlay overlayIn, BossInfo.Color... entries) {
         super(MathHelper.getRandomUUID(), nameIn, overlayIn, entries);
     }
 
@@ -27,8 +26,14 @@ public class ServerMultiBossInfo extends MultiBossInfo {
     }
 
     @Override
-    public void setPercentage(ResourceLocation id, float perc) {
-        super.setPercentage(id, perc);
+    public void setPercentage(BossInfo.Color color, float perc) {
+        super.setPercentage(color, perc);
+        this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_PCT);
+    }
+
+    @Override
+    public void setPercentage(float... perc) {
+        super.setPercentage(perc);
         this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_PCT);
     }
 
@@ -45,9 +50,9 @@ public class ServerMultiBossInfo extends MultiBossInfo {
     }
 
     @Override
-    public void setEntries(Entry... entry) {
-        super.setEntries(entry);
-        this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_PCT);
+    public void setColors(BossInfo.Color... entries) {
+        super.setColors(entries);
+        this.sendUpdate(SUpdateBossInfoPacket.Operation.ADD);
     }
 
     @Override
@@ -62,6 +67,20 @@ public class ServerMultiBossInfo extends MultiBossInfo {
 
             for (ServerPlayerEntity player : this.players) {
                 VampirismMod.dispatcher.sendTo(packet, player);
+            }
+        }
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        if (this.visible != visible) {
+            this.visible = visible;
+
+            for (ServerPlayerEntity player : this.players) {
+                VampirismMod.dispatcher.sendTo(new UpdateMultiBossInfoPacket(visible? SUpdateBossInfoPacket.Operation.ADD: SUpdateBossInfoPacket.Operation.REMOVE, this), player);
             }
         }
     }
