@@ -189,6 +189,15 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         }
     }
 
+    private void applyVictoryBonus(boolean attackWin) {
+        List<PlayerEntity> entities = this.world.getEntitiesWithinAABB(PlayerEntity.class, getVillageArea());
+        for (PlayerEntity entity : entities) {
+            if (VampirismAPI.factionRegistry().getFaction(entity) == (attackWin?this.capturingFaction:this.controllingFaction)) {
+                entity.addPotionEffect(new EffectInstance(Effects.HERO_OF_THE_VILLAGE, 48000, 0, false, false, true));
+            }
+        }
+    }
+
     /**
      * gets the size of the village
      *
@@ -198,18 +207,19 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         return this.village.size();
     }
 
-    //support methods --------------------------------------------------------------------------------------------------
     public static void makeAgressive(VillagerEntity villager) {
         AggressiveVillagerEntity hunter = AggressiveVillagerEntity.makeHunter(villager);
         UtilLib.replaceEntity(villager, hunter);
     }
 
     private void abortCapture(boolean notifyPlayer) {
+        this.applyVictoryBonus(false);
         this.setCapturingFaction(null);
         this.forceVillageUpdate = true;
         this.informEntitiesAboutCaptureStop();
-        if (notifyPlayer)
+        if (notifyPlayer) {
             notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.village_capture_aborted"));
+        }
         this.updateBossinfoPlayers(null);
         this.markDirty();
     }
@@ -248,7 +258,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             }
         }
 
-
+        this.applyVictoryBonus(true);
         this.setControllingFaction(this.capturingFaction);
         this.setCapturingFaction(null);
 
