@@ -83,7 +83,7 @@ public class BiteableEntryManager {
         int blood = 0;
 
         if (v >= 0.3) {
-            blood = (int) (v * 10d);
+            blood = (int) (v * 7d);
             blood = Math.min(15, blood);//Make sure there are no too crazy values
         }
         if (creature.getMaxHealth() > 50) {
