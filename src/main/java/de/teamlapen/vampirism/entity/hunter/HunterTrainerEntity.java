@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
@@ -28,10 +27,8 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -56,9 +53,6 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
 
     @Override
     public boolean attackEntityFrom(DamageSource source, float amount) {
-//        if(VampirismMod.inDev){
-        ServerLifecycleHooks.getCurrentServer().sendMessage(new StringTextComponent("Damage: " + amount + " from " + source.toString()), Util.DUMMY_UUID);
-//        }
         return super.attackEntityFrom(source, amount);
     }
 
