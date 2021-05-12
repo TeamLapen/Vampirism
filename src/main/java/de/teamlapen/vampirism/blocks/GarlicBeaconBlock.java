@@ -1,12 +1,11 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.client.gui.GarlicBeaconScreen;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.tileentity.GarlicBeaconTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -29,7 +28,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -139,7 +137,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
             if(world.isRemote){
                 GarlicBeaconTileEntity t = getTile(world, pos);
                 if (t != null) {
-                    DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().displayGuiScreen(new GarlicBeaconScreen(t,getTranslatedName())));
+                    VampirismMod.proxy.displayGarlicBeaconScreen(t,getTranslatedName());
                 }
             }
         }

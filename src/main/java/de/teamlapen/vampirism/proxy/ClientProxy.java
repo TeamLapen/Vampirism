@@ -17,6 +17,7 @@ import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.player.skills.ClientSkillTreeManager;
 import de.teamlapen.vampirism.player.skills.SkillTree;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.tileentity.GarlicBeaconTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -87,6 +88,11 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void displayRevertBackScreen() {
         Minecraft.getInstance().displayGuiScreen(new RevertBackScreen());
+    }
+
+    @Override
+    public void displayGarlicBeaconScreen(GarlicBeaconTileEntity tile, ITextComponent title) {
+        Minecraft.getInstance().displayGuiScreen(new GarlicBeaconScreen(tile,title));
     }
 
     @Nullable
