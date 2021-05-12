@@ -57,6 +57,7 @@ public class ModRefinements {
     public static final Refinement dark_blood_projectile_multi_shot = getNull();
     public static final Refinement dark_blood_projectile_aoe = getNull();
     public static final Refinement dark_blood_projectile_damage = getNull();
+    public static final Refinement dark_blood_projectile_speed = getNull();
     public static final Refinement vista = getNull();
     public static final Refinement freeze_duration = getNull();
     public static final Refinement blood_charge_speed = getNull();
@@ -119,6 +120,7 @@ public class ModRefinements {
             registry.register(newRefinement("dark_blood_projectile_multi_shot"));
             registry.register(newRefinement("dark_blood_projectile_aoe"));
             registry.register(newRefinement("dark_blood_projectile_damage"));
+            registry.register(newRefinement("dark_blood_projectile_speed"));
             registry.register(newRefinement("vista"));
             registry.register(newRefinement("freeze_duration"));
             registry.register(newRefinement("blood_charge_speed"));

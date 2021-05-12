@@ -35,7 +35,7 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
     protected float directDamage = 4;
     protected float indirectDamage = 2;
     private boolean initialNoClip = false;
-    private float motionFactor = 0.97f;
+    private float motionFactor =  0.97f;
     private boolean excludeShooter = false;
     private boolean gothrough;
     private int maxTicks = 40;
@@ -86,6 +86,7 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
         this.indirectDamage = compound.getFloat("indirect_damage");
         this.gothrough = compound.getBoolean("gothrough");
         this.maxTicks = compound.getInt("max_ticks");
+        this.motionFactor = compound.getFloat("motion_factor");
     }
 
     /**
@@ -117,6 +118,7 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
         compound.putFloat("indirect_damage", indirectDamage);
         compound.putBoolean("gothrough", gothrough);
         compound.putInt("max_ticks", maxTicks);
+        compound.putFloat("motion_factor", motionFactor);
     }
 
     @Override

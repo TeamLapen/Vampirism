@@ -80,7 +80,7 @@ public class ModRefinementSets {
             //de-buffed skill upgrades
             registry.register(new RefinementSet.VampireRefinementSet(Rarity.UNCOMMON, 0x0bafed, ModRefinements.vista, ModRefinements.n_speed1).setRegistryName(REFERENCE.MODID, "vista_debuffed"));
             registry.register(new RefinementSet.VampireRefinementSet(Rarity.UNCOMMON, 0x068755, ModRefinements.teleport_distance, ModRefinements.n_speed1).setRegistryName(REFERENCE.MODID, "teleport_distance_debuffed"));
-            registry.register(new RefinementSet.VampireRefinementSet(Rarity.UNCOMMON, 0xe303ff, ModRefinements.dark_blood_projectile_damage, ModRefinements.n_damage1).onlyFor(IRefinementItem.AccessorySlotType.RING).setRegistryName(REFERENCE.MODID, "dark_blood_projectile_damage_debuffed"));
+            registry.register(new RefinementSet.VampireRefinementSet(Rarity.UNCOMMON, 0xe303ff, ModRefinements.dark_blood_projectile_damage, ModRefinements.n_damage1).setRegistryName(REFERENCE.MODID, "dark_blood_projectile_damage_debuffed"));
             registry.register(new RefinementSet.VampireRefinementSet(Rarity.UNCOMMON, 0xe303ff, ModRefinements.dark_blood_projectile_penetration, ModRefinements.n_attack_speed1).onlyFor(IRefinementItem.AccessorySlotType.RING).setRegistryName(REFERENCE.MODID, "dark_blood_projectile_penetration_debuffed"));
             registry.register(new RefinementSet.VampireRefinementSet(Rarity.UNCOMMON, 0xe303ff, ModRefinements.dark_blood_projectile_multi_shot, ModRefinements.n_attack_speed1).onlyFor(IRefinementItem.AccessorySlotType.RING).setRegistryName(REFERENCE.MODID,"dark_blood_projectile_multi_shot_debuffed" ));
         }
@@ -100,6 +100,7 @@ public class ModRefinementSets {
             registry.register(new RefinementSet.VampireRefinementSet(Rarity.RARE, 0xa96db7, ModRefinements.half_invulnerable).setRegistryName(REFERENCE.MODID, "half_invulnerable"));
             registry.register(new RefinementSet.VampireRefinementSet(Rarity.RARE, 0x8b8a91, ModRefinements.summon_bats).setRegistryName(REFERENCE.MODID, "summon_bats"));
             registry.register(new RefinementSet.VampireRefinementSet(Rarity.RARE, 0xedc20b, ModRefinements.sun_screen).setRegistryName(REFERENCE.MODID, "sun_screen"));
+            registry.register(new RefinementSet.VampireRefinementSet(Rarity.RARE, 0xeeabcd, ModRefinements.dark_blood_projectile_speed).setRegistryName(REFERENCE.MODID, "dark_blood_projectile_speed"));
 
             // de-buffed skill upgrades
             registry.register(new RefinementSet.VampireRefinementSet(Rarity.RARE, 0xa96db7, ModRefinements.half_invulnerable, ModRefinements.n_armor1).setRegistryName(REFERENCE.MODID, "half_invulnerable_debuffed"));
@@ -115,11 +116,12 @@ public class ModRefinementSets {
             registry.register(new RefinementSet.VampireRefinementSet(Rarity.EPIC, 0xe303ff, ModRefinements.dark_blood_projectile_penetration, ModRefinements.dark_blood_projectile_multi_shot).onlyFor(IRefinementItem.AccessorySlotType.RING).setRegistryName(REFERENCE.MODID,"dark_blood_projectile" ));
 
             // skill upgrades
-            registry.register(new RefinementSet.VampireRefinementSet(Rarity.RARE, 0xc10202, ModRefinements.rage_fury).setRegistryName(REFERENCE.MODID, "rage_fury"));
+            registry.register(new RefinementSet.VampireRefinementSet(Rarity.EPIC, 0xc10202, ModRefinements.rage_fury).setRegistryName(REFERENCE.MODID, "rage_fury"));
             registry.register(new RefinementSet.VampireRefinementSet(Rarity.EPIC, 0x8b8a91, ModRefinements.summon_bats, ModRefinements.health1).setRegistryName(REFERENCE.MODID, "summon_bats_buffed"));
             registry.register(new RefinementSet.VampireRefinementSet(Rarity.EPIC, 0xe303ff, ModRefinements.dark_blood_projectile_aoe).onlyFor(IRefinementItem.AccessorySlotType.RING).setRegistryName(REFERENCE.MODID, "dark_blood_projectile_aoe"));
             registry.register(new RefinementSet.VampireRefinementSet(Rarity.EPIC, 0xa96db7, ModRefinements.half_invulnerable, ModRefinements.armor1).setRegistryName(REFERENCE.MODID, "half_invulnerable_buffed"));
             registry.register(new RefinementSet.VampireRefinementSet(Rarity.EPIC, 0xedc20b, ModRefinements.sun_screen, ModRefinements.armor1).setRegistryName(REFERENCE.MODID, "sun_screen_buffed"));
+            registry.register(new RefinementSet.VampireRefinementSet(Rarity.EPIC, 0xeeab6d, ModRefinements.dark_blood_projectile_speed, ModRefinements.speed1).setRegistryName(REFERENCE.MODID, "dark_blood_projectile_speed_buffed"));
 
             // de-buffed skill upgrades
             registry.register(new RefinementSet.VampireRefinementSet(Rarity.EPIC, 0xe303ff, ModRefinements.dark_blood_projectile_aoe, ModRefinements.n_health1).onlyFor(IRefinementItem.AccessorySlotType.RING).setRegistryName(REFERENCE.MODID, "dark_blood_projectile_aoe_debuffed"));
@@ -129,6 +131,7 @@ public class ModRefinementSets {
         {
             registry.register(new RefinementSet.VampireRefinementSet(Rarity.LEGENDARY, 0xe303ff, ModRefinements.dark_blood_projectile_aoe, ModRefinements.health1).onlyFor(IRefinementItem.AccessorySlotType.RING).setRegistryName(REFERENCE.MODID,"dark_blood_projectile_aoe_buffed" ));
             registry.register(new RefinementSet.VampireRefinementSet(Rarity.LEGENDARY, 0xc10202, ModRefinements.rage_fury, ModRefinements.armor1).setRegistryName(REFERENCE.MODID,"rage_fury_buffed" ));
+            registry.register(new RefinementSet.VampireRefinementSet(Rarity.LEGENDARY, 0xee5acd, ModRefinements.dark_blood_projectile_speed, ModRefinements.speed3).setRegistryName(REFERENCE.MODID, "dark_blood_projectile_speed_double_buffed"));
         }
     }
 
