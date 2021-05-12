@@ -30,6 +30,7 @@ import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
 import de.teamlapen.vampirism.util.*;
@@ -1358,7 +1359,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             this.player.setForcedPose(null);
             this.player.recalculateSize();
             this.sync(true);
-            this.player.addPotionEffect(new EffectInstance(ModEffects.neonatal,VampirismConfig.BALANCE.vpNeonatalDuration.get()*20));
+            int duration = VampirismConfig.BALANCE.vpNeonatalDuration.get() * 20;
+            if (this.skillHandler.isSkillEnabled(VampireSkills.neonatal_decrease)) {
+                duration = Math.max(1, (int) (duration * VampirismConfig.BALANCE.vsNeonatalReduction.get()));
+            }
+            this.player.addPotionEffect(new EffectInstance(ModEffects.neonatal, duration));
         }
         else{
             if(this.isRemote()){
@@ -1375,8 +1380,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return this.dbnoTimer;
     }
 
-    public int getDbnoDuration(){
-        return VampirismConfig.BALANCE.vpDbnoDuration.get() * 20;
+    public int getDbnoDuration() {
+        int duration = VampirismConfig.BALANCE.vpDbnoDuration.get() * 20;
+        if (this.skillHandler.isSkillEnabled(VampireSkills.dbno_duration)) {
+            duration = Math.max(1, (int) (duration * VampirismConfig.BALANCE.vsDbnoReduction.get()));
+        }
+        return duration;
     }
 
     private static class Storage implements Capability.IStorage<IVampirePlayer> {

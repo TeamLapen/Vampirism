@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
  * Handles all key/input related stuff
  */
 @OnlyIn(Dist.CLIENT)
-public class ModKeys {
+public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting the keybindings
 
     private static final Logger LOGGER = LogManager.getLogger(ModKeys.class);
     /**

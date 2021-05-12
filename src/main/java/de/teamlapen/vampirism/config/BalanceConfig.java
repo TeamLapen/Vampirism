@@ -109,6 +109,8 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue vsBloodVisionDistanceSq;
     public final ForgeConfigSpec.DoubleValue vsSmallAttackDamageModifier;
     public final ForgeConfigSpec.DoubleValue vsSmallAttackSpeedModifier;
+    public final ForgeConfigSpec.DoubleValue vsNeonatalReduction;
+    public final ForgeConfigSpec.DoubleValue vsDbnoReduction;
 
     public final ForgeConfigSpec.DoubleValue vpHealthMaxMod;
     public final ForgeConfigSpec.DoubleValue vpAttackSpeedMaxMod;
@@ -312,6 +314,8 @@ public class BalanceConfig {
         vsBloodVisionDistanceSq = builder.comment("Squared blood vision distance").defineInRange("bloodVisionDistanceSq", 1600, 5, Integer.MAX_VALUE);
         vsSmallAttackDamageModifier = builder.comment("Damage added to base damage").defineInRange("smallAttackDamageModifier", 1d, 0, 10d);
         vsSmallAttackSpeedModifier = builder.comment("Basic skill - Weapon cooldown = 1/(oldvalue*(1+modifier))").defineInRange("smallAttackSpeedModifier", 0.15, 0, 3);
+        vsNeonatalReduction = builder.comment("Reduced percentage of the neonatal effect").defineInRange("neonatalReduction", 0.5,0,1);
+        vsDbnoReduction = builder.comment("Reduced percentage of the downed timer required to resurrect").defineInRange("dbnoReduction", 0.5,0,1);
 
 
         //Vampire Player
@@ -334,8 +338,8 @@ public class BalanceConfig {
         vpFireResistanceReplace = builder.comment("Whether to replace the vanilla fire resistance potion for vampires with a custom one that only reduces damage but does not remove it" + (iceAndFire ? " - Changed due to IceAndFire" : "")).define("fireResistanceReplace", !iceAndFire);
         vpMaxYellowBorderPercentage = builder.comment("Defines the maximum extend the yellow border covers when the player is in the sun. 100 is default. 0 to disable completely").defineInRange("maxYellowBorderPercentage", 100, 0, 100);
         vpImmortalFromDamageSources = builder.comment("List of damage source types that the player does not die from (immediately)").defineList("immortalFromDamageSources", Lists.asList("player","mob",new String[]{"lightningBolt", "onFire", "cramming", "fall", "flyIntoWall", "magic", "wither", "anvil", "falling_block", "dragon_breath", "sweetBerryBush", "trident", "arrow", "fireworks", "fireBall", "witherSkull", "explosion", "explosion.player", "thrown", "indirectMagic", "vampire_on_fire"}),s->s instanceof String);
-        vpDbnoDuration = builder.comment("Base cooldown before a downed vampire can resurrect. In sec.").defineInRange("dbnoDuration",30,1,1000);
-        vpNeonatalDuration = builder.comment("Base duration of neonatal effect after resurrection. In sec.").defineInRange("neonatalDuration", 60, 1,Integer.MAX_VALUE);
+        vpDbnoDuration = builder.comment("Base cooldown before a downed vampire can resurrect. In sec.").defineInRange("dbnoDuration",60,1,1000);
+        vpNeonatalDuration = builder.comment("Base duration of neonatal effect after resurrection. In sec.").defineInRange("neonatalDuration", 120, 1,Integer.MAX_VALUE);
         vpNaturalArmorRegenDuration = builder.comment("The duration it takes for the vampire natural armor to fully regenerate after respawn. In seconds").defineInRange("naturalArmorRegenDuration",240,1,2400);
         vpNaturalArmorBaseValue = builder.comment("The base value of natural armor every vampire has at level 1").defineInRange("naturalArmorBaseValue",10,0,100);
         vpNaturalArmorIncrease = builder.comment("The amount of natural armor a max level vampire has in addition to the base value").defineInRange("naturalArmorIncrease",10,0,100);

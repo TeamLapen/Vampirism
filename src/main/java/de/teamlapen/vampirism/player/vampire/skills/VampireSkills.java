@@ -50,6 +50,8 @@ public class VampireSkills {
     public static final ISkill water_resistance = getNull();
     public static final ISkill vampire_attack_speed = getNull();
     public static final ISkill vampire_attack_damage = getNull();
+    public static final ISkill neonatal_decrease = getNull();
+    public static final ISkill dbno_duration = getNull();
 
 
     @SuppressWarnings({"deprecation", "Convert2MethodRef"})
@@ -87,6 +89,8 @@ public class VampireSkills {
         //Config null, so cannot get method ref
         //noinspection Convert2MethodRef
         registry.register(new VampirismSkill.SimpleVampireSkill("vampire_attack_damage", false).registerAttributeModifier(Attributes.ATTACK_DAMAGE, "f2acc818-dc3a-4696-ba63-c3294290ad86", () -> VampirismConfig.BALANCE.vsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADDITION));
+        registry.register(new VampirismSkill.SimpleVampireSkill("neonatal_decrease", true));
+        registry.register(new VampirismSkill.SimpleVampireSkill("dbno_duration", true));
     }
 
     public static void fixMappings(RegistryEvent.MissingMappings<ISkill> event) {
