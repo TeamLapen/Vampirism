@@ -21,6 +21,9 @@ repositories {
     maven {
         url = "https://maxanier.de/maven2"
     }
+    maven {
+        url "https://nexus.resourcefulbees.com/repository/maven-public/"
+    }
     mavenCentral()
     mavenLocal()
 }
@@ -39,6 +42,9 @@ dependencies {
     runtimeOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}") //For runtime (not exported to POM)
 
     //runtimeOnly fg.deobf("curse.maven:angel-of-vengeance:2810906")
+
+    //Blame for debugging
+    implementation fg.deobf("com.telepathicgrunt:Blame:${project.blame_version}")
 
 
 }
