@@ -337,10 +337,10 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) { //proccessInteract
+    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) { //processInteract
         if (hand == Hand.MAIN_HAND && tryCureSanguinare(player)) return ActionResultType.SUCCESS;
         int hunterLevel = HunterPlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0);
-        if (this.isAlive() && !player.isSneaking()) {
+        if (this.isAlive() && !player.isSneaking() && hand == Hand.MAIN_HAND) {
             if (!world.isRemote) {
                 if (HunterLevelingConf.instance().isLevelValidForBasicHunter(hunterLevel + 1)) {
                     if (trainee == null) {

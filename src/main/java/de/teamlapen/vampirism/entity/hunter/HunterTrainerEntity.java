@@ -119,7 +119,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
         ItemStack stack = player.getHeldItem(hand);
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 
-        if (!flag && this.isAlive() && !player.isSneaking()) {
+        if (!flag && this.isAlive() && !player.isSneaking() && hand == Hand.MAIN_HAND) {
             int lvl=HunterPlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0);
             if (!this.world.isRemote && lvl>0) {
                 int levelCorrect = HunterLevelingConf.instance().isLevelValidForTrainer(lvl+ 1);
