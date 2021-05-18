@@ -135,6 +135,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private int captureDuration;
     private int captureForceTargetTimer;
     private float strengthRatio;
+    private boolean badOmenTriggered;
 
     //client attributes
     private @OnlyIn(Dist.CLIENT)
@@ -189,7 +190,13 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             super.markDirty();
             this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 3);
             if (!this.village.isEmpty()) {
-                VampirismWorld.getOpt(this.world).ifPresent(vw->vw.updateArtificialFogBoundingBox(this.pos,this.controllingFaction == VReference.VAMPIRE_FACTION?this.getVillageArea() : null ));
+                VampirismWorld.getOpt(this.world).ifPresent(vw-> {
+                    vw.updateArtificialFogBoundingBox(this.pos,this.controllingFaction == VReference.VAMPIRE_FACTION?this.getVillageArea() : null );
+                    if (this.badOmenTriggered && this.capturingFaction == VReference.VAMPIRE_FACTION) {
+                        vw.updateTemporaryArtificialFog(this.pos, this.getVillageArea());
+                    }
+                });
+
             }
         }
     }
@@ -229,6 +236,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.informEntitiesAboutCaptureStop();
         this.updateBossinfoPlayers(null);
         this.captureInfo.clear();
+        VampirismWorld.getOpt(this.world).ifPresent(vw -> vw.updateTemporaryArtificialFog(this.pos, null));
         this.markDirty();
     }
 
@@ -321,12 +329,14 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             list.add(nbt);
         }
         compound.put("captureInfo", list);
+        compound.putBoolean("badOmenTriggered", this.badOmenTriggered);
         return super.write(compound);
     }
 
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
+        this.badOmenTriggered = compound.getBoolean("badOmenTriggered");
         this.isDisabled = compound.getBoolean("isDisabled");
         this.isComplete = compound.getBoolean("isComplete");
         this.isInsideVillage = compound.getBoolean("isInsideVillage");
@@ -349,7 +359,13 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         }
         if (this.world != null) {
             if (compound.contains("villageArea")) {
-                VampirismWorld.getOpt(this.world).ifPresent(vw->vw.updateArtificialFogBoundingBox(this.pos,this.controllingFaction == VReference.VAMPIRE_FACTION ? UtilLib.intToBB(compound.getIntArray("villageArea")) : null ));
+                VampirismWorld.getOpt(this.world).ifPresent(vw->{
+                    AxisAlignedBB aabb = UtilLib.intToBB(compound.getIntArray("villageArea"));
+                    vw.updateArtificialFogBoundingBox(this.pos,this.controllingFaction == VReference.VAMPIRE_FACTION ? aabb : null );
+                    if (this.badOmenTriggered && this.capturingFaction == VReference.VAMPIRE_FACTION) {
+                        vw.updateTemporaryArtificialFog(this.pos, aabb);
+                    }
+                });
             }
         }
         this.forceVillageUpdate = true;
@@ -754,10 +770,10 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     @SuppressWarnings("ConstantConditions")
     public void initiateCapture(PlayerEntity player) {
         if (!player.isAlive()) return;
-        initiateCapture(FactionPlayerHandler.get(player).getCurrentFaction(), 0.3f, player::sendStatusMessage);
+        initiateCapture(FactionPlayerHandler.get(player).getCurrentFaction(), 0.3f, player::sendStatusMessage, false);
     }
 
-    public void initiateCapture(IFaction<?> faction, float strengthRatio, @Nullable BiConsumer<ITextComponent, Boolean> feedback) {
+    public void initiateCapture(IFaction<?> faction, float strengthRatio, @Nullable BiConsumer<ITextComponent, Boolean> feedback, boolean badOmenTriggered) {
         this.updateTileStatus();
         if (!this.capturePreconditions(faction, feedback == null? (a,b)->{}:feedback)) return;
         this.forceVillageUpdate = true;
@@ -768,6 +784,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.captureInfo.setColors(faction.getColor(), Color.WHITE, this.controllingFaction == null?Color.WHITE: this.controllingFaction.getColor());
         this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.bossinfo.capture"));
         this.strengthRatio = strengthRatio;
+        this.badOmenTriggered = badOmenTriggered;
 
         if (this.controllingFaction == null) {
             this.phase = CAPTURE_PHASE.PHASE_1_NEUTRAL;
