@@ -46,6 +46,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.potion.EffectInstance;
@@ -79,6 +81,8 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.awt.*;
+import java.util.List;
 import java.util.*;
 import java.util.function.BiConsumer;
 
@@ -140,7 +144,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private float[] baseColors = DyeColor.WHITE.getColorComponentValues();
     private float[] progressColor = DyeColor.WHITE.getColorComponentValues();
 
-    private final ServerMultiBossInfo captureInfo = new ServerMultiBossInfo(new TranslationTextComponent("text.vampirism.village.bossinfo.capture"), BossInfo.Overlay.PROGRESS, BossInfo.Color.RED, BossInfo.Color.WHITE, BossInfo.Color.BLUE);
+    private final ServerMultiBossInfo captureInfo = new ServerMultiBossInfo(new TranslationTextComponent("text.vampirism.village.bossinfo.capture"), BossInfo.Overlay.PROGRESS);
 
     public TotemTileEntity() {
         super(ModTiles.totem);
@@ -224,6 +228,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.forceVillageUpdate = true;
         this.informEntitiesAboutCaptureStop();
         this.updateBossinfoPlayers(null);
+        this.captureInfo.clear();
         this.markDirty();
     }
 
@@ -308,6 +313,14 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         if (!village.isEmpty()) {
             compound.putIntArray("villageArea", UtilLib.bbToInt(this.getVillageArea()));
         }
+        ListNBT list = new ListNBT();
+        for (Map.Entry<Color, Float> entry : this.captureInfo.getEntries().entrySet()) {
+            CompoundNBT nbt = new CompoundNBT();
+            nbt.putInt("color", entry.getKey().getRGB());
+            nbt.putFloat("perc", entry.getValue());
+            list.add(nbt);
+        }
+        compound.put("captureInfo", list);
         return super.write(compound);
     }
 
@@ -340,6 +353,12 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             }
         }
         this.forceVillageUpdate = true;
+        ListNBT list = compound.getList("captureInfo", 10);
+        for (INBT inbt : list) {
+            Color color = new Color(((CompoundNBT) inbt).getInt("color"), true);
+            float perc = ((CompoundNBT) inbt).getFloat("perc");
+            this.captureInfo.setPercentage(color, perc);
+        }
     }
 
     /**
@@ -746,6 +765,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.captureTimer = 0;
         this.captureForceTargetTimer = 0;
         this.setCapturingFaction(faction);
+        this.captureInfo.setColors(faction.getColor(), Color.WHITE, this.controllingFaction == null?Color.WHITE: this.controllingFaction.getColor());
         this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.bossinfo.capture"));
         this.strengthRatio = strengthRatio;
 

@@ -299,4 +299,8 @@ public class ClientProxy extends CommonProxy {
     public void handleUpdateMultiBossInfoPacket(UpdateMultiBossInfoPacket msg) {
         this.bossInfoOverlay.read(msg);
     }
+
+    public void clearBossBarOverlay() {
+        this.bossInfoOverlay.clear();
+    }
 }

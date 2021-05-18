@@ -60,6 +60,10 @@ public class MultiBossInfo {
         this.entries.put(color,perc);
     }
 
+    public void clear(){
+        this.entries.clear();
+    }
+
     public void setPercentage(float... perc) {
         for (int i = 0; i < perc.length; i++) {
             if (this.colors.size() >= i + 1){

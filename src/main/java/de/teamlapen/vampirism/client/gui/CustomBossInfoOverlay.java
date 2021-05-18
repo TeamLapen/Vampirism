@@ -94,4 +94,8 @@ public class CustomBossInfoOverlay extends AbstractGui {
             this.bossInfoMap.get(packet.getUniqueId()).updateFromPackage(packet);
         }
     }
+
+    public void clear() {
+        this.bossInfoMap.clear();
+    }
 }

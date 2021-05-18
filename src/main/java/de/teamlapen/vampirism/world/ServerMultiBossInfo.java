@@ -33,6 +33,12 @@ public class ServerMultiBossInfo extends MultiBossInfo {
     }
 
     @Override
+    public void clear() {
+        super.clear();
+        this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_PCT);
+    }
+
+    @Override
     public void setPercentage(float... perc) {
         super.setPercentage(perc);
         this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_PCT);
