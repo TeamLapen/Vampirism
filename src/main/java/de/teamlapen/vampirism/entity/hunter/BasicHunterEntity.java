@@ -480,7 +480,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public void onDeath(DamageSource cause) {
         if (cause.getTrueSource() instanceof PlayerEntity && this.villageAttributes == null) {
-            if (ItemStack.areItemStacksEqual(this.getItemStackFromSlot(EquipmentSlotType.HEAD), HunterVillageData.createBanner())) {
+            if (this.getFaction().getVillageData().isBanner(this.getItemStackFromSlot(EquipmentSlotType.HEAD))) {
                 ((PlayerEntity) cause.getTrueSource()).addPotionEffect(new EffectInstance(ModEffects.bad_omen_hunter, 120000,0,false,false, true));
             }
         }
@@ -564,7 +564,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Nullable
     @Override
     public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        if ((reason == SpawnReason.NATURAL|| reason == SpawnReason.STRUCTURE ) && this.getRNG().nextInt(50) == 0) {
+        if (!(reason == SpawnReason.SPAWN_EGG || reason == SpawnReason.BUCKET || reason == SpawnReason.CONVERSION || reason == SpawnReason.COMMAND) && this.getRNG().nextInt(50) == 0) {
             this.setItemStackToSlot(EquipmentSlotType.HEAD, HunterVillageData.createBanner());
         }
         ILivingEntityData livingData = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);

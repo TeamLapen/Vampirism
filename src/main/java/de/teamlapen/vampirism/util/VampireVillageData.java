@@ -63,6 +63,11 @@ public class VampireVillageData implements IVillageFactionData {
         return banner.copy();
     }
 
+    @Override
+    public boolean isBanner(@Nonnull ItemStack stack) {
+        return ItemStack.areItemStacksEqual(this.banner, stack);
+    }
+
     public static ItemStack createBanner() {
         ItemStack itemStack = new ItemStack(Items.BLACK_BANNER);
         CompoundNBT compoundNBT = itemStack.getOrCreateChildTag("BlockEntityTag");

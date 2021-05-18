@@ -50,6 +50,11 @@ public interface IVillageFactionData {
         public ItemStack getBanner() {
             return new ItemStack(Items.WHITE_BANNER);
         }
+
+        @Override
+        public boolean isBanner(@Nonnull ItemStack stack) {
+            return ItemStack.areItemStacksEqual(getBanner(), stack);
+        }
     };
 
     Class<? extends MobEntity> getGuardSuperClass();
@@ -67,6 +72,12 @@ public interface IVillageFactionData {
     EntityType<? extends ITaskMasterEntity> getTaskMasterEntity();
 
     @Nonnull
-    ItemStack getBanner();
+    default ItemStack getBanner() { //TODO 1.17 remove default implementation
+        return new ItemStack(Items.WHITE_BANNER);
+    }
+
+    default boolean isBanner(@Nonnull ItemStack stack) {//TODO 1.17 remove default implementation
+        return false;
+    }
 
 }

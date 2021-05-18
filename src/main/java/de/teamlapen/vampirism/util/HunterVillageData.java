@@ -60,7 +60,12 @@ public class HunterVillageData implements IVillageFactionData {
     @Nonnull
     @Override
     public ItemStack getBanner() {
-        return banner.copy();
+        return this.banner.copy();
+    }
+
+    @Override
+    public boolean isBanner(@Nonnull ItemStack stack) {
+        return ItemStack.areItemStacksEqual(this.banner, stack);
     }
 
     public static ItemStack createBanner() {
