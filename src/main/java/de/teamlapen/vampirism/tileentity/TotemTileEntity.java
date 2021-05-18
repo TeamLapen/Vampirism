@@ -132,6 +132,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     //capturing attributes
     private CAPTURE_PHASE phase;
     private int captureTimer;
+    private int captureAbortTimer;
     private int captureDuration;
     private int captureForceTargetTimer;
     private float strengthRatio;
@@ -315,7 +316,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             compound.putString("capturingFaction", this.capturingFaction.getID().toString());
             compound.putInt("captureTimer", this.captureTimer);
             compound.putFloat("strengthRatio", this.strengthRatio);
-            compound.putInt("captureAbortTimer", this.captureDuration);
+            compound.putInt("captureDuration", this.captureDuration);
+            compound.putInt("captureAbortTimer", this.captureAbortTimer);
             compound.putString("phase", this.phase.name());
         }
         if (!village.isEmpty()) {
@@ -348,9 +350,10 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         if (compound.contains("capturingFaction")) {
             this.setCapturingFaction(VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(compound.getString("capturingFaction"))));
             this.captureTimer = compound.getInt("captureTimer");
-            this.captureDuration = compound.getInt("captureabortTimer");
+            this.captureDuration = compound.getInt("captureDuration");
             this.phase = CAPTURE_PHASE.valueOf(compound.getString("phase"));
             this.strengthRatio = compound.getFloat("strengthRatio");
+            this.captureAbortTimer = compound.getInt("captureAbortTimer");
             if (this.phase == CAPTURE_PHASE.PHASE_2) {
                 this.setupPhase2();
             }
@@ -542,12 +545,19 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                         }
                     }
 
+                    if (currentAttacker == 0) {
+                        this.captureAbortTimer++;
+                    } else {
+                        this.captureAbortTimer = 0;
+                    }
+
                     ++this.captureTimer;
                     --this.captureDuration;
-                    if (this.phase == CAPTURE_PHASE.PHASE_2)
+                    if (this.phase == CAPTURE_PHASE.PHASE_2) {
                         captureForceTargetTimer++;
+                    }
 
-                    if (this.captureDuration == 0) {
+                    if (this.captureDuration == 0 || this.captureAbortTimer > 10) {
                         this.abortCapture();
                     } else {
                         switch (this.phase) {
@@ -556,6 +566,12 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                                     this.captureTimer = 1;
                                     this.setupPhase2();
                                     this.markDirty();
+                                } else {
+                                    if (captureTimer % 2 == 0) {
+                                        if (attackerStrength < 5){
+                                            this.spawnCaptureEntity(this.capturingFaction);
+                                        }
+                                    }
                                 }
                                 break;
                             case PHASE_1_OPPOSITE:
@@ -777,6 +793,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.updateTileStatus();
         if (!this.capturePreconditions(faction, feedback == null? (a,b)->{}:feedback)) return;
         this.forceVillageUpdate = true;
+        this.captureAbortTimer = 0;
         this.captureDuration = 24000;
         this.captureTimer = 0;
         this.captureForceTargetTimer = 0;
