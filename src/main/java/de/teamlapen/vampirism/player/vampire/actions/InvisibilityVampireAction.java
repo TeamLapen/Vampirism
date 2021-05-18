@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 
 
 public class InvisibilityVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
@@ -34,12 +35,13 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
 
     @Override
     public void onActivatedClient(IVampirePlayer vampire) {
-
+        ((VampirePlayer)vampire).getSpecialAttributes().invisible = true;
     }
 
     @Override
     public void onDeactivated(IVampirePlayer vampire) {
         vampire.getRepresentingPlayer().setInvisible(false);
+        ((VampirePlayer)vampire).getSpecialAttributes().invisible = false;
     }
 
     @Override

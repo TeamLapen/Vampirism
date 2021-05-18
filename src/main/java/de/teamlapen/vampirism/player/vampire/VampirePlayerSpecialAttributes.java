@@ -12,10 +12,14 @@ public class VampirePlayerSpecialAttributes {
     public boolean bat = false;
     public boolean blood_vision = false;
     public boolean half_invulnerable = false;
-    public boolean increasedVampireFogDistance = true;
     public boolean waterResistance;
     public boolean advanced_biter = false;
     public boolean blood_vision_garlic;
+    /**
+     * This cancels the render player event.
+     * The invisibility skill additionally sets the entity invisible so armor, shadow and more are not rendered
+     */
+    public boolean invisible = false;
     private int jump_boost = 0;
 
     public int getJumpBoost() {

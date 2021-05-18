@@ -274,7 +274,11 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
         PlayerEntity player = event.getPlayer();
-        if (VampirePlayer.getOpt(player).map(VampirePlayer::getSpecialAttributes).map(s -> s.bat).orElse(false)) {
+        LazyOptional<VampirePlayer> pOpt = VampirePlayer.getOpt(player);
+        if(pOpt.map(VampirePlayer::getSpecialAttributes).map(s->s.invisible).orElse(false)){
+            event.setCanceled(true);
+        }
+        else if (pOpt.map(VampirePlayer::getSpecialAttributes).map(s -> s.bat).orElse(false)) {
             event.setCanceled(true);
             if (entityBat == null) {
                 entityBat = EntityType.BAT.create(event.getEntity().getEntityWorld());
@@ -303,7 +307,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
             mc.getRenderManager().renderEntityStatic(entityBat, d0, d1, d2, f, partialTicks, event.getMatrixStack(), mc.getRenderTypeBuffers().getBufferSource(), mc.getRenderManager().getPackedLight(entityBat, partialTicks));
 
         }
-        else if(VampirePlayer.getOpt(player).map(VampirePlayer::isDBNO).orElse(false)){
+        else if(pOpt.map(VampirePlayer::isDBNO).orElse(false)){
             event.getMatrixStack().translate(1.2,0,0);
             PlayerModel<?> m = event.getRenderer().getEntityModel();
             m.bipedRightArm.showModel=false;
