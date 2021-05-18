@@ -15,6 +15,7 @@ import net.minecraft.world.BossInfo;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,18 +68,19 @@ public class CustomBossInfoOverlay extends AbstractGui {
 
     private void render(MatrixStack stack, int k, int j, MultiBossInfo value) {
         int textureStart = 0;
-        List<BossInfo.Color> s = value.getColors();
-        Map<BossInfo.Color, Float> perc = value.getEntries();
+        List<Color> s = value.getColors();
+        Map<Color, Float> perc = value.getEntries();
         for (int i = 0; i < s.size(); i++) {
             if (textureStart >= 182) break;
-            BossInfo.Color color = s.get(i);
+            Color color = s.get(i);
             int width = (int) (perc.getOrDefault(color,0f) * 182);
             if (i == s.size()-1) {
                 if (textureStart + width < 182){
                     width = 182 - textureStart;
                 }
             }
-            this.blit(stack, k + textureStart, j, textureStart, color.ordinal() * 5 * 2 +5, width, 5);
+            RenderSystem.color4f(color.getRed(),color.getGreen(),color.getBlue(),color.getAlpha());
+            this.blit(stack, k + textureStart, j, textureStart, BossInfo.Color.WHITE.ordinal() * 5 * 2 +5, width, 5);
             textureStart+=width;
         }
     }

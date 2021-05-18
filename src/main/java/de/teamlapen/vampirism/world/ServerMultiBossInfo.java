@@ -9,6 +9,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.BossInfo;
 
+import java.awt.*;
 import java.util.Set;
 
 public class ServerMultiBossInfo extends MultiBossInfo {
@@ -17,7 +18,7 @@ public class ServerMultiBossInfo extends MultiBossInfo {
     private boolean visible = true;
 
 
-    public ServerMultiBossInfo(ITextComponent nameIn, BossInfo.Overlay overlayIn, BossInfo.Color... entries) {
+    public ServerMultiBossInfo(ITextComponent nameIn, BossInfo.Overlay overlayIn, Color... entries) {
         super(MathHelper.getRandomUUID(), nameIn, overlayIn, entries);
     }
 
@@ -26,7 +27,7 @@ public class ServerMultiBossInfo extends MultiBossInfo {
     }
 
     @Override
-    public void setPercentage(BossInfo.Color color, float perc) {
+    public void setPercentage(Color color, float perc) {
         super.setPercentage(color, perc);
         this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_PCT);
     }
@@ -50,7 +51,7 @@ public class ServerMultiBossInfo extends MultiBossInfo {
     }
 
     @Override
-    public void setColors(BossInfo.Color... entries) {
+    public void setColors(Color... entries) {
         super.setColors(entries);
         this.sendUpdate(SUpdateBossInfoPacket.Operation.ADD);
     }

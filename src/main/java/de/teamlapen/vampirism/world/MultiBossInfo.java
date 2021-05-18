@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.network.UpdateMultiBossInfoPacket;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.BossInfo;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,10 +15,10 @@ public class MultiBossInfo {
     private final UUID uniqueId;
     protected ITextComponent name;
     protected BossInfo.Overlay overlay;
-    protected List<BossInfo.Color> colors;
-    protected Map<BossInfo.Color,Float> entries;
+    protected List<Color> colors;
+    protected Map<Color,Float> entries;
 
-    public MultiBossInfo(UUID uniqueIdIn, ITextComponent nameIn, BossInfo.Overlay overlayIn, BossInfo.Color... entries) {
+    public MultiBossInfo(UUID uniqueIdIn, ITextComponent nameIn, BossInfo.Overlay overlayIn, Color... entries) {
         this.uniqueId = uniqueIdIn;
         this.name = nameIn;
         this.overlay = overlayIn;
@@ -44,15 +45,18 @@ public class MultiBossInfo {
         this.name = name;
     }
 
-    public List<BossInfo.Color> getColors() {
+    public List<Color> getColors() {
         return colors;
     }
 
-    public Map<BossInfo.Color, Float> getEntries() {
+    public Map<Color, Float> getEntries() {
         return entries;
     }
 
-    public void setPercentage(BossInfo.Color color, float perc) {
+    public void setPercentage(Color color, float perc) {
+        if (!this.colors.contains(color)) {
+            this.colors.add(color);
+        }
         this.entries.put(color,perc);
     }
 
@@ -64,7 +68,7 @@ public class MultiBossInfo {
         }
     }
 
-    public void setColors(BossInfo.Color... entries) {
+    public void setColors(Color... entries) {
         this.colors = Lists.newArrayList(entries);
     }
 
