@@ -11,6 +11,7 @@ import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,5 +55,11 @@ public class ModEventFactory {
         VampirismVillageEvent.MakeAggressive event = new VampirismVillageEvent.MakeAggressive(totem, entity);
         MinecraftForge.EVENT_BUS.post(event);
         return !event.isCanceled();
+    }
+
+    public static Pair<Float, Float> fireDefineRaidStrengthEvent(@Nonnull ITotem totem, float defendStrength, float attackStrength) {
+        VampirismVillageEvent.DefineRaidStrength event = new VampirismVillageEvent.DefineRaidStrength(totem, defendStrength, attackStrength);
+        MinecraftForge.EVENT_BUS.post(event);
+        return Pair.of(event.getDefendStrength(),event.getAttackStrength());
     }
 }

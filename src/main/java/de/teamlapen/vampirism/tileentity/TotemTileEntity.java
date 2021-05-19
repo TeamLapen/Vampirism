@@ -76,6 +76,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -677,8 +678,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                     if (this.controllingFaction != null) {
                         factions.remove(this.controllingFaction);
                     }
-
-                    this.initiateCapture(factions.get(this.world.rand.nextInt(factions.size())),0.2f,null,true);
+                    this.initiateCapture(factions.get(this.world.rand.nextInt(factions.size())), null, true, -1f);
                 }
             }
         }
@@ -802,10 +802,10 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     @SuppressWarnings("ConstantConditions")
     public void initiateCapture(PlayerEntity player) {
         if (!player.isAlive()) return;
-        initiateCapture(FactionPlayerHandler.get(player).getCurrentFaction(), 0.3f, player::sendStatusMessage, false);
+        initiateCapture(FactionPlayerHandler.get(player).getCurrentFaction(), player::sendStatusMessage, false, -0.5f);
     }
 
-    public void initiateCapture(IFaction<?> faction, float strengthRatio, @Nullable BiConsumer<ITextComponent, Boolean> feedback, boolean badOmenTriggered) {
+    public void initiateCapture(IFaction<?> faction, @Nullable BiConsumer<ITextComponent, Boolean> feedback, boolean badOmenTriggered, float strengthModifier) {
         this.updateTileStatus();
         if (!this.capturePreconditions(faction, feedback == null? (a,b)->{}:feedback)) return;
         this.forceVillageUpdate = true;
@@ -814,8 +814,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.captureTimer = 0;
         this.captureForceTargetTimer = 0;
         this.setCapturingFaction(faction);
-        this.strengthRatio = strengthRatio;
         this.badOmenTriggered = badOmenTriggered;
+        this.calculateAttackStrength(strengthModifier);
 
         if (this.controllingFaction == null) {
             this.phase = CAPTURE_PHASE.PHASE_1_NEUTRAL;
@@ -829,6 +829,28 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.markDirty();
 
         this.makeAgressive();
+    }
+
+    /**
+     * sets the strength ratio of attacking and defending factions
+     *
+     * @param strengthModifier a positiv value increases the attacker strength while the defender strength is increased by negativ values
+     */
+    private void calculateAttackStrength(float strengthModifier) {
+        float defenderStrength = 1f;
+        float attackerStrength = 1f;
+        if (strengthModifier > 0) {
+            attackerStrength += strengthModifier;
+        } else {
+            defenderStrength += strengthModifier;
+        }
+        Pair<Float, Float> strength = ModEventFactory.fireDefineRaidStrengthEvent(this, defenderStrength, attackerStrength);
+        this.strengthRatio = strength.getRight() / (strength.getLeft() + strength.getRight());
+    }
+
+    @Override
+    public boolean isRaidTriggeredByBadOmen() {
+        return this.badOmenTriggered;
     }
 
     /**
@@ -936,7 +958,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                 neutralPerc = 0;
                 break;
         }
-        float max = defenderMaxHealth + attackerMaxHealth;
+        float max = defenderHealth + attackerHealth;
         this.captureInfo.setPercentage(neutralPerc * attackerHealth /max, 1-neutralPerc, neutralPerc * defenderHealth /max);
     }
 

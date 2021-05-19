@@ -20,6 +20,10 @@ public interface ITotem {
     @Nullable
     IFaction getControllingFaction();
 
+    default boolean isRaidTriggeredByBadOmen() { //TODO 1.17 remove default implementation
+        return false;
+    }
+
     @Nonnull
     AxisAlignedBB getVillageArea();
 
