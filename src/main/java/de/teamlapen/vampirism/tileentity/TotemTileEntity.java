@@ -147,7 +147,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private float[] baseColors = DyeColor.WHITE.getColorComponentValues();
     private float[] progressColor = DyeColor.WHITE.getColorComponentValues();
 
-    private final ServerMultiBossInfo captureInfo = new ServerMultiBossInfo(new TranslationTextComponent("text.vampirism.village.bossinfo.capture"), BossInfo.Overlay.PROGRESS);
+    private final ServerMultiBossInfo captureInfo = new ServerMultiBossInfo(new TranslationTextComponent("text.vampirism.village.bossinfo.raid"), BossInfo.Overlay.PROGRESS);
 
     public TotemTileEntity() {
         super(ModTiles.totem);
@@ -228,7 +228,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
 
     public void abortCapture() {
         this.applyVictoryBonus(false);
-        notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.village_capture_aborted"));
+        notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.defended"));
         breakCapture();
     }
 
@@ -595,12 +595,14 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                             case PHASE_2:
                                 if (currentDefender == 0) {
                                     captureTimer++;
-                                    if (captureTimer > 4)
+                                    if (captureTimer > 4) {
                                         this.completeCapture(true, false);
+                                    }
                                 } else if (currentAttacker == 0) {
                                     captureTimer++;
-                                    if (captureTimer > 4)
+                                    if (captureTimer > 4) {
                                         this.abortCapture();
+                                    }
                                 } else {
                                     captureTimer = 1;
                                 }
@@ -702,6 +704,10 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private void setCapturingFaction(@Nullable IFaction<?> faction) {
         this.capturingFaction = faction;
         this.progressColor = faction != null ? faction.getColor().getColorComponents(null) : DyeColor.WHITE.getColorComponentValues();
+        if (faction != null) {
+            this.captureInfo.setColors(faction.getColor(), Color.WHITE, this.controllingFaction == null ? Color.WHITE : this.controllingFaction.getColor());
+            this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.bossinfo.raid", faction.getName().copyRaw().mergeStyle(faction.getChatColor())));
+        }
     }
 
     @Override
@@ -808,8 +814,6 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.captureTimer = 0;
         this.captureForceTargetTimer = 0;
         this.setCapturingFaction(faction);
-        this.captureInfo.setColors(faction.getColor(), Color.WHITE, this.controllingFaction == null?Color.WHITE: this.controllingFaction.getColor());
-        this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.bossinfo.capture"));
         this.strengthRatio = strengthRatio;
         this.badOmenTriggered = badOmenTriggered;
 
@@ -913,7 +917,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private void setupPhase2() {
         if (this.phase != CAPTURE_PHASE.PHASE_2) {
             this.phase = CAPTURE_PHASE.PHASE_2;
-            this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.defender_remaining"));
+            this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.bossinfo.remaining"));
         }
     }
 
@@ -926,7 +930,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                 break;
             case PHASE_2:
                 neutralPerc = 1f;
-                this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.defender_remaining"));
+                this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.bossinfo.remaining"));
                 break;
             default:
                 neutralPerc = 0;
