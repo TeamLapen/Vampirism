@@ -67,6 +67,7 @@ import net.minecraft.village.PointOfInterest;
 import net.minecraft.village.PointOfInterestManager;
 import net.minecraft.village.PointOfInterestType;
 import net.minecraft.world.BossInfo;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureStart;
@@ -667,6 +668,15 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                     if (!flag) {
                         ModEventFactory.fireReplaceVillageBlockEvent(this, b, pos);
                     }
+                }
+
+                if (time % 20 == 0 && this.world.getDifficulty() != Difficulty.PEACEFUL && this.world.rand.nextFloat() < 0.000138888888889) {
+                    List<IFaction<?>> factions = Lists.newArrayList(VampirismAPI.factionRegistry().getFactions());
+                    if (this.controllingFaction != null) {
+                        factions.remove(this.controllingFaction);
+                    }
+
+                    this.initiateCapture(factions.get(this.world.rand.nextInt(factions.size())),0.2f,null,true);
                 }
             }
         }
