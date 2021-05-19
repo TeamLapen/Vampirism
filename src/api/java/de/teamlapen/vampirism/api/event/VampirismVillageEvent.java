@@ -281,6 +281,8 @@ public abstract class VampirismVillageEvent extends Event {
 
         public DefineRaidStrength(ITotem totem, float defendStrength, float attackStrength) {
             super(totem);
+            this.defendStrength = defendStrength;
+            this.attackStrength = attackStrength;
         }
 
         public float getDefendStrength() {

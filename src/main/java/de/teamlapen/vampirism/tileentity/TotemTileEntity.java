@@ -124,6 +124,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
      */
     private @Nullable
     AxisAlignedBB villageAreaReduced;
+    public long timeSinceLastRaid = 0;
 
     //forced attributes
     private @Nullable
@@ -334,6 +335,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         }
         compound.put("captureInfo", list);
         compound.putBoolean("badOmenTriggered", this.badOmenTriggered);
+        compound.putLong("timeSinceLastRaid", this.timeSinceLastRaid);
         return super.write(compound);
     }
 
@@ -380,6 +382,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             float perc = ((CompoundNBT) inbt).getFloat("perc");
             this.captureInfo.setPercentage(color, perc);
         }
+        this.timeSinceLastRaid = compound.getLong("timeSinceLastRaid");
     }
 
     /**
@@ -503,7 +506,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                 this.updateVillageArea();
             }
             if (capturingFaction != null) {
-                if (time % 40 == 0) {
+                if (time % 20 == 0) {
                     List<LivingEntity> entities = this.world.getEntitiesWithinAABB(LivingEntity.class, getVillageArea());
                     this.updateBossinfoPlayers(entities);
                     int currentAttacker = 0; //include player
@@ -617,6 +620,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             }
             //normal village life
             else {
+                this.timeSinceLastRaid++;
+
                 if (this.controllingFaction != null && time % 512 == 0) {
                     int beds = (int) ((ServerWorld) world).getPointOfInterestManager().func_219146_b(pointOfInterestType -> pointOfInterestType.equals(PointOfInterestType.HOME), this.pos, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXSize(), 2) + Math.pow(this.getVillageArea().getZSize(), 2))) / 2, PointOfInterestManager.Status.ANY).count();
                     boolean spawnTaskMaster = RNG.nextInt(6) == 0;
@@ -673,7 +678,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                     }
                 }
 
-                if (time % 20 == 0 && this.world.getDifficulty() != Difficulty.PEACEFUL && this.world.rand.nextFloat() < 0.000138888888889) {
+                if (timeSinceLastRaid > 6000 && time % 20 == 0 && this.world.getDifficulty() != Difficulty.PEACEFUL && this.world.rand.nextFloat() < 0.000138888888889) {
                     List<IFaction<?>> factions = Lists.newArrayList(VampirismAPI.factionRegistry().getFactions());
                     if (this.controllingFaction != null) {
                         factions.remove(this.controllingFaction);
@@ -816,6 +821,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.setCapturingFaction(faction);
         this.badOmenTriggered = badOmenTriggered;
         this.calculateAttackStrength(strengthModifier);
+        this.timeSinceLastRaid = 0;
 
         if (this.controllingFaction == null) {
             this.phase = CAPTURE_PHASE.PHASE_1_NEUTRAL;
@@ -842,7 +848,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         if (strengthModifier > 0) {
             attackerStrength += strengthModifier;
         } else {
-            defenderStrength += strengthModifier;
+            defenderStrength -= strengthModifier;
         }
         Pair<Float, Float> strength = ModEventFactory.fireDefineRaidStrengthEvent(this, defenderStrength, attackerStrength);
         this.strengthRatio = strength.getRight() / (strength.getLeft() + strength.getRight());
