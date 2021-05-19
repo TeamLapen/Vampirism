@@ -206,8 +206,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private void applyVictoryBonus(boolean attackWin) {
         List<PlayerEntity> entities = this.world.getEntitiesWithinAABB(PlayerEntity.class, getVillageArea());
         for (PlayerEntity entity : entities) {
-            if (VampirismAPI.factionRegistry().getFaction(entity) == (attackWin?this.capturingFaction:this.controllingFaction)) {
-                entity.addPotionEffect(new EffectInstance(Effects.HERO_OF_THE_VILLAGE, 48000, 0, false, false, true));
+            if (VampirismAPI.factionRegistry().getFaction(entity) == (attackWin ? this.capturingFaction : this.controllingFaction)) {
+                entity.addPotionEffect(new EffectInstance(Effects.HERO_OF_THE_VILLAGE, 48000, (int) ((attackWin? 1-this.strengthRatio:this.strengthRatio) * 5), false, false, true));
             }
         }
     }
