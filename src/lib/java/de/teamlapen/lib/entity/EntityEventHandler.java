@@ -70,7 +70,7 @@ public class EntityEventHandler {
         }
         if(event.getSource().getTrueSource() instanceof PlayerEntity){
             for (Capability listener : listeners) {
-                (event.getEntity().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onEntityKilled(event.getEntityLiving(),event.getSource()));
+                (event.getSource().getTrueSource().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onEntityKilled(event.getEntityLiving(),event.getSource()));
             }
         }
     }
