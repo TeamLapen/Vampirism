@@ -527,6 +527,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                         IFaction<?> faction = VampirismAPI.factionRegistry().getFaction(entity);
                         if (faction == null) continue;
                         if (entity instanceof ICaptureIgnore) continue;
+                        if (!entity.isAlive()) continue;
                         if (this.capturingFaction.equals(faction)) {
                             currentAttacker++;
                             attackerStrength += this.getStrength(entity);
