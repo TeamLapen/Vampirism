@@ -678,7 +678,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                     }
                 }
 
-                if (timeSinceLastRaid > 6000 && time % 20 == 0 && this.world.getDifficulty() != Difficulty.PEACEFUL && this.world.rand.nextFloat() < 0.000138888888889) {
+                if (timeSinceLastRaid > 12000 && time % 20 == 0 && this.world.getDifficulty() != Difficulty.PEACEFUL && this.world.rand.nextFloat() < 0.000138888888889) {
                     List<IFaction<?>> factions = Lists.newArrayList(VampirismAPI.factionRegistry().getFactions());
                     if (this.controllingFaction != null) {
                         factions.remove(this.controllingFaction);
