@@ -206,10 +206,17 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     private void applyVictoryBonus(boolean attackWin) {
-        List<PlayerEntity> entities = this.world.getEntitiesWithinAABB(PlayerEntity.class, getVillageArea());
-        for (PlayerEntity entity : entities) {
-            if (VampirismAPI.factionRegistry().getFaction(entity) == (attackWin ? this.capturingFaction : this.controllingFaction)) {
-                entity.addPotionEffect(new EffectInstance(Effects.HERO_OF_THE_VILLAGE, 48000, (int) ((attackWin? 1-this.strengthRatio:this.strengthRatio) * 5), false, false, true));
+        for (PlayerEntity player : world.getPlayers()) {
+            if (!player.isSpectator() && this.getVillageArea().contains(player.getPositionVec())) {
+                if (!player.isSpectator() && VampirismAPI.factionRegistry().getFaction(player) == (attackWin ? this.capturingFaction : this.controllingFaction)) {
+                    player.addPotionEffect(new EffectInstance(Effects.HERO_OF_THE_VILLAGE, 48000, (int) ((attackWin ? 1 - this.strengthRatio : this.strengthRatio) * 5), false, false, true));
+                    player.addStat(ModStats.win_village_capture);
+                    if (attackWin) {
+                        player.addStat(ModStats.capture_village);
+                    } else {
+                        player.addStat(ModStats.defend_village);
+                    }
+                }
             }
         }
     }
@@ -268,14 +275,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private void completeCapture(boolean notifyPlayer, boolean fullConvert) {
         this.informEntitiesAboutCaptureStop();
         //noinspection ConstantConditions
-        if (!this.world.isRemote)
+        if (!this.world.isRemote) {
             this.updateCreaturesOnCapture(fullConvert);
-        if (this.controllingFaction != null) {
-            for (PlayerEntity p : world.getPlayers()) { //Add stat
-                if (this.getVillageArea().contains(p.getPositionVec())) {
-                    FactionPlayerHandler.getOpt(p).filter(fph -> fph.getCurrentFaction() == this.capturingFaction).ifPresent(fph -> fph.getPlayer().addStat(ModStats.capture_village));
-                }
-            }
         }
 
         this.applyVictoryBonus(true);
@@ -836,12 +837,13 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.markDirty();
 
         this.makeAgressive();
+        LOGGER.debug("Initiated capture with strength {} by {} at {}",this.strengthRatio, faction.getID(), this.getPos());
     }
 
     /**
      * sets the strength ratio of attacking and defending factions
      *
-     * @param strengthModifier a positiv value increases the attacker strength while the defender strength is increased by negativ values
+     * @param strengthModifier a positive value increases the attacker strength while the defender strength is increased by negative values
      */
     private void calculateAttackStrength(float strengthModifier) {
         float defenderStrength = 1f;

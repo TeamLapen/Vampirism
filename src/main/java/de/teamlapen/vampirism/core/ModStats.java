@@ -13,12 +13,16 @@ public class ModStats {
     public static final ResourceLocation weapon_table = new ResourceLocation(REFERENCE.MODID, "weapon_table");
     public static final ResourceLocation interact_alchemical_cauldron = new ResourceLocation(REFERENCE.MODID, "interact_alchemical_cauldron");
     public static final ResourceLocation capture_village = new ResourceLocation(REFERENCE.MODID, "capture_village");
+    public static final ResourceLocation defend_village = new ResourceLocation(REFERENCE.MODID, "defend_village");
+    public static final ResourceLocation win_village_capture = new ResourceLocation(REFERENCE.MODID, "win_village_capture");
     public static final ResourceLocation infected_creatures = new ResourceLocation(REFERENCE.MODID, "infected_creatures");
 
     static void registerStats(IForgeRegistry<StatType<?>> registry) {
         register(weapon_table);
         register(interact_alchemical_cauldron);
         register(capture_village);
+        register(defend_village);
+        register(win_village_capture);
         register(infected_creatures);
     }
 
