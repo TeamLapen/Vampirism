@@ -10,6 +10,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.server.ServerWorld;
 
+import javax.annotation.Nonnull;
+
 /**
  * does not extends {@link VampirismEffect} so other mods can use this too
  */
@@ -28,16 +30,17 @@ public abstract class BadOmen extends Effect {
     public abstract IFaction<?> getFaction();
 
     @Override
-    public void performEffect(LivingEntity entityLivingBaseIn, int amplifier) {
+    public void performEffect(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
         if (entityLivingBaseIn instanceof ServerPlayerEntity && !entityLivingBaseIn.isSpectator()) {
             ServerPlayerEntity playerEntity = ((ServerPlayerEntity) entityLivingBaseIn);
             ServerWorld serverWorld = playerEntity.getServerWorld();
             if (serverWorld.getDifficulty() == Difficulty.PEACEFUL) {
                 return;
             }
-            TotemHelper.getTotemNearPos(serverWorld, entityLivingBaseIn.getPosition(),true).ifPresent(totem -> {
+            TotemHelper.getTotemNearPos(serverWorld, entityLivingBaseIn.getPosition(), true).ifPresent(totem -> {
                 if (totem.getControllingFaction() != getFaction()) {
-                    totem.initiateCapture(getFaction(), null, true,0.5f);
+                    int level = Math.min(amplifier, 4);
+                    totem.initiateCapture(getFaction(), null, level + 1, 0.25f + 0.4375f * level);
                     entityLivingBaseIn.removePotionEffect(this);
                 }
             });

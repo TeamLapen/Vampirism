@@ -139,7 +139,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private int captureDuration;
     private int captureForceTargetTimer;
     private float strengthRatio;
-    private boolean badOmenTriggered;
+    private int badOmenLevel;
 
     //client attributes
     private @OnlyIn(Dist.CLIENT)
@@ -196,7 +196,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             if (!this.village.isEmpty()) {
                 VampirismWorld.getOpt(this.world).ifPresent(vw-> {
                     vw.updateArtificialFogBoundingBox(this.pos,this.controllingFaction == VReference.VAMPIRE_FACTION?this.getVillageArea() : null );
-                    if (this.badOmenTriggered && this.capturingFaction == VReference.VAMPIRE_FACTION) {
+                    if (this.isRaidTriggeredByBadOmen() && this.capturingFaction == VReference.VAMPIRE_FACTION) {
                         vw.updateTemporaryArtificialFog(this.pos, this.getVillageArea());
                     }
                 });
@@ -209,7 +209,9 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         for (PlayerEntity player : world.getPlayers()) {
             if (!player.isSpectator() && this.getVillageArea().contains(player.getPositionVec())) {
                 if (!player.isSpectator() && VampirismAPI.factionRegistry().getFaction(player) == (attackWin ? this.capturingFaction : this.controllingFaction)) {
-                    player.addPotionEffect(new EffectInstance(Effects.HERO_OF_THE_VILLAGE, 48000, (int) ((attackWin ? 1 - this.strengthRatio : this.strengthRatio) * 5), false, false, true));
+                    if (!attackWin) {
+                        player.addPotionEffect(new EffectInstance(Effects.HERO_OF_THE_VILLAGE, 48000, Math.max(this.badOmenLevel-1, 0), false, false, true));
+                    }
                     player.addStat(ModStats.win_village_capture);
                     if (attackWin) {
                         player.addStat(ModStats.capture_village);
@@ -335,7 +337,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             list.add(nbt);
         }
         compound.put("captureInfo", list);
-        compound.putBoolean("badOmenTriggered", this.badOmenTriggered);
+        compound.putInt("badOmenTriggered", this.badOmenLevel);
         compound.putLong("timeSinceLastRaid", this.timeSinceLastRaid);
         return super.write(compound);
     }
@@ -343,7 +345,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
-        this.badOmenTriggered = compound.getBoolean("badOmenTriggered");
+        this.badOmenLevel = compound.getInt("badOmenTriggered");
         this.isDisabled = compound.getBoolean("isDisabled");
         this.isComplete = compound.getBoolean("isComplete");
         this.isInsideVillage = compound.getBoolean("isInsideVillage");
@@ -370,7 +372,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                 VampirismWorld.getOpt(this.world).ifPresent(vw->{
                     AxisAlignedBB aabb = UtilLib.intToBB(compound.getIntArray("villageArea"));
                     vw.updateArtificialFogBoundingBox(this.pos,this.controllingFaction == VReference.VAMPIRE_FACTION ? aabb : null );
-                    if (this.badOmenTriggered && this.capturingFaction == VReference.VAMPIRE_FACTION) {
+                    if (this.isRaidTriggeredByBadOmen() && this.capturingFaction == VReference.VAMPIRE_FACTION) {
                         vw.updateTemporaryArtificialFog(this.pos, aabb);
                     }
                 });
@@ -685,7 +687,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                     if (this.controllingFaction != null) {
                         factions.remove(this.controllingFaction);
                     }
-                    this.initiateCapture(factions.get(this.world.rand.nextInt(factions.size())), null, true, -1f);
+                    this.initiateCapture(factions.get(this.world.rand.nextInt(factions.size())), null, 0, -1f);
                 }
             }
         }
@@ -809,10 +811,16 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     @SuppressWarnings("ConstantConditions")
     public void initiateCapture(PlayerEntity player) {
         if (!player.isAlive()) return;
-        initiateCapture(FactionPlayerHandler.get(player).getCurrentFaction(), player::sendStatusMessage, false, -0.5f);
+        initiateCapture(FactionPlayerHandler.get(player).getCurrentFaction(), player::sendStatusMessage, -1, -1f);
     }
 
-    public void initiateCapture(IFaction<?> faction, @Nullable BiConsumer<ITextComponent, Boolean> feedback, boolean badOmenTriggered, float strengthModifier) {
+    /**
+     * @param faction attacking faction
+     * @param feedback interaction feedback supplier if capture cannot be started {@link #capturePreconditions(IFaction, BiConsumer)}
+     * @param badOmenLevel level of the badomen effect that triggered the raid (effect amplifier + 1). -1 if not triggered by bad omen.
+     * @param strengthModifier modifier of the faction strength ration. See {@link #calculateAttackStrength(float)}
+     */
+    public void initiateCapture(IFaction<?> faction, @Nullable BiConsumer<ITextComponent, Boolean> feedback, int badOmenLevel, float strengthModifier) {
         this.updateTileStatus();
         if (!this.capturePreconditions(faction, feedback == null? (a,b)->{}:feedback)) return;
         this.forceVillageUpdate = true;
@@ -821,7 +829,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.captureTimer = 0;
         this.captureForceTargetTimer = 0;
         this.setCapturingFaction(faction);
-        this.badOmenTriggered = badOmenTriggered;
+        this.badOmenLevel = badOmenLevel;
         this.calculateAttackStrength(strengthModifier);
         this.timeSinceLastRaid = 0;
 
@@ -837,7 +845,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.markDirty();
 
         this.makeAgressive();
-        LOGGER.debug("Initiated capture with strength {} by {} at {}",this.strengthRatio, faction.getID(), this.getPos());
+        LOGGER.debug("Initiated capture with strength {} by {} at {} with badomen level {}", this.strengthRatio, faction.getID(), this.getPos(), badOmenLevel);
     }
 
     /**
@@ -859,7 +867,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
 
     @Override
     public boolean isRaidTriggeredByBadOmen() {
-        return this.badOmenTriggered;
+        return this.badOmenLevel >= 0;
     }
 
     /**
