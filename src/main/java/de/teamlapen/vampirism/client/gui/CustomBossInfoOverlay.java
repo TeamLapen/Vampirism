@@ -83,6 +83,10 @@ public class CustomBossInfoOverlay extends AbstractGui {
             this.blit(stack, k + textureStart, j, textureStart, BossInfo.Color.WHITE.ordinal() * 5 * 2 +5, width, 5);
             textureStart+=width;
         }
+        if (value.getOverlay() != BossInfo.Overlay.PROGRESS) {
+            RenderSystem.color4f(1,1,1,1);
+            this.blit(stack, k, j, 0, 80+(value.getOverlay().ordinal() -1)*5*2, 182,5);
+        }
     }
 
     public void read(UpdateMultiBossInfoPacket packet) {

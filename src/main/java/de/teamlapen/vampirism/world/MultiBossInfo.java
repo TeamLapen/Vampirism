@@ -31,6 +31,7 @@ public class MultiBossInfo {
         this.name = packet.getName();
         this.colors = packet.getColors();
         this.entries = packet.getEntries();
+        this.overlay = packet.getOverlay();
     }
 
     public UUID getUniqueId() {
@@ -39,6 +40,14 @@ public class MultiBossInfo {
 
     public ITextComponent getName() {
         return name;
+    }
+
+    public BossInfo.Overlay getOverlay() {
+        return overlay;
+    }
+
+    public void setOverlay(BossInfo.Overlay overlay) {
+        this.overlay = overlay;
     }
 
     public void setName(ITextComponent name) {
@@ -83,6 +92,9 @@ public class MultiBossInfo {
                 break;
             case UPDATE_PCT:
                 this.entries = packet.getEntries();
+                break;
+            case UPDATE_STYLE:
+                this.overlay = packet.getOverlay();
                 break;
         }
     }

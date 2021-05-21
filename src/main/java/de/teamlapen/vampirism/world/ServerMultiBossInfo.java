@@ -44,6 +44,12 @@ public class ServerMultiBossInfo extends MultiBossInfo {
         this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_PCT);
     }
 
+    @Override
+    public void setOverlay(BossInfo.Overlay overlay) {
+        super.setOverlay(overlay);
+        this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_STYLE);
+    }
+
     public void addPlayer(ServerPlayerEntity player){
         if (this.players.add(player) && this.visible) {
             VampirismMod.dispatcher.sendTo(new UpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation.ADD, this), player);

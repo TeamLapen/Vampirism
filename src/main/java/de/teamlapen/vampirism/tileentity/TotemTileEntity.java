@@ -149,7 +149,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private float[] baseColors = DyeColor.WHITE.getColorComponentValues();
     private float[] progressColor = DyeColor.WHITE.getColorComponentValues();
 
-    private final ServerMultiBossInfo captureInfo = new ServerMultiBossInfo(new TranslationTextComponent("text.vampirism.village.bossinfo.raid"), BossInfo.Overlay.PROGRESS);
+    private final ServerMultiBossInfo captureInfo = new ServerMultiBossInfo(new TranslationTextComponent("text.vampirism.village.bossinfo.raid"), BossInfo.Overlay.NOTCHED_10);
 
     public TotemTileEntity() {
         super(ModTiles.totem);

@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.world.MultiBossInfo;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateBossInfoPacket;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.BossInfo;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.awt.*;
@@ -17,6 +18,7 @@ public class UpdateMultiBossInfoPacket implements IMessage {
     private final UUID uniqueId;
     private final SUpdateBossInfoPacket.Operation operation;
     private ITextComponent name;
+    private BossInfo.Overlay overlay;
     protected List<Color> colors;
     protected Map<Color,Float> entries;
 
@@ -26,6 +28,7 @@ public class UpdateMultiBossInfoPacket implements IMessage {
         this.name = data.getName();
         this.colors = data.getColors();
         this.entries = data.getEntries();
+        this.overlay = data.getOverlay();
     }
 
     private UpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation operation, UUID uuid) {
@@ -54,6 +57,10 @@ public class UpdateMultiBossInfoPacket implements IMessage {
         return colors;
     }
 
+    public BossInfo.Overlay getOverlay() {
+        return overlay;
+    }
+
     static void encode(UpdateMultiBossInfoPacket msg, PacketBuffer buf) {
         buf.writeUniqueId(msg.uniqueId);
         buf.writeEnumValue(msg.operation);
@@ -62,6 +69,7 @@ public class UpdateMultiBossInfoPacket implements IMessage {
                 buf.writeTextComponent(msg.name);
                 buf.writeVarInt(msg.colors.size());
                 msg.colors.forEach(color -> buf.writeVarInt(color.getRGB()));
+                buf.writeEnumValue(msg.overlay);
             case UPDATE_PCT:
                 buf.writeVarInt(msg.entries.size());
                 for (Map.Entry<Color, Float> value : msg.entries.entrySet()) {
@@ -71,6 +79,9 @@ public class UpdateMultiBossInfoPacket implements IMessage {
                 break;
             case UPDATE_NAME:
                 buf.writeTextComponent(msg.name);
+                break;
+            case UPDATE_STYLE:
+                buf.writeEnumValue(msg.overlay);
                 break;
         }
     }
@@ -88,6 +99,7 @@ public class UpdateMultiBossInfoPacket implements IMessage {
                     colors.add(new Color(buf.readVarInt(), true));
                 }
                 packet.colors = colors;
+                packet.overlay = buf.readEnumValue(BossInfo.Overlay.class);
             case UPDATE_PCT:
                 Map<Color,Float> entries = new LinkedHashMap<>();
                 int size2 = buf.readVarInt();
@@ -100,6 +112,9 @@ public class UpdateMultiBossInfoPacket implements IMessage {
                 break;
             case UPDATE_NAME:
                 packet.name = buf.readTextComponent();
+                break;
+            case UPDATE_STYLE:
+                packet.overlay = buf.readEnumValue(BossInfo.Overlay.class);
                 break;
         }
         return packet;
