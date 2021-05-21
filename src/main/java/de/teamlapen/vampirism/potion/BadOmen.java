@@ -40,8 +40,9 @@ public abstract class BadOmen extends Effect {
             TotemHelper.getTotemNearPos(serverWorld, entityLivingBaseIn.getPosition(), true).ifPresent(totem -> {
                 if (totem.getControllingFaction() != getFaction()) {
                     int level = Math.min(amplifier, 4);
-                    totem.initiateCapture(getFaction(), null, level + 1, 0.25f + 0.4375f * level);
-                    entityLivingBaseIn.removePotionEffect(this);
+                    if(totem.initiateCaptureOrIncreaseBadOmenLevel(getFaction(), null, level + 1, 0)) {
+                        entityLivingBaseIn.removePotionEffect(this);
+                    }
                 }
             });
         }

@@ -276,13 +276,36 @@ public abstract class VampirismVillageEvent extends Event {
 
     public static class DefineRaidStrength extends VampirismVillageEvent {
 
+        /**
+         * -2 if triggered by player
+         * -1 if triggered by chance
+         * 0<= x < 5 triggered by badomen effect with respective amplifier
+         */
+        private int badOmenLevel;
         private float defendStrength;
         private float attackStrength;
 
-        public DefineRaidStrength(ITotem totem, float defendStrength, float attackStrength) {
+        public DefineRaidStrength(ITotem totem, int badOmenLevel, float defendStrength, float attackStrength) {
             super(totem);
+            this.badOmenLevel = badOmenLevel;
             this.defendStrength = defendStrength;
             this.attackStrength = attackStrength;
+        }
+
+        public boolean isPlayerRaid() {
+            return badOmenLevel == -2;
+        }
+
+        public boolean isRandomRaid() {
+            return badOmenLevel == -1;
+        }
+
+        public boolean isBadOmenTriggered() {
+            return badOmenLevel >= 0;
+        }
+
+        public int getBadOmenLevel() {
+            return badOmenLevel;
         }
 
         public float getDefendStrength() {

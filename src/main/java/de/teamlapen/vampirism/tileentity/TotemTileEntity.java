@@ -829,8 +829,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.captureTimer = 0;
         this.captureForceTargetTimer = 0;
         this.setCapturingFaction(faction);
-        this.badOmenLevel = badOmenLevel;
-        this.calculateAttackStrength(strengthModifier);
+        this.calculateAttackStrength(badOmenLevel, strengthModifier);
         this.timeSinceLastRaid = 0;
 
         if (this.controllingFaction == null) {
@@ -849,19 +848,51 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     /**
+     * initiates a new capture or increases the badomen level of a running capture
+     *
+     * @param faction attacking faction
+     * @param feedback interaction feedback supplier if capture cannot be started {@link #capturePreconditions(IFaction, BiConsumer)}
+     * @param badOmenLevel level of the badomen effect that triggered the raid (effect amplifier + 1). -1 if not triggered by bad omen.
+     * @param strengthModifier modifier of the faction strength ration. See {@link #calculateAttackStrength(float)}
+     * @return true if the badomen effect should be consumed
+     */
+    public boolean initiateCaptureOrIncreaseBadOmenLevel(IFaction<?> faction, @Nullable BiConsumer<ITextComponent, Boolean> feedback, int badOmenLevel, float strengthModifier) {
+        if (this.capturingFaction == null) {
+            this.initiateCapture(faction, feedback, badOmenLevel, strengthModifier);
+            return true;
+        }
+        if (this.capturingFaction == faction) {
+            if (this.phase == CAPTURE_PHASE.PHASE_1_OPPOSITE) {
+                int tmpBadOmen = this.badOmenLevel;
+                float tmpStrength = this.strengthRatio;
+                this.calculateAttackStrength(this.badOmenLevel + badOmenLevel, strengthModifier);
+                this.captureTimer = this.captureTimer/2;
+                LOGGER.debug("Increase capture from strength {} and badomen level {} to strength {} and badomen level {}", tmpStrength, tmpBadOmen, this.strengthRatio, this.badOmenLevel);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * sets the strength ratio of attacking and defending factions
      *
      * @param strengthModifier a positive value increases the attacker strength while the defender strength is increased by negative values
      */
-    private void calculateAttackStrength(float strengthModifier) {
+    private void calculateAttackStrength(int badOmenLevel, float strengthModifier) {
+        this.badOmenLevel = MathHelper.clamp(badOmenLevel,-1, 5);
+        int level = this.badOmenLevel-1;
         float defenderStrength = 1f;
         float attackerStrength = 1f;
+        if (level >= 0) {
+            attackerStrength += 0.25f + 0.4375f * level;
+        }
         if (strengthModifier > 0) {
             attackerStrength += strengthModifier;
         } else {
             defenderStrength -= strengthModifier;
         }
-        Pair<Float, Float> strength = ModEventFactory.fireDefineRaidStrengthEvent(this, defenderStrength, attackerStrength);
+        Pair<Float, Float> strength = ModEventFactory.fireDefineRaidStrengthEvent(this, level, defenderStrength, attackerStrength);
         this.strengthRatio = strength.getRight() / (strength.getLeft() + strength.getRight());
     }
 

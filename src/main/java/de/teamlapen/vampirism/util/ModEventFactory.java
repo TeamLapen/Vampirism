@@ -57,8 +57,8 @@ public class ModEventFactory {
         return !event.isCanceled();
     }
 
-    public static Pair<Float, Float> fireDefineRaidStrengthEvent(@Nonnull ITotem totem, float defendStrength, float attackStrength) {
-        VampirismVillageEvent.DefineRaidStrength event = new VampirismVillageEvent.DefineRaidStrength(totem, defendStrength, attackStrength);
+    public static Pair<Float, Float> fireDefineRaidStrengthEvent(@Nonnull ITotem totem, int badOmenLevel, float defendStrength, float attackStrength) {
+        VampirismVillageEvent.DefineRaidStrength event = new VampirismVillageEvent.DefineRaidStrength(totem, badOmenLevel, defendStrength, attackStrength);
         MinecraftForge.EVENT_BUS.post(event);
         return Pair.of(event.getDefendStrength(),event.getAttackStrength());
     }
