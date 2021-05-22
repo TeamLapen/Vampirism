@@ -9,6 +9,7 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.potion.Effect;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -55,6 +56,12 @@ public interface IVillageFactionData {
         public boolean isBanner(@Nonnull ItemStack stack) {
             return ItemStack.areItemStacksEqual(getBanner(), stack);
         }
+
+        @Nullable
+        @Override
+        public Effect getBadOmenEffect() {
+            return null;
+        }
     };
 
     Class<? extends MobEntity> getGuardSuperClass();
@@ -78,6 +85,15 @@ public interface IVillageFactionData {
 
     default boolean isBanner(@Nonnull ItemStack stack) {//TODO 1.17 remove default implementation
         return false;
+    }
+
+    /**
+     * TODO 1.17 remove default for methods here (as they are implemented in the default instance)
+     * @return A faction specific bad omen effect
+     */
+    @Nullable
+    default Effect getBadOmenEffect(){
+        return null;
     }
 
 }

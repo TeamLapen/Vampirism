@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
-import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismEntity;
@@ -28,6 +27,7 @@ import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.potion.BadOmen;
 import de.teamlapen.vampirism.util.HunterVillageData;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import de.teamlapen.vampirism.world.MinionWorldData;
@@ -479,13 +479,8 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     @Override
     public void onDeath(DamageSource cause) {
-        if (cause.getTrueSource() instanceof PlayerEntity && this.villageAttributes == null) {
-            if (VampirismAPI.getFactionPlayerHandler(((PlayerEntity) cause.getTrueSource())).map(p -> p.getCurrentFaction() != null && p.getCurrentFaction() != this.getFaction()).orElse(false)) {
-                if (this.getFaction().getVillageData().isBanner(this.getItemStackFromSlot(EquipmentSlotType.HEAD))) {
-                    EffectInstance ins = ((PlayerEntity) cause.getTrueSource()).getActivePotionEffect(ModEffects.bad_omen_hunter);
-                    ((PlayerEntity) cause.getTrueSource()).addPotionEffect(new EffectInstance(ModEffects.bad_omen_hunter, 120000, ins != null ? ins.getAmplifier() + 1 : 0, false, false, true));
-                }
-            }
+        if (this.villageAttributes == null) {
+            BadOmen.handlePotentialBannerKill(cause.getTrueSource(), this);
         }
         super.onDeath(cause);
     }

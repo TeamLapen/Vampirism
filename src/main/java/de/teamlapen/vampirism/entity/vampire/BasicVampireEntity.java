@@ -23,6 +23,7 @@ import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
+import de.teamlapen.vampirism.potion.BadOmen;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import de.teamlapen.vampirism.util.VampireVillageData;
 import de.teamlapen.vampirism.world.MinionWorldData;
@@ -463,13 +464,8 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Override
     public void onDeath(DamageSource cause) {
-        if (cause.getTrueSource() instanceof PlayerEntity && this.villageAttributes == null) {
-            if (VampirismAPI.getFactionPlayerHandler(((PlayerEntity) cause.getTrueSource())).map(p -> p.getCurrentFaction() != null && p.getCurrentFaction() != this.getFaction()).orElse(false)) {
-                if (this.getFaction().getVillageData().isBanner(this.getItemStackFromSlot(EquipmentSlotType.HEAD))) {
-                    EffectInstance inst = ((PlayerEntity) cause.getTrueSource()).getActivePotionEffect(ModEffects.bad_omen_vampire);
-                    ((PlayerEntity) cause.getTrueSource()).addPotionEffect(new EffectInstance(ModEffects.bad_omen_vampire, 120000, inst != null ? inst.getAmplifier() + 1 : 0, false, false, true));
-                }
-            }
+        if(this.villageAttributes==null){
+            BadOmen.handlePotentialBannerKill(cause.getTrueSource(), this);
         }
         super.onDeath(cause);
     }

@@ -853,7 +853,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
      * @param faction attacking faction
      * @param feedback interaction feedback supplier if capture cannot be started {@link #capturePreconditions(IFaction, BiConsumer)}
      * @param badOmenLevel level of the badomen effect that triggered the raid (effect amplifier + 1). -1 if not triggered by bad omen.
-     * @param strengthModifier modifier of the faction strength ration. See {@link #calculateAttackStrength(float)}
+     * @param strengthModifier modifier of the faction strength ration. See {@link #calculateAttackStrength(int,float)}
      * @return true if the badomen effect should be consumed
      */
     public boolean initiateCaptureOrIncreaseBadOmenLevel(IFaction<?> faction, @Nullable BiConsumer<ITextComponent, Boolean> feedback, int badOmenLevel, float strengthModifier) {
@@ -927,7 +927,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         PHASE_1_NEUTRAL, PHASE_1_OPPOSITE, PHASE_2
     }
 
-    public void ringBell(@Nullable PlayerEntity playerEntity){
+    public void ringBell(@Nonnull PlayerEntity playerEntity){
         if (this.capturingFaction != null) {
             IPlayableFaction<?> faction = FactionPlayerHandler.get(playerEntity).getCurrentFaction();
             boolean defender = faction == this.controllingFaction;
