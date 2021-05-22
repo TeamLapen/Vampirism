@@ -480,9 +480,11 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public void onDeath(DamageSource cause) {
         if (cause.getTrueSource() instanceof PlayerEntity && this.villageAttributes == null) {
-            if (this.getFaction().getVillageData().isBanner(this.getItemStackFromSlot(EquipmentSlotType.HEAD))) {
-                EffectInstance ins = ((PlayerEntity) cause.getTrueSource()).getActivePotionEffect(ModEffects.bad_omen_hunter);
-                ((PlayerEntity) cause.getTrueSource()).addPotionEffect(new EffectInstance(ModEffects.bad_omen_hunter, 120000,ins != null? ins.getAmplifier()+1:0,false,false, true));
+            if (VampirismAPI.getFactionPlayerHandler(((PlayerEntity) cause.getTrueSource())).map(p -> p.getCurrentFaction() != null && p.getCurrentFaction() != this.getFaction()).orElse(false)) {
+                if (this.getFaction().getVillageData().isBanner(this.getItemStackFromSlot(EquipmentSlotType.HEAD))) {
+                    EffectInstance ins = ((PlayerEntity) cause.getTrueSource()).getActivePotionEffect(ModEffects.bad_omen_hunter);
+                    ((PlayerEntity) cause.getTrueSource()).addPotionEffect(new EffectInstance(ModEffects.bad_omen_hunter, 120000, ins != null ? ins.getAmplifier() + 1 : 0, false, false, true));
+                }
             }
         }
         super.onDeath(cause);
