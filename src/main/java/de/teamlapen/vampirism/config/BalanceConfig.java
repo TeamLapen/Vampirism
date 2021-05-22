@@ -100,6 +100,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue viTotemWeight;
     public final ForgeConfigSpec.IntValue viMaxVillagerRespawn;
     public final ForgeConfigSpec.IntValue viMaxTotemRadius;
+    public final ForgeConfigSpec.DoubleValue viRandomRaidChance;
 
     public final ForgeConfigSpec.DoubleValue vsSundamageReduction1;
     public final ForgeConfigSpec.DoubleValue vsBloodThirstReduction1;
@@ -302,6 +303,7 @@ public class BalanceConfig {
         viTotemWeight = builder.comment("Weight of the Totem Building inside the Village").defineInRange("totemWeight", 20, 1, Integer.MAX_VALUE);
         viMaxVillagerRespawn = builder.comment("Maximum of Villager the Totem can respawn").defineInRange("maxVillagerRespawn", 30, 0, Integer.MAX_VALUE);
         viMaxTotemRadius = builder.comment("Maximum range of a Totem to grow the village").defineInRange("maxTotemRadius", 100, 0, Integer.MAX_VALUE);
+        viRandomRaidChance = builder.comment("Chance (per tick) of a faction raid to occur").defineInRange("randomRaidChance", 0.000138888888889, 0 ,1);
 
 
         //Vampire skills
