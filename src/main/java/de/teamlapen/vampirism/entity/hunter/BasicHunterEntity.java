@@ -27,6 +27,8 @@ import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.potion.BadOmen;
+import de.teamlapen.vampirism.util.HunterVillageData;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.entity.*;
@@ -47,6 +49,7 @@ import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -474,6 +477,14 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         }
     }
 
+    @Override
+    public void onDeath(DamageSource cause) {
+        if (this.villageAttributes == null) {
+            BadOmen.handlePotentialBannerKill(cause.getTrueSource(), this);
+        }
+        super.onDeath(cause);
+    }
+
     //Entityactions ----------------------------------------------------------------------------------------------------
     /**
      * available actions for AI task & task
@@ -551,6 +562,9 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Nullable
     @Override
     public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        if (!(reason == SpawnReason.SPAWN_EGG || reason == SpawnReason.BUCKET || reason == SpawnReason.CONVERSION || reason == SpawnReason.COMMAND) && this.getRNG().nextInt(50) == 0) {
+            this.setItemStackToSlot(EquipmentSlotType.HEAD, HunterVillageData.createBanner());
+        }
         ILivingEntityData livingData = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 
         if (this.getRNG().nextInt(4) == 0) {

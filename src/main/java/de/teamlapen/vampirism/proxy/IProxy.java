@@ -90,4 +90,7 @@ public interface IProxy extends IInitListener {
     default void handleActionBindingPacket(ActionBindingPacket msg, PlayerEntity playerEntity) {
     }
 
+    default void handleUpdateMultiBossInfoPacket(UpdateMultiBossInfoPacket msg){
+    }
+
 }

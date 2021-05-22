@@ -23,10 +23,14 @@ import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
+import de.teamlapen.vampirism.potion.BadOmen;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
+import de.teamlapen.vampirism.util.VampireVillageData;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ILivingEntityData;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.PatrollerEntity;
@@ -46,6 +50,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -447,6 +453,22 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.targetSelector.addGoal(8, new DefendLeaderGoal(this));
     }
 
+    @Nullable
+    @Override
+    public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        if ((reason == SpawnReason.NATURAL || reason == SpawnReason.STRUCTURE )  && this.getRNG().nextInt(50) == 0) {
+            this.setItemStackToSlot(EquipmentSlotType.HEAD, VampireVillageData.createBanner());
+        }
+        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    }
+
+    @Override
+    public void onDeath(DamageSource cause) {
+        if(this.villageAttributes==null){
+            BadOmen.handlePotentialBannerKill(cause.getTrueSource(), this);
+        }
+        super.onDeath(cause);
+    }
 
     @Override
     protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {

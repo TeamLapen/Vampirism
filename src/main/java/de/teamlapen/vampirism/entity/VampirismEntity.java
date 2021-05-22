@@ -313,7 +313,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
 
     private void checkImobConversion() {
         if (doImobConversion && !this.world.isRemote) {
-            if (this.ticksExisted % 256 == 0) {
+            if (this.ticksExisted % 256 == 0 && this.isAlive()) {
                 boolean current = this instanceof IMob;
                 boolean convert = false;
                 VampirismConfig.Server.IMobOptions opt = VampirismConfig.SERVER.entityIMob.get();

@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
@@ -94,16 +95,11 @@ public class VampirismWorld implements IVampirismWorld {
      * stores all BoundingBoxes of vampire controlled villages per dimension, mapped from origin block positions
      */
     private static final Map<BlockPos, MutableBoundingBox> fogAreas = Maps.newHashMap();
+    private static final Map<BlockPos, MutableBoundingBox> tmpFogAreas = Maps.newHashMap();
 
     @Override
     public boolean isInsideArtificialVampireFogArea(BlockPos blockPos) {
-            for (Map.Entry<BlockPos, MutableBoundingBox> entry : fogAreas.entrySet()) {
-                if (entry.getValue().isVecInside(blockPos)) {
-                    return true;
-                }
-            }
-
-        return false;
+        return Stream.concat(fogAreas.entrySet().stream(), tmpFogAreas.entrySet().stream()).anyMatch(entry -> entry.getValue().isVecInside(blockPos));
     }
 
     /**
@@ -115,8 +111,17 @@ public class VampirismWorld implements IVampirismWorld {
     public void updateArtificialFogBoundingBox(@Nonnull BlockPos totemPos, @Nullable AxisAlignedBB box) {
         if (box == null) {
             fogAreas.remove(totemPos);
+            updateTemporaryArtificialFog(totemPos, null);
         } else {
             fogAreas.put(totemPos, UtilLib.AABBtoMB(box));
+        }
+    }
+
+    public void updateTemporaryArtificialFog(@Nonnull BlockPos totemPos, @Nullable AxisAlignedBB box) {
+        if (box == null) {
+            tmpFogAreas.remove(totemPos);
+        } else {
+            tmpFogAreas.put(totemPos, UtilLib.AABBtoMB(box));
         }
     }
 

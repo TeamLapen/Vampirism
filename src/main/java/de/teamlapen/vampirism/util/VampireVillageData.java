@@ -12,12 +12,21 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
+import net.minecraft.item.DyeColor;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.tileentity.BannerPattern;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class VampireVillageData implements IVillageFactionData {
-
+    private final ItemStack banner = createBanner();
     private List<CaptureEntityEntry> captureEntityEntries;
 
     @Override
@@ -46,5 +55,33 @@ public class VampireVillageData implements IVillageFactionData {
     @Override
     public EntityType<? extends ITaskMasterEntity> getTaskMasterEntity() {
         return ModEntities.task_master_vampire;
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack getBanner() {
+        return banner.copy();
+    }
+
+    @Override
+    public boolean isBanner(@Nonnull ItemStack stack) {
+        return ItemStack.areItemStacksEqual(this.banner, stack);
+    }
+
+    public static ItemStack createBanner() {
+        ItemStack itemStack = new ItemStack(Items.BLACK_BANNER);
+        CompoundNBT compoundNBT = itemStack.getOrCreateChildTag("BlockEntityTag");
+        ListNBT listNBT = new BannerPattern.Builder()
+                .setPatternWithColor(BannerPattern.TRIANGLES_BOTTOM, DyeColor.RED)
+                .setPatternWithColor(BannerPattern.TRIANGLES_TOP, DyeColor.RED)
+                .setPatternWithColor(BannerPattern.BORDER, DyeColor.PURPLE)
+                .setPatternWithColor(BannerPattern.RHOMBUS_MIDDLE, DyeColor.RED)
+                .setPatternWithColor(BannerPattern.STRAIGHT_CROSS, DyeColor.RED)
+                .setPatternWithColor(BannerPattern.CIRCLE_MIDDLE, DyeColor.PURPLE)
+                .buildNBT();
+        compoundNBT.put("Patterns", listNBT);
+        itemStack.func_242395_a(ItemStack.TooltipDisplayFlags.ADDITIONAL);
+        itemStack.setDisplayName(new TranslationTextComponent("block.minecraft.ominous_banner").mergeStyle(TextFormatting.GOLD));
+        return itemStack;
     }
 }

@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.core;
 
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.potion.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SRGNAMES;
@@ -33,6 +35,9 @@ public class ModEffects {
     public static final Effect neonatal = getNull();
     public static final Effect oblivion = getNull();
     public static final Effect armor_regeneration = getNull();
+    public static final Effect bad_omen_hunter = getNull();
+    public static final Effect bad_omen_vampire = getNull();
+
     private static Effect modded_night_vision;  //Substituted version
     private static Effect vanilla_night_vision; //Vanilla night vision instance
 
@@ -52,6 +57,18 @@ public class ModEffects {
         registry.register(new VampirismEffect("neonatal", EffectType.NEUTRAL, 0xFFBBBB).addAttributesModifier(Attributes.ATTACK_DAMAGE, "377d132d-d091-43b2-8a8f-b940f9bc894c",  -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL).addAttributesModifier(Attributes.MOVEMENT_SPEED, "ad6d7def-46e2-485f-afba-39252767f114", -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL));
         registry.register(new OblivionEffect("oblivion", EffectType.NEUTRAL, 0x4E9331));
         registry.register(new VampirismEffect("armor_regeneration", EffectType.NEUTRAL, 0xD17642));
+        registry.register(new BadOmen(REFERENCE.MODID, REFERENCE.HUNTER_PLAYER_KEY) {
+            @Override
+            public IFaction<?> getFaction() {
+                return VReference.HUNTER_FACTION;
+            }
+        });
+        registry.register(new BadOmen(REFERENCE.MODID, REFERENCE.VAMPIRE_PLAYER_KEY) {
+            @Override
+            public IFaction<?> getFaction() {
+                return VReference.VAMPIRE_FACTION;
+            }
+        });
     }
 
     static void fixNightVisionEffecTypes() {

@@ -69,6 +69,7 @@ public class ClientProxy extends CommonProxy {
     private final static Logger LOGGER = LogManager.getLogger(ClientProxy.class);
 
     private VampirismHUDOverlay overlay;
+    private CustomBossInfoOverlay bossInfoOverlay;
     private final ClientSkillTreeManager skillTreeManager = new ClientSkillTreeManager();
 
     public ClientProxy() {
@@ -175,7 +176,9 @@ public class ClientProxy extends CommonProxy {
 
     private void registerSubscriptions() {
         overlay = new VampirismHUDOverlay(Minecraft.getInstance());
+        this.bossInfoOverlay = new CustomBossInfoOverlay();
         MinecraftForge.EVENT_BUS.register(overlay);
+        MinecraftForge.EVENT_BUS.register(this.bossInfoOverlay);
         MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
         MinecraftForge.EVENT_BUS.register(new ScreenEventHandler());
     }
@@ -290,5 +293,14 @@ public class ClientProxy extends CommonProxy {
         if (Minecraft.getInstance().currentScreen instanceof SkillsScreen) {
             ((SkillsScreen) Minecraft.getInstance().currentScreen).resetToolTipCache();
         }
+    }
+
+    @Override
+    public void handleUpdateMultiBossInfoPacket(UpdateMultiBossInfoPacket msg) {
+        this.bossInfoOverlay.read(msg);
+    }
+
+    public void clearBossBarOverlay() {
+        this.bossInfoOverlay.clear();
     }
 }

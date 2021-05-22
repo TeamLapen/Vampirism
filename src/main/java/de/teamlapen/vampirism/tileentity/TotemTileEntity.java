@@ -33,6 +33,7 @@ import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.PotionSanguinareEffect;
 import de.teamlapen.vampirism.util.ModEventFactory;
+import de.teamlapen.vampirism.world.ServerMultiBossInfo;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -45,6 +46,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.potion.EffectInstance;
@@ -64,22 +67,26 @@ import net.minecraft.village.PointOfInterest;
 import net.minecraft.village.PointOfInterestManager;
 import net.minecraft.village.PointOfInterestType;
 import net.minecraft.world.BossInfo;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureStart;
-import net.minecraft.world.server.ServerBossInfo;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.awt.*;
+import java.util.List;
 import java.util.*;
+import java.util.function.BiConsumer;
 
 import static de.teamlapen.vampirism.tileentity.TotemHelper.*;
 
@@ -117,6 +124,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
      */
     private @Nullable
     AxisAlignedBB villageAreaReduced;
+    public long timeSinceLastRaid = 0;
 
     //forced attributes
     private @Nullable
@@ -128,8 +136,10 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private CAPTURE_PHASE phase;
     private int captureTimer;
     private int captureAbortTimer;
-    private int defenderMax;
+    private int captureDuration;
     private int captureForceTargetTimer;
+    private float strengthRatio;
+    private int badOmenLevel;
 
     //client attributes
     private @OnlyIn(Dist.CLIENT)
@@ -139,7 +149,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private float[] baseColors = DyeColor.WHITE.getColorComponentValues();
     private float[] progressColor = DyeColor.WHITE.getColorComponentValues();
 
-    private final ServerBossInfo captureInfo = new ServerBossInfo(new TranslationTextComponent("text.vampirism.village.bossinfo.capture"), BossInfo.Color.YELLOW, BossInfo.Overlay.PROGRESS);
+    private final ServerMultiBossInfo captureInfo = new ServerMultiBossInfo(new TranslationTextComponent("text.vampirism.village.bossinfo.raid"), BossInfo.Overlay.NOTCHED_10);
 
     public TotemTileEntity() {
         super(ModTiles.totem);
@@ -184,7 +194,31 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             super.markDirty();
             this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 3);
             if (!this.village.isEmpty()) {
-                VampirismWorld.getOpt(this.world).ifPresent(vw->vw.updateArtificialFogBoundingBox(this.pos,this.controllingFaction == VReference.VAMPIRE_FACTION?this.getVillageArea() : null ));
+                VampirismWorld.getOpt(this.world).ifPresent(vw-> {
+                    vw.updateArtificialFogBoundingBox(this.pos,this.controllingFaction == VReference.VAMPIRE_FACTION?this.getVillageArea() : null );
+                    if (this.isRaidTriggeredByBadOmen() && this.capturingFaction == VReference.VAMPIRE_FACTION) {
+                        vw.updateTemporaryArtificialFog(this.pos, this.getVillageArea());
+                    }
+                });
+
+            }
+        }
+    }
+
+    private void applyVictoryBonus(boolean attackWin) {
+        for (PlayerEntity player : world.getPlayers()) {
+            if (!player.isSpectator() && this.getVillageArea().contains(player.getPositionVec())) {
+                if (!player.isSpectator() && VampirismAPI.factionRegistry().getFaction(player) == (attackWin ? this.capturingFaction : this.controllingFaction)) {
+                    if (!attackWin) {
+                        player.addPotionEffect(new EffectInstance(Effects.HERO_OF_THE_VILLAGE, 48000, Math.max(this.badOmenLevel-1, 0), false, false, true));
+                    }
+                    player.addStat(ModStats.win_village_capture);
+                    if (attackWin) {
+                        player.addStat(ModStats.capture_village);
+                    } else {
+                        player.addStat(ModStats.defend_village);
+                    }
+                }
             }
         }
     }
@@ -198,20 +232,24 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         return this.village.size();
     }
 
-    //support methods --------------------------------------------------------------------------------------------------
     public static void makeAgressive(VillagerEntity villager) {
         AggressiveVillagerEntity hunter = AggressiveVillagerEntity.makeHunter(villager);
         UtilLib.replaceEntity(villager, hunter);
     }
 
-    private void abortCapture(boolean notifyPlayer) {
+    public void abortCapture() {
+        this.applyVictoryBonus(false);
+        notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.defended"));
+        breakCapture();
+    }
+
+    public void breakCapture() {
         this.setCapturingFaction(null);
         this.forceVillageUpdate = true;
         this.informEntitiesAboutCaptureStop();
-        if (notifyPlayer)
-            notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.village_capture_aborted"));
         this.updateBossinfoPlayers(null);
-        this.defenderMax = 0;
+        this.captureInfo.clear();
+        VampirismWorld.getOpt(this.world).ifPresent(vw -> vw.updateTemporaryArtificialFog(this.pos, null));
         this.markDirty();
     }
 
@@ -221,7 +259,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         VampirismWorld.getOpt(this.world).ifPresent(vw->vw.updateArtificialFogBoundingBox(this.pos, null ));
         TotemHelper.removeTotem(this.world.getDimensionKey(), this.village, this.pos, true);
         if (this.capturingFaction != null) {
-            this.abortCapture(false);
+            this.breakCapture();
         } else {
             this.updateBossinfoPlayers(null);
         }
@@ -239,17 +277,11 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private void completeCapture(boolean notifyPlayer, boolean fullConvert) {
         this.informEntitiesAboutCaptureStop();
         //noinspection ConstantConditions
-        if (!this.world.isRemote)
+        if (!this.world.isRemote) {
             this.updateCreaturesOnCapture(fullConvert);
-        if (this.controllingFaction != null) {
-            for (PlayerEntity p : world.getPlayers()) { //Add stat
-                if (this.getVillageArea().contains(p.getPositionVec())) {
-                    FactionPlayerHandler.getOpt(p).filter(fph -> fph.getCurrentFaction() == this.capturingFaction).ifPresent(fph -> fph.getPlayer().addStat(ModStats.capture_village));
-                }
-            }
         }
 
-
+        this.applyVictoryBonus(true);
         this.setControllingFaction(this.capturingFaction);
         this.setCapturingFaction(null);
 
@@ -289,21 +321,31 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         if (this.capturingFaction != null) {
             compound.putString("capturingFaction", this.capturingFaction.getID().toString());
             compound.putInt("captureTimer", this.captureTimer);
+            compound.putFloat("strengthRatio", this.strengthRatio);
+            compound.putInt("captureDuration", this.captureDuration);
             compound.putInt("captureAbortTimer", this.captureAbortTimer);
             compound.putString("phase", this.phase.name());
-            if (this.phase == CAPTURE_PHASE.PHASE_2) {
-                compound.putInt("defenderMax", this.defenderMax);
-            }
         }
         if (!village.isEmpty()) {
             compound.putIntArray("villageArea", UtilLib.bbToInt(this.getVillageArea()));
         }
+        ListNBT list = new ListNBT();
+        for (Map.Entry<Color, Float> entry : this.captureInfo.getEntries().entrySet()) {
+            CompoundNBT nbt = new CompoundNBT();
+            nbt.putInt("color", entry.getKey().getRGB());
+            nbt.putFloat("perc", entry.getValue());
+            list.add(nbt);
+        }
+        compound.put("captureInfo", list);
+        compound.putInt("badOmenTriggered", this.badOmenLevel);
+        compound.putLong("timeSinceLastRaid", this.timeSinceLastRaid);
         return super.write(compound);
     }
 
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
+        this.badOmenLevel = compound.getInt("badOmenTriggered");
         this.isDisabled = compound.getBoolean("isDisabled");
         this.isComplete = compound.getBoolean("isComplete");
         this.isInsideVillage = compound.getBoolean("isInsideVillage");
@@ -315,10 +357,11 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         if (compound.contains("capturingFaction")) {
             this.setCapturingFaction(VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(compound.getString("capturingFaction"))));
             this.captureTimer = compound.getInt("captureTimer");
-            this.captureAbortTimer = compound.getInt("captureabortTimer");
+            this.captureDuration = compound.getInt("captureDuration");
             this.phase = CAPTURE_PHASE.valueOf(compound.getString("phase"));
-            if (this.phase == CAPTURE_PHASE.PHASE_2 && compound.contains("defenderMax")) {
-                this.defenderMax = compound.getInt("defenderMax");
+            this.strengthRatio = compound.getFloat("strengthRatio");
+            this.captureAbortTimer = compound.getInt("captureAbortTimer");
+            if (this.phase == CAPTURE_PHASE.PHASE_2) {
                 this.setupPhase2();
             }
         } else {
@@ -326,10 +369,23 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         }
         if (this.world != null) {
             if (compound.contains("villageArea")) {
-                VampirismWorld.getOpt(this.world).ifPresent(vw->vw.updateArtificialFogBoundingBox(this.pos,this.controllingFaction == VReference.VAMPIRE_FACTION ? UtilLib.intToBB(compound.getIntArray("villageArea")) : null ));
+                VampirismWorld.getOpt(this.world).ifPresent(vw->{
+                    AxisAlignedBB aabb = UtilLib.intToBB(compound.getIntArray("villageArea"));
+                    vw.updateArtificialFogBoundingBox(this.pos,this.controllingFaction == VReference.VAMPIRE_FACTION ? aabb : null );
+                    if (this.isRaidTriggeredByBadOmen() && this.capturingFaction == VReference.VAMPIRE_FACTION) {
+                        vw.updateTemporaryArtificialFog(this.pos, aabb);
+                    }
+                });
             }
         }
         this.forceVillageUpdate = true;
+        ListNBT list = compound.getList("captureInfo", 10);
+        for (INBT inbt : list) {
+            Color color = new Color(((CompoundNBT) inbt).getInt("color"), true);
+            float perc = ((CompoundNBT) inbt).getFloat("perc");
+            this.captureInfo.setPercentage(color, perc);
+        }
+        this.timeSinceLastRaid = compound.getLong("timeSinceLastRaid");
     }
 
     /**
@@ -429,14 +485,14 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             }
             if (!this.checkTileStatus()) {
                 if(!isInsideVillage && capturingFaction != null) {
-                    abortCapture(false);
+                    this.breakCapture();
                 }
                 return;
             }
             if (this.forcedFaction != null) {
                 if (this.forcedFactionTimer > 0) {
                     if (this.forcedFactionTimer == 1) {
-                        this.abortCapture(false);
+                        this.breakCapture();
                     }
                     this.forcedFactionTimer--;
                 } else {
@@ -453,16 +509,20 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                 this.updateVillageArea();
             }
             if (capturingFaction != null) {
-                if (time % 40 == 0) {
+                if (time % 20 == 0) {
                     List<LivingEntity> entities = this.world.getEntitiesWithinAABB(LivingEntity.class, getVillageArea());
                     this.updateBossinfoPlayers(entities);
-                    int attacker = 0; //include player
+                    int currentAttacker = 0; //include player
                     int attackerPlayer = 0;
-                    int defender = 0; //include player
+                    int currentDefender = 0; //include player
                     int defenderPlayer = 0;
                     int neutral = 0;
                     float attackerStrength = 0f;
                     float defenderStrength = 0f;
+                    float attackerHealth = 0;
+                    float attackerMaxHealth = 0;
+                    float defenderHealth = 0;
+                    float defenderMaxHealth = 0;
 
                     //count entities
                     CaptureInfo captureInfo = new CaptureInfo(this);
@@ -470,16 +530,21 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                         IFaction<?> faction = VampirismAPI.factionRegistry().getFaction(entity);
                         if (faction == null) continue;
                         if (entity instanceof ICaptureIgnore) continue;
+                        if (!entity.isAlive()) continue;
                         if (this.capturingFaction.equals(faction)) {
-                            attacker++;
+                            currentAttacker++;
                             attackerStrength += this.getStrength(entity);
+                            attackerMaxHealth += entity.getMaxHealth();
+                            attackerHealth += entity.getHealth();
                             if (entity instanceof PlayerEntity) attackerPlayer++;
                             if (entity instanceof IVillageCaptureEntity) {
                                 ((IVillageCaptureEntity) entity).attackVillage(captureInfo);
                             }
                         } else if (faction.equals(this.controllingFaction)) {
-                            defender++;
+                            currentDefender++;
                             defenderStrength += this.getStrength(entity);
+                            defenderMaxHealth += entity.getMaxHealth();
+                            defenderHealth += entity.getHealth();
                             if (entity instanceof PlayerEntity) defenderPlayer++;
                             if (entity instanceof IVillageCaptureEntity) {
                                 ((IVillageCaptureEntity) entity).defendVillage(captureInfo);
@@ -489,17 +554,20 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                         }
                     }
 
-                    if (attackerPlayer == 0) {
+                    if (currentAttacker == 0) {
                         this.captureAbortTimer++;
                     } else {
                         this.captureAbortTimer = 0;
-                        captureTimer++;
-                        if (this.phase == CAPTURE_PHASE.PHASE_2)
-                            captureForceTargetTimer++;
                     }
 
-                    if (this.captureAbortTimer > 7) {
-                        this.abortCapture(true);
+                    ++this.captureTimer;
+                    --this.captureDuration;
+                    if (this.phase == CAPTURE_PHASE.PHASE_2) {
+                        captureForceTargetTimer++;
+                    }
+
+                    if (this.captureDuration == 0 || this.captureAbortTimer > 10) {
+                        this.abortCapture();
                     } else {
                         switch (this.phase) {
                             case PHASE_1_NEUTRAL:
@@ -507,6 +575,12 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                                     this.captureTimer = 1;
                                     this.setupPhase2();
                                     this.markDirty();
+                                } else {
+                                    if (captureTimer % 2 == 0) {
+                                        if (attackerStrength < 5){
+                                            this.spawnCaptureEntity(this.capturingFaction);
+                                        }
+                                    }
                                 }
                                 break;
                             case PHASE_1_OPPOSITE:
@@ -514,22 +588,29 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                                     captureTimer = 1;
                                     this.setupPhase2();
                                     this.markDirty();
-                                    this.notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.almost_captured", defender));
+                                    this.notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.almost_captured", currentDefender));
                                 } else {
                                     if (captureTimer % 2 == 0) {
-                                        if (attackerStrength * 1.1f > defenderStrength) {
-                                            this.spawnCaptureEntity(this.controllingFaction);
-                                        } else if (defenderStrength * 1.1f > attackerStrength) {
+                                        float max = attackerStrength + defenderStrength;
+                                        if (attackerStrength / max <= this.strengthRatio) {
                                             this.spawnCaptureEntity(this.capturingFaction);
+                                        } else if (defenderStrength / max <= 1 - this.strengthRatio) {
+                                            this.spawnCaptureEntity(this.controllingFaction);
                                         }
                                     }
                                 }
                                 break;
                             case PHASE_2:
-                                if (defender == 0) {
+                                if (currentDefender == 0) {
                                     captureTimer++;
-                                    if (captureTimer > 4)
+                                    if (captureTimer > 4) {
                                         this.completeCapture(true, false);
+                                    }
+                                } else if (currentAttacker == 0) {
+                                    captureTimer++;
+                                    if (captureTimer > 4) {
+                                        this.abortCapture();
+                                    }
                                 } else {
                                     captureTimer = 1;
                                 }
@@ -537,12 +618,14 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                             default:
                                 break;
                         }
-                        this.handleBossBar(defender);
+                        this.handleBossBar(defenderMaxHealth, defenderHealth, attackerMaxHealth, attackerHealth);
                     }
                 }
             }
             //normal village life
             else {
+                this.timeSinceLastRaid++;
+
                 if (this.controllingFaction != null && time % 512 == 0) {
                     int beds = (int) ((ServerWorld) world).getPointOfInterestManager().func_219146_b(pointOfInterestType -> pointOfInterestType.equals(PointOfInterestType.HOME), this.pos, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXSize(), 2) + Math.pow(this.getVillageArea().getZSize(), 2))) / 2, PointOfInterestManager.Status.ANY).count();
                     boolean spawnTaskMaster = RNG.nextInt(6) == 0;
@@ -598,6 +681,14 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                         ModEventFactory.fireReplaceVillageBlockEvent(this, b, pos);
                     }
                 }
+
+                if (timeSinceLastRaid > 12000 && time % 20 == 0 && this.world.getDifficulty() != Difficulty.PEACEFUL && this.world.rand.nextFloat() < VampirismConfig.BALANCE.viRandomRaidChance.get()) {
+                    List<IFaction<?>> factions = Lists.newArrayList(VampirismAPI.factionRegistry().getFactions());
+                    if (this.controllingFaction != null) {
+                        factions.remove(this.controllingFaction);
+                    }
+                    this.initiateCapture(factions.get(this.world.rand.nextInt(factions.size())), null, 0, -1f);
+                }
             }
         }
     }
@@ -622,6 +713,10 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private void setCapturingFaction(@Nullable IFaction<?> faction) {
         this.capturingFaction = faction;
         this.progressColor = faction != null ? faction.getColor().getColorComponents(null) : DyeColor.WHITE.getColorComponentValues();
+        if (faction != null) {
+            this.captureInfo.setColors(faction.getColor(), Color.WHITE, this.controllingFaction == null ? Color.WHITE : this.controllingFaction.getColor());
+            this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.bossinfo.raid", faction.getName().copyRaw().mergeStyle(faction.getChatColor())));
+        }
     }
 
     @Override
@@ -642,17 +737,17 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         return this.villageAreaReduced;
     }
 
-    private boolean capturePreconditions(@Nullable IFaction<?> faction, PlayerEntity player) {
+    private boolean capturePreconditions(@Nullable IFaction<?> faction, @Nonnull BiConsumer<ITextComponent, Boolean> feedback) {
         if (faction == null) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.no_faction"), true);
+            feedback.accept(new TranslationTextComponent("text.vampirism.village.no_faction"), true);
             return false;
         }
         if (capturingFaction != null) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.capturing_in_progress"), true);
+            feedback.accept(new TranslationTextComponent("text.vampirism.village.capturing_in_progress"), true);
             return false;
         }
         if (faction.equals(controllingFaction)) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.same_faction"), true);
+            feedback.accept(new TranslationTextComponent("text.vampirism.village.same_faction"), true);
             return false;
         }
         if (!isInsideVillage) {
@@ -679,19 +774,19 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                 text.append(new TranslationTextComponent("text.vampirism.village.missing_components.villager"));
                 text.appendString(" " + stats.get(4) + "/" + MIN_VILLAGER);
             }
-            player.sendStatusMessage(text, false);
+            feedback.accept(text, false);
 
 
             return false;
         }
         if (isDisabled) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.othertotem"), true);
+            feedback.accept(new TranslationTextComponent("text.vampirism.village.othertotem"), true);
             return false;
         }
         VampirismVillageEvent.InitiateCapture event = new VampirismVillageEvent.InitiateCapture(this, faction);
         MinecraftForge.EVENT_BUS.post(event);
         if(event.getResult().equals(Event.Result.DENY)) {
-            player.sendStatusMessage(new TranslationTextComponent(event.getMessage()), true);
+            feedback.accept(new TranslationTextComponent(event.getMessage()), true);
             return false;
         }
         return true;
@@ -715,19 +810,27 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
 
     @SuppressWarnings("ConstantConditions")
     public void initiateCapture(PlayerEntity player) {
-        this.updateTileStatus();
         if (!player.isAlive()) return;
-        IFaction<?> faction = FactionPlayerHandler.get(player).getCurrentFaction();
-        if (!this.capturePreconditions(faction, player)) return;
+        initiateCapture(FactionPlayerHandler.get(player).getCurrentFaction(), player::sendStatusMessage, -1, -1f);
+    }
+
+    /**
+     * @param faction attacking faction
+     * @param feedback interaction feedback supplier if capture cannot be started {@link #capturePreconditions(IFaction, BiConsumer)}
+     * @param badOmenLevel level of the badomen effect that triggered the raid (effect amplifier + 1). -1 if not triggered by bad omen.
+     * @param strengthModifier modifier of the faction strength ration. See {@link #calculateAttackStrength(float)}
+     */
+    public void initiateCapture(IFaction<?> faction, @Nullable BiConsumer<ITextComponent, Boolean> feedback, int badOmenLevel, float strengthModifier) {
+        this.updateTileStatus();
+        if (!this.capturePreconditions(faction, feedback == null? (a,b)->{}:feedback)) return;
         this.forceVillageUpdate = true;
         this.captureAbortTimer = 0;
+        this.captureDuration = 24000;
         this.captureTimer = 0;
         this.captureForceTargetTimer = 0;
         this.setCapturingFaction(faction);
-        this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.bossinfo.capture"));
-        this.captureInfo.setColor(BossInfo.Color.YELLOW);
-        this.captureInfo.setPercent(0f);
-        this.defenderMax = 0;
+        this.calculateAttackStrength(badOmenLevel, strengthModifier);
+        this.timeSinceLastRaid = 0;
 
         if (this.controllingFaction == null) {
             this.phase = CAPTURE_PHASE.PHASE_1_NEUTRAL;
@@ -741,6 +844,61 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         this.markDirty();
 
         this.makeAgressive();
+        LOGGER.debug("Initiated capture with strength {} by {} at {} with badomen level {}", this.strengthRatio, faction.getID(), this.getPos(), badOmenLevel);
+    }
+
+    /**
+     * initiates a new capture or increases the badomen level of a running capture
+     *
+     * @param faction attacking faction
+     * @param feedback interaction feedback supplier if capture cannot be started {@link #capturePreconditions(IFaction, BiConsumer)}
+     * @param badOmenLevel level of the badomen effect that triggered the raid (effect amplifier + 1). -1 if not triggered by bad omen.
+     * @param strengthModifier modifier of the faction strength ration. See {@link #calculateAttackStrength(int,float)}
+     * @return true if the badomen effect should be consumed
+     */
+    public boolean initiateCaptureOrIncreaseBadOmenLevel(IFaction<?> faction, @Nullable BiConsumer<ITextComponent, Boolean> feedback, int badOmenLevel, float strengthModifier) {
+        if (this.capturingFaction == null) {
+            this.initiateCapture(faction, feedback, badOmenLevel, strengthModifier);
+            return true;
+        }
+        if (this.capturingFaction == faction) {
+            if (this.phase == CAPTURE_PHASE.PHASE_1_OPPOSITE) {
+                int tmpBadOmen = this.badOmenLevel;
+                float tmpStrength = this.strengthRatio;
+                this.calculateAttackStrength(this.badOmenLevel + badOmenLevel, strengthModifier);
+                this.captureTimer = this.captureTimer/2;
+                LOGGER.debug("Increase capture from strength {} and badomen level {} to strength {} and badomen level {}", tmpStrength, tmpBadOmen, this.strengthRatio, this.badOmenLevel);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * sets the strength ratio of attacking and defending factions
+     *
+     * @param strengthModifier a positive value increases the attacker strength while the defender strength is increased by negative values
+     */
+    private void calculateAttackStrength(int badOmenLevel, float strengthModifier) {
+        this.badOmenLevel = MathHelper.clamp(badOmenLevel,-1, 5);
+        int level = this.badOmenLevel-1;
+        float defenderStrength = 1f;
+        float attackerStrength = 1f;
+        if (level >= 0) {
+            attackerStrength += 0.25f + 0.4375f * level;
+        }
+        if (strengthModifier > 0) {
+            attackerStrength += strengthModifier;
+        } else {
+            defenderStrength -= strengthModifier;
+        }
+        Pair<Float, Float> strength = ModEventFactory.fireDefineRaidStrengthEvent(this, level, defenderStrength, attackerStrength);
+        this.strengthRatio = strength.getRight() / (strength.getLeft() + strength.getRight());
+    }
+
+    @Override
+    public boolean isRaidTriggeredByBadOmen() {
+        return this.badOmenLevel >= 0;
     }
 
     /**
@@ -755,7 +913,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             for (LivingEntity entity : includedPlayerEntities) {
                 if (entity instanceof ServerPlayerEntity) {
                     if (!oldList.remove(entity)) {
-                        captureInfo.addPlayer((ServerPlayerEntity) entity);
+                        captureInfo.addPlayer(((ServerPlayerEntity) entity));
                     }
                 }
             }
@@ -769,7 +927,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         PHASE_1_NEUTRAL, PHASE_1_OPPOSITE, PHASE_2
     }
 
-    public void ringBell(@Nullable PlayerEntity playerEntity){
+    public void ringBell(@Nonnull PlayerEntity playerEntity){
         if (this.capturingFaction != null) {
             IPlayableFaction<?> faction = FactionPlayerHandler.get(playerEntity).getCurrentFaction();
             boolean defender = faction == this.controllingFaction;
@@ -805,7 +963,6 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             LOGGER.warn("No village capture entity registered for {}", faction);
             return;
         }
-        //noinspection ConstantConditions
         MobEntity entity = entityType.create(this.world);
         if (entity instanceof VampireBaseEntity)
             ((VampireBaseEntity) entity).setSpawnRestriction(VampireBaseEntity.SpawnRestriction.SIMPLE);
@@ -828,24 +985,29 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     private void setupPhase2() {
-        if (this.phase != CAPTURE_PHASE.PHASE_2)
+        if (this.phase != CAPTURE_PHASE.PHASE_2) {
             this.phase = CAPTURE_PHASE.PHASE_2;
-        this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.defender_remaining"));
-        this.captureInfo.setColor(BossInfo.Color.WHITE);
+            this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.bossinfo.remaining"));
+        }
     }
 
-    private void handleBossBar(int defenderLeft) {
-        if (phase == CAPTURE_PHASE.PHASE_1_NEUTRAL || phase == CAPTURE_PHASE.PHASE_1_OPPOSITE) {
-            captureInfo.setPercent(this.captureTimer / (float) VampirismConfig.BALANCE.viPhase1Duration.get());
-        } else if (phase == CAPTURE_PHASE.PHASE_2) {
-            if (defenderMax != 0) {
-                if (defenderLeft > defenderMax) defenderMax = defenderLeft;
-                captureInfo.setPercent((float) defenderLeft / (float) defenderMax);
-            } else {
-                defenderMax = defenderLeft;
-                this.setupPhase2();
-            }
+    private void handleBossBar(float defenderMaxHealth, float defenderHealth, float attackerMaxHealth, float attackerHealth) {
+        float neutralPerc;
+        switch (this.phase){
+            case PHASE_1_NEUTRAL:
+            case PHASE_1_OPPOSITE:
+                neutralPerc = this.captureTimer / (float) VampirismConfig.BALANCE.viPhase1Duration.get();
+                break;
+            case PHASE_2:
+                neutralPerc = 1f;
+                this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.bossinfo.remaining"));
+                break;
+            default:
+                neutralPerc = 0;
+                break;
         }
+        float max = defenderHealth + attackerHealth;
+        this.captureInfo.setPercentage(neutralPerc * attackerHealth /max, 1-neutralPerc, neutralPerc * defenderHealth /max);
     }
 
     @Nullable

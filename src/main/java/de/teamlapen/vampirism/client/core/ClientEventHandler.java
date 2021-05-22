@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Either;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
@@ -12,6 +13,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.potion.VampirismPotion;
+import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
@@ -34,6 +36,7 @@ import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -169,5 +172,10 @@ public class ClientEventHandler {
                 event.getToolTip().add(new TranslationTextComponent("text.vampirism.hunter_potion.deadly").mergeStyle(TextFormatting.DARK_RED));
             }
 
+    }
+
+    @SubscribeEvent
+    public void onWorldClosed(WorldEvent.Unload event) {
+        ((ClientProxy) VampirismMod.proxy).clearBossBarOverlay();
     }
 }
