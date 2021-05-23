@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:vampire/util1",
+  "skills": [
+    "vampirism:hissing"
+  ]
+}

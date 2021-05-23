@@ -23,6 +23,7 @@ public class VampireActions {
     public static final TeleportVampireAction teleport = getNull();
     public static final InvisibilityVampireAction vampire_invisibility = getNull();
     public static final RageVampireAction vampire_rage = getNull();
+    public static final HissingAction hissing = getNull();
 
     public static void registerDefaultActions(IForgeRegistry<IAction> registry) {
         registry.register(new BatVampireAction().setRegistryName(REFERENCE.MODID, "bat"));
@@ -36,5 +37,6 @@ public class VampireActions {
         registry.register(new TeleportVampireAction().setRegistryName(REFERENCE.MODID, "teleport"));
         registry.register(new InvisibilityVampireAction().setRegistryName(REFERENCE.MODID, "vampire_invisibility"));
         registry.register(new RageVampireAction().setRegistryName(REFERENCE.MODID, "vampire_rage"));
+        registry.register(new HissingAction().setRegistryName(REFERENCE.MODID, "hissing"));
     }
 }
