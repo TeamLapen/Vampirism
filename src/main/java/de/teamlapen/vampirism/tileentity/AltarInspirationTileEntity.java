@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.EntityType;
@@ -99,8 +100,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
 
     public void startRitual(PlayerEntity p) {
         if (ritualTicksLeft > 0 || !p.isAlive()) return;
-        VampirePlayer player = VampirePlayer.get(p);
-        int targetLevel = player.getLevel() + 1;
+        int targetLevel = VampirismPlayerAttributes.get(p).vampireLevel + 1;
         VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
         if (!levelingConf.isLevelValidForAltarInspiration(targetLevel)) {
             if (p.world.isRemote)
@@ -114,7 +114,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
             return;
         }
         if (!p.world.isRemote) {
-            ModParticles.spawnParticlesServer(p.world, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, player.getRepresentingEntity().getEntityId(), false), this.pos.getX() + 0.5, this.pos.getY() + 1, this.pos.getZ() + 0.5, 40, 0.1F, 0.1f, 0.1f, 0);
+            ModParticles.spawnParticlesServer(p.world, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, p.getEntityId(), false), this.pos.getX() + 0.5, this.pos.getY() + 1, this.pos.getZ() + 0.5, 40, 0.1F, 0.1f, 0.1f, 0);
         } else {
             ((InternalTank) tank).doDrain(neededBlood, IFluidHandler.FluidAction.EXECUTE);
         }
@@ -136,8 +136,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
                     ritualPlayer.setHealth(ritualPlayer.getMaxHealth());
                     break;
                 case 1:
-                    VampirePlayer player = VampirePlayer.get(ritualPlayer);
-                    int targetLevel = player.getLevel() + 1;
+                    int targetLevel = VampirismPlayerAttributes.get(ritualPlayer).vampireLevel + 1;
                     VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
                     int blood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
                     ((InternalTank) tank).doDrain(blood, IFluidHandler.FluidAction.EXECUTE);

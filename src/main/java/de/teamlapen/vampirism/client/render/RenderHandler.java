@@ -8,9 +8,9 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.items.HunterCoatItem;
-import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.ASMHooks;
 import de.teamlapen.vampirism.util.Helper;
@@ -108,7 +108,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         lastBloodVisionTicks = bloodVisionTicks;
         VampirePlayer vampire = VampirePlayer.get(mc.player);
         //Blood vision
-        if (vampire.getSpecialAttributes().blood_vision && !VampirismConfig.CLIENT.disableBloodVisionRendering.get() && !VampirePlayer.get(mc.player).isGettingSundamage(mc.player.world)) {
+        if (vampire.getSpecialAttributes().blood_vision && !VampirismConfig.CLIENT.disableBloodVisionRendering.get() && !vampire.isGettingSundamage(mc.player.world)) {
 
             if (bloodVisionTicks < BLOOD_VISION_FADE_TICKS) {
                 bloodVisionTicks++;
@@ -212,7 +212,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
                 LazyOptional<IExtendedCreatureVampirism> opt = entity instanceof CreatureEntity && entity.isAlive() ? ExtendedCreature.getSafe(entity) : LazyOptional.empty();
                 if (opt.map(creature -> creature.getBlood() > 0 && !creature.hasPoisonousBlood()).orElse(false)) {
                     color = 0xFF0000;
-                } else if (VampirePlayer.getOpt(mc.player).map(VampirePlayer::getSpecialAttributes).map(s -> s.blood_vision_garlic).orElse(false) && ((opt.map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) || Helper.isHunter(entity))) {
+                } else if (VampirismPlayerAttributes.get(mc.player).getVampSpecial().blood_vision_garlic && ((opt.map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) || Helper.isHunter(entity))) {
                     color = 0x07FF07;
                 } else {
                     color = 0xA0A0A0;
@@ -257,7 +257,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     @SubscribeEvent
     public void onRenderLivingPre(RenderLivingEvent.Pre<PlayerEntity, PlayerModel<PlayerEntity>> event) {
         LivingEntity entity = event.getEntity();
-        if (entity instanceof PlayerEntity && HunterPlayer.getOpt((PlayerEntity) entity).map(HunterPlayer::getSpecialAttributes).map(HunterPlayerSpecialAttribute::isDisguised).orElse(false)) {
+        if (entity instanceof PlayerEntity && VampirismPlayerAttributes.get(mc.player).getHuntSpecial().isDisguised()) {
             double dist = this.mc.player == null ? 0 : entity.getDistanceSq(this.mc.player);
             if (dist > 64) {
                 event.setCanceled(true);
@@ -275,10 +275,11 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
         PlayerEntity player = event.getPlayer();
         LazyOptional<VampirePlayer> pOpt = VampirePlayer.getOpt(player);
-        if(pOpt.map(VampirePlayer::getSpecialAttributes).map(s->s.invisible).orElse(false)){
+        VampirePlayerSpecialAttributes vAtt = VampirismPlayerAttributes.get(player).getVampSpecial();
+        if(vAtt.invisible){
             event.setCanceled(true);
         }
-        else if (pOpt.map(VampirePlayer::getSpecialAttributes).map(s -> s.bat).orElse(false)) {
+        else if (vAtt.bat) {
             event.setCanceled(true);
             if (entityBat == null) {
                 entityBat = EntityType.BAT.create(event.getEntity().getEntityWorld());

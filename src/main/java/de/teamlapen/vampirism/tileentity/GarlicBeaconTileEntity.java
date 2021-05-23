@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.blocks.GarlicBeaconBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.DamageHandler;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -83,11 +84,12 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
     }
 
     public void onTouched(PlayerEntity player) {
-        VampirePlayer.getOpt(player).ifPresent(vampirePlayer -> {
-            if (vampirePlayer.getLevel() > 0) {
-                DamageHandler.affectVampireGarlicDirect(vampirePlayer, strength);
-            }
-        });
+        if(VampirismPlayerAttributes.get(player).vampireLevel>0){
+            VampirePlayer.getOpt(player).ifPresent(vampirePlayer -> {
+                    DamageHandler.affectVampireGarlicDirect(vampirePlayer, strength);
+            });
+        }
+
     }
 
     @OnlyIn(Dist.CLIENT)

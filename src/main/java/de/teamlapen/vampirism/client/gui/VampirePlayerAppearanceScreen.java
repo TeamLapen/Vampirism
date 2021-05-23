@@ -5,9 +5,9 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableArrayTextComponentList;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.network.AppearancePacket;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -24,7 +24,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
 public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity> {
@@ -56,8 +55,8 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
     @Override
     protected void init() {
         super.init();
-        this.color = FactionPlayerHandler.getOpt(Minecraft.getInstance().player).resolve().flatMap(fhp -> Optional.ofNullable(fhp.getCurrentFaction())).map(IPlayableFaction::getColor).orElse(Color.gray).getRGBColorComponents(null);
-
+        IFaction<?> f = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
+        this.color = f == null ? Color.gray.getRGBColorComponents(null) : f.getColor().getRGBColorComponents(null);
 
         this.fangType = VampirePlayer.getOpt(this.minecraft.player).map(VampirePlayer::getFangType).orElse(0);
         this.eyeType = VampirePlayer.getOpt(this.minecraft.player).map(VampirePlayer::getEyeType).orElse(0);

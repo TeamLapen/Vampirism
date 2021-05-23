@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.player;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -25,7 +24,6 @@ import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.items.GarlicBreadItem;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.player.vampire.actions.BatVampireAction;
 import de.teamlapen.vampirism.potion.PotionPoison;
 import de.teamlapen.vampirism.potion.VampirismPotion;
@@ -106,7 +104,7 @@ public class ModPlayerEventHandler {
     public void onAttackEntity(AttackEntityEvent event) {
         PlayerEntity player = event.getPlayer();
         if (player.isAlive()) {
-            if (VampirePlayer.get(player).getSpecialAttributes().bat) {
+            if (VampirismPlayerAttributes.get(player).getVampSpecial().bat) {
                 event.setCanceled(true);
             }
             HunterPlayer.getOpt(player).ifPresent(HunterPlayer::breakDisguise);
@@ -141,7 +139,7 @@ public class ModPlayerEventHandler {
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
         if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(v->v.isDBNO()|| v.getSpecialAttributes().bat).orElse(false)) {
             event.setCanceled(true);
-        } else if ((ModBlocks.garlic_beacon_normal.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_weak.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_improved.equals(event.getState().getBlock())) && VampirePlayer.getOpt(event.getPlayer()).map(VampirismPlayer::getLevel).orElse(0) > 0) {
+        } else if ((ModBlocks.garlic_beacon_normal.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_weak.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_improved.equals(event.getState().getBlock())) && VampirismPlayerAttributes.get(event.getPlayer()).vampireLevel > 0) {
             event.setNewSpeed(event.getOriginalSpeed() * 0.1F);
         }
     }
@@ -224,7 +222,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onLivingFall(LivingFallEvent event) {
         if (event.getEntity() instanceof PlayerEntity) {
-            event.setDistance(event.getDistance() - VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(VampirePlayer::getSpecialAttributes).map(VampirePlayerSpecialAttributes::getJumpBoost).orElse(0));
+            event.setDistance(event.getDistance() - VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().getJumpBoost());
         }
     }
 
@@ -232,7 +230,7 @@ public class ModPlayerEventHandler {
     public void onLivingHurt(LivingHurtEvent event) {
         DamageSource d = event.getSource();
         if (!d.isDamageAbsolute() && !d.isUnblockable() && event.getEntityLiving() instanceof PlayerEntity) {
-            if (VampirePlayer.getOpt((PlayerEntity) event.getEntityLiving()).map(VampirePlayer::getSpecialAttributes).map(s -> s.bat).orElse(false)) {
+            if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().bat) {
                 event.setAmount(event.getAmount() * 2);
             }
         }
@@ -241,7 +239,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onLivingJump(LivingEvent.LivingJumpEvent event) {
         if (event.getEntity() instanceof PlayerEntity) {
-            event.getEntity().setMotion(event.getEntity().getMotion().add(0.0D, (float) (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(VampirePlayer::getSpecialAttributes).map(VampirePlayerSpecialAttributes::getJumpBoost).orElse(0)) * 0.1F, 0.0D));
+            event.getEntity().setMotion(event.getEntity().getMotion().add(0.0D, (float) VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().getJumpBoost() * 0.1F, 0.0D));
         }
     }
 
@@ -352,7 +350,7 @@ public class ModPlayerEventHandler {
     public void eyeHeight(EntityEvent.Size event) {
         if (event.getEntity() instanceof PlayerEntity && ((PlayerEntity) event.getEntity()).inventory != null /*make sure we are not in the player's contructor*/) {
             if (event.getEntity().isAlive() && event.getEntity().getPositionVec().lengthSquared() != 0) { //Do not attempt to get capability while entity is being initialized
-                if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(vampire -> vampire.getSpecialAttributes().bat).orElse(false)) {
+                if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().bat) {
                     event.setNewSize(BatVampireAction.BAT_SIZE);
                     event.setNewEyeHeight(BatVampireAction.BAT_EYE_HEIGHT);
                 }
@@ -446,7 +444,7 @@ public class ModPlayerEventHandler {
         //also notify client about wrong destroyed neighbor blocks (bed)
         if (totemPos != null && event.getWorld().isBlockLoaded(totemPos)) {
             TileEntity totem = (event.getWorld().getTileEntity(totemPos));
-            if (totem instanceof TotemTileEntity && ((TotemTileEntity) totem).getControllingFaction() != null && VampirismAPI.getFactionPlayerHandler(event.getPlayer()).map(player -> player.getCurrentFaction() != ((TotemTileEntity) totem).getControllingFaction()).orElse(true)) {
+            if (totem instanceof TotemTileEntity && ((TotemTileEntity) totem).getControllingFaction() != null && VampirismPlayerAttributes.get(event.getPlayer()).faction != ((TotemTileEntity) totem).getControllingFaction()) {
                 event.setCanceled(true);
                 event.getPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.village.totem_destroy.fail_totem_faction"), true);
                 if (!positions.isEmpty()) {

@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.client.util.ITooltipFlag;
@@ -73,7 +73,8 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
     @Override
     public void onArmorTick(ItemStack stack, World world, PlayerEntity player) {
         if (player.ticksExisted % 16 == 8) {
-            if (FactionPlayerHandler.getOpt(player).map(a -> a.getCurrentFaction() != null && !VReference.HUNTER_FACTION.equals(a.getCurrentFaction())).orElse(false)) {
+            IFaction<?> f = VampirismPlayerAttributes.get(player).faction;
+            if (f != null && !VReference.HUNTER_FACTION.equals(f)) {
                 player.addPotionEffect(new EffectInstance(ModEffects.poison, 20, 1));
             }
         }

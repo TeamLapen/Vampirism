@@ -12,8 +12,10 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.items.ObsidianArmorItem;
+import de.teamlapen.vampirism.player.IVampirismPlayer;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.player.VampirismPlayer;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
@@ -102,13 +104,11 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     private final ActionHandler<IHunterPlayer> actionHandler;
     private final SkillHandler<IHunterPlayer> skillHandler;
-    private final HunterPlayerSpecialAttribute specialAttributes;
 
     public HunterPlayer(PlayerEntity player) {
         super(player);
         actionHandler = new ActionHandler<>(this);
         skillHandler = new SkillHandler<>(this, VReference.HUNTER_FACTION);
-        specialAttributes = new HunterPlayerSpecialAttribute();
     }
 
     @Override
@@ -151,9 +151,12 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         return skillHandler;
     }
 
+    /**
+     * You can use {@link VampirismPlayerAttributes#getHuntSpecial()} instead if you don't have the hunter player already
+     */
     @Nonnull
     public HunterPlayerSpecialAttribute getSpecialAttributes() {
-        return this.specialAttributes;
+        return ((IVampirismPlayer)player).getVampAtts().getHuntSpecial();
     }
 
     @Override
@@ -307,6 +310,11 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         super.writeFullUpdate(nbt);
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);
+    }
+
+    @Override
+    public int getLevel() {
+        return ((IVampirismPlayer)player).getVampAtts().hunterLevel;
     }
 
     private static class Storage implements Capability.IStorage<IHunterPlayer> {

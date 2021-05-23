@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.factions;
 
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -11,6 +12,8 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
+import de.teamlapen.vampirism.player.IVampirismPlayer;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.tasks.reward.LordLevelReward;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.ModEventFactory;
@@ -138,6 +141,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         this.boundActions.putAll(oldP.boundActions);
         this.titleGender = oldP.titleGender;
         notifyFaction(oldP.currentFaction, oldP.currentLevel);
+        this.updateCache();
     }
 
     /**
@@ -337,7 +341,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (player instanceof ServerPlayerEntity) {
             ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayerEntity) player, currentFaction, currentLevel, currentLordLevel);
         }
-        player.refreshDisplayName();
+        updateCache();
         return true;
 
     }
@@ -376,7 +380,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayerEntity) player, currentFaction, currentLevel, currentLordLevel);
         }
         if (sync) sync(false);
-        player.refreshDisplayName();
+        this.updateCache();
         return true;
     }
 
@@ -430,6 +434,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
         this.loadBoundActions(nbt);
         notifyFaction(old, oldLevel);
+        updateCache();
     }
 
     private void saveNBTData(CompoundNBT nbt) {
@@ -460,6 +465,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             this.titleGender = nbt.getBoolean("title_gender");
         }
         loadBoundActions(nbt);
+        updateCache();
     }
 
     private void writeBoundActions(CompoundNBT nbt) {
@@ -524,6 +530,15 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     public int getMaxMinions() {
         return currentLordLevel * VampirismConfig.BALANCE.miMinionPerLordLevel.get();
+    }
+
+    private void updateCache(){
+        player.refreshDisplayName();
+        VampirismPlayerAttributes atts = ((IVampirismPlayer)player).getVampAtts();
+        atts.hunterLevel = this.currentFaction == VReference.HUNTER_FACTION ? this.currentLevel : 0;
+        atts.vampireLevel = this.currentFaction == VReference.VAMPIRE_FACTION ? this.currentLevel : 0;
+        atts.lordLevel = this.currentLordLevel;
+        atts.faction = this.currentFaction;
     }
 
     private static class Storage implements Capability.IStorage<IFactionPlayerHandler> {

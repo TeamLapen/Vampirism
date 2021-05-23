@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskActionPacket;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -81,7 +82,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
 
     @Override
     public boolean canInteractWith(@Nonnull PlayerEntity playerIn) {
-        return FactionPlayerHandler.getOpt(playerIn).map(player -> player.getCurrentFaction() != null).orElse(false);
+        return VampirismPlayerAttributes.get(playerIn).faction != null;
     }
 
     public int size() {

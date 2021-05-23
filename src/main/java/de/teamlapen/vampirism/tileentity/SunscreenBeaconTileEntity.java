@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.tileentity;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -49,7 +49,7 @@ public class SunscreenBeaconTileEntity extends TileEntity implements ITickableTi
 
             for (PlayerEntity player : list) {
                 if (player.isAlive() && selector.test(player)) {
-                    if (VampirePlayer.get(player).getLevel() > 0) {
+                    if (VampirismPlayerAttributes.get(player).vampireLevel>0) {
                         player.addPotionEffect(new EffectInstance(ModEffects.sunscreen, 160, 5, true, false));
                     }
                 }

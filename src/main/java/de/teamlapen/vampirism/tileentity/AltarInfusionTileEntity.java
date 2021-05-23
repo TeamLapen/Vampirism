@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.container.AltarInfusionContainer;
 import de.teamlapen.vampirism.items.PureBloodItem;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.block.BlockState;
@@ -94,7 +95,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         }
         this.player = null;
 
-        targetLevel = VampirePlayer.get(player).getLevel() + 1;
+        targetLevel = VampirismPlayerAttributes.get(player).vampireLevel + 1;
         int requiredLevel = checkRequiredLevel();
         if (requiredLevel == -1) {
             if (messagePlayer)
@@ -456,7 +457,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         if (this.world.getPlayers().size() == 0) return false;
         this.player = this.world.getPlayerByUuid(playerID);
         if (this.player != null && player.isAlive()) {
-            this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
+            this.targetLevel = VampirismPlayerAttributes.get(player).vampireLevel + 1;
             checkStructureLevel(checkRequiredLevel());
         } else {
             runningTick = 0;

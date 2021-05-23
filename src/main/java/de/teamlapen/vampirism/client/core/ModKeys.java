@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.client.gui.SelectActionScreen;
 import de.teamlapen.vampirism.client.gui.SelectMinionTaskScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import net.minecraft.client.Minecraft;
@@ -138,7 +139,7 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
             }
         } else if (keyPressed == KEY.ACTION) {
             if (Minecraft.getInstance().player.isAlive()) {
-                IPlayableFaction faction = FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFaction();
+                IPlayableFaction<?> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
                 if (faction != null) {
                     Minecraft.getInstance().displayGuiScreen(new SelectActionScreen(faction.getColor(), false));
                 }

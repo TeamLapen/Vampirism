@@ -25,8 +25,10 @@ import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.mixin.ArmorItemAccessor;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
+import de.teamlapen.vampirism.player.IVampirismPlayer;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.player.VampirismPlayer;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
@@ -156,7 +158,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private final BloodStats bloodStats;
     private final ActionHandler<IVampirePlayer> actionHandler;
     private final SkillHandler<IVampirePlayer> skillHandler;
-    private final VampirePlayerSpecialAttributes specialAttributes = new VampirePlayerSpecialAttributes();
     private boolean sundamage_cache = false;
     private EnumStrength garlic_cache = EnumStrength.NONE;
     private int eyeType = 0;
@@ -411,7 +412,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public
     @Nullable
     IFaction getDisguisedAs() {
-        return isDisguised() ? specialAttributes.disguisedAs : getFaction();
+        return isDisguised() ? getSpecialAttributes().disguisedAs : getFaction();
     }
 
     /**
@@ -479,9 +480,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return skillHandler;
     }
 
+    /**
+     * You can use {@link VampirismPlayerAttributes#getVampSpecial()} instead if you don't have the vampire player already
+     */
     @Nonnull
     public VampirePlayerSpecialAttributes getSpecialAttributes() {
-        return specialAttributes;
+        return ((IVampirismPlayer)player).getVampAtts().getVampSpecial();
     }
 
     @Override
@@ -495,7 +499,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public boolean isAdvancedBiter() {
-        return specialAttributes.advanced_biter;
+        return getSpecialAttributes().advanced_biter;
     }
 
     @Override
@@ -505,7 +509,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public boolean isDisguised() {
-        return specialAttributes.disguised;
+        return getSpecialAttributes().disguised;
     }
 
     @Nonnull
@@ -1386,6 +1390,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             duration = Math.max(1, (int) (duration * VampirismConfig.BALANCE.vsDbnoReduction.get()));
         }
         return duration;
+    }
+
+    @Override
+    public int getLevel() {
+        return ((IVampirismPlayer)player).getVampAtts().vampireLevel;
     }
 
     private static class Storage implements Capability.IStorage<IVampirePlayer> {

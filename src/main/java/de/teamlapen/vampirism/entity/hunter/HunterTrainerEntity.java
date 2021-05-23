@@ -6,9 +6,8 @@ import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
-import de.teamlapen.vampirism.player.VampirismPlayer;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
-import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
@@ -120,7 +119,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 
         if (!flag && this.isAlive() && !player.isSneaking() && hand == Hand.MAIN_HAND) {
-            int lvl=HunterPlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0);
+            int lvl= VampirismPlayerAttributes.get(player).hunterLevel;
             if (!this.world.isRemote && lvl>0) {
                 int levelCorrect = HunterLevelingConf.instance().isLevelValidForTrainer(lvl+ 1);
                 if (levelCorrect == 0) {
