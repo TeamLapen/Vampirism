@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.goals.AttackRangedDarkBloodGoal;
 import de.teamlapen.vampirism.entity.goals.FleeGarlicVampireGoal;
 import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
-import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
@@ -89,7 +88,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
                 float pld = (this.getLevel() + 1) - VampirismPlayerAttributes.get((PlayerEntity) entity).vampireLevel / 3f;
                 tm = pld + 1;
                 mr = pld < 1.5f ? 1 : (pld < 3 ? 2 : 3);
-                if (HunterCoatItem.isFullyEquipped((PlayerEntity) entity)!=null) {
+                if (VampirismPlayerAttributes.get((PlayerEntity) entity).getHuntSpecial().fullHunterCoat!=null) {
                     tm *= 0.5F;
                 }
             }

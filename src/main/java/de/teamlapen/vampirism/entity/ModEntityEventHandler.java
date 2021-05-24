@@ -17,7 +17,6 @@ import de.teamlapen.vampirism.entity.goals.GolemTargetNonVillageFactionGoal;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
-import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -277,7 +276,7 @@ public class ModEntityEventHandler {
         if (event.getEntity() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) event.getEntity();
             if (VampirismPlayerAttributes.get(player).getHuntSpecial().isDisguised()) {
-                event.modifyVisibility((HunterCoatItem.isFullyEquipped((PlayerEntity) event.getEntity())!=null?0.5:1)*VampirismConfig.BALANCE.haDisguiseVisibilityMod.get());
+                event.modifyVisibility((VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getHuntSpecial().fullHunterCoat!=null?0.5:1)*VampirismConfig.BALANCE.haDisguiseVisibilityMod.get());
             }
         }
     }
@@ -286,7 +285,7 @@ public class ModEntityEventHandler {
     public void onEntityLootingEvent(LootingLevelEvent event){
         if(event.getDamageSource().getTrueSource() instanceof PlayerEntity){
             @Nullable
-            IItemWithTier.TIER hunterCoatTier = HunterCoatItem.isFullyEquipped((PlayerEntity) event.getDamageSource().getTrueSource());
+            IItemWithTier.TIER hunterCoatTier = VampirismPlayerAttributes.get((PlayerEntity) event.getDamageSource().getTrueSource()).getHuntSpecial().fullHunterCoat;
             if(hunterCoatTier== IItemWithTier.TIER.ENHANCED || hunterCoatTier== IItemWithTier.TIER.ULTIMATE){
                 event.setLootingLevel(Math.min(event.getLootingLevel()+1 , 3));
             }

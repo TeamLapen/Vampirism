@@ -160,9 +160,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private final SkillHandler<IVampirePlayer> skillHandler;
     private boolean sundamage_cache = false;
     private EnumStrength garlic_cache = EnumStrength.NONE;
-    private int eyeType = 0;
-    private int fangType = 0;
-    private boolean glowingEyes = false;
     private int ticksInSun = 0;
     private boolean wasDead = false;
     private final List<IVampireVision> unlockedVisions = new ArrayList<>();
@@ -419,14 +416,14 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * @return Eyetype for rendering
      */
     public int getEyeType() {
-        return eyeType;
+        return getSpecialAttributes().eyeType;
     }
 
     /**
      * @return Fangtype for rendering
      */
     public int getFangType() {
-        return fangType;
+        return getSpecialAttributes().fangType;
     }
 
     /**
@@ -440,7 +437,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * @return Render eyes glowing
      */
     public boolean getGlowingEyes() {
-        return glowingEyes;
+        return getSpecialAttributes().glowingEyes;
     }
 
     /**
@@ -450,11 +447,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * @param value
      */
     public void setGlowingEyes(boolean value) {
-        if (value != this.glowingEyes) {
-            this.glowingEyes = value;
+        if (value != this.getSpecialAttributes().glowingEyes) {
+            this.getSpecialAttributes().glowingEyes = value;
             if (!isRemote()) {
                 CompoundNBT nbt = new CompoundNBT();
-                nbt.putBoolean(KEY_GLOWING_EYES, glowingEyes);
+                nbt.putBoolean(KEY_GLOWING_EYES, value);
                 sync(nbt, true);
             }
         }
@@ -537,9 +534,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public void loadData(CompoundNBT nbt) {
         super.loadData(nbt);
         bloodStats.readNBT(nbt);
-        eyeType = nbt.getInt(KEY_EYE);
-        fangType = nbt.getInt(KEY_FANGS);
-        glowingEyes = nbt.getBoolean(KEY_GLOWING_EYES);
+        VampirePlayerSpecialAttributes a = getSpecialAttributes();
+        a.eyeType = nbt.getInt(KEY_EYE);
+        a.fangType = nbt.getInt(KEY_FANGS);
+        a.glowingEyes = nbt.getBoolean(KEY_GLOWING_EYES);
         actionHandler.loadFromNbt(nbt);
         skillHandler.loadFromNbt(nbt);
         if (nbt.getBoolean("wasDBNO")) wasDBNO = true;
@@ -581,7 +579,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         actionHandler.deactivateAllActions();
         wasDead = true;
-        dbnoTimer=-1;
+        this.setDBNOTimer(-1);
         dbnoMessage=null;
     }
 
@@ -687,7 +685,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public void onPlayerLoggedOut() {
         endFeeding(false);
         if(this.isDBNO()){
-            this.dbnoTimer = -1;
+            this.setDBNOTimer(-1);
             this.player.attackEntityFrom(DamageSource.GENERIC,10000);
         }
     }
@@ -723,9 +721,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             this.player.attackEntityFrom(DamageSource.GENERIC, 100000);
             return;
         }
-        else if(this.dbnoTimer>=0){
-            if(dbnoTimer>0){
-                if(--dbnoTimer==0){
+        else if(this.dbnoTimer >=0){
+            if(dbnoTimer >0){
+                this.setDBNOTimer(dbnoTimer -1);
+                if(dbnoTimer ==0){
                     CompoundNBT nbt = new CompoundNBT();
                     nbt.putInt(KEY_DBNO_TIMER,0);
                     HelperLib.sync(this, nbt, player, false);
@@ -819,6 +818,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
         } else {
             if (level > 0) {
+                VampirismMod.proxy.handleSleepClient(player);
                 actionHandler.updateActions();
                 if (isGettingSundamage(world)) {
                     handleSunDamage(true);
@@ -841,7 +841,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     feedBiteTickCounter = 0;
                 }
             }
-            VampirismMod.proxy.handleSleepClient(player);
         }
         if (feed_victim == -1) {
             feedBiteTickCounter = 0;
@@ -869,9 +868,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public void saveData(CompoundNBT nbt) {
         super.saveData(nbt);
         bloodStats.writeNBT(nbt);
-        nbt.putInt(KEY_EYE, eyeType);
-        nbt.putInt(KEY_FANGS, fangType);
-        nbt.putBoolean(KEY_GLOWING_EYES, glowingEyes);
+        nbt.putInt(KEY_EYE, getEyeType());
+        nbt.putInt(KEY_FANGS, getFangType());
+        nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());
         actionHandler.saveToNbt(nbt);
         skillHandler.saveToNbt(nbt);
         if (isDBNO()) nbt.putBoolean("wasDBNO", true);
@@ -888,8 +887,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (eyeType >= REFERENCE.EYE_TYPE_COUNT || eyeType < 0) {
             return false;
         }
-        if (eyeType != this.eyeType) {
-            this.eyeType = eyeType;
+        if (eyeType != this.getEyeType()) {
+            getSpecialAttributes().eyeType = eyeType;
             if (!isRemote()) {
                 CompoundNBT nbt = new CompoundNBT();
                 nbt.putInt(KEY_EYE, eyeType);
@@ -909,8 +908,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (fangType >= REFERENCE.FANG_TYPE_COUNT || fangType < 0) {
             return false;
         }
-        if (fangType != this.fangType) {
-            this.fangType = fangType;
+        if (fangType != this.getFangType()) {
+            this.getSpecialAttributes().fangType = fangType;
             if (!isRemote()) {
                 CompoundNBT nbt = new CompoundNBT();
                 nbt.putInt(KEY_FANGS, fangType);
@@ -1003,7 +1002,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         if(nbt.contains(KEY_DBNO_TIMER)){
             boolean wasDBNOClient = isDBNO();
-            dbnoTimer = nbt.getInt(KEY_DBNO_TIMER);
+            setDBNOTimer(nbt.getInt(KEY_DBNO_TIMER));
             if(!wasDBNOClient && isDBNO()){
                 VampirismMod.proxy.showDBNOScreen(player, dbnoMessage);
                 player.setForcedPose(Pose.SLEEPING);
@@ -1045,7 +1044,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);
         nbt.putInt(KEY_VISION, activatedVision == null ? -1 : ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
-        nbt.putInt(KEY_DBNO_TIMER, dbnoTimer);
+        nbt.putInt(KEY_DBNO_TIMER, getDbnoTimer());
         if(dbnoMessage!=null)nbt.putString(KEY_DBNO_MSG, ITextComponent.Serializer.toJson(dbnoMessage));
     }
 
@@ -1332,7 +1331,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public boolean onDeadlyHit(DamageSource source) {
         if (getLevel()>0&&!this.player.isPotionActive(ModEffects.neonatal)&&!Helper.canKillVampires(source)){
-                this.dbnoTimer = getDbnoDuration();
+                this.setDBNOTimer(getDbnoDuration());
                 this.player.setHealth(0.5f);
                 this.player.setForcedPose(Pose.SLEEPING);
                 resetNearbyTargetingMobs();
@@ -1341,7 +1340,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     dbnoMessage = player.getCombatTracker().getDeathMessage();
                 }
                 CompoundNBT nbt = new CompoundNBT();
-                nbt.putInt(KEY_DBNO_TIMER,dbnoTimer);
+                nbt.putInt(KEY_DBNO_TIMER, dbnoTimer);
                 if(dbnoMessage!=null)nbt.putString(KEY_DBNO_MSG, ITextComponent.Serializer.toJson(dbnoMessage));
                 HelperLib.sync(this,nbt,player,true);
                 return true;
@@ -1355,8 +1354,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     public void tryResurrect(){
-        if(this.dbnoTimer==0){
-            this.dbnoTimer=-1;
+        if(this.getDbnoTimer()==0){
+            this.setDBNOTimer(-1);
             this.dbnoMessage = null;
             this.player.setHealth(Math.max(0.5f,bloodStats.getBloodLevel()-1));
             this.bloodStats.removeBlood(bloodStats.getBloodLevel()-1,true);
@@ -1371,7 +1370,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         else{
             if(this.isRemote()){
-                this.dbnoTimer=-1;
+                this.setDBNOTimer(-1);
             }
             else{
                 //If client thinks it is alive again, tell it to die again
@@ -1395,6 +1394,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public int getLevel() {
         return ((IVampirismPlayer)player).getVampAtts().vampireLevel;
+    }
+
+    private void setDBNOTimer(int newValue){
+        this.dbnoTimer = newValue;
+        this.getSpecialAttributes().isDBNO = isDBNO();
     }
 
     private static class Storage implements Capability.IStorage<IVampirePlayer> {

@@ -15,6 +15,11 @@ public class VampirePlayerSpecialAttributes {
     public boolean waterResistance;
     public boolean advanced_biter = false;
     public boolean blood_vision_garlic;
+    public int eyeType;
+    public int fangType;
+    public boolean glowingEyes;
+    public boolean isDBNO;
+
     /**
      * This cancels the render player event.
      * The invisibility skill additionally sets the entity invisible so armor, shadow and more are not rendered
@@ -28,5 +33,9 @@ public class VampirePlayerSpecialAttributes {
 
     public void setJumpBoost(int jump_boost) {
         this.jump_boost = (jump_boost >= 0 && jump_boost < 10) ? jump_boost : 0;
+    }
+
+    public boolean isCannotInteract(){
+        return bat || isDBNO;
     }
 }

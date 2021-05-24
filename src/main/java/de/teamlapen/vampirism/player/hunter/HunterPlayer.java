@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.items.ObsidianArmorItem;
 import de.teamlapen.vampirism.player.IVampirismPlayer;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
@@ -251,8 +252,8 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         player.getEntityWorld().getProfiler().startSection("vampirism_hunterPlayer");
         super.onUpdate();
         int level = getLevel();
-        if (!isRemote()) {
-            if (level > 0) {
+        if(level>0){
+            if (!isRemote()) {
                 boolean sync = false;
                 boolean syncToAll = false;
                 CompoundNBT syncPacket = new CompoundNBT();
@@ -268,13 +269,14 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
                 if (sync) {
                     sync(syncPacket, syncToAll);
                 }
-            }
-        } else {
-            if (level > 0) {
+            } else {
                 actionHandler.updateActions();
+                VampirismMod.proxy.handleSleepClient(player);
+
             }
-            VampirismMod.proxy.handleSleepClient(player);
         }
+        getSpecialAttributes().fullHunterCoat = level > 0 ? HunterCoatItem.isFullyEquipped(player) : null;
+
         player.getEntityWorld().getProfiler().endSection();
     }
 

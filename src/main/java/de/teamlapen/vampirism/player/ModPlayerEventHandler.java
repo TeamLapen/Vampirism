@@ -126,7 +126,7 @@ public class ModPlayerEventHandler {
     public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
         if (!(event.getEntity() instanceof PlayerEntity) || !event.getEntity().isAlive()) return;
         try {
-            if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(v->v.isDBNO()|| v.getSpecialAttributes().bat).orElse(false)) {
+            if ( VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
                 event.setCanceled(true);
             }
             HunterPlayer.getOpt((PlayerEntity) event.getEntity()).ifPresent(HunterPlayer::breakDisguise);
@@ -137,7 +137,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(v->v.isDBNO()|| v.getSpecialAttributes().bat).orElse(false)) {
+        if ( VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
             event.setCanceled(true);
         } else if ((ModBlocks.garlic_beacon_normal.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_weak.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_improved.equals(event.getState().getBlock())) && VampirismPlayerAttributes.get(event.getPlayer()).vampireLevel > 0) {
             event.setNewSpeed(event.getOriginalSpeed() * 0.1F);
@@ -146,7 +146,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onItemPickupPre(EntityItemPickupEvent event){
-        if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(VampirePlayer::isDBNO).orElse(false)) {
+        if ( VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isDBNO) {
             event.setCanceled(true);
         }
     }
@@ -158,7 +158,7 @@ public class ModPlayerEventHandler {
         }
 
         if ((event.getItemStack().getItem() instanceof ThrowablePotionItem || event.getItemStack().getItem() instanceof CrossbowItem)) {
-            if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(v->v.isDBNO()|| v.getSpecialAttributes().bat).orElse(false)) {
+            if ( VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
                 event.setCancellationResult(ActionResultType.func_233537_a_(event.getWorld().isRemote()));
                 event.setCanceled(true);
             }
@@ -169,7 +169,7 @@ public class ModPlayerEventHandler {
     public void onItemUse(LivingEntityUseItemEvent.Start event) {
         if (event.getEntity() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) event.getEntity();
-            if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(v->v.isDBNO()|| v.getSpecialAttributes().bat).orElse(false)) {
+            if ( VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
                 event.setCanceled(true);
             }
             if (!checkItemUsePerm(event.getItem(), player)) {
@@ -354,7 +354,7 @@ public class ModPlayerEventHandler {
                     event.setNewSize(BatVampireAction.BAT_SIZE);
                     event.setNewEyeHeight(BatVampireAction.BAT_EYE_HEIGHT);
                 }
-                else if(VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(VampirePlayer::isDBNO).orElse(false)){
+                else if( VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isDBNO){
                     event.setNewSize(EntitySize.fixed(0.6f,0.95f));
                     event.setNewEyeHeight(0.725f);
                 }

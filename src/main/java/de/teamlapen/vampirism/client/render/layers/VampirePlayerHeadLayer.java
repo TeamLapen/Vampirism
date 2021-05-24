@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.render.layers;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -38,11 +38,11 @@ public class VampirePlayerHeadLayer extends LayerRenderer<AbstractClientPlayerEn
     @Override
     public void render(MatrixStack stack, IRenderTypeBuffer iRenderTypeBuffer, int i, AbstractClientPlayerEntity player, float v, float v1, float v2, float v3, float v4, float v5) {
         if (!VampirismConfig.CLIENT.renderVampireEyes.get() || !player.isAlive()) return;
-        VampirePlayer vampirePlayer = VampirePlayer.get(player);
-        if (vampirePlayer.getLevel() > 0 && !vampirePlayer.isDisguised() && !player.isInvisible()) {
-            int eyeType = Math.max(0, Math.min(vampirePlayer.getEyeType(), eyeOverlays.length - 1));
-            int fangType = Math.max(0, Math.min(vampirePlayer.getFangType(), fangOverlays.length - 1));
-            RenderType eyeRenderType = vampirePlayer.getGlowingEyes() ? RenderType.getEyes(eyeOverlays[eyeType]) : RenderType.getEntityCutoutNoCull(eyeOverlays[eyeType]);
+        VampirismPlayerAttributes atts = VampirismPlayerAttributes.get(player);
+        if (atts.vampireLevel > 0 && !atts.getVampSpecial().disguised && !player.isInvisible()) {
+            int eyeType = Math.max(0, Math.min(atts.getVampSpecial().eyeType, eyeOverlays.length - 1));
+            int fangType = Math.max(0, Math.min(atts.getVampSpecial().fangType, fangOverlays.length - 1));
+            RenderType eyeRenderType = atts.getVampSpecial().glowingEyes ? RenderType.getEyes(eyeOverlays[eyeType]) : RenderType.getEntityCutoutNoCull(eyeOverlays[eyeType]);
             IVertexBuilder vertexBuilderEye = iRenderTypeBuffer.getBuffer(eyeRenderType);
             int packerOverlay = LivingRenderer.getPackedOverlay(player, 0);
             ModelRenderer head = this.getEntityModel().bipedHead;

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,6 +23,7 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
     private final static String baseRegName = "hunter_coat";
 
     /**
+     * Consider using cached value instead {@link HunterPlayerSpecialAttribute#fullHunterCoat}
      * Checks if the player has this armor fully equipped
      * @return if fully equipped the tier of the worst item, otherwise null
      */

@@ -7,11 +7,9 @@ import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
-import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
-import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.ASMHooks;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -171,7 +169,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
 
     @SubscribeEvent
     public void onRenderHand(RenderHandEvent event) {
-        if (mc.player != null && mc.player.isAlive() && VampirePlayer.get(mc.player).getActionHandler().isActionActive(VampireActions.bat)) {
+        if (mc.player != null && mc.player.isAlive() && VampirismPlayerAttributes.get(mc.player).getVampSpecial().bat) {
             event.setCanceled(true);
         }
     }
@@ -202,7 +200,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
             Entity entity = event.getEntity();
 
             boolean flag = true;
-            if (entity instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) entity)!=null) flag = false;
+            if (entity instanceof PlayerEntity && VampirismPlayerAttributes.get((PlayerEntity) entity).getHuntSpecial().fullHunterCoat!=null) flag = false;
             double dist = mc.player.getDistanceSq(entity);
             if (dist > VampirismConfig.BALANCE.vsBloodVisionDistanceSq.get()) {
                 flag = false;
@@ -263,7 +261,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
                 event.setCanceled(true);
             }
             else if(dist>16){
-                IItemWithTier.TIER hunterCoatTier = HunterCoatItem.isFullyEquipped((PlayerEntity) entity);
+                IItemWithTier.TIER hunterCoatTier = VampirismPlayerAttributes.get((PlayerEntity) entity).getHuntSpecial().fullHunterCoat;
                 if(hunterCoatTier== IItemWithTier.TIER.ENHANCED||hunterCoatTier == IItemWithTier.TIER.ULTIMATE){
                     event.setCanceled(true);
                 }
@@ -274,7 +272,6 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
         PlayerEntity player = event.getPlayer();
-        LazyOptional<VampirePlayer> pOpt = VampirePlayer.getOpt(player);
         VampirePlayerSpecialAttributes vAtt = VampirismPlayerAttributes.get(player).getVampSpecial();
         if(vAtt.invisible){
             event.setCanceled(true);
@@ -308,7 +305,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
             mc.getRenderManager().renderEntityStatic(entityBat, d0, d1, d2, f, partialTicks, event.getMatrixStack(), mc.getRenderTypeBuffers().getBufferSource(), mc.getRenderManager().getPackedLight(entityBat, partialTicks));
 
         }
-        else if(pOpt.map(VampirePlayer::isDBNO).orElse(false)){
+        else if(vAtt.isDBNO){
             event.getMatrixStack().translate(1.2,0,0);
             PlayerModel<?> m = event.getRenderer().getEntityModel();
             m.bipedRightArm.showModel=false;
@@ -338,8 +335,8 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         if (blit0 == null || blur1 == null || blur2 == null) return;
         progress = MathHelper.clamp(progress, 0, 1);
         blit0.getShaderManager().getShaderUniform("ColorModulate").set((1 - 0.4F * progress), (1 - 0.5F * progress), (1 - 0.3F * progress), 1);
-        blur1.getShaderManager().getShaderUniform("Radius").set(Math.round(15 * progress) / 1F);
-        blur2.getShaderManager().getShaderUniform("Radius").set(Math.round(15 * progress) / 1F);
+        blur1.getShaderManager().getShaderUniform("Radius").set(Math.round(15 * progress));
+        blur2.getShaderManager().getShaderUniform("Radius").set(Math.round(15 * progress));
 
     }
 

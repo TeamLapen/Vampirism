@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.network.AppearancePacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -57,10 +58,10 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
         super.init();
         IFaction<?> f = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
         this.color = f == null ? Color.gray.getRGBColorComponents(null) : f.getColor().getRGBColorComponents(null);
-
-        this.fangType = VampirePlayer.getOpt(this.minecraft.player).map(VampirePlayer::getFangType).orElse(0);
-        this.eyeType = VampirePlayer.getOpt(this.minecraft.player).map(VampirePlayer::getEyeType).orElse(0);
-        this.glowingEyes = VampirePlayer.getOpt(this.minecraft.player).map(VampirePlayer::getGlowingEyes).orElse(false);
+        VampirePlayerSpecialAttributes vampAtt = VampirismPlayerAttributes.get(this.minecraft.player).getVampSpecial();
+        this.fangType = vampAtt.fangType;
+        this.eyeType = vampAtt.eyeType;
+        this.glowingEyes = vampAtt.glowingEyes;
 
         this.eyeList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100,20,REFERENCE.EYE_TYPE_COUNT, new TranslationTextComponent("gui.vampirism.appearance.eye"),this::eye, this::hoverEye).scrollSpeed(2));
         this.fangList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80,20,REFERENCE.FANG_TYPE_COUNT, new TranslationTextComponent("gui.vampirism.appearance.fang"),this::fang, this::hoverFang));
