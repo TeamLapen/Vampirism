@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.potion;
 
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.tileentity.TotemHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -66,7 +66,8 @@ public abstract class BadOmen extends Effect {
             PlayerEntity player= (PlayerEntity) offender;
             IFaction<?> faction = victim.getFaction();
             if (faction.getVillageData().isBanner(victim.getRepresentingEntity().getItemStackFromSlot(EquipmentSlotType.HEAD))) {
-                if (VampirismAPI.getFactionPlayerHandler(player).map(p -> p.getCurrentFaction() != null && p.getCurrentFaction() != faction).orElse(false)) {
+                IFaction<?> playerFaction = VampirismPlayerAttributes.get(player).faction;
+                if (playerFaction != null &&  playerFaction != faction) {
                     Effect badOmen = faction.getVillageData().getBadOmenEffect();
                     if(badOmen!=null){
                         EffectInstance inst = player.getActivePotionEffect(badOmen);

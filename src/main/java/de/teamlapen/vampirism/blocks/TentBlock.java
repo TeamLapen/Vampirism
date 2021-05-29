@@ -8,8 +8,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.network.PlayEventPacket;
-import de.teamlapen.vampirism.player.VampirismPlayer;
-import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.particle.ParticleManager;
@@ -73,7 +72,7 @@ public class TentBlock extends VampirismBlock {
     @Override
     public ActionResultType onBlockActivated(BlockState blockState, World world, final BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         if (world.isRemote()) return ActionResultType.SUCCESS;
-        if (HunterPlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0) == 0) {
+        if (VampirismPlayerAttributes.get(player).hunterLevel == 0) {
             player.sendStatusMessage(new TranslationTextComponent("text.vampirism.tent.cant_use"), true);
             return ActionResultType.SUCCESS;
         }

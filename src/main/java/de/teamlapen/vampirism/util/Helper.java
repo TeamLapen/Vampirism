@@ -20,6 +20,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
 import de.teamlapen.vampirism.items.StakeItem;
 import de.teamlapen.vampirism.mixin.LivingEntityAccessor;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -194,11 +195,11 @@ public class Helper {
     }
 
     public static boolean isHunter(PlayerEntity entity) {
-        return VampirismAPI.getFactionPlayerHandler((entity)).map(h -> VReference.HUNTER_FACTION.equals(h.getCurrentFaction())).orElse(false);
+        return VReference.HUNTER_FACTION.equals(VampirismPlayerAttributes.get(entity).faction);
     }
 
     public static boolean isVampire(PlayerEntity entity) {
-        return VampirismAPI.getFactionPlayerHandler((entity)).map(h -> VReference.VAMPIRE_FACTION.equals(h.getCurrentFaction())).orElse(false);
+        return VReference.VAMPIRE_FACTION.equals(VampirismPlayerAttributes.get(entity).faction);
     }
 
     /**

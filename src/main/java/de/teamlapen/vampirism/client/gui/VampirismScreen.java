@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.inventory.container.VampirismContainer;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -62,7 +63,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         this.addButton(list = new ScrollableListWithDummyWidget<>(this.guiLeft + 83, this.guiTop + 7, 145, 104, 21, this::refreshTasks, (item, list1, isDummy) -> new TaskItem(item, list1, isDummy, this, this.factionPlayer)));
 
         this.addButton(new ImageButton(this.guiLeft + 5, this.guiTop + 90, 20, 20, 40, 205, 20, BACKGROUND, 256, 256, context -> {
-            if (this.minecraft.player.isAlive() && FactionPlayerHandler.get(this.minecraft.player).getCurrentFaction() != null) {
+            if (this.minecraft.player.isAlive() && VampirismPlayerAttributes.get(this.minecraft.player).faction != null) {
                 Minecraft.getInstance().displayGuiScreen(new SkillsScreen(this));
             }
         }, (button, matrixStack, mouseX, mouseY) -> {
@@ -70,7 +71,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         }, StringTextComponent.EMPTY));
 
         this.addButton(new ImageButton(this.guiLeft + 26, this.guiTop + 90, 20, 20, 0, 205, 20, BACKGROUND, 256, 256, (context) -> {
-            IPlayableFaction<?> factionNew = FactionPlayerHandler.get(this.minecraft.player).getCurrentFaction();
+            IPlayableFaction<?> factionNew = VampirismPlayerAttributes.get(this.minecraft.player).faction;
             Minecraft.getInstance().displayGuiScreen(new SelectActionScreen(factionNew.getColor(), true));
         }, (button, matrixStack, mouseX, mouseY) -> {
             this.renderTooltip(matrixStack, new TranslationTextComponent("gui.vampirism.vampirism_menu.edit_actions"), mouseX, mouseY);

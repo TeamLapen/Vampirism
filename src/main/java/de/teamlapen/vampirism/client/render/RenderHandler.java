@@ -7,11 +7,9 @@ import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
-import de.teamlapen.vampirism.items.HunterCoatItem;
-import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.util.ASMHooks;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -108,7 +106,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         lastBloodVisionTicks = bloodVisionTicks;
         VampirePlayer vampire = VampirePlayer.get(mc.player);
         //Blood vision
-        if (vampire.getSpecialAttributes().blood_vision && !VampirismConfig.CLIENT.disableBloodVisionRendering.get() && !VampirePlayer.get(mc.player).isGettingSundamage(mc.player.world)) {
+        if (vampire.getSpecialAttributes().blood_vision && !VampirismConfig.CLIENT.disableBloodVisionRendering.get() && !vampire.isGettingSundamage(mc.player.world)) {
 
             if (bloodVisionTicks < BLOOD_VISION_FADE_TICKS) {
                 bloodVisionTicks++;
@@ -171,7 +169,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
 
     @SubscribeEvent
     public void onRenderHand(RenderHandEvent event) {
-        if (mc.player != null && mc.player.isAlive() && VampirePlayer.get(mc.player).getActionHandler().isActionActive(VampireActions.bat)) {
+        if (mc.player != null && mc.player.isAlive() && VampirismPlayerAttributes.get(mc.player).getVampSpecial().bat) {
             event.setCanceled(true);
         }
     }
@@ -202,7 +200,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
             Entity entity = event.getEntity();
 
             boolean flag = true;
-            if (entity instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) entity)!=null) flag = false;
+            if (entity instanceof PlayerEntity && VampirismPlayerAttributes.get((PlayerEntity) entity).getHuntSpecial().fullHunterCoat!=null) flag = false;
             double dist = mc.player.getDistanceSq(entity);
             if (dist > VampirismConfig.BALANCE.vsBloodVisionDistanceSq.get()) {
                 flag = false;
@@ -212,7 +210,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
                 LazyOptional<IExtendedCreatureVampirism> opt = entity instanceof CreatureEntity && entity.isAlive() ? ExtendedCreature.getSafe(entity) : LazyOptional.empty();
                 if (opt.map(creature -> creature.getBlood() > 0 && !creature.hasPoisonousBlood()).orElse(false)) {
                     color = 0xFF0000;
-                } else if (VampirePlayer.getOpt(mc.player).map(VampirePlayer::getSpecialAttributes).map(s -> s.blood_vision_garlic).orElse(false) && ((opt.map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) || Helper.isHunter(entity))) {
+                } else if (VampirismPlayerAttributes.get(mc.player).getVampSpecial().blood_vision_garlic && ((opt.map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) || Helper.isHunter(entity))) {
                     color = 0x07FF07;
                 } else {
                     color = 0xA0A0A0;
@@ -257,13 +255,13 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     @SubscribeEvent
     public void onRenderLivingPre(RenderLivingEvent.Pre<PlayerEntity, PlayerModel<PlayerEntity>> event) {
         LivingEntity entity = event.getEntity();
-        if (entity instanceof PlayerEntity && HunterPlayer.getOpt((PlayerEntity) entity).map(HunterPlayer::getSpecialAttributes).map(HunterPlayerSpecialAttribute::isDisguised).orElse(false)) {
+        if (entity instanceof PlayerEntity && VampirismPlayerAttributes.get(mc.player).getHuntSpecial().isDisguised()) {
             double dist = this.mc.player == null ? 0 : entity.getDistanceSq(this.mc.player);
             if (dist > 64) {
                 event.setCanceled(true);
             }
             else if(dist>16){
-                IItemWithTier.TIER hunterCoatTier = HunterCoatItem.isFullyEquipped((PlayerEntity) entity);
+                IItemWithTier.TIER hunterCoatTier = VampirismPlayerAttributes.get((PlayerEntity) entity).getHuntSpecial().fullHunterCoat;
                 if(hunterCoatTier== IItemWithTier.TIER.ENHANCED||hunterCoatTier == IItemWithTier.TIER.ULTIMATE){
                     event.setCanceled(true);
                 }
@@ -274,11 +272,11 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
         PlayerEntity player = event.getPlayer();
-        LazyOptional<VampirePlayer> pOpt = VampirePlayer.getOpt(player);
-        if(pOpt.map(VampirePlayer::getSpecialAttributes).map(s->s.invisible).orElse(false)){
+        VampirePlayerSpecialAttributes vAtt = VampirismPlayerAttributes.get(player).getVampSpecial();
+        if(vAtt.invisible){
             event.setCanceled(true);
         }
-        else if (pOpt.map(VampirePlayer::getSpecialAttributes).map(s -> s.bat).orElse(false)) {
+        else if (vAtt.bat) {
             event.setCanceled(true);
             if (entityBat == null) {
                 entityBat = EntityType.BAT.create(event.getEntity().getEntityWorld());
@@ -307,7 +305,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
             mc.getRenderManager().renderEntityStatic(entityBat, d0, d1, d2, f, partialTicks, event.getMatrixStack(), mc.getRenderTypeBuffers().getBufferSource(), mc.getRenderManager().getPackedLight(entityBat, partialTicks));
 
         }
-        else if(pOpt.map(VampirePlayer::isDBNO).orElse(false)){
+        else if(vAtt.isDBNO){
             event.getMatrixStack().translate(1.2,0,0);
             PlayerModel<?> m = event.getRenderer().getEntityModel();
             m.bipedRightArm.showModel=false;
@@ -337,8 +335,8 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         if (blit0 == null || blur1 == null || blur2 == null) return;
         progress = MathHelper.clamp(progress, 0, 1);
         blit0.getShaderManager().getShaderUniform("ColorModulate").set((1 - 0.4F * progress), (1 - 0.5F * progress), (1 - 0.3F * progress), 1);
-        blur1.getShaderManager().getShaderUniform("Radius").set(Math.round(15 * progress) / 1F);
-        blur2.getShaderManager().getShaderUniform("Radius").set(Math.round(15 * progress) / 1F);
+        blur1.getShaderManager().getShaderUniform("Radius").set(Math.round(15 * progress));
+        blur2.getShaderManager().getShaderUniform("Radius").set(Math.round(15 * progress));
 
     }
 

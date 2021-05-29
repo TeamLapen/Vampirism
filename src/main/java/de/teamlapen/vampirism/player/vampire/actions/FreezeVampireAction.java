@@ -7,8 +7,8 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.entity.BlindingBatEntity;
-import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.particle.GenericParticleData;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
@@ -32,7 +32,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
         for (LivingEntity e : l) {
             if (player.equals(e)) continue;
             if (e instanceof BlindingBatEntity) continue;
-            if (e instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) e)!=null) continue;
+            if (e instanceof PlayerEntity && VampirismPlayerAttributes.get((PlayerEntity) e).getHuntSpecial().fullHunterCoat!=null) continue;
             int dur = VampirismConfig.BALANCE.vaFreezeDuration.get() * 20;
             if (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.freeze_duration)) {
                 dur *= VampirismConfig.BALANCE.vrFreezeDurationMod.get();

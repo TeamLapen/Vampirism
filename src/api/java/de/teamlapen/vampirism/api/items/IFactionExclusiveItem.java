@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.api.items;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -31,8 +30,7 @@ public interface IFactionExclusiveItem {
 
     @OnlyIn(Dist.CLIENT)
     default void addFactionPoisonousToolTip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn, @Nullable PlayerEntity player) {
-        IFactionPlayerHandler handler = player == null ? null : VampirismAPI.getFactionPlayerHandler(player).orElse(null);
-        IFaction faction = handler == null ? null : handler.getCurrentFaction();
+        IFaction<?> faction = player!=null ? VampirismAPI.factionRegistry().getFaction(player) : null;
         if (faction == null ? !VReference.HUNTER_FACTION.equals(getExclusiveFaction()) : faction != getExclusiveFaction()) {
             tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_non", getExclusiveFaction().getNamePlural()).mergeStyle(TextFormatting.DARK_RED));
         }

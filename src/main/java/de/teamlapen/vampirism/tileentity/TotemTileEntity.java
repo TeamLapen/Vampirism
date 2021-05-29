@@ -30,6 +30,7 @@ import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.hunter.HunterTrainerEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.particle.GenericParticleData;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.PotionSanguinareEffect;
 import de.teamlapen.vampirism.util.ModEventFactory;
@@ -164,7 +165,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     public boolean canPlayerRemoveBlock(PlayerEntity player) {
         if (player.abilities.isCreativeMode) return true;
         if (!player.isAlive()) return false;
-        @Nullable IFaction<?> faction = FactionPlayerHandler.get(player).getCurrentFaction();
+        @Nullable IFaction<?> faction = VampirismPlayerAttributes.get(player).faction;
         if (faction == this.controllingFaction) {
             if (this.capturingFaction == null) {
                 return true;
@@ -811,7 +812,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     @SuppressWarnings("ConstantConditions")
     public void initiateCapture(PlayerEntity player) {
         if (!player.isAlive()) return;
-        initiateCapture(FactionPlayerHandler.get(player).getCurrentFaction(), player::sendStatusMessage, -1, -1f);
+        initiateCapture(VampirismPlayerAttributes.get(player).faction, player::sendStatusMessage, -1, -1f);
     }
 
     /**
@@ -929,7 +930,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
 
     public void ringBell(@Nonnull PlayerEntity playerEntity){
         if (this.capturingFaction != null) {
-            IPlayableFaction<?> faction = FactionPlayerHandler.get(playerEntity).getCurrentFaction();
+            IPlayableFaction<?> faction = VampirismPlayerAttributes.get(playerEntity).faction;
             boolean defender = faction == this.controllingFaction;
             boolean attacker = faction == this.capturingFaction;
             List<LivingEntity> entities = this.world.getEntitiesWithinAABB(LivingEntity.class, getVillageArea());

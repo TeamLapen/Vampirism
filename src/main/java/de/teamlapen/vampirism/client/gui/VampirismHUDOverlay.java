@@ -231,7 +231,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDisable(GL11.GL_LIGHTING);
         IFactionPlayerHandler handler = FactionPlayerHandler.get(mc.player);
-        IPlayableFaction faction = handler.getCurrentFaction();
+        IPlayableFaction<?> faction = handler.getCurrentFaction();
         if (mc.playerController.gameIsSurvivalOrAdventure() && faction != null && faction.renderLevel()) {
             // boolean flag1 = false;
             int color = faction.getColor().getRGB();

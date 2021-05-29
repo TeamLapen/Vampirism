@@ -10,8 +10,8 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModParticles;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.particle.GenericParticleData;
+import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import de.teamlapen.vampirism.world.VampirismWorld;
@@ -323,8 +323,8 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
                     if (opt == VampirismConfig.Server.IMobOptions.SMART) {
                         PlayerEntity player = VampirismMod.proxy.getClientPlayer();
                         if (player != null && player.isAlive()) {
-                            IPlayableFaction f = FactionPlayerHandler.get(player).getCurrentFaction();
-                            IFaction thisFaction = ((IFactionEntity) this).getFaction();
+                            IPlayableFaction<?> f = VampirismPlayerAttributes.get(player).faction;
+                            IFaction<?> thisFaction = ((IFactionEntity) this).getFaction();
 
                             boolean hostile = f == null ? thisFaction.isHostileTowardsNeutral() : !thisFaction.equals(f);
                             convert = hostile != current;
