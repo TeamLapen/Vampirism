@@ -389,8 +389,8 @@ public class BalanceConfig {
         vaHalfInvulnerableThreshold = builder.comment("Damage threshold relative to players max health. Damage above this value will be ignored").defineInRange("halfInvulnerableThreshold", 0.4d, 0.0d, 1d);
         vaHalfInvulnerableBloodCost = builder.defineInRange("halfInvulnerableBloodCost", 4, 0, 1000);
         vaHalfInvulnerableEnabled = builder.define("halfInvulnerableEnabled", true);
-        vaHissingCooldown = builder.comment("In seconds").defineInRange("HissingCooldown", 60, 0, 10000);
-        vaHissingEnabled = builder.define("HissingEnabled", true);
+        vaHissingCooldown = builder.comment("In seconds").defineInRange("hissingCooldown", 60, 0, 10000);
+        vaHissingEnabled = builder.define("hissingEnabled", true);
 
         builder.category("mobs", "mb");
         mbVampireSpawnChance = builder.comment("Vampire spawn chance/weight (e.g. Zombie: 100)").defineInRange("vampireSpawnChance", 75, 0, 100000);
