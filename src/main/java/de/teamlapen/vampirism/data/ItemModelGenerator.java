@@ -118,6 +118,10 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModItems.hunter_minion_upgrade_special);
             add(ModItems.oblivion_potion);
             add(ModItems.cure_apple);
+            add(ModItems.vampire_clothing_hat);
+            add(ModItems.vampire_clothing_boots);
+            add(ModItems.vampire_clothing_legs);
+            add(ModItems.vampire_clothing_crown);
         }};
         Map<Item, ResourceLocation> itemsWithTexture = new HashMap<Item, ResourceLocation>() {{
             put(ModItems.holy_water_bottle_normal, modLoc("item/holy_water_normal"));
