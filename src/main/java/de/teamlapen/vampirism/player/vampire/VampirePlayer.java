@@ -728,6 +728,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     HelperLib.sync(this, nbt, player, false);
                 }
             }
+            player.setAir(300);
             player.setMotion(0, Math.min(0, player.getMotion().getY()), 0);
             return;
         }
