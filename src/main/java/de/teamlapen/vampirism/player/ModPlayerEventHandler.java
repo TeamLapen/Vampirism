@@ -184,7 +184,14 @@ public class ModPlayerEventHandler {
         if (Helper.isVampire(event.getEntity())) {
             if (event.getItem().getItem() instanceof GarlicBreadItem) {
                 if (!event.getEntity().getEntityWorld().isRemote) {
-                    DamageHandler.affectVampireGarlicDirect(event.getEntity() instanceof IVampire ? (IVampire) event.getEntity() : VampirePlayer.get((PlayerEntity) event.getEntity()), EnumStrength.MEDIUM);
+                    if(event.getEntity() instanceof IVampire){
+                        DamageHandler.affectVampireGarlicDirect((IVampire) event.getEntity(), EnumStrength.MEDIUM);
+                    }
+                    else if(event.getEntity() instanceof PlayerEntity){
+                        VampirePlayer.getOpt((PlayerEntity) event.getEntity()).ifPresent(vampire-> {
+                            DamageHandler.affectVampireGarlicDirect(vampire, EnumStrength.MEDIUM);
+                        });
+                    }
                 }
             }
         }

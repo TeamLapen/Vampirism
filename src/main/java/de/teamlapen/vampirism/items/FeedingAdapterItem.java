@@ -43,15 +43,16 @@ public class FeedingAdapterItem extends VampirismItem {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, @Nonnull Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
-        VampirePlayer vampire = VampirePlayer.get(playerIn);
-        if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
+        return VampirePlayer.getOpt(playerIn).map(vampire -> {
+            if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
 
 
-        if (vampire.getBloodStats().needsBlood() && !BloodHelper.getBloodContainerInInventory(playerIn.inventory, true, false).isEmpty()) {
-            playerIn.setActiveHand(handIn);
-            return new ActionResult<>(ActionResultType.SUCCESS, stack);
-        }
-        return new ActionResult<>(ActionResultType.PASS, stack);
+            if (vampire.getBloodStats().needsBlood() && !BloodHelper.getBloodContainerInInventory(playerIn.inventory, true, false).isEmpty()) {
+                playerIn.setActiveHand(handIn);
+                return new ActionResult<>(ActionResultType.SUCCESS, stack);
+            }
+            return new ActionResult<>(ActionResultType.PASS, stack);
+        }).orElse(new ActionResult<>(ActionResultType.PASS, stack));
     }
 
 

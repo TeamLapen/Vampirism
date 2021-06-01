@@ -98,15 +98,15 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, @Nonnull Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
-        VampirePlayer vampire = VampirePlayer.get(playerIn);
-        if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
+        return VampirePlayer.getOpt(playerIn).map(vampire -> {
+            if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
 
-        if (vampire.getBloodStats().needsBlood() && stack.getCount() == 1) {
-            playerIn.setActiveHand(handIn);
-            return new ActionResult<>(ActionResultType.SUCCESS, stack);
-        }
-
-        return new ActionResult<>(ActionResultType.PASS, stack);
+            if (vampire.getBloodStats().needsBlood() && stack.getCount() == 1) {
+                playerIn.setActiveHand(handIn);
+                return new ActionResult<>(ActionResultType.SUCCESS, stack);
+            }
+            return new ActionResult<>(ActionResultType.PASS, stack);
+        }).orElse( new ActionResult<>(ActionResultType.PASS, stack));
     }
 
     @Nonnull

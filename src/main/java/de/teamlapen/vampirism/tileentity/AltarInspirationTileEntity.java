@@ -136,7 +136,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
                     ritualPlayer.setHealth(ritualPlayer.getMaxHealth());
                     break;
                 case 1:
-                    int targetLevel = VampirismPlayerAttributes.get(ritualPlayer).vampireLevel + 1;
+                    int targetLevel =VampirePlayer.get(ritualPlayer).getLevel() + 1;
                     VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
                     int blood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
                     ((InternalTank) tank).doDrain(blood, IFluidHandler.FluidAction.EXECUTE);

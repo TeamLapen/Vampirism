@@ -136,7 +136,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
             float trained = getTrained(stack, attacker);
             int exp = target instanceof PlayerEntity ? 10 : (attacker instanceof PlayerEntity ? (Helper.getExperiencePoints(target, (PlayerEntity) attacker)) : 5);
             float newTrained = exp / 5f * (1.0f - trained) / 15f;
-            if (attacker instanceof PlayerEntity && VampirePlayer.get(((PlayerEntity) attacker)).getSkillHandler().isRefinementEquipped(ModRefinements.sword_trained_amount)) {
+            if (attacker instanceof PlayerEntity && VampirePlayer.getOpt(((PlayerEntity) attacker)).map(VampirePlayer::getSkillHandler).map(handler-> handler.isRefinementEquipped(ModRefinements.sword_trained_amount)).orElse(false)) {
                 newTrained *= VampirismConfig.BALANCE.vrSwordTrainingSpeedMod.get();
             }
             trained += newTrained ;
@@ -182,16 +182,16 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
-        if (playerIn.isAlive()) {
-            VampirePlayer vampire = VampirePlayer.get(playerIn);
-            if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
+        return VampirePlayer.getOpt(playerIn).map(vampire-> {
+                if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
 
-            if (this.canBeCharged(stack) && playerIn.isSneaking() && vampire.getSkillHandler().isSkillEnabled(VampireSkills.blood_charge) && (playerIn.isCreative() || vampire.getBloodLevel() >= (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.blood_charge_speed) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get():2))) {
-                playerIn.setActiveHand(handIn);
-                return new ActionResult<>(ActionResultType.SUCCESS, stack);
-            }
-        }
-        return new ActionResult<>(ActionResultType.PASS, stack);
+                if (this.canBeCharged(stack) && playerIn.isSneaking() && vampire.getSkillHandler().isSkillEnabled(VampireSkills.blood_charge) && (playerIn.isCreative() || vampire.getBloodLevel() >= (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.blood_charge_speed) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get():2))) {
+                    playerIn.setActiveHand(handIn);
+                    return new ActionResult<>(ActionResultType.SUCCESS, stack);
+                }
+
+            return new ActionResult<>(ActionResultType.PASS, stack);
+        }).orElse(new ActionResult<>(ActionResultType.PASS, stack));
     }
 
     @Override

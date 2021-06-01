@@ -297,6 +297,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         }
         if (phase.equals(PHASE.LEVELUP)) {
             if (!world.isRemote) {
+                assert player.isAlive();
                 IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
                 if (handler.getCurrentLevel(VReference.VAMPIRE_FACTION) != targetLevel - 1) {
                     LOGGER.warn("Player {} changed level while the ritual was running. Cannot levelup.", player);
