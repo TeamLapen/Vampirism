@@ -454,14 +454,15 @@ public class ModPlayerEventHandler {
             if (totem instanceof TotemTileEntity && ((TotemTileEntity) totem).getControllingFaction() != null && VampirismPlayerAttributes.get(event.getPlayer()).faction != ((TotemTileEntity) totem).getControllingFaction()) {
                 event.setCanceled(true);
                 event.getPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.village.totem_destroy.fail_totem_faction"), true);
-                if (!positions.isEmpty()) {
+                if (!positions.isEmpty() && event.getPlayer() instanceof ServerPlayerEntity) {
+                    ServerPlayerEntity playerMP = (ServerPlayerEntity) event.getPlayer();
                     positions.forEach(pos -> {
-                        ((ServerPlayerEntity) event.getPlayer()).connection.sendPacket(new SChangeBlockPacket(event.getWorld(), pos));
+                        playerMP.connection.sendPacket(new SChangeBlockPacket(event.getWorld(), pos));
                         TileEntity tileentity = event.getWorld().getTileEntity(pos);
                         if (tileentity != null) {
                             IPacket<?> pkt = tileentity.getUpdatePacket();
                             if (pkt != null) {
-                                ((ServerPlayerEntity) event.getPlayer()).connection.sendPacket(pkt);
+                               playerMP.connection.sendPacket(pkt);
                             }
                         }
                     });

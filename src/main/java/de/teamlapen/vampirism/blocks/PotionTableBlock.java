@@ -62,7 +62,7 @@ public class PotionTableBlock extends VampirismBlockContainer {
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!worldIn.isRemote) {
+        if (!worldIn.isRemote && player instanceof ServerPlayerEntity) {
             TileEntity tile = worldIn.getTileEntity(pos);
             if (tile instanceof PotionTableTileEntity) {
                 if (((PotionTableTileEntity) tile).canOpen(player)) {
