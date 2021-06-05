@@ -140,8 +140,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         currentLordLevel = oldP.currentLordLevel;
         this.boundActions.putAll(oldP.boundActions);
         this.titleGender = oldP.titleGender;
-        notifyFaction(oldP.currentFaction, oldP.currentLevel);
         this.updateCache();
+        notifyFaction(oldP.currentFaction, oldP.currentLevel);
     }
 
     /**
@@ -333,6 +333,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (currentLordLevel != newLordLevel) {
             this.setLordLevel(newLordLevel, false);
         }
+        updateCache();
         notifyFaction(old, oldLevel);
 //        if(faction != null && faction != old) {
 //            faction.getPlayerCapability(player).ifPresent(factionPlayer -> factionPlayer.getTaskManager().init());
@@ -341,7 +342,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (player instanceof ServerPlayerEntity) {
             ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayerEntity) player, currentFaction, currentLevel, currentLordLevel);
         }
-        updateCache();
         return true;
 
     }
@@ -370,6 +370,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
 
         this.currentLordLevel = level;
+        this.updateCache();
         MinionWorldData.getData(player.world).ifPresent(data -> {
             PlayerMinionController c = data.getController(this.player.getUniqueID());
             if (c != null) {
@@ -380,7 +381,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayerEntity) player, currentFaction, currentLevel, currentLordLevel);
         }
         if (sync) sync(false);
-        this.updateCache();
         return true;
     }
 
@@ -433,8 +433,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             this.titleGender = nbt.getBoolean("title_gender");
         }
         this.loadBoundActions(nbt);
-        notifyFaction(old, oldLevel);
         updateCache();
+        notifyFaction(old, oldLevel);
     }
 
     private void saveNBTData(CompoundNBT nbt) {
@@ -458,6 +458,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             } else {
                 currentLevel = nbt.getInt("level");
                 currentLordLevel = nbt.getInt("lord_level");
+                updateCache();
                 notifyFaction(null, 0);
             }
         }

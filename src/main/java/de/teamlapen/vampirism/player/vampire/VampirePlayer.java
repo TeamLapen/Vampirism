@@ -635,10 +635,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         this.applyEntityAttributes();
         if (!isRemote()) {
             ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.VAMPIRE_LEVEL_CRITERIA, newLevel);
-            applyLevelModifiersA();
-            applyLevelModifiersB(false);
+            applyLevelModifiersA(newLevel);
+            applyLevelModifiersB(newLevel,false);
             if (player.getHealth() > player.getMaxHealth()) player.setHealth(player.getMaxHealth());
-            updateNaturalArmor();
+            updateNaturalArmor(newLevel);
             if (newLevel > 13) {
                 bloodStats.setMaxBlood(40);
             } else if (newLevel > 9) {
@@ -811,7 +811,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 }
 
                 if(forceNaturalArmorUpdate|| player.ticksExisted % 128 ==0){
-                   updateNaturalArmor();
+                   updateNaturalArmor(getLevel());
                    forceNaturalArmorUpdate=false;
                 }
 
@@ -1236,12 +1236,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return  (lvl/(double)REFERENCE.HIGHEST_VAMPIRE_LEVEL)*VampirismConfig.BALANCE.vpNaturalArmorToughnessIncrease.get();
     }
 
-    public void updateNaturalArmor(){
+    public void updateNaturalArmor(int lvl){
         ModifiableAttributeInstance armorAtt = player.getAttribute(Attributes.ARMOR);
         ModifiableAttributeInstance toughnessAtt = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
         if(armorAtt!=null&&toughnessAtt!=null){
-
-            int lvl = getLevel();
             if(lvl==0){
                 armorAtt.removeModifier(NATURAL_ARMOR_UUID);
                 toughnessAtt.removeModifier(NATURAL_ARMOR_UUID);
@@ -1273,7 +1271,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 if(targetToughness!=0&&modToughness==null){
                     toughnessAtt.applyNonPersistentModifier(new AttributeModifier(NATURAL_ARMOR_UUID,"Natural Vampire Armor Toughness",targetToughness, AttributeModifier.Operation.ADDITION));
                 }
-                applyLevelModifiersB(VampirismConfig.BALANCE.vpArmorPenalty.get() && baseArmor > 7);
+                applyLevelModifiersB(lvl, VampirismConfig.BALANCE.vpArmorPenalty.get() && baseArmor > 7);
 
             }
         }
@@ -1289,17 +1287,17 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     /**
      * Apply the armor unaffected level scaled entity attribute modifiers
      */
-    private void applyLevelModifiersA(){
-        LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, true);
-        LevelAttributeModifier.applyModifier(player, ModAttributes.blood_exhaustion, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+    private void applyLevelModifiersA(int level){
+        LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, true);
+        LevelAttributeModifier.applyModifier(player, ModAttributes.blood_exhaustion, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
     }
 
     /**
      * Apply the armor affected level scaled entity attribute modifiers
      */
-    private void applyLevelModifiersB(boolean heavyArmor){
-        LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpSpeedMaxMod.get() * (heavyArmor?0.5f:1), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
-        LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_SPEED, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpAttackSpeedMaxMod.get() * (heavyArmor?0.5f:1), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+    private void applyLevelModifiersB(int level, boolean heavyArmor){
+        LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpSpeedMaxMod.get() * (heavyArmor?0.5f:1), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+        LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_SPEED, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpAttackSpeedMaxMod.get() * (heavyArmor?0.5f:1), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
     }
 
     @Override
