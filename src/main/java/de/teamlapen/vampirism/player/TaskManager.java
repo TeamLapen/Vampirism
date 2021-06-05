@@ -56,9 +56,9 @@ public class TaskManager implements ITaskManager {
     @Nonnull
     private final Map<UUID, Map<Task, Map<ResourceLocation, Integer>>> stats = Maps.newHashMap();
 
-    public TaskManager(@Nonnull IFactionPlayer<?> factionPlayer, @Nonnull IPlayableFaction<?> faction) {
+    public TaskManager(ServerPlayerEntity player, @Nonnull IFactionPlayer<?> factionPlayer, @Nonnull IPlayableFaction<?> faction) {
         this.faction = faction;
-        this.player = (ServerPlayerEntity) factionPlayer.getRepresentingPlayer();
+        this.player = player;
         this.factionPlayer = factionPlayer;
     }
 

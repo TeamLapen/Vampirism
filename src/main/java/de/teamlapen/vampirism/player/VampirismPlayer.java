@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,8 +29,8 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
 
     public VampirismPlayer(PlayerEntity player) {
         this.player = player;
-        if(!player.getEntityWorld().isRemote()) {
-            this.taskManager = new TaskManager(this, this.getFaction());
+        if(player instanceof ServerPlayerEntity) {
+            this.taskManager = new TaskManager((ServerPlayerEntity) player, this, this.getFaction());
         }else {
             this.taskManager = null;
         }
