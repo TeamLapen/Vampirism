@@ -283,7 +283,7 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onEntityLootingEvent(LootingLevelEvent event){
-        if(event.getDamageSource().getTrueSource() instanceof PlayerEntity){
+        if(event.getDamageSource() != null && event.getDamageSource().getTrueSource() instanceof PlayerEntity){
             @Nullable
             IItemWithTier.TIER hunterCoatTier = VampirismPlayerAttributes.get((PlayerEntity) event.getDamageSource().getTrueSource()).getHuntSpecial().fullHunterCoat;
             if(hunterCoatTier== IItemWithTier.TIER.ENHANCED || hunterCoatTier== IItemWithTier.TIER.ULTIMATE){
