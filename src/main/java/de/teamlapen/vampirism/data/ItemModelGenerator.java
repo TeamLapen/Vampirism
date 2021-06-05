@@ -54,6 +54,8 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModBlocks.totem_top_vampirism_hunter);
             add(ModBlocks.vampire_orchid);
             add(ModBlocks.bloody_spruce_log);
+            add(ModBlocks.chandelier);
+            add(ModBlocks.candelabra);
         }};
         Set<Item> items = new HashSet<Item>() {{
             add(ModItems.hunter_coat_chest_normal);

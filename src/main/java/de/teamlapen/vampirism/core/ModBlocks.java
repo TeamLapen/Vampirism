@@ -4,7 +4,11 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.*;
+import de.teamlapen.vampirism.client.core.ModBlocksRender;
 import de.teamlapen.vampirism.client.render.VampirismItemStackTESR;
+import de.teamlapen.vampirism.data.BlockStateGenerator;
+import de.teamlapen.vampirism.data.ItemModelGenerator;
+import de.teamlapen.vampirism.data.LootTablesGenerator;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -79,6 +83,8 @@ public class ModBlocks {
     public static final BloodySpruceLeavesBlock vampire_spruce_leaves = getNull();
     public static final BloodySpruceLeavesBlock bloody_spruce_leaves = getNull();
     public static final BloodySpruceSaplingBlock bloody_spruce_sapling = getNull();
+    public static final VampirismBlock chandelier = getNull();
+    public static final VampirismBlock candelabra = getNull();
 
     static void registerItemBlocks(IForgeRegistry<Item> registry) {
         registry.register(itemBlock(alchemical_cauldron));
@@ -122,6 +128,8 @@ public class ModBlocks {
         registry.register(itemBlock(vampire_spruce_leaves));
         registry.register(itemBlock(bloody_spruce_leaves));
         registry.register(itemBlock(bloody_spruce_sapling));
+        registry.register(itemBlock(chandelier));
+        registry.register(itemBlock(candelabra));
     }
 
     static void registerBlocks(IForgeRegistry<Block> registry) {
@@ -181,6 +189,20 @@ public class ModBlocks {
         registry.register(prepareRegister(new BloodySpruceLeavesBlock("vampire_spruce_leaves")));
         registry.register(prepareRegister(new BloodySpruceLeavesBlock("bloody_spruce_leaves")));
         registry.register(prepareRegister(new BloodySpruceSaplingBlock()));
+        registry.register(prepareRegister(new VampirismHorizontalBlock("chandelier", AbstractBlock.Properties.create(Material.IRON).setLightLevel(s->14).notSolid())));
+        registry.register(prepareRegister(new VampirismHorizontalBlock("candelabra", AbstractBlock.Properties.create(Material.IRON).setLightLevel(s->14).notSolid(), GenericVoxelShapes.makeCandelabraShape())));
+
+        /**
+         * TUTORIAL:
+         * - Register block here.
+         * - Register itemblock in {@link ModBlocks#registerItemBlocks(IForgeRegistry)}
+         * - Maybe set render layer in {@link ModBlocksRender#registerRenderType()}
+         * - Register blockstate in {@link BlockStateGenerator#registerStatesAndModels()} (pass existent model if desired)
+         * - Register itemrender in {@link ItemModelGenerator#registerModels()}
+         * - Register loot table in {@link LootTablesGenerator.ModBlockLootTables#addTables()}
+         * - Add lang keys
+         * - Run genData (twice?)
+         */
     }
 
     private static Block prepareRegister(Block block){

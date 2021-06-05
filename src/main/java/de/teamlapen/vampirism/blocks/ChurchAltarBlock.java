@@ -7,16 +7,12 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -34,9 +30,8 @@ import javax.annotation.Nullable;
 /**
  * Placed in some churches
  */
-public class ChurchAltarBlock extends HorizontalBlock {
+public class ChurchAltarBlock extends VampirismHorizontalBlock {
 
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     private final static String regName = "church_altar";
     private static final VoxelShape SHAPEX = makeShape();
     private static final VoxelShape SHAPEZ = UtilLib.rotateShape(SHAPEX, UtilLib.RotationAmount.NINETY);
@@ -51,9 +46,8 @@ public class ChurchAltarBlock extends HorizontalBlock {
 
 
     public ChurchAltarBlock() {
-        super(Properties.create(Material.WOOD).hardnessAndResistance(0.5f).notSolid());
+        super(regName, Properties.create(Material.WOOD).hardnessAndResistance(0.5f).notSolid());
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
-        setRegistryName(REFERENCE.MODID, regName);
     }
 
 
@@ -93,10 +87,5 @@ public class ChurchAltarBlock extends HorizontalBlock {
             }
         }
         return ActionResultType.PASS;
-    }
-
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
     }
 }
