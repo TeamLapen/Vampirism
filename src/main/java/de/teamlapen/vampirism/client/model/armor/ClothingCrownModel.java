@@ -6,14 +6,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class CrownModel extends VampirismArmorModel {
+public class ClothingCrownModel extends VampirismArmorModel {
 
-    private static CrownModel instance;
+    private static ClothingCrownModel instance;
 
-    public static CrownModel getInstance() {
-//        if (instance == null) {
-            instance = new CrownModel();
-//        }
+    public static ClothingCrownModel getInstance() {
+        if (instance == null) {
+            instance = new ClothingCrownModel();
+        }
         return instance;
     }
 
@@ -22,7 +22,7 @@ public class CrownModel extends VampirismArmorModel {
     public ModelRenderer left;
     public ModelRenderer right;
 
-    public CrownModel() {
+    public ClothingCrownModel() {
         super(64,32);
         this.left = new ModelRenderer(this, 0, 0);
         this.left.setRotationPoint(0.0F, 0.0F, 0.0F);

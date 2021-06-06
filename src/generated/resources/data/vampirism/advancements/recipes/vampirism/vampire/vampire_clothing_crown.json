@@ -6,6 +6,16 @@
     ]
   },
   "criteria": {
+    "has_heart": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:human_heart"
+          }
+        ]
+      }
+    },
     "has_gold": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
@@ -25,6 +35,7 @@
   },
   "requirements": [
     [
+      "has_heart",
       "has_gold",
       "has_the_recipe"
     ]

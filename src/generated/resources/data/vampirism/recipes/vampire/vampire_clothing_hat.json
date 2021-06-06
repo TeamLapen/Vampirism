@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " XX",
+    "ZXX",
     " Y ",
     "XXX"
   ],
@@ -11,7 +11,15 @@
     },
     "Y": {
       "item": "minecraft:red_wool"
-    }
+    },
+    "Z": [
+      {
+        "item": "vampirism:human_heart"
+      },
+      {
+        "item": "vampirism:weak_human_heart"
+      }
+    ]
   },
   "result": {
     "item": "vampirism:vampire_clothing_hat"

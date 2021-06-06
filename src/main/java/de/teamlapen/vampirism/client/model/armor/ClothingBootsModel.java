@@ -6,13 +6,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class VampireClothBootsModel extends VampirismArmorModel {
+public class ClothingBootsModel extends VampirismArmorModel {
 
-    private static VampireClothBootsModel instance;
+    private static ClothingBootsModel instance;
 
-    public static VampireClothBootsModel getInstance() {
+    public static ClothingBootsModel getInstance() {
         if (instance == null) {
-            instance = new VampireClothBootsModel();
+            instance = new ClothingBootsModel();
         }
         return instance;
     }
@@ -22,7 +22,7 @@ public class VampireClothBootsModel extends VampirismArmorModel {
     public ModelRenderer leftToes;
     public ModelRenderer rightToes;
 
-    public VampireClothBootsModel() {
+    public ClothingBootsModel() {
         super(32,16);
         this.rightBoot = new ModelRenderer(this, 0, 0);
         this.rightBoot.setRotationPoint(1.9F, 12.0F, 0.0F);

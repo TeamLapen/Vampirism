@@ -56,11 +56,11 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
     public BipedModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, BipedModel _default) {
         switch (regName){
             case "vampire_clothing_crown":
-                return CrownModel.getInstance();
+                return ClothingCrownModel.getInstance();
             case "vampire_clothing_legs":
-                return VampireClothLegsModel.getInstance();
+                return ClothingPantsModel.getInstance();
             case "vampire_clothing_boots":
-                return VampireClothBootsModel.getInstance();
+                return ClothingBootsModel.getInstance();
             case "vampire_clothing_hat":
                 return VampireHatModel.getInstance();
             default:
@@ -84,7 +84,5 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
             }
         }
     }
-
-
 
 }
