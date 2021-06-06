@@ -29,7 +29,7 @@ public class VampirismArmorModel extends BipedModel<LivingEntity> {
         ll.forEach(p->p.copyModelAngles(this.bipedLeftLeg));
         Iterable<ModelRenderer> rl =  getRightLegModels();
         rl.forEach(p->p.copyModelAngles(this.bipedRightLeg));
-        return Iterables.concat(b,ll);
+        return Iterables.concat(b,ll,rl);
     }
 
     protected Iterable<ModelRenderer> getHeadModels(){

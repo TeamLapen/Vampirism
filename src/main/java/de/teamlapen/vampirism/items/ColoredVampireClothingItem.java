@@ -14,7 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 
 
-public class ColoredVampireClothingItem  extends VampireClothingItem{
+public class ColoredVampireClothingItem  extends VampireClothingItem {
     private final String baseName;
     private final EnumClothingColor color;
     private final EnumModel model;

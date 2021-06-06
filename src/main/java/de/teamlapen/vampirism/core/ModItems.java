@@ -204,9 +204,10 @@ public class ModItems {
     public static final VampireRefinementItem ring = getNull();
     public static final VampireRefinementItem obi_belt = getNull();
 
-    public static final VampireClothingItem vampire_clothing_head = getNull();
+    public static final VampireClothingItem vampire_clothing_crown = getNull();
     public static final VampireClothingItem vampire_clothing_legs = getNull();
-    public static final VampireClothingItem vampire_clothing_feet = getNull();
+    public static final VampireClothingItem vampire_clothing_boots = getNull();
+    public static final VampireClothingItem vampire_clothing_hat = getNull();
 
 
     static void registerCraftingRecipes() {
@@ -422,9 +423,10 @@ public class ModItems {
         registry.register(new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.RING).setRegistryName(REFERENCE.MODID, "ring"));
         registry.register(new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.OBI_BELT).setRegistryName(REFERENCE.MODID, "obi_belt"));
 
-        registry.register(new VampireClothingItem(EquipmentSlotType.HEAD,"vampire_clothing_head"));
+        registry.register(new VampireClothingItem(EquipmentSlotType.HEAD,"vampire_clothing_crown"));
         registry.register(new VampireClothingItem(EquipmentSlotType.LEGS, "vampire_clothing_legs"));
-        registry.register(new VampireClothingItem(EquipmentSlotType.FEET, "vampire_clothing_feet"));
+        registry.register(new VampireClothingItem(EquipmentSlotType.FEET, "vampire_clothing_boots"));
+        registry.register(new VampireClothingItem(EquipmentSlotType.HEAD, "vampire_clothing_hat"));
 
         registry.register(new VampirismItem("cure_apple", creativeTabProps().rarity(Rarity.RARE)));
 
@@ -439,10 +441,17 @@ public class ModItems {
 
     public static void fixMappings(RegistryEvent.MissingMappings<Item> event) {
         event.getAllMappings().forEach(missingMapping -> {
-            if ("vampirism:blood_potion".equals(missingMapping.key.toString())) {
-                missingMapping.ignore();
-            } else if ("vampirism:blood_potion_table".equals(missingMapping.key.toString())) {
-                missingMapping.ignore();
+            switch (missingMapping.key.toString()){
+                case "vampirism:blood_potion":
+                case "vampirism:blood_potion_table":
+                    missingMapping.ignore();
+                    break;
+                case "vampirism:vampire_clothing_head":
+                    missingMapping.remap(vampire_clothing_crown);
+                    break;
+                case "vampirism:vampire_clothing_feet":
+                    missingMapping.remap(vampire_clothing_boots);
+                    break;
             }
         });
     }

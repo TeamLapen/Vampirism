@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
-import de.teamlapen.vampirism.client.model.armor.DummyClothingModel;
+import de.teamlapen.vampirism.client.model.armor.*;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -54,7 +54,18 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
     @OnlyIn(Dist.CLIENT)
     @Override
     public BipedModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, BipedModel _default) {
-        return DummyClothingModel.getArmorModel();
+        switch (regName){
+            case "vampire_clothing_crown":
+                return ClothingCrownModel.getInstance();
+            case "vampire_clothing_legs":
+                return ClothingPantsModel.getInstance();
+            case "vampire_clothing_boots":
+                return ClothingBootsModel.getInstance();
+            case "vampire_clothing_hat":
+                return VampireHatModel.getInstance();
+            default:
+                return DummyClothingModel.getArmorModel();
+        }
     }
 
 
@@ -73,7 +84,5 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
             }
         }
     }
-
-
 
 }

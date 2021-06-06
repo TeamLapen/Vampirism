@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XYX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:gold_ingot"
+    },
+    "Y": [
+      {
+        "item": "vampirism:human_heart"
+      },
+      {
+        "item": "vampirism:weak_human_heart"
+      }
+    ]
+  },
+  "result": {
+    "item": "vampirism:vampire_clothing_crown"
+  }
+}
