@@ -219,5 +219,6 @@ public class BlockStateGenerator extends BlockStateProvider {
                 .part().modelFile(hunterTableHammer).rotationY(270).addModel().condition(HunterTableBlock.FACING, Direction.WEST).condition(HunterTableBlock.VARIANT, HunterTableBlock.TABLE_VARIANT.WEAPON, HunterTableBlock.TABLE_VARIANT.WEAPON_CAULDRON, HunterTableBlock.TABLE_VARIANT.WEAPON_POTION, HunterTableBlock.TABLE_VARIANT.COMPLETE).end();
         simpleBlock(ModBlocks.chandelier, models().getExistingFile(modLoc("block/chandelier")));
         horizontalBlock(ModBlocks.candelabra, models().getExistingFile(modLoc("block/candelabra")));
+        horizontalBlock(ModBlocks.candelabra_wall, models().getExistingFile(modLoc("block/candelabra_wall")));
     }
 }

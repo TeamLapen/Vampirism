@@ -276,7 +276,8 @@ public class LootTablesGenerator extends LootTableProvider {
             this.registerLootTable(ModBlocks.vampire_spruce_leaves, (block) -> droppingWithChancesAndSticks(block, ModBlocks.bloody_spruce_sapling, DEFAULT_SAPLING_DROP_RATES));
             this.registerLootTable(ModBlocks.bloody_spruce_leaves, (block) -> droppingWithChancesAndSticks(block, ModBlocks.bloody_spruce_sapling, DEFAULT_SAPLING_DROP_RATES));
             this.registerDropSelfLootTable(ModBlocks.chandelier);
-            this.registerDropSelfLootTable(ModBlocks.candelabra);
+            this.registerLootTable(ModBlocks.candelabra_wall,dropping(ModItems.item_candelabra));
+            this.registerLootTable(ModBlocks.candelabra,dropping(ModItems.item_candelabra));
         }
 
         @Nonnull

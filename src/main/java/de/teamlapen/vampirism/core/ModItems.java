@@ -208,6 +208,8 @@ public class ModItems {
     public static final VampireClothingItem vampire_clothing_legs = getNull();
     public static final VampireClothingItem vampire_clothing_feet = getNull();
 
+    public static final WallOrFloorItem item_candelabra = getNull();
+
 
     static void registerCraftingRecipes() {
         // Brewing
@@ -427,6 +429,9 @@ public class ModItems {
         registry.register(new VampireClothingItem(EquipmentSlotType.FEET, "vampire_clothing_feet"));
 
         registry.register(new VampirismItem("cure_apple", creativeTabProps().rarity(Rarity.RARE)));
+
+        registry.register(new WallOrFloorItem(ModBlocks.candelabra, ModBlocks.candelabra_wall, new Item.Properties().group(VampirismMod.creativeTab)).setRegistryName(REFERENCE.MODID,"item_candelabra"));
+
 
         if (VampirismMod.inDataGen) {
             registry.register(new DummyItem().setRegistryName("guideapi-vp", "vampirism-guidebook"));

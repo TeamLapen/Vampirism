@@ -75,10 +75,6 @@ public class VampirismHorizontalBlock extends VampirismBlock {
         builder.add(FACING);
     }
 
-//    @Override
-//    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-//        return hasEnoughSolidSide(worldIn, pos.up(), Direction.DOWN);
-//    }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {

@@ -85,6 +85,7 @@ public class ModBlocks {
     public static final BloodySpruceSaplingBlock bloody_spruce_sapling = getNull();
     public static final VampirismBlock chandelier = getNull();
     public static final VampirismBlock candelabra = getNull();
+    public static final VampirismBlock candelabra_wall = getNull();
 
     static void registerItemBlocks(IForgeRegistry<Item> registry) {
         registry.register(itemBlock(alchemical_cauldron));
@@ -129,7 +130,6 @@ public class ModBlocks {
         registry.register(itemBlock(bloody_spruce_leaves));
         registry.register(itemBlock(bloody_spruce_sapling));
         registry.register(itemBlock(chandelier));
-        registry.register(itemBlock(candelabra));
     }
 
     static void registerBlocks(IForgeRegistry<Block> registry) {
@@ -189,8 +189,9 @@ public class ModBlocks {
         registry.register(prepareRegister(new BloodySpruceLeavesBlock("vampire_spruce_leaves")));
         registry.register(prepareRegister(new BloodySpruceLeavesBlock("bloody_spruce_leaves")));
         registry.register(prepareRegister(new BloodySpruceSaplingBlock()));
-        registry.register(prepareRegister(new VampirismHorizontalBlock("chandelier", AbstractBlock.Properties.create(Material.IRON).setLightLevel(s->14).notSolid())));
-        registry.register(prepareRegister(new VampirismHorizontalBlock("candelabra", AbstractBlock.Properties.create(Material.IRON).setLightLevel(s->14).notSolid(), GenericVoxelShapes.makeCandelabraShape())));
+        registry.register(prepareRegister(new ChandelierBlock()));
+        registry.register(prepareRegister(new CandelabraWallBlock()));
+        registry.register(prepareRegister(new CandelabraBlock()));
 
         /**
          * TUTORIAL:

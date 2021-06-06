@@ -55,7 +55,6 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModBlocks.vampire_orchid);
             add(ModBlocks.bloody_spruce_log);
             add(ModBlocks.chandelier);
-            add(ModBlocks.candelabra);
         }};
         Set<Item> items = new HashSet<Item>() {{
             add(ModItems.hunter_coat_chest_normal);
@@ -223,6 +222,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         item(ModItems.amulet, modLoc("item/vampire_amulet_layer0"), modLoc("item/vampire_amulet_layer1"));
         item(ModItems.obi_belt, modLoc("item/vampire_obi_belt_layer0"), modLoc("item/vampire_obi_belt_layer1"));
 
+        withExistingParent(ModItems.item_candelabra, modLoc("block/candelabra"));
 
 
         singleTexture("blood_bottle", mcLoc("item/generated"), "layer0", modLoc("item/blood_bottle_0"))

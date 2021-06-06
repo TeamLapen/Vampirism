@@ -113,6 +113,7 @@ public class ModBlocksRender {
         RenderTypeLookup.setRenderLayer(ModBlocks.bloody_spruce_sapling, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.chandelier, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.candelabra, cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.candelabra_wall, cutout);
     }
 
 
