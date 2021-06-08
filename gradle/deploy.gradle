@@ -126,7 +126,7 @@ task modrinth (type: TaskModrinthUpload){
         versionType = 'ALPHA'
         changelog = "This version should not be used in your 'productive' world. It contains the latest features, but also the latest bugs.\n Probably not all features are finished.\n To see what might have changed visit our Github page and browse the latest commits."
     }
-    token = project.MODRINTH_API
+    token = findProperty("MODRINTH_API") ?: "DUMMY"
     projectId = 'jVZ0F1wn'
     versionName = "Vampirism-${project.minecraft_version}-${project.mod_version}"
     versionNumber = "${project.minecraft_version}-${project.mod_version}"

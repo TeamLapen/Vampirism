@@ -44,7 +44,7 @@ dependencies {
     //runtimeOnly fg.deobf("curse.maven:angel-of-vengeance:2810906")
 
     //Blame for debugging
-    implementation fg.deobf("com.telepathicgrunt:Blame:${project.blame_version}")
+    runtimeOnly fg.deobf("com.telepathicgrunt:Blame:${project.blame_version}")
 
 
 }
