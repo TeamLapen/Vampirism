@@ -45,7 +45,7 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
         if (name.isEmpty()) {
             name = new TranslationTextComponent("text.vampirism.minion").toString() + entity.getMinionId().orElse(0);
         }
-        VampirismMod.dispatcher.sendToServer(new AppearancePacket(this.entity.getEntityId(), name, this.skinType, (isMinionSpecificSkin ? 0b10 : 0b0) | (useLordSkin ? 0b1 : 0b0)));
+        VampirismMod.dispatcher.sendToServer(new AppearancePacket(this.entity.getEntityId(), name, this.skinType, this.hatType, (this.isMinionSpecificSkin ? 0b10 : 0b0) | (this.useLordSkin ? 0b1 : 0b0)));
         super.onClose();
     }
 
