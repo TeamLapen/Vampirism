@@ -9,6 +9,7 @@ import de.maxanier.guideapi.api.impl.abstraction.CategoryAbstract;
 import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
 import de.maxanier.guideapi.api.util.PageHelper;
 import de.maxanier.guideapi.category.CategoryItemStack;
+import de.maxanier.guideapi.entry.EntryResourceLocation;
 import de.maxanier.guideapi.page.PageEntity;
 import de.maxanier.guideapi.page.PageImage;
 import de.maxanier.guideapi.page.PageText;
@@ -71,6 +72,7 @@ public class GuideBook implements IGuideBook {
         categories.add(new CategoryItemStack(buildWorld(), translateComponent("guide.vampirism.world.title"), new ItemStack(ModBlocks.cursed_earth)));
         categories.add(new CategoryItemStack(buildItems(), translateComponent("guide.vampirism.items.title"), new ItemStack(Items.APPLE)));
         categories.add(new CategoryItemStack(buildBlocks(), translateComponent("guide.vampirism.blocks.title"), new ItemStack(ModBlocks.castle_block_dark_brick)));
+        categories.add(new CategoryItemStack(buildChangelog(), translateComponent("guide.vampirism.changelog.title"), new ItemStack(Items.WRITABLE_BOOK)));
         MinecraftForge.EVENT_BUS.post(new VampirismGuideBookCategoriesEvent(categories));
         LOGGER.debug("Built content in {} ms", System.currentTimeMillis() - start);
     }
@@ -474,6 +476,45 @@ public class GuideBook implements IGuideBook {
         ItemInfoBuilder.create(ModBlocks.potion_table).recipes("hunter/potion_table").customPages(generatePotionMixes()).build(entries);
         links.putAll(entries);
         return entries;
+    }
+
+    public static Map<ResourceLocation, EntryAbstract> buildChangelog() {
+        Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
+        String base = "guide.vampirism.changelog.";
+        entries.put(new ResourceLocation(base + "v1_8"), buildChangelog1_8());
+        links.putAll(entries);
+        return entries;
+    }
+
+    public static EntryAbstract buildChangelog1_8() {
+        String base = "guide.vampirism.changelog.";
+        String base1_8 = base + "v1_8.";
+
+        //Vampirism 1.8
+        List<IPage> v1_8 = new ArrayList<>();
+        //vampirism menu
+        List<IPage> vampirism_menu = PageHelper.pagesForLongText(new TranslationTextComponent(base1_8 + "vampirism_menu.text", ModKeys.getKeyBinding(ModKeys.KEY.SKILL).func_238171_j_()));
+        vampirism_menu.add(new PageTextImage(translateComponent(base1_8 + "vampirism_menu.image"), new ResourceLocation(IMAGE_BASE + "vampirism_menu.png"), false));
+        v1_8.addAll(vampirism_menu);
+        //vampire accessories
+        //vampire armor
+        //vampire immortality
+        //task changes
+        List<IPage> task_changes = PageHelper.pagesForLongText(translateComponent(base1_8 + "tasks.text"));
+        v1_8.addAll(task_changes);
+        //skills
+        List<IPage> skills = PageHelper.pagesForLongText(translateComponent(base1_8 + "skills.text"));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.vista.image"), new ResourceLocation(IMAGE_BASE + "vampire_forest_fog.png"), false));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.neonatal.image"), new ResourceLocation(IMAGE_BASE + "neonatal_decrease.png"), false));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.dbno.image"), new ResourceLocation(IMAGE_BASE + "dbno_duration.png"), false));
+        v1_8.addAll(skills);
+        //balancing
+        List<IPage> balancing = PageHelper.pagesForLongText(new TranslationTextComponent(base1_8 + "balancing.text"));
+        v1_8.addAll(balancing);
+        //misc
+        List<IPage> misc = PageHelper.pagesForLongText(new TranslationTextComponent(base1_8 + "misc.text"));
+        v1_8.addAll(misc);
+        return new EntryResourceLocation(v1_8, new TranslationTextComponent(base + "v1_8"), new ResourceLocation("textures/item/writable_book.png"));
     }
 
     private static IPage[] generatePotionMixes() {
