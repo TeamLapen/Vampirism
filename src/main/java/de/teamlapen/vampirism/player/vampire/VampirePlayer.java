@@ -733,6 +733,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
             player.setAir(300);
             player.setMotion(0, Math.min(0, player.getMotion().getY()), 0);
+            player.clearActivePotions();
             return;
         }
         super.onUpdate();
@@ -857,7 +858,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public void onUpdatePlayer(TickEvent.Phase phase) {
         if (phase == TickEvent.Phase.END) {
             //Update blood stats
-            if (getLevel() > 0) {
+            if (getLevel() > 0 && !isDBNO()) {
                 player.world.getProfiler().startSection("vampirism_bloodupdate");
                 if (!player.world.isRemote && this.bloodStats.onUpdate()) {
                     sync(this.bloodStats.writeUpdate(new CompoundNBT()), false);
