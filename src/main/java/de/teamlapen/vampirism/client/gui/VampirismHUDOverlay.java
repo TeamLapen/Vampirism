@@ -292,7 +292,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (mc.player!=null&&Helper.isVampire(mc.player) && !IMCHandler.requestedToDisableBloodbar) {
             event.setCanceled(true);
 
-            if (mc.playerController.gameIsSurvivalOrAdventure()) {
+            if (mc.playerController.gameIsSurvivalOrAdventure() &&  mc.player.isAlive()) {
                 VampirePlayer.getOpt(mc.player).map(VampirePlayer::getBloodStats).ifPresent(stats -> {
                             GlStateManager.enableBlend();
 
