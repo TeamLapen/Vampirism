@@ -291,10 +291,10 @@ public class VampirismHUDOverlay extends ExtendedGui {
             return;
         }
 
-        if (Helper.isVampire(mc.player) && !IMCHandler.requestedToDisableBloodbar) {
+        if (mc.player != null && Helper.isVampire(mc.player) && !IMCHandler.requestedToDisableBloodbar) {
             event.setCanceled(true);
 
-            if (mc.playerController.gameIsSurvivalOrAdventure()) {
+            if (mc.playerController.gameIsSurvivalOrAdventure() && mc.player.isAlive()) {
                 IBloodStats stats = VampirePlayer.get(mc.player).getBloodStats();
 
                 GlStateManager.enableBlend();
