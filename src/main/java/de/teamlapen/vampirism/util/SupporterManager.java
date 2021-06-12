@@ -23,7 +23,7 @@ import java.util.Random;
 public class SupporterManager {
     private final static Logger LOGGER = LogManager.getLogger();
 
-    private static SupporterManager instance = new SupporterManager();
+    private static final SupporterManager instance = new SupporterManager();
 
     public static SupporterManager getInstance() {
         return instance;
@@ -43,7 +43,7 @@ public class SupporterManager {
         if (supporters[1].length > 0) {
             return supporters[1][rnd.nextInt(supporters[1].length)];
         }
-        return new Supporter(null, null, 0);
+        return new Supporter(null, null, 0, null);
     }
 
     /**
@@ -53,7 +53,7 @@ public class SupporterManager {
         if (supporters[0].length > 0) {
             return supporters[0][rnd.nextInt(supporters[0].length)];
         }
-        return new Supporter(null, null, 0);
+        return new Supporter(null, null, 0, null);
     }
 
     public void initAsync() {
@@ -107,6 +107,7 @@ public class SupporterManager {
     private Supporter parseSupporter(JsonObject object) {
         String name = null;
         String texture = null;
+        String bookId = null;
         int type = 0;
         if (object.has("name")) {
             name = object.get("name").getAsString();
@@ -117,7 +118,10 @@ public class SupporterManager {
         if (object.has("type")) {
             type = object.get("type").getAsInt();
         }
-        return new Supporter(name, texture, type);
+        if (object.has("bookId")) {
+            bookId = object.get("bookId").getAsString();
+        }
+        return new Supporter(name, texture, type, bookId);
     }
 
     @SuppressWarnings("unchecked")
@@ -146,16 +150,16 @@ public class SupporterManager {
 
     }
 
-    public class Supporter {
-        public
+    public static class Supporter {
         @Nullable
-        final String textureName;
-        public
+        public final String textureName;
         @Nullable
-        final String senderName;
+        public final String senderName;
         public final int typeId;
+        @Nullable
+        public final String bookID;
 
-        private Supporter(@Nullable String senderName, @Nullable String textureName, int typeId) {
+        private Supporter(@Nullable String senderName, @Nullable String textureName, int typeId, @Nullable String bookID) {
             this.typeId = typeId;
             if (senderName != null && senderName.equals("null")) {
                 this.senderName = null;
@@ -163,6 +167,7 @@ public class SupporterManager {
                 this.senderName = senderName;
             }
             this.textureName = textureName;
+            this.bookID = bookID;
         }
 
         @Override

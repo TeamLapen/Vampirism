@@ -87,7 +87,7 @@ public class LootTablesGenerator extends LootTableProvider {
                     .addLootPool(LootPool.builder().name("general").acceptCondition(KilledByPlayer.builder()).rolls(ConstantRange.of(1))
                             .addEntry(ItemLootEntry.builder(ModItems.vampire_blood_bottle).weight(1))
                             .addEntry(ItemLootEntry.builder(ModItems.blood_bottle).weight(1).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.5f, 1.0f))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(1f, 1f)))))
-                    .addLootPool(LootPool.builder().name("special").acceptCondition(RandomChanceWithLooting.builder(0.05f, 0.01f)).rolls(ConstantRange.of(1))
+                    .addLootPool(LootPool.builder().name("special").acceptCondition(RandomChanceWithLooting.builder(0.1f, 0.01f)).rolls(ConstantRange.of(1))
                             .addEntry(ItemLootEntry.builder(ModItems.vampire_book).weight(1).acceptFunction(AddBookNbt.builder())))
                     .addLootPool(LootPool.builder().name("refinement_item").rolls(ConstantRange.of(1)).acceptCondition(RandomChanceWithLooting.builder(0.05f, 0.01f))
                             .addEntry(ItemLootEntry.builder(ModItems.amulet).weight(1).acceptFunction(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))

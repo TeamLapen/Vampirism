@@ -71,6 +71,11 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Nullable
     private Pair<ResourceLocation, Boolean> skinDetails;
 
+    /**
+     * If set, the vampire book with this id should be dropped
+     */
+    @Nullable
+    private String lootBookId;
 
     /**
      * available actions for AI task & task
@@ -206,6 +211,9 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         if (tagCompund.contains("attack")) {
             this.attack = tagCompund.getBoolean("attack");
         }
+        if(tagCompund.contains("lootBookId")){
+            this.lootBookId = tagCompund.getString("lootBookId");
+        }
     }
 
     @Override
@@ -235,6 +243,9 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
             entityActionHandler.write(nbt);
         }
         nbt.putBoolean("attack", attack);
+        if(lootBookId!=null){
+            nbt.putString("lootBookId",lootBookId);
+        }
     }
 
     @Override
@@ -256,6 +267,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.getDataManager().register(TYPE, supporter.typeId);
         this.getDataManager().register(NAME, supporter.senderName == null ? "none" : supporter.senderName);
         this.getDataManager().register(TEXTURE, supporter.textureName == null ? "none" : supporter.textureName);
+        this.lootBookId = supporter.bookID;
 
     }
 
@@ -354,5 +366,9 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Override
     public AxisAlignedBB getTargetVillageArea() {
         return villageAttributes == null ? null : villageAttributes.getVillageArea();
+    }
+
+    public Optional<String> getBookLootId(){
+        return Optional.ofNullable(lootBookId);
     }
 }
