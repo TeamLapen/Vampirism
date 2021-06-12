@@ -209,6 +209,8 @@ public class ModItems {
     public static final VampireClothingItem vampire_clothing_boots = getNull();
     public static final VampireClothingItem vampire_clothing_hat = getNull();
 
+    public static final VampirismItem garlic_finder = getNull();
+
 
     static void registerCraftingRecipes() {
         // Brewing
@@ -429,6 +431,7 @@ public class ModItems {
         registry.register(new VampireClothingItem(EquipmentSlotType.HEAD, "vampire_clothing_hat"));
 
         registry.register(new VampirismItem("cure_apple", creativeTabProps().rarity(Rarity.RARE)));
+        registry.register(new VampirismItem("garlic_finder",creativeTabProps().rarity(Rarity.RARE)));
 
         if (VampirismMod.inDataGen) {
             registry.register(new DummyItem().setRegistryName("guideapi-vp", "vampirism-guidebook"));

@@ -15,6 +15,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -102,6 +103,14 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
                 register(); //Register in case we weren't active before. Shouldn't have an effect when already registered
             }
         }
+    }
+
+    /**
+     *
+     * @return If inside effective distance
+     */
+    public boolean isInRange(BlockPos pos){
+        return new ChunkPos(this.getPos()).getChessboardDistance(new ChunkPos(pos)) <= r;
     }
 
     @Override
