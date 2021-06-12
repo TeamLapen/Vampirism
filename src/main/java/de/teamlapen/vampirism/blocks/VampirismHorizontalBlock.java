@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.data.BlockStateGenerator;
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
@@ -47,7 +46,7 @@ public class VampirismHorizontalBlock extends VampirismBlock {
         WEST = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
     }
 
-    public VampirismHorizontalBlock(String regName, AbstractBlock.Properties properties) {
+    public VampirismHorizontalBlock(String regName, Block.Properties properties) {
         this(regName, properties, VoxelShapes.fullCube());
     }
 

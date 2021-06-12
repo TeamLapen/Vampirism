@@ -220,5 +220,6 @@ public class BlockStateGenerator extends BlockStateProvider {
         simpleBlock(ModBlocks.chandelier, models().getExistingFile(modLoc("block/chandelier")));
         horizontalBlock(ModBlocks.candelabra, models().getExistingFile(modLoc("block/candelabra")));
         horizontalBlock(ModBlocks.candelabra_wall, models().getExistingFile(modLoc("block/candelabra_wall")));
+        horizontalBlock(ModBlocks.cross, models().getExistingFile(modLoc("block/cross")));
     }
 }

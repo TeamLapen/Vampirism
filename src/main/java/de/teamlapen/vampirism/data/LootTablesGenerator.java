@@ -278,6 +278,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.registerDropSelfLootTable(ModBlocks.chandelier);
             this.registerLootTable(ModBlocks.candelabra_wall,dropping(ModItems.item_candelabra));
             this.registerLootTable(ModBlocks.candelabra,dropping(ModItems.item_candelabra));
+            this.registerDropSelfLootTable(ModBlocks.cross);
         }
 
         @Nonnull

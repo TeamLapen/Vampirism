@@ -114,6 +114,7 @@ public class ModBlocksRender {
         RenderTypeLookup.setRenderLayer(ModBlocks.chandelier, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.candelabra, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.candelabra_wall, cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.cross, cutout);
     }
 
 

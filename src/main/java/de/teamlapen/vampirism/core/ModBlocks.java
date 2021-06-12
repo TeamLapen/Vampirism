@@ -86,6 +86,7 @@ public class ModBlocks {
     public static final VampirismBlock chandelier = getNull();
     public static final VampirismBlock candelabra = getNull();
     public static final VampirismBlock candelabra_wall = getNull();
+    public static final VampirismBlock cross = getNull();
 
     static void registerItemBlocks(IForgeRegistry<Item> registry) {
         registry.register(itemBlock(alchemical_cauldron));
@@ -130,6 +131,7 @@ public class ModBlocks {
         registry.register(itemBlock(bloody_spruce_leaves));
         registry.register(itemBlock(bloody_spruce_sapling));
         registry.register(itemBlock(chandelier));
+        registry.register(itemBlock(cross));
     }
 
     static void registerBlocks(IForgeRegistry<Block> registry) {
@@ -192,6 +194,7 @@ public class ModBlocks {
         registry.register(prepareRegister(new ChandelierBlock()));
         registry.register(prepareRegister(new CandelabraWallBlock()));
         registry.register(prepareRegister(new CandelabraBlock()));
+        registry.register(prepareRegister(new CrossBlock()));
 
         /**
          * TUTORIAL:
