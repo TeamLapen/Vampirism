@@ -12,13 +12,10 @@ import de.teamlapen.vampirism.potion.PotionSanguinare;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.stats.Stats;
@@ -39,9 +36,8 @@ import javax.annotation.Nullable;
 /**
  * Block which represents the top and the bottom part of a "Medical Chair" used for injections
  */
-public class MedChairBlock extends VampirismBlock {
+public class MedChairBlock extends VampirismHorizontalBlock {
     public static final EnumProperty<EnumPart> PART = EnumProperty.create("part", EnumPart.class);
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     private final static String name = "med_chair";
     private final VoxelShape SHAPE_TOP;
     private final VoxelShape SHAPE_BOTTOM;
@@ -54,19 +50,8 @@ public class MedChairBlock extends VampirismBlock {
         SHAPE_BOTTOM = makeCuboidShape(1, 1, 0, 15, 10, 16);
     }
 
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getNearestLookingDirection());
-    }
-
 
     @Nonnull
-    @Override
-    public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
-    }
-
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
         return new ItemStack(ModItems.item_med_chair);
@@ -182,12 +167,6 @@ public class MedChairBlock extends VampirismBlock {
             player.addStat(Stats.BLOCK_MINED.get(this));
         }
         super.onBlockHarvested(worldIn, pos, state, player);
-    }
-
-    @Nonnull
-    @Override
-    public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
     }
 
     @Override

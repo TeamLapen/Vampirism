@@ -211,6 +211,8 @@ public class ModItems {
 
     public static final VampirismItem garlic_finder = getNull();
 
+    public static final WallOrFloorItem item_candelabra = getNull();
+
 
     static void registerCraftingRecipes() {
         // Brewing
@@ -432,6 +434,9 @@ public class ModItems {
 
         registry.register(new VampirismItem("cure_apple", creativeTabProps().rarity(Rarity.RARE)));
         registry.register(new VampirismItem("garlic_finder",creativeTabProps().rarity(Rarity.RARE)));
+
+        registry.register(new WallOrFloorItem(ModBlocks.candelabra, ModBlocks.candelabra_wall, new Item.Properties().group(VampirismMod.creativeTab)).setRegistryName(REFERENCE.MODID,"item_candelabra"));
+
 
         if (VampirismMod.inDataGen) {
             registry.register(new DummyItem().setRegistryName("guideapi-vp", "vampirism-guidebook"));

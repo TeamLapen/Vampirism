@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "vampirism:block/cross"
+    },
+    "facing=south": {
+      "model": "vampirism:block/cross",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "vampirism:block/cross",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "vampirism:block/cross",
+      "y": 90
+    }
+  }
+}
