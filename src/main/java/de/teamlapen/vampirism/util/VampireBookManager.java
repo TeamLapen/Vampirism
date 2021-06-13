@@ -10,42 +10,46 @@ import net.minecraft.nbt.JsonToNBT;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Handles loading of texts for ancient vampire books
  */
 public class VampireBookManager {
     private final static Logger LOGGER = LogManager.getLogger();
-    private static VampireBookManager ourInstance = new VampireBookManager();
+    private static final VampireBookManager ourInstance = new VampireBookManager();
 
     public static VampireBookManager getInstance() {
         return ourInstance;
     }
 
     private CompoundNBT[] bookTags = null;
+    private final Map<String,CompoundNBT> booksById = new HashMap<>();
 
     private VampireBookManager() {
     }
 
-    public void applyRandomBook(ItemStack stack, Random rnd) {
-        CompoundNBT nbt = (bookTags == null || bookTags.length == 0) ? new CompoundNBT() : bookTags[rnd.nextInt(bookTags.length)];
-        stack.setTag(nbt);
+    @Nonnull
+    public CompoundNBT getRandomBookData(Random rnd) {
+        return (bookTags == null || bookTags.length == 0) ? new CompoundNBT() : bookTags[rnd.nextInt(bookTags.length)];
     }
 
     /**
      * Return a vampire book with a randomly selected text and title
      *
-     * @param rnd
-     * @return
      */
     public ItemStack getRandomBook(Random rnd) {
         ItemStack book = new ItemStack(ModItems.vampire_book, 1);
-        applyRandomBook(book, rnd);
+        book.setTag(getRandomBookData(rnd));
         return book;
+    }
+
+    public Optional<CompoundNBT> getBookData(String id){
+        CompoundNBT nbt = booksById.get(id);
+        return Optional.ofNullable(nbt);
     }
 
     public void init() {
@@ -76,12 +80,22 @@ public class VampireBookManager {
     }
 
     private void parseBooks(String data) throws CommandSyntaxException {
-
         ArrayList<CompoundNBT> books = new ArrayList<>();
         String[] lines = data.split("\n");
         for (String line : lines) {
+            String id = null;
+            if(line.startsWith("id")){
+                int pos = line.indexOf(':');
+                if(pos!=-1){
+                    id = line.substring(2,pos);
+                    line = line.substring(pos+1);
+                }
+            }
             CompoundNBT nbt = JsonToNBT.getTagFromJson(line);
             books.add(nbt);
+            if(id!=null){
+                booksById.put(id,nbt);
+            }
         }
         bookTags = books.toArray(new CompoundNBT[0]);
     }

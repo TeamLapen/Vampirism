@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.OpenVampireBookPacket;
 import de.teamlapen.vampirism.util.VampireBookManager;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Slot;
@@ -15,13 +16,13 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
 import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.util.*;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextComponentUtils;
+import net.minecraft.util.text.*;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Random;
 
 
@@ -62,6 +63,20 @@ public class VampireBookItem extends VampirismItem {
         return super.getDisplayName(stack);
     }
 
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        if (stack.hasTag()) {
+            CompoundNBT compoundnbt = stack.getTag();
+            String s = compoundnbt.getString("author");
+            if (!StringUtils.isNullOrEmpty(s)) {
+                tooltip.add((new TranslationTextComponent("book.byAuthor", s)).mergeStyle(TextFormatting.GRAY));
+            }
+
+            tooltip.add((new StringTextComponent("Vampirism knowledge").mergeStyle(TextFormatting.GRAY)));
+        }
+
+    }
 
     @OnlyIn(Dist.CLIENT)
     public boolean hasEffect(ItemStack stack) {

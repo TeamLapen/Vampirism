@@ -73,7 +73,8 @@
       "name": "Pyromaniac Pik",
       "texture": "piklach",
       "type": 0,
-      "status": 1
+      "status": 1,
+      "bookId": "pyropik"
     },
     {
       "name": "James the Hunter",

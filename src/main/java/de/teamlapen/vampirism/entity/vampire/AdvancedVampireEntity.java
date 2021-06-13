@@ -77,6 +77,13 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     @Nullable
     private Pair<ResourceLocation, Boolean> skinDetails;
 
+    /**
+     * If set, the vampire book with this id should be dropped
+     */
+    @Nullable
+    private String lootBookId;
+
+
     public AdvancedVampireEntity(EntityType<? extends AdvancedVampireEntity> type, World world) {
         super(type, world, true);
         this.canSuckBloodFromPlayer = true;
@@ -211,6 +218,9 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         if (tagCompund.contains("attack")) {
             this.attack = tagCompund.getBoolean("attack");
         }
+        if(tagCompund.contains("lootBookId")){
+            this.lootBookId = tagCompund.getString("lootBookId");
+        }
     }
 
     @Override
@@ -234,6 +244,9 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
             entityActionHandler.write(nbt);
         }
         nbt.putBoolean("attack", this.attack);
+        if(lootBookId!=null){
+            nbt.putString("lootBookId",lootBookId);
+        }
     }
 
     @Override
@@ -257,6 +270,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     protected void registerData() {
         super.registerData();
         SupporterManager.Supporter supporter = SupporterManager.getInstance().getRandomVampire(rand);
+        lootBookId = supporter.bookID;
         this.getDataManager().register(LEVEL, -1);
         this.getDataManager().register(TYPE, supporter.typeId);
         this.getDataManager().register(NAME, supporter.senderName == null ? "none" : supporter.senderName);
@@ -359,5 +373,10 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     @Override
     public boolean isDefendingVillage() {
         return villageAttributes != null && !attack;
+    }
+
+
+    public Optional<String> getBookLootId(){
+        return Optional.ofNullable(lootBookId);
     }
 }
