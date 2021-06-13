@@ -493,28 +493,39 @@ public class GuideBook implements IGuideBook {
         //Vampirism 1.8
         List<IPage> v1_8 = new ArrayList<>();
         //vampirism menu
-        List<IPage> vampirism_menu = PageHelper.pagesForLongText(new TranslationTextComponent(base1_8 + "vampirism_menu.text", ModKeys.getKeyBinding(ModKeys.KEY.SKILL).func_238171_j_()));
+        List<IPage> vampirism_menu = PageHelper.pagesForLongText(translateComponent(base1_8 + "vampirism_menu.text", ModKeys.getKeyBinding(ModKeys.KEY.SKILL).func_238171_j_()));
         vampirism_menu.add(new PageTextImage(translateComponent(base1_8 + "vampirism_menu.image"), new ResourceLocation(IMAGE_BASE + "vampirism_menu.png"), false));
         v1_8.addAll(vampirism_menu);
         //vampire accessories
+        List<IPage> accessories = PageHelper.pagesForLongText(translateComponent(base1_8 + "accessories.text"));
+        accessories.add(new PageTextImage(translateComponent(base1_8 + "accessories.image"), new ResourceLocation(IMAGE_BASE + "vampire_accessories.png"), false));
+        v1_8.addAll(accessories);
         //vampire armor
+        List<IPage> armor = PageHelper.pagesForLongText(translateComponent(base1_8 + "vampire_armor.text"));
+        v1_8.addAll(armor);
         //vampire immortality
+        List<IPage> immortality = PageHelper.pagesForLongText(translateComponent(base1_8 + "vampire_immortality.text"));
+        v1_8.addAll(immortality);
         //task changes
         List<IPage> task_changes = PageHelper.pagesForLongText(translateComponent(base1_8 + "tasks.text"));
         v1_8.addAll(task_changes);
+        //raids
+        List<IPage> raids = PageHelper.pagesForLongText(translateComponent(base1_8 + "raids.text"));
+        v1_8.addAll(raids);
         //skills
         List<IPage> skills = PageHelper.pagesForLongText(translateComponent(base1_8 + "skills.text"));
-        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.vista.image"), new ResourceLocation(IMAGE_BASE + "vampire_forest_fog.png"), false));
-        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.neonatal.image"), new ResourceLocation(IMAGE_BASE + "neonatal_decrease.png"), false));
-        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.dbno.image"), new ResourceLocation(IMAGE_BASE + "dbno_duration.png"), false));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.vista.image"), new ResourceLocation(REFERENCE.MODID,"textures/skills/vampire_forest_fog.png"), false));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.neonatal.image"), new ResourceLocation( REFERENCE.MODID,"textures/skills/neonatal_decrease.png"), false));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.dbno.image"), new ResourceLocation(REFERENCE.MODID,"textures/skills/dbno_duration.png"), false));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.hissing.image"), new ResourceLocation(REFERENCE.MODID,"textures/actions/hissing.png"), false));
         v1_8.addAll(skills);
         //balancing
-        List<IPage> balancing = PageHelper.pagesForLongText(new TranslationTextComponent(base1_8 + "balancing.text"));
+        List<IPage> balancing = PageHelper.pagesForLongText(translateComponent(base1_8 + "balancing.text"));
         v1_8.addAll(balancing);
         //misc
-        List<IPage> misc = PageHelper.pagesForLongText(new TranslationTextComponent(base1_8 + "misc.text"));
+        List<IPage> misc = PageHelper.pagesForLongText(translateComponent(base1_8 + "misc.text"));
         v1_8.addAll(misc);
-        return new EntryResourceLocation(v1_8, new TranslationTextComponent(base + "v1_8"), new ResourceLocation("textures/item/writable_book.png"));
+        return new EntryResourceLocation(v1_8, translateComponent(base + "v1_8"), new ResourceLocation("textures/item/writable_book.png"));
     }
 
     private static IPage[] generatePotionMixes() {
