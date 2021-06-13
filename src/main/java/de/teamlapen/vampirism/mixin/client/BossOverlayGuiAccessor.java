@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.mixin;
+package de.teamlapen.vampirism.mixin.client;
 
 import net.minecraft.client.gui.ClientBossInfo;
 import net.minecraft.client.gui.overlay.BossOverlayGui;

@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.render.layers;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
-import de.teamlapen.vampirism.mixin.AgeableModelAccessor;
+import de.teamlapen.vampirism.mixin.client.AgeableModelAccessor;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;

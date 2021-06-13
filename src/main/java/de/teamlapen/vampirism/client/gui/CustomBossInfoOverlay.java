@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.teamlapen.vampirism.mixin.BossOverlayGuiAccessor;
+import de.teamlapen.vampirism.mixin.client.BossOverlayGuiAccessor;
 import de.teamlapen.vampirism.network.UpdateMultiBossInfoPacket;
 import de.teamlapen.vampirism.world.DummyBossInfo;
 import de.teamlapen.vampirism.world.MultiBossInfo;

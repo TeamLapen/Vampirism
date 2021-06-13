@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.mixin;
+package de.teamlapen.vampirism.mixin.client;
 
 import net.minecraft.client.renderer.entity.model.AgeableModel;
 import net.minecraft.client.renderer.model.ModelRenderer;

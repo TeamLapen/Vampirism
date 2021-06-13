@@ -18,8 +18,8 @@
     "MixinPotionBrewing"
   ],
   "client": [
-    "AgeableModelAccessor",
-    "BossOverlayGuiAccessor"
+    "client.AgeableModelAccessor",
+    "client.BossOverlayGuiAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
