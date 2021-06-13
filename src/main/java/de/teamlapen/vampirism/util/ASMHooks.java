@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.util;
 import com.google.common.collect.Lists;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
 import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
-import net.minecraft.world.gen.feature.structure.StructurePiece;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class ASMHooks {
         onlyOneStructure.addAll(structures);
     }
 
-    public static boolean checkStructures(List<StructurePiece> pieces, JigsawPiece jigsawPiece) {
+    public static boolean checkStructures(List<? super AbstractVillagePiece> pieces, JigsawPiece jigsawPiece) {
         if (!onlyOneStructure.contains(jigsawPiece.toString())) return false;
         return pieces.stream().anyMatch(structurePiece -> onlyOneStructure.stream().anyMatch(string -> ((AbstractVillagePiece) structurePiece).getJigsawPiece().toString().equals(string)));
     }

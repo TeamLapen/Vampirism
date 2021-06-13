@@ -5,6 +5,7 @@
   "refmap": "vampirism.refmap.json",
   "mixins": [
     "ArmorItemAccessor",
+    "AssemblerMixin",
     "DimensionStructureSettingsAccessor",
     "FlatGenerationSettingsAccessor",
     "LivingEntityAccessor",
