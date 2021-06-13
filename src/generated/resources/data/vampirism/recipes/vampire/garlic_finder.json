@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "XYX",
+    "ZAZ"
+  ],
+  "key": {
+    "X": {
+      "item": "vampirism:blood_infused_iron_ingot"
+    },
+    "Y": {
+      "tag": "forge:crops/garlic"
+    },
+    "Z": {
+      "tag": "minecraft:planks"
+    },
+    "A": {
+      "tag": "forge:dusts/redstone"
+    }
+  },
+  "result": {
+    "item": "vampirism:garlic_finder"
+  }
+}

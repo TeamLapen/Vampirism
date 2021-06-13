@@ -1,0 +1,54 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:vampire/garlic_finder"
+    ]
+  },
+  "criteria": {
+    "has_garlic": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:crops/garlic"
+          }
+        ]
+      }
+    },
+    "has_bloodiron": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:blood_infused_iron_ingot"
+          }
+        ]
+      }
+    },
+    "has_redstone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:dusts/redstone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:vampire/garlic_finder"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_garlic",
+      "has_bloodiron",
+      "has_redstone",
+      "has_the_recipe"
+    ]
+  ]
+}
