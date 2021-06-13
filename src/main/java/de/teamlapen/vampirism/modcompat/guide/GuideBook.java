@@ -491,7 +491,7 @@ public class GuideBook implements IGuideBook {
         String base1_8 = base + "v1_8.";
 
         //Vampirism 1.8
-        List<IPage> v1_8 = new ArrayList<>();
+        List<IPage> v1_8 = new ArrayList<>(PageHelper.pagesForLongText(translateComponent(base1_8 + "overview.text")));
         //vampirism menu
         List<IPage> vampirism_menu = PageHelper.pagesForLongText(translateComponent(base1_8 + "vampirism_menu.text", ModKeys.getKeyBinding(ModKeys.KEY.SKILL).func_238171_j_()));
         vampirism_menu.add(new PageTextImage(translateComponent(base1_8 + "vampirism_menu.image"), new ResourceLocation(IMAGE_BASE + "vampirism_menu.png"), false));
