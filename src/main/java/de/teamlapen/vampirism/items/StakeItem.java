@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -45,7 +46,7 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
     @Override
     public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (!attacker.getEntityWorld().isRemote) {
-            if (target instanceof IVampireMob || target instanceof PlayerEntity) {
+            if (target instanceof IVampireMob || (target instanceof PlayerEntity && Helper.isVampire(((PlayerEntity) target)))) {
                 if (canKillInstant(target, attacker)) {
                     DamageSource dmg = attacker instanceof PlayerEntity ? DamageSource.causePlayerDamage((PlayerEntity) attacker) : DamageSource.causeMobDamage(attacker);
                     dmg = dmg.setDamageBypassesArmor();
