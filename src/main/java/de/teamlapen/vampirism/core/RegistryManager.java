@@ -69,7 +69,7 @@ public class RegistryManager implements IInitListener {
                 ModEntities.registerCustomExtendedCreatures();
                 ModItems.registerCraftingRecipes();
                 ModPotions.registerPotionMixes();
-                ModAdvancements.registerAdvancements();
+                ModAdvancements.registerAdvancementTrigger();
                 event.enqueueWork(ModCommands::registerArgumentTypesUsage);
                 ModLoot.registerLootConditions();
                 ModLoot.registerLootFunctionType();

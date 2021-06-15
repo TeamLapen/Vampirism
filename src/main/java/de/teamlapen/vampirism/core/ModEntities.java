@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
@@ -21,8 +22,6 @@ import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Set;
 import java.util.function.Function;
@@ -34,6 +33,7 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
  */
 @ObjectHolder(REFERENCE.MODID)
 public class ModEntities {
+    /** empty unless in datagen */
     private static final Set<EntityType<?>> ALL_ENTITIES = Sets.newHashSet();
 
     public static final EntityType<AdvancedHunterEntity> advanced_hunter;
@@ -65,8 +65,6 @@ public class ModEntities {
     public static final EntityType<HunterMinionEntity> hunter_minion = getNull();
     public static final EntityType<VampireTaskMasterEntity> task_master_vampire = getNull();
     public static final EntityType<HunterTaskMasterEntity> task_master_hunter = getNull();
-
-    private static final Logger LOGGER = LogManager.getLogger(ModEntities.class);
 
     static {
         //IMPORTANT - Must include all entity types that are used in vampire forest spawns
@@ -199,7 +197,9 @@ public class ModEntities {
             type.disableSummoning();
         EntityType<T> entry = type.build(REFERENCE.MODID + ":" + id);
         entry.setRegistryName(REFERENCE.MODID, id);
-        ALL_ENTITIES.add(entry);
+        if (VampirismMod.inDataGen) {
+            ALL_ENTITIES.add(entry);
+        }
         return entry;
     }
 

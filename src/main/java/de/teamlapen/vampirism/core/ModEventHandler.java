@@ -48,8 +48,7 @@ import java.util.Map;
  */
 public class ModEventHandler {
 
-    private final static Logger LOGGER = LogManager.getLogger(ModEventHandler.class);
-
+    private final static Logger LOGGER = LogManager.getLogger();
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {

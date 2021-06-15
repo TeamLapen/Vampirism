@@ -26,7 +26,7 @@ public class ModAdvancements {
     /**
      * Does nothing itself, but static initializer perform registration
      */
-    static void registerAdvancements() {
+    static void registerAdvancementTrigger() {
 
     }
 }

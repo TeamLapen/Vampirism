@@ -32,6 +32,7 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 @ObjectHolder(REFERENCE.MODID)
 @SuppressWarnings("unused")
 public class ModBlocks {
+    /** empty unless in datagen */
     private static final Set<Block> ALL_BLOCKS = Sets.newHashSet();
 
     public static final AlchemicalCauldronBlock alchemical_cauldron = getNull();
@@ -210,7 +211,9 @@ public class ModBlocks {
     }
 
     private static Block prepareRegister(Block block){
-        ALL_BLOCKS.add(block);
+        if (VampirismMod.inDataGen) {
+            ALL_BLOCKS.add(block);
+        }
         return block;
     }
 

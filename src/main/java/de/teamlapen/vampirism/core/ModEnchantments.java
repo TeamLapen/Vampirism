@@ -25,7 +25,7 @@ public class ModEnchantments {
         registry.register(new EnchantmentVampireSlayer(Enchantment.Rarity.UNCOMMON));
     }
 
-    public static void fixMapping(RegistryEvent.MissingMappings<Enchantment> event) {
+    static void fixMapping(RegistryEvent.MissingMappings<Enchantment> event) {
         event.getAllMappings().forEach(missingMapping -> {
             if ("vampirism:crossbowinfinite".equals(missingMapping.key.toString())) {
                 missingMapping.remap(Enchantments.INFINITY);
