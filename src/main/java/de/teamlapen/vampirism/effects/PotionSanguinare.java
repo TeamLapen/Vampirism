@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.potion;
+package de.teamlapen.vampirism.effects;
 
 import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.matrix.MatrixStack;

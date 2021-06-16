@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.mixin;
 
-import de.teamlapen.vampirism.potion.VampirismPotion;
+import de.teamlapen.vampirism.effects.VampirismPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;

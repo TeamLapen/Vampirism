@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.potion;
+package de.teamlapen.vampirism.effects;
 
 
 import net.minecraft.entity.LivingEntity;

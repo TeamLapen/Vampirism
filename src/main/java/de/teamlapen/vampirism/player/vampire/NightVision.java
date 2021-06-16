@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.player.vampire;
 
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
-import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
+import de.teamlapen.vampirism.effects.VampireNightVisionEffect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 

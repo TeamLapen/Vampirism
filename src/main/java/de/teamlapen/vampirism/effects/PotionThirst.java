@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.potion;
+package de.teamlapen.vampirism.effects;
 
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;

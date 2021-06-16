@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.potion;
+package de.teamlapen.vampirism.effects;
 
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;

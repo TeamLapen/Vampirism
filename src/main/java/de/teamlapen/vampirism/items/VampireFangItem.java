@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.potion.PotionSanguinare;
+import de.teamlapen.vampirism.effects.PotionSanguinare;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;

@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.potion;
+package de.teamlapen.vampirism.effects;
 
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.item.ItemStack;

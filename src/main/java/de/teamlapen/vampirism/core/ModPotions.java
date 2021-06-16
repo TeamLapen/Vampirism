@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
 import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
-import de.teamlapen.vampirism.potion.VampirismPotion;
+import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
@@ -18,7 +18,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
-import static de.teamlapen.vampirism.potion.VampirismPotion.HunterPotion;
+import static de.teamlapen.vampirism.effects.VampirismPotion.HunterPotion;
 
 @ObjectHolder(REFERENCE.MODID)
 public class ModPotions {

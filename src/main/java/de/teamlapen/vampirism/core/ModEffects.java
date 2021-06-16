@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.potion.*;
+import de.teamlapen.vampirism.effects.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
