@@ -27,7 +27,7 @@ public class FactionArgument implements ArgumentType<IPlayableFaction<?>> {
     private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((id) -> new TranslationTextComponent("command.vampirism.argument.faction.notfound", id));
     private static final DynamicCommandExceptionType FACTION_NOT_PLAYABLE = new DynamicCommandExceptionType((id) -> new TranslationTextComponent("command.vampirism.argument.faction.notplayable", id));
 
-    public static IPlayableFaction<IFactionPlayer<?>> getFaction(CommandContext<CommandSource> context, String id) throws CommandSyntaxException {
+    public static IPlayableFaction<IFactionPlayer<?>> getFaction(CommandContext<CommandSource> context, String id) {
         return (IPlayableFaction<IFactionPlayer<?>>) context.getArgument(id, IFaction.class);
     }
 

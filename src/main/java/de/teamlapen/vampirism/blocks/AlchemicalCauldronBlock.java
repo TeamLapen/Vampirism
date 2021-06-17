@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.tileentity.AlchemicalCauldronTileEntity;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

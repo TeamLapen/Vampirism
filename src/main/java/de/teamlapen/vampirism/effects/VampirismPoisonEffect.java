@@ -5,11 +5,11 @@ import net.minecraft.potion.EffectType;
 import net.minecraft.util.DamageSource;
 
 
-public class PotionPoison extends VampirismEffect {
+public class VampirismPoisonEffect extends VampirismEffect {
 
     public static int DEADLY_AMPLIFIER = 4;
 
-    public PotionPoison(String name, int potionColor) {
+    public VampirismPoisonEffect(String name, int potionColor) {
         super(name, EffectType.HARMFUL, potionColor);
     }
 

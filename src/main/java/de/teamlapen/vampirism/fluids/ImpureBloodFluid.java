@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.fluids;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.fluid.Fluid;

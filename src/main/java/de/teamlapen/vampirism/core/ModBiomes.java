@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.core;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.biome.VampireForestBiome;
 import de.teamlapen.vampirism.world.biome.VampirismBiomeFeatures;
 import net.minecraft.entity.EntityClassification;

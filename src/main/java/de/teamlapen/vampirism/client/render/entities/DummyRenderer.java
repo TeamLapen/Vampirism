@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.culling.ClippingHelper;
 import net.minecraft.client.renderer.entity.EntityRenderer;

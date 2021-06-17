@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
@@ -19,12 +20,11 @@ import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
 import de.teamlapen.vampirism.entity.villager.Trades;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleStatus;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
@@ -211,7 +211,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @Override
     public void initBrain(@Nonnull Brain<VillagerEntity> brain) {
         VillagerProfession villagerprofession = this.getVillagerData().getProfession();
-        float f = (float) this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getValue();
+        float f = (float) this.getAttribute(Attributes.MOVEMENT_SPEED).getValue();
         if (this.isChild()) {
             brain.setSchedule(Schedule.VILLAGER_BABY);
             brain.registerActivity(Activity.PLAY, VillagerTasks.play(f));

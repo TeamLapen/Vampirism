@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.command.arguments;
 
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.command.arguments.SuggestionProviders;

@@ -6,7 +6,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientSkillTreeManager {
-    private SkillTree skillTree = new SkillTree();
+    private final SkillTree skillTree = new SkillTree();
 
     public SkillTree getSkillTree() {
         return skillTree;

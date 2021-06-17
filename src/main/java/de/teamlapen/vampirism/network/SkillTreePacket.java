@@ -43,7 +43,7 @@ public class SkillTreePacket implements IMessage {
         ctx.setPacketHandled(true);
     }
 
-    private Map<ResourceLocation, SkillNode.Builder> nodes;
+    private final Map<ResourceLocation, SkillNode.Builder> nodes;
 
     public SkillTreePacket(Map<ResourceLocation, SkillNode.Builder> nodes) {
         this.nodes = nodes;

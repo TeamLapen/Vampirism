@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.render.layers.AdvancedVampireEyeLayer;
 import de.teamlapen.vampirism.client.render.layers.PlayerFaceOverlayLayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.BipedRenderer;

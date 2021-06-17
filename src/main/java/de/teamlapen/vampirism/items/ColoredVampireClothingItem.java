@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.model.armor.CloakModel;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;

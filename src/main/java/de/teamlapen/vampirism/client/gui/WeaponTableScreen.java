@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.gui.recipebook.WeaponTableRecipeBookGui;
 import de.teamlapen.vampirism.inventory.container.WeaponTableContainer;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.recipebook.IRecipeShownListener;
 import net.minecraft.client.gui.recipebook.RecipeBookGui;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;

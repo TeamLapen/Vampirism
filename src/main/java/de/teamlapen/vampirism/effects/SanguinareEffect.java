@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PotionSanguinare extends VampirismEffect {
+public class SanguinareEffect extends VampirismEffect {
     /**
      * @param entity
      * @param player Whether to use the player effect duration or the mob duration
@@ -33,7 +33,7 @@ public class PotionSanguinare extends VampirismEffect {
     public static void addRandom(LivingEntity entity, boolean player) {
         int avgDuration = 20 * (player ? VampirismConfig.BALANCE.vpSanguinareAverageDuration.get() : BalanceMobProps.mobProps.SANGUINARE_AVG_DURATION);
         int duration = (int) ((entity.getRNG().nextFloat() + 0.5F) * avgDuration);
-        EffectInstance effect = new PotionSanguinareEffect(duration);
+        EffectInstance effect = new SanguinareEffectInstance(duration);
         Preconditions.checkNotNull(effect);
         if (!VampirismConfig.BALANCE.canCancelSanguinare.get()) {
             effect.setCurativeItems(new ArrayList<>());
@@ -42,7 +42,7 @@ public class PotionSanguinare extends VampirismEffect {
 
     }
 
-    public PotionSanguinare(String name, EffectType effectType, int potionColor) {
+    public SanguinareEffect(String name, EffectType effectType, int potionColor) {
         super(name, effectType, potionColor);
         addAttributesModifier(Attributes.ATTACK_DAMAGE, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, AttributeModifier.Operation.ADDITION);
     }

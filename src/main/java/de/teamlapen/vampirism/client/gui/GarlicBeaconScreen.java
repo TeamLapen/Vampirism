@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.teamlapen.lib.lib.client.gui.ProgressBar;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.tileentity.GarlicBeaconTileEntity;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;

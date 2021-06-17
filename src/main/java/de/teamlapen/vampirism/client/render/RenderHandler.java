@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.util.OptifineHandler;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -10,9 +11,8 @@ import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
-import de.teamlapen.vampirism.util.ASMHooks;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.util.MixinHooks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.OutlineLayerBuffer;
@@ -186,7 +186,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
                 }
                 adjustBloodVisionShaders(getBloodVisionProgress((float) event.getRenderPartialTicks()));
             } else {
-                ASMHooks.enforcingGlowing_bloodVision = true;
+                MixinHooks.enforcingGlowing_bloodVision = true;
             }
         }
         if(VampirismConfig.SERVER.preventRenderingDebugBoundingBoxes.get()){
@@ -237,7 +237,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
 
     @SubscribeEvent
     public void onRenderWorldLast(RenderWorldLastEvent event) {
-        ASMHooks.enforcingGlowing_bloodVision = false;
+        MixinHooks.enforcingGlowing_bloodVision = false;
         if (mc.world == null) return;
 
         /*

@@ -118,7 +118,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
 
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {

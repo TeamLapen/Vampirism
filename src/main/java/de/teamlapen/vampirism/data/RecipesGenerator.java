@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.data;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModTags;
@@ -12,7 +13,6 @@ import de.teamlapen.vampirism.data.recipebuilder.ShapelessWeaponTableRecipeBuild
 import de.teamlapen.vampirism.inventory.recipes.ConfigCondition;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.IRequirementsStrategy;

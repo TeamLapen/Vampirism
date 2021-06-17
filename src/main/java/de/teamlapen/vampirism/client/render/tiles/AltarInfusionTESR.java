@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.client.render.tiles;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.tileentity.AltarInfusionTileEntity;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -85,10 +85,10 @@ public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
             float f7 = MathHelper.sin((float) j * ((float) Math.PI * 2F) / 8.0F) * 0.2F;
             float f8 = MathHelper.cos((float) j * ((float) Math.PI * 2F) / 8.0F) * 0.2F;
             float f9 = (float) j / 8.0F;
-            ivertexbuilder.pos(matrix4f, f4 * 1F, f5 * 1F, 0.0F).color(75, 0, 0, 255).tex(f6, f2).overlay(OverlayTexture.NO_OVERLAY).lightmap(packedLight).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+            ivertexbuilder.pos(matrix4f, f4, f5, 0.0F).color(75, 0, 0, 255).tex(f6, f2).overlay(OverlayTexture.NO_OVERLAY).lightmap(packedLight).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
             ivertexbuilder.pos(matrix4f, f4 * 0.5f, f5 * 0.5f, dist).color(255, 0, 0, 255).tex(f6, f3).overlay(OverlayTexture.NO_OVERLAY).lightmap(packedLight).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
             ivertexbuilder.pos(matrix4f, f7 * 0.5f, f8 * 0.5f, dist).color(255, 0, 0, 255).tex(f9, f3).overlay(OverlayTexture.NO_OVERLAY).lightmap(packedLight).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-            ivertexbuilder.pos(matrix4f, f7 * 1F, f8 * 1F, 0.0F).color(75, 0, 0, 255).tex(f9, f2).overlay(OverlayTexture.NO_OVERLAY).lightmap(packedLight).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+            ivertexbuilder.pos(matrix4f, f7, f8, 0.0F).color(75, 0, 0, 255).tex(f9, f2).overlay(OverlayTexture.NO_OVERLAY).lightmap(packedLight).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
             f4 = f7;
             f5 = f8;
             f6 = f9;

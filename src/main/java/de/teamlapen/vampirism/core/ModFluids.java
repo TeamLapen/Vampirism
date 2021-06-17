@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.core;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.fluids.BloodFluid;
 import de.teamlapen.vampirism.fluids.ImpureBloodFluid;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.fluid.Fluid;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;

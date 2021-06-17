@@ -8,10 +8,10 @@ import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
-import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
@@ -90,10 +90,10 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder()
-                .createMutableAttribute(SharedMonsterAttributes.MAX_HEALTH, 300)
-                .createMutableAttribute(SharedMonsterAttributes.ATTACK_DAMAGE, 19)
-                .createMutableAttribute(SharedMonsterAttributes.MOVEMENT_SPEED, 0.17)
-                .createMutableAttribute(SharedMonsterAttributes.FOLLOW_RANGE, 5);
+                .createMutableAttribute(Attributes.MAX_HEALTH, 300)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 19)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.17)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 5);
     }
 
     @Override

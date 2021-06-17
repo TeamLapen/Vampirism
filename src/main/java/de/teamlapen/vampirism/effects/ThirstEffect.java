@@ -8,8 +8,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectType;
 
 
-public class PotionThirst extends VampirismEffect {
-    public PotionThirst(String name, EffectType effectType, int potionColor) {
+public class ThirstEffect extends VampirismEffect {
+    public ThirstEffect(String name, EffectType effectType, int potionColor) {
         super(name, effectType, potionColor);
         addAttributesModifier(ModAttributes.blood_exhaustion, "f6d9889e-dfdc-11e5-b86d-9a79f06e9478", 0.5F, AttributeModifier.Operation.ADDITION);
     }

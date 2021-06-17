@@ -4,11 +4,11 @@ import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.data.recipebuilder.FinishedSkillNode;
 import de.teamlapen.vampirism.data.recipebuilder.SkillNodeBuilder;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
@@ -35,12 +35,12 @@ public class SkillNodeGenerator implements IDataProvider {
     }
 
     @Override
-    public void act(DirectoryCache cache) throws IOException {
+    public void act(DirectoryCache cache) {
         Path path = this.generator.getOutputFolder();
         Set<ResourceLocation> set = Sets.newHashSet();
         this.registerSkillNodes((node) -> {
             if (!set.add(node.getID())) {
-                throw new IllegalStateException("Dublicate skill node " + node.getID());
+                throw new IllegalStateException("Duplicate skill node " + node.getID());
             } else {
                 this.saveSkillNode(cache, node.getSkillNodeJson(), path.resolve("data/" + node.getID().getNamespace() + "/vampirismskillnodes/" + node.getID().getPath() + ".json"));
             }

@@ -22,9 +22,9 @@ import javax.annotation.Nullable;
 /**
  * does not extends {@link VampirismEffect} so other mods can use this too
  */
-public abstract class BadOmen extends Effect {
+public abstract class BadOmenEffect extends Effect {
 
-    public BadOmen(String modID, ResourceLocation faction) {
+    public BadOmenEffect(String modID, ResourceLocation faction) {
         super(EffectType.NEUTRAL, 745784);
         this.setRegistryName(modID, "bad_omen_" + faction.getPath());
     }

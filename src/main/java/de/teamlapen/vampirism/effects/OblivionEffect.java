@@ -12,7 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectType;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
@@ -24,12 +23,6 @@ public class OblivionEffect extends VampirismEffect {
 
     public OblivionEffect(String name, EffectType effectType, int potionColor) {
         super(name, effectType, potionColor);
-    }
-
-    @Nonnull
-    @Override
-    public ITextComponent getDisplayName() {
-        return super.getDisplayName();
     }
 
     @Override

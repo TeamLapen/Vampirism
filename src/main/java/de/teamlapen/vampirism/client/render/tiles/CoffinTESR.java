@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.client.render.tiles;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.client.model.CoffinModel;
 import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;

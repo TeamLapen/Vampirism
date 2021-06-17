@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.player.vampire;
 
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
 import de.teamlapen.vampirism.api.EnumStrength;
@@ -18,8 +19,8 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
-import de.teamlapen.vampirism.effects.PotionSanguinare;
-import de.teamlapen.vampirism.effects.VampireNightVisionEffect;
+import de.teamlapen.vampirism.effects.SanguinareEffect;
+import de.teamlapen.vampirism.effects.VampireNightVisionEffectInstance;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -35,7 +36,10 @@ import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
-import de.teamlapen.vampirism.util.*;
+import de.teamlapen.vampirism.util.GeneralRegistryImpl;
+import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.Permissions;
+import de.teamlapen.vampirism.util.ScoreboardUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -554,7 +558,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             player.getFoodStats().setFoodLevel(amt - sucked);
             player.addExhaustion(1000F);
             if (!player.isPotionActive(ModEffects.sanguinare) && Helper.canTurnPlayer(biter, player) && Helper.canBecomeVampire(player)) {
-                if (!player.isCreative()) PotionSanguinare.addRandom(player, true);
+                if (!player.isCreative()) SanguinareEffect.addRandom(player, true);
             }
             return sucked;
         }
@@ -666,7 +670,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     player.removePotionEffect(Effects.NIGHT_VISION);
                 }
             } else if (newLevel == 0) {
-                if (player.getActivePotionEffect(Effects.NIGHT_VISION) instanceof VampireNightVisionEffect) {
+                if (player.getActivePotionEffect(Effects.NIGHT_VISION) instanceof VampireNightVisionEffectInstance) {
                     player.removePotionEffect(Effects.NIGHT_VISION);
                 }
                 actionHandler.resetTimers();
@@ -1289,7 +1293,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * Apply the armor unaffected level scaled entity attribute modifiers
      */
     private void applyLevelModifiersA(int level){
-        LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, true);
+        LevelAttributeModifier.applyModifier(player, Attributes.MAX_HEALTH, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, true);
         LevelAttributeModifier.applyModifier(player, ModAttributes.blood_exhaustion, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
     }
 
@@ -1297,8 +1301,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * Apply the armor affected level scaled entity attribute modifiers
      */
     private void applyLevelModifiersB(int level, boolean heavyArmor){
-        LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpSpeedMaxMod.get() * (heavyArmor?0.5f:1), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
-        LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_SPEED, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpAttackSpeedMaxMod.get() * (heavyArmor?0.5f:1), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+        LevelAttributeModifier.applyModifier(player, Attributes.MOVEMENT_SPEED, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpSpeedMaxMod.get() * (heavyArmor?0.5f:1), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+        LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_SPEED, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpAttackSpeedMaxMod.get() * (heavyArmor?0.5f:1), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
     }
 
     @Override

@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.modcompat.jei;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.util.REFERENCE;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;

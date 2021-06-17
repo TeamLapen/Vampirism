@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.render.layers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.model.BaronAttireModel;
 import de.teamlapen.vampirism.client.model.BaronWrapperModel;
 import de.teamlapen.vampirism.client.model.BaronessAttireModel;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;

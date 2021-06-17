@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;

@@ -64,8 +64,7 @@ public class GrinderBlock extends VampirismBlockContainer {
 
         VoxelShape h = VoxelShapes.or(f, g4);
 
-        VoxelShape i = VoxelShapes.or(h, e4);
-        return i;
+        return VoxelShapes.or(h, e4);
     }
 
     public GrinderBlock() {

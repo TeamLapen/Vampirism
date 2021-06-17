@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.render.layers.PlayerBodyOverlayLayer;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;

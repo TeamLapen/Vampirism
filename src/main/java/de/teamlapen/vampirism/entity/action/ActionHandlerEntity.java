@@ -21,8 +21,8 @@ import java.util.List;
  */
 public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> implements IActionHandlerEntity {
 
-    private T entity;
-    private List<IEntityAction> availableActions;
+    private final T entity;
+    private final List<IEntityAction> availableActions;
     private int preActivation = 0;
     private int cooldown = 0;
     private int duration = 0;

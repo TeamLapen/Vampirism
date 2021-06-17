@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.core;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.items.enchantment.EnchantmentArrowFrugality;
 import de.teamlapen.vampirism.items.enchantment.EnchantmentVampireSlayer;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraftforge.event.RegistryEvent;

@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.world.biome;
 
 import com.google.common.collect.ImmutableList;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFeatures;
 import de.teamlapen.vampirism.mixin.FlatGenerationSettingsAccessor;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.modcompat.guide;
 
 import de.maxanier.guideapi.api.IPage;
 import de.maxanier.guideapi.entry.EntryResourceLocation;
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 

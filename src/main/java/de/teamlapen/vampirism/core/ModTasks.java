@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.core;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
@@ -8,7 +9,6 @@ import de.teamlapen.vampirism.player.tasks.reward.LordLevelReward;
 import de.teamlapen.vampirism.player.tasks.reward.RefinementItemReward;
 import de.teamlapen.vampirism.player.tasks.unlock.LordLvlUnlocker;
 import de.teamlapen.vampirism.player.tasks.unlock.LvlUnlocker;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;

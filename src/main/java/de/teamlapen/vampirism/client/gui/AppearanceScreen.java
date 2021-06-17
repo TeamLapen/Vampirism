@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.gui;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.button.Button;

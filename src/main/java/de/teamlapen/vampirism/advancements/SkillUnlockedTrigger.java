@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.advancements;
 
 import com.google.gson.JsonObject;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.util.REFERENCE;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.criterion.AbstractCriterionTrigger;
 import net.minecraft.advancements.criterion.CriterionInstance;

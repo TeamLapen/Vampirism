@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.factions;
 
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
@@ -16,9 +17,8 @@ import de.teamlapen.vampirism.player.IVampirismPlayer;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.tasks.reward.LordLevelReward;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.ModEventFactory;
-import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
+import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -121,7 +121,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     @Override
     public boolean canJoin(IPlayableFaction<? extends IFactionPlayer<?>> faction) {
-        Event.Result res = ModEventFactory.fireCanJoinFactionEvent(this, currentFaction, faction);
+        Event.Result res = VampirismEventFactory.fireCanJoinFactionEvent(this, currentFaction, faction);
         if (res == Event.Result.DEFAULT) {
             return currentFaction == null;
         }
@@ -308,7 +308,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             LOGGER.warn("Level {} in faction {} cannot be reached", level, faction.getID());
             return false;
         }
-        if (ModEventFactory.fireChangeLevelOrFactionEvent(this, old, oldLevel, faction, faction == null ? 0 : level)) {
+        if (VampirismEventFactory.fireChangeLevelOrFactionEvent(this, old, oldLevel, faction, faction == null ? 0 : level)) {
             LOGGER.debug("Faction or Level change event canceled");
             return false;
         }

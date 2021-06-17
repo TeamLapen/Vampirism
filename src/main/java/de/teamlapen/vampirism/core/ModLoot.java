@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.world.loot.*;
 import net.minecraft.loot.LootConditionType;
 import net.minecraft.loot.LootFunctionType;

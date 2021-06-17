@@ -16,14 +16,15 @@ import net.minecraft.world.gen.feature.structure.Structure;
 
 import java.util.Random;
 
-public class ModLakeFeature extends LakesFeature {
+public class VampirismLakeFeature extends LakesFeature {
     private static final BlockState AIR = Blocks.CAVE_AIR.getDefaultState();
 
-    public ModLakeFeature(Codec<BlockStateFeatureConfig> p_i231968_1_) {
+    public VampirismLakeFeature(Codec<BlockStateFeatureConfig> p_i231968_1_) {
         super(p_i231968_1_);
     }
 
     /**
+     * What was modified? @Cheaterpaul
      * copied from {@link LakesFeature}
      */
     @Override

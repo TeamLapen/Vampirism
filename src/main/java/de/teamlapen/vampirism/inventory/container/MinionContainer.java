@@ -91,11 +91,6 @@ public class MinionContainer extends InventoryContainer {
         return minionEntity.isAlive();
     }
 
-    @Override
-    public void detectAndSendChanges() {
-        super.detectAndSendChanges();
-    }
-
     @Nonnull
     public IMinionTask<?, ?>[] getAvailableTasks() {
         return availableTasks;

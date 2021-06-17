@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.villager.VillagerType;
 import net.minecraft.util.DamageSource;
@@ -36,7 +36,7 @@ public class VampirismVillagerEntity extends VillagerEntity {
     }
 
     public boolean attackEntityAsMob(Entity entity) {
-        float f = (float) this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue();
+        float f = (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
         int i = 0;
 
         if (entity instanceof LivingEntity) {
@@ -108,7 +108,7 @@ public class VampirismVillagerEntity extends VillagerEntity {
     }
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return VillagerEntity.registerAttributes().createMutableAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+        return VillagerEntity.registerAttributes().createMutableAttribute(Attributes.ATTACK_DAMAGE);
     }
 
     @Override

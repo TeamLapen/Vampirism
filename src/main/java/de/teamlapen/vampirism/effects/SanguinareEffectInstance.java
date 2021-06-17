@@ -6,8 +6,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 
-public class PotionSanguinareEffect extends EffectInstance {
-    public PotionSanguinareEffect(int effectDuration) {
+public class SanguinareEffectInstance extends EffectInstance {
+    public SanguinareEffectInstance(int effectDuration) {
         super(ModEffects.sanguinare, effectDuration, 0, false, true);
     }
 

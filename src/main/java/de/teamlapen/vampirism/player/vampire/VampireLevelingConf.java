@@ -10,7 +10,7 @@ import java.util.Map;
  * All levels here are target levels, not the levels the player currently is on
  */
 public class VampireLevelingConf {
-    private static VampireLevelingConf instance = new VampireLevelingConf();
+    private static final VampireLevelingConf instance = new VampireLevelingConf();
 
     public static VampireLevelingConf getInstance() {
         return instance;
@@ -29,7 +29,7 @@ public class VampireLevelingConf {
     /**
      * Maps <target level> to requirements
      */
-    private Map<Integer, AltarInfusionRequirements> altarInfusionRequirementsHashMap;
+    private final Map<Integer, AltarInfusionRequirements> altarInfusionRequirementsHashMap;
 
     private VampireLevelingConf() {
         INSPIRATION_MIN_LEVEL = 2;

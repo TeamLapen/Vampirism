@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.stats.IStatFormatter;
 import net.minecraft.stats.StatType;
 import net.minecraft.stats.Stats;

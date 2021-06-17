@@ -2,12 +2,12 @@ package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.entity.FactionVillagerProfession;
 import de.teamlapen.vampirism.entity.villager.Trades;
 import de.teamlapen.vampirism.entity.villager.VampireVillagerHostilesSensor;
-import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.FactionPointOfInterestType;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.block.Block;

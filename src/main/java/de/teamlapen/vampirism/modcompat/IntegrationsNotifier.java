@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.modcompat;
 
 import com.google.common.collect.Lists;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraftforge.fml.ModList;
 import org.apache.commons.lang3.StringUtils;
 

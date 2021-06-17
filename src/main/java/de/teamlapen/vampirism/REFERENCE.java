@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.util;
+package de.teamlapen.vampirism;
 
 import net.minecraft.util.ResourceLocation;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
@@ -20,7 +20,6 @@ public class REFERENCE {
     public static final String VERSION_UPDATE_FILE = "https://maxanier.de/projects/vampirism/versions.json";
     public static final String SUPPORTER_FILE = "http://maxanier.de/projects/vampirism/supporters.json";
     public static final String CURSEFORGE_LINK = "https://minecraft.curseforge.com/projects/vampirism-become-a-vampire";
-    public static final String PATREON_LINK = "https://www.patreon.com/maxanier";
     public static final String INTEGRATIONS_MODID = "vampirism_integrations";
     public static final String INTEGRATIONS_LINK = "https://minecraft.curseforge.com/projects/vampirism-integrations";
     public static final String GUIDEAPI_LINK = "https://www.curseforge.com/minecraft/mc-mods/guide-api-village-and-pillage";
@@ -41,7 +40,6 @@ public class REFERENCE {
     public final static ResourceLocation HUNTER_PLAYER_KEY = new ResourceLocation(MODID, "hunter");
     public final static ResourceLocation EXTENDED_CREATURE_KEY = new ResourceLocation(MODID, "iextendedcreature");
     public final static ResourceLocation WORLD_CAP_KEY = new ResourceLocation(MODID, "world");
-    public final static ResourceLocation VAMPIRISM_VILLAGE_KEY_NEW = new ResourceLocation(MODID, "ivv");
     public static ArtifactVersion VERSION = new DefaultArtifactVersion("0.0.0");
 
 }

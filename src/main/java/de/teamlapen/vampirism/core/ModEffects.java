@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.core;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.effects.*;
-import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -45,25 +45,25 @@ public class ModEffects {
     static void registerEffects(IForgeRegistry<Effect> registry) {
         vanilla_night_vision = Effects.NIGHT_VISION;
         registry.register(new VampirismNightVisionPotion());
-        registry.register(new PotionThirst("thirst", EffectType.HARMFUL, 859494));
-        registry.register(new PotionSanguinare("sanguinare", EffectType.NEUTRAL, 0x6A0888));
+        registry.register(new ThirstEffect("thirst", EffectType.HARMFUL, 859494));
+        registry.register(new SanguinareEffect("sanguinare", EffectType.NEUTRAL, 0x6A0888));
         registry.register(new VampirismEffect("saturation", EffectType.BENEFICIAL, 0xDCFF00));
         registry.register(new VampirismEffect("sunscreen", EffectType.BENEFICIAL, 0xFFF100).addAttributesModifier(ModAttributes.sundamage, "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
         registry.register(new VampirismEffect("fire_protection", EffectType.BENEFICIAL, 14981690));
         registry.register(new VampirismEffect("disguise_as_vampire", EffectType.NEUTRAL, 0x999900));
         registry.register(new VampirismEffect("garlic", EffectType.HARMFUL, 0xFFFFFF));
-        registry.register(new PotionPoison("poison", 0x4E9331));
-        registry.register(new PotionFreeze("freeze"));
+        registry.register(new VampirismPoisonEffect("poison", 0x4E9331));
+        registry.register(new FreezeEffect("freeze"));
         registry.register(new VampirismEffect("neonatal", EffectType.NEUTRAL, 0xFFBBBB).addAttributesModifier(Attributes.ATTACK_DAMAGE, "377d132d-d091-43b2-8a8f-b940f9bc894c",  -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL).addAttributesModifier(Attributes.MOVEMENT_SPEED, "ad6d7def-46e2-485f-afba-39252767f114", -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL));
         registry.register(new OblivionEffect("oblivion", EffectType.NEUTRAL, 0x4E9331));
         registry.register(new VampirismEffect("armor_regeneration", EffectType.NEUTRAL, 0xD17642));
-        registry.register(new BadOmen(REFERENCE.MODID, REFERENCE.HUNTER_PLAYER_KEY) {
+        registry.register(new BadOmenEffect(REFERENCE.MODID, REFERENCE.HUNTER_PLAYER_KEY) {
             @Override
             public IFaction<?> getFaction() {
                 return VReference.HUNTER_FACTION;
             }
         });
-        registry.register(new BadOmen(REFERENCE.MODID, REFERENCE.VAMPIRE_PLAYER_KEY) {
+        registry.register(new BadOmenEffect(REFERENCE.MODID, REFERENCE.VAMPIRE_PLAYER_KEY) {
             @Override
             public IFaction<?> getFaction() {
                 return VReference.VAMPIRE_FACTION;
@@ -71,7 +71,7 @@ public class ModEffects {
         });
     }
 
-    static void fixNightVisionEffecTypes() {
+    static void fixNightVisionEffectTypes() {
         /*We have to fix the vanilla night vision potion types as they are created using the vanilla night vision potion before it can be replaced
         There are two options:
         1) Substitute the potion types too

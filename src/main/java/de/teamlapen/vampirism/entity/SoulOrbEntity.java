@@ -98,12 +98,10 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
 
     @Override
     public boolean isInvisibleToPlayer(@Nonnull PlayerEntity player) {
-        switch (getVariant()) {
-            case VAMPIRE:
-                return !Helper.isHunter(player) || player.isSpectator();
-            default:
-                return true;
+        if (getVariant() == VARIANT.VAMPIRE) {
+            return !Helper.isHunter(player) || player.isSpectator();
         }
+        return true;
     }
 
     @Override
@@ -207,12 +205,10 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
     }
 
     private ItemStack createSoulItemStack() {
-        switch (getVariant()) {
-            case VAMPIRE:
-                return new ItemStack(ModItems.soul_orb_vampire);
-            default:
-                return new ItemStack(ModItems.soul_orb_vampire);
+        if (getVariant() == VARIANT.VAMPIRE) {
+            return new ItemStack(ModItems.soul_orb_vampire);
         }
+        return new ItemStack(ModItems.soul_orb_vampire);
     }
 
 

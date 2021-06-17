@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.Maps;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.inventory.recipes.*;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;

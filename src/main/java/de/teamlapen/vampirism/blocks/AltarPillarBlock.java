@@ -44,10 +44,9 @@ public class AltarPillarBlock extends VampirismBlock {
     }
 
     private static VoxelShape makeShapeFull() {
-        VoxelShape a = pillarShape;
         VoxelShape b = Block.makeCuboidShape(4, 1, 2, 12, 15, 14);
         VoxelShape c = Block.makeCuboidShape(2, 1, 4, 14, 15, 12);
-        return VoxelShapes.or(a, b, c);
+        return VoxelShapes.or(pillarShape, b, c);
     }
 
     public AltarPillarBlock() {

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.data;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.*;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.data.*;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;

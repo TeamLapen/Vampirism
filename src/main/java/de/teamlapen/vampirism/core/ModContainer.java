@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.core;
 
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.inventory.container.*;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;

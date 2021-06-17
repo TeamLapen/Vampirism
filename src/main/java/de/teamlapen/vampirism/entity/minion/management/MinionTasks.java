@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.minion.management;
 
 
 import de.teamlapen.lib.util.WeightedRandomItem;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
@@ -11,7 +12,6 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.items.BloodBottleItem;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraftforge.registries.IForgeRegistry;

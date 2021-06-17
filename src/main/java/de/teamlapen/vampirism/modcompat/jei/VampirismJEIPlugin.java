@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.modcompat.jei;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.client.gui.AlchemicalCauldronScreen;
 import de.teamlapen.vampirism.client.gui.WeaponTableScreen;
@@ -10,7 +11,6 @@ import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.inventory.container.AlchemicalCauldronContainer;
 import de.teamlapen.vampirism.inventory.container.WeaponTableContainer;
 import de.teamlapen.vampirism.player.tasks.TaskUtil;
-import de.teamlapen.vampirism.util.REFERENCE;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
@@ -88,7 +88,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     private Collection<Object> getRepairRecipes(IVanillaRecipeFactory factory){
         List<Object> recipes = new ArrayList<>();
         Map<Ingredient, List<Item>> items = Maps.newHashMap();
-        Ingredient ironIngredient = ItemTier.IRON.getRepairMaterial();;
+        Ingredient ironIngredient = ItemTier.IRON.getRepairMaterial();
         items.put(ironIngredient, Lists.newArrayList(ModItems.hunter_axe_normal, ModItems.hunter_axe_enhanced, ModItems.hunter_axe_ultimate, ModItems.basic_tech_crossbow, ModItems.enhanced_tech_crossbow, ModItems.hunter_coat_chest_normal, ModItems.hunter_coat_chest_enhanced, ModItems.hunter_coat_chest_ultimate, ModItems.hunter_coat_head_normal, ModItems.hunter_coat_head_enhanced, ModItems.hunter_coat_head_ultimate, ModItems.hunter_coat_legs_normal, ModItems.hunter_coat_legs_enhanced, ModItems.hunter_coat_legs_ultimate, ModItems.hunter_coat_feet_normal, ModItems.hunter_coat_feet_enhanced, ModItems.hunter_coat_feet_ultimate));
         Ingredient stringIngredient = Ingredient.fromTag(Tags.Items.STRING);
         items.put(stringIngredient, Lists.newArrayList(ModItems.basic_crossbow, ModItems.basic_double_crossbow, ModItems.enhanced_crossbow, ModItems.enhanced_double_crossbow));

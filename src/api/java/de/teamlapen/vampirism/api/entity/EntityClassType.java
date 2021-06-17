@@ -41,9 +41,9 @@ public enum EntityClassType {
     public static EntityClassType getEntityClassType(int id) {
         return (id >= ID.size() || id < 0) ? null : ID.get(id);
     }
-    private AttributeModifier healthModifier;
-    private AttributeModifier damageModifier;
-    private AttributeModifier speedModifier;
+    private final AttributeModifier healthModifier;
+    private final AttributeModifier damageModifier;
+    private final AttributeModifier speedModifier;
 
     EntityClassType(double healthModifier, double damageModifier, double speedModifier) {
         this.healthModifier = new AttributeModifier("entity_class_health", healthModifier, AttributeModifier.Operation.MULTIPLY_BASE);

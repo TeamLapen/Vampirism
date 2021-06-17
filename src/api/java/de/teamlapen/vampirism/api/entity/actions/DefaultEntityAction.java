@@ -9,8 +9,8 @@ import javax.annotation.Nonnull;
  * Default implementation of {@link IEntityAction}
  */
 public abstract class DefaultEntityAction extends ForgeRegistryEntry<IEntityAction> implements IEntityAction {
-    private EntityClassType[] entityClassTypes;
-    private EntityActionTier entityActionTier;
+    private final EntityClassType[] entityClassTypes;
+    private final EntityActionTier entityActionTier;
 
     public DefaultEntityAction(@Nonnull EntityActionTier tier, EntityClassType... param) {
         entityActionTier = tier;

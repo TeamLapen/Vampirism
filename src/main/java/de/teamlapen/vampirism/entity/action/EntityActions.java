@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.entity.action;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.entity.action.hunter.GarlicAOFEntityAction;
 import de.teamlapen.vampirism.entity.action.vampire.*;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 

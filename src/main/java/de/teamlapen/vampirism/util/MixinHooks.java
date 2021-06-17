@@ -7,8 +7,7 @@ import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
 import java.util.List;
 
 
-@SuppressWarnings("unused")
-public class ASMHooks {
+public class MixinHooks {
     /**
      * Used by mixins as a fast check if reduced blood vision is enabled
      */

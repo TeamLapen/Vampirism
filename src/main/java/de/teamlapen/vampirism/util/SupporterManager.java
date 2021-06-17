@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.util;
 
 import com.google.common.io.ByteStreams;
 import com.google.gson.*;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -124,7 +125,6 @@ public class SupporterManager {
         return new Supporter(name, texture, type, bookId);
     }
 
-    @SuppressWarnings("unchecked")
     private
     @Nullable
     Supporter[][] retrieveSupporter(String data) {

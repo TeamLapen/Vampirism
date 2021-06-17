@@ -43,6 +43,7 @@ import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import de.teamlapen.vampirism.world.WorldGenManager;
+import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.CreatureAttribute;
@@ -190,7 +191,7 @@ public class VampirismMod {
 
     @SubscribeEvent
     public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
-        ModWorld.addVillageStructures();
+        VampirismWorldGen.addVillageStructures();
     }
 
     @SubscribeEvent
@@ -317,7 +318,7 @@ public class VampirismMod {
             versionInfo = VersionChecker.executeVersionCheck(REFERENCE.VERSION_UPDATE_FILE, REFERENCE.VERSION, !inDev && VampirismConfig.COMMON.collectStats.get());
         }
 
-        ModEventHandler eventHandler = new ModEventHandler();
+        GeneralEventHandler eventHandler = new GeneralEventHandler();
         MinecraftForge.EVENT_BUS.register(eventHandler);
 
         MinecraftForge.EVENT_BUS.register(new ModPlayerEventHandler());
@@ -339,7 +340,7 @@ public class VampirismMod {
         if (inDev) {
             Tests.runBackgroundTests();
         }
-        ModWorld.initVillageStructures();
+        VampirismWorldGen.initVillageStructures();
     }
 
 

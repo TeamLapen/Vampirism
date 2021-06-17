@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.player.vampire;
 
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
-import de.teamlapen.vampirism.effects.VampireNightVisionEffect;
+import de.teamlapen.vampirism.effects.VampireNightVisionEffectInstance;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 
@@ -20,14 +20,14 @@ public class NightVision implements IVampireVision {
     @Override
     public void onActivated(IVampirePlayer player) {
         if (player.isRemote()) {
-            player.getRepresentingPlayer().addPotionEffect(new VampireNightVisionEffect());
+            player.getRepresentingPlayer().addPotionEffect(new VampireNightVisionEffectInstance());
         }
     }
 
     @Override
     public void onDeactivated(IVampirePlayer player) {
         EffectInstance nightVision = player.getRepresentingPlayer().getActivePotionEffect(Effects.NIGHT_VISION);
-        if (nightVision instanceof VampireNightVisionEffect) {
+        if (nightVision instanceof VampireNightVisionEffectInstance) {
             player.getRepresentingPlayer().removePotionEffect(nightVision.getPotion());
         }
     }
@@ -36,12 +36,12 @@ public class NightVision implements IVampireVision {
     public void tick(IVampirePlayer player) {
         if (player.getRepresentingPlayer().ticksExisted % 50 == 8) {
             EffectInstance effect = player.getRepresentingPlayer().getActivePotionEffect(Effects.NIGHT_VISION);
-            if (!(effect instanceof VampireNightVisionEffect)) {
+            if (!(effect instanceof VampireNightVisionEffectInstance)) {
                 player.getRepresentingPlayer().removeActivePotionEffect(Effects.NIGHT_VISION);
                 effect = null;
             }
             if (effect == null) {
-                player.getRepresentingPlayer().addPotionEffect(new VampireNightVisionEffect());
+                player.getRepresentingPlayer().addPotionEffect(new VampireNightVisionEffectInstance());
 
             }
         }

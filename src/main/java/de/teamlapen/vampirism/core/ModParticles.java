@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.core;
 
 import com.mojang.serialization.Codec;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
 import de.teamlapen.vampirism.particle.GenericParticleData;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.util.ResourceLocation;

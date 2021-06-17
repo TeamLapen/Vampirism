@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraftforge.registries.IForgeRegistry;

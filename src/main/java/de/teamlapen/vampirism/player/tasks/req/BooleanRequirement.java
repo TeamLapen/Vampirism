@@ -14,7 +14,6 @@ public class BooleanRequirement implements TaskRequirement.Requirement<Boolean> 
     @Nonnull
     private final BooleanSupplier function;
 
-    @Nonnull
     public BooleanRequirement(@Nonnull ResourceLocation id, @Nonnull BooleanSupplier function) {
         this.id = id;
         this.function = function;

@@ -2,13 +2,13 @@ package de.teamlapen.vampirism.client.render.entities;
 
 import com.google.common.base.Predicates;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.model.BasicHunterModel;
 import de.teamlapen.vampirism.client.render.layers.CloakLayer;
 import de.teamlapen.vampirism.client.render.layers.HunterEquipmentLayer;
 import de.teamlapen.vampirism.client.render.layers.PlayerFaceOverlayLayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.hunter.AdvancedHunterEntity;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;

@@ -1,19 +1,18 @@
-package de.teamlapen.vampirism.core;
+package de.teamlapen.vampirism;
 
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.lib.util.VersionChecker;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModFeatures;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.modcompat.IntegrationsNotifier;
 import de.teamlapen.vampirism.network.BloodValuePacket;
 import de.teamlapen.vampirism.network.SkillTreePacket;
 import de.teamlapen.vampirism.util.Permissions;
-import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -46,7 +45,7 @@ import java.util.Map;
 /**
  * Handles all events used in central parts of the mod
  */
-public class ModEventHandler {
+public class GeneralEventHandler {
 
     private final static Logger LOGGER = LogManager.getLogger();
 
@@ -104,10 +103,6 @@ public class ModEventHandler {
         if (!PermissionAPI.hasPermission(event.getPlayer(), Permissions.VAMPIRISM)) {
             event.getPlayer().sendMessage(new StringTextComponent("[" + TextFormatting.DARK_PURPLE + "Vampirism" + TextFormatting.RESET + "] It seems like the permission plugin used is not properly set up. Make sure all players have 'vampirism.*' for the mod to work (or at least '" + Permissions.VAMPIRISM + "' to suppress this warning)."), Util.DUMMY_UUID);
         }
-    }
-
-    public void onPlayerDisconnect(PlayerEvent.PlayerLoggedOutEvent event) {
-
     }
 
     @SubscribeEvent

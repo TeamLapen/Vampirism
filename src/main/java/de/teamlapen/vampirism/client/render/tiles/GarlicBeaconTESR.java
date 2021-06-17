@@ -61,7 +61,7 @@ public class GarlicBeaconTESR extends VampirismTESR<GarlicBeaconTileEntity> {
             matrixStackIn.pop();
             matrixStackIn.pop();
         }
-    };
+    }
 
     @Override
     public boolean isGlobalRenderer(GarlicBeaconTileEntity te) {

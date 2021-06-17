@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import com.google.common.base.Predicates;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.model.BaronWrapperModel;
 import de.teamlapen.vampirism.client.render.layers.BaronAttireLayer;
 import de.teamlapen.vampirism.client.render.layers.WingsLayer;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;

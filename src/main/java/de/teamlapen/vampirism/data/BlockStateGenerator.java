@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.data;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;

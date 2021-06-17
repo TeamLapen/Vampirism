@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.player;
 
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -18,7 +19,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.effects.PotionPoison;
+import de.teamlapen.vampirism.effects.VampirismPoisonEffect;
 import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -30,7 +31,6 @@ import de.teamlapen.vampirism.player.vampire.actions.BatVampireAction;
 import de.teamlapen.vampirism.tileentity.TotemHelper;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -200,7 +200,7 @@ public class ModPlayerEventHandler {
             if (stack.getItem() == Items.POTION) {
                 Potion p =PotionUtils.getPotionFromItem(stack);
                 if (p instanceof VampirismPotion.HunterPotion && p.getEffects().stream().map(EffectInstance::getPotion).anyMatch(Effect::isBeneficial)) {
-                    event.getEntityLiving().addPotionEffect(new EffectInstance(ModEffects.poison, Integer.MAX_VALUE, PotionPoison.DEADLY_AMPLIFIER));
+                    event.getEntityLiving().addPotionEffect(new EffectInstance(ModEffects.poison, Integer.MAX_VALUE, VampirismPoisonEffect.DEADLY_AMPLIFIER));
                 }
             }
         }

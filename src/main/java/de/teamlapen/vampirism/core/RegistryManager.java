@@ -77,7 +77,7 @@ public class RegistryManager implements IInitListener {
             case LOAD_COMPLETE:
                 event.enqueueWork(ModFeatures::registerStructureSeparation);
                 if (ModEffects.checkNightVision()) {
-                    ModEffects.fixNightVisionEffecTypes();
+                    ModEffects.fixNightVisionEffectTypes();
                 }
                 ModRecipes.registerDefaultLiquidColors();
                 break;

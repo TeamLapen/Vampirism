@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.effects.PotionSanguinare;
+import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -126,7 +126,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
                 if (VampirismConfig.SERVER.disableFangInfection.get()) {
                     player.sendStatusMessage(new TranslationTextComponent("text.vampirism.deactivated_by_serveradmin"), true);
                 } else {
-                    PotionSanguinare.addRandom(player, true);
+                    SanguinareEffect.addRandom(player, true);
                     player.addPotionEffect(new EffectInstance(ModEffects.poison, 60));
                     return true;
                 }

@@ -2,13 +2,13 @@ package de.teamlapen.vampirism.core;
 
 
 import com.google.common.collect.Lists;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.mixin.DimensionStructureSettingsAccessor;
 import de.teamlapen.vampirism.util.ConfigurableStructureSeparationSettings;
-import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.world.gen.features.ModLakeFeature;
 import de.teamlapen.vampirism.world.gen.features.VampireDungeonFeature;
+import de.teamlapen.vampirism.world.gen.features.VampirismLakeFeature;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampStructure;
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
@@ -37,7 +37,7 @@ public class ModFeatures {
     private static final Logger LOGGER = LogManager.getLogger();
     //features
     public static final VampireDungeonFeature vampire_dungeon = new VampireDungeonFeature(NoFeatureConfig.field_236558_a_);
-    public static final ModLakeFeature mod_lake = new ModLakeFeature(BlockStateFeatureConfig.field_236455_a_);
+    public static final VampirismLakeFeature mod_lake = new VampirismLakeFeature(BlockStateFeatureConfig.field_236455_a_);
 
     //structures
     public static final Structure<NoFeatureConfig> hunter_camp = new HunterCampStructure(NoFeatureConfig.field_236558_a_/*deserialize*/);

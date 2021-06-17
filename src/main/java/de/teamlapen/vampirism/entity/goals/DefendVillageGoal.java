@@ -12,8 +12,8 @@ import javax.annotation.Nullable;
 
 public class DefendVillageGoal<T extends CreatureEntity & IVillageCaptureEntity> extends TargetGoal {
 
-    private T creature;
-    private EntityPredicate entityPredicate;
+    private final T creature;
+    private final EntityPredicate entityPredicate;
     private double distance = getTargetDistance() * 4;
 
     public DefendVillageGoal(T creature) {

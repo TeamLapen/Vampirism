@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
@@ -24,7 +25,6 @@ import de.teamlapen.vampirism.tileentity.TotemHelper;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.REFERENCE;
 import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import net.minecraft.block.Block;
@@ -73,8 +73,6 @@ public class ModEntityEventHandler {
     private boolean skipAttackDamageOnceServer = false;
     private boolean skipAttackDamageOnceClient = false;
 
-    private boolean warnAboutCreeper = true;
-    private boolean warnAboutZombie = true;
     private boolean warnAboutGolem = true;
     private final Set<ResourceLocation> unknownZombies = new HashSet<>();
 

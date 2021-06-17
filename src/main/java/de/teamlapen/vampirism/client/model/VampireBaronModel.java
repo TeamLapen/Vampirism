@@ -11,10 +11,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class VampireBaronModel<T extends LivingEntity> extends BipedCloakedModel<T> {
 
 
-    private ModelRenderer rightwing1;
-    private ModelRenderer rightwing2;
-    private ModelRenderer leftwing1;
-    private ModelRenderer leftwing2;
+    private final ModelRenderer rightwing1;
+    private final ModelRenderer rightwing2;
+    private final ModelRenderer leftwing1;
+    private final ModelRenderer leftwing2;
 
     public VampireBaronModel() {
         super(0.0F, 0.0F, 64, 64);

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Either;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
@@ -15,13 +16,12 @@ import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.client.renderer.model.BlockModel;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.IUnbakedModel;
 import net.minecraft.client.renderer.model.ModelRotation;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
@@ -157,8 +157,8 @@ public class ClientEventHandler {
     @SubscribeEvent
     public void onFovOffsetUpdate(FOVUpdateEvent event) {
         if (VampirismConfig.CLIENT.disableFovChange.get() && Helper.isVampire(event.getEntity())) {
-            ModifiableAttributeInstance speed = event.getEntity().getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-            AttributeModifier vampirespeed = speed.getModifier(LevelAttributeModifier.getUUID(SharedMonsterAttributes.MOVEMENT_SPEED));
+            ModifiableAttributeInstance speed = event.getEntity().getAttribute(Attributes.MOVEMENT_SPEED);
+            AttributeModifier vampirespeed = speed.getModifier(LevelAttributeModifier.getUUID(Attributes.MOVEMENT_SPEED));
             if (vampirespeed == null)
                 return;
             //removes speed buffs, add speed buffs without the vampire speed

@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ModEventFactory {
+public class VampirismEventFactory {
 
     public static boolean fireVillagerCaptureEventPre(@Nonnull ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
         VampirismVillageEvent.VillagerCaptureFinish.Pre event = new VampirismVillageEvent.VillagerCaptureFinish.Pre(totem, villagerIn, forced);

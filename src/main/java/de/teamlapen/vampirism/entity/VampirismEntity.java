@@ -13,7 +13,6 @@ import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -260,7 +259,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     }
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return CreatureEntity.registerAttributes().createMutableAttribute(Attributes.ATTACK_DAMAGE).createMutableAttribute(SharedMonsterAttributes.FOLLOW_RANGE, 16).createMutableAttribute(Attributes.ATTACK_KNOCKBACK);
+        return CreatureEntity.registerAttributes().createMutableAttribute(Attributes.ATTACK_DAMAGE).createMutableAttribute(Attributes.FOLLOW_RANGE, 16).createMutableAttribute(Attributes.ATTACK_KNOCKBACK);
     }
 
     protected void setDontDropEquipment() {

@@ -11,16 +11,16 @@ This mod allows you to become a vampire with all its benefits and drawbacks.
 
 After being bitten by a vampire or manually injecting some vampire blood you get an effect called "Sanguinare Vampiris" which eventually turns you into a vampire.
 
-For a more detailed description head over to the Minecraft forums or the Curseforge page.
+For a more detailed description head over to the Minecraft Forum or the Curseforge page.
 ## Links
 [Curseforge Project](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire)  
 [Downloads](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire/files)   
 [Help to translate](https://crowdin.com/project/vampirism)
 
 ## People
-- [maxanier](https://maxanier.de) _Everything_  
-- [Cheaterpaul](https://github.com/Cheaterpaul) _Coding_
-- [1LiterZinalco](https://chimute.org/) _Triage/Support/Community_
+- [maxanier](https://maxanier.de)
+- [Cheaterpaul](https://github.com/Cheaterpaul)
+- [1LiterZinalco](https://chimute.org/) _Triage/Support/Community/Art_
 
 ## Special Thanks to
 - PixelEyeStudios _Models/Textures_
@@ -31,6 +31,8 @@ For a more detailed description head over to the Minecraft forums or the Cursefo
 - Mistadon _Code/Models_  
 - wildbill22 _Code_  
 - LRA_10 _Models/Textures_
+- Oreo365 _Models_
+- Slippingchip400 _Models_
 
 ## API
 Vampirism has an API you can use to add blood values to your mod's creatures or make them convertible and more.
@@ -72,13 +74,12 @@ Refresh/Restart your IDE afterwards.
 
 #### Run Vampirism in a deobfuscated environment
 
-Since Vampirism uses **mixins** and they try to use the obfuscated mappings by default it is currently required to
+Since Vampirism uses **mixins**, and they try to use the obfuscated mappings by default, it is currently required to
 disable the mixin for mixin based mods. Therefore, you currently have to set the Java system
 property `mixin.env.disableRefMap` to `true` when running Vampirism in dev. This can e.g. be achieved by
-adding             
-`property 'mixin.env.disableRefMap', 'true'`
+adding `property 'mixin.env.disableRefMap', 'true'`
 to your run configurations in your `build.gradle` and then regenerate your IDE run configurations (`genIntelliJRuns` or
-similar)
+similar).
 
 If you run into issues with the mixins you can also set `mixin.env.ignoreRequired` to `true`. However, not all of
 Vampirism will work correctly then.

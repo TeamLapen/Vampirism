@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.fluids;
 
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.fluid.Fluid;
 
 public abstract class VampirismFluid extends Fluid {

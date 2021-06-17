@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.inventory.recipes;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;

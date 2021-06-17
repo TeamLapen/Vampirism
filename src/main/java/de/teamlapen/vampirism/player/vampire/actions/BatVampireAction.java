@@ -9,10 +9,10 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -125,11 +125,12 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     private void setModifier(PlayerEntity player, boolean enabled) {
         if (enabled) {
 
-            ModifiableAttributeInstance armorAttributeInst = player.getAttribute(SharedMonsterAttributes.ARMOR);
+            ModifiableAttributeInstance armorAttributeInst = player.getAttribute(Attributes.ARMOR);
+
             if (armorAttributeInst.getModifier(armorModifierUUID) == null) {
                 armorAttributeInst.applyPersistentModifier(new AttributeModifier(armorModifierUUID, "Bat Armor Disabled", -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
-            ModifiableAttributeInstance armorToughnessAttributeInst = player.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS);
+            ModifiableAttributeInstance armorToughnessAttributeInst = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
             if (armorToughnessAttributeInst.getModifier(armorToughnessModifierUUID) == null) {
                 armorToughnessAttributeInst.applyPersistentModifier(new AttributeModifier(armorToughnessModifierUUID, "Bat Armor Disabled", -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
@@ -137,16 +138,14 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             player.abilities.allowFlying = true;
             player.abilities.isFlying = true;
             setFlightSpeed(player, (float) 0.03);
-            player.sendPlayerAbilities();
         } else {
-
             // Health modifier
-            ModifiableAttributeInstance armorAttributeInst = player.getAttribute(SharedMonsterAttributes.ARMOR);
+            ModifiableAttributeInstance armorAttributeInst = player.getAttribute(Attributes.ARMOR);
             AttributeModifier m = armorAttributeInst.getModifier(armorModifierUUID);
             if (m != null) {
                 armorAttributeInst.removeModifier(m);
             }
-            ModifiableAttributeInstance armorToughnessAttributeInst = player.getAttribute(SharedMonsterAttributes.ARMOR);
+            ModifiableAttributeInstance armorToughnessAttributeInst = player.getAttribute(Attributes.ARMOR);
             AttributeModifier m2 = armorToughnessAttributeInst.getModifier(armorModifierUUID);
             if (m2 != null) {
                 armorToughnessAttributeInst.removeModifier(m2);
@@ -157,8 +156,8 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             }
             player.abilities.isFlying = false;
             setFlightSpeed(player, 0.05F);
-            player.sendPlayerAbilities();
         }
+        player.sendPlayerAbilities();
 
     }
 

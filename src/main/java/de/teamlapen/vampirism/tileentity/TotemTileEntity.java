@@ -19,8 +19,8 @@ import de.teamlapen.vampirism.blocks.TotemBaseBlock;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
-import de.teamlapen.vampirism.effects.PotionSanguinare;
-import de.teamlapen.vampirism.effects.PotionSanguinareEffect;
+import de.teamlapen.vampirism.effects.SanguinareEffect;
+import de.teamlapen.vampirism.effects.SanguinareEffectInstance;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.FactionVillagerProfession;
 import de.teamlapen.vampirism.entity.VampirismEntity;
@@ -33,7 +33,7 @@ import de.teamlapen.vampirism.entity.hunter.HunterTrainerEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.util.ModEventFactory;
+import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.ServerMultiBossInfo;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.block.Block;
@@ -431,7 +431,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         VillagerEntity newVillager = EntityType.VILLAGER.create(this.world);
         //noinspection ConstantConditions
         ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
-        newVillager = ModEventFactory.fireSpawnNewVillagerEvent(this, null, newVillager, false, poisonousBlood);
+        newVillager = VampirismEventFactory.fireSpawnNewVillagerEvent(this, null, newVillager, false, poisonousBlood);
         spawnEntity(newVillager);
     }
 
@@ -446,7 +446,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         if (!this.world.isRemote) {
             List<VillagerEntity> villagerEntities = this.world.getEntitiesWithinAABB(VillagerEntity.class, this.getVillageArea());
             for (VillagerEntity villager : villagerEntities) {
-                if (ModEventFactory.fireMakeAggressive(this, villager)) {
+                if (VampirismEventFactory.fireMakeAggressive(this, villager)) {
                     if (VReference.VAMPIRE_FACTION.equals(this.capturingFaction)) {
                         if (villager instanceof IFactionEntity) continue;
                         if (villager.getGrowingAge() < 0) continue;
@@ -679,7 +679,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                         }
                     }
                     if (!flag) {
-                        ModEventFactory.fireReplaceVillageBlockEvent(this, b, pos);
+                        VampirismEventFactory.fireReplaceVillageBlockEvent(this, b, pos);
                     }
                 }
 
@@ -893,7 +893,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         } else {
             defenderStrength -= strengthModifier;
         }
-        Pair<Float, Float> strength = ModEventFactory.fireDefineRaidStrengthEvent(this, level, defenderStrength, attackerStrength);
+        Pair<Float, Float> strength = VampirismEventFactory.fireDefineRaidStrengthEvent(this, level, defenderStrength, attackerStrength);
         this.strengthRatio = strength.getRight() / (strength.getLeft() + strength.getRight());
     }
 
@@ -1023,7 +1023,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
         if (oldEntity instanceof VillagerEntity)
             newVillager.setHomePosAndDistance(oldEntity.getHomePosition(), (int) oldEntity.getMaximumHomeDistance());
-        newVillager = ModEventFactory.fireSpawnNewVillagerEvent(this, oldEntity, newVillager, true, poisonousBlood);
+        newVillager = VampirismEventFactory.fireSpawnNewVillagerEvent(this, oldEntity, newVillager, true, poisonousBlood);
         spawnEntity(newVillager, oldEntity, true, true);
     }
 
@@ -1035,7 +1035,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         if (oldEntity instanceof VillagerEntity) {
             newVillager.setHomePosAndDistance(oldEntity.getHomePosition(), (int) oldEntity.getMaximumHomeDistance());
         }
-        newVillager = ModEventFactory.fireSpawnNewVillagerEvent(this, oldEntity, newVillager, true, poisonousBlood);
+        newVillager = VampirismEventFactory.fireSpawnNewVillagerEvent(this, oldEntity, newVillager, true, poisonousBlood);
         UtilLib.replaceEntity(oldEntity, newVillager);
     }
 
@@ -1047,7 +1047,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private void updateCreaturesOnCapture(boolean fullConvert) {
         //noinspection ConstantConditions
         List<VillagerEntity> villagerEntities = this.world.getEntitiesWithinAABB(VillagerEntity.class, getVillageArea());
-        if (ModEventFactory.fireVillagerCaptureEventPre(this, villagerEntities, fullConvert)) {
+        if (VampirismEventFactory.fireVillagerCaptureEventPre(this, villagerEntities, fullConvert)) {
             return;
         }
         if (VReference.HUNTER_FACTION.equals(this.capturingFaction)) {
@@ -1091,9 +1091,9 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             for (VillagerEntity villager : villagerEntities) {
                 if (!fullConvert) {
                     if (RNG.nextInt(2) == 1) continue;
-                    PotionSanguinare.addRandom(villager, false);
+                    SanguinareEffect.addRandom(villager, false);
                 } else {
-                    villager.addPotionEffect(new PotionSanguinareEffect(11));
+                    villager.addPotionEffect(new SanguinareEffectInstance(11));
                 }
             }
 
@@ -1125,7 +1125,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                 villager.setVillagerData(villager.getVillagerData().withProfession(VillagerProfession.NONE));
             }
         }
-        ModEventFactory.fireVillagerCaptureEventPost(this, villagerEntities, fullConvert);
+        VampirismEventFactory.fireVillagerCaptureEventPost(this, villagerEntities, fullConvert);
     }
 
     private void spawnEntity(MobEntity newEntity) {

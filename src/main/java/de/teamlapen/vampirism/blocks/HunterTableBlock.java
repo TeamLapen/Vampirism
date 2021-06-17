@@ -52,8 +52,7 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
         VoxelShape d3 = VoxelShapes.or(d1, d2);
         VoxelShape f1 = VoxelShapes.or(e, f);
 
-        VoxelShape g = VoxelShapes.or(d3, f1);
-        return g;
+        return VoxelShapes.or(d3, f1);
     }
 
     public HunterTableBlock() {

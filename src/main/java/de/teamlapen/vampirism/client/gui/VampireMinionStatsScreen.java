@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
-import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -12,9 +12,9 @@ import javax.annotation.Nullable;
 
 public class VampireMinionStatsScreen extends MinionStatsScreen<VampireMinionEntity.VampireMinionData, VampireMinionEntity> {
     private final TranslationTextComponent inventoryLevel = new TranslationTextComponent("text.vampirism.minion.stats.inventory_level");
-    private final TranslationTextComponent healthLevel = new TranslationTextComponent( SharedMonsterAttributes.MAX_HEALTH.getAttributeName());
-    private final TranslationTextComponent strengthLevel = new TranslationTextComponent(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeName());
-    private final TranslationTextComponent speedLevel = new TranslationTextComponent(SharedMonsterAttributes.MOVEMENT_SPEED.getAttributeName());
+    private final TranslationTextComponent healthLevel = new TranslationTextComponent( Attributes.MAX_HEALTH.getAttributeName());
+    private final TranslationTextComponent strengthLevel = new TranslationTextComponent(Attributes.ATTACK_DAMAGE.getAttributeName());
+    private final TranslationTextComponent speedLevel = new TranslationTextComponent(Attributes.MOVEMENT_SPEED.getAttributeName());
 
 
     public VampireMinionStatsScreen(VampireMinionEntity entity, @Nullable Screen backScreen) {
@@ -51,9 +51,9 @@ public class VampireMinionStatsScreen extends MinionStatsScreen<VampireMinionEnt
     protected void renderStats(MatrixStack mStack, VampireMinionEntity.VampireMinionData data) {
         renderLevelRow(mStack, data.getLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL + 1);
         renderStatRow(mStack, 0, inventoryLevel, new StringTextComponent("" + data.getInventorySize()), data.getInventoryLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_INVENTORY + 1);
-        renderStatRow(mStack, 1, healthLevel, new StringTextComponent("" + entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue()), data.getHealthLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_HEALTH + 1);
-        renderStatRow(mStack, 2, strengthLevel, new StringTextComponent("" + entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getBaseValue()), data.getStrengthLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_STRENGTH + 1);
-        renderStatRow(mStack,3, speedLevel, new StringTextComponent("" + entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue()), data.getSpeedLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_SPEED + 1);
+        renderStatRow(mStack, 1, healthLevel, new StringTextComponent("" + entity.getAttribute(Attributes.MAX_HEALTH).getBaseValue()), data.getHealthLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_HEALTH + 1);
+        renderStatRow(mStack, 2, strengthLevel, new StringTextComponent("" + entity.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue()), data.getStrengthLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_STRENGTH + 1);
+        renderStatRow(mStack,3, speedLevel, new StringTextComponent("" + entity.getAttribute(Attributes.MOVEMENT_SPEED).getBaseValue()), data.getSpeedLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_SPEED + 1);
 
     }
 }

@@ -6,9 +6,9 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
-import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.vector.Vector3d;
 
@@ -27,7 +27,7 @@ public class SpeedEntityAction<T extends CreatureEntity & IEntityActionUser> ext
 
     @Override
     public void deactivate(T entity) {
-        entity.getRepresentingEntity().getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(UUIDS);
+        entity.getRepresentingEntity().getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(UUIDS);
     }
 
     @Override
@@ -55,8 +55,8 @@ public class SpeedEntityAction<T extends CreatureEntity & IEntityActionUser> ext
 
     @Override
     public void onUpdate(T entity, int duration) {
-        if (entity.getRepresentingEntity().getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(UUIDS) == null) {
-            entity.getRepresentingEntity().getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyPersistentModifier(new AttributeModifier(UUIDS, "speedaction", VampirismConfig.BALANCE.eaSpeedAmount.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        if (entity.getRepresentingEntity().getAttribute(Attributes.MOVEMENT_SPEED).getModifier(UUIDS) == null) {
+            entity.getRepresentingEntity().getAttribute(Attributes.MOVEMENT_SPEED).applyPersistentModifier(new AttributeModifier(UUIDS, "speedaction", VampirismConfig.BALANCE.eaSpeedAmount.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
         if (duration % 5 == 0) {
             double maxDist = 0.5D;

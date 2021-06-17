@@ -1,14 +1,15 @@
-package de.teamlapen.vampirism.core;
+package de.teamlapen.vampirism.world.gen;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.util.ASMHooks;
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.util.MixinHooks;
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.util.RandomBlockState;
 import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
@@ -33,7 +34,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class ModWorld {
+public class VampirismWorldGen {
     private static final Logger LOGGER = LogManager.getLogger();
     public static boolean debug = false;
     private final static float TOTEM_PRESET_PERCENTAGE = 0.6f;
@@ -41,18 +42,18 @@ public class ModWorld {
 
 
     public static void initVillageStructures() {
-        ModWorld.setupSingleJigsawPieceGeneration();
+        VampirismWorldGen.setupSingleJigsawPieceGeneration();
 
         //init pools for modification
         VillagesPools.func_244194_a();
 
         Pair<Map<String, List<Pair<JigsawPiece, Integer>>>, Map<String, JigsawPattern>> structures = getStructures();
 
-        ModWorld.replaceTemples(structures.getFirst());
+        VampirismWorldGen.replaceTemples(structures.getFirst());
 
         addVillageStructures(structures.getFirst());
 
-        ModWorld.saveChanges(structures.getFirst(), structures.getSecond());
+        VampirismWorldGen.saveChanges(structures.getFirst(), structures.getSecond());
 
     }
 
@@ -61,12 +62,12 @@ public class ModWorld {
 
         addVillageStructures(structures.getFirst());
 
-        ModWorld.saveChanges(structures.getFirst(), structures.getSecond());
+        VampirismWorldGen.saveChanges(structures.getFirst(), structures.getSecond());
     }
 
     public static void addVillageStructures(Map<String, List<Pair<JigsawPiece, Integer>>> map) {
-        ModWorld.addHunterTrainerHouse(map);
-        ModWorld.addTotem(map);
+        VampirismWorldGen.addHunterTrainerHouse(map);
+        VampirismWorldGen.addTotem(map);
     }
 
     //
@@ -188,7 +189,7 @@ public class ModWorld {
      * ensure single generation of following structures
      */
     private static void setupSingleJigsawPieceGeneration() {
-        ASMHooks.addSingleInstanceStructure(Lists.newArrayList(
+        MixinHooks.addSingleInstanceStructure(Lists.newArrayList(
                 singleJigsawString("vampirism:village/totem"),
                 singleJigsawString("vampirism:village/desert/houses/hunter_trainer"),
                 singleJigsawString("vampirism:village/plains/houses/hunter_trainer"),

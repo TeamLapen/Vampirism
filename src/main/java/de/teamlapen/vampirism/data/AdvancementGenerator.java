@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.data;
 
 import com.google.common.collect.ImmutableList;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.*;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.criterion.*;
 import net.minecraft.data.AdvancementProvider;

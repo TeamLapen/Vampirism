@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
@@ -13,10 +14,9 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModStats;
-import de.teamlapen.vampirism.effects.PotionSanguinare;
+import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
@@ -225,7 +225,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             if (blood == 0) {
                 if (canBecomeVampire && entity.getRNG().nextBoolean()) {
                     if (VampirismConfig.SERVER.infectCreaturesSanguinare.get()) {
-                        PotionSanguinare.addRandom(entity, false);
+                        SanguinareEffect.addRandom(entity, false);
                     } else {
                         makeVampire();
                     }

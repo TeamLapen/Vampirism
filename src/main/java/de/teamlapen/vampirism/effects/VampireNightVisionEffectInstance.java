@@ -10,9 +10,9 @@ import java.util.ArrayList;
 /**
  * Night vision effect for vampire players which is not displayed
  */
-public class VampireNightVisionEffect extends EffectInstance {
+public class VampireNightVisionEffectInstance extends EffectInstance {
 
-    public VampireNightVisionEffect() {
+    public VampireNightVisionEffectInstance() {
         super(Effects.NIGHT_VISION, 10000, 0, false, false);
         setCurativeItems(new ArrayList<>());
     }

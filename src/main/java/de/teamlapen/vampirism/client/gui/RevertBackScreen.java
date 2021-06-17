@@ -28,10 +28,8 @@ public class RevertBackScreen extends ConfirmScreen {
         super((context) -> {
             if (context) {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.REVERTBACK, "0"));
-                Minecraft.getInstance().displayGuiScreen(null);
-            } else {
-                Minecraft.getInstance().displayGuiScreen(null);
             }
+            Minecraft.getInstance().displayGuiScreen(null);
         }, new TranslationTextComponent("gui.vampirism.revertback.head"), new StringTextComponent(getDescription()));
     }
 }

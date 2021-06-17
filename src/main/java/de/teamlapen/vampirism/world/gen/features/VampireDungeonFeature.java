@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModLootTables;
-import de.teamlapen.vampirism.core.ModWorld;
+import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
@@ -131,7 +131,7 @@ public class VampireDungeonFeature extends DungeonsFeature {
             } else {
                 LOGGER.error("Failed to fetch mob spawner entity at ({}, {}, {})", pos.getX(), pos.getY(), pos.getZ());
             }
-            if (ModWorld.debug) {
+            if (VampirismWorldGen.debug) {
                 LOGGER.info("Generated dungeon at {}", pos);
             }
             return true;

@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.effects.PotionSanguinare;
+import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -34,7 +34,7 @@ public class VampireFangItem extends VampirismItem {
                 playerIn.sendStatusMessage(new TranslationTextComponent("text.vampirism.deactivated_by_serveradmin"), true);
             } else {
                 if (Helper.canBecomeVampire(playerIn)) {
-                    PotionSanguinare.addRandom(playerIn, true);
+                    SanguinareEffect.addRandom(playerIn, true);
                     playerIn.addPotionEffect(new EffectInstance(ModEffects.poison, 60));
                 } else {
                     if (Helper.isVampire(playerIn)) {

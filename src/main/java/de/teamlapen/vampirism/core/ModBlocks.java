@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.client.core.ModBlocksRender;
@@ -9,7 +10,6 @@ import de.teamlapen.vampirism.client.render.VampirismItemStackTESR;
 import de.teamlapen.vampirism.data.BlockStateGenerator;
 import de.teamlapen.vampirism.data.ItemModelGenerator;
 import de.teamlapen.vampirism.data.LootTablesGenerator;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;

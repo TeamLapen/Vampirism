@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity.hunter;
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
@@ -34,11 +33,6 @@ public class TrainingDummyHunterEntity extends BasicHunterEntity {
     @Override
     public void convertToMinion(PlayerEntity lord) {
         super.convertToMinion(lord);
-    }
-
-    @Override
-    public CompoundNBT serializeNBT() {
-        return super.serializeNBT();
     }
 
     @Override

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.mixin;
 
-import de.teamlapen.vampirism.util.ASMHooks;
+import de.teamlapen.vampirism.util.MixinHooks;
 import net.minecraft.world.gen.feature.jigsaw.EmptyJigsawPiece;
 import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
@@ -25,7 +25,7 @@ public abstract class AssemblerMixin {
     private Object inject(Iterator<JigsawPiece> iterator) {
         while(iterator.hasNext()) {
             JigsawPiece piece = iterator.next();
-            if (!ASMHooks.checkStructures(this.structurePieces, piece)) {
+            if (!MixinHooks.checkStructures(this.structurePieces, piece)) {
                 return piece;
             }
         }

@@ -34,11 +34,6 @@ public class PlayableFaction<T extends IFactionPlayer<?>> extends Faction<T> imp
     }
 
     @Override
-    public Class<T> getFactionEntityInterface() {
-        return super.getFactionEntityInterface();
-    }
-
-    @Override
     public Class<T> getFactionPlayerInterface() {
         return super.getFactionEntityInterface();
     }

@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.items.enchantment;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.items.PitchforkItem;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.enchantment.DamageEnchantment;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentType;

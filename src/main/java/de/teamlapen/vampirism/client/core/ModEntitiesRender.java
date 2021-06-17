@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.lib.lib.client.render.RenderAreaParticleCloud;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.render.entities.*;
 import de.teamlapen.vampirism.client.render.layers.VampireEntityLayer;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.BatRenderer;
 import net.minecraft.client.renderer.entity.HorseRenderer;

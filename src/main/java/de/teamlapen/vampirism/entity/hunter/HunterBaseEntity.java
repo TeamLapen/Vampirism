@@ -24,7 +24,6 @@ import java.util.Random;
 /**
  * Base class for all vampire hunter
  */
-@SuppressWarnings("EntityConstructor")
 public abstract class HunterBaseEntity extends VampirismEntity implements IHunterMob, INPC/*mainly for JourneyMap*/ {
 
     public static boolean spawnPredicateHunter(EntityType<? extends HunterBaseEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {

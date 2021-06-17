@@ -86,8 +86,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
         if (stack.getItem() == item) {
             if (stack.hasTag() && stack.getTag().contains("fluid", 10)) {
                 CompoundNBT fluidTag = stack.getTag().getCompound("fluid");
-                FluidStack fluidStack = FluidStack.loadFluidStackFromNBT(fluidTag);
-                return fluidStack;
+                return FluidStack.loadFluidStackFromNBT(fluidTag);
             } else {
                 return new FluidStack(ModFluids.blood, 0);
             }

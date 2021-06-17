@@ -23,7 +23,7 @@ public class MinionDamageSource extends EntityDamageSource {
     @Nullable
     protected final PlayerEntity playerEntity;
 
-    public MinionDamageSource(MinionEntity<?> minion) {
+    public MinionDamageSource(@Nonnull MinionEntity<?> minion) {
         super("mob", minion);
         this.minionEntity = minion;
         this.playerEntity = minion.getLordOpt().map(ILordPlayer::getPlayer).orElse(null);

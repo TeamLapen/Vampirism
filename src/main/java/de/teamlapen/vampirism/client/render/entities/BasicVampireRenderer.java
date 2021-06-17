@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.render.entities;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
