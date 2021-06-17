@@ -18,10 +18,10 @@ import javax.annotation.Nonnull;
  * Collection of several vampire related triggers
  */
 public class VampireActionTrigger extends AbstractCriterionTrigger<VampireActionTrigger.Instance> {
-    private static final Logger LOGGER = LogManager.getLogger();
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "vampire_action");
+    private static final Logger LOGGER = LogManager.getLogger();
 
-    public static Instance builder(Action action){
+    public static Instance builder(Action action) {
         return new Instance(action);
     }
 
@@ -29,6 +29,12 @@ public class VampireActionTrigger extends AbstractCriterionTrigger<VampireAction
     @Override
     public ResourceLocation getId() {
         return ID;
+    }
+
+    public void trigger(ServerPlayerEntity player, Action action) {
+        this.triggerListeners(player, (instance) -> {
+            return instance.test(action);
+        });
     }
 
     @Nonnull
@@ -49,12 +55,6 @@ public class VampireActionTrigger extends AbstractCriterionTrigger<VampireAction
         return new Instance(action);
     }
 
-    public void trigger(ServerPlayerEntity player, Action action) {
-        this.triggerListeners(player, (instance) -> {
-            return instance.test(action);
-        });
-    }
-
     public enum Action {
         SNIPED_IN_BAT, POISONOUS_BITE, PERFORM_RITUAL_INFUSION, BAT, SUCK_BLOOD, NONE, KILL_FROZEN_HUNTER
     }
@@ -68,16 +68,16 @@ public class VampireActionTrigger extends AbstractCriterionTrigger<VampireAction
             this.action = action;
         }
 
-        boolean test(Action action) {
-            return this.action == action;
-        }
-
         @Nonnull
         @Override
         public JsonObject serialize(@Nonnull ConditionArraySerializer serializer) {
             JsonObject json = super.serialize(serializer);
             json.addProperty("action", action.name());
             return json;
+        }
+
+        boolean test(Action action) {
+            return this.action == action;
         }
     }
 }

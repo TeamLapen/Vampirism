@@ -100,6 +100,26 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     }
 
     @SubscribeEvent
+    public void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
+        if (shouldRenderBloodVision()) {
+            reducedBloodVision = OptifineHandler.isShaders();
+            if (!reducedBloodVision) {
+                if (displayHeight != mc.getMainWindow().getFramebufferHeight() || displayWidth != mc.getMainWindow().getFramebufferWidth()) {
+                    this.displayHeight = mc.getMainWindow().getFramebufferHeight();
+                    this.displayWidth = mc.getMainWindow().getFramebufferWidth();
+                    this.updateFramebufferSize(this.displayWidth, this.displayHeight);
+                }
+                adjustBloodVisionShaders(getBloodVisionProgress((float) event.getRenderPartialTicks()));
+            } else {
+                MixinHooks.enforcingGlowing_bloodVision = true;
+            }
+        }
+        if (VampirismConfig.SERVER.preventRenderingDebugBoundingBoxes.get()) {
+            Minecraft.getInstance().getRenderManager().setDebugBoundingBox(false);
+        }
+    }
+
+    @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (mc.world == null || mc.player == null || !mc.player.isAlive()) return;
         if (event.phase == TickEvent.Phase.END) return;
@@ -122,7 +142,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         }
         //Vampire biome/village fog
         if (mc.player.ticksExisted % 10 == 0) {
-            if ((VampirismConfig.CLIENT.renderVampireForestFog.get() || VampirismConfig.SERVER.enforceRenderForestFog.get()) && (Helper.isEntityInArtificalVampireFogArea(mc.player) || Helper.isEntityInVampireBiome(mc.player) )) {
+            if ((VampirismConfig.CLIENT.renderVampireForestFog.get() || VampirismConfig.SERVER.enforceRenderForestFog.get()) && (Helper.isEntityInArtificalVampireFogArea(mc.player) || Helper.isEntityInVampireBiome(mc.player))) {
                 insideFog = true;
                 vampireBiomeFogDistanceMultiplier = vampire.getLevel() > 0 ? 2 : 1;
                 vampireBiomeFogDistanceMultiplier += vampire.getSkillHandler().isRefinementEquipped(ModRefinements.vista) ? VampirismConfig.BALANCE.vrVistaMod.get() : 0;
@@ -175,32 +195,11 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     }
 
     @SubscribeEvent
-    public void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
-        if (shouldRenderBloodVision()) {
-            reducedBloodVision = OptifineHandler.isShaders();
-            if (!reducedBloodVision) {
-                if (displayHeight != mc.getMainWindow().getFramebufferHeight() || displayWidth != mc.getMainWindow().getFramebufferWidth()) {
-                    this.displayHeight = mc.getMainWindow().getFramebufferHeight();
-                    this.displayWidth = mc.getMainWindow().getFramebufferWidth();
-                    this.updateFramebufferSize(this.displayWidth, this.displayHeight);
-                }
-                adjustBloodVisionShaders(getBloodVisionProgress((float) event.getRenderPartialTicks()));
-            } else {
-                MixinHooks.enforcingGlowing_bloodVision = true;
-            }
-        }
-        if(VampirismConfig.SERVER.preventRenderingDebugBoundingBoxes.get()){
-            Minecraft.getInstance().getRenderManager().setDebugBoundingBox(false);
-        }
-    }
-
-    @SubscribeEvent
     public void onRenderLivingPost(RenderLivingEvent.Post event) {
         if (!isInsideBloodVisionRendering && shouldRenderBloodVision() && !reducedBloodVision) {
             Entity entity = event.getEntity();
 
-            boolean flag = true;
-            if (entity instanceof PlayerEntity && VampirismPlayerAttributes.get((PlayerEntity) entity).getHuntSpecial().fullHunterCoat!=null) flag = false;
+            boolean flag = !(entity instanceof PlayerEntity) || VampirismPlayerAttributes.get((PlayerEntity) entity).getHuntSpecial().fullHunterCoat == null;
             double dist = mc.player.getDistanceSq(entity);
             if (dist > VampirismConfig.BALANCE.vsBloodVisionDistanceSq.get()) {
                 flag = false;
@@ -236,33 +235,15 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     }
 
     @SubscribeEvent
-    public void onRenderWorldLast(RenderWorldLastEvent event) {
-        MixinHooks.enforcingGlowing_bloodVision = false;
-        if (mc.world == null) return;
-
-        /*
-         * DO NOT USE partial ticks from event. They are bugged: https://github.com/MinecraftForge/MinecraftForge/issues/6380
-         */
-        float partialTicks = mc.getRenderPartialTicks();
-
-
-        if (shouldRenderBloodVision() && !reducedBloodVision) {
-            this.blurShader.render(partialTicks);
-            if (this.bloodVisionBuffer != null) this.bloodVisionBuffer.finish();
-        }
-    }
-
-    @SubscribeEvent
     public void onRenderLivingPre(RenderLivingEvent.Pre<PlayerEntity, PlayerModel<PlayerEntity>> event) {
         LivingEntity entity = event.getEntity();
         if (entity instanceof PlayerEntity && VampirismPlayerAttributes.get(mc.player).getHuntSpecial().isDisguised()) {
             double dist = this.mc.player == null ? 0 : entity.getDistanceSq(this.mc.player);
             if (dist > 64) {
                 event.setCanceled(true);
-            }
-            else if(dist>16){
+            } else if (dist > 16) {
                 IItemWithTier.TIER hunterCoatTier = VampirismPlayerAttributes.get((PlayerEntity) entity).getHuntSpecial().fullHunterCoat;
-                if(hunterCoatTier== IItemWithTier.TIER.ENHANCED||hunterCoatTier == IItemWithTier.TIER.ULTIMATE){
+                if (hunterCoatTier == IItemWithTier.TIER.ENHANCED || hunterCoatTier == IItemWithTier.TIER.ULTIMATE) {
                     event.setCanceled(true);
                 }
             }
@@ -273,10 +254,9 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
         PlayerEntity player = event.getPlayer();
         VampirePlayerSpecialAttributes vAtt = VampirismPlayerAttributes.get(player).getVampSpecial();
-        if(vAtt.invisible){
+        if (vAtt.invisible) {
             event.setCanceled(true);
-        }
-        else if (vAtt.bat) {
+        } else if (vAtt.bat) {
             event.setCanceled(true);
             if (entityBat == null) {
                 entityBat = EntityType.BAT.create(event.getEntity().getEntityWorld());
@@ -304,19 +284,41 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
             float f = MathHelper.lerp(partialTicks, entityBat.prevRotationYaw, entityBat.rotationYaw);
             mc.getRenderManager().renderEntityStatic(entityBat, d0, d1, d2, f, partialTicks, event.getMatrixStack(), mc.getRenderTypeBuffers().getBufferSource(), mc.getRenderManager().getPackedLight(entityBat, partialTicks));
 
-        }
-        else if(vAtt.isDBNO){
-            event.getMatrixStack().translate(1.2,0,0);
+        } else if (vAtt.isDBNO) {
+            event.getMatrixStack().translate(1.2, 0, 0);
             PlayerModel<?> m = event.getRenderer().getEntityModel();
-            m.bipedRightArm.showModel=false;
+            m.bipedRightArm.showModel = false;
             m.bipedRightArmwear.showModel = false;
-            m.bipedLeftArm.showModel=false;
-            m.bipedLeftArmwear.showModel=false;
-            m.bipedRightLeg.showModel=false;
-            m.bipedLeftLeg.showModel=false;
-            m.bipedRightLegwear.showModel=false;
-            m.bipedLeftLegwear.showModel=false;
+            m.bipedLeftArm.showModel = false;
+            m.bipedLeftArmwear.showModel = false;
+            m.bipedRightLeg.showModel = false;
+            m.bipedLeftLeg.showModel = false;
+            m.bipedRightLegwear.showModel = false;
+            m.bipedLeftLegwear.showModel = false;
         }
+
+    }
+
+    @SubscribeEvent
+    public void onRenderWorldLast(RenderWorldLastEvent event) {
+        MixinHooks.enforcingGlowing_bloodVision = false;
+        if (mc.world == null) return;
+
+        /*
+         * DO NOT USE partial ticks from event. They are bugged: https://github.com/MinecraftForge/MinecraftForge/issues/6380
+         */
+        float partialTicks = mc.getRenderPartialTicks();
+
+
+        if (shouldRenderBloodVision() && !reducedBloodVision) {
+            this.blurShader.render(partialTicks);
+            if (this.bloodVisionBuffer != null) this.bloodVisionBuffer.finish();
+        }
+    }
+
+    @Override
+    public void onResourceManagerReload(IResourceManager resourceManager, Predicate<IResourceType> resourcePredicate) {
+        this.reMakeBloodVisionShader();
 
     }
 
@@ -325,10 +327,8 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         this.bloodVisionTicks = 0;//Reset blood vision on world load
     }
 
-    @Override
-    public void onResourceManagerReload(IResourceManager resourceManager, Predicate<IResourceType> resourcePredicate) {
-        this.reMakeBloodVisionShader();
-
+    public boolean shouldRenderBloodVision() {
+        return this.bloodVisionTicks > 0 && this.blurShader != null && this.mc.player != null;
     }
 
     private void adjustBloodVisionShaders(float progress) {
@@ -365,10 +365,6 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
             LOGGER.warn("Failed to load blood vision blur shader", e);
             this.blurShader = null;
         }
-    }
-
-    public boolean shouldRenderBloodVision() {
-        return this.bloodVisionTicks > 0 && this.blurShader != null && this.mc.player != null;
     }
 
     private void updateFramebufferSize(int width, int height) {

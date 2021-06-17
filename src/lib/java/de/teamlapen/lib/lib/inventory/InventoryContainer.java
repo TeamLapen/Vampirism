@@ -129,6 +129,11 @@ public abstract class InventoryContainer extends Container {
         return true;
     }
 
+    @FunctionalInterface
+    public interface SelectorSlotFactory {
+        SelectorSlot create(IInventory inventoryIn, int index, SelectorInfo info, Consumer<IInventory> refreshInvFunc, Function<Integer, Boolean> activeFunc);
+    }
+
     public static class SelectorSlot extends Slot {
 
         private final SelectorInfo info;
@@ -143,6 +148,21 @@ public abstract class InventoryContainer extends Container {
             this.refreshInvFunc = refreshInvFunc;
         }
 
+        @Nullable
+        @OnlyIn(Dist.CLIENT)
+        @Override
+        public Pair<ResourceLocation, ResourceLocation> getBackground() {
+            return info.background;
+        }
+
+        public InventoryContainer getContainer() {
+            return container;
+        }
+
+        public void setContainer(InventoryContainer container) {
+            this.container = container;
+        }
+
         @Override
         public int getItemStackLimit(ItemStack stack) {
             return info.stackLimit;
@@ -151,6 +171,11 @@ public abstract class InventoryContainer extends Container {
         @Override
         public int getSlotStackLimit() {
             return info.stackLimit;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return activeFunc.apply(this.slotNumber);
         }
 
         @Override
@@ -164,33 +189,7 @@ public abstract class InventoryContainer extends Container {
             this.refreshInvFunc.accept(this.inventory);
         }
 
-        public void setContainer(InventoryContainer container) {
-            this.container = container;
-        }
-
-        public InventoryContainer getContainer() {
-            return container;
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return activeFunc.apply(this.slotNumber);
-        }
-
-        @Nullable
-        @OnlyIn(Dist.CLIENT)
-        @Override
-        public Pair<ResourceLocation, ResourceLocation> getBackground() {
-            return info.background;
-        }
-
     }
-
-    @FunctionalInterface
-    public interface SelectorSlotFactory {
-        SelectorSlot create(IInventory inventoryIn, int index, SelectorInfo info, Consumer<IInventory> refreshInvFunc, Function<Integer, Boolean> activeFunc);
-    }
-
 
     public static class SelectorInfo {
         public final Predicate<ItemStack> predicate;

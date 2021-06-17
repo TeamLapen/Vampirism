@@ -16,6 +16,9 @@ import javax.annotation.Nonnull;
 
 
 public class AdjustableLevelCondition implements ILootCondition {
+    public static IBuilder builder(int level, LootContext.EntityTarget target) {
+        return () -> new AdjustableLevelCondition(level, target);
+    }
     private final int levelTest;
     private final LootContext.EntityTarget target;
 
@@ -40,10 +43,6 @@ public class AdjustableLevelCondition implements ILootCondition {
             }
         }
         return false;
-    }
-
-    public static IBuilder builder(int level, LootContext.EntityTarget target) {
-        return () -> new AdjustableLevelCondition(level, target);
     }
 
     public static class Serializer implements ILootSerializer<AdjustableLevelCondition> {

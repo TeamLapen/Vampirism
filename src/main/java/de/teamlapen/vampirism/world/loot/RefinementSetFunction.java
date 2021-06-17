@@ -20,6 +20,13 @@ import javax.annotation.Nullable;
 
 public class RefinementSetFunction extends LootFunction {
 
+    public static Builder<?> builder(IFaction<?> faction) {
+        return builder(conditions -> new RefinementSetFunction(conditions, faction));
+    }
+
+    public static Builder<?> builder() {
+        return builder(conditions -> new RefinementSetFunction(conditions, null));
+    }
     @Nullable
     public final IFaction<?> faction;
 
@@ -28,12 +35,10 @@ public class RefinementSetFunction extends LootFunction {
         this.faction = faction;
     }
 
-    public static Builder<?> builder(IFaction<?> faction) {
-        return builder(conditions -> new RefinementSetFunction(conditions, faction));
-    }
-
-    public static Builder<?> builder() {
-        return builder(conditions -> new RefinementSetFunction(conditions, null));
+    @Nonnull
+    @Override
+    public LootFunctionType getFunctionType() {
+        return ModLoot.add_refinement_set;
     }
 
     @Nonnull
@@ -48,21 +53,7 @@ public class RefinementSetFunction extends LootFunction {
         return stack;
     }
 
-    @Nonnull
-    @Override
-    public LootFunctionType getFunctionType() {
-        return ModLoot.add_refinement_set;
-    }
-
     public static class Serializer extends LootFunction.Serializer<RefinementSetFunction> {
-
-        @Override
-        public void serialize(@Nonnull JsonObject json, @Nonnull RefinementSetFunction function, @Nonnull JsonSerializationContext context) {
-            super.serialize(json, function, context);
-            if (function.faction != null) {
-                json.addProperty("faction", function.faction.getID().toString());
-            }
-        }
 
         @Nonnull
         @Override
@@ -76,6 +67,14 @@ public class RefinementSetFunction extends LootFunction {
                 }
             }
             return new RefinementSetFunction(conditionsIn, faction);
+        }
+
+        @Override
+        public void serialize(@Nonnull JsonObject json, @Nonnull RefinementSetFunction function, @Nonnull JsonSerializationContext context) {
+            super.serialize(json, function, context);
+            if (function.faction != null) {
+                json.addProperty("faction", function.faction.getID().toString());
+            }
         }
     }
 }

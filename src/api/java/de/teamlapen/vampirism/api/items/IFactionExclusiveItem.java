@@ -22,17 +22,17 @@ import java.util.List;
  */
 public interface IFactionExclusiveItem {
 
+    @OnlyIn(Dist.CLIENT)
+    default void addFactionPoisonousToolTip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn, @Nullable PlayerEntity player) {
+        IFaction<?> faction = player != null ? VampirismAPI.factionRegistry().getFaction(player) : null;
+        if (faction == null ? !VReference.HUNTER_FACTION.equals(getExclusiveFaction()) : faction != getExclusiveFaction()) {
+            tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_non", getExclusiveFaction().getNamePlural()).mergeStyle(TextFormatting.DARK_RED));
+        }
+    }
+
     /**
      * @return The faction this item is meant for
      */
     @Nonnull
     IFaction<?> getExclusiveFaction();
-
-    @OnlyIn(Dist.CLIENT)
-    default void addFactionPoisonousToolTip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn, @Nullable PlayerEntity player) {
-        IFaction<?> faction = player!=null ? VampirismAPI.factionRegistry().getFaction(player) : null;
-        if (faction == null ? !VReference.HUNTER_FACTION.equals(getExclusiveFaction()) : faction != getExclusiveFaction()) {
-            tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_non", getExclusiveFaction().getNamePlural()).mergeStyle(TextFormatting.DARK_RED));
-        }
-    }
 }

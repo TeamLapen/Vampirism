@@ -200,9 +200,8 @@ public class BaronessModel extends AgeableModel<VampireBaronEntity> implements I
         this.getArmForSide(sideIn).translateRotate(matrixStackIn);
     }
 
-    @Override
-    protected Iterable<ModelRenderer> getHeadParts() {
-        return ImmutableList.of(head);
+    protected ModelRenderer getArmForSide(HandSide side) {
+        return side == HandSide.LEFT ? this.armLeft : this.armRight;
     }
 
     @Override
@@ -210,9 +209,9 @@ public class BaronessModel extends AgeableModel<VampireBaronEntity> implements I
         return ImmutableList.of(this.body, this.headOverlay, this.bodyOverlay, this.armLeftOverlay, this.armRightOverlay, this.legLeftOverlay, this.legRightOverlay);
     }
 
-
-    protected ModelRenderer getArmForSide(HandSide side) {
-        return side == HandSide.LEFT ? this.armLeft : this.armRight;
+    @Override
+    protected Iterable<ModelRenderer> getHeadParts() {
+        return ImmutableList.of(head);
     }
 
     protected HandSide getSwingingSide(VampireBaronEntity entity) {

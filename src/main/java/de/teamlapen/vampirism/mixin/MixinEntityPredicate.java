@@ -19,10 +19,10 @@ public class MixinEntityPredicate {
     private boolean allowInvulnerable;
 
     @Inject(method = "canTarget", at = @At("RETURN"), cancellable = true)
-    private void handleCanTarget_vampirism( LivingEntity attacker, LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
-        if(cir.getReturnValue()&&!allowInvulnerable){
-            if(target instanceof PlayerEntity && !(attacker instanceof IHunterMob)){
-                if(VampirismPlayerAttributes.get((PlayerEntity) target).getVampSpecial().isDBNO){
+    private void handleCanTarget_vampirism(LivingEntity attacker, LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
+        if (cir.getReturnValue() && !allowInvulnerable) {
+            if (target instanceof PlayerEntity && !(attacker instanceof IHunterMob)) {
+                if (VampirismPlayerAttributes.get((PlayerEntity) target).getVampSpecial().isDBNO) {
                     cir.setReturnValue(false);
                     cir.cancel();
                 }

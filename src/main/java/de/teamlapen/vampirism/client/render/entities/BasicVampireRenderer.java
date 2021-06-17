@@ -21,12 +21,12 @@ public class BasicVampireRenderer extends BipedRenderer<BasicVampireEntity, Bipe
         textures = Minecraft.getInstance().getResourceManager().getAllResourceLocations("textures/entity/vampire", s -> s.endsWith(".png")).stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())).toArray(ResourceLocation[]::new);
     }
 
-    public ResourceLocation getVampireTexture(int entityId) {
-        return textures[entityId % textures.length];
-    }
-
     @Override
     public ResourceLocation getEntityTexture(BasicVampireEntity entity) {
         return getVampireTexture(entity.getEntityTextureType());
+    }
+
+    public ResourceLocation getVampireTexture(int entityId) {
+        return textures[entityId % textures.length];
     }
 }

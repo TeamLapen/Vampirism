@@ -8,7 +8,6 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Recipe that can be used in the hunter weapon crafting table

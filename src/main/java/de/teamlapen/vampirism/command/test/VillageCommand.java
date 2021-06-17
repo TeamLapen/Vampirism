@@ -30,7 +30,7 @@ public class VillageCommand extends BasicCommand {
     }
 
     private static int abort(CommandSource source) {
-        TotemHelper.getTotemNearPos(source.getWorld(), new BlockPos(source.getPos()),true).ifPresent(TotemTileEntity::breakCapture);
+        TotemHelper.getTotemNearPos(source.getWorld(), new BlockPos(source.getPos()), true).ifPresent(TotemTileEntity::breakCapture);
         return 0;
     }
 }

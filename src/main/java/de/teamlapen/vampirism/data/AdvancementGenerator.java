@@ -72,7 +72,7 @@ public class AdvancementGenerator extends AdvancementProvider {
                     .withCriterion("level", TriggerFaction.lord(VReference.HUNTER_FACTION, 5))
                     .register(consumer, REFERENCE.MODID + ":hunter/max_lord");
             Advancement cure_vampire = Advancement.Builder.builder()
-                    .withDisplay(ModItems.cure_apple, new TranslationTextComponent("advancement.vampirism.cure_vampire_villager"), new TranslationTextComponent("advancement.vampirism.cure_vampire_villager"),null , FrameType.TASK, true, true, true )
+                    .withDisplay(ModItems.cure_apple, new TranslationTextComponent("advancement.vampirism.cure_vampire_villager"), new TranslationTextComponent("advancement.vampirism.cure_vampire_villager"), null, FrameType.TASK, true, true, true)
                     .withParent(become_hunter)
                     .withCriterion("cure", CuredVampireVillagerTrigger.Instance.any())
                     .register(consumer, REFERENCE.MODID + ":hunter/cure_vampire_villager");

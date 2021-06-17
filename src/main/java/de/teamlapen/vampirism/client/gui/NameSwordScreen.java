@@ -48,35 +48,6 @@ public class NameSwordScreen extends Screen {
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(stack);
-        drawCenteredString(stack, this.font, this.text1, this.width / 2, 70, 16777215);
-        int i = 90;
-        for (IReorderingProcessor s : this.listLines) {
-            font.func_238422_b_(stack, s, (float) this.width / 2 - (float) font.func_243245_a(s) / 2.0F, (float) i, 16777215);
-            i += this.font.FONT_HEIGHT;
-        }
-        this.nameField.render(stack, mouseX, mouseY, partialTicks);
-
-
-        super.render(stack, mouseX, mouseY, partialTicks);
-        RenderSystem.disableLighting();
-        RenderSystem.disableBlend();
-    }
-
-    @Override
-    public void tick() {
-        nameField.tick();
-    }
-
-    @Override
-    public void resize(Minecraft p_resize_1_, int p_resize_2_, int p_resize_3_) {
-        String text = nameField.getText();
-        super.resize(p_resize_1_, p_resize_2_, p_resize_3_); //Text gets deleted as this calls init again
-        nameField.setText(text);
-    }
-
-    @Override
     public void init() {
         super.init();
         this.addButton(new OptionButton(this.width / 2 - 155, this.height / 6 + 96, 150, 20, AbstractOption.AO, this.yes, (context) -> {
@@ -104,5 +75,34 @@ public class NameSwordScreen extends Screen {
         this.nameField.setText(sword_names[new Random().nextInt(sword_names.length)]);
         this.children.add(nameField);
         this.setFocusedDefault(nameField);
+    }
+
+    @Override
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(stack);
+        drawCenteredString(stack, this.font, this.text1, this.width / 2, 70, 16777215);
+        int i = 90;
+        for (IReorderingProcessor s : this.listLines) {
+            font.func_238422_b_(stack, s, (float) this.width / 2 - (float) font.func_243245_a(s) / 2.0F, (float) i, 16777215);
+            i += this.font.FONT_HEIGHT;
+        }
+        this.nameField.render(stack, mouseX, mouseY, partialTicks);
+
+
+        super.render(stack, mouseX, mouseY, partialTicks);
+        RenderSystem.disableLighting();
+        RenderSystem.disableBlend();
+    }
+
+    @Override
+    public void resize(Minecraft p_resize_1_, int p_resize_2_, int p_resize_3_) {
+        String text = nameField.getText();
+        super.resize(p_resize_1_, p_resize_2_, p_resize_3_); //Text gets deleted as this calls init again
+        nameField.setText(text);
+    }
+
+    @Override
+    public void tick() {
+        nameField.tick();
     }
 }

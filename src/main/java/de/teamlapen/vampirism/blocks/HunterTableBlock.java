@@ -55,12 +55,15 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
         return VoxelShapes.or(d3, f1);
     }
 
+    public static TABLE_VARIANT getTierFor(boolean weapon_table, boolean potion_table, boolean cauldron) {
+        return weapon_table ? (potion_table ? (cauldron ? TABLE_VARIANT.COMPLETE : TABLE_VARIANT.WEAPON_POTION) : (cauldron ? TABLE_VARIANT.WEAPON_CAULDRON : TABLE_VARIANT.WEAPON)) : (potion_table ? (cauldron ? TABLE_VARIANT.POTION_CAULDRON : TABLE_VARIANT.POTION) : (cauldron ? TABLE_VARIANT.CAULDRON : TABLE_VARIANT.SIMPLE));
+    }
+
+
     public HunterTableBlock() {
         super(name, Properties.create(Material.WOOD).hardnessAndResistance(0.5f).notSolid());
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(VARIANT, TABLE_VARIANT.SIMPLE));
     }
-
-
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
@@ -77,15 +80,20 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
         return NORTH;
     }
 
-    public static TABLE_VARIANT getTierFor(boolean weapon_table, boolean potion_table, boolean cauldron) {
-        return weapon_table ? (potion_table ? (cauldron ? TABLE_VARIANT.COMPLETE : TABLE_VARIANT.WEAPON_POTION) : (cauldron ? TABLE_VARIANT.WEAPON_CAULDRON : TABLE_VARIANT.WEAPON)) : (potion_table ? (cauldron ? TABLE_VARIANT.POTION_CAULDRON : TABLE_VARIANT.POTION) : (cauldron ? TABLE_VARIANT.CAULDRON : TABLE_VARIANT.SIMPLE));
-    }
-
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         Direction facing = context.getPlacementHorizontalFacing();
         return this.getDefaultState().with(FACING, facing).with(VARIANT, determineTier(context.getWorld(), context.getPos(), facing));
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        if (fromPos.getY() != pos.getY()) return;
+        TABLE_VARIANT newVariant = determineTier(worldIn, pos, state.get(FACING));
+        if (newVariant != state.get(VARIANT)) {
+            worldIn.setBlockState(pos, state.with(VARIANT, newVariant), 2);
+        }
     }
 
     @Override
@@ -97,11 +105,6 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
         }
 
         return ActionResultType.SUCCESS;
-    }
-
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, VARIANT);
     }
 
     protected TABLE_VARIANT determineTier(IWorldReader world, BlockPos pos, Direction facing) {
@@ -117,12 +120,8 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        if (fromPos.getY() != pos.getY()) return;
-        TABLE_VARIANT newVariant = determineTier(worldIn, pos, state.get(FACING));
-        if (newVariant != state.get(VARIANT)) {
-            worldIn.setBlockState(pos, state.with(VARIANT, newVariant), 2);
-        }
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(FACING, VARIANT);
     }
 
     public enum TABLE_VARIANT implements IStringSerializable {

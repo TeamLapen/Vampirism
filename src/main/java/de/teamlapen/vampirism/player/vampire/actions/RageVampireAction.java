@@ -15,7 +15,7 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
 
     @Override
     public boolean activate(IVampirePlayer vampire) {
-        int duration =  getDuration(vampire);
+        int duration = getDuration(vampire);
         addEffectInstance(vampire, new EffectInstance(Effects.SPEED, duration, 2, false, false));
         addEffectInstance(vampire, new EffectInstance(Effects.STRENGTH, duration, 0, false, false));
         addEffectInstance(vampire, new EffectInstance(Effects.HASTE, duration, 0, false, false));

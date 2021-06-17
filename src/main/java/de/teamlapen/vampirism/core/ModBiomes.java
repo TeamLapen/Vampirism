@@ -50,10 +50,10 @@ public class ModBiomes {
      * Only call from main thread / non parallel event
      */
     static void addBiomesToGeneratorUnsafe() {
-            //TODO don't generate hills biome for now. Should be added as a hills variant at some point if supported by Forge
-            BiomeManager.addAdditionalOverworldBiomes(VAMPIRE_FOREST_KEY);
-            //BiomeManager.addAdditionalOverworldBiomes(VAMPIRE_FOREST_HILLS_KEY);
-            BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_KEY, VampirismConfig.BALANCE.vampireForestWeight.get()));
+        //TODO don't generate hills biome for now. Should be added as a hills variant at some point if supported by Forge
+        BiomeManager.addAdditionalOverworldBiomes(VAMPIRE_FOREST_KEY);
+        //BiomeManager.addAdditionalOverworldBiomes(VAMPIRE_FOREST_HILLS_KEY);
+        BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_KEY, VampirismConfig.BALANCE.vampireForestWeight.get()));
 //            BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_HILLS_KEY, VampirismConfig.BALANCE.vampireForestHillsWeight.get()));
 
     }

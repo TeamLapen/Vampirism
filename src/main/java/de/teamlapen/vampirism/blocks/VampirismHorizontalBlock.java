@@ -28,6 +28,7 @@ import javax.annotation.Nullable;
  * - Add FACING to {@link Block#fillStateContainer(StateContainer.Builder)}
  */
 public class VampirismHorizontalBlock extends VampirismBlock {
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     private final VoxelShape NORTH;
     private final VoxelShape EAST;
     private final VoxelShape SOUTH;
@@ -50,12 +51,19 @@ public class VampirismHorizontalBlock extends VampirismBlock {
         this(regName, properties, VoxelShapes.fullCube());
     }
 
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-
-
     @Override
-    public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        switch (state.get(FACING)) {
+            case NORTH:
+                return NORTH;
+            case EAST:
+                return EAST;
+            case SOUTH:
+                return SOUTH;
+            case WEST:
+                return WEST;
+        }
+        return NORTH;
     }
 
     @Nullable
@@ -70,23 +78,12 @@ public class VampirismHorizontalBlock extends VampirismBlock {
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+    public BlockState rotate(BlockState state, Rotation rot) {
+        return state.with(FACING, rot.rotate(state.get(FACING)));
     }
 
-
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING)) {
-            case NORTH:
-                return NORTH;
-            case EAST:
-                return EAST;
-            case SOUTH:
-                return SOUTH;
-            case WEST:
-                return WEST;
-        }
-        return NORTH;
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
     }
 }

@@ -122,11 +122,6 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         setDontDropEquipment();
     }
 
-    @Override
-    public boolean canDespawn(double distanceToClosestPlayer) {
-        return false;
-    }
-
     /**
      * Copy of {@link MobEntity} but with modified DamageSource
      * Check if code still up-to-date
@@ -173,8 +168,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    protected void damageArmor(DamageSource damageSource, float damage) {
-        if (this.minionData != null) this.minionData.getInventory().damageArmor(damageSource, damage, this);
+    public boolean canDespawn(double distanceToClosestPlayer) {
+        return false;
     }
 
     public void changeMinionName(String name) {
@@ -219,7 +214,6 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     public Predicate<LivingEntity> getAttackPredicate(boolean onlyShould) {
         return onlyShould ? this.hardAttackPredicate.and(this.softAttackPredicate) : this.hardAttackPredicate;
     }
-
 
     public abstract List<IMinionTask<?, ?>> getAvailableTasks();
 
@@ -327,31 +321,6 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
     }
 
-    protected void consumeOffhand() {
-        if (isHandActive()) return;
-        if (this.targetSelector.getRunningGoals().findAny().isPresent()) return;
-        ItemStack stack = this.getInventory().map(i -> i.getStackInSlot(1)).orElse(ItemStack.EMPTY);
-        if (!canConsume(stack))return;
-        this.setActiveHand(Hand.OFF_HAND);
-        this.rotationYaw = this.rotationYawHead;
-    }
-
-    protected boolean canConsume(ItemStack stack) {
-        if (!(stack.getUseAction() == UseAction.DRINK || stack.getUseAction() == UseAction.EAT)) return false;
-        if (stack.isEmpty()) return false;
-        return true;
-    }
-
-    @Nonnull
-    @Override
-    public ItemStack onFoodEaten(@Nonnull World world, @Nonnull ItemStack stack) {
-        if (stack.isFood()) {
-            float healAmount = stack.getItem().getFood().getHealing() / 2f;
-            this.heal(healAmount);
-        }
-        return super.onFoodEaten(world, stack);
-    }
-
     @OnlyIn(Dist.CLIENT)
     @Override
     public void loadUpdateFromNBT(CompoundNBT nbt) {
@@ -392,6 +361,16 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             this.playerMinionController.markDeadAndReleaseMinionSlot(minionId, token);
             this.playerMinionController = null;
         }
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack onFoodEaten(@Nonnull World world, @Nonnull ItemStack stack) {
+        if (stack.isFood()) {
+            float healAmount = stack.getItem().getFood().getHealing() / 2f;
+            this.heal(healAmount);
+        }
+        return super.onFoodEaten(world, stack);
     }
 
     public void onTaskChanged() {
@@ -510,17 +489,23 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         buffer.writeVarInt(convertCounter);
     }
 
-    @Nullable
-    protected ILordPlayer getLord() {
-        return this.getLordID().map(this.world::getPlayerByUuid).filter(PlayerEntity::isAlive).map(FactionPlayerHandler::get).orElse(null);
+    protected boolean canConsume(ItemStack stack) {
+        if (!(stack.getUseAction() == UseAction.DRINK || stack.getUseAction() == UseAction.EAT)) return false;
+        return !stack.isEmpty();
     }
 
-    protected Optional<UUID> getLordID() {
-        return this.getDataManager().get(LORD_ID);
+    protected void consumeOffhand() {
+        if (isHandActive()) return;
+        if (this.targetSelector.getRunningGoals().findAny().isPresent()) return;
+        ItemStack stack = this.getInventory().map(i -> i.getStackInSlot(1)).orElse(ItemStack.EMPTY);
+        if (!canConsume(stack)) return;
+        this.setActiveHand(Hand.OFF_HAND);
+        this.rotationYaw = this.rotationYawHead;
     }
 
-    protected boolean isValid() {
-        return this.playerMinionController != null;
+    @Override
+    protected void damageArmor(DamageSource damageSource, float damage) {
+        if (this.minionData != null) this.minionData.getInventory().damageArmor(damageSource, damage, this);
     }
 
     @Override
@@ -534,16 +519,29 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return super.func_230254_b_(player, hand);
     }
 
+    @Nullable
+    protected ILordPlayer getLord() {
+        return this.getLordID().map(this.world::getPlayerByUuid).filter(PlayerEntity::isAlive).map(FactionPlayerHandler::get).orElse(null);
+    }
+
+    protected Optional<UUID> getLordID() {
+        return this.getDataManager().get(LORD_ID);
+    }
+
+    protected boolean isLord(PlayerEntity p) {
+        return this.getLordID().map(id -> id.equals(p.getUniqueID())).orElse(false);
+    }
+
+    protected boolean isValid() {
+        return this.playerMinionController != null;
+    }
+
     /**
      * Called when valid minion data is received on world load.
      * {@link MinionEntity#minionData} is already set
      * Can be called client and server side
      */
     protected void onMinionDataReceived(@Nonnull T data) {
-    }
-
-    protected boolean isLord(PlayerEntity p) {
-        return this.getLordID().map(id -> id.equals(p.getUniqueID())).orElse(false);
     }
 
     @Override

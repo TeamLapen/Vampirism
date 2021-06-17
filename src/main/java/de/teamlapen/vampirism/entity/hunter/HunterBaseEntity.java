@@ -29,24 +29,12 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
     public static boolean spawnPredicateHunter(EntityType<? extends HunterBaseEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
         return world.getDifficulty() != Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
     }
-
-    private final boolean countAsMonster;
     protected final int MOVE_TO_RESTRICT_PRIO = 3;
+    private final boolean countAsMonster;
 
     public HunterBaseEntity(EntityType<? extends HunterBaseEntity> type, World world, boolean countAsMonster) {
         super(type, world);
         this.countAsMonster = countAsMonster;
-    }
-
-    @Override
-    public LivingEntity getRepresentingEntity() {
-        return this;
-    }
-
-    @Override
-    protected void registerGoals() {
-        super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimGoal(this));
     }
 
     @Override
@@ -55,6 +43,30 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
             return EntityClassification.MONSTER;
         }
         return super.getClassification(forSpawnCount);
+    }
+
+    @Override
+    public LivingEntity getRepresentingEntity() {
+        return this;
+    }
+
+    public void makeCampHunter(BlockPos pos) {
+        super.setHome(new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1).grow(10));
+        this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
+    }
+
+    @Override
+    public void onDeath(DamageSource cause) {
+        super.onDeath(cause);
+        if (cause.getTrueSource() instanceof ServerPlayerEntity && Helper.isVampire(((PlayerEntity) cause.getTrueSource())) && this.getActivePotionEffect(ModEffects.freeze) != null) {
+            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayerEntity) cause.getTrueSource()), VampireActionTrigger.Action.KILL_FROZEN_HUNTER);
+        }
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(0, new SwimGoal(this));
     }
 
     /**
@@ -69,18 +81,5 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
             return true;
         }
         return false;
-    }
-
-    public void makeCampHunter(BlockPos pos) {
-        super.setHome(new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1).grow(10));
-        this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
-    }
-
-    @Override
-    public void onDeath(DamageSource cause) {
-        super.onDeath(cause);
-        if (cause.getTrueSource() instanceof ServerPlayerEntity && Helper.isVampire(((PlayerEntity) cause.getTrueSource())) && this.getActivePotionEffect(ModEffects.freeze) != null) {
-            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayerEntity) cause.getTrueSource()), VampireActionTrigger.Action.KILL_FROZEN_HUNTER);
-        }
     }
 }

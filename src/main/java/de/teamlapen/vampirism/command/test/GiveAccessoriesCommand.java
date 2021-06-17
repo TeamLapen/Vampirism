@@ -35,9 +35,9 @@ public class GiveAccessoriesCommand extends BasicCommand {
 
     private static int give(CommandContext<CommandSource> context, ServerPlayerEntity asPlayer, int number, IRefinementSet set) {
         VampireRefinementItem i;
-        switch (number){
+        switch (number) {
             case 1:
-                i= ModItems.amulet;
+                i = ModItems.amulet;
                 break;
             case 2:
                 i = ModItems.ring;
@@ -47,11 +47,10 @@ public class GiveAccessoriesCommand extends BasicCommand {
                 break;
         }
         ItemStack s = new ItemStack(i);
-        if(i.applyRefinementSet(s,set)){
+        if (i.applyRefinementSet(s, set)) {
             asPlayer.addItemStackToInventory(s);
             context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.test.give_accessories.success", set.getName(), number), false);
-        }
-        else{
+        } else {
             context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.test.give_accessories.incompatible", set.getName(), number), false);
         }
 
@@ -63,9 +62,9 @@ public class GiveAccessoriesCommand extends BasicCommand {
         return 0;
     }
 
-    private static int random(CommandContext<CommandSource> context, ServerPlayerEntity entity, int amount)  {
+    private static int random(CommandContext<CommandSource> context, ServerPlayerEntity entity, int amount) {
         IFaction<?> faction = VampirismAPI.factionRegistry().getFaction(entity);
-        for (int i = 0; i < amount;++i) {
+        for (int i = 0; i < amount; ++i) {
             ItemStack stack = VampireRefinementItem.getRandomRefinementItem(faction);
             if (!stack.isEmpty()) {
                 entity.addItemStackToInventory(stack);

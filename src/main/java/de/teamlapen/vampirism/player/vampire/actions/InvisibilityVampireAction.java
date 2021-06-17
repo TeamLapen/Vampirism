@@ -35,13 +35,13 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
 
     @Override
     public void onActivatedClient(IVampirePlayer vampire) {
-        ((VampirePlayer)vampire).getSpecialAttributes().invisible = true;
+        ((VampirePlayer) vampire).getSpecialAttributes().invisible = true;
     }
 
     @Override
     public void onDeactivated(IVampirePlayer vampire) {
         vampire.getRepresentingPlayer().setInvisible(false);
-        ((VampirePlayer)vampire).getSpecialAttributes().invisible = false;
+        ((VampirePlayer) vampire).getSpecialAttributes().invisible = false;
     }
 
     @Override

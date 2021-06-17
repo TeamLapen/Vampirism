@@ -24,12 +24,12 @@ public class ServerProxy extends CommonProxy {
     }
 
     @Override
-    public void renderScreenFullColor(int ticksOn, int ticksOff, int color) {
+    public void handleSleepClient(PlayerEntity player) {
 
     }
 
     @Override
-    public void handleSleepClient(PlayerEntity player) {
+    public void renderScreenFullColor(int ticksOn, int ticksOff, int color) {
 
     }
 

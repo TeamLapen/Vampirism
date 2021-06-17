@@ -32,16 +32,52 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(new TypeToken<ResourceLocation>() {
     }.getType(), new ResourceLocationTypeAdapter()).create();
 
-    /**
-     * File to save dynamically calculated values to
-     */
-    @Nullable
-    private File bloodValueWorldFile;
+    private static void writeBloodValues(Writer w, Map<ResourceLocation, Integer> values, String comment) throws IOException, JsonIOException {
+        BufferedWriter bw = null;
+        try {
+            bw = new BufferedWriter(w);
+            bw.write('#');
+            bw.write(comment);
+            bw.newLine();
+            bw.write(GSON.toJson(values));
+            bw.flush();
+        } finally {
+            if (bw != null) {
+                bw.close();
+            }
+            w.close();
+        }
+    }
+
+    private static Optional<Map<ResourceLocation, Integer>> loadBloodValues(Reader r) throws IOException, JsonSyntaxException {
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(r);
+            br.readLine();
+            Type s = new TypeToken<Map<ResourceLocation, Integer>>() {
+            }.getType();
+            return Optional.ofNullable(GSON.fromJson(br, s));
+        } finally {
+            if (br != null) {
+                br.close();
+            }
+            r.close();
+        }
+    }
+
+    public static List<BloodValueLoaderDynamic> getDynamicBloodLoader() {
+        return ImmutableList.copyOf(LOADER);
+    }
     private final Consumer<Map<ResourceLocation, Integer>> addCalculatedValues;
     private final Supplier<Map<ResourceLocation, Integer>> getCalculatedValues;
     private final String name;
     private final String modId;
     private final FolderName worldSubFolder;
+    /**
+     * File to save dynamically calculated values to
+     */
+    @Nullable
+    private File bloodValueWorldFile;
 
     public BloodValueLoaderDynamic(@Nonnull String modIdIn, @Nonnull String nameIn, @Nonnull BiConsumer<Map<ResourceLocation, Integer>, Integer> consumerIn, @Nullable ResourceLocation multiplierNameIn, @Nonnull Consumer<Map<ResourceLocation, Integer>> addCalculatedValuesIn, @Nonnull Supplier<Map<ResourceLocation, Integer>> getCalculatedValuesIn) {
         super(nameIn, consumerIn, multiplierNameIn);
@@ -95,42 +131,5 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
         } catch (IOException | JsonSyntaxException e) {
             LOGGER.warn(LogUtil.CONFIG, "Could not write calculated " + name + " values to file", e);
         }
-    }
-
-    private static void writeBloodValues(Writer w, Map<ResourceLocation, Integer> values, String comment) throws IOException, JsonIOException {
-        BufferedWriter bw = null;
-        try {
-            bw = new BufferedWriter(w);
-            bw.write('#');
-            bw.write(comment);
-            bw.newLine();
-            bw.write(GSON.toJson(values));
-            bw.flush();
-        } finally {
-            if (bw != null) {
-                bw.close();
-            }
-            w.close();
-        }
-    }
-
-    private static Optional<Map<ResourceLocation, Integer>> loadBloodValues(Reader r) throws IOException, JsonSyntaxException {
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(r);
-            br.readLine();
-            Type s = new TypeToken<Map<ResourceLocation, Integer>>() {
-            }.getType();
-            return Optional.ofNullable(GSON.fromJson(br, s));
-        } finally {
-            if (br != null) {
-                br.close();
-            }
-            r.close();
-        }
-    }
-
-    public static List<BloodValueLoaderDynamic> getDynamicBloodLoader() {
-        return ImmutableList.copyOf(LOADER);
     }
 }

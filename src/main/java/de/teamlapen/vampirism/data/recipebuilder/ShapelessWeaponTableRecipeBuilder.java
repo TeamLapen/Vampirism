@@ -29,6 +29,13 @@ import java.util.function.Consumer;
 @ParametersAreNonnullByDefault
 public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
 
+    public static ShapelessWeaponTableRecipeBuilder shapelessWeaponTable(IItemProvider result, int count) {
+        return new ShapelessWeaponTableRecipeBuilder(result, count);
+    }
+
+    public static ShapelessWeaponTableRecipeBuilder shapelessWeaponTable(IItemProvider result) {
+        return new ShapelessWeaponTableRecipeBuilder(result, 1);
+    }
     private int lava = 1;
     private ISkill[] skills;
     private int level = 1;
@@ -37,27 +44,9 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
         super(resultIn, countIn);
     }
 
-    public static ShapelessWeaponTableRecipeBuilder shapelessWeaponTable(IItemProvider result, int count) {
-        return new ShapelessWeaponTableRecipeBuilder(result, count);
-    }
-
-    public static ShapelessWeaponTableRecipeBuilder shapelessWeaponTable(IItemProvider result) {
-        return new ShapelessWeaponTableRecipeBuilder(result, 1);
-    }
-
-    public ShapelessWeaponTableRecipeBuilder lava(int amount) {
-        this.lava = amount;
-        return this;
-    }
-
-    public ShapelessWeaponTableRecipeBuilder skills(ISkill... skills) {
-        this.skills = skills;
-        return this;
-    }
-
-    public ShapelessWeaponTableRecipeBuilder level(int level) {
-        this.level = level;
-        return this;
+    @Override
+    public ShapelessWeaponTableRecipeBuilder addCriterion(String name, ICriterionInstance criterionIn) {
+        return (ShapelessWeaponTableRecipeBuilder) super.addCriterion(name, criterionIn);
     }
 
     @Override
@@ -86,19 +75,9 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
     }
 
     @Override
-    public ShapelessWeaponTableRecipeBuilder addCriterion(String name, ICriterionInstance criterionIn) {
-        return (ShapelessWeaponTableRecipeBuilder) super.addCriterion(name, criterionIn);
-    }
-
-    @Override
-    public ShapelessWeaponTableRecipeBuilder setGroup(String groupIn) {
-        return (ShapelessWeaponTableRecipeBuilder) super.setGroup(groupIn);
-    }
-
-    @Override
     public void build(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
         id = new ResourceLocation(id.getNamespace(), "weapontable/" + id.getPath());
-        this.advancementBuilder.withCriterion("has_skill", SkillUnlockedTrigger.builder(this.skills != null && this.skills.length >= 1? this.skills[0]:HunterSkills.weapon_table));
+        this.advancementBuilder.withCriterion("has_skill", SkillUnlockedTrigger.builder(this.skills != null && this.skills.length >= 1 ? this.skills[0] : HunterSkills.weapon_table));
         this.validate(id);
         this.advancementBuilder
                 .withParentId(new ResourceLocation("recipes/root"))
@@ -106,6 +85,26 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
                 .withRewards(AdvancementRewards.Builder.recipe(id))
                 .withRequirementsStrategy(IRequirementsStrategy.OR);
         consumerIn.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, this.ingredients, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getGroup().getPath() + "/" + id.getPath()), this.lava, this.skills != null ? this.skills : new ISkill[]{}, this.level));
+    }
+
+    public ShapelessWeaponTableRecipeBuilder lava(int amount) {
+        this.lava = amount;
+        return this;
+    }
+
+    public ShapelessWeaponTableRecipeBuilder level(int level) {
+        this.level = level;
+        return this;
+    }
+
+    @Override
+    public ShapelessWeaponTableRecipeBuilder setGroup(String groupIn) {
+        return (ShapelessWeaponTableRecipeBuilder) super.setGroup(groupIn);
+    }
+
+    public ShapelessWeaponTableRecipeBuilder skills(ISkill... skills) {
+        this.skills = skills;
+        return this;
     }
 
     private class Result extends ShapelessRecipeBuilder.Result {
@@ -121,6 +120,11 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
         }
 
         @Override
+        public IRecipeSerializer<?> getSerializer() {
+            return ModRecipes.shapeless_crafting_weapontable;
+        }
+
+        @Override
         public void serialize(JsonObject json) {
             super.serialize(json);
             json.addProperty("lava", this.lava);
@@ -130,11 +134,6 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
             }
             json.add("skill", skills);
             json.addProperty("level", this.level);
-        }
-
-        @Override
-        public IRecipeSerializer<?> getSerializer() {
-            return ModRecipes.shapeless_crafting_weapontable;
         }
     }
 }

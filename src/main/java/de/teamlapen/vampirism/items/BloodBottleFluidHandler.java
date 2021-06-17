@@ -35,6 +35,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     public static int getAdjustedAmount(int amt) {
         return amt - amt % MULTIPLIER;
     }
+
     private final LazyOptional<IFluidHandlerItem> holder = LazyOptional.of(() -> this);
     private final int capacity;
     @Nonnull

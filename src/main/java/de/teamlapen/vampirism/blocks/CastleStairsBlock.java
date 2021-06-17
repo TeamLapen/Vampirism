@@ -19,11 +19,6 @@ import java.util.List;
 
 public class CastleStairsBlock extends StairsBlock {
     private final static String REGNAME_BASE = "castle_stairs";
-
-    public CastleBricksBlock.EnumVariant getVariant() {
-        return variant;
-    }
-
     private final CastleBricksBlock.EnumVariant variant;
 
     public CastleStairsBlock(BlockState state, CastleBricksBlock.EnumVariant variant) {
@@ -32,12 +27,15 @@ public class CastleStairsBlock extends StairsBlock {
         this.variant = variant;
     }
 
-
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable IBlockReader player, List<ITextComponent> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         tooltip.add(new TranslationTextComponent("block.vampirism.castle_block" + (variant == CastleBricksBlock.EnumVariant.DARK_STONE ? ".no_spawn" : ".vampire_spawn")).mergeStyle(TextFormatting.ITALIC, TextFormatting.GRAY));
 
+    }
+
+    public CastleBricksBlock.EnumVariant getVariant() {
+        return variant;
     }
 }

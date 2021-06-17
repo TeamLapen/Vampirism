@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 
 /**
  * add this buttons first and render them last and call {@link #mouseDragged(double, double, int, double, double)}
- *
+ * <p>
  * use {@link de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget}
  */
 @Deprecated
@@ -24,13 +24,13 @@ public class ScrollableListButton extends ExtendedButton {
 
     private static final ResourceLocation MISC = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/scrollablelist.png");
     protected final int menuSize;
-    protected int itemCount;
-    protected int scrolled;
-    private boolean scrollerPressed;
     protected final Button[] elements;
     private final Consumer<Integer> pressConsumer;
     private final ITextComponent[] desc;
     private final boolean alternate;
+    protected int itemCount;
+    protected int scrolled;
+    private boolean scrollerPressed;
 
     public ScrollableListButton(int xPos, int yPos, int width, int shownItems, int maxItemCount, @Nullable ITextComponent[] strings, ITextComponent displayString, Consumer<Integer> elementPressAction, boolean alternate) {
         super(xPos, yPos + 1, width, Math.min(shownItems, maxItemCount) * 20, displayString, button -> {
@@ -65,6 +65,28 @@ public class ScrollableListButton extends ExtendedButton {
             }
         }
         return super.mouseClicked(mouseX, mouseY, buttonId);
+    }
+
+    @Override
+    public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
+        if (scrollerPressed) {
+            float amount = ((float) p_mouseDragged_3_ - (float) this.y - 13.5F) / ((float) (this.height) - 27.0F);
+            amount = amount * (float) (this.itemCount - this.menuSize) + 0.5f;
+            this.scrolled = MathHelper.clamp((int) amount, 0, this.itemCount - this.menuSize);
+            return true;
+        } else {
+            return super.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
+        }
+    }
+
+    @Override
+    public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
+        int scrollItems = this.itemCount - this.menuSize;
+        if (scrollItems > 0) {
+            this.scrolled = (int) ((double) this.scrolled - p_mouseScrolled_5_);
+            this.scrolled = MathHelper.clamp(this.scrolled, 0, scrollItems);
+        }
+        return true;
     }
 
     @Override
@@ -111,28 +133,6 @@ public class ScrollableListButton extends ExtendedButton {
                 int x = this.x + (this.width - 8) / 2 - Minecraft.getInstance().fontRenderer.getStringPropertyWidth(desc) / 2;
                 Minecraft.getInstance().fontRenderer.func_243246_a(mStack, desc, x, this.y + 6 + i * 20, this.elements[i].getFGColor());
             }
-        }
-    }
-
-    @Override
-    public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
-        int scrollItems = this.itemCount - this.menuSize;
-        if (scrollItems > 0) {
-            this.scrolled = (int) ((double) this.scrolled - p_mouseScrolled_5_);
-            this.scrolled = MathHelper.clamp(this.scrolled, 0, scrollItems);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
-        if (scrollerPressed) {
-            float amount = ((float) p_mouseDragged_3_ - (float) this.y - 13.5F) / ((float) (this.height) - 27.0F);
-            amount = amount * (float) (this.itemCount - this.menuSize) + 0.5f;
-            this.scrolled = MathHelper.clamp((int) amount, 0, this.itemCount - this.menuSize);
-            return true;
-        } else {
-            return super.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
         }
     }
 }

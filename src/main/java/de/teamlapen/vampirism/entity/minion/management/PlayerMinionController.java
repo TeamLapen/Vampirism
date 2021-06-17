@@ -281,28 +281,12 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         return ids;
     }
 
-    public UUID getUUID() {
-        return this.lordID;
-    }
-
     public List<IFormattableTextComponent> getRecoveringMinionNames() {
         return Arrays.stream(this.minions).filter(MinionInfo::isStillRecovering).map(i -> i.data).map(MinionData::getFormattedName).collect(Collectors.toList());
     }
 
-    /**
-     * @return Whether a new minion can be created via {@link PlayerMinionController#createNewMinionSlot(MinionData, EntityType)}
-     */
-    public boolean hasFreeMinionSlot() {
-        return minions.length < maxMinions;
-    }
-
-    /**
-     * The controller is only saved if it has minions
-     *
-     * @return Whether the minion controller has minions.
-     */
-    public boolean hasMinions() {
-        return this.minions.length > 0;
+    public UUID getUUID() {
+        return this.lordID;
     }
 
     /**
@@ -321,6 +305,21 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
 
     }
 
+    /**
+     * @return Whether a new minion can be created via {@link PlayerMinionController#createNewMinionSlot(MinionData, EntityType)}
+     */
+    public boolean hasFreeMinionSlot() {
+        return minions.length < maxMinions;
+    }
+
+    /**
+     * The controller is only saved if it has minions
+     *
+     * @return Whether the minion controller has minions.
+     */
+    public boolean hasMinions() {
+        return this.minions.length > 0;
+    }
 
     /**
      * Mark a minion as dead and as inactive.

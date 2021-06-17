@@ -49,7 +49,7 @@ public class SunscreenBeaconTileEntity extends TileEntity implements ITickableTi
 
             for (PlayerEntity player : list) {
                 if (player.isAlive() && selector.test(player)) {
-                    if (VampirismPlayerAttributes.get(player).vampireLevel>0) {
+                    if (VampirismPlayerAttributes.get(player).vampireLevel > 0) {
                         player.addPotionEffect(new EffectInstance(ModEffects.sunscreen, 160, 5, true, false));
                     }
                 }

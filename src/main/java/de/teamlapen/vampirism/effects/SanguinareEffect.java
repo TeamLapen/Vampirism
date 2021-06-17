@@ -48,6 +48,13 @@ public class SanguinareEffect extends VampirismEffect {
     }
 
     @Override
+    public List<ItemStack> getCurativeItems() {
+        List<ItemStack> l = super.getCurativeItems();
+        l.add(new ItemStack(ModItems.garlic_bread));
+        return l;
+    }
+
+    @Override
     public boolean isReady(int duration, int amplifier) {
         return duration == 2;
     }
@@ -65,23 +72,16 @@ public class SanguinareEffect extends VampirismEffect {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public boolean shouldRenderInvText(EffectInstance effect) {
-        return false;
-    }
-
-    @Override
-    public List<ItemStack> getCurativeItems() {
-        List<ItemStack> l = super.getCurativeItems();
-        l.add(new ItemStack(ModItems.garlic_bread));
-        return l;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
     public void renderInventoryEffect(EffectInstance effect, DisplayEffectsScreen<?> gui, MatrixStack mStack, int x, int y, float z) {
         String s = UtilLib.translate(effect.getPotion().getName());
         gui.font
                 .drawStringWithShadow/*drawStringWithShadow*/
                 (mStack, s, (float) (x + 10 + 18), (float) (y + 6), 16777215);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public boolean shouldRenderInvText(EffectInstance effect) {
+        return false;
     }
 }

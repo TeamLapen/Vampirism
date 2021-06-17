@@ -25,8 +25,8 @@ public class PotionTableScreen extends ContainerScreen<PotionTableContainer> {
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
-        super.render(stack,mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(stack,mouseX, mouseY);
+        super.render(stack, mouseX, mouseY, partialTicks);
+        this.renderHoveredTooltip(stack, mouseX, mouseY);
 
     }
 
@@ -37,23 +37,23 @@ public class PotionTableScreen extends ContainerScreen<PotionTableContainer> {
         int cX = (this.width - this.xSize) / 2;
         int cY = (this.height - this.ySize) / 2;
         this.minecraft.getTextureManager().bindTexture(this.container.isExtendedTable() ? TABLE_GUI_TEXTURES_EXTENDED : TABLE_GUI_TEXTURES);
-        this.blit(stack,cX, cY, 0, 0, this.xSize, this.ySize);
+        this.blit(stack, cX, cY, 0, 0, this.xSize, this.ySize);
         int fuelTime = this.container.getFuelTime();
         int fuelIconWidth = MathHelper.clamp((18 * fuelTime + 20 - 1) / 20, 0, 18);
         if (fuelIconWidth > 0) {
-            this.blit(stack,cX + 66, cY + 41, 176, 29, fuelIconWidth, 4);
+            this.blit(stack, cX + 66, cY + 41, 176, 29, fuelIconWidth, 4);
         }
 
         int brewTime = this.container.getBrewTime();
         if (brewTime > 0) {
             int brewIconHeight = (int) (28.0F * (1.0F - (float) brewTime / 400.0F));
             if (brewIconHeight > 0) {
-                this.blit(stack,cX + 145, cY + 17, 176, 0, 9, brewIconHeight);
+                this.blit(stack, cX + 145, cY + 17, 176, 0, 9, brewIconHeight);
             }
 
             brewIconHeight = BUBBLELENGTHS[brewTime / 2 % 7];
             if (brewIconHeight > 0) {
-                this.blit(stack,cX + 69, cY + 14 + 26 - brewIconHeight, 185, 29 - brewIconHeight, 12, brewIconHeight);
+                this.blit(stack, cX + 69, cY + 14 + 26 - brewIconHeight, 185, 29 - brewIconHeight, 12, brewIconHeight);
             }
         }
     }

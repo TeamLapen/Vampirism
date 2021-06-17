@@ -145,7 +145,7 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
                 }
             }
         } else if (keyPressed == KEY.SKILL) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.OPEN_VAMPIRISM_MENU,""));
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.OPEN_VAMPIRISM_MENU, ""));
         } else if (keyPressed == KEY.VISION) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.VAMPIRE_VISION_TOGGLE, ""));
         } else if (keyPressed == KEY.ACTION1) {

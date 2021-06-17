@@ -12,25 +12,24 @@ import java.util.Set;
 
 public interface IRefinementSet extends IForgeRegistryEntry<IRefinementSet> {
 
+    int getColor();
+
     @Nonnull
-    Set<IRefinement> getRefinements();
+    IFaction<?> getFaction();
 
     @Nonnull
     ITextComponent getName();
-
-    /**
-     *
-     * @return The accessory type this can be on, or empty if all
-     */
-    Optional<IRefinementItem.AccessorySlotType> getSlotType();
 
     @Nonnull
     Rarity getRarity();
 
     @Nonnull
-    IFaction<?> getFaction();
+    Set<IRefinement> getRefinements();
 
-    int getColor();
+    /**
+     * @return The accessory type this can be on, or empty if all
+     */
+    Optional<IRefinementItem.AccessorySlotType> getSlotType();
 
     enum Rarity {
         COMMON(4, TextFormatting.WHITE),

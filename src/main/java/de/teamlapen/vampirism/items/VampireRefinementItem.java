@@ -35,6 +35,44 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
 
     public static final int MAX_DAMAGE = 500;
     private static final Random RANDOM = new Random();
+
+    public static ItemStack getRandomRefinementItem(IFaction<?> faction) {
+        List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream().filter(set -> set.getFaction() == faction).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
+        if (sets.isEmpty()) return ItemStack.EMPTY;
+        IRefinementSet s = WeightedRandom.getRandomItem(RANDOM, sets).getItem();
+        AccessorySlotType t = s.getSlotType().orElseGet(() -> {
+            switch (RANDOM.nextInt(3)) {
+                case 0:
+                    return AccessorySlotType.OBI_BELT;
+                case 1:
+                    return AccessorySlotType.RING;
+            }
+            return AccessorySlotType.AMULET;
+        });
+        VampireRefinementItem i = getItemForType(t);
+        ItemStack stack = new ItemStack(i);
+        if (i.applyRefinementSet(stack, s)) {
+            return stack;
+        }
+        return ItemStack.EMPTY;
+    }
+
+    public static IRefinementSet getRandomRefinementForItem(@Nullable IFaction<?> faction, VampireRefinementItem stack) {
+        List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream().filter(set -> faction == null || set.getFaction() == faction).filter(set -> set.getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
+        if (sets.isEmpty()) return null;
+        return WeightedRandom.getRandomItem(RANDOM, sets).getItem();
+    }
+
+    public static VampireRefinementItem getItemForType(AccessorySlotType type) {
+        switch (type) {
+            case AMULET:
+                return ModItems.amulet;
+            case RING:
+                return ModItems.ring;
+            default:
+                return ModItems.obi_belt;
+        }
+    }
     private final AccessorySlotType type;
 
     public VampireRefinementItem(Properties properties, AccessorySlotType type) {
@@ -53,6 +91,21 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
         }
     }
 
+    /**
+     * Apply refinement set to the given stack.
+     * Note: Not all refinements can be applied to all accessory slot types
+     *
+     * @return Whether the set was successfully applied
+     */
+    public boolean applyRefinementSet(ItemStack stack, IRefinementSet set) {
+        if (set.getSlotType().map(t -> t == type).orElse(true)) {
+            CompoundNBT tag = stack.getOrCreateTag();
+            tag.putString("refinement_set", set.getRegistryName().toString());
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public ITextComponent getDisplayName(@Nonnull ItemStack stack) {
         IRefinementSet set = getRefinementSet(stack);
@@ -60,16 +113,6 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
             return super.getDisplayName(stack);
         }
         return new TranslationTextComponent(this.getTranslationKey() + ".of").appendString(" ").append(set.getName()).mergeStyle(set.getRarity().color);
-    }
-
-    @Override
-    public boolean isEnchantable(@Nonnull ItemStack stack) {
-        return false;
-    }
-
-    @Override
-    public AccessorySlotType getSlotType() {
-        return this.type;
     }
 
     @Nullable
@@ -80,66 +123,24 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
     }
 
     @Override
+    public AccessorySlotType getSlotType() {
+        return this.type;
+    }
+
+    @Override
+    public boolean isEnchantable(@Nonnull ItemStack stack) {
+        return false;
+    }
+
+    @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        if(!worldIn.isRemote()){
+        if (!worldIn.isRemote()) {
             ItemStack stack = playerIn.getHeldItem(handIn);
-            if(FactionPlayerHandler.getOpt(playerIn).map(v->v).flatMap(FactionPlayerHandler::getCurrentFactionPlayer).map(ISkillPlayer::getSkillHandler).map(sh->sh.equipRefinementItem(stack)).orElse(false)){
+            if (FactionPlayerHandler.getOpt(playerIn).map(v -> v).flatMap(FactionPlayerHandler::getCurrentFactionPlayer).map(ISkillPlayer::getSkillHandler).map(sh -> sh.equipRefinementItem(stack)).orElse(false)) {
                 return ActionResult.resultConsume(ItemStack.EMPTY);
             }
 
         }
         return super.onItemRightClick(worldIn, playerIn, handIn);
-    }
-
-    public static ItemStack getRandomRefinementItem(IFaction<?> faction) {
-        List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream().filter(set -> set.getFaction() == faction).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
-        if (sets.isEmpty()) return ItemStack.EMPTY;
-        IRefinementSet s = WeightedRandom.getRandomItem(RANDOM,sets).getItem();
-        AccessorySlotType t = s.getSlotType().orElseGet(()->{
-            switch (RANDOM.nextInt(3)){
-                case 0:
-                    return AccessorySlotType.OBI_BELT;
-                case 1:
-                    return AccessorySlotType.RING;
-            }
-           return AccessorySlotType.AMULET;
-        });
-        VampireRefinementItem i  = getItemForType(t);
-        ItemStack stack= new ItemStack(i);
-        if(i.applyRefinementSet(stack,s)){
-            return stack;
-        }
-        return ItemStack.EMPTY;
-    }
-
-    public static IRefinementSet getRandomRefinementForItem(@Nullable IFaction<?> faction, VampireRefinementItem stack) {
-        List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream().filter(set -> faction == null || set.getFaction() == faction).filter(set -> set.getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
-        if (sets.isEmpty()) return null;
-        return WeightedRandom.getRandomItem(RANDOM, sets).getItem();
-    }
-
-    public static VampireRefinementItem getItemForType(AccessorySlotType type){
-        switch (type){
-            case AMULET:
-                return ModItems.amulet;
-            case RING:
-                return ModItems.ring;
-            default:
-                return ModItems.obi_belt;
-        }
-    }
-
-    /**
-     * Apply refinement set to the given stack.
-     * Note: Not all refinements can be applied to all accessory slot types
-     * @return Whether the set was successfully applied
-     */
-    public boolean applyRefinementSet(ItemStack stack, IRefinementSet set) {
-        if(set.getSlotType().map(t -> t==type).orElse(true)){
-            CompoundNBT tag = stack.getOrCreateTag();
-            tag.putString("refinement_set", set.getRegistryName().toString());
-            return true;
-        }
-        return false;
     }
 }

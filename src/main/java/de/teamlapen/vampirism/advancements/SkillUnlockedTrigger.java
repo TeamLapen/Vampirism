@@ -29,15 +29,15 @@ public class SkillUnlockedTrigger extends AbstractCriterionTrigger<SkillUnlocked
         return new Instance(id);
     }
 
+    @Override
+    public ResourceLocation getId() {
+        return ID;
+    }
+
     public void trigger(ServerPlayerEntity player, ISkill skill) {
         this.triggerListeners(player, (instance -> {
             return instance.test(skill);
         }));
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return ID;
     }
 
     @Override
@@ -59,15 +59,15 @@ public class SkillUnlockedTrigger extends AbstractCriterionTrigger<SkillUnlocked
             this.skillId = skillId;
         }
 
-        public boolean test(@Nonnull ISkill skill) {
-            return this.skillId.equals(skill.getRegistryName());
-        }
-
         @Override
         public JsonObject serialize(ConditionArraySerializer serializer) {
             JsonObject jsonObject = super.serialize(serializer);
             jsonObject.addProperty("skill", skillId.toString());
             return jsonObject;
+        }
+
+        public boolean test(@Nonnull ISkill skill) {
+            return this.skillId.equals(skill.getRegistryName());
         }
     }
 }

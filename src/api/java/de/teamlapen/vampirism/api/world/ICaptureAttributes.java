@@ -9,14 +9,14 @@ import javax.annotation.Nullable;
 public interface ICaptureAttributes {
 
     @Nullable
-    IFaction getDefendingFaction();
-
-    @Nullable
     IFaction getAttackingFaction();
 
-    AxisAlignedBB getVillageArea();
+    @Nullable
+    IFaction getDefendingFaction();
 
     BlockPos getPosition();
+
+    AxisAlignedBB getVillageArea();
 
     default boolean shouldForceTargets() {
         return false;

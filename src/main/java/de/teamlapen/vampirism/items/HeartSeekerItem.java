@@ -38,13 +38,23 @@ public class HeartSeekerItem extends VampirismVampireSword implements IItemWithT
     }
 
     @Override
+    public String getBaseRegName() {
+        return regName;
+    }
+
+    @Override
+    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+        return (this.getVampirismTier() == TIER.NORMAL ? ModItems.blood_infused_iron_ingot : ModItems.blood_infused_enhanced_iron_ingot).equals(repair.getItem()) || super.getIsRepairable(toRepair, repair);
+    }
+
+    @Override
     public TIER getVampirismTier() {
         return tier;
     }
 
     @Override
-    public String getBaseRegName() {
-        return regName;
+    public float getXpRepairRatio(ItemStack stack) {
+        return this.getVampirismTier() == TIER.ULTIMATE ? super.getXpRepairRatio(stack) / 2f : super.getXpRepairRatio(stack);
     }
 
     @Override
@@ -55,16 +65,6 @@ public class HeartSeekerItem extends VampirismVampireSword implements IItemWithT
     @Override
     protected float getChargingFactor(ItemStack stack) {
         return (float) (VampirismConfig.BALANCE.vampireSwordChargingFactor.get() * 2f / (getVampirismTier().ordinal() + 2f));
-    }
-
-    @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-        return (this.getVampirismTier() == TIER.NORMAL ? ModItems.blood_infused_iron_ingot : ModItems.blood_infused_enhanced_iron_ingot).equals( repair.getItem()) || super.getIsRepairable(toRepair, repair);
-    }
-
-    @Override
-    public float getXpRepairRatio(ItemStack stack) {
-        return this.getVampirismTier()==TIER.ULTIMATE ? super.getXpRepairRatio(stack)/2f : super.getXpRepairRatio(stack);
     }
 
 }

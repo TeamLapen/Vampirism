@@ -82,9 +82,9 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
 
     public static class Desc<Z extends MinionData> implements IMinionTask.IMinionTaskDesc<Z> {
         private final CollectResourcesTask<Z> task;
-        private int coolDown;
         @Nullable
         private final UUID lordEntityID;
+        private int coolDown;
 
         public Desc(CollectResourcesTask<Z> task, int coolDown, @Nullable UUID lordEntityID) {
             this.task = task;

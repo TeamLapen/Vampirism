@@ -72,6 +72,56 @@ public abstract class GuiPieMenu<T> extends Screen {
     }
 
     @Override
+    public void closeScreen() {
+        super.closeScreen();
+        ForgeIngameGui.renderCrosshairs = true;
+    }
+
+    @Override
+    public void init() {
+        this.onGuiInit();
+        this.elementCount = elements.size();
+        radDiff = 2D * Math.PI / elementCount;// gap in rad
+        GLFW.glfwSetInputMode(minecraft.getMainWindow().getHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
+        ForgeIngameGui.renderCrosshairs = false;
+    }
+
+    @Override
+    public boolean isPauseScreen() { //isPauseScreen
+        return false;
+    }
+
+    @Override
+    public boolean keyReleased(int key, int scancode, int modifiers) {
+        if (!isKeyBindingStillPressed()) {
+            this.selectedAndClose();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean mouseReleased(double p_mouseReleased_1_, double p_mouseReleased_3_, int p_mouseReleased_5_) {
+        if (!isKeyBindingStillPressed()) {
+            this.selectedAndClose();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
+        return false;
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        GLFW.glfwSetInputMode(Minecraft.getInstance().getMainWindow().getHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
+        ForgeIngameGui.renderCrosshairs = true;
+    }
+
+    @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         // Calculate center and radius of the skill cycle
         int cX = this.width / 2;
@@ -148,60 +198,6 @@ public abstract class GuiPieMenu<T> extends Screen {
         }
     }
 
-    @Override
-    public boolean keyReleased(int key, int scancode, int modifiers) {
-        if (!isKeyBindingStillPressed()) {
-            this.selectedAndClose();
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseReleased(double p_mouseReleased_1_, double p_mouseReleased_3_, int p_mouseReleased_5_) {
-        if (!isKeyBindingStillPressed()) {
-            this.selectedAndClose();
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void init() {
-        this.onGuiInit();
-        this.elementCount = elements.size();
-        radDiff = 2D * Math.PI / elementCount;// gap in rad
-        GLFW.glfwSetInputMode(minecraft.getMainWindow().getHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
-        ForgeIngameGui.renderCrosshairs = false;
-    }
-
-    @Override
-    public void onClose() {
-        super.onClose();
-        GLFW.glfwSetInputMode(Minecraft.getInstance().getMainWindow().getHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
-        ForgeIngameGui.renderCrosshairs = true;
-    }
-
-    @Override
-    public void closeScreen() {
-        super.closeScreen();
-        ForgeIngameGui.renderCrosshairs = true;
-    }
-
-    @Override
-    public boolean isPauseScreen() { //isPauseScreen
-        return false;
-    }
-
-    protected boolean isKeyBindingStillPressed() {
-        return getMenuKeyBinding().isKeyDown();
-    }
-
     protected void afterIconDraw(MatrixStack stack, T element, int x, int y) {
 
     }
@@ -245,24 +241,28 @@ public abstract class GuiPieMenu<T> extends Screen {
      */
     protected abstract KeyBinding getMenuKeyBinding();
 
-    protected void selectedAndClose() {
-        closeScreen();
-        if (selectedElement >= 0) {
-            this.onElementSelected(elements.get(selectedElement));
-        }
-    }
+    protected abstract ITextComponent getName(T item);
 
     protected int getSelectedElement() {
         return selectedElement;
     }
 
-    protected abstract ITextComponent getName(T item);
+    protected boolean isKeyBindingStillPressed() {
+        return getMenuKeyBinding().isKeyDown();
+    }
 
     protected void onElementSelected(T id) {
 
     }
 
     protected abstract void onGuiInit();
+
+    protected void selectedAndClose() {
+        closeScreen();
+        if (selectedElement >= 0) {
+            this.onElementSelected(elements.get(selectedElement));
+        }
+    }
 
     /**
      * Draws the background cicle image as well as border lines between the different segments

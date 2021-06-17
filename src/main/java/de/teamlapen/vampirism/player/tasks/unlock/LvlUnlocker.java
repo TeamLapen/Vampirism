@@ -24,16 +24,16 @@ public class LvlUnlocker implements TaskUnlocker {
     }
 
     @Override
-    public boolean isUnlocked(IFactionPlayer<?> playerEntity) {
-        return playerEntity.getLevel() >= reqLevel && (maxLevel <= 0 || playerEntity.getLevel() <= maxLevel);
-    }
-
-    @Override
     public ITextComponent getDescription() {
         TextComponent t = new TranslationTextComponent("text.vampirism.level_min", reqLevel);
-        if (maxLevel>0) {
+        if (maxLevel > 0) {
             t.appendString(" ").append(new TranslationTextComponent("text.vampirism.level_max", maxLevel));
         }
         return t;
+    }
+
+    @Override
+    public boolean isUnlocked(IFactionPlayer<?> playerEntity) {
+        return playerEntity.getLevel() >= reqLevel && (maxLevel <= 0 || playerEntity.getLevel() <= maxLevel);
     }
 }

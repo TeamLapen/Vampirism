@@ -16,14 +16,16 @@ import java.util.List;
 
 @Mixin(JigsawManager.Assembler.class)
 public abstract class AssemblerMixin {
-    @Shadow @Final private List<? super AbstractVillagePiece> structurePieces;
+    @Shadow
+    @Final
+    private List<? super AbstractVillagePiece> structurePieces;
 
     private AssemblerMixin() {
     }
 
-    @Redirect(method = "func_236831_a_(Lnet/minecraft/world/gen/feature/structure/AbstractVillagePiece;Lorg/apache/commons/lang3/mutable/MutableObject;IIZ)V", at = @At(value = "INVOKE", target = "Ljava/util/Iterator;next()Ljava/lang/Object;",ordinal = 1))
+    @Redirect(method = "func_236831_a_(Lnet/minecraft/world/gen/feature/structure/AbstractVillagePiece;Lorg/apache/commons/lang3/mutable/MutableObject;IIZ)V", at = @At(value = "INVOKE", target = "Ljava/util/Iterator;next()Ljava/lang/Object;", ordinal = 1))
     private Object inject(Iterator<JigsawPiece> iterator) {
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             JigsawPiece piece = iterator.next();
             if (!MixinHooks.checkStructures(this.structurePieces, piece)) {
                 return piece;

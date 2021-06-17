@@ -20,8 +20,8 @@ public interface ITotem {
     @Nullable
     IFaction getControllingFaction();
 
-    default boolean isRaidTriggeredByBadOmen() { //TODO 1.17 remove default implementation
-        return false;
+    default World getTileWorld() {
+        return ((TileEntity) this).getWorld();
     }
 
     @Nonnull
@@ -30,8 +30,8 @@ public interface ITotem {
     @Nonnull
     AxisAlignedBB getVillageAreaReduced();
 
-    default World getTileWorld() {
-        return ((TileEntity) this).getWorld();
+    default boolean isRaidTriggeredByBadOmen() { //TODO 1.17 remove default implementation
+        return false;
     }
 
 }

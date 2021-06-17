@@ -15,12 +15,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class GarlicBeaconScreen extends Screen {
 
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/garlic_beacon.png");
-
-
-    private final GarlicBeaconTileEntity tile;
-
     protected final int xSize = 220;
     protected final int ySize = 114;
+    private final GarlicBeaconTileEntity tile;
     protected int guiLeft;
     protected int guiTop;
     protected ProgressBar startupBar;
@@ -49,31 +46,30 @@ public class GarlicBeaconScreen extends Screen {
     }
 
     @Override
+    public void tick() {
+        startupBar.setProgress(tile.getBootProgress());
+        float f = tile.getFueledState();
+        if (f == 0) {
+            fueledTimer.active = false;
+        } else {
+            fueledTimer.active = true;
+            fueledTimer.setProgress(f);
+        }
+
+    }
+
+    @Override
     protected void init() {
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
 
-        startupBar = this.addButton(new ProgressBar(this, this.guiLeft + (xSize - 170)/2, this.guiTop +30, 170,new TranslationTextComponent("gui.vampirism.garlic_beacon.startup")));
+        startupBar = this.addButton(new ProgressBar(this, this.guiLeft + (xSize - 170) / 2, this.guiTop + 30, 170, new TranslationTextComponent("gui.vampirism.garlic_beacon.startup")));
         startupBar.setColor(0xD0D0FF);
         startupBar.setFGColor(0xFFFFFF);
 
-        fueledTimer = this.addButton(new ProgressBar(this, this.guiLeft + (xSize - 170)/2, this.guiTop +60, 170,new TranslationTextComponent("gui.vampirism.garlic_beacon.fueled")));
+        fueledTimer = this.addButton(new ProgressBar(this, this.guiLeft + (xSize - 170) / 2, this.guiTop + 60, 170, new TranslationTextComponent("gui.vampirism.garlic_beacon.fueled")));
         fueledTimer.setColor(0xD0FFD0);
         fueledTimer.setFGColor(0xFFFFFF);
-    }
-
-    @Override
-    public void tick() {
-        startupBar.setProgress(tile.getBootProgress());
-        float f = tile.getFueledState();
-        if(f==0){
-            fueledTimer.active=false;
-        }
-        else{
-            fueledTimer.active=true;
-            fueledTimer.setProgress(f);
-        }
-
     }
 
     protected void renderGuiBackground(MatrixStack mStack) {

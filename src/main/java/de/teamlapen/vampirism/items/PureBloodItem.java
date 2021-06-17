@@ -53,6 +53,7 @@ public class PureBloodItem extends VampirismItem {
                 return ModItems.pure_blood_4;
         }
     }
+
     private final int level;
 
     public PureBloodItem(int level) {

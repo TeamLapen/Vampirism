@@ -36,6 +36,10 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> i
         this.availableActions = entityIn.getAvailableActions();
     }
 
+    public void deactivateAction() {
+        deactivateAction(null);
+    }
+
     @Nullable
     public IEntityAction getAction() {
         return action;
@@ -59,6 +63,10 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> i
         }
     }
 
+    public boolean isActionActive(IEntityAction action) {
+        return this.action != null && this.action.equals(action) && duration > 0;
+    }
+
     public boolean isPlayerTarget() {
         return isPlayerTarget;
     }
@@ -77,8 +85,10 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> i
         preActivation = -1;
     }
 
-    public boolean isActionActive(IEntityAction action) {
-        return this.action != null && this.action.equals(action) && duration > 0;
+    public void write(CompoundNBT nbt) {
+        if (isPlayerTarget() && action != null) {
+            nbt.putString("activeAction", action.getRegistryName().toString());
+        }
     }
 
     /**
@@ -119,10 +129,6 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> i
             return WeightedRandom.getRandomItem(entity.getRNG(), entry, weightsum).getAction();
         }
         return null;
-    }
-
-    public void deactivateAction() {
-        deactivateAction(null);
     }
 
     /**
@@ -196,12 +202,6 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> i
             ((ILastingAction<T>) action).updatePreAction(entity, preActivation);
         } else if (action instanceof IInstantAction) {
             ((IInstantAction<T>) action).updatePreAction(entity, preActivation);
-        }
-    }
-
-    public void write(CompoundNBT nbt) {
-        if (isPlayerTarget() && action != null) {
-            nbt.putString("activeAction", action.getRegistryName().toString());
         }
     }
 }

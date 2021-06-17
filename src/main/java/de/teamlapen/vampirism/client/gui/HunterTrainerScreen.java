@@ -49,19 +49,19 @@ public class HunterTrainerScreen extends ContainerScreen<HunterTrainerContainer>
     }
 
     @Override
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(stack);
+        super.render(stack, mouseX, mouseY, partialTicks);
+        this.renderHoveredTooltip(stack, mouseX, mouseY);
+
+    }
+
+    @Override
     public void tick() {
         super.tick();
         if (container.hasChanged() || this.minecraft.player.getRNG().nextInt(40) == 6) {
             buttonLevelup.active = container.canLevelup();
         }
-
-    }
-
-    @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(stack);
-        super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(stack, mouseX, mouseY);
 
     }
 

@@ -32,9 +32,6 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 @ObjectHolder(REFERENCE.MODID)
 @SuppressWarnings("unused")
 public class ModBlocks {
-    /** empty unless in datagen */
-    private static final Set<Block> ALL_BLOCKS = Sets.newHashSet();
-
     public static final AlchemicalCauldronBlock alchemical_cauldron = getNull();
     public static final AlchemicalFireBlock alchemical_fire = getNull();
     public static final AltarInfusionBlock altar_infusion = getNull();
@@ -88,6 +85,10 @@ public class ModBlocks {
     public static final VampirismBlock candelabra = getNull();
     public static final VampirismBlock candelabra_wall = getNull();
     public static final VampirismBlock cross = getNull();
+    /**
+     * empty unless in datagen
+     */
+    private static final Set<Block> ALL_BLOCKS = Sets.newHashSet();
 
     static void registerItemBlocks(IForgeRegistry<Item> registry) {
         registry.register(itemBlock(alchemical_cauldron));
@@ -210,7 +211,7 @@ public class ModBlocks {
          */
     }
 
-    private static Block prepareRegister(Block block){
+    private static Block prepareRegister(Block block) {
         if (VampirismMod.inDataGen) {
             ALL_BLOCKS.add(block);
         }

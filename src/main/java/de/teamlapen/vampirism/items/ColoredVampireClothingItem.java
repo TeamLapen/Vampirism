@@ -14,7 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 
 
-public class ColoredVampireClothingItem  extends VampireClothingItem {
+public class ColoredVampireClothingItem extends VampireClothingItem {
     private final String baseName;
     private final EnumClothingColor color;
     private final EnumModel model;
@@ -30,7 +30,7 @@ public class ColoredVampireClothingItem  extends VampireClothingItem {
     @OnlyIn(Dist.CLIENT)
     @Override
     public BipedModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, BipedModel _default) {
-        switch (model){
+        switch (model) {
             case CLOAK:
                 return CloakModel.getRotatedCloak();
             default:
@@ -44,7 +44,7 @@ public class ColoredVampireClothingItem  extends VampireClothingItem {
                 color.getName());
     }
 
-    public enum EnumModel{
+    public enum EnumModel {
         CLOAK
     }
 
@@ -59,14 +59,13 @@ public class ColoredVampireClothingItem  extends VampireClothingItem {
             this.name = nameIn;
         }
 
+        public String getName() {
+            return getString();
+        }
+
         @Override
         public String getString() {
             return this.name;
-        }
-
-
-        public String getName() {
-            return getString();
         }
 
 

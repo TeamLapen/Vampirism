@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinBellBlock {
 
     @Inject(method = "attemptRing", at = @At(value = "RETURN", ordinal = 0))
-    public void ringTotem(World world, BlockState state, BlockRayTraceResult result, PlayerEntity player, boolean canRingBell, CallbackInfoReturnable<Boolean> cir){
-        if(player!=null)TotemHelper.ringBell(world, player);
+    public void ringTotem(World world, BlockState state, BlockRayTraceResult result, PlayerEntity player, boolean canRingBell, CallbackInfoReturnable<Boolean> cir) {
+        if (player != null) TotemHelper.ringBell(world, player);
     }
 }

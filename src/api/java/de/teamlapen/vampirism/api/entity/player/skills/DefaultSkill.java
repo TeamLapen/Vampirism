@@ -25,16 +25,6 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
     private ITextComponent name;
 
     @Override
-    public int getRenderColumn() {
-        return renderColumn;
-    }
-
-    @Override
-    public int getRenderRow() {
-        return renderRow;
-    }
-
-    @Override
     public ITextComponent getName() {
         return name == null ? name = new TranslationTextComponent(getTranslationKey()) : name;
     }
@@ -42,6 +32,16 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
     public DefaultSkill<T> setName(ITextComponent name) {
         this.name = name;
         return this;
+    }
+
+    @Override
+    public int getRenderColumn() {
+        return renderColumn;
+    }
+
+    @Override
+    public int getRenderRow() {
+        return renderRow;
     }
 
     @Deprecated

@@ -25,12 +25,12 @@ public class ItemReward implements TaskReward {
         }
     }
 
-    public List<ItemStack> getAllPossibleRewards() {
-        return Collections.singletonList(reward);
-    }
-
     @Override
     public ItemRewardInstance createInstance(@Nullable IFactionPlayer<?> player) {
         return new ItemRewardInstance(reward);
+    }
+
+    public List<ItemStack> getAllPossibleRewards() {
+        return Collections.singletonList(reward);
     }
 }

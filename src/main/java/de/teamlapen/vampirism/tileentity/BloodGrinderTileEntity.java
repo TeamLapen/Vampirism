@@ -46,12 +46,11 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
         int posZ = pos.getZ();
         return worldIn.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(posX, posY + 0.5D, posZ, posX + 1D, posY + 1.5D, posZ + 1D), EntityPredicates.IS_ALIVE);
     }
-
-    private int cooldownPull = 0;
-    private int cooldownProcess = 0;
     //Used to provide ItemHandler compatibility
     private final IItemHandler itemHandler;
     private final LazyOptional<IItemHandler> itemHandlerOptional;
+    private int cooldownPull = 0;
+    private int cooldownProcess = 0;
 
     public BloodGrinderTileEntity() {
         super(ModTiles.grinder, 1, BloodGrinderContainer.SELECTOR_INFOS);

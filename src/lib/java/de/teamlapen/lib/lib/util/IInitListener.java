@@ -8,11 +8,11 @@ import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
  * Simple interface which provides ClientSetup, CommonSetup and LoadComplete.
  */
 public interface IInitListener {
-    default void onInitStep(Step step, ParallelDispatchEvent event) {
-    }
-
     default void onGatherData(GatherDataEvent event) {
 
+    }
+
+    default void onInitStep(Step step, ParallelDispatchEvent event) {
     }
 
     enum Step {

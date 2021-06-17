@@ -22,7 +22,7 @@ public class CurrentDimensionCommand extends BasicCommand {
     }
 
     private static int currentDimension(CommandContext<CommandSource> context, ServerPlayerEntity asPlayer) {
-        context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.currentdimension.dimension", asPlayer.getEntityWorld().getDimensionKey().getLocation().toString() + " (" + asPlayer.getServer().func_244267_aX().func_230520_a_().getKey(asPlayer.getEntityWorld().getDimensionType())), false);
+        context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.currentdimension.dimension", asPlayer.getEntityWorld().getDimensionKey().getLocation() + " (" + asPlayer.getServer().func_244267_aX().func_230520_a_().getKey(asPlayer.getEntityWorld().getDimensionType())), false);
         return 0;
     }
 }

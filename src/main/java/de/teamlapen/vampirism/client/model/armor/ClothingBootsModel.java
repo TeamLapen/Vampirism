@@ -23,7 +23,7 @@ public class ClothingBootsModel extends VampirismArmorModel {
     public ModelRenderer rightToes;
 
     public ClothingBootsModel() {
-        super(32,16);
+        super(32, 16);
         this.rightBoot = new ModelRenderer(this, 0, 0);
         this.rightBoot.setRotationPoint(1.9F, 12.0F, 0.0F);
         this.rightBoot.addBox(-2.0F, 7.0F, -2.0F, 4.0F, 5.0F, 4.0F, 0.4F, 0.4F, 0.4F);

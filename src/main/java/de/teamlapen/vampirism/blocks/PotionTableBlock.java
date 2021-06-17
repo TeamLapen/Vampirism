@@ -76,21 +76,21 @@ public class PotionTableBlock extends VampirismBlockContainer {
     }
 
     @Override
+    public void onBlockPlacedBy(World world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack stack) {
+        super.onBlockPlacedBy(world, blockPos, blockState, entity, stack);
+        TileEntity tile = world.getTileEntity(blockPos);
+        if (entity instanceof PlayerEntity && tile instanceof PotionTableTileEntity) {
+            ((PotionTableTileEntity) tile).setOwnerID((PlayerEntity) entity);
+        }
+    }
+
+    @Override
     protected void clearContainer(BlockState state, World worldIn, BlockPos pos) {
         TileEntity te = worldIn.getTileEntity(pos);
         if (te instanceof PotionTableTileEntity) {
             for (int i = 0; i < 8; ++i) {
                 this.dropItem(worldIn, pos, ((PotionTableTileEntity) te).removeStackFromSlot(i));
             }
-        }
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack stack) {
-        super.onBlockPlacedBy(world, blockPos, blockState, entity, stack);
-        TileEntity tile = world.getTileEntity(blockPos);
-        if (entity instanceof PlayerEntity && tile instanceof PotionTableTileEntity) {
-            ((PotionTableTileEntity) tile).setOwnerID((PlayerEntity) entity);
         }
     }
 

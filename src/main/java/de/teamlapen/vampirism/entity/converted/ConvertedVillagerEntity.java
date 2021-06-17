@@ -68,11 +68,6 @@ import java.util.UUID;
 public class ConvertedVillagerEntity extends VampirismVillagerEntity implements ICurableConvertedCreature<VillagerEntity> {
     public static final List<SensorType<? extends Sensor<? super VillagerEntity>>> SENSOR_TYPES;
     private static final DataParameter<Boolean> CONVERTING = EntityDataManager.createKey(ConvertedVillagerEntity.class, DataSerializers.BOOLEAN);
-    private EnumStrength garlicCache = EnumStrength.NONE;
-    private boolean sundamageCache;
-    private int bloodTimer = 0;
-    private int conversionTime;
-    private UUID conversationStarter;
 
     static {
         SENSOR_TYPES = Lists.newArrayList(VillagerEntity.SENSOR_TYPES);
@@ -80,30 +75,14 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         SENSOR_TYPES.add(ModVillage.vampire_villager_hostiles);
     }
 
+    private EnumStrength garlicCache = EnumStrength.NONE;
+    private boolean sundamageCache;
+    private int bloodTimer = 0;
+    private int conversionTime;
+    private UUID conversationStarter;
+
     public ConvertedVillagerEntity(EntityType<? extends ConvertedVillagerEntity> type, World worldIn) {
         super(type, worldIn);
-    }
-
-    @Override
-    public DataParameter<Boolean> getConvertingDataParam() {
-        return CONVERTING;
-    }
-
-    @Override
-    protected void registerData() {
-        super.registerData();
-        this.registerConvertingData(this);
-    }
-
-    /**
-     * copied from {@link VillagerEntity#createBrain(Dynamic)} but with {@link #SENSOR_TYPES}, where {@link SensorType#VILLAGER_HOSTILES} is replaced by {@link ModVillage#vampire_villager_hostiles}
-     */
-    @Nonnull
-    @Override
-    protected Brain<?> createBrain(@Nonnull Dynamic<?> dynamicIn) {
-        Brain<VillagerEntity> brain = Brain.createCodec(MEMORY_TYPES, SENSOR_TYPES).deserialize(dynamicIn);
-        this.initBrain(brain);
-        return brain;
     }
 
     @Override
@@ -114,6 +93,47 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
             return true;
         }
         return super.attackEntityAsMob(entity);
+    }
+
+    @Override
+    public VillagerEntity cureEntity(ServerWorld world, CreatureEntity entity, EntityType<VillagerEntity> newType) {
+        VillagerEntity villager = ICurableConvertedCreature.super.cureEntity(world, entity, newType);
+        villager.setVillagerData(this.getVillagerData());
+        villager.setGossips(this.getGossip().write(NBTDynamicOps.INSTANCE).getValue());
+        villager.setOffers(this.getOffers());
+        villager.setXp(this.getXp());
+        if (this.conversationStarter != null) {
+            PlayerEntity playerentity = world.getPlayerByUuid(this.conversationStarter);
+            if (playerentity instanceof ServerPlayerEntity) {
+                ModAdvancements.TRIGGER_CURED_VAMPIRE_VILLAGER.trigger((ServerPlayerEntity) playerentity, this, villager);
+                world.updateReputation(IReputationType.ZOMBIE_VILLAGER_CURED, playerentity, villager);
+            }
+        }
+        return villager;
+    }
+
+    @Override
+    public boolean doesResistGarlic(EnumStrength strength) {
+        return false;
+    }
+
+    @Override
+    public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
+        this.addPotionEffect(new EffectInstance(Effects.REGENERATION, amt * 20));
+        bloodTimer = -1200 - rand.nextInt(1200);
+    }
+
+    @Nonnull
+    @Override
+    public ActionResultType func_230254_b_(PlayerEntity player, @Nonnull Hand hand) {
+        ItemStack stack = player.getHeldItem(hand);
+        if (stack.getItem() != ModItems.cure_apple) return super.func_230254_b_(player, hand);
+        return interactWithCureItem(player, stack, this);
+    }
+
+    @Override
+    public DataParameter<Boolean> getConvertingDataParam() {
+        return CONVERTING;
     }
 
     @Nonnull
@@ -134,78 +154,15 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    public boolean doesResistGarlic(EnumStrength strength) {
-        return false;
-    }
-
-    @Override
-    public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
-        this.addPotionEffect(new EffectInstance(Effects.REGENERATION, amt * 20));
-        bloodTimer = -1200 - rand.nextInt(1200);
-    }
-
-    @Override
     public LivingEntity getRepresentingEntity() {
         return this;
     }
 
-    @Nonnull
     @Override
-    public EnumStrength isGettingGarlicDamage(IWorld iWorld, boolean forceRefresh) {
-        if (forceRefresh) {
-            garlicCache = Helper.getGarlicStrength(this, iWorld);
+    public void handleStatusUpdate(byte id) {
+        if (!handleSound(id, this)) {
+            super.handleStatusUpdate(id);
         }
-        return garlicCache;
-    }
-
-    @Override
-    public boolean isGettingSundamage(IWorld iWorld, boolean forceRefresh) {
-        if (!forceRefresh) return sundamageCache;
-        return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.world.getProfiler()));
-    }
-
-    @Override
-    public boolean isIgnoringSundamage() {
-        return false;
-    }
-
-    @Override
-    public void livingTick() {
-        if (!this.world.isRemote && this.isAlive() && this.isConverting(this)) {
-            --this.conversionTime;
-            if (this.conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(this, EntityType.VILLAGER, (timer) -> this.conversionTime = timer)) {
-                this.cureEntity((ServerWorld)this.world, this, EntityType.VILLAGER);
-            }
-        }
-
-        if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 1) {
-            isGettingGarlicDamage(world, true);
-        }
-        if (this.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
-            isGettingSundamage(world, true);
-        }
-        if (!world.isRemote) {
-            if (isGettingSundamage(world) && ticksExisted % 40 == 11) {
-                this.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 42));
-            }
-            if (isGettingGarlicDamage(world) != EnumStrength.NONE) {
-                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(world), this.ticksExisted);
-            }
-        }
-        bloodTimer++;
-        super.livingTick();
-    }
-
-    @Override
-    public boolean useBlood(int amt, boolean allowPartial) {
-        this.addPotionEffect(new EffectInstance(Effects.WEAKNESS, amt * 20));
-        bloodTimer = 0;
-        return true;
-    }
-
-    @Override
-    public boolean wantsBlood() {
-        return bloodTimer > 0;
     }
 
     @Override
@@ -234,36 +191,58 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         brain.updateActivity(this.world.getDayTime(), this.world.getGameTime());
     }
 
-    @Override
-    protected void populateTradeData() {
-        super.populateTradeData();
-        if (!this.getOffers().isEmpty() && this.getRNG().nextInt(3) == 0) {
-            this.addTrades(this.getOffers(), Trades.converted_trades, 1);
-        }
-    }
-
     @Nonnull
     @Override
-    public ActionResultType func_230254_b_(PlayerEntity player, @Nonnull Hand hand) {
-        ItemStack stack = player.getHeldItem(hand);
-        if (stack.getItem() != ModItems.cure_apple) return super.func_230254_b_(player, hand);
-        return interactWithCureItem(player, stack, this);
+    public EnumStrength isGettingGarlicDamage(IWorld iWorld, boolean forceRefresh) {
+        if (forceRefresh) {
+            garlicCache = Helper.getGarlicStrength(this, iWorld);
+        }
+        return garlicCache;
     }
 
     @Override
-    public void writeAdditional(@Nonnull CompoundNBT compound) {
-        super.writeAdditional(compound);
-        compound.putInt("ConversionTime", this.isConverting(this) ? this.conversionTime : -1);
-        if (this.conversationStarter != null) {
-            compound.putUniqueId("ConversionPlayer", this.conversationStarter);
+    public boolean isGettingSundamage(IWorld iWorld, boolean forceRefresh) {
+        if (!forceRefresh) return sundamageCache;
+        return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.world.getProfiler()));
+    }
+
+    @Override
+    public boolean isIgnoringSundamage() {
+        return false;
+    }
+
+    @Override
+    public void livingTick() {
+        if (!this.world.isRemote && this.isAlive() && this.isConverting(this)) {
+            --this.conversionTime;
+            if (this.conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(this, EntityType.VILLAGER, (timer) -> this.conversionTime = timer)) {
+                this.cureEntity((ServerWorld) this.world, this, EntityType.VILLAGER);
+            }
         }
+
+        if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 1) {
+            isGettingGarlicDamage(world, true);
+        }
+        if (this.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
+            isGettingSundamage(world, true);
+        }
+        if (!world.isRemote) {
+            if (isGettingSundamage(world) && ticksExisted % 40 == 11) {
+                this.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 42));
+            }
+            if (isGettingGarlicDamage(world) != EnumStrength.NONE) {
+                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(world), this.ticksExisted);
+            }
+        }
+        bloodTimer++;
+        super.livingTick();
     }
 
     @Override
     public void readAdditional(@Nonnull CompoundNBT compound) {
         super.readAdditional(compound);
         if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1) {
-            this.startConverting(compound.hasUniqueId("ConversionPlayer") ? compound.getUniqueId("ConversionPlayer") : null, compound.getInt("ConversionTime"),this);
+            this.startConverting(compound.hasUniqueId("ConversionPlayer") ? compound.getUniqueId("ConversionPlayer") : null, compound.getInt("ConversionTime"), this);
         }
     }
 
@@ -275,27 +254,49 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    public void handleStatusUpdate(byte id) {
-        if (!handleSound(id, this)){
-            super.handleStatusUpdate(id);
+    public boolean useBlood(int amt, boolean allowPartial) {
+        this.addPotionEffect(new EffectInstance(Effects.WEAKNESS, amt * 20));
+        bloodTimer = 0;
+        return true;
+    }
+
+    @Override
+    public boolean wantsBlood() {
+        return bloodTimer > 0;
+    }
+
+    @Override
+    public void writeAdditional(@Nonnull CompoundNBT compound) {
+        super.writeAdditional(compound);
+        compound.putInt("ConversionTime", this.isConverting(this) ? this.conversionTime : -1);
+        if (this.conversationStarter != null) {
+            compound.putUniqueId("ConversionPlayer", this.conversationStarter);
+        }
+    }
+
+    /**
+     * copied from {@link VillagerEntity#createBrain(Dynamic)} but with {@link #SENSOR_TYPES}, where {@link SensorType#VILLAGER_HOSTILES} is replaced by {@link ModVillage#vampire_villager_hostiles}
+     */
+    @Nonnull
+    @Override
+    protected Brain<?> createBrain(@Nonnull Dynamic<?> dynamicIn) {
+        Brain<VillagerEntity> brain = Brain.createCodec(MEMORY_TYPES, SENSOR_TYPES).deserialize(dynamicIn);
+        this.initBrain(brain);
+        return brain;
+    }
+
+    @Override
+    protected void populateTradeData() {
+        super.populateTradeData();
+        if (!this.getOffers().isEmpty() && this.getRNG().nextInt(3) == 0) {
+            this.addTrades(this.getOffers(), Trades.converted_trades, 1);
         }
     }
 
     @Override
-    public VillagerEntity cureEntity(ServerWorld world, CreatureEntity entity, EntityType<VillagerEntity> newType) {
-        VillagerEntity villager = ICurableConvertedCreature.super.cureEntity(world, entity, newType);
-        villager.setVillagerData(this.getVillagerData());
-        villager.setGossips(this.getGossip().write(NBTDynamicOps.INSTANCE).getValue());
-        villager.setOffers(this.getOffers());
-        villager.setXp(this.getXp());
-        if (this.conversationStarter != null) {
-            PlayerEntity playerentity = world.getPlayerByUuid(this.conversationStarter);
-            if (playerentity instanceof ServerPlayerEntity) {
-                ModAdvancements.TRIGGER_CURED_VAMPIRE_VILLAGER.trigger((ServerPlayerEntity)playerentity, this, villager);
-                world.updateReputation(IReputationType.ZOMBIE_VILLAGER_CURED, playerentity, villager);
-            }
-        }
-        return villager;
+    protected void registerData() {
+        super.registerData();
+        this.registerConvertingData(this);
     }
 
     public static class ConvertingHandler implements IConvertingHandler<VillagerEntity> {

@@ -13,7 +13,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 
 public class AwarenessHunterAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
 
-    private final EntityPredicate vampirePredicate = new EntityPredicate().setCustomPredicate(VampirismAPI.factionRegistry().getPredicate(VReference.HUNTER_FACTION, true,true,false,false,VReference.VAMPIRE_FACTION));
+    private final EntityPredicate vampirePredicate = new EntityPredicate().setCustomPredicate(VampirismAPI.factionRegistry().getPredicate(VReference.HUNTER_FACTION, true, true, false, false, VReference.VAMPIRE_FACTION));
 
     public AwarenessHunterAction() {
         super();
@@ -56,13 +56,13 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
 
     @Override
     public boolean onUpdate(IHunterPlayer player) {
-        if(player.getRepresentingEntity().getEntityWorld().isRemote()&&player.getRepresentingEntity().ticksExisted % 8 == 0){
+        if (player.getRepresentingEntity().getEntityWorld().isRemote() && player.getRepresentingEntity().ticksExisted % 8 == 0) {
             double dist = nearbyVampire(player);
-            double p=0;
-            if(dist!=Double.MAX_VALUE){
-                p=1f-(dist/(float)VampirismConfig.BALANCE.haAwarenessRadius.get());
+            double p = 0;
+            if (dist != Double.MAX_VALUE) {
+                p = 1f - (dist / (float) VampirismConfig.BALANCE.haAwarenessRadius.get());
             }
-            ((HunterPlayer)player).getSpecialAttributes().nearbyVampire(p);
+            ((HunterPlayer) player).getSpecialAttributes().nearbyVampire(p);
         }
         return false;
     }
@@ -75,10 +75,10 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
 
     private double nearbyVampire(IHunterPlayer player) {
         int r = VampirismConfig.BALANCE.haAwarenessRadius.get();
-        LivingEntity closestVampire = player.getRepresentingEntity().getEntityWorld().func_225318_b(LivingEntity.class,vampirePredicate,null,player.getRepresentingEntity().getPosX(),player.getRepresentingEntity().getPosY(),player.getRepresentingEntity().getPosZ(), new AxisAlignedBB(player.getRepresentingEntity().getPosX() - r, player.getRepresentingEntity().getPosY()
+        LivingEntity closestVampire = player.getRepresentingEntity().getEntityWorld().func_225318_b(LivingEntity.class, vampirePredicate, null, player.getRepresentingEntity().getPosX(), player.getRepresentingEntity().getPosY(), player.getRepresentingEntity().getPosZ(), new AxisAlignedBB(player.getRepresentingEntity().getPosX() - r, player.getRepresentingEntity().getPosY()
                 - r + 1, player.getRepresentingEntity().getPosZ()
                 - r, player.getRepresentingEntity().getPosX() + r, player.getRepresentingEntity().getPosY() + r + 1, player.getRepresentingEntity().getPosZ() + r));
-        if(closestVampire!=null)return closestVampire.getDistance(player.getRepresentingEntity());
+        if (closestVampire != null) return closestVampire.getDistance(player.getRepresentingEntity());
         return Double.MAX_VALUE;
     }
 

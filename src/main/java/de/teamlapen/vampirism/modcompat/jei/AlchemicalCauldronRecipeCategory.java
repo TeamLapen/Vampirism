@@ -31,12 +31,10 @@ import java.util.List;
 public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<AlchemicalCauldronRecipe> {
 
 
+    private static final ResourceLocation location = new ResourceLocation(REFERENCE.MODID, "textures/gui/alchemical_cauldron.png");
     private final String localizedName;
     private final IDrawable background;
     private final IDrawable icon;
-
-    private static final ResourceLocation location = new ResourceLocation(REFERENCE.MODID, "textures/gui/alchemical_cauldron.png");
-
     private final IDrawableAnimated flame;
     private final IDrawableAnimated arrow;
     private final IDrawableAnimated bubbles;
@@ -45,7 +43,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     AlchemicalCauldronRecipeCategory(IGuiHelper guiHelper) {
         this.localizedName = UtilLib.translate(ModBlocks.alchemical_cauldron.getTranslationKey());
         this.icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.alchemical_cauldron));
-        background = guiHelper.drawableBuilder(location, 38, 10, 120, 70).addPadding(0,33,0,0).build();
+        background = guiHelper.drawableBuilder(location, 38, 10, 120, 70).addPadding(0, 33, 0, 0).build();
 
         IDrawableStatic flameDrawable = guiHelper.createDrawable(location, 176, 0, 14, 14);
         flame = guiHelper.createAnimatedDrawable(flameDrawable, 300, IDrawableAnimated.StartDirection.TOP, true);
@@ -117,7 +115,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
         ingredients.addAll(recipe.getIngredients());
         iIngredients.setInputIngredients(ingredients);
 
-        iIngredients.setOutput(VanillaTypes.ITEM,recipe.getRecipeOutput());
+        iIngredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
     }
 
     @Override

@@ -28,12 +28,6 @@ public class BipedCloakedModel<T extends LivingEntity> extends BipedModel<T> {
     }
 
     @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
-        bipedCloak.showModel = visible;
-    }
-
-    @Override
     public void setRotationAngles(T entity, float f, float f1, float f2, float f3, float f4) {
         super.setRotationAngles(entity, f, f1, f2, f3, f4);
         if (entity.isCrouching()) {
@@ -41,5 +35,11 @@ public class BipedCloakedModel<T extends LivingEntity> extends BipedModel<T> {
         } else {
             this.bipedCloak.rotationPointY = 0.0F;
         }
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        bipedCloak.showModel = visible;
     }
 }

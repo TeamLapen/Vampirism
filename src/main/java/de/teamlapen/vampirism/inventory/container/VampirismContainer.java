@@ -34,17 +34,13 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
             new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.AMULET, 58, 8),
             new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.RING, 58, 26),
             new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.OBI_BELT, 58, 44)};
-
+    private final IFactionPlayer<?> factionPlayer;
+    private final TextFormatting factionColor;
+    private final NonNullList<ItemStack> refinementStacks = NonNullList.withSize(3, ItemStack.EMPTY);
     public Map<UUID, TaskManager.TaskWrapper> taskWrapper = new HashMap<>();
     public Map<UUID, Set<UUID>> completableTasks = new HashMap<>();
     public Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements = new HashMap<>();
-
-    private final IFactionPlayer<?> factionPlayer;
-    private final TextFormatting factionColor;
-
     private Runnable listener;
-
-    private final NonNullList<ItemStack> refinementStacks = NonNullList.withSize(3, ItemStack.EMPTY);
 
     public VampirismContainer(int id, @Nonnull PlayerInventory playerInventory) {
         super(ModContainer.vampirism, id, playerInventory, IWorldPosCallable.DUMMY, new Inventory(3), RemovingSelectorSlot::new, SELECTOR_INFOS);
@@ -57,69 +53,6 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
                 this.refinementStacks.set(i, sets[i]);
             }
         }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public void init(@Nonnull Map<UUID, TaskManager.TaskWrapper> taskWrapper, @Nonnull Map<UUID, Set<UUID>> completableTasks, @Nonnull Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) {
-        this.taskWrapper = taskWrapper;
-        this.completedRequirements = completedRequirements;
-        this.completableTasks = completableTasks;
-        if (this.listener != null) {
-            this.listener.run();
-        }
-    }
-
-    public void setRefinement(int slot, @Nonnull ItemStack stack) {
-        this.factionPlayer.getSkillHandler().equipRefinementItem(stack);
-        this.refinementStacks.set(slot, stack);
-    }
-
-    public NonNullList<ItemStack> getRefinementStacks() {
-        return refinementStacks;
-    }
-
-    public Collection<ITaskInstance> getTaskInfos() {
-        return this.taskWrapper.values().stream().flatMap(t -> t.getTaskInstances().stream().filter(ITaskInstance::isAccepted)).collect(Collectors.toList());
-    }
-
-    @Override
-    public void setReloadListener(@Nullable Runnable listener) {
-        this.listener = listener;
-    }
-
-
-    @Override
-    public boolean isTaskNotAccepted(@Nonnull ITaskInstance taskInfo) {
-        return false;
-    }
-
-    @Override
-    public boolean canCompleteTask(@Nonnull ITaskInstance taskInfo) {
-        return this.completableTasks.containsKey(taskInfo.getTaskBoard()) && this.completableTasks.get(taskInfo.getTaskBoard()).contains(taskInfo.getId()) && this.factionPlayer.getRepresentingPlayer().world.getGameTime() < taskInfo.getTaskTimeStamp();
-    }
-
-    @Override
-    public void pressButton(@Nonnull ITaskInstance taskInfo) {
-        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), buttonAction(taskInfo)));
-        this.taskWrapper.get(taskInfo.getTaskBoard()).removeTask(taskInfo, true);
-        if (this.listener != null) {
-            this.listener.run();
-        }
-    }
-
-    @Override
-    public TaskAction buttonAction(@Nonnull ITaskInstance taskInfo) {
-        return taskInfo.isUnique() || this.factionPlayer.getRepresentingPlayer().world.getGameTime() < taskInfo.getTaskTimeStamp() ? TaskContainer.TaskAction.ABORT : TaskAction.REMOVE;
-    }
-
-    @Override
-    public boolean isCompleted(@Nonnull ITaskInstance item) {
-        return false;
-    }
-
-    @Override
-    public TextFormatting getFactionColor() {
-        return this.factionColor;
     }
 
     @Override
@@ -139,6 +72,25 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     }
 
     @Override
+    public TaskAction buttonAction(@Nonnull ITaskInstance taskInfo) {
+        return taskInfo.isUnique() || this.factionPlayer.getRepresentingPlayer().world.getGameTime() < taskInfo.getTaskTimeStamp() ? TaskContainer.TaskAction.ABORT : TaskAction.REMOVE;
+    }
+
+    @Override
+    public boolean canCompleteTask(@Nonnull ITaskInstance taskInfo) {
+        return this.completableTasks.containsKey(taskInfo.getTaskBoard()) && this.completableTasks.get(taskInfo.getTaskBoard()).contains(taskInfo.getId()) && this.factionPlayer.getRepresentingPlayer().world.getGameTime() < taskInfo.getTaskTimeStamp();
+    }
+
+    @Override
+    public TextFormatting getFactionColor() {
+        return this.factionColor;
+    }
+
+    public NonNullList<ItemStack> getRefinementStacks() {
+        return refinementStacks;
+    }
+
+    @Override
     public int getRequirementStatus(@Nonnull ITaskInstance taskInfo, @Nonnull TaskRequirement.Requirement<?> requirement) {
         assert this.completedRequirements != null;
         if (this.completedRequirements.containsKey(taskInfo.getTaskBoard())) {
@@ -146,6 +98,25 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
         } else {
             return requirement.getAmount(this.factionPlayer);
         }
+    }
+
+    public Collection<ITaskInstance> getTaskInfos() {
+        return this.taskWrapper.values().stream().flatMap(t -> t.getTaskInstances().stream().filter(ITaskInstance::isAccepted)).collect(Collectors.toList());
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void init(@Nonnull Map<UUID, TaskManager.TaskWrapper> taskWrapper, @Nonnull Map<UUID, Set<UUID>> completableTasks, @Nonnull Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) {
+        this.taskWrapper = taskWrapper;
+        this.completedRequirements = completedRequirements;
+        this.completableTasks = completableTasks;
+        if (this.listener != null) {
+            this.listener.run();
+        }
+    }
+
+    @Override
+    public boolean isCompleted(@Nonnull ITaskInstance item) {
+        return false;
     }
 
     @Override
@@ -157,6 +128,30 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean isTaskNotAccepted(@Nonnull ITaskInstance taskInfo) {
+        return false;
+    }
+
+    @Override
+    public void pressButton(@Nonnull ITaskInstance taskInfo) {
+        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), buttonAction(taskInfo)));
+        this.taskWrapper.get(taskInfo.getTaskBoard()).removeTask(taskInfo, true);
+        if (this.listener != null) {
+            this.listener.run();
+        }
+    }
+
+    public void setRefinement(int slot, @Nonnull ItemStack stack) {
+        this.factionPlayer.getSkillHandler().equipRefinementItem(stack);
+        this.refinementStacks.set(slot, stack);
+    }
+
+    @Override
+    public void setReloadListener(@Nullable Runnable listener) {
+        this.listener = listener;
     }
 
     private static class RemovingSelectorSlot extends SelectorSlot {

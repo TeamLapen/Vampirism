@@ -41,11 +41,10 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
 
     private final int display_width = 234;
     private final int display_height = 205;
-
+    private final IFactionPlayer<?> factionPlayer;
     private int oldMouseX;
     private int oldMouseY;
     private ScrollableListWidget<ITaskInstance> list;
-    private final IFactionPlayer<?> factionPlayer;
 
     public VampirismScreen(VampirismContainer container, PlayerInventory playerInventory, ITextComponent titleIn) {
         super(container, playerInventory, titleIn);
@@ -55,6 +54,73 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         this.playerInventoryTitleY = this.ySize - 93;
         this.container.setReloadListener(() -> this.list.refresh());
         this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().get();
+    }
+
+    @Override
+    public ItemRenderer getItemRenderer() {
+        return this.itemRenderer;
+    }
+
+    @Override
+    public TaskContainer getTaskContainer() {
+        return this.container;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (ModKeys.getKeyBinding(ModKeys.KEY.SKILL).matchesKey(keyCode, scanCode)) {
+            this.closeScreen();
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        if (!this.dragSplitting) {
+            this.list.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        }
+        return true;
+    }
+
+    public Collection<ITaskInstance> refreshTasks() {
+        return this.container.getTaskInfos();
+    }
+
+    @Override
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
+
+        for (int i = 0; i < this.container.getRefinementStacks().size(); i++) {
+            ItemStack stack = this.container.getRefinementStacks().get(i);
+            Slot slot = this.container.getSlot(i);
+            int x = slot.xPos + this.guiLeft;
+            int y = slot.yPos + this.guiTop;
+            this.itemRenderer.renderItemAndEffectIntoGUI(this.minecraft.player, stack, x, y);
+            this.itemRenderer.renderItemOverlayIntoGUI(this.font, stack, x, y, null);
+        }
+
+        if (this.list.isEmpty()) {
+            ITextComponent text = new TranslationTextComponent("gui.vampirism.vampirism_menu.no_tasks").mergeStyle(TextFormatting.WHITE);
+            int width = this.font.getStringPropertyWidth(text);
+            this.font.func_243246_a(matrixStack, text, this.guiLeft + 152 - (width / 2), this.guiTop + 52, 0);
+        }
+
+        this.oldMouseX = mouseX;
+        this.oldMouseY = mouseY;
+        this.list.renderToolTip(matrixStack, mouseX, mouseY);
+        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
+        this.renderHoveredRefinementTooltip(matrixStack, mouseX, mouseY);
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float v, int i, int i1) {
+        this.renderBackground(matrixStack);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
+        this.blit(matrixStack, this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        InventoryScreen.drawEntityOnScreen(this.guiLeft + 31, this.guiTop + 72, 30, (float) (this.guiLeft + 10) - this.oldMouseX, (float) (this.guiTop + 75 - 50) - this.oldMouseY, this.minecraft.player);
     }
 
     @Override
@@ -89,55 +155,6 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
 
     }
 
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (ModKeys.getKeyBinding(ModKeys.KEY.SKILL).matchesKey(keyCode, scanCode)) {
-            this.closeScreen();
-            return true;
-        }
-        return super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    public Collection<ITaskInstance> refreshTasks() {
-        return this.container.getTaskInfos();
-    }
-
-    @Override
-    public ItemRenderer getItemRenderer() {
-        return this.itemRenderer;
-    }
-
-    @Override
-    public TaskContainer getTaskContainer() {
-        return this.container;
-    }
-
-    @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-
-        for (int i = 0; i < this.container.getRefinementStacks().size(); i++) {
-            ItemStack stack = this.container.getRefinementStacks().get(i);
-            Slot slot = this.container.getSlot(i);
-            int x = slot.xPos + this.guiLeft;
-            int y = slot.yPos + this.guiTop;
-            this.itemRenderer.renderItemAndEffectIntoGUI(this.minecraft.player, stack, x, y);
-            this.itemRenderer.renderItemOverlayIntoGUI(this.font, stack, x, y, null);
-        }
-
-        if (this.list.isEmpty()) {
-            ITextComponent text = new TranslationTextComponent("gui.vampirism.vampirism_menu.no_tasks").mergeStyle(TextFormatting.WHITE);
-            int width = this.font.getStringPropertyWidth(text);
-            this.font.func_243246_a(matrixStack, text, this.guiLeft + 152 - (width/2), this.guiTop + 52, 0);
-        }
-
-        this.oldMouseX = mouseX;
-        this.oldMouseY = mouseY;
-        this.list.renderToolTip(matrixStack, mouseX, mouseY);
-        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
-        this.renderHoveredRefinementTooltip(matrixStack, mouseX, mouseY);
-    }
-
     protected void renderHoveredRefinementTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
         if (this.hoveredSlot != null) {
             int index = this.hoveredSlot.slotNumber;
@@ -154,24 +171,6 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         }
     }
 
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
-        if (!this.dragSplitting) {
-            this.list.mouseDragged(mouseX, mouseY, button, dragX, dragY);
-        }
-        return true;
-    }
-
-    @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float v, int i, int i1) {
-        this.renderBackground(matrixStack);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
-        this.blit(matrixStack, this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-        InventoryScreen.drawEntityOnScreen(this.guiLeft + 31, this.guiTop + 72, 30, (float) (this.guiLeft + 10) - this.oldMouseX, (float) (this.guiTop + 75 - 50) - this.oldMouseY, this.minecraft.player);
-    }
-
     private class TaskItem extends de.teamlapen.vampirism.client.gui.widget.TaskItem<VampirismScreen> {
 
         private ImageButton button;
@@ -180,6 +179,16 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
             super(item, list, isDummy, screen, factionPlayer);
             if (!item.isUnique()) {
                 this.button = new ImageButton(0, 0, 8, 11, 0, 229, 11, TASKMASTER_GUI_TEXTURE, 256, 256, this::onClick, this::onTooltip, StringTextComponent.EMPTY);
+            }
+        }
+
+        @Override
+        public boolean onClick(double mouseX, double mouseY) {
+            if (this.button != null && !this.isDummy && mouseX > this.button.x && mouseX < this.button.x + this.button.getWidth() && mouseY > this.button.y && mouseY < this.button.y + this.button.getHeightRealms()) {
+                this.button.onClick(mouseX, mouseY);
+                return true;
+            } else {
+                return super.onClick(mouseX, mouseY);
             }
         }
 
@@ -202,21 +211,10 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
             }
         }
 
-        @Override
-        public boolean onClick(double mouseX, double mouseY) {
-            if (this.button != null && !this.isDummy && mouseX > this.button.x && mouseX < this.button.x + this.button.getWidth() && mouseY > this.button.y && mouseY < this.button.y + this.button.getHeightRealms()) {
-                this.button.onClick(mouseX, mouseY);
-                return true;
-            } else {
-                return super.onClick(mouseX, mouseY);
-            }
-        }
-
-        private void onTooltip(Button button, MatrixStack matrixStack, int mouseX, int mouseY) {
-            ITextComponent position = container.taskWrapper.get(this.item.getTaskBoard()).getLastSeenPos().map(pos -> new StringTextComponent("[" + pos.getCoordinatesAsString() + "]").mergeStyle(TextFormatting.GREEN)).orElseGet(() -> new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos.unknown").mergeStyle(TextFormatting.GOLD));
-
-            VampirismScreen.this.renderWrappedToolTip(matrixStack, Collections.singletonList(new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos").append(position)), mouseX, mouseY, font);
-
+        private float getDistance(int x1, int z1, int x2, int z2) {
+            int i = x2 - x1;
+            int j = z2 - z1;
+            return MathHelper.sqrt((float) (i * i + j * j));
         }
 
         private void onClick(Button button) {
@@ -230,12 +228,13 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
             }).orElseGet(() -> new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos.unknown").mergeStyle(TextFormatting.GOLD));
             player.sendStatusMessage(new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos").append(position), false);
 
-    }
+        }
 
-        private float getDistance(int x1, int z1, int x2, int z2) {
-            int i = x2 - x1;
-            int j = z2 - z1;
-            return MathHelper.sqrt((float) (i * i + j * j));
+        private void onTooltip(Button button, MatrixStack matrixStack, int mouseX, int mouseY) {
+            ITextComponent position = container.taskWrapper.get(this.item.getTaskBoard()).getLastSeenPos().map(pos -> new StringTextComponent("[" + pos.getCoordinatesAsString() + "]").mergeStyle(TextFormatting.GREEN)).orElseGet(() -> new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos.unknown").mergeStyle(TextFormatting.GOLD));
+
+            VampirismScreen.this.renderWrappedToolTip(matrixStack, Collections.singletonList(new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos").append(position)), mouseX, mouseY, font);
+
         }
     }
 

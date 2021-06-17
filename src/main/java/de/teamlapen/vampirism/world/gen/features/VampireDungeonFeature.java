@@ -75,9 +75,9 @@ public class VampireDungeonFeature extends DungeonsFeature {
         }
 
         if (j2 >= 1 && j2 <= 5) {
-            for(int k3 = k; k3 <= l; ++k3) {
-                for(int i4 = 3; i4 >= -1; --i4) {
-                    for(int k4 = l1; k4 <= i2; ++k4) {
+            for (int k3 = k; k3 <= l; ++k3) {
+                for (int i4 = 3; i4 >= -1; --i4) {
+                    for (int k4 = l1; k4 <= i2; ++k4) {
                         BlockPos blockpos1 = pos.add(k3, i4, k4);
                         BlockState blockstate = reader.getBlockState(blockpos1);
                         if (k3 != k && i4 != -1 && k4 != l1 && k3 != l && i4 != 4 && k4 != i2) {
@@ -100,8 +100,8 @@ public class VampireDungeonFeature extends DungeonsFeature {
                 }
             }
 
-            for(int l3 = 0; l3 < 2; ++l3) {
-                for(int j4 = 0; j4 < 3; ++j4) {
+            for (int l3 = 0; l3 < 2; ++l3) {
+                for (int j4 = 0; j4 < 3; ++j4) {
                     int l4 = pos.getX() + rand.nextInt(j * 2 + 1) - j;
                     int i5 = pos.getY();
                     int j5 = pos.getZ() + rand.nextInt(k1 * 2 + 1) - k1;

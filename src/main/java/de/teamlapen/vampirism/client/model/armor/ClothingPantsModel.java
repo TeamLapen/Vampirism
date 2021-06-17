@@ -22,7 +22,7 @@ public class ClothingPantsModel extends VampirismArmorModel {
     public ModelRenderer belt;
 
     public ClothingPantsModel() {
-        super(32,32);
+        super(32, 32);
         this.leftLeg = new ModelRenderer(this, 16, 0);
         this.leftLeg.setRotationPoint(-4F, 12.0F, 0.0F);
         this.leftLeg.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.25F, 0.25F, 0.25F);

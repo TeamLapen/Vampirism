@@ -73,15 +73,15 @@ public class BasicEntityAreaParticleCloud extends Entity {
         return this.getDataManager().get(RADIUS);
     }
 
-    public void setHeight(float height) {
+    public void setRadius(float radius) {
         double d0 = this.getPosX();
         double d1 = this.getPosY();
         double d2 = this.getPosZ();
-        this.size = new EntitySize(getRadius() * 2, height, size.fixed);
+        this.size = new EntitySize(radius * 2.0F, getHeight(), size.fixed);
         this.setPosition(d0, d1, d2);
 
         if (!this.world.isRemote) {
-            this.getDataManager().set(HEIGHT, height);
+            this.getDataManager().set(RADIUS, radius);
         }
     }
 
@@ -101,15 +101,15 @@ public class BasicEntityAreaParticleCloud extends Entity {
         this.waitTime = waitTime;
     }
 
-    public void setRadius(float radius) {
+    public void setHeight(float height) {
         double d0 = this.getPosX();
         double d1 = this.getPosY();
         double d2 = this.getPosZ();
-        this.size = new EntitySize(radius * 2.0F, getHeight(), size.fixed);
+        this.size = new EntitySize(getRadius() * 2, height, size.fixed);
         this.setPosition(d0, d1, d2);
 
         if (!this.world.isRemote) {
-            this.getDataManager().set(RADIUS, radius);
+            this.getDataManager().set(HEIGHT, height);
         }
     }
 

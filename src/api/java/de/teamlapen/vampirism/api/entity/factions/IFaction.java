@@ -48,6 +48,14 @@ public interface IFaction<T extends IFactionEntity> {
      */
     ITextComponent getNamePlural();
 
+    /**
+     * Gets Village Totem related utility class
+     *
+     * @return the village data class
+     */
+    @Nonnull
+    IVillageFactionData getVillageData();
+
     boolean isEntityOfFaction(CreatureEntity creature);
 
     /**
@@ -62,12 +70,4 @@ public interface IFaction<T extends IFactionEntity> {
      * @return The same instance
      */
     IFaction<T> setTranslationKeys(String name, String plural);
-
-    /**
-     * Gets Village Totem related utility class
-     *
-     * @return the village data class
-     */
-    @Nonnull
-    IVillageFactionData getVillageData();
 }

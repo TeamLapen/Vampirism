@@ -24,18 +24,6 @@ public class EntityTypeRequirement implements TaskRequirement.Requirement<ITag<E
         this.amount = amount;
     }
 
-    @Nonnull
-    @Override
-    public TaskRequirement.Type getType() {
-        return TaskRequirement.Type.ENTITY_TAG;
-    }
-
-    @Nonnull
-    @Override
-    public ITag<EntityType<?>> getStat(IFactionPlayer<?> player) {
-        return entityType;
-    }
-
     @Override
     public int getAmount(IFactionPlayer<?> player) {
         return amount;
@@ -45,6 +33,18 @@ public class EntityTypeRequirement implements TaskRequirement.Requirement<ITag<E
     @Override
     public ResourceLocation getId() {
         return id;
+    }
+
+    @Nonnull
+    @Override
+    public ITag<EntityType<?>> getStat(IFactionPlayer<?> player) {
+        return entityType;
+    }
+
+    @Nonnull
+    @Override
+    public TaskRequirement.Type getType() {
+        return TaskRequirement.Type.ENTITY_TAG;
     }
 
 }

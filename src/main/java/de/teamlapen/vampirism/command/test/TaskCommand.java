@@ -10,7 +10,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 public class TaskCommand extends BasicCommand {
 
 
-
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("tasks")
 

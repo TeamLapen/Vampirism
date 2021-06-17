@@ -138,13 +138,13 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
             this.color = color;
         }
 
+        public String getName() {
+            return this.getString();
+        }
+
         @Override
         public String getString() {
             return name;
-        }
-
-        public String getName() {
-            return this.getString();
         }
     }
 }

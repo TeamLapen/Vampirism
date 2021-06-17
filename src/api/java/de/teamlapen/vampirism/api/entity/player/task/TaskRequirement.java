@@ -21,12 +21,12 @@ public class TaskRequirement {
         this.hasStatBasedReq = requirements.keySet().stream().anyMatch(Type::isStatBased);
     }
 
-    public Map<Type, List<Requirement<?>>> requirements() {
-        return requirements;
+    public List<Requirement<?>> getAll() {
+        return this.requirements.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
     }
 
-    public int size() {
-        return size;
+    public boolean isHasStatBasedReq() {
+        return hasStatBasedReq;
     }
 
     /**
@@ -42,46 +42,12 @@ public class TaskRequirement {
         }
     }
 
-    public List<Requirement<?>> getAll() {
-        return this.requirements.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+    public Map<Type, List<Requirement<?>>> requirements() {
+        return requirements;
     }
 
-    public boolean isHasStatBasedReq() {
-        return hasStatBasedReq;
-    }
-
-    public interface Requirement<T> {
-        @Nonnull
-        default Type getType() {
-            return Type.BOOLEAN;
-        }
-
-        /**
-         * @param player the player who wants to complete this task
-         * @return the stat the needs to be achieved with {@link #getAmount(IFactionPlayer)} to complete the requirement
-         * @throws ClassCastException if Object is not applicant for the {@link #getType()}
-         */
-        @Nonnull
-        T getStat(IFactionPlayer<?> player);
-
-        /**
-         * @return the needed amount of the {@link #getStat(IFactionPlayer)} to complete this requirement
-         */
-        default int getAmount(IFactionPlayer<?> player) {
-            return 1;
-        }
-
-        /**
-         * if needed removes the requirements from the player upon task completion
-         *
-         * @param player the player which completed the task
-         */
-        default void removeRequirement(IFactionPlayer<?> player) {
-        }
-
-        @Nonnull
-        ResourceLocation getId();
-
+    public int size() {
+        return size;
     }
 
     @SuppressWarnings("JavadocReference")
@@ -115,13 +81,47 @@ public class TaskRequirement {
             this.translationKey = translationKey;
         }
 
-        public boolean isStatBased() {
-            return statBased;
-        }
-
         public String getTranslationKey() {
             return translationKey;
         }
+
+        public boolean isStatBased() {
+            return statBased;
+        }
+    }
+
+    public interface Requirement<T> {
+        /**
+         * @return the needed amount of the {@link #getStat(IFactionPlayer)} to complete this requirement
+         */
+        default int getAmount(IFactionPlayer<?> player) {
+            return 1;
+        }
+
+        @Nonnull
+        ResourceLocation getId();
+
+        /**
+         * @param player the player who wants to complete this task
+         * @return the stat the needs to be achieved with {@link #getAmount(IFactionPlayer)} to complete the requirement
+         * @throws ClassCastException if Object is not applicant for the {@link #getType()}
+         */
+        @Nonnull
+        T getStat(IFactionPlayer<?> player);
+
+        @Nonnull
+        default Type getType() {
+            return Type.BOOLEAN;
+        }
+
+        /**
+         * if needed removes the requirements from the player upon task completion
+         *
+         * @param player the player which completed the task
+         */
+        default void removeRequirement(IFactionPlayer<?> player) {
+        }
+
     }
 
 }

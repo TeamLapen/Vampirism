@@ -33,6 +33,21 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
 
     @Nonnull
     @Override
+    public ResourceLocation getId() {
+        return ID;
+    }
+
+    /**
+     * Trigger this criterion
+     */
+    public void trigger(ServerPlayerEntity playerMP, IPlayableFaction<?> faction, int level, int lordLevel) {
+        this.triggerListeners(playerMP, (instance -> {
+            return instance.test(faction, level, lordLevel);
+        }));
+    }
+
+    @Nonnull
+    @Override
     protected Instance deserializeTrigger(JsonObject json, @Nonnull EntityPredicate.AndPredicate entityPredicate, @Nonnull ConditionArrayParser conditionsParser) {
         IPlayableFaction<?> faction = null;
         Type type = json.has("type") ? Type.valueOf(json.get("type").getAsString()) : Type.LEVEL;
@@ -50,21 +65,6 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
         }
         int level = json.has("level") ? json.get("level").getAsInt() : 1;
         return new Instance(type, faction, level);
-    }
-
-    /**
-     * Trigger this criterion
-     */
-    public void trigger(ServerPlayerEntity playerMP, IPlayableFaction<?> faction, int level, int lordLevel) {
-        this.triggerListeners(playerMP, (instance -> {
-            return instance.test(faction, level, lordLevel);
-        }));
-    }
-
-    @Nonnull
-    @Override
-    public ResourceLocation getId() {
-        return ID;
     }
 
     public enum Type {
@@ -86,6 +86,16 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
             this.level = level;
         }
 
+        @Nonnull
+        @Override
+        public JsonObject serialize(@Nonnull ConditionArraySerializer serializer) {
+            JsonObject json = super.serialize(serializer);
+            json.addProperty("type", type.name());
+            json.addProperty("faction", faction == null ? "null" : faction.getID().toString());
+            json.addProperty("level", level);
+            return json;
+        }
+
         public boolean test(IPlayableFaction<?> faction, int level, int lordLevel) {
             if (this.faction == null || this.faction.equals(faction)) {
                 if (type == Type.LEVEL) {
@@ -95,16 +105,6 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
                 }
             }
             return false;
-        }
-
-        @Nonnull
-        @Override
-        public JsonObject serialize(@Nonnull ConditionArraySerializer serializer) {
-            JsonObject json = super.serialize(serializer);
-            json.addProperty("type", type.name());
-            json.addProperty("faction", faction == null ? "null" : faction.getID().toString());
-            json.addProperty("level", level);
-            return json;
         }
 
     }

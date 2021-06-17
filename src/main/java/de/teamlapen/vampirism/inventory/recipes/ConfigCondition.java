@@ -35,7 +35,7 @@ public class ConfigCondition implements ICondition {
     }
 
     private Supplier<Boolean> getTester(String option) {
-        switch (option){
+        switch (option) {
             case "auto_convert":
                 return VampirismConfig.COMMON.autoConvertGlassBottles::get;
             case "umbrella":

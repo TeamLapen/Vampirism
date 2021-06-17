@@ -20,12 +20,11 @@ public class SkillTree {
     private final static Logger LOGGER = LogManager.getLogger();
 
     private final Map<ResourceLocation, SkillNode> rootNodes = new HashMap<>();
-    private Map<ResourceLocation, SkillNode> allNodes = new HashMap<>();
-
     /**
      * Stores values relevant for rendering the skill menu. Only filled on client
      */
     private final Map<ResourceLocation, Integer[]> skillNodeSizeMap = new HashMap<>();
+    private Map<ResourceLocation, SkillNode> allNodes = new HashMap<>();
 
     public Map<ResourceLocation, SkillNode.Builder> getCopy() {
         Map<ResourceLocation, SkillNode.Builder> map = new HashMap<>();
@@ -47,16 +46,16 @@ public class SkillTree {
         return skillNodeSizeMap.get(faction);
     }
 
+    @Nullable
+    public SkillNode getNodeFromId(ResourceLocation id) {
+        return allNodes.get(id);
+    }
+
     @Nonnull
     public SkillNode getRootNodeForFaction(ResourceLocation id) {
         if (!rootNodes.containsKey(id))
             throw new IllegalStateException("Faction " + id + " does not have a root skill");
         return rootNodes.get(id);
-    }
-
-    @Nullable
-    public SkillNode getNodeFromId(ResourceLocation id) {
-        return allNodes.get(id);
     }
 
     /**

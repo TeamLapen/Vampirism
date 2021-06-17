@@ -16,15 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import javax.annotation.Nonnull;
 
 public class CuredVampireVillagerTrigger extends AbstractCriterionTrigger<CuredVampireVillagerTrigger.Instance> {
-    private static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID,"cured_vampire_villager");
-
-    @Nonnull
-    @Override
-    protected Instance deserializeTrigger(@Nonnull JsonObject json, @Nonnull EntityPredicate.AndPredicate entityPredicate, @Nonnull ConditionArrayParser conditionsParser) {
-        EntityPredicate.AndPredicate vampire = EntityPredicate.AndPredicate.deserializeJSONObject(json, "vampire", conditionsParser);
-        EntityPredicate.AndPredicate villager = EntityPredicate.AndPredicate.deserializeJSONObject(json, "villager", conditionsParser);
-        return new Instance(entityPredicate, vampire, villager);
-    }
+    private static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "cured_vampire_villager");
 
     @Nonnull
     @Override
@@ -38,7 +30,18 @@ public class CuredVampireVillagerTrigger extends AbstractCriterionTrigger<CuredV
         this.triggerListeners(player, (instance) -> instance.test(lootcontext, lootcontext1));
     }
 
+    @Nonnull
+    @Override
+    protected Instance deserializeTrigger(@Nonnull JsonObject json, @Nonnull EntityPredicate.AndPredicate entityPredicate, @Nonnull ConditionArrayParser conditionsParser) {
+        EntityPredicate.AndPredicate vampire = EntityPredicate.AndPredicate.deserializeJSONObject(json, "vampire", conditionsParser);
+        EntityPredicate.AndPredicate villager = EntityPredicate.AndPredicate.deserializeJSONObject(json, "villager", conditionsParser);
+        return new Instance(entityPredicate, vampire, villager);
+    }
+
     public static class Instance extends CriterionInstance {
+        public static Instance any() {
+            return new Instance(EntityPredicate.AndPredicate.ANY_AND, EntityPredicate.AndPredicate.ANY_AND, EntityPredicate.AndPredicate.ANY_AND);
+        }
         private final EntityPredicate.AndPredicate vampire;
         private final EntityPredicate.AndPredicate villager;
 
@@ -48,18 +51,6 @@ public class CuredVampireVillagerTrigger extends AbstractCriterionTrigger<CuredV
             this.villager = villager;
         }
 
-        public static Instance any() {
-            return new Instance(EntityPredicate.AndPredicate.ANY_AND, EntityPredicate.AndPredicate.ANY_AND, EntityPredicate.AndPredicate.ANY_AND);
-        }
-
-        public boolean test(LootContext vampire, LootContext villager) {
-            if (!this.vampire.testContext(vampire)) {
-                return false;
-            }else {
-                return this.villager.testContext(villager);
-            }
-        }
-
         @Nonnull
         @Override
         public JsonObject serialize(@Nonnull ConditionArraySerializer conditions) {
@@ -67,6 +58,14 @@ public class CuredVampireVillagerTrigger extends AbstractCriterionTrigger<CuredV
             json.add("vampire", this.vampire.serializeConditions(conditions));
             json.add("villager", this.villager.serializeConditions(conditions));
             return json;
+        }
+
+        public boolean test(LootContext vampire, LootContext villager) {
+            if (!this.vampire.testContext(vampire)) {
+                return false;
+            } else {
+                return this.villager.testContext(villager);
+            }
         }
     }
 }

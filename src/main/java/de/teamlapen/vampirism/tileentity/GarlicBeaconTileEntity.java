@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
  * TODO 1.17 refractor garlic diffusor
  */
 public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileEntity {
+    private static final int FUEL_DURATION = 20 * 60 * 2;
     private int id;
     private EnumStrength strength = EnumStrength.MEDIUM;
     private EnumStrength defaultStrength = EnumStrength.MEDIUM;
@@ -35,15 +36,22 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
     private int fueled = 0;
     private int bootTimer;
     private int maxBootTimer;
-    private static final int FUEL_DURATION = 20*60*2;
 
 
     public GarlicBeaconTileEntity() {
         super(ModTiles.garlic_beacon);
     }
 
+    public float getBootProgress() {
+        return bootTimer > 0 ? (1 - (bootTimer / (float) maxBootTimer)) : 1f;
+    }
+
     public int getFuelTime() {
         return fueled;
+    }
+
+    public float getFueledState() {
+        return this.fueled / (float) FUEL_DURATION;
     }
 
     @Nullable
@@ -57,6 +65,17 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
         return this.write(new CompoundNBT());
     }
 
+    public boolean isActive() {
+        return bootTimer == 0;
+    }
+
+    /**
+     * @return If inside effective distance
+     */
+    public boolean isInRange(BlockPos pos) {
+        return new ChunkPos(this.getPos()).getChessboardDistance(new ChunkPos(pos)) <= r;
+    }
+
     @Override
     public void markDirty() {
         super.markDirty();
@@ -64,6 +83,32 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
             BlockState state = world.getBlockState(pos);
             this.world.notifyBlockUpdate(pos, state, state, 3);
         }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        if (hasWorld()) {
+            CompoundNBT nbt = pkt.getNbtCompound();
+            handleUpdateTag(this.world.getBlockState(pkt.getPos()), nbt);
+            if (isActive()) {
+                register(); //Register in case we weren't active before. Shouldn't have an effect when already registered
+            }
+        }
+    }
+
+    public void onFueled() {
+        setFueledTime(FUEL_DURATION);
+        this.markDirty();
+    }
+
+    public void onTouched(PlayerEntity player) {
+        if (VampirismPlayerAttributes.get(player).vampireLevel > 0) {
+            VampirePlayer.getOpt(player).ifPresent(vampirePlayer -> {
+                DamageHandler.affectVampireGarlicDirect(vampirePlayer, strength);
+            });
+        }
+
     }
 
     @Override
@@ -75,49 +120,16 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
         setFueledTime(compound.getInt("fueled"));
     }
 
-    public void onFueled() {
-        setFueledTime(FUEL_DURATION);
-        this.markDirty();
-    }
-
-    public float getFueledState(){
-        return this.fueled/(float)FUEL_DURATION;
-    }
-
-    public void onTouched(PlayerEntity player) {
-        if(VampirismPlayerAttributes.get(player).vampireLevel>0){
-            VampirePlayer.getOpt(player).ifPresent(vampirePlayer -> {
-                    DamageHandler.affectVampireGarlicDirect(vampirePlayer, strength);
-            });
-        }
-
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        if (hasWorld()) {
-            CompoundNBT nbt = pkt.getNbtCompound();
-            handleUpdateTag(this.world.getBlockState(pkt.getPos()), nbt);
-            if(isActive()){
-                register(); //Register in case we weren't active before. Shouldn't have an effect when already registered
-            }
-        }
-    }
-
-    /**
-     *
-     * @return If inside effective distance
-     */
-    public boolean isInRange(BlockPos pos){
-        return new ChunkPos(this.getPos()).getChessboardDistance(new ChunkPos(pos)) <= r;
-    }
-
     @Override
     public void remove() {
         super.remove();
         unregister();
 
+    }
+
+    public void setNewBootDelay(int delayTicks) {
+        this.bootTimer = delayTicks;
+        this.maxBootTimer = delayTicks;
     }
 
     public void setType(GarlicBeaconBlock.Type type) {
@@ -140,13 +152,12 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
 
     @Override
     public void tick() {
-        if(bootTimer>0){
-            if(--bootTimer==0){
+        if (bootTimer > 0) {
+            if (--bootTimer == 0) {
                 this.markDirty();
                 register();
             }
-        }
-        else if (fueled > 0) {
+        } else if (fueled > 0) {
             if (fueled == 1) {
                 setFueledTime(0);
                 this.markDirty();
@@ -156,24 +167,10 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
         }
     }
 
-    public boolean isActive(){
-        return bootTimer == 0;
-    }
-
-    public float getBootProgress(){
-        return bootTimer>0 ? (1-(bootTimer/(float)maxBootTimer)) : 1f;
-    }
-
-    public void setNewBootDelay(int delayTicks){
-        this.bootTimer  = delayTicks;
-        this.maxBootTimer = delayTicks;
-    }
-
-
     @Override
     public void validate() {
         super.validate();
-        if(isActive()){
+        if (isActive()) {
             register();
         }
     }
@@ -184,8 +181,8 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
         compound.putInt("radius", r);
         compound.putInt("strength", defaultStrength.getStrength());
         compound.putInt("fueled", fueled);
-        if(bootTimer!=0){
-            compound.putInt("boot_timer",bootTimer);
+        if (bootTimer != 0) {
+            compound.putInt("boot_timer", bootTimer);
         }
         return compound;
     }
@@ -204,8 +201,8 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
                 chunks[i++] = new ChunkPos(x + baseX, z + baseZ);
             }
         }
-        id = VampirismAPI.getVampirismWorld(getWorld()).map(vw->vw.registerGarlicBlock(strength, chunks)).orElse(0);
-        registered = i!=0;
+        id = VampirismAPI.getVampirismWorld(getWorld()).map(vw -> vw.registerGarlicBlock(strength, chunks)).orElse(0);
+        registered = i != 0;
 
     }
 
@@ -227,7 +224,7 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
 
     private void unregister() {
         if (registered && hasWorld()) {
-            VampirismAPI.getVampirismWorld(getWorld()).ifPresent(vw->vw.removeGarlicBlock(id));
+            VampirismAPI.getVampirismWorld(getWorld()).ifPresent(vw -> vw.removeGarlicBlock(id));
             registered = false;
         }
     }

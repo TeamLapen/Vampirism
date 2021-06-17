@@ -78,6 +78,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
     private int rederFullOn, renderFullOff, renderFullColor;
     private int screenBottomColor = 0;
     private int screenBottomPercentage = 0;
+    private boolean addTempPoison;
+    private EffectInstance addedTempPoison;
 
     public VampirismHUDOverlay(Minecraft mc) {
         this.mc = mc;
@@ -147,7 +149,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
         if (p != null && p.getType() == RayTraceResult.Type.ENTITY) {
             VampirismPlayerAttributes atts = VampirismPlayerAttributes.get(mc.player);
-            if (atts.vampireLevel>0 && !mc.player.isSpectator() && !atts.getVampSpecial().bat) {
+            if (atts.vampireLevel > 0 && !mc.player.isSpectator() && !atts.getVampSpecial().bat) {
                 Entity entity = ((EntityRayTraceResult) p).getEntity();
                 VampirePlayer.getOpt(mc.player).ifPresent(player -> {
                     LazyOptional<? extends IBiteableEntity> biteableOpt = LazyOptional.empty();
@@ -168,11 +170,11 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 });
 
             }
-            if(atts.hunterLevel > 0  && !mc.player.isSpectator() && mc.player.getHeldItemMainhand().getItem() == ModItems.stake) {
+            if (atts.hunterLevel > 0 && !mc.player.isSpectator() && mc.player.getHeldItemMainhand().getItem() == ModItems.stake) {
                 Entity entity = ((EntityRayTraceResult) p).getEntity();
                 if (entity instanceof LivingEntity && entity instanceof IVampireMob) {
                     if (StakeItem.canKillInstant((LivingEntity) entity, mc.player)) {
-                        if(((LivingEntity)entity).getHealth() > 0) {
+                        if (((LivingEntity) entity).getHealth() > 0) {
                             this.renderStakeInstantKill(event.getMatrixStack(), this.mc.getMainWindow().getScaledWidth(), this.mc.getMainWindow().getScaledHeight());
                             event.setCanceled(true);
                         }
@@ -252,47 +254,16 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
     }
 
-    private boolean addTempPoison;
-    private EffectInstance addedTempPoison;
-
-    @SubscribeEvent
-    public void onRenderHealthBarPost(RenderGameOverlayEvent.Post event) {
-        if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTH) {
-            return;
-        }
-        if (addTempPoison) {
-            mc.player.activePotionsMap.remove(Effects.POISON);
-        }
-
-
-    }
-
-    @SubscribeEvent
-    public void onRenderHealthBarPre(RenderGameOverlayEvent.Pre event) {
-        if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTH) {
-            return;
-        }
-        addTempPoison = mc.player.isPotionActive(ModEffects.poison) && !mc.player.activePotionsMap.containsKey(Effects.POISON);
-
-        if (addTempPoison) { //Add temporary dummy potion effect to trick renderer
-            if (addedTempPoison == null) {
-                addedTempPoison = new EffectInstance(Effects.POISON, 100);
-            }
-            mc.player.activePotionsMap.put(Effects.POISON, addedTempPoison);
-        }
-
-    }
-
     @SubscribeEvent
     public void onRenderFoodBar(RenderGameOverlayEvent.Pre event) {
 
         if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD) {
             return;
         }
-        if (mc.player!=null&&Helper.isVampire(mc.player) && !IMCHandler.requestedToDisableBloodbar) {
+        if (mc.player != null && Helper.isVampire(mc.player) && !IMCHandler.requestedToDisableBloodbar) {
             event.setCanceled(true);
 
-            if (mc.playerController.gameIsSurvivalOrAdventure() &&  mc.player.isAlive()) {
+            if (mc.playerController.gameIsSurvivalOrAdventure() && mc.player.isAlive()) {
                 VampirePlayer.getOpt(mc.player).map(VampirePlayer::getBloodStats).ifPresent(stats -> {
                             GlStateManager.enableBlend();
 
@@ -399,6 +370,34 @@ public class VampirismHUDOverlay extends ExtendedGui {
             }
             stack.pop();
         }
+    }
+
+    @SubscribeEvent
+    public void onRenderHealthBarPost(RenderGameOverlayEvent.Post event) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTH) {
+            return;
+        }
+        if (addTempPoison) {
+            mc.player.activePotionsMap.remove(Effects.POISON);
+        }
+
+
+    }
+
+    @SubscribeEvent
+    public void onRenderHealthBarPre(RenderGameOverlayEvent.Pre event) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTH) {
+            return;
+        }
+        addTempPoison = mc.player.isPotionActive(ModEffects.poison) && !mc.player.activePotionsMap.containsKey(Effects.POISON);
+
+        if (addTempPoison) { //Add temporary dummy potion effect to trick renderer
+            if (addedTempPoison == null) {
+                addedTempPoison = new EffectInstance(Effects.POISON, 100);
+            }
+            mc.player.activePotionsMap.put(Effects.POISON, addedTempPoison);
+        }
+
     }
 
     private void handleScreenColorHunter(HunterPlayer hunter) {

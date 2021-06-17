@@ -41,12 +41,6 @@ public interface IFactionPlayer<T extends IFactionPlayer<?>> extends IFactionEnt
     IFaction getDisguisedAs();
 
     /**
-     * null on client & @Nonnull on server
-     */
-    @Nonnull
-    ITaskManager getTaskManager();
-
-    /**
      * @return the faction this faction player belongs to
      */
     IPlayableFaction<T> getFaction();
@@ -73,6 +67,12 @@ public interface IFactionPlayer<T extends IFactionPlayer<?>> extends IFactionEnt
     Predicate<LivingEntity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise);
 
     PlayerEntity getRepresentingPlayer();
+
+    /**
+     * null on client & @Nonnull on server
+     */
+    @Nonnull
+    ITaskManager getTaskManager();
 
     /**
      * You can also use {@link IFactionPlayer#getDisguisedAs()} to get the faction the player looks like

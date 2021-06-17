@@ -43,8 +43,18 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
     private CheckboxButton glowingEyesButton;
 
 
-    public VampirePlayerAppearanceScreen(@Nullable  Screen backScreen) {
+    public VampirePlayerAppearanceScreen(@Nullable Screen backScreen) {
         super(NAME, Minecraft.getInstance().player, backScreen);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (!this.fangList.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
+            if (!this.eyeList.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
+                return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            }
+        }
+        return true;
     }
 
     @Override
@@ -63,8 +73,8 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
         this.eyeType = vampAtt.eyeType;
         this.glowingEyes = vampAtt.glowingEyes;
 
-        this.eyeList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100,20,REFERENCE.EYE_TYPE_COUNT, new TranslationTextComponent("gui.vampirism.appearance.eye"),this::eye, this::hoverEye).scrollSpeed(2));
-        this.fangList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80,20,REFERENCE.FANG_TYPE_COUNT, new TranslationTextComponent("gui.vampirism.appearance.fang"),this::fang, this::hoverFang));
+        this.eyeList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100, 20, REFERENCE.EYE_TYPE_COUNT, new TranslationTextComponent("gui.vampirism.appearance.eye"), this::eye, this::hoverEye).scrollSpeed(2));
+        this.fangList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80, 20, REFERENCE.FANG_TYPE_COUNT, new TranslationTextComponent("gui.vampirism.appearance.fang"), this::fang, this::hoverFang));
         this.eyeButton = this.addButton(new ExtendedButton(eyeList.x, eyeList.y - 20, eyeList.getWidth() + 1, 20, new StringTextComponent(""), (b) -> {
             this.setEyeListVisibility(!eyeList.visible);
         }));
@@ -81,16 +91,6 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
         });
         this.setEyeListVisibility(false);
         this.setFangListVisibility(false);
-    }
-
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (!this.fangList.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
-            if (!this.eyeList.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
-                return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
-            }
-        }
-        return true;
     }
 
     @Override

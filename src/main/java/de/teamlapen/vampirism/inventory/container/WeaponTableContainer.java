@@ -76,12 +76,6 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
         this.onCraftMatrixChanged(this.craftMatrix);
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void func_217056_a(boolean shouldPlaceAll, @Nonnull IRecipe<?> recipe, @Nonnull ServerPlayerEntity serverPlayer) {
-        new WeaponTableRecipePlacer<>(this).place(serverPlayer, (IRecipe<CraftingInventory>)recipe, shouldPlaceAll);
-    }
-
     @Override
     public boolean canInteractWith(@Nonnull PlayerEntity playerIn) {
         return isWithinUsableDistance(this.worldPos, playerIn, ModBlocks.weapon_table);
@@ -102,8 +96,31 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     }
 
     @Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+        for (IContainerListener icontainerlistener : this.listeners) {
+            if (this.prevMissingLava != this.missingLava) {
+                icontainerlistener.sendWindowProperty(this, 0, missingLava ? 1 : 0);
+            }
+
+        }
+        this.prevMissingLava = missingLava;
+    }
+
+    @Override
     public void fillStackedContents(@Nonnull RecipeItemHelper recipeItemHelper) {
         craftMatrix.fillStackedContents(recipeItemHelper);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void func_217056_a(boolean shouldPlaceAll, @Nonnull IRecipe<?> recipe, @Nonnull ServerPlayerEntity serverPlayer) {
+        new WeaponTableRecipePlacer<>(this).place(serverPlayer, (IRecipe<CraftingInventory>) recipe, shouldPlaceAll);
+    }
+
+    @Override
+    public RecipeBookCategory func_241850_m() {
+        return RecipeBookCategory.CRAFTING;
     }
 
     @Override
@@ -114,6 +131,12 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     @Override
     public int getOutputSlot() {
         return 0;
+    }
+
+    @Nonnull
+    @Override
+    public List<RecipeBookCategories> getRecipeBookCategories() {
+        return Lists.newArrayList(RecipeBookCategories.UNKNOWN);
     }
 
     @Override
@@ -208,18 +231,6 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
         return itemStackCopy;
     }
 
-    @Override
-    public void detectAndSendChanges() {
-        super.detectAndSendChanges();
-        for (IContainerListener icontainerlistener : this.listeners) {
-            if (this.prevMissingLava != this.missingLava) {
-                icontainerlistener.sendWindowProperty(this, 0, missingLava ? 1 : 0);
-            }
-
-        }
-        this.prevMissingLava = missingLava;
-    }
-
     @OnlyIn(Dist.CLIENT)
     @Override
     public void updateProgressBar(int id, int data) {
@@ -236,7 +247,7 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
             craftResultIn.setInventorySlotContents(0, ItemStack.EMPTY);
             if (optional.isPresent()) {
                 IWeaponTableRecipe recipe = optional.get();
-                if ( (craftResultIn.canUseRecipe(worldIn, entityplayermp, recipe) || ModList.get().isLoaded("fastbench")) && recipe.getRequiredLevel() <= hunter.getLevel() && Helper.areSkillsEnabled(hunter.getSkillHandler(), recipe.getRequiredSkills())) {
+                if ((craftResultIn.canUseRecipe(worldIn, entityplayermp, recipe) || ModList.get().isLoaded("fastbench")) && recipe.getRequiredLevel() <= hunter.getLevel() && Helper.areSkillsEnabled(hunter.getSkillHandler(), recipe.getRequiredSkills())) {
                     this.worldPos.consume((world, pos) -> {
                         if (world.getBlockState(pos).get(WeaponTableBlock.LAVA) >= recipe.getRequiredLavaUnits()) {
                             craftResultIn.setInventorySlotContents(0, recipe.getCraftingResult(craftMatrixIn));
@@ -248,17 +259,6 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
             }
             entityplayermp.connection.sendPacket(new SSetSlotPacket(this.windowId, 0, craftResultIn.getStackInSlot(0)));
         }
-    }
-
-    @Nonnull
-    @Override
-    public List<RecipeBookCategories> getRecipeBookCategories() {
-        return Lists.newArrayList(RecipeBookCategories.UNKNOWN);
-    }
-
-    @Override
-    public RecipeBookCategory func_241850_m() {
-        return RecipeBookCategory.CRAFTING;
     }
 
     public static class Factory implements IContainerFactory<WeaponTableContainer> {

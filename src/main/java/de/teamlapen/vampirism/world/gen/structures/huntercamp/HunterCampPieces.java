@@ -32,16 +32,32 @@ import java.util.Random;
 
 @ParametersAreNonnullByDefault
 public abstract class HunterCampPieces extends StructurePiece {
-    protected final int x, z;
-    protected int y;
-    protected final Block baseBlock;
-
     public static void init(int chunkX, int chunkZ, Biome biomeIn, Random rand, List<StructurePiece> componentsIn) {
         Fireplace hunterCamp = new Fireplace(rand, chunkX * 16 + rand.nextInt(16), 63, chunkZ * 16 + rand.nextInt(16), biomeIn.getGenerationSettings().getSurfaceBuilderConfig().getTop().getBlock());
         componentsIn.add(hunterCamp);
         hunterCamp.buildComponent(hunterCamp, componentsIn, rand);
     }
+    protected final int x, z;
+    protected final Block baseBlock;
+    protected int y;
 
+
+    public HunterCampPieces(IStructurePieceType structurePieceType, int part, int x, int y, int z, Block baseBlock) {
+        super(structurePieceType, part);
+        this.baseBlock = baseBlock;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.setBoundingBox();
+    }
+
+    public HunterCampPieces(IStructurePieceType structurePieceType, CompoundNBT nbt) {
+        super(structurePieceType, nbt);
+        this.baseBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(nbt.getString("baseBlock")));
+        this.x = nbt.getInt("x");
+        this.y = nbt.getInt("y");
+        this.z = nbt.getInt("z");
+    }
 
     @Override
     public boolean func_230383_a_/*addComponentParts*/(ISeedReader worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
@@ -50,6 +66,31 @@ public abstract class HunterCampPieces extends StructurePiece {
 
         //fail conditions
         return testPreconditions(worldIn, structureManager, chunkPos);
+    }
+
+    @Override
+    protected void readAdditional(CompoundNBT tagCompound) {
+        tagCompound.putInt("x", x);
+        tagCompound.putInt("y", y);
+        tagCompound.putInt("z", z);
+        //noinspection ConstantConditions
+        tagCompound.putString("baseBlock", this.baseBlock.getRegistryName().toString());
+    }
+
+    protected void setBoundingBox() {
+        this.boundingBox = new MutableBoundingBox(this.x - 1, this.y, this.z - 1, this.x + 1, this.y + 2, this.z + 1);
+    }
+
+    protected boolean testPreconditions(ISeedReader worldIn, StructureManager manager, ChunkPos chunkPos) {
+        if (VampirismConfig.SERVER.disableHunterTentGen.get()) return false;
+        for (StructureStart<?> value : worldIn.getChunk(chunkPos.x, chunkPos.z).getStructureStarts().values()) {
+            if (value != StructureStart.DUMMY && value.getStructure() != ModFeatures.hunter_camp) {
+                return false;
+            }
+        }
+        return this.y >= 63
+                && !worldIn.getBlockState(new BlockPos(x, y - 1, z)).getMaterial().isLiquid()
+                && !manager.getStructureStart(new BlockPos(x, y, z), false, Structure.VILLAGE).isValid();
     }
 
     public static class Fireplace extends HunterCampPieces {
@@ -65,20 +106,6 @@ public abstract class HunterCampPieces extends StructurePiece {
             super(ModFeatures.hunter_camp_fireplace, nbt);
             advanced = nbt.getBoolean("advanced");
             specialComponentAdd = nbt.getBoolean("specialComponentAdd");
-        }
-
-        @Override
-        public boolean func_230383_a_/*addComponentParts*/(ISeedReader worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
-            //preconditions
-            if (!super.func_230383_a_/*addComponentParts*/(worldIn, structureManager, chunkGenerator, random, structureBoundingBoxIn, chunkPos, blockPos)) {
-                return false;
-            }
-
-            //generation
-            this.setBlockState(worldIn, VampirismConfig.COMMON.useVanillaCampfire.get() ? Blocks.CAMPFIRE.getDefaultState() : ModBlocks.fire_place.getDefaultState(), 1, 0, 1, structureBoundingBoxIn);
-            this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), 1, 1, 1, structureBoundingBoxIn);
-
-            return true;
         }
 
         @Override
@@ -101,6 +128,27 @@ public abstract class HunterCampPieces extends StructurePiece {
                 if (rand.nextInt(2) == 0)
                     listIn.add(getComponent(rand, directions, false));
             }
+        }
+
+        @Override
+        public boolean func_230383_a_/*addComponentParts*/(ISeedReader worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
+            //preconditions
+            if (!super.func_230383_a_/*addComponentParts*/(worldIn, structureManager, chunkGenerator, random, structureBoundingBoxIn, chunkPos, blockPos)) {
+                return false;
+            }
+
+            //generation
+            this.setBlockState(worldIn, VampirismConfig.COMMON.useVanillaCampfire.get() ? Blocks.CAMPFIRE.getDefaultState() : ModBlocks.fire_place.getDefaultState(), 1, 0, 1, structureBoundingBoxIn);
+            this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), 1, 1, 1, structureBoundingBoxIn);
+
+            return true;
+        }
+
+        @Override
+        protected void readAdditional(CompoundNBT tagCompound) {
+            super.readAdditional(tagCompound);
+            tagCompound.putBoolean("advanced", this.advanced);
+            tagCompound.putBoolean("specialComponentAdd", this.specialComponentAdd);
         }
 
         /**
@@ -130,21 +178,14 @@ public abstract class HunterCampPieces extends StructurePiece {
             int z = this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 3 : -3 : 0);
             return new Tent(x, y, z, direction, baseBlock, advanced);
         }
-
-        @Override
-        protected void readAdditional(CompoundNBT tagCompound) {
-            super.readAdditional(tagCompound);
-            tagCompound.putBoolean("advanced", this.advanced);
-            tagCompound.putBoolean("specialComponentAdd", this.specialComponentAdd);
-        }
     }
 
     public static class Tent extends HunterCampPieces {
         private final Direction direction;
-        private int mirror;
+        private final boolean advanced;
         int xDiff;
         int xCenter;
-        private final boolean advanced;
+        private int mirror;
 
         public Tent(int x, int y, int z, Direction direction, Block baseBlock, boolean advanced) {
             super(ModFeatures.hunter_camp_tent, 1, x, y, z, baseBlock);
@@ -268,36 +309,6 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
     }
 
-    protected void setBoundingBox() {
-        this.boundingBox = new MutableBoundingBox(this.x - 1, this.y, this.z - 1, this.x + 1, this.y + 2, this.z + 1);
-    }
-
-    public HunterCampPieces(IStructurePieceType structurePieceType, int part, int x, int y, int z, Block baseBlock) {
-        super(structurePieceType, part);
-        this.baseBlock = baseBlock;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.setBoundingBox();
-    }
-
-    public HunterCampPieces(IStructurePieceType structurePieceType, CompoundNBT nbt) {
-        super(structurePieceType, nbt);
-        this.baseBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(nbt.getString("baseBlock")));
-        this.x = nbt.getInt("x");
-        this.y = nbt.getInt("y");
-        this.z = nbt.getInt("z");
-    }
-
-    @Override
-    protected void readAdditional(CompoundNBT tagCompound) {
-        tagCompound.putInt("x", x);
-        tagCompound.putInt("y", y);
-        tagCompound.putInt("z", z);
-        //noinspection ConstantConditions
-        tagCompound.putString("baseBlock", this.baseBlock.getRegistryName().toString());
-    }
-
     public static class SpecialBlock extends HunterCampPieces {
         private final Direction direction;
         private final boolean advanced;
@@ -346,17 +357,5 @@ public abstract class HunterCampPieces extends StructurePiece {
             return super.testPreconditions(worldIn, manager, chunkPos)
                     && (Math.abs(this.y - worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0), this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0))) < 3);
         }
-    }
-
-    protected boolean testPreconditions(ISeedReader worldIn, StructureManager manager, ChunkPos chunkPos) {
-        if (VampirismConfig.SERVER.disableHunterTentGen.get()) return false;
-        for (StructureStart<?> value : worldIn.getChunk(chunkPos.x, chunkPos.z).getStructureStarts().values()) {
-            if (value != StructureStart.DUMMY && value.getStructure() != ModFeatures.hunter_camp) {
-                return false;
-            }
-        }
-        return this.y >= 63
-                && !worldIn.getBlockState(new BlockPos(x, y - 1, z)).getMaterial().isLiquid()
-                && !manager.getStructureStart(new BlockPos(x, y, z), false, Structure.VILLAGE).isValid();
     }
 }

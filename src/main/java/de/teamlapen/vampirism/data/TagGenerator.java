@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 public class TagGenerator {
 
     public static void register(DataGenerator generator, ExistingFileHelper helper) {
-        BlockTagsProvider blockTagsProvider = new ModBlockTagsProvider(generator,helper);
+        BlockTagsProvider blockTagsProvider = new ModBlockTagsProvider(generator, helper);
         generator.addProvider(blockTagsProvider);
         generator.addProvider(new ModItemTagsProvider(generator, blockTagsProvider, helper));
         generator.addProvider(new ModEntityTypeTagsProvider(generator, helper));

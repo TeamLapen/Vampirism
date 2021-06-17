@@ -25,21 +25,19 @@ public class VampireBookManager {
     public static VampireBookManager getInstance() {
         return ourInstance;
     }
-
+    private final Map<String, CompoundNBT> booksById = new HashMap<>();
     private CompoundNBT[] bookTags = null;
-    private final Map<String,CompoundNBT> booksById = new HashMap<>();
 
     private VampireBookManager() {
     }
 
-    @Nonnull
-    public CompoundNBT getRandomBookData(Random rnd) {
-        return (bookTags == null || bookTags.length == 0) ? new CompoundNBT() : bookTags[rnd.nextInt(bookTags.length)];
+    public Optional<CompoundNBT> getBookData(String id) {
+        CompoundNBT nbt = booksById.get(id);
+        return Optional.ofNullable(nbt);
     }
 
     /**
      * Return a vampire book with a randomly selected text and title
-     *
      */
     public ItemStack getRandomBook(Random rnd) {
         ItemStack book = new ItemStack(ModItems.vampire_book, 1);
@@ -47,9 +45,9 @@ public class VampireBookManager {
         return book;
     }
 
-    public Optional<CompoundNBT> getBookData(String id){
-        CompoundNBT nbt = booksById.get(id);
-        return Optional.ofNullable(nbt);
+    @Nonnull
+    public CompoundNBT getRandomBookData(Random rnd) {
+        return (bookTags == null || bookTags.length == 0) ? new CompoundNBT() : bookTags[rnd.nextInt(bookTags.length)];
     }
 
     public void init() {
@@ -84,17 +82,17 @@ public class VampireBookManager {
         String[] lines = data.split("\n");
         for (String line : lines) {
             String id = null;
-            if(line.startsWith("id")){
+            if (line.startsWith("id")) {
                 int pos = line.indexOf(':');
-                if(pos!=-1){
-                    id = line.substring(2,pos);
-                    line = line.substring(pos+1);
+                if (pos != -1) {
+                    id = line.substring(2, pos);
+                    line = line.substring(pos + 1);
                 }
             }
             CompoundNBT nbt = JsonToNBT.getTagFromJson(line);
             books.add(nbt);
-            if(id!=null){
-                booksById.put(id,nbt);
+            if (id != null) {
+                booksById.put(id, nbt);
             }
         }
         bookTags = books.toArray(new CompoundNBT[0]);

@@ -17,16 +17,16 @@ public class ParentUnlocker implements TaskUnlocker {
     }
 
     @Override
-    public boolean isUnlocked(IFactionPlayer<?> playerEntity) {
-        return playerEntity.getTaskManager().wasTaskCompleted(parent.get());
-    }
-
-    @Override
     public ITextComponent getDescription() {
         return new TranslationTextComponent("text.vampirism.task.require_parent", parent.get().getTranslation());
     }
 
     public Supplier<Task> getParent() {
         return parent;
+    }
+
+    @Override
+    public boolean isUnlocked(IFactionPlayer<?> playerEntity) {
+        return playerEntity.getTaskManager().wasTaskCompleted(parent.get());
     }
 }

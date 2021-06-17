@@ -62,6 +62,15 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
         arrowStack.setCount(1);
     }
 
+    @Override
+    public IPacket<?> createSpawnPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    public CrossbowArrowItem.EnumArrowType getArrowType() {
+        return arrowStack.getItem() instanceof CrossbowArrowItem ? ((CrossbowArrowItem) arrowStack.getItem()).getType() : CrossbowArrowItem.EnumArrowType.NORMAL;
+    }
+
     public Random getRNG() {
         return this.rand;
     }
@@ -97,16 +106,6 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
         }
     }
 
-    @Nonnull
-    @Override
-    protected ItemStack getArrowStack() {
-        return arrowStack;
-    }
-
-    public CrossbowArrowItem.EnumArrowType getArrowType(){
-        return arrowStack.getItem() instanceof CrossbowArrowItem ? ((CrossbowArrowItem)arrowStack.getItem()).getType() : CrossbowArrowItem.EnumArrowType.NORMAL;
-    }
-
     @Override
     protected void func_230299_a_(BlockRayTraceResult blockRayTraceResult) { //onHitBlock
         Item item = arrowStack.getItem();
@@ -116,8 +115,9 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
         super.func_230299_a_(blockRayTraceResult);
     }
 
+    @Nonnull
     @Override
-    public IPacket<?> createSpawnPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+    protected ItemStack getArrowStack() {
+        return arrowStack;
     }
 }

@@ -48,19 +48,19 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
             directDamage *= modifier;
             indirectDamage *= modifier;
         }
-        if(player.getSkillHandler().isRefinementEquipped(ModRefinements.dark_blood_projectile_speed)) {
+        if (player.getSkillHandler().isRefinementEquipped(ModRefinements.dark_blood_projectile_speed)) {
             speed = 1.4f;
         }
 
-        if (player.getSkillHandler().isRefinementEquipped(ModRefinements.dark_blood_projectile_aoe)){
+        if (player.getSkillHandler().isRefinementEquipped(ModRefinements.dark_blood_projectile_aoe)) {
             for (int i = 0; i < 32; i++) {
-                Vector3d vec3d = getRotationVector(shooter.getPitch(1.0f), shooter.getYaw(1.0f) + i *11.25f);
+                Vector3d vec3d = getRotationVector(shooter.getPitch(1.0f), shooter.getYaw(1.0f) + i * 11.25f);
                 DarkBloodProjectileEntity entity = createProjectile(shooter, shooter.getPositionVec(), 0, vec3d, false, 0, 0, 0.95f);
                 entity.setMaxTicks(7);
                 entity.excludeShooter();
-                if (i==0) {
+                if (i == 0) {
                     entity.setDamage(0, directDamage);
-                    entity.explode(VampirismConfig.BALANCE.vrDarkBloodProjectileAOERange.get(),null);
+                    entity.explode(VampirismConfig.BALANCE.vrDarkBloodProjectileAOERange.get(), null);
                 }
             }
         } else {
@@ -86,6 +86,14 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
         return entity;
     }
 
+    private Vector3d getRotationVector(float pitch, float yaw) {
+        float f = pitch * ((float) Math.PI / 180F);
+        float f1 = -yaw * ((float) Math.PI / 180F);
+        float f2 = MathHelper.cos(f1);
+        float f3 = MathHelper.sin(f1);
+        float f4 = MathHelper.cos(f);
+        return new Vector3d(f3 * f4, 0, f2 * f4);
+    }
 
     private Vector3d getVectorForRotation(float pitch, float yaw) {
         float f = pitch * ((float) Math.PI / 180F);
@@ -95,14 +103,5 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
         float f4 = MathHelper.cos(f);
         float f5 = MathHelper.sin(f);
         return new Vector3d(f3 * f4, -f5, f2 * f4);
-    }
-
-    private Vector3d getRotationVector(float pitch, float yaw) {
-        float f = pitch * ((float) Math.PI / 180F);
-        float f1 = -yaw * ((float) Math.PI / 180F);
-        float f2 = MathHelper.cos(f1);
-        float f3 = MathHelper.sin(f1);
-        float f4 = MathHelper.cos(f);
-        return new Vector3d(f3 * f4,0, f2 * f4);
     }
 }

@@ -15,6 +15,9 @@ public interface ISkillHandler<T extends ISkillPlayer<?>> {
      */
     Result canSkillBeEnabled(ISkill skill);
 
+    ItemStack[] createRefinementItems();
+
+    void damageRefinements();
 
     /**
      * Disables the given skill
@@ -31,20 +34,6 @@ public interface ISkillHandler<T extends ISkillPlayer<?>> {
     void enableSkill(ISkill skill);
 
     /**
-     * @return The count of additional skills that can be currently unlocked
-     */
-    int getLeftSkillPoints();
-
-    ISkill[] getParentSkills(ISkill skill);
-
-    boolean isSkillEnabled(ISkill skill);
-
-    /**
-     * Reset all skills but reactivate the root skill of the faction
-     */
-    void resetSkills();
-
-    /**
      * Equip the refinement set from the given stack to the appropriate slot
      * If no set is present or it is from the wrong faction, the old set for the slot will be removed, but no new set will be added
      *
@@ -53,16 +42,26 @@ public interface ISkillHandler<T extends ISkillPlayer<?>> {
      */
     boolean equipRefinementItem(ItemStack stack);
 
+    /**
+     * @return The count of additional skills that can be currently unlocked
+     */
+    int getLeftSkillPoints();
+
+    ISkill[] getParentSkills(ISkill skill);
+
     boolean isRefinementEquipped(IRefinement refinement);
 
-    ItemStack[] createRefinementItems();
-
-    void damageRefinements();
+    boolean isSkillEnabled(ISkill skill);
 
     /**
      * remove all equipped refinements
      */
     void resetRefinements();
+
+    /**
+     * Reset all skills but reactivate the root skill of the faction
+     */
+    void resetSkills();
 
     enum Result {
         /**

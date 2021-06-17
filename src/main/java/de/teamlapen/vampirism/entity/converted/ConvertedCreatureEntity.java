@@ -70,17 +70,6 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     }
 
     @Override
-    public DataParameter<Boolean> getConvertingDataParam() {
-        return CONVERTING;
-    }
-
-    @Override
-    protected void registerData() {
-        super.registerData();
-        this.registerConvertingData(this);
-    }
-
-    @Override
     public void baseTick() {
         super.baseTick();
         if (!nil()) {
@@ -123,6 +112,12 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         return super.canDespawn(distanceToClosestPlayer) && canDespawn;
     }
 
+    @Override
+    public T createCuredEntity(CreatureEntity entity, EntityType<T> newType) {
+        this.entityCreature.revive();
+        return this.entityCreature;
+    }
+
     @Nullable
     @Override
     public ItemEntity entityDropItem(ItemStack stack, float offsetY) {
@@ -136,6 +131,11 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         return super.entityDropItem(actualDrop, offsetY);
     }
 
+    @Override
+    public DataParameter<Boolean> getConvertingDataParam() {
+        return CONVERTING;
+    }
+
     @Nonnull
     @Override
     public ITextComponent getName() {
@@ -147,8 +147,27 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         }
         return name;
     }
+
     public T getOldCreature() {
         return entityCreature;
+    }
+
+    @Override
+    public void handleStatusUpdate(byte id) {
+        if (!handleSound(id, this)) {
+            super.handleStatusUpdate(id);
+        }
+    }
+
+    @Override
+    public void livingTick() {
+        if (!this.world.isRemote && this.isAlive() && this.isConverting(this)) {
+            --this.conversionTime;
+            if (this.conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(this, EntityType.VILLAGER, (timer) -> this.conversionTime = timer)) {
+                this.cureEntity((ServerWorld) this.world, this, ((EntityType<T>) entityCreature.getType()));
+            }
+        }
+        super.livingTick();
     }
 
     @Override
@@ -180,7 +199,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
             canDespawn = nbt.getBoolean("converted_canDespawn");
         }
         if (nbt.contains("ConversionTime", 99) && nbt.getInt("ConversionTime") > -1) {
-            this.startConverting(nbt.hasUniqueId("ConversionPlayer") ? nbt.getUniqueId("ConversionPlayer") : null, nbt.getInt("ConversionTime"),this);
+            this.startConverting(nbt.hasUniqueId("ConversionPlayer") ? nbt.getUniqueId("ConversionPlayer") : null, nbt.getInt("ConversionTime"), this);
         }
     }
 
@@ -220,6 +239,13 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     }
 
     @Override
+    public void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, CreatureEntity entity) {
+        ICurableConvertedCreature.super.startConverting(conversionStarterIn, conversionTimeIn, entity);
+        this.conversationStarter = conversionStarterIn;
+        this.conversionTime = conversionTimeIn;
+    }
+
+    @Override
     public void tick() {
         super.tick();
         if (!world.isRemote && entityCreature == null) {
@@ -249,6 +275,14 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     public void writeFullUpdateToNBT(CompoundNBT nbt) {
         writeOldEntityToNBT(nbt);
 
+    }
+
+    @Nonnull
+    @Override
+    protected ActionResultType func_230254_b_(PlayerEntity player, @Nonnull Hand hand) {
+        ItemStack stack = player.getHeldItem(hand);
+        if (stack.getItem() != ModItems.cure_apple) return super.func_230254_b_(player, hand);
+        return interactWithCureItem(player, stack, this);
     }
 
     /**
@@ -287,7 +321,11 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         return entityCreature == null;
     }
 
-
+    @Override
+    protected void registerData() {
+        super.registerData();
+        this.registerConvertingData(this);
+    }
 
     @Override
     protected void registerGoals() {
@@ -347,46 +385,6 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
             }
         }
 
-    }
-
-    @Override
-    public void livingTick() {
-        if (!this.world.isRemote && this.isAlive() && this.isConverting(this)) {
-            --this.conversionTime;
-            if (this.conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(this, EntityType.VILLAGER, (timer) -> this.conversionTime = timer)) {
-                this.cureEntity((ServerWorld)this.world, this, ((EntityType<T>) entityCreature.getType()));
-            }
-        }
-        super.livingTick();
-    }
-
-
-    @Nonnull
-    @Override
-    protected ActionResultType func_230254_b_(PlayerEntity player, @Nonnull Hand hand) {
-        ItemStack stack = player.getHeldItem(hand);
-        if (stack.getItem() != ModItems.cure_apple) return super.func_230254_b_(player, hand);
-        return interactWithCureItem(player, stack, this);
-    }
-
-    @Override
-    public void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, CreatureEntity entity) {
-        ICurableConvertedCreature.super.startConverting(conversionStarterIn, conversionTimeIn, entity);
-        this.conversationStarter = conversionStarterIn;
-        this.conversionTime = conversionTimeIn;
-    }
-
-    @Override
-    public void handleStatusUpdate(byte id) {
-        if (!handleSound(id, this)){
-            super.handleStatusUpdate(id);
-        }
-    }
-
-    @Override
-    public T createCuredEntity(CreatureEntity entity, EntityType<T> newType) {
-        this.entityCreature.revive();
-        return this.entityCreature;
     }
 
     public static class IMob extends ConvertedCreatureEntity implements net.minecraft.entity.monster.IMob {

@@ -22,9 +22,8 @@ import java.util.function.Predicate;
  */
 public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoal<LivingEntity> {
     private static final Map<IFaction<?>, Predicate<LivingEntity>> predicates = new HashMap<>();
-
-    private IFaction<?> faction;
     private final IronGolemEntity golem;
+    private IFaction<?> faction;
 
     public GolemTargetNonVillageFactionGoal(IronGolemEntity creature) {
         super(creature, LivingEntity.class, 4, false, false, null);

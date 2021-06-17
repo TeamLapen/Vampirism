@@ -33,6 +33,7 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
         }
         return true;
     }
+
     private final TIER tier;
     private final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{5, 8, 10, 5};
     private final int[] DAMAGE_REDUCTION_ENHANCED = new int[]{4, 7, 9, 4};
@@ -50,11 +51,6 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
-    }
-
-    @Override
-    public String getBaseRegName() {
-        return baseRegName;
     }
 
     @Override
@@ -77,6 +73,11 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
             map.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Speed modifier", this.getSpeedReduction(slot.getIndex()), AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
         return map;
+    }
+
+    @Override
+    public String getBaseRegName() {
+        return baseRegName;
     }
 
     @Override

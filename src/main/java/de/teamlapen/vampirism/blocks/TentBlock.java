@@ -54,174 +54,6 @@ public class TentBlock extends VampirismBlock {
     private static final Map<PlayerEntity.SleepResult, ITextComponent> sleepResults;
     private static final Table<Integer, Direction, Pair<Double, Double>> offsets;
 
-    public TentBlock() {
-        this(name);
-    }
-
-    protected TentBlock(String name) {
-        super(name, Properties.create(Material.WOOL).hardnessAndResistance(0.6f).sound(SoundType.CLOTH).notSolid());
-        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(POSITION, 0).with(BedBlock.OCCUPIED, false));
-    }
-
-
-    @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        return new ItemStack(ModItems.item_tent);
-    }
-
-    @Override
-    public ActionResultType onBlockActivated(BlockState blockState, World world, final BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
-        if (world.isRemote()) return ActionResultType.SUCCESS;
-        if (VampirismPlayerAttributes.get(player).hunterLevel == 0) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.tent.cant_use"), true);
-            return ActionResultType.SUCCESS;
-        }
-
-        if (!BedBlock.doesBedWork(world)) {
-            world.removeBlock(pos, false);
-            BlockPos blockpos = pos.offset(blockState.get(HORIZONTAL_FACING).getOpposite());
-            if (world.getBlockState(blockpos).isIn(this)) {
-                world.removeBlock(blockpos, false);
-            }
-
-            world.createExplosion(null, DamageSource.func_233546_a_(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
-            return ActionResultType.SUCCESS;
-        } else if (blockState.get(BedBlock.OCCUPIED)) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.tent.occupied"), true);
-            return ActionResultType.SUCCESS;
-        } else {
-            final BlockPos finalPos = pos;
-            player.trySleep(pos).ifLeft(sleepResult1 -> {
-                if (sleepResult1 != null) {
-                    player.sendStatusMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
-                }
-            }).ifRight(u -> {
-                this.setBedOccupied(blockState, world, pos, null, true);
-                setTentSleepPosition(player, pos, player.world.getBlockState(pos).get(POSITION), player.world.getBlockState(pos).get(HORIZONTAL_FACING));
-            });
-            return ActionResultType.SUCCESS;
-        }
-    }
-
-    @Override
-    public boolean isValidPosition(BlockState blockState, IWorldReader worldReader, BlockPos blockPos) {
-        return worldReader.getBlockState(blockPos).isAir(worldReader,blockPos);
-    }
-
-    @Override
-    public void setBedOccupied(BlockState state, World world, BlockPos pos, LivingEntity sleeper, boolean occupied) {
-        forWholeTent(pos, state, ((direction, blockPos) -> {
-            BlockState blockState = world.getBlockState(blockPos);
-            if (blockState.getBlock() instanceof TentBlock) {
-                ((IWorldWriter & IWorldReader) world).setBlockState(pos, world.getBlockState(pos).with(BlockStateProperties.OCCUPIED, occupied), 2);
-            }
-        }));
-    }
-
-    @Override
-    public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
-        super.onFallenUpon(worldIn, pos, entityIn, fallDistance * 0.7F);
-    }
-
-    @Override
-    public void onBlockHarvested(World world, @Nonnull BlockPos blockPos, BlockState blockState, @Nonnull PlayerEntity playerEntity) {
-        forWholeTent(blockPos, blockState, (direction, blockPos1) -> {
-            world.destroyBlock(blockPos1, true);
-            if (!world.isRemote) {
-                VampirismMod.dispatcher.sendToAllAround(new PlayEventPacket(1, blockPos1, Block.getStateId(world.getBlockState(blockPos1))), world.getDimensionKey(), blockPos1.getX(), blockPos1.getY(), blockPos1.getZ(), 64);
-                if (!playerEntity.isCreative()) {
-                    spawnDrops(world.getBlockState(blockPos1), world, blockPos1, null, playerEntity, playerEntity.getHeldItemMainhand());
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onBlockExploded(BlockState state, World world, BlockPos pos, Explosion explosion) {
-        forWholeTent(pos, state, (di, pos1) -> {
-            if (world.getBlockState(pos1).getBlock() instanceof TentBlock) {
-                world.setBlockState(pos1, Blocks.AIR.getDefaultState(), 3);
-                getBlock().onExplosionDestroy(world, pos1, explosion);
-            }
-        });
-    }
-
-    @Override
-    public boolean isBed(BlockState state, IBlockReader world, BlockPos pos, @Nullable Entity player) {
-        return true;
-    }
-
-    @Override
-    public Direction getBedDirection(BlockState state, IWorldReader world, BlockPos pos) {
-        switch (state.get(POSITION)){
-            case 0:
-            case 3:
-                return state.get(HORIZONTAL_FACING).getOpposite();
-            default:
-                return state.get(HORIZONTAL_FACING);
-        }
-    }
-
-    @Override
-    public void onLanded(IBlockReader worldIn, Entity entityIn) {
-        if (entityIn.isSneaking()) {
-            super.onLanded(worldIn, entityIn);
-        } else {
-            Vector3d vec3d = entityIn.getMotion();
-            if (vec3d.y < 0.0D) {
-                double d0 = entityIn instanceof LivingEntity ? 1.0D : 0.8D;
-                entityIn.setMotion(vec3d.x, -vec3d.y * (double) 0.33F * d0, vec3d.z);
-            }
-        }
-
-    }
-
-    private void forWholeTent(BlockPos blockPos, BlockState blockState, BiConsumer<Direction, BlockPos> consumer){
-        BlockPos main = blockPos;
-        Direction dir = blockState.get(FACING);
-        int p = blockState.get(POSITION);
-        if (p == 0) {
-            dir = dir.getOpposite();
-        } else if (p == 1) {
-            main = blockPos.offset(dir.rotateY());
-        } else if (p == 2) {
-            main = blockPos.offset(dir.rotateY()).offset(dir.getOpposite());
-        } else if (p == 3) {
-            main = blockPos.offset(dir);
-            dir = dir.getOpposite();
-        }
-        consumer.accept(dir, blockPos);
-        BlockPos cur = main;
-        if (cur != blockPos) consumer.accept(dir, cur);
-        cur = main.offset(dir);
-        if (cur != blockPos) consumer.accept(dir, cur);
-        cur = main.offset(dir.rotateYCCW());
-        if (cur != blockPos) consumer.accept(dir, cur);
-        cur = main.offset(dir).offset(dir.rotateYCCW());
-        if (cur != blockPos) consumer.accept(dir, cur);
-    }
-
-    @Nonnull
-    @Override
-    public VoxelShape getShape(BlockState blockState, IBlockReader blockReader, BlockPos blockPos, ISelectionContext context) {
-        return shapes.get(blockState.get(FACING),blockState.get(POSITION));
-    }
-
-    @Override
-    public boolean addDestroyEffects(BlockState state, World world, BlockPos pos, ParticleManager manager) {
-        return true;
-    }
-
-
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, POSITION, BlockStateProperties.OCCUPIED);
-    }
-
-    public static void setTentSleepPosition(PlayerEntity player, BlockPos blockPos, int position, Direction facing) {
-        player.setPosition(blockPos.getX() + offsets.get(position, facing).getFirst(), blockPos.getY() + 0.0625, blockPos.getZ() + offsets.get(position, facing).getSecond());
-    }
-
     static {
         VoxelShape NORTH = makeShape();
         VoxelShape EAST = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.NINETY);
@@ -229,8 +61,8 @@ public class TentBlock extends VampirismBlock {
         VoxelShape WEST = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
         VoxelShape BACK = makeShapeBack1();
         VoxelShape BACKMIRROR = makeShapeBack2();
-        VoxelShape SOUTHR = VoxelShapes.or(SOUTH,BACK);
-        VoxelShape NORTHL = VoxelShapes.or(NORTH,BACKMIRROR);
+        VoxelShape SOUTHR = VoxelShapes.or(SOUTH, BACK);
+        VoxelShape NORTHL = VoxelShapes.or(NORTH, BACKMIRROR);
 
         ImmutableTable.Builder<Direction, Integer, VoxelShape> shapeBuilder = ImmutableTable.builder();
         shapeBuilder.put(Direction.NORTH, 0, NORTH);
@@ -275,6 +107,10 @@ public class TentBlock extends VampirismBlock {
         sleepBuilder.put(PlayerEntity.SleepResult.TOO_FAR_AWAY, new TranslationTextComponent("text.vampirism.tent.too_far_away"));
         sleepBuilder.put(PlayerEntity.SleepResult.OBSTRUCTED, new TranslationTextComponent("text.vampirism.tent.obstructed"));
         sleepResults = sleepBuilder.build();
+    }
+
+    public static void setTentSleepPosition(PlayerEntity player, BlockPos blockPos, int position, Direction facing) {
+        player.setPosition(blockPos.getX() + offsets.get(position, facing).getFirst(), blockPos.getY() + 0.0625, blockPos.getZ() + offsets.get(position, facing).getSecond());
     }
 
     private static VoxelShape makeShape() {
@@ -357,5 +193,167 @@ public class TentBlock extends VampirismBlock {
                 Block.makeCuboidShape(2, 1, 0, 3, 13.85, 1),
                 Block.makeCuboidShape(1, 1, 0, 2, 14.65, 1),
                 Block.makeCuboidShape(0, 1, 0, 1, 15.85, 1));
+    }
+
+    public TentBlock() {
+        this(name);
+    }
+
+    protected TentBlock(String name) {
+        super(name, Properties.create(Material.WOOL).hardnessAndResistance(0.6f).sound(SoundType.CLOTH).notSolid());
+        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(POSITION, 0).with(BedBlock.OCCUPIED, false));
+    }
+
+    @Override
+    public boolean addDestroyEffects(BlockState state, World world, BlockPos pos, ParticleManager manager) {
+        return true;
+    }
+
+    @Override
+    public Direction getBedDirection(BlockState state, IWorldReader world, BlockPos pos) {
+        switch (state.get(POSITION)) {
+            case 0:
+            case 3:
+                return state.get(HORIZONTAL_FACING).getOpposite();
+            default:
+                return state.get(HORIZONTAL_FACING);
+        }
+    }
+
+    @Override
+    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+        return new ItemStack(ModItems.item_tent);
+    }
+
+    @Nonnull
+    @Override
+    public VoxelShape getShape(BlockState blockState, IBlockReader blockReader, BlockPos blockPos, ISelectionContext context) {
+        return shapes.get(blockState.get(FACING), blockState.get(POSITION));
+    }
+
+    @Override
+    public boolean isBed(BlockState state, IBlockReader world, BlockPos pos, @Nullable Entity player) {
+        return true;
+    }
+
+    @Override
+    public boolean isValidPosition(BlockState blockState, IWorldReader worldReader, BlockPos blockPos) {
+        return worldReader.getBlockState(blockPos).isAir(worldReader, blockPos);
+    }
+
+    @Override
+    public ActionResultType onBlockActivated(BlockState blockState, World world, final BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
+        if (world.isRemote()) return ActionResultType.SUCCESS;
+        if (VampirismPlayerAttributes.get(player).hunterLevel == 0) {
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.tent.cant_use"), true);
+            return ActionResultType.SUCCESS;
+        }
+
+        if (!BedBlock.doesBedWork(world)) {
+            world.removeBlock(pos, false);
+            BlockPos blockpos = pos.offset(blockState.get(HORIZONTAL_FACING).getOpposite());
+            if (world.getBlockState(blockpos).isIn(this)) {
+                world.removeBlock(blockpos, false);
+            }
+
+            world.createExplosion(null, DamageSource.func_233546_a_(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
+            return ActionResultType.SUCCESS;
+        } else if (blockState.get(BedBlock.OCCUPIED)) {
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.tent.occupied"), true);
+            return ActionResultType.SUCCESS;
+        } else {
+            final BlockPos finalPos = pos;
+            player.trySleep(pos).ifLeft(sleepResult1 -> {
+                if (sleepResult1 != null) {
+                    player.sendStatusMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
+                }
+            }).ifRight(u -> {
+                this.setBedOccupied(blockState, world, pos, null, true);
+                setTentSleepPosition(player, pos, player.world.getBlockState(pos).get(POSITION), player.world.getBlockState(pos).get(HORIZONTAL_FACING));
+            });
+            return ActionResultType.SUCCESS;
+        }
+    }
+
+    @Override
+    public void onBlockExploded(BlockState state, World world, BlockPos pos, Explosion explosion) {
+        forWholeTent(pos, state, (di, pos1) -> {
+            if (world.getBlockState(pos1).getBlock() instanceof TentBlock) {
+                world.setBlockState(pos1, Blocks.AIR.getDefaultState(), 3);
+                getBlock().onExplosionDestroy(world, pos1, explosion);
+            }
+        });
+    }
+
+    @Override
+    public void onBlockHarvested(World world, @Nonnull BlockPos blockPos, BlockState blockState, @Nonnull PlayerEntity playerEntity) {
+        forWholeTent(blockPos, blockState, (direction, blockPos1) -> {
+            world.destroyBlock(blockPos1, true);
+            if (!world.isRemote) {
+                VampirismMod.dispatcher.sendToAllAround(new PlayEventPacket(1, blockPos1, Block.getStateId(world.getBlockState(blockPos1))), world.getDimensionKey(), blockPos1.getX(), blockPos1.getY(), blockPos1.getZ(), 64);
+                if (!playerEntity.isCreative()) {
+                    spawnDrops(world.getBlockState(blockPos1), world, blockPos1, null, playerEntity, playerEntity.getHeldItemMainhand());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
+        super.onFallenUpon(worldIn, pos, entityIn, fallDistance * 0.7F);
+    }
+
+    @Override
+    public void onLanded(IBlockReader worldIn, Entity entityIn) {
+        if (entityIn.isSneaking()) {
+            super.onLanded(worldIn, entityIn);
+        } else {
+            Vector3d vec3d = entityIn.getMotion();
+            if (vec3d.y < 0.0D) {
+                double d0 = entityIn instanceof LivingEntity ? 1.0D : 0.8D;
+                entityIn.setMotion(vec3d.x, -vec3d.y * (double) 0.33F * d0, vec3d.z);
+            }
+        }
+
+    }
+
+    @Override
+    public void setBedOccupied(BlockState state, World world, BlockPos pos, LivingEntity sleeper, boolean occupied) {
+        forWholeTent(pos, state, ((direction, blockPos) -> {
+            BlockState blockState = world.getBlockState(blockPos);
+            if (blockState.getBlock() instanceof TentBlock) {
+                ((IWorldWriter & IWorldReader) world).setBlockState(pos, world.getBlockState(pos).with(BlockStateProperties.OCCUPIED, occupied), 2);
+            }
+        }));
+    }
+
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(FACING, POSITION, BlockStateProperties.OCCUPIED);
+    }
+
+    private void forWholeTent(BlockPos blockPos, BlockState blockState, BiConsumer<Direction, BlockPos> consumer) {
+        BlockPos main = blockPos;
+        Direction dir = blockState.get(FACING);
+        int p = blockState.get(POSITION);
+        if (p == 0) {
+            dir = dir.getOpposite();
+        } else if (p == 1) {
+            main = blockPos.offset(dir.rotateY());
+        } else if (p == 2) {
+            main = blockPos.offset(dir.rotateY()).offset(dir.getOpposite());
+        } else if (p == 3) {
+            main = blockPos.offset(dir);
+            dir = dir.getOpposite();
+        }
+        consumer.accept(dir, blockPos);
+        BlockPos cur = main;
+        if (cur != blockPos) consumer.accept(dir, cur);
+        cur = main.offset(dir);
+        if (cur != blockPos) consumer.accept(dir, cur);
+        cur = main.offset(dir.rotateYCCW());
+        if (cur != blockPos) consumer.accept(dir, cur);
+        cur = main.offset(dir).offset(dir.rotateYCCW());
+        if (cur != blockPos) consumer.accept(dir, cur);
     }
 }

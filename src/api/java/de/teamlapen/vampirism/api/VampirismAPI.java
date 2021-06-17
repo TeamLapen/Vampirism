@@ -34,6 +34,32 @@ import javax.annotation.Nonnull;
 public class VampirismAPI {
 
 
+    /**
+     * TODO 1.17 remove
+     */
+    @Deprecated
+    private static final IGarlicChunkHandler dummyGarlicChunkHandler = new IGarlicChunkHandler() {
+        @Override
+        public void clear() {
+
+        }
+
+        @Nonnull
+        @Override
+        public EnumStrength getStrengthAtChunk(ChunkPos pos) {
+            return EnumStrength.NONE;
+        }
+
+        @Override
+        public int registerGarlicBlock(EnumStrength strength, ChunkPos... pos) {
+            return 0;
+        }
+
+        @Override
+        public void removeGarlicBlock(int id) {
+
+        }
+    };
     @SuppressWarnings("FieldMayBeFinal")
     @CapabilityInject(IExtendedCreatureVampirism.class)
     private static Capability<IExtendedCreatureVampirism> CAP_CREATURE = null;
@@ -43,7 +69,6 @@ public class VampirismAPI {
     @SuppressWarnings("FieldMayBeFinal")
     @CapabilityInject(IVampirismWorld.class)
     private static Capability<IVampirismWorld> CAP_WORLD = null;
-
     private static IFactionRegistry factionRegistry;
     private static ISundamageRegistry sundamageRegistry;
     private static IVampirismEntityRegistry entityRegistry;
@@ -83,7 +108,6 @@ public class VampirismAPI {
     public static ISundamageRegistry sundamageRegistry() {
         return sundamageRegistry;
     }
-
 
     /**
      * @return The vampirism entity registry
@@ -130,7 +154,6 @@ public class VampirismAPI {
 
     }
 
-
     /**
      * @param player
      * @return The respective {@link IFactionPlayerHandler}
@@ -138,7 +161,6 @@ public class VampirismAPI {
     public static LazyOptional<IFactionPlayerHandler> getFactionPlayerHandler(PlayerEntity player) {
         return player.getCapability(CAP_FACTION_HANDLER_PLAYER, null);
     }
-
 
     /**
      * Get the {@link IExtendedCreatureVampirism} instance for the given creature
@@ -150,54 +172,28 @@ public class VampirismAPI {
     /**
      * Use getVampirismWorld instead
      * TODO 1.17 remove
+     *
      * @return The {@link IGarlicChunkHandler} for the given world
      */
     @Deprecated
     @Nonnull
     public static IGarlicChunkHandler getGarlicChunkHandler(RegistryKey<World> world) {
-        World w=  DistExecutor.safeRunForDist(()->()->{
+        World w = DistExecutor.safeRunForDist(() -> () -> {
             MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-            if(server!=null){
+            if (server != null) {
                 return server.getWorld(world);
             }
-           return ClientHelper.getAndCheckWorld(world);
-        },()->()-> ServerLifecycleHooks.getCurrentServer().getWorld(world));
-        if(w!=null){
-            return w.getCapability(CAP_WORLD).map(iw->(IGarlicChunkHandler)iw).orElse(dummyGarlicChunkHandler);
+            return ClientHelper.getAndCheckWorld(world);
+        }, () -> () -> ServerLifecycleHooks.getCurrentServer().getWorld(world));
+        if (w != null) {
+            return w.getCapability(CAP_WORLD).map(iw -> (IGarlicChunkHandler) iw).orElse(dummyGarlicChunkHandler);
         }
         return dummyGarlicChunkHandler;
     }
 
-    public static LazyOptional<IVampirismWorld> getVampirismWorld(World w){
+    public static LazyOptional<IVampirismWorld> getVampirismWorld(World w) {
         return w.getCapability(CAP_WORLD);
     }
-
-    /**
-     * TODO 1.17 remove
-     */
-    @Deprecated
-    private static final IGarlicChunkHandler dummyGarlicChunkHandler = new IGarlicChunkHandler() {
-        @Override
-        public void clear() {
-
-        }
-
-        @Nonnull
-        @Override
-        public EnumStrength getStrengthAtChunk(ChunkPos pos) {
-            return EnumStrength.NONE;
-        }
-
-        @Override
-        public int registerGarlicBlock(EnumStrength strength, ChunkPos... pos) {
-            return 0;
-        }
-
-        @Override
-        public void removeGarlicBlock(int id) {
-
-        }
-    };
 
 
 }

@@ -20,18 +20,6 @@ public class StatRequirement implements TaskRequirement.Requirement<ResourceLoca
         this.amount = amount;
     }
 
-    @Nonnull
-    @Override
-    public TaskRequirement.Type getType() {
-        return TaskRequirement.Type.STATS;
-    }
-
-    @Nonnull
-    @Override
-    public ResourceLocation getStat(IFactionPlayer<?> player) {
-        return stat;
-    }
-
     @Override
     public int getAmount(IFactionPlayer<?> player) {
         return amount;
@@ -41,6 +29,18 @@ public class StatRequirement implements TaskRequirement.Requirement<ResourceLoca
     @Override
     public ResourceLocation getId() {
         return id;
+    }
+
+    @Nonnull
+    @Override
+    public ResourceLocation getStat(IFactionPlayer<?> player) {
+        return stat;
+    }
+
+    @Nonnull
+    @Override
+    public TaskRequirement.Type getType() {
+        return TaskRequirement.Type.STATS;
     }
 
 }

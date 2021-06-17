@@ -41,6 +41,7 @@ public enum EntityClassType {
     public static EntityClassType getEntityClassType(int id) {
         return (id >= ID.size() || id < 0) ? null : ID.get(id);
     }
+
     private final AttributeModifier healthModifier;
     private final AttributeModifier damageModifier;
     private final AttributeModifier speedModifier;

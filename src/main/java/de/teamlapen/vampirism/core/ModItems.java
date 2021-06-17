@@ -392,10 +392,10 @@ public class ModItems {
         registry.register(new VampirismItem("soul_orb_vampire", creativeTabProps()));
 
         registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.REDBLACK));
-        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak",ColoredVampireClothingItem.EnumClothingColor.BLACKBLUE));
-        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak",ColoredVampireClothingItem.EnumClothingColor.BLACKRED));
-        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak",ColoredVampireClothingItem.EnumClothingColor.BLACKWHITE));
-        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak",ColoredVampireClothingItem.EnumClothingColor.WHITEBLACK));
+        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKBLUE));
+        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKRED));
+        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKWHITE));
+        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.WHITEBLACK));
 
         registry.register(new SpawnEggItem(ModEntities.vampire, 0x8B15A3, 0xa735e3, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_spawn_egg"));
         registry.register(new SpawnEggItem(ModEntities.hunter, 0x2d05f2, 0x2600e0, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_hunter_spawn_egg"));
@@ -427,15 +427,15 @@ public class ModItems {
         registry.register(new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.RING).setRegistryName(REFERENCE.MODID, "ring"));
         registry.register(new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.OBI_BELT).setRegistryName(REFERENCE.MODID, "obi_belt"));
 
-        registry.register(new VampireClothingItem(EquipmentSlotType.HEAD,"vampire_clothing_crown"));
+        registry.register(new VampireClothingItem(EquipmentSlotType.HEAD, "vampire_clothing_crown"));
         registry.register(new VampireClothingItem(EquipmentSlotType.LEGS, "vampire_clothing_legs"));
         registry.register(new VampireClothingItem(EquipmentSlotType.FEET, "vampire_clothing_boots"));
         registry.register(new VampireClothingItem(EquipmentSlotType.HEAD, "vampire_clothing_hat"));
 
         registry.register(new VampirismItem("cure_apple", creativeTabProps().rarity(Rarity.RARE)));
-        registry.register(new VampirismItem("garlic_finder",creativeTabProps().rarity(Rarity.RARE)));
+        registry.register(new VampirismItem("garlic_finder", creativeTabProps().rarity(Rarity.RARE)));
 
-        registry.register(new WallOrFloorItem(ModBlocks.candelabra, ModBlocks.candelabra_wall, new Item.Properties().group(VampirismMod.creativeTab)).setRegistryName(REFERENCE.MODID,"item_candelabra"));
+        registry.register(new WallOrFloorItem(ModBlocks.candelabra, ModBlocks.candelabra_wall, new Item.Properties().group(VampirismMod.creativeTab)).setRegistryName(REFERENCE.MODID, "item_candelabra"));
 
 
         if (VampirismMod.inDataGen) {
@@ -449,7 +449,7 @@ public class ModItems {
 
     public static void fixMappings(RegistryEvent.MissingMappings<Item> event) {
         event.getAllMappings().forEach(missingMapping -> {
-            switch (missingMapping.key.toString()){
+            switch (missingMapping.key.toString()) {
                 case "vampirism:blood_potion":
                 case "vampirism:blood_potion_table":
                     missingMapping.ignore();

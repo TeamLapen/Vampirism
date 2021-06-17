@@ -62,7 +62,7 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
      *
      * @param desc         Task description
      * @param minionGetter Getter for the minion entity. Only use if necessary as it's a costly operation. Optional can be empty if there is an issue.
-     * @param minionData    The minion data.
+     * @param minionData   The minion data.
      */
     default void tickActive(T desc, @Nonnull Supplier<Optional<IMinionEntity>> minionGetter, @Nonnull Q minionData) {
         this.tickBackground(desc, minionData);
@@ -70,10 +70,10 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
 
     /**
      * Tick the task if the minion isn't loaded
-     *
+     * <p>
      * Server side only
      *
-     * @param desc      Task description
+     * @param desc       Task description
      * @param minionData The minion data
      */
     default void tickBackground(T desc, @Nonnull Q minionData) {

@@ -19,6 +19,7 @@ public interface ILastingAction<T extends IActionPlayer> extends IAction {
     /**
      * TODO 1.17 remove
      * Use IFactionPlayer sensitive version
+     *
      * @param level Player's faction level
      * @return Skill duration in ticks
      */
@@ -28,7 +29,7 @@ public interface ILastingAction<T extends IActionPlayer> extends IAction {
     /**
      * @return Skill duration in ticks
      */
-    default int getDuration(IFactionPlayer player){
+    default int getDuration(IFactionPlayer player) {
         return getDuration(player.getLevel());
     }
 

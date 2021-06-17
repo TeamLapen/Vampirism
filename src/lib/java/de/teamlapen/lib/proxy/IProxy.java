@@ -15,6 +15,9 @@ import javax.annotation.Nullable;
 
 
 public interface IProxy {
+    @Nonnull
+    ISoundReference createMasterSoundReference(SoundEvent event, float volume, float pinch);
+
     /**
      * Create a server and client friendly reference for a sound.
      * This only does something on client side, but does not throw a Class Cast exception on server side.
@@ -23,9 +26,6 @@ public interface IProxy {
      */
     @Nonnull
     ISoundReference createSoundReference(SoundEvent event, SoundCategory category, BlockPos pos, float volume, float pinch);
-
-    @Nonnull
-    ISoundReference createMasterSoundReference(SoundEvent event, float volume, float pinch);
 
     /**
      * Create a server and client friendly reference for a sound.
@@ -43,13 +43,13 @@ public interface IProxy {
 
     PlayerEntity getPlayerEntity(NetworkEvent.Context context);
 
-    default void handleUpdateEntityPacket(UpdateEntityPacket msg) {
-    }
-
     /**
      * Try to obtain the world from the given key. Null if not loaded or not accessible (on client)
      */
     @Nullable
     World getWorldFromKey(RegistryKey<World> dimension);
+
+    default void handleUpdateEntityPacket(UpdateEntityPacket msg) {
+    }
 
 }

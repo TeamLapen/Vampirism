@@ -37,6 +37,14 @@ import java.util.Optional;
  */
 public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEntityGoal.TaskOwner, ICaptureIgnore {
     private static final ITextComponent name = new TranslationTextComponent("container.huntertrainer");
+
+    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+        return VampirismEntity.getAttributeBuilder()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 300)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 19)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.17)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 5);
+    }
     private final int MOVE_TO_RESTRICT_PRIO = 3;
     private PlayerEntity trainee;
     private boolean shouldCreateHome;
@@ -83,26 +91,6 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
     }
 
     @Override
-    public void setHome(AxisAlignedBB box) {
-        super.setHome(box);
-        this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
-    }
-
-    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return VampirismEntity.getAttributeBuilder()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 300)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 19)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.17)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 5);
-    }
-
-    @Override
-    public void writeAdditional(CompoundNBT nbt) {
-        super.writeAdditional(nbt);
-        nbt.putBoolean("createHome", this.shouldCreateHome);
-    }
-
-    @Override
     public void readAdditional(CompoundNBT nbt) {
         super.readAdditional(nbt);
         if (nbt.contains("createHome") && (this.shouldCreateHome = nbt.getBoolean("createHome"))) {
@@ -113,15 +101,27 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
     }
 
     @Override
+    public void setHome(AxisAlignedBB box) {
+        super.setHome(box);
+        this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
+    }
+
+    @Override
+    public void writeAdditional(CompoundNBT nbt) {
+        super.writeAdditional(nbt);
+        nbt.putBoolean("createHome", this.shouldCreateHome);
+    }
+
+    @Override
     protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
         if (tryCureSanguinare(player)) return ActionResultType.SUCCESS;
         ItemStack stack = player.getHeldItem(hand);
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 
         if (!flag && this.isAlive() && !player.isSneaking() && hand == Hand.MAIN_HAND) {
-            int lvl= VampirismPlayerAttributes.get(player).hunterLevel;
-            if (!this.world.isRemote && lvl>0) {
-                int levelCorrect = HunterLevelingConf.instance().isLevelValidForTrainer(lvl+ 1);
+            int lvl = VampirismPlayerAttributes.get(player).hunterLevel;
+            if (!this.world.isRemote && lvl > 0) {
+                int levelCorrect = HunterLevelingConf.instance().isLevelValidForTrainer(lvl + 1);
                 if (levelCorrect == 0) {
                     if (trainee == null) {
                         player.openContainer(new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new HunterTrainerContainer(id, playerInventory, this), name));

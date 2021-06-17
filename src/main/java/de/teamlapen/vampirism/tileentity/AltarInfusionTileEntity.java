@@ -53,8 +53,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
 
     private final static Logger LOGGER = LogManager.getLogger(AltarInfusionTileEntity.class);
     private final int DURATION_TICK = 450;
-
-
+    private final LazyOptional<IItemHandler> itemHandlerOptional = LazyOptional.of(this::createWrapper);
     /**
      * Used to store a saved player UUID during read until world and player are available
      */
@@ -73,8 +72,6 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
      * Only available when running ({@link #runningTick}>0)
      */
     private int targetLevel;
-
-    private final LazyOptional<IItemHandler> itemHandlerOptional = LazyOptional.of(this::createWrapper);
 
     public AltarInfusionTileEntity() {
         super(ModTiles.altar_infusion, 3, AltarInfusionContainer.SELECTOR_INFOS);
@@ -199,6 +196,12 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         return write(new CompoundNBT());
     }
 
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        if (this.hasWorld()) this.read(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
+    }
+
     @Override
     public void read(BlockState state, CompoundNBT tagCompound) {
         super.read(state, tagCompound);
@@ -212,12 +215,6 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
             this.runningTick = tick;
         }
 
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        if (this.hasWorld()) this.read(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
     }
 
     /**

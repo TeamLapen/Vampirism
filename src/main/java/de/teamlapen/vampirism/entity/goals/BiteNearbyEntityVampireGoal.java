@@ -81,7 +81,7 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
 
         timer--;
         if (timer == 1) {
-            if(canFeed(creature)){
+            if (canFeed(creature)) {
                 int amount = creature.onBite(vampire);
                 vampire.playSound(ModSounds.player_bite, 1, 1);
                 vampire.drinkBlood(amount, creature.getBloodSaturation());
@@ -89,11 +89,11 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
         }
     }
 
-    protected AxisAlignedBB getBiteBoundingBox() {
-        return vampire.getBoundingBox().grow(0.5, 0.7, 0.5);
+    protected boolean canFeed(IExtendedCreatureVampirism entity) {
+        return entity.canBeBitten(vampire) && !entity.hasPoisonousBlood() && (!(entity.getEntity() instanceof VillagerEntity) || entity.getBlood() > (entity.getMaxBlood() / 2f));
     }
 
-    protected boolean canFeed(IExtendedCreatureVampirism entity){
-        return entity.canBeBitten(vampire) && ! entity.hasPoisonousBlood() && (!(entity.getEntity() instanceof VillagerEntity) || entity.getBlood() > (entity.getMaxBlood()/2f));
+    protected AxisAlignedBB getBiteBoundingBox() {
+        return vampire.getBoundingBox().grow(0.5, 0.7, 0.5);
     }
 }

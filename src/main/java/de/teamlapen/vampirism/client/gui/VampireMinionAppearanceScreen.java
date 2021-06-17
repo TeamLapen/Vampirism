@@ -36,6 +36,14 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
     }
 
     @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (!this.typeList.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
+            return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        }
+        return true;
+    }
+
+    @Override
     public void onClose() {
         String name = nameWidget.getText();
         if (name.isEmpty()) {
@@ -60,13 +68,13 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
         this.minionSkinCount = ((VampireMinionRenderer) Minecraft.getInstance().getRenderManager().getRenderer(this.entity)).getMinionSpecificTextureCount();
         this.skinType = this.entity.getVampireType();
         this.isMinionSpecificSkin = this.entity.hasMinionSpecificSkin();
-        if(this.isMinionSpecificSkin) {
+        if (this.isMinionSpecificSkin) {
             this.skinType = this.skinType % this.minionSkinCount;
-        } else{
+        } else {
             this.skinType = this.skinType % this.normalSkinCount;
         }
         this.useLordSkin = this.entity.shouldRenderLordSkin();
-        this.typeList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 43 + 19, 99,80,20, this.normalSkinCount + this.minionSkinCount, new TranslationTextComponent("gui.vampirism.minion_appearance.skin"), this::skin, this::previewSkin));
+        this.typeList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 43 + 19, 99, 80, 20, this.normalSkinCount + this.minionSkinCount, new TranslationTextComponent("gui.vampirism.minion_appearance.skin"), this::skin, this::previewSkin));
         this.typeButton = this.addButton(new ExtendedButton(this.typeList.x, this.typeList.y - 20, this.typeList.getWidth() + 1, 20, new StringTextComponent(""), (button1 -> {
             setListVisibility(!typeList.visible);
         })));
@@ -87,18 +95,6 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
         this.entity.changeMinionName(newName);
     }
 
-    private void setListVisibility(boolean show) {
-        this.typeButton.setMessage(typeList.getMessage().deepCopy().appendString(" " + (skinType + 1)));
-        this.typeList.visible = show;
-        this.lordSkinButton.visible = !show;
-    }
-
-    private void skin(int type) {
-        boolean minionSpecific = type >= normalSkinCount;
-        this.entity.setVampireType(this.skinType = type, this.isMinionSpecificSkin = minionSpecific);
-        setListVisibility(false);
-    }
-
     private void previewSkin(int type, boolean hovered) {
         boolean minionSpecific = type >= normalSkinCount;
         if (hovered) {
@@ -110,11 +106,15 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
         }
     }
 
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (!this.typeList.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
-            return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
-        }
-        return true;
+    private void setListVisibility(boolean show) {
+        this.typeButton.setMessage(typeList.getMessage().deepCopy().appendString(" " + (skinType + 1)));
+        this.typeList.visible = show;
+        this.lordSkinButton.visible = !show;
+    }
+
+    private void skin(int type) {
+        boolean minionSpecific = type >= normalSkinCount;
+        this.entity.setVampireType(this.skinType = type, this.isMinionSpecificSkin = minionSpecific);
+        setListVisibility(false);
     }
 }

@@ -23,6 +23,7 @@ public class DummyBittenAnimalEntity extends MobEntity {
     public static boolean spawnPredicate(EntityType<? extends DummyBittenAnimalEntity> entityType, IWorld iWorld, SpawnReason spawnReason, BlockPos blockPos, Random random) {
         return (iWorld.getBlockState(blockPos.down()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.down()).getBlock() == ModBlocks.cursed_earth);
     }
+
     public DummyBittenAnimalEntity(EntityType<? extends DummyBittenAnimalEntity> type, World world) {
         super(type, world);
     }

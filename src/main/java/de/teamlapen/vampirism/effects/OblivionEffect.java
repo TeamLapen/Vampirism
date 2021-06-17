@@ -26,24 +26,20 @@ public class OblivionEffect extends VampirismEffect {
     }
 
     @Override
-    public boolean isReady(int duration, int amplifier) {
-        return duration % getTickDuration(amplifier) == 0;
-    }
-
-    private int getTickDuration(int amplifier) {
-        return (1000 / (amplifier +1));
+    public List<ItemStack> getCurativeItems() {
+        return Collections.emptyList();
     }
 
     @Override
-    public List<ItemStack> getCurativeItems() {
-        return Collections.emptyList();
+    public boolean isReady(int duration, int amplifier) {
+        return duration % getTickDuration(amplifier) == 0;
     }
 
     @Override
     public void performEffect(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
         if (!entityLivingBaseIn.getEntityWorld().isRemote) {
             if (entityLivingBaseIn instanceof PlayerEntity) {
-                entityLivingBaseIn.addPotionEffect(new EffectInstance(Effects.NAUSEA,getTickDuration(amplifier),5,false,false,false, null));
+                entityLivingBaseIn.addPotionEffect(new EffectInstance(Effects.NAUSEA, getTickDuration(amplifier), 5, false, false, false, null));
                 FactionPlayerHandler.getOpt(((PlayerEntity) entityLivingBaseIn)).map(FactionPlayerHandler::getCurrentFactionPlayer).flatMap(factionPlayer -> factionPlayer).ifPresent(factionPlayer -> {
                     ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
                     Optional<SkillNode> nodeOPT = ((SkillHandler<?>) skillHandler).anyLastNode();
@@ -58,6 +54,10 @@ public class OblivionEffect extends VampirismEffect {
                 });
             }
         }
+    }
+
+    private int getTickDuration(int amplifier) {
+        return (1000 / (amplifier + 1));
     }
 
 }

@@ -24,14 +24,17 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class TaskBuilder {
+    public static TaskBuilder builder() {
+        return new TaskBuilder();
+    }
     @Nonnull
     private final Map<TaskRequirement.Type, List<TaskRequirement.Requirement<?>>> requirement = Maps.newHashMapWithExpectedSize(TaskRequirement.Type.values().length);
+    @Nonnull
+    private final List<TaskUnlocker> unlocker = Lists.newArrayList();
     @Nullable
     private TaskReward reward;
     @Nullable
     private IPlayableFaction<?> faction;
-    @Nonnull
-    private final List<TaskUnlocker> unlocker = Lists.newArrayList();
     @Nonnull
     private Task.Variant variant = Task.Variant.REPEATABLE;
     private boolean useDescription = false;
@@ -39,42 +42,9 @@ public class TaskBuilder {
     private TaskBuilder() {
     }
 
-    public static TaskBuilder builder() {
-        return new TaskBuilder();
-    }
-
-    @Nonnull
-    public TaskBuilder withFaction(@Nullable IPlayableFaction<?> faction) {
-        this.faction = faction;
-        return this;
-    }
-
-    @Nonnull
-    public TaskBuilder requireParent(@Nonnull Task parentTask) {
-        return this.requireParent(()->parentTask);
-    }
-
-    @Nonnull
-    public TaskBuilder setUnique() {
-        this.variant = Task.Variant.UNIQUE;
-        return this;
-    }
-
-    @Nonnull
-    public TaskBuilder unlockedBy(TaskUnlocker unlocker) {
-        this.unlocker.add(unlocker);
-        return this;
-    }
-
-    @Nonnull
-    public TaskBuilder requireParent(@Nullable Supplier<Task> parentTask) {
-        this.unlocker.add(new ParentUnlocker(parentTask));
-        return this;
-    }
-
     @Nonnull
     public TaskBuilder addRequirement(String name, @Nonnull EntityType<?> entityType, int amount) {
-        return this.addRequirement(new EntityRequirement(new ResourceLocation(modId(),name), entityType, amount));
+        return this.addRequirement(new EntityRequirement(new ResourceLocation(modId(), name), entityType, amount));
     }
 
     @Nonnull
@@ -89,17 +59,51 @@ public class TaskBuilder {
 
     @Nonnull
     public TaskBuilder addRequirement(String name, @Nonnull ItemStack itemStack) {
-        return this.addRequirement(new ItemRequirement(new ResourceLocation(modId(),name), itemStack));
+        return this.addRequirement(new ItemRequirement(new ResourceLocation(modId(), name), itemStack));
     }
 
     @Nonnull
     public TaskBuilder addRequirement(String name, @Nonnull BooleanRequirement.BooleanSupplier function) {
-        return this.addRequirement(new BooleanRequirement(new ResourceLocation(modId(),name), function));
+        return this.addRequirement(new BooleanRequirement(new ResourceLocation(modId(), name), function));
     }
 
     @Nonnull
     public TaskBuilder addRequirement(@Nonnull TaskRequirement.Requirement<?> requirement) {
         this.requirement.computeIfAbsent(requirement.getType(), type -> Lists.newArrayListWithExpectedSize(3)).add(requirement);
+        return this;
+    }
+
+    @Nonnull
+    public Task build(ResourceLocation registryName) {
+        if (requirement.isEmpty()) throw new IllegalStateException("The task " + registryName + " needs requirements");
+        if (reward == null) throw new IllegalStateException("The task " + registryName + " needs a reward");
+        return new Task(this.variant, this.faction, new TaskRequirement(this.requirement), this.reward, this.unlocker.toArray(new TaskUnlocker[]{}), this.useDescription).setRegistryName(registryName);
+    }
+
+    @Nonnull
+    public Task build(String modId, String name) {
+        return this.build(new ResourceLocation(modId, name));
+    }
+
+    @Nonnull
+    public Task build(String name) {
+        return this.build(new ResourceLocation(modId(), name));
+    }
+
+    @Nonnull
+    public TaskBuilder enableDescription() {
+        this.useDescription = true;
+        return this;
+    }
+
+    @Nonnull
+    public TaskBuilder requireParent(@Nonnull Task parentTask) {
+        return this.requireParent(() -> parentTask);
+    }
+
+    @Nonnull
+    public TaskBuilder requireParent(@Nullable Supplier<Task> parentTask) {
+        this.unlocker.add(new ParentUnlocker(parentTask));
         return this;
     }
 
@@ -116,29 +120,24 @@ public class TaskBuilder {
     }
 
     @Nonnull
-    public TaskBuilder enableDescription() {
-        this.useDescription = true;
+    public TaskBuilder setUnique() {
+        this.variant = Task.Variant.UNIQUE;
         return this;
     }
 
     @Nonnull
-    public Task build(ResourceLocation registryName) {
-        if (requirement.isEmpty()) throw new IllegalStateException("The task " + registryName + " needs requirements");
-        if (reward == null) throw new IllegalStateException("The task " + registryName + " needs a reward");
-        return new Task(this.variant, this.faction, new TaskRequirement(this.requirement), this.reward, this.unlocker.toArray(new TaskUnlocker[]{}), this.useDescription).setRegistryName(registryName);
+    public TaskBuilder unlockedBy(TaskUnlocker unlocker) {
+        this.unlocker.add(unlocker);
+        return this;
+    }
+
+    @Nonnull
+    public TaskBuilder withFaction(@Nullable IPlayableFaction<?> faction) {
+        this.faction = faction;
+        return this;
     }
 
     protected String modId() {
         return REFERENCE.MODID;
-    }
-
-    @Nonnull
-    public Task build(String modId, String name) {
-        return this.build(new ResourceLocation(modId, name));
-    }
-
-    @Nonnull
-    public Task build(String name) {
-        return this.build(new ResourceLocation(modId(), name));
     }
 }

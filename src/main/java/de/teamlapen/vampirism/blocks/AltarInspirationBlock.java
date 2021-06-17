@@ -86,7 +86,6 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
     }
 
 
-
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         ItemStack stack = player.getHeldItem(hand);

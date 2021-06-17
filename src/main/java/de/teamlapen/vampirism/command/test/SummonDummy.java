@@ -16,12 +16,12 @@ public class SummonDummy extends BasicCommand {
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("summonDummy")
                 .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
-                .then(Commands.literal("vampire").executes(context -> summon(context.getSource().asPlayer(),true)))
-                .then(Commands.literal("hunter").executes(context -> summon(context.getSource().asPlayer(),false)));
+                .then(Commands.literal("vampire").executes(context -> summon(context.getSource().asPlayer(), true)))
+                .then(Commands.literal("hunter").executes(context -> summon(context.getSource().asPlayer(), false)));
     }
 
-    private static int summon(ServerPlayerEntity p,boolean b) {
-        VampirismEntity t = b? new TrainingDummyVampireEntity(ModEntities.vampire,p.world) : new TrainingDummyHunterEntity(ModEntities.hunter, p.world);
+    private static int summon(ServerPlayerEntity p, boolean b) {
+        VampirismEntity t = b ? new TrainingDummyVampireEntity(ModEntities.vampire, p.world) : new TrainingDummyHunterEntity(ModEntities.hunter, p.world);
         t.copyLocationAndAnglesFrom(p);
         p.world.addEntity(t);
         return 0;

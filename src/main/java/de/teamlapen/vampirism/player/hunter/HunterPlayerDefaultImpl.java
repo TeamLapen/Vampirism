@@ -79,6 +79,12 @@ class HunterPlayerDefaultImpl implements IHunterPlayer {
         return null;
     }
 
+    @Nonnull
+    @Override
+    public ITaskManager getTaskManager() {
+        return null;
+    }
+
     @Override
     public boolean isDisguised() {
         return false;
@@ -89,15 +95,8 @@ class HunterPlayerDefaultImpl implements IHunterPlayer {
         return false;
     }
 
-
     @Override
     public void onLevelChanged(int newLevel, int oldLevel) {
 
-    }
-
-    @Nonnull
-    @Override
-    public ITaskManager getTaskManager() {
-        return null;
     }
 }

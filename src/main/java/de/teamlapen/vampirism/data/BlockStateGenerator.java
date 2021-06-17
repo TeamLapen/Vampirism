@@ -52,7 +52,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         simpleBlock(ModBlocks.vampire_orchid, models().cross("vampire_orchid", modLoc("block/vampire_orchid")));
         simpleBlock(ModBlocks.totem_top, models().getExistingFile(modLoc("block/totem_top")));
         simpleBlock(ModBlocks.totem_top_crafted, models().getExistingFile(modLoc("block/totem_top_crafted")));
-        simpleBlock(ModBlocks.totem_top_vampirism_hunter,   models().withExistingParent("totem_top_vampirism_hunter", modLoc("block/totem_top")));
+        simpleBlock(ModBlocks.totem_top_vampirism_hunter, models().withExistingParent("totem_top_vampirism_hunter", modLoc("block/totem_top")));
         simpleBlock(ModBlocks.totem_top_vampirism_vampire, models().withExistingParent("totem_top_vampirism_vampire", modLoc("block/totem_top")));
         simpleBlock(ModBlocks.totem_top_vampirism_hunter_crafted, models().withExistingParent("totem_top_vampirism_hunter_crafted", modLoc("block/totem_top_crafted")));
         simpleBlock(ModBlocks.totem_top_vampirism_vampire_crafted, models().withExistingParent("totem_top_vampirism_vampire_crafted", modLoc("block/totem_top_crafted")));

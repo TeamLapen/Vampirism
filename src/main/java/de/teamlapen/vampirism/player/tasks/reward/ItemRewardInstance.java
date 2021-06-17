@@ -13,7 +13,13 @@ import javax.annotation.Nonnull;
 public class ItemRewardInstance implements ITaskRewardInstance {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "item");
 
+    public static ItemRewardInstance decode(PacketBuffer buffer) {
+        return new ItemRewardInstance(buffer.readItemStack());
+    }
 
+    public static ItemRewardInstance readNbt(CompoundNBT nbt) {
+        return new ItemRewardInstance(ItemStack.read(nbt.getCompound("reward")));
+    }
     @Nonnull
     protected final ItemStack reward;
 
@@ -28,6 +34,16 @@ public class ItemRewardInstance implements ITaskRewardInstance {
         }
     }
 
+    @Override
+    public void encode(PacketBuffer buffer) {
+        buffer.writeItemStack(this.reward);
+    }
+
+    @Override
+    public ResourceLocation getId() {
+        return ID;
+    }
+
     @Nonnull
     public ItemStack getReward() {
         return reward.copy();
@@ -37,23 +53,5 @@ public class ItemRewardInstance implements ITaskRewardInstance {
     public CompoundNBT writeNBT(@Nonnull CompoundNBT nbt) {
         nbt.put("reward", this.reward.write(new CompoundNBT()));
         return nbt;
-    }
-
-    @Override
-    public void encode(PacketBuffer buffer) {
-        buffer.writeItemStack(this.reward);
-    }
-
-    public static ItemRewardInstance decode(PacketBuffer buffer) {
-        return new ItemRewardInstance(buffer.readItemStack());
-    }
-
-    public static ItemRewardInstance readNbt(CompoundNBT nbt) {
-        return new ItemRewardInstance(ItemStack.read(nbt.getCompound("reward")));
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return ID;
     }
 }

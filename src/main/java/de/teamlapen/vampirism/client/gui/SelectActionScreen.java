@@ -41,7 +41,6 @@ import java.util.stream.Collectors;
 @OnlyIn(Dist.CLIENT)
 public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename to ActionSelectScreen
     public final static List<IAction> ACTIONORDER = Lists.newArrayList();
-    public static IAction SELECTEDACTION;
     /**
      * Fake skill which represents the cancel button
      */
@@ -66,6 +65,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
             return true;
         }
     };
+    public static IAction SELECTEDACTION;
 
     /**
      * safes the action order to client config
@@ -103,13 +103,52 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
             saveActionOrder();
         }
     }
-
-    private IActionHandler actionHandler;
     private final boolean editActions;
+    private IActionHandler actionHandler;
 
     public SelectActionScreen(Color backgroundColor, boolean edit) {
         super(backgroundColor, new TranslationTextComponent("selectAction"));
         editActions = edit;
+    }
+
+    @Override
+    public void closeScreen() {
+        if (editActions) {
+            saveActionOrder();
+            SELECTEDACTION = null;
+        }
+        super.closeScreen();
+    }
+
+    @Override
+    public boolean keyPressed(int key, int scancode, int modifiers) {
+        if (editActions && key == GLFW.GLFW_KEY_ESCAPE) {
+            closeScreen();
+            return true;
+        } else if (key == GLFW.GLFW_KEY_SPACE && !this.editActions) { //TODO as long as minion tasks are not editable prevent switching to them
+            if (FactionPlayerHandler.getOpt(minecraft.player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
+                this.minecraft.displayGuiScreen(new SelectMinionTaskScreen());
+            }
+        }
+        if (getSelectedElement() >= 0) {
+            if (checkBinding(binding -> binding.matchesKey(key, scancode))) {
+                return true;
+            }
+        }
+        return super.keyPressed(key, scancode, modifiers);
+    }
+
+    @Override
+    public boolean keyReleased(int key, int scancode, int modifiers) {
+        if (!editActions) {
+            if (ModKeys.getKeyBinding(ModKeys.KEY.MINION).matchesKey(key, scancode) || ModKeys.getKeyBinding(ModKeys.KEY.ACTION).matchesKey(key, scancode)) {
+                this.closeScreen();
+                if (getSelectedElement() >= 0) {
+                    this.onElementSelected(elements.get(getSelectedElement()));
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -133,64 +172,6 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
     }
 
     @Override
-    public boolean keyPressed(int key, int scancode, int modifiers) {
-        if (editActions && key == GLFW.GLFW_KEY_ESCAPE) {
-            closeScreen();
-            return true;
-        } else if (key == GLFW.GLFW_KEY_SPACE && !this.editActions) { //TODO as long as minion tasks are not editable prevent switching to them
-            if (FactionPlayerHandler.getOpt(minecraft.player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
-                this.minecraft.displayGuiScreen(new SelectMinionTaskScreen());
-            }
-        }
-        if (getSelectedElement() >= 0) {
-            if (checkBinding(binding -> binding.matchesKey(key, scancode))) {
-                return true;
-            }
-        }
-        return super.keyPressed(key, scancode, modifiers);
-    }
-
-    private boolean checkBinding(Function<KeyBinding, Boolean> func) {
-        if (elements.get(getSelectedElement()) == fakeAction) {
-            return true;
-        }
-        if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION1)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).getKeyModifier().isActive(KeyConflictContext.GUI)) {
-            setBinding(1);
-            return true;
-        } else if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION2)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).getKeyModifier().isActive(KeyConflictContext.GUI)) {
-            setBinding(2);
-            return true;
-        } else if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION3)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION3).getKeyModifier().isActive(KeyConflictContext.GUI)) {
-            setBinding(3);
-            return true;
-        }
-        return false;
-    }
-
-    private void setBinding(int id) {
-        IAction action = elements.get(getSelectedElement());
-        FactionPlayerHandler.get(minecraft.player).setBoundAction(id, action, false, true);
-        VampirismMod.dispatcher.sendToServer(new ActionBindingPacket(id, action));
-        if (!editActions) {
-            GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
-            closeScreen();
-        }
-    }
-
-    @Override
-    public boolean keyReleased(int key, int scancode, int modifiers) {
-        if (!editActions) {
-            if (ModKeys.getKeyBinding(ModKeys.KEY.MINION).matchesKey(key, scancode) || ModKeys.getKeyBinding(ModKeys.KEY.ACTION).matchesKey(key, scancode)) {
-                this.closeScreen();
-                if (getSelectedElement() >= 0) {
-                    this.onElementSelected(elements.get(getSelectedElement()));
-                }
-            }
-        }
-        return false;
-    }
-
-    @Override
     public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
         if (editActions) {
             if (SELECTEDACTION != null) {
@@ -207,18 +188,10 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
     }
 
     @Override
-    public void closeScreen() {
-        if (editActions) {
-            saveActionOrder();
-            SELECTEDACTION = null;
-        }
-        super.closeScreen();
-    }
-
-    @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
-        if(editActions)GuiUtils.drawHoveringText(stack, Lists.newArrayList(new TranslationTextComponent("gui.vampirism.action_select.action_binding"), ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).func_238171_j_().copyRaw().mergeStyle(TextFormatting.AQUA), ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).func_238171_j_().copyRaw().mergeStyle(TextFormatting.AQUA)), 0, ((int) (this.height * 0.8)), width, height, this.width / 4, this.font);
+        if (editActions)
+            GuiUtils.drawHoveringText(stack, Lists.newArrayList(new TranslationTextComponent("gui.vampirism.action_select.action_binding"), ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).func_238171_j_().copyRaw().mergeStyle(TextFormatting.AQUA), ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).func_238171_j_().copyRaw().mergeStyle(TextFormatting.AQUA)), 0, ((int) (this.height * 0.8)), width, height, this.width / 4, this.font);
     }
 
     @Override
@@ -289,6 +262,23 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
 
     }
 
+    private boolean checkBinding(Function<KeyBinding, Boolean> func) {
+        if (elements.get(getSelectedElement()) == fakeAction) {
+            return true;
+        }
+        if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION1)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).getKeyModifier().isActive(KeyConflictContext.GUI)) {
+            setBinding(1);
+            return true;
+        } else if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION2)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).getKeyModifier().isActive(KeyConflictContext.GUI)) {
+            setBinding(2);
+            return true;
+        } else if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION3)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION3).getKeyModifier().isActive(KeyConflictContext.GUI)) {
+            setBinding(3);
+            return true;
+        }
+        return false;
+    }
+
     /**
      * orders the given list after client preference
      */
@@ -303,6 +293,16 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
         }
         ordered.addAll(toSort);
         return ImmutableList.copyOf(ordered);
+    }
+
+    private void setBinding(int id) {
+        IAction action = elements.get(getSelectedElement());
+        FactionPlayerHandler.get(minecraft.player).setBoundAction(id, action, false, true);
+        VampirismMod.dispatcher.sendToServer(new ActionBindingPacket(id, action));
+        if (!editActions) {
+            GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
+            closeScreen();
+        }
     }
 
     /**

@@ -87,6 +87,72 @@ public class ModPlayerEventHandler {
     private final static Logger LOGGER = LogManager.getLogger(ModPlayerEventHandler.class);
 
     @SubscribeEvent
+    public void blockDestroyed(BlockEvent.BreakEvent event) {
+        if (!(event.getWorld() instanceof World)) return;
+        //don't allow player to destroy blocks with PointOfInterests that are owned by a totem with different faction as the player
+        if (event.getPlayer().isCreative()) return;
+        Set<BlockPos> positions = new HashSet<>();
+        BlockPos totemPos = TotemHelper.getTotemPosition(((World) event.getWorld()).getDimensionKey(), event.getPos());
+        Block block = event.getState().getBlock();
+        //if the blockstate does not have a POI, but another blockstate of the specific block eg. the bed, search for the blockstate in a 3x3x3 radius
+        //or the other way around
+        ImmutableList<BlockState> validStates = block.getStateContainer().getValidStates();
+        if (validStates.size() > 1 && PointOfInterestType.BLOCKS_OF_INTEREST.stream().anyMatch(validStates::contains)) {
+            for (int x = event.getPos().getX() - 1; x <= event.getPos().getX() + 1; ++x) {
+                for (int z = event.getPos().getZ() - 1; z <= event.getPos().getZ() + 1; ++z) {
+                    for (double y = event.getPos().getY() - 1; y <= event.getPos().getY() + 1; ++y) {
+                        BlockPos pos1 = new BlockPos(x, y, z);
+                        if (event.getWorld().getChunkProvider().isChunkLoaded(new ChunkPos(pos1)) && event.getWorld().getBlockState(pos1).getBlock() == block) {
+                            BlockPos totemPos1 = TotemHelper.getTotemPosition(pos1);
+                            if (totemPos1 != null && totemPos == null) {
+                                totemPos = totemPos1;
+                            }
+                            positions.add(pos1);
+                        }
+                    }
+                }
+            }
+        }
+        //cancel the event and notify client about the failed block destroy.
+        //also notify client about wrong destroyed neighbor blocks (bed)
+        if (totemPos != null && event.getWorld().isBlockLoaded(totemPos)) {
+            TileEntity totem = (event.getWorld().getTileEntity(totemPos));
+            if (totem instanceof TotemTileEntity && ((TotemTileEntity) totem).getControllingFaction() != null && VampirismPlayerAttributes.get(event.getPlayer()).faction != ((TotemTileEntity) totem).getControllingFaction()) {
+                event.setCanceled(true);
+                event.getPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.village.totem_destroy.fail_totem_faction"), true);
+                if (!positions.isEmpty() && event.getPlayer() instanceof ServerPlayerEntity) {
+                    ServerPlayerEntity playerMP = (ServerPlayerEntity) event.getPlayer();
+                    positions.forEach(pos -> {
+                        playerMP.connection.sendPacket(new SChangeBlockPacket(event.getWorld(), pos));
+                        TileEntity tileentity = event.getWorld().getTileEntity(pos);
+                        if (tileentity != null) {
+                            IPacket<?> pkt = tileentity.getUpdatePacket();
+                            if (pkt != null) {
+                                playerMP.connection.sendPacket(pkt);
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void eyeHeight(EntityEvent.Size event) {
+        if (event.getEntity() instanceof PlayerEntity && ((PlayerEntity) event.getEntity()).inventory != null /*make sure we are not in the player's contructor*/) {
+            if (event.getEntity().isAlive() && event.getEntity().getPositionVec().lengthSquared() != 0) { //Do not attempt to get capability while entity is being initialized
+                if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().bat) {
+                    event.setNewSize(BatVampireAction.BAT_SIZE);
+                    event.setNewEyeHeight(BatVampireAction.BAT_EYE_HEIGHT);
+                } else if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isDBNO) {
+                    event.setNewSize(EntitySize.fixed(0.6f, 0.95f));
+                    event.setNewEyeHeight(0.725f);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
     public void onAttachCapability(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof PlayerEntity) {
             try {
@@ -126,7 +192,7 @@ public class ModPlayerEventHandler {
     public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
         if (!(event.getEntity() instanceof PlayerEntity) || !event.getEntity().isAlive()) return;
         try {
-            if ( VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
+            if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
                 event.setCanceled(true);
             }
             HunterPlayer.getOpt((PlayerEntity) event.getEntity()).ifPresent(HunterPlayer::breakDisguise);
@@ -137,7 +203,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if ( VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
+        if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
             event.setCanceled(true);
         } else if ((ModBlocks.garlic_beacon_normal.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_weak.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_improved.equals(event.getState().getBlock())) && VampirismPlayerAttributes.get(event.getPlayer()).vampireLevel > 0) {
             event.setNewSpeed(event.getOriginalSpeed() * 0.1F);
@@ -145,8 +211,8 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onItemPickupPre(EntityItemPickupEvent event){
-        if ( VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isDBNO) {
+    public void onItemPickupPre(EntityItemPickupEvent event) {
+        if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isDBNO) {
             event.setCanceled(true);
         }
     }
@@ -158,7 +224,7 @@ public class ModPlayerEventHandler {
         }
 
         if ((event.getItemStack().getItem() instanceof ThrowablePotionItem || event.getItemStack().getItem() instanceof CrossbowItem)) {
-            if ( VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
+            if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
                 event.setCancellationResult(ActionResultType.func_233537_a_(event.getWorld().isRemote()));
                 event.setCanceled(true);
             }
@@ -169,7 +235,7 @@ public class ModPlayerEventHandler {
     public void onItemUse(LivingEntityUseItemEvent.Start event) {
         if (event.getEntity() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) event.getEntity();
-            if ( VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
+            if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
                 event.setCanceled(true);
             }
             if (!checkItemUsePerm(event.getItem(), player)) {
@@ -184,11 +250,10 @@ public class ModPlayerEventHandler {
         if (Helper.isVampire(event.getEntity())) {
             if (event.getItem().getItem() instanceof GarlicBreadItem) {
                 if (!event.getEntity().getEntityWorld().isRemote) {
-                    if(event.getEntity() instanceof IVampire){
+                    if (event.getEntity() instanceof IVampire) {
                         DamageHandler.affectVampireGarlicDirect((IVampire) event.getEntity(), EnumStrength.MEDIUM);
-                    }
-                    else if(event.getEntity() instanceof PlayerEntity){
-                        VampirePlayer.getOpt((PlayerEntity) event.getEntity()).ifPresent(vampire-> {
+                    } else if (event.getEntity() instanceof PlayerEntity) {
+                        VampirePlayer.getOpt((PlayerEntity) event.getEntity()).ifPresent(vampire -> {
                             DamageHandler.affectVampireGarlicDirect(vampire, EnumStrength.MEDIUM);
                         });
                     }
@@ -198,7 +263,7 @@ public class ModPlayerEventHandler {
         if (!Helper.isHunter(event.getEntity())) {
             ItemStack stack = event.getItem();
             if (stack.getItem() == Items.POTION) {
-                Potion p =PotionUtils.getPotionFromItem(stack);
+                Potion p = PotionUtils.getPotionFromItem(stack);
                 if (p instanceof VampirismPotion.HunterPotion && p.getEffects().stream().map(EffectInstance::getPotion).anyMatch(Effect::isBeneficial)) {
                     event.getEntityLiving().addPotionEffect(new EffectInstance(ModEffects.poison, Integer.MAX_VALUE, VampirismPoisonEffect.DEADLY_AMPLIFIER));
                 }
@@ -306,6 +371,16 @@ public class ModPlayerEventHandler {
             }
         }
     }
+
+    @SubscribeEvent
+    public void onPlayerInteract(PlayerInteractEvent.EntityInteract event) {
+        if (!(event.getTarget().getType() == EntityType.ZOMBIE)) return;
+        ItemStack stack = event.getPlayer().getHeldItem(event.getHand());
+        if (stack.getItem() != ModItems.injection_empty) return;
+        event.getPlayer().setHeldItem(event.getHand(), new ItemStack(ModItems.injection_zombie_blood));
+        event.setCanceled(true);
+    }
+
     @SubscribeEvent
     public void onPlayerLeftLickedBlock(PlayerInteractEvent.LeftClickBlock event) {
         assert event.getFace() != null;
@@ -331,9 +406,8 @@ public class ModPlayerEventHandler {
                     if (f != null) {
                         IFormattableTextComponent displayName;
                         if (fph.getLordLevel() > 0 && VampirismConfig.SERVER.lordPrefixInChat.get()) {
-                            displayName =new StringTextComponent("[").append(fph.getLordTitle()).appendString("] ").append(event.getDisplayname());
-                        }
-                        else{
+                            displayName = new StringTextComponent("[").append(fph.getLordTitle()).appendString("] ").append(event.getDisplayname());
+                        } else {
                             displayName = event.getDisplayname().deepCopy();
                         }
                         event.setDisplayname(displayName.mergeStyle(f.getChatColor()));
@@ -350,22 +424,6 @@ public class ModPlayerEventHandler {
         }
         if (Helper.isHunter(event.getPlayer())) {
             event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getPlayer().getEntityWorld().getBlockState(blockPos).getBlock() instanceof TentBlock ? !event.getPlayer().getEntityWorld().isDaytime() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));
-        }
-    }
-
-    @SubscribeEvent
-    public void eyeHeight(EntityEvent.Size event) {
-        if (event.getEntity() instanceof PlayerEntity && ((PlayerEntity) event.getEntity()).inventory != null /*make sure we are not in the player's contructor*/) {
-            if (event.getEntity().isAlive() && event.getEntity().getPositionVec().lengthSquared() != 0) { //Do not attempt to get capability while entity is being initialized
-                if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().bat) {
-                    event.setNewSize(BatVampireAction.BAT_SIZE);
-                    event.setNewEyeHeight(BatVampireAction.BAT_EYE_HEIGHT);
-                }
-                else if( VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isDBNO){
-                    event.setNewSize(EntitySize.fixed(0.6f,0.95f));
-                    event.setNewEyeHeight(0.725f);
-                }
-            }
         }
     }
 
@@ -418,65 +476,5 @@ public class ModPlayerEventHandler {
 
         }
         return true;
-    }
-
-    @SubscribeEvent
-    public void blockDestroyed(BlockEvent.BreakEvent event) {
-        if (!(event.getWorld() instanceof World)) return;
-        //don't allow player to destroy blocks with PointOfInterests that are owned by a totem with different faction as the player
-        if (event.getPlayer().isCreative()) return;
-        Set<BlockPos> positions = new HashSet<>();
-        BlockPos totemPos = TotemHelper.getTotemPosition(((World) event.getWorld()).getDimensionKey(), event.getPos());
-        Block block = event.getState().getBlock();
-        //if the blockstate does not have a POI, but another blockstate of the specific block eg. the bed, search for the blockstate in a 3x3x3 radius
-        //or the other way around
-        ImmutableList<BlockState> validStates = block.getStateContainer().getValidStates();
-        if (validStates.size() > 1 && PointOfInterestType.BLOCKS_OF_INTEREST.stream().anyMatch(validStates::contains)) {
-            for (int x = event.getPos().getX() - 1; x <= event.getPos().getX() + 1; ++x) {
-                for (int z = event.getPos().getZ() - 1; z <= event.getPos().getZ() + 1; ++z) {
-                    for (double y = event.getPos().getY() - 1; y <= event.getPos().getY() + 1; ++y) {
-                        BlockPos pos1 = new BlockPos(x, y, z);
-                        if (event.getWorld().getChunkProvider().isChunkLoaded(new ChunkPos(pos1)) && event.getWorld().getBlockState(pos1).getBlock() == block) {
-                            BlockPos totemPos1 = TotemHelper.getTotemPosition(pos1);
-                            if (totemPos1 != null && totemPos == null) {
-                                totemPos = totemPos1;
-                            }
-                            positions.add(pos1);
-                        }
-                    }
-                }
-            }
-        }
-        //cancel the event and notify client about the failed block destroy.
-        //also notify client about wrong destroyed neighbor blocks (bed)
-        if (totemPos != null && event.getWorld().isBlockLoaded(totemPos)) {
-            TileEntity totem = (event.getWorld().getTileEntity(totemPos));
-            if (totem instanceof TotemTileEntity && ((TotemTileEntity) totem).getControllingFaction() != null && VampirismPlayerAttributes.get(event.getPlayer()).faction != ((TotemTileEntity) totem).getControllingFaction()) {
-                event.setCanceled(true);
-                event.getPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.village.totem_destroy.fail_totem_faction"), true);
-                if (!positions.isEmpty() && event.getPlayer() instanceof ServerPlayerEntity) {
-                    ServerPlayerEntity playerMP = (ServerPlayerEntity) event.getPlayer();
-                    positions.forEach(pos -> {
-                        playerMP.connection.sendPacket(new SChangeBlockPacket(event.getWorld(), pos));
-                        TileEntity tileentity = event.getWorld().getTileEntity(pos);
-                        if (tileentity != null) {
-                            IPacket<?> pkt = tileentity.getUpdatePacket();
-                            if (pkt != null) {
-                               playerMP.connection.sendPacket(pkt);
-                            }
-                        }
-                    });
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onPlayerInteract(PlayerInteractEvent.EntityInteract event) {
-        if (!(event.getTarget().getType() == EntityType.ZOMBIE)) return;
-        ItemStack stack = event.getPlayer().getHeldItem(event.getHand());
-        if (stack.getItem() != ModItems.injection_empty) return;
-        event.getPlayer().setHeldItem(event.getHand(), new ItemStack(ModItems.injection_zombie_blood));
-        event.setCanceled(true);
     }
 }

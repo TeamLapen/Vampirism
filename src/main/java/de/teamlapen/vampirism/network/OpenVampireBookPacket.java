@@ -25,6 +25,7 @@ public class OpenVampireBookPacket implements IMessage {
     static OpenVampireBookPacket decode(PacketBuffer buf) {
         return new OpenVampireBookPacket(buf.readItemStack());
     }
+
     public final ItemStack itemStack;
 
     public OpenVampireBookPacket(ItemStack itemStack) {

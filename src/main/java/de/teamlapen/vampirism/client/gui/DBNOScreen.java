@@ -30,27 +30,21 @@ public class DBNOScreen extends Screen {
         this.causeOfDeath = textComponent;
     }
 
-    protected void init() {
-        this.enableButtonsTimer = 0;
-        dieButton = this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 72, 200, 20, new TranslationTextComponent("gui.vampirism.dbno.die"), (p_213021_1_) -> {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DIE,""));
-            this.minecraft.displayGuiScreen(null);
-        }));
-        dieButton.active=false;
-        resurrectButton = this.addButton(new CooldownButton(this.width / 2 - 100, this.height / 4 + 96, 200, 20, new TranslationTextComponent("gui.vampirism.dbno.resurrect"), (p_213020_1_) -> {
-            if(this.minecraft.player!=null)VampirePlayer.getOpt(this.minecraft.player).ifPresent(VampirePlayer::tryResurrect);
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESURRECT,""));
-            this.minecraft.displayGuiScreen(null);
-        }));
-        resurrectButton.updateState(1f);
-
-
-    }
-
-    public boolean shouldCloseOnEsc() {
+    public boolean isPauseScreen() {
         return false;
     }
 
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (this.causeOfDeath != null && mouseY > 85.0D && mouseY < (double) (85 + 9)) {
+            Style style = this.deriveDeathMessageStyle((int) mouseX);
+            if (style != null && style.getClickEvent() != null && style.getClickEvent().getAction() == ClickEvent.Action.OPEN_URL) {
+                this.handleComponentClicked(style);
+                return false;
+            }
+        }
+
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
 
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.fillGradient(matrixStack, 0, 0, this.width, this.height, 1615855616, -1602211792);
@@ -70,6 +64,39 @@ public class DBNOScreen extends Screen {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
+    public boolean shouldCloseOnEsc() {
+        return false;
+    }
+
+    public void tick() {
+        super.tick();
+        ++this.enableButtonsTimer;
+        if (this.enableButtonsTimer == 20) {
+            dieButton.active = true;
+        }
+        float prog = this.minecraft.player != null ? VampirePlayer.getOpt(this.minecraft.player).map(v -> v.getDbnoTimer() / (float) v.getDbnoDuration()).orElse(1f) : 1f;
+        resurrectButton.updateState(prog);
+
+    }
+
+    protected void init() {
+        this.enableButtonsTimer = 0;
+        dieButton = this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 72, 200, 20, new TranslationTextComponent("gui.vampirism.dbno.die"), (p_213021_1_) -> {
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DIE, ""));
+            this.minecraft.displayGuiScreen(null);
+        }));
+        dieButton.active = false;
+        resurrectButton = this.addButton(new CooldownButton(this.width / 2 - 100, this.height / 4 + 96, 200, 20, new TranslationTextComponent("gui.vampirism.dbno.resurrect"), (p_213020_1_) -> {
+            if (this.minecraft.player != null)
+                VampirePlayer.getOpt(this.minecraft.player).ifPresent(VampirePlayer::tryResurrect);
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESURRECT, ""));
+            this.minecraft.displayGuiScreen(null);
+        }));
+        resurrectButton.updateState(1f);
+
+
+    }
+
     @Nullable
     private Style deriveDeathMessageStyle(int mouseX) {
         if (this.causeOfDeath == null) {
@@ -80,32 +107,5 @@ public class DBNOScreen extends Screen {
             int k = this.width / 2 + i / 2;
             return mouseX >= j && mouseX <= k ? this.minecraft.fontRenderer.getCharacterManager().func_238357_a_(this.causeOfDeath, mouseX - j) : null;
         }
-    }
-
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.causeOfDeath != null && mouseY > 85.0D && mouseY < (double)(85 + 9)) {
-            Style style = this.deriveDeathMessageStyle((int)mouseX);
-            if (style != null && style.getClickEvent() != null && style.getClickEvent().getAction() == ClickEvent.Action.OPEN_URL) {
-                this.handleComponentClicked(style);
-                return false;
-            }
-        }
-
-        return super.mouseClicked(mouseX, mouseY, button);
-    }
-
-    public boolean isPauseScreen() {
-        return false;
-    }
-
-    public void tick() {
-        super.tick();
-        ++this.enableButtonsTimer;
-        if (this.enableButtonsTimer == 20) {
-            dieButton.active = true;
-        }
-        float prog = this.minecraft.player != null ? VampirePlayer.getOpt(this.minecraft.player).map(v -> v.getDbnoTimer()/(float)v.getDbnoDuration()).orElse(1f): 1f;
-        resurrectButton.updateState(prog);
-
     }
 }

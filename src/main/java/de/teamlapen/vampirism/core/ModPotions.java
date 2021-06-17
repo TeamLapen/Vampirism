@@ -165,41 +165,41 @@ public class ModPotions {
         veryStrong(very_long_leaping, long_strong_leaping);
         veryDurable(Potions.LONG_INVISIBILITY, very_long_invisibility);
         veryDurable(Potions.LONG_NIGHT_VISION, very_long_night_vision);
-        master(nausea, ()->Ingredient.fromTag(Tags.Items.MUSHROOMS), 32, 16);
+        master(nausea, () -> Ingredient.fromTag(Tags.Items.MUSHROOMS), 32, 16);
         durable(nausea, long_nausea);
         veryDurable(long_nausea, very_long_nausea);
-        master(thirst, ()->Ingredient.fromItems(ModItems.vampire_fang), 10, 5);
+        master(thirst, () -> Ingredient.fromItems(ModItems.vampire_fang), 10, 5);
         durable(thirst, long_thirst);
         strong(thirst, strong_thirst);
         veryDurable(long_thirst, very_long_thirst);
         veryStrong(strong_thirst, very_strong_thirst);
         veryDurable(very_strong_thirst, long_strong_thirst);
         veryStrong(very_long_thirst, long_strong_thirst);
-        master(blindness, ()->Ingredient.fromItems(Items.INK_SAC), 64, 32);
+        master(blindness, () -> Ingredient.fromItems(Items.INK_SAC), 64, 32);
         durable(blindness, long_blindness);
         veryDurable(long_blindness, very_long_blindness);
-        master(health_boost, ()->Ingredient.fromItems(Items.APPLE), 64, 32);
+        master(health_boost, () -> Ingredient.fromItems(Items.APPLE), 64, 32);
         durable(health_boost, long_health_boost);
         strong(health_boost, strong_health_boost);
         veryDurable(long_health_boost, very_long_health_boost);
         veryStrong(strong_health_boost, very_strong_health_boost);
         veryDurable(very_strong_health_boost, long_strong_health_boost);
         veryStrong(very_long_health_boost, long_strong_health_boost);
-        master(resistance, ()->Ingredient.fromItems(Items.GOLDEN_APPLE), 20, 10);
+        master(resistance, () -> Ingredient.fromItems(Items.GOLDEN_APPLE), 20, 10);
         durable(resistance, long_resistance);
         strong(resistance, strong_resistance);
     }
 
     private static void durable(Potion in, Potion out) {
-        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(()->Ingredient.fromItems(Items.REDSTONE), 1).blood().build());
+        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.fromItems(Items.REDSTONE), 1).blood().build());
     }
 
     private static void strong(Potion in, Potion out) {
-        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(()->Ingredient.fromItems(Items.GLOWSTONE_DUST), 1).blood().build());
+        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.fromItems(Items.GLOWSTONE_DUST), 1).blood().build());
     }
 
     private static void veryDurable(Potion in, Potion out) {
-        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(()->Ingredient.fromItems(Items.REDSTONE_BLOCK), 32, 16).blood().durable().build());
+        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.fromItems(Items.REDSTONE_BLOCK), 32, 16).blood().durable().build());
     }
 
     private static void veryStrong(Potion in, Potion out) {

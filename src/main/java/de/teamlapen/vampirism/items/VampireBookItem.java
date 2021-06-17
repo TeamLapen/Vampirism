@@ -45,6 +45,21 @@ public class VampireBookItem extends VampirismItem {
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        if (stack.hasTag()) {
+            CompoundNBT compoundnbt = stack.getTag();
+            String s = compoundnbt.getString("author");
+            if (!StringUtils.isNullOrEmpty(s)) {
+                tooltip.add((new TranslationTextComponent("book.byAuthor", s)).mergeStyle(TextFormatting.GRAY));
+            }
+
+            tooltip.add((new StringTextComponent("Vampirism knowledge").mergeStyle(TextFormatting.GRAY)));
+        }
+
+    }
+
+    @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
         if (isInGroup(group)) {
             items.add(VampireBookManager.getInstance().getRandomBook(new Random()));
@@ -61,21 +76,6 @@ public class VampireBookItem extends VampirismItem {
             }
         }
         return super.getDisplayName(stack);
-    }
-
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (stack.hasTag()) {
-            CompoundNBT compoundnbt = stack.getTag();
-            String s = compoundnbt.getString("author");
-            if (!StringUtils.isNullOrEmpty(s)) {
-                tooltip.add((new TranslationTextComponent("book.byAuthor", s)).mergeStyle(TextFormatting.GRAY));
-            }
-
-            tooltip.add((new StringTextComponent("Vampirism knowledge").mergeStyle(TextFormatting.GRAY)));
-        }
-
     }
 
     @OnlyIn(Dist.CLIENT)

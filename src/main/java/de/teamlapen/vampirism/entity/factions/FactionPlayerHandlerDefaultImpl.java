@@ -76,15 +76,15 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
         return 0;
     }
 
-    @Nonnull
-    @Override
-    public PlayerEntity getPlayer() {
-        return null;
-    }
-
     @Nullable
     @Override
     public ITextComponent getLordTitle() {
+        return null;
+    }
+
+    @Nonnull
+    @Override
+    public PlayerEntity getPlayer() {
         return null;
     }
 
@@ -109,12 +109,12 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
     }
 
     @Override
-    public boolean setLordLevel(int level) {
+    public boolean setFactionLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level) {
         return false;
     }
 
     @Override
-    public boolean setFactionLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level) {
+    public boolean setLordLevel(int level) {
         return false;
     }
 }

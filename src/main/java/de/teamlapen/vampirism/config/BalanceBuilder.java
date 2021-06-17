@@ -160,8 +160,8 @@ public class BalanceBuilder {
     /**
      * @return null, for drop-in replacement
      */
-    public ForgeConfigSpec.ConfigValue<List<? extends String>> defineList(String name, List<String> defaultValues, Predicate<Object> validator){
-        add(new BalanceBuilder.StringList(name,defaultValues,validator));
+    public ForgeConfigSpec.ConfigValue<List<? extends String>> defineList(String name, List<String> defaultValues, Predicate<Object> validator) {
+        add(new BalanceBuilder.StringList(name, defaultValues, validator));
         return null;
     }
 
@@ -297,19 +297,19 @@ public class BalanceBuilder {
             this.elementValidator = validator;
         }
 
+        public void addValue(String s) {
+            if (elementValidator.test(s)) {
+                defaultValue.add(s);
+            }
+        }
+
         @Override
         public ForgeConfigSpec.ConfigValue<?> buildInternal(ForgeConfigSpec.Builder builder) {
             return builder.defineList(name, Collections.unmodifiableList(defaultValue), elementValidator);
         }
 
-        public void removeValue(String s){
+        public void removeValue(String s) {
             defaultValue.remove(s);
-        }
-
-        public void addValue(String s){
-            if(elementValidator.test(s)){
-                defaultValue.add(s);
-            }
         }
 
 

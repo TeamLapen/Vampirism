@@ -5,7 +5,7 @@ import net.minecraft.util.text.ITextComponent;
 
 public interface TaskUnlocker {
 
-    boolean isUnlocked(IFactionPlayer<?> playerEntity);
-
     ITextComponent getDescription();
+
+    boolean isUnlocked(IFactionPlayer<?> playerEntity);
 }

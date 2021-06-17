@@ -44,6 +44,13 @@ import java.util.Random;
 public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capability.TileFluidHandler implements ITickableTileEntity, FluidTankWithListener.IFluidTankListener {
     public static final int CAPACITY = 100 * VReference.FOOD_TO_FLUID_BLOOD;
     public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
+
+    public static void setBloodValue(IBlockReader worldIn, Random randomIn, BlockPos blockPosIn) {
+        TileEntity tileEntity = worldIn.getTileEntity(blockPosIn);
+        if (tileEntity instanceof AltarInspirationTileEntity) {
+            tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(fluidHandler -> fluidHandler.fill(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))), IFluidHandler.FluidAction.EXECUTE));
+        }
+    }
     private final int RITUAL_TIME = 60;
     private int ritualTicksLeft = 0;
     private PlayerEntity ritualPlayer;
@@ -136,7 +143,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
                     ritualPlayer.setHealth(ritualPlayer.getMaxHealth());
                     break;
                 case 1:
-                    int targetLevel =VampirePlayer.get(ritualPlayer).getLevel() + 1;
+                    int targetLevel = VampirePlayer.get(ritualPlayer).getLevel() + 1;
                     VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
                     int blood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
                     ((InternalTank) tank).doDrain(blood, IFluidHandler.FluidAction.EXECUTE);
@@ -164,13 +171,6 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
         modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).build();
         if (refresh) {
             ModelDataManager.requestModelDataRefresh(this);
-        }
-    }
-
-    public static void setBloodValue(IBlockReader worldIn, Random randomIn, BlockPos blockPosIn) {
-        TileEntity tileEntity = worldIn.getTileEntity(blockPosIn);
-        if (tileEntity instanceof AltarInspirationTileEntity) {
-            tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(fluidHandler -> fluidHandler.fill(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))), IFluidHandler.FluidAction.EXECUTE));
         }
     }
 

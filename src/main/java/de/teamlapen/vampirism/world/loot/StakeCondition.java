@@ -18,6 +18,9 @@ import javax.annotation.Nonnull;
 
 
 public class StakeCondition implements ILootCondition {
+    public static IBuilder builder(LootContext.EntityTarget target) {
+        return () -> new StakeCondition(target);
+    }
     private final LootContext.EntityTarget target;
 
     public StakeCondition(LootContext.EntityTarget targetIn) {
@@ -38,10 +41,6 @@ public class StakeCondition implements ILootCondition {
             return !active.isEmpty() && active.getItem() instanceof StakeItem;
         }
         return false;
-    }
-
-    public static IBuilder builder(LootContext.EntityTarget target) {
-        return () -> new StakeCondition(target);
     }
 
     public static class Serializer implements ILootSerializer<StakeCondition> {

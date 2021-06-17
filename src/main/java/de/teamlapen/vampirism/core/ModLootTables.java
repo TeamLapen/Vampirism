@@ -26,28 +26,25 @@ import java.util.Set;
 public class ModLootTables {
     private final static Logger LOGGER = LogManager.getLogger();
     private static final Set<ResourceLocation> LOOT_TABLES = Sets.newHashSet();
+    //chests
+    public static final ResourceLocation chest_hunter_trainer = register("chests/village/hunter_trainer");
+    public static final ResourceLocation chest_vampire_dungeon = register("chests/dungeon/vampire_dungeon");
     private static final Map<String, ResourceLocation> INJECTION_TABLES = Maps.newHashMap();
-
     //inject
     public static final ResourceLocation abandoned_mineshaft = registerInject("abandoned_mineshaft");
     public static final ResourceLocation jungle_temple = registerInject("jungle_temple");
     public static final ResourceLocation stronghold_corridor = registerInject("stronghold_corridor");
     public static final ResourceLocation desert_pyramid = registerInject("desert_pyramid");
     public static final ResourceLocation stronghold_library = registerInject("stronghold_library");
-
-    //chests
-    public static final ResourceLocation chest_hunter_trainer = register("chests/village/hunter_trainer");
-    public static final ResourceLocation chest_vampire_dungeon = register("chests/dungeon/vampire_dungeon");
-
     private static int injected = 0;
 
-    static ResourceLocation registerInject(String resourceName){
-        ResourceLocation registryName = register("inject/"+resourceName);
+    static ResourceLocation registerInject(String resourceName) {
+        ResourceLocation registryName = register("inject/" + resourceName);
         INJECTION_TABLES.put(resourceName, registryName);
         return registryName;
     }
 
-    static ResourceLocation register(String resourceName){
+    static ResourceLocation register(String resourceName) {
         return register(new ResourceLocation(REFERENCE.MODID, resourceName));
     }
 
@@ -67,7 +64,7 @@ public class ModLootTables {
         String name = event.getName().toString();
         if (name.startsWith(prefix)) {
             String file = name.substring(name.indexOf(prefix) + prefix.length());
-            if(INJECTION_TABLES.containsKey(file)) {
+            if (INJECTION_TABLES.containsKey(file)) {
                 try {
                     event.getTable().addPool(getInjectPool(file));
                     injected++;

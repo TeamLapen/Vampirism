@@ -112,6 +112,15 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
         return InventoryHelper.checkItems(inventory, new Item[]{Items.BOOK, ModItems.vampire_fang, PureBloodItem.getBloodItemForLevel(bloodLevel), ModItems.vampire_book}, new int[]{1, fangs, blood, par3});
     }
 
+    public static class Factory implements IContainerFactory<HunterTableContainer> {
+
+        @Override
+        public HunterTableContainer create(int windowId, PlayerInventory inv, PacketBuffer data) {
+            BlockPos pos = data.readBlockPos();
+            return new HunterTableContainer(windowId, inv, IWorldPosCallable.of(inv.player.world, pos));
+        }
+    }
+
     private class SlotResult extends Slot {
 
         private final HunterTableContainer container;
@@ -130,16 +139,6 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
         public ItemStack onTake(PlayerEntity playerIn, ItemStack stack) {
             container.onPickupResult();
             return stack;
-        }
-    }
-
-
-    public static class Factory implements IContainerFactory<HunterTableContainer> {
-
-        @Override
-        public HunterTableContainer create(int windowId, PlayerInventory inv, PacketBuffer data) {
-            BlockPos pos = data.readBlockPos();
-            return new HunterTableContainer(windowId, inv, IWorldPosCallable.of(inv.player.world, pos));
         }
     }
 }

@@ -69,6 +69,32 @@ public class BaronessAttireModel extends EntityModel<VampireBaronEntity> {
     }
 
     @Override
+    public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+        this.dressArmBandLeft.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        this.dressArmBandRight.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        this.dressTorso.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        this.hat.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        matrixStackIn.push();
+        matrixStackIn.scale(1 - 0.5f * enragedProgress, 1 - 0.7f * enragedProgress, 1 - 0.5f * enragedProgress);
+        this.hood.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        matrixStackIn.pop();
+    }
+
+    @Override
+    public void setLivingAnimations(VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
+        enragedProgress = entityIn.getEnragedProgress();
+    }
+
+    /**
+     * This is a helper function from Tabula to set the rotation of model parts
+     */
+    public void setRotateAngle(ModelRenderer renderer, float x, float y, float z) {
+        renderer.rotateAngleX = x;
+        renderer.rotateAngleY = y;
+        renderer.rotateAngleZ = z;
+    }
+
+    @Override
     public void setRotationAngles(VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         float bodyRotateY = 0;
         float headRotateY = 0;
@@ -92,36 +118,6 @@ public class BaronessAttireModel extends EntityModel<VampireBaronEntity> {
         this.dressArmBandLeft.rotateAngleY = bodyRotateY;
         this.dressArmBandRight.rotateAngleY = bodyRotateY;
     }
-
-
-
-
-    @Override
-    public void setLivingAnimations(VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
-        enragedProgress = entityIn.getEnragedProgress();
-    }
-
-    @Override
-    public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        this.dressArmBandLeft.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        this.dressArmBandRight.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        this.dressTorso.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        this.hat.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        matrixStackIn.push();
-        matrixStackIn.scale(1-0.5f*enragedProgress,1-0.7f*enragedProgress, 1-0.5f*enragedProgress);
-        this.hood.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        matrixStackIn.pop();
-    }
-
-    /**
-     * This is a helper function from Tabula to set the rotation of model parts
-     */
-    public void setRotateAngle(ModelRenderer renderer, float x, float y, float z) {
-        renderer.rotateAngleX = x;
-        renderer.rotateAngleY = y;
-        renderer.rotateAngleZ = z;
-    }
-
 
     protected HandSide getSwingingSide(VampireBaronEntity entity) {
         HandSide handside = entity.getPrimaryHand();

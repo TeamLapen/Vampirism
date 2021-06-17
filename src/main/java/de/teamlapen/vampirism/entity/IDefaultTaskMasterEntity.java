@@ -20,6 +20,11 @@ public interface IDefaultTaskMasterEntity extends ForceLookEntityGoal.TaskOwner,
     ITextComponent CONTAINER_NAME = new TranslationTextComponent("container.vampirism.taskmaster");
     ITextComponent NO_TASK = new TranslationTextComponent("text.vampirism.taskmaster.no_tasks");
 
+    /**
+     * @return The biome type based on where this entity was spawned
+     */
+    VillagerType getBiomeType();
+
     default boolean processInteraction(PlayerEntity playerEntity, Entity entity) {
         if (FactionPlayerHandler.getOpt(playerEntity).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(taskManager -> taskManager.hasAvailableTasks(entity.getUniqueID())).orElse(false)) {
             OptionalInt containerIdOpt = playerEntity.openContainer(new SimpleNamedContainerProvider((containerId, playerInventory, player) -> new TaskBoardContainer(containerId, playerInventory), entity.getDisplayName().copyRaw()));
@@ -34,10 +39,5 @@ public interface IDefaultTaskMasterEntity extends ForceLookEntityGoal.TaskOwner,
         }
         return false;
     }
-
-    /**
-     * @return The biome type based on where this entity was spawned
-     */
-    VillagerType getBiomeType();
 
 }

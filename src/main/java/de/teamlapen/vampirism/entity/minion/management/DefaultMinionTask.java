@@ -24,17 +24,17 @@ public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>
         return null;
     }
 
-    protected void triggerAdvancements(PlayerEntity player){
-        if (player instanceof ServerPlayerEntity) {
-            ModAdvancements.TRIGGER_MINION_ACTION.trigger(((ServerPlayerEntity) player),this);
-        }
-    }
-
     @Override
     public ITextComponent getName() {
         if (name == null) {
             name = new TranslationTextComponent(Util.makeTranslationKey("minion_task", getRegistryName()));
         }
         return name;
+    }
+
+    protected void triggerAdvancements(PlayerEntity player) {
+        if (player instanceof ServerPlayerEntity) {
+            ModAdvancements.TRIGGER_MINION_ACTION.trigger(((ServerPlayerEntity) player), this);
+        }
     }
 }

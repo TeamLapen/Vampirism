@@ -18,13 +18,13 @@ import java.util.List;
  */
 public interface IProxy extends IInitListener {
 
+    default void displayGarlicBeaconScreen(GarlicBeaconTileEntity tile, ITextComponent title) {
+    }
+
     default void displayNameSwordScreen(ItemStack stack) {
     }
 
     default void displayRevertBackScreen() {
-    }
-
-    default void displayGarlicBeaconScreen(GarlicBeaconTileEntity tile, ITextComponent title){
     }
 
     @Nullable
@@ -32,11 +32,6 @@ public interface IProxy extends IInitListener {
 
     @Nullable
     Entity getMouseOverEntity();
-
-    /**
-     * Shows a DBNO state with the given death message if the passed player is the client player
-     */
-    default void showDBNOScreen(PlayerEntity player, @Nullable ITextComponent deathMessage){}
 
     default float getRenderPartialTick() {
         return 1F;
@@ -50,47 +45,53 @@ public interface IProxy extends IInitListener {
      */
     SkillTree getSkillTree(boolean client);
 
-    default void handleBloodValuePacket(BloodValuePacket msg) {
-    }
-
-    default void handleSkillTreePacket(SkillTreePacket msg) {
-    }
-
-    default void handleVampireBookPacket(OpenVampireBookPacket msg) {
+    default void handleActionBindingPacket(ActionBindingPacket msg, PlayerEntity playerEntity) {
     }
 
     default void handleAppearancePacket(PlayerEntity player, AppearancePacket msg) {
     }
 
+    default void handleBloodValuePacket(BloodValuePacket msg) {
+    }
+
     default void handlePlayEventPacket(PlayEventPacket msg) {
     }
 
-    default void handleTaskActionPacket(TaskActionPacket msg, PlayerEntity playerEntity) {
+    default void handleRequestMinionSelect(RequestMinionSelectPacket.Action action, List<Pair<Integer, ITextComponent>> minions) {
     }
 
-    default void handleTaskStatusPacket(TaskStatusPacket msg) {
+    default void handleSkillTreePacket(SkillTreePacket msg) {
     }
-
-    default void handleTaskPacket(TaskPacket msg) {
-    }
-
-    void renderScreenFullColor(int ticksOn, int ticksOff, int color);
 
     /**
      * Handle client side only sleep things
      */
     void handleSleepClient(PlayerEntity player);
 
-    default void handleRequestMinionSelect(RequestMinionSelectPacket.Action action, List<Pair<Integer, ITextComponent>> minions) {
+    default void handleTaskActionPacket(TaskActionPacket msg, PlayerEntity playerEntity) {
     }
+
+    default void handleTaskPacket(TaskPacket msg) {
+    }
+
+    default void handleTaskStatusPacket(TaskStatusPacket msg) {
+    }
+
+    default void handleUpdateMultiBossInfoPacket(UpdateMultiBossInfoPacket msg) {
+    }
+
+    default void handleVampireBookPacket(OpenVampireBookPacket msg) {
+    }
+
+    void renderScreenFullColor(int ticksOn, int ticksOff, int color);
 
     default void resetSkillScreenCache() {
     }
 
-    default void handleActionBindingPacket(ActionBindingPacket msg, PlayerEntity playerEntity) {
-    }
-
-    default void handleUpdateMultiBossInfoPacket(UpdateMultiBossInfoPacket msg){
+    /**
+     * Shows a DBNO state with the given death message if the passed player is the client player
+     */
+    default void showDBNOScreen(PlayerEntity player, @Nullable ITextComponent deathMessage) {
     }
 
 }

@@ -42,19 +42,14 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         PlayerEntity playerEntity = VampirismMod.proxy.getClientPlayer();
-        this.addFactionPoisonousToolTip(stack,worldIn,tooltip,flagIn,playerEntity);
-    }
-
-    @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
-        return String.format(REFERENCE.MODID + ":textures/models/armor/%s.png", regName);
+        this.addFactionPoisonousToolTip(stack, worldIn, tooltip, flagIn, playerEntity);
     }
 
     @Nullable
     @OnlyIn(Dist.CLIENT)
     @Override
     public BipedModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, BipedModel _default) {
-        switch (regName){
+        switch (regName) {
             case "vampire_clothing_crown":
                 return ClothingCrownModel.getInstance();
             case "vampire_clothing_legs":
@@ -68,6 +63,10 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
         }
     }
 
+    @Override
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
+        return String.format(REFERENCE.MODID + ":textures/models/armor/%s.png", regName);
+    }
 
     @Nonnull
     @Override

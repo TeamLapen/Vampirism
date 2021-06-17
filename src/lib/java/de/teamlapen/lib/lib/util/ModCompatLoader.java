@@ -19,14 +19,12 @@ import java.util.*;
 public class ModCompatLoader implements IInitListener {
 
     private final static Logger LOGGER = LogManager.getLogger();
+    private final Map<IModCompat, ForgeConfigSpec.BooleanValue> compatEnableMap = new HashMap<>();
+    private final List<IModCompat> incompatibleCompats = new LinkedList<>();
     private
     @Nullable
     List<IModCompat> availableModCompats = new LinkedList<>();
     private List<IModCompat> loadedModCompats;
-    private final Map<IModCompat, ForgeConfigSpec.BooleanValue> compatEnableMap = new HashMap<>();
-
-    private final List<IModCompat> incompatibleCompats = new LinkedList<>();
-
 
     /**
      * Add any compats BEFORE pre-init
@@ -40,11 +38,6 @@ public class ModCompatLoader implements IInitListener {
         availableModCompats.add(compat);
     }
 
-    @Nullable
-    public List<IModCompat> getAvailableModCompats() {
-        return availableModCompats;
-    }
-
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         builder.push("Compatibility");
         assert availableModCompats != null;
@@ -56,6 +49,11 @@ public class ModCompatLoader implements IInitListener {
             builder.pop();
         }
 
+    }
+
+    @Nullable
+    public List<IModCompat> getAvailableModCompats() {
+        return availableModCompats;
     }
 
     public List<IModCompat> getIncompatibleCompats() {

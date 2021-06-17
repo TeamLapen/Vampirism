@@ -45,11 +45,11 @@ public class BlindingBatEntity extends BatEntity {
             return i <= random.nextInt(j) && canSpawnOn(entityType, iWorld, spawnReason, blockPos, random);
         }
     }
+    private final EntityPredicate nonVampirePredicatePlayer = new EntityPredicate().setCustomPredicate(VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true).and(EntityPredicates.CAN_AI_TARGET));
+    private final EntityPredicate nonVampirePredicate = new EntityPredicate().setCustomPredicate(e -> !Helper.isVampire(e));
     private boolean restrictLiveSpan;
     private boolean targeting;
-    private boolean targetingMob=false;
-    private final EntityPredicate nonVampirePredicatePlayer = new EntityPredicate().setCustomPredicate(VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true).and(EntityPredicates.CAN_AI_TARGET));
-    private final EntityPredicate nonVampirePredicate = new EntityPredicate().setCustomPredicate(e->!Helper.isVampire(e));
+    private boolean targetingMob = false;
 
     public BlindingBatEntity(EntityType<? extends BlindingBatEntity> type, World worldIn) {
         super(type, worldIn);
@@ -64,7 +64,7 @@ public class BlindingBatEntity extends BatEntity {
         this.restrictLiveSpan = true;
     }
 
-    public void setTargeting(){
+    public void setTargeting() {
         this.targeting = true;
     }
 
@@ -76,15 +76,15 @@ public class BlindingBatEntity extends BatEntity {
         }
         if (!this.world.isRemote) {
             List<LivingEntity> l = world.getEntitiesWithinAABB(targetingMob ? MonsterEntity.class : PlayerEntity.class, this.getBoundingBox());
-            boolean hit=false;
+            boolean hit = false;
             for (LivingEntity e : l) {
                 if (e.isAlive() && !Helper.isVampire(e)) {
                     e.addPotionEffect(new EffectInstance(Effects.BLINDNESS, BalanceMobProps.mobProps.BLINDING_BAT_EFFECT_DURATION));
-                    hit=true;
+                    hit = true;
                 }
             }
-            if(targeting && hit){
-                this.attackEntityFrom(DamageSource.GENERIC,1000);
+            if (targeting && hit) {
+                this.attackEntityFrom(DamageSource.GENERIC, 1000);
             }
         }
     }
@@ -92,29 +92,29 @@ public class BlindingBatEntity extends BatEntity {
     @Override
     protected void updateAITasks() {
         boolean t = false;
-        if(targeting&&this.ticksExisted>40){
-            targetingMob=false;
-            LivingEntity e = world.getClosestPlayer(nonVampirePredicatePlayer,this);
-            if(e==null){
-                e = world.getClosestEntityWithinAABB(MonsterEntity.class, nonVampirePredicate, null, this.getPosX(), this.getPosY(), this.getPosZ(), this.getBoundingBox().grow(20) );
-                targetingMob=true;
+        if (targeting && this.ticksExisted > 40) {
+            targetingMob = false;
+            LivingEntity e = world.getClosestPlayer(nonVampirePredicatePlayer, this);
+            if (e == null) {
+                e = world.getClosestEntityWithinAABB(MonsterEntity.class, nonVampirePredicate, null, this.getPosX(), this.getPosY(), this.getPosZ(), this.getBoundingBox().grow(20));
+                targetingMob = true;
             }
-            if(e!=null){
-                Vector3d diff = e.getPositionVec().add(0,e.getEyeHeight(),0).subtract(this.getPositionVec());
+            if (e != null) {
+                Vector3d diff = e.getPositionVec().add(0, e.getEyeHeight(), 0).subtract(this.getPositionVec());
                 double dist = diff.length();
-                if(dist<20){
-                    Vector3d mov = diff.scale(0.15/dist);
+                if (dist < 20) {
+                    Vector3d mov = diff.scale(0.15 / dist);
                     this.setMotion(mov);
-                    float f = (float)(MathHelper.atan2(mov.z, mov.x) * (double)(180F / (float)Math.PI)) - 90.0F;
+                    float f = (float) (MathHelper.atan2(mov.z, mov.x) * (double) (180F / (float) Math.PI)) - 90.0F;
                     float f1 = MathHelper.wrapDegrees(f - this.rotationYaw);
                     this.moveForward = 0.5F;
                     this.rotationYaw += f1;
-                    t=true;
+                    t = true;
                 }
             }
 
         }
-        if(!t){
+        if (!t) {
             super.updateAITasks();
         }
 

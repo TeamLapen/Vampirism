@@ -16,15 +16,15 @@ public interface IVampirismCrossbowArrow<T extends AbstractArrowEntity & IEntity
 
     T createEntity(ItemStack stack, World world, PlayerEntity player, double heightOffset, double centerOffset, boolean rightHand);
 
-    boolean isCanBeInfinite();
-
-    void onHitBlock(ItemStack arrow, BlockPos blockPos, IEntityCrossbowArrow arrowEntity, Entity shootingEntity);
-
-    void onHitEntity(ItemStack arrow, LivingEntity entity, IEntityCrossbowArrow arrowEntity, Entity shootingEntity);
-
     @Nonnull
     @Override
     default IFaction<?> getExclusiveFaction() {
         return VReference.HUNTER_FACTION;
     }
+
+    boolean isCanBeInfinite();
+
+    void onHitBlock(ItemStack arrow, BlockPos blockPos, IEntityCrossbowArrow arrowEntity, Entity shootingEntity);
+
+    void onHitEntity(ItemStack arrow, LivingEntity entity, IEntityCrossbowArrow arrowEntity, Entity shootingEntity);
 }

@@ -29,7 +29,8 @@ public abstract class CommonProxy implements IProxy {
     }
 
     @Override
-    public void onInitStep(Step step, ParallelDispatchEvent event) {
+    public void handleActionBindingPacket(ActionBindingPacket msg, PlayerEntity playerEntity) {
+        FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.setBoundAction(msg.actionBindingId, msg.action, false, false));
     }
 
     @Override
@@ -63,7 +64,6 @@ public abstract class CommonProxy implements IProxy {
     }
 
     @Override
-    public void handleActionBindingPacket(ActionBindingPacket msg, PlayerEntity playerEntity) {
-        FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.setBoundAction(msg.actionBindingId, msg.action, false, false));
+    public void onInitStep(Step step, ParallelDispatchEvent event) {
     }
 }

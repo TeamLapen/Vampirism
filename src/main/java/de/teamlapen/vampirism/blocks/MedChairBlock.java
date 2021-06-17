@@ -63,6 +63,11 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         return state.get(PART) == EnumPart.BOTTOM ? SHAPE_BOTTOM : SHAPE_TOP;
     }
 
+    @Override
+    public void harvestBlock(@Nonnull World worldIn, @Nonnull PlayerEntity player, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable TileEntity te, @Nonnull ItemStack stack) {
+        super.harvestBlock(worldIn, player, pos, Blocks.AIR.getDefaultState(), te, stack);
+    }
+
     @Nonnull
     @Override
     public ActionResultType onBlockActivated(@Nonnull BlockState state, @Nonnull World world, @Nonnull BlockPos pos, PlayerEntity player, @Nonnull Hand hand, @Nonnull BlockRayTraceResult hit) {
@@ -80,22 +85,36 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         return ActionResultType.SUCCESS;
     }
 
-    private boolean handleInjections(PlayerEntity player, World world, ItemStack stack) {
-        IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
-        IPlayableFaction<?> faction = handler.getCurrentFaction();
-        if (stack.getItem().equals(ModItems.injection_garlic)) {
-            return handleGarlicInjection(player, world, handler, faction);
+    @Override
+    public void onBlockHarvested(@Nonnull World worldIn, @Nonnull BlockPos pos, BlockState state, @Nonnull PlayerEntity player) {
+        EnumPart part = state.get(PART);
+        BlockPos other;
+        Direction dir = state.get(FACING);
+        if (state.get(PART) == EnumPart.TOP) {
+            other = pos.offset(dir);
+        } else {
+            other = pos.offset(dir.getOpposite());
         }
-        if (stack.getItem().equals(ModItems.injection_sanguinare)) {
-            return handleSanguinareInjection(player, handler, faction);
+        BlockState otherState = worldIn.getBlockState(other);
+        if (otherState.getBlock() == this && otherState.get(PART) != part) {
+            worldIn.setBlockState(other, Blocks.AIR.getDefaultState(), 35);
+            worldIn.playEvent(player, 2001, other, Block.getStateId(otherState));
+            if (!worldIn.isRemote && !player.isCreative()) {
+                ItemStack itemstack = player.getHeldItemMainhand();
+                spawnDrops(state, worldIn, pos, null, player, itemstack);
+                spawnDrops(otherState, worldIn, other, null, player, itemstack);
+            }
+            player.addStat(Stats.BLOCK_MINED.get(this));
         }
-        if (stack.getItem().equals(ModItems.injection_zombie_blood)) {
-            return handleZombieBloodInjection(player);
-        }
-        return false;
+        super.onBlockHarvested(worldIn, pos, state, player);
     }
 
-    private boolean handleGarlicInjection(@Nonnull PlayerEntity player, @Nonnull World world, @Nonnull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction){
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(FACING, PART);
+    }
+
+    private boolean handleGarlicInjection(@Nonnull PlayerEntity player, @Nonnull World world, @Nonnull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
         if (handler.canJoin(VReference.HUNTER_FACTION)) {
             if (world.isRemote) {
                 VampirismMod.proxy.renderScreenFullColor(4, 30, 0xBBBBBBFF);
@@ -108,6 +127,21 @@ public class MedChairBlock extends VampirismHorizontalBlock {
             if (!world.isRemote) {
                 player.sendMessage(new TranslationTextComponent("text.vampirism.med_chair_other_faction", currentFaction.getName()), Util.DUMMY_UUID);
             }
+        }
+        return false;
+    }
+
+    private boolean handleInjections(PlayerEntity player, World world, ItemStack stack) {
+        IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
+        IPlayableFaction<?> faction = handler.getCurrentFaction();
+        if (stack.getItem().equals(ModItems.injection_garlic)) {
+            return handleGarlicInjection(player, world, handler, faction);
+        }
+        if (stack.getItem().equals(ModItems.injection_sanguinare)) {
+            return handleSanguinareInjection(player, handler, faction);
+        }
+        if (stack.getItem().equals(ModItems.injection_zombie_blood)) {
+            return handleZombieBloodInjection(player);
         }
         return false;
     }
@@ -138,40 +172,6 @@ public class MedChairBlock extends VampirismHorizontalBlock {
     private boolean handleZombieBloodInjection(@Nonnull PlayerEntity player) {
         player.addPotionEffect(new EffectInstance(ModEffects.poison, 200));
         return true;
-    }
-
-    @Override
-    public void harvestBlock(@Nonnull World worldIn, @Nonnull PlayerEntity player, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable TileEntity te, @Nonnull ItemStack stack) {
-        super.harvestBlock(worldIn, player, pos, Blocks.AIR.getDefaultState(), te, stack);
-    }
-
-    @Override
-    public void onBlockHarvested(@Nonnull World worldIn, @Nonnull BlockPos pos, BlockState state, @Nonnull PlayerEntity player) {
-        EnumPart part = state.get(PART);
-        BlockPos other;
-        Direction dir = state.get(FACING);
-        if (state.get(PART) == EnumPart.TOP) {
-            other = pos.offset(dir);
-        } else {
-            other = pos.offset(dir.getOpposite());
-        }
-        BlockState otherState = worldIn.getBlockState(other);
-        if (otherState.getBlock() == this && otherState.get(PART) != part) {
-            worldIn.setBlockState(other, Blocks.AIR.getDefaultState(), 35);
-            worldIn.playEvent(player, 2001, other, Block.getStateId(otherState));
-            if (!worldIn.isRemote && !player.isCreative()) {
-                ItemStack itemstack = player.getHeldItemMainhand();
-                spawnDrops(state, worldIn, pos, null, player, itemstack);
-                spawnDrops(otherState, worldIn, other, null, player, itemstack);
-            }
-            player.addStat(Stats.BLOCK_MINED.get(this));
-        }
-        super.onBlockHarvested(worldIn, pos, state, player);
-    }
-
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, PART);
     }
 
 

@@ -39,7 +39,8 @@ public class ExtendedPotionMix {
 
 
     public static class Builder {
-        private final static NonNullSupplier<Ingredient> EMPTY_SUPPLIER = ()->Ingredient.EMPTY;
+        private final static NonNullSupplier<Ingredient> EMPTY_SUPPLIER = () -> Ingredient.EMPTY;
+        private static final NonNullSupplier<Ingredient> VAMPIRE_BLOOD = () -> Ingredient.fromItems(ForgeRegistries.ITEMS.getValue(new ResourceLocation("vampirism", "vampire_blood_bottle")));
         private final net.minecraftforge.registries.IRegistryDelegate<Potion> input;
         private final net.minecraftforge.registries.IRegistryDelegate<Potion> output;
         private LazyOptional<Ingredient> reagent1 = LazyOptional.of(EMPTY_SUPPLIER);
@@ -51,11 +52,14 @@ public class ExtendedPotionMix {
         private boolean durable = false;
         private boolean concentrated = false;
         private boolean master = false;
-        private static final NonNullSupplier<Ingredient> VAMPIRE_BLOOD = ()->Ingredient.fromItems(ForgeRegistries.ITEMS.getValue(new ResourceLocation("vampirism", "vampire_blood_bottle")));
 
         public Builder(Potion input, Potion output) {
             this.input = input.delegate;
             this.output = output.delegate;
+        }
+
+        public Builder blood() {
+            return this.extraIngredient(VAMPIRE_BLOOD);
         }
 
         public ExtendedPotionMix[] build() {
@@ -66,6 +70,35 @@ public class ExtendedPotionMix {
                 result[1] = new ExtendedPotionMix(input, reagent1Count == 0 || reagent1CountReduced == 0 ? LazyOptional.of(EMPTY_SUPPLIER) : reagent1, reagent1CountReduced != -1 ? reagent1CountReduced : reagent1Count, reagent2Count == 0 || reagent2CountReduced == 0 ? LazyOptional.of(EMPTY_SUPPLIER) : reagent2, reagent2CountReduced != -1 ? reagent2CountReduced : reagent2Count, output, durable, concentrated, master, true);
             }
             return result;
+        }
+
+        public Builder concentrated() {
+            this.concentrated = true;
+            return this;
+        }
+
+        public Builder durable() {
+            this.durable = true;
+            return this;
+        }
+
+        public Builder extraIngredient(NonNullSupplier<Ingredient> i) {
+            this.reagent2 = LazyOptional.of(i);
+            this.reagent2Count = 1;
+            return this;
+        }
+
+        public Builder extraIngredient(NonNullSupplier<Ingredient> i, int count) {
+            this.reagent2 = LazyOptional.of(i);
+            this.reagent2Count = count;
+            return this;
+        }
+
+        public Builder extraIngredient(NonNullSupplier<Ingredient> i, int count, int countReduced) {
+            this.reagent2 = LazyOptional.of(i);
+            this.reagent2Count = count;
+            this.reagent2CountReduced = countReduced;
+            return this;
         }
 
         public Builder ingredient(NonNullSupplier<Ingredient> i) {
@@ -84,39 +117,6 @@ public class ExtendedPotionMix {
             this.reagent1 = LazyOptional.of(i);
             this.reagent1Count = count;
             this.reagent1CountReduced = reducedCount;
-            return this;
-        }
-
-        public Builder extraIngredient(NonNullSupplier<Ingredient> i) {
-            this.reagent2 = LazyOptional.of(i);
-            this.reagent2Count = 1;
-            return this;
-        }
-
-        public Builder blood() {
-            return this.extraIngredient(VAMPIRE_BLOOD);
-        }
-
-        public Builder extraIngredient(NonNullSupplier<Ingredient> i, int count) {
-            this.reagent2 = LazyOptional.of(i);
-            this.reagent2Count = count;
-            return this;
-        }
-
-        public Builder extraIngredient(NonNullSupplier<Ingredient> i, int count, int countReduced) {
-            this.reagent2 = LazyOptional.of(i);
-            this.reagent2Count = count;
-            this.reagent2CountReduced = countReduced;
-            return this;
-        }
-
-        public Builder concentrated() {
-            this.concentrated = true;
-            return this;
-        }
-
-        public Builder durable() {
-            this.durable = true;
             return this;
         }
 

@@ -59,21 +59,6 @@ public class AlchemicalFireBlock extends VampirismBlock {
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        if (!entityIn.isImmuneToFire()) {
-            entityIn.forceFireTicks(entityIn.getFireTimer() + 1);
-            if (entityIn.getFireTimer() == 0) {
-                entityIn.setFire(8);
-            }
-
-            entityIn.attackEntityFrom(DamageSource.IN_FIRE, 1);
-        }
-
-        super.onEntityCollision(state, worldIn, pos, entityIn);
-    }
-
-
-    @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return VoxelShapes.empty();
     }
@@ -82,8 +67,6 @@ public class AlchemicalFireBlock extends VampirismBlock {
     public boolean isBurning(BlockState state, IBlockReader world, BlockPos pos) {
         return true;
     }
-
-
 
     @Override
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
@@ -95,6 +78,20 @@ public class AlchemicalFireBlock extends VampirismBlock {
         if (!isValidPosition(state, worldIn, pos)) {
             worldIn.removeBlock(pos, isMoving);
         }
+    }
+
+    @Override
+    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+        if (!entityIn.isImmuneToFire()) {
+            entityIn.forceFireTicks(entityIn.getFireTimer() + 1);
+            if (entityIn.getFireTimer() == 0) {
+                entityIn.setFire(8);
+            }
+
+            entityIn.attackEntityFrom(DamageSource.IN_FIRE, 1);
+        }
+
+        super.onEntityCollision(state, worldIn, pos, entityIn);
     }
 
     /**

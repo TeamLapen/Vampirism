@@ -32,36 +32,6 @@ import javax.annotation.Nullable;
 public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, IFactionExclusiveItem {
     private final static String regName = "stake";
 
-    public StakeItem() {
-        super(regName, ItemTier.WOOD, 1, -1, new Properties().group(VampirismMod.creativeTab));
-    }
-
-    @Nonnull
-    @Override
-    public IFaction<?> getExclusiveFaction() {
-        return VReference.HUNTER_FACTION;
-    }
-
-
-    @Override
-    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (!attacker.getEntityWorld().isRemote) {
-            if (target instanceof IVampireMob || (target instanceof PlayerEntity && Helper.isVampire(((PlayerEntity) target)))) {
-                if (canKillInstant(target, attacker)) {
-                    DamageSource dmg = attacker instanceof PlayerEntity ? DamageSource.causePlayerDamage((PlayerEntity) attacker) : DamageSource.causeMobDamage(attacker);
-                    dmg = dmg.setDamageBypassesArmor();
-                    target.attackEntityFrom(dmg, 10000F);
-                    if (attacker instanceof ServerPlayerEntity) {
-                        ModAdvancements.TRIGGER_HUNTER_ACTION.trigger((ServerPlayerEntity) attacker, HunterActionTrigger.Action.STAKE);
-                    }
-                }
-
-            }
-        }
-
-        return super.hitEntity(stack, target, attacker);
-    }
-
     public static boolean canKillInstant(LivingEntity target, LivingEntity attacker) {
         boolean instaKillFromBehind = false;
         boolean instaKillLowHealth = false;
@@ -80,15 +50,40 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
             instaKillLowHealth = true;// make more out of this
         }
         if (instaKillFromBehind && !UtilLib.canReallySee(target, attacker, true)) {
-            if (!(VampirismConfig.BALANCE.hsInstantKill2OnlyNPC.get() && target instanceof PlayerEntity) && target.getMaxHealth() < VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get()) {
-                return true;
-            }
+            return !(VampirismConfig.BALANCE.hsInstantKill2OnlyNPC.get() && target instanceof PlayerEntity) && target.getMaxHealth() < VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get();
         } else if (instaKillLowHealth && target.getHealth() <= (VampirismConfig.BALANCE.hsInstantKill1MaxHealth.get() * target.getMaxHealth())) {
-            if (!VampirismConfig.BALANCE.hsInstantKill1FromBehind.get() || !UtilLib.canReallySee(target, attacker, true)) {
-                return true;
-            }
+            return !VampirismConfig.BALANCE.hsInstantKill1FromBehind.get() || !UtilLib.canReallySee(target, attacker, true);
 
         }
         return false;
+    }
+
+    public StakeItem() {
+        super(regName, ItemTier.WOOD, 1, -1, new Properties().group(VampirismMod.creativeTab));
+    }
+
+    @Nonnull
+    @Override
+    public IFaction<?> getExclusiveFaction() {
+        return VReference.HUNTER_FACTION;
+    }
+
+    @Override
+    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        if (!attacker.getEntityWorld().isRemote) {
+            if (target instanceof IVampireMob || (target instanceof PlayerEntity && Helper.isVampire(((PlayerEntity) target)))) {
+                if (canKillInstant(target, attacker)) {
+                    DamageSource dmg = attacker instanceof PlayerEntity ? DamageSource.causePlayerDamage((PlayerEntity) attacker) : DamageSource.causeMobDamage(attacker);
+                    dmg = dmg.setDamageBypassesArmor();
+                    target.attackEntityFrom(dmg, 10000F);
+                    if (attacker instanceof ServerPlayerEntity) {
+                        ModAdvancements.TRIGGER_HUNTER_ACTION.trigger((ServerPlayerEntity) attacker, HunterActionTrigger.Action.STAKE);
+                    }
+                }
+
+            }
+        }
+
+        return super.hitEntity(stack, target, attacker);
     }
 }

@@ -39,16 +39,6 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> impleme
     }
 
     @Override
-    protected void init() {
-        super.init();
-        this.addButton(list = new ScrollableListWithDummyWidget<>(this.guiLeft + 16, this.guiTop + 16, 145, 149, 21, this::taskSupplier, (item, list1, isDummy) -> new TaskItem<>(item, list1, isDummy, this, this.factionPlayer)));
-    }
-
-    public Collection<ITaskInstance> taskSupplier() {
-        return this.container.getVisibleTasks();
-    }
-
-    @Override
     public ItemRenderer getItemRenderer() {
         return this.itemRenderer;
     }
@@ -59,18 +49,22 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> impleme
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.list.renderToolTip(matrixStack, mouseX, mouseY);
-    }
-
-    @Override
     public boolean mouseDragged(double mouseX, double mouseY, int buttonId, double dragX, double dragY) {
         super.mouseDragged(mouseX, mouseY, buttonId, dragX, dragY);
         if (!this.dragSplitting) {
             this.list.mouseDragged(mouseX, mouseY, buttonId, dragX, dragY);
         }
         return true;
+    }
+
+    @Override
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        this.list.renderToolTip(matrixStack, mouseX, mouseY);
+    }
+
+    public Collection<ITaskInstance> taskSupplier() {
+        return this.container.getVisibleTasks();
     }
 
     @Override
@@ -84,6 +78,12 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> impleme
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack mStack, int mouseX, int mouseY) {
         this.font.func_243248_b(mStack, this.title, (float) (this.xSize / 2 - this.font.getStringPropertyWidth(this.title) / 2), 5.0F, 4210752);
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        this.addButton(list = new ScrollableListWithDummyWidget<>(this.guiLeft + 16, this.guiTop + 16, 145, 149, 21, this::taskSupplier, (item, list1, isDummy) -> new TaskItem<>(item, list1, isDummy, this, this.factionPlayer)));
     }
 
 

@@ -58,14 +58,14 @@ public class ClientProxy extends CommonProxy {
 
     @Nonnull
     @Override
-    public ISoundReference createSoundReference(SoundEvent event, SoundCategory category, BlockPos pos, float volume, float pinch) {
-        return new SoundReference(new SimpleSound(event, category, volume, pinch, pos));
+    public ISoundReference createMasterSoundReference(SoundEvent event, float volume, float pinch) {
+        return new SoundReference(SimpleSound.master(event, volume, pinch));
     }
 
     @Nonnull
     @Override
-    public ISoundReference createMasterSoundReference(SoundEvent event, float volume, float pinch) {
-        return new SoundReference(SimpleSound.master(event, volume, pinch));
+    public ISoundReference createSoundReference(SoundEvent event, SoundCategory category, BlockPos pos, float volume, float pinch) {
+        return new SoundReference(new SimpleSound(event, category, volume, pinch, pos));
     }
 
     @Nonnull
@@ -83,6 +83,19 @@ public class ClientProxy extends CommonProxy {
     public PlayerEntity getPlayerEntity(NetworkEvent.Context ctx) {
         //Need to double check the side for some reason
         return (EffectiveSide.get() == LogicalSide.CLIENT ? Minecraft.getInstance().player : super.getPlayerEntity(ctx));
+    }
+
+    @Override
+    public World getWorldFromKey(RegistryKey<World> world) {
+        World serverWorld = super.getWorldFromKey(world);
+        if (serverWorld != null) return serverWorld;
+        World clientWorld = Minecraft.getInstance().world;
+        if (clientWorld != null) {
+            if (clientWorld.getDimensionKey().equals(world)) {
+                return clientWorld;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -120,18 +133,5 @@ public class ClientProxy extends CommonProxy {
                 }
             }
         }
-    }
-
-    @Override
-    public World getWorldFromKey(RegistryKey<World> world) {
-        World serverWorld = super.getWorldFromKey(world);
-        if(serverWorld!=null)return serverWorld;
-        World clientWorld = Minecraft.getInstance().world;
-        if(clientWorld!=null){
-            if(clientWorld.getDimensionKey().equals(world)){
-                return clientWorld;
-            }
-        }
-        return null;
     }
 }

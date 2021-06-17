@@ -23,6 +23,7 @@ public interface IAction extends IForgeRegistryEntry<IAction> {
     /**
      * //TODO 1.17 remove
      * Use IFactionPlayer sensitive version
+     *
      * @return Cooldown time in ticks until the action can be used again
      */
     @Deprecated
@@ -31,7 +32,7 @@ public interface IAction extends IForgeRegistryEntry<IAction> {
     /**
      * @return Cooldown time in ticks until the action can be used again
      */
-    default int getCooldown(IFactionPlayer player){
+    default int getCooldown(IFactionPlayer player) {
         return getCooldown();
     }
 

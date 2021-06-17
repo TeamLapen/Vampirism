@@ -23,6 +23,56 @@ public class ItemModelGenerator extends ItemModelProvider {
         super(generator, REFERENCE.MODID, existingFileHelper);
     }
 
+    @SuppressWarnings("ConstantConditions")
+    public ItemModelBuilder block(Block name) {
+        try {
+            return super.withExistingParent(name.getRegistryName().getPath(), REFERENCE.MODID + ":block/" + name.getRegistryName().getPath());
+        } catch (IllegalStateException e) {
+            return getBuilder(name.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile(REFERENCE.MODID + ":block/" + name.getRegistryName().getPath()));
+        }
+    }
+
+    @Nonnull
+    @Override
+    public String getName() {
+        return "Vampirism Item Models";
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public ItemModelBuilder item(Item item, ResourceLocation... texture) {
+        if (texture != null && texture.length == 0) {
+            return withExistingParent(item, mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":item/" + item.getRegistryName().getPath());
+        }
+        return item(item.getRegistryName().getPath(), texture);
+    }
+
+    public ItemModelBuilder item(String item, ResourceLocation... texture) {
+        ItemModelBuilder model = withExistingParent(item, mcLoc("item/generated"));
+        if (texture != null) {
+            for (int i = 0; i < texture.length; i++) {
+                model.texture("layer" + i, texture[i]);
+            }
+        }
+        return model;
+    }
+
+    @Nonnull
+    public ItemModelBuilder withExistingParent(Item name, Item parent) {
+        return this.withExistingParent(name, parent.getRegistryName());
+    }
+
+    @SuppressWarnings({"UnusedReturnValue", "ConstantConditions"})
+    @Nonnull
+    public ItemModelBuilder withExistingParent(Block name, ResourceLocation parent) {
+        return super.withExistingParent(name.getRegistryName().getPath(), parent);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Nonnull
+    public ItemModelBuilder withExistingParent(Item name, ResourceLocation parent) {
+        return super.withExistingParent(name.getRegistryName().getPath(), parent);
+    }
+
     @Override
     protected void registerModels() {
         Set<Block> blocks = new HashSet<Block>() {{
@@ -242,56 +292,6 @@ public class ItemModelGenerator extends ItemModelProvider {
                 .override().predicate(mcLoc("damage"), 0.77f).model(withExistingParent("blood_bottle_7", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_7"))).end()
                 .override().predicate(mcLoc("damage"), 0.88f).model(withExistingParent("blood_bottle_8", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_8"))).end()
                 .override().predicate(mcLoc("damage"), 0.99f).model(withExistingParent("blood_bottle_9", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_9"))).end();
-    }
-
-    @Nonnull
-    @Override
-    public String getName() {
-        return "Vampirism Item Models";
-    }
-
-    public ItemModelBuilder item(String item, ResourceLocation... texture) {
-        ItemModelBuilder model = withExistingParent(item, mcLoc("item/generated"));
-        if (texture != null) {
-            for (int i = 0; i < texture.length; i++) {
-                model.texture("layer" + i, texture[i]);
-            }
-        }
-        return model;
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    public ItemModelBuilder item(Item item, ResourceLocation... texture) {
-        if (texture != null && texture.length == 0) {
-            return withExistingParent(item, mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":item/" + item.getRegistryName().getPath());
-        }
-        return item(item.getRegistryName().getPath(), texture);
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    @Nonnull
-    public ItemModelBuilder withExistingParent(Item name, ResourceLocation parent) {
-        return super.withExistingParent(name.getRegistryName().getPath(), parent);
-    }
-
-    @Nonnull
-    public ItemModelBuilder withExistingParent(Item name, Item parent) {
-        return this.withExistingParent(name, parent.getRegistryName());
-    }
-
-    @SuppressWarnings({"UnusedReturnValue", "ConstantConditions"})
-    @Nonnull
-    public ItemModelBuilder withExistingParent(Block name, ResourceLocation parent) {
-        return super.withExistingParent(name.getRegistryName().getPath(), parent);
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    public ItemModelBuilder block(Block name) {
-        try {
-            return super.withExistingParent(name.getRegistryName().getPath(), REFERENCE.MODID + ":block/" + name.getRegistryName().getPath());
-        } catch (IllegalStateException e) {
-            return getBuilder(name.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile(REFERENCE.MODID + ":block/" + name.getRegistryName().getPath()));
-        }
     }
 
 }

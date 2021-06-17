@@ -27,6 +27,10 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
     @Nonnull
     IPlayableFaction getFaction();
 
+    default ITextComponent getName() {
+        return new TranslationTextComponent(getTranslationKey());
+    }
+
     /**
      * Can return null if not registered, but since this has to be registered, we don't want annoying null warnings everywhere
      */
@@ -38,10 +42,6 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
 
     @OnlyIn(Dist.CLIENT)
     int getRenderRow();
-
-    default ITextComponent getName() {
-        return new TranslationTextComponent(getTranslationKey());
-    }
 
     /**
      * Use {@link ISkill#getName()}

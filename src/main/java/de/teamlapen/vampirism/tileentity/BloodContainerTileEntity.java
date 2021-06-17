@@ -35,9 +35,14 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
     public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
     public static final ModelProperty<Boolean> FLUID_IMPURE = new ModelProperty<>();
 
+    public static void setBloodValue(IBlockReader worldIn, Random randomIn, BlockPos blockPosIn) {
+        TileEntity tileEntity = worldIn.getTileEntity(blockPosIn);
+        if (tileEntity instanceof BloodContainerTileEntity) {
+            ((BloodContainerTileEntity) tileEntity).setFluidStack(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))));
+        }
+    }
     private int lastSyncedAmount = Integer.MIN_VALUE;
     private IModelData modelData;
-
 
     public BloodContainerTileEntity() {
         super(ModTiles.blood_container);
@@ -116,12 +121,5 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
         }
         modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).withInitial(FLUID_IMPURE, fluid.getFluid().equals(ModFluids.impure_blood)).build();
         if (refresh) ModelDataManager.requestModelDataRefresh(this);
-    }
-
-    public static void setBloodValue(IBlockReader worldIn, Random randomIn, BlockPos blockPosIn) {
-        TileEntity tileEntity = worldIn.getTileEntity(blockPosIn);
-        if (tileEntity instanceof BloodContainerTileEntity) {
-            ((BloodContainerTileEntity) tileEntity).setFluidStack(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))));
-        }
     }
 }

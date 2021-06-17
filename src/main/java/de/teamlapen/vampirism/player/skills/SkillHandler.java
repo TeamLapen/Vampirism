@@ -39,15 +39,34 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     private final ArrayList<ISkill> enabledSkills = new ArrayList<>();
     private final T player;
     private final IPlayableFaction<T> faction;
-    private boolean dirty = false;
     private final IRefinementSet[] appliedRefinementSets = new IRefinementSet[3];
     private final int[] refinementSetDamage = new int[3];
     private final Set<IRefinement> activeRefinements = new HashSet<>();
     private final Map<IRefinement, AttributeModifier> refinementModifier = new HashMap<>();
+    private boolean dirty = false;
 
     public SkillHandler(T player, IPlayableFaction<T> faction) {
         this.player = player;
         this.faction = faction;
+    }
+
+    public Optional<SkillNode> anyLastNode() {
+        SkillNode rootNode = getRootNode();
+        Queue<SkillNode> queue = new ArrayDeque<>();
+        queue.add(rootNode);
+
+        for (SkillNode skillNode = queue.poll(); skillNode != null; skillNode = queue.poll()) {
+            List<SkillNode> child = skillNode.getChildren().stream().filter(this::isNodeEnabled).collect(Collectors.toList());
+            if (child.isEmpty()) {
+                if (skillNode == rootNode) {
+                    skillNode = null;
+                }
+                return Optional.ofNullable(skillNode);
+            } else {
+                queue.addAll(child);
+            }
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -79,12 +98,39 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         }
     }
 
-    public boolean isSkillNodeLocked(SkillNode nodeIn) {
-        return Arrays.stream(nodeIn.getLockingNodes()).map(id -> SkillTreeManager.getInstance().getSkillTree().getNodeFromId(id)).filter(Objects::nonNull).flatMap(node -> Arrays.stream(node.getElements())).anyMatch(this::isSkillEnabled);
+    @Override
+    public ItemStack[] createRefinementItems() {
+        ItemStack[] items = new ItemStack[this.appliedRefinementSets.length];
+        for (int i = 0; i < this.appliedRefinementSets.length; i++) {
+            if (this.appliedRefinementSets[i] != null) {
+                VampireRefinementItem item;
+                switch (i) {
+                    case 0:
+                        item = ModItems.amulet;
+                        break;
+                    case 1:
+                        item = ModItems.ring;
+                        break;
+                    default:
+                        item = ModItems.obi_belt;
+                }
+                items[i] = new ItemStack(item);
+                item.applyRefinementSet(items[i], this.appliedRefinementSets[i]);
+                items[i].setDamage(this.refinementSetDamage[i]);
+            }
+        }
+        return items;
     }
 
-    public List<ISkill> getLockingSkills(SkillNode nodeIn) {
-        return Arrays.stream(nodeIn.getLockingNodes()).map(id -> SkillTreeManager.getInstance().getSkillTree().getNodeFromId(id)).filter(Objects::nonNull).flatMap(node -> Arrays.stream(node.getElements())).collect(Collectors.toList());
+    @Override
+    public void damageRefinements() {
+        for (int i = 0; i < this.refinementSetDamage.length; i++) {
+            if (this.appliedRefinementSets[i] == null) continue;
+            int damage = 40 + (this.appliedRefinementSets[i].getRarity().weight - 1) * 10 + this.getPlayer().getRepresentingPlayer().getRNG().nextInt(60);
+            if ((this.refinementSetDamage[i] += damage) >= VampireRefinementItem.MAX_DAMAGE) {
+                this.removeRefinementSet(i);
+            }
+        }
     }
 
     public void disableAllSkills() {
@@ -115,11 +161,30 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
             skill.onEnable(player);
             enabledSkills.add(skill);
             dirty = true;
-            if(this.player.getRepresentingPlayer() instanceof ServerPlayerEntity) {
-                ModAdvancements.TRIGGER_SKILL_UNLOCKED.trigger((ServerPlayerEntity)player.getRepresentingPlayer(), skill);
+            if (this.player.getRepresentingPlayer() instanceof ServerPlayerEntity) {
+                ModAdvancements.TRIGGER_SKILL_UNLOCKED.trigger((ServerPlayerEntity) player.getRepresentingPlayer(), skill);
             }
         }
 
+    }
+
+    @Override
+    public boolean equipRefinementItem(ItemStack stack) {
+        if (stack.getItem() instanceof IRefinementItem) {
+            IRefinementItem refinementItem = ((IRefinementItem) stack.getItem());
+            @Nullable IRefinementSet newSet = refinementItem.getRefinementSet(stack);
+            IRefinementItem.AccessorySlotType setSlot = refinementItem.getSlotType();
+
+            removeRefinementSet(setSlot.getSlot());
+            this.dirty = true;
+
+            if (newSet != null && newSet.getFaction() == faction) {
+                applyRefinementSet(newSet, setSlot.getSlot());
+            }
+            return true;
+        }
+
+        return false;
     }
 
     public SkillNode findSkillNode(SkillNode base, ISkill skill) {
@@ -148,6 +213,10 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         return remainingSkillPoints;
     }
 
+    public List<ISkill> getLockingSkills(SkillNode nodeIn) {
+        return Arrays.stream(nodeIn.getLockingNodes()).map(id -> SkillTreeManager.getInstance().getSkillTree().getNodeFromId(id)).filter(Objects::nonNull).flatMap(node -> Arrays.stream(node.getElements())).collect(Collectors.toList());
+    }
+
     @Override
     public ISkill[] getParentSkills(ISkill skill) {
         SkillNode node = findSkillNode(getRootNode(), skill);
@@ -159,6 +228,10 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     public T getPlayer() {
         return player;
+    }
+
+    public SkillNode getRootNode() {
+        return VampirismMod.proxy.getSkillTree(player.isRemote()).getRootNodeForFaction(faction.getID());
     }
 
     /**
@@ -176,8 +249,17 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     }
 
     @Override
+    public boolean isRefinementEquipped(IRefinement refinement) {
+        return this.activeRefinements.contains(refinement);
+    }
+
+    @Override
     public boolean isSkillEnabled(ISkill skill) {
         return enabledSkills.contains(skill);
+    }
+
+    public boolean isSkillNodeLocked(SkillNode nodeIn) {
+        return Arrays.stream(nodeIn.getLockingNodes()).map(id -> SkillTreeManager.getInstance().getSkillTree().getNodeFromId(id)).filter(Objects::nonNull).flatMap(node -> Arrays.stream(node.getElements())).anyMatch(this::isSkillEnabled);
     }
 
     public void loadFromNbt(CompoundNBT nbt) {
@@ -200,7 +282,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
                 CompoundNBT setNBT = setsNBT.getCompound(id);
                 String setName = setNBT.getString("id");
                 int damage = setNBT.getInt("damage");
-                if("none".equals(setName))continue;
+                if ("none".equals(setName)) continue;
                 ResourceLocation setId = new ResourceLocation(setName);
                 IRefinementSet set = ModRegistries.REFINEMENT_SETS.getValue(setId);
                 this.applyRefinementSet(set, i);
@@ -256,6 +338,13 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         }
     }
 
+    @Override
+    public void resetRefinements() {
+        for (int i = 0; i < this.appliedRefinementSets.length; i++) {
+            this.removeRefinementSet(i);
+        }
+    }
+
     public void resetSkills() {
         disableAllSkills();
         enableRootSkill();
@@ -272,7 +361,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
             CompoundNBT setNbt = new CompoundNBT();
             IRefinementSet set = this.appliedRefinementSets[i];
             int damage = this.refinementSetDamage[i];
-            setNbt.putString("id", set != null? set.getRegistryName().toString(): "none");
+            setNbt.putString("id", set != null ? set.getRegistryName().toString() : "none");
             setNbt.putInt("damage", damage);
             refinements.put(String.valueOf(i), setNbt);
         }
@@ -291,94 +380,12 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
             CompoundNBT setNbt = new CompoundNBT();
             IRefinementSet set = this.appliedRefinementSets[i];
             int damage = this.refinementSetDamage[i];
-            setNbt.putString("id", set != null? set.getRegistryName().toString(): "none");
+            setNbt.putString("id", set != null ? set.getRegistryName().toString() : "none");
             setNbt.putInt("damage", damage);
             refinements.put(String.valueOf(i), setNbt);
         }
         nbt.put("refinement_set", refinements);
         dirty = false;
-    }
-
-    public SkillNode getRootNode() {
-        return VampirismMod.proxy.getSkillTree(player.isRemote()).getRootNodeForFaction(faction.getID());
-    }
-
-    public Optional<SkillNode> anyLastNode() {
-        SkillNode rootNode = getRootNode();
-        Queue<SkillNode> queue = new ArrayDeque<>();
-        queue.add(rootNode);
-
-        for (SkillNode skillNode = queue.poll(); skillNode != null; skillNode = queue.poll()) {
-            List<SkillNode> child = skillNode.getChildren().stream().filter(this::isNodeEnabled).collect(Collectors.toList());
-            if (child.isEmpty()) {
-                if (skillNode == rootNode) {
-                    skillNode = null;
-                }
-                return Optional.ofNullable(skillNode);
-            } else {
-                queue.addAll(child);
-            }
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public boolean equipRefinementItem(ItemStack stack) {
-        if (stack.getItem() instanceof IRefinementItem) {
-            IRefinementItem refinementItem = ((IRefinementItem) stack.getItem());
-            @Nullable IRefinementSet newSet = refinementItem.getRefinementSet(stack);
-            IRefinementItem.AccessorySlotType setSlot = refinementItem.getSlotType();
-
-            removeRefinementSet(setSlot.getSlot());
-            this.dirty = true;
-
-            if (newSet != null && newSet.getFaction() == faction) {
-                applyRefinementSet(newSet, setSlot.getSlot());
-            }
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean isRefinementEquipped(IRefinement refinement) {
-        return this.activeRefinements.contains(refinement);
-    }
-
-    @Override
-    public void damageRefinements() {
-        for (int i = 0; i < this.refinementSetDamage.length; i++) {
-            if (this.appliedRefinementSets[i] == null)continue;
-            int damage = 40 + (this.appliedRefinementSets[i].getRarity().weight - 1) * 10 + this.getPlayer().getRepresentingPlayer().getRNG().nextInt(60);
-            if ((this.refinementSetDamage[i] += damage) >= VampireRefinementItem.MAX_DAMAGE) {
-                this.removeRefinementSet(i);
-            }
-        }
-    }
-
-    @Override
-    public ItemStack[] createRefinementItems() {
-        ItemStack[] items = new ItemStack[this.appliedRefinementSets.length];
-        for (int i = 0; i < this.appliedRefinementSets.length; i++) {
-            if (this.appliedRefinementSets[i] != null) {
-                VampireRefinementItem item;
-                switch (i) {
-                    case 0:
-                        item = ModItems.amulet;
-                        break;
-                    case 1:
-                        item = ModItems.ring;
-                        break;
-                    default:
-                        item = ModItems.obi_belt;
-                }
-                items[i] = new ItemStack(item);
-                item.applyRefinementSet(items[i], this.appliedRefinementSets[i]);
-                items[i].setDamage(this.refinementSetDamage[i]);
-            }
-        }
-        return items;
     }
 
     private void applyRefinementSet(@Nullable IRefinementSet set, int slot) {
@@ -410,11 +417,11 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     private void removeRefinementSet(int slot) {
         IRefinementSet set = this.appliedRefinementSets[slot];
         this.appliedRefinementSets[slot] = null;
-        if(set != null) {
+        if (set != null) {
             Collection<IRefinement> refinements = set.getRefinements();
             for (IRefinement refinement : refinements) {
                 this.activeRefinements.remove(refinement);
-                if(!this.player.isRemote()) {
+                if (!this.player.isRemote()) {
                     Attribute a = refinement.getAttribute();
                     if (a != null) {
                         ModifiableAttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(a);
@@ -430,13 +437,6 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
                     }
                 }
             }
-        }
-    }
-
-    @Override
-    public void resetRefinements() {
-        for (int i = 0; i < this.appliedRefinementSets.length; i++) {
-            this.removeRefinementSet(i);
         }
     }
 }

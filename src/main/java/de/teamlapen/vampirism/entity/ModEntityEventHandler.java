@@ -70,11 +70,36 @@ import java.util.function.Predicate;
 public class ModEntityEventHandler {
 
     private final static Logger LOGGER = LogManager.getLogger(ModEntityEventHandler.class);
+    private static final Predicate<LivingEntity> nonVampireCheck = entity -> !Helper.isVampire(entity);
+    private static final Object2BooleanMap<String> entityAIReplacementWarnMap = new Object2BooleanArrayMap<>();
+
+    public static <T extends MobEntity, S extends LivingEntity, Q extends NearestAttackableTargetGoal<S>> void makeVampireFriendly(String name, T e, Class<Q> targetClass, Class<S> targetEntityClass, int attackPriority, BiFunction<T, Predicate<LivingEntity>, Q> replacement, Predicate<EntityType<? extends T>> typeCheck) {
+        Goal target = null;
+        for (PrioritizedGoal t : e.targetSelector.goals) {
+            Goal g = t.getGoal();
+            if (targetClass.equals(g.getClass()) && t.getPriority() == attackPriority && targetEntityClass.equals(((NearestAttackableTargetGoal<?>) g).targetClass)) {
+                target = g;
+                break;
+            }
+        }
+        if (target != null) {
+            e.targetSelector.removeGoal(target);
+            EntityType<? extends T> type = (EntityType<? extends T>) e.getType();
+            if (typeCheck.test(type)) {
+                e.targetSelector.addGoal(attackPriority, replacement.apply(e, nonVampireCheck));
+            }
+        } else {
+            if (entityAIReplacementWarnMap.getOrDefault(name, true)) {
+                LOGGER.warn("Could not replace {} attack target task for {}", name, e.getType().getName());
+                entityAIReplacementWarnMap.put(name, false);
+            }
+
+        }
+    }
+    private final Set<ResourceLocation> unknownZombies = new HashSet<>();
     private boolean skipAttackDamageOnceServer = false;
     private boolean skipAttackDamageOnceClient = false;
-
     private boolean warnAboutGolem = true;
-    private final Set<ResourceLocation> unknownZombies = new HashSet<>();
 
     @SubscribeEvent
     public void onAttachCapabilityEntity(AttachCapabilitiesEvent<Entity> event) {
@@ -136,30 +161,10 @@ public class ModEntityEventHandler {
         }
     }
 
-    private static final Predicate<LivingEntity> nonVampireCheck = entity -> !Helper.isVampire(entity);
-    private static final Object2BooleanMap<String> entityAIReplacementWarnMap = new Object2BooleanArrayMap<>();
-
-    public static <T extends MobEntity, S extends LivingEntity, Q extends NearestAttackableTargetGoal<S>> void makeVampireFriendly(String name, T e, Class<Q> targetClass, Class<S> targetEntityClass, int attackPriority, BiFunction<T, Predicate<LivingEntity>, Q> replacement, Predicate<EntityType<? extends T>> typeCheck) {
-        Goal target = null;
-        for (PrioritizedGoal t : e.targetSelector.goals) {
-            Goal g = t.getGoal();
-            if (targetClass.equals(g.getClass()) && t.getPriority() == attackPriority && targetEntityClass.equals(((NearestAttackableTargetGoal<?>) g).targetClass)) {
-                target = g;
-                break;
-            }
-        }
-        if (target != null) {
-            e.targetSelector.removeGoal(target);
-            EntityType<? extends T> type = (EntityType<? extends T>) e.getType();
-            if (typeCheck.test(type)) {
-                e.targetSelector.addGoal(attackPriority, replacement.apply(e, nonVampireCheck));
-            }
-        } else {
-            if (entityAIReplacementWarnMap.getOrDefault(name, true)) {
-                LOGGER.warn("Could not replace {} attack target task for {}", name, e.getType().getName());
-                entityAIReplacementWarnMap.put(name, false);
-            }
-
+    @SubscribeEvent
+    public void onEntityEquipmentChange(LivingEquipmentChangeEvent event) {
+        if (event.getSlot().getSlotType() == EquipmentSlotType.Group.ARMOR && event.getEntity() instanceof PlayerEntity) {
+            VampirePlayer.getOpt((PlayerEntity) event.getEntity()).ifPresent(VampirePlayer::requestNaturalArmorUpdate);
         }
     }
 
@@ -246,9 +251,45 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
+    public void onEntityLootingEvent(LootingLevelEvent event) {
+        if (event.getDamageSource() != null && event.getDamageSource().getTrueSource() instanceof PlayerEntity) {
+            @Nullable
+            IItemWithTier.TIER hunterCoatTier = VampirismPlayerAttributes.get((PlayerEntity) event.getDamageSource().getTrueSource()).getHuntSpecial().fullHunterCoat;
+            if (hunterCoatTier == IItemWithTier.TIER.ENHANCED || hunterCoatTier == IItemWithTier.TIER.ULTIMATE) {
+                event.setLootingLevel(Math.min(event.getLootingLevel() + 1, 3));
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onEntityVisibilityCheck(LivingEvent.LivingVisibilityEvent event) {
+        if (event.getEntity() instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) event.getEntity();
+            if (VampirismPlayerAttributes.get(player).getHuntSpecial().isDisguised()) {
+                event.modifyVisibility((VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getHuntSpecial().fullHunterCoat != null ? 0.5 : 1) * VampirismConfig.BALANCE.haDisguiseVisibilityMod.get());
+            }
+        }
+    }
+
+    @SubscribeEvent
     public void onEyeHeightSet(EntityEvent.Size event) {
         if (event.getEntity() instanceof VampireBaseEntity || event.getEntity() instanceof HunterBaseEntity)
             event.setNewEyeHeight(event.getOldEyeHeight() * 0.875f);
+    }
+
+    @SubscribeEvent
+    public void onItemUseFinish(LivingEntityUseItemEvent.Finish event) {
+        if (event.getEntity() instanceof MinionEntity) {
+            if (event.getItem().getItem() instanceof PotionItem) {
+                ItemStack stack = event.getResultStack();
+                stack.shrink(1);
+                if (stack.isEmpty()) {
+                    event.setResultStack(new ItemStack(Items.GLASS_BOTTLE));
+                    return;
+                }
+                ((MinionEntity<?>) event.getEntity()).getInventory().ifPresent(inv -> inv.addItemStack(new ItemStack(Items.GLASS_BOTTLE)));
+            }
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -265,50 +306,6 @@ public class ModEntityEventHandler {
             ExtendedCreature.getSafe(event.getEntity()).ifPresent(IExtendedCreatureVampirism::tick);
             event.getEntity().getEntityWorld().getProfiler().endSection();
 
-        }
-    }
-
-
-    @SubscribeEvent
-    public void onEntityVisibilityCheck(LivingEvent.LivingVisibilityEvent event){
-        if (event.getEntity() instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) event.getEntity();
-            if (VampirismPlayerAttributes.get(player).getHuntSpecial().isDisguised()) {
-                event.modifyVisibility((VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getHuntSpecial().fullHunterCoat!=null?0.5:1)*VampirismConfig.BALANCE.haDisguiseVisibilityMod.get());
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onEntityLootingEvent(LootingLevelEvent event){
-        if(event.getDamageSource() != null && event.getDamageSource().getTrueSource() instanceof PlayerEntity){
-            @Nullable
-            IItemWithTier.TIER hunterCoatTier = VampirismPlayerAttributes.get((PlayerEntity) event.getDamageSource().getTrueSource()).getHuntSpecial().fullHunterCoat;
-            if(hunterCoatTier== IItemWithTier.TIER.ENHANCED || hunterCoatTier== IItemWithTier.TIER.ULTIMATE){
-                event.setLootingLevel(Math.min(event.getLootingLevel()+1 , 3));
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onEntityEquipmentChange(LivingEquipmentChangeEvent event){
-        if(event.getSlot().getSlotType() == EquipmentSlotType.Group.ARMOR && event.getEntity() instanceof PlayerEntity){
-            VampirePlayer.getOpt((PlayerEntity) event.getEntity()).ifPresent(VampirePlayer::requestNaturalArmorUpdate);
-        }
-    }
-
-    @SubscribeEvent
-    public void onItemUseFinish(LivingEntityUseItemEvent.Finish event) {
-        if (event.getEntity() instanceof MinionEntity) {
-            if (event.getItem().getItem() instanceof PotionItem) {
-                ItemStack stack = event.getResultStack();
-                stack.shrink(1);
-                if (stack.isEmpty()){
-                    event.setResultStack(new ItemStack(Items.GLASS_BOTTLE));
-                    return;
-                }
-                ((MinionEntity<?>) event.getEntity()).getInventory().ifPresent(inv -> inv.addItemStack(new ItemStack(Items.GLASS_BOTTLE)));
-            }
         }
     }
 }

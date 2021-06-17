@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.util.ResourceLocation;
 
 public interface FinishedSkillNode {
-    void serialize(JsonObject json);
+    ResourceLocation getID();
 
     default JsonObject getSkillNodeJson() {
         JsonObject jsonObject = new JsonObject();
@@ -12,5 +12,5 @@ public interface FinishedSkillNode {
         return jsonObject;
     }
 
-    ResourceLocation getID();
+    void serialize(JsonObject json);
 }

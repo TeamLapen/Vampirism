@@ -98,11 +98,9 @@ public class VampireSkills {
         event.getAllMappings().forEach(missingMapping -> {
             if ("vampirism:creeper_avoided".equals(missingMapping.key.toString())) {
                 missingMapping.ignore();
-            }
-            else if("vampirism:enhanced_crossbow".equals(missingMapping.key.toString())){
+            } else if ("vampirism:enhanced_crossbow".equals(missingMapping.key.toString())) {
                 missingMapping.ignore();
-            }
-            else if("vampirism:vampire_forest_fog".equals(missingMapping.key.toString())){
+            } else if ("vampirism:vampire_forest_fog".equals(missingMapping.key.toString())) {
                 missingMapping.ignore();
             }
         });

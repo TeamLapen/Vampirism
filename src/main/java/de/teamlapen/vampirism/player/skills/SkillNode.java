@@ -90,12 +90,12 @@ public class SkillNode {
         return id;
     }
 
-    public SkillNode getParent() {
-        return parent;
-    }
-
     public ResourceLocation[] getLockingNodes() {
         return lockingNodes;
+    }
+
+    public SkillNode getParent() {
+        return parent;
     }
 
     public boolean isRoot() {
@@ -112,18 +112,6 @@ public class SkillNode {
     }
 
     public static class Builder {
-        public final List<ResourceLocation> lockingNodes;
-        public final ResourceLocation parentId;
-        public final List<ISkill> skills;
-        public final ResourceLocation mergeId;
-
-        private Builder(ResourceLocation parentId, ResourceLocation mergeId, List<ISkill> skills, List<ResourceLocation> lockingNodes) {
-            this.mergeId = mergeId;
-            this.parentId = parentId;
-            this.skills = skills;
-            this.lockingNodes = lockingNodes;
-        }
-
         public static Builder deserialize(JsonObject json, @SuppressWarnings("unused") JsonDeserializationContext context) {
             if (json.has("remove") && JSONUtils.getBoolean(json, "remove")) return null;
             ResourceLocation parent = json.has("parent") ? new ResourceLocation(JSONUtils.getString(json, "parent")) : null;
@@ -169,6 +157,17 @@ public class SkillNode {
 
 
             return new Builder(parent, merge, skillList, lockingList);
+        }
+        public final List<ResourceLocation> lockingNodes;
+        public final ResourceLocation parentId;
+        public final List<ISkill> skills;
+        public final ResourceLocation mergeId;
+
+        private Builder(ResourceLocation parentId, ResourceLocation mergeId, List<ISkill> skills, List<ResourceLocation> lockingNodes) {
+            this.mergeId = mergeId;
+            this.parentId = parentId;
+            this.skills = skills;
+            this.lockingNodes = lockingNodes;
         }
 
         public SkillNode build(ResourceLocation id, SkillNode parent) {

@@ -43,21 +43,6 @@ public class WingModel<T extends LivingEntity> extends AgeableModel<T> {
         this.wingLeft.addChild(this.wingLeft2);
     }
 
-    @Override
-    public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-
-    }
-
-    @Override
-    protected Iterable<ModelRenderer> getHeadParts() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    protected Iterable<ModelRenderer> getBodyParts() {
-        return ImmutableList.of(this.wingLeft,this.wingRight);
-    }
-
     public void copyRotationFromBody(ModelRenderer body) {
         this.wingLeft.rotateAngleY = body.rotateAngleY;
         this.wingLeft2.rotateAngleY = body.rotateAngleY;
@@ -79,8 +64,8 @@ public class WingModel<T extends LivingEntity> extends AgeableModel<T> {
             this.wingLeft.rotationPointY = 2.5f;
         }
 
-        this.wingLeft.rotateAngleZ -= MathHelper.cos((entityIn.ticksExisted+partialTick) * 0.0662F + (float) Math.PI) * 0.06;
-        this.wingRight.rotateAngleZ += MathHelper.cos((entityIn.ticksExisted+partialTick) * 0.0662F + (float) Math.PI) * 0.06;
+        this.wingLeft.rotateAngleZ -= MathHelper.cos((entityIn.ticksExisted + partialTick) * 0.0662F + (float) Math.PI) * 0.06;
+        this.wingRight.rotateAngleZ += MathHelper.cos((entityIn.ticksExisted + partialTick) * 0.0662F + (float) Math.PI) * 0.06;
 
         this.wingLeft.rotateAngleY -= 0.3f;
         this.wingRight.rotateAngleY += 0.3f;
@@ -93,6 +78,21 @@ public class WingModel<T extends LivingEntity> extends AgeableModel<T> {
         ModelRenderer.rotateAngleX = x;
         ModelRenderer.rotateAngleY = y;
         ModelRenderer.rotateAngleZ = z;
+    }
+
+    @Override
+    public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+
+    }
+
+    @Override
+    protected Iterable<ModelRenderer> getBodyParts() {
+        return ImmutableList.of(this.wingLeft, this.wingRight);
+    }
+
+    @Override
+    protected Iterable<ModelRenderer> getHeadParts() {
+        return Collections.emptyList();
     }
 
     protected HandSide getSwingingSide(T entity) {

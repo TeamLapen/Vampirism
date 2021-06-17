@@ -12,9 +12,9 @@ public class CloakModel extends VampirismArmorModel {
 
     private static CloakModel cloakItemModel;
 
-    public static CloakModel getRotatedCloak(){
-        if(cloakItemModel==null){
-            cloakItemModel=new CloakModel();
+    public static CloakModel getRotatedCloak() {
+        if (cloakItemModel == null) {
+            cloakItemModel = new CloakModel();
         }
         return cloakItemModel;
     }
@@ -70,7 +70,7 @@ public class CloakModel extends VampirismArmorModel {
         shoulderleft = new ModelRenderer(this, 30, 60);
         shoulderleft.addBox(3F, 0F, 0F, 1, 1, 3);
         shoulderleft.setRotationPoint(-5F, 0F, 0F);
-        shoulderleft.mirror=true;
+        shoulderleft.mirror = true;
         setRotation(shoulderleft, 0F, 0F, 0F);
     }
 
@@ -118,7 +118,7 @@ public class CloakModel extends VampirismArmorModel {
 
     @Override
     protected Iterable<ModelRenderer> getBodyModels() {
-        return   ImmutableList.of(cloakback, leftlong, rightmedium, leftmedium, rightshort, leftshort, rightlong, shoulderright, shoulderleft);
+        return ImmutableList.of(cloakback, leftlong, rightmedium, leftmedium, rightshort, leftshort, rightlong, shoulderright, shoulderleft);
     }
 
     private void setRotation(ModelRenderer model, float x, float y, float z) {

@@ -11,11 +11,6 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class VampirismPotion extends Potion {
-    public VampirismPotion(String regName, @Nullable String baseName, EffectInstance... effects) {
-        super(baseName, effects);
-        this.setRegistryName(REFERENCE.MODID, regName);
-    }
-
     public static Optional<VampirismPotion.HunterPotion> isHunterPotion(ItemStack stack, boolean onlyNormal) {
         if (stack.getItem() == Items.POTION || (!onlyNormal && (stack.getItem() == Items.LINGERING_POTION || stack.getItem() == Items.SPLASH_POTION))) {
             Potion potion = PotionUtils.getPotionFromItem(stack);
@@ -24,6 +19,11 @@ public class VampirismPotion extends Potion {
             }
         }
         return Optional.empty();
+    }
+
+    public VampirismPotion(String regName, @Nullable String baseName, EffectInstance... effects) {
+        super(baseName, effects);
+        this.setRegistryName(REFERENCE.MODID, regName);
     }
 
     public static class HunterPotion extends VampirismPotion {

@@ -58,9 +58,8 @@ public class GuideBook implements IGuideBook {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private final static String IMAGE_BASE = "vampirismguide:textures/images/";
-    private static Book guideBook;
     private static final Map<ResourceLocation, EntryAbstract> links = Maps.newHashMap();
-
+    private static Book guideBook;
 
     static void buildCategories(List<CategoryAbstract> categories) {
         LOGGER.debug("Building content");
@@ -389,8 +388,6 @@ public class GuideBook implements IGuideBook {
         entries.put(new ResourceLocation(base + "taskmaster"), new EntryText(taskMasterPages, new TranslationTextComponent(base + "taskmaster")));
 
 
-
-
         links.putAll(entries);
         return entries;
     }
@@ -514,10 +511,10 @@ public class GuideBook implements IGuideBook {
         v1_8.addAll(raids);
         //skills
         List<IPage> skills = PageHelper.pagesForLongText(translateComponent(base1_8 + "skills.text"));
-        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.vista.image"), new ResourceLocation(REFERENCE.MODID,"textures/skills/vampire_forest_fog.png"), false));
-        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.neonatal.image"), new ResourceLocation( REFERENCE.MODID,"textures/skills/neonatal_decrease.png"), false));
-        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.dbno.image"), new ResourceLocation(REFERENCE.MODID,"textures/skills/dbno_duration.png"), false));
-        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.hissing.image"), new ResourceLocation(REFERENCE.MODID,"textures/actions/hissing.png"), false));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.vista.image"), new ResourceLocation(REFERENCE.MODID, "textures/skills/vampire_forest_fog.png"), false));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.neonatal.image"), new ResourceLocation(REFERENCE.MODID, "textures/skills/neonatal_decrease.png"), false));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.dbno.image"), new ResourceLocation(REFERENCE.MODID, "textures/skills/dbno_duration.png"), false));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.hissing.image"), new ResourceLocation(REFERENCE.MODID, "textures/actions/hissing.png"), false));
         v1_8.addAll(skills);
         //balancing
         List<IPage> balancing = PageHelper.pagesForLongText(translateComponent(base1_8 + "balancing.text"));

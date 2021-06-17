@@ -44,6 +44,12 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
     }
 
     @Override
+    public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
+        this.taskList.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
+        return super.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
+    }
+
+    @Override
     public void render(MatrixStack mStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(mStack);
         super.render(mStack, mouseX, mouseY, partialTicks);
@@ -66,9 +72,10 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
     }
 
     @Override
-    public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
-        this.taskList.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
-        return super.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
+    protected void drawGuiContainerForegroundLayer(MatrixStack mStack, int mouseX, int mouseY) {
+        this.font.func_243248_b(mStack, title, 5, 6.0F, 0x404040);
+        this.font.func_243248_b(mStack, new TranslationTextComponent("gui.vampirism.minion.active_task"), 120, 10.0F, 0x404040);
+
     }
 
     @Override
@@ -80,18 +87,11 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
         this.lockActionButton.setLocked(this.container.isTaskLocked());
         ITextComponent[] taskNames = Arrays.stream(container.getAvailableTasks()).map(IMinionTask::getName).toArray(ITextComponent[]::new);
 
-        this.taskList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 120, this.guiTop + 19 + 19, 86,Math.min(3* 20, taskNames.length * 20), 20, () -> taskNames, this::selectTask).scrollSpeed(2D));
+        this.taskList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 120, this.guiTop + 19 + 19, 86, Math.min(3 * 20, taskNames.length * 20), 20, () -> taskNames, this::selectTask).scrollSpeed(2D));
         this.taskList.visible = false;
         this.taskButton = this.addButton(new ExtendedButton(this.guiLeft + 119, this.guiTop + 19, 88, 20, getActiveTaskName(), (button -> {
             this.taskList.visible = !this.taskList.visible;
         })));
-    }
-
-    @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack mStack, int mouseX, int mouseY) {
-        this.font.func_243248_b(mStack, title, 5, 6.0F, 0x404040);
-        this.font.func_243248_b(mStack, new TranslationTextComponent("gui.vampirism.minion.active_task"), 120, 10.0F, 0x404040);
-
     }
 
     @Override

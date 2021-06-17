@@ -25,10 +25,10 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
     protected final int xSize = 256;
     protected final int ySize = 177;
     private final List<Button> buttons = Lists.newArrayList();
-    protected int guiLeft;
-    protected int guiTop;
     @Nullable
     private final Screen backScreen;
+    protected int guiLeft;
+    protected int guiTop;
 
     public AppearanceScreen(ITextComponent titleIn, T entity, @Nullable Screen backScreen) {
         super(titleIn);

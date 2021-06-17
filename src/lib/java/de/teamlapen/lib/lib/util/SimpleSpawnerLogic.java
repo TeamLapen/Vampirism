@@ -71,6 +71,20 @@ public class SimpleSpawnerLogic<T extends Entity> {
         this.flag = nbt.getBoolean("spawner_flag");
     }
 
+    public SimpleSpawnerLogic<T> setActivateRange(int activateRange) {
+        this.activateRange = activateRange;
+        return this;
+    }
+
+    public void setBlockPos(BlockPos blockPosIn) {
+        this.pos = blockPosIn;
+    }
+
+    public SimpleSpawnerLogic<T> setDailyLimit(int dailyLimit) {
+        this.dailyLimit = dailyLimit;
+        return this;
+    }
+
     public boolean setDelayToMin(int id) {
         if (id == 1 && (this.world == null || this.world.isRemote)) {
             this.spawnDelay = this.minSpawnDelay;
@@ -78,14 +92,6 @@ public class SimpleSpawnerLogic<T extends Entity> {
         } else {
             return false;
         }
-    }
-
-    public void setWorld(@Nullable World worldIn) {
-        this.world = worldIn;
-    }
-
-    public void setBlockPos(BlockPos blockPosIn) {
-        this.pos = blockPosIn;
     }
 
     /**
@@ -111,6 +117,11 @@ public class SimpleSpawnerLogic<T extends Entity> {
         return this;
     }
 
+    public SimpleSpawnerLogic<T> setOnSpawned(Consumer<T> onSpawned) {
+        this.onSpawned = onSpawned;
+        return this;
+    }
+
     public SimpleSpawnerLogic<T> setSpawn(boolean spawn) {
         this.flag = spawn;
         return this;
@@ -121,24 +132,13 @@ public class SimpleSpawnerLogic<T extends Entity> {
         return this;
     }
 
-    public SimpleSpawnerLogic<T> setDailyLimit(int dailyLimit) {
-        this.dailyLimit = dailyLimit;
-        return this;
-    }
-
     public SimpleSpawnerLogic<T> setSpawnRange(int spawnRange) {
         this.spawnRange = spawnRange;
         return this;
     }
 
-    public SimpleSpawnerLogic<T> setActivateRange(int activateRange) {
-        this.activateRange = activateRange;
-        return this;
-    }
-
-    public SimpleSpawnerLogic<T> setOnSpawned(Consumer<T> onSpawned) {
-        this.onSpawned = onSpawned;
-        return this;
+    public void setWorld(@Nullable World worldIn) {
+        this.world = worldIn;
     }
 
     public void updateSpawner() {

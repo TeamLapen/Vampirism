@@ -33,9 +33,6 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
  */
 @ObjectHolder(REFERENCE.MODID)
 public class ModEntities {
-    /** empty unless in datagen */
-    private static final Set<EntityType<?>> ALL_ENTITIES = Sets.newHashSet();
-
     public static final EntityType<AdvancedHunterEntity> advanced_hunter;
     public static final EntityType<AdvancedHunterEntity.IMob> advanced_hunter_imob = getNull();
     public static final EntityType<AdvancedVampireEntity> advanced_vampire;
@@ -65,6 +62,10 @@ public class ModEntities {
     public static final EntityType<HunterMinionEntity> hunter_minion = getNull();
     public static final EntityType<VampireTaskMasterEntity> task_master_vampire = getNull();
     public static final EntityType<HunterTaskMasterEntity> task_master_hunter = getNull();
+    /**
+     * empty unless in datagen
+     */
+    private static final Set<EntityType<?>> ALL_ENTITIES = Sets.newHashSet();
 
     static {
         //IMPORTANT - Must include all entity types that are used in vampire forest spawns
@@ -157,7 +158,7 @@ public class ModEntities {
         EntitySpawnPlacementRegistry.register(villager_converted, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canSpawnOn);
     }
 
-    static void onRegisterEntityTypeAttributes(EntityAttributeCreationEvent event){
+    static void onRegisterEntityTypeAttributes(EntityAttributeCreationEvent event) {
         event.put(advanced_hunter, AdvancedHunterEntity.getAttributeBuilder().create());
         event.put(advanced_hunter_imob, AdvancedHunterEntity.getAttributeBuilder().create());
         event.put(advanced_vampire, AdvancedVampireEntity.getAttributeBuilder().create());
@@ -184,10 +185,10 @@ public class ModEntities {
         event.put(task_master_vampire, VampireTaskMasterEntity.getAttributeBuilder().create());
     }
 
-    static void onModifyEntityTypeAttributes(EntityAttributeModificationEvent event){
-        event.add(EntityType.PLAYER,ModAttributes.sundamage);
-        event.add(EntityType.PLAYER,ModAttributes.blood_exhaustion);
-        event.add(EntityType.PLAYER,ModAttributes.bite_damage);
+    static void onModifyEntityTypeAttributes(EntityAttributeModificationEvent event) {
+        event.add(EntityType.PLAYER, ModAttributes.sundamage);
+        event.add(EntityType.PLAYER, ModAttributes.blood_exhaustion);
+        event.add(EntityType.PLAYER, ModAttributes.bite_damage);
 
     }
 
@@ -214,7 +215,7 @@ public class ModEntities {
     }
 
 
-    public static Set<EntityType<?>> getAllEntities(){
+    public static Set<EntityType<?>> getAllEntities() {
         return ImmutableSet.copyOf(ALL_ENTITIES);
     }
 }

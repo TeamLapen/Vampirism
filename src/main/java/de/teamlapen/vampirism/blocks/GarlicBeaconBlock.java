@@ -45,6 +45,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
         VoxelShape b = Block.makeCuboidShape(3, 2, 3, 13, 12, 13);
         return VoxelShapes.or(a, b);
     }
+
     private final Type type;
 
     public GarlicBeaconBlock(Type type) {
@@ -70,9 +71,9 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
         GarlicBeaconTileEntity tile = new GarlicBeaconTileEntity();
         tile.setType(type);
-        int bootTime = VampirismConfig.BALANCE.garlicDiffusorStartupTime.get()*20;
-        if(worldIn instanceof ServerWorld){
-            if(((ServerWorld) worldIn).getPlayers().size()<=1){
+        int bootTime = VampirismConfig.BALANCE.garlicDiffusorStartupTime.get() * 20;
+        if (worldIn instanceof ServerWorld) {
+            if (((ServerWorld) worldIn).getPlayers().size() <= 1) {
                 bootTime >>= 2; // /4
             }
         }
@@ -132,12 +133,11 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
                 }
             }
             return ActionResultType.SUCCESS;
-        }
-        else{
-            if(world.isRemote){
+        } else {
+            if (world.isRemote) {
                 GarlicBeaconTileEntity t = getTile(world, pos);
                 if (t != null) {
-                    VampirismMod.proxy.displayGarlicBeaconScreen(t,getTranslatedName());
+                    VampirismMod.proxy.displayGarlicBeaconScreen(t, getTranslatedName());
                 }
             }
         }
@@ -183,14 +183,13 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
             this.id = id;
         }
 
+        public String getName() {
+            return this.getString();
+        }
 
         @Override
         public String getString() {
             return name;
-        }
-
-        public String getName() {
-            return this.getString();
         }
     }
 }

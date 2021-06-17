@@ -17,6 +17,8 @@ public interface IEntityActionUser extends IAdjustableLevel, IFactionEntity {
         entity.getAttribute(Attributes.MOVEMENT_SPEED).applyPersistentModifier(entity.getEntityClass().getSpeedModifier());
     }
 
+    IActionHandlerEntity getActionHandler();
+
     /**
      * gets all available actions for this entity.
      */
@@ -31,6 +33,4 @@ public interface IEntityActionUser extends IAdjustableLevel, IFactionEntity {
     default EntityActionTier getEntityTier() {
         return EntityActionTier.Default;
     }
-
-    IActionHandlerEntity getActionHandler();
 }

@@ -47,13 +47,13 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public float getPlayerRelativeBlockHardness(BlockState state, PlayerEntity player, IBlockReader worldIn, BlockPos pos) {
-        return VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : -1;
+    public float getExplosionResistance() {
+        return VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : 3600000;
     }
 
     @Override
-    public float getExplosionResistance() {
-        return VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : 3600000;
+    public float getPlayerRelativeBlockHardness(BlockState state, PlayerEntity player, IBlockReader worldIn, BlockPos pos) {
+        return VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : -1;
     }
 
     @Override

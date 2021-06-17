@@ -59,6 +59,12 @@ public class RegistryManager implements IInitListener {
     }
 
     @Override
+    public void onGatherData(GatherDataEvent event) {
+        ModLoot.registerLootConditions();
+        ModLoot.registerLootFunctionType();
+    }
+
+    @Override
     public void onInitStep(Step step, ParallelDispatchEvent event) {
         switch (step) {
             case COMMON_SETUP:
@@ -88,10 +94,35 @@ public class RegistryManager implements IInitListener {
         }
     }
 
-    @Override
-    public void onGatherData(GatherDataEvent event) {
-        ModLoot.registerLootConditions();
-        ModLoot.registerLootFunctionType();
+    @SubscribeEvent
+    public void onMissingMappingEntityTypes(RegistryEvent.MissingMappings<EntityType<?>> event) {
+        ModEntities.fixMapping(event);
+    }
+
+    @SubscribeEvent
+    public void onMissingMappingsBlocks(RegistryEvent.MissingMappings<Block> event) {
+        ModBlocks.fixMappings(event);
+    }
+
+    @SubscribeEvent
+    public void onMissingMappingsEnchantments(RegistryEvent.MissingMappings<Enchantment> event) {
+        ModEnchantments.fixMapping(event);
+    }
+
+    @SubscribeEvent
+    public void onMissingMappingsItems(RegistryEvent.MissingMappings<Item> event) {
+        ModItems.fixMappings(event);
+    }
+
+    @SubscribeEvent
+    public void onMissingMappingsPotions(RegistryEvent.MissingMappings<Potion> event) {
+        ModPotions.fixMappings(event);
+    }
+
+    @SubscribeEvent
+    public void onMissingMappingsSkills(RegistryEvent.MissingMappings<ISkill> event) {
+        HunterSkills.fixMappings(event);
+        VampireSkills.fixMappings(event);
     }
 
     @SubscribeEvent
@@ -99,6 +130,11 @@ public class RegistryManager implements IInitListener {
         VampireActions.registerDefaultActions(event.getRegistry());
         HunterActions.registerDefaultActions(event.getRegistry());
         ObjectHolderRegistry.applyObjectHolders(); //Apply object holders so action skills can use them
+    }
+
+    @SubscribeEvent
+    public void onRegisterAttributes(RegistryEvent.Register<Attribute> event) {
+        ModAttributes.registerAttributes(event.getRegistry());
     }
 
     @SubscribeEvent
@@ -117,6 +153,11 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
+    public void onRegisterEffects(RegistryEvent.Register<Effect> event) {
+        ModEffects.registerEffects(event.getRegistry());
+    }
+
+    @SubscribeEvent
     public void onRegisterEnchantments(RegistryEvent.Register<Enchantment> event) {
         ModEnchantments.registerEnchantments(event.getRegistry());
     }
@@ -124,12 +165,6 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterEntities(RegistryEvent.Register<EntityType<?>> event) {
         ModEntities.registerEntities(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterMinionTasks(RegistryEvent.Register<IMinionTask<?, ?>> event) {
-
-        MinionTasks.register(event.getRegistry());
     }
 
     @SubscribeEvent
@@ -154,18 +189,14 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
+    public void onRegisterMinionTasks(RegistryEvent.Register<IMinionTask<?, ?>> event) {
+
+        MinionTasks.register(event.getRegistry());
+    }
+
+    @SubscribeEvent
     public void onRegisterParticles(RegistryEvent.Register<ParticleType<?>> event) {
         ModParticles.registerParticles(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterEffects(RegistryEvent.Register<Effect> event) {
-        ModEffects.registerEffects(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterProfessions(RegistryEvent.Register<VillagerProfession> event) {
-        ModVillage.registerProfessions(event.getRegistry());
     }
 
     @SubscribeEvent
@@ -174,8 +205,28 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterSensorTypes(RegistryEvent.Register<SensorType<?>> event) {
-        ModVillage.registerSensor(event.getRegistry());
+    public void onRegisterPotions(RegistryEvent.Register<Potion> event) {
+        ModPotions.registerPotions(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterProfessions(RegistryEvent.Register<VillagerProfession> event) {
+        ModVillage.registerProfessions(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterRecipeSerializer(RegistryEvent.Register<IRecipeSerializer<?>> event) {
+        ModRecipes.registerSerializer(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterRefinementSets(RegistryEvent.Register<IRefinementSet> event) {
+        ModRefinementSets.registerRefinementSets(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterRefinements(RegistryEvent.Register<IRefinement> event) {
+        ModRefinements.registerRefinements(event.getRegistry());
     }
 
     @SubscribeEvent
@@ -184,8 +235,8 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterRecipeSerializer(RegistryEvent.Register<IRecipeSerializer<?>> event) {
-        ModRecipes.registerSerializer(event.getRegistry());
+    public void onRegisterSensorTypes(RegistryEvent.Register<SensorType<?>> event) {
+        ModVillage.registerSensor(event.getRegistry());
     }
 
     @SubscribeEvent
@@ -206,50 +257,8 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterTiles(RegistryEvent.Register<TileEntityType<?>> event) {
-        ModTiles.registerTiles(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onMissingMappingEntityTypes(RegistryEvent.MissingMappings<EntityType<?>> event) {
-        ModEntities.fixMapping(event);
-    }
-
-    @SubscribeEvent
-    public void onRegisterAttributes(RegistryEvent.Register<Attribute> event) {
-        ModAttributes.registerAttributes(event.getRegistry());
-    }
-
-    @SubscribeEvent
     public void onRegisterStructures(RegistryEvent.Register<Structure<?>> event) {
         ModFeatures.registerStructures(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onMissingMappingsEnchantments(RegistryEvent.MissingMappings<Enchantment> event) {
-        ModEnchantments.fixMapping(event);
-    }
-
-    @SubscribeEvent
-    public void onMissingMappingsBlocks(RegistryEvent.MissingMappings<Block> event) {
-        ModBlocks.fixMappings(event);
-    }
-
-    @SubscribeEvent
-    public void onMissingMappingsItems(RegistryEvent.MissingMappings<Item> event) {
-        ModItems.fixMappings(event);
-    }
-
-    @SubscribeEvent
-    public void onMissingMappingsSkills(RegistryEvent.MissingMappings<ISkill> event) {
-        HunterSkills.fixMappings(event);
-        VampireSkills.fixMappings(event);
-    }
-
-
-    @SubscribeEvent
-    public void onMissingMappingsPotions(RegistryEvent.MissingMappings<Potion> event) {
-        ModPotions.fixMappings(event);
     }
 
     @SubscribeEvent
@@ -258,17 +267,7 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterPotions(RegistryEvent.Register<Potion> event) {
-        ModPotions.registerPotions(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterRefinements(RegistryEvent.Register<IRefinement> event) {
-        ModRefinements.registerRefinements(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterRefinementSets(RegistryEvent.Register<IRefinementSet> event) {
-        ModRefinementSets.registerRefinementSets(event.getRegistry());
+    public void onRegisterTiles(RegistryEvent.Register<TileEntityType<?>> event) {
+        ModTiles.registerTiles(event.getRegistry());
     }
 }

@@ -71,18 +71,17 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
             world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
     }
 
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
+        if (hasWorld()) read(world.getBlockState(packet.getPos()), packet.getNbtCompound());
+    }
 
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
         this.color = compound.contains("color") ? DyeColor.byId(compound.getInt("color")) : DyeColor.BLACK;
 
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
-        if (hasWorld()) read(world.getBlockState(packet.getPos()), packet.getNbtCompound());
     }
 
     @Override

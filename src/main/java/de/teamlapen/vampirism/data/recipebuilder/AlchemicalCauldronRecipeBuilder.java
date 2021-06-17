@@ -30,6 +30,13 @@ import java.util.function.Consumer;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class AlchemicalCauldronRecipeBuilder {
+    public static AlchemicalCauldronRecipeBuilder cauldronRecipe(Item item) {
+        return AlchemicalCauldronRecipeBuilder.cauldronRecipe(item, 1);
+    }
+
+    public static AlchemicalCauldronRecipeBuilder cauldronRecipe(Item item, int count) {
+        return new AlchemicalCauldronRecipeBuilder(item, count);
+    }
     private final ItemStack result;
     private final Advancement.Builder advancementBuilder = Advancement.Builder.builder();
     private String group;
@@ -44,26 +51,44 @@ public class AlchemicalCauldronRecipeBuilder {
         this.result = new ItemStack(result, count);
     }
 
-    public static AlchemicalCauldronRecipeBuilder cauldronRecipe(Item item) {
-        return AlchemicalCauldronRecipeBuilder.cauldronRecipe(item, 1);
+    public void build(Consumer<IFinishedRecipe> consumer, ResourceLocation id) {
+        id = new ResourceLocation(id.getNamespace(), "alchemical_cauldron/" + id.getPath());
+        this.validate(id);
+        this.advancementBuilder
+                .withParentId(new ResourceLocation("recipes/root"))
+                .withCriterion("has_the_recipe", RecipeUnlockedTrigger.create(id))
+                .withRewards(AdvancementRewards.Builder.recipe(id))
+                .withRequirementsStrategy(IRequirementsStrategy.OR);
+        consumer.accept(new Result(id, this.group != null ? this.group : "", this.ingredient, this.fluid, this.result, this.skills != null ? skills : new ISkill[]{HunterSkills.basic_alchemy}, this.reqLevel, this.cookTime, this.exp, advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItem().getGroup().getPath() + "/" + id.getPath())));
     }
 
-    public static AlchemicalCauldronRecipeBuilder cauldronRecipe(Item item, int count) {
-        return new AlchemicalCauldronRecipeBuilder(item, count);
+    public AlchemicalCauldronRecipeBuilder cookTime(int cookTime) {
+        this.cookTime = cookTime;
+        return this;
+    }
+
+    public AlchemicalCauldronRecipeBuilder experience(float exp) {
+        this.exp = exp;
+        return this;
+    }
+
+    public AlchemicalCauldronRecipeBuilder group(String group) {
+        this.group = group;
+        return this;
+    }
+
+    public AlchemicalCauldronRecipeBuilder requireLevel(int level) {
+        this.reqLevel = level;
+        return this;
+    }
+
+    public AlchemicalCauldronRecipeBuilder withCriterion(String name, ICriterionInstance criterion) {
+        this.advancementBuilder.withCriterion(name, criterion);
+        return this;
     }
 
     public AlchemicalCauldronRecipeBuilder withFluid(ITag<Item> tag) {
         this.fluid = Either.left(Ingredient.fromTag(tag));
-        return this;
-    }
-
-    public AlchemicalCauldronRecipeBuilder withIngredient(IItemProvider... items) {
-        this.ingredient = Ingredient.fromItems(items);
-        return this;
-    }
-
-    public AlchemicalCauldronRecipeBuilder withIngredient(ItemStack... stacks) {
-        this.ingredient = Ingredient.fromStacks(stacks);
         return this;
     }
 
@@ -77,43 +102,28 @@ public class AlchemicalCauldronRecipeBuilder {
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withIngredient(ITag<Item> tag) {
-        this.ingredient = Ingredient.fromTag(tag);
-        return this;
-    }
-
     public AlchemicalCauldronRecipeBuilder withFluid(ItemStack... stacks) {
         this.fluid = Either.left(Ingredient.fromStacks(stacks));
         return this;
     }
 
+    public AlchemicalCauldronRecipeBuilder withIngredient(IItemProvider... items) {
+        this.ingredient = Ingredient.fromItems(items);
+        return this;
+    }
+
+    public AlchemicalCauldronRecipeBuilder withIngredient(ItemStack... stacks) {
+        this.ingredient = Ingredient.fromStacks(stacks);
+        return this;
+    }
+
+    public AlchemicalCauldronRecipeBuilder withIngredient(ITag<Item> tag) {
+        this.ingredient = Ingredient.fromTag(tag);
+        return this;
+    }
+
     public AlchemicalCauldronRecipeBuilder withSkills(ISkill... skills) {
         this.skills = skills;
-        return this;
-    }
-
-    public AlchemicalCauldronRecipeBuilder requireLevel(int level) {
-        this.reqLevel = level;
-        return this;
-    }
-
-    public AlchemicalCauldronRecipeBuilder cookTime(int cookTime) {
-        this.cookTime = cookTime;
-        return this;
-    }
-
-    public AlchemicalCauldronRecipeBuilder experience(float exp) {
-        this.exp = exp;
-        return this;
-    }
-
-    public AlchemicalCauldronRecipeBuilder withCriterion(String name, ICriterionInstance criterion) {
-        this.advancementBuilder.withCriterion(name, criterion);
-        return this;
-    }
-
-    public AlchemicalCauldronRecipeBuilder group(String group) {
-        this.group = group;
         return this;
     }
 
@@ -123,17 +133,6 @@ public class AlchemicalCauldronRecipeBuilder {
         } else if (this.fluid == null) {
             throw new IllegalStateException("No fluid defined for alchemical cauldron recipe " + id + "!");
         }
-    }
-
-    public void build(Consumer<IFinishedRecipe> consumer, ResourceLocation id) {
-        id = new ResourceLocation(id.getNamespace(), "alchemical_cauldron/" + id.getPath());
-        this.validate(id);
-        this.advancementBuilder
-                .withParentId(new ResourceLocation("recipes/root"))
-                .withCriterion("has_the_recipe", RecipeUnlockedTrigger.create(id))
-                .withRewards(AdvancementRewards.Builder.recipe(id))
-                .withRequirementsStrategy(IRequirementsStrategy.OR);
-        consumer.accept(new Result(id, this.group != null ? this.group : "", this.ingredient, this.fluid, this.result, this.skills != null ? skills : new ISkill[]{HunterSkills.basic_alchemy}, this.reqLevel, this.cookTime, this.exp, advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItem().getGroup().getPath() + "/" + id.getPath())));
     }
 
     public static class Result implements IFinishedRecipe {
@@ -161,6 +160,30 @@ public class AlchemicalCauldronRecipeBuilder {
             this.exp = exp;
             this.advancementBuilder = advancementBuilderIn;
             this.advancementId = advancementId;
+        }
+
+        @Nullable
+        @Override
+        public ResourceLocation getAdvancementID() {
+            return this.advancementId;
+        }
+
+        @Nullable
+        @Override
+        public JsonObject getAdvancementJson() {
+            return this.advancementBuilder.serialize();
+        }
+
+        @Nonnull
+        @Override
+        public ResourceLocation getID() {
+            return id;
+        }
+
+        @Nonnull
+        @Override
+        public IRecipeSerializer<?> getSerializer() {
+            return ModRecipes.alchemical_cauldron;
         }
 
         @Override
@@ -194,30 +217,6 @@ public class AlchemicalCauldronRecipeBuilder {
             jsonObject.addProperty("cookTime", this.cookTimeIn);
             jsonObject.addProperty("experience", this.exp);
             jsonObject.addProperty("reqLevel", this.reqLevel);
-        }
-
-        @Nonnull
-        @Override
-        public ResourceLocation getID() {
-            return id;
-        }
-
-        @Nonnull
-        @Override
-        public IRecipeSerializer<?> getSerializer() {
-            return ModRecipes.alchemical_cauldron;
-        }
-
-        @Nullable
-        @Override
-        public JsonObject getAdvancementJson() {
-            return this.advancementBuilder.serialize();
-        }
-
-        @Nullable
-        @Override
-        public ResourceLocation getAdvancementID() {
-            return this.advancementId;
         }
     }
 }

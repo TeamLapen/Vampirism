@@ -70,17 +70,19 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        this.addFactionLevelToolTip(stack,worldIn,tooltip,flagIn,VampirismMod.proxy.getClientPlayer());
+        this.addFactionLevelToolTip(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
         float charged = getCharged(stack);
         float trained = getTrained(stack, VampirismMod.proxy.getClientPlayer());
         tooltip.add(new TranslationTextComponent("text.vampirism.sword_charged").append(new StringTextComponent(" " + ((int) Math.ceil(charged * 100f)) + "%")).mergeStyle(TextFormatting.DARK_AQUA));
         tooltip.add(new TranslationTextComponent("text.vampirism.sword_trained").append(new StringTextComponent(" " + ((int) Math.ceil(trained * 100f)) + "%")).mergeStyle(TextFormatting.DARK_AQUA));
     }
 
-    @Nonnull
     @Override
-    public IFaction<?> getExclusiveFaction() {
-        return VReference.VAMPIRE_FACTION;
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        if (enchantment == Enchantments.FIRE_ASPECT || ((this instanceof IItemWithTier) && ((IItemWithTier) this).getVampirismTier() == IItemWithTier.TIER.ULTIMATE)) {
+            return false;
+        }
+        return super.canApplyAtEnchantingTable(stack, enchantment);
     }
 
     @Override
@@ -104,26 +106,40 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         stack.setTagInfo("dont_name", ByteNBT.valueOf(Byte.MAX_VALUE));
     }
 
+    @Nonnull
     @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        if(enchantment == Enchantments.FIRE_ASPECT || ((this instanceof IItemWithTier) &&((IItemWithTier) this).getVampirismTier() == IItemWithTier.TIER.ULTIMATE)){
-            return false;
-        }
-        return super.canApplyAtEnchantingTable(stack,enchantment);
+    public IFaction<?> getExclusiveFaction() {
+        return VReference.VAMPIRE_FACTION;
     }
 
+    @Override
+    public int getMinLevel(@Nonnull ItemStack stack) {
+        return 0;
+    }
+
+    @Nullable
+    @Override
+    public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
+        return null;
+    }
 
     @Override
     public int getUseDuration(ItemStack stack) {
         return 40;
     }
 
+    @Nullable
+    @Override
+    public IPlayableFaction getUsingFaction(@Nonnull ItemStack stack) {
+        return VReference.VAMPIRE_FACTION;
+    }
+
     @Override
     public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         //Vampire Finisher skill
-        if(attacker instanceof PlayerEntity&& !Helper.isVampire(target)){
-            double relTh = VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() * VampirePlayer.getOpt((PlayerEntity) attacker).map(VampirePlayer::getSkillHandler).map(h -> h.isSkillEnabled(VampireSkills.sword_finisher) ? (h.isRefinementEquipped(ModRefinements.sword_finisher) ? VampirismConfig.BALANCE.vrSwordFinisherThresholdMod.get() : 1d ): 0d).orElse(0d);
-            if (relTh>0 && target.getHealth() <= target.getMaxHealth() * relTh ) {
+        if (attacker instanceof PlayerEntity && !Helper.isVampire(target)) {
+            double relTh = VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() * VampirePlayer.getOpt((PlayerEntity) attacker).map(VampirePlayer::getSkillHandler).map(h -> h.isSkillEnabled(VampireSkills.sword_finisher) ? (h.isRefinementEquipped(ModRefinements.sword_finisher) ? VampirismConfig.BALANCE.vrSwordFinisherThresholdMod.get() : 1d) : 0d).orElse(0d);
+            if (relTh > 0 && target.getHealth() <= target.getMaxHealth() * relTh) {
                 DamageSource dmg = DamageSource.causePlayerDamage((PlayerEntity) attacker).setDamageBypassesArmor();
                 target.attackEntityFrom(dmg, 10000F);
                 Vector3d center = Vector3d.copy(target.getPosition());
@@ -136,10 +152,10 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
             float trained = getTrained(stack, attacker);
             int exp = target instanceof PlayerEntity ? 10 : (attacker instanceof PlayerEntity ? (Helper.getExperiencePoints(target, (PlayerEntity) attacker)) : 5);
             float newTrained = exp / 5f * (1.0f - trained) / 15f;
-            if (attacker instanceof PlayerEntity && VampirePlayer.getOpt(((PlayerEntity) attacker)).map(VampirePlayer::getSkillHandler).map(handler-> handler.isRefinementEquipped(ModRefinements.sword_trained_amount)).orElse(false)) {
+            if (attacker instanceof PlayerEntity && VampirePlayer.getOpt(((PlayerEntity) attacker)).map(VampirePlayer::getSkillHandler).map(handler -> handler.isRefinementEquipped(ModRefinements.sword_trained_amount)).orElse(false)) {
                 newTrained *= VampirismConfig.BALANCE.vrSwordTrainingSpeedMod.get();
             }
-            trained += newTrained ;
+            trained += newTrained;
             setTrained(stack, attacker, trained);
         }
         //Consume blood
@@ -150,16 +166,6 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
 
         return super.hitEntity(stack, target, attacker);
     }
-
-    /**
-     * //TODO 1.17 make abstract
-     * @return The amount of charge consumed per hit
-     */
-    protected float getChargeUsage(){
-        return 0;
-    }
-
-
 
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
@@ -180,15 +186,20 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     @Override
+    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
+        return !Helper.isVampire(entity);
+    }
+
+    @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
-        return VampirePlayer.getOpt(playerIn).map(vampire-> {
-                if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
+        return VampirePlayer.getOpt(playerIn).map(vampire -> {
+            if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
 
-                if (this.canBeCharged(stack) && playerIn.isSneaking() && vampire.getSkillHandler().isSkillEnabled(VampireSkills.blood_charge) && (playerIn.isCreative() || vampire.getBloodLevel() >= (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.blood_charge_speed) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get():2))) {
-                    playerIn.setActiveHand(handIn);
-                    return new ActionResult<>(ActionResultType.SUCCESS, stack);
-                }
+            if (this.canBeCharged(stack) && playerIn.isSneaking() && vampire.getSkillHandler().isSkillEnabled(VampireSkills.blood_charge) && (playerIn.isCreative() || vampire.getBloodLevel() >= (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.blood_charge_speed) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get() : 2))) {
+                playerIn.setActiveHand(handIn);
+                return new ActionResult<>(ActionResultType.SUCCESS, stack);
+            }
 
             return new ActionResult<>(ActionResultType.PASS, stack);
         }).orElse(new ActionResult<>(ActionResultType.PASS, stack));
@@ -198,7 +209,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
         if (!(entityLiving instanceof PlayerEntity)) return stack;
         VReference.VAMPIRE_FACTION.getPlayerCapability((PlayerEntity) entityLiving).ifPresent(vampire -> {
-            int amount = (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.blood_charge_speed) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get():2);
+            int amount = (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.blood_charge_speed) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get() : 2);
             if (((PlayerEntity) entityLiving).isCreative() || vampire.useBlood(amount, false)) {
                 this.charge(stack, amount * VReference.FOOD_TO_FLUID_BLOOD);
             }
@@ -207,6 +218,11 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
             tryName(stack, (PlayerEntity) entityLiving);
         }
         return stack;
+    }
+
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
+        return !Helper.isVampire(player);
     }
 
     @Override
@@ -273,6 +289,19 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         return getCharged(stack) > 0 ? 1f : minStrength;
     }
 
+    @Override
+    protected final float getAttackSpeed(ItemStack stack) {
+        return untrainedAttackSpeed + (trainedAttackSpeed - untrainedAttackSpeed) * getTrained(stack);
+    }
+
+    /**
+     * //TODO 1.17 make abstract
+     *
+     * @return The amount of charge consumed per hit
+     */
+    protected float getChargeUsage() {
+        return 0;
+    }
 
     /**
      * Gets the charged value from the tag compound
@@ -293,6 +322,22 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     protected abstract float getChargingFactor(ItemStack stack);
 
     /**
+     * Gets a cached trained value from the tag compound
+     *
+     * @param stack
+     * @return Value between 0 and 1. Defaults to 0
+     */
+    protected float getTrained(@Nonnull ItemStack stack) {
+        if (stack.hasTag()) {
+            CompoundNBT nbt = stack.getTag();
+            if (nbt.contains("trained-cache")) {
+                return nbt.getFloat("trained-cache");
+            }
+        }
+        return 0.0f;
+    }
+
+    /**
      * Gets the trained value from the tag compound
      *
      * @param stack
@@ -311,22 +356,6 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         return 0f;
     }
 
-    /**
-     * Gets a cached trained value from the tag compound
-     *
-     * @param stack
-     * @return Value between 0 and 1. Defaults to 0
-     */
-    protected float getTrained(@Nonnull ItemStack stack) {
-        if (stack.hasTag()) {
-            CompoundNBT nbt = stack.getTag();
-            if (nbt.contains("trained-cache")) {
-                return nbt.getFloat("trained-cache");
-            }
-        }
-        return 0.0f;
-    }
-
     @OnlyIn(Dist.CLIENT)
     private void spawnChargedParticle(LivingEntity player, boolean mainHand) {
         Vector3d mainPos = UtilLib.getItemPosition(player, mainHand);
@@ -343,37 +372,5 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         pos = pos.add((player.getRNG().nextFloat() - 0.5f) * 0.1f, (player.getRNG().nextFloat() - 0.3f) * 0.9f, (player.getRNG().nextFloat() - 0.5f) * 0.1f);
         Vector3d playerPos = new Vector3d((player).getPosX(), (player).getPosY() + player.getEyeHeight() - 0.2f, (player).getPosZ());
         ModParticles.spawnParticleClient(player.getEntityWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (player.getRNG().nextFloat() * 0.6F + 0.1F)), true, pos.x, pos.y, pos.z), playerPos.x, playerPos.y, playerPos.z);
-    }
-
-    @Override
-    protected final float getAttackSpeed(ItemStack stack) {
-        return untrainedAttackSpeed + (trainedAttackSpeed - untrainedAttackSpeed) * getTrained(stack);
-    }
-
-    @Override
-    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        return !Helper.isVampire(entity);
-    }
-
-    @Override
-    public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
-        return !Helper.isVampire(player);
-    }
-
-    @Override
-    public int getMinLevel(@Nonnull ItemStack stack) {
-        return 0;
-    }
-
-    @Nullable
-    @Override
-    public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public IPlayableFaction getUsingFaction(@Nonnull ItemStack stack) {
-        return VReference.VAMPIRE_FACTION;
     }
 }

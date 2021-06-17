@@ -89,17 +89,25 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     private final int MAX_LEVEL = 3;
     private final MeleeAttackGoal attackMelee;
     private final AttackRangedCrossbowGoal<BasicHunterEntity> attackRange;
-
+    /**
+     * available actions for AI task & task
+     */
+    private final ActionHandlerEntity<?> entityActionHandler;
+    private final EntityClassType entityclass;
+    private final EntityActionTier entitytier;
     /**
      * Player currently being trained otherwise null
      */
     private @Nullable
     PlayerEntity trainee;
-
     /**
      * Stores the x axis angle between when targeting an enemy with the crossbow
      */
     private float targetAngle = 0;
+    private @Nullable
+    ICaptureAttributes villageAttributes;
+    //Village capture --------------------------------------------------------------------------------------------------
+    private boolean attack;
 
     public BasicHunterEntity(EntityType<? extends BasicHunterEntity> type, World world) {
         super(type, world, true);
@@ -128,20 +136,95 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public boolean canDespawn(double distanceToClosestPlayer) {
-        return super.canDespawn(distanceToClosestPlayer) && getHome() != null;
-    }
-
-    @Override
     public void attackVillage(ICaptureAttributes attributes) {
         this.villageAttributes = attributes;
         this.attack = true;
     }
 
     @Override
+    public boolean canDespawn(double distanceToClosestPlayer) {
+        return super.canDespawn(distanceToClosestPlayer) && getHome() != null;
+    }
+
+    /**
+     * Assumes preconditions as been met. Checks conditions but does not give feedback to user
+     *
+     * @param lord
+     */
+    public void convertToMinion(PlayerEntity lord) {
+        FactionPlayerHandler.getOpt(lord).ifPresent(fph -> {
+            if (fph.getMaxMinions() > 0) {
+                MinionWorldData.getData(lord.world).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
+                    if (controller.hasFreeMinionSlot()) {
+                        if (fph.getCurrentFaction() == this.getFaction()) {
+                            HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), this.getEntityTextureType() % 4, false);
+                            int id = controller.createNewMinionSlot(data, ModEntities.hunter_minion);
+                            if (id < 0) {
+                                LOGGER.error("Failed to get minion slot");
+                                return;
+                            }
+                            HunterMinionEntity minion = ModEntities.hunter_minion.create(this.world);
+                            minion.claimMinionSlot(id, controller);
+                            minion.copyLocationAndAnglesFrom(this);
+                            minion.markAsConverted();
+                            controller.activateTask(0, MinionTasks.stay);
+                            UtilLib.replaceEntity(this, minion);
+
+                        } else {
+                            LOGGER.warn("Wrong faction for minion");
+                        }
+                    } else {
+                        LOGGER.warn("No free slot");
+                    }
+                });
+            } else {
+                LOGGER.error("Can't have minions");
+            }
+        });
+    }
+
+    @Override
+    public void defendVillage(ICaptureAttributes attributes) {
+        this.villageAttributes = attributes;
+        this.attack = false;
+    }
+
+    @Override
+    public ActionHandlerEntity getActionHandler() {
+        return entityActionHandler;
+    }
+
+    @Override
     public @Nonnull
     ItemStack getArrowStackForAttack(LivingEntity target) {
         return new ItemStack(ModItems.crossbow_arrow_normal);
+    }
+
+    @Override
+    public @Nullable
+    ICaptureAttributes getCaptureInfo() {
+        return this.villageAttributes;
+    }
+
+    @Override
+    public EntityClassType getEntityClass() {
+        return entityclass;
+    }
+
+    @Override
+    public int getEntityTextureType() {
+        return Math.max(0, getDataManager().get(TYPE));
+    }
+
+    @Override
+    public EntityActionTier getEntityTier() {
+        return entitytier;
+    }
+
+    @Nonnull
+    @Override
+    public Optional<PlayerEntity> getForceLookTarget() {
+        return Optional.ofNullable(trainee);
     }
 
     @Override
@@ -169,17 +252,25 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         return targetAngle;
     }
 
-    @Nonnull
     @Override
-    public Optional<PlayerEntity> getForceLookTarget() {
-        return Optional.ofNullable(trainee);
+    public @Nullable
+    AxisAlignedBB getTargetVillageArea() {
+        return villageAttributes == null ? null : villageAttributes.getVillageArea();
     }
 
-
+    @Override
+    public boolean isAttackingVillage() {
+        return villageAttributes != null && attack;
+    }
 
     @Override
     public boolean isCrossbowInMainhand() {
         return !this.getHeldItemMainhand().isEmpty() && this.getHeldItemMainhand().getItem() instanceof VampirismItemCrossbow;
+    }
+
+    @Override
+    public boolean isDefendingVillage() {
+        return villageAttributes != null && !attack;
     }
 
     @Override
@@ -245,12 +336,71 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
     }
 
-    private @Nullable
-    ICaptureAttributes villageAttributes;
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+        if (getDataManager().get(TYPE) == -1) {
+            getDataManager().set(TYPE, this.getRNG().nextInt(TYPES));
+        }
+    }
 
     @Override
-    public int getEntityTextureType() {
-        return Math.max(0, getDataManager().get(TYPE));
+    public void onDeath(DamageSource cause) {
+        if (this.villageAttributes == null) {
+            BadOmenEffect.handlePotentialBannerKill(cause.getTrueSource(), this);
+        }
+        super.onDeath(cause);
+    }
+
+    //Entityactions ----------------------------------------------------------------------------------------------------
+
+    @Nullable
+    @Override
+    public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        if (!(reason == SpawnReason.SPAWN_EGG || reason == SpawnReason.BUCKET || reason == SpawnReason.CONVERSION || reason == SpawnReason.COMMAND) && this.getRNG().nextInt(50) == 0) {
+            this.setItemStackToSlot(EquipmentSlotType.HEAD, HunterVillageData.createBanner());
+        }
+        ILivingEntityData livingData = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+
+        if (this.getRNG().nextInt(4) == 0) {
+            this.setLeftHanded(true);
+            Item crossBow = getLevel() > 1 ? ModItems.enhanced_crossbow : ModItems.basic_crossbow;
+            this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(crossBow));
+
+        } else {
+            this.setLeftHanded(false);
+        }
+
+        this.updateCombatTask();
+        return livingData;
+    }
+
+    @Override
+    public void readAdditional(CompoundNBT tagCompund) {
+        super.readAdditional(tagCompund);
+        if (tagCompund.contains("level")) {
+            setLevel(tagCompund.getInt("level"));
+        }
+
+        if (tagCompund.contains("crossbow") && tagCompund.getBoolean("crossbow")) {
+            this.setLeftHanded(true);
+            this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.basic_crossbow));
+        } else {
+            this.setLeftHanded(false);
+            this.setItemStackToSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
+        }
+        this.updateCombatTask();
+        if (tagCompund.contains("attack")) {
+            this.attack = tagCompund.getBoolean("attack");
+        }
+        if (tagCompund.contains("type")) {
+            int t = tagCompund.getInt("type");
+            getDataManager().set(TYPE, t < TYPES && t >= 0 ? t : -1);
+        }
+
+        if (entityActionHandler != null) {
+            entityActionHandler.read(tagCompund);
+        }
     }
 
     @Override
@@ -263,54 +413,10 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         this.setSwingingArms(false);
     }
 
-    /**
-     * Assumes preconditions as been met. Checks conditions but does not give feedback to user
-     *
-     * @param lord
-     */
-    public void convertToMinion(PlayerEntity lord) {
-        FactionPlayerHandler.getOpt(lord).ifPresent(fph -> {
-            if (fph.getMaxMinions() > 0) {
-                MinionWorldData.getData(lord.world).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
-                    if (controller.hasFreeMinionSlot()) {
-                        if (fph.getCurrentFaction() == this.getFaction()) {
-                            HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), this.getEntityTextureType() % 4, false);
-                            int id = controller.createNewMinionSlot(data, ModEntities.hunter_minion);
-                            if (id < 0) {
-                                LOGGER.error("Failed to get minion slot");
-                                return;
-                            }
-                            HunterMinionEntity minion = ModEntities.hunter_minion.create(this.world);
-                            minion.claimMinionSlot(id, controller);
-                            minion.copyLocationAndAnglesFrom(this);
-                            minion.markAsConverted();
-                            controller.activateTask(0, MinionTasks.stay);
-                            UtilLib.replaceEntity(this,minion);
-
-                        } else {
-                            LOGGER.warn("Wrong faction for minion");
-                        }
-                    } else {
-                        LOGGER.warn("No free slot");
-                    }
-                });
-            } else {
-                LOGGER.error("Can't have minions");
-            }
-        });
-    }
-
     @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
-        if (getDataManager().get(TYPE) == -1) {
-            getDataManager().set(TYPE, this.getRNG().nextInt(TYPES));
-        }
-    }
-
-    @Override
-    protected int getExperiencePoints(PlayerEntity player) {
-        return 6 + getLevel();
+    public void stopVillageAttackDefense() {
+        this.setCustomName(null);
+        this.villageAttributes = null;
     }
 
     @Override
@@ -328,14 +434,17 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     }
 
-
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.getDataManager().register(LEVEL, -1);
-        this.getDataManager().register(SWINGING_ARMS, false);
-        this.getDataManager().register(WATCHED_ID, 0);
-        this.getDataManager().register(TYPE, -1);
+    public void writeAdditional(CompoundNBT nbt) {
+        super.writeAdditional(nbt);
+        nbt.putInt("level", getLevel());
+        nbt.putBoolean("crossbow", isCrossbowInMainhand());
+        nbt.putBoolean("attack", attack);
+        nbt.putInt("type", getEntityTextureType());
+        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
+        if (entityActionHandler != null) {
+            entityActionHandler.write(nbt);
+        }
     }
 
     @Override
@@ -390,6 +499,26 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
+    protected int getExperiencePoints(PlayerEntity player) {
+        return 6 + getLevel();
+    }
+
+    //IMob -------------------------------------------------------------------------------------------------------------
+    @Override
+    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+        return iMob ? ModEntities.hunter_imob : ModEntities.hunter;
+    }
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+        this.getDataManager().register(LEVEL, -1);
+        this.getDataManager().register(SWINGING_ARMS, false);
+        this.getDataManager().register(WATCHED_ID, 0);
+        this.getDataManager().register(TYPE, -1);
+    }
+
+    @Override
     protected void registerGoals() {
         super.registerGoals();
 
@@ -416,101 +545,30 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, Structure.VILLAGE)));        //Also check the priority of tasks that are dynamically added. See top of class
     }
 
+    protected void updateEntityAttributes() {
+        int l = Math.max(getLevel(), 0);
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH + BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH_PL * l);
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE_PL * l);
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED);
+    }
+
     private int getWatchedId() {
         return getDataManager().get(WATCHED_ID);
     }
 
     private void updateCombatTask() {
-            this.goalSelector.removeGoal(attackMelee);
-            this.goalSelector.removeGoal(attackRange);
-            ItemStack stack = this.getHeldItemMainhand();
-            if (!stack.isEmpty() && stack.getItem() instanceof VampirismItemCrossbow) {
-                this.goalSelector.addGoal(2, this.attackRange);
-            } else {
-                this.goalSelector.addGoal(2, this.attackMelee);
-            }
+        this.goalSelector.removeGoal(attackMelee);
+        this.goalSelector.removeGoal(attackRange);
+        ItemStack stack = this.getHeldItemMainhand();
+        if (!stack.isEmpty() && stack.getItem() instanceof VampirismItemCrossbow) {
+            this.goalSelector.addGoal(2, this.attackRange);
+        } else {
+            this.goalSelector.addGoal(2, this.attackMelee);
+        }
     }
 
     private void updateWatchedId(int id) {
         getDataManager().set(WATCHED_ID, id);
-    }
-
-    @Override
-    public void readAdditional(CompoundNBT tagCompund) {
-        super.readAdditional(tagCompund);
-        if (tagCompund.contains("level")) {
-            setLevel(tagCompund.getInt("level"));
-        }
-
-        if (tagCompund.contains("crossbow") && tagCompund.getBoolean("crossbow")) {
-            this.setLeftHanded(true);
-            this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.basic_crossbow));
-        } else {
-            this.setLeftHanded(false);
-            this.setItemStackToSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
-        }
-        this.updateCombatTask();
-        if (tagCompund.contains("attack")) {
-            this.attack = tagCompund.getBoolean("attack");
-        }
-        if (tagCompund.contains("type")) {
-            int t = tagCompund.getInt("type");
-            getDataManager().set(TYPE, t < TYPES && t >= 0 ? t : -1);
-        }
-
-        if (entityActionHandler != null) {
-            entityActionHandler.read(tagCompund);
-        }
-    }
-
-    @Override
-    public void writeAdditional(CompoundNBT nbt) {
-        super.writeAdditional(nbt);
-        nbt.putInt("level", getLevel());
-        nbt.putBoolean("crossbow", isCrossbowInMainhand());
-        nbt.putBoolean("attack", attack);
-        nbt.putInt("type", getEntityTextureType());
-        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
-        if (entityActionHandler != null) {
-            entityActionHandler.write(nbt);
-        }
-    }
-
-    @Override
-    public void onDeath(DamageSource cause) {
-        if (this.villageAttributes == null) {
-            BadOmenEffect.handlePotentialBannerKill(cause.getTrueSource(), this);
-        }
-        super.onDeath(cause);
-    }
-
-    //Entityactions ----------------------------------------------------------------------------------------------------
-    /**
-     * available actions for AI task & task
-     */
-    private final ActionHandlerEntity<?> entityActionHandler;
-    private final EntityClassType entityclass;
-    private final EntityActionTier entitytier;
-
-    @Override
-    public EntityClassType getEntityClass() {
-        return entityclass;
-    }
-
-    @Override
-    public EntityActionTier getEntityTier() {
-        return entitytier;
-    }
-
-    @Override
-    public ActionHandlerEntity getActionHandler() {
-        return entityActionHandler;
-    }
-
-    //IMob -------------------------------------------------------------------------------------------------------------
-    @Override
-    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
-        return iMob ? ModEntities.hunter_imob : ModEntities.hunter;
     }
 
     public static class IMob extends BasicHunterEntity implements net.minecraft.entity.monster.IMob {
@@ -519,70 +577,5 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             super(type, world);
         }
 
-    }
-
-    //Village capture --------------------------------------------------------------------------------------------------
-    private boolean attack;
-
-    @Override
-    public void defendVillage(ICaptureAttributes attributes) {
-        this.villageAttributes = attributes;
-        this.attack = false;
-    }
-
-    @Override
-    public void stopVillageAttackDefense() {
-        this.setCustomName(null);
-        this.villageAttributes = null;
-    }
-
-    @Override
-    public boolean isAttackingVillage() {
-        return villageAttributes != null && attack;
-    }
-
-    @Override
-    public boolean isDefendingVillage() {
-        return villageAttributes != null && !attack;
-    }
-
-    @Override
-    public @Nullable
-    ICaptureAttributes getCaptureInfo() {
-        return this.villageAttributes;
-    }
-
-    @Override
-    public @Nullable
-    AxisAlignedBB getTargetVillageArea() {
-        return villageAttributes == null ? null : villageAttributes.getVillageArea();
-    }
-
-    @Nullable
-    @Override
-    public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        if (!(reason == SpawnReason.SPAWN_EGG || reason == SpawnReason.BUCKET || reason == SpawnReason.CONVERSION || reason == SpawnReason.COMMAND) && this.getRNG().nextInt(50) == 0) {
-            this.setItemStackToSlot(EquipmentSlotType.HEAD, HunterVillageData.createBanner());
-        }
-        ILivingEntityData livingData = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-
-        if (this.getRNG().nextInt(4) == 0) {
-            this.setLeftHanded(true);
-            Item crossBow = getLevel() > 1 ? ModItems.enhanced_crossbow : ModItems.basic_crossbow;
-            this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(crossBow));
-
-        } else {
-            this.setLeftHanded(false);
-        }
-
-        this.updateCombatTask();
-        return livingData;
-    }
-
-    protected void updateEntityAttributes() {
-        int l = Math.max(getLevel(), 0);
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH + BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH_PL * l);
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE_PL * l);
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED);
     }
 }

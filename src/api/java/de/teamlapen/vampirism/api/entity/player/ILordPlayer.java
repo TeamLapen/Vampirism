@@ -20,12 +20,12 @@ public interface ILordPlayer {
 
     int getLordLevel();
 
-    @Nonnull
-    PlayerEntity getPlayer();
-
     /**
      * @return Null, if level ==0
      */
     @Nullable
     ITextComponent getLordTitle();
+
+    @Nonnull
+    PlayerEntity getPlayer();
 }

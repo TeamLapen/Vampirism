@@ -34,15 +34,15 @@ public class Task extends ForgeRegistryEntry<Task> {
     /**
      * translation keys used for a task are
      * <p>
-     *  - {@code task.<registryname>}
-     *  <p>
-     *  if needed:
-     *  <p>
-     *  - {@code task.<registryname>.req.<requirementname>}
-     *  <p>
-     *  - {@code task.<registryname>.reward}
-     *  <p>
-     *  - {@code task.<registryname>.desc}
+     * - {@code task.<registryname>}
+     * <p>
+     * if needed:
+     * <p>
+     * - {@code task.<registryname>.req.<requirementname>}
+     * <p>
+     * - {@code task.<registryname>.reward}
+     * <p>
+     * - {@code task.<registryname>.desc}
      *
      * @param variant        the task variant
      * @param faction        the faction that can complete the task. if {@code null} all faction are able to complete the task
@@ -60,8 +60,14 @@ public class Task extends ForgeRegistryEntry<Task> {
         this.unlocker = unlocker;
     }
 
-    public boolean isUnique() {
-        return variant == Variant.UNIQUE;
+    @Nonnull
+    public ITextComponent getDescription() {
+        return this.desc != null ? this.desc : (this.desc = new TranslationTextComponent(this.getDescriptionKey()));
+    }
+
+    @Nonnull
+    public String getDescriptionKey() {
+        return this.descKey != null ? this.descKey : (this.descKey = (this.translationKey != null ? this.translationKey : getTranslationKey()) + ".desc");
     }
 
     @Nullable
@@ -80,8 +86,8 @@ public class Task extends ForgeRegistryEntry<Task> {
     }
 
     @Nonnull
-    public TaskUnlocker[] getUnlocker() {
-        return unlocker;
+    public ITextComponent getTranslation() {
+        return this.translation != null ? this.translation : (this.translation = new TranslationTextComponent(this.getTranslationKey()));
     }
 
     @Nonnull
@@ -90,18 +96,12 @@ public class Task extends ForgeRegistryEntry<Task> {
     }
 
     @Nonnull
-    public String getDescriptionKey() {
-        return this.descKey != null ? this.descKey : (this.descKey = (this.translationKey != null ? this.translationKey : getTranslationKey()) + ".desc");
+    public TaskUnlocker[] getUnlocker() {
+        return unlocker;
     }
 
-    @Nonnull
-    public ITextComponent getTranslation() {
-        return this.translation != null ? this.translation : (this.translation = new TranslationTextComponent(this.getTranslationKey()));
-    }
-
-    @Nonnull
-    public ITextComponent getDescription() {
-        return this.desc != null ? this.desc : (this.desc = new TranslationTextComponent(this.getDescriptionKey()));
+    public boolean isUnique() {
+        return variant == Variant.UNIQUE;
     }
 
     public boolean useDescription() {

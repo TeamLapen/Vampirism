@@ -9,6 +9,14 @@ import net.minecraft.tags.*;
 import net.minecraft.util.ResourceLocation;
 
 public class ModTags {
+    private static ResourceLocation forge(String resourceName) {
+        return new ResourceLocation("forge", resourceName);
+    }
+
+    private static ResourceLocation vanilla(String resourceName) {
+        return new ResourceLocation(resourceName);
+    }
+
     public static class Blocks {
         public static final ITag.INamedTag<Block> CASTLE_BLOCK = tag("castle_block");
         public static final ITag.INamedTag<Block> CURSEDEARTH = tag("cursed_earth");
@@ -85,13 +93,5 @@ public class ModTags {
         private static ITag.INamedTag<Fluid> tag(String name) {
             return tag(new ResourceLocation(REFERENCE.MODID, name));
         }
-    }
-
-    private static ResourceLocation forge(String resourceName){
-        return new ResourceLocation("forge", resourceName);
-    }
-
-    private static ResourceLocation vanilla(String resourceName){
-        return new ResourceLocation(resourceName);
     }
 }

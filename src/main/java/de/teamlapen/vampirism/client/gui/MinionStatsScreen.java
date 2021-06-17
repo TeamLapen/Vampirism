@@ -35,13 +35,13 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     protected final int xSize = 256;
     protected final int ySize = 177;
     protected final int statCount;
-    private final TranslationTextComponent textLevel = new TranslationTextComponent("text.vampirism.level");
-    private final List<Button> statButtons = new ArrayList<>();
-    private Button reset;
-    protected int guiLeft;
-    protected int guiTop;
     @Nullable
     protected final Screen backScreen;
+    private final TranslationTextComponent textLevel = new TranslationTextComponent("text.vampirism.level");
+    private final List<Button> statButtons = new ArrayList<>();
+    protected int guiLeft;
+    protected int guiTop;
+    private Button reset;
 
     protected MinionStatsScreen(Q entity, int statCount, @Nullable Screen backScreen) {
         super(new TranslationTextComponent("gui.vampirism.minion_stats"));
@@ -58,7 +58,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         this.renderGuiBackground(mStack);
         this.drawTitle(mStack);
         super.render(mStack, mouseX, mouseY, partialTicks);
-        entity.getMinionData().ifPresent(d-> renderStats(mStack, d));
+        entity.getMinionData().ifPresent(d -> renderStats(mStack, d));
 
     }
 
@@ -73,11 +73,9 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         reset.active = entity.getMinionData().map(MinionData::hasUsedSkillPoints).orElse(false) && getOblivionPotion().isPresent();
     }
 
-    protected abstract int getRemainingStatPoints(T d);
-
-    protected abstract boolean isActive(T data, int i);
-
     protected abstract boolean areButtonsVisible(T d);
+
+    protected abstract int getRemainingStatPoints(T d);
 
     @Override
     protected void init() {
@@ -85,7 +83,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
         this.addButton(new Button(this.guiLeft + this.xSize - 80 - 20, this.guiTop + 152, 80, 20, new TranslationTextComponent("gui.done"), (context) -> {
-           this.closeScreen();
+            this.closeScreen();
         }));
         if (backScreen != null) {
             this.addButton(new Button(this.guiLeft + 20, this.guiTop + 152, 80, 20, new TranslationTextComponent("gui.back"), (context) -> {
@@ -120,9 +118,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         reset.active = false;
     }
 
-    private Optional<ItemStack> getOblivionPotion() {
-        return Optional.ofNullable(entity.getMinionData().flatMap(data -> Optional.ofNullable(InventoryHelper.getFirst(data.getInventory(), ModItems.oblivion_potion))).orElse(InventoryHelper.getFirst(this.minecraft.player.inventory, ModItems.oblivion_potion)));
-    }
+    protected abstract boolean isActive(T data, int i);
 
     protected void renderGuiBackground(MatrixStack mStack) {
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
@@ -140,9 +136,9 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     }
 
     protected void renderStatRow(MatrixStack mStack, int i, TranslationTextComponent name, StringTextComponent value, int currentLevel, int maxLevel) {
-        this.font.func_243248_b(mStack,name.appendString(":"), guiLeft + 10, guiTop + 50 + 26 * i, 0x404040);
+        this.font.func_243248_b(mStack, name.appendString(":"), guiLeft + 10, guiTop + 50 + 26 * i, 0x404040);
         this.font.func_243248_b(mStack, value, guiLeft + 145, guiTop + 50 + 26 * i, 0x404040);
-        this.font.drawString(mStack,UtilLib.translate("text.vampirism.level_short") + ": " + currentLevel + "/" + maxLevel, guiLeft + 175, guiTop + 50 + 26 * i, 0x404040);
+        this.font.drawString(mStack, UtilLib.translate("text.vampirism.level_short") + ": " + currentLevel + "/" + maxLevel, guiLeft + 175, guiTop + 50 + 26 * i, 0x404040);
     }
 
     protected void renderStats(MatrixStack mStack, T data) {
@@ -151,6 +147,10 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
 
     private void drawTitle(MatrixStack mStack) {
         this.font.func_243246_a(mStack, this.title, this.guiLeft + 10, this.guiTop + 10, 0xFFFFFF);
+    }
+
+    private Optional<ItemStack> getOblivionPotion() {
+        return Optional.ofNullable(entity.getMinionData().flatMap(data -> Optional.ofNullable(InventoryHelper.getFirst(data.getInventory(), ModItems.oblivion_potion))).orElse(InventoryHelper.getFirst(this.minecraft.player.inventory, ModItems.oblivion_potion)));
     }
 
 

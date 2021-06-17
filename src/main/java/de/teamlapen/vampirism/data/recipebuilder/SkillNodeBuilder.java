@@ -15,17 +15,6 @@ import java.util.function.Consumer;
 @MethodsReturnNonnullByDefault
 public class SkillNodeBuilder {
 
-    private final ResourceLocation parent;
-    private final ISkill[] skills;
-    private ResourceLocation faction;
-    private ResourceLocation[] lockingSkillNodes;
-
-    public SkillNodeBuilder(ResourceLocation parent, ISkill... skills) {
-        this.parent = parent;
-        this.skills = skills;
-        this.lockingSkillNodes = new ResourceLocation[0];
-    }
-
     public static SkillNodeBuilder skill(ResourceLocation parent, ISkill... skills) {
         return new SkillNodeBuilder(parent, skills);
     }
@@ -37,21 +26,15 @@ public class SkillNodeBuilder {
     public static SkillNodeBuilder vampire(ResourceLocation parent, ISkill... skills) {
         return skill(parent, skills).faction(VReference.VAMPIRE_FACTION);
     }
+    private final ResourceLocation parent;
+    private final ISkill[] skills;
+    private ResourceLocation faction;
+    private ResourceLocation[] lockingSkillNodes;
 
-    public SkillNodeBuilder lockingNodes(ResourceLocation... skillNodes) {
-        this.lockingSkillNodes = skillNodes;
-        return this;
-    }
-
-    public SkillNodeBuilder faction(IPlayableFaction<?> faction) {
-        this.faction = faction.getID();
-        return this;
-    }
-
-    private void validate(ResourceLocation id) {
-        if (this.skills.length == 0) {
-            throw new IllegalStateException("No skills defined for skill node " + id + "!");
-        }
+    public SkillNodeBuilder(ResourceLocation parent, ISkill... skills) {
+        this.parent = parent;
+        this.skills = skills;
+        this.lockingSkillNodes = new ResourceLocation[0];
     }
 
     public ResourceLocation build(Consumer<FinishedSkillNode> consumer, ResourceLocation id) {
@@ -61,6 +44,22 @@ public class SkillNodeBuilder {
         this.validate(id);
         consumer.accept(new Result(id, this.parent, this.skills, this.lockingSkillNodes));
         return id;
+    }
+
+    public SkillNodeBuilder faction(IPlayableFaction<?> faction) {
+        this.faction = faction.getID();
+        return this;
+    }
+
+    public SkillNodeBuilder lockingNodes(ResourceLocation... skillNodes) {
+        this.lockingSkillNodes = skillNodes;
+        return this;
+    }
+
+    private void validate(ResourceLocation id) {
+        if (this.skills.length == 0) {
+            throw new IllegalStateException("No skills defined for skill node " + id + "!");
+        }
     }
 
     private static class Result implements FinishedSkillNode {
@@ -74,6 +73,11 @@ public class SkillNodeBuilder {
             this.parent = parent;
             this.skills = skills;
             this.lockingSkillNodes = lockingSkillNodes;
+        }
+
+        @Override
+        public ResourceLocation getID() {
+            return id;
         }
 
         @Override
@@ -91,11 +95,6 @@ public class SkillNodeBuilder {
                 }
                 json.add("locking", nodes);
             }
-        }
-
-        @Override
-        public ResourceLocation getID() {
-            return id;
         }
     }
 }

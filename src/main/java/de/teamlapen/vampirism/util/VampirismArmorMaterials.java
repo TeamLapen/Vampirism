@@ -52,6 +52,11 @@ public enum VampirismArmorMaterials implements IArmorMaterial {
         return this.enchantability;
     }
 
+    @Override
+    public float getKnockbackResistance() {
+        return this.knockbackResistance;
+    }
+
     @Nonnull
     @OnlyIn(Dist.CLIENT)
     public String getName() {
@@ -69,11 +74,6 @@ public enum VampirismArmorMaterials implements IArmorMaterial {
 
     public float getToughness() {
         return this.toughness;
-    }
-
-    @Override
-    public float getKnockbackResistance() {
-        return this.knockbackResistance;
     }
 
 }

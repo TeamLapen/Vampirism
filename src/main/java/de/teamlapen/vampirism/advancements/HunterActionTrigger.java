@@ -22,7 +22,7 @@ public class HunterActionTrigger extends AbstractCriterionTrigger<HunterActionTr
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "hunter_action");
     private final static Logger LOGGER = LogManager.getLogger();
 
-    public static Instance builder(Action action){
+    public static Instance builder(Action action) {
         return new Instance(action);
     }
 
@@ -30,6 +30,12 @@ public class HunterActionTrigger extends AbstractCriterionTrigger<HunterActionTr
     @Override
     public ResourceLocation getId() {
         return ID;
+    }
+
+    public void trigger(ServerPlayerEntity player, Action action) {
+        this.triggerListeners(player, (instance) -> {
+            return instance.test(action);
+        });
     }
 
     @Nonnull
@@ -50,12 +56,6 @@ public class HunterActionTrigger extends AbstractCriterionTrigger<HunterActionTr
         return new Instance(action);
     }
 
-    public void trigger(ServerPlayerEntity player, Action action) {
-        this.triggerListeners(player, (instance) -> {
-            return instance.test(action);
-        });
-    }
-
     public enum Action {
         STAKE, NONE
     }
@@ -69,16 +69,16 @@ public class HunterActionTrigger extends AbstractCriterionTrigger<HunterActionTr
             this.action = action;
         }
 
-        boolean test(Action action) {
-            return this.action == action;
-        }
-
         @Nonnull
         @Override
         public JsonObject serialize(@Nonnull ConditionArraySerializer serializer) {
             JsonObject json = super.serialize(serializer);
             json.addProperty("action", action.name());
             return json;
+        }
+
+        boolean test(Action action) {
+            return this.action == action;
         }
     }
 }

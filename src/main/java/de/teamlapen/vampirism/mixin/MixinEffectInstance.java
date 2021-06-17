@@ -17,19 +17,34 @@ import javax.annotation.Nullable;
 @Mixin(EffectInstance.class)
 public class MixinEffectInstance implements EffectInstanceWithSource {
 
-    @Shadow private int duration;
-    @Shadow @Nullable private EffectInstance hiddenEffects;
+    @Inject(method = "readInternal(Lnet/minecraft/potion/Effect;Lnet/minecraft/nbt/CompoundNBT;)Lnet/minecraft/potion/EffectInstance;", at = @At("RETURN"))
+    private static void readInternal_vampirism(Effect effect, CompoundNBT nbt, CallbackInfoReturnable<EffectInstance> cir) {
+        if (nbt.contains("source")) {
+            ((EffectInstanceWithSource) cir.getReturnValue()).setSource(new ResourceLocation(nbt.getString("source")));
+        }
+    }
+    @Shadow
+    private int duration;
+    @Shadow
+    @Nullable
+    private EffectInstance hiddenEffects;
     private ResourceLocation source;
 
     @Override
-    public void setSource(@Nullable ResourceLocation source) {
-        this.source = source;
+    @Nullable
+    public EffectInstance getHiddenEffect() {
+        return this.hiddenEffects;
     }
 
     @Override
     @Nullable
     public ResourceLocation getSource() {
         return this.source;
+    }
+
+    @Override
+    public void setSource(@Nullable ResourceLocation source) {
+        this.source = source;
     }
 
     @Override
@@ -42,33 +57,20 @@ public class MixinEffectInstance implements EffectInstanceWithSource {
         this.duration = 1;
     }
 
-    @Override
-    @Nullable
-    public EffectInstance getHiddenEffect() {
-        return this.hiddenEffects;
+    @Inject(method = "combine(Lnet/minecraft/potion/EffectInstance;)Z", at = @At(value = "JUMP", ordinal = 2))
+    private void copySource(EffectInstance other, CallbackInfoReturnable<Boolean> cir) {
+        this.source = ((EffectInstanceWithSource) other).getSource();
     }
 
     @Inject(method = "func_230117_a_(Lnet/minecraft/potion/EffectInstance;)V", at = @At("TAIL"))
-    private void copySource1(EffectInstance other, CallbackInfo ci){
+    private void copySource1(EffectInstance other, CallbackInfo ci) {
         this.source = ((EffectInstanceWithSource) other).getSource();
     }
 
     @Inject(method = "writeInternal(Lnet/minecraft/nbt/CompoundNBT;)V", at = @At("TAIL"))
-    private void writeInternal_vampirism(CompoundNBT nbt, CallbackInfo ci){
+    private void writeInternal_vampirism(CompoundNBT nbt, CallbackInfo ci) {
         if (source != null) {
             nbt.putString("source", source.toString());
         }
-    }
-
-    @Inject(method = "readInternal(Lnet/minecraft/potion/Effect;Lnet/minecraft/nbt/CompoundNBT;)Lnet/minecraft/potion/EffectInstance;", at = @At("RETURN"))
-    private static void readInternal_vampirism(Effect effect, CompoundNBT nbt, CallbackInfoReturnable<EffectInstance> cir){
-        if (nbt.contains("source")) {
-            ((EffectInstanceWithSource) cir.getReturnValue()).setSource(new ResourceLocation(nbt.getString("source")));
-        }
-    }
-
-    @Inject(method = "combine(Lnet/minecraft/potion/EffectInstance;)Z", at = @At(value = "JUMP", ordinal = 2))
-    private void copySource(EffectInstance other, CallbackInfoReturnable<Boolean> cir){
-        this.source = ((EffectInstanceWithSource) other).getSource();
     }
 }

@@ -21,8 +21,6 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
  */
 @ObjectHolder(REFERENCE.MODID)
 public class ModEffects {
-    private static final Logger LOGGER = LogManager.getLogger();
-
     public static final Effect sanguinare = getNull();
     public static final Effect thirst = getNull();
     public static final Effect saturation = getNull();
@@ -37,7 +35,7 @@ public class ModEffects {
     public static final Effect armor_regeneration = getNull();
     public static final Effect bad_omen_hunter = getNull();
     public static final Effect bad_omen_vampire = getNull();
-
+    private static final Logger LOGGER = LogManager.getLogger();
     private static Effect modded_night_vision;  //Substituted version
     private static Effect vanilla_night_vision; //Vanilla night vision instance
 
@@ -54,7 +52,7 @@ public class ModEffects {
         registry.register(new VampirismEffect("garlic", EffectType.HARMFUL, 0xFFFFFF));
         registry.register(new VampirismPoisonEffect("poison", 0x4E9331));
         registry.register(new FreezeEffect("freeze"));
-        registry.register(new VampirismEffect("neonatal", EffectType.NEUTRAL, 0xFFBBBB).addAttributesModifier(Attributes.ATTACK_DAMAGE, "377d132d-d091-43b2-8a8f-b940f9bc894c",  -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL).addAttributesModifier(Attributes.MOVEMENT_SPEED, "ad6d7def-46e2-485f-afba-39252767f114", -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismEffect("neonatal", EffectType.NEUTRAL, 0xFFBBBB).addAttributesModifier(Attributes.ATTACK_DAMAGE, "377d132d-d091-43b2-8a8f-b940f9bc894c", -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL).addAttributesModifier(Attributes.MOVEMENT_SPEED, "ad6d7def-46e2-485f-afba-39252767f114", -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL));
         registry.register(new OblivionEffect("oblivion", EffectType.NEUTRAL, 0x4E9331));
         registry.register(new VampirismEffect("armor_regeneration", EffectType.NEUTRAL, 0xD17642));
         registry.register(new BadOmenEffect(REFERENCE.MODID, REFERENCE.HUNTER_PLAYER_KEY) {

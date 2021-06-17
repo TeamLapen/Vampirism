@@ -18,20 +18,20 @@ public interface IItemWithTier {
     default void addTierInformation(List<ITextComponent> tooltip) {
         TIER t = getVampirismTier();
         if (t != TIER.NORMAL) {
-            TextFormatting format = t == TIER.ENHANCED?TextFormatting.YELLOW :TextFormatting.AQUA;
+            TextFormatting format = t == TIER.ENHANCED ? TextFormatting.YELLOW : TextFormatting.AQUA;
             tooltip.add(new TranslationTextComponent("item.vampirism.item.tier." + t.getString().toLowerCase()).mergeStyle(format));
         }
     }
 
     /**
-     * @return The tier of the item stack
-     */
-    TIER getVampirismTier();
-
-    /**
      * The registry name all tier items are derived from (basename+"_"+tier)
      */
     String getBaseRegName();
+
+    /**
+     * @return The tier of the item stack
+     */
+    TIER getVampirismTier();
 
     enum TIER implements IStringSerializable {
         NORMAL("normal"), ENHANCED("enhanced"), ULTIMATE("ultimate");
@@ -42,14 +42,13 @@ public interface IItemWithTier {
             this.name = name;
         }
 
+        public String getName() {
+            return this.getString();
+        }
 
         @Override
         public String getString() {
             return name;
-        }
-
-        public String getName() {
-            return this.getString();
         }
     }
 

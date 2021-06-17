@@ -34,6 +34,12 @@ import java.util.EnumSet;
  * Resets the task
  * <p>
  * Execute a one shot task or start executing a continuous task
+ * <p>
+ * Returns whether an in-progress EntityAIBase should continue executing
+ * <p>
+ * Resets the task
+ * <p>
+ * Execute a one shot task or start executing a continuous task
  *//*
 
 public class MoveIndoorsDayGoal extends Goal {

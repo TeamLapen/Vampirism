@@ -30,6 +30,14 @@ public class SelectMinionScreen extends Screen {
     }
 
     @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (!this.list.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
+            return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        }
+        return true;
+    }
+
+    @Override
     public void render(MatrixStack mStack, int p_render_1_, int p_render_2_, float p_render_3_) {
         renderBackground(mStack);
         super.render(mStack, p_render_1_, p_render_2_, p_render_3_);
@@ -50,13 +58,5 @@ public class SelectMinionScreen extends Screen {
             VampirismMod.dispatcher.sendToServer(new SelectMinionTaskPacket(selectedMinion, SelectMinionTaskPacket.RECALL));
         }
         this.closeScreen();
-    }
-
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (!this.list.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
-            return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
-        }
-        return true;
     }
 }

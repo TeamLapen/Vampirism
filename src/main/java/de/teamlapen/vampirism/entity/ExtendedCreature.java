@@ -201,7 +201,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             blood = 0;
             IConvertedCreature c = VampirismAPI.entityRegistry().convert(entity);
             if (c != null) {
-                UtilLib.replaceEntity(entity, (CreatureEntity)c);
+                UtilLib.replaceEntity(entity, (CreatureEntity) c);
             }
             return c;
         }
@@ -222,19 +222,19 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         blood -= amt;
         boolean killed = false;
         boolean converted = false;
-            if (blood == 0) {
-                if (canBecomeVampire && entity.getRNG().nextBoolean()) {
-                    if (VampirismConfig.SERVER.infectCreaturesSanguinare.get()) {
-                        SanguinareEffect.addRandom(entity, false);
-                    } else {
-                        makeVampire();
-                    }
-                    converted = true;
-
+        if (blood == 0) {
+            if (canBecomeVampire && entity.getRNG().nextBoolean()) {
+                if (VampirismConfig.SERVER.infectCreaturesSanguinare.get()) {
+                    SanguinareEffect.addRandom(entity, false);
                 } else {
-                    entity.attackEntityFrom(VReference.NO_BLOOD, 1000);
-                    killed = true;
+                    makeVampire();
                 }
+                converted = true;
+
+            } else {
+                entity.attackEntityFrom(VReference.NO_BLOOD, 1000);
+                killed = true;
+            }
         }
 
         this.sync();

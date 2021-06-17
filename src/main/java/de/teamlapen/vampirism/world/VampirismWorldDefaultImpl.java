@@ -21,6 +21,11 @@ public class VampirismWorldDefaultImpl implements IVampirismWorld {
     }
 
     @Override
+    public boolean isInsideArtificialVampireFogArea(BlockPos blockPos) {
+        return false;
+    }
+
+    @Override
     public int registerGarlicBlock(EnumStrength strength, ChunkPos... pos) {
         return 0;
     }
@@ -28,10 +33,5 @@ public class VampirismWorldDefaultImpl implements IVampirismWorld {
     @Override
     public void removeGarlicBlock(int id) {
 
-    }
-
-    @Override
-    public boolean isInsideArtificialVampireFogArea(BlockPos blockPos) {
-        return false;
     }
 }

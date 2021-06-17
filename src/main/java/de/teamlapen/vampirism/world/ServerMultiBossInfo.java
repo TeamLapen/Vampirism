@@ -22,14 +22,10 @@ public class ServerMultiBossInfo extends MultiBossInfo {
         super(MathHelper.getRandomUUID(), nameIn, overlayIn, entries);
     }
 
-    public Set<ServerPlayerEntity> getPlayers() {
-        return players;
-    }
-
-    @Override
-    public void setPercentage(Color color, float perc) {
-        super.setPercentage(color, perc);
-        this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_PCT);
+    public void addPlayer(ServerPlayerEntity player) {
+        if (this.players.add(player) && this.visible) {
+            VampirismMod.dispatcher.sendTo(new UpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation.ADD, this), player);
+        }
     }
 
     @Override
@@ -38,25 +34,25 @@ public class ServerMultiBossInfo extends MultiBossInfo {
         this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_PCT);
     }
 
-    @Override
-    public void setPercentage(float... perc) {
-        super.setPercentage(perc);
-        this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_PCT);
+    public Set<ServerPlayerEntity> getPlayers() {
+        return players;
     }
 
-    @Override
-    public void setOverlay(BossInfo.Overlay overlay) {
-        super.setOverlay(overlay);
-        this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_STYLE);
+    public boolean isVisible() {
+        return visible;
     }
 
-    public void addPlayer(ServerPlayerEntity player){
-        if (this.players.add(player) && this.visible) {
-            VampirismMod.dispatcher.sendTo(new UpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation.ADD, this), player);
+    public void setVisible(boolean visible) {
+        if (this.visible != visible) {
+            this.visible = visible;
+
+            for (ServerPlayerEntity player : this.players) {
+                VampirismMod.dispatcher.sendTo(new UpdateMultiBossInfoPacket(visible ? SUpdateBossInfoPacket.Operation.ADD : SUpdateBossInfoPacket.Operation.REMOVE, this), player);
+            }
         }
     }
 
-    public void removePlayer(ServerPlayerEntity player){
+    public void removePlayer(ServerPlayerEntity player) {
         if (this.players.remove(player) && this.visible) {
             VampirismMod.dispatcher.sendTo(new UpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation.REMOVE, this), player);
         }
@@ -74,26 +70,30 @@ public class ServerMultiBossInfo extends MultiBossInfo {
         this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_NAME);
     }
 
+    @Override
+    public void setOverlay(BossInfo.Overlay overlay) {
+        super.setOverlay(overlay);
+        this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_STYLE);
+    }
+
+    @Override
+    public void setPercentage(Color color, float perc) {
+        super.setPercentage(color, perc);
+        this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_PCT);
+    }
+
+    @Override
+    public void setPercentage(float... perc) {
+        super.setPercentage(perc);
+        this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_PCT);
+    }
+
     private void sendUpdate(SUpdateBossInfoPacket.Operation operation) {
-        if(this.visible) {
+        if (this.visible) {
             UpdateMultiBossInfoPacket packet = new UpdateMultiBossInfoPacket(operation, this);
 
             for (ServerPlayerEntity player : this.players) {
                 VampirismMod.dispatcher.sendTo(packet, player);
-            }
-        }
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(boolean visible) {
-        if (this.visible != visible) {
-            this.visible = visible;
-
-            for (ServerPlayerEntity player : this.players) {
-                VampirismMod.dispatcher.sendTo(new UpdateMultiBossInfoPacket(visible? SUpdateBossInfoPacket.Operation.ADD: SUpdateBossInfoPacket.Operation.REMOVE, this), player);
             }
         }
     }

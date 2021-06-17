@@ -33,11 +33,11 @@ import java.util.List;
  */
 public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRecipe> {
 
+    private final static ResourceLocation location = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table_clean.png");
+    private static final ItemStack lavaStack = new ItemStack(Items.LAVA_BUCKET);
     private final String localizedName;
     private final IDrawable background;
     private final IDrawable icon;
-    private final static ResourceLocation location = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table_clean.png");
-    private static final ItemStack lavaStack = new ItemStack(Items.LAVA_BUCKET);
 
 
     WeaponTableRecipeCategory(IGuiHelper guiHelper) {

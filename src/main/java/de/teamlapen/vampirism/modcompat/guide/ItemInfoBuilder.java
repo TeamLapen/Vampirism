@@ -32,13 +32,6 @@ public class ItemInfoBuilder {
         return new ItemInfoBuilder(Ingredient.fromItems(items), new ItemStack(i0), name, false);
     }
 
-    private final boolean block;
-    private String name;
-    private Object[] formats = new Object[0];
-    private Object[] links = null;
-    private boolean customName;
-    private final List<IPage> additionalPages = new ArrayList<>();
-
     /**
      * @param block Whether to use "block" or "item" translation keys
      */
@@ -50,18 +43,22 @@ public class ItemInfoBuilder {
         return new ItemInfoBuilder(Ingredient.fromStacks(stacks), i0, name, block);
     }
 
-    @Nonnull
-    private List<ResourceLocation> recipes = Collections.emptyList();
-
     public static ItemInfoBuilder create(Block... blocks) {
         assert blocks.length > 0;
         Block i0 = blocks[0];
         String name = Helper.getIDSafe(i0).getPath();
         return new ItemInfoBuilder(Ingredient.fromItems(blocks), new ItemStack(i0), name, true);
     }
-
+    private final boolean block;
+    private final List<IPage> additionalPages = new ArrayList<>();
     private final Ingredient ingredient;
     private final ItemStack mainStack;
+    private String name;
+    private Object[] formats = new Object[0];
+    private Object[] links = null;
+    private boolean customName;
+    @Nonnull
+    private List<ResourceLocation> recipes = Collections.emptyList();
     @Nullable
     private ItemStack[] brewingStacks;
 
@@ -83,28 +80,6 @@ public class ItemInfoBuilder {
      */
     public ItemInfoBuilder brewingItems(Item... brewableItems) {
         this.brewingStacks = Arrays.stream(brewableItems).map(ItemStack::new).toArray(ItemStack[]::new);
-        return this;
-    }
-
-    /**
-     * Add recipes
-     *
-     * @param ids the ids of the recipes to be displayeed
-     */
-    public ItemInfoBuilder recipes(ResourceLocation... ids) {
-        this.recipes = Arrays.asList(ids);
-        return this;
-    }
-
-    /**
-     * Add recipes
-     * String ids are prefixed with vampirism
-     *
-     * @param vampIDs without namespace prefix
-     * @return this
-     */
-    public ItemInfoBuilder recipes(String... vampIDs) {
-        this.recipes = Arrays.stream(vampIDs).map(id -> new ResourceLocation("vampirism", id)).collect(Collectors.toList());
         return this;
     }
 
@@ -142,12 +117,6 @@ public class ItemInfoBuilder {
         entries.put(new ResourceLocation(base), new EntryItemStack(pages, new TranslationTextComponent(customName ? base : mainStack.getTranslationKey()), mainStack));
     }
 
-    public ItemInfoBuilder customPages(IPage... additionalPages) {
-        this.additionalPages.addAll(Arrays.asList(additionalPages));
-        return this;
-    }
-
-
     /**
      * Use a custom name (guide.vampirism....) instead of the translated Item/Block name
      *
@@ -155,6 +124,33 @@ public class ItemInfoBuilder {
      */
     public ItemInfoBuilder customName() {
         customName = true;
+        return this;
+    }
+
+    public ItemInfoBuilder customPages(IPage... additionalPages) {
+        this.additionalPages.addAll(Arrays.asList(additionalPages));
+        return this;
+    }
+
+    /**
+     * Add recipes
+     *
+     * @param ids the ids of the recipes to be displayeed
+     */
+    public ItemInfoBuilder recipes(ResourceLocation... ids) {
+        this.recipes = Arrays.asList(ids);
+        return this;
+    }
+
+    /**
+     * Add recipes
+     * String ids are prefixed with vampirism
+     *
+     * @param vampIDs without namespace prefix
+     * @return this
+     */
+    public ItemInfoBuilder recipes(String... vampIDs) {
+        this.recipes = Arrays.stream(vampIDs).map(id -> new ResourceLocation("vampirism", id)).collect(Collectors.toList());
         return this;
     }
 

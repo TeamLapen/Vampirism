@@ -62,6 +62,9 @@ public class SkillsScreen extends Screen {
     private final List<SkillNode> skillNodes = new ArrayList<>();
     private final int display_width = 256;
     private final int display_height = 202;
+    @Nullable
+    private final Screen backScreen;
+    private final Map<ISkill, List<ITextComponent>> skillToolTipsCache = new HashMap<>();
     private int area_min_x = 0;
     private int area_max_x = 0;
     private int area_max_y;
@@ -79,12 +82,7 @@ public class SkillsScreen extends Screen {
     @Nullable
     private ITextComponent lordTitle;
     private int lordLevel;
-    @Nullable
-    private final Screen backScreen;
-
     private Button resetSkills;
-
-    private final Map<ISkill, List<ITextComponent>> skillToolTipsCache = new HashMap<>();
 
     public SkillsScreen() {
         this(null);
@@ -95,81 +93,6 @@ public class SkillsScreen extends Screen {
         this.width = display_width;
         this.height = display_height;
         this.backScreen = backScreen;
-    }
-
-    @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        if (!display) {
-            super.render(stack, mouseX, mouseY, partialTicks);
-            return;
-        }
-
-        this.renderBackground(stack);
-
-
-        this.drawSkills(stack, mouseX, mouseY, partialTicks);
-
-        this.drawDisableText(stack);
-
-        this.drawTitle(stack);
-    }
-
-    @Override
-    public void tick() {
-        if (!this.minecraft.player.isAlive()) {
-            this.minecraft.player.closeScreen();
-        }
-    }
-
-    @Override
-    public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
-        zoomOut += p_mouseScrolled_5_ > 0 ? -0.25 : 0.25;
-        zoomOut = MathHelper.clamp(this.zoomOut, 1.0F, 2.0F);
-        checkDisplay();
-        return true;
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        boolean retur = super.mouseClicked(mouseX, mouseY, mouseButton);
-        if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT && selected != null) {
-            this.unlockSkill();
-            return true;
-        }
-        return retur;
-    }
-
-    @Override
-    public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
-        displayY -= p_mouseDragged_8_;
-        displayX -= p_mouseDragged_6_;
-        checkDisplay();
-        return true;
-    }
-
-    @Override
-    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-        if (p_keyPressed_1_ == 256 || ModKeys.getKeyBinding(ModKeys.KEY.SKILL).getKey().getKeyCode() == p_keyPressed_1_) {
-            this.minecraft.displayGuiScreen(null);
-            this.minecraft.setGameFocused(true);
-            return true;
-        } else {
-            super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
-        }
-        return false;
-    }
-
-    private void unlockSkill(){
-        if (canUnlockSkill()) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, selected.getRegistryName().toString()));
-            playSoundEffect(SoundEvents.ENTITY_PLAYER_LEVELUP, 0.7F);
-        } else {
-            playSoundEffect(SoundEvents.BLOCK_NOTE_BLOCK_BASS, 0.5F);
-        }
-    }
-
-    private boolean canUnlockSkill(){
-        return skillHandler.canSkillBeEnabled(selected) == ISkillHandler.Result.OK;
     }
 
     @Override
@@ -233,13 +156,80 @@ public class SkillsScreen extends Screen {
         return false;
     }
 
+    @Override
+    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
+        if (p_keyPressed_1_ == 256 || ModKeys.getKeyBinding(ModKeys.KEY.SKILL).getKey().getKeyCode() == p_keyPressed_1_) {
+            this.minecraft.displayGuiScreen(null);
+            this.minecraft.setGameFocused(true);
+            return true;
+        } else {
+            super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        boolean retur = super.mouseClicked(mouseX, mouseY, mouseButton);
+        if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT && selected != null) {
+            this.unlockSkill();
+            return true;
+        }
+        return retur;
+    }
+
+    @Override
+    public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
+        displayY -= p_mouseDragged_8_;
+        displayX -= p_mouseDragged_6_;
+        checkDisplay();
+        return true;
+    }
+
+    @Override
+    public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
+        zoomOut += p_mouseScrolled_5_ > 0 ? -0.25 : 0.25;
+        zoomOut = MathHelper.clamp(this.zoomOut, 1.0F, 2.0F);
+        checkDisplay();
+        return true;
+    }
+
+    @Override
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        if (!display) {
+            super.render(stack, mouseX, mouseY, partialTicks);
+            return;
+        }
+
+        this.renderBackground(stack);
+
+
+        this.drawSkills(stack, mouseX, mouseY, partialTicks);
+
+        this.drawDisableText(stack);
+
+        this.drawTitle(stack);
+    }
+
+    public void resetToolTipCache() {
+        skillToolTipsCache.clear();
+    }
+
+    @Override
+    public void tick() {
+        if (!this.minecraft.player.isAlive()) {
+            this.minecraft.player.closeScreen();
+        }
+    }
+
     protected void drawTitle(MatrixStack stack) {
         ITextComponent title;
         if (lordTitle != null) {
             title = lordTitle.deepCopy().appendString(" (" + lordLevel + ")");
         } else {
             title = new TranslationTextComponent("text.vampirism.skills.gui_title");
-        }        int x = (this.width - display_width) / 2;
+        }
+        int x = (this.width - display_width) / 2;
         int y = (this.height - display_height) / 2;
         this.font.func_238407_a_(stack, title.func_241878_f(), x + 15, y + 5, 0xFFFFFFFF);
         IFormattableTextComponent points = new TranslationTextComponent("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
@@ -265,9 +255,13 @@ public class SkillsScreen extends Screen {
 
     }
 
+    private boolean canUnlockSkill() {
+        return skillHandler.canSkillBeEnabled(selected) == ISkillHandler.Result.OK;
+    }
+
     private void checkDisplay() {
-        displayY = MathHelper.clamp(displayY, -20 / zoomOut, (this.displayYHeight - 20)  / zoomOut);
-        displayX = MathHelper.clamp(displayX, (-400 - displayXWidth)  / zoomOut + (zoomOut - 2.0F) * (-1) * 250, (-400 + displayXWidth) / zoomOut + (zoomOut - 2.0F) * (-1) * 250);
+        displayY = MathHelper.clamp(displayY, -20 / zoomOut, (this.displayYHeight - 20) / zoomOut);
+        displayX = MathHelper.clamp(displayX, (-400 - displayXWidth) / zoomOut + (zoomOut - 2.0F) * (-1) * 250, (-400 + displayXWidth) / zoomOut + (zoomOut - 2.0F) * (-1) * 250);
         displayXNew = displayX;
         displayYNew = displayY;
     }
@@ -275,9 +269,9 @@ public class SkillsScreen extends Screen {
     private void drawDisableText(MatrixStack mStack) {
         if (this.minecraft.player.getActivePotionEffect(ModEffects.oblivion) == null) return;
         int tooltipX = (this.width - this.display_width) / 2 + 19 + 3;
-        int tooltipY = (this.height - this.display_height) / 2 + 4+19;
-        int tooltipTextWidth = this.display_width -19-19-6;
-        int tooltipHeight =17;
+        int tooltipY = (this.height - this.display_height) / 2 + 4 + 19;
+        int tooltipTextWidth = this.display_width - 19 - 19 - 6;
+        int tooltipHeight = 17;
         int backgroundColor = 0xF0aa0808;//0xF0550404;;
         int borderColorStart = 0x505f0c0c;
         int borderColorEnd = (borderColorStart & 0xFEFEFE) >> 1 | borderColorStart & 0xFF000000;
@@ -303,7 +297,7 @@ public class SkillsScreen extends Screen {
         IReorderingProcessor s = LanguageMap.getInstance().func_241870_a(f);
 
 
-        font.func_238416_a_(s, (float)tooltipX + (tooltipTextWidth/2) - this.font.getStringPropertyWidth(f)/2, (float)tooltipY + (tooltipHeight/2) - 3, -1, true, mat, renderType, false, 0, 15728880);
+        font.func_238416_a_(s, (float) tooltipX + (tooltipTextWidth / 2) - this.font.getStringPropertyWidth(f) / 2, (float) tooltipY + (tooltipHeight / 2) - 3, -1, true, mat, renderType, false, 0, 15728880);
 
         renderType.finish();
         mStack.pop();
@@ -522,9 +516,9 @@ public class SkillsScreen extends Screen {
 
         //Don't render skill tooltip when hovering over button
         for (Widget button : this.buttons) {
-            if(button.isHovered()){
-                newSelected=null;
-                newSelectedNode=null;
+            if (button.isHovered()) {
+                newSelected = null;
+                newSelectedNode = null;
             }
         }
         //Draw information for selected skill
@@ -606,8 +600,13 @@ public class SkillsScreen extends Screen {
         minecraft.getSoundHandler().play(SimpleSound.master(event, 1.0F));
     }
 
-    public void resetToolTipCache() {
-        skillToolTipsCache.clear();
+    private void unlockSkill() {
+        if (canUnlockSkill()) {
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, selected.getRegistryName().toString()));
+            playSoundEffect(SoundEvents.ENTITY_PLAYER_LEVELUP, 0.7F);
+        } else {
+            playSoundEffect(SoundEvents.BLOCK_NOTE_BLOCK_BASS, 0.5F);
+        }
     }
 
 }

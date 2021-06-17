@@ -15,7 +15,7 @@ public class HunterHatModel extends VampirismArmorModel {
 
 
     public HunterHatModel(int type) {
-        super( 64, 64);
+        super(64, 64);
         if (type == 1) {
             hatTop = new ModelRenderer(this, 0, 31);
             hatTop.addBox(-4F, -14F, -4F, 8, 5, 8);
@@ -45,14 +45,14 @@ public class HunterHatModel extends VampirismArmorModel {
     }
 
     @Override
-    protected Iterable<ModelRenderer> getHeadModels() {
-        return ImmutableList.of(hatTop, hatRim);
-    }
-
-    @Override
     public void setVisible(boolean invisible) {
         super.setVisible(false);
         hatRim.showModel = true;
         hatTop.showModel = true;
+    }
+
+    @Override
+    protected Iterable<ModelRenderer> getHeadModels() {
+        return ImmutableList.of(hatTop, hatRim);
     }
 }

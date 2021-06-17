@@ -25,16 +25,16 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
     /**
      * Consider using cached value instead {@link HunterPlayerSpecialAttribute#fullHunterCoat}
      * Checks if the player has this armor fully equipped
+     *
      * @return if fully equipped the tier of the worst item, otherwise null
      */
     @Nullable
     public static TIER isFullyEquipped(PlayerEntity player) {
-        int minLevel  = 1000 ;
+        int minLevel = 1000;
         for (ItemStack stack : player.inventory.armorInventory) {
             if (stack.isEmpty() || !(stack.getItem() instanceof HunterCoatItem)) {
                 return null;
-            }
-            else{
+            } else {
                 minLevel = Math.min(minLevel, ((HunterCoatItem) stack.getItem()).getVampirismTier().ordinal());
             }
         }
@@ -60,11 +60,6 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
     }
 
     @Override
-    public String getBaseRegName() {
-        return baseRegName;
-    }
-
-    @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
         switch (getVampirismTier()) {
             case ENHANCED:
@@ -75,6 +70,11 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
                 return getTextureLocation("hunter_coat", slot, type);
         }
 
+    }
+
+    @Override
+    public String getBaseRegName() {
+        return baseRegName;
     }
 
     @Override

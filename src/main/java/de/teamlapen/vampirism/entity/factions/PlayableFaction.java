@@ -22,8 +22,8 @@ public class PlayableFaction<T extends IFactionPlayer<?>> extends Faction<T> imp
     private final int highestLevel;
     private final int highestLordLevel;
     private final NonNullSupplier<Capability<T>> playerCapabilitySupplier;
-    private boolean renderLevel = true;
     private final BiFunction<Integer, Boolean, ITextComponent> lordTitleFunction;
+    private boolean renderLevel = true;
 
     PlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull BiFunction<Integer, Boolean, ITextComponent> lordTitleFunction, @Nonnull IVillageFactionData villageFactionData) {
         super(id, entityInterface, color, hostileTowardsNeutral, villageFactionData);
@@ -39,10 +39,21 @@ public class PlayableFaction<T extends IFactionPlayer<?>> extends Faction<T> imp
     }
 
     @Override
+    public int getHighestLordLevel() {
+        return highestLordLevel;
+    }
+
+    @Override
     public int getHighestReachableLevel() {
         return highestLevel;
     }
 
+    @Nonnull
+    @Override
+    public ITextComponent getLordTitle(int level, boolean female) {
+        assert level <= highestLordLevel;
+        return lordTitleFunction.apply(level, female);
+    }
 
     @Override
     public LazyOptional<T> getPlayerCapability(PlayerEntity player) {
@@ -61,21 +72,9 @@ public class PlayableFaction<T extends IFactionPlayer<?>> extends Faction<T> imp
     }
 
     @Override
-    public int getHighestLordLevel() {
-        return highestLordLevel;
-    }
-
-    @Override
     public String toString() {
         return "PlayableFaction{" +
                 "id='" + id + '\'' +
                 '}';
-    }
-
-    @Nonnull
-    @Override
-    public ITextComponent getLordTitle(int level, boolean female) {
-        assert level <= highestLordLevel;
-        return lordTitleFunction.apply(level, female);
     }
 }

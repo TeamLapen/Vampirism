@@ -15,52 +15,6 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public class UpdateMultiBossInfoPacket implements IMessage {
-    private final UUID uniqueId;
-    private final SUpdateBossInfoPacket.Operation operation;
-    private ITextComponent name;
-    private BossInfo.Overlay overlay;
-    protected List<Color> colors;
-    protected Map<Color,Float> entries;
-
-    public UpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation operation, MultiBossInfo data) {
-        this.uniqueId = data.getUniqueId();
-        this.operation = operation;
-        this.name = data.getName();
-        this.colors = data.getColors();
-        this.entries = data.getEntries();
-        this.overlay = data.getOverlay();
-    }
-
-    private UpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation operation, UUID uuid) {
-        this.uniqueId = uuid;
-        this.operation = operation;
-        this.entries = new LinkedHashMap<>();
-    }
-
-    public SUpdateBossInfoPacket.Operation getOperation() {
-        return operation;
-    }
-
-    public UUID getUniqueId() {
-        return uniqueId;
-    }
-
-    public ITextComponent getName() {
-        return name;
-    }
-
-    public Map<Color, Float> getEntries() {
-        return entries;
-    }
-
-    public List<Color> getColors() {
-        return colors;
-    }
-
-    public BossInfo.Overlay getOverlay() {
-        return overlay;
-    }
-
     static void encode(UpdateMultiBossInfoPacket msg, PacketBuffer buf) {
         buf.writeUniqueId(msg.uniqueId);
         buf.writeEnumValue(msg.operation);
@@ -101,11 +55,11 @@ public class UpdateMultiBossInfoPacket implements IMessage {
                 packet.colors = colors;
                 packet.overlay = buf.readEnumValue(BossInfo.Overlay.class);
             case UPDATE_PCT:
-                Map<Color,Float> entries = new LinkedHashMap<>();
+                Map<Color, Float> entries = new LinkedHashMap<>();
                 int size2 = buf.readVarInt();
                 for (int i = 0; i < size2; i++) {
                     Color color = new Color(buf.readVarInt(), true);
-                    float perc =buf.readFloat();
+                    float perc = buf.readFloat();
                     entries.put(color, perc);
                 }
                 packet.entries = entries;
@@ -124,6 +78,51 @@ public class UpdateMultiBossInfoPacket implements IMessage {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleUpdateMultiBossInfoPacket(msg));
         ctx.setPacketHandled(true);
+    }
+    private final UUID uniqueId;
+    private final SUpdateBossInfoPacket.Operation operation;
+    protected List<Color> colors;
+    protected Map<Color, Float> entries;
+    private ITextComponent name;
+    private BossInfo.Overlay overlay;
+
+    public UpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation operation, MultiBossInfo data) {
+        this.uniqueId = data.getUniqueId();
+        this.operation = operation;
+        this.name = data.getName();
+        this.colors = data.getColors();
+        this.entries = data.getEntries();
+        this.overlay = data.getOverlay();
+    }
+
+    private UpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation operation, UUID uuid) {
+        this.uniqueId = uuid;
+        this.operation = operation;
+        this.entries = new LinkedHashMap<>();
+    }
+
+    public List<Color> getColors() {
+        return colors;
+    }
+
+    public Map<Color, Float> getEntries() {
+        return entries;
+    }
+
+    public ITextComponent getName() {
+        return name;
+    }
+
+    public SUpdateBossInfoPacket.Operation getOperation() {
+        return operation;
+    }
+
+    public BossInfo.Overlay getOverlay() {
+        return overlay;
+    }
+
+    public UUID getUniqueId() {
+        return uniqueId;
     }
 
 

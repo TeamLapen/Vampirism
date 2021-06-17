@@ -53,6 +53,15 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
         this.setRegistryName(REFERENCE.MODID, regName);
     }
 
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void animateTick(BlockState state, World world, BlockPos pos, Random rng) {
+        super.animateTick(state, world, pos, rng);
+        if (state.get(LIQUID) == 2) {
+            world.playSound(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, ModSounds.boiling, SoundCategory.BLOCKS, 0.05F, 1, false);
+        }
+    }
+
     @Nullable
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
@@ -84,15 +93,6 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
         if (tile instanceof AlchemicalCauldronTileEntity) {
             playerEntity.openContainer((INamedContainerProvider) tile);
             playerEntity.addStat(ModStats.interact_alchemical_cauldron);
-        }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void animateTick(BlockState state, World world, BlockPos pos, Random rng) {
-        super.animateTick(state, world, pos, rng);
-        if (state.get(LIQUID) == 2) {
-            world.playSound(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, ModSounds.boiling, SoundCategory.BLOCKS, 0.05F, 1, false);
         }
     }
 }

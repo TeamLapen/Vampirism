@@ -54,7 +54,7 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         PlayerEntity player = VampirismMod.proxy.getClientPlayer();
-        addFactionPoisonousToolTip(stack,worldIn, tooltip, flagIn, player);
+        addFactionPoisonousToolTip(stack, worldIn, tooltip, flagIn, player);
     }
 
     @Override
@@ -64,9 +64,15 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
             map.put(Attributes.ARMOR, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor modifier", this.getDamageReduction(slot.getIndex(), stack), AttributeModifier.Operation.ADDITION));
             map.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor toughness", this.getToughness(slot.getIndex(), stack), AttributeModifier.Operation.ADDITION));
             if (this.knockbackResistance > 0)
-                map.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor knockback resistance", (double) this.knockbackResistance, AttributeModifier.Operation.ADDITION));
+                map.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor knockback resistance", this.knockbackResistance, AttributeModifier.Operation.ADDITION));
         }
         return map;
+    }
+
+    @Override
+    @Nonnull
+    public IFaction<?> getExclusiveFaction() {
+        return VReference.HUNTER_FACTION;
     }
 
     @Override
@@ -77,12 +83,6 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
                 player.addPotionEffect(new EffectInstance(ModEffects.poison, 20, 1));
             }
         }
-    }
-
-    @Override
-    @Nonnull
-    public IFaction<?> getExclusiveFaction() {
-        return VReference.HUNTER_FACTION;
     }
 
     /**

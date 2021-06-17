@@ -58,15 +58,22 @@ public class VampirismJEIPlugin implements IModPlugin {
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-        registration.addRecipeClickArea(AlchemicalCauldronScreen.class,80,34,20,15,ALCHEMICAL_CAULDRON_RECIPE_UID);
+        registration.addRecipeClickArea(AlchemicalCauldronScreen.class, 80, 34, 20, 15, ALCHEMICAL_CAULDRON_RECIPE_UID);
         registration.addRecipeClickArea(WeaponTableScreen.class, 114, 46, 20, 15, WEAPON_TABLE_RECIPE_ID);
+    }
+
+    @Override
+    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+        registration.addRecipeTransferHandler(AlchemicalCauldronContainer.class, ALCHEMICAL_CAULDRON_RECIPE_UID, 0, 2, 4, 36);
+        registration.addRecipeTransferHandler(AlchemicalCauldronContainer.class, VanillaRecipeCategoryUid.FUEL, 3, 1, 4, 36);
+        registration.addRecipeTransferHandler(WeaponTableContainer.class, WEAPON_TABLE_RECIPE_ID, 1, 16, 17, 36);
     }
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         ClientWorld world = Minecraft.getInstance().world;
         RecipeManager recipeManager = world.getRecipeManager();
-        registration.addRecipes(recipeManager.getRecipes(ModRecipes.ALCHEMICAL_CAULDRON_TYPE).values(),ALCHEMICAL_CAULDRON_RECIPE_UID);
+        registration.addRecipes(recipeManager.getRecipes(ModRecipes.ALCHEMICAL_CAULDRON_TYPE).values(), ALCHEMICAL_CAULDRON_RECIPE_UID);
         registration.addRecipes(recipeManager.getRecipes(ModRecipes.WEAPONTABLE_CRAFTING_TYPE).values(), WEAPON_TABLE_RECIPE_ID);
         registration.addRecipes(TaskUtil.getItemRewardTasks(), TASK_RECIPE_UID);
         registration.addRecipes(VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()), POTION_RECIPE_UID);
@@ -74,18 +81,11 @@ public class VampirismJEIPlugin implements IModPlugin {
     }
 
     @Override
-    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-        registration.addRecipeTransferHandler(AlchemicalCauldronContainer.class,ALCHEMICAL_CAULDRON_RECIPE_UID,0,2,4,36);
-        registration.addRecipeTransferHandler(AlchemicalCauldronContainer.class, VanillaRecipeCategoryUid.FUEL,3,1,4,36);
-        registration.addRecipeTransferHandler(WeaponTableContainer.class, WEAPON_TABLE_RECIPE_ID, 1, 16, 17, 36);
-    }
-
-    @Override
     public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
 
     }
 
-    private Collection<Object> getRepairRecipes(IVanillaRecipeFactory factory){
+    private Collection<Object> getRepairRecipes(IVanillaRecipeFactory factory) {
         List<Object> recipes = new ArrayList<>();
         Map<Ingredient, List<Item>> items = Maps.newHashMap();
         Ingredient ironIngredient = ItemTier.IRON.getRepairMaterial();

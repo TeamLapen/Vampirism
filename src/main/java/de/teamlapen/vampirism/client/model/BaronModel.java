@@ -98,20 +98,6 @@ public class BaronModel extends AgeableModel<VampireBaronEntity> implements IHas
         return head;
     }
 
-
-
-    @Override
-    protected Iterable<ModelRenderer> getHeadParts() {
-        return ImmutableList.of(head);
-    }
-
-    @Override
-    protected Iterable<ModelRenderer> getBodyParts() {
-        return ImmutableList.of(this.headOverlay, this.body, this.bodyOverlay, this.armLeftOverlay, this.armRightOverlay,  this.legLeftOverlay, this.legRightOverlay);
-    }
-
-
-
     @Override
     public void setRotationAngles(VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.head.rotateAngleY = netHeadYaw * ((float) Math.PI / 180f);
@@ -220,6 +206,16 @@ public class BaronModel extends AgeableModel<VampireBaronEntity> implements IHas
 
     protected ModelRenderer getArmForSide(HandSide side) {
         return side == HandSide.LEFT ? this.armLeft : this.armRight;
+    }
+
+    @Override
+    protected Iterable<ModelRenderer> getBodyParts() {
+        return ImmutableList.of(this.headOverlay, this.body, this.bodyOverlay, this.armLeftOverlay, this.armRightOverlay, this.legLeftOverlay, this.legRightOverlay);
+    }
+
+    @Override
+    protected Iterable<ModelRenderer> getHeadParts() {
+        return ImmutableList.of(head);
     }
 
     protected HandSide getSwingingSide(VampireBaronEntity entity) {

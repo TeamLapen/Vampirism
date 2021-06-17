@@ -17,18 +17,16 @@ public interface IVillageCaptureEntity extends IFactionEntity {
     void defendVillage(ICaptureAttributes totem);
 
     /**
-     * @return The village area that is target of the capture
-     */
-    @Nullable
-    AxisAlignedBB getTargetVillageArea();
-
-    /**
      * @return A (cached) instance of the village the entity is currently in if it is of the same faction or null otherwise
      */
     @Nullable
     ICaptureAttributes getCaptureInfo();
 
-    boolean isDefendingVillage();
+    /**
+     * @return The village area that is target of the capture
+     */
+    @Nullable
+    AxisAlignedBB getTargetVillageArea();
 
     /**
      * if this village is
@@ -36,6 +34,8 @@ public interface IVillageCaptureEntity extends IFactionEntity {
      * @return
      */
     boolean isAttackingVillage();
+
+    boolean isDefendingVillage();
 
     /**
      * Called when the entity is within a village whre a capture progress has been stopped.

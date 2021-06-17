@@ -34,27 +34,6 @@ public class FirePlaceBlock extends VampirismBlock {
 
     }
 
-
-    @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return shape;
-    }
-
-
-    @Override
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos.down()).isSolidSide(worldIn, pos.down(), Direction.UP);
-    }
-
-    @Override
-    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
-        if (!isValidPosition(state, world, pos)) {
-            if (world instanceof IWorldWriter) {
-                ((IWorldWriter) world).destroyBlock(pos, true);
-            }
-        }
-    }
-
     @Override
     @OnlyIn(Dist.CLIENT)
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
@@ -70,5 +49,24 @@ public class FirePlaceBlock extends VampirismBlock {
             worldIn.addParticle(ParticleTypes.LARGE_SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
         }
 
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return shape;
+    }
+
+    @Override
+    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        return worldIn.getBlockState(pos.down()).isSolidSide(worldIn, pos.down(), Direction.UP);
+    }
+
+    @Override
+    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+        if (!isValidPosition(state, world, pos)) {
+            if (world instanceof IWorldWriter) {
+                ((IWorldWriter) world).destroyBlock(pos, true);
+            }
+        }
     }
 }

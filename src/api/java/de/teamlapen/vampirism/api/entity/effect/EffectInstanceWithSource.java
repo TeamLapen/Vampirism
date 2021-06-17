@@ -11,16 +11,23 @@ import javax.annotation.Nullable;
 public interface EffectInstanceWithSource {
 
     /**
-     * sets the source of this effect instance
-     * @param source the id of the source
+     * @return the hidden effect of the effect instance
      */
-    void setSource(@Nullable ResourceLocation source);
+    @Nullable
+    EffectInstance getHiddenEffect();
 
     /**
      * @return the source of this effect instance
      */
     @Nullable
     ResourceLocation getSource();
+
+    /**
+     * sets the source of this effect instance
+     *
+     * @param source the id of the source
+     */
+    void setSource(@Nullable ResourceLocation source);
 
     /**
      * @return if this effect instance has a defined source
@@ -32,10 +39,4 @@ public interface EffectInstanceWithSource {
      * which means that the effect will be removed in the next tick and the next hidden effect is applied
      */
     void removeEffect();
-
-    /**
-     * @return the hidden effect of the effect instance
-     */
-    @Nullable
-    EffectInstance getHiddenEffect();
 }

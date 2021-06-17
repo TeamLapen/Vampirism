@@ -15,10 +15,10 @@ class ClientHelper {
      * @return The client world if it matches the given dimension key
      */
     @Nullable
-    static World getAndCheckWorld(RegistryKey<World> dimension){
+    static World getAndCheckWorld(RegistryKey<World> dimension) {
         World clientWorld = Minecraft.getInstance().world;
-        if(clientWorld!=null){
-            if(clientWorld.getDimensionKey().equals(dimension)){
+        if (clientWorld != null) {
+            if (clientWorld.getDimensionKey().equals(dimension)) {
                 return clientWorld;
             }
         }

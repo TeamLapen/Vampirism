@@ -35,7 +35,7 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
     protected float directDamage = 4;
     protected float indirectDamage = 2;
     private boolean initialNoClip = false;
-    private float motionFactor =  0.97f;
+    private float motionFactor = 0.97f;
     private boolean excludeShooter = false;
     private boolean gothrough;
     private int maxTicks = 40;
@@ -59,17 +59,14 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
         super(ModEntities.dark_blood_projectile, x, y, z, accelX, accelY, accelZ, worldIn);
     }
 
-    public void setGothrough(boolean gothrough) {
-        this.gothrough = gothrough;
-    }
-
-    public void setMaxTicks(int maxTicks) {
-        this.maxTicks = maxTicks;
-    }
-
     @Override
     public boolean attackEntityFrom(DamageSource source, float amount) {
         return false;
+    }
+
+    @Override
+    public IPacket<?> createSpawnPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     /**
@@ -77,6 +74,37 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
      */
     public void excludeShooter() {
         this.excludeShooter = true;
+    }
+
+    /**
+     * Deal area of effect damage, spawn particles and remove entity
+     *
+     * @param distanceSq    the squared distance
+     * @param excludeEntity If given this will not receive AOE damage
+     */
+    public void explode(int distanceSq, @Nullable Entity excludeEntity) {
+        @Nullable Entity shootingEntity = func_234616_v_();
+        List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(distanceSq / 2d), EntityPredicates.IS_ALIVE.and(EntityPredicates.NOT_SPECTATING));
+        for (Entity e : list) {
+            if ((excludeShooter && e == shootingEntity) || e == excludeEntity) {
+                continue;
+            }
+            if (e instanceof LivingEntity && e.getDistanceSq(this) < distanceSq) {
+                LivingEntity entity = (LivingEntity) e;
+                entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 200, 1));
+                entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, func_234616_v_()), indirectDamage);
+            }
+        }
+        if (!this.world.isRemote) {
+            ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_1"), 7, 0xA01010, 0.2F), this.getPosX(), this.getPosY(), this.getPosZ(), 40, 1, 1, 1, 0);
+            ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_6"), 10, 0x700505), this.getPosX(), this.getPosY(), this.getPosZ(), 15, 1, 1, 1, 0);
+        }
+        this.remove();
+    }
+
+    @Override
+    public float getCollisionBorderSize() {
+        return 0.5f;
     }
 
     @Override
@@ -98,6 +126,10 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
         indirectDamage = indirect;
     }
 
+    public void setGothrough(boolean gothrough) {
+        this.gothrough = gothrough;
+    }
+
     /**
      * Ignore blocks and minions during the initial 20 ticks
      * Shooter is always ignored for 20 ticks.
@@ -106,9 +138,30 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
         initialNoClip = true;
     }
 
+    public void setMaxTicks(int maxTicks) {
+        this.maxTicks = maxTicks;
+    }
+
     @Override
-    public IPacket<?> createSpawnPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+    public void tick() {
+        super.tick();
+        if (this.world.isRemote) {
+            Vector3d center = this.getPositionVec();
+            ModParticles.spawnParticlesClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010, 0f), center.x, center.y, center.z, 5, getCollisionBorderSize(), this.rand);
+
+            if (this.ticksExisted % 3 == 0) {
+                ModParticles.spawnParticleClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);
+            }
+        }
+
+        if (this.ticksExisted > this.maxTicks) {
+            if (!this.world.isRemote()) {
+                explode(4, null);
+            } else {
+                this.remove();
+            }
+        }
+
     }
 
     @Override
@@ -139,36 +192,8 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
     }
 
     @Override
-    public float getCollisionBorderSize() {
-        return 0.5f;
-    }
-
-    @Override
     protected boolean isFireballFiery() {
         return false;
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        if (this.world.isRemote) {
-            Vector3d center = this.getPositionVec();
-            ModParticles.spawnParticlesClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010, 0f), center.x, center.y, center.z, 5, getCollisionBorderSize(), this.rand);
-
-            if (this.ticksExisted % 3 == 0) {
-                ModParticles.spawnParticleClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);
-            }
-        }
-
-        if (this.ticksExisted > this.maxTicks) {
-            if(!this.world.isRemote()){
-                explode(4, null);
-            }
-            else{
-                this.remove();
-            }
-        }
-
     }
 
     @Override
@@ -204,30 +229,5 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
 
             }
         }
-    }
-
-    /**
-     * Deal area of effect damage, spawn particles and remove entity
-     * @param distanceSq the squared distance
-     * @param excludeEntity If given this will not receive AOE damage
-     */
-    public void explode(int distanceSq, @Nullable Entity excludeEntity){
-        @Nullable Entity shootingEntity = func_234616_v_();
-        List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(distanceSq/2d), EntityPredicates.IS_ALIVE.and(EntityPredicates.NOT_SPECTATING));
-        for (Entity e : list) {
-            if ((excludeShooter && e == shootingEntity) || e == excludeEntity) {
-                continue;
-            }
-            if (e instanceof LivingEntity && e.getDistanceSq(this) < distanceSq) {
-                LivingEntity entity = (LivingEntity) e;
-                entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 200, 1));
-                entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, func_234616_v_()), indirectDamage);
-            }
-        }
-        if(!this.world.isRemote){
-            ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_1"), 7, 0xA01010, 0.2F), this.getPosX(), this.getPosY(), this.getPosZ(), 40, 1, 1, 1, 0);
-            ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_6"), 10, 0x700505), this.getPosX(), this.getPosY(), this.getPosZ(), 15, 1, 1, 1, 0);
-        }
-        this.remove();
     }
 }

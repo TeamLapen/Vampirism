@@ -64,7 +64,6 @@ public class ModRefinements {
     public static final Refinement sword_trained_amount = getNull();
 
 
-
     public static void registerRefinements(@Nonnull IForgeRegistry<IRefinement> registry) {
         {
             {

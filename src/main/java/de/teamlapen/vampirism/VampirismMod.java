@@ -183,15 +183,15 @@ public class VampirismMod {
     }
 
     @SubscribeEvent
+    public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
+        VampirismWorldGen.addVillageStructures();
+    }
+
+    @SubscribeEvent
     public void onServerStart(FMLServerStartingEvent event) {
         for (BloodValueLoaderDynamic loader : BloodValues.getDynamicLoader()) {
             loader.onServerStarting(event.getServer());
         }
-    }
-
-    @SubscribeEvent
-    public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
-        VampirismWorldGen.addVillageStructures();
     }
 
     @SubscribeEvent
@@ -219,7 +219,7 @@ public class VampirismMod {
         if (launchTarget != null && launchTarget.contains("dev")) {
             inDev = true;
         }
-        if(launchTarget != null && launchTarget.contains("data")) {
+        if (launchTarget != null && launchTarget.contains("data")) {
             inDataGen = true;
         }
     }
@@ -233,6 +233,10 @@ public class VampirismMod {
         HelperRegistry.registerSyncablePlayerCapability(HunterPlayer.CAP, REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.class);
         HelperRegistry.registerSyncablePlayerCapability(FactionPlayerHandler.CAP, REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.class);
 
+    }
+
+    private void finalizeConfiguration(RegistryEvent<Block> event) {
+        VampirismConfig.finalizeAndRegisterConfig();
     }
 
     /**
@@ -296,8 +300,14 @@ public class VampirismMod {
         VampirismAPI.onSetupComplete();
     }
 
-    private void finalizeConfiguration(RegistryEvent<Block> event) {
-        VampirismConfig.finalizeAndRegisterConfig();
+    private void processIMC(final InterModProcessEvent event) {
+        finishAPI();
+        registryManager.onInitStep(IInitListener.Step.PROCESS_IMC, event);
+        IMCHandler.handleInterModMessage(event);
+        if (inDev) {
+            Tests.runBackgroundTests();
+        }
+        VampirismWorldGen.initVillageStructures();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -332,17 +342,6 @@ public class VampirismMod {
         VampirismEntitySelectors.registerSelectors();
 
     }
-
-    private void processIMC(final InterModProcessEvent event) {
-        finishAPI();
-        registryManager.onInitStep(IInitListener.Step.PROCESS_IMC, event);
-        IMCHandler.handleInterModMessage(event);
-        if (inDev) {
-            Tests.runBackgroundTests();
-        }
-        VampirismWorldGen.initVillageStructures();
-    }
-
 
     private void setupClient(FMLClientSetupEvent event) {
         registryManager.onInitStep(IInitListener.Step.CLIENT_SETUP, event);

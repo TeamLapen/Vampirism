@@ -34,6 +34,11 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 public class VampirismWorld implements IVampirismWorld {
 
     private final static Logger LOGGER = LogManager.getLogger();
+    /**
+     * stores all BoundingBoxes of vampire controlled villages per dimension, mapped from origin block positions
+     */
+    private static final Map<BlockPos, MutableBoundingBox> fogAreas = Maps.newHashMap();
+    private static final Map<BlockPos, MutableBoundingBox> tmpFogAreas = Maps.newHashMap();
     @CapabilityInject(IVampirismWorld.class)
     public static Capability<IVampirismWorld> CAP = getNull();
 
@@ -51,7 +56,6 @@ public class VampirismWorld implements IVampirismWorld {
         }
         return opt;
     }
-
 
     public static void registerCapability() {
         CapabilityManager.INSTANCE.register(IVampirismWorld.class, new VampirismWorld.Storage(), VampirismWorldDefaultImpl::new);
@@ -82,47 +86,19 @@ public class VampirismWorld implements IVampirismWorld {
         };
     }
 
+    private static boolean isHostingClient() {
+        return EffectiveSide.get().isClient() && ServerLifecycleHooks.getCurrentServer() != null;
+    }
 
+    // VampireFog
     @Nonnull
     private final World world;
-
     // Garlic Handler ------------
     private final HashMap<ChunkPos, EnumStrength> strengthHashMap = Maps.newHashMap();
     private final HashMap<Integer, Emitter> emitterHashMap = Maps.newHashMap();
 
-    // VampireFog
-    /**
-     * stores all BoundingBoxes of vampire controlled villages per dimension, mapped from origin block positions
-     */
-    private static final Map<BlockPos, MutableBoundingBox> fogAreas = Maps.newHashMap();
-    private static final Map<BlockPos, MutableBoundingBox> tmpFogAreas = Maps.newHashMap();
-
-    @Override
-    public boolean isInsideArtificialVampireFogArea(BlockPos blockPos) {
-        return Stream.concat(fogAreas.entrySet().stream(), tmpFogAreas.entrySet().stream()).anyMatch(entry -> entry.getValue().isVecInside(blockPos));
-    }
-
-    /**
-     * adds/updates/removes the bounding box of a fog generating block
-     *
-     * @param totemPos  position of the village totem
-     * @param box       new bounding box of the village or null if the area should be removed
-     */
-    public void updateArtificialFogBoundingBox(@Nonnull BlockPos totemPos, @Nullable AxisAlignedBB box) {
-        if (box == null) {
-            fogAreas.remove(totemPos);
-            updateTemporaryArtificialFog(totemPos, null);
-        } else {
-            fogAreas.put(totemPos, UtilLib.AABBtoMB(box));
-        }
-    }
-
-    public void updateTemporaryArtificialFog(@Nonnull BlockPos totemPos, @Nullable AxisAlignedBB box) {
-        if (box == null) {
-            tmpFogAreas.remove(totemPos);
-        } else {
-            tmpFogAreas.put(totemPos, UtilLib.AABBtoMB(box));
-        }
+    public VampirismWorld(@Nonnull World world) {
+        this.world = world;
     }
 
     @Override
@@ -138,6 +114,11 @@ public class VampirismWorld implements IVampirismWorld {
         return s == null ? EnumStrength.NONE : s;
     }
 
+    @Override
+    public boolean isInsideArtificialVampireFogArea(BlockPos blockPos) {
+        return Stream.concat(fogAreas.entrySet().stream(), tmpFogAreas.entrySet().stream()).anyMatch(entry -> entry.getValue().isVecInside(blockPos));
+    }
+
     public void printDebug(CommandSource sender) {
         for (Emitter e : emitterHashMap.values()) {
             sender.sendFeedback(new StringTextComponent("E: " + e.toString()), true);
@@ -145,10 +126,6 @@ public class VampirismWorld implements IVampirismWorld {
         for (Map.Entry<ChunkPos, EnumStrength> e : strengthHashMap.entrySet()) {
             sender.sendFeedback(new StringTextComponent("S: " + e.toString()), true);
         }
-    }
-
-    private static boolean isHostingClient() {
-        return EffectiveSide.get().isClient() && ServerLifecycleHooks.getCurrentServer() != null;
     }
 
     @Override
@@ -168,6 +145,45 @@ public class VampirismWorld implements IVampirismWorld {
         return hash;
     }
 
+    @Override
+    public void removeGarlicBlock(int id) {
+        if (isHostingClient()) {
+            return; //If this is happening on client side and the client is also the server, the emitter has already been registered on server side. Avoid duplicate values and concurrent modification issues
+        }
+        Emitter e = emitterHashMap.remove(id);
+        if (e == null) LOGGER.debug("Removed emitter did not exist");
+        rebuildStrengthMap();
+    }
+
+    /**
+     * adds/updates/removes the bounding box of a fog generating block
+     *
+     * @param totemPos position of the village totem
+     * @param box      new bounding box of the village or null if the area should be removed
+     */
+    public void updateArtificialFogBoundingBox(@Nonnull BlockPos totemPos, @Nullable AxisAlignedBB box) {
+        if (box == null) {
+            fogAreas.remove(totemPos);
+            updateTemporaryArtificialFog(totemPos, null);
+        } else {
+            fogAreas.put(totemPos, UtilLib.AABBtoMB(box));
+        }
+    }
+
+    public void updateTemporaryArtificialFog(@Nonnull BlockPos totemPos, @Nullable AxisAlignedBB box) {
+        if (box == null) {
+            tmpFogAreas.remove(totemPos);
+        } else {
+            tmpFogAreas.put(totemPos, UtilLib.AABBtoMB(box));
+        }
+    }
+
+
+    //----
+
+    private void loadNBTData(CompoundNBT nbt) {
+    }
+
     private void rebuildStrengthMap() {
         strengthHashMap.clear();
         for (Emitter e : emitterHashMap.values()) {
@@ -179,26 +195,6 @@ public class VampirismWorld implements IVampirismWorld {
 
             }
         }
-    }
-
-    @Override
-    public void removeGarlicBlock(int id) {
-        if (isHostingClient()) {
-            return; //If this is happening on client side and the client is also the server, the emitter has already been registered on server side. Avoid duplicate values and concurrent modification issues
-        }
-        Emitter e = emitterHashMap.remove(id);
-        if (e == null) LOGGER.debug("Removed emitter did not exist");
-        rebuildStrengthMap();
-    }
-
-
-    //----
-
-    public VampirismWorld(@Nonnull World world) {
-        this.world = world;
-    }
-
-    private void loadNBTData(CompoundNBT nbt) {
     }
 
     private void saveNBTData(CompoundNBT nbt) {

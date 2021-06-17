@@ -127,10 +127,10 @@ public class ConfigCommand extends BasicCommand {
         List<? extends String> list = configList.get();
         if (!list.contains(id.toString())) {
             ((List<String>) list).add(id.toString());
-            player.sendStatusMessage(new TranslationTextComponent(blacklist, id),false);
+            player.sendStatusMessage(new TranslationTextComponent(blacklist, id), false);
         } else {
             list.remove(id.toString());
-            player.sendStatusMessage(new TranslationTextComponent(not_blacklist, id),false);
+            player.sendStatusMessage(new TranslationTextComponent(not_blacklist, id), false);
         }
         configList.set(list);
         return 0;

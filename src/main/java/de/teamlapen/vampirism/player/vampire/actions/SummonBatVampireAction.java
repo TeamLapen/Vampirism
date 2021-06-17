@@ -24,14 +24,14 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     public boolean activate(IVampirePlayer player) {
         PlayerEntity entityPlayer = player.getRepresentingPlayer();
         boolean refined = player.getSkillHandler().isRefinementEquipped(ModRefinements.summon_bats);
-        int amount =  VampirismConfig.BALANCE.vaSummonBatsCount.get();
-        if(amount>1&&refined){
-            amount=amount/2;
+        int amount = VampirismConfig.BALANCE.vaSummonBatsCount.get();
+        if (amount > 1 && refined) {
+            amount = amount / 2;
         }
         for (int i = 0; i < amount; i++) {
             BlindingBatEntity e = ModEntities.blinding_bat.create(entityPlayer.getEntityWorld());
             e.restrictLiveSpan();
-            if(refined)e.setTargeting();
+            if (refined) e.setTargeting();
             e.setIsBatHanging(false);
             e.copyLocationAndAnglesFrom(player.getRepresentingPlayer());
             player.getRepresentingPlayer().getEntityWorld().addEntity(e);
@@ -52,7 +52,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
 
     @Override
     public int getCooldown(IFactionPlayer player) {
-        return (int) ((player.getSkillHandler().isRefinementEquipped(ModRefinements.summon_bats) ? 0.7 : 1)*getCooldown());
+        return (int) ((player.getSkillHandler().isRefinementEquipped(ModRefinements.summon_bats) ? 0.7 : 1) * getCooldown());
     }
 
     @Override

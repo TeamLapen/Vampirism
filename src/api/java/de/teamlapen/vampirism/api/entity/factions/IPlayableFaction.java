@@ -15,10 +15,22 @@ public interface IPlayableFaction<T extends IFactionPlayer> extends IFaction<T> 
     Class<T> getFactionPlayerInterface();
 
     /**
+     * @return The highest reachable lord level or 0 if no lord
+     */
+    int getHighestLordLevel();
+
+    /**
      * @return Highest reachable level for players
      */
     int getHighestReachableLevel();
 
+    /**
+     * @param level  lord level
+     * @param female Female version
+     * @return A text component representing the title of the player at the given lord level. empty if level==0
+     */
+    @Nonnull
+    ITextComponent getLordTitle(int level, boolean female);
 
     /**
      * @param player
@@ -37,18 +49,5 @@ public interface IPlayableFaction<T extends IFactionPlayer> extends IFaction<T> 
      * @param render
      */
     IPlayableFaction<T> setRenderLevel(boolean render);
-
-    /**
-     * @return The highest reachable lord level or 0 if no lord
-     */
-    int getHighestLordLevel();
-
-    /**
-     * @param level  lord level
-     * @param female Female version
-     * @return A text component representing the title of the player at the given lord level. empty if level==0
-     */
-    @Nonnull
-    ITextComponent getLordTitle(int level, boolean female);
 
 }

@@ -48,39 +48,10 @@ import java.util.List;
 public class BloodContainerBlock extends VampirismBlockContainer {
 
     public final static String regName = "blood_container";
-    protected static final VoxelShape containerShape = Block.makeCuboidShape(2, 0, 2, 14, 16, 14);
-    private final static Logger LOGGER = LogManager.getLogger();
     @ObjectHolder("vampirism:blood_container")
     public static final Item item = UtilLib.getNull();
-
-    public BloodContainerBlock() {
-        super(regName, Properties.create(Material.GLASS).hardnessAndResistance(1f).notSolid());
-    }
-
-    @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new BloodContainerTileEntity();
-    }
-
-    @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        super.fillItemGroup(group, items);
-        ItemStack stack = new ItemStack(this, 1);
-        FluidStack fluid = new FluidStack(ModFluids.blood, BloodContainerTileEntity.CAPACITY);
-        stack.setTagInfo("fluid", fluid.writeToNBT(new CompoundNBT()));
-        items.add(stack);
-    }
-
-
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return containerShape;
-    }
+    protected static final VoxelShape containerShape = Block.makeCuboidShape(2, 0, 2, 14, 16, 14);
+    private final static Logger LOGGER = LogManager.getLogger();
 
     public static FluidStack getFluidFromItemStack(ItemStack stack) {
         if (stack.getItem() == item) {
@@ -102,6 +73,46 @@ public class BloodContainerBlock extends VampirismBlockContainer {
         } else {
             stack.setTagInfo("fluid", fluid.writeToNBT(new CompoundNBT()));
         }
+    }
+
+    public BloodContainerBlock() {
+        super(regName, Properties.create(Material.GLASS).hardnessAndResistance(1f).notSolid());
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        if (stack.hasTag() && stack.getTag().contains("fluid")) {
+            CompoundNBT nbt = stack.getTag().getCompound("fluid");
+            FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
+            if (fluid != null) {
+                tooltip.add(new TranslationTextComponent(fluid.getTranslationKey()).append(new StringTextComponent(": " + fluid.getAmount() + "mB")).mergeStyle(TextFormatting.DARK_RED));
+            }
+
+        }
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+        return new BloodContainerTileEntity();
+    }
+
+    @Override
+    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+        super.fillItemGroup(group, items);
+        ItemStack stack = new ItemStack(this, 1);
+        FluidStack fluid = new FluidStack(ModFluids.blood, BloodContainerTileEntity.CAPACITY);
+        stack.setTagInfo("fluid", fluid.writeToNBT(new CompoundNBT()));
+        items.add(stack);
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return containerShape;
     }
 
     @Override
@@ -147,18 +158,6 @@ public class BloodContainerBlock extends VampirismBlockContainer {
             if (tile instanceof BloodContainerTileEntity) {
                 ((BloodContainerTileEntity) tile).setFluidStack(fluid);
             }
-        }
-    }
-
-    @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (stack.hasTag() && stack.getTag().contains("fluid")) {
-            CompoundNBT nbt = stack.getTag().getCompound("fluid");
-            FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
-            if (fluid != null) {
-                tooltip.add(new TranslationTextComponent(fluid.getTranslationKey()).append(new StringTextComponent(": " + fluid.getAmount() + "mB")).mergeStyle(TextFormatting.DARK_RED));
-            }
-
         }
     }
 }

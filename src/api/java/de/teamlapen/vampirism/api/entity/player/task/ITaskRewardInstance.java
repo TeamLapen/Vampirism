@@ -15,10 +15,10 @@ public interface ITaskRewardInstance {
      */
     void applyReward(IFactionPlayer<?> player);
 
-    CompoundNBT writeNBT(@Nonnull CompoundNBT nbt);
-
     void encode(PacketBuffer buffer);
 
     ResourceLocation getId();
+
+    CompoundNBT writeNBT(@Nonnull CompoundNBT nbt);
 
 }

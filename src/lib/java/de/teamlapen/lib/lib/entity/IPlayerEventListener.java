@@ -28,10 +28,12 @@ public interface IPlayerEventListener {
 
     /**
      * Called when the player killed an living entity
+     *
      * @param victim The killed entity
-     * @param src The lethal damage source
+     * @param src    The lethal damage source
      */
-    default void onEntityKilled(LivingEntity victim, DamageSource src){}
+    default void onEntityKilled(LivingEntity victim, DamageSource src) {
+    }
 
     void onJoinWorld();
 

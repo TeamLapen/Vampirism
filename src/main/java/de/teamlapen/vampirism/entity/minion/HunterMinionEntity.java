@@ -102,16 +102,16 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         return this.getMinionData().map(d -> d.type).map(t -> Math.max(0, t)).orElse(0);
     }
 
-    public void setHunterType(int type, boolean minionSkin) {
-        getMinionData().ifPresent(d -> {
-            d.type = type;
-            d.minionSkin = minionSkin;
-        });
-    }
-
     @Override
     public LivingEntity getRepresentingEntity() {
         return this;
+    }
+
+    /**
+     * @return Whether the selected skin is from the minion specific pool or a generic vampire skin
+     */
+    public boolean hasMinionSpecificSkin() {
+        return this.getMinionData().map(d -> d.minionSkin).orElse(false);
     }
 
     @Override
@@ -147,19 +147,19 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().displayGuiScreen(new HunterMinionStatsScreen(this, Minecraft.getInstance().currentScreen)));
     }
 
+    public void setHunterType(int type, boolean minionSkin) {
+        getMinionData().ifPresent(d -> {
+            d.type = type;
+            d.minionSkin = minionSkin;
+        });
+    }
+
     public void setUseLordSkin(boolean useLordSkin) {
         this.getMinionData().ifPresent(d -> d.useLordSkin = useLordSkin);
     }
 
     public boolean shouldRenderLordSkin() {
         return this.getMinionData().map(d -> d.useLordSkin).orElse(false);
-    }
-
-    /**
-     * @return Whether the selected skin is from the minion specific pool or a generic vampire skin
-     */
-    public boolean hasMinionSpecificSkin(){
-        return this.getMinionData().map(d -> d.minionSkin).orElse(false);
     }
 
     @Override
@@ -173,10 +173,10 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     @Override
-    protected void onMinionDataReceived(@Nonnull HunterMinionData data) {
-        super.onMinionDataReceived(data);
-        this.updateAttackGoal();
-        this.updateAttributes();
+    protected boolean canConsume(ItemStack stack) {
+        if (!super.canConsume(stack)) return false;
+        boolean fullHealth = this.getHealth() == this.getMaxHealth();
+        return !stack.isFood() || !fullHealth || stack.getItem().getFood().canEatWhenFull();
     }
 
     @Override
@@ -190,7 +190,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
                     player.sendStatusMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_upgrade"), false);
                     HelperLib.sync(this);
                 } else {
-                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_wrong"),false);
+                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_wrong"), false);
 
                 }
                 return ActionResultType.SUCCESS;
@@ -198,6 +198,14 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
         return super.func_230254_b_(player, hand);
     }
+
+    @Override
+    protected void onMinionDataReceived(@Nonnull HunterMinionData data) {
+        super.onMinionDataReceived(data);
+        this.updateAttackGoal();
+        this.updateAttributes();
+    }
+
     @Override
     protected void registerData() {
         super.registerData();
@@ -227,14 +235,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             this.goalSelector.addGoal(1, crossbowGoal);
             crossbowTask = true;
         }
-    }
-
-    @Override
-    protected boolean canConsume(ItemStack stack) {
-        if (!super.canConsume(stack))return false;
-        boolean fullHealth = this.getHealth() == this.getMaxHealth();
-        if (stack.isFood() && fullHealth && !stack.getItem().getFood().canEatWhenFull()) return false;
-        return true;
     }
 
     private void updateAttributes() {
@@ -272,7 +272,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             this.hat = hat;
             this.useLordSkin = useLordSkin;
             this.level = 0;
-            this.minionSkin=false;
+            this.minionSkin = false;
         }
 
         private HunterMinionData() {
@@ -341,6 +341,23 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
+        public boolean hasUsedSkillPoints() {
+            return this.inventoryLevel + this.healthLevel + this.strengthLevel + this.resourceEfficiencyLevel > 0;
+        }
+
+        @Override
+        public void resetStats(MinionEntity<?> entity) {
+            assert entity instanceof HunterMinionEntity;
+            this.inventoryLevel = 0;
+            this.healthLevel = 0;
+            this.strengthLevel = 0;
+            this.resourceEfficiencyLevel = 0;
+            this.shrinkInventory(entity);
+            ((HunterMinionEntity) entity).updateAttributes();
+            super.resetStats(entity);
+        }
+
+        @Override
         public void serializeNBT(CompoundNBT tag) {
             super.serializeNBT(tag);
             tag.putInt("hunter_type", type);
@@ -351,7 +368,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             tag.putInt("l_str", strengthLevel);
             tag.putInt("l_res", resourceEfficiencyLevel);
             tag.putBoolean("use_lord_skin", useLordSkin);
-            tag.putBoolean("ms",minionSkin);
+            tag.putBoolean("ms", minionSkin);
 
         }
 
@@ -400,23 +417,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
                     LOGGER.warn("Cannot upgrade minion stat {} as it does not exist", statId);
                     return false;
             }
-        }
-
-        @Override
-        public void resetStats(MinionEntity<?> entity) {
-            assert entity instanceof HunterMinionEntity;
-            this.inventoryLevel = 0;
-            this.healthLevel = 0;
-            this.strengthLevel = 0;
-            this.resourceEfficiencyLevel = 0;
-            this.shrinkInventory(entity);
-            ((HunterMinionEntity) entity).updateAttributes();
-            super.resetStats(entity);
-        }
-
-        @Override
-        public boolean hasUsedSkillPoints() {
-            return this.inventoryLevel + this.healthLevel + this.strengthLevel + this.resourceEfficiencyLevel > 0;
         }
 
         @Override

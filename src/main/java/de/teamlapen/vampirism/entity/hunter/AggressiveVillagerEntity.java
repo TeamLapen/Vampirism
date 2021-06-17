@@ -60,26 +60,19 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
         return hunter;
     }
 
-    public AggressiveVillagerEntity(EntityType<? extends AggressiveVillagerEntity> type, World worldIn) {
-        super(type, worldIn);
-        ((GroundPathNavigator) getNavigator()).setBreakDoors(true);
-    }
-
-    @Override
-    public LivingEntity getRepresentingEntity() {
-        return this;
-    }
-
-    //Village capture---------------------------------------------------------------------------------------------------
-    @Nullable
-    private ICaptureAttributes villageAttributes;
-
-
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
         return VampirismVillagerEntity.getAttributeBuilder()
                 .createMutableAttribute(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.HUNTER_VILLAGER_MAX_HEALTH)
                 .createMutableAttribute(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.HUNTER_VILLAGER_ATTACK_DAMAGE)
                 .createMutableAttribute(Attributes.FOLLOW_RANGE, 32);
+    }
+    //Village capture---------------------------------------------------------------------------------------------------
+    @Nullable
+    private ICaptureAttributes villageAttributes;
+
+    public AggressiveVillagerEntity(EntityType<? extends AggressiveVillagerEntity> type, World worldIn) {
+        super(type, worldIn);
+        ((GroundPathNavigator) getNavigator()).setBreakDoors(true);
     }
 
     @Override
@@ -99,21 +92,14 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    protected ITextComponent getProfessionName() {
-        return this.getType().getName(); //Don't use profession as part of the translation key
+    public LivingEntity getRepresentingEntity() {
+        return this;
     }
 
     @Nullable
     @Override
     public AxisAlignedBB getTargetVillageArea() {
         return villageAttributes == null ? null : villageAttributes.getVillageArea();
-    }
-
-    @Override
-    public ILivingEntityData onInitialSpawn(@Nonnull IServerWorld worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        ILivingEntityData data = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-        this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.pitchfork));
-        return data;
     }
 
     @Override
@@ -124,6 +110,13 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     @Override
     public boolean isDefendingVillage() {
         return villageAttributes != null;
+    }
+
+    @Override
+    public ILivingEntityData onInitialSpawn(@Nonnull IServerWorld worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        ILivingEntityData data = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.pitchfork));
+        return data;
     }
 
     @Override
@@ -140,6 +133,11 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
         villager.read(nbt);
         villager.setUniqueId(MathHelper.getRandomUUID(this.rand));
         UtilLib.replaceEntity(this, villager);
+    }
+
+    @Override
+    protected ITextComponent getProfessionName() {
+        return this.getType().getName(); //Don't use profession as part of the translation key
     }
 
     @Override

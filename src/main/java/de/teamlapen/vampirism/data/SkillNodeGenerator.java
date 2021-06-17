@@ -47,24 +47,6 @@ public class SkillNodeGenerator implements IDataProvider {
         });
     }
 
-    private void saveSkillNode(DirectoryCache cache, JsonObject nodeJson, Path path) {
-        try {
-            String s = GSON.toJson(nodeJson);
-            @SuppressWarnings("UnstableApiUsage")
-            String s1 = HASH_FUNCTION.hashUnencodedChars(s).toString();
-            if (!Objects.equals(cache.getPreviousHash(path), s1) || !Files.exists(path)) {
-                Files.createDirectories(path.getParent());
-
-                try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path)) {
-                    bufferedWriter.write(s);
-                }
-            }
-            cache.recordHash(path, s1);
-        } catch (IOException ioExeption) {
-            LOGGER.error("Couldn't save skill node {}", path, ioExeption);
-        }
-    }
-
     @Override
     public String getName() {
         return "Vampirism skillnode generator";
@@ -133,6 +115,24 @@ public class SkillNodeGenerator implements IDataProvider {
 
     private ResourceLocation modId(String string) {
         return new ResourceLocation(REFERENCE.MODID, string);
+    }
+
+    private void saveSkillNode(DirectoryCache cache, JsonObject nodeJson, Path path) {
+        try {
+            String s = GSON.toJson(nodeJson);
+            @SuppressWarnings("UnstableApiUsage")
+            String s1 = HASH_FUNCTION.hashUnencodedChars(s).toString();
+            if (!Objects.equals(cache.getPreviousHash(path), s1) || !Files.exists(path)) {
+                Files.createDirectories(path.getParent());
+
+                try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path)) {
+                    bufferedWriter.write(s);
+                }
+            }
+            cache.recordHash(path, s1);
+        } catch (IOException ioExeption) {
+            LOGGER.error("Couldn't save skill node {}", path, ioExeption);
+        }
     }
 
 

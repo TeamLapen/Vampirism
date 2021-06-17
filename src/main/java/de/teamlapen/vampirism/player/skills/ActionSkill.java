@@ -47,14 +47,14 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
         }
     }
 
+    public ResourceLocation getActionID() {
+        return action.getRegistryName();
+    }
+
     @Nonnull
     @Override
     public IPlayableFaction getFaction() {
         return action.getFaction();
-    }
-
-    public ResourceLocation getActionID() {
-        return action.getRegistryName();
     }
 
     @Override

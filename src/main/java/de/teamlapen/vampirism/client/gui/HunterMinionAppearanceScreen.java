@@ -40,6 +40,16 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
     }
 
     @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (!this.hatList.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
+            if (!this.skinList.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
+                return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            }
+        }
+        return true;
+    }
+
+    @Override
     public void onClose() {
         String name = nameWidget.getText();
         if (name.isEmpty()) {
@@ -61,15 +71,15 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
         this.normalSkinCount = ((HunterMinionRenderer) Minecraft.getInstance().getRenderManager().getRenderer(this.entity)).getHunterTextureCount();
         this.minionSkinCount = ((HunterMinionRenderer) Minecraft.getInstance().getRenderManager().getRenderer(this.entity)).getMinionSpecificTextureCount();
         this.isMinionSpecificSkin = this.entity.hasMinionSpecificSkin();
-        if(this.isMinionSpecificSkin) {
+        if (this.isMinionSpecificSkin) {
             this.skinType = this.skinType % this.minionSkinCount;
-        } else{
+        } else {
             this.skinType = this.skinType % this.normalSkinCount;
         }
         this.hatType = this.entity.getHatType();
         this.useLordSkin = this.entity.shouldRenderLordSkin();
-        this.skinList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 43 + 19, 99,80,20, this.normalSkinCount + this.minionSkinCount,new TranslationTextComponent("gui.vampirism.minion_appearance.skin"), this::skin, this::previewSkin));
-        this.hatList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 64 + 19, 99,60,20, 3, new TranslationTextComponent("gui.vampirism.minion_appearance.hat"), this::hat, this::previewHat));
+        this.skinList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 43 + 19, 99, 80, 20, this.normalSkinCount + this.minionSkinCount, new TranslationTextComponent("gui.vampirism.minion_appearance.skin"), this::skin, this::previewSkin));
+        this.hatList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 64 + 19, 99, 60, 20, 3, new TranslationTextComponent("gui.vampirism.minion_appearance.hat"), this::hat, this::previewHat));
         this.skinButton = this.addButton(new ExtendedButton(skinList.x, skinList.y - 20, skinList.getWidth() + 1, 20, new StringTextComponent(""), (b) -> {
             setSkinListVisibility(!skinList.visible);
         }));
@@ -94,6 +104,10 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
         setHatListVisibility(false);
     }
 
+    private void onNameChanged(String newName) {
+        this.entity.changeMinionName(newName);
+    }
+
     private void previewHat(int type, boolean hovered) {
         if (hovered) {
             this.entity.setHatType(type);
@@ -104,8 +118,15 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
         }
     }
 
-    private void onNameChanged(String newName) {
-        this.entity.changeMinionName(newName);
+    private void previewSkin(int type, boolean hovered) {
+        boolean minionSpecific = type >= normalSkinCount;
+        if (hovered) {
+            this.entity.setHunterType(type, minionSpecific);
+        } else {
+            if (this.entity.getHunterType() == type && this.entity.hasMinionSpecificSkin() == minionSpecific) {
+                this.entity.setHunterType(this.skinType, this.isMinionSpecificSkin);
+            }
+        }
     }
 
     private void setHatListVisibility(boolean show) {
@@ -127,26 +148,5 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
         boolean minionSpecific = type >= normalSkinCount;
         this.entity.setHunterType(this.skinType = type, this.isMinionSpecificSkin = minionSpecific);
         setSkinListVisibility(false);
-    }
-
-    private void previewSkin(int type, boolean hovered) {
-        boolean minionSpecific = type >= normalSkinCount;
-        if (hovered) {
-            this.entity.setHunterType(type, minionSpecific);
-        } else {
-            if (this.entity.getHunterType() == type && this.entity.hasMinionSpecificSkin() == minionSpecific) {
-                this.entity.setHunterType(this.skinType, this.isMinionSpecificSkin);
-            }
-        }
-    }
-
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (!this.hatList.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
-            if (!this.skinList.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
-                return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
-            }
-        }
-        return true;
     }
 }

@@ -99,15 +99,6 @@ public interface IFactionPlayerHandler extends ILordPlayer {
     boolean setFactionAndLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level);
 
     /**
-     * Set the players lord level.
-     * Checks if player is in faction and at faction max level and if level is lower than max lord level
-     *
-     * @param level
-     * @return if successful
-     */
-    boolean setLordLevel(int level);
-
-    /**
      * Set the level for a faction. Only works if the player already is in the given faction.
      * Use {@link IFactionPlayerHandler#joinFaction(IPlayableFaction)} to join a faction first or {@link IFactionPlayerHandler#setFactionAndLevel(IPlayableFaction, int)} if you are sure what you do
      *
@@ -116,4 +107,13 @@ public interface IFactionPlayerHandler extends ILordPlayer {
      * @return If successful
      */
     boolean setFactionLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level);
+
+    /**
+     * Set the players lord level.
+     * Checks if player is in faction and at faction max level and if level is lower than max lord level
+     *
+     * @param level
+     * @return if successful
+     */
+    boolean setLordLevel(int level);
 }

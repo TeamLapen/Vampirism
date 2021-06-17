@@ -19,8 +19,9 @@ public class HunterTrainerRenderer extends BipedRenderer<MobEntity, PlayerModel<
 
 
     public HunterTrainerRenderer(EntityRendererManager renderManagerIn, boolean renderEquipment) {
-        super(renderManagerIn, new PlayerModel<>(0,false), 0.5F);
-        if(renderEquipment)this.addLayer(new HunterEquipmentLayer<>(this, h-> HunterEquipmentModel.StakeType.ONLY, entityModel -> 1));
+        super(renderManagerIn, new PlayerModel<>(0, false), 0.5F);
+        if (renderEquipment)
+            this.addLayer(new HunterEquipmentLayer<>(this, h -> HunterEquipmentModel.StakeType.ONLY, entityModel -> 1));
         //this.addLayer(new CloakLayer<>(this, textureCloak, Predicates.alwaysTrue()));
     }
 

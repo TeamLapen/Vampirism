@@ -57,6 +57,13 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     private static final DataParameter<String> NAME = EntityDataManager.createKey(AdvancedVampireEntity.class, DataSerializers.STRING);
     private static final DataParameter<String> TEXTURE = EntityDataManager.createKey(AdvancedVampireEntity.class, DataSerializers.STRING);
 
+    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+        return VampireBaseEntity.getAttributeBuilder()
+                .createMutableAttribute(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_SPEED)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 13);
+    }
     private final int MAX_LEVEL = 1;
     /**
      * available actions for AI task & task
@@ -69,20 +76,21 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
      * Not guaranteed to be exact and not saved to nbt
      */
     private int followingEntities = 0;
-
     /**
      * Overlay player texture and if slim (true)
      */
     @OnlyIn(Dist.CLIENT)
     @Nullable
     private Pair<ResourceLocation, Boolean> skinDetails;
-
     /**
      * If set, the vampire book with this id should be dropped
      */
     @Nullable
     private String lootBookId;
-
+    //Village stuff ----------------------------------------------------------------------------------------------------
+    @Nullable
+    private ICaptureAttributes villageAttributes;
+    private boolean attack;
 
     public AdvancedVampireEntity(EntityType<? extends AdvancedVampireEntity> type, World world) {
         super(type, world, true);
@@ -106,13 +114,40 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
+    public void attackVillage(ICaptureAttributes totem) {
+        this.villageAttributes = totem;
+        this.attack = true;
+    }
+
+    @Override
     public void decreaseFollowerCount() {
         followingEntities = Math.max(0, followingEntities - 1);
     }
 
     @Override
+    public void defendVillage(ICaptureAttributes totem) {
+        this.villageAttributes = totem;
+        this.attack = false;
+    }
+
+    @Override
+    public ActionHandlerEntity getActionHandler() {
+        return entityActionHandler;
+    }
+
+    @Override
     public boolean getAlwaysRenderNameTagForRender() {
         return true;
+    }
+
+    public Optional<String> getBookLootId() {
+        return Optional.ofNullable(lootBookId);
+    }
+
+    @Nullable
+    @Override
+    public ICaptureAttributes getCaptureInfo() {
+        return villageAttributes;
     }
 
     @Override
@@ -161,9 +196,12 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         return MAX_LEVEL;
     }
 
-    //Village stuff ----------------------------------------------------------------------------------------------------
-    @Nullable
-    private ICaptureAttributes villageAttributes;
+    @Nonnull
+    @Override
+    public ITextComponent getName() {
+        String senderName = this.getDataManager().get(NAME);
+        return "none".equals(senderName) ? super.getName() : new StringTextComponent(senderName);
+    }
 
     @OnlyIn(Dist.CLIENT)
     @Override
@@ -179,6 +217,12 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Nullable
+    @Override
+    public AxisAlignedBB getTargetVillageArea() {
+        return villageAttributes == null ? null : villageAttributes.getVillageArea();
+    }
+
+    @Nullable
     public String getTextureName() {
         String texture = this.getDataManager().get(TEXTURE);
         return "none".equals(texture) ? null : texture;
@@ -191,6 +235,16 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean isAttackingVillage() {
+        return villageAttributes != null && attack;
+    }
+
+    @Override
+    public boolean isDefendingVillage() {
+        return villageAttributes != null && !attack;
     }
 
     @Override
@@ -218,9 +272,15 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         if (tagCompund.contains("attack")) {
             this.attack = tagCompund.getBoolean("attack");
         }
-        if(tagCompund.contains("lootBookId")){
+        if (tagCompund.contains("lootBookId")) {
             this.lootBookId = tagCompund.getString("lootBookId");
         }
+    }
+
+    @Override
+    public void stopVillageAttackDefense() {
+        this.setCustomName(null);
+        this.villageAttributes = null;
     }
 
     @Override
@@ -244,8 +304,8 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
             entityActionHandler.write(nbt);
         }
         nbt.putBoolean("attack", this.attack);
-        if(lootBookId!=null){
-            nbt.putString("lootBookId",lootBookId);
+        if (lootBookId != null) {
+            nbt.putString("lootBookId", lootBookId);
         }
     }
 
@@ -264,8 +324,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         return iMob ? ModEntities.advanced_vampire_imob : ModEntities.advanced_vampire;
     }
 
-
-
     @Override
     protected void registerData() {
         super.registerData();
@@ -276,25 +334,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         this.getDataManager().register(NAME, supporter.senderName == null ? "none" : supporter.senderName);
         this.getDataManager().register(TEXTURE, supporter.textureName == null ? "none" : supporter.textureName);
 
-    }
-
-    @Override
-    public void attackVillage(ICaptureAttributes totem) {
-        this.villageAttributes = totem;
-        this.attack = true;
-    }
-
-    @Override
-    public ActionHandlerEntity getActionHandler() {
-        return entityActionHandler;
-    }
-
-    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return VampireBaseEntity.getAttributeBuilder()
-                .createMutableAttribute(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_SPEED)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 13);
     }
 
     @Override
@@ -318,65 +357,17 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, Structure.VILLAGE)));
     }
 
-    public static class IMob extends AdvancedVampireEntity implements net.minecraft.entity.monster.IMob {
-
-        public IMob(EntityType<? extends AdvancedVampireEntity> type, World world) {
-            super(type, world);
-        }
-
-    }
-
-    @Override
-    public void defendVillage(ICaptureAttributes totem) {
-        this.villageAttributes = totem;
-        this.attack = false;
-    }
-
-    private boolean attack;
-
-    @Nullable
-    @Override
-    public ICaptureAttributes getCaptureInfo() {
-        return villageAttributes;
-    }
-
-    @Nonnull
-    @Override
-    public ITextComponent getName() {
-        String senderName = this.getDataManager().get(NAME);
-        return "none".equals(senderName) ? super.getName() : new StringTextComponent(senderName);
-    }
-
-    @Nullable
-    @Override
-    public AxisAlignedBB getTargetVillageArea() {
-        return villageAttributes == null ? null : villageAttributes.getVillageArea();
-    }
-
-    @Override
-    public void stopVillageAttackDefense() {
-        this.setCustomName(null);
-        this.villageAttributes = null;
-    }
-
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);
         Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH + BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH_PL * l);
         Objects.requireNonNull(this.getAttribute(Attributes.ATTACK_DAMAGE)).setBaseValue(BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE + BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE_PL * l);
     }
 
-    @Override
-    public boolean isAttackingVillage() {
-        return villageAttributes != null && attack;
-    }
+    public static class IMob extends AdvancedVampireEntity implements net.minecraft.entity.monster.IMob {
 
-    @Override
-    public boolean isDefendingVillage() {
-        return villageAttributes != null && !attack;
-    }
+        public IMob(EntityType<? extends AdvancedVampireEntity> type, World world) {
+            super(type, world);
+        }
 
-
-    public Optional<String> getBookLootId(){
-        return Optional.ofNullable(lootBookId);
     }
 }

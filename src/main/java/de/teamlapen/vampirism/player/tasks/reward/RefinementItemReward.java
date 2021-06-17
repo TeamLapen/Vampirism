@@ -35,15 +35,10 @@ public class RefinementItemReward extends ItemReward {
         this(faction, null, refinementRarity);
     }
 
-    public RefinementItemReward(@Nullable IFaction<?> faction, @Nullable VampireRefinementItem item,  @Nullable IRefinementSet.Rarity refinementRarity) {
+    public RefinementItemReward(@Nullable IFaction<?> faction, @Nullable VampireRefinementItem item, @Nullable IRefinementSet.Rarity refinementRarity) {
         super(new ItemStack(item));
         this.faction = faction;
         this.rarity = refinementRarity;
-    }
-
-    @Override
-    public List<ItemStack> getAllPossibleRewards() {
-        return (!this.reward.isEmpty() ? Stream.of((VampireRefinementItem) this.reward.getItem()):Arrays.stream(IRefinementItem.AccessorySlotType.values()).map(VampireRefinementItem::getItemForType)).map(ItemStack::new).collect(Collectors.toList());
     }
 
     @Override
@@ -51,12 +46,17 @@ public class RefinementItemReward extends ItemReward {
         return new ItemRewardInstance(createItem());
     }
 
+    @Override
+    public List<ItemStack> getAllPossibleRewards() {
+        return (!this.reward.isEmpty() ? Stream.of((VampireRefinementItem) this.reward.getItem()) : Arrays.stream(IRefinementItem.AccessorySlotType.values()).map(VampireRefinementItem::getItemForType)).map(ItemStack::new).collect(Collectors.toList());
+    }
+
     protected ItemStack createItem() {
         VampireRefinementItem item = VampireRefinementItem.getItemForType(IRefinementItem.AccessorySlotType.values()[RANDOM.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
         IRefinementItem.AccessorySlotType slot = (item).getSlotType();
         List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream()
                 .filter(set -> this.faction == null || set.getFaction() == faction)
-                .filter(set-> this.rarity == null || set.getRarity().ordinal() >= this.rarity.ordinal())
+                .filter(set -> this.rarity == null || set.getRarity().ordinal() >= this.rarity.ordinal())
                 .filter(set -> set.getSlotType().map(slot1 -> slot1 == slot).orElse(true))
                 .map(set -> ((RefinementSet) set).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return new ItemStack(item);

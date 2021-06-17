@@ -72,9 +72,9 @@ public abstract class VampirismVillageEvent extends Event {
          */
         private final @Nullable
         MobEntity oldEntity;
+        private final boolean replace;
         private @Nullable
         VillagerEntity newVillager;
-        private final boolean replace;
         private boolean willBeConverted;
 
         public SpawnNewVillager(ITotem totem, @Nullable MobEntity oldEntity, @Nonnull VillagerEntity newVillager, boolean replace, boolean willBeConverted) {
@@ -108,14 +108,6 @@ public abstract class VampirismVillageEvent extends Event {
         }
 
         /**
-         * If the villager will be converted afterwards (e.g. to a vampire version)
-         * Default: Is sometimes true if the village is not controlled by hunters. Can be overridden by {@link #setWillBeConverted}
-         */
-        public boolean isWillBeConverted() {
-            return willBeConverted;
-        }
-
-        /**
          * A random existing villager which can be used as a seed (e.g. for the position)
          *
          * @return
@@ -126,17 +118,25 @@ public abstract class VampirismVillageEvent extends Event {
         }
 
         /**
-         * Overwrite the default value.
-         */
-        public void setWillBeConverted(boolean willBeConverted) {
-            this.willBeConverted = willBeConverted;
-        }
-
-        /**
          * @return if the {@link #oldEntity} will be replaced by {@link #newVillager}
          */
         public boolean isReplace() {
             return replace;
+        }
+
+        /**
+         * If the villager will be converted afterwards (e.g. to a vampire version)
+         * Default: Is sometimes true if the village is not controlled by hunters. Can be overridden by {@link #setWillBeConverted}
+         */
+        public boolean isWillBeConverted() {
+            return willBeConverted;
+        }
+
+        /**
+         * Overwrite the default value.
+         */
+        public void setWillBeConverted(boolean willBeConverted) {
+            this.willBeConverted = willBeConverted;
         }
     }
 
@@ -281,7 +281,7 @@ public abstract class VampirismVillageEvent extends Event {
          * -1 if triggered by chance
          * 0<= x < 5 triggered by badomen effect with respective amplifier
          */
-        private int badOmenLevel;
+        private final int badOmenLevel;
         private float defendStrength;
         private float attackStrength;
 
@@ -292,16 +292,12 @@ public abstract class VampirismVillageEvent extends Event {
             this.attackStrength = attackStrength;
         }
 
-        public boolean isPlayerRaid() {
-            return badOmenLevel == -2;
+        public float getAttackStrength() {
+            return attackStrength;
         }
 
-        public boolean isRandomRaid() {
-            return badOmenLevel == -1;
-        }
-
-        public boolean isBadOmenTriggered() {
-            return badOmenLevel >= 0;
+        public void setAttackStrength(float attackStrength) {
+            this.attackStrength = attackStrength;
         }
 
         public int getBadOmenLevel() {
@@ -312,16 +308,20 @@ public abstract class VampirismVillageEvent extends Event {
             return defendStrength;
         }
 
-        public float getAttackStrength() {
-            return attackStrength;
-        }
-
         public void setDefendStrength(float defendStrength) {
             this.defendStrength = defendStrength;
         }
 
-        public void setAttackStrength(float attackStrength) {
-            this.attackStrength = attackStrength;
+        public boolean isBadOmenTriggered() {
+            return badOmenLevel >= 0;
+        }
+
+        public boolean isPlayerRaid() {
+            return badOmenLevel == -2;
+        }
+
+        public boolean isRandomRaid() {
+            return badOmenLevel == -1;
         }
     }
 }

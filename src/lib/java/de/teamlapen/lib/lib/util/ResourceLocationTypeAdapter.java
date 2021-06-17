@@ -10,16 +10,16 @@ import java.io.IOException;
 public final class ResourceLocationTypeAdapter extends TypeAdapter<ResourceLocation> {
 
     @Override
+    public ResourceLocation read(JsonReader in) throws IOException {
+        return new ResourceLocation(in.nextString());
+    }
+
+    @Override
     public void write(JsonWriter out, ResourceLocation value) throws IOException {
         if (value == null) {
             out.nullValue();
             return;
         }
         out.value(value.toString());
-    }
-
-    @Override
-    public ResourceLocation read(JsonReader in) throws IOException {
-        return new ResourceLocation(in.nextString());
     }
 }

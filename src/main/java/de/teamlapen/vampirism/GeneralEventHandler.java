@@ -50,6 +50,11 @@ public class GeneralEventHandler {
     private final static Logger LOGGER = LogManager.getLogger();
 
     @SubscribeEvent
+    public void onAttachCapabilityWorld(AttachCapabilitiesEvent<World> event) {
+        event.addCapability(REFERENCE.WORLD_CAP_KEY, VampirismWorld.createNewCapability(event.getObject()));
+    }
+
+    @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         VersionChecker.VersionInfo versionInfo = VampirismMod.instance.getVersionInfo();
         if (!versionInfo.isChecked()) LOGGER.warn("Version check is not finished yet");
@@ -106,10 +111,10 @@ public class GeneralEventHandler {
     }
 
     @SubscribeEvent
-    public void onWorldUnload(WorldEvent.Unload event) {
-        if (event.getWorld() instanceof World) {
-            VampirismWorld.getOpt((World) event.getWorld()).ifPresent(VampirismWorld::clear);
-        }
+    public void onServerTick(TickEvent.ServerTickEvent event) {
+        if (event.phase == TickEvent.Phase.END) return;
+        MinionWorldData.getData(ServerLifecycleHooks.getCurrentServer()).tick();
+
     }
 
     @SubscribeEvent
@@ -123,14 +128,9 @@ public class GeneralEventHandler {
     }
 
     @SubscribeEvent
-    public void onAttachCapabilityWorld(AttachCapabilitiesEvent<World> event) {
-        event.addCapability(REFERENCE.WORLD_CAP_KEY, VampirismWorld.createNewCapability(event.getObject()));
-    }
-
-    @SubscribeEvent
-    public void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) return;
-        MinionWorldData.getData(ServerLifecycleHooks.getCurrentServer()).tick();
-
+    public void onWorldUnload(WorldEvent.Unload event) {
+        if (event.getWorld() instanceof World) {
+            VampirismWorld.getOpt((World) event.getWorld()).ifPresent(VampirismWorld::clear);
+        }
     }
 }

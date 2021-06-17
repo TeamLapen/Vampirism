@@ -21,9 +21,9 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
     private final Set<IRefinement> refinements;
     private final Rarity rarity;
     private final int color;
+    private final WeightedRandomItem<IRefinementSet> weightedRandom;
     private ITextComponent name;
     private ITextComponent desc;
-    private final WeightedRandomItem<IRefinementSet> weightedRandom;
     @Nullable
     private IRefinementItem.AccessorySlotType restrictedType;
 
@@ -38,24 +38,15 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
         this(rarity, color, UtilLib.newSortedSet(refinements));
     }
 
-    /**
-     * Specify the one and only accessory type this refinement can be put on
-     */
-    public RefinementSet onlyFor(IRefinementItem.AccessorySlotType restrictedType){
-        this.restrictedType=restrictedType;
-        return this;
-    }
-
-    @Nonnull
     @Override
-    public Set<IRefinement> getRefinements() {
-        return this.refinements;
+    public int getColor() {
+        return color;
     }
 
     @Nonnull
     @Override
     public ITextComponent getName() {
-        return this.name != null? this.name: (this.name= new TranslationTextComponent("refinement_set." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()));
+        return this.name != null ? this.name : (this.name = new TranslationTextComponent("refinement_set." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()));
     }
 
     @Nonnull
@@ -64,8 +55,10 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
         return this.rarity;
     }
 
-    public WeightedRandomItem<IRefinementSet> getWeightedRandom() {
-        return weightedRandom;
+    @Nonnull
+    @Override
+    public Set<IRefinement> getRefinements() {
+        return this.refinements;
     }
 
     @Override
@@ -73,18 +66,25 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
         return Optional.ofNullable(restrictedType);
     }
 
-    @Override
-    public int getColor() {
-        return color;
+    public WeightedRandomItem<IRefinementSet> getWeightedRandom() {
+        return weightedRandom;
+    }
+
+    /**
+     * Specify the one and only accessory type this refinement can be put on
+     */
+    public RefinementSet onlyFor(IRefinementItem.AccessorySlotType restrictedType) {
+        this.restrictedType = restrictedType;
+        return this;
     }
 
     public static class VampireRefinementSet extends RefinementSet {
         public VampireRefinementSet(Rarity rarity, int color, Set<IRefinement> refinements) {
-            super(rarity,color, refinements);
+            super(rarity, color, refinements);
         }
 
         public VampireRefinementSet(Rarity rarity, int color, IRefinement... refinements) {
-            super(rarity,color, refinements);
+            super(rarity, color, refinements);
         }
 
         @Nonnull

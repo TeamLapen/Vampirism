@@ -31,16 +31,6 @@ import java.util.function.Consumer;
 @ParametersAreNonnullByDefault
 public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
 
-    private int lava = 1;
-    private ISkill[] skills;
-    private int level = 1;
-    private final JsonObject extraNbt;
-
-    public ShapedWeaponTableRecipeBuilder(IItemProvider item, int count, @Nullable JsonObject extraNbt) {
-        super(item, count);
-        this.extraNbt = extraNbt;
-    }
-
     public static ShapedWeaponTableRecipeBuilder shapedWeaponTable(IItemProvider item) {
         return new ShapedWeaponTableRecipeBuilder(item, 1, null);
     }
@@ -52,25 +42,32 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
     public static ShapedWeaponTableRecipeBuilder shapedWeaponTable(IItemProvider item, int count, JsonObject nbt) {
         return new ShapedWeaponTableRecipeBuilder(item, count, nbt);
     }
+    private final JsonObject extraNbt;
+    private int lava = 1;
+    private ISkill[] skills;
+    private int level = 1;
 
-    public ShapedWeaponTableRecipeBuilder lava(int amount) {
-        this.lava = amount;
-        return this;
-    }
-
-    public ShapedWeaponTableRecipeBuilder skills(ISkill... skills) {
-        this.skills = skills;
-        return this;
-    }
-
-    public ShapedWeaponTableRecipeBuilder level(int level) {
-        this.level = level;
-        return this;
+    public ShapedWeaponTableRecipeBuilder(IItemProvider item, int count, @Nullable JsonObject extraNbt) {
+        super(item, count);
+        this.extraNbt = extraNbt;
     }
 
     @Override
     public ShapedWeaponTableRecipeBuilder addCriterion(String name, ICriterionInstance criterionIn) {
         return (ShapedWeaponTableRecipeBuilder) super.addCriterion(name, criterionIn);
+    }
+
+    @Override
+    public void build(Consumer<IFinishedRecipe> consumer, ResourceLocation id) {
+        id = new ResourceLocation(id.getNamespace(), "weapontable/" + id.getPath());
+        this.advancementBuilder.withCriterion("has_skill", SkillUnlockedTrigger.builder(this.skills != null && this.skills.length >= 1 ? this.skills[0] : HunterSkills.weapon_table));
+        this.validate(id);
+        this.advancementBuilder
+                .withParentId(new ResourceLocation("recipes/root"))
+                .withCriterion("has_the_recipe", RecipeUnlockedTrigger.create(id))
+                .withRewards(net.minecraft.advancements.AdvancementRewards.Builder.recipe(id))
+                .withRequirementsStrategy(IRequirementsStrategy.OR);
+        consumer.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, this.pattern, this.key, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getGroup().getPath() + "/" + id.getPath()), this.lava, this.skills != null ? this.skills : new ISkill[]{}, this.level, this.extraNbt));
     }
 
     @Override
@@ -88,6 +85,16 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         return (ShapedWeaponTableRecipeBuilder) super.key(symbol, tagIn);
     }
 
+    public ShapedWeaponTableRecipeBuilder lava(int amount) {
+        this.lava = amount;
+        return this;
+    }
+
+    public ShapedWeaponTableRecipeBuilder level(int level) {
+        this.level = level;
+        return this;
+    }
+
     @Override
     public ShapedWeaponTableRecipeBuilder patternLine(String patternIn) {
         return (ShapedWeaponTableRecipeBuilder) super.patternLine(patternIn);
@@ -98,17 +105,9 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         return (ShapedWeaponTableRecipeBuilder) super.setGroup(groupIn);
     }
 
-    @Override
-    public void build(Consumer<IFinishedRecipe> consumer, ResourceLocation id) {
-        id = new ResourceLocation(id.getNamespace(), "weapontable/" + id.getPath());
-        this.advancementBuilder.withCriterion("has_skill", SkillUnlockedTrigger.builder(this.skills != null && this.skills.length >= 1? this.skills[0]:HunterSkills.weapon_table));
-        this.validate(id);
-        this.advancementBuilder
-                .withParentId(new ResourceLocation("recipes/root"))
-                .withCriterion("has_the_recipe", RecipeUnlockedTrigger.create(id))
-                .withRewards(net.minecraft.advancements.AdvancementRewards.Builder.recipe(id))
-                .withRequirementsStrategy(IRequirementsStrategy.OR);
-        consumer.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, this.pattern, this.key, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getGroup().getPath() + "/" + id.getPath()), this.lava, this.skills != null ? this.skills : new ISkill[]{}, this.level, this.extraNbt));
+    public ShapedWeaponTableRecipeBuilder skills(ISkill... skills) {
+        this.skills = skills;
+        return this;
     }
 
     private class Result extends ShapedRecipeBuilder.Result {
@@ -125,6 +124,12 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
             this.extraNbt = extraNbt;
         }
 
+        @Nonnull
+        @Override
+        public IRecipeSerializer<?> getSerializer() {
+            return ModRecipes.shaped_crafting_weapontable;
+        }
+
         @Override
         public void serialize(JsonObject jsonObject) {
             super.serialize(jsonObject);
@@ -138,12 +143,6 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
             if (extraNbt != null) {
                 jsonObject.get("result").getAsJsonObject().add("nbt", extraNbt);
             }
-        }
-
-        @Nonnull
-        @Override
-        public IRecipeSerializer<?> getSerializer() {
-            return ModRecipes.shaped_crafting_weapontable;
         }
     }
 }

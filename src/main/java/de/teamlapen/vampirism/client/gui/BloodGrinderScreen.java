@@ -23,15 +23,15 @@ public class BloodGrinderScreen extends ContainerScreen<BloodGrinderContainer> {
     }
 
     @Override
+    public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
+    }
+
+    @Override
     protected void drawGuiContainerBackgroundLayer(@Nonnull MatrixStack stack, float var1, int var2, int var3) {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(background);
         this.blit(stack, this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-    }
-
-    @Override
-    public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
     }
 }

@@ -199,6 +199,10 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
         return true;
     }
 
+    public boolean isExtended() {
+        return this.config.isMultiTaskBrewing();
+    }
+
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
         if (index == 2) {
@@ -211,10 +215,6 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
                 return net.minecraftforge.common.brewing.BrewingRecipeRegistry.isValidInput(stack) && this.getStackInSlot(index).isEmpty();
             }
         }
-    }
-
-    public boolean isExtended() {
-        return this.config.isMultiTaskBrewing();
     }
 
     @Override

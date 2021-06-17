@@ -20,29 +20,9 @@ import java.util.List;
 public interface IVillageFactionData {
 
     IVillageFactionData INSTANCE = new IVillageFactionData() {
-        @Override
-        public Class<? extends MobEntity> getGuardSuperClass() {
-            return MobEntity.class;
-        }
-
-        @Override
-        public VillagerProfession getFactionVillageProfession() {
-            return VillagerProfession.NONE;
-        }
-
-        @Override
-        public List<CaptureEntityEntry> getCaptureEntries() {
-            return Collections.emptyList();
-        }
-
-        @Override
-        public Pair<Block, Block> getTotemTopBlock() {
-            return Pair.of(Blocks.AIR, Blocks.AIR);
-        }
-
         @Nullable
         @Override
-        public EntityType<? extends ITaskMasterEntity> getTaskMasterEntity() {
+        public Effect getBadOmenEffect() {
             return null;
         }
 
@@ -53,47 +33,68 @@ public interface IVillageFactionData {
         }
 
         @Override
-        public boolean isBanner(@Nonnull ItemStack stack) {
-            return ItemStack.areItemStacksEqual(getBanner(), stack);
+        public List<CaptureEntityEntry> getCaptureEntries() {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public VillagerProfession getFactionVillageProfession() {
+            return VillagerProfession.NONE;
+        }
+
+        @Override
+        public Class<? extends MobEntity> getGuardSuperClass() {
+            return MobEntity.class;
         }
 
         @Nullable
         @Override
-        public Effect getBadOmenEffect() {
+        public EntityType<? extends ITaskMasterEntity> getTaskMasterEntity() {
             return null;
+        }
+
+        @Override
+        public Pair<Block, Block> getTotemTopBlock() {
+            return Pair.of(Blocks.AIR, Blocks.AIR);
+        }
+
+        @Override
+        public boolean isBanner(@Nonnull ItemStack stack) {
+            return ItemStack.areItemStacksEqual(getBanner(), stack);
         }
     };
 
-    Class<? extends MobEntity> getGuardSuperClass();
-
-    VillagerProfession getFactionVillageProfession();
-
-    List<CaptureEntityEntry> getCaptureEntries();
-
     /**
-     * @return Pair of totem top blocks for faction. Left is the generated (crafted=false), right is the crafted
+     * TODO 1.17 remove default for methods here (as they are implemented in the default instance)
+     *
+     * @return A faction specific bad omen effect
      */
-    Pair<Block, Block> getTotemTopBlock();
-
     @Nullable
-    EntityType<? extends ITaskMasterEntity> getTaskMasterEntity();
+    default Effect getBadOmenEffect() {
+        return null;
+    }
 
     @Nonnull
     default ItemStack getBanner() { //TODO 1.17 remove default implementation
         return new ItemStack(Items.WHITE_BANNER);
     }
 
-    default boolean isBanner(@Nonnull ItemStack stack) {//TODO 1.17 remove default implementation
-        return false;
-    }
+    List<CaptureEntityEntry> getCaptureEntries();
+
+    VillagerProfession getFactionVillageProfession();
+
+    Class<? extends MobEntity> getGuardSuperClass();
+
+    @Nullable
+    EntityType<? extends ITaskMasterEntity> getTaskMasterEntity();
 
     /**
-     * TODO 1.17 remove default for methods here (as they are implemented in the default instance)
-     * @return A faction specific bad omen effect
+     * @return Pair of totem top blocks for faction. Left is the generated (crafted=false), right is the crafted
      */
-    @Nullable
-    default Effect getBadOmenEffect(){
-        return null;
+    Pair<Block, Block> getTotemTopBlock();
+
+    default boolean isBanner(@Nonnull ItemStack stack) {//TODO 1.17 remove default implementation
+        return false;
     }
 
 }

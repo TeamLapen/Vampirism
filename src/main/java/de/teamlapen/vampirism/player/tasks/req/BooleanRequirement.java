@@ -18,16 +18,17 @@ public class BooleanRequirement implements TaskRequirement.Requirement<Boolean> 
         this.id = id;
         this.function = function;
     }
-    @Nonnull
-    @Override
-    public Boolean getStat(IFactionPlayer<?> player) {
-        return this.function.apply(player);
-    }
 
     @Nonnull
     @Override
     public ResourceLocation getId() {
         return this.id;
+    }
+
+    @Nonnull
+    @Override
+    public Boolean getStat(IFactionPlayer<?> player) {
+        return this.function.apply(player);
     }
 
     @FunctionalInterface

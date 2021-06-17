@@ -50,6 +50,12 @@ public class RecipesGenerator extends RecipeProvider {
         super(dataGenerator);
     }
 
+    @Nonnull
+    @Override
+    public String getName() {
+        return "Vampirism Recipes";
+    }
+
     @Override
     protected void registerRecipes(@Nonnull Consumer<IFinishedRecipe> consumer) {
         IItemProvider hopper = Blocks.HOPPER;
@@ -247,43 +253,15 @@ public class RecipesGenerator extends RecipeProvider {
         ConditionalRecipe.builder().addCondition(new ModLoadedCondition("guideapi-vp")).addRecipe((consumer1 -> ShapelessRecipeBuilder.shapelessRecipe(ForgeRegistries.ITEMS.getValue(new ResourceLocation("guideapi-vp", "vampirism-guidebook"))).addIngredient(vampire_fang).addIngredient(book).addCriterion("has_fang", hasItem(vampire_fang)).build(consumer1, modId("general/guidebook")))).build(consumer, modId("general/guidebook"));
 
         ShapedRecipeBuilder.shapedRecipe(ModItems.cure_apple).patternLine("YXY").patternLine("YZY").patternLine("YYY").key('Y', Items.GOLD_NUGGET).key('Z', Items.APPLE).key('X', ModItems.injection_zombie_blood).addCriterion("has_apple", hasItem(Items.APPLE)).addCriterion("has_zombie_blood", hasItem(ModItems.injection_zombie_blood)).build(consumer, general("cure_item"));
-        ShapedRecipeBuilder.shapedRecipe(ModItems.vampire_clothing_legs).patternLine("XXX").patternLine("X X").patternLine("XYX").key('X', Items.GRAY_WOOL).key('Y',Ingredient.fromItems(ModItems.human_heart, ModItems.weak_human_heart)).addCriterion("has_heart",hasItem(ModItems.human_heart)).addCriterion("has_wool", hasItem(Items.GRAY_WOOL)).build(consumer, vampire("vampire_clothing_legs"));
-        ShapedRecipeBuilder.shapedRecipe(ModItems.vampire_clothing_boots).patternLine("XYX").patternLine("X X").key('X', Items.BROWN_WOOL).key('Y',Ingredient.fromItems(ModItems.human_heart, ModItems.weak_human_heart)).addCriterion("has_heart",hasItem(ModItems.human_heart)).addCriterion("has_wool", hasItem(Items.BROWN_WOOL)).build(consumer, vampire("vampire_clothing_boots"));
-        ShapedRecipeBuilder.shapedRecipe(ModItems.vampire_clothing_hat).patternLine("ZXX").patternLine(" Y ").patternLine("XXX").key('X', Items.BLACK_WOOL).key('Y', Items.RED_WOOL).key('Z',Ingredient.fromItems(ModItems.human_heart, ModItems.weak_human_heart)).addCriterion("has_heart",hasItem(ModItems.human_heart)).addCriterion("has_wool", hasItem(Items.BLACK_WOOL)).build(consumer, vampire("vampire_clothing_hat"));
-        ShapedRecipeBuilder.shapedRecipe(ModItems.vampire_clothing_crown).patternLine("XYX").patternLine("XXX").key('X', Items.GOLD_INGOT).key('Y',Ingredient.fromItems(ModItems.human_heart, ModItems.weak_human_heart)).addCriterion("has_heart",hasItem(ModItems.human_heart)).addCriterion("has_gold", hasItem(Items.GOLD_INGOT)).build(consumer, vampire("vampire_clothing_crown"));
+        ShapedRecipeBuilder.shapedRecipe(ModItems.vampire_clothing_legs).patternLine("XXX").patternLine("X X").patternLine("XYX").key('X', Items.GRAY_WOOL).key('Y', Ingredient.fromItems(ModItems.human_heart, ModItems.weak_human_heart)).addCriterion("has_heart", hasItem(ModItems.human_heart)).addCriterion("has_wool", hasItem(Items.GRAY_WOOL)).build(consumer, vampire("vampire_clothing_legs"));
+        ShapedRecipeBuilder.shapedRecipe(ModItems.vampire_clothing_boots).patternLine("XYX").patternLine("X X").key('X', Items.BROWN_WOOL).key('Y', Ingredient.fromItems(ModItems.human_heart, ModItems.weak_human_heart)).addCriterion("has_heart", hasItem(ModItems.human_heart)).addCriterion("has_wool", hasItem(Items.BROWN_WOOL)).build(consumer, vampire("vampire_clothing_boots"));
+        ShapedRecipeBuilder.shapedRecipe(ModItems.vampire_clothing_hat).patternLine("ZXX").patternLine(" Y ").patternLine("XXX").key('X', Items.BLACK_WOOL).key('Y', Items.RED_WOOL).key('Z', Ingredient.fromItems(ModItems.human_heart, ModItems.weak_human_heart)).addCriterion("has_heart", hasItem(ModItems.human_heart)).addCriterion("has_wool", hasItem(Items.BLACK_WOOL)).build(consumer, vampire("vampire_clothing_hat"));
+        ShapedRecipeBuilder.shapedRecipe(ModItems.vampire_clothing_crown).patternLine("XYX").patternLine("XXX").key('X', Items.GOLD_INGOT).key('Y', Ingredient.fromItems(ModItems.human_heart, ModItems.weak_human_heart)).addCriterion("has_heart", hasItem(ModItems.human_heart)).addCriterion("has_gold", hasItem(Items.GOLD_INGOT)).build(consumer, vampire("vampire_clothing_crown"));
 
-        ShapedRecipeBuilder.shapedRecipe(ModBlocks.cross).patternLine(" X ").patternLine("XYX").patternLine(" X ").key('X',planks).key('Y',holy_water).addCriterion("has_planks", hasItem(planks)).addCriterion("has_holy",hasItem(holy_water)).build(consumer, hunter("cross"));
-        ShapedRecipeBuilder.shapedRecipe(ModItems.item_candelabra).patternLine("XXX").patternLine("YYY").patternLine("ZAZ").key('X',string).key('Y', Items.HONEYCOMB).key('Z',iron_ingot).key('A',gold_ingot).addCriterion("has_honey", hasItem(Items.HONEYCOMB)).addCriterion("has_string", hasItem(string)).addCriterion("has_iron",hasItem(iron_ingot)).addCriterion("has_gold", hasItem(gold_ingot)).build(consumer, vampire("candelabra"));
-        ShapedRecipeBuilder.shapedRecipe(ModBlocks.chandelier).patternLine("XYX").patternLine("ZYZ").patternLine("BAB").key('X',string).key('Y', ModItems.item_candelabra).key('Z', Items.HONEYCOMB).key('B',iron_ingot).key('A',gold_ingot).addCriterion("has_string", hasItem(string)).addCriterion("has_honey",hasItem(Items.HONEYCOMB)).addCriterion("has_candelabra", hasItem(ModItems.item_candelabra)).build(consumer, vampire("chandelier"));
-        ShapedRecipeBuilder.shapedRecipe(ModItems.garlic_finder).patternLine("XXX").patternLine("XYX").patternLine("ZAZ").key('X', blood_infused_iron_ingot).key('Y',garlic).key('Z',planks).key('A',Tags.Items.DUSTS_REDSTONE).addCriterion("has_garlic",hasItem(garlic)).addCriterion("has_bloodiron",hasItem(blood_infused_iron_ingot)).addCriterion("has_redstone",hasItem(Tags.Items.DUSTS_REDSTONE)).build(consumer, vampire("garlic_finder"));
-    }
-
-    @Nonnull
-    @Override
-    public String getName() {
-        return "Vampirism Recipes";
-    }
-
-    private ResourceLocation modId(String path) {
-        return new ResourceLocation(REFERENCE.MODID, path);
-    }
-
-    private ResourceLocation hunter(String path) {
-        return modId("hunter/" + path);
-    }
-
-    private ResourceLocation vampire(String path) {
-        return modId("vampire/" + path);
-    }
-
-    private ResourceLocation general(String path) {
-        return modId("general/" + path);
-    }
-
-    private Ingredient potion(Potion potion) {
-        ItemStack stack = new ItemStack(Items.POTION, 1);
-        PotionUtils.addPotionToItemStack(stack, potion);
-        return new NBTIngredient(stack);
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.cross).patternLine(" X ").patternLine("XYX").patternLine(" X ").key('X', planks).key('Y', holy_water).addCriterion("has_planks", hasItem(planks)).addCriterion("has_holy", hasItem(holy_water)).build(consumer, hunter("cross"));
+        ShapedRecipeBuilder.shapedRecipe(ModItems.item_candelabra).patternLine("XXX").patternLine("YYY").patternLine("ZAZ").key('X', string).key('Y', Items.HONEYCOMB).key('Z', iron_ingot).key('A', gold_ingot).addCriterion("has_honey", hasItem(Items.HONEYCOMB)).addCriterion("has_string", hasItem(string)).addCriterion("has_iron", hasItem(iron_ingot)).addCriterion("has_gold", hasItem(gold_ingot)).build(consumer, vampire("candelabra"));
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.chandelier).patternLine("XYX").patternLine("ZYZ").patternLine("BAB").key('X', string).key('Y', ModItems.item_candelabra).key('Z', Items.HONEYCOMB).key('B', iron_ingot).key('A', gold_ingot).addCriterion("has_string", hasItem(string)).addCriterion("has_honey", hasItem(Items.HONEYCOMB)).addCriterion("has_candelabra", hasItem(ModItems.item_candelabra)).build(consumer, vampire("chandelier"));
+        ShapedRecipeBuilder.shapedRecipe(ModItems.garlic_finder).patternLine("XXX").patternLine("XYX").patternLine("ZAZ").key('X', blood_infused_iron_ingot).key('Y', garlic).key('Z', planks).key('A', Tags.Items.DUSTS_REDSTONE).addCriterion("has_garlic", hasItem(garlic)).addCriterion("has_bloodiron", hasItem(blood_infused_iron_ingot)).addCriterion("has_redstone", hasItem(Tags.Items.DUSTS_REDSTONE)).build(consumer, vampire("garlic_finder"));
     }
 
     private JsonObject enchantment(int level, Enchantment enchantment) {
@@ -295,6 +273,28 @@ public class RecipesGenerator extends RecipeProvider {
         enchantmentarray.add(enchantment1);
         nbt.add("Enchantments", enchantmentarray);
         return nbt;
+    }
+
+    private ResourceLocation general(String path) {
+        return modId("general/" + path);
+    }
+
+    private ResourceLocation hunter(String path) {
+        return modId("hunter/" + path);
+    }
+
+    private ResourceLocation modId(String path) {
+        return new ResourceLocation(REFERENCE.MODID, path);
+    }
+
+    private Ingredient potion(Potion potion) {
+        ItemStack stack = new ItemStack(Items.POTION, 1);
+        PotionUtils.addPotionToItemStack(stack, potion);
+        return new NBTIngredient(stack);
+    }
+
+    private ResourceLocation vampire(String path) {
+        return modId("vampire/" + path);
     }
 
     private static class NBTIngredient extends net.minecraftforge.common.crafting.NBTIngredient {

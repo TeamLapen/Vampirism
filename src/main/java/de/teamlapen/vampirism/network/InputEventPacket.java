@@ -252,14 +252,14 @@ public class InputEventPacket implements IMessage {
                             player.openContainer(new INamedContainerProvider() {
                                 @Nonnull
                                 @Override
-                                public ITextComponent getDisplayName() {
-                                    return new TranslationTextComponent("");
+                                public Container createMenu(int i, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity playerEntity) {
+                                    return new VampirismContainer(i, playerInventory);
                                 }
 
                                 @Nonnull
                                 @Override
-                                public Container createMenu(int i, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity playerEntity) {
-                                    return new VampirismContainer(i, playerInventory);
+                                public ITextComponent getDisplayName() {
+                                    return new TranslationTextComponent("");
                                 }
                             });
                             fPlayer.getTaskManager().openVampirismMenu();
@@ -270,12 +270,13 @@ public class InputEventPacket implements IMessage {
                     VampirePlayer.getOpt(player).ifPresent(VampirePlayer::tryResurrect);
                     break;
                 case DIE:
-                    player.attackEntityFrom(DamageSource.GENERIC,10000);
+                    player.attackEntityFrom(DamageSource.GENERIC, 10000);
                     break;
             }
             ctx.setPacketHandled(true);
         });
     }
+
     private String param;
     private String action;
 

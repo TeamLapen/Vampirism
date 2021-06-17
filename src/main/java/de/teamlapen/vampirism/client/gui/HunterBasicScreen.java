@@ -44,6 +44,14 @@ public class HunterBasicScreen extends ContainerScreen<HunterBasicContainer> {
     }
 
     @Override
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(stack);
+        super.render(stack, mouseX, mouseY, partialTicks);
+        this.renderHoveredTooltip(stack, mouseX, mouseY);
+
+    }
+
+    @Override
     public void tick() {
         super.tick();
         timer = (timer + 1) % 10;
@@ -51,14 +59,6 @@ public class HunterBasicScreen extends ContainerScreen<HunterBasicContainer> {
             this.missing = container.getMissingCount();
             this.buttonLevelup.active = missing == 0;
         }
-    }
-
-    @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(stack);
-        super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(stack, mouseX, mouseY);
-
     }
 
     @Override

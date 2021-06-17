@@ -106,7 +106,7 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
                 return new ActionResult<>(ActionResultType.SUCCESS, stack);
             }
             return new ActionResult<>(ActionResultType.PASS, stack);
-        }).orElse( new ActionResult<>(ActionResultType.PASS, stack));
+        }).orElse(new ActionResult<>(ActionResultType.PASS, stack));
     }
 
     @Nonnull
@@ -116,18 +116,13 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
             int blood = BloodHelper.getBlood(stack);
             int drink = Math.min(blood, MULTIPLIER);
             ItemStack[] result = new ItemStack[1];
-            int amt = BloodHelper.drain(stack,drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> {
+            int amt = BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> {
                 result[0] = containerStack;
             });
-            ((IVampire) entityLiving).drinkBlood(amt/MULTIPLIER, 0, false);
+            ((IVampire) entityLiving).drinkBlood(amt / MULTIPLIER, 0, false);
             return result[0];
         }
         return FluidUtil.getFluidHandler(stack).map(IFluidHandlerItem::getContainer).orElse(super.onItemUseFinish(stack, worldIn, entityLiving));
-    }
-
-    @Override
-    public boolean showDurabilityBar(ItemStack stack) {
-        return false;
     }
 
     @Override
@@ -158,5 +153,10 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
                 player.setActiveHand(player.getActiveHand());
             }
         }
+    }
+
+    @Override
+    public boolean showDurabilityBar(ItemStack stack) {
+        return false;
     }
 }

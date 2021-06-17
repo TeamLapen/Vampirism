@@ -113,6 +113,13 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     }
 
     @Override
+    public void breakDisguise() {
+        if (actionHandler.isActionActive(HunterActions.disguise_hunter)) {
+            actionHandler.toggleAction(HunterActions.disguise_hunter);
+        }
+    }
+
+    @Override
     public boolean canLeaveFaction() {
         return true;
     }
@@ -130,6 +137,11 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     @Override
     public IFaction getDisguisedAs() {
         return player.isPotionActive(ModEffects.disguise_as_vampire) ? VReference.VAMPIRE_FACTION : getFaction();
+    }
+
+    @Override
+    public int getLevel() {
+        return ((IVampirismPlayer) player).getVampAtts().hunterLevel;
     }
 
     @Override
@@ -157,7 +169,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
      */
     @Nonnull
     public HunterPlayerSpecialAttribute getSpecialAttributes() {
-        return ((IVampirismPlayer)player).getVampAtts().getHuntSpecial();
+        return ((IVampirismPlayer) player).getVampAtts().getHuntSpecial();
     }
 
     @Override
@@ -196,13 +208,6 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
             return ObsidianArmorItem.isFullyEquipped(player);
         }
         return false;
-    }
-
-    @Override
-    public void breakDisguise() {
-        if (actionHandler.isActionActive(HunterActions.disguise_hunter)) {
-            actionHandler.toggleAction(HunterActions.disguise_hunter);
-        }
     }
 
     @Override
@@ -252,7 +257,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         player.getEntityWorld().getProfiler().startSection("vampirism_hunterPlayer");
         super.onUpdate();
         int level = getLevel();
-        if(level>0){
+        if (level > 0) {
             if (!isRemote()) {
                 boolean sync = false;
                 boolean syncToAll = false;
@@ -312,11 +317,6 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         super.writeFullUpdate(nbt);
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);
-    }
-
-    @Override
-    public int getLevel() {
-        return ((IVampirismPlayer)player).getVampAtts().hunterLevel;
     }
 
     private static class Storage implements Capability.IStorage<IHunterPlayer> {

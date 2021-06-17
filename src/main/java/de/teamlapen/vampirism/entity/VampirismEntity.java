@@ -51,12 +51,16 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     }
 
     public static boolean spawnPredicateVampireFog(IWorld world, BlockPos blockPos) {
-        return ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || ModBiomes.vampire_forest_hills.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || (world instanceof World && VampirismWorld.getOpt((World) world).map(vh->vh.isInsideArtificialVampireFogArea(blockPos)).orElse(false));
+        return ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || ModBiomes.vampire_forest_hills.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || (world instanceof World && VampirismWorld.getOpt((World) world).map(vh -> vh.isInsideArtificialVampireFogArea(blockPos)).orElse(false));
     }
 
     public static boolean spawnPredicateCanSpawn(EntityType<? extends MobEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
         BlockPos blockpos = blockPos.down();
         return spawnReason == SpawnReason.SPAWNER || world.getBlockState(blockpos).canEntitySpawn(world, blockpos, entityType);
+    }
+
+    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+        return CreatureEntity.registerAttributes().createMutableAttribute(Attributes.ATTACK_DAMAGE).createMutableAttribute(Attributes.FOLLOW_RANGE, 16).createMutableAttribute(Attributes.ATTACK_KNOCKBACK);
     }
     private final Goal moveTowardsRestriction;
     protected boolean hasArms = true;
@@ -175,10 +179,13 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
         }
     }
 
-
     @Override
     protected boolean canDropLoot() {
         return true;
+    }
+
+    protected void disableImobConversion() {
+        this.doImobConversion = false;
     }
 
     /**
@@ -199,10 +206,6 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
         }
     }
 
-    protected void disableImobConversion(){
-        this.doImobConversion=false;
-    }
-
     protected SoundEvent getDeathSound() {
         return SoundEvents.ENTITY_HOSTILE_DEATH;
     }
@@ -217,7 +220,6 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     }
 
     /**
-     *
      * @param iMob Whether we want the iMob or non iMob variant
      * @return Must be LivingEntity type
      */
@@ -256,10 +258,6 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
      */
     protected void onRandomTick() {
 
-    }
-
-    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return CreatureEntity.registerAttributes().createMutableAttribute(Attributes.ATTACK_DAMAGE).createMutableAttribute(Attributes.FOLLOW_RANGE, 16).createMutableAttribute(Attributes.ATTACK_KNOCKBACK);
     }
 
     protected void setDontDropEquipment() {

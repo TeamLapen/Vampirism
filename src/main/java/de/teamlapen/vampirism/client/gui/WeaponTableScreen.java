@@ -38,6 +38,31 @@ public class WeaponTableScreen extends ContainerScreen<WeaponTableContainer> imp
     }
 
     @Override
+    public RecipeBookGui getRecipeGui() {
+        return recipeBookGui;
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int p_mouseClicked_5_) {
+        if (this.recipeBookGui.mouseClicked(mouseX, mouseY, p_mouseClicked_5_)) {
+            return true;
+        } else {
+            return this.widthTooNarrow && this.recipeBookGui.isVisible() || super.mouseClicked(mouseX, mouseY, p_mouseClicked_5_);
+        }
+    }
+
+    @Override
+    public void onClose() {
+        this.recipeBookGui.removed();
+        super.onClose();
+    }
+
+    @Override
+    public void recipesUpdated() {
+        this.recipeBookGui.recipesUpdated();
+    }
+
+    @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
         this.renderBackground(stack);
@@ -61,26 +86,6 @@ public class WeaponTableScreen extends ContainerScreen<WeaponTableContainer> imp
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int p_mouseClicked_5_) {
-        if (this.recipeBookGui.mouseClicked(mouseX, mouseY, p_mouseClicked_5_)) {
-            return true;
-        } else {
-            return this.widthTooNarrow && this.recipeBookGui.isVisible() || super.mouseClicked(mouseX, mouseY, p_mouseClicked_5_);
-        }
-    }
-
-    @Override
-    public void onClose() {
-        this.recipeBookGui.removed();
-        super.onClose();
-    }
-
-    @Override
-    protected boolean isPointInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
-        return (!this.widthTooNarrow || !this.recipeBookGui.isVisible()) && super.isPointInRegion(x, y, width, height, mouseX, mouseY);
-    }
-
-    @Override
     protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -99,20 +104,15 @@ public class WeaponTableScreen extends ContainerScreen<WeaponTableContainer> imp
     }
 
     @Override
-    protected boolean hasClickedOutside(double mouseX, double mouseY, int guiLeftIn, int guiTopIn, int mouseButton) {
-        boolean flag = mouseX < (double)guiLeftIn || mouseY < (double)guiTopIn || mouseX >= (double)(guiLeftIn + this.xSize) || mouseY >= (double)(guiTopIn + this.ySize);
-        return this.recipeBookGui.func_195604_a(mouseX, mouseY, this.guiLeft, this.guiTop, this.xSize, this.ySize, mouseButton) && flag;
-    }
-
-    @Override
     protected void handleMouseClick(Slot slotIn, int slotId, int mouseButton, ClickType type) {
         super.handleMouseClick(slotIn, slotId, mouseButton, type);
         this.recipeBookGui.slotClicked(slotIn);
     }
 
     @Override
-    public void recipesUpdated() {
-        this.recipeBookGui.recipesUpdated();
+    protected boolean hasClickedOutside(double mouseX, double mouseY, int guiLeftIn, int guiTopIn, int mouseButton) {
+        boolean flag = mouseX < (double) guiLeftIn || mouseY < (double) guiTopIn || mouseX >= (double) (guiLeftIn + this.xSize) || mouseY >= (double) (guiTopIn + this.ySize);
+        return this.recipeBookGui.func_195604_a(mouseX, mouseY, this.guiLeft, this.guiTop, this.xSize, this.ySize, mouseButton) && flag;
     }
 
     @Override
@@ -132,8 +132,8 @@ public class WeaponTableScreen extends ContainerScreen<WeaponTableContainer> imp
     }
 
     @Override
-    public RecipeBookGui getRecipeGui() {
-        return recipeBookGui;
+    protected boolean isPointInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
+        return (!this.widthTooNarrow || !this.recipeBookGui.isVisible()) && super.isPointInRegion(x, y, width, height, mouseX, mouseY);
     }
 
 }

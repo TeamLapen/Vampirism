@@ -30,18 +30,6 @@ public class MinionDamageSource extends EntityDamageSource {
     }
 
     @Override
-    @Nullable
-    public Entity getImmediateSource() {
-        return this.minionEntity;
-    }
-
-    @Override
-    @Nullable
-    public Entity getTrueSource() {
-        return this.playerEntity;
-    }
-
-    @Override
     public ITextComponent getDeathMessage(LivingEntity entityLivingBaseIn) {
         ITextComponent minionName = this.damageSourceEntity.getDisplayName();
         ItemStack itemstack = minionEntity.getHeldItemMainhand();
@@ -52,5 +40,17 @@ public class MinionDamageSource extends EntityDamageSource {
             msg.append(new StringTextComponent(" ")).append(new TranslationTextComponent("death.minion.on_behalf", playerEntity.getDisplayName()));
         }
         return msg;
+    }
+
+    @Override
+    @Nullable
+    public Entity getImmediateSource() {
+        return this.minionEntity;
+    }
+
+    @Override
+    @Nullable
+    public Entity getTrueSource() {
+        return this.playerEntity;
     }
 }

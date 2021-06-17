@@ -20,18 +20,6 @@ public class EntityRequirement implements TaskRequirement.Requirement<EntityType
         this.amount = amount;
     }
 
-    @Nonnull
-    @Override
-    public TaskRequirement.Type getType() {
-        return TaskRequirement.Type.ENTITY;
-    }
-
-    @Nonnull
-    @Override
-    public EntityType<?> getStat(IFactionPlayer<?> player) {
-        return entityType;
-    }
-
     @Override
     public int getAmount(IFactionPlayer<?> player) {
         return amount;
@@ -41,6 +29,18 @@ public class EntityRequirement implements TaskRequirement.Requirement<EntityType
     @Override
     public ResourceLocation getId() {
         return id;
+    }
+
+    @Nonnull
+    @Override
+    public EntityType<?> getStat(IFactionPlayer<?> player) {
+        return entityType;
+    }
+
+    @Nonnull
+    @Override
+    public TaskRequirement.Type getType() {
+        return TaskRequirement.Type.ENTITY;
     }
 
 }

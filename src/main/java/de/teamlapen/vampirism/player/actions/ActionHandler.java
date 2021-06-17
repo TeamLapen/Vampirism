@@ -83,6 +83,14 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     @Override
+    public void extendActionTimer(@Nonnull ILastingAction action, int duration) {
+        int i = activeTimers.getOrDefault(action.getRegistryName(), -1);
+        if (i > 0) {
+            activeTimers.put(action.getRegistryName(), i + duration);
+        }
+    }
+
+    @Override
     public List<IAction> getAvailableActions() {
         ArrayList<IAction> actions = new ArrayList<>();
         for (IAction action : unlockedActions) {
@@ -121,13 +129,13 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     @Override
-    public boolean isActionUnlocked(IAction action) {
-        return unlockedActions.contains(action);
+    public boolean isActionOnCooldown(IAction action) {
+        return cooldownTimers.containsKey(action.getRegistryName());
     }
 
     @Override
-    public boolean isActionOnCooldown(IAction action) {
-        return cooldownTimers.containsKey(action.getRegistryName());
+    public boolean isActionUnlocked(IAction action) {
+        return unlockedActions.contains(action);
     }
 
     /**
@@ -292,11 +300,6 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         unlockedActions.addAll(actions);
     }
 
-    private boolean isActionAllowedPermission(IAction action) {
-        ResourceLocation id = action.getRegistryName();
-        return player.getRepresentingEntity().world.isRemote || PermissionAPI.hasPermission(player.getRepresentingPlayer(), Permissions.ACTION_PREFIX + id.getNamespace() + "." + id.getPath());
-    }
-
     /**
      * Update the actions
      * Should only be called by the corresponding Capability instance
@@ -351,12 +354,9 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         nbt.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
     }
 
-    @Override
-    public void extendActionTimer(@Nonnull ILastingAction action, int duration) {
-        int i = activeTimers.getOrDefault(action.getRegistryName(),-1);
-        if(i>0){
-            activeTimers.put(action.getRegistryName(),i+duration);
-        }
+    private boolean isActionAllowedPermission(IAction action) {
+        ResourceLocation id = action.getRegistryName();
+        return player.getRepresentingEntity().world.isRemote || PermissionAPI.hasPermission(player.getRepresentingPlayer(), Permissions.ACTION_PREFIX + id.getNamespace() + "." + id.getPath());
     }
 
     private void loadTimerMapFromNBT(CompoundNBT nbt, Object2IntMap<ResourceLocation> map) {

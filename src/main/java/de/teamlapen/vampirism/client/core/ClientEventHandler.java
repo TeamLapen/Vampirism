@@ -168,9 +168,9 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onToolTip(ItemTooltipEvent event) {
-            if (VampirismPotion.isHunterPotion(event.getItemStack(), true).map(Potion::getEffects).map(effectInstances -> effectInstances.stream().map(EffectInstance::getPotion).anyMatch(Effect::isBeneficial)).orElse(false) && (event.getPlayer() == null || !Helper.isHunter(event.getPlayer()))) {
-                event.getToolTip().add(new TranslationTextComponent("text.vampirism.hunter_potion.deadly").mergeStyle(TextFormatting.DARK_RED));
-            }
+        if (VampirismPotion.isHunterPotion(event.getItemStack(), true).map(Potion::getEffects).map(effectInstances -> effectInstances.stream().map(EffectInstance::getPotion).anyMatch(Effect::isBeneficial)).orElse(false) && (event.getPlayer() == null || !Helper.isHunter(event.getPlayer()))) {
+            event.getToolTip().add(new TranslationTextComponent("text.vampirism.hunter_potion.deadly").mergeStyle(TextFormatting.DARK_RED));
+        }
 
     }
 

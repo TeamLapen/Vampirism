@@ -37,22 +37,38 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
         Collection<ResourceLocation> hunterTextures = new ArrayList<>(rm.getAllResourceLocations("textures/entity/hunter", s -> s.endsWith(".png")));
         Collection<ResourceLocation> minionsTextures = new ArrayList<>(rm.getAllResourceLocations("textures/entity/minion/hunter", s -> s.endsWith(".png")));
         textures = separateSlimTextures(hunterTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
-        if(textures.length==0){
+        if (textures.length == 0) {
             throw new IllegalStateException("Must have at least one hunter texture: vampirism:textures/entity/hunter/hunter.png");
         }
         minionSpecificTextures = separateSlimTextures(minionsTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
-        this.addLayer(new HunterEquipmentLayer<>(this, minion -> minion.getItemStackFromSlot(EquipmentSlotType.MAINHAND).isEmpty() ? minion.getItemStackFromSlot(EquipmentSlotType.OFFHAND).isEmpty() ? HunterEquipmentModel.StakeType.FULL: HunterEquipmentModel.StakeType.AXE_ONLY : HunterEquipmentModel.StakeType.NONE, HunterMinionEntity::getHatType));
+        this.addLayer(new HunterEquipmentLayer<>(this, minion -> minion.getItemStackFromSlot(EquipmentSlotType.MAINHAND).isEmpty() ? minion.getItemStackFromSlot(EquipmentSlotType.OFFHAND).isEmpty() ? HunterEquipmentModel.StakeType.FULL : HunterEquipmentModel.StakeType.AXE_ONLY : HunterEquipmentModel.StakeType.NONE, HunterMinionEntity::getHatType));
         this.addLayer(new BipedArmorLayer<>(this, new BipedModel<>(0.5f), new BipedModel<>(1f)));
+    }
+
+    public int getHunterTextureCount() {
+        return this.textures.length;
+    }
+
+    public int getMinionSpecificTextureCount() {
+        return this.minionSpecificTextures.length;
     }
 
     @Override
     protected Pair<ResourceLocation, Boolean> determineTextureAndModel(HunterMinionEntity entity) {
-        Pair<ResourceLocation, Boolean> p = (entity.hasMinionSpecificSkin() && this.minionSpecificTextures.length >0) ? minionSpecificTextures[entity.getHunterType() % minionSpecificTextures.length] : textures[entity.getHunterType() % textures.length];
+        Pair<ResourceLocation, Boolean> p = (entity.hasMinionSpecificSkin() && this.minionSpecificTextures.length > 0) ? minionSpecificTextures[entity.getHunterType() % minionSpecificTextures.length] : textures[entity.getHunterType() % textures.length];
         if (entity.shouldRenderLordSkin()) {
             return entity.getOverlayPlayerProperties().map(Pair::getRight).map(b -> Pair.of(p.getLeft(), b)).orElse(p);
         }
         return p;
+    }
+
+    @Override
+    protected void preRenderCallback(HunterMinionEntity entityIn, MatrixStack matrixStackIn, float partialTickTime) {
+        float s = entityIn.getScale();
+        //float off = (1 - s) * 1.95f;
+        matrixStackIn.scale(s, s, s);
+        //matrixStackIn.translate(0,off,0f);
     }
 
     @Override
@@ -63,22 +79,6 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
             this.entityModel.rightArmPose = BipedModel.ArmPose.ITEM;
         }
         super.renderSelected(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-    }
-
-    public int getHunterTextureCount() {
-        return this.textures.length;
-    }
-
-    public int getMinionSpecificTextureCount(){
-        return this.minionSpecificTextures.length;
-    }
-
-    @Override
-    protected void preRenderCallback(HunterMinionEntity entityIn, MatrixStack matrixStackIn, float partialTickTime) {
-        float s = entityIn.getScale();
-        //float off = (1 - s) * 1.95f;
-        matrixStackIn.scale(s, s, s);
-        //matrixStackIn.translate(0,off,0f);
     }
 
 }

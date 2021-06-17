@@ -48,14 +48,14 @@ public class InjectionItem extends VampirismItem {
             this.name = name;
         }
 
+        public String getName() {
+            return this.getString();
+        }
+
         @Override
         @Nonnull
         public String getString() {
             return name;
-        }
-
-        public String getName() {
-            return this.getString();
         }
     }
 }

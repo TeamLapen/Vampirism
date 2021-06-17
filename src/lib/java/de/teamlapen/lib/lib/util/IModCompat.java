@@ -13,8 +13,6 @@ import javax.annotation.Nullable;
 public interface IModCompat extends IInitListener {
     void buildConfig(ForgeConfigSpec.Builder builder);
 
-    String getModID();
-
     /**
      * Can be null if all versions are accepted
      * {@link net.minecraftforge.fml.common.versioning.VersionRange} String
@@ -23,4 +21,6 @@ public interface IModCompat extends IInitListener {
     default String getAcceptedVersionRange() {
         return null;
     }
+
+    String getModID();
 }

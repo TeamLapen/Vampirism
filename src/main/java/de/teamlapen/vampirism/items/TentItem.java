@@ -68,6 +68,7 @@ public class TentItem extends VampirismItem {
     private static boolean canPlaceAt(BlockState state, Block block, IWorld world, int x, int y, int z) {
         return block.isValidPosition(state, world, new BlockPos(x, y, z));
     }
+
     private final boolean spawner;
 
     public TentItem(boolean spawner) {

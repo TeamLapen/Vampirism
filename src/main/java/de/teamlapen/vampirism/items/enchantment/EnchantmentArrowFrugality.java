@@ -29,11 +29,6 @@ public class EnchantmentArrowFrugality extends Enchantment {
     }
 
     @Override
-    protected boolean canApplyTogether(Enchantment ench) {
-        return super.canApplyTogether(ench) && ench != Enchantments.INFINITY;
-    }
-
-    @Override
     public int getMaxLevel() {
         return 2;
     }
@@ -41,6 +36,11 @@ public class EnchantmentArrowFrugality extends Enchantment {
     @Override
     public int getMinEnchantability(int enchantmentLevel) {
         return 10 + enchantmentLevel * 5;
+    }
+
+    @Override
+    protected boolean canApplyTogether(Enchantment ench) {
+        return super.canApplyTogether(ench) && ench != Enchantments.INFINITY;
     }
 
     @Override

@@ -5,9 +5,9 @@ import net.minecraft.item.ItemStack;
 
 public interface IRefinementItem {
 
-    AccessorySlotType getSlotType();
-
     IRefinementSet getRefinementSet(ItemStack stack);
+
+    AccessorySlotType getSlotType();
 
     enum AccessorySlotType {
         AMULET(0), RING(1), OBI_BELT(2);

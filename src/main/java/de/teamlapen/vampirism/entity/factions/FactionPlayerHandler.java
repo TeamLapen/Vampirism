@@ -102,6 +102,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     private final PlayerEntity player;
+    @Nonnull
+    private final Int2ObjectMap<IAction> boundActions = new Int2ObjectArrayMap<>();
     private IPlayableFaction<? extends IFactionPlayer<?>> currentFaction = null;
     private int currentLevel = 0;
     private int currentLordLevel = 0;
@@ -111,9 +113,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      */
     @Nullable
     private Boolean titleGender = null;
-
-    @Nonnull
-    private final Int2ObjectMap<IAction> boundActions = new Int2ObjectArrayMap<>();
 
     private FactionPlayerHandler(PlayerEntity player) {
         this.player = player;
@@ -144,6 +143,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         notifyFaction(oldP.currentFaction, oldP.currentLevel);
     }
 
+    @Nullable
+    public IAction getBoundAction(int id) {
+        return this.boundActions.get(id);
+    }
+
     /**
      * @see #getBoundAction(int)
      */
@@ -160,11 +164,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     @Nullable
     public IAction getBoundAction2() { //TODO 1.17 remove
         return getBoundAction(2);
-    }
-
-    @Nullable
-    public IAction getBoundAction(int id) {
-        return this.boundActions.get(id);
     }
 
     @Override
@@ -216,6 +215,10 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return currentLordLevel == 0 || currentFaction == null ? null : currentFaction.getLordTitle(currentLordLevel, titleGender != null && titleGender);
     }
 
+    public int getMaxMinions() {
+        return currentLordLevel * VampirismConfig.BALANCE.miMinionPerLordLevel.get();
+    }
+
     @Nonnull
     @Override
     public PlayerEntity getPlayer() {
@@ -239,6 +242,47 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
     }
 
+    @Override
+    public void loadUpdateFromNBT(CompoundNBT nbt) {
+        IPlayableFaction<? extends IFactionPlayer<?>> old = currentFaction;
+        int oldLevel = currentLevel;
+        String f = nbt.getString("faction");
+        if ("null".equals(f)) {
+            currentFaction = null;
+            currentLevel = 0;
+            currentLordLevel = 0;
+        } else {
+            currentFaction = getFactionFromKey(new ResourceLocation(f));
+            if (currentFaction == null) {
+                LOGGER.error("Cannot find faction {} on client. You have to register factions on both sides!", f);
+                currentLevel = 0;
+            } else {
+                currentLevel = nbt.getInt("level");
+                currentLordLevel = nbt.getInt("lord_level");
+            }
+        }
+        if (nbt.contains("title_gender")) {
+            this.titleGender = nbt.getBoolean("title_gender");
+        }
+        this.loadBoundActions(nbt);
+        updateCache();
+        notifyFaction(old, oldLevel);
+    }
+
+    @Override
+    public boolean onEntityAttacked(DamageSource src, float amt) {
+        if (VampirismConfig.SERVER.pvpOnlyBetweenFactions.get() && src instanceof EntityDamageSource) {
+            if (src.getTrueSource() instanceof PlayerEntity) {
+                FactionPlayerHandler other = get((PlayerEntity) src.getTrueSource());
+                if (this.currentFaction == null || other.currentFaction == null) {
+                    return VampirismConfig.SERVER.pvpOnlyBetweenFactionsIncludeHumans.get();
+                }
+                return !this.currentFaction.equals(other.currentFaction);
+            }
+        }
+        return true;
+    }
+
     /**
      * Must be called on player login
      */
@@ -248,18 +292,27 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
     }
 
-    @Override
-    public boolean onEntityAttacked(DamageSource src, float amt) {
-        if (VampirismConfig.SERVER.pvpOnlyBetweenFactions.get() && src instanceof EntityDamageSource) {
-            if (src.getTrueSource() instanceof PlayerEntity) {
-                FactionPlayerHandler other = get((PlayerEntity) src.getTrueSource());
-                if(this.currentFaction == null || other.currentFaction == null){
-                    return VampirismConfig.SERVER.pvpOnlyBetweenFactionsIncludeHumans.get();
-                }
-                return !this.currentFaction.equals(other.currentFaction);
-            }
+    /**
+     * Reset all lord task that should be available for players at the given lord level
+     *
+     * @param minLevel the lord level the player now has
+     */
+    public void resetLordTasks(int minLevel) {
+        ModRegistries.TASKS.getValues().stream().filter(task -> task.isUnique() && task.getReward() instanceof LordLevelReward && ((LordLevelReward) task.getReward()).targetLevel > minLevel).forEach(task -> getCurrentFactionPlayer().map(IFactionPlayer::getTaskManager).ifPresent(manager -> manager.resetUniqueTask(task)));
+    }
+
+    public void setBoundAction(int id, @Nullable IAction boundAction, boolean sync, boolean notify) {
+        if (boundAction == null) {
+            this.boundActions.remove(id);
+        } else {
+            this.boundActions.put(id, boundAction);
         }
-        return true;
+        if (notify) {
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", boundAction != null ? boundAction.getName() : "none", id), true);
+        }
+        if (sync) {
+            this.sync(false);
+        }
     }
 
     /**
@@ -276,20 +329,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     @Deprecated
     public void setBoundAction2(@Nullable IAction boundAction2, boolean sync) { //TODO 1.17 remove
         this.setBoundAction(2, boundAction2, sync, true);
-    }
-
-    public void setBoundAction(int id, @Nullable IAction boundAction, boolean sync, boolean notify) {
-        if (boundAction == null) {
-            this.boundActions.remove(id);
-        } else {
-            this.boundActions.put(id, boundAction);
-        }
-        if (notify) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", boundAction != null ? boundAction.getName() : "none", id), true);
-        }
-        if (sync) {
-            this.sync(false);
-        }
     }
 
     @Override
@@ -347,17 +386,112 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
+    public boolean setFactionLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level) {
+        return faction.equals(currentFaction) && setFactionAndLevel(faction, level);
+    }
+
+    @Override
     public boolean setLordLevel(int level) {
         return this.setLordLevel(level, true);
     }
 
+    public boolean setTitleGender(boolean female) {
+        if (titleGender == null || female != this.titleGender) {
+            this.titleGender = female;
+            player.refreshDisplayName();
+            if (!player.world.isRemote()) {
+                sync(true);
+            }
+        }
+        this.titleGender = female;
+        return true;
+    }
+
+    @Override
+    public void writeFullUpdateToNBT(CompoundNBT nbt) {
+        nbt.putString("faction", currentFaction == null ? "null" : currentFaction.getID().toString());
+        nbt.putInt("level", currentLevel);
+        nbt.putInt("lord_level", currentLordLevel);
+        nbt.putBoolean("title_gender", titleGender != null && titleGender);
+        this.writeBoundActions(nbt);
+    }
+
+    private IPlayableFaction<? extends IFactionPlayer<?>> getFactionFromKey(ResourceLocation key) {
+        for (IPlayableFaction p : VampirismAPI.factionRegistry().getPlayableFactions()) {
+            if (p.getID().equals(key)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    private void loadBoundActions(CompoundNBT nbt) {
+        if (nbt.contains("bound1")) {
+            this.boundActions.put(1, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound1"))));
+        }
+        if (nbt.contains("bound2")) {
+            this.boundActions.put(2, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound2"))));
+        }
+        if (nbt.contains("bound3")) {
+            this.boundActions.put(3, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound3"))));
+        }
+        CompoundNBT bounds = nbt.getCompound("bound_actions");
+        for (String s : bounds.keySet()) {
+            int id = Integer.parseInt(s);
+            IAction action = ModRegistries.ACTIONS.getValue(new ResourceLocation(bounds.getString(s)));
+            this.boundActions.put(id, action);
+        }
+    }
+
+    private void loadNBTData(CompoundNBT nbt) {
+        if (nbt.contains("faction")) {
+            currentFaction = getFactionFromKey(new ResourceLocation(nbt.getString("faction")));
+            if (currentFaction == null) {
+                LOGGER.warn("Could not find faction {}. Did mods change?", nbt.getString("faction"));
+            } else {
+                currentLevel = nbt.getInt("level");
+                currentLordLevel = nbt.getInt("lord_level");
+                updateCache();
+                notifyFaction(null, 0);
+            }
+        }
+        if (nbt.contains("title_gender")) {
+            this.titleGender = nbt.getBoolean("title_gender");
+        }
+        loadBoundActions(nbt);
+        updateCache();
+    }
+
     /**
-     * Reset all lord task that should be available for players at the given lord level
+     * Notify faction about changes.
+     * {@link FactionPlayerHandler#currentFaction} and {@link FactionPlayerHandler#currentLevel} will be used as the new ones
      *
-     * @param minLevel the lord level the player now has
+     * @param oldFaction
+     * @param oldLevel
      */
-    public void resetLordTasks(int minLevel) {
-        ModRegistries.TASKS.getValues().stream().filter(task -> task.isUnique() && task.getReward() instanceof LordLevelReward && ((LordLevelReward) task.getReward()).targetLevel > minLevel).forEach(task -> getCurrentFactionPlayer().map(IFactionPlayer::getTaskManager).ifPresent(manager -> manager.resetUniqueTask(task)));
+    private void notifyFaction(IPlayableFaction<? extends IFactionPlayer<?>> oldFaction, int oldLevel) {
+        if (oldFaction != null && !oldFaction.equals(currentFaction)) {
+            LOGGER.debug("Leaving faction {}", oldFaction.getID());
+            oldFaction.getPlayerCapability(player).ifPresent(c -> c.onLevelChanged(0, oldLevel));
+        }
+        if (currentFaction != null) {
+            LOGGER.debug("Changing to {} {}", currentFaction, currentLevel);
+            currentFaction.getPlayerCapability(player).ifPresent(c -> c.onLevelChanged(currentLevel, Objects.equals(oldFaction, currentFaction) ? oldLevel : 0));
+        }
+        ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.FACTION_CRITERIA, currentFaction == null ? 0 : currentFaction.getID().hashCode());
+    }
+
+    private void saveNBTData(CompoundNBT nbt) {
+        //Don't forget to also add things to copyFrom !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if (currentFaction != null) {
+            nbt.putString("faction", currentFaction.getID().toString());
+            nbt.putInt("level", currentLevel);
+            nbt.putInt("lord_level", currentLordLevel);
+        }
+        if (titleGender != null) nbt.putBoolean("title_gender", titleGender);
+
+        writeBoundActions(nbt);
+        //Don't forget to also add things to copyFrom !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
     private boolean setLordLevel(int level, boolean sync) {
@@ -384,89 +518,17 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return true;
     }
 
-    public boolean setTitleGender(boolean female) {
-        if (titleGender == null || female != this.titleGender) {
-            this.titleGender = female;
-            player.refreshDisplayName();
-            if (!player.world.isRemote()) {
-                sync(true);
-            }
-        }
-        this.titleGender = female;
-        return true;
+    private void sync(boolean all) {
+        HelperLib.sync(this, player, all);
     }
 
-    @Override
-    public boolean setFactionLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level) {
-        return faction.equals(currentFaction) && setFactionAndLevel(faction, level);
-    }
-
-    @Override
-    public void writeFullUpdateToNBT(CompoundNBT nbt) {
-        nbt.putString("faction", currentFaction == null ? "null" : currentFaction.getID().toString());
-        nbt.putInt("level", currentLevel);
-        nbt.putInt("lord_level", currentLordLevel);
-        nbt.putBoolean("title_gender", titleGender != null && titleGender);
-        this.writeBoundActions(nbt);
-    }
-
-    @Override
-    public void loadUpdateFromNBT(CompoundNBT nbt) {
-        IPlayableFaction<? extends IFactionPlayer<?>> old = currentFaction;
-        int oldLevel = currentLevel;
-        String f = nbt.getString("faction");
-        if ("null".equals(f)) {
-            currentFaction = null;
-            currentLevel = 0;
-            currentLordLevel = 0;
-        } else {
-            currentFaction = getFactionFromKey(new ResourceLocation(f));
-            if (currentFaction == null) {
-                LOGGER.error("Cannot find faction {} on client. You have to register factions on both sides!", f);
-                currentLevel = 0;
-            } else {
-                currentLevel = nbt.getInt("level");
-                currentLordLevel = nbt.getInt("lord_level");
-            }
-        }
-        if (nbt.contains("title_gender")) {
-            this.titleGender = nbt.getBoolean("title_gender");
-        }
-        this.loadBoundActions(nbt);
-        updateCache();
-        notifyFaction(old, oldLevel);
-    }
-
-    private void saveNBTData(CompoundNBT nbt) {
-        //Don't forget to also add things to copyFrom !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        if (currentFaction != null) {
-            nbt.putString("faction", currentFaction.getID().toString());
-            nbt.putInt("level", currentLevel);
-            nbt.putInt("lord_level", currentLordLevel);
-        }
-        if (titleGender != null) nbt.putBoolean("title_gender", titleGender);
-
-        writeBoundActions(nbt);
-        //Don't forget to also add things to copyFrom !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    }
-
-    private void loadNBTData(CompoundNBT nbt) {
-        if (nbt.contains("faction")) {
-            currentFaction = getFactionFromKey(new ResourceLocation(nbt.getString("faction")));
-            if (currentFaction == null) {
-                LOGGER.warn("Could not find faction {}. Did mods change?", nbt.getString("faction"));
-            } else {
-                currentLevel = nbt.getInt("level");
-                currentLordLevel = nbt.getInt("lord_level");
-                updateCache();
-                notifyFaction(null, 0);
-            }
-        }
-        if (nbt.contains("title_gender")) {
-            this.titleGender = nbt.getBoolean("title_gender");
-        }
-        loadBoundActions(nbt);
-        updateCache();
+    private void updateCache() {
+        player.refreshDisplayName();
+        VampirismPlayerAttributes atts = ((IVampirismPlayer) player).getVampAtts();
+        atts.hunterLevel = this.currentFaction == VReference.HUNTER_FACTION ? this.currentLevel : 0;
+        atts.vampireLevel = this.currentFaction == VReference.VAMPIRE_FACTION ? this.currentLevel : 0;
+        atts.lordLevel = this.currentLordLevel;
+        atts.faction = this.currentFaction;
     }
 
     private void writeBoundActions(CompoundNBT nbt) {
@@ -475,71 +537,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             bounds.putString(String.valueOf(entry.getIntKey()), entry.getValue().getRegistryName().toString());
         }
         nbt.put("bound_actions", bounds);
-    }
-
-    private void loadBoundActions(CompoundNBT nbt) {
-        if (nbt.contains("bound1")) {
-            this.boundActions.put(1, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound1"))));
-        }
-        if (nbt.contains("bound2")) {
-            this.boundActions.put(2, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound2"))));
-        }
-        if (nbt.contains("bound3")) {
-            this.boundActions.put(3, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound3"))));
-        }
-        CompoundNBT bounds = nbt.getCompound("bound_actions");
-        for (String s : bounds.keySet()) {
-            int id = Integer.parseInt(s);
-            IAction action = ModRegistries.ACTIONS.getValue(new ResourceLocation(bounds.getString(s)));
-            this.boundActions.put(id, action);
-        }
-    }
-
-    private IPlayableFaction<? extends IFactionPlayer<?>> getFactionFromKey(ResourceLocation key) {
-        for (IPlayableFaction p : VampirismAPI.factionRegistry().getPlayableFactions()) {
-            if (p.getID().equals(key)) {
-                return p;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Notify faction about changes.
-     * {@link FactionPlayerHandler#currentFaction} and {@link FactionPlayerHandler#currentLevel} will be used as the new ones
-     *
-     * @param oldFaction
-     * @param oldLevel
-     */
-    private void notifyFaction(IPlayableFaction<? extends IFactionPlayer<?>> oldFaction, int oldLevel) {
-        if (oldFaction != null && !oldFaction.equals(currentFaction)) {
-            LOGGER.debug("Leaving faction {}", oldFaction.getID());
-            oldFaction.getPlayerCapability(player).ifPresent(c -> c.onLevelChanged(0, oldLevel));
-        }
-        if (currentFaction != null) {
-            LOGGER.debug("Changing to {} {}", currentFaction, currentLevel);
-            currentFaction.getPlayerCapability(player).ifPresent(c -> c.onLevelChanged(currentLevel, Objects.equals(oldFaction, currentFaction) ? oldLevel : 0));
-        }
-        ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.FACTION_CRITERIA, currentFaction == null ? 0 : currentFaction.getID().hashCode());
-    }
-
-
-    private void sync(boolean all) {
-        HelperLib.sync(this, player, all);
-    }
-
-
-    public int getMaxMinions() {
-        return currentLordLevel * VampirismConfig.BALANCE.miMinionPerLordLevel.get();
-    }
-
-    private void updateCache(){
-        player.refreshDisplayName();
-        VampirismPlayerAttributes atts = ((IVampirismPlayer)player).getVampAtts();
-        atts.hunterLevel = this.currentFaction == VReference.HUNTER_FACTION ? this.currentLevel : 0;
-        atts.vampireLevel = this.currentFaction == VReference.VAMPIRE_FACTION ? this.currentLevel : 0;
-        atts.lordLevel = this.currentLordLevel;
-        atts.faction = this.currentFaction;
     }
 
     private static class Storage implements Capability.IStorage<IFactionPlayerHandler> {

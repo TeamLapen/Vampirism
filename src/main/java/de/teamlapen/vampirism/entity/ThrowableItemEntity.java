@@ -39,6 +39,11 @@ public class ThrowableItemEntity extends ThrowableEntity implements IRendersAsIt
         super(ModEntities.throwable_item, thrower, worldIn);
     }
 
+    @Override
+    public IPacket<?> createSpawnPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
     /**
      * @return Itemstack represented by this entity. Corresponding item is instance of {@link IVampirismThrowableItem}
      */
@@ -85,8 +90,17 @@ public class ThrowableItemEntity extends ThrowableEntity implements IRendersAsIt
     }
 
     @Override
-    public IPacket<?> createSpawnPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+    protected void onImpact(RayTraceResult result) {
+        ItemStack stack = getItem();
+        if (!stack.isEmpty()) {
+            Item item = stack.getItem();
+            if (item instanceof IVampirismThrowableItem) {
+                ((IVampirismThrowableItem) item).onImpact(this, stack, result, this.world.isRemote);
+            } else {
+                LOGGER.warn("Saved item ({}) is not an instance of IVampirismThrowableItem. This should not be able to happen", stack);
+            }
+        }
+        if (!this.world.isRemote) this.remove();
     }
 
     @Override
@@ -108,19 +122,5 @@ public class ThrowableItemEntity extends ThrowableEntity implements IRendersAsIt
          * @param remote If this is a remote world
          */
         void onImpact(ThrowableItemEntity entity, ItemStack stack, RayTraceResult impact, boolean remote);
-    }
-
-    @Override
-    protected void onImpact(RayTraceResult result) {
-        ItemStack stack = getItem();
-        if (!stack.isEmpty()) {
-            Item item = stack.getItem();
-            if (item instanceof IVampirismThrowableItem) {
-                ((IVampirismThrowableItem) item).onImpact(this, stack, result, this.world.isRemote);
-            } else {
-                LOGGER.warn("Saved item ({}) is not an instance of IVampirismThrowableItem. This should not be able to happen", stack);
-            }
-        }
-        if (!this.world.isRemote) this.remove();
     }
 }

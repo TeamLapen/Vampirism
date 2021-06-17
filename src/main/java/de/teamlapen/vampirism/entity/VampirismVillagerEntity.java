@@ -20,8 +20,10 @@ import net.minecraft.world.World;
  */
 public class VampirismVillagerEntity extends VillagerEntity {
 
+    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+        return VillagerEntity.registerAttributes().createMutableAttribute(Attributes.ATTACK_DAMAGE);
+    }
     protected boolean peaceful = false;
-
     /**
      * A timer which reaches 0 every 70 to 120 ticks
      */
@@ -80,17 +82,17 @@ public class VampirismVillagerEntity extends VillagerEntity {
         return false;
     }
 
-    @Override
-    public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
-        return (peaceful || worldIn.getDifficulty() != Difficulty.PEACEFUL) && super.canSpawn(worldIn, spawnReasonIn);
-    }
-
 //    @Nullable
 //    public StructureStart getVillage() {
 //        if (cachedVillage == StructureStart.DUMMY)
 //            return null;
 //        return cachedVillage;
 //    }
+
+    @Override
+    public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
+        return (peaceful || worldIn.getDifficulty() != Difficulty.PEACEFUL) && super.canSpawn(worldIn, spawnReasonIn);
+    }
 
     @Override
     public void livingTick() {
@@ -105,10 +107,6 @@ public class VampirismVillagerEntity extends VillagerEntity {
         if (!this.world.isRemote && !peaceful && this.world.getDifficulty() == Difficulty.PEACEFUL) {
             this.remove();
         }
-    }
-
-    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return VillagerEntity.registerAttributes().createMutableAttribute(Attributes.ATTACK_DAMAGE);
     }
 
     @Override

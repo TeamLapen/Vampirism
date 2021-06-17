@@ -36,8 +36,8 @@ public class ModRegistries {
         //noinspection unchecked
         MINION_TASKS = ModRegistries.makeRegistry(MINION_TASKS_ID, (Class<IMinionTask<?, ?>>) (Object) IMinionTask.class, Integer.MAX_VALUE >> 5);
         TASKS = makeRegistry(TASK_ID, Task.class, Integer.MAX_VALUE >> 5);
-        REFINEMENTS = makeRegistry(REFINEMENT_ID, IRefinement.class, Integer.MAX_VALUE >>5);
-        REFINEMENT_SETS = makeRegistry(REFINEMENT_SET_ID, IRefinementSet.class, Integer.MAX_VALUE >>5);
+        REFINEMENTS = makeRegistry(REFINEMENT_ID, IRefinement.class, Integer.MAX_VALUE >> 5);
+        REFINEMENT_SETS = makeRegistry(REFINEMENT_SET_ID, IRefinementSet.class, Integer.MAX_VALUE >> 5);
     }
 
     static void init() {

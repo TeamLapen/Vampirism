@@ -18,25 +18,6 @@ import java.util.function.Supplier;
 
 public class TaskStatusPacket implements IMessage {
 
-    public final int containerId;
-    public final UUID taskBoardId;
-    public final Set<ITaskInstance> available;
-    public final Set<UUID> completableTasks;
-    public final Map<UUID, Map<ResourceLocation, Integer>> completedRequirements;
-
-    /**
-     * @param completedRequirements all requirements of the visible tasks that are already completed
-     * @param containerId           the id of the {@link de.teamlapen.vampirism.inventory.container.TaskBoardContainer}
-     * @param taskBoardId           the task board id
-     */
-    public TaskStatusPacket(@Nonnull Set<ITaskInstance> available, Set<UUID> completableTasks ,@Nonnull Map<UUID, Map<ResourceLocation, Integer>> completedRequirements, int containerId, UUID taskBoardId) {
-        this.available = available;
-        this.completableTasks = completableTasks;
-        this.completedRequirements = completedRequirements;
-        this.containerId = containerId;
-        this.taskBoardId = taskBoardId;
-    }
-
     static void encode(@Nonnull TaskStatusPacket msg, @Nonnull PacketBuffer buf) {
         buf.writeString(msg.taskBoardId.toString());
         buf.writeVarInt(msg.containerId);
@@ -86,5 +67,23 @@ public class TaskStatusPacket implements IMessage {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleTaskStatusPacket(msg));
         ctx.setPacketHandled(true);
+    }
+    public final int containerId;
+    public final UUID taskBoardId;
+    public final Set<ITaskInstance> available;
+    public final Set<UUID> completableTasks;
+    public final Map<UUID, Map<ResourceLocation, Integer>> completedRequirements;
+
+    /**
+     * @param completedRequirements all requirements of the visible tasks that are already completed
+     * @param containerId           the id of the {@link de.teamlapen.vampirism.inventory.container.TaskBoardContainer}
+     * @param taskBoardId           the task board id
+     */
+    public TaskStatusPacket(@Nonnull Set<ITaskInstance> available, Set<UUID> completableTasks, @Nonnull Map<UUID, Map<ResourceLocation, Integer>> completedRequirements, int containerId, UUID taskBoardId) {
+        this.available = available;
+        this.completableTasks = completableTasks;
+        this.completedRequirements = completedRequirements;
+        this.containerId = containerId;
+        this.taskBoardId = taskBoardId;
     }
 }

@@ -42,20 +42,19 @@ public class SetMetaBasedOnLevel extends LootFunction {
 
     public static class Serializer extends LootFunction.Serializer<SetMetaBasedOnLevel> {
 
-        @Override
-        public void serialize(@Nonnull JsonObject json, @Nonnull SetMetaBasedOnLevel lootFunction, @Nonnull JsonSerializationContext context) {
-            super.serialize(json, lootFunction, context);
-            json.add("max", RandomRanges.serialize(lootFunction.max, context));
-            json.add("entity", context.serialize(lootFunction.target));
-        }
-
-
         @Nonnull
         @Override
         public SetMetaBasedOnLevel deserialize(@Nonnull JsonObject jsonObject, @Nonnull JsonDeserializationContext jsonDeserializationContext, @Nonnull ILootCondition[] iLootConditions) {
             IRandomRange range = RandomRanges.deserialize(jsonObject.get("max"), jsonDeserializationContext);
             LootContext.EntityTarget target = jsonDeserializationContext.deserialize(jsonObject.get("entity"), LootContext.EntityTarget.class);
             return new SetMetaBasedOnLevel(iLootConditions, range, target);
+        }
+
+        @Override
+        public void serialize(@Nonnull JsonObject json, @Nonnull SetMetaBasedOnLevel lootFunction, @Nonnull JsonSerializationContext context) {
+            super.serialize(json, lootFunction, context);
+            json.add("max", RandomRanges.serialize(lootFunction.max, context));
+            json.add("entity", context.serialize(lootFunction.target));
         }
     }
 }

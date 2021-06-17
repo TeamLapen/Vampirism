@@ -66,13 +66,13 @@ public class CastleBricksBlock extends VampirismBlock {
             this.name = name;
         }
 
+        public String getName() {
+            return this.getString();
+        }
+
         @Override
         public String getString() {
             return this.name;
-        }
-
-        public String getName() {
-            return this.getString();
         }
     }
 }

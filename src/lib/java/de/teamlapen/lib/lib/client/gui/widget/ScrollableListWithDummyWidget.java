@@ -16,10 +16,10 @@ import java.util.function.Supplier;
  */
 public class ScrollableListWithDummyWidget<T> extends ScrollableListWidget<T> {
 
-    @Nullable
-    private ListItem<T> dummyItem;
     @Nonnull
     private final ItemCreator<T> itemCreator;
+    @Nullable
+    private ListItem<T> dummyItem;
 
     public ScrollableListWithDummyWidget(int xPos, int yPos, int width, int height, int itemHeight, Supplier<Collection<T>> baseValueSupplier, @Nonnull ItemCreator<T> itemSupplier) {
         super(xPos, yPos, width, height, itemHeight, baseValueSupplier, (item, list) -> itemSupplier.apply(item, (ScrollableListWithDummyWidget<T>) list, false));
@@ -49,6 +49,11 @@ public class ScrollableListWithDummyWidget<T> extends ScrollableListWidget<T> {
         }
     }
 
+    @FunctionalInterface
+    public interface ItemCreator<T> {
+        ListItem<T> apply(T item, ScrollableListWithDummyWidget<T> list, boolean isDummy);
+    }
+
     public abstract static class ListItem<T> extends ScrollableListWidget.ListItem<T> {
 
 
@@ -57,24 +62,6 @@ public class ScrollableListWithDummyWidget<T> extends ScrollableListWidget<T> {
         public ListItem(T item, ScrollableListWithDummyWidget<T> list, boolean isDummy) {
             super(item, list);
             this.isDummy = isDummy;
-        }
-
-        @Override
-        public void render(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
-            if (this.isDummy) {
-                this.renderDummy(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, partialTicks, zLevel);
-            } else {
-                this.renderItem(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, partialTicks, zLevel);
-            }
-        }
-
-        @Override
-        public void renderToolTip(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
-            if (this.isDummy) {
-                this.renderDummyToolTip(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, zLevel);
-            } else {
-                this.renderItemToolTip(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, zLevel);
-            }
         }
 
         @Override
@@ -87,26 +74,39 @@ public class ScrollableListWithDummyWidget<T> extends ScrollableListWidget<T> {
             }
         }
 
+        public boolean onDummyClick(double mouseX, double mouseY) {
+            return super.onClick(mouseX, mouseY);
+        }
+
+        @Override
+        public void render(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
+            if (this.isDummy) {
+                this.renderDummy(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, partialTicks, zLevel);
+            } else {
+                this.renderItem(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, partialTicks, zLevel);
+            }
+        }
+
+        public abstract void renderDummy(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel);
+
+        public abstract void renderDummyToolTip(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel);
+
         /**
          *
          */
         public abstract void renderItem(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel);
 
-        public abstract void renderDummy(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel);
-
         public abstract void renderItemToolTip(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel);
 
-        public abstract void renderDummyToolTip(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel);
-
-        public boolean onDummyClick(double mouseX, double mouseY) {
-            return super.onClick(mouseX, mouseY);
+        @Override
+        public void renderToolTip(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
+            if (this.isDummy) {
+                this.renderDummyToolTip(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, zLevel);
+            } else {
+                this.renderItemToolTip(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, zLevel);
+            }
         }
 
-    }
-
-    @FunctionalInterface
-    public interface ItemCreator<T> {
-        ListItem<T> apply(T item, ScrollableListWithDummyWidget<T> list, boolean isDummy);
     }
 
 }

@@ -86,7 +86,7 @@ public class Helper {
                         try {
                             ResourceLocation biome = getBiomeId(world, pos);
                             if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biome)) {
-                                if(world instanceof World && !VampirismWorld.getOpt((World) world).map(vw->vw.isInsideArtificialVampireFogArea(new BlockPos(entity.getPosX(), entity.getPosY() + 1, entity.getPosZ()))).orElse(false)){
+                                if (world instanceof World && !VampirismWorld.getOpt((World) world).map(vw -> vw.isInsideArtificialVampireFogArea(new BlockPos(entity.getPosX(), entity.getPosY() + 1, entity.getPosZ()))).orElse(false)) {
                                     if (profiler != null) profiler.endSection();
                                     return true;
                                 }
@@ -160,7 +160,7 @@ public class Helper {
 
     @Nonnull
     public static EnumStrength getGarlicStrengthAt(IWorld world, BlockPos pos) {
-        return world instanceof World ? VampirismAPI.getVampirismWorld((World) world).map(vw->vw.getStrengthAtChunk(new ChunkPos(pos))).orElse(EnumStrength.NONE) : EnumStrength.NONE;
+        return world instanceof World ? VampirismAPI.getVampirismWorld((World) world).map(vw -> vw.getStrengthAtChunk(new ChunkPos(pos))).orElse(EnumStrength.NONE) : EnumStrength.NONE;
     }
 
     @Nonnull
@@ -227,10 +227,10 @@ public class Helper {
     /**
      * @return Whether the entity is in a vampire fog area (does not check for vampire biome)
      */
-    public static boolean isEntityInArtificalVampireFogArea(Entity e){
-        if(e==null) return false;
+    public static boolean isEntityInArtificalVampireFogArea(Entity e) {
+        if (e == null) return false;
         World w = e.getEntityWorld();
-        return  VampirismWorld.getOpt(w).map(vh->vh.isInsideArtificialVampireFogArea(e.getPosition())).orElse(false);
+        return VampirismWorld.getOpt(w).map(vh -> vh.isInsideArtificialVampireFogArea(e.getPosition())).orElse(false);
     }
 
     public static ResourceLocation getBiomeId(Entity e) {
@@ -314,20 +314,17 @@ public class Helper {
 
     /**
      * Check if
+     *
      * @return Whether the given damage source can kill a vampire player or go to DBNO state instead
      */
     public static boolean canKillVampires(DamageSource source) {
         if (!source.canHarmInCreative()) {
             if (VampirismConfig.BALANCE.vpImmortalFromDamageSources.get().contains(source.getDamageType())) {
-                if(source.getImmediateSource() instanceof LivingEntity){
-                    if(source.getImmediateSource() instanceof IHunterMob || ((LivingEntity) source.getImmediateSource()).getHeldItemMainhand().getItem() instanceof StakeItem){ //Maybe use all IVampireFinisher??
-                        return true;
-                    }
-                }
-                else if(source.getImmediateSource() instanceof CrossbowArrowEntity){
-                    if(((CrossbowArrowEntity) source.getImmediateSource()).getArrowType() == CrossbowArrowItem.EnumArrowType.VAMPIRE_KILLER){
-                        return true;
-                    }
+                if (source.getImmediateSource() instanceof LivingEntity) {
+                    //Maybe use all IVampireFinisher??
+                    return source.getImmediateSource() instanceof IHunterMob || ((LivingEntity) source.getImmediateSource()).getHeldItemMainhand().getItem() instanceof StakeItem;
+                } else if (source.getImmediateSource() instanceof CrossbowArrowEntity) {
+                    return ((CrossbowArrowEntity) source.getImmediateSource()).getArrowType() == CrossbowArrowItem.EnumArrowType.VAMPIRE_KILLER;
                 }
                 return false;
             }

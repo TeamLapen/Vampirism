@@ -18,12 +18,18 @@ import javax.annotation.Nonnull;
 public class LordLevelReward implements TaskReward, ITaskRewardInstance {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "lord_level_reward");
 
+    public static LordLevelReward decode(PacketBuffer buffer) {
+        return new LordLevelReward(buffer.readVarInt());
+    }
+
+    public static LordLevelReward readNbt(CompoundNBT nbt) {
+        return new LordLevelReward(nbt.getInt("targetLevel"));
+    }
     public final int targetLevel;
 
     public LordLevelReward(int targetLevel) {
         this.targetLevel = targetLevel;
     }
-
 
     @Override
     public void applyReward(IFactionPlayer<?> p) {
@@ -35,9 +41,8 @@ public class LordLevelReward implements TaskReward, ITaskRewardInstance {
     }
 
     @Override
-    public CompoundNBT writeNBT(@Nonnull CompoundNBT nbt) {
-        nbt.putInt("targetLevel", this.targetLevel);
-        return nbt;
+    public ITaskRewardInstance createInstance(IFactionPlayer<?> player) {
+        return this;
     }
 
     @Override
@@ -46,20 +51,13 @@ public class LordLevelReward implements TaskReward, ITaskRewardInstance {
     }
 
     @Override
-    public ITaskRewardInstance createInstance(IFactionPlayer<?> player) {
-        return this;
-    }
-
-    @Override
     public ResourceLocation getId() {
         return ID;
     }
 
-    public static LordLevelReward decode(PacketBuffer buffer) {
-        return new LordLevelReward(buffer.readVarInt());
-    }
-
-    public static LordLevelReward readNbt(CompoundNBT nbt) {
-        return new LordLevelReward(nbt.getInt("targetLevel"));
+    @Override
+    public CompoundNBT writeNBT(@Nonnull CompoundNBT nbt) {
+        nbt.putInt("targetLevel", this.targetLevel);
+        return nbt;
     }
 }

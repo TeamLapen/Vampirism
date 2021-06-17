@@ -10,7 +10,6 @@ import net.minecraft.potion.Effects;
 
 /**
  * @author cheaterpaul
- *
  */
 public class HalfInvulnerableAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 

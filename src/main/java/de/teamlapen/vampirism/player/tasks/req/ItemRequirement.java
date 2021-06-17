@@ -20,12 +20,29 @@ public class ItemRequirement implements TaskRequirement.Requirement<Item> {
         this.itemRequirement = itemRequirement;
     }
 
+    @Override
+    public int getAmount(IFactionPlayer<?> player) {
+        return itemRequirement.getCount();
+    }
+
+    @Override
+    @Nonnull
+    public ResourceLocation getId() {
+        return id;
+    }
+
     /**
      * @return a copy of the required itemStack
      */
     @Nonnull
     public ItemStack getItemStack() {
         return itemRequirement.copy();
+    }
+
+    @Nonnull
+    @Override
+    public Item getStat(IFactionPlayer<?> player) {
+        return itemRequirement.getItem();
     }
 
     @Nonnull
@@ -42,23 +59,6 @@ public class ItemRequirement implements TaskRequirement.Requirement<Item> {
     @Override
     public void removeRequirement(IFactionPlayer<?> player) {
         player.getRepresentingPlayer().inventory.func_234564_a_(itemStack -> itemStack.getItem() == this.itemRequirement.getItem(), getAmount(player), player.getRepresentingPlayer().container.func_234641_j_() /*Not sure if the crafting container is correct here*/);
-    }
-
-    @Nonnull
-    @Override
-    public Item getStat(IFactionPlayer<?> player) {
-        return itemRequirement.getItem();
-    }
-
-    @Override
-    public int getAmount(IFactionPlayer<?> player) {
-        return itemRequirement.getCount();
-    }
-
-    @Override
-    @Nonnull
-    public ResourceLocation getId() {
-        return id;
     }
 
 }

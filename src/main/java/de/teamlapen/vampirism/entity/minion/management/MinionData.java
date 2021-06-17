@@ -94,6 +94,10 @@ public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
         return activeTaskDesc;
     }
 
+    public int getDefaultInventorySize() {
+        return 9;
+    }
+
     @Override
     public IFormattableTextComponent getFormattedName() {
         return new StringTextComponent(name);
@@ -113,6 +117,10 @@ public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
         return inventory;
     }
 
+    public int getInventorySize() {
+        return getDefaultInventorySize();
+    }
+
     @Override
     public int getMaxHealth() {
         return (int) BalanceMobProps.mobProps.MINION_MAX_HEALTH;
@@ -130,13 +138,21 @@ public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
     public void handleMinionAppearanceConfig(String name, int... data) {
     }
 
-    public <Q extends IMinionTask.IMinionTaskDesc<MinionData>, T extends IMinionTask<Q, ?>> void switchTask(T oldTask, IMinionTask.IMinionTaskDesc<MinionData> oldDesc, IMinionTask.IMinionTaskDesc<MinionData> newDesc) {
-        oldTask.deactivateTask((Q) oldDesc);
-        this.activeTaskDesc = newDesc;
+    public boolean hasUsedSkillPoints() {
+        return false;
     }
 
     public boolean isTaskLocked() {
         return taskLocked;
+    }
+
+    public void resetStats(MinionEntity<?> entity) {
+        entity.getInventory().ifPresent(inv -> {
+            if (!InventoryHelper.removeItemFromInventory(inv, new ItemStack(ModItems.oblivion_potion))) {
+                entity.getLordOpt().ifPresent(lord -> InventoryHelper.removeItemFromInventory(lord.getPlayer().inventory, new ItemStack(ModItems.oblivion_potion)));
+            }
+        });
+        HelperLib.sync(entity);
     }
 
     @Override
@@ -163,29 +179,6 @@ public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
 
     public boolean setTaskLocked(boolean locked) {
         return this.taskLocked = locked;
-    }
-
-    /**
-     * Called on server side to upgrade a stat of the given id
-     *
-     * @param statId -1 if stats are to be reset
-     * @return if attributes where changed and a sync is required
-     */
-    public boolean upgradeStat(int statId, MinionEntity<?> entity) {
-        if (statId == -1) {
-            resetStats(entity);
-            return true;
-        }
-        return false;
-    }
-
-    public void resetStats(MinionEntity<?> entity) {
-        entity.getInventory().ifPresent(inv -> {
-            if (!InventoryHelper.removeItemFromInventory(inv, new ItemStack(ModItems.oblivion_potion))) {
-                entity.getLordOpt().ifPresent(lord -> InventoryHelper.removeItemFromInventory(lord.getPlayer().inventory, new ItemStack(ModItems.oblivion_potion)));
-            }
-        });
-        HelperLib.sync(entity);
     }
 
     public void shrinkInventory(MinionEntity<?> entity) {
@@ -215,15 +208,22 @@ public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
         }
     }
 
-    public int getDefaultInventorySize() {
-        return 9;
+    public <Q extends IMinionTask.IMinionTaskDesc<MinionData>, T extends IMinionTask<Q, ?>> void switchTask(T oldTask, IMinionTask.IMinionTaskDesc<MinionData> oldDesc, IMinionTask.IMinionTaskDesc<MinionData> newDesc) {
+        oldTask.deactivateTask((Q) oldDesc);
+        this.activeTaskDesc = newDesc;
     }
 
-    public int getInventorySize() {
-        return getDefaultInventorySize();
-    }
-
-    public boolean hasUsedSkillPoints() {
+    /**
+     * Called on server side to upgrade a stat of the given id
+     *
+     * @param statId -1 if stats are to be reset
+     * @return if attributes where changed and a sync is required
+     */
+    public boolean upgradeStat(int statId, MinionEntity<?> entity) {
+        if (statId == -1) {
+            resetStats(entity);
+            return true;
+        }
         return false;
     }
 

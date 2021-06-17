@@ -61,28 +61,35 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     private static final DataParameter<String> NAME = EntityDataManager.createKey(AdvancedHunterEntity.class, DataSerializers.STRING);
     private static final DataParameter<String> TEXTURE = EntityDataManager.createKey(AdvancedHunterEntity.class, DataSerializers.STRING);
 
+    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+        return VampirismEntity.getAttributeBuilder()
+                .createMutableAttribute(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.ADVANCED_HUNTER_MAX_HEALTH)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.ADVANCED_HUNTER_SPEED);
+    }
     private final int MAX_LEVEL = 1;
     private final int MOVE_TO_RESTRICT_PRIO = 3;
-
-    /**
-     * Overlay player texture and if slim (true)
-     */
-    @OnlyIn(Dist.CLIENT)
-    @Nullable
-    private Pair<ResourceLocation, Boolean> skinDetails;
-
-    /**
-     * If set, the vampire book with this id should be dropped
-     */
-    @Nullable
-    private String lootBookId;
-
     /**
      * available actions for AI task & task
      */
     private final ActionHandlerEntity<?> entityActionHandler;
     private final EntityClassType entityclass;
     private final EntityActionTier entitytier;
+    /**
+     * Overlay player texture and if slim (true)
+     */
+    @OnlyIn(Dist.CLIENT)
+    @Nullable
+    private Pair<ResourceLocation, Boolean> skinDetails;
+    /**
+     * If set, the vampire book with this id should be dropped
+     */
+    @Nullable
+    private String lootBookId;
+    //Village capture --------------------------------------------------------------------------------------------------
+    private boolean attack;
+    @Nullable
+    private ICaptureAttributes villageAttributes;
 
     public AdvancedHunterEntity(EntityType<? extends AdvancedHunterEntity> type, World world) {
         super(type, world, true);
@@ -108,13 +115,40 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
+    public void attackVillage(ICaptureAttributes attributes) {
+        this.villageAttributes = attributes;
+        this.attack = true;
+    }
+
+    @Override
     public boolean canDespawn(double distanceToClosestPlayer) {
         return super.canDespawn(distanceToClosestPlayer) && isLookingForHome();
     }
 
     @Override
+    public void defendVillage(ICaptureAttributes attributes) {
+        this.villageAttributes = attributes;
+        this.attack = false;
+    }
+
+    @Override
+    public ActionHandlerEntity getActionHandler() {
+        return entityActionHandler;
+    }
+
+    @Override
     public boolean getAlwaysRenderNameTagForRender() {
         return true;
+    }
+
+    public Optional<String> getBookLootId() {
+        return Optional.ofNullable(lootBookId);
+    }
+
+    @Nullable
+    @Override
+    public ICaptureAttributes getCaptureInfo() {
+        return this.villageAttributes;
     }
 
     @Override
@@ -161,7 +195,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         return "none".equals(senderName) ? super.getName() : new StringTextComponent(senderName);
     }
 
-
     @Override
     @Nullable
     public Optional<Pair<ResourceLocation, Boolean>> getOverlayPlayerProperties() {
@@ -176,9 +209,25 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
 
     @Nullable
     @Override
+    public AxisAlignedBB getTargetVillageArea() {
+        return villageAttributes == null ? null : villageAttributes.getVillageArea();
+    }
+
+    @Nullable
+    @Override
     public String getTextureName() {
         String texture = this.getDataManager().get(TEXTURE);
         return "none".equals(texture) ? null : texture;
+    }
+
+    @Override
+    public boolean isAttackingVillage() {
+        return villageAttributes != null && attack;
+    }
+
+    @Override
+    public boolean isDefendingVillage() {
+        return villageAttributes != null && !attack;
     }
 
     @Override
@@ -211,7 +260,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         if (tagCompund.contains("attack")) {
             this.attack = tagCompund.getBoolean("attack");
         }
-        if(tagCompund.contains("lootBookId")){
+        if (tagCompund.contains("lootBookId")) {
             this.lootBookId = tagCompund.getString("lootBookId");
         }
     }
@@ -220,6 +269,12 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     public void setCampArea(AxisAlignedBB box) {
         super.setHome(box);
         this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
+    }
+
+    @Override
+    public void stopVillageAttackDefense() {
+        this.setCustomName(null);
+        this.villageAttributes = null;
     }
 
     @Override
@@ -243,9 +298,15 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
             entityActionHandler.write(nbt);
         }
         nbt.putBoolean("attack", attack);
-        if(lootBookId!=null){
-            nbt.putString("lootBookId",lootBookId);
+        if (lootBookId != null) {
+            nbt.putString("lootBookId", lootBookId);
         }
+    }
+
+    @Override
+    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) { //processInteract
+        if (hand == Hand.MAIN_HAND && tryCureSanguinare(player)) return ActionResultType.SUCCESS;
+        return super.func_230254_b_(player, hand);
     }
 
     @Override
@@ -258,7 +319,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         return iMob ? ModEntities.advanced_hunter_imob : ModEntities.advanced_hunter;
     }
 
-
     @Override
     protected void registerData() {
         super.registerData();
@@ -269,24 +329,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.getDataManager().register(TEXTURE, supporter.textureName == null ? "none" : supporter.textureName);
         this.lootBookId = supporter.bookID;
 
-    }
-
-    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return VampirismEntity.getAttributeBuilder()
-                .createMutableAttribute(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.ADVANCED_HUNTER_MAX_HEALTH)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.ADVANCED_HUNTER_SPEED);
-    }
-
-    @Override
-    public ActionHandlerEntity getActionHandler() {
-        return entityActionHandler;
-    }
-
-    @Override
-    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) { //processInteract
-        if (hand == Hand.MAIN_HAND && tryCureSanguinare(player)) return ActionResultType.SUCCESS;
-        return super.func_230254_b_(player, hand);
     }
 
     @Override
@@ -321,54 +363,5 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         public IMob(EntityType<? extends AdvancedHunterEntity> type, World world) {
             super(type, world);
         }
-    }
-
-    //Village capture --------------------------------------------------------------------------------------------------
-    private boolean attack;
-    @Nullable
-    private ICaptureAttributes villageAttributes;
-
-    @Override
-    public void stopVillageAttackDefense() {
-        this.setCustomName(null);
-        this.villageAttributes = null;
-    }
-
-    @Override
-    public boolean isAttackingVillage() {
-        return villageAttributes != null && attack;
-    }
-
-    @Override
-    public boolean isDefendingVillage() {
-        return villageAttributes != null && !attack;
-    }
-
-    @Override
-    public void attackVillage(ICaptureAttributes attributes) {
-        this.villageAttributes = attributes;
-        this.attack = true;
-    }
-
-    @Override
-    public void defendVillage(ICaptureAttributes attributes) {
-        this.villageAttributes = attributes;
-        this.attack = false;
-    }
-
-    @Nullable
-    @Override
-    public ICaptureAttributes getCaptureInfo() {
-        return this.villageAttributes;
-    }
-
-    @Nullable
-    @Override
-    public AxisAlignedBB getTargetVillageArea() {
-        return villageAttributes == null ? null : villageAttributes.getVillageArea();
-    }
-
-    public Optional<String> getBookLootId(){
-        return Optional.ofNullable(lootBookId);
     }
 }

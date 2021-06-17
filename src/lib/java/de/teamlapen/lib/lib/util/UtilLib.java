@@ -61,6 +61,7 @@ import java.util.regex.Pattern;
 public class UtilLib {
 
     private final static Logger LOGGER = LogManager.getLogger();
+    private final static Pattern oldFormatPattern = Pattern.compile("%[sd]");
 
     public static String entityToString(Entity e) {
         if (e == null) {
@@ -72,7 +73,6 @@ public class UtilLib {
     public static boolean doesBlockHaveSolidTopSurface(World worldIn, BlockPos pos) {
         return worldIn.getBlockState(pos).isSolidSide(worldIn, pos, Direction.UP);
     }
-
 
     @OnlyIn(Dist.CLIENT)
     public static void drawTexturedModalRect(Matrix4f matrix, float zLevel, int x, int y, int textureX, int textureY, int width, int height, int texWidth, int texHeight) {
@@ -584,8 +584,6 @@ public class UtilLib {
         return ServerLifecycleHooks.getCurrentServer() != null;
     }
 
-    private final static Pattern oldFormatPattern = Pattern.compile("%[sd]");
-
     public static String translate(String key, Object... format) {
         String pattern = ForgeI18n.getPattern(key);
         if (format.length == 0) {
@@ -692,14 +690,14 @@ public class UtilLib {
     @Nullable
     public static StructureStart<?> getStructureStartAt(World w, BlockPos pos, Structure<?> s) {
         if (w instanceof ServerWorld) {
-            return getStructureStartAt((ServerWorld)w, pos, s);
+            return getStructureStartAt((ServerWorld) w, pos, s);
         }
         return null;
     }
 
     @Nonnull
     public static StructureStart<?> getStructureStartAt(ServerWorld w, BlockPos pos, Structure<?> s) {
-        return ( w).func_241112_a_()/*getStructureManager*/.getStructureStart(pos, false, s);
+        return (w).func_241112_a_()/*getStructureManager*/.getStructureStart(pos, false, s);
     }
 
     /**
@@ -766,12 +764,6 @@ public class UtilLib {
         return d;
     }
 
-    public enum RotationAmount {
-        NINETY,
-        HUNDRED_EIGHTY,
-        TWO_HUNDRED_SEVENTY
-    }
-
     @Nullable
     public static DyeColor getColorForItem(Item item) {
         if (!Tags.Items.DYES.contains(item)) return null;
@@ -787,12 +779,13 @@ public class UtilLib {
 
     /**
      * Replace an entity with a new one. Removes the old ones, adds the new one to the same world. Fires the respective Forge event
-     * @param old To be removed
+     *
+     * @param old         To be removed
      * @param replacement To be added
      */
-    public static void replaceEntity(LivingEntity old, LivingEntity replacement){
+    public static void replaceEntity(LivingEntity old, LivingEntity replacement) {
         World w = old.getEntityWorld();
-        MinecraftForge.EVENT_BUS.post(new LivingConversionEvent.Post(old,replacement));
+        MinecraftForge.EVENT_BUS.post(new LivingConversionEvent.Post(old, replacement));
         w.addEntity(replacement);
         old.remove();
     }
@@ -801,9 +794,15 @@ public class UtilLib {
      * Creates a LinkedHashSet from the given elements.
      * It isn't a {@link SortedSet} but should keep the order anyway
      */
-    public static <T> Set<T> newSortedSet(T... elements){
+    public static <T> Set<T> newSortedSet(T... elements) {
         Set<T> s = new LinkedHashSet<>();
-        Collections.addAll(s,elements);
+        Collections.addAll(s, elements);
         return s;
+    }
+
+    public enum RotationAmount {
+        NINETY,
+        HUNDRED_EIGHTY,
+        TWO_HUNDRED_SEVENTY
     }
 }

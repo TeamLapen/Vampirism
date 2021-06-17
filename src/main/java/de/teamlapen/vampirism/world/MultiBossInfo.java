@@ -16,7 +16,7 @@ public class MultiBossInfo {
     protected ITextComponent name;
     protected BossInfo.Overlay overlay;
     protected List<Color> colors;
-    protected Map<Color,Float> entries;
+    protected Map<Color, Float> entries;
 
     public MultiBossInfo(UUID uniqueIdIn, ITextComponent nameIn, BossInfo.Overlay overlayIn, Color... entries) {
         this.uniqueId = uniqueIdIn;
@@ -34,12 +34,28 @@ public class MultiBossInfo {
         this.overlay = packet.getOverlay();
     }
 
-    public UUID getUniqueId() {
-        return uniqueId;
+    public void clear() {
+        this.entries.clear();
+    }
+
+    public List<Color> getColors() {
+        return colors;
+    }
+
+    public void setColors(Color... entries) {
+        this.colors = Lists.newArrayList(entries);
+    }
+
+    public Map<Color, Float> getEntries() {
+        return entries;
     }
 
     public ITextComponent getName() {
         return name;
+    }
+
+    public void setName(ITextComponent name) {
+        this.name = name;
     }
 
     public BossInfo.Overlay getOverlay() {
@@ -50,43 +66,27 @@ public class MultiBossInfo {
         this.overlay = overlay;
     }
 
-    public void setName(ITextComponent name) {
-        this.name = name;
-    }
-
-    public List<Color> getColors() {
-        return colors;
-    }
-
-    public Map<Color, Float> getEntries() {
-        return entries;
+    public UUID getUniqueId() {
+        return uniqueId;
     }
 
     public void setPercentage(Color color, float perc) {
         if (!this.colors.contains(color)) {
             this.colors.add(color);
         }
-        this.entries.put(color,perc);
-    }
-
-    public void clear(){
-        this.entries.clear();
+        this.entries.put(color, perc);
     }
 
     public void setPercentage(float... perc) {
         for (int i = 0; i < perc.length; i++) {
-            if (this.colors.size() >= i + 1){
-                this.entries.put(this.colors.get(i),perc[i]);
+            if (this.colors.size() >= i + 1) {
+                this.entries.put(this.colors.get(i), perc[i]);
             }
         }
     }
 
-    public void setColors(Color... entries) {
-        this.colors = Lists.newArrayList(entries);
-    }
-
     public void updateFromPackage(UpdateMultiBossInfoPacket packet) {
-        switch (packet.getOperation()){
+        switch (packet.getOperation()) {
             case UPDATE_NAME:
                 this.name = packet.getName();
                 break;

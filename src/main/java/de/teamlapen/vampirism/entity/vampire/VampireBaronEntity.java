@@ -44,16 +44,24 @@ import java.util.Random;
  * Vampire that spawns in the vampire forest, has minions and drops pure blood
  */
 public class VampireBaronEntity extends VampireBaseEntity implements IVampireBaron {
+    public static final int MAX_LEVEL = 4;
     private final static Logger LOGGER = LogManager.getLogger(VampireBaronEntity.class);
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(VampireBaronEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> ENRAGED = EntityDataManager.createKey(VampireBaronEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> LADY = EntityDataManager.createKey(VampireBaronEntity.class, DataSerializers.BOOLEAN);
+    private final static int ENRAGED_TRANSITION_TIME = 15;
 
     public static boolean spawnPredicateBaron(EntityType<? extends VampireBaronEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
         return (ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || ModBiomes.vampire_forest_hills.getRegistryName().equals(Helper.getBiomeId(world, blockPos))) && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
     }
 
-    public static final int MAX_LEVEL = 4;
+    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+        return VampireBaseEntity.getAttributeBuilder()
+                .createMutableAttribute(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_BARON_MAX_HEALTH)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 5);
+    }
     /**
      * Used for ranged vs melee attack decision
      */
@@ -63,13 +71,11 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
      */
     private boolean rangedAttack = false;
     private boolean prevAttacking = false;
-
     /**
      * Store the approximate count of entities that are following this advanced vampire.
      * Not guaranteed to be exact and not saved to nbt
      */
     private int followingEntities = 0;
-    private final static int ENRAGED_TRANSITION_TIME = 15;
     private int enragedTransitionTime = 0;
 
     public VampireBaronEntity(EntityType<? extends VampireBaronEntity> type, World world) {
@@ -88,7 +94,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
                 float pld = (this.getLevel() + 1) - VampirismPlayerAttributes.get((PlayerEntity) entity).vampireLevel / 3f;
                 tm = pld + 1;
                 mr = pld < 1.5f ? 1 : (pld < 3 ? 2 : 3);
-                if (VampirismPlayerAttributes.get((PlayerEntity) entity).getHuntSpecial().fullHunterCoat!=null) {
+                if (VampirismPlayerAttributes.get((PlayerEntity) entity).getHuntSpecial().fullHunterCoat != null) {
                     tm *= 0.5F;
                 }
             }
@@ -122,18 +128,21 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
+    public void decreaseFollowerCount() {
+        followingEntities = Math.max(0, followingEntities - 1);
+    }
+
+    @Override
+    public void func_241847_a(ServerWorld world, LivingEntity entity) {
+        super.func_241847_a(world, entity);
+        if (entity instanceof VampireBaronEntity) {
+            this.setHealth(this.getMaxHealth());
+        }
+    }
+
+    @Override
     public boolean getAlwaysRenderNameTagForRender() {
         return true;
-    }
-
-    @Override
-    public int getVerticalFaceSpeed() {
-        return 5; //Turn around slowly
-    }
-
-    @Override
-    public int getHorizontalFaceSpeed() {
-        return 5; //Don't move the head too far
     }
 
     /**
@@ -144,16 +153,14 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         return enragedTransitionTime / (float) ENRAGED_TRANSITION_TIME;
     }
 
-    public boolean isEnraged() {
-        return getDataManager().get(ENRAGED);
+    @Override
+    public int getFollowingCount() {
+        return followingEntities;
     }
 
-    public boolean isLady() {
-        return getDataManager().get(LADY);
-    }
-
-    public void setLady(boolean lady) {
-        getDataManager().set(LADY, lady);
+    @Override
+    public int getHorizontalFaceSpeed() {
+        return 5; //Don't move the head too far
     }
 
     @Override
@@ -175,6 +182,11 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
+    public int getMaxFollowerCount() {
+        return (int) (BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_FOLLOWER * this.getLevel() / (float) this.getMaxLevel() * 2f);
+    }
+
+    @Override
     public int getMaxInPortalTime() {
         return 500;
     }
@@ -184,20 +196,14 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         return MAX_LEVEL;
     }
 
-
     @Override
-    public void decreaseFollowerCount() {
-        followingEntities = Math.max(0, followingEntities - 1);
+    public LivingEntity getRepresentingEntity() {
+        return this;
     }
 
     @Override
-    public int getFollowingCount() {
-        return followingEntities;
-    }
-
-    @Override
-    public int getMaxFollowerCount() {
-        return (int) (BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_FOLLOWER * this.getLevel() / (float) this.getMaxLevel() * 2f);
+    public int getVerticalFaceSpeed() {
+        return 5; //Turn around slowly
     }
 
     @Override
@@ -209,11 +215,17 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         return false;
     }
 
-    @Override
-    public LivingEntity getRepresentingEntity() {
-        return this;
+    public boolean isEnraged() {
+        return getDataManager().get(ENRAGED);
     }
 
+    public boolean isLady() {
+        return getDataManager().get(LADY);
+    }
+
+    public void setLady(boolean lady) {
+        getDataManager().set(LADY, lady);
+    }
 
     @Override
     public void livingTick() {
@@ -257,19 +269,24 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         super.livingTick();
     }
 
-    @Override
-    public void func_241847_a(ServerWorld world, LivingEntity entity) {
-        super.func_241847_a(world, entity);
-        if (entity instanceof VampireBaronEntity) {
-            this.setHealth(this.getMaxHealth());
-        }
-    }
-
     @Nullable
     @Override
     public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         this.getDataManager().set(LADY, this.getRNG().nextBoolean());
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    }
+
+    @Override
+    public void readAdditional(CompoundNBT nbt) {
+        super.readAdditional(nbt);
+        setLevel(MathHelper.clamp(nbt.getInt("level"), 0, MAX_LEVEL));
+        this.getDataManager().set(LADY, nbt.getBoolean("lady"));
+    }
+
+    @Override
+    public void setAttackTarget(@Nullable LivingEntity target) {
+        super.setAttackTarget(target);
+        this.getDataManager().set(ENRAGED, target != null);
     }
 
     @Override
@@ -296,10 +313,10 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public void readAdditional(CompoundNBT nbt) {
-        super.readAdditional(nbt);
-        setLevel(MathHelper.clamp(nbt.getInt("level"), 0, MAX_LEVEL));
-        this.getDataManager().set(LADY, nbt.getBoolean("lady"));
+    public void writeAdditional(CompoundNBT nbt) {
+        super.writeAdditional(nbt);
+        nbt.putInt("level", getLevel());
+        nbt.putBoolean("lady", isLady());
     }
 
     @Override
@@ -310,20 +327,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     @Override
     protected int getExperiencePoints(PlayerEntity player) {
         return 20 + 5 * getLevel();
-    }
-
-
-    @Override
-    public void setAttackTarget(@Nullable LivingEntity target) {
-        super.setAttackTarget(target);
-        this.getDataManager().set(ENRAGED, target != null);
-    }
-
-    @Override
-    public void writeAdditional(CompoundNBT nbt) {
-        super.writeAdditional(nbt);
-        nbt.putInt("level", getLevel());
-        nbt.putBoolean("lady", isLady());
     }
 
     @Override
@@ -348,15 +351,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, input -> input != null && isLowerLevel(input)));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, VampireBaronEntity.class, true, false));
-    }
-
-
-    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return VampireBaseEntity.getAttributeBuilder()
-                .createMutableAttribute(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_BARON_MAX_HEALTH)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 5);
     }
 
     protected void updateEntityAttributes(boolean aggressive) {

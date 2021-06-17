@@ -47,7 +47,7 @@ public abstract class DualBipedRenderer<T extends MobEntity, M extends BipedMode
     /**
      * @return Array of texture and slim status
      */
-    protected Pair<ResourceLocation,Boolean>[] separateSlimTextures(Stream<ResourceLocation> set){
+    protected Pair<ResourceLocation, Boolean>[] separateSlimTextures(Stream<ResourceLocation> set) {
         return set.map(r -> {
             boolean b = r.getPath().endsWith("slim.png");
             return Pair.of(r, b);

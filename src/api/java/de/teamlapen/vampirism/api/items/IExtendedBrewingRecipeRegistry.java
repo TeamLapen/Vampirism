@@ -17,9 +17,9 @@ public interface IExtendedBrewingRecipeRegistry {
 
     boolean canBrew(NonNullList<ItemStack> inputs, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities, int[] inputIndexes);
 
-    List<ExtendedPotionMix> getPotionMixes();
-
     Optional<Triple<ItemStack, Integer, Integer>> getOutput(ItemStack bottle, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities, boolean onlyExtended);
+
+    List<ExtendedPotionMix> getPotionMixes();
 
     boolean hasOutput(ItemStack input, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities);
 

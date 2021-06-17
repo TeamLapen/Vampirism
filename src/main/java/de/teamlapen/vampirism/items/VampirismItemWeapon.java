@@ -32,7 +32,6 @@ public class VampirismItemWeapon extends SwordItem {
     private String translation_key;
 
 
-
     public VampirismItemWeapon(String regName, IItemTier material, int attackDamageIn, float attackSpeedIn, Properties builder) {
         super(material, attackDamageIn, attackSpeedIn, builder);
         this.attackDamage = attackDamageIn;

@@ -48,10 +48,10 @@ public class MinionContainer extends InventoryContainer {
         SelectorInfo[] slots = new SelectorInfo[6 + extraSlots];
         slots[0] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.MAINHAND, minionEntity)), 7, 60, false, 1, null);
         slots[1] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.OFFHAND, minionEntity) || stack.getUseAction() == UseAction.DRINK || stack.getUseAction() == UseAction.EAT), 7, 78, false, 5, null);
-        slots[2] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.FEET, minionEntity)), 81, 22, false, 1, Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE,PlayerContainer.EMPTY_ARMOR_SLOT_BOOTS));
-        slots[3] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.LEGS, minionEntity)), 63, 22, false, 1, Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE,PlayerContainer.EMPTY_ARMOR_SLOT_LEGGINGS));
-        slots[4] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.CHEST, minionEntity)), 45, 22, false, 1, Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE,PlayerContainer.EMPTY_ARMOR_SLOT_CHESTPLATE));
-        slots[5] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.HEAD, minionEntity)), 27, 22, false, 1, Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE,PlayerContainer.EMPTY_ARMOR_SLOT_HELMET));
+        slots[2] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.FEET, minionEntity)), 81, 22, false, 1, Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE, PlayerContainer.EMPTY_ARMOR_SLOT_BOOTS));
+        slots[3] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.LEGS, minionEntity)), 63, 22, false, 1, Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE, PlayerContainer.EMPTY_ARMOR_SLOT_LEGGINGS));
+        slots[4] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.CHEST, minionEntity)), 45, 22, false, 1, Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE, PlayerContainer.EMPTY_ARMOR_SLOT_CHESTPLATE));
+        slots[5] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.HEAD, minionEntity)), 27, 22, false, 1, Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE, PlayerContainer.EMPTY_ARMOR_SLOT_HELMET));
 
         assert extraSlots == 9 || extraSlots == 12 || extraSlots == 15 : "Minion inventory has unexpected size";
         for (int i = 0; i < extraSlots; i++) {
@@ -66,13 +66,11 @@ public class MinionContainer extends InventoryContainer {
     private final IMinionTask<?, ?>[] availableTasks;
     @Nullable
     private final IMinionTask<?, ?> previousTask;
+    private final boolean previousTaskLocked;
+    private final int extraSlots;
     @Nullable
     private IMinionTask<?, ?> taskToActivate;
-
-    private final boolean previousTaskLocked;
     private boolean taskLocked;
-
-    private final int extraSlots;
 
     public MinionContainer(int id, PlayerInventory playerInventory, MinionEntity<?> minionEntity, @Nonnull IInventory inventory, int extraSlots, SelectorInfo... selectorInfos) {
         super(ModContainer.minion, id, playerInventory, IWorldPosCallable.of(minionEntity.world, minionEntity.getPosition()), inventory, selectorInfos);

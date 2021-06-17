@@ -36,14 +36,14 @@ public class VampirismFlowerBlock extends FlowerBlock {
             this.duration = duration;
         }
 
+        public String getName() {
+            return this.getString();
+        }
+
         @Nonnull
         @Override
         public String getString() {
             return name;
-        }
-
-        public String getName() {
-            return this.getString();
         }
 
     }

@@ -111,13 +111,6 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
         return 0;
     }
 
-
-    @Nonnull
-    @Override
-    public ITaskManager getTaskManager() {
-        return null;
-    }
-
     @Override
     public Predicate<LivingEntity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
         return null;
@@ -138,6 +131,11 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
         return null;
     }
 
+    @Nonnull
+    @Override
+    public ITaskManager getTaskManager() {
+        return null;
+    }
 
     @Override
     public int getTicksInSun() {
@@ -146,6 +144,11 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
 
     @Override
     public boolean isAutoFillEnabled() {
+        return false;
+    }
+
+    @Override
+    public boolean isDBNO() {
         return false;
     }
 
@@ -181,10 +184,14 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
         return false;
     }
 
-
     @Override
     public int onBite(IVampire biter) {
         return 0;
+    }
+
+    @Override
+    public boolean onDeadlyHit(DamageSource source) {
+        return false;
     }
 
     @Override
@@ -200,16 +207,6 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     @Override
     public void unlockVision(@Nonnull IVampireVision vision) {
 
-    }
-
-    @Override
-    public boolean onDeadlyHit(DamageSource source) {
-        return false;
-    }
-
-    @Override
-    public boolean isDBNO() {
-        return false;
     }
 
     @Override

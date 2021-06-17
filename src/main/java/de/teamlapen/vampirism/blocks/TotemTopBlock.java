@@ -42,15 +42,13 @@ public class TotemTopBlock extends ContainerBlock {
         return Collections.unmodifiableList(blocks);
     }
 
-    private final boolean crafted;
-
     private static VoxelShape makeShape() {
         VoxelShape a = Block.makeCuboidShape(3, 0, 3, 13, 10, 13);
         VoxelShape b = Block.makeCuboidShape(1, 1, 1, 15, 9, 15);
         return VoxelShapes.or(a, b);
     }
-
     public final ResourceLocation faction;
+    private final boolean crafted;
 
     /**
      * @param faction faction must be faction registryname;
@@ -67,18 +65,16 @@ public class TotemTopBlock extends ContainerBlock {
         return false;
     }
 
-    @Override
-    public float getExplosionResistance() {
-        return Float.MAX_VALUE;
-    }
-
     @Nullable
     @Override
     public TileEntity createNewTileEntity(@Nonnull IBlockReader worldIn) {
         return ModTiles.totem.create();
     }
 
-
+    @Override
+    public float getExplosionResistance() {
+        return Float.MAX_VALUE;
+    }
 
     @Nonnull
     @Override
@@ -119,6 +115,13 @@ public class TotemTopBlock extends ContainerBlock {
     }
 
     @Override
+    public void onReplaced(BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!(newState.getBlock() instanceof TotemTopBlock)) {
+            worldIn.removeTileEntity(pos);
+        }
+    }
+
+    @Override
     public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
         TotemTileEntity tile = getTile(world, pos);
         if (tile != null) {
@@ -131,7 +134,7 @@ public class TotemTopBlock extends ContainerBlock {
                 tile.notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.village_abandoned"));
             }
             return true;
-        }else {
+        } else {
             return false;
         }
     }
@@ -141,12 +144,5 @@ public class TotemTopBlock extends ContainerBlock {
         TileEntity tile = world.getTileEntity(pos);
         if (tile instanceof TotemTileEntity) return (TotemTileEntity) tile;
         return null;
-    }
-
-    @Override
-    public void onReplaced(BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!(newState.getBlock() instanceof TotemTopBlock)) {
-            worldIn.removeTileEntity(pos);
-        }
     }
 }

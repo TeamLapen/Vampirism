@@ -22,6 +22,16 @@ public class HunterMinionStatsScreen extends MinionStatsScreen<HunterMinionEntit
     }
 
     @Override
+    protected boolean areButtonsVisible(HunterMinionEntity.HunterMinionData d) {
+        return d.getRemainingStatPoints() > 0 || d.getLevel() < HunterMinionEntity.HunterMinionData.MAX_LEVEL;
+    }
+
+    @Override
+    protected int getRemainingStatPoints(HunterMinionEntity.HunterMinionData d) {
+        return d.getRemainingStatPoints();
+    }
+
+    @Override
     protected boolean isActive(HunterMinionEntity.HunterMinionData data, int i) {
         switch (i) {
             case 0:
@@ -35,16 +45,6 @@ public class HunterMinionStatsScreen extends MinionStatsScreen<HunterMinionEntit
             default:
                 return false;
         }
-    }
-
-    @Override
-    protected boolean areButtonsVisible(HunterMinionEntity.HunterMinionData d) {
-        return d.getRemainingStatPoints() > 0 || d.getLevel() < HunterMinionEntity.HunterMinionData.MAX_LEVEL;
-    }
-
-    @Override
-    protected int getRemainingStatPoints(HunterMinionEntity.HunterMinionData d) {
-        return d.getRemainingStatPoints();
     }
 
     @Override

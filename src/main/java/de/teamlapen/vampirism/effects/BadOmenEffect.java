@@ -24,17 +24,44 @@ import javax.annotation.Nullable;
  */
 public abstract class BadOmenEffect extends Effect {
 
+    /**
+     * Call this if onDeath of an entity that might carry a faction banner.
+     * Checks if banner is equipped and handles bad omen effect accordingly
+     *
+     * @param offender Killer entity
+     * @param victim   The killed faction entity
+     */
+    public static void handlePotentialBannerKill(@Nullable Entity offender, IFactionEntity victim) {
+        if (offender instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) offender;
+            IFaction<?> faction = victim.getFaction();
+            if (faction.getVillageData().isBanner(victim.getRepresentingEntity().getItemStackFromSlot(EquipmentSlotType.HEAD))) {
+                IFaction<?> playerFaction = VampirismPlayerAttributes.get(player).faction;
+                if (playerFaction != null && playerFaction != faction) {
+                    Effect badOmen = faction.getVillageData().getBadOmenEffect();
+                    if (badOmen != null) {
+                        EffectInstance inst = player.getActivePotionEffect(badOmen);
+                        int i = inst != null ? Math.min(inst.getAmplifier() + 1, 4) : 0;
+                        if (inst != null) player.removeActivePotionEffect(badOmen);
+                        player.addPotionEffect(new EffectInstance(badOmen, 120000, i, false, false, true));
+                    }
+
+                }
+            }
+        }
+    }
+
     public BadOmenEffect(String modID, ResourceLocation faction) {
         super(EffectType.NEUTRAL, 745784);
         this.setRegistryName(modID, "bad_omen_" + faction.getPath());
     }
 
+    public abstract IFaction<?> getFaction();
+
     @Override
     public boolean isReady(int duration, int amplifier) {
         return true;
     }
-
-    public abstract IFaction<?> getFaction();
 
     @Override
     public void performEffect(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
@@ -47,37 +74,11 @@ public abstract class BadOmenEffect extends Effect {
             TotemHelper.getTotemNearPos(serverWorld, entityLivingBaseIn.getPosition(), true).ifPresent(totem -> {
                 if (totem.getControllingFaction() != getFaction()) {
                     int level = Math.min(amplifier, 4);
-                    if(totem.initiateCaptureOrIncreaseBadOmenLevel(getFaction(), null, level + 1, 0)) {
+                    if (totem.initiateCaptureOrIncreaseBadOmenLevel(getFaction(), null, level + 1, 0)) {
                         entityLivingBaseIn.removePotionEffect(this);
                     }
                 }
             });
-        }
-    }
-
-    /**
-     * Call this if onDeath of an entity that might carry a faction banner.
-     * Checks if banner is equipped and handles bad omen effect accordingly
-     * @param offender Killer entity
-     * @param victim The killed faction entity
-     */
-    public static void handlePotentialBannerKill(@Nullable Entity offender, IFactionEntity victim){
-        if (offender instanceof PlayerEntity) {
-            PlayerEntity player= (PlayerEntity) offender;
-            IFaction<?> faction = victim.getFaction();
-            if (faction.getVillageData().isBanner(victim.getRepresentingEntity().getItemStackFromSlot(EquipmentSlotType.HEAD))) {
-                IFaction<?> playerFaction = VampirismPlayerAttributes.get(player).faction;
-                if (playerFaction != null &&  playerFaction != faction) {
-                    Effect badOmen = faction.getVillageData().getBadOmenEffect();
-                    if(badOmen!=null){
-                        EffectInstance inst = player.getActivePotionEffect(badOmen);
-                        int i = inst != null ? Math.min(inst.getAmplifier()+1,4) : 0;
-                        if(inst != null) player.removeActivePotionEffect(badOmen);
-                        player.addPotionEffect(new EffectInstance(badOmen, 120000, i,false,false, true));
-                    }
-
-                }
-            }
         }
     }
 }

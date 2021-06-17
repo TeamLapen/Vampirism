@@ -34,6 +34,7 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
 
     private final Random rand = new Random();
     private final LazyOptional<IItemHandler> opt = LazyOptional.of(() -> this);
+    private final int chargeRate = 30;
     private int ticksExistedClient;
     /**
      * If larger zero: Charging
@@ -42,7 +43,6 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
      */
     private int chargingTicks;
     private int bloodStored = 0;
-    private final int chargeRate = 30;
     @Nonnull
     private ItemStack internalStack;
 
@@ -138,6 +138,11 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
     }
 
     @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        if (hasWorld()) handleUpdateTag(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
+    }
+
+    @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
         if (compound.contains("item")) {
@@ -147,11 +152,6 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
         }
         this.bloodStored = compound.getInt("blood_stored");
         this.chargingTicks = compound.getInt("charging_ticks");
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        if (hasWorld()) handleUpdateTag(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
     }
 
     @Nonnull

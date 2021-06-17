@@ -58,6 +58,7 @@ public class VersionChecker implements Runnable {
         new Thread(checker).start();
         return checker.versionInfo;
     }
+
     private final boolean stats;
     private final String UPDATE_FILE_URL;
     private final VersionInfo versionInfo;
@@ -169,6 +170,25 @@ public class VersionChecker implements Runnable {
 
     }
 
+    private String getStatsString() {
+        try {
+            return "?" +
+                    "current=" +
+                    URLEncoder.encode(currentVersion.getMajorVersion() + "." + currentVersion.getMinorVersion() + "." + currentVersion.getIncrementalVersion(), "UTF-8") +
+                    '&' +
+                    "mc=" +
+                    URLEncoder.encode(MCPVersion.getMCVersion(), "UTF-8") +
+                    '&' +
+                    "count=" +
+                    URLEncoder.encode("" + ModList.get().size(), "UTF-8") +
+                    '&' +
+                    "side=" +
+                    (EffectiveSide.get() == LogicalSide.CLIENT ? "client" : "server");
+        } catch (UnsupportedEncodingException e) {
+            return "";
+        }
+    }
+
     /**
      * Opens stream for given URL while following redirects
      */
@@ -194,25 +214,6 @@ public class VersionChecker implements Runnable {
             return c.getInputStream();
         }
         throw new IOException("Too many redirects while trying to fetch " + url);
-    }
-
-    private String getStatsString() {
-        try {
-            return "?" +
-                    "current=" +
-                    URLEncoder.encode(currentVersion.getMajorVersion() + "." + currentVersion.getMinorVersion() + "." + currentVersion.getIncrementalVersion(), "UTF-8") +
-                    '&' +
-                    "mc=" +
-                    URLEncoder.encode(MCPVersion.getMCVersion(), "UTF-8") +
-                    '&' +
-                    "count=" +
-                    URLEncoder.encode("" + ModList.get().size(), "UTF-8") +
-                    '&' +
-                    "side=" +
-                    (EffectiveSide.get() == LogicalSide.CLIENT ? "client" : "server");
-        } catch (UnsupportedEncodingException e) {
-            return "";
-        }
     }
 
     /**

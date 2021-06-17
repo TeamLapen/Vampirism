@@ -37,7 +37,8 @@ public class BloodHelper {
         int hotbarSize = PlayerInventory.getHotbarSize();
         for (int i = 0; i < hotbarSize; i++) {
             ItemStack stack = inventory.getStackInSlot(i);
-            if (!stack.isEmpty() && FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.blood, 1000), IFluidHandler.FluidAction.SIMULATE) > 0).orElse(false)) return stack;
+            if (!stack.isEmpty() && FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.blood, 1000), IFluidHandler.FluidAction.SIMULATE) > 0).orElse(false))
+                return stack;
         }
         return ItemStack.EMPTY;
     }
@@ -46,7 +47,7 @@ public class BloodHelper {
      * Checks if the given stack can store blood
      */
     public static boolean canStoreBlood(@Nonnull ItemStack stack) {
-        return fill(stack, 1000, IFluidHandler.FluidAction.SIMULATE)>0;
+        return fill(stack, 1000, IFluidHandler.FluidAction.SIMULATE) > 0;
     }
 
     /**
@@ -109,7 +110,7 @@ public class BloodHelper {
     /**
      * Fills the blood in container in the players inventory using multiple possible ways
      *
-     * @param amt    Fluid amount in mB
+     * @param amt Fluid amount in mB
      * @return Blood amount that could not be filled
      */
     public static int fillBloodIntoInventory(PlayerEntity player, int amt) {
@@ -118,7 +119,7 @@ public class BloodHelper {
         int hotbarSize = PlayerInventory.getHotbarSize();
         for (int i = 0; i < hotbarSize; i++) {
             ItemStack stack1 = player.inventory.getStackInSlot(i);
-            if (!stack1.isEmpty() && fill(stack1, amt, IFluidHandler.FluidAction.SIMULATE)>0) {
+            if (!stack1.isEmpty() && fill(stack1, amt, IFluidHandler.FluidAction.SIMULATE) > 0) {
                 stack = stack1;
                 break;
             }
@@ -132,7 +133,7 @@ public class BloodHelper {
                     return 0;
                 }
             }
-            LOGGER.warn("Could not execute bottle fill even though simulation was successful. Item: {} Amount: {}",stack,amt);
+            LOGGER.warn("Could not execute bottle fill even though simulation was successful. Item: {} Amount: {}", stack, amt);
         }
         ItemStack glass = getGlassBottleInHotbar(player.inventory);
         if (!glass.isEmpty() && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {

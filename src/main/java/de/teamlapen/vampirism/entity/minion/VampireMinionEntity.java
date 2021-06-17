@@ -68,13 +68,11 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
     }
 
-
-    private boolean sundamageCache;
-    private EnumStrength garlicCache = EnumStrength.NONE;
-
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
         return BasicVampireEntity.getAttributeBuilder();
     }
+    private boolean sundamageCache;
+    private EnumStrength garlicCache = EnumStrength.NONE;
 
     public VampireMinionEntity(EntityType<? extends VampirismEntity> type, World world) {
         super(type, world, VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true, true, true, false, null).or(e -> !(e instanceof IFactionEntity) && e instanceof IMob && !(e instanceof ZombieEntity) && !(e instanceof SkeletonEntity) && !(e instanceof CreeperEntity)));
@@ -87,13 +85,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
     @Override
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
-        this.heal(amt/3f); //blood bottle = 900 amt = 9 amt = 2.5 health
-    }
-
-    @Nonnull
-    @Override
-    public ItemStack onFoodEaten(@Nonnull World world, @Nonnull ItemStack stack) {
-        return stack;
+        this.heal(amt / 3f); //blood bottle = 900 amt = 9 amt = 2.5 health
     }
 
     @Override
@@ -110,11 +102,11 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         return this.getMinionData().map(d -> d.type).map(t -> Math.max(0, t)).orElse(0);
     }
 
-    public void setVampireType(int type, boolean minionSkin) {
-        getMinionData().ifPresent(d -> {
-            d.type = type;
-            d.minionSkin = minionSkin;
-        });
+    /**
+     * @return Whether the selected skin is from the minion specific pool or a generic vampire skin
+     */
+    public boolean hasMinionSpecificSkin() {
+        return this.getMinionData().map(d -> d.minionSkin).orElse(false);
     }
 
     @Nonnull
@@ -165,6 +157,12 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         super.livingTick();
     }
 
+    @Nonnull
+    @Override
+    public ItemStack onFoodEaten(@Nonnull World world, @Nonnull ItemStack stack) {
+        return stack;
+    }
+
     @OnlyIn(Dist.CLIENT)
     @Override
     public void openAppearanceScreen() {
@@ -181,15 +179,15 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         this.getMinionData().ifPresent(d -> d.useLordSkin = useLordSkin);
     }
 
-    public boolean shouldRenderLordSkin() {
-        return this.getMinionData().map(d -> d.useLordSkin).orElse(false);
+    public void setVampireType(int type, boolean minionSkin) {
+        getMinionData().ifPresent(d -> {
+            d.type = type;
+            d.minionSkin = minionSkin;
+        });
     }
 
-    /**
-     * @return Whether the selected skin is from the minion specific pool or a generic vampire skin
-     */
-    public boolean hasMinionSpecificSkin(){
-        return this.getMinionData().map(d -> d.minionSkin).orElse(false);
+    public boolean shouldRenderLordSkin() {
+        return this.getMinionData().map(d -> d.useLordSkin).orElse(false);
     }
 
     @Override
@@ -203,11 +201,14 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     @Override
-    protected void onMinionDataReceived(@Nonnull VampireMinionData data) {
-        super.onMinionDataReceived(data);
-        updateAttributes();
+    protected boolean canConsume(ItemStack stack) {
+        if (!super.canConsume(stack)) return false;
+        if ((stack.isFood() && !(stack.getItem() instanceof VampirismItemBloodFood))) return false;
+        boolean fullHealth = this.getHealth() == this.getMaxHealth();
+        if (fullHealth && (stack.isFood() && stack.getItem() instanceof VampirismItemBloodFood)) return false;
+        if (stack.getItem() instanceof BloodBottleItem && stack.getDamage() == 0) return false;
+        return !fullHealth || !(stack.getItem() instanceof BloodBottleItem);
     }
-
 
     @Override
     protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
@@ -230,14 +231,9 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     @Override
-    protected boolean canConsume(ItemStack stack) {
-        if(!super.canConsume(stack)) return false;
-        if ((stack.isFood() && !(stack.getItem() instanceof VampirismItemBloodFood))) return false;
-        boolean fullHealth = this.getHealth() == this.getMaxHealth();
-        if (fullHealth && (stack.isFood() && stack.getItem() instanceof VampirismItemBloodFood)) return false;
-        if (stack.getItem() instanceof BloodBottleItem && stack.getDamage() == 0)return false;
-        if (fullHealth && stack.getItem() instanceof BloodBottleItem) return false;
-        return true;
+    protected void onMinionDataReceived(@Nonnull VampireMinionData data) {
+        super.onMinionDataReceived(data);
+        updateAttributes();
     }
 
     @Override
@@ -340,8 +336,25 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             if (data.length >= 2) {
                 this.type = data[0];
                 this.useLordSkin = (data[1] & 0b1) == 1;
-                this.minionSkin = (data[1] &0b10) == 0b10;
+                this.minionSkin = (data[1] & 0b10) == 0b10;
             }
+        }
+
+        @Override
+        public boolean hasUsedSkillPoints() {
+            return this.inventoryLevel + this.healthLevel + this.strengthLevel + this.speedLevel > 0;
+        }
+
+        @Override
+        public void resetStats(MinionEntity<?> entity) {
+            assert entity instanceof VampireMinionEntity;
+            this.inventoryLevel = 0;
+            this.healthLevel = 0;
+            this.strengthLevel = 0;
+            this.speedLevel = 0;
+            this.getInventory().setAvailableSize(getInventorySize());
+            ((VampireMinionEntity) entity).updateAttributes();
+            super.resetStats(entity);
         }
 
         @Override
@@ -354,7 +367,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             tag.putInt("l_he", healthLevel);
             tag.putInt("l_str", strengthLevel);
             tag.putInt("l_spe", speedLevel);
-            tag.putBoolean("ms",minionSkin);
+            tag.putBoolean("ms", minionSkin);
         }
 
         /**
@@ -401,23 +414,6 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
                     LOGGER.warn("Cannot upgrade minion stat {} as it does not exist", statId);
                     return false;
             }
-        }
-
-        @Override
-        public void resetStats(MinionEntity<?> entity) {
-            assert entity instanceof VampireMinionEntity;
-            this.inventoryLevel = 0;
-            this.healthLevel = 0;
-            this.strengthLevel = 0;
-            this.speedLevel = 0;
-            this.getInventory().setAvailableSize(getInventorySize());
-            ((VampireMinionEntity) entity).updateAttributes();
-            super.resetStats(entity);
-        }
-
-        @Override
-        public boolean hasUsedSkillPoints() {
-            return this.inventoryLevel + this.healthLevel + this.strengthLevel + this.speedLevel > 0;
         }
 
         @Override

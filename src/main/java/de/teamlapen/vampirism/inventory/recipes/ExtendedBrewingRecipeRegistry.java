@@ -110,7 +110,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
         if (stack.isEmpty()) return false;
 
         for (ExtendedPotionMix mix : conversionMixes) {
-            if (mix.reagent2.filter(i->i.test(stack)).isPresent()) return true;
+            if (mix.reagent2.filter(i -> i.test(stack)).isPresent()) return true;
 
         }
 
@@ -122,7 +122,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
         if (stack.isEmpty()) return false;
 
         for (ExtendedPotionMix mix : conversionMixes) {
-            if (mix.reagent1.filter(i->i.test(stack)).isPresent()) return true;
+            if (mix.reagent1.filter(i -> i.test(stack)).isPresent()) return true;
         }
         return BrewingRecipeRegistry.isValidIngredient(stack);
     }

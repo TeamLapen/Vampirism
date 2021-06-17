@@ -19,6 +19,13 @@ public interface IActionHandler<T extends IActionPlayer> {
     void deactivateAllActions();
 
     /**
+     * If active, the remaining duration is extended by the giving duration
+     *
+     * @param action
+     */
+    void extendActionTimer(@Nonnull ILastingAction action, int duration);
+
+    /**
      * @return A list of actions which currently are available to the player
      */
     List<IAction> getAvailableActions();
@@ -53,9 +60,9 @@ public interface IActionHandler<T extends IActionPlayer> {
      */
     boolean isActionActive(ResourceLocation id);
 
-    boolean isActionUnlocked(IAction action);
-    
     boolean isActionOnCooldown(IAction action);
+
+    boolean isActionUnlocked(IAction action);
 
     /**
      * Locks the given actions again
@@ -83,10 +90,4 @@ public interface IActionHandler<T extends IActionPlayer> {
      * @param actions
      */
     void unlockActions(Collection<IAction> actions);
-
-    /**
-     * If active, the remaining duration is extended by the giving duration
-     * @param action
-     */
-    void extendActionTimer(@Nonnull ILastingAction action, int duration);
 }

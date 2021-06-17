@@ -15,40 +15,39 @@ public class VampirismArmorModel extends BipedModel<LivingEntity> {
         super(0, 0, textureWidthIn, textureHeightIn);
     }
 
-    @Override
-    protected final Iterable<ModelRenderer> getHeadParts() {
-        Iterable<ModelRenderer> l =  getHeadModels();
-        l.forEach(p->p.copyModelAngles(this.bipedHead));
-        return l;    }
+    protected Iterable<ModelRenderer> getBodyModels() {
+        return Collections.emptyList();
+    }
 
     @Override
     protected final Iterable<ModelRenderer> getBodyParts() {
-        Iterable<ModelRenderer> b =  getBodyModels();
-        b.forEach(p->p.copyModelAngles(this.bipedBody));
-        Iterable<ModelRenderer> ll =  getLeftLegModels();
-        ll.forEach(p->p.copyModelAngles(this.bipedLeftLeg));
-        Iterable<ModelRenderer> rl =  getRightLegModels();
-        rl.forEach(p->p.copyModelAngles(this.bipedRightLeg));
-        return Iterables.concat(b,ll,rl);
+        Iterable<ModelRenderer> b = getBodyModels();
+        b.forEach(p -> p.copyModelAngles(this.bipedBody));
+        Iterable<ModelRenderer> ll = getLeftLegModels();
+        ll.forEach(p -> p.copyModelAngles(this.bipedLeftLeg));
+        Iterable<ModelRenderer> rl = getRightLegModels();
+        rl.forEach(p -> p.copyModelAngles(this.bipedRightLeg));
+        return Iterables.concat(b, ll, rl);
     }
 
-    protected Iterable<ModelRenderer> getHeadModels(){
+    protected Iterable<ModelRenderer> getHeadModels() {
         return Collections.emptyList();
     }
 
-    protected Iterable<ModelRenderer> getBodyModels(){
+    @Override
+    protected final Iterable<ModelRenderer> getHeadParts() {
+        Iterable<ModelRenderer> l = getHeadModels();
+        l.forEach(p -> p.copyModelAngles(this.bipedHead));
+        return l;
+    }
+
+    protected Iterable<ModelRenderer> getLeftLegModels() {
         return Collections.emptyList();
     }
 
-    protected Iterable<ModelRenderer> getLeftLegModels(){
+    protected Iterable<ModelRenderer> getRightLegModels() {
         return Collections.emptyList();
     }
-
-    protected Iterable<ModelRenderer> getRightLegModels(){
-        return Collections.emptyList();
-    }
-
-
 
 
 }

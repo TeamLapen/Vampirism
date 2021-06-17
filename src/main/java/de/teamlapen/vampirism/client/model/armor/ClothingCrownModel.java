@@ -23,7 +23,7 @@ public class ClothingCrownModel extends VampirismArmorModel {
     public ModelRenderer right;
 
     public ClothingCrownModel() {
-        super(64,32);
+        super(64, 32);
         this.left = new ModelRenderer(this, 0, 0);
         this.left.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.left.setTextureOffset(0, 6).addBox(-5.0F, -7.7F, -4.0F, 1.0F, 1.0F, 8.0F, -0.2F, 0.1F, 0.1F);

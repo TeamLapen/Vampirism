@@ -39,7 +39,7 @@ public class OblivionItem extends VampirismItem {
             if (((SkillHandler<?>) skillHandler).getRootNode().getChildren().stream().flatMap(a -> Arrays.stream(a.getElements())).noneMatch(skillHandler::isSkillEnabled))
                 return;
             boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
-            player.addPotionEffect(new EffectInstance(ModEffects.oblivion, Integer.MAX_VALUE, test?100:4));
+            player.addPotionEffect(new EffectInstance(ModEffects.oblivion, Integer.MAX_VALUE, test ? 100 : 4));
             if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst) {
                 HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, factionPlayer.getRepresentingPlayer(), false);
             }
@@ -70,20 +70,20 @@ public class OblivionItem extends VampirismItem {
 
     @Nonnull
     @Override
+    public ActionResult<ItemStack> onItemRightClick(@Nonnull World worldIn, @Nonnull PlayerEntity playerIn, @Nonnull Hand handIn) {
+        return DrinkHelper.startDrinking(worldIn, playerIn, handIn);
+    }
+
+    @Nonnull
+    @Override
     public ItemStack onItemUseFinish(ItemStack stack, @Nonnull World worldIn, LivingEntity entityLiving) {
         stack.shrink(1);
         if (entityLiving instanceof PlayerEntity) {
             FactionPlayerHandler.getOpt(((PlayerEntity) entityLiving)).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty()).ifPresent(OblivionItem::applyEffect);
         }
         if (entityLiving instanceof MinionEntity) {
-            ((MinionEntity<?>) entityLiving).getMinionData().ifPresent(d -> d.upgradeStat(-1,(MinionEntity<?>) entityLiving));
+            ((MinionEntity<?>) entityLiving).getMinionData().ifPresent(d -> d.upgradeStat(-1, (MinionEntity<?>) entityLiving));
         }
         return stack;
-    }
-
-    @Nonnull
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull World worldIn, @Nonnull PlayerEntity playerIn, @Nonnull Hand handIn) {
-        return DrinkHelper.startDrinking(worldIn, playerIn, handIn);
     }
 }

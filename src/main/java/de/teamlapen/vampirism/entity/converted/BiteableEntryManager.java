@@ -99,32 +99,17 @@ public class BiteableEntryManager {
     }
 
     /**
-     * checks if the creature entity is blacklisted
-     *
-     * @param creature the entity to check
-     * @returns weather the entity is blacklisted or not
+     * @param creature for which a {@link BiteableEntry} is requested
+     * @return {@code null} if resources aren't loaded or the creatures type is blacklisted.
      */
-    private boolean isEntityBlacklisted(CreatureEntity creature) {
-        if (!(creature instanceof AnimalEntity)) return true;
-        if (creature instanceof IVampire) return true;
+    public @Nullable
+    BiteableEntry get(CreatureEntity creature) {
+        if (!initialized) return null;
         EntityType<?> type = creature.getType();
-        if (type.getClassification() == EntityClassification.MONSTER || type.getClassification() == EntityClassification.WATER_CREATURE)
-            return true;
-        if (ModTags.Entities.VAMPIRE.contains(type)) return true;
-        //noinspection ConstantConditions
-        if (isConfigBlackListed(type.getRegistryName())) return true;
-        return false;
-    }
-
-    /**
-     * checks if the entity type is blacklisted through the server config
-     *
-     * @param id registryname of the entity type
-     * @returns weather the entity type is blacklisted by the server config or not
-     */
-    private boolean isConfigBlackListed(ResourceLocation id) {
-        List<? extends String> list = VampirismConfig.SERVER.blacklistedBloodEntity.get();
-        return list.contains(id.toString());
+        ResourceLocation id = EntityType.getKey(type);
+        if (isConfigBlackListed(id)) return null;
+        if (biteableEntries.containsKey(id)) return biteableEntries.get(id);
+        return calculated.getOrDefault(id, null);
     }
 
     /**
@@ -158,17 +143,31 @@ public class BiteableEntryManager {
     }
 
     /**
-     * @param creature for which a {@link BiteableEntry} is requested
-     * @return {@code null} if resources aren't loaded or the creatures type is blacklisted.
+     * checks if the entity type is blacklisted through the server config
+     *
+     * @param id registryname of the entity type
+     * @returns weather the entity type is blacklisted by the server config or not
      */
-    public @Nullable
-    BiteableEntry get(CreatureEntity creature) {
-        if (!initialized) return null;
+    private boolean isConfigBlackListed(ResourceLocation id) {
+        List<? extends String> list = VampirismConfig.SERVER.blacklistedBloodEntity.get();
+        return list.contains(id.toString());
+    }
+
+    /**
+     * checks if the creature entity is blacklisted
+     *
+     * @param creature the entity to check
+     * @returns weather the entity is blacklisted or not
+     */
+    private boolean isEntityBlacklisted(CreatureEntity creature) {
+        if (!(creature instanceof AnimalEntity)) return true;
+        if (creature instanceof IVampire) return true;
         EntityType<?> type = creature.getType();
-        ResourceLocation id = EntityType.getKey(type);
-        if (isConfigBlackListed(id)) return null;
-        if (biteableEntries.containsKey(id)) return biteableEntries.get(id);
-        return calculated.getOrDefault(id, null);
+        if (type.getClassification() == EntityClassification.MONSTER || type.getClassification() == EntityClassification.WATER_CREATURE)
+            return true;
+        if (ModTags.Entities.VAMPIRE.contains(type)) return true;
+        //noinspection ConstantConditions
+        return isConfigBlackListed(type.getRegistryName());
     }
 
     void setNewBiteables(Map<ResourceLocation, BiteableEntry> biteableEntries, Set<ResourceLocation> blacklist) {

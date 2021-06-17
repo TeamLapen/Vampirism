@@ -23,17 +23,17 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private final Class<T> entityInterface;
     private final Color color;
     private final boolean hostileTowardsNeutral;
-    @Nullable
-    private String translationKey;
-    @Nullable
-    private String translationKeyPlural;
     /**
      * Id used for hashing
      */
     private final int integerId;
-    private TextFormatting chatColor;
     @Nonnull
     private final IVillageFactionData villageFactionData;
+    @Nullable
+    private String translationKey;
+    @Nullable
+    private String translationKeyPlural;
+    private TextFormatting chatColor;
 
     Faction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, @Nonnull IVillageFactionData villageFactionData) {
         this.id = id;
@@ -84,6 +84,12 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
         return translationKeyPlural == null ? new StringTextComponent(id.toString()) : new TranslationTextComponent(translationKeyPlural);
     }
 
+    @Nonnull
+    @Override
+    public IVillageFactionData getVillageData() {
+        return villageFactionData;
+    }
+
     @Override
     public int hashCode() {
         return integerId;
@@ -103,12 +109,6 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
         this.translationKey = unlocalizedName;
         this.translationKeyPlural = unlocalizedNamePlural;
         return this;
-    }
-
-    @Nonnull
-    @Override
-    public IVillageFactionData getVillageData() {
-        return villageFactionData;
     }
 
     @Override

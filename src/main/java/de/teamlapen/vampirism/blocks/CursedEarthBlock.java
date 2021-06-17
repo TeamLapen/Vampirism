@@ -102,11 +102,6 @@ public class CursedEarthBlock extends VampirismBlock implements IGrowable {
     }
 
     @Override
-    public void onPlantGrow(BlockState state, IWorld world, BlockPos pos, BlockPos source) {
-        world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState(), 2);
-    }
-
-    @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         ItemStack heldItemStack = player.getHeldItem(handIn);
         Item heldItem = heldItemStack.getItem();
@@ -119,5 +114,10 @@ public class CursedEarthBlock extends VampirismBlock implements IGrowable {
             return ActionResultType.SUCCESS;
         }
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+    }
+
+    @Override
+    public void onPlantGrow(BlockState state, IWorld world, BlockPos pos, BlockPos source) {
+        world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState(), 2);
     }
 }

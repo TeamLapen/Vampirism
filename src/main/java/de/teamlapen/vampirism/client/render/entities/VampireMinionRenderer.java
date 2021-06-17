@@ -31,7 +31,7 @@ public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity
         Collection<ResourceLocation> vampireTextures = new ArrayList<>(rm.getAllResourceLocations("textures/entity/vampire", s -> s.endsWith(".png")));
         Collection<ResourceLocation> minionsTextures = new ArrayList<>(rm.getAllResourceLocations("textures/entity/minion/vampire", s -> s.endsWith(".png")));
         textures = separateSlimTextures(vampireTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
-        if(textures.length==0){
+        if (textures.length == 0) {
             throw new IllegalStateException("Must have at least one vampire texture: vampirism:textures/entity/vampire/vampire.png");
         }
         minionSpecificTextures = separateSlimTextures(minionsTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
@@ -43,10 +43,17 @@ public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity
         this.getEntityModel().bipedRightLeg.showModel = this.getEntityModel().bipedRightLegwear.showModel = this.getEntityModel().bipedLeftLeg.showModel = this.getEntityModel().bipedLeftLegwear.showModel = false;
     }
 
+    public int getMinionSpecificTextureCount() {
+        return this.minionSpecificTextures.length;
+    }
+
+    public int getVampireTextureCount() {
+        return this.textures.length;
+    }
 
     @Override
     protected Pair<ResourceLocation, Boolean> determineTextureAndModel(VampireMinionEntity entity) {
-        Pair<ResourceLocation, Boolean> p = (entity.hasMinionSpecificSkin() && this.minionSpecificTextures.length >0) ? minionSpecificTextures[entity.getVampireType() % minionSpecificTextures.length] : textures[entity.getVampireType() % textures.length];
+        Pair<ResourceLocation, Boolean> p = (entity.hasMinionSpecificSkin() && this.minionSpecificTextures.length > 0) ? minionSpecificTextures[entity.getVampireType() % minionSpecificTextures.length] : textures[entity.getVampireType() % textures.length];
         if (entity.shouldRenderLordSkin()) {
             return entity.getOverlayPlayerProperties().map(Pair::getRight).map(b -> Pair.of(p.getLeft(), b)).orElse(p);
         }
@@ -59,14 +66,6 @@ public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity
         //float off = (1 - s) * 1.95f;
         matrixStackIn.scale(s, s, s);
         //matrixStackIn.translate(0,off,0f);
-    }
-
-    public int getVampireTextureCount() {
-        return this.textures.length;
-    }
-
-    public int getMinionSpecificTextureCount(){
-        return this.minionSpecificTextures.length;
     }
 
 }

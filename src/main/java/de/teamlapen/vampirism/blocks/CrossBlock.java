@@ -15,7 +15,7 @@ import net.minecraft.world.IWorldReader;
 import java.util.stream.Stream;
 
 
-public class CrossBlock extends VampirismHorizontalBlock{
+public class CrossBlock extends VampirismHorizontalBlock {
 
     private static VoxelShape makeCross() {
         return Stream.of(
@@ -33,7 +33,7 @@ public class CrossBlock extends VampirismHorizontalBlock{
 
     @Override
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos.up()).isAir(worldIn,pos); //TODO 1.17
+        return worldIn.getBlockState(pos.up()).isAir(worldIn, pos); //TODO 1.17
     }
 
     @Override

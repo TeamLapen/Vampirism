@@ -65,9 +65,9 @@ public class TotemHelper {
      */
     @Deprecated
     public static void addVampireVillage(RegistryKey<World> dimension, BlockPos pos, AxisAlignedBB box) {
-        World w =VampLib.proxy.getWorldFromKey(dimension);
-        if(w!=null){
-            VampirismWorld.getOpt(w).ifPresent(vw -> vw.updateArtificialFogBoundingBox(pos,box));
+        World w = VampLib.proxy.getWorldFromKey(dimension);
+        if (w != null) {
+            VampirismWorld.getOpt(w).ifPresent(vw -> vw.updateArtificialFogBoundingBox(pos, box));
         }
     }
 
@@ -81,9 +81,9 @@ public class TotemHelper {
      */
     @Deprecated
     public static void removeVampireVillage(RegistryKey<World> dimension, BlockPos pos) {
-        World w =VampLib.proxy.getWorldFromKey(dimension);
-        if(w!=null){
-            VampirismWorld.getOpt(w).ifPresent(vw -> vw.updateArtificialFogBoundingBox(pos,null));
+        World w = VampLib.proxy.getWorldFromKey(dimension);
+        if (w != null) {
+            VampirismWorld.getOpt(w).ifPresent(vw -> vw.updateArtificialFogBoundingBox(pos, null));
         }
     }
 
@@ -98,8 +98,8 @@ public class TotemHelper {
      */
     @Deprecated
     public static boolean isInsideVampireAreaCached(RegistryKey<World> dimension, BlockPos blockPos) {
-        World w =VampLib.proxy.getWorldFromKey(dimension);
-        if(w!=null){
+        World w = VampLib.proxy.getWorldFromKey(dimension);
+        if (w != null) {
             return VampirismWorld.getOpt(w).map(vw -> vw.isInsideArtificialVampireFogArea(blockPos)).orElse(false);
         }
         return false;
@@ -108,8 +108,8 @@ public class TotemHelper {
     /**
      * add a totem
      *
-     * @param world world of the totem
-     * @param pois points that may belong to the totem
+     * @param world    world of the totem
+     * @param pois     points that may belong to the totem
      * @param totemPos position of the totem
      * @return false if no {@link PointOfInterest} belongs to the totem
      */
@@ -161,21 +161,19 @@ public class TotemHelper {
             return;
         }
 
-        boolean ignoreOtherTotem = true;
+        boolean ignoreOtherTotem = totem1.getControllingFaction() == totem2.getControllingFaction();
 
         //noinspection ConstantConditions
-        if (totem1.getControllingFaction() != totem2.getControllingFaction()) { //both keep their pois
-            ignoreOtherTotem = false;
-        }
+        //both keep their pois
 
         if (totem1.getCapturingFaction() != null || totem2.getCapturingFaction() != null) { //both keep their pois
             ignoreOtherTotem = false;
         }
 
-        StructureStart<?> structure1 = UtilLib.getStructureStartAt(world,totem,Structure.VILLAGE);
-        StructureStart<?> structure2 = UtilLib.getStructureStartAt(world,conflicting,Structure.VILLAGE);
+        StructureStart<?> structure1 = UtilLib.getStructureStartAt(world, totem, Structure.VILLAGE);
+        StructureStart<?> structure2 = UtilLib.getStructureStartAt(world, conflicting, Structure.VILLAGE);
 
-        if ((structure1== StructureStart.DUMMY || !structure1.isValid()) && (structure2 != StructureStart.DUMMY && structure2.isValid())) { //the first totem wins the POIs if located in natural village, other looses then
+        if ((structure1 == StructureStart.DUMMY || !structure1.isValid()) && (structure2 != StructureStart.DUMMY && structure2.isValid())) { //the first totem wins the POIs if located in natural village, other looses then
             ignoreOtherTotem = false;
         }
 
@@ -345,23 +343,22 @@ public class TotemHelper {
     /**
      * use {@link #isVillage(Set, ServerWorld, BlockPos, boolean)}
      * <p>
-     *
+     * <p>
      * flag & 1 != 0 :
      * <p>
-     *   - enough homes
+     * - enough homes
      * <p>
      * flag & 2 != 0 :
      * <p>
-     *   - enough work stations
+     * - enough work stations
      * <p>
      * flag & 4 != 0 :
      * <p>
-     *   - enough villager
+     * - enough villager
      * <p>
      *
      * @param stats          the output of {@link #getVillageStats(Set, World)}
      * @param hasInteraction if the village is influenced by a faction
-     *
      * @return flag which requirements are met
      */
     public static int isVillage(Map<Integer, Integer> stats, boolean hasInteraction) {
@@ -401,7 +398,7 @@ public class TotemHelper {
      * @return flag which requirements are met
      */
     public static int isVillage(Set<PointOfInterest> pointOfInterests, ServerWorld world, BlockPos totemPos, boolean hasInteraction) {
-        if (UtilLib.getStructureStartAt(world,totemPos, Structure.VILLAGE) != StructureStart.DUMMY) {
+        if (UtilLib.getStructureStartAt(world, totemPos, Structure.VILLAGE) != StructureStart.DUMMY) {
             return 7;
         }
         return isVillage(getVillageStats(pointOfInterests, world), hasInteraction);
@@ -423,7 +420,6 @@ public class TotemHelper {
             put(4, area == null ? 0 : world.getEntitiesWithinAABB(VillagerEntity.class, area).size());
         }};
     }
-
 
 
     /**

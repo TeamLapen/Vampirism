@@ -48,10 +48,10 @@ public class ModItemsRender {
             return 0x2e0606;
         }, ModBlocks.bloody_spruce_leaves);
         colors.register((stack, tintIndex) -> {
-            if(tintIndex == 1){
-                if(stack.getItem() instanceof VampireRefinementItem){
+            if (tintIndex == 1) {
+                if (stack.getItem() instanceof VampireRefinementItem) {
                     IRefinementSet set = ((VampireRefinementItem) stack.getItem()).getRefinementSet(stack);
-                    if(set!=null){
+                    if (set != null) {
                         return set.getColor();
                     }
                 }

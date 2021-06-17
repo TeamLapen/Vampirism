@@ -37,18 +37,25 @@ public class Refinement extends ForgeRegistryEntry<IRefinement> implements IRefi
         this.uuid = null;
     }
 
-    /**
-     * Set when refinement actually makes things worse instead of better
-     * @return this
-     */
-    public Refinement setDetrimental(){
-        this.detrimental = true;
-        return this;
-    }
-
     @Override
     public AttributeModifier createAttributeModifier(UUID uuid, double value) {
-        return this.modifier==null?null:this.modifier.apply(uuid, value);
+        return this.modifier == null ? null : this.modifier.apply(uuid, value);
+    }
+
+    @Nullable
+    @Override
+    public Attribute getAttribute() {
+        return this.attribute;
+    }
+
+    @Nonnull
+    @Override
+    public ITextComponent getDescription() {
+        if (description == null) {
+            description = new TranslationTextComponent("refinement." + getRegistryName().getNamespace() + "." + getRegistryName().getPath() + ".desc");
+            if (detrimental) description.mergeStyle(TextFormatting.RED);
+        }
+        return description;
     }
 
     @Override
@@ -62,19 +69,13 @@ public class Refinement extends ForgeRegistryEntry<IRefinement> implements IRefi
         return this.uuid;
     }
 
-    @Nullable
-    @Override
-    public Attribute getAttribute() {
-        return this.attribute;
-    }
-
-    @Nonnull
-    @Override
-    public ITextComponent getDescription() {
-        if(description==null){
-            description=new TranslationTextComponent("refinement." + getRegistryName().getNamespace() + "." + getRegistryName().getPath() + ".desc");
-            if(detrimental)description.mergeStyle(TextFormatting.RED);
-        }
-        return description;
+    /**
+     * Set when refinement actually makes things worse instead of better
+     *
+     * @return this
+     */
+    public Refinement setDetrimental() {
+        this.detrimental = true;
+        return this;
     }
 }

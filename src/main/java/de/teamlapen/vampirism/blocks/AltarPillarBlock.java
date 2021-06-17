@@ -120,15 +120,14 @@ public class AltarPillarBlock extends VampirismBlock {
             this.value = value;
         }
 
-        @Override
-        public String getString() {
-            return name;
-        }
-
         public String getName() {
             return getString();
         }
 
+        @Override
+        public String getString() {
+            return name;
+        }
 
         /**
          * @return The "value" or level of this material.

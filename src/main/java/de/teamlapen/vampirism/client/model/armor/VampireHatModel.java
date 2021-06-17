@@ -21,7 +21,7 @@ public class VampireHatModel extends VampirismArmorModel {
     public ModelRenderer top;
 
     public VampireHatModel() {
-        super(64,32);
+        super(64, 32);
         this.base = new ModelRenderer(this, 16, 0);
         this.base.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.base.addBox(-4.5F, -8.4F, -3.5F, 7.0F, 0.4F, 7.0F, 0.25F, 0.25F, 0.25F);

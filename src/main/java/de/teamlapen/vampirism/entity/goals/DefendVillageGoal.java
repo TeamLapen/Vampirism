@@ -14,7 +14,7 @@ public class DefendVillageGoal<T extends CreatureEntity & IVillageCaptureEntity>
 
     private final T creature;
     private final EntityPredicate entityPredicate;
-    private double distance = getTargetDistance() * 4;
+    private final double distance = getTargetDistance() * 4;
 
     public DefendVillageGoal(T creature) {
         super(creature, false, false);

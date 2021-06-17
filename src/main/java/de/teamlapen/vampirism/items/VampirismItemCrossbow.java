@@ -37,6 +37,15 @@ import java.util.Random;
  */
 public abstract class VampirismItemCrossbow extends VampirismItem implements IFactionLevelItem<IHunterPlayer>, IVampirismCrossbow {
 
+    /**
+     * Checks for Frugality enchantment on the crossbow
+     *
+     * @param crossbowStack crossbow to check
+     * @return the enchantment level
+     */
+    protected static int isCrossbowFrugal(ItemStack crossbowStack) {
+        return EnchantmentHelper.getEnchantmentLevel(ModEnchantments.crossbowfrugality, crossbowStack);
+    }
     private int enchantability = 0;
 
     /**
@@ -50,17 +59,17 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        this.addFactionLevelToolTip(stack,worldIn,tooltip, flagIn,VampirismMod.proxy.getClientPlayer());
+        this.addFactionLevelToolTip(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 
-    /**
-     * Checks for Frugality enchantment on the crossbow
-     *
-     * @param crossbowStack crossbow to check
-     * @return the enchantment level
-     */
-    protected static int isCrossbowFrugal(ItemStack crossbowStack) {
-        return EnchantmentHelper.getEnchantmentLevel(ModEnchantments.crossbowfrugality, crossbowStack);
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        return super.canApplyAtEnchantingTable(stack, enchantment) || enchantment == Enchantments.INFINITY;
+    }
+
+    @Override
+    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+        return Tags.Items.STRING.contains(repair.getItem()) || super.getIsRepairable(toRepair, repair);
     }
 
     @Override
@@ -173,11 +182,6 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
         return false;
     }
 
-    @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-        return Tags.Items.STRING.contains(repair.getItem()) || super.getIsRepairable(toRepair, repair);
-    }
-
     /**
      * Shoots an arrow.
      *
@@ -259,11 +263,6 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
             }
         }
         return false;
-    }
-
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return super.canApplyAtEnchantingTable(stack, enchantment) || enchantment == Enchantments.INFINITY;
     }
 
     /**

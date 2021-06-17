@@ -38,12 +38,15 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
         this.spawnerLogicAdvancedHunter = new SimpleSpawnerLogic<>(ModEntities.advanced_hunter).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(1200).setMaxSpawnDelay(2000).setMaxNearbyEntities(1).setDailyLimit(1).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.pos));
     }
 
-    public boolean isSpawner() {
-        return spawn;
+    @Nonnull
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+        return super.getRenderBoundingBox().grow(1, 0, 1);
     }
 
-    public boolean receiveClientEvent(int id, int type) {
-        return (this.spawnerLogicHunter.setDelayToMin(id) || this.spawnerLogicAdvancedHunter.setDelayToMin(id)) || super.receiveClientEvent(id, type);
+    public boolean isSpawner() {
+        return spawn;
     }
 
     @Override
@@ -61,11 +64,23 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
         spawn = nbt.getBoolean("spawn");
     }
 
+    public boolean receiveClientEvent(int id, int type) {
+        return (this.spawnerLogicHunter.setDelayToMin(id) || this.spawnerLogicAdvancedHunter.setDelayToMin(id)) || super.receiveClientEvent(id, type);
+    }
+
+    public void setAdvanced(boolean advanced) {
+        this.advanced = advanced;
+    }
+
     @Override
     public void setPos(BlockPos posIn) {
         super.setPos(posIn);
         this.spawnerLogicHunter.setBlockPos(this.pos); //Internal position should be set here using the immutable version of the given block pos
         this.spawnerLogicAdvancedHunter.setBlockPos(this.pos);
+    }
+
+    public void setSpawn(boolean spawn) {
+        this.spawn = spawn;
     }
 
     @Override
@@ -107,20 +122,5 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
         nbt.putBoolean("spawn", this.spawn);
         nbt.putBoolean("advanced", this.advanced);
         return nbt;
-    }
-
-    public void setSpawn(boolean spawn) {
-        this.spawn = spawn;
-    }
-
-    public void setAdvanced(boolean advanced) {
-        this.advanced = advanced;
-    }
-
-    @Nonnull
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public AxisAlignedBB getRenderBoundingBox() {
-        return super.getRenderBoundingBox().grow(1, 0, 1);
     }
 }

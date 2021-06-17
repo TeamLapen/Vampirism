@@ -21,32 +21,28 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GarlicBeaconTESR extends VampirismTESR<GarlicBeaconTileEntity> {
-    private static class Accessor extends RenderState{
-        private static final RenderType CUTOUT_NODEPTH =  RenderType.makeType("cutout_nodepth", DefaultVertexFormats.BLOCK, 7, 131072, true, false, RenderType.State.getBuilder().depthTest(DEPTH_ALWAYS).texture(BLOCK_SHEET).alpha(HALF_ALPHA).fog(NO_FOG).build(true));
-
-        public Accessor(String nameIn, Runnable setupTaskIn, Runnable clearTaskIn) {
-            super(nameIn, setupTaskIn, clearTaskIn);
-        }
-    }
-
-
     public GarlicBeaconTESR(TileEntityRendererDispatcher dispatcher) {
         super(dispatcher);
     }
 
     @Override
+    public boolean isGlobalRenderer(GarlicBeaconTileEntity te) {
+        return true;
+    }
+
+    @Override
     public void render(GarlicBeaconTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferInOld, int combinedLightIn, int combinedOverlayIn) {
         Entity e = Minecraft.getInstance().getRenderViewEntity();
-        if(e!=null&&Streams.stream(e.getHeldEquipment()).map(ItemStack::getItem).anyMatch(i->i==ModItems.garlic_finder) && tileEntityIn.isInRange(e.getPosition())){
+        if (e != null && Streams.stream(e.getHeldEquipment()).map(ItemStack::getItem).anyMatch(i -> i == ModItems.garlic_finder) && tileEntityIn.isInRange(e.getPosition())) {
             long totalWorldTime = tileEntityIn.getWorld() != null ? tileEntityIn.getWorld().getGameTime() : 0;
-            float scale = (float) MathHelper.clamp(Math.sqrt(tileEntityIn.getPos().distanceSq(e.getPosition()))/16,1,3);
+            float scale = (float) MathHelper.clamp(Math.sqrt(tileEntityIn.getPos().distanceSq(e.getPosition())) / 16, 1, 3);
             IVertexBuilder bufferIn = bufferInOld.getBuffer(Accessor.CUTOUT_NODEPTH);
 
             matrixStackIn.push();
             matrixStackIn.translate(0.5D, 0.5D, 0.5D);
-            matrixStackIn.scale(scale,scale,scale);
+            matrixStackIn.scale(scale, scale, scale);
 
-            matrixStackIn.rotate(Vector3f.YP.rotationDegrees((totalWorldTime+partialTicks) % 360));
+            matrixStackIn.rotate(Vector3f.YP.rotationDegrees((totalWorldTime + partialTicks) % 360));
             matrixStackIn.translate(-0.5D, 0, -0.5);
             matrixStackIn.push();
 
@@ -57,14 +53,17 @@ public class GarlicBeaconTESR extends VampirismTESR<GarlicBeaconTileEntity> {
 //        });
 
 
-            Minecraft.getInstance().getItemRenderer().renderModel(Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(new ItemStack(ModItems.item_garlic), null,null), new ItemStack(ModItems.item_garlic),combinedLightIn,combinedOverlayIn,matrixStackIn,bufferIn);
+            Minecraft.getInstance().getItemRenderer().renderModel(Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(new ItemStack(ModItems.item_garlic), null, null), new ItemStack(ModItems.item_garlic), combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
             matrixStackIn.pop();
             matrixStackIn.pop();
         }
     }
 
-    @Override
-    public boolean isGlobalRenderer(GarlicBeaconTileEntity te) {
-        return true;
+    private static class Accessor extends RenderState {
+        private static final RenderType CUTOUT_NODEPTH = RenderType.makeType("cutout_nodepth", DefaultVertexFormats.BLOCK, 7, 131072, true, false, RenderType.State.getBuilder().depthTest(DEPTH_ALWAYS).texture(BLOCK_SHEET).alpha(HALF_ALPHA).fog(NO_FOG).build(true));
+
+        public Accessor(String nameIn, Runnable setupTaskIn, Runnable clearTaskIn) {
+            super(nameIn, setupTaskIn, clearTaskIn);
+        }
     }
 }

@@ -16,6 +16,9 @@ import javax.annotation.Nonnull;
  */
 public class SetItemBloodCharge extends LootFunction {
 
+    public static Builder<?> builder(IRandomRange p_215931_0_) {
+        return builder((p_215930_1_) -> new SetItemBloodCharge(p_215930_1_, p_215931_0_));
+    }
     /**
      * In blood mB
      */
@@ -36,10 +39,6 @@ public class SetItemBloodCharge extends LootFunction {
         return stack;
     }
 
-    public static Builder<?> builder(IRandomRange p_215931_0_) {
-        return builder((p_215930_1_) -> new SetItemBloodCharge(p_215930_1_, p_215931_0_));
-    }
-
     @Nonnull
     @Override
     public LootFunctionType getFunctionType() {
@@ -47,19 +46,18 @@ public class SetItemBloodCharge extends LootFunction {
     }
 
     public static class Serializer extends LootFunction.Serializer<SetItemBloodCharge> {
-        @Override
-        public void serialize(@Nonnull JsonObject object, @Nonnull SetItemBloodCharge lootFunction, @Nonnull JsonSerializationContext context) {
-            super.serialize(object, lootFunction, context);
-            object.add("charge", RandomRanges.serialize(lootFunction.charge, context));
-
-        }
-
-
         @Nonnull
         @Override
         public SetItemBloodCharge deserialize(@Nonnull JsonObject jsonObject, @Nonnull JsonDeserializationContext jsonDeserializationContext, @Nonnull ILootCondition[] iLootConditions) {
             IRandomRange charge = RandomRanges.deserialize(jsonObject.get("charge"), jsonDeserializationContext);
             return new SetItemBloodCharge(iLootConditions, charge);
+        }
+
+        @Override
+        public void serialize(@Nonnull JsonObject object, @Nonnull SetItemBloodCharge lootFunction, @Nonnull JsonSerializationContext context) {
+            super.serialize(object, lootFunction, context);
+            object.add("charge", RandomRanges.serialize(lootFunction.charge, context));
+
         }
     }
 }

@@ -17,6 +17,7 @@ import java.util.List;
 public class MinionUpgradeItem extends VampirismItem {
     private final int minLevel;
     private final int maxLevel;
+    private final IFaction<?> faction;
 
     public MinionUpgradeItem(String regName, int minLevel, int maxLevel, IFaction<?> faction) {
         super(regName, new Item.Properties().group(VampirismMod.creativeTab));
@@ -32,14 +33,12 @@ public class MinionUpgradeItem extends VampirismItem {
         tooltip.add(new TranslationTextComponent("text.vampirism.for_to_levels", minLevel + 1, maxLevel + 1).mergeStyle(TextFormatting.GRAY));
     }
 
-    private final IFaction<?> faction;
+    public IFaction<?> getFaction() {
+        return faction;
+    }
 
     public int getMaxLevel() {
         return maxLevel;
-    }
-
-    public IFaction<?> getFaction() {
-        return faction;
     }
 
     public int getMinLevel() {

@@ -30,10 +30,10 @@ import static net.minecraft.world.biome.Biome.LOGGER;
 
 @SuppressWarnings("rawtypes")
 public class FactionRegistry implements IFactionRegistry {
+    private final Map<Integer, Predicate<LivingEntity>> predicateMap = new HashMap<>();
     private List<Faction> temp = new CopyOnWriteArrayList<>(); //Copy on write is costly, but we only expect very few elements anyway
     private Faction[] allFactions;
     private PlayableFaction[] playableFactions;
-    private final Map<Integer, Predicate<LivingEntity>> predicateMap = new HashMap<>();
 
     /**
      * Finishes registrations during InterModProcessEvent

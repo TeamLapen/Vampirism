@@ -36,10 +36,9 @@ import java.util.stream.Collectors;
 
 public class VampirismWorldGen {
     private static final Logger LOGGER = LogManager.getLogger();
-    public static boolean debug = false;
     private final static float TOTEM_PRESET_PERCENTAGE = 0.6f;
     private final static int HUNTER_TRAINER_WEIGHT = 400;
-
+    public static boolean debug = false;
 
     public static void initVillageStructures() {
         VampirismWorldGen.setupSingleJigsawPieceGeneration();

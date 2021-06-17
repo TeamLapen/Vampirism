@@ -136,10 +136,11 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
+    public void handleUpdateTag(BlockState state, CompoundNBT compound) {
+        super.handleUpdateTag(state, compound);
         ownerID = compound.hasUniqueId("owner") ? compound.getUniqueId("owner") : null;
         ownerName = compound.contains("owner_name") ? compound.getString("owner_name") : null;
-        super.read(state, compound);
+        ItemStackHelper.loadAllItems(compound, this.items);
     }
 
     @Override
@@ -156,20 +157,29 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
         }
     }
 
-    @Override
-    public void handleUpdateTag(BlockState state, CompoundNBT compound) {
-        super.handleUpdateTag(state, compound);
-        ownerID = compound.hasUniqueId("owner") ? compound.getUniqueId("owner") : null;
-        ownerName = compound.contains("owner_name") ? compound.getString("owner_name") : null;
-        ItemStackHelper.loadAllItems(compound, this.items);
-    }
-
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         CompoundNBT nbt = pkt.getNbtCompound();
         if (hasWorld()) {
             handleUpdateTag(this.world.getBlockState(pkt.getPos()), nbt);
+        }
+    }
+
+    @Override
+    public void read(BlockState state, CompoundNBT compound) {
+        ownerID = compound.hasUniqueId("owner") ? compound.getUniqueId("owner") : null;
+        ownerName = compound.contains("owner_name") ? compound.getString("owner_name") : null;
+        super.read(state, compound);
+    }
+
+    @Override
+    public void setInventorySlotContents(int index, ItemStack stack) {
+        super.setInventorySlotContents(index, stack);
+        ItemStack itemstack = this.items.get(index);
+        boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
+        if (flag) {
+            this.markDirty();
         }
     }
 
@@ -195,13 +205,12 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
             ItemStack itemstackFuel = this.items.get(3);
             if (this.isBurning() || !itemstackFuel.isEmpty() && !this.items.get(0).isEmpty() && !this.items.get(1).isEmpty()) {
                 AlchemicalCauldronRecipe cauldronRecipe = null;
-                IRecipe<?> irecipe = this.world.getRecipeManager().getRecipe( this.recipeType, this, this.world).orElse(null);
-                if(irecipe instanceof AlchemicalCauldronRecipe){
+                IRecipe<?> irecipe = this.world.getRecipeManager().getRecipe(this.recipeType, this, this.world).orElse(null);
+                if (irecipe instanceof AlchemicalCauldronRecipe) {
                     cauldronRecipe = (AlchemicalCauldronRecipe) irecipe;
-                }
-                else{
-                    if(!warnedRecipeType){
-                        LOGGER.error("Got an unexpected/illegal recipe for recipe type {}. This might break the AlchemicalCauldron and is caused by another mod",this.recipeType);
+                } else {
+                    if (!warnedRecipeType) {
+                        LOGGER.error("Got an unexpected/illegal recipe for recipe type {}. This might break the AlchemicalCauldron and is caused by another mod", this.recipeType);
                         warnedRecipeType = true;
                     }
                 }
@@ -247,16 +256,6 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
             this.markDirty();
         }
 
-    }
-
-    @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
-        super.setInventorySlotContents(index, stack);
-        ItemStack itemstack = this.items.get(index);
-        boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
-        if (flag) {
-            this.markDirty();
-        }
     }
 
     @Override
@@ -323,13 +322,13 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
             Either<Ingredient, FluidStack> fluid = recipe.getFluid();
             fluid.ifLeft(ingredient -> itemstackfluid.shrink(1));
             fluid.ifRight(fluidStack -> {
-               this.items.set(0,FluidUtil.getFluidHandler(itemstackfluid).map(handler -> {
-                   FluidStack drained = handler.drain(fluidStack, IFluidHandler.FluidAction.EXECUTE);
-                   if(drained.getAmount()<fluidStack.getAmount()){
-                       handler.drain(new FluidStack(fluidStack.getFluid(), FluidAttributes.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE); //For bucket containers we need to draw at least one bucket size
-                   }
-                   return handler.getContainer();
-               }).orElse(ItemStack.EMPTY));
+                this.items.set(0, FluidUtil.getFluidHandler(itemstackfluid).map(handler -> {
+                    FluidStack drained = handler.drain(fluidStack, IFluidHandler.FluidAction.EXECUTE);
+                    if (drained.getAmount() < fluidStack.getAmount()) {
+                        handler.drain(new FluidStack(fluidStack.getFluid(), FluidAttributes.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE); //For bucket containers we need to draw at least one bucket size
+                    }
+                    return handler.getContainer();
+                }).orElse(ItemStack.EMPTY));
             });
             itemstackingredient.shrink(1);
             recipeChecked = null;

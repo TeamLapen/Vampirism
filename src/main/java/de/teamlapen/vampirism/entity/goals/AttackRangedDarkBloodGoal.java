@@ -15,12 +15,12 @@ import java.util.EnumSet;
 public class AttackRangedDarkBloodGoal extends Goal {
 
     protected final VampireBaronEntity entity;
-    private int attackTime;
     private final int attackCooldown;
-    private int seeTime;
     private final int maxAttackDistance;
     private final float directDamage;
     private final float indirectDamage;
+    private int attackTime;
+    private int seeTime;
 
     public AttackRangedDarkBloodGoal(VampireBaronEntity entity, int cooldown, int maxDistance, float damage, float indirectDamage) {
         this.entity = entity;

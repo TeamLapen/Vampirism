@@ -19,6 +19,7 @@ public class VampirismPlayerAttributes {
     public static VampirismPlayerAttributes get(PlayerEntity player) {
         return ((IVampirismPlayer) player).getVampAtts();
     }
+
     private final VampirePlayerSpecialAttributes vampSpecial = new VampirePlayerSpecialAttributes();
     private final HunterPlayerSpecialAttribute huntSpecial = new HunterPlayerSpecialAttribute();
     public int vampireLevel = 0;

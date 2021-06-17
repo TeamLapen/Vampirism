@@ -17,7 +17,7 @@ import net.minecraft.util.math.MathHelper;
 public class BaronAttireModel extends EntityModel<VampireBaronEntity> {
     public ModelRenderer hood;
     public ModelRenderer cloak;
-    private float enragedProgress=0;
+    private float enragedProgress = 0;
 
     public BaronAttireModel() {
         this.textureWidth = 128;
@@ -35,7 +35,7 @@ public class BaronAttireModel extends EntityModel<VampireBaronEntity> {
     public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         hood.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
         matrixStackIn.push();
-        matrixStackIn.scale(1-0.4f * enragedProgress, 1-0.7f* enragedProgress, 1-0.4f*enragedProgress);
+        matrixStackIn.scale(1 - 0.4f * enragedProgress, 1 - 0.7f * enragedProgress, 1 - 0.4f * enragedProgress);
         cloak.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
         matrixStackIn.pop();
     }

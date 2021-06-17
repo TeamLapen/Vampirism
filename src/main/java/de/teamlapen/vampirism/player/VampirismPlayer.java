@@ -23,17 +23,17 @@ import javax.annotation.Nonnull;
 public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IFactionPlayer<T>, ISyncable.ISyncableEntityCapabilityInst, IPlayerEventListener {
 
     private static final Logger LOGGER = LogManager.getLogger(VampirismPlayer.class);
+    protected final PlayerEntity player;
     /**
      * {@code @Nonnull} on server, otherwise {@code null}
      */
     private final TaskManager taskManager;
-    protected final PlayerEntity player;
 
     public VampirismPlayer(PlayerEntity player) {
         this.player = player;
-        if(player instanceof ServerPlayerEntity) {
+        if (player instanceof ServerPlayerEntity) {
             this.taskManager = new TaskManager((ServerPlayerEntity) player, this, this.getFaction());
-        }else {
+        } else {
             this.taskManager = null;
         }
     }
@@ -42,15 +42,6 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
     @Override
     public int getLevel() {
         return VampirismAPI.getFactionPlayerHandler(player).map(handler -> handler.getCurrentLevel(getFaction())).orElse(0);
-    }
-
-    /**
-     * null on client & @Nonnull on server
-     */
-    @Nonnull
-    @Override
-    public TaskManager getTaskManager() {
-        return taskManager;
     }
 
     /**
@@ -67,6 +58,14 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
         return player;
     }
 
+    /**
+     * null on client & @Nonnull on server
+     */
+    @Nonnull
+    @Override
+    public TaskManager getTaskManager() {
+        return taskManager;
+    }
 
     @Override
     public int getTheEntityID() {
@@ -84,17 +83,22 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
         return player.getEntityWorld().isRemote;
     }
 
-    @Override
-    public void onUpdate() {
-        if(!isRemote()) {
-            this.taskManager.tick();
+    public void loadData(CompoundNBT nbt) {
+        if (this.taskManager != null) {
+            this.taskManager.readNBT(nbt);
+        } else {
+            LOGGER.debug("The player is loaded on the client side and therefore taskmaster related data is missing");
         }
     }
-
 
     @Override
     public final void loadUpdateFromNBT(CompoundNBT nbt) {
         loadUpdate(nbt);
+    }
+
+    @Override
+    public void onDeath(DamageSource src) {
+        this.getSkillHandler().damageRefinements();
     }
 
     @Override
@@ -103,8 +107,18 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
     }
 
     @Override
-    public void onDeath(DamageSource src) {
-        this.getSkillHandler().damageRefinements();
+    public void onUpdate() {
+        if (!isRemote()) {
+            this.taskManager.tick();
+        }
+    }
+
+    public void saveData(CompoundNBT nbt) {
+        if (this.taskManager != null) {
+            this.taskManager.writeNBT(nbt);
+        } else {
+            LOGGER.debug("The player is saved on the client side and therefore taskmaster related data is missing");
+        }
     }
 
     /**
@@ -129,7 +143,6 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
      */
     protected abstract VampirismPlayer<T> copyFromPlayer(PlayerEntity old);
 
-
     /**
      * Can be overridden to load data from updates in subclasses
      *
@@ -137,7 +150,6 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
      */
     protected void loadUpdate(CompoundNBT nbt) {
     }
-
 
     /**
      * Sync the capability using the given data
@@ -159,21 +171,5 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
 
     private void copyFrom(PlayerEntity old) {
         VampirismPlayer<T> p = copyFromPlayer(old);
-    }
-
-    public void loadData(CompoundNBT nbt) {
-        if (this.taskManager != null) {
-            this.taskManager.readNBT(nbt);
-        } else {
-            LOGGER.debug("The player is loaded on the client side and therefore taskmaster related data is missing");
-        }
-    }
-
-    public void saveData(CompoundNBT nbt) {
-        if (this.taskManager != null) {
-            this.taskManager.writeNBT(nbt);
-        } else {
-            LOGGER.debug("The player is saved on the client side and therefore taskmaster related data is missing");
-        }
     }
 }

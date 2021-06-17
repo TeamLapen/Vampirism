@@ -23,6 +23,10 @@ import java.util.Optional;
  */
 public class AddBookNbt extends LootFunction {
 
+    public static Builder<?> builder() {
+        return builder(AddBookNbt::new);
+    }
+
     public AddBookNbt(ILootCondition[] conditions) {
         super(conditions);
     }
@@ -32,18 +36,14 @@ public class AddBookNbt extends LootFunction {
     public ItemStack doApply(@Nonnull ItemStack itemStack, LootContext lootContext) {
         Entity victim = lootContext.get(LootParameters.THIS_ENTITY);
         Optional<String> id = Optional.empty();
-        if(victim instanceof AdvancedHunterEntity){
+        if (victim instanceof AdvancedHunterEntity) {
             id = ((AdvancedHunterEntity) victim).getBookLootId();
-        } else if(victim instanceof AdvancedVampireEntity){
+        } else if (victim instanceof AdvancedVampireEntity) {
             id = ((AdvancedVampireEntity) victim).getBookLootId();
         }
-        CompoundNBT data = id.flatMap(str -> VampireBookManager.getInstance().getBookData(str)).orElseGet(()->VampireBookManager.getInstance().getRandomBookData(lootContext.getRandom()));
+        CompoundNBT data = id.flatMap(str -> VampireBookManager.getInstance().getBookData(str)).orElseGet(() -> VampireBookManager.getInstance().getRandomBookData(lootContext.getRandom()));
         itemStack.setTag(data);
         return itemStack;
-    }
-
-    public static Builder<?> builder() {
-        return builder(AddBookNbt::new);
     }
 
     @Nonnull

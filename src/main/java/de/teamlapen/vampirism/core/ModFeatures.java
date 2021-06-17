@@ -34,23 +34,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ModFeatures {
-    private static final Logger LOGGER = LogManager.getLogger();
     //features
     public static final VampireDungeonFeature vampire_dungeon = new VampireDungeonFeature(NoFeatureConfig.field_236558_a_);
     public static final VampirismLakeFeature mod_lake = new VampirismLakeFeature(BlockStateFeatureConfig.field_236455_a_);
-
     //structures
     public static final Structure<NoFeatureConfig> hunter_camp = new HunterCampStructure(NoFeatureConfig.field_236558_a_/*deserialize*/);
-
     //structure pieces
     public static final IStructurePieceType hunter_camp_fireplace = IStructurePieceType.register(HunterCampPieces.Fireplace::new, REFERENCE.MODID + ":hunter_camp_fireplace");
     public static final IStructurePieceType hunter_camp_tent = IStructurePieceType.register(HunterCampPieces.Tent::new, REFERENCE.MODID + ":hunter_camp_tent");
     public static final IStructurePieceType hunter_camp_special = IStructurePieceType.register(HunterCampPieces.SpecialBlock::new, REFERENCE.MODID + ":hunter_camp_craftingtable");
-
     //structure proccesor
-    public static final IStructureProcessorType<RandomStructureProcessor> random_selector = IStructureProcessorType.register/*register*/(REFERENCE.MODID+":random_selector", RandomStructureProcessor.CODEC);
-    public static final IStructureProcessorType<BiomeTopBlockProcessor> biome_based = IStructureProcessorType.register/*register*/(REFERENCE.MODID+":biome_based", BiomeTopBlockProcessor.CODEC);
-
+    public static final IStructureProcessorType<RandomStructureProcessor> random_selector = IStructureProcessorType.register/*register*/(REFERENCE.MODID + ":random_selector", RandomStructureProcessor.CODEC);
+    public static final IStructureProcessorType<BiomeTopBlockProcessor> biome_based = IStructureProcessorType.register/*register*/(REFERENCE.MODID + ":biome_based", BiomeTopBlockProcessor.CODEC);
+    private static final Logger LOGGER = LogManager.getLogger();
 
     static void registerFeatures(IForgeRegistry<Feature<?>> registry) {
         registry.register(vampire_dungeon.setRegistryName(REFERENCE.MODID, "vampire_dungeon"));

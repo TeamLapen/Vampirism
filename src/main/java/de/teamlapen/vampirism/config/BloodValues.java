@@ -16,13 +16,13 @@ public class BloodValues {
     public static final BloodValueLoaderDynamic ITEMS;
     public static final BloodValueLoader FLUIDS;
 
-    public static List<BloodValueLoaderDynamic> getDynamicLoader() {
-        return BloodValueLoaderDynamic.getDynamicBloodLoader();
-    }
-
     static {
         ENTITIES = new BloodValueLoaderDynamic(REFERENCE.MODID, "entities", (values, multiplier) -> ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(values, multiplier), new ResourceLocation("multiplier"), VampirismEntityRegistry.biteableEntryManager::addCalculated, VampirismEntityRegistry.biteableEntryManager::getValuesToSave);
         ITEMS = new BloodValueLoaderDynamic(REFERENCE.MODID, "items", BloodConversionRegistry::applyNewItemResources, new ResourceLocation("multiplier"), BloodConversionRegistry::applyNewItemCalculated, BloodConversionRegistry::getItemValuesCalculated);
         FLUIDS = new BloodValueLoader("fluids", BloodConversionRegistry::applyNewFluidResources, new ResourceLocation("divider"));
+    }
+
+    public static List<BloodValueLoaderDynamic> getDynamicLoader() {
+        return BloodValueLoaderDynamic.getDynamicBloodLoader();
     }
 }

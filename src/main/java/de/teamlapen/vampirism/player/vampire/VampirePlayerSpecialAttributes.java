@@ -35,7 +35,7 @@ public class VampirePlayerSpecialAttributes {
         this.jump_boost = (jump_boost >= 0 && jump_boost < 10) ? jump_boost : 0;
     }
 
-    public boolean isCannotInteract(){
+    public boolean isCannotInteract() {
         return bat || isDBNO;
     }
 }

@@ -19,6 +19,10 @@ public class TentSpawnerCondition implements ILootCondition {
 
     private final static TentSpawnerCondition INSTANCE = new TentSpawnerCondition();
 
+    public static IBuilder builder() {
+        return () -> INSTANCE;
+    }
+
     @Nonnull
     @Override
     public LootConditionType func_230419_b_() {
@@ -33,11 +37,6 @@ public class TentSpawnerCondition implements ILootCondition {
         }
         return false;
     }
-
-    public static IBuilder builder() {
-        return () -> INSTANCE;
-    }
-
 
     public static class Serializer implements ILootSerializer<TentSpawnerCondition> {
 

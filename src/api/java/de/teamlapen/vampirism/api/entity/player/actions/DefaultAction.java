@@ -14,6 +14,11 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegistryEntry<IAction> implements IAction {
     private ITextComponent name;
 
+    public void addEffectInstance(T player, EffectInstance instance) {
+        ((EffectInstanceWithSource) instance).setSource(this.getRegistryName());
+        player.getRepresentingPlayer().addPotionEffect(instance);
+    }
+
     /**
      * Can be overridden to check additional requirements
      */
@@ -60,18 +65,6 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
         }
     }
 
-    @Override
-    public String toString() {
-        return this.getRegistryName() + " (" + this.getClass().getSimpleName() + ")";
-    }
-
-    /**
-     * Called when the action is activated. Only called server side
-     *
-     * @return Whether the action was successfully activated. !Does not give any feedback to the user!
-     */
-    protected abstract boolean activate(T player);
-
     public void removePotionEffect(T player, Effect effect) {
         EffectInstance ins = player.getRepresentingPlayer().getActivePotionEffect(effect);
         while (ins != null) {
@@ -86,8 +79,15 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
         }
     }
 
-    public void addEffectInstance(T player, EffectInstance instance) {
-        ((EffectInstanceWithSource) instance).setSource(this.getRegistryName());
-        player.getRepresentingPlayer().addPotionEffect(instance);
+    @Override
+    public String toString() {
+        return this.getRegistryName() + " (" + this.getClass().getSimpleName() + ")";
     }
+
+    /**
+     * Called when the action is activated. Only called server side
+     *
+     * @return Whether the action was successfully activated. !Does not give any feedback to the user!
+     */
+    protected abstract boolean activate(T player);
 }

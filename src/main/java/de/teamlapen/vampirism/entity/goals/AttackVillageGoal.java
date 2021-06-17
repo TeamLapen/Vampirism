@@ -15,7 +15,7 @@ public class AttackVillageGoal<T extends VampirismEntity & IVillageCaptureEntity
 
     private final T attacker;
     private final EntityPredicate entityPredicate;
-    private double distance = getTargetDistance() * 4;
+    private final double distance = getTargetDistance() * 4;
 
     public AttackVillageGoal(T creature) {
         super(creature, false, false);
