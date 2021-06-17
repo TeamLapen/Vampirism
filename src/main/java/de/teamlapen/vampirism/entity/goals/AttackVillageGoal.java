@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 public class AttackVillageGoal<T extends VampirismEntity & IVillageCaptureEntity> extends TargetGoal {
 
     private final T attacker;
-    private final EntityPredicate entityPredicate;
+    protected final EntityPredicate entityPredicate;
     private final double distance = getTargetDistance() * 4;
 
     public AttackVillageGoal(T creature) {

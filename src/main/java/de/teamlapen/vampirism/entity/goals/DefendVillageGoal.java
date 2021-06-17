@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 public class DefendVillageGoal<T extends CreatureEntity & IVillageCaptureEntity> extends TargetGoal {
 
     private final T creature;
-    private final EntityPredicate entityPredicate;
+    protected final EntityPredicate entityPredicate;
     private final double distance = getTargetDistance() * 4;
 
     public DefendVillageGoal(T creature) {
