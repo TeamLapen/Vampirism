@@ -25,6 +25,7 @@ import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.fluids.BloodHelper;
+import de.teamlapen.vampirism.items.VampirismHunterArmor;
 import de.teamlapen.vampirism.mixin.ArmorItemAccessor;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
@@ -50,6 +51,7 @@ import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -337,10 +339,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             if (((PlayerEntity) entity).abilities.isCreativeMode || !Permissions.isPvpEnabled(player)) {
                 return BITE_TYPE.NONE;
             }
-            boolean hunter = Helper.isHunter(player);
             if (!UtilLib.canReallySee(entity, player, false) && VampirePlayer.getOpt((PlayerEntity) entity).map(v -> v.canBeBitten(this)).orElse(false) && PermissionAPI.hasPermission(player, Permissions.FEED_PLAYER)) {
-                return hunter ? BITE_TYPE.SUCK_BLOOD_HUNTER_PLAYER : BITE_TYPE.SUCK_BLOOD_PLAYER;
-
+                if(!(entity.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() instanceof VampirismHunterArmor)){
+                    return BITE_TYPE.SUCK_BLOOD_PLAYER;
+                }
             } else return BITE_TYPE.NONE;
         }
         return BITE_TYPE.NONE;
@@ -1266,12 +1268,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             if (isAdvancedBiter() && opt.map(IExtendedCreatureVampirism::getBlood).orElse(0) == 1) {
                 continue_feeding = false;
             }
-        } else if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_PLAYER || feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_HUNTER_PLAYER) {
+        } else if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_PLAYER) {
             blood = VampirePlayer.getOpt((PlayerEntity) entity).map(v -> v.onBite(this)).orElse(0);
             saturationMod = VampirePlayer.getOpt((PlayerEntity) entity).map(VampirePlayer::getBloodSaturation).orElse(0f);
-            if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_HUNTER_PLAYER) {
-                player.addPotionEffect(new EffectInstance(ModEffects.poison, 15, 2));
-            }
         } else if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD) {
             blood = ((IBiteableEntity) entity).onBite(this);
             saturationMod = ((IBiteableEntity) entity).getBloodSaturation();
