@@ -1,4 +1,4 @@
-Vampirism for Minecraft 1.16 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![Build Status](https://github.com/TeamLapen/Vampirism/workflows/Java%20CI/badge.svg?branch=1.16)](https://github.com/TeamLapen/Vampirism/actions) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
+Vampirism for Minecraft 1.16 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![Build Status](https://github.com/TeamLapen/Vampirism/workflows/Java%20CI/badge.svg?branch=1.16)](https://github.com/TeamLapen/Vampirism/actions) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) [![Discord Server](https://img.shields.io/discord/430326060635258881)](https://discord.gg/wuamm4P)
 ============================================
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://maxanier.de)  
 
@@ -20,7 +20,9 @@ For a more detailed description head over to the Minecraft Forum or the Cursefor
 ## People
 - [maxanier](https://maxanier.de)
 - [Cheaterpaul](https://github.com/Cheaterpaul)
-- [1LiterZinalco](https://chimute.org/) _Triage/Support/Community/Art_
+- [1LiterZinalco](https://chimute.org/) _Triage/Support/Community/Official Server/Art_
+- [Piklach](https://twitter.com/Piklach) _Community/Official Server_
+- [xXvPendragonvXx](https://github.com/PendragonII) _Community/Official Server_
 
 ## Special Thanks to
 - PixelEyeStudios _Models/Textures_
@@ -33,6 +35,11 @@ For a more detailed description head over to the Minecraft Forum or the Cursefor
 - LRA_10 _Models/Textures_
 - Oreo365 _Models_
 - Slippingchip400 _Models_
+- Йода _Textures_
+- XxKidDowdallxX _Textures_
+- F_Spade _Textures_  
+- Matheo _Lore_
+- cournualllama2 _Lore_
 
 ## API
 Vampirism has an API you can use to add blood values to your mod's creatures or make them convertible and more.
