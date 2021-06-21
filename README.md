@@ -13,9 +13,10 @@ After being bitten by a vampire or manually injecting some vampire blood you get
 
 For a more detailed description head over to the Minecraft Forum or the Curseforge page.
 ## Links
-[Curseforge Project](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire)  
-[Downloads](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire/files)   
-[Help to translate](https://crowdin.com/project/vampirism)
+[Downloads on CurseForge](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire/files)   
+[Downloads on Modrinth](https://modrinth.com/mod/vampirism/versions)   
+[Help to translate](https://crowdin.com/project/vampirism)   
+[Short feature overview](https://teamlapen.github.io/Vampirism/)   
 
 ## People
 - [maxanier](https://maxanier.de)
@@ -84,7 +85,10 @@ Refresh/Restart your IDE afterwards.
 Since Vampirism uses **mixins**, and they try to use the obfuscated mappings by default, it is currently required to
 disable the mixin for mixin based mods. Therefore, you currently have to set the Java system
 property `mixin.env.disableRefMap` to `true` when running Vampirism in dev. This can e.g. be achieved by
-adding `property 'mixin.env.disableRefMap', 'true'`
+adding 
+```
+property 'mixin.env.disableRefMap', 'true'
+```
 to your run configurations in your `build.gradle` and then regenerate your IDE run configurations (`genIntelliJRuns` or
 similar).
 
@@ -96,7 +100,7 @@ Vampirism will work correctly then.
 Checkout this example project: https://github.com/TeamLapen/VampirismAPIExample
 
 If you want to create an addon which access all of Vampirism's classes, not just the API, checkout
-this https://github.com/TeamLapen/VampirismAddonExample and consider contacting maxanier.
+this https://github.com/TeamLapen/VampirismAddonExample and consider contacting @maxanier.
 
 ## Code Structure
 
