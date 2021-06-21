@@ -2,10 +2,7 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
-import de.teamlapen.vampirism.client.render.tiles.AltarInfusionTESR;
-import de.teamlapen.vampirism.client.render.tiles.CoffinTESR;
-import de.teamlapen.vampirism.client.render.tiles.PedestalTESR;
-import de.teamlapen.vampirism.client.render.tiles.TotemTESR;
+import de.teamlapen.vampirism.client.render.tiles.*;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModTiles;
@@ -72,6 +69,7 @@ public class ModBlocksRender {
         ClientRegistry.bindTileEntityRenderer(ModTiles.altar_infusion, AltarInfusionTESR::new);
         ClientRegistry.bindTileEntityRenderer(ModTiles.blood_pedestal, PedestalTESR::new);
         ClientRegistry.bindTileEntityRenderer(ModTiles.totem, TotemTESR::new);
+        ClientRegistry.bindTileEntityRenderer(ModTiles.garlic_beacon, GarlicBeaconTESR::new);
     }
 
     private static void registerRenderType() {
