@@ -51,6 +51,11 @@ public class VampirismEventFactory {
         return MinecraftForge.EVENT_BUS.post(event);
     }
 
+    public static void fireFactionLevelChangedEvent(@Nonnull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> oldFaction, int oldLevel, @Nullable IPlayableFaction<?> newFaction, int newLevel) {
+        FactionEvent.FactionLevelChanged event = new FactionEvent.FactionLevelChanged(player, oldFaction, oldLevel, newFaction, newLevel);
+        MinecraftForge.EVENT_BUS.post(event);
+    }
+
     public static boolean fireMakeAggressive(@Nonnull ITotem totem, @Nonnull VillagerEntity entity) {
         VampirismVillageEvent.MakeAggressive event = new VampirismVillageEvent.MakeAggressive(totem, entity);
         MinecraftForge.EVENT_BUS.post(event);

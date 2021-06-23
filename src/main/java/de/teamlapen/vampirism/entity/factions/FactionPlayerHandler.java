@@ -261,6 +261,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
                 currentLordLevel = nbt.getInt("lord_level");
             }
         }
+        if(old != currentFaction || oldLevel != currentLevel){
+            VampirismEventFactory.fireFactionLevelChangedEvent(this,old,oldLevel,currentFaction,currentLevel);
+        }
         if (nbt.contains("title_gender")) {
             this.titleGender = nbt.getBoolean("title_gender");
         }
@@ -374,6 +377,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
         updateCache();
         notifyFaction(old, oldLevel);
+        if(old != currentFaction || oldLevel != currentLevel){
+            VampirismEventFactory.fireFactionLevelChangedEvent(this,old,oldLevel,currentFaction,currentLevel);
+        }
 //        if(faction != null && faction != old) {
 //            faction.getPlayerCapability(player).ifPresent(factionPlayer -> factionPlayer.getTaskManager().init());
 //        }
