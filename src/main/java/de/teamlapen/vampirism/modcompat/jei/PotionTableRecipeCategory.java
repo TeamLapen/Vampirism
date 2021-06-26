@@ -56,21 +56,21 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
         int x = 5;
         Minecraft minecraft = Minecraft.getInstance();
         if (recipe.getOriginal().durable && recipe.getOriginal().concentrated) {
-            minecraft.fontRenderer.func_243248_b(stack, HunterSkills.concentrated_durable_brewing.getName(), x, y, Color.gray.getRGB());
+            minecraft.fontRenderer.drawText(stack, HunterSkills.concentrated_durable_brewing.getName(), x, y, Color.gray.getRGB());
             y += minecraft.fontRenderer.FONT_HEIGHT;
         } else if (recipe.getOriginal().durable) {
-            minecraft.fontRenderer.func_243248_b(stack, HunterSkills.durable_brewing.getName(), x, y, Color.gray.getRGB());
+            minecraft.fontRenderer.drawText(stack, HunterSkills.durable_brewing.getName(), x, y, Color.gray.getRGB());
             y += minecraft.fontRenderer.FONT_HEIGHT;
         } else if (recipe.getOriginal().concentrated) {
-            minecraft.fontRenderer.func_243248_b(stack, HunterSkills.concentrated_brewing.getName(), x, y, Color.gray.getRGB());
+            minecraft.fontRenderer.drawText(stack, HunterSkills.concentrated_brewing.getName(), x, y, Color.gray.getRGB());
             y += minecraft.fontRenderer.FONT_HEIGHT;
         }
         if (recipe.getOriginal().master) {
-            minecraft.fontRenderer.func_243248_b(stack, HunterSkills.master_brewer.getName(), x, y, Color.gray.getRGB());
+            minecraft.fontRenderer.drawText(stack, HunterSkills.master_brewer.getName(), x, y, Color.gray.getRGB());
             y += minecraft.fontRenderer.FONT_HEIGHT;
         }
         if (recipe.getOriginal().efficient) {
-            minecraft.fontRenderer.func_243248_b(stack, HunterSkills.efficient_brewing.getName(), x, y, Color.gray.getRGB());
+            minecraft.fontRenderer.drawText(stack, HunterSkills.efficient_brewing.getName(), x, y, Color.gray.getRGB());
             y += minecraft.fontRenderer.FONT_HEIGHT;
         }
     }

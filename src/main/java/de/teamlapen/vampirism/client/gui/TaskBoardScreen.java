@@ -77,7 +77,7 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> impleme
 
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack mStack, int mouseX, int mouseY) {
-        this.font.func_243248_b(mStack, this.title, (float) (this.xSize / 2 - this.font.getStringPropertyWidth(this.title) / 2), 5.0F, 4210752);
+        this.font.drawText(mStack, this.title, (float) (this.xSize / 2 - this.font.getStringPropertyWidth(this.title) / 2), 5.0F, 4210752);
     }
 
     @Override

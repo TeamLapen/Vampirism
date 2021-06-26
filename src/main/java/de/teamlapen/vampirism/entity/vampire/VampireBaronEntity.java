@@ -133,8 +133,8 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public void func_241847_a(ServerWorld world, LivingEntity entity) {
-        super.func_241847_a(world, entity);
+    public void onKillEntity(ServerWorld world, LivingEntity entity) {
+        super.onKillEntity(world, entity);
         if (entity instanceof VampireBaronEntity) {
             this.setHealth(this.getMaxHealth());
         }
@@ -175,7 +175,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
             this.updateEntityAttributes(false);
             float hp = this.getHealth() / this.getMaxHealth();
             this.setHealth(this.getMaxHealth() * hp);
-            this.setCustomName(getProfessionName().copyRaw().append(new TranslationTextComponent("entity.vampirism.vampire_baron.level", level + 1)));
+            this.setCustomName(getProfessionName().copyRaw().appendSibling(new TranslationTextComponent("entity.vampirism.vampire_baron.level", level + 1)));
         } else {
             this.setCustomName(null);
         }
@@ -246,7 +246,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         }
         if (!this.world.isRemote && this.getAttackTarget() != null && this.ticksExisted % 128 == 0) {
             if (rangedAttack) {
-                if (this.rand.nextInt(2) == 0 && this.navigator.getPathToEntity(this.getAttackTarget(), 0) != null) {
+                if (this.rand.nextInt(2) == 0 && this.navigator.pathfind(this.getAttackTarget(), 0) != null) {
                     rangedAttack = false;
                 }
             } else {

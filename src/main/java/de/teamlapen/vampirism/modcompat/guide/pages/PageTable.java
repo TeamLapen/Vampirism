@@ -50,7 +50,7 @@ public class PageTable extends Page {
         int y = guiTop + 12;
         int x = guiLeft + 39;
         if (headline != null) {
-            fontRendererObj.func_243248_b(stack, headline.mergeStyle(TextFormatting.BOLD), x, y, 0);
+            fontRendererObj.drawText(stack, headline.mergeStyle(TextFormatting.BOLD), x, y, 0);
             y += fontRendererObj.FONT_HEIGHT;
         }
         drawLine(stack, x, y + fontRendererObj.FONT_HEIGHT, x + (guiBase.xSize * 3F / 5F), y + fontRendererObj.FONT_HEIGHT, guiBase.publicZLevel);

@@ -37,7 +37,7 @@ public class MinionDamageSource extends EntityDamageSource {
         String s1 = s + ".item";
         IFormattableTextComponent msg = !itemstack.isEmpty() && itemstack.hasDisplayName() ? new TranslationTextComponent(s1, entityLivingBaseIn.getDisplayName(), minionName, itemstack.getTextComponent()) : new TranslationTextComponent(s, entityLivingBaseIn.getDisplayName(), minionName);
         if (playerEntity != null) {
-            msg.append(new StringTextComponent(" ")).append(new TranslationTextComponent("death.minion.on_behalf", playerEntity.getDisplayName()));
+            msg.appendSibling(new StringTextComponent(" ")).appendSibling(new TranslationTextComponent("death.minion.on_behalf", playerEntity.getDisplayName()));
         }
         return msg;
     }

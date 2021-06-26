@@ -133,7 +133,7 @@ public class GuideHelper {
         TaskUnlocker[] unlockers = task.getUnlocker();
         if (unlockers.length > 0) {
             for (TaskUnlocker u : unlockers) {
-                text.add(new StringTextComponent("- ").append(u.getDescription()).append(newLine));
+                text.add(new StringTextComponent("- ").appendSibling(u.getDescription()).appendSibling(newLine));
             }
 
 

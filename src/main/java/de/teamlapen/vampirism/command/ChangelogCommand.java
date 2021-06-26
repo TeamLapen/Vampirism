@@ -46,7 +46,7 @@ public class ChangelogCommand extends BasicCommand {
         ITextComponent download = new TranslationTextComponent("text.vampirism.update_message.download").modifyStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, newVersion.getUrl() == null ? homepage : newVersion.getUrl())).setUnderlined(true).applyFormatting(TextFormatting.BLUE));
         ITextComponent changelog = new TranslationTextComponent("text.vampirism.update_message.changelog").modifyStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vampirism changelog")).setUnderlined(true));
         ITextComponent modpage = new TranslationTextComponent("text.vampirism.update_message.modpage").modifyStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, homepage)).setUnderlined(true).applyFormatting(TextFormatting.BLUE));
-        context.getSource().sendFeedback(new StringTextComponent("").append(download).append(new StringTextComponent(" ")).append(changelog).append(new StringTextComponent(" ")).append(modpage), false);
+        context.getSource().sendFeedback(new StringTextComponent("").appendSibling(download).appendSibling(new StringTextComponent(" ")).appendSibling(changelog).appendSibling(new StringTextComponent(" ")).appendSibling(modpage), false);
         return 1;
     }
 

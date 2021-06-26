@@ -697,7 +697,7 @@ public class UtilLib {
 
     @Nonnull
     public static StructureStart<?> getStructureStartAt(ServerWorld w, BlockPos pos, Structure<?> s) {
-        return (w).func_241112_a_()/*getStructureManager*/.getStructureStart(pos, false, s);
+        return (w).getStructureManager()/*getStructureManager*/.getStructureStart(pos, false, s);
     }
 
     /**

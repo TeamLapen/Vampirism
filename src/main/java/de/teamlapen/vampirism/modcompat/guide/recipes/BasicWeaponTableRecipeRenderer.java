@@ -60,7 +60,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
         int y = guiTop + 120;
         if (recipe.getRequiredLevel() > 1) {
             ITextComponent level = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
-            fontRenderer.func_243248_b(stack, level, guiLeft + 40, y, Color.gray.getRGB());
+            fontRenderer.drawText(stack, level, guiLeft + 40, y, Color.gray.getRGB());
             y += fontRenderer.FONT_HEIGHT + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {

@@ -49,7 +49,7 @@ public class DummyHunterTrainerEntity extends VampirismEntity implements ICaptur
     }
 
     @Override
-    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
+    protected ActionResultType getEntityInteractionResult(PlayerEntity player, Hand hand) {
         ItemStack stack = player.getHeldItem(hand);
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 
@@ -65,7 +65,7 @@ public class DummyHunterTrainerEntity extends VampirismEntity implements ICaptur
         }
 
 
-        return super.func_230254_b_(player, hand);
+        return super.getEntityInteractionResult(player, hand);
     }
 
 

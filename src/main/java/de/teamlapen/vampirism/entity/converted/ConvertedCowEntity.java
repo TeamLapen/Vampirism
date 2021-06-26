@@ -21,7 +21,7 @@ public class ConvertedCowEntity extends ConvertedCreatureEntity<CowEntity> {
     }
 
     @Nonnull
-    public ActionResultType func_230254_b_(PlayerEntity player, @Nonnull Hand hand) {
+    public ActionResultType getEntityInteractionResult(PlayerEntity player, @Nonnull Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
         if (itemstack.getItem() == Items.BUCKET && !this.isChild()) {
             player.playSound(SoundEvents.ENTITY_COW_MILK, 1.0F, 1.0F);
@@ -29,7 +29,7 @@ public class ConvertedCowEntity extends ConvertedCreatureEntity<CowEntity> {
             player.setHeldItem(hand, itemstack1);
             return ActionResultType.func_233537_a_(this.world.isRemote);
         } else {
-            return super.func_230254_b_(player, hand);
+            return super.getEntityInteractionResult(player, hand);
         }
     }
 

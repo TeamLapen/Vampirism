@@ -66,14 +66,14 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
         int y = 65;
         if (recipe.getRequiredLevel() > 1) {
             ITextComponent level = new TranslationTextComponent("gui.vampirism.alchemical_cauldron.level", recipe.getRequiredLevel());
-            minecraft.fontRenderer.func_243248_b(stack, level, x, y, Color.gray.getRGB());
+            minecraft.fontRenderer.drawText(stack, level, x, y, Color.gray.getRGB());
             y += minecraft.fontRenderer.FONT_HEIGHT + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {
             IFormattableTextComponent skillText = new TranslationTextComponent("gui.vampirism.alchemical_cauldron.skill", " ");
 
             for (ISkill s : recipe.getRequiredSkills()) {
-                skillText.append(s.getName()).appendString(" ");
+                skillText.appendSibling(s.getName()).appendString(" ");
             }
             y += UtilLib.renderMultiLine(minecraft.fontRenderer, stack, skillText, 132, x, y, Color.gray.getRGB());
         }

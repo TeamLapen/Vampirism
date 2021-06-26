@@ -102,7 +102,7 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
             if (ignoreHurtTimer && living.hurtResistantTime > 0) {
                 living.hurtResistantTime = 0;
             }
-            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, func_234616_v_());
+            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, getShooter());
         }
     }
 
@@ -110,7 +110,7 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
     protected void func_230299_a_(BlockRayTraceResult blockRayTraceResult) { //onHitBlock
         Item item = arrowStack.getItem();
         if (item instanceof IVampirismCrossbowArrow) {
-            ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, (blockRayTraceResult).getPos(), this, func_234616_v_());
+            ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, (blockRayTraceResult).getPos(), this, getShooter());
         }
         super.func_230299_a_(blockRayTraceResult);
     }

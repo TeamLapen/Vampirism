@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 
 public class TrainingDummyVampireEntity extends BasicVampireEntity {
 
-    private final EntityPredicate PREDICATE = new EntityPredicate().allowInvulnerable().setSkipAttackChecks().setLineOfSiteRequired();
+    private final EntityPredicate PREDICATE = new EntityPredicate().allowInvulnerable().setSkipAttackChecks().setIgnoresLineOfSight();
     private int startTicks = 0;
     private float damageTaken = 0;
 
@@ -44,7 +44,7 @@ public class TrainingDummyVampireEntity extends BasicVampireEntity {
     }
 
     @Override
-    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) { //processInteract
+    protected ActionResultType getEntityInteractionResult(PlayerEntity player, Hand hand) { //processInteract
         if (!this.world.isRemote && hand == Hand.MAIN_HAND) {
             if (startTicks == 0) {
                 player.sendStatusMessage(new StringTextComponent("Start recording"), false);

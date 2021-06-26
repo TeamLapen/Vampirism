@@ -103,9 +103,9 @@ public class ConvertedHorseEntity extends HorseEntity implements ICurableConvert
 
     @Nonnull
     @Override
-    public ActionResultType func_230254_b_(@Nonnull PlayerEntity player, @Nonnull Hand hand) {
+    public ActionResultType getEntityInteractionResult(@Nonnull PlayerEntity player, @Nonnull Hand hand) {
         ItemStack stack = player.getHeldItem(hand);
-        if (stack.getItem() != ModItems.cure_apple) return super.func_230254_b_(player, hand);
+        if (stack.getItem() != ModItems.cure_apple) return super.getEntityInteractionResult(player, hand);
         return interactWithCureItem(player, stack, this);
     }
 
@@ -125,7 +125,7 @@ public class ConvertedHorseEntity extends HorseEntity implements ICurableConvert
             return super.getName();
         }
         if (name == null) {
-            this.name = new TranslationTextComponent("entity.vampirism.vampire").append(new TranslationTextComponent("entity.horse"));
+            this.name = new TranslationTextComponent("entity.vampirism.vampire").appendSibling(new TranslationTextComponent("entity.horse"));
         }
         return name;
     }

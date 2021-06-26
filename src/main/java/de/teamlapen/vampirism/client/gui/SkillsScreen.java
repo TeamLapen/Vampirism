@@ -231,14 +231,14 @@ public class SkillsScreen extends Screen {
         }
         int x = (this.width - display_width) / 2;
         int y = (this.height - display_height) / 2;
-        this.font.func_238407_a_(stack, title.func_241878_f(), x + 15, y + 5, 0xFFFFFFFF);
+        this.font.drawTextWithShadow(stack, title.func_241878_f(), x + 15, y + 5, 0xFFFFFFFF);
         IFormattableTextComponent points = new TranslationTextComponent("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
         if (this.minecraft.player.getActivePotionEffect(ModEffects.oblivion) != null) {
             points.mergeStyle(TextFormatting.DARK_RED);
         }
         x = (this.width + display_width) / 2 - this.font.getStringPropertyWidth(points);
-//        this.font.func_243248_b(stack, points, x - 15, y + 5, 0xFFFFFFFF);
-        this.font.func_238407_a_(stack, points.func_241878_f(), x - 15, y + 5, 0xFFFFFFFF);
+//        this.font.drawText(stack, points, x - 15, y + 5, 0xFFFFFFFF);
+        this.font.drawTextWithShadow(stack, points.func_241878_f(), x - 15, y + 5, 0xFFFFFFFF);
     }
 
     /**
@@ -297,7 +297,7 @@ public class SkillsScreen extends Screen {
         IReorderingProcessor s = LanguageMap.getInstance().func_241870_a(f);
 
 
-        font.func_238416_a_(s, (float) tooltipX + (tooltipTextWidth / 2) - this.font.getStringPropertyWidth(f) / 2, (float) tooltipY + (tooltipHeight / 2) - 3, -1, true, mat, renderType, false, 0, 15728880);
+        font.drawEntityText(s, (float) tooltipX + (tooltipTextWidth / 2) - this.font.getStringPropertyWidth(f) / 2, (float) tooltipY + (tooltipHeight / 2) - 3, -1, true, mat, renderType, false, 0, 15728880);
 
         renderType.finish();
         mStack.pop();
@@ -550,7 +550,7 @@ public class SkillsScreen extends Screen {
                 if (lockingSkills != null) {
                     tooltips.add(new TranslationTextComponent("text.vampirism.skill.excluding").mergeStyle(lockingColor));
                     for (ISkill lockingSkill : lockingSkills) {
-                        tooltips.add(new StringTextComponent("  ").append(lockingSkill.getName().deepCopy().mergeStyle(lockingColor)));
+                        tooltips.add(new StringTextComponent("  ").appendSibling(lockingSkill.getName().deepCopy().mergeStyle(lockingColor)));
                     }
                 }
 

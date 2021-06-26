@@ -38,7 +38,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
         if (!remote) {
             AxisAlignedBB axisalignedbb = entity.getBoundingBox().grow(4.0D, 2.0D, 4.0D);
             List<LivingEntity> list1 = entity.getEntityWorld().getEntitiesWithinAABB(LivingEntity.class, axisalignedbb);
-            @Nullable Entity thrower = entity.func_234616_v_();
+            @Nullable Entity thrower = entity.getShooter();
 
             if (!list1.isEmpty()) {
                 for (LivingEntity entitylivingbase : list1) {
@@ -65,7 +65,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
             ItemStack throwStack = stack.copy();
             throwStack.setCount(1);
             entityThrowable.setItem(throwStack);
-            entityThrowable.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
+            entityThrowable.setDirectionAndMovement(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
             worldIn.addEntity(entityThrowable);
         }
 

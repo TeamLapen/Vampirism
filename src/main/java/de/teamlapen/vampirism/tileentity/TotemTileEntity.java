@@ -910,17 +910,17 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             IFormattableTextComponent text = new TranslationTextComponent("text.vampirism.village.missing_components");
             if ((status & 1) == 0) {
                 text.appendString("\n  - ");
-                text.append(new TranslationTextComponent("text.vampirism.village.missing_components.home"));
+                text.appendSibling(new TranslationTextComponent("text.vampirism.village.missing_components.home"));
                 text.appendString(" " + stats.get(1) + "/" + MIN_HOMES);
             }
             if ((status & 2) == 0) {
                 text.appendString("\n  - ");
-                text.append(new TranslationTextComponent("text.vampirism.village.missing_components.workstations"));
+                text.appendSibling(new TranslationTextComponent("text.vampirism.village.missing_components.workstations"));
                 text.appendString(" " + stats.get(2) + "/" + MIN_WORKSTATIONS);
             }
             if ((status & 4) == 0) {
                 text.appendString("\n  - ");
-                text.append(new TranslationTextComponent("text.vampirism.village.missing_components.villager"));
+                text.appendSibling(new TranslationTextComponent("text.vampirism.village.missing_components.villager"));
                 text.appendString(" " + stats.get(4) + "/" + MIN_VILLAGER);
             }
             feedback.accept(text, false);

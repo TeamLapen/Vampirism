@@ -175,7 +175,7 @@ public abstract class GuiPieMenu<T> extends Screen {
             ITextComponent name = getName(elements.get(selectedElement));
             int tx = cX - minecraft.fontRenderer.getStringPropertyWidth(name) / 2;
             int ty = this.height / 7;
-            minecraft.fontRenderer.func_243246_a(stack, name, tx, ty, Color.WHITE.getRGB());
+            minecraft.fontRenderer.drawTextWithShadow(stack, name, tx, ty, Color.WHITE.getRGB());
         }
         super.render(stack, mouseX, mouseY, partialTicks);
     }

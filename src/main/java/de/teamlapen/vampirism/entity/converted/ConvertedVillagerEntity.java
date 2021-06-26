@@ -125,9 +125,9 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
 
     @Nonnull
     @Override
-    public ActionResultType func_230254_b_(PlayerEntity player, @Nonnull Hand hand) {
+    public ActionResultType getEntityInteractionResult(PlayerEntity player, @Nonnull Hand hand) {
         ItemStack stack = player.getHeldItem(hand);
-        if (stack.getItem() != ModItems.cure_apple) return super.func_230254_b_(player, hand);
+        if (stack.getItem() != ModItems.cure_apple) return super.getEntityInteractionResult(player, hand);
         return interactWithCureItem(player, stack, this);
     }
 
@@ -144,7 +144,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
             return super.getDisplayName();
         } else {
             VillagerProfession villagerprofession = this.getVillagerData().getProfession();
-            IFormattableTextComponent itextcomponent1 = (new TranslationTextComponent(EntityType.VILLAGER.getTranslationKey() + '.' + (!"minecraft".equals(Helper.getIDSafe(villagerprofession).getNamespace()) ? Helper.getIDSafe(villagerprofession).getNamespace() + '.' : "") + Helper.getIDSafe(villagerprofession).getPath())).modifyStyle((p_211516_1_) -> p_211516_1_.setHoverEvent(this.getHoverEvent()).setInsertion(this.getCachedUniqueIdString()));
+            IFormattableTextComponent itextcomponent1 = (new TranslationTextComponent(EntityType.VILLAGER.getTranslationKey() + '.' + (!"minecraft".equals(Helper.getIDSafe(villagerprofession).getNamespace()) ? Helper.getIDSafe(villagerprofession).getNamespace() + '.' : "") + Helper.getIDSafe(villagerprofession).getPath())).modifyStyle((style) -> style.setHoverEvent(this.getHoverEvent()).setInsertion(this.getCachedUniqueIdString()));
             if (team != null) {
                 itextcomponent1.mergeStyle(team.getColor());
             }
@@ -185,7 +185,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         brain.registerActivity(Activity.PRE_RAID, VillagerTasks.preRaid(villagerprofession, f));
         brain.registerActivity(Activity.RAID, VillagerTasks.raid(villagerprofession, f));
         brain.registerActivity(Activity.HIDE, VillagerTasks.hide(villagerprofession, f));
-        brain.setDefaultActivities(ImmutableSet.of(Activity.CORE));
+        brain.setPersistentActivities(ImmutableSet.of(Activity.CORE));
         brain.setFallbackActivity(Activity.IDLE);
         brain.switchTo(Activity.IDLE);
         brain.updateActivity(this.world.getDayTime(), this.world.getGameTime());

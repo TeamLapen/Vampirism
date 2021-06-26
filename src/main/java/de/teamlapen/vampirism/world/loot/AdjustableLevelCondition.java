@@ -29,7 +29,7 @@ public class AdjustableLevelCondition implements ILootCondition {
 
     @Nonnull
     @Override
-    public LootConditionType func_230419_b_() {
+    public LootConditionType getConditionType() {
         return ModLoot.adjustable_level;
     }
 

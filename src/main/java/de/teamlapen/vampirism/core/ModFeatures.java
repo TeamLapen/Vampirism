@@ -35,10 +35,10 @@ import java.util.Map;
 
 public class ModFeatures {
     //features
-    public static final VampireDungeonFeature vampire_dungeon = new VampireDungeonFeature(NoFeatureConfig.field_236558_a_);
-    public static final VampirismLakeFeature mod_lake = new VampirismLakeFeature(BlockStateFeatureConfig.field_236455_a_);
+    public static final VampireDungeonFeature vampire_dungeon = new VampireDungeonFeature(NoFeatureConfig.CODEC);
+    public static final VampirismLakeFeature mod_lake = new VampirismLakeFeature(BlockStateFeatureConfig.CODEC);
     //structures
-    public static final Structure<NoFeatureConfig> hunter_camp = new HunterCampStructure(NoFeatureConfig.field_236558_a_/*deserialize*/);
+    public static final Structure<NoFeatureConfig> hunter_camp = new HunterCampStructure(NoFeatureConfig.CODEC/*deserialize*/);
     //structure pieces
     public static final IStructurePieceType hunter_camp_fireplace = IStructurePieceType.register(HunterCampPieces.Fireplace::new, REFERENCE.MODID + ":hunter_camp_fireplace");
     public static final IStructurePieceType hunter_camp_tent = IStructurePieceType.register(HunterCampPieces.Tent::new, REFERENCE.MODID + ":hunter_camp_tent");
@@ -73,7 +73,7 @@ public class ModFeatures {
     public static void registerStructureSeparation() {
         //https://github.com/MinecraftForge/MinecraftForge/pull/7232
         //https://github.com/MinecraftForge/MinecraftForge/pull/7331
-        DimensionStructuresSettings settings = DimensionSettings.func_242746_i().getStructures();
+        DimensionStructuresSettings settings = DimensionSettings.getDefaultDimensionSettings().getStructures();
         //Copy/Overwrite
         Map<Structure<?>, StructureSeparationSettings> structureSettingsMapOverworld = new HashMap<>(settings.func_236195_a_()); //TODO 1.17 check if any PR has been accepted
         addStructureSeparationSettings(structureSettingsMapOverworld);

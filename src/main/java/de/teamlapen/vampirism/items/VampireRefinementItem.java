@@ -86,7 +86,7 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
             for (IRefinement refinement : set.getRefinements()) {
-                tooltip.add(new StringTextComponent(" - ").append(refinement.getDescription()).mergeStyle(TextFormatting.GRAY));
+                tooltip.add(new StringTextComponent(" - ").appendSibling(refinement.getDescription()).mergeStyle(TextFormatting.GRAY));
             }
         }
     }
@@ -112,7 +112,7 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
         if (set == null) {
             return super.getDisplayName(stack);
         }
-        return new TranslationTextComponent(this.getTranslationKey() + ".of").appendString(" ").append(set.getName()).mergeStyle(set.getRarity().color);
+        return new TranslationTextComponent(this.getTranslationKey() + ".of").appendString(" ").appendSibling(set.getName()).mergeStyle(set.getRarity().color);
     }
 
     @Nullable

@@ -184,7 +184,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
             if (remainingTime < this.item.getTaskDuration() / 20 * 0.1) {
                 color = 16733525;
             }
-            this.screen.font.func_243246_a(matrixStack, msg, x + 134 - width, y + 12, color);
+            this.screen.font.drawTextWithShadow(matrixStack, msg, x + 134 - width, y + 12, color);
         }
 
         RenderSystem.disableDepthTest();
@@ -284,7 +284,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
                     if (completed || this.screen.getTaskContainer().isRequirementCompleted(taskInfo, requirement)) {
                         desc.mergeStyle(TextFormatting.STRIKETHROUGH);
                     }
-                    toolTips.add(new StringTextComponent("  ").append(desc));
+                    toolTips.add(new StringTextComponent("  ").appendSibling(desc));
                 }
             }
         }
@@ -311,7 +311,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         }
         tooltips.add((strikeThrough ? REQUIREMENT_STRIKE : REQUIREMENT));
         tooltips.add(title.mergeStyle(TextFormatting.ITALIC));
-        tooltips.add(new StringTextComponent("  ").append(text));
+        tooltips.add(new StringTextComponent("  ").appendSibling(text));
         this.screen.renderWrappedToolTip(mStack, tooltips, x, y, this.screen.font);
     }
 
@@ -367,7 +367,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         }
 
         @Override
-        public void renderButton(@Nonnull MatrixStack mStack, int mouseX, int mouseY, float p_renderButton_3_) {
+        public void renderWidget(@Nonnull MatrixStack mStack, int mouseX, int mouseY, float p_renderButton_3_) {
             TaskContainer.TaskAction action = TaskItem.this.screen.getTaskContainer().buttonAction(TaskItem.this.item);
             RenderSystem.enableDepthTest();
             Minecraft minecraft = Minecraft.getInstance();

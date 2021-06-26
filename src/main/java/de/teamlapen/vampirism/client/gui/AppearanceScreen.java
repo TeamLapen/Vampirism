@@ -84,6 +84,6 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
     }
 
     private void drawTitle(MatrixStack mStack) {
-        this.font.func_243246_a(mStack, title, this.guiLeft + 15, this.guiTop + 5, 0xFFFFFFFF);
+        this.font.drawTextWithShadow(mStack, title, this.guiLeft + 15, this.guiTop + 5, 0xFFFFFFFF);
     }
 }

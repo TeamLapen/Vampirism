@@ -79,7 +79,7 @@ public class ScrollableArrayTextComponentList extends ScrollableListWidget<Pair<
                 width = listWidth;
             }
 
-            Minecraft.getInstance().fontRenderer.func_243246_a(matrixStack, this.item.getRight(), x + (listWidth / 2) - (width / 2), y + 7, -1);
+            Minecraft.getInstance().fontRenderer.drawTextWithShadow(matrixStack, this.item.getRight(), x + (listWidth / 2) - (width / 2), y + 7, -1);
 
             if (this.onHover != null) {
                 boolean newHovered = mouseX >= x && mouseX < x + listWidth && mouseY >= y && mouseY < y + itemHeight;

@@ -69,7 +69,7 @@ public class CustomBossInfoOverlay extends AbstractGui {
                 int l = this.client.fontRenderer.getStringPropertyWidth(itextcomponent);
                 int i1 = i / 2 - l / 2;
                 int j1 = j - 9;
-                this.client.fontRenderer.func_243246_a(stack, itextcomponent, (float) i1, (float) j1, 16777215);
+                this.client.fontRenderer.drawTextWithShadow(stack, itextcomponent, (float) i1, (float) j1, 16777215);
             }
             j += event.getIncrement();
             net.minecraftforge.client.ForgeHooksClient.bossBarRenderPost(stack, this.client.getMainWindow());

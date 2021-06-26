@@ -81,12 +81,12 @@ public class VampireDungeonFeature extends DungeonsFeature {
                         BlockPos blockpos1 = pos.add(k3, i4, k4);
                         BlockState blockstate = reader.getBlockState(blockpos1);
                         if (k3 != k && i4 != -1 && k4 != l1 && k3 != l && i4 != 4 && k4 != i2) {
-                            if (!blockstate.isIn(Blocks.CHEST) && !blockstate.isIn(Blocks.SPAWNER)) {
+                            if (!blockstate.matchesBlock(Blocks.CHEST) && !blockstate.matchesBlock(Blocks.SPAWNER)) {
                                 reader.setBlockState(blockpos1, CAVE_AIR, 2);
                             }
                         } else if (blockpos1.getY() >= 0 && !reader.getBlockState(blockpos1.down()).getMaterial().isSolid()) {
                             reader.setBlockState(blockpos1, CAVE_AIR, 2);
-                        } else if (blockstate.getMaterial().isSolid() && !blockstate.isIn(Blocks.CHEST)) {
+                        } else if (blockstate.getMaterial().isSolid() && !blockstate.matchesBlock(Blocks.CHEST)) {
                             if (i4 == -1 && rand.nextInt(4) != 0) {
                                 if (rand.nextInt(20) == 0) // changed to castle bricks
                                     reader.setBlockState(blockpos1, ModBlocks.castle_block_dark_brick_bloody.getDefaultState(), 2);

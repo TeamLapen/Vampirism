@@ -83,7 +83,7 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
      * @param excludeEntity If given this will not receive AOE damage
      */
     public void explode(int distanceSq, @Nullable Entity excludeEntity) {
-        @Nullable Entity shootingEntity = func_234616_v_();
+        @Nullable Entity shootingEntity = getShooter();
         List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(distanceSq / 2d), EntityPredicates.IS_ALIVE.and(EntityPredicates.NOT_SPECTATING));
         for (Entity e : list) {
             if ((excludeShooter && e == shootingEntity) || e == excludeEntity) {
@@ -92,7 +92,7 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
             if (e instanceof LivingEntity && e.getDistanceSq(this) < distanceSq) {
                 LivingEntity entity = (LivingEntity) e;
                 entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 200, 1));
-                entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, func_234616_v_()), indirectDamage);
+                entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, getShooter()), indirectDamage);
             }
         }
         if (!this.world.isRemote) {
@@ -220,7 +220,7 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
     }
 
     private void hitEntity(Entity entity) {
-        entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, func_234616_v_()), directDamage);
+        entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, getShooter()), directDamage);
         if (entity instanceof LivingEntity) {
             if (this.rand.nextInt(3) == 0) {
                 ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.BLINDNESS, 100));

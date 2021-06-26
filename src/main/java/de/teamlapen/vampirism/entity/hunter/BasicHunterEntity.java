@@ -448,7 +448,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) { //processInteract
+    protected ActionResultType getEntityInteractionResult(PlayerEntity player, Hand hand) { //processInteract
         if (hand == Hand.MAIN_HAND && tryCureSanguinare(player)) return ActionResultType.SUCCESS;
         int hunterLevel = VampirismPlayerAttributes.get(player).hunterLevel;
         if (this.isAlive() && !player.isSneaking() && hand == Hand.MAIN_HAND) {
@@ -495,7 +495,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
             }
         }
-        return super.func_230254_b_(player, hand);
+        return super.getEntityInteractionResult(player, hand);
     }
 
     @Override

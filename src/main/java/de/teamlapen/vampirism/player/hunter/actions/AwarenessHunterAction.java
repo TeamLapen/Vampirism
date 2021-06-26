@@ -75,7 +75,7 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
 
     private double nearbyVampire(IHunterPlayer player) {
         int r = VampirismConfig.BALANCE.haAwarenessRadius.get();
-        LivingEntity closestVampire = player.getRepresentingEntity().getEntityWorld().func_225318_b(LivingEntity.class, vampirePredicate, null, player.getRepresentingEntity().getPosX(), player.getRepresentingEntity().getPosY(), player.getRepresentingEntity().getPosZ(), new AxisAlignedBB(player.getRepresentingEntity().getPosX() - r, player.getRepresentingEntity().getPosY()
+        LivingEntity closestVampire = player.getRepresentingEntity().getEntityWorld().getClosestEntity(LivingEntity.class, vampirePredicate, null, player.getRepresentingEntity().getPosX(), player.getRepresentingEntity().getPosY(), player.getRepresentingEntity().getPosZ(), new AxisAlignedBB(player.getRepresentingEntity().getPosX() - r, player.getRepresentingEntity().getPosY()
                 - r + 1, player.getRepresentingEntity().getPosZ()
                 - r, player.getRepresentingEntity().getPosX() + r, player.getRepresentingEntity().getPosY() + r + 1, player.getRepresentingEntity().getPosZ() + r));
         if (closestVampire != null) return closestVampire.getDistance(player.getRepresentingEntity());

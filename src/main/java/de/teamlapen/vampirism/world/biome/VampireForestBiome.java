@@ -31,7 +31,7 @@ public class VampireForestBiome {
         VampirismBiomeFeatures.addVampireTrees(builder);
 
         VampirismBiomeFeatures.addWaterSprings(builder);
-        return new Biome.Builder().precipitation(Biome.RainType.NONE).category(Biome.Category.FOREST).depth(depth).scale(scale).temperature(0.3F).downfall(0F).setEffects(ambienceBuilder.build()).withMobSpawnSettings(spawnBuilder.copy()).withGenerationSettings(builder.build());
+        return new Biome.Builder().precipitation(Biome.RainType.NONE).category(Biome.Category.FOREST).depth(depth).scale(scale).temperature(0.3F).downfall(0F).setEffects(ambienceBuilder.build()).withMobSpawnSettings(spawnBuilder.build()).withGenerationSettings(builder.build());
     }
 
     public static MobSpawnInfo.Builder createMobInfoBuilder() {

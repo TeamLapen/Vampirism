@@ -43,7 +43,7 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
         Minecraft minecraft = Minecraft.getInstance();
         int x = 4;
         int y = 40;
-        minecraft.fontRenderer.func_243248_b(stack, task.getTranslation(), 1, 1, Color.gray.getRGB());
+        minecraft.fontRenderer.drawText(stack, task.getTranslation(), 1, 1, Color.gray.getRGB());
         IPlayableFaction<?> f = task.getFaction();
         ITextComponent taskmasterComponent = f == null || f.getVillageData().getTaskMasterEntity() == null ? new TranslationTextComponent("text.vampirism.faction_representative") : new TranslationTextComponent(f.getVillageData().getTaskMasterEntity().getTranslationKey());
         ITextComponent text = new TranslationTextComponent("text.vampirism.task.reward_obtain", taskmasterComponent);
@@ -54,10 +54,10 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
         if (unlockers.length > 0) {
             StringTextComponent newLine = new StringTextComponent("\n");
             for (TaskUnlocker u : unlockers) {
-                prerequisites.append(new StringTextComponent("- ")).append(u.getDescription()).append(newLine);
+                prerequisites.appendSibling(new StringTextComponent("- ")).appendSibling(u.getDescription()).appendSibling(newLine);
             }
         } else {
-            prerequisites.append(new TranslationTextComponent("text.vampirism.task.prerequisites.none"));
+            prerequisites.appendSibling(new TranslationTextComponent("text.vampirism.task.prerequisites.none"));
         }
         y += UtilLib.renderMultiLine(minecraft.fontRenderer, stack, prerequisites, 160, x, y, Color.gray.getRGB());
 

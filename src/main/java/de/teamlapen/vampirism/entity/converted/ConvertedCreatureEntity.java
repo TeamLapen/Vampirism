@@ -98,7 +98,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
             entityCreature.deathTime = this.deathTime;
 
 //            if (world.isRemote) {
-//                entityCreature.func_242277_a(this.func_242274_V()); //Careful not available on server, so if needed we have to use a proxy here
+//                entityCreature.func_242277_a(this.positionOffset()); //Careful not available on server, so if needed we have to use a proxy here
 //            }
         }
         if (entityChanged) {
@@ -143,7 +143,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
             return super.getName();
         }
         if (name == null) {
-            this.name = new TranslationTextComponent("entity.vampirism.vampire").appendString(" ").append((nil() ? super.getName() : entityCreature.getName()));
+            this.name = new TranslationTextComponent("entity.vampirism.vampire").appendString(" ").appendSibling((nil() ? super.getName() : entityCreature.getName()));
         }
         return name;
     }
@@ -279,9 +279,9 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
 
     @Nonnull
     @Override
-    protected ActionResultType func_230254_b_(PlayerEntity player, @Nonnull Hand hand) {
+    protected ActionResultType getEntityInteractionResult(PlayerEntity player, @Nonnull Hand hand) {
         ItemStack stack = player.getHeldItem(hand);
-        if (stack.getItem() != ModItems.cure_apple) return super.func_230254_b_(player, hand);
+        if (stack.getItem() != ModItems.cure_apple) return super.getEntityInteractionResult(player, hand);
         return interactWithCureItem(player, stack, this);
     }
 

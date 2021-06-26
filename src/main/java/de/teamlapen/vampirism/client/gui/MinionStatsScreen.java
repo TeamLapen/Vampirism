@@ -110,7 +110,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
                     if (!this.active) {
                         RenderSystem.color4f(0.65f, 0.65f, 0.65f, 1);
                     }
-                    super.renderButton(matrixStack, mouseX, mouseY, partialTicks);
+                    super.renderWidget(matrixStack, mouseX, mouseY, partialTicks);
                 }
             }
 
@@ -126,7 +126,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     }
 
     protected void renderLevelRow(MatrixStack mStack, int current, int max) {
-        this.font.func_243248_b(mStack, textLevel, guiLeft + 10, guiTop + 30, 0x0);
+        this.font.drawText(mStack, textLevel, guiLeft + 10, guiTop + 30, 0x0);
         this.font.drawString(mStack, current + "/" + max, guiLeft + 145, guiTop + 30, 0x404040);
         int remainingPoints = entity.getMinionData().map(this::getRemainingStatPoints).orElse(0);
         if (remainingPoints > 0) {
@@ -136,8 +136,8 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     }
 
     protected void renderStatRow(MatrixStack mStack, int i, TranslationTextComponent name, StringTextComponent value, int currentLevel, int maxLevel) {
-        this.font.func_243248_b(mStack, name.appendString(":"), guiLeft + 10, guiTop + 50 + 26 * i, 0x404040);
-        this.font.func_243248_b(mStack, value, guiLeft + 145, guiTop + 50 + 26 * i, 0x404040);
+        this.font.drawText(mStack, name.appendString(":"), guiLeft + 10, guiTop + 50 + 26 * i, 0x404040);
+        this.font.drawText(mStack, value, guiLeft + 145, guiTop + 50 + 26 * i, 0x404040);
         this.font.drawString(mStack, UtilLib.translate("text.vampirism.level_short") + ": " + currentLevel + "/" + maxLevel, guiLeft + 175, guiTop + 50 + 26 * i, 0x404040);
     }
 
@@ -146,7 +146,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     }
 
     private void drawTitle(MatrixStack mStack) {
-        this.font.func_243246_a(mStack, this.title, this.guiLeft + 10, this.guiTop + 10, 0xFFFFFF);
+        this.font.drawTextWithShadow(mStack, this.title, this.guiLeft + 10, this.guiTop + 10, 0xFFFFFF);
     }
 
     private Optional<ItemStack> getOblivionPotion() {

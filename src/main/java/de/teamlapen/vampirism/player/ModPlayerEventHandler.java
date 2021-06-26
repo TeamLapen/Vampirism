@@ -406,7 +406,7 @@ public class ModPlayerEventHandler {
                     if (f != null) {
                         IFormattableTextComponent displayName;
                         if (fph.getLordLevel() > 0 && VampirismConfig.SERVER.lordPrefixInChat.get()) {
-                            displayName = new StringTextComponent("[").append(fph.getLordTitle()).appendString("] ").append(event.getDisplayname());
+                            displayName = new StringTextComponent("[").appendSibling(fph.getLordTitle()).appendString("] ").appendSibling(event.getDisplayname());
                         } else {
                             displayName = event.getDisplayname().deepCopy();
                         }

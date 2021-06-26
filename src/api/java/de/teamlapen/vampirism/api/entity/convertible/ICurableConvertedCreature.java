@@ -27,7 +27,7 @@ import java.util.UUID;
  * - override {@link #startConverting} to save the conversion started and conversion time <p>
  * - create a {@link DataParameter<Boolean> } the is returned by {@link #getConvertingDataParam()}<p>
  * - call {@link #registerConvertingData(CreatureEntity)} in {@link MobEntity#registerData()}<p>
- * - call {@link #interactWithCureItem(PlayerEntity, ItemStack, CreatureEntity)} in {@link MobEntity#func_230254_b_(PlayerEntity, Hand)} if the cure item is in the players hand<p>
+ * - call {@link #interactWithCureItem(PlayerEntity, ItemStack, CreatureEntity)} in {@link MobEntity#getEntityInteractionResult(PlayerEntity, Hand)} if the cure item is in the players hand<p>
  * - call {@link #handleSound(byte, CreatureEntity)} in {@link MobEntity#handleStatusUpdate(byte)}<p>
  * - check in {@link MobEntity#livingTick()} if the conversion timer has ended. If so call {@link #cureEntity(ServerWorld, CreatureEntity, EntityType)}<p>
  */
@@ -97,7 +97,7 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
     }
 
     /**
-     * call in {@link MobEntity#func_230254_b_(PlayerEntity, Hand)}
+     * call in {@link MobEntity#getEntityInteractionResult(PlayerEntity, Hand)}
      *
      * @param player the interacting player
      * @param stack  the itemstack in the players hand

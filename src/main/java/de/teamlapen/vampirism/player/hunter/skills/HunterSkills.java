@@ -79,8 +79,8 @@ public class HunterSkills {
                 .setDescription(() -> {
                     TextComponent desc = new TranslationTextComponent("skill.vampirism.stake1.desc", (int) (VampirismConfig.BALANCE.hsInstantKill1MaxHealth.get() * 100));
                     if (VampirismConfig.BALANCE.hsInstantKill1FromBehind.get()) {
-                        desc.append(new StringTextComponent(" "));
-                        desc.append(new TranslationTextComponent("text.vampirism.from_behind"));
+                        desc.appendSibling(new StringTextComponent(" "));
+                        desc.appendSibling(new TranslationTextComponent("text.vampirism.from_behind"));
                     }
                     return desc;
                 }));

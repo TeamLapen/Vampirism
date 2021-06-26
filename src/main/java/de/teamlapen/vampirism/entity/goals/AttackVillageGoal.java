@@ -30,7 +30,7 @@ public class AttackVillageGoal<T extends VampirismEntity & IVillageCaptureEntity
                 }
                 return super.canTarget(attackEntity, targetEntity);
             }
-        }.setCustomPredicate(VampirismAPI.factionRegistry().getPredicate(attacker.getFaction(), false)).setLineOfSiteRequired()/*Actually does the opposite -> no line of sight required*/;
+        }.setCustomPredicate(VampirismAPI.factionRegistry().getPredicate(attacker.getFaction(), false)).setIgnoresLineOfSight();
     }
 
     @Override

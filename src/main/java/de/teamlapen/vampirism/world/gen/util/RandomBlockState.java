@@ -34,9 +34,9 @@ public class RandomBlockState extends RuleEntry {
     });
     @SuppressWarnings("CodeBlock2Expr")
     public static final Codec<RandomBlockState> CODEC = RecordCodecBuilder.create((instance) -> {
-        return instance.group(RuleTest.field_237127_c_.fieldOf("input_predicate").forGetter((getter) -> {
+        return instance.group(RuleTest.CODEC.fieldOf("input_predicate").forGetter((getter) -> {
             return getter.inputPredicate;
-        }), RuleTest.field_237127_c_.fieldOf("location_predicate").forGetter(entry -> {
+        }), RuleTest.CODEC.fieldOf("location_predicate").forGetter(entry -> {
             return entry.locationPredicate;
         }), PAIR_CODEC.fieldOf("default_state").forGetter(entry -> {
             return Pair.of(entry.outputState, Optional.ofNullable(entry.outputNbt));

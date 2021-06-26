@@ -96,7 +96,7 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements IDefault
     }
 
     @Override
-    protected ActionResultType func_230254_b_(@Nonnull PlayerEntity playerEntity, @Nonnull Hand hand) {
+    protected ActionResultType getEntityInteractionResult(@Nonnull PlayerEntity playerEntity, @Nonnull Hand hand) {
         if (this.world.isRemote)
             return Helper.isHunter(playerEntity) ? ActionResultType.SUCCESS : ActionResultType.PASS;
         if (Helper.isHunter(playerEntity) && interactor == null) {

@@ -73,8 +73,8 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
 
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack mStack, int mouseX, int mouseY) {
-        this.font.func_243248_b(mStack, title, 5, 6.0F, 0x404040);
-        this.font.func_243248_b(mStack, new TranslationTextComponent("gui.vampirism.minion.active_task"), 120, 10.0F, 0x404040);
+        this.font.drawText(mStack, title, 5, 6.0F, 0x404040);
+        this.font.drawText(mStack, new TranslationTextComponent("gui.vampirism.minion.active_task"), 120, 10.0F, 0x404040);
 
     }
 

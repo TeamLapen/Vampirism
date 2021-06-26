@@ -19,8 +19,8 @@ import java.util.Random;
 public class VampirismLakeFeature extends LakesFeature {
     private static final BlockState AIR = Blocks.CAVE_AIR.getDefaultState();
 
-    public VampirismLakeFeature(Codec<BlockStateFeatureConfig> p_i231968_1_) {
-        super(p_i231968_1_);
+    public VampirismLakeFeature(Codec<BlockStateFeatureConfig> codec) {
+        super(codec);
     }
 
     /**

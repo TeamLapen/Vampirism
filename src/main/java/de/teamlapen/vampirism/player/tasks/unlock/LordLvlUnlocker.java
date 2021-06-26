@@ -23,7 +23,7 @@ public class LordLvlUnlocker implements TaskUnlocker {
 
     @Override
     public ITextComponent getDescription() {
-        return new TranslationTextComponent("text.vampirism.lord").append(new StringTextComponent(" ")).append(new TranslationTextComponent("text.vampirism.level")).append(new StringTextComponent((exact ? " = " : " ") + reqLordLevel));
+        return new TranslationTextComponent("text.vampirism.lord").appendSibling(new StringTextComponent(" ")).appendSibling(new TranslationTextComponent("text.vampirism.level")).appendSibling(new StringTextComponent((exact ? " = " : " ") + reqLordLevel));
     }
 
     @Override

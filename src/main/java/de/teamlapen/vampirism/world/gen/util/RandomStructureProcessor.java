@@ -39,7 +39,7 @@ public class RandomStructureProcessor extends RuleStructureProcessor {
         BlockState blockstate = worldReaderIn.getBlockState(blockInfo1.pos);
 
         for (RandomBlockState ruleEntry : this.rules) {
-            if (ruleEntry.func_237110_a_(blockInfo1.state, blockstate, blockInfo.pos, blockInfo1.pos, pos2, random)) { // ruleEntry#test
+            if (ruleEntry.test(blockInfo1.state, blockstate, blockInfo.pos, blockInfo1.pos, pos2, random)) { // ruleEntry#test
                 Pair<BlockState, Optional<CompoundNBT>> pair = ruleEntry.getOutput();
                 return new Template.BlockInfo(blockInfo1.pos, pair.getLeft(), pair.getRight().orElse(null));
             }
