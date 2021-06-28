@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.model;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -12,11 +12,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * ModelBiped with a cloak
  */
 @OnlyIn(Dist.CLIENT)
-public class BipedCloakedModel<T extends LivingEntity> extends BipedModel<T> {
+public class BipedCloakedModel<T extends LivingEntity> extends PlayerModel<T> {
     protected ModelRenderer bipedCloak;
 
-    public BipedCloakedModel(float modelSize, float yOffsetIn, int textureWidthIn, int textureHeightIn) {
-        super(modelSize, yOffsetIn, textureWidthIn, textureHeightIn);
+    public BipedCloakedModel(float modelSize, boolean smallArms) {
+        super(modelSize, smallArms);
         bipedCloak = new ModelRenderer(this, 0, 0);
         bipedCloak.setTextureSize(64, 32);
         bipedCloak.addBox(-7.0F, 0.0F, 0.4F, 14, 20, 1);

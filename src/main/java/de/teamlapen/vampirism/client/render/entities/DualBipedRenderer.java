@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import de.teamlapen.vampirism.REFERENCE;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -9,6 +11,8 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.function.IntFunction;
 import java.util.stream.Stream;
 
@@ -52,5 +56,20 @@ public abstract class DualBipedRenderer<T extends MobEntity, M extends BipedMode
             boolean b = r.getPath().endsWith("slim.png");
             return Pair.of(r, b);
         }).toArray((IntFunction<Pair<ResourceLocation, Boolean>[]>) Pair[]::new);
+    }
+
+    /**
+     * Gather all available textures (.png) in the given directory and in MODID namespace
+     * @param dirPath relative assets path (no namespace)
+     * @param required whether to throw an illegal state exception if none found
+     * @return Array of texture and slim status
+     */
+    protected Pair<ResourceLocation, Boolean>[] gatherTextures(String dirPath, boolean required){
+        Collection<ResourceLocation> hunterTextures = new ArrayList<>(Minecraft.getInstance().getResourceManager().getAllResourceLocations(dirPath, s -> s.endsWith(".png")));
+        Pair<ResourceLocation, Boolean>[] textures =  separateSlimTextures(hunterTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
+        if (textures.length == 0) {
+            throw new IllegalStateException("Must have at least one hunter texture: "+REFERENCE.MODID+":"+dirPath+"texture.png");
+        }
+        return textures;
     }
 }

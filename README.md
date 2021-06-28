@@ -41,6 +41,7 @@ For a more detailed description head over to the Minecraft Forum or the Cursefor
 - F_Spade _Textures_  
 - Matheo _Lore_
 - cournualllama2 _Lore_
+- Random _Textures_
 
 ## API
 Vampirism has an API you can use to add blood values to your mod's creatures or make them convertible and more.

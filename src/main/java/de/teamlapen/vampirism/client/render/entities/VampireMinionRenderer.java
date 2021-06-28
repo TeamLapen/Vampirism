@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.render.layers.PlayerBodyOverlayLayer;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import net.minecraft.client.Minecraft;
@@ -15,9 +14,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 @OnlyIn(Dist.CLIENT)
 public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity, PlayerModel<VampireMinionEntity>> {
 
@@ -28,13 +24,8 @@ public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity
     public VampireMinionRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new PlayerModel<>(0F, false), new PlayerModel<>(0f, true), 0.5F);
         IResourceManager rm = Minecraft.getInstance().getResourceManager();
-        Collection<ResourceLocation> vampireTextures = new ArrayList<>(rm.getAllResourceLocations("textures/entity/vampire", s -> s.endsWith(".png")));
-        Collection<ResourceLocation> minionsTextures = new ArrayList<>(rm.getAllResourceLocations("textures/entity/minion/vampire", s -> s.endsWith(".png")));
-        textures = separateSlimTextures(vampireTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
-        if (textures.length == 0) {
-            throw new IllegalStateException("Must have at least one vampire texture: vampirism:textures/entity/vampire/vampire.png");
-        }
-        minionSpecificTextures = separateSlimTextures(minionsTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
+        textures = gatherTextures("textures/entity/vampire",true);
+        minionSpecificTextures = gatherTextures("textures/entity/minion/vampire", false);
 
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
         this.addLayer(new BipedArmorLayer<>(this, new BipedModel<>(0.5f), new BipedModel<>(1f)));

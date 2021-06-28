@@ -18,8 +18,8 @@ public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<
     private boolean targetingRight = false;
     private float xAngle = 0;
 
-    public BasicHunterModel() {
-        super(0.0F, 0.0F, 64, 64);
+    public BasicHunterModel( boolean smallArms) {
+        super(0.0F, smallArms);
         this.bipedHeadwear.showModel = false;
     }
 
