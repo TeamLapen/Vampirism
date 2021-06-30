@@ -60,6 +60,7 @@ import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
@@ -331,7 +332,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
      * @param faction          attacking faction
      * @param feedback         interaction feedback supplier if capture cannot be started {@link #capturePreconditions(IFaction, BiConsumer)}
      * @param badOmenLevel     level of the badomen effect that triggered the raid (effect amplifier + 1). -1 if not triggered by bad omen.
-     * @param strengthModifier modifier of the faction strength ration. See {@link #calculateAttackStrength(float)}
+     * @param strengthModifier modifier of the faction strength ration. See {@link #calculateAttackStrength(int, float)}
      */
     public void initiateCapture(IFaction<?> faction, @Nullable BiConsumer<ITextComponent, Boolean> feedback, int badOmenLevel, float strengthModifier) {
         this.updateTileStatus();
@@ -1245,11 +1246,13 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             }
         }
         AxisAlignedBB totem = TotemHelper.getAABBAroundPOIs(this.village);
+        if (totem == null) {
+            totem = new AxisAlignedBB(this.pos);
+        }
         StructureStart<?> start = UtilLib.getStructureStartAt(this.world, this.pos, Structure.VILLAGE);
         if (start != null && start != StructureStart.DUMMY && start.isValid()) {
-            totem = UtilLib.MBtoAABB(start.getBoundingBox());
+            totem = totem.union(UtilLib.MBtoAABB(start.getBoundingBox()));
         }
-        assert totem != null;
         this.villageArea = totem;
         this.villageAreaReduced = totem.grow(-30, -10, -30);
     }
