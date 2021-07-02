@@ -10,9 +10,6 @@ import net.minecraft.command.Commands;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.TranslationTextComponent;
 
-/**
- * @authors Cheaterpaul, Maxanier
- */
 public class GlowingEyeCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {

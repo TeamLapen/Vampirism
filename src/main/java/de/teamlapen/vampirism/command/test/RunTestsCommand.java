@@ -7,10 +7,7 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
 
-/**
- * @authors Cheaterpaul, Maxanier
- */
-public class RunTestsCommand extends BasicCommand {
+public class RunTestsCommand extends BasicCommand { //TODO "unit test" can potentially run in 1.17 with help of forge (with headless java)
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("runTests")

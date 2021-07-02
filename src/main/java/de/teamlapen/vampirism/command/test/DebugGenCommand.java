@@ -7,9 +7,6 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.util.text.TranslationTextComponent;
 
-/**
- * @authors Cheaterpaul, Maxanier
- */
 public class DebugGenCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {

@@ -12,9 +12,6 @@ import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.TranslationTextComponent;
 
-/**
- * @authors Cheaterpaul, Maxanier
- */
 public class BindActionCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {

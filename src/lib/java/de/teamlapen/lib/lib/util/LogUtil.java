@@ -10,6 +10,7 @@ public class LogUtil {
 
     public static final Marker CONFIG = new MarkerManager.Log4jMarker("config");
     public static final Marker COMPAT = new MarkerManager.Log4jMarker("compat");
+    public static final Marker TEST = new MarkerManager.Log4jMarker("testing");
 
 
     public static final Logger LOGGER = LogManager.getLogger("TestLogger");

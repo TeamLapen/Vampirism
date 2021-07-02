@@ -14,9 +14,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * @authors Cheaterpaul, Maxanier
- */
 public class ResetActionsCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {

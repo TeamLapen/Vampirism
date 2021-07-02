@@ -11,9 +11,6 @@ import net.minecraft.command.Commands;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.TranslationTextComponent;
 
-/**
- * @authors Cheaterpaul, Maxanier
- */
 public class FangCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {

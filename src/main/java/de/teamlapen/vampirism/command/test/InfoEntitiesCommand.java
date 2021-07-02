@@ -11,9 +11,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.spawner.WorldEntitySpawner;
 
-/**
- * @author Cheaterpaul, Maxanier
- */
 public class InfoEntitiesCommand extends BasicCommand {
     public static final int maxSpawns = 50;
 

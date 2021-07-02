@@ -12,9 +12,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TranslationTextComponent;
 
-/**
- * @authors Cheaterpaul, Maxanier
- */
 public class TentCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
@@ -27,10 +24,10 @@ public class TentCommand extends BasicCommand {
 
     private static int tent(CommandSource commandSource, ServerPlayerEntity asPlayer, boolean advanced) {
         RayTraceResult result = UtilLib.getPlayerLookingSpot(asPlayer, 5);
-        if (result != null && result.getType() == RayTraceResult.Type.BLOCK) {
+        if (result.getType() == RayTraceResult.Type.BLOCK) {
 
             TileEntity tent = asPlayer.getEntityWorld().getTileEntity(((BlockRayTraceResult) result).getPos());
-            if (tent != null && tent instanceof TentTileEntity) {
+            if (tent instanceof TentTileEntity) {
                 ((TentTileEntity) tent).setSpawn(true);
                 if (advanced) ((TentTileEntity) tent).setAdvanced(true);
                 commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.tent.success"), false);

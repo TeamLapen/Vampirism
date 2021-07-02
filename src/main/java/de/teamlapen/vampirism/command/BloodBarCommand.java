@@ -13,9 +13,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 
 import java.util.Collection;
 
-/**
- * @authors Cheaterpaul, Maxanier
- */
 public class BloodBarCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {

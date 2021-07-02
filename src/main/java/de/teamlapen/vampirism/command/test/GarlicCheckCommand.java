@@ -12,9 +12,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TranslationTextComponent;
 
-/**
- * @authors Cheaterpaul, Maxanier
- */
 public class GarlicCheckCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
@@ -30,10 +27,12 @@ public class GarlicCheckCommand extends BasicCommand {
     }
 
     private static int garlicCheck(CommandSource commandSource, ServerPlayerEntity asPlayer, boolean print) {
-        if (commandSource.getEntity() != null && commandSource.getEntity() instanceof PlayerEntity)
+        if (commandSource.getEntity() != null && commandSource.getEntity() instanceof PlayerEntity) {
             commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.garliccheck.strength" + VampirismAPI.getVampirismWorld(asPlayer.getEntityWorld()).map(w -> w.getStrengthAtChunk(new ChunkPos(asPlayer.getPosition()))).orElse(EnumStrength.NONE)), true);
-        if (print)
+        }
+        if (print) {
             VampirismWorld.getOpt(asPlayer.getEntityWorld()).ifPresent(vw -> vw.printDebug(commandSource));
+        }
         return 0;
     }
 }

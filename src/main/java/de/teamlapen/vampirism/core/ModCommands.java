@@ -28,7 +28,8 @@ public class ModCommands {
             dispatcher.register(
                     LiteralArgumentBuilder.<CommandSource>literal(s)
                             .then(BindActionCommand.register())
-                            .then(ChangelogCommand.register())
+                            .then(VersionCheckCommand.registerChangelog())//TODO 1.17 remove
+                            .then(VersionCheckCommand.register())
                             .then(CurrentDimensionCommand.register())
                             .then(EyeCommand.register())
                             .then(FangCommand.register())
@@ -39,6 +40,7 @@ public class ModCommands {
                             .then(GenderCommand.register())
                             .then(BloodBarCommand.register())
                             .then(ConfigCommand.register())
+                            .then(SkillCommand.register())
             );
         }
 
@@ -48,8 +50,7 @@ public class ModCommands {
                     LiteralArgumentBuilder.<CommandSource>literal(s)
                             .then(InfoEntitiesCommand.register())
                             .then(MarkerCommand.register())
-                            .then(GiveTestTargetMapCommand.register())
-                            .then(SkillCommand.register())
+                            .then(SkillCommand.registerTest())//TODO 1.17 remove
                             .then(EntityCommand.register())
                             .then(InfoEntityCommand.register())
                             .then(BiomeCommand.register())

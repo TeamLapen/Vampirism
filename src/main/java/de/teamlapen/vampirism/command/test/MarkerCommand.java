@@ -7,9 +7,6 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import org.apache.logging.log4j.LogManager;
 
-/**
- * @authors Cheaterpaul, Maxanier
- */
 public class MarkerCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {

@@ -13,9 +13,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.Collection;
 
-/**
- * @authors Cheaterpaul, Maxanier
- */
 public class LevelUpCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {

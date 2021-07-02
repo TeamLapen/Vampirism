@@ -16,17 +16,20 @@ import net.minecraft.util.text.event.ClickEvent;
 
 import java.util.List;
 
-/**
- * @authors Cheaterpaul, Maxanier
- */
-public class ChangelogCommand extends BasicCommand {
+public class VersionCheckCommand extends BasicCommand {
+
+    public static ArgumentBuilder<CommandSource, ?> registerChangelog() {
+        return setup(Commands.literal("changelog"));
+
+    }
 
     public static ArgumentBuilder<CommandSource, ?> register() {
-        return Commands.literal("changelog")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ALL))
-                .executes(context -> {
-                    return changelog(context);
-                });
+        return setup(Commands.literal("checkForUpdate"));
+    }
+
+    private static ArgumentBuilder<CommandSource, ?> setup(ArgumentBuilder<CommandSource, ?> builder) {
+        return builder.requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ALL))
+                .executes(VersionCheckCommand::changelog);
     }
 
     private static int changelog(CommandContext<CommandSource> context) {

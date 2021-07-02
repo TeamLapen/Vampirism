@@ -14,9 +14,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.List;
 
-/**
- * @authors Cheaterpaul, Maxanier
- */
 public class EntityCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {

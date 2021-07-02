@@ -12,18 +12,26 @@ import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.TranslationTextComponent;
 
-/**
- * @authors Cheaterpaul, Maxanier
- */
 public class SkillCommand extends BasicCommand {
 
+    public static ArgumentBuilder<CommandSource, ?> registerTest() {
+        return create(Commands.literal("skill"));
+    }
+
     public static ArgumentBuilder<CommandSource, ?> register() {
-        return Commands.literal("skill")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+        return create(Commands.literal("skills"));
+    }
+
+    private static ArgumentBuilder<CommandSource, ?> create(ArgumentBuilder<CommandSource, ?> builder) {
+        return builder.requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
                 .then(Commands.argument("type", SkillArgument.skills())
                         .executes(context -> {
-                            return skill(context.getSource(), context.getSource().asPlayer(), SkillArgument.getSkill(context, "type"));
-                        }))
+                            return skill(context.getSource(), context.getSource().asPlayer(), SkillArgument.getSkill(context, "type"), false);
+                        })
+                        .then(Commands.literal("force")
+                                .executes(context -> {
+                                    return skill(context.getSource(), context.getSource().asPlayer(), SkillArgument.getSkill(context, "type"), true);
+                                })))
                 .then(Commands.literal("disableall")
                         .executes(context -> {
                             return disableall(context.getSource(), context.getSource().asPlayer());
@@ -40,7 +48,7 @@ public class SkillCommand extends BasicCommand {
         return 0;
     }
 
-    private static int skill(CommandSource commandSource, ServerPlayerEntity asPlayer, ISkill skill) {
+    private static int skill(CommandSource commandSource, ServerPlayerEntity asPlayer, ISkill skill, boolean force) {
         IFactionPlayer factionPlayer = asPlayer.isAlive() ? FactionPlayerHandler.get(asPlayer).getCurrentFactionPlayer().orElse(null) : null;
         if (factionPlayer == null) {
             commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.noinfaction"), false);
@@ -52,6 +60,9 @@ public class SkillCommand extends BasicCommand {
             return 0;
         }
         ISkillHandler.Result result = factionPlayer.getSkillHandler().canSkillBeEnabled(skill);
+        if (force) {
+            result = ISkillHandler.Result.OK;
+        }
         switch (result) {
             case OK:
                 factionPlayer.getSkillHandler().enableSkill(skill);

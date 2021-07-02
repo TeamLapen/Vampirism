@@ -11,9 +11,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 
 import java.util.List;
 
-/**
- * @authors Cheaterpaul, Maxanier
- */
 public class MakeVillagerAgressiveCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {

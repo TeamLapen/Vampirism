@@ -8,9 +8,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 
-/**
- * @authors Cheaterpaul, Maxanier
- */
 public class SpawnTestAnimalCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {

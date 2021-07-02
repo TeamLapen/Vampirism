@@ -8,9 +8,6 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
 
-/**
- * @authors Cheaterpaul, Maxanier
- */
 public class ForcePlayerSyncCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {

@@ -9,9 +9,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 
-/**
- * @authors Cheaterpaul, Maxanier
- */
 public class BiomeCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {

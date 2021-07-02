@@ -17,9 +17,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.Collection;
 
-/**
- * @author Cheaterpaul, Maxanier
- */
 public class LevelCommand extends BasicCommand {
 
 
