@@ -28,7 +28,7 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
     public HunterMinionRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new PlayerModel<>(0.5f, false), new PlayerModel<>(0.5f, true), 0.5F);
         textures = gatherTextures("textures/entity/hunter", true);
-        minionSpecificTextures =gatherTextures("textures/entity/minion/hunter", false);
+        minionSpecificTextures = gatherTextures("textures/entity/minion/hunter", false);
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
         this.addLayer(new HunterEquipmentLayer<>(this, minion -> minion.getItemStackFromSlot(EquipmentSlotType.MAINHAND).isEmpty() ? minion.getItemStackFromSlot(EquipmentSlotType.OFFHAND).isEmpty() ? HunterEquipmentModel.StakeType.FULL : HunterEquipmentModel.StakeType.AXE_ONLY : HunterEquipmentModel.StakeType.NONE, HunterMinionEntity::getHatType));
         this.addLayer(new BipedArmorLayer<>(this, new BipedModel<>(0.5f), new BipedModel<>(1f)));

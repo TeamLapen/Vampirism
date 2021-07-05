@@ -66,9 +66,9 @@ public abstract class DualBipedRenderer<T extends MobEntity, M extends BipedMode
      */
     protected Pair<ResourceLocation, Boolean>[] gatherTextures(String dirPath, boolean required){
         Collection<ResourceLocation> hunterTextures = new ArrayList<>(Minecraft.getInstance().getResourceManager().getAllResourceLocations(dirPath, s -> s.endsWith(".png")));
-        Pair<ResourceLocation, Boolean>[] textures =  separateSlimTextures(hunterTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
-        if (textures.length == 0) {
-            throw new IllegalStateException("Must have at least one hunter texture: "+REFERENCE.MODID+":"+dirPath+"texture.png");
+        Pair<ResourceLocation, Boolean>[] textures = separateSlimTextures(hunterTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
+        if (textures.length == 0 && required) {
+            throw new IllegalStateException("Must have at least one hunter texture: " + REFERENCE.MODID + ":" + dirPath + "/texture.png");
         }
         return textures;
     }
