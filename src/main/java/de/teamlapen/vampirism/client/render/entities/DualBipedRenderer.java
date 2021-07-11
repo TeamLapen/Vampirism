@@ -42,6 +42,9 @@ public abstract class DualBipedRenderer<T extends MobEntity, M extends BipedMode
         this.renderSelected(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
+    /**
+     * @return Sets of texture resource location and model selecting boolean (true->b, false ->a)
+     */
     protected abstract Pair<ResourceLocation, Boolean> determineTextureAndModel(T entity);
 
     protected void renderSelected(T entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
