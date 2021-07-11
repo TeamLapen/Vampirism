@@ -37,6 +37,7 @@ import java.util.Collections;
 public class VampirismScreen extends ContainerScreen<VampirismContainer> implements ExtendedScreen {
 
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/vampirism_menu.png");
+    private static final ResourceLocation BACKGROUND_REFINEMENTS = new ResourceLocation(REFERENCE.MODID, "textures/gui/vampirism_menu_refinements.png");
 
 
     private final int display_width = 234;
@@ -92,15 +93,16 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
-        for (int i = 0; i < this.container.getRefinementStacks().size(); i++) {
-            ItemStack stack = this.container.getRefinementStacks().get(i);
-            Slot slot = this.container.getSlot(i);
-            int x = slot.xPos + this.guiLeft;
-            int y = slot.yPos + this.guiTop;
-            this.itemRenderer.renderItemAndEffectIntoGUI(this.minecraft.player, stack, x, y);
-            this.itemRenderer.renderItemOverlayIntoGUI(this.font, stack, x, y, null);
+        if(this.container.areRefinementsAvailable()) {
+            for (int i = 0; i < this.container.getRefinementStacks().size(); i++) {
+                ItemStack stack = this.container.getRefinementStacks().get(i);
+                Slot slot = this.container.getSlot(i);
+                int x = slot.xPos + this.guiLeft;
+                int y = slot.yPos + this.guiTop;
+                this.itemRenderer.renderItemAndEffectIntoGUI(this.minecraft.player, stack, x, y);
+                this.itemRenderer.renderItemOverlayIntoGUI(this.font, stack, x, y, null);
+            }
         }
-
         if (this.list.isEmpty()) {
             ITextComponent text = new TranslationTextComponent("gui.vampirism.vampirism_menu.no_tasks").mergeStyle(TextFormatting.WHITE);
             int width = this.font.getStringPropertyWidth(text);
@@ -111,14 +113,14 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         this.oldMouseY = mouseY;
         this.list.renderToolTip(matrixStack, mouseX, mouseY);
         this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
-        this.renderHoveredRefinementTooltip(matrixStack, mouseX, mouseY);
+        if(this.container.areRefinementsAvailable()) this.renderHoveredRefinementTooltip(matrixStack, mouseX, mouseY);
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float v, int i, int i1) {
         this.renderBackground(matrixStack);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
+        this.minecraft.getTextureManager().bindTexture(this.container.areRefinementsAvailable() ? BACKGROUND_REFINEMENTS : BACKGROUND);
         this.blit(matrixStack, this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         InventoryScreen.drawEntityOnScreen(this.guiLeft + 31, this.guiTop + 72, 30, (float) (this.guiLeft + 10) - this.oldMouseX, (float) (this.guiTop + 75 - 50) - this.oldMouseY, this.minecraft.player);
     }

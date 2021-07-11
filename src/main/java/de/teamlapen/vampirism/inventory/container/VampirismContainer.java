@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.inventory.container;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
@@ -41,11 +42,13 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     public Map<UUID, Set<UUID>> completableTasks = new HashMap<>();
     public Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements = new HashMap<>();
     private Runnable listener;
+    private boolean refinementsAvailable = false;
 
     public VampirismContainer(int id, @Nonnull PlayerInventory playerInventory) {
         super(ModContainer.vampirism, id, playerInventory, IWorldPosCallable.DUMMY, new Inventory(3), RemovingSelectorSlot::new, SELECTOR_INFOS);
         this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction"));
         this.factionColor = factionPlayer.getFaction().getChatColor();
+        this.refinementsAvailable = factionPlayer.getFaction() == VReference.VAMPIRE_FACTION;
         this.addPlayerSlots(playerInventory, 37, 124);
         ItemStack[] sets = this.factionPlayer.getSkillHandler().createRefinementItems();
         for (int i = 0; i < sets.length; i++) {
@@ -88,6 +91,15 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
 
     public NonNullList<ItemStack> getRefinementStacks() {
         return refinementStacks;
+    }
+
+    @Override
+    protected boolean isSlotEnabled(int id) {
+        return refinementsAvailable;
+    }
+
+    public boolean areRefinementsAvailable(){
+        return refinementsAvailable;
     }
 
     @Override
