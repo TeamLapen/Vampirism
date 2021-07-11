@@ -38,6 +38,8 @@ public class ModTasks {
     public static final Task hunter_lord4 = getNull();
     public static final Task hunter_lord5 = getNull();
 
+    public static final Task oblivion_potion = getNull();
+
 
     public static void registerTasks(IForgeRegistry<Task> registry) {
         //Vampire gadgets
