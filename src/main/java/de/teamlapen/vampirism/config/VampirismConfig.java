@@ -141,14 +141,12 @@ public class VampirismConfig {
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDimensionsOverrideNegative;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDisabledBiomes;
 
-        public final ForgeConfigSpec.IntValue villageDistance;
-        public final ForgeConfigSpec.IntValue villageSeparation;
+
 
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> blacklistedBloodEntity;
 
         public final ForgeConfigSpec.BooleanValue disableFangInfection;
         public final ForgeConfigSpec.BooleanValue disableMobBiteInfection;
-        public final ForgeConfigSpec.BooleanValue disableHunterTentGen;
 
         public final ForgeConfigSpec.BooleanValue oldVampireBiomeGen;
 
@@ -182,8 +180,8 @@ public class VampirismConfig {
             builder.pop();
 
             builder.push("village");
-            villageDistance = builder.comment("Desired maximum distance between villages in chunks").defineInRange("villageDistance", 26, 1, 100);
-            villageSeparation = builder.comment("Minimum distance between villages in chunks. Must be smaller than distance").defineInRange("villageSeparation", 6, 1, 100);
+            builder.comment("Unused. Moved to COMMON config.").defineInRange("villageDistance", 26, 1, 100);//TODO 1.17
+            builder.comment("Unused. Moved to COMMON config").defineInRange("villageSeparation", 6, 1, 100);//TODO 1.17
             builder.pop();
 
             builder.push("entities");
@@ -198,7 +196,7 @@ public class VampirismConfig {
             builder.push("disable");
             disableFangInfection = builder.comment("Disable vampire fangs being usable to infect yourself").define("disableFangInfection", false);
             disableMobBiteInfection = builder.comment("Prevent vampire mobs from infecting players when attacking").define("disableMobBiteInfection", false);
-            disableHunterTentGen = builder.comment("Disable hunter camp generation").define("disableHunterTentGen", false);
+            builder.comment("Unused. Moved to COMMON config").define("disableHunterTentGen", false); //TODO 1.17
             builder.pop();
 
             builder.push("internal");
@@ -274,13 +272,32 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue collectStats;
         public final ForgeConfigSpec.ConfigValue<String> integrationsNotifier;
         public final ForgeConfigSpec.BooleanValue useVanillaCampfire; //TODO 1.17 move to Server config
-        public final ForgeConfigSpec.BooleanValue villageModify;
         public final ForgeConfigSpec.BooleanValue optifineBloodvisionWarning;
 
         //Common server
         public final ForgeConfigSpec.BooleanValue autoConvertGlassBottles;
         public final ForgeConfigSpec.BooleanValue umbrella;
         public final ForgeConfigSpec.BooleanValue enforceTentGeneration;
+
+        //Mobs
+        public final ForgeConfigSpec.IntValue vampireSpawnChance;
+        public final ForgeConfigSpec.IntValue advancedVampireSpawnChance;
+        public final ForgeConfigSpec.IntValue hunterSpawnChance;
+        public final ForgeConfigSpec.IntValue advancedHunterSpawnChance;
+        public final ForgeConfigSpec.IntValue baronSpawnChance;
+
+        //World
+        public final ForgeConfigSpec.IntValue vampireForestWeight;
+//        public final ForgeConfigSpec.IntValue vampireForestHillsWeight;
+        public final ForgeConfigSpec.IntValue hunterTentDistance;
+        public final ForgeConfigSpec.IntValue hunterTentSeparation;
+        public final ForgeConfigSpec.BooleanValue villageModify;
+
+        public final ForgeConfigSpec.IntValue villageDistance;
+        public final ForgeConfigSpec.IntValue villageSeparation;
+        public final ForgeConfigSpec.BooleanValue enableHunterTentGeneration;
+
+
 
 
         Common(ForgeConfigSpec.Builder builder) {
@@ -289,7 +306,11 @@ public class VampirismConfig {
             versionCheck = builder.comment("Check for new versions of Vampirism on startup").define("versionCheck", true);
             collectStats = builder.comment("Send mod version, MC version and mod count to mod author").define("collectStats", true);
             useVanillaCampfire = builder.comment("Use the vanilla campfire block instead of Vampirism's much cooler one").define("useVanillaCampfire", false);
-            villageModify = builder.comment("Whether to modify the village world gen (size and frequency), based on world config").define("villageModify", true);
+
+            villageModify = builder.comment("Whether to modify the village world gen (size and frequency), based on world config").define("villageModify", true); //TODO 1.17 move to world
+            villageDistance = builder.comment("Desired maximum distance between villages in chunks").defineInRange("villageDistance", 26, 1, 100);  //TODO 1.17 move to world
+            villageSeparation = builder.comment("Minimum distance between villages in chunks. Must be smaller than distance").defineInRange("villageSeparation", 6, 1, 100);  //TODO 1.17 move to world
+
             //builder.push("internal"); //TODO 1.17
             integrationsNotifier = builder.comment("INTERNAL - Set to 'never' if you don't want to be notified about integration mods").define("integrationsNotifier", "");
             optifineBloodvisionWarning = builder.comment("INTERNAL").define("optifineBloodvisionWarning", false);
@@ -299,6 +320,21 @@ public class VampirismConfig {
             autoConvertGlassBottles = builder.comment("Whether glass bottles should be automatically be converted to blood bottles when needed").define("autoConvertGlassBottles", true);
             umbrella = builder.comment("If enabled adds a craftable umbrella that can be used to slowly walk though sunlight without taking damage").define("umbrella", false);
             enforceTentGeneration = builder.comment("Enforce tent generation in any overworld world, even if they were not included in modded or datapack world-types on purpose. Does not affect Server#disableTentGeneration or disable tent generation itself.").define("enforceOverworldTentGeneration", true);
+            builder.push("mobspawn");
+            vampireSpawnChance = builder.comment("Vampire spawn chance/weight (e.g. Zombie: 100). Does not affect vampire forest.").defineInRange("vampireSpawnChance", 80, 0, 100000);
+            advancedVampireSpawnChance = builder.comment("Advanced vampire spawn chance/weight (e.g. Zombie: 100). Does not affect vampire forest.").defineInRange("advancedVampireSpawnChance", 26, 0, 100000);
+            hunterSpawnChance = builder.comment("Hunter spawn chance. By default they only spawn in tent camps, but you can enable global spawn here.").defineInRange("hunterSpawnChance",0,0,10000);
+            advancedHunterSpawnChance = builder.comment("Advanced hunter spawn chance. By default they only spawn in large tent camps, but you can enable global spawn here.").defineInRange("advancedHunterSpawnChance",0,0,100000);
+            baronSpawnChance = builder.comment("Vampire baron spawn chance in vampire forest (reference vampire in forest: 35)").defineInRange("baronSpawnChance",10,0,10000);
+            builder.pop();
+            builder.push("world");
+            vampireForestWeight = builder.defineInRange("vampireForestWeight", 3, 1, Integer.MAX_VALUE);
+//            vampireForestHillsWeight = builder.defineInRange("vampireForestHillsWeight", 3, 1, Integer.MAX_VALUE);
+            hunterTentDistance = builder.comment("Desired maximum distance in chunks between tents. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentDistance", 10, 2, 4096);
+            hunterTentSeparation = builder.comment("Desired minimum distance in chunks between tents. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentSeparation", 4, 1, 4096);
+            enableHunterTentGeneration = builder.comment("Control hunter camp generation. If disabled you should set hunterSpawnChance to 75.").define("enableHunterTentGeneration", true);
+
+            builder.pop();
             builder.pop();
         }
 

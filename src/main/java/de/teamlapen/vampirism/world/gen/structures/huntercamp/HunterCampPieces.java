@@ -82,7 +82,7 @@ public abstract class HunterCampPieces extends StructurePiece {
     }
 
     protected boolean testPreconditions(ISeedReader worldIn, StructureManager manager, ChunkPos chunkPos) {
-        if (VampirismConfig.SERVER.disableHunterTentGen.get()) return false;
+        if (!VampirismConfig.COMMON.enableHunterTentGeneration.get()) return false;
         for (StructureStart<?> value : worldIn.getChunk(chunkPos.x, chunkPos.z).getStructureStarts().values()) {
             if (value != StructureStart.DUMMY && value.getStructure() != ModFeatures.hunter_camp) {
                 return false;

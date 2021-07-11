@@ -10,22 +10,6 @@ public class BalanceMobProps {
     public final int BLINDING_BAT_LIVE_SPAWN = 600;
     //    @DefaultInt(value = 40, name = "blinding_bat_effect_duration", minValue = 1, comment = "Blinding duration in ticks")
     public final int BLINDING_BAT_EFFECT_DURATION = 80;
-    //    @DefaultInt(value = 30, minValue = 0, maxValue = 1000000, name = "blinding_bat_spawn_chance", comment = "e.g. Zombie spawn chance: 100")
-    public final int BLINDING_BAT_SPAWN_CHANCE = 60;
-
-    //    @DefaultInt(value = 75, minValue = 0, maxValue = 1000000, name = "dummy_creature_spawn_chance", comment = "e.g. Zombie spawn chance: 100")
-    public final int DUMMY_CREATURE_SPAWN_CHANCE = 80;
-
-    //    @DefaultDouble(value = 5D, name = "ghost_attack_damage", minValue = 0)
-    public final double GHOST_ATTACK_DAMAGE = 5;
-    //    @DefaultInt(value = 14, name = "ghost_follow_range", minValue = 1, maxValue = 32)
-    public final int GHOST_FOLLOW_RANGE = 14;
-    //    @DefaultDouble(value = 0.2D, name = "ghost_speed", minValue = 0, maxValue = 2)
-    public final double GHOST_SPEED = 0.2d;
-    //    @DefaultInt(value = 30, name = "ghost_health", minValue = 0)
-    public final int GHOST_HEALTH = 30;
-    //    @DefaultInt(value = 10, minValue = 0, maxValue = 1000000, name = "ghost_spawn_chance", comment = "e.g. Zombie spawn chance: 100")
-    public final int GHOST_SPAWN_CHANCE = 10;
 
     //    @DefaultInt(value = 1, minValue = 0, name = "converted_mob_default_dmg")
     public final int CONVERTED_MOB_DEFAULT_DMG = 1;
@@ -107,8 +91,7 @@ public class BalanceMobProps {
     public final double VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL = 1.2;
     //    @DefaultDouble(value = 3, minValue = 0, comment = "Any fire damage that is received by a baron is multiplied by this")
     public final double VAMPIRE_BARON_FIRE_VULNERABILITY = 3;
-    //    @DefaultInt(value = 10, minValue = 0, maxValue = 1000000, name = "vampire_baron_spawn_chance", comment = "e.g. Zombie spawn chance: 100")
-    public final int VAMPIRE_BARON_SPAWN_CHANCE = 10;
+
 
     public final double MINION_MAX_HEALTH = 45;
     public final double MINION_MAX_HEALTH_PL = 5;

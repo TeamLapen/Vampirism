@@ -79,7 +79,7 @@ public class ModFeatures {
         addStructureSeparationSettings(structureSettingsMapOverworld);
         if (VampirismConfig.COMMON.villageModify.get()) {
             LOGGER.info("Replacing vanilla village structure separation settings for the overworld dimension preset");
-            structureSettingsMapOverworld.put(Structure.VILLAGE, new ConfigurableStructureSeparationSettings(VampirismConfig.SERVER.villageDistance, VampirismConfig.SERVER.villageSeparation, DimensionStructuresSettings.field_236191_b_.get(Structure.VILLAGE).func_236673_c_()));
+            structureSettingsMapOverworld.put(Structure.VILLAGE, new ConfigurableStructureSeparationSettings(VampirismConfig.COMMON.villageDistance, VampirismConfig.COMMON.villageSeparation, DimensionStructuresSettings.field_236191_b_.get(Structure.VILLAGE).func_236673_c_()));
         } else {
             LOGGER.trace("Not modifying village");
         }
@@ -99,8 +99,8 @@ public class ModFeatures {
         Map<Structure<?>, StructureSeparationSettings> structureSettings = new HashMap<>(settings.func_236195_a_());
         if (!structureSettings.containsKey(hunter_camp)) {
             LOGGER.info("Cannot find hunter camp configuration for loaded world -> Adding");
-            int dist = VampirismConfig.BALANCE.hunterTentDistance.get();
-            int sep = VampirismConfig.BALANCE.hunterTentSeparation.get();
+            int dist = VampirismConfig.COMMON.hunterTentDistance.get();
+            int sep = VampirismConfig.COMMON.hunterTentSeparation.get();
             if (dist <= sep) {
                 LOGGER.warn("Hunter tent distance must be larger than separation. Adjusting");
                 dist = sep + 1;
@@ -111,7 +111,7 @@ public class ModFeatures {
     }
 
     private static void addStructureSeparationSettings(Map<Structure<?>, StructureSeparationSettings> settings) {
-        settings.put(hunter_camp, new ConfigurableStructureSeparationSettings(VampirismConfig.BALANCE.hunterTentDistance, VampirismConfig.BALANCE.hunterTentSeparation, 14357719));
+        settings.put(hunter_camp, new ConfigurableStructureSeparationSettings(VampirismConfig.COMMON.hunterTentDistance, VampirismConfig.COMMON.hunterTentSeparation, 14357719));
 
     }
 }

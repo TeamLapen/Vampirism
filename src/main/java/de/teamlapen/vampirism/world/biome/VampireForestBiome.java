@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.world.biome;
 
-import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
@@ -37,10 +36,10 @@ public class VampireForestBiome {
     public static MobSpawnInfo.Builder createMobInfoBuilder() {
         MobSpawnInfo.Builder builder = new MobSpawnInfo.Builder();
         builder.withCreatureSpawnProbability(0.25f);
-        builder.withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.vampire, VampirismConfig.BALANCE.mbVampireSpawnChance.get() / 2, 1, 3));
-        builder.withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.vampire_baron, BalanceMobProps.mobProps.VAMPIRE_BARON_SPAWN_CHANCE, 1, 1));
-        builder.withSpawner(EntityClassification.AMBIENT, new MobSpawnInfo.Spawners(ModEntities.blinding_bat, BalanceMobProps.mobProps.BLINDING_BAT_SPAWN_CHANCE, 2, 4));
-        builder.withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.dummy_creature, BalanceMobProps.mobProps.DUMMY_CREATURE_SPAWN_CHANCE, 3, 6));
+        builder.withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.vampire, 35, 1, 3));
+        builder.withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.vampire_baron, VampirismConfig.COMMON.baronSpawnChance.get(), 1, 1));
+        builder.withSpawner(EntityClassification.AMBIENT, new MobSpawnInfo.Spawners(ModEntities.blinding_bat,60 ,2, 4));
+        builder.withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.dummy_creature, 80, 3, 6));
         return builder;
     }
 

@@ -18,10 +18,8 @@ public class BalanceConfig {
     private static final Logger LOGGER = LogManager.getLogger();
 
     //GENERAL
-    public final ForgeConfigSpec.IntValue hunterTentDistance;
-    public final ForgeConfigSpec.IntValue hunterTentSeparation;
-    public final ForgeConfigSpec.IntValue vampireForestWeight;
-    public final ForgeConfigSpec.IntValue vampireForestHillsWeight;
+
+
     public final ForgeConfigSpec.BooleanValue canCancelSanguinare;
     public final ForgeConfigSpec.IntValue arrowVampireKillerMaxHealth;
     public final ForgeConfigSpec.IntValue holyWaterSplashDamage;
@@ -185,9 +183,6 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue miDeathRecoveryTime;
     public final ForgeConfigSpec.IntValue miMinionPerLordLevel;
 
-    public final ForgeConfigSpec.IntValue mbVampireSpawnChance;
-    public final ForgeConfigSpec.IntValue mbAdvancedVampireSpawnChance;
-
     public final ForgeConfigSpec.DoubleValue vrSwordTrainingSpeedMod;
     public final ForgeConfigSpec.IntValue vrBloodChargeSpeedMod;
     public final ForgeConfigSpec.DoubleValue vrFreezeDurationMod;
@@ -214,10 +209,7 @@ public class BalanceConfig {
         builder.comment("General options");
         builder.category("general", "");
 
-        hunterTentDistance = builder.comment("Desired maximum distance in chunks between tents. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentDistance", 10, 2, 4096);
-        hunterTentSeparation = builder.comment("Desired minimum distance in chunks between tents. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentSeparation", 4, 1, 4096);
-        vampireForestWeight = builder.defineInRange("vampireForestWeight", 3, 1, Integer.MAX_VALUE);
-        vampireForestHillsWeight = builder.defineInRange("vampireForestHillsWeight", 3, 1, Integer.MAX_VALUE);
+
         canCancelSanguinare = builder.comment("If the sanguinare effect can be canceled by milk").define("canCancelSanguinare", true);
         arrowVampireKillerMaxHealth = builder.comment("The vampire killer arrow can only instant kill NPC vampires that have a max (not actual) health of this").defineInRange("arrowVampireKillerMaxHealth", 40, 1, Integer.MAX_VALUE);
         holyWaterSplashDamage = builder.comment("Damage a normal holy water splash bottle does when directly hitting a vampire").defineInRange("holyWaterSplashDamage", 5, 0, Integer.MAX_VALUE);
@@ -392,9 +384,7 @@ public class BalanceConfig {
         vaHissingCooldown = builder.comment("In seconds").defineInRange("hissingCooldown", 60, 0, 10000);
         vaHissingEnabled = builder.define("hissingEnabled", true);
 
-        builder.category("mobs", "mb");
-        mbVampireSpawnChance = builder.comment("Vampire spawn chance/weight (e.g. Zombie: 100)").defineInRange("vampireSpawnChance", 75, 0, 100000);
-        mbAdvancedVampireSpawnChance = builder.comment("Advanceed vampire spawn chance/weight (e.g. Zombie: 100)").defineInRange("advancedVampireSpawnChance", 23, 0, 100000);
+
 
         builder.category("minions", "mi");
         miResourceCooldown = builder.comment("Cooldown in ticks,before new resources are added in collect resource task types").defineInRange("resourceCooldown", 1500, 20, Integer.MAX_VALUE);
