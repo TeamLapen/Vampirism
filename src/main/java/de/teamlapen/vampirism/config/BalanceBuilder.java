@@ -82,7 +82,13 @@ public class BalanceBuilder {
                 }
                 Conf c = stringConfEntry.getValue();
                 Consumer<Conf> modifier = (Consumer<Conf>) balanceModifications.get(fullName);
-                if (modifier != null) modifier.accept(c);
+                if (modifier != null) {
+                    try {
+                        modifier.accept(c);
+                    } catch (Exception e) {
+                        LOGGER.error("Failed to apply balance config modifier for " + fullName, e);
+                    }
+                }
                 ForgeConfigSpec.ConfigValue<?> val = c.build(builder);
                 setVal(conf, fullName, val);
             }
