@@ -101,6 +101,8 @@ public class LootTablesGenerator extends LootTableProvider {
             this.add(ModEntities.converted_sheep, LootTable.lootTable());
             this.add(ModEntities.converted_cow, LootTable.lootTable());
             this.add(ModEntities.converted_horse, LootTable.lootTable());
+            this.add(ModEntities.converted_donkey, LootTable.lootTable());
+            this.add(ModEntities.converted_mule, LootTable.lootTable());
             this.add(ModEntities.dummy_creature, LootTable.lootTable());
             this.add(ModEntities.hunter_trainer, LootTable.lootTable());
             LootTable.Builder vampire = LootTable.lootTable()

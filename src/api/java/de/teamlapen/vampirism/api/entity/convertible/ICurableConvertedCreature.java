@@ -124,7 +124,7 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
     }
 
     /**
-     * call in {@link Entity#registerData()}
+     * call in {@link Entity#defineSynchedData()}
      *
      * @param entity the entity that extends this interface
      */

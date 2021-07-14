@@ -34,6 +34,8 @@ public class ModEntitiesRender {
             renderer.addLayer(new VampireEntityLayer<>(renderer, new ResourceLocation(REFERENCE.MODID, "textures/entity/vanilla/horse_overlay.png"), false));
             return renderer;
         });
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_donkey, safeFactory(ConvertedChestedHorseRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_mule, safeFactory(ConvertedChestedHorseRenderer::new));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_sheep, safeFactory(ConvertedCreatureRenderer::new));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_cow, safeFactory(ConvertedCreatureRenderer::new));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter, safeFactory(BasicHunterRenderer::new));

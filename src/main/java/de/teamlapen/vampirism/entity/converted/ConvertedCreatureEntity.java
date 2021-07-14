@@ -67,6 +67,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     public ConvertedCreatureEntity(EntityType<? extends ConvertedCreatureEntity> type, World world) {
         super(type, world, false);
         this.enableImobConversion();
+        this.xpReward = 2;
     }
 
     @Override

@@ -12,6 +12,7 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.math.MathHelper;
 
 import javax.annotation.Nullable;
 
@@ -75,6 +76,7 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
     public IConvertedCreature<T> createFrom(T entity) {
         return Helper.createEntity(ModEntities.converted_creature, entity.getCommandSenderWorld()).map(convertedCreature -> {
             copyImportantStuff(convertedCreature, entity);
+            convertedCreature.setUUID(MathHelper.createInsecureUUID(convertedCreature.getRandom()));
             convertedCreature.addEffect(new EffectInstance(Effects.WEAKNESS, 200, 2));
             return convertedCreature;
         }).orElse(null);

@@ -8,7 +8,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
-import net.minecraft.entity.passive.horse.HorseEntity;
+import net.minecraft.entity.passive.horse.MuleEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -23,9 +23,9 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
+public class ConvertedMuleEntity extends MuleEntity implements CurableConvertedCreature<MuleEntity, ConvertedMuleEntity> {
 
-public class ConvertedHorseEntity extends HorseEntity implements CurableConvertedCreature<HorseEntity, ConvertedHorseEntity> {
-    private static final DataParameter<Boolean> CONVERTING = EntityDataManager.defineId(ConvertedHorseEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> CONVERTING = EntityDataManager.defineId(ConvertedMuleEntity.class, DataSerializers.BOOLEAN);
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
         return AbstractHorseEntity.createBaseHorseAttributes()
@@ -33,15 +33,14 @@ public class ConvertedHorseEntity extends HorseEntity implements CurableConverte
                 .add(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
-    private final Data<HorseEntity> data = new Data<>();
+    private final Data<MuleEntity> data = new Data<>();
 
-    public ConvertedHorseEntity(EntityType<? extends HorseEntity> type, World worldIn) {
+    public ConvertedMuleEntity(EntityType<? extends MuleEntity> type, World worldIn) {
         super(type, worldIn);
-        this.xpReward = 2;
     }
 
     @Override
-    public Data<HorseEntity> data() {
+    public Data<MuleEntity> data() {
         return this.data;
     }
 
@@ -73,7 +72,7 @@ public class ConvertedHorseEntity extends HorseEntity implements CurableConverte
 
     @Override
     public void aiStep() {
-        aiStepC(EntityType.HORSE);
+        aiStepC(EntityType.MULE);
         super.aiStep();
     }
 
@@ -97,7 +96,7 @@ public class ConvertedHorseEntity extends HorseEntity implements CurableConverte
     @Nonnull
     @Override
     public ITextComponent getName() {
-        return this.getNameC(() -> new TranslationTextComponent("entity.horse"));
+        return this.getNameC(() -> new TranslationTextComponent("entity.mule"));
     }
 
     @Override
@@ -138,6 +137,7 @@ public class ConvertedHorseEntity extends HorseEntity implements CurableConverte
     public void registerGoals() {
         super.registerGoals();
         this.registerGoalsC();
+        this.xpReward = 2;
     }
 
     @Override

@@ -42,6 +42,8 @@ public class ModEntities {
     public static final EntityType<ConvertedCreatureEntity.IMob> converted_creature_imob = getNull();
     public static final EntityType<ConvertedSheepEntity> converted_sheep = getNull();
     public static final EntityType<ConvertedCowEntity> converted_cow = getNull();
+    public static final EntityType<ConvertedDonkeyEntity> converted_donkey = getNull();
+    public static final EntityType<ConvertedMuleEntity> converted_mule = getNull();
     public static final EntityType<ConvertedHorseEntity> converted_horse = getNull();
     public static final EntityType<CrossbowArrowEntity> crossbow_arrow = getNull();
     public static final EntityType<DarkBloodProjectileEntity> dark_blood_projectile = getNull();
@@ -103,7 +105,9 @@ public class ModEntities {
         registry.addConvertible(EntityType.RABBIT, overlay.apply("rabbit"));
         registry.addConvertible(EntityType.SHEEP, overlay.apply("sheep"), new ConvertedSheepEntity.ConvertingHandler());
         registry.addConvertible(EntityType.VILLAGER, null, new ConvertedVillagerEntity.ConvertingHandler());
-        registry.addConvertible(EntityType.HORSE, overlay.apply("horse"), new ConvertedHorseEntity.ConvertingHandler());
+        registry.addConvertible(EntityType.HORSE, overlay.apply("horse"), new SpecialConvertingHandler<>(ModEntities.converted_horse));
+        registry.addConvertible(EntityType.DONKEY, overlay.apply("horse"), new SpecialConvertingHandler<>(ModEntities.converted_donkey));
+        registry.addConvertible(EntityType.MULE, overlay.apply("horse"), new SpecialConvertingHandler<>(ModEntities.converted_mule));
     }
 
     static void registerEntities(IForgeRegistry<EntityType<?>> registry) {
@@ -134,6 +138,8 @@ public class ModEntities {
         registry.register(prepareEntityType("villager_converted", EntityType.Builder.of(ConvertedVillagerEntity::new, VReference.VAMPIRE_CREATURE_TYPE).sized(0.6F, 1.95F), false));
         registry.register(prepareEntityType("converted_horse", EntityType.Builder.of(ConvertedHorseEntity::new, EntityClassification.CREATURE).sized(1.3964844F, 1.6F), false));
         registry.register(prepareEntityType("vampire_minion", EntityType.Builder.of(VampireMinionEntity::new, EntityClassification.CREATURE).sized(0.6f, 1.95f), false));
+        registry.register(prepareEntityType("converted_donkey", EntityType.Builder.of(ConvertedDonkeyEntity::new, EntityClassification.CREATURE).sized(1.3964844F, 1.5F), false));
+        registry.register(prepareEntityType("converted_mule", EntityType.Builder.of(ConvertedMuleEntity::new, EntityClassification.CREATURE).sized(1.3964844F, 1.5F), false));
         VampireMinionEntity.init();
         HunterMinionEntity.init();
         registry.register(prepareEntityType("hunter_minion", EntityType.Builder.of(HunterMinionEntity::new, EntityClassification.CREATURE).sized(0.6f, 1.95f), false));
@@ -169,6 +175,8 @@ public class ModEntities {
         event.put(converted_horse, ConvertedHorseEntity.getAttributeBuilder().build());
         event.put(converted_sheep, BasicVampireEntity.getAttributeBuilder().build());
         event.put(converted_cow, BasicVampireEntity.getAttributeBuilder().build());
+        event.put(converted_donkey, ConvertedDonkeyEntity.getAttributeBuilder().build());
+        event.put(converted_mule, ConvertedMuleEntity.getAttributeBuilder().build());
         event.put(dummy_creature, BasicVampireEntity.getAttributeBuilder().build());
         event.put(hunter, BasicHunterEntity.getAttributeBuilder().build());
         event.put(hunter_imob, BasicHunterEntity.getAttributeBuilder().build());
