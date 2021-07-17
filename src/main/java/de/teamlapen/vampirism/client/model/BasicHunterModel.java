@@ -20,7 +20,6 @@ public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<
 
     public BasicHunterModel( boolean smallArms) {
         super(0.0F, smallArms);
-        this.bipedHeadwear.showModel = false;
     }
 
     @Override
