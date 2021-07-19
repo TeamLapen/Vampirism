@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.factions;
 
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -380,9 +381,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if(old != currentFaction || oldLevel != currentLevel){
             VampirismEventFactory.fireFactionLevelChangedEvent(this,old,oldLevel,currentFaction,currentLevel);
         }
-//        if(faction != null && faction != old) {
-//            faction.getPlayerCapability(player).ifPresent(factionPlayer -> factionPlayer.getTaskManager().init());
-//        }
         sync(!Objects.equals(old, currentFaction));
         if (player instanceof ServerPlayerEntity) {
             ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayerEntity) player, currentFaction, currentLevel, currentLordLevel);
@@ -477,11 +475,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      */
     private void notifyFaction(IPlayableFaction<? extends IFactionPlayer<?>> oldFaction, int oldLevel) {
         if (oldFaction != null && !oldFaction.equals(currentFaction)) {
-            LOGGER.debug("Leaving faction {}", oldFaction.getID());
+            LOGGER.debug(LogUtil.FACTION, "{} is leaving faction {}", this.player.getName().getString(), oldFaction.getID());
             oldFaction.getPlayerCapability(player).ifPresent(c -> c.onLevelChanged(0, oldLevel));
         }
         if (currentFaction != null) {
-            LOGGER.debug("Changing to {} {}", currentFaction, currentLevel);
+            LOGGER.debug(LogUtil.FACTION, "{} has new faction level {} {}", this.player.getName().getString(), currentFaction.getID(), currentLevel);
             currentFaction.getPlayerCapability(player).ifPresent(c -> c.onLevelChanged(currentLevel, Objects.equals(oldFaction, currentFaction) ? oldLevel : 0));
         }
         ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.FACTION_CRITERIA, currentFaction == null ? 0 : currentFaction.getID().hashCode());
@@ -505,7 +503,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             return false;
         }
         if (level < this.currentLordLevel) {
-            //Downleveling -> Reset tasks
+            //down leveling -> Reset tasks
             resetLordTasks(level);
         }
 
@@ -517,6 +515,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
                 c.setMaxMinions(this.currentFaction, this.getMaxMinions());
             }
         });
+        if (level == 0) {
+            LOGGER.debug(LogUtil.FACTION, "Resetting lord level for {}", this.player.getName());
+        } else {
+            LOGGER.debug(LogUtil.FACTION, "{} has now lord level {}", this.player.getName(), level);
+        }
         if (player instanceof ServerPlayerEntity) {
             ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayerEntity) player, currentFaction, currentLevel, currentLordLevel);
         }
