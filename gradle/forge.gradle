@@ -15,10 +15,6 @@ repositories {
         url = "../../MinecraftForge/repo/"
     }
     maven {
-        name 'shinoow'
-        url 'https://dl.bintray.com/shinoow/maven/'
-    }
-    maven {
         url = "https://maxanier.de/maven2"
     }
     maven {
