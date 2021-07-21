@@ -88,7 +88,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
 
     @Override
     public boolean canCompleteTask(@Nonnull ITaskInstance taskInfo) {
-        return this.completableTasks.contains(taskInfo.getId()) && this.factionPlayer.getRepresentingPlayer().world.getGameTime() < taskInfo.getTaskTimeStamp();
+        return this.completableTasks.contains(taskInfo.getId()) && (taskInfo.isUnique() || this.factionPlayer.getRepresentingPlayer().world.getGameTime() < taskInfo.getTaskTimeStamp());
     }
 
     @Override
