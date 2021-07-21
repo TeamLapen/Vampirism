@@ -328,7 +328,7 @@ public class VampirismConfig {
             baronSpawnChance = builder.comment("Vampire baron spawn chance in vampire forest (reference vampire in forest: 35)").defineInRange("baronSpawnChance",10,0,10000);
             builder.pop();
             builder.push("world");
-            vampireForestWeight = builder.defineInRange("vampireForestWeight", 3, 1, Integer.MAX_VALUE);
+            vampireForestWeight = builder.defineInRange("vampireForestWeight", 3, 0, Integer.MAX_VALUE);
 //            vampireForestHillsWeight = builder.defineInRange("vampireForestHillsWeight", 3, 1, Integer.MAX_VALUE);
             hunterTentDistance = builder.comment("Desired maximum distance in chunks between tents. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentDistance", 10, 2, 4096);
             hunterTentSeparation = builder.comment("Desired minimum distance in chunks between tents. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentSeparation", 4, 1, 4096);
