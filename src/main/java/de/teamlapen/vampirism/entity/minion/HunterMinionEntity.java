@@ -335,8 +335,8 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             if (data.length >= 3) {
                 type = data[0];
                 hat = data[1];
-                this.useLordSkin = (data[1] & 0b1) == 1;
-                this.minionSkin = (data[1] & 0b10) == 0b10;
+                this.useLordSkin = (data[2] & 0b1) == 1;
+                this.minionSkin = (data[2] & 0b10) == 0b10;
             }
         }
 

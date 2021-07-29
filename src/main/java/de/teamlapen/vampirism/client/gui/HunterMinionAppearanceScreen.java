@@ -69,12 +69,13 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
         this.nameWidget.setMaxStringLength(MinionData.MAX_NAME_LENGTH);
         this.nameWidget.setResponder(this::onNameChanged);
         this.normalSkinCount = ((HunterMinionRenderer) Minecraft.getInstance().getRenderManager().getRenderer(this.entity)).getHunterTextureCount();
-        this.minionSkinCount = ((HunterMinionRenderer) Minecraft.getInstance().getRenderManager().getRenderer(this.entity)).getMinionSpecificTextureCount();
+        this.minionSkinCount = ((HunterMinionRenderer) Minecraft.getInstance().getRenderManager().getRenderer(this.entity)).getMinionSpecificTextureCount(); //Can be 0
         this.isMinionSpecificSkin = this.entity.hasMinionSpecificSkin();
-        if (this.isMinionSpecificSkin) {
+        if (this.isMinionSpecificSkin && this.minionSkinCount > 0) {
             this.skinType = this.skinType % this.minionSkinCount;
         } else {
             this.skinType = this.skinType % this.normalSkinCount;
+            this.isMinionSpecificSkin = false; //If this.isMinionSpecificSkin && this.minionSkinCount==0
         }
         this.hatType = this.entity.getHatType();
         this.useLordSkin = this.entity.shouldRenderLordSkin();

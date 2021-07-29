@@ -65,13 +65,14 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
         this.nameWidget.setMaxStringLength(MinionData.MAX_NAME_LENGTH);
         this.nameWidget.setResponder(this::onNameChanged);
         this.normalSkinCount = ((VampireMinionRenderer) Minecraft.getInstance().getRenderManager().getRenderer(this.entity)).getVampireTextureCount();
-        this.minionSkinCount = ((VampireMinionRenderer) Minecraft.getInstance().getRenderManager().getRenderer(this.entity)).getMinionSpecificTextureCount();
+        this.minionSkinCount = ((VampireMinionRenderer) Minecraft.getInstance().getRenderManager().getRenderer(this.entity)).getMinionSpecificTextureCount(); //can be 0
         this.skinType = this.entity.getVampireType();
         this.isMinionSpecificSkin = this.entity.hasMinionSpecificSkin();
-        if (this.isMinionSpecificSkin) {
+        if (this.isMinionSpecificSkin && this.minionSkinCount > 0) {
             this.skinType = this.skinType % this.minionSkinCount;
         } else {
             this.skinType = this.skinType % this.normalSkinCount;
+            this.isMinionSpecificSkin = false; //If this.isMinionSpecificSkin && this.minionSkinCount==0
         }
         this.useLordSkin = this.entity.shouldRenderLordSkin();
         this.typeList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 43 + 19, 99, 80, 20, this.normalSkinCount + this.minionSkinCount, new TranslationTextComponent("gui.vampirism.minion_appearance.skin"), this::skin, this::previewSkin));
