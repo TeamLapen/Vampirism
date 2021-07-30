@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         mavenCentral()
-        jcenter()
         maven {
             name = "forge"
             url = "https://files.minecraftforge.net/maven"
@@ -11,7 +10,7 @@ buildscript {
 
     
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.0.1'
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
@@ -20,7 +19,6 @@ buildscript {
 plugins {
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id 'de.undercouch.download' version '3.3.0'
-    id 'com.wynprice.cursemaven' version '2.1.1'
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -66,12 +64,14 @@ sourceSets {
 
 apply from: 'gradle/versioning.gradle'
 apply from: 'gradle/forge.gradle'
-apply from: 'gradle/dev.gradle'
+apply from: 'gradle/artifacts.gradle'
 apply from: 'gradle/deploy.gradle'
 
 
 configurations {
     apiCompile.extendsFrom(compile)
+    apiImplementation.extendsFrom(implementation)
+    apiRuntimeOnly.extendsFrom(runtimeOnly)
 }
 
 idea {

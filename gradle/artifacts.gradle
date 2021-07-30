@@ -1,0 +1,46 @@
+task apiJar(type: Jar, dependsOn: 'classes') {
+    classifier 'api'
+    from sourceSets.api.output
+//    afterEvaluate { finalizedBy reobfApiJar }
+}
+
+
+task deobfJar(type: Jar) {
+    description = 'Creates a JAR containing the non-obfuscated compiled code.'
+    from sourceSets.main.output
+    classifier = "deobf"
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    from sourceSets.api.allJava
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    description = 'Creates a JAR containing the JavaDocs.'
+    from javadoc.destinationDir
+    classifier = 'javadoc'
+}
+
+javadoc {
+    options.addBooleanOption('Xdoclint:none', true)
+}
+
+
+artifacts {
+    archives sourcesJar
+    archives apiJar
+    archives deobfJar
+    archives javadocJar
+}
+//jar.finalizedBy('reobfJar')
+//reobf {
+//    apiJar { classpath.from(sourceSets.api.compileClasspath) }
+//    jar { classpath.from(sourceSets.main.compileClasspath) }
+//}
+//
+//task reobf {
+//    dependsOn reobfJar
+//    dependsOn reobfApiJar
+//}

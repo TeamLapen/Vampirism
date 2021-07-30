@@ -9,7 +9,7 @@ buildscript {
     }
 }
 
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 curseforge {
     if (project.hasProperty("CURSEFORGE_API")) {
@@ -45,68 +45,90 @@ curseforge {
 
 }
 
-configurations {
-    deployerJars
+apply plugin: 'maven-publish'
+tasks.withType(GenerateModuleMetadata) {
+    enabled = false
 }
 
-dependencies {
-    deployerJars "org.apache.maven.wagon:wagon-ftp:2.9"
-}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
 
-uploadArchives {
-    repositories {
-        add getProject().repositories.mavenLocal()
-    }
-    repositories.mavenDeployer {
-        configuration = configurations.deployerJars
+            // Allows the maven pom file to be modified.
+            pom.withXml {
+                // Go through all the dependencies.
+                asNode().dependencies.dependency.each { dep ->
 
-        if (!project.hasProperty("local")&& project.hasProperty("filesmaven_url")) {
-            logger.info('Publishing to files server')
-            repository(url: project.filesmaven_url) {
-                authentication(userName: project.filesmaven_username, password: project.filesmaven_key)
-            }
-        } else if (!project.hasProperty("local")&&System.getenv().MAVEN_URL) {
-            logger.info('Publishing to files server')
-            repository(url: System.getenv().MAVEN_URL) {
-                authentication(userName: System.getenv().MAVEN_USERNAME, password: System.getenv().MAVEN_KEY)
-            }
-        } else {
-            logger.info('Publishing to repo folder')
-            repository(url: 'file://localhost/' + project.file('../../../.m2/repository').getAbsolutePath())
-        }
+                    // Check if the dependency has been mapped with MCP
+                    if (dep.version.last().value().last().contains('_mapped_snapshot_') || dep.version.last().value().last().contains('_mapped_stable_') || dep.version.last().value().last().contains('_mapped_official_')) {
 
-        pom {
-            groupId = project.group
-            version = project.version
-            artifactId = project.archivesBaseName
-        }
-        pom.project {
-            name project.archivesBaseName
-            packaging 'jar'
-            description 'An Minecraft mod that allows you to become a vampire'
-            url 'https://maxanier.de/projects/vampirism'
-
-            scm {
-                url 'https://github.com/TeamLapen/Vampirism'
-                connection 'scm:git:git://github.com/TeamLapen/Vampirism.git'
-                developerConnection 'scm:git:git@github.com:TeamLapen/Vampirism.git'
-            }
-
-            issueManagement {
-                system 'github'
-                url 'https://github.com/TeamLapen/Vampirism/issues'
-            }
-
-            developers {
-                developer {
-                    id 'maxanier'
-                    name 'maxanier'
-                    roles { role 'developer' }
+                        // Remove the MCP mapped artifact from the dependency list.
+                        println 'Surpressing MCP mapped artifact ' + dep.artifactId.last().value().last() + ' from maven dependencies.'
+                        assert dep.parent().remove(dep)
+                    }
                 }
             }
+
+            pom {
+                description = 'An Minecraft mod that allows you to become a vampire'
+
+                scm {
+                    url = 'https://github.com/TeamLapen/Vampirism'
+                    connection = 'scm:git:git://github.com/TeamLapen/Vampirism.git'
+                    developerConnection = 'scm:git:git@github.com:TeamLapen/Vampirism.git'
+                }
+
+                issueManagement {
+                    system = 'github'
+                    url = 'https://github.com/TeamLapen/Vampirism/issues'
+                }
+                developers {
+                    developer {
+                        id = 'maxanier'
+                        name = 'maxanier'
+                        roles = ["developer"]
+                    }
+                }
+
+            }
+
+            // Adds the api as an artifact.
+            artifact apiJar {
+                classifier 'api'
+            }
+
+            // Adds the sources as an artifact.
+            artifact sourcesJar {
+                classifier 'sources'
+            }
+
+            // Adds the deobfuscated jar as an artifact.
+            artifact deobfJar {
+                classifier 'deobf'
+            }
+
+            artifact javadocJar {
+                classifier 'javadoc'
+            }
+
         }
+    }
 
+    repositories {
+        maven {
+            // Sets the login credentials for your maven.
+            credentials {
+                username findProperty('maxanier_maven_alias')
+                password findProperty('maxanier_maven_token')
+            }
 
+            // Sets the maven URL
+            url findProperty('maxanier_maven_url')
+        }
     }
 }
 

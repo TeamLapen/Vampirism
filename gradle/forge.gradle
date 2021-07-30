@@ -172,8 +172,7 @@ task crowdin(type: Copy){
 
 processResources {
 
-    from(sourceSets.main.resources.srcDirs) {
-        include 'META-INF/mods.toml'
+    filesMatching("**/mods.toml") {
 
         expand 'version': project.mod_version, 'mcversion': minecraft_version, 'forge_version': forge_version, 'jei_version': jei_version, 'guideapi_version': guideapi_version
     }
@@ -181,23 +180,10 @@ processResources {
     outputs.upToDateWhen { false }
 
 
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'META-INF/mods.toml'
-    }
-
     exclude '**/Thumbs.db'
 }
 
 processLibResources {
-    from(sourceSets.lib.resources.srcDirs) {
-        include 'META-INF/mods.toml'
-        expand 'version': project.mod_version, 'mcversion': minecraft_version, 'forge_version': forge_version
-    }
-    from(sourceSets.lib.resources.srcDirs) {
-        exclude 'META-INF/mods.toml'
-    }
-
-     outputs.upToDateWhen { false }
 }
 
 
@@ -237,9 +223,6 @@ jar {
                 "MixinConfigs": "vampirism.mixins.json"
         ])
     }
-
-
-
 }
 apply plugin: 'org.spongepowered.mixin'
 
