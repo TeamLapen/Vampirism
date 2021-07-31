@@ -51,25 +51,28 @@ You should be able to include it with the following in your `build.gradle`:
 repositories {
     //Maven repo for Vampirism
     maven {
-        url = "https://maxanier.de/maven2"
+        url = "https://maven.maxanier.de"
     }
 }
 dependencies {
     //compile against the Vampirism API
-    deobfCompile "de.teamlapen.vampirism:Vampirism:${mc_version}-${vampirism_version}:api"
+    compileOnly fg.deobf("de.teamlapen.vampirism:Vampirism:${mc_version}-${vampirism_version}:api")
     //at runtime (in your development environment) use the full Vampirism jar
-    runtime "de.teamlapen.vampirism:Vampirism:${mc_version}-${vampirism_version}"
+    runtimeOnly fg.deobf("de.teamlapen.vampirism:Vampirism:${mc_version}-${vampirism_version}")
 }
 ```
 
 #### Choose a version
-`${mc_version}` gets replaced by the current Minecraft version. (i.e. `1.10.2`)
-`${vampirism_version}` gets replaced by the version of Vampirism you want to use (i.e `1.0.3`)
 
-For a list of available Vampirism version, see [CurseForge](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire) or the [maven listing](https://maxanier.de/maven2/de/teamlapen/vampirism/Vampirism/) .
+`${mc_version}` gets replaced by the current Minecraft version. (i.e. `1.16.5`)
+`${vampirism_version}` gets replaced by the version of Vampirism you want to use (i.e `1.7.12`)
 
-These properties can be set in a file named `gradle.properties`, placed in the same directory as your `build.gradle` file.
-Example `gradle.properties`:
+For a list of available Vampirism version,
+see [CurseForge](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire) or
+the [maven listing](https://maven.maxanier.de/de/teamlapen/vampirism/Vampirism/) .
+
+These properties can be set in a file named `gradle.properties`, placed in the same directory as your `build.gradle`
+file. Example `gradle.properties`:
 ```
 mc_version=1.10.2
 vampirism_version=1.0.3
@@ -83,17 +86,18 @@ Refresh/Restart your IDE afterwards.
 
 #### Run Vampirism in a deobfuscated environment
 
-Since Vampirism uses **mixins**, and they try to use the obfuscated mappings by default, it is currently required to
-disable the mixin for mixin based mods. Therefore, you currently have to set the Java system
-property `mixin.env.disableRefMap` to `true` when running Vampirism in dev. This can e.g. be achieved by
-adding 
-```
-property 'mixin.env.disableRefMap', 'true'
-```
-to your run configurations in your `build.gradle` and then regenerate your IDE run configurations (`genIntelliJRuns` or
-similar).
+Vampirism uses **mixins**. To be able to apply them in a deobfuscated environement using a different set of mappings (
+from the one Vampirism uses) you have to enable remapping the refmap:
+Add
 
-If you run into issues with the mixins you can also set `mixin.env.ignoreRequired` to `true`. However, not all of
+```
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+```
+
+to your run configurations in your `build.gradle` and then regenerate your IDE run configurations (`genIntelliJRuns` or
+similar). If that does not work you can also try `property 'mixin.env.disableRefMap', 'true'`
+If you still run into issues with the mixins you can also set `mixin.env.ignoreRequired` to `true`. However, not all of
 Vampirism will work correctly then.
 
 #### Examples
