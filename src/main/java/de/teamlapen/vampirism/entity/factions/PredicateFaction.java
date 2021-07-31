@@ -3,12 +3,12 @@ package de.teamlapen.vampirism.entity.factions;
 import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * Predicate for faction related selection
@@ -53,18 +53,16 @@ public class PredicateFaction implements Predicate<LivingEntity> {
     public boolean apply(@Nullable LivingEntity input) {
         if (input == null) return false;
         if (nonPlayer && input instanceof IFactionEntity) {
-            IFaction other = ((IFactionEntity) input).getFaction();
+            IFaction<?> other = ((IFactionEntity) input).getFaction();
             return !thisFaction.equals(other) && (otherFaction == null || otherFaction.equals(other));
 
         }
         if (player && input instanceof PlayerEntity && input.isAlive()) {
-            IFactionPlayer fp = FactionPlayerHandler.get((PlayerEntity) input).getCurrentFactionPlayer().orElse(null);
-            IFaction f = fp == null ? null : (ignoreDisguise ? fp.getFaction() : fp.getDisguisedAs());
-            if (f == null) {
-                return neutralPlayer;
-            } else {
-                return !thisFaction.equals(f) && (otherFaction == null || otherFaction.equals(f));
-            }
+            return FactionPlayerHandler.getOpt((PlayerEntity) input).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty()).map(fp -> {
+                        IFaction<?> f = (ignoreDisguise ? fp.getFaction() : fp.getDisguisedAs());
+                        return !thisFaction.equals(f) && (otherFaction == null || otherFaction.equals(f));
+                    }
+            ).orElse(neutralPlayer);
         }
         return false;
     }
