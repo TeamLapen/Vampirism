@@ -14,7 +14,6 @@ import net.minecraft.util.JSONUtils;
 
 import javax.annotation.Nonnull;
 
-
 public class AdjustableLevelCondition implements ILootCondition {
     public static IBuilder builder(int level, LootContext.EntityTarget target) {
         return () -> new AdjustableLevelCondition(level, target);
@@ -29,13 +28,13 @@ public class AdjustableLevelCondition implements ILootCondition {
 
     @Nonnull
     @Override
-    public LootConditionType getConditionType() {
+    public LootConditionType getType() {
         return ModLoot.adjustable_level;
     }
 
     @Override
     public boolean test(LootContext lootContext) {
-        Entity e = lootContext.get(target.getParameter());
+        Entity e = lootContext.getParamOrNull(target.getParam());
         if (e instanceof IAdjustableLevel) {
             int l = ((IAdjustableLevel) e).getLevel();
             if (levelTest != -1) {
@@ -51,7 +50,7 @@ public class AdjustableLevelCondition implements ILootCondition {
         @Nonnull
         @Override
         public AdjustableLevelCondition deserialize(JsonObject json, @Nonnull JsonDeserializationContext context) {
-            return new AdjustableLevelCondition(json.has("level") ? JSONUtils.getInt(json, "level") : -1, JSONUtils.deserializeClass(json, "entity", context, LootContext.EntityTarget.class));
+            return new AdjustableLevelCondition(json.has("level") ? JSONUtils.getAsInt(json, "level") : -1, JSONUtils.getAsObject(json, "entity", context, LootContext.EntityTarget.class));
         }
 
         @Override

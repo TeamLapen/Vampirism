@@ -21,7 +21,7 @@ import java.util.Random;
 public class DummyBittenAnimalEntity extends MobEntity {
 
     public static boolean spawnPredicate(EntityType<? extends DummyBittenAnimalEntity> entityType, IWorld iWorld, SpawnReason spawnReason, BlockPos blockPos, Random random) {
-        return (iWorld.getBlockState(blockPos.down()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.down()).getBlock() == ModBlocks.cursed_earth);
+        return (iWorld.getBlockState(blockPos.below()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.below()).getBlock() == ModBlocks.cursed_earth);
     }
 
     public DummyBittenAnimalEntity(EntityType<? extends DummyBittenAnimalEntity> type, World world) {
@@ -29,24 +29,24 @@ public class DummyBittenAnimalEntity extends MobEntity {
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
-        if (this.ticksExisted > 4 && !this.getEntityWorld().isRemote) {
+    public void aiStep() {
+        super.aiStep();
+        if (this.tickCount > 4 && !this.getCommandSenderWorld().isClientSide) {
             CreatureEntity entity;
-            int rand = this.rand.nextInt(3);
+            int rand = this.random.nextInt(3);
             switch (rand) {
                 case 0:
-                    entity = EntityType.PIG.create(world);
+                    entity = EntityType.PIG.create(level);
                     break;
                 case 1:
-                    entity = EntityType.SHEEP.create(world);
+                    entity = EntityType.SHEEP.create(level);
                     break;
                 default:
-                    entity = EntityType.COW.create(world);
+                    entity = EntityType.COW.create(level);
                     break;
             }
             if (entity == null) return;
-            entity.copyLocationAndAnglesFrom(this);
+            entity.copyPosition(this);
             ExtendedCreature.getSafe(entity).ifPresent(e -> {
                 if (e.canBecomeVampire()) {
                     IConvertedCreature c = e.makeVampire();

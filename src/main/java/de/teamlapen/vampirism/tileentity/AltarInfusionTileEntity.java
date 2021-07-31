@@ -86,7 +86,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
     public Result canActivate(PlayerEntity player, boolean messagePlayer) {
         if (runningTick > 0) {
             if (messagePlayer)
-                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"), true);
+                player.displayClientMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"), true);
 
             return Result.ISRUNNING;
         }
@@ -96,15 +96,15 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         int requiredLevel = checkRequiredLevel();
         if (requiredLevel == -1) {
             if (messagePlayer)
-                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_level_wrong"), true);
+                player.displayClientMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_level_wrong"), true);
             return Result.WRONGLEVEL;
-        } else if (player.getEntityWorld().isDaytime()) {
+        } else if (player.getCommandSenderWorld().isDay()) {
             if (messagePlayer)
-                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_night_only"), true);
+                player.displayClientMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_night_only"), true);
             return Result.NIGHTONLY;
         } else if (!checkStructureLevel(requiredLevel)) {
             if (messagePlayer)
-                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_structure_wrong"), true);
+                player.displayClientMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_structure_wrong"), true);
             tips = null;
             return Result.STRUCTUREWRONG;
         } else if (!checkItemRequirements(player, messagePlayer)) {
@@ -187,28 +187,22 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
     @Nullable
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(getPos(), 1, getUpdateTag());
+        return new SUpdateTileEntityPacket(getBlockPos(), 1, getUpdateTag());
     }
 
     @Nonnull
     @Override
     public CompoundNBT getUpdateTag() {
-        return write(new CompoundNBT());
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        if (this.hasWorld()) this.read(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
+        return save(new CompoundNBT());
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT tagCompound) {
-        super.read(state, tagCompound);
+    public void load(BlockState state, CompoundNBT tagCompound) {
+        super.load(state, tagCompound);
         int tick = tagCompound.getInt("tick");
         //This is used on both client and server side and has to be prepared for the world not being available yet
-        if (tick > 0 && player == null && tagCompound.hasUniqueId("playerUUID")) {
-            UUID playerID = tagCompound.getUniqueId("playerUUID");
+        if (tick > 0 && player == null && tagCompound.hasUUID("playerUUID")) {
+            UUID playerID = tagCompound.getUUID("playerUUID");
             if (!loadRitual(playerID)) {
                 this.playerToLoadUUID = playerID;
             }
@@ -217,43 +211,59 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
 
     }
 
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        if (this.hasLevel()) this.load(this.level.getBlockState(pkt.getPos()), pkt.getTag());
+    }
+
+    @Override
+    public CompoundNBT save(CompoundNBT compound) {
+        CompoundNBT nbt = super.save(compound);
+        nbt.putInt("tick", runningTick);
+        if (player != null) {
+            nbt.putUUID("playerUUID", player.getUUID());
+        }
+        return nbt;
+    }
+
     /**
      * Starts the ritual.
      * ONLY call if {@link AltarInfusionTileEntity#canActivate(PlayerEntity, boolean)} returned 1
      */
     public void startRitual(PlayerEntity player) {
-        if (world == null) return;
+        if (level == null) return;
         LOGGER.debug("Starting ritual for {}", player);
         this.player = player;
         runningTick = DURATION_TICK;
 
-        this.markDirty();
-        if (!this.world.isRemote) {
+        this.setChanged();
+        if (!this.level.isClientSide) {
             for (BlockPos pTip : tips) {
-                ModParticles.spawnParticlesServer(world, new FlyingBloodParticleData(ModParticles.flying_blood, 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 3, 0.1, 0.1, 0.1, 0);
+                ModParticles.spawnParticlesServer(level, new FlyingBloodParticleData(ModParticles.flying_blood, 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5, 3, 0.1, 0.1, 0.1, 0);
             }
-            BlockState state = this.world.getBlockState(getPos());
-            this.world.notifyBlockUpdate(getPos(), state, state, 3); //Notify client about started ritual
+            BlockState state = this.level.getBlockState(getBlockPos());
+            this.level.sendBlockUpdated(getBlockPos(), state, state, 3); //Notify client about started ritual
         }
-        player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, DURATION_TICK, 10));
-        this.markDirty();
+        player.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, DURATION_TICK, 10));
+        this.setChanged();
     }
 
     @Override
     public void tick() {
-        if (world == null) return;
+        if (level == null) return;
         if (playerToLoadUUID != null) { //Restore loaded ritual
             if (!loadRitual(playerToLoadUUID)) return;
             playerToLoadUUID = null;
-            this.markDirty();
-            BlockState state = this.world.getBlockState(getPos());
-            this.world.notifyBlockUpdate(getPos(), state, state, 3); //Notify client about started ritual
+            this.setChanged();
+            BlockState state = this.level.getBlockState(getBlockPos());
+            this.level.sendBlockUpdated(getBlockPos(), state, state, 3); //Notify client about started ritual
 
         }
-        if (runningTick == DURATION_TICK && !world.isRemote) {
+        if (runningTick == DURATION_TICK && !level.isClientSide) {
             LOGGER.debug("Ritual started");
             consumeItems();
-            this.markDirty();
+            this.setChanged();
         }
         if (runningTick <= 0)
             return;
@@ -262,26 +272,26 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         if (player == null || !player.isAlive()) {
             runningTick = 1;
         } else {
-            if (player.getMotion().y >= 0) {
-                player.setMotion(0D, 0D, 0D);
+            if (player.getDeltaMovement().y >= 0) {
+                player.setDeltaMovement(0D, 0D, 0D);
             } else {
-                player.setMotion(0D, player.getMotion().y, 0D);
-                player.setMotion(player.getMotion().mul(1D, 0.5D, 1D));
+                player.setDeltaMovement(0D, player.getDeltaMovement().y, 0D);
+                player.setDeltaMovement(player.getDeltaMovement().multiply(1D, 0.5D, 1D));
             }
         }
 
         PHASE phase = getCurrentPhase();
-        if (this.world.isRemote) {
+        if (this.level.isClientSide) {
             if (phase.equals(PHASE.PARTICLE_SPREAD)) {
                 if (runningTick % 15 == 0) {
-                    BlockPos pos = getPos();
+                    BlockPos pos = getBlockPos();
                     for (BlockPos pTip : tips) {
-                        ModParticles.spawnParticlesClient(world, new FlyingBloodParticleData(ModParticles.flying_blood, 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0, 5, 0.1, new Random());
+                        ModParticles.spawnParticlesClient(level, new FlyingBloodParticleData(ModParticles.flying_blood, 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0, 5, 0.1, new Random());
                     }
                 }
             }
             if (runningTick == DURATION_TICK - 200) {
-                if (getPlayer().isUser()) {
+                if (getPlayer().isLocalPlayer()) {
                     VampirismMod.proxy.renderScreenFullColor(DURATION_TICK - 250, 50, 0xFF0000);
                 }
             }
@@ -289,11 +299,11 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         if (phase.equals(PHASE.CLEAN_UP)) {
             player = null;
             tips = null;
-            this.markDirty();
+            this.setChanged();
             this.runningTick = 0;
         }
         if (phase.equals(PHASE.LEVELUP)) {
-            if (!world.isRemote) {
+            if (!level.isClientSide) {
                 assert player.isAlive();
                 IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
                 if (handler.getCurrentLevel(VReference.VAMPIRE_FACTION) != targetLevel - 1) {
@@ -306,29 +316,19 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
                     ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.PERFORM_RITUAL_INFUSION);
                 }
             } else {
-                this.world.playSound(player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F, true);
-                this.world.addParticle(ParticleTypes.EXPLOSION, player.getPosX(), player.getPosY(), player.getPosZ(), 1.0D, 0.0D, 0.0D);
+                this.level.playLocalSound(player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F) * 0.7F, true);
+                this.level.addParticle(ParticleTypes.EXPLOSION, player.getX(), player.getY(), player.getZ(), 1.0D, 0.0D, 0.0D);
             }
 
-            player.addPotionEffect(new EffectInstance(ModEffects.saturation, 400, 2));
-            player.addPotionEffect(new EffectInstance(Effects.REGENERATION, 400, 2));
-            player.addPotionEffect(new EffectInstance(Effects.STRENGTH, 400, 2));
+            player.addEffect(new EffectInstance(ModEffects.saturation, 400, 2));
+            player.addEffect(new EffectInstance(Effects.REGENERATION, 400, 2));
+            player.addEffect(new EffectInstance(Effects.DAMAGE_BOOST, 400, 2));
         }
-    }
-
-    @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        CompoundNBT nbt = super.write(compound);
-        nbt.putInt("tick", runningTick);
-        if (player != null) {
-            nbt.putUniqueId("playerUUID", player.getUniqueID());
-        }
-        return nbt;
     }
 
     @Override
     protected Container createMenu(int id, PlayerInventory player) {
-        return new AltarInfusionContainer(id, player, this, world == null ? IWorldPosCallable.DUMMY : IWorldPosCallable.of(world, pos));
+        return new AltarInfusionContainer(id, player, this, level == null ? IWorldPosCallable.NULL : IWorldPosCallable.create(level, worldPosition));
     }
 
     @Override
@@ -347,9 +347,9 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         ItemStack missing = InventoryHelper.checkItems(this, new Item[]{PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel), ModItems.human_heart, ModItems.vampire_book}, new int[]{requirements.blood, requirements.heart, requirements.vampireBook}, (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem && required instanceof PureBloodItem && ((PureBloodItem) supplied).getLevel() >= ((PureBloodItem) required).getLevel()));
         if (!missing.isEmpty()) {
             if (messagePlayer) {
-                ITextComponent item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : new TranslationTextComponent(missing.getTranslationKey());
+                ITextComponent item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : new TranslationTextComponent(missing.getDescriptionId());
                 ITextComponent main = new TranslationTextComponent("text.vampirism.altar_infusion.ritual_missing_items", missing.getCount(), item);
-                player.sendMessage(main, Util.DUMMY_UUID);
+                player.sendMessage(main, Util.NIL_UUID);
             }
 
             return false;
@@ -383,7 +383,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
      * @return
      */
     private boolean checkStructureLevel(int required) {
-        if (world == null) return false;
+        if (level == null) return false;
         BlockPos[] tips = findTips();
         ValuedObject<BlockPos>[] valuedTips = new ValuedObject[tips.length];
         for (int i = 0; i < tips.length; i++) {
@@ -391,8 +391,8 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
             int j = 0;
             AltarPillarBlock.EnumPillarType type = null;
             BlockState temp;
-            while ((temp = world.getBlockState(pPos.add(0, -j - 1, 0))).getBlock().equals(ModBlocks.altar_pillar)) {
-                AltarPillarBlock.EnumPillarType t = temp.get(AltarPillarBlock.TYPE_PROPERTY);
+            while ((temp = level.getBlockState(pPos.offset(0, -j - 1, 0))).getBlock().equals(ModBlocks.altar_pillar)) {
+                AltarPillarBlock.EnumPillarType t = temp.getValue(AltarPillarBlock.TYPE_PROPERTY);
                 if (type == null) {
                     type = t;
                     j++;
@@ -435,13 +435,13 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
      * Finds all {@link AltarTipBlock}'s in the area
      */
     private BlockPos[] findTips() {
-        if (world == null) return new BlockPos[0];
+        if (level == null) return new BlockPos[0];
         List<BlockPos> list = new ArrayList<>();
         BlockPos.Mutable pos = new BlockPos.Mutable();
-        for (int x = getPos().getX() - 4; x < getPos().getX() + 5; x++) {
-            for (int y = getPos().getY() + 1; y < getPos().getY() + 4; y++) {
-                for (int z = getPos().getZ() - 4; z < getPos().getZ() + 5; z++) {
-                    if (world.getBlockState(pos.setPos(x, y, z)).getBlock().equals(ModBlocks.altar_tip)) {
+        for (int x = getBlockPos().getX() - 4; x < getBlockPos().getX() + 5; x++) {
+            for (int y = getBlockPos().getY() + 1; y < getBlockPos().getY() + 4; y++) {
+                for (int z = getBlockPos().getZ() - 4; z < getBlockPos().getZ() + 5; z++) {
+                    if (level.getBlockState(pos.set(x, y, z)).getBlock().equals(ModBlocks.altar_tip)) {
                         list.add(new BlockPos(x, y, z));
                     }
                 }
@@ -451,9 +451,9 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
     }
 
     private boolean loadRitual(UUID playerID) {
-        if (this.world == null) return false;
-        if (this.world.getPlayers().size() == 0) return false;
-        this.player = this.world.getPlayerByUuid(playerID);
+        if (this.level == null) return false;
+        if (this.level.players().size() == 0) return false;
+        this.player = this.level.getPlayerByUUID(playerID);
         if (this.player != null && player.isAlive()) {
             this.targetLevel = VampirismPlayerAttributes.get(player).vampireLevel + 1;
             checkStructureLevel(checkRequiredLevel());

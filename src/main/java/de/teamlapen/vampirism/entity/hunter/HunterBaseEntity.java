@@ -50,17 +50,17 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
         return this;
     }
 
-    public void makeCampHunter(BlockPos pos) {
-        super.setHome(new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1).grow(10));
-        this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
+    @Override
+    public void die(DamageSource cause) {
+        super.die(cause);
+        if (cause.getEntity() instanceof ServerPlayerEntity && Helper.isVampire(((PlayerEntity) cause.getEntity())) && this.getEffect(ModEffects.freeze) != null) {
+            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayerEntity) cause.getEntity()), VampireActionTrigger.Action.KILL_FROZEN_HUNTER);
+        }
     }
 
-    @Override
-    public void onDeath(DamageSource cause) {
-        super.onDeath(cause);
-        if (cause.getTrueSource() instanceof ServerPlayerEntity && Helper.isVampire(((PlayerEntity) cause.getTrueSource())) && this.getActivePotionEffect(ModEffects.freeze) != null) {
-            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayerEntity) cause.getTrueSource()), VampireActionTrigger.Action.KILL_FROZEN_HUNTER);
-        }
+    public void makeCampHunter(BlockPos pos) {
+        super.setHome(new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1).inflate(10));
+        this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
     }
 
     @Override
@@ -75,9 +75,9 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
      * @return If player was cured
      */
     protected boolean tryCureSanguinare(PlayerEntity entity) {
-        if (!this.world.isRemote && entity.isPotionActive(ModEffects.sanguinare)) {
-            entity.removePotionEffect(ModEffects.sanguinare);
-            entity.sendMessage(new TranslationTextComponent("text.vampirism.hunter.cured_sanguinare"), Util.DUMMY_UUID);
+        if (!this.level.isClientSide && entity.hasEffect(ModEffects.sanguinare)) {
+            entity.removeEffect(ModEffects.sanguinare);
+            entity.sendMessage(new TranslationTextComponent("text.vampirism.hunter.cured_sanguinare"), Util.NIL_UUID);
             return true;
         }
         return false;

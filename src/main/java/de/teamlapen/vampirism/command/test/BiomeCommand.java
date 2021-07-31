@@ -13,15 +13,15 @@ public class BiomeCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("biome")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ALL))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ALL))
                 .executes(context -> {
-                    return biome(context.getSource(), context.getSource().asPlayer());
+                    return biome(context.getSource(), context.getSource().getPlayerOrException());
                 });
     }
 
     private static int biome(CommandSource commandSource, ServerPlayerEntity asPlayer) {
         ResourceLocation res = Helper.getBiomeId(asPlayer);
-        commandSource.sendFeedback(new StringTextComponent(res.toString()), true);
+        commandSource.sendSuccess(new StringTextComponent(res.toString()), true);
         return 0;
     }
 }

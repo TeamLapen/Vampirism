@@ -22,7 +22,7 @@ public class UpgradeMinionStatPacket implements IMessage {
         ctx.enqueueWork(() -> {
             PlayerEntity player = ctx.getSender();
             if (player != null) {
-                Entity entity = player.world.getEntityByID(msg.entityId);
+                Entity entity = player.level.getEntity(msg.entityId);
                 if (entity instanceof MinionEntity) {
                     if (((MinionEntity<?>) entity).getMinionData().map(d -> d.upgradeStat(msg.statId, (MinionEntity<?>) entity)).orElse(false)) {
                         HelperLib.sync((MinionEntity<?>) entity);

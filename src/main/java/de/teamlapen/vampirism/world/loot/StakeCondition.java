@@ -16,7 +16,6 @@ import net.minecraft.util.JSONUtils;
 
 import javax.annotation.Nonnull;
 
-
 public class StakeCondition implements ILootCondition {
     public static IBuilder builder(LootContext.EntityTarget target) {
         return () -> new StakeCondition(target);
@@ -29,15 +28,15 @@ public class StakeCondition implements ILootCondition {
 
     @Nonnull
     @Override
-    public LootConditionType getConditionType() {
+    public LootConditionType getType() {
         return ModLoot.with_stake;
     }
 
     @Override
     public boolean test(LootContext context) {
-        Entity player = context.get(target.getParameter());
+        Entity player = context.getParamOrNull(target.getParam());
         if (player instanceof PlayerEntity) {
-            ItemStack active = ((PlayerEntity) player).getHeldItemMainhand();
+            ItemStack active = ((PlayerEntity) player).getMainHandItem();
             return !active.isEmpty() && active.getItem() instanceof StakeItem;
         }
         return false;
@@ -49,7 +48,7 @@ public class StakeCondition implements ILootCondition {
         @Nonnull
         @Override
         public StakeCondition deserialize(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context) {
-            return new StakeCondition(JSONUtils.deserializeClass(json, "entity", context, LootContext.EntityTarget.class));
+            return new StakeCondition(JSONUtils.getAsObject(json, "entity", context, LootContext.EntityTarget.class));
         }
 
         @Override

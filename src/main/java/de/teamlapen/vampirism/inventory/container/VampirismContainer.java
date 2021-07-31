@@ -45,7 +45,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     private boolean refinementsAvailable = false;
 
     public VampirismContainer(int id, @Nonnull PlayerInventory playerInventory) {
-        super(ModContainer.vampirism, id, playerInventory, IWorldPosCallable.DUMMY, new Inventory(3), RemovingSelectorSlot::new, SELECTOR_INFOS);
+        super(ModContainer.vampirism, id, playerInventory, IWorldPosCallable.NULL, new Inventory(3), RemovingSelectorSlot::new, SELECTOR_INFOS);
         this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction"));
         this.factionColor = factionPlayer.getFaction().getChatColor();
         this.refinementsAvailable = factionPlayer.getFaction() == VReference.VAMPIRE_FACTION;
@@ -76,12 +76,12 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
 
     @Override
     public TaskAction buttonAction(@Nonnull ITaskInstance taskInfo) {
-        return taskInfo.isUnique() || this.factionPlayer.getRepresentingPlayer().world.getGameTime() < taskInfo.getTaskTimeStamp() ? TaskContainer.TaskAction.ABORT : TaskAction.REMOVE;
+        return taskInfo.isUnique() || this.factionPlayer.getRepresentingPlayer().level.getGameTime() < taskInfo.getTaskTimeStamp() ? TaskContainer.TaskAction.ABORT : TaskAction.REMOVE;
     }
 
     @Override
     public boolean canCompleteTask(@Nonnull ITaskInstance taskInfo) {
-        return this.completableTasks.containsKey(taskInfo.getTaskBoard()) && this.completableTasks.get(taskInfo.getTaskBoard()).contains(taskInfo.getId()) && (taskInfo.isUnique() || this.factionPlayer.getRepresentingPlayer().world.getGameTime() < taskInfo.getTaskTimeStamp());
+        return this.completableTasks.containsKey(taskInfo.getTaskBoard()) && this.completableTasks.get(taskInfo.getTaskBoard()).contains(taskInfo.getId()) && (taskInfo.isUnique() || this.factionPlayer.getRepresentingPlayer().level.getGameTime() < taskInfo.getTaskTimeStamp());
     }
 
     @Override
@@ -173,7 +173,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
         }
 
         @Override
-        public void putStack(@Nonnull ItemStack stack) {
+        public void set(@Nonnull ItemStack stack) {
             if (!stack.isEmpty()) {
                 ((VampirismContainer) this.getContainer()).setRefinement(this.getSlotIndex(), stack);
             }

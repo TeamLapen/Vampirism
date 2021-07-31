@@ -43,8 +43,8 @@ public class TotemTopBlock extends ContainerBlock {
     }
 
     private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(3, 0, 3, 13, 10, 13);
-        VoxelShape b = Block.makeCuboidShape(1, 1, 1, 15, 9, 15);
+        VoxelShape a = Block.box(3, 0, 3, 13, 10, 13);
+        VoxelShape b = Block.box(1, 1, 1, 15, 9, 15);
         return VoxelShapes.or(a, b);
     }
     public final ResourceLocation faction;
@@ -54,7 +54,7 @@ public class TotemTopBlock extends ContainerBlock {
      * @param faction faction must be faction registryname;
      */
     public TotemTopBlock(boolean crafted, ResourceLocation faction) {
-        super(Properties.create(Material.ROCK).hardnessAndResistance(12, 2000).sound(SoundType.STONE));
+        super(Properties.of(Material.STONE).strength(12, 2000).sound(SoundType.STONE));
         this.faction = faction;
         this.crafted = crafted;
         blocks.add(this);
@@ -65,10 +65,10 @@ public class TotemTopBlock extends ContainerBlock {
         return false;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public TileEntity createNewTileEntity(@Nonnull IBlockReader worldIn) {
-        return ModTiles.totem.create();
+    public BlockRenderType getRenderShape(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
     @Override
@@ -76,10 +76,14 @@ public class TotemTopBlock extends ContainerBlock {
         return Float.MAX_VALUE;
     }
 
-    @Nonnull
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        if (worldIn.isClientSide) return;
+        TileEntity tile = worldIn.getBlockEntity(pos);
+        if (tile instanceof TotemTileEntity) {
+            ((TotemTileEntity) tile).updateTileStatus();
+            worldIn.blockEvent(pos, this, 1, 0); //Notify client about render update
+        }
     }
 
     @Nonnull
@@ -92,33 +96,28 @@ public class TotemTopBlock extends ContainerBlock {
         return crafted;
     }
 
+    @Nullable
+    @Override
+    public TileEntity newBlockEntity(@Nonnull IBlockReader worldIn) {
+        return ModTiles.totem.create();
+    }
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        if (worldIn.isRemote) return;
-        TileEntity tile = worldIn.getTileEntity(pos);
-        if (tile instanceof TotemTileEntity) {
-            ((TotemTileEntity) tile).updateTileStatus();
-            worldIn.addBlockEvent(pos, this, 1, 0); //Notify client about render update
+    public void onRemove(BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!(newState.getBlock() instanceof TotemTopBlock)) {
+            worldIn.removeBlockEntity(pos);
         }
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (world.isRemote) return ActionResultType.SUCCESS;
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (world.isClientSide) return ActionResultType.SUCCESS;
         TotemTileEntity t = getTile(world, pos);
-        if (t != null && world.getBlockState(pos.down()).getBlock().equals(ModBlocks.totem_base)) {
+        if (t != null && world.getBlockState(pos.below()).getBlock().equals(ModBlocks.totem_base)) {
             t.initiateCapture(player);
             return ActionResultType.SUCCESS;
         }
-        return super.onBlockActivated(state, world, pos, player, hand, hit);
-    }
-
-    @Override
-    public void onReplaced(BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!(newState.getBlock() instanceof TotemTopBlock)) {
-            worldIn.removeTileEntity(pos);
-        }
+        return super.use(state, world, pos, player, hand, hit);
     }
 
     @Override
@@ -141,7 +140,7 @@ public class TotemTopBlock extends ContainerBlock {
 
     @Nullable
     private TotemTileEntity getTile(World world, BlockPos pos) {
-        TileEntity tile = world.getTileEntity(pos);
+        TileEntity tile = world.getBlockEntity(pos);
         if (tile instanceof TotemTileEntity) return (TotemTileEntity) tile;
         return null;
     }

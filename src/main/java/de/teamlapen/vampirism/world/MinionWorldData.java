@@ -30,7 +30,7 @@ public class MinionWorldData extends WorldSavedData {
 
     @Nonnull
     public static MinionWorldData getData(final MinecraftServer server) {
-        return server.getWorld(World.OVERWORLD).getSavedData().getOrCreate(() -> new MinionWorldData(server), ID);
+        return server.getLevel(World.OVERWORLD).getDataStorage().computeIfAbsent(() -> new MinionWorldData(server), ID);
     }
 
 
@@ -57,7 +57,7 @@ public class MinionWorldData extends WorldSavedData {
 
     @Nonnull
     public PlayerMinionController getOrCreateController(FactionPlayerHandler lord) {
-        UUID id = lord.getPlayer().getUniqueID();
+        UUID id = lord.getPlayer().getUUID();
         if (controllers.containsKey(id)) {
             return controllers.get(id);
         } else {
@@ -82,13 +82,13 @@ public class MinionWorldData extends WorldSavedData {
     }
 
     @Override
-    public void read(CompoundNBT nbt) {
+    public void load(CompoundNBT nbt) {
 
         controllers.clear();
         ListNBT all = nbt.getList("controllers", 10);
         for (INBT inbt : all) {
             CompoundNBT tag = (CompoundNBT) inbt;
-            UUID id = tag.getUniqueId("uuid");
+            UUID id = tag.getUUID("uuid");
             PlayerMinionController c = new PlayerMinionController(server, id);
             c.deserializeNBT(tag);
             controllers.put(id, c);
@@ -104,12 +104,12 @@ public class MinionWorldData extends WorldSavedData {
 
     @Nonnull
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         ListNBT all = new ListNBT();
         controllers.object2ObjectEntrySet().fastForEach((entry) -> {
             if (entry.getValue().hasMinions()) {
                 CompoundNBT tag = entry.getValue().serializeNBT();
-                tag.putUniqueId("uuid", entry.getKey());
+                tag.putUUID("uuid", entry.getKey());
                 all.add(tag);
             }
         });

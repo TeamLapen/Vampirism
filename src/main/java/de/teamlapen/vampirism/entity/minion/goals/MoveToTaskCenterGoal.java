@@ -37,18 +37,17 @@ public class MoveToTaskCenterGoal extends MoveToPositionGoal<MinionEntity<?>> {
     }
 
     @Override
-    public void resetTask() {
-        super.resetTask();
-        this.target = null;
-    }
-
-
-    @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         return getTargetPos().map(t -> {
             this.target = t;
             return true;
-        }).orElse(false) && super.shouldExecute();
+        }).orElse(false) && super.canUse();
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        this.target = null;
     }
 
     @Override

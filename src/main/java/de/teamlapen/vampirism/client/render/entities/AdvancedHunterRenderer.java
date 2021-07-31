@@ -33,21 +33,21 @@ public class AdvancedHunterRenderer extends BipedRenderer<AdvancedHunterEntity, 
         this.addLayer(new CloakLayer<>(this, textureCloak, Predicates.alwaysTrue()));
         if (VampirismConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {
             this.addLayer(new PlayerFaceOverlayLayer<>(this));
-            this.getEntityModel().bipedHead.showModel = false;
-            this.getEntityModel().bipedHeadwear.showModel = false;
+            this.getModel().head.visible = false;
+            this.getModel().hat.visible = false;
         }
     }
 
     @Override
-    public ResourceLocation getEntityTexture(AdvancedHunterEntity entity) {
+    public ResourceLocation getTextureLocation(AdvancedHunterEntity entity) {
         return texture;
     }
 
     @Override
-    protected void renderName(AdvancedHunterEntity entityIn, ITextComponent displayNameIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        double dist = this.renderManager.squareDistanceTo(entityIn);
+    protected void renderNameTag(AdvancedHunterEntity entityIn, ITextComponent displayNameIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+        double dist = this.entityRenderDispatcher.distanceToSqr(entityIn);
         if (dist <= 256) {
-            super.renderName(entityIn, displayNameIn, matrixStackIn, bufferIn, packedLightIn);
+            super.renderNameTag(entityIn, displayNameIn, matrixStackIn, bufferIn, packedLightIn);
         }
     }
 

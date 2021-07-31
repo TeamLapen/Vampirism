@@ -70,7 +70,7 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
     private static final KeyBinding ACTION2 = new KeyBinding(ACTIVATE_ACTION2, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_2, CATEGORY);
     private static final KeyBinding ACTION3 = new KeyBinding(ACTIVATE_ACTION3, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_3, CATEGORY);
 
-    private static final KeyBinding MINION = new KeyBinding(MINION_TASK, KeyConflictContext.IN_GAME, InputMappings.INPUT_INVALID, CATEGORY);
+    private static final KeyBinding MINION = new KeyBinding(MINION_TASK, KeyConflictContext.IN_GAME, InputMappings.UNKNOWN, CATEGORY);
 
     @Nonnull
     public static KeyBinding getKeyBinding(@Nonnull KEY key) {
@@ -124,14 +124,14 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
         KEY keyPressed = getPressedKeyBinding(); // Only call isPressed once, so
         // get value here!
         if (!suckKeyDown && keyPressed == KEY.SUCK) {
-            RayTraceResult mouseOver = Minecraft.getInstance().objectMouseOver;
+            RayTraceResult mouseOver = Minecraft.getInstance().hitResult;
             suckKeyDown = true;
             PlayerEntity player = Minecraft.getInstance().player;
             if (mouseOver != null && !player.isSpectator() && VampirePlayer.getOpt(player).map(vp -> vp.getLevel() > 0 && !vp.getActionHandler().isActionActive(VampireActions.bat)).orElse(false)) {
                 if (mouseOver instanceof EntityRayTraceResult) {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + ((EntityRayTraceResult) mouseOver).getEntity().getEntityId()));
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + ((EntityRayTraceResult) mouseOver).getEntity().getId()));
                 } else if (mouseOver instanceof BlockRayTraceResult) {
-                    BlockPos pos = ((BlockRayTraceResult) mouseOver).getPos();
+                    BlockPos pos = ((BlockRayTraceResult) mouseOver).getBlockPos();
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DRINK_BLOOD_BLOCK, "" + pos.getX() + ":" + pos.getY() + ":" + pos.getZ()));
                 } else {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + -1));
@@ -141,7 +141,7 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
             if (Minecraft.getInstance().player.isAlive()) {
                 IPlayableFaction<?> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
                 if (faction != null) {
-                    Minecraft.getInstance().displayGuiScreen(new SelectActionScreen(faction.getColor(), false));
+                    Minecraft.getInstance().setScreen(new SelectActionScreen(faction.getColor(), false));
                 }
             }
         } else if (keyPressed == KEY.SKILL) {
@@ -180,10 +180,10 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
 
         } else if (keyPressed == KEY.MINION) {
             if (FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
-                Minecraft.getInstance().displayGuiScreen(new SelectMinionTaskScreen());
+                Minecraft.getInstance().setScreen(new SelectMinionTaskScreen());
             }
         }
-        if (suckKeyDown && !SUCK.isKeyDown()) {
+        if (suckKeyDown && !SUCK.isDown()) {
             suckKeyDown = false;
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
         }
@@ -193,21 +193,21 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
      * @return the KeyBinding that is currently pressed
      */
     private KEY getPressedKeyBinding() {
-        if (SUCK.isKeyDown()) {
+        if (SUCK.isDown()) {
             return KEY.SUCK;
-        } else if (ACTION.isKeyDown()) {
+        } else if (ACTION.isDown()) {
             return KEY.ACTION;
-        } else if (SKILL.isKeyDown()) {
+        } else if (SKILL.isDown()) {
             return KEY.SKILL;
-        } else if (VISION.isKeyDown()) {
+        } else if (VISION.isDown()) {
             return KEY.VISION;
-        } else if (ACTION1.isKeyDown()) {
+        } else if (ACTION1.isDown()) {
             return KEY.ACTION1;
-        } else if (ACTION2.isKeyDown()) {
+        } else if (ACTION2.isDown()) {
             return KEY.ACTION2;
-        } else if (ACTION3.isKeyDown()) {
+        } else if (ACTION3.isDown()) {
             return KEY.ACTION3;
-        } else if (MINION.isKeyDown()) {
+        } else if (MINION.isDown()) {
             return KEY.MINION;
         }
         return KEY.UNKNOWN;
@@ -218,10 +218,10 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
      **/
     private void toggleBoundAction(@Nonnull IFactionPlayer player, @Nullable IAction action) {
         if (action == null) {
-            player.getRepresentingPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
+            player.getRepresentingPlayer().displayClientMessage(new TranslationTextComponent("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
         } else {
             if (!action.getFaction().equals(player.getFaction())) {
-                player.getRepresentingPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.action.only_faction", action.getFaction().getName()), true);
+                player.getRepresentingPlayer().displayClientMessage(new TranslationTextComponent("text.vampirism.action.only_faction", action.getFaction().getName()), true);
             } else {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + action.getRegistryName()));
             }

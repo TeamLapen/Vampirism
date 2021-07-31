@@ -17,7 +17,7 @@ public class BloodGrinderContainer extends InventoryContainer {
 
     @Deprecated
     public BloodGrinderContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, new Inventory(1), IWorldPosCallable.DUMMY);
+        this(id, playerInventory, new Inventory(1), IWorldPosCallable.NULL);
     }
 
     public BloodGrinderContainer(int id, PlayerInventory playerInventory, IInventory inventory, IWorldPosCallable worldPosIn) {

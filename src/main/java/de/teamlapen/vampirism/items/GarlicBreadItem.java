@@ -15,7 +15,7 @@ public class GarlicBreadItem extends VampirismItem implements IFactionExclusiveI
     private static final String regName = "garlic_bread";
 
     public GarlicBreadItem() {
-        super(regName, new Properties().food((new Food.Builder()).hunger(6).saturation(0.7F).build()).group(ItemGroup.FOOD));
+        super(regName, new Properties().food((new Food.Builder()).nutrition(6).saturationMod(0.7F).build()).tab(ItemGroup.TAB_FOOD));
     }
 
     @Nonnull
@@ -26,10 +26,10 @@ public class GarlicBreadItem extends VampirismItem implements IFactionExclusiveI
 
 
     @Override
-    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
-        if (!worldIn.isRemote) {
+    public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {
+        if (!worldIn.isClientSide) {
             entityLiving.curePotionEffects(stack);
         }
-        return super.onItemUseFinish(stack, worldIn, entityLiving);
+        return super.finishUsingItem(stack, worldIn, entityLiving);
     }
 }

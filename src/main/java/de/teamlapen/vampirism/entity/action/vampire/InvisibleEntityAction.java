@@ -18,7 +18,7 @@ public class InvisibleEntityAction<T extends CreatureEntity & IEntityActionUser>
 
     @Override
     public void activate(T entity) {
-        ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.EXPLOSION, entity.getPosX(), entity.getPosY(), entity.getPosZ(), 60, 1, 1, 1, 0);
+        ModParticles.spawnParticlesServer(entity.getCommandSenderWorld(), ParticleTypes.EXPLOSION, entity.getX(), entity.getY(), entity.getZ(), 60, 1, 1, 1, 0);
 
     }
 
@@ -40,8 +40,8 @@ public class InvisibleEntityAction<T extends CreatureEntity & IEntityActionUser>
 
     @Override
     public int getWeight(CreatureEntity entity) {
-        if (entity.getAttackTarget() == null) return 0;
-        double distanceToTarget = new Vector3d(entity.getPosX(), entity.getPosY(), entity.getPosZ()).subtract(entity.getAttackTarget().getPosX(), entity.getAttackTarget().getPosY(), entity.getAttackTarget().getPosZ()).length();
+        if (entity.getTarget() == null) return 0;
+        double distanceToTarget = new Vector3d(entity.getX(), entity.getY(), entity.getZ()).subtract(entity.getTarget().getX(), entity.getTarget().getY(), entity.getTarget().getZ()).length();
         if (distanceToTarget > 4) {
             return 3;
         } else {
@@ -59,7 +59,7 @@ public class InvisibleEntityAction<T extends CreatureEntity & IEntityActionUser>
     @Override
     public void updatePreAction(T entity, int duration) {
         if (duration % 5 == 0) {
-            ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.EXPLOSION, entity.getPosX(), entity.getPosY(), entity.getPosZ(), 10, 1, 1, 1, 0);
+            ModParticles.spawnParticlesServer(entity.getCommandSenderWorld(), ParticleTypes.EXPLOSION, entity.getX(), entity.getY(), entity.getZ(), 10, 1, 1, 1, 0);
         }
     }
 }

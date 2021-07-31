@@ -18,21 +18,20 @@ import net.minecraft.world.IBlockReader;
 import javax.annotation.Nullable;
 import java.util.List;
 
-
 public class SunscreenBeaconBlock extends VampirismBlockContainer {
 
     private static final String regName = "sunscreen_beacon";
 
     public SunscreenBeaconBlock() {
-        super(regName, Properties.create(Material.IRON).hardnessAndResistance(-1, 3600000).notSolid());
+        super(regName, Properties.of(Material.METAL).strength(-1, 3600000).noOcclusion());
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
-        super.addInformation(stack, world, tooltip, advanced);
-        tooltip.add(new TranslationTextComponent(getTranslationKey() + ".tooltip1").mergeStyle(TextFormatting.GRAY));
+    public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
+        super.appendHoverText(stack, world, tooltip, advanced);
+        tooltip.add(new TranslationTextComponent(getDescriptionId() + ".tooltip1").withStyle(TextFormatting.GRAY));
         if (world != null)
-            tooltip.add(new TranslationTextComponent(getTranslationKey() + ".tooltip2", VampirismConfig.SERVER.sunscreenBeaconDistance.get()).mergeStyle(TextFormatting.GRAY)); //Only add this if a world is present. Otherwise the config might not be ready as this is also called during search tree population before setup
+            tooltip.add(new TranslationTextComponent(getDescriptionId() + ".tooltip2", VampirismConfig.SERVER.sunscreenBeaconDistance.get()).withStyle(TextFormatting.GRAY)); //Only add this if a world is present. Otherwise the config might not be ready as this is also called during search tree population before setup
     }
 
     @Override
@@ -40,10 +39,9 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
         return VampirismConfig.SERVER.sunscreenBeaconMineable.get();
     }
 
-    @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new SunscreenBeaconTileEntity();
+    public float getDestroyProgress(BlockState state, PlayerEntity player, IBlockReader worldIn, BlockPos pos) {
+        return VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : -1;
     }
 
     @Override
@@ -52,13 +50,14 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public float getPlayerRelativeBlockHardness(BlockState state, PlayerEntity player, IBlockReader worldIn, BlockPos pos) {
-        return VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : -1;
+    public BlockRenderType getRenderShape(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
+    @Nullable
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public TileEntity newBlockEntity(IBlockReader worldIn) {
+        return new SunscreenBeaconTileEntity();
     }
 
 }

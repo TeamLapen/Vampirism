@@ -31,17 +31,17 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         IFaction<?> faction = VReference.HUNTER_FACTION;
         if (VampirismConfig.BALANCE.golemAttackNonVillageFaction.get()) {
-            Optional<TotemTileEntity> tile = TotemHelper.getTotemNearPos(((ServerWorld) this.golem.world), this.golem.getPosition(), true);
+            Optional<TotemTileEntity> tile = TotemHelper.getTotemNearPos(((ServerWorld) this.golem.level), this.golem.blockPosition(), true);
             faction = tile.map(TotemTileEntity::getControllingFaction).orElse(((IPlayableFaction) VReference.HUNTER_FACTION));
         }
 
         if (faction != this.faction) {
-            this.targetEntitySelector.setCustomPredicate(predicates.computeIfAbsent(this.faction = faction, faction1 -> VampirismAPI.factionRegistry().getPredicate(faction1, true, true, false, false, null)));
+            this.targetConditions.selector(predicates.computeIfAbsent(this.faction = faction, faction1 -> VampirismAPI.factionRegistry().getPredicate(faction1, true, true, false, false, null)));
         }
 
-        return super.shouldExecute();
+        return super.canUse();
     }
 }

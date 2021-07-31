@@ -26,7 +26,7 @@ class VampirismRecipeHelper {
             return new ISkill[0];
         ISkill[] skills = new ISkill[jsonObject.size()];
         for (int i = 0; i < skills.length; ++i) {
-            String s = JSONUtils.getString(jsonObject.get(i), "skill[" + i + "]");
+            String s = JSONUtils.convertToString(jsonObject.get(i), "skill[" + i + "]");
             ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(s));
             if (skill == null) {
                 throw new JsonSyntaxException("Unknown skill '" + s + "'");
@@ -98,8 +98,8 @@ class VampirismRecipeHelper {
         NonNullList<Ingredient> nonnulllist = NonNullList.create();
 
         for (int i = 0; i < ingredientArray.size(); ++i) {
-            Ingredient ingredient = Ingredient.deserialize(ingredientArray.get(i));
-            if (!ingredient.hasNoMatchingItems()) {
+            Ingredient ingredient = Ingredient.fromJson(ingredientArray.get(i));
+            if (!ingredient.isEmpty()) {
                 nonnulllist.add(ingredient);
             }
         }
@@ -108,13 +108,13 @@ class VampirismRecipeHelper {
     }
 
     static FluidStack deserializeFluid(JsonObject object) {
-        String s = JSONUtils.getString(object, "fluid");
+        String s = JSONUtils.getAsString(object, "fluid");
         Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(s));
         if (fluid == null) throw new JsonSyntaxException("Unknown fluid '" + s + "'");
         if (object.has("data")) {
             throw new JsonParseException("Disallowed data tag found");
         } else {
-            int i = JSONUtils.getInt(object, "amount", 1);
+            int i = JSONUtils.getAsInt(object, "amount", 1);
             return new FluidStack(fluid, i);
         }
     }
@@ -134,7 +134,7 @@ class VampirismRecipeHelper {
                 throw new JsonSyntaxException("Invalid key entry: ' ' is a reserved symbol.");
             }
 
-            map.put(entry.getKey(), Ingredient.deserialize(entry.getValue()));
+            map.put(entry.getKey(), Ingredient.fromJson(entry.getValue()));
         }
 
         map.put(" ", Ingredient.EMPTY);
@@ -190,7 +190,7 @@ class VampirismRecipeHelper {
             throw new JsonSyntaxException("Invalid pattern: empty pattern not allowed");
         } else {
             for (int i = 0; i < astring.length; ++i) {
-                String s = JSONUtils.getString(jsonArr.get(i), "pattern[" + i + "]");
+                String s = JSONUtils.convertToString(jsonArr.get(i), "pattern[" + i + "]");
                 if (s.length() > max) {
                     throw new JsonSyntaxException("Invalid pattern: too many columns, " + max + " is maximum");
                 }
@@ -208,7 +208,7 @@ class VampirismRecipeHelper {
 
     static Either<Ingredient, FluidStack> getFluidOrItem(JsonObject json) {
         if (json.has("fluidItem")) {
-            return Either.left(Ingredient.deserialize(json.get("fluidItem")));
+            return Either.left(Ingredient.fromJson(json.get("fluidItem")));
 
         } else {
             return Either.right(deserializeFluid(json.getAsJsonObject("fluid")));

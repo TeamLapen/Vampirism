@@ -92,7 +92,7 @@ public class Task extends ForgeRegistryEntry<Task> {
 
     @Nonnull
     public String getTranslationKey() {
-        return this.translationKey != null ? this.translationKey : (this.translationKey = Util.makeTranslationKey("task", this.getRegistryName()));
+        return this.translationKey != null ? this.translationKey : (this.translationKey = Util.makeDescriptionId("task", this.getRegistryName()));
     }
 
     @Nonnull

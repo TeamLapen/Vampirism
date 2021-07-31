@@ -24,7 +24,7 @@ public class AdvancedVampireRenderer extends BipedRenderer<AdvancedVampireEntity
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/advanced_vampire.png");
 
     public AdvancedVampireRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new BipedModel<>(RenderType::getEntityCutoutNoCull, 0F, 0F, 64, 64), 0.5F);
+        super(renderManagerIn, new BipedModel<>(RenderType::entityCutoutNoCull, 0F, 0F, 64, 64), 0.5F);
         if (VampirismConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {
             this.addLayer(new PlayerFaceOverlayLayer<>(this));
             this.addLayer(new AdvancedVampireEyeLayer(this));
@@ -33,16 +33,16 @@ public class AdvancedVampireRenderer extends BipedRenderer<AdvancedVampireEntity
     }
 
     @Override
-    public ResourceLocation getEntityTexture(AdvancedVampireEntity entity) {
+    public ResourceLocation getTextureLocation(AdvancedVampireEntity entity) {
         return texture;
     }
 
 
     @Override
-    protected void renderName(AdvancedVampireEntity entityIn, ITextComponent displayNameIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        double dist = this.renderManager.squareDistanceTo(entityIn);
+    protected void renderNameTag(AdvancedVampireEntity entityIn, ITextComponent displayNameIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+        double dist = this.entityRenderDispatcher.distanceToSqr(entityIn);
         if (dist <= 256) {
-            super.renderName(entityIn, displayNameIn, matrixStackIn, bufferIn, packedLightIn);
+            super.renderNameTag(entityIn, displayNameIn, matrixStackIn, bufferIn, packedLightIn);
         }
     }
 }

@@ -30,28 +30,28 @@ public class AlchemicalFireItem extends VampirismItem {
     private static final String regName = "item_alchemical_fire";
 
     public AlchemicalFireItem() {
-        super(regName, new Properties().group(VampirismMod.creativeTab));
+        super(regName, new Properties().tab(VampirismMod.creativeTab));
     }
 
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslationTextComponent("item.vampirism.item_alchemical_fire.desc1").mergeStyle(TextFormatting.GRAY));
-        tooltip.add(new TranslationTextComponent("item.vampirism.item_alchemical_fire.desc2").mergeStyle(TextFormatting.GRAY));
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        tooltip.add(new TranslationTextComponent("item.vampirism.item_alchemical_fire.desc1").withStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent("item.vampirism.item_alchemical_fire.desc2").withStyle(TextFormatting.GRAY));
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext ctx) {
-        BlockPos pos = ctx.getPos().offset(ctx.getFace());
+    public ActionResultType useOn(ItemUseContext ctx) {
+        BlockPos pos = ctx.getClickedPos().relative(ctx.getClickedFace());
 
-        if (ctx.getPlayer() != null && !ctx.getPlayer().canPlayerEdit(pos, ctx.getFace(), ctx.getItem())) {
+        if (ctx.getPlayer() != null && !ctx.getPlayer().mayUseItemAt(pos, ctx.getClickedFace(), ctx.getItemInHand())) {
             return ActionResultType.FAIL;
         } else {
-            if (ctx.getWorld().isAirBlock(pos)) {
-                ctx.getWorld().playSound(ctx.getPlayer(), pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, ctx.getPlayer().getRNG().nextFloat() * 0.4F + 0.8F);
-                ctx.getWorld().setBlockState(pos, ModBlocks.alchemical_fire.getDefaultState().with(AlchemicalFireBlock.AGE, 15), 11);
+            if (ctx.getLevel().isEmptyBlock(pos)) {
+                ctx.getLevel().playSound(ctx.getPlayer(), pos, SoundEvents.FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, ctx.getPlayer().getRandom().nextFloat() * 0.4F + 0.8F);
+                ctx.getLevel().setBlock(pos, ModBlocks.alchemical_fire.defaultBlockState().setValue(AlchemicalFireBlock.AGE, 15), 11);
             }
 
             return ActionResultType.SUCCESS;

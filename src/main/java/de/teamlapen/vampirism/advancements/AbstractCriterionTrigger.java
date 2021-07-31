@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-
 /**
  * Implements some general function used in most criterion triggers.
  * The concept is more or less copied from vanilla.
@@ -35,7 +34,7 @@ public abstract class AbstractCriterionTrigger<T extends ICriterionInstance> imp
     }
 
     @Override
-    public void addListener(@Nonnull PlayerAdvancements playerAdvancementsIn, @Nonnull Listener<T> listener) {
+    public void addPlayerListener(@Nonnull PlayerAdvancements playerAdvancementsIn, @Nonnull Listener<T> listener) {
         GenericListeners<T> listeners = this.listenersForPlayers.get(playerAdvancementsIn);
         if (listeners == null) {
             listeners = listenerConstructor.apply(playerAdvancementsIn);
@@ -51,12 +50,7 @@ public abstract class AbstractCriterionTrigger<T extends ICriterionInstance> imp
     }
 
     @Override
-    public void removeAllListeners(@Nonnull PlayerAdvancements playerAdvancementsIn) {
-        this.listenersForPlayers.remove(playerAdvancementsIn);
-    }
-
-    @Override
-    public void removeListener(@Nonnull PlayerAdvancements playerAdvancementsIn, @Nonnull Listener<T> listener) {
+    public void removePlayerListener(@Nonnull PlayerAdvancements playerAdvancementsIn, @Nonnull Listener<T> listener) {
         GenericListeners<T> listeners = this.listenersForPlayers.get(playerAdvancementsIn);
         if (listeners != null) {
             listeners.remove(listener);
@@ -64,6 +58,11 @@ public abstract class AbstractCriterionTrigger<T extends ICriterionInstance> imp
                 this.listenersForPlayers.remove(playerAdvancementsIn);
             }
         }
+    }
+
+    @Override
+    public void removePlayerListeners(@Nonnull PlayerAdvancements playerAdvancementsIn) {
+        this.listenersForPlayers.remove(playerAdvancementsIn);
     }
 
     protected abstract static class GenericListeners<T extends ICriterionInstance> {

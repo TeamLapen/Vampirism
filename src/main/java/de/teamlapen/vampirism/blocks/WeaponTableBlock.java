@@ -36,7 +36,6 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-
 public class WeaponTableBlock extends VampirismHorizontalBlock {
     public final static String regName = "weapon_table";
     public static final int MAX_LAVA = 5;
@@ -45,46 +44,46 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
     private static final ITextComponent name = new TranslationTextComponent("gui.vampirism.hunter_weapon_table");
 
     private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(3, 0, 0, 13, 2, 8);
-        VoxelShape b = Block.makeCuboidShape(4, 2, 1, 12, 3, 7);
-        VoxelShape c = Block.makeCuboidShape(5, 3, 2, 11, 6, 6);
-        VoxelShape d = Block.makeCuboidShape(3, 6, 0, 13, 9.5, 8);
+        VoxelShape a = Block.box(3, 0, 0, 13, 2, 8);
+        VoxelShape b = Block.box(4, 2, 1, 12, 3, 7);
+        VoxelShape c = Block.box(5, 3, 2, 11, 6, 6);
+        VoxelShape d = Block.box(3, 6, 0, 13, 9.5, 8);
 
-        VoxelShape e = Block.makeCuboidShape(0, 1, 9, 7, 2, 16);
-        VoxelShape e1 = Block.makeCuboidShape(0, 0, 9, 2, 1, 11);
-        VoxelShape e2 = Block.makeCuboidShape(5, 0, 9, 7, 1, 11);
-        VoxelShape e3 = Block.makeCuboidShape(0, 0, 14, 2, 1, 16);
-        VoxelShape e4 = Block.makeCuboidShape(5, 0, 14, 7, 1, 16);
+        VoxelShape e = Block.box(0, 1, 9, 7, 2, 16);
+        VoxelShape e1 = Block.box(0, 0, 9, 2, 1, 11);
+        VoxelShape e2 = Block.box(5, 0, 9, 7, 1, 11);
+        VoxelShape e3 = Block.box(0, 0, 14, 2, 1, 16);
+        VoxelShape e4 = Block.box(5, 0, 14, 7, 1, 16);
 
-        VoxelShape e5 = Block.makeCuboidShape(0, 1, 9, 1, 7, 16);
-        VoxelShape e6 = Block.makeCuboidShape(0, 1, 9, 7, 7, 10);
-        VoxelShape e7 = Block.makeCuboidShape(7, 1, 16, 0, 7, 15);
-        VoxelShape e8 = Block.makeCuboidShape(7, 1, 16, 6, 7, 9);
+        VoxelShape e5 = Block.box(0, 1, 9, 1, 7, 16);
+        VoxelShape e6 = Block.box(0, 1, 9, 7, 7, 10);
+        VoxelShape e7 = Block.box(7, 1, 16, 0, 7, 15);
+        VoxelShape e8 = Block.box(7, 1, 16, 6, 7, 9);
 
-        VoxelShape f = Block.makeCuboidShape(10, 0, 11, 15, 3, 14);
-        VoxelShape g = Block.makeCuboidShape(12, 3, 12, 13, 10, 13);
+        VoxelShape f = Block.box(10, 0, 11, 15, 3, 14);
+        VoxelShape g = Block.box(12, 3, 12, 13, 10, 13);
 
         return VoxelShapes.or(a, b, c, d, e, e1, e2, e3, e4, e5, e6, e7, e8, f, g);
     }
 
     public WeaponTableBlock() {
-        super(regName, Properties.create(Material.IRON).hardnessAndResistance(3).notSolid(), makeShape());
-        this.setDefaultState(this.getStateContainer().getBaseState().with(LAVA, 0).with(FACING, Direction.NORTH));
+        super(regName, Properties.of(Material.METAL).strength(3).noOcclusion(), makeShape());
+        this.registerDefaultState(this.getStateDefinition().any().setValue(LAVA, 0).setValue(FACING, Direction.NORTH));
 
     }
 
     @Nullable
     @Override
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-        return new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new WeaponTableContainer(id, playerInventory, IWorldPosCallable.of(worldIn, pos)), name);
+    public INamedContainerProvider getMenuProvider(BlockState state, World worldIn, BlockPos pos) {
+        return new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new WeaponTableContainer(id, playerInventory, IWorldPosCallable.create(worldIn, pos)), name);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (!world.isRemote) {
-            int fluid = world.getBlockState(pos).get(LAVA);
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (!world.isClientSide) {
+            int fluid = world.getBlockState(pos).getValue(LAVA);
             boolean flag = false;
-            ItemStack heldItem = player.getHeldItem(hand);
+            ItemStack heldItem = player.getItemInHand(hand);
             if (fluid < MAX_LAVA) {
                 LazyOptional<IFluidHandlerItem> opt = FluidUtil.getFluidHandler(heldItem);
                 flag = opt.map(fluidHandler -> {
@@ -97,8 +96,8 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
                     if (drainable.getAmount() >= MB_PER_META) {
                         FluidStack drained = fluidHandler.drain(missing, IFluidHandler.FluidAction.EXECUTE);
                         if (drained.getAmount() > 0) {
-                            world.setBlockState(pos, state.with(LAVA, Math.min(MAX_LAVA, fluid + drained.getAmount() / MB_PER_META)));
-                            player.setHeldItem(hand, fluidHandler.getContainer());
+                            world.setBlockAndUpdate(pos, state.setValue(LAVA, Math.min(MAX_LAVA, fluid + drained.getAmount() / MB_PER_META)));
+                            player.setItemInHand(hand, fluidHandler.getContainer());
                             return true;
                         }
                     }
@@ -108,9 +107,9 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
             if (!flag) {
 
                 if (canUse(player) && player instanceof ServerPlayerEntity) {
-                    NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new WeaponTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, pos)), name), pos);
+                    NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new WeaponTableContainer(id, playerInventory, IWorldPosCallable.create(playerIn.level, pos)), name), pos);
                 } else {
-                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.weapon_table.cannot_use"), true);
+                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.weapon_table.cannot_use"), true);
                 }
             }
         }
@@ -118,7 +117,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(LAVA, FACING);
     }
 

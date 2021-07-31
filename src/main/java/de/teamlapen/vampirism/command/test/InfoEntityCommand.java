@@ -17,20 +17,20 @@ public class InfoEntityCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("printEntityNBT")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .executes(context -> {
-                    return infoEntity(context.getSource(), context.getSource().asPlayer());
+                    return infoEntity(context.getSource(), context.getSource().getPlayerOrException());
                 });
     }
 
     private static int infoEntity(CommandSource commandSource, ServerPlayerEntity asPlayer) {
-        List<Entity> l = asPlayer.getEntityWorld().getEntitiesWithinAABBExcludingEntity(asPlayer, asPlayer.getBoundingBox().grow(3, 2, 3));
+        List<Entity> l = asPlayer.getCommandSenderWorld().getEntities(asPlayer, asPlayer.getBoundingBox().inflate(3, 2, 3));
         for (Entity o : l) {
             CompoundNBT nbt = new CompoundNBT();
-            o.writeUnlessRemoved(nbt);
+            o.saveAsPassenger(nbt);
             LogManager.getLogger().info(LogUtil.TEST, "Data {}", nbt);
         }
-        commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.infoentity.printed"), false);
+        commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.infoentity.printed"), false);
         return 0;
     }
 }

@@ -31,22 +31,22 @@ public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTie
 
 
     public HunterAxeItem(TIER tier) {
-        super(regName + "_" + tier.getName(), ItemTier.IRON, 10, -2.9f, new Properties().group(VampirismMod.creativeTab));
+        super(regName + "_" + tier.getName(), ItemTier.IRON, 10, -2.9f, new Properties().tab(VampirismMod.creativeTab));
         this.tier = tier;
         this.setTranslation_key(regName);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
-        tooltip.add(new TranslationTextComponent("text.vampirism.deals_more_damage_to", Math.round((getVampireMult() - 1) * 100), VReference.VAMPIRE_FACTION.getNamePlural()).mergeStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent("text.vampirism.deals_more_damage_to", Math.round((getVampireMult() - 1) * 100), VReference.VAMPIRE_FACTION.getNamePlural()).withStyle(TextFormatting.GRAY));
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        if (this.isInGroup(group)) {
+    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+        if (this.allowdedIn(group)) {
             items.add(getEnchantedStack());
         }
     }
@@ -83,7 +83,7 @@ public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTie
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return false;
     }
 

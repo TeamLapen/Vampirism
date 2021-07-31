@@ -23,13 +23,13 @@ public class FeedingAdapterItem extends VampirismItem {
     private final static String regName = "feeding_adapter";
 
     public FeedingAdapterItem() {
-        super(regName, new Item.Properties().maxStackSize(1).group(VampirismMod.creativeTab));
+        super(regName, new Item.Properties().stacksTo(1).tab(VampirismMod.creativeTab));
     }
 
 
     @Nonnull
     @Override
-    public UseAction getUseAction(ItemStack stack) {
+    public UseAction getUseAnimation(ItemStack stack) {
         return UseAction.DRINK;
     }
 
@@ -38,28 +38,10 @@ public class FeedingAdapterItem extends VampirismItem {
         return 15;
     }
 
-
-    @Nonnull
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, @Nonnull Hand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
-        return VampirePlayer.getOpt(playerIn).map(vampire -> {
-            if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
-
-
-            if (vampire.getBloodStats().needsBlood() && !BloodHelper.getBloodContainerInInventory(playerIn.inventory, true, false).isEmpty()) {
-                playerIn.setActiveHand(handIn);
-                return new ActionResult<>(ActionResultType.SUCCESS, stack);
-            }
-            return new ActionResult<>(ActionResultType.PASS, stack);
-        }).orElse(new ActionResult<>(ActionResultType.PASS, stack));
-    }
-
-
     @Override
     public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
         if (!(player instanceof PlayerEntity) || !player.isAlive()) {
-            player.stopActiveHand();
+            player.releaseUsingItem();
             return;
         }
         ItemStack bloodContainer = BloodHelper.getBloodContainerInInventory(((PlayerEntity) player).inventory, true, false);
@@ -67,7 +49,7 @@ public class FeedingAdapterItem extends VampirismItem {
         int blood = fluidStack.isEmpty() || fluidStack.getFluid() != ModFluids.blood ? 0 : fluidStack.getAmount();
         VampirePlayer vampire = VampirePlayer.get((PlayerEntity) player);
         if (vampire.getLevel() == 0 || blood == 0 || !vampire.getBloodStats().needsBlood()) {
-            player.stopActiveHand();
+            player.releaseUsingItem();
             return;
         }
 
@@ -79,9 +61,25 @@ public class FeedingAdapterItem extends VampirismItem {
 
             blood = blood - drink;
             if (blood > 0) {
-                player.setActiveHand(player.getActiveHand());
+                player.startUsingItem(player.getUsedItemHand());
             }
         }
+    }
+
+    @Nonnull
+    @Override
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, @Nonnull Hand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
+        return VampirePlayer.getOpt(playerIn).map(vampire -> {
+            if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
+
+
+            if (vampire.getBloodStats().needsBlood() && !BloodHelper.getBloodContainerInInventory(playerIn.inventory, true, false).isEmpty()) {
+                playerIn.startUsingItem(handIn);
+                return new ActionResult<>(ActionResultType.SUCCESS, stack);
+            }
+            return new ActionResult<>(ActionResultType.PASS, stack);
+        }).orElse(new ActionResult<>(ActionResultType.PASS, stack));
     }
 
 }

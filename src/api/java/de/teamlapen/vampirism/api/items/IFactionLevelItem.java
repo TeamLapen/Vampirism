@@ -50,14 +50,14 @@ public interface IFactionLevelItem<T extends IFactionPlayer> { //TODO 1.17 exten
 
 
         if (usingFaction == null && getMinLevel(stack) == 0) return;
-        IFormattableTextComponent string = new StringTextComponent("").appendSibling(usingFaction == null ? new TranslationTextComponent("text.vampirism.all") : usingFaction.getNamePlural()).mergeStyle(factionC);
+        IFormattableTextComponent string = new StringTextComponent("").append(usingFaction == null ? new TranslationTextComponent("text.vampirism.all") : usingFaction.getNamePlural()).withStyle(factionC);
         if (getMinLevel(stack) > 0) {
-            string.appendSibling(new StringTextComponent("@" + getMinLevel(stack)).mergeStyle(levelC));
+            string.append(new StringTextComponent("@" + getMinLevel(stack)).withStyle(levelC));
         }
         tooltip.add(string);
         ISkill reqSkill = this.getRequiredSkill(stack);
         if (reqSkill != null) {
-            tooltip.add(new TranslationTextComponent("text.vampirism.required_skill", reqSkill.getName()).mergeStyle(skillC));
+            tooltip.add(new TranslationTextComponent("text.vampirism.required_skill", reqSkill.getName()).withStyle(skillC));
         }
     }
 

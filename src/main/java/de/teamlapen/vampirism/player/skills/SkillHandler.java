@@ -71,7 +71,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     @Override
     public Result canSkillBeEnabled(ISkill skill) {
-        if (player.getRepresentingPlayer().getActivePotionEffect(ModEffects.oblivion) != null) {
+        if (player.getRepresentingPlayer().getEffect(ModEffects.oblivion) != null) {
             return Result.LOCKED_BY_PLAYER_STATE;
         }
         if (isSkillEnabled(skill)) {
@@ -116,7 +116,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
                 }
                 items[i] = new ItemStack(item);
                 item.applyRefinementSet(items[i], this.appliedRefinementSets[i]);
-                items[i].setDamage(this.refinementSetDamage[i]);
+                items[i].setDamageValue(this.refinementSetDamage[i]);
             }
         }
         return items;
@@ -126,7 +126,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     public void damageRefinements() {
         for (int i = 0; i < this.refinementSetDamage.length; i++) {
             if (this.appliedRefinementSets[i] == null) continue;
-            int damage = 40 + (this.appliedRefinementSets[i].getRarity().weight - 1) * 10 + this.getPlayer().getRepresentingPlayer().getRNG().nextInt(60);
+            int damage = 40 + (this.appliedRefinementSets[i].getRarity().weight - 1) * 10 + this.getPlayer().getRepresentingPlayer().getRandom().nextInt(60);
             if ((this.refinementSetDamage[i] += damage) >= VampireRefinementItem.MAX_DAMAGE) {
                 this.removeRefinementSet(i);
             }
@@ -264,7 +264,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     public void loadFromNbt(CompoundNBT nbt) {
         if (nbt.contains("skills")) {
-            for (String id : nbt.getCompound("skills").keySet()) {
+            for (String id : nbt.getCompound("skills").getAllKeys()) {
                 ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(id));
                 if (skill == null) {
                     LOGGER.warn("Skill {} does not exist anymore", id);
@@ -277,7 +277,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
         if (nbt.contains("refinement_set")) {
             CompoundNBT setsNBT = nbt.getCompound("refinement_set");
-            for (String id : setsNBT.keySet()) {
+            for (String id : setsNBT.getAllKeys()) {
                 int i = Integer.parseInt(id);
                 CompoundNBT setNBT = setsNBT.getCompound(id);
                 String setName = setNBT.getString("id");
@@ -297,7 +297,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
             //noinspection unchecked
             List<ISkill> old = (List<ISkill>) enabledSkills.clone();
-            for (String id : nbt.getCompound("skills").keySet()) {
+            for (String id : nbt.getCompound("skills").getAllKeys()) {
                 ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(id));
                 if (skill == null) {
                     LOGGER.error("Skill {} does not exist on client!!!", id);
@@ -319,7 +319,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
         if (nbt.contains("refinement_set")) {
             CompoundNBT setsNBT = nbt.getCompound("refinement_set");
-            for (String id : setsNBT.keySet()) {
+            for (String id : setsNBT.getAllKeys()) {
                 int i = Integer.parseInt(id);
                 CompoundNBT setNBT = setsNBT.getCompound(id);
                 String setName = setNBT.getString("id");
@@ -407,7 +407,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
                         }
                         t = refinement.createAttributeModifier(refinement.getUUID(), value);
                         this.refinementModifier.put(refinement, t);
-                        attributeInstance.applyNonPersistentModifier(t);
+                        attributeInstance.addTransientModifier(t);
                     }
                 }
             }
@@ -430,7 +430,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
                         this.refinementModifier.remove(refinement);
                         attributeInstance.removeModifier(modifier);
                         if (value != 0) {
-                            attributeInstance.applyNonPersistentModifier(modifier = refinement.createAttributeModifier(modifier.getID(), value));
+                            attributeInstance.addTransientModifier(modifier = refinement.createAttributeModifier(modifier.getId(), value));
                             this.refinementModifier.put(refinement, modifier);
                             this.activeRefinements.add(refinement);
                         }

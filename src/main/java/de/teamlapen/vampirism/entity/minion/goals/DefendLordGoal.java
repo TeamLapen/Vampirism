@@ -19,28 +19,28 @@ public class DefendLordGoal extends TargetGoal {
 
     public DefendLordGoal(MinionEntity<?> mobIn) {
         super(mobIn, false, false);
-        this.setMutexFlags(EnumSet.of(Goal.Flag.TARGET));
+        this.setFlags(EnumSet.of(Goal.Flag.TARGET));
         this.entity = mobIn;
-        this.predicate = new EntityPredicate().setCustomPredicate(e -> entity.getAttackPredicate(false).test(e) && entity.getLordOpt().map(lp -> lp.getPlayer().getDistanceSq(e) < maxStartDistSQ).orElse(true)).setUseInvisibilityCheck().setDistance(60);
+        this.predicate = new EntityPredicate().selector(e -> entity.getAttackPredicate(false).test(e) && entity.getLordOpt().map(lp -> lp.getPlayer().distanceToSqr(e) < maxStartDistSQ).orElse(true)).ignoreInvisibilityTesting().range(60);
 
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
-        return entity.getCurrentTask().map(d -> d.getTask() == MinionTasks.protect_lord).orElse(false) && super.shouldContinueExecuting() && entity.getLordOpt().map(lp -> lp.getPlayer().getDistanceSq(target) < maxStopDistSQ).orElse(true);
+    public boolean canContinueToUse() {
+        return entity.getCurrentTask().map(d -> d.getTask() == MinionTasks.protect_lord).orElse(false) && super.canContinueToUse() && entity.getLordOpt().map(lp -> lp.getPlayer().distanceToSqr(targetMob) < maxStopDistSQ).orElse(true);
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         return entity.getCurrentTask().map(d -> d.getTask() == MinionTasks.protect_lord).orElse(false) && entity.getLordOpt().map(lp -> {
-            LivingEntity attackTarget = lp.getPlayer().getLastAttackedEntity();
-            if (isSuitableTarget(attackTarget, predicate)) {
-                this.target = attackTarget;
+            LivingEntity attackTarget = lp.getPlayer().getLastHurtMob();
+            if (canAttack(attackTarget, predicate)) {
+                this.targetMob = attackTarget;
                 return true;
             }
-            LivingEntity revengeTarget = lp.getPlayer().getRevengeTarget();
-            if (isSuitableTarget(revengeTarget, predicate)) {
-                this.target = revengeTarget;
+            LivingEntity revengeTarget = lp.getPlayer().getLastHurtByMob();
+            if (canAttack(revengeTarget, predicate)) {
+                this.targetMob = revengeTarget;
                 return true;
             }
 //            LivingEntity attackingEntity = lp.getPlayer().getAttackingEntity();
@@ -53,8 +53,8 @@ public class DefendLordGoal extends TargetGoal {
     }
 
     @Override
-    public void startExecuting() {
-        super.startExecuting();
-        this.entity.setAttackTarget(target);
+    public void start() {
+        super.start();
+        this.entity.setTarget(targetMob);
     }
 }

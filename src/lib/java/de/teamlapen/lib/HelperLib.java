@@ -19,7 +19,7 @@ public class HelperLib {
      * @param entity
      */
     public static <T extends Entity & ISyncable> void sync(T entity) {
-        if (!entity.getEntityWorld().isRemote) {
+        if (!entity.getCommandSenderWorld().isClientSide) {
             IMessage m = UpdateEntityPacket.create(entity);
             VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
         }
@@ -33,7 +33,7 @@ public class HelperLib {
      * @param entity
      */
     public static <T extends Entity & ISyncable> void sync(T entity, CompoundNBT data) {
-        if (!entity.getEntityWorld().isRemote) {
+        if (!entity.getCommandSenderWorld().isClientSide) {
             IMessage m = UpdateEntityPacket.create(entity, data);
             VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
         }
@@ -50,7 +50,7 @@ public class HelperLib {
      * @param entity
      */
     public static void sync(ISyncable.ISyncableEntityCapabilityInst cap, Entity entity, boolean all) {
-        if (!entity.getEntityWorld().isRemote) {
+        if (!entity.getCommandSenderWorld().isClientSide) {
             IMessage m = UpdateEntityPacket.create(cap);
             if (entity instanceof ServerPlayerEntity && !all) {
                 if (((ServerPlayerEntity) entity).connection != null) {
@@ -74,7 +74,7 @@ public class HelperLib {
      * @param entity
      */
     public static void sync(ISyncable.ISyncableEntityCapabilityInst cap, CompoundNBT data, Entity entity, boolean all) {
-        if (!entity.getEntityWorld().isRemote) {
+        if (!entity.getCommandSenderWorld().isClientSide) {
             IMessage m = UpdateEntityPacket.create(cap, data);
             if (entity instanceof ServerPlayerEntity && !all) {
                 if (((ServerPlayerEntity) entity).connection != null) {

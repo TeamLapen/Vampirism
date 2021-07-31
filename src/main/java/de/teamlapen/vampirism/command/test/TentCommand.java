@@ -16,21 +16,21 @@ public class TentCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("tent")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
-                .executes(context -> tent(context.getSource(), context.getSource().asPlayer(), false))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
+                .executes(context -> tent(context.getSource(), context.getSource().getPlayerOrException(), false))
                 .then(Commands.literal("advanced")
-                        .executes(context -> tent(context.getSource(), context.getSource().asPlayer(), true)));
+                        .executes(context -> tent(context.getSource(), context.getSource().getPlayerOrException(), true)));
     }
 
     private static int tent(CommandSource commandSource, ServerPlayerEntity asPlayer, boolean advanced) {
         RayTraceResult result = UtilLib.getPlayerLookingSpot(asPlayer, 5);
         if (result.getType() == RayTraceResult.Type.BLOCK) {
 
-            TileEntity tent = asPlayer.getEntityWorld().getTileEntity(((BlockRayTraceResult) result).getPos());
+            TileEntity tent = asPlayer.getCommandSenderWorld().getBlockEntity(((BlockRayTraceResult) result).getBlockPos());
             if (tent instanceof TentTileEntity) {
                 ((TentTileEntity) tent).setSpawn(true);
                 if (advanced) ((TentTileEntity) tent).setAdvanced(true);
-                commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.tent.success"), false);
+                commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.tent.success"), false);
             }
 
         }

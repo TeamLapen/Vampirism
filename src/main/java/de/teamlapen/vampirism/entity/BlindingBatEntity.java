@@ -37,16 +37,17 @@ public class BlindingBatEntity extends BatEntity {
         if (blockPos.getY() >= iWorld.getSeaLevel()) {
             return false;
         } else {
-            int i = iWorld.getLight(blockPos);
+            int i = iWorld.getMaxLocalRawBrightness(blockPos);
             int j = 4;
             if (random.nextBoolean())
                 return false;
 
-            return i <= random.nextInt(j) && canSpawnOn(entityType, iWorld, spawnReason, blockPos, random);
+            return i <= random.nextInt(j) && checkMobSpawnRules(entityType, iWorld, spawnReason, blockPos, random);
         }
     }
-    private final EntityPredicate nonVampirePredicatePlayer = new EntityPredicate().setCustomPredicate(VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true).and(EntityPredicates.CAN_AI_TARGET));
-    private final EntityPredicate nonVampirePredicate = new EntityPredicate().setCustomPredicate(e -> !Helper.isVampire(e));
+
+    private final EntityPredicate nonVampirePredicatePlayer = new EntityPredicate().selector(VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true).and(EntityPredicates.NO_CREATIVE_OR_SPECTATOR));
+    private final EntityPredicate nonVampirePredicate = new EntityPredicate().selector(e -> !Helper.isVampire(e));
     private boolean restrictLiveSpan;
     private boolean targeting;
     private boolean targetingMob = false;
@@ -56,8 +57,8 @@ public class BlindingBatEntity extends BatEntity {
     }
 
     @Override
-    public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
-        return worldIn.checkNoEntityCollision(this, VoxelShapes.create(this.getBoundingBox())) && worldIn.checkNoEntityCollision(this) && !worldIn.containsAnyLiquid(this.getBoundingBox()); //Check no entity collision
+    public boolean checkSpawnRules(IWorld worldIn, SpawnReason spawnReasonIn) {
+        return worldIn.isUnobstructed(this, VoxelShapes.create(this.getBoundingBox())) && worldIn.isUnobstructed(this) && !worldIn.containsAnyLiquid(this.getBoundingBox()); //Check no entity collision
     }
 
     public void restrictLiveSpan() {
@@ -71,51 +72,51 @@ public class BlindingBatEntity extends BatEntity {
     @Override
     public void tick() {
         super.tick();
-        if (restrictLiveSpan && this.ticksExisted > BalanceMobProps.mobProps.BLINDING_BAT_LIVE_SPAWN) {
-            this.attackEntityFrom(DamageSource.MAGIC, 10F);
+        if (restrictLiveSpan && this.tickCount > BalanceMobProps.mobProps.BLINDING_BAT_LIVE_SPAWN) {
+            this.hurt(DamageSource.MAGIC, 10F);
         }
-        if (!this.world.isRemote) {
-            List<LivingEntity> l = world.getEntitiesWithinAABB(targetingMob ? MonsterEntity.class : PlayerEntity.class, this.getBoundingBox());
+        if (!this.level.isClientSide) {
+            List<LivingEntity> l = level.getEntitiesOfClass(targetingMob ? MonsterEntity.class : PlayerEntity.class, this.getBoundingBox());
             boolean hit = false;
             for (LivingEntity e : l) {
                 if (e.isAlive() && !Helper.isVampire(e)) {
-                    e.addPotionEffect(new EffectInstance(Effects.BLINDNESS, BalanceMobProps.mobProps.BLINDING_BAT_EFFECT_DURATION));
+                    e.addEffect(new EffectInstance(Effects.BLINDNESS, BalanceMobProps.mobProps.BLINDING_BAT_EFFECT_DURATION));
                     hit = true;
                 }
             }
             if (targeting && hit) {
-                this.attackEntityFrom(DamageSource.GENERIC, 1000);
+                this.hurt(DamageSource.GENERIC, 1000);
             }
         }
     }
 
     @Override
-    protected void updateAITasks() {
+    protected void customServerAiStep() {
         boolean t = false;
-        if (targeting && this.ticksExisted > 40) {
+        if (targeting && this.tickCount > 40) {
             targetingMob = false;
-            LivingEntity e = world.getClosestPlayer(nonVampirePredicatePlayer, this);
+            LivingEntity e = level.getNearestPlayer(nonVampirePredicatePlayer, this);
             if (e == null) {
-                e = world.getClosestEntityWithinAABB(MonsterEntity.class, nonVampirePredicate, null, this.getPosX(), this.getPosY(), this.getPosZ(), this.getBoundingBox().grow(20));
+                e = level.getNearestEntity(MonsterEntity.class, nonVampirePredicate, null, this.getX(), this.getY(), this.getZ(), this.getBoundingBox().inflate(20));
                 targetingMob = true;
             }
             if (e != null) {
-                Vector3d diff = e.getPositionVec().add(0, e.getEyeHeight(), 0).subtract(this.getPositionVec());
+                Vector3d diff = e.position().add(0, e.getEyeHeight(), 0).subtract(this.position());
                 double dist = diff.length();
                 if (dist < 20) {
                     Vector3d mov = diff.scale(0.15 / dist);
-                    this.setMotion(mov);
+                    this.setDeltaMovement(mov);
                     float f = (float) (MathHelper.atan2(mov.z, mov.x) * (double) (180F / (float) Math.PI)) - 90.0F;
-                    float f1 = MathHelper.wrapDegrees(f - this.rotationYaw);
-                    this.moveForward = 0.5F;
-                    this.rotationYaw += f1;
+                    float f1 = MathHelper.wrapDegrees(f - this.yRot);
+                    this.zza = 0.5F;
+                    this.yRot += f1;
                     t = true;
                 }
             }
 
         }
         if (!t) {
-            super.updateAITasks();
+            super.customServerAiStep();
         }
 
     }

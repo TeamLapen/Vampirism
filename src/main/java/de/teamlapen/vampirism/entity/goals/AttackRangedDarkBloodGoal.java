@@ -11,7 +11,6 @@ import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.EnumSet;
 
-
 public class AttackRangedDarkBloodGoal extends Goal {
 
     protected final VampireBaronEntity entity;
@@ -24,7 +23,7 @@ public class AttackRangedDarkBloodGoal extends Goal {
 
     public AttackRangedDarkBloodGoal(VampireBaronEntity entity, int cooldown, int maxDistance, float damage, float indirectDamage) {
         this.entity = entity;
-        this.setMutexFlags(EnumSet.of(Flag.MOVE));
+        this.setFlags(EnumSet.of(Flag.MOVE));
         this.attackCooldown = cooldown;
         this.maxAttackDistance = maxDistance;
         this.directDamage = damage;
@@ -32,14 +31,14 @@ public class AttackRangedDarkBloodGoal extends Goal {
     }
 
     @Override
-    public void resetTask() {
-        seeTime = 0;
-        attackTime = 0;
+    public boolean canUse() {
+        return entity.getTarget() != null;
     }
 
     @Override
-    public boolean shouldExecute() {
-        return entity.getAttackTarget() != null;
+    public void stop() {
+        seeTime = 0;
+        attackTime = 0;
     }
 
     @Override
@@ -47,10 +46,10 @@ public class AttackRangedDarkBloodGoal extends Goal {
         if (attackTime > 0) {
             attackTime--;
         } else {
-            LivingEntity target = entity.getAttackTarget();
+            LivingEntity target = entity.getTarget();
             if (target != null) {
-                double d0 = this.entity.getDistanceSq(target.getPosX(), target.getBoundingBox().minY, target.getPosZ());
-                boolean canSee = this.entity.getEntitySenses().canSee(target);
+                double d0 = this.entity.distanceToSqr(target.getX(), target.getBoundingBox().minY, target.getZ());
+                boolean canSee = this.entity.getSensing().canSee(target);
                 boolean couldSee = this.seeTime > 0;
 
                 if (canSee != couldSee) {
@@ -59,7 +58,7 @@ public class AttackRangedDarkBloodGoal extends Goal {
 
                 if (canSee) {
                     ++this.seeTime;
-                    this.entity.faceEntity(target, 19.0F, 10.0F);
+                    this.entity.lookAt(target, 19.0F, 10.0F);
 
 
                     this.entity.lookAt(EntityAnchorArgument.Type.EYES, target.getEyePosition(1.0F));
@@ -70,11 +69,11 @@ public class AttackRangedDarkBloodGoal extends Goal {
                 if (d0 <= (double) this.maxAttackDistance && this.seeTime >= 20) {
                     attack(target);
                     this.attackTime = attackCooldown;
-                    entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20));
+                    entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20));
 
 
                 } else {
-                    this.entity.getNavigator().tryMoveToEntityLiving(target, 1.0);
+                    this.entity.getNavigation().moveTo(target, 1.0);
 
                 }
             }
@@ -85,12 +84,12 @@ public class AttackRangedDarkBloodGoal extends Goal {
      * Spawns the dark blood entity heading towards the target entity
      */
     protected void attack(LivingEntity target) {
-        Vector3d vec3d = target.getPositionVec().add(0, target.getHeight() * 0.6f, 0).subtract(entity.getEyePosition(1f)).normalize();
+        Vector3d vec3d = target.position().add(0, target.getBbHeight() * 0.6f, 0).subtract(entity.getEyePosition(1f)).normalize();
 
-        DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(entity.getEntityWorld(), entity.getPosX() + vec3d.x * 0.3f, entity.getPosY() + entity.getEyeHeight() * 0.9f, entity.getPosZ() + vec3d.z * 0.3f, vec3d.x, vec3d.y, vec3d.z);
-        projectile.setShooter(entity);
+        DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(entity.getCommandSenderWorld(), entity.getX() + vec3d.x * 0.3f, entity.getY() + entity.getEyeHeight() * 0.9f, entity.getZ() + vec3d.z * 0.3f, vec3d.x, vec3d.y, vec3d.z);
+        projectile.setOwner(entity);
         projectile.setDamage(directDamage, indirectDamage);
-        if (entity.getDistanceSq(target) > 64) {
+        if (entity.distanceToSqr(target) > 64) {
             projectile.setMotionFactor(0.95f);
         } else {
             projectile.setMotionFactor(0.75f);
@@ -98,6 +97,6 @@ public class AttackRangedDarkBloodGoal extends Goal {
         projectile.setInitialNoClip();
         projectile.excludeShooter();
 
-        entity.getEntityWorld().addEntity(projectile);
+        entity.getCommandSenderWorld().addFreshEntity(projectile);
     }
 }

@@ -18,7 +18,7 @@ public class MixinEntity {
         if (MixinHooks.enforcingGlowing_bloodVision) {
             Entity p = VampirismMod.proxy.getClientPlayer();
             Entity e = (Entity) (Object) this;
-            if (p != null && p.getDistanceSq(e) < VampirismConfig.BALANCE.vsBloodVisionDistanceSq.get()) {
+            if (p != null && p.distanceToSqr(e) < VampirismConfig.BALANCE.vsBloodVisionDistanceSq.get()) {
                 cir.setReturnValue(true);
             }
         }

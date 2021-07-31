@@ -24,17 +24,17 @@ public class ConfigurableStructureSeparationSettings extends StructureSeparation
     }
 
     @Override
-    public int func_236668_a_() {
-        int dist = distanceConf.get();
-        if (dist <= func_236671_b_()) {
-            LogManager.getLogger(BalanceConfig.class).warn("config value 'distance' must be greater than 'separation'. 'distance' increased");
-            dist = func_236671_b_() + 1;
-        }
-        return dist;
+    public int separation() {
+        return separationConf.get();
     }
 
     @Override
-    public int func_236671_b_() {
-        return separationConf.get();
+    public int spacing() {
+        int dist = distanceConf.get();
+        if (dist <= separation()) {
+            LogManager.getLogger(BalanceConfig.class).warn("config value 'distance' must be greater than 'separation'. 'distance' increased");
+            dist = separation() + 1;
+        }
+        return dist;
     }
 }

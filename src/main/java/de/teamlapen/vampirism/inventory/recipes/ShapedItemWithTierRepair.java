@@ -19,25 +19,25 @@ import net.minecraft.util.ResourceLocation;
 public class ShapedItemWithTierRepair extends ShapedRecipe {
 
     public ShapedItemWithTierRepair(ShapedRecipe shaped) {
-        super(shaped.getId(), shaped.getGroup(), shaped.getRecipeWidth(), shaped.getRecipeHeight(), shaped.getIngredients(), shaped.getRecipeOutput());
+        super(shaped.getId(), shaped.getGroup(), shaped.getRecipeWidth(), shaped.getRecipeHeight(), shaped.getIngredients(), shaped.getResultItem());
     }
 
     @Override
-    public ItemStack getCraftingResult(CraftingInventory inv) {
+    public ItemStack assemble(CraftingInventory inv) {
         ItemStack stack = null;
         search:
         for (int i = 0; i <= inv.getWidth(); ++i) {
             for (int j = 0; j <= inv.getHeight(); ++j) {
-                if (inv.getStackInSlot(i + j * inv.getWidth()).getItem() instanceof IItemWithTier) {
-                    stack = inv.getStackInSlot(i + j * inv.getWidth());
+                if (inv.getItem(i + j * inv.getWidth()).getItem() instanceof IItemWithTier) {
+                    stack = inv.getItem(i + j * inv.getWidth());
                     break search;
                 }
             }
         }
-        ItemStack result = super.getCraftingResult(inv);
+        ItemStack result = super.assemble(inv);
         if (stack != null) {
             result.setTag(stack.getTag());
-            result.setDamage(0);
+            result.setDamageValue(0);
         }
         return result;
     }
@@ -49,18 +49,18 @@ public class ShapedItemWithTierRepair extends ShapedRecipe {
 
     public static class Serializer extends ShapedRecipe.Serializer {
         @Override
-        public ShapedRecipe read(ResourceLocation recipeId, JsonObject json) {
-            return new ShapedItemWithTierRepair(super.read(recipeId, json));
+        public ShapedRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+            return new ShapedItemWithTierRepair(super.fromJson(recipeId, json));
         }
 
         @Override
-        public ShapedRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-            return new ShapedItemWithTierRepair(super.read(recipeId, buffer));
+        public ShapedRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+            return new ShapedItemWithTierRepair(super.fromNetwork(recipeId, buffer));
         }
 
         @Override
-        public void write(PacketBuffer buffer, ShapedRecipe recipe) {
-            super.write(buffer, recipe);
+        public void toNetwork(PacketBuffer buffer, ShapedRecipe recipe) {
+            super.toNetwork(buffer, recipe);
         }
     }
 }

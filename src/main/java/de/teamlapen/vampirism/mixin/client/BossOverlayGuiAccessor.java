@@ -14,6 +14,6 @@ import java.util.UUID;
 @Mixin(BossOverlayGui.class)
 public interface BossOverlayGuiAccessor {
 
-    @Accessor(value = "mapBossInfos")
+    @Accessor(value = "events")
     Map<UUID, ClientBossInfo> getMapBossInfos();
 }

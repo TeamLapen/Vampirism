@@ -28,28 +28,28 @@ public class VersionCheckCommand extends BasicCommand {
     }
 
     private static ArgumentBuilder<CommandSource, ?> setup(ArgumentBuilder<CommandSource, ?> builder) {
-        return builder.requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ALL))
+        return builder.requires(context -> context.hasPermission(PERMISSION_LEVEL_ALL))
                 .executes(VersionCheckCommand::changelog);
     }
 
     private static int changelog(CommandContext<CommandSource> context) {
         if (!VampirismMod.instance.getVersionInfo().isNewVersionAvailable()) {
-            context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.changelog.newversion"), false);
+            context.getSource().sendSuccess(new TranslationTextComponent("command.vampirism.base.changelog.newversion"), false);
             return 0;
         }
         VersionChecker.Version newVersion = VampirismMod.instance.getVersionInfo().getNewVersion();
         List<String> changes = newVersion.getChanges();
-        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GREEN + "Vampirism " + newVersion.name + "(" + SharedConstants.getVersion().getName() + ")"), true);
+        context.getSource().sendSuccess(new StringTextComponent(TextFormatting.GREEN + "Vampirism " + newVersion.name + "(" + SharedConstants.getCurrentVersion().getName() + ")"), true);
         for (String c : changes) {
-            context.getSource().sendFeedback(new StringTextComponent("-" + c), false);
+            context.getSource().sendSuccess(new StringTextComponent("-" + c), false);
         }
-        context.getSource().sendFeedback(new StringTextComponent(""), false);
+        context.getSource().sendSuccess(new StringTextComponent(""), false);
         String homepage = VampirismMod.instance.getVersionInfo().getHomePage();
 
-        ITextComponent download = new TranslationTextComponent("text.vampirism.update_message.download").modifyStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, newVersion.getUrl() == null ? homepage : newVersion.getUrl())).setUnderlined(true).applyFormatting(TextFormatting.BLUE));
-        ITextComponent changelog = new TranslationTextComponent("text.vampirism.update_message.changelog").modifyStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vampirism changelog")).setUnderlined(true));
-        ITextComponent modpage = new TranslationTextComponent("text.vampirism.update_message.modpage").modifyStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, homepage)).setUnderlined(true).applyFormatting(TextFormatting.BLUE));
-        context.getSource().sendFeedback(new StringTextComponent("").appendSibling(download).appendSibling(new StringTextComponent(" ")).appendSibling(changelog).appendSibling(new StringTextComponent(" ")).appendSibling(modpage), false);
+        ITextComponent download = new TranslationTextComponent("text.vampirism.update_message.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, newVersion.getUrl() == null ? homepage : newVersion.getUrl())).setUnderlined(true).applyFormat(TextFormatting.BLUE));
+        ITextComponent changelog = new TranslationTextComponent("text.vampirism.update_message.changelog").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vampirism changelog")).setUnderlined(true));
+        ITextComponent modpage = new TranslationTextComponent("text.vampirism.update_message.modpage").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, homepage)).setUnderlined(true).applyFormat(TextFormatting.BLUE));
+        context.getSource().sendSuccess(new StringTextComponent("").append(download).append(new StringTextComponent(" ")).append(changelog).append(new StringTextComponent(" ")).append(modpage), false);
         return 1;
     }
 

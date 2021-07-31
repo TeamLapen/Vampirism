@@ -30,15 +30,15 @@ public abstract class DualBipedRenderer<T extends MobEntity, M extends BipedMode
     }
 
     @Override
-    public ResourceLocation getEntityTexture(T entity) {
-        return currentTexture != null ? currentTexture : super.getEntityTexture(entity);
+    public ResourceLocation getTextureLocation(T entity) {
+        return currentTexture != null ? currentTexture : super.getTextureLocation(entity);
     }
 
     @Override
     public final void render(T entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         Pair<ResourceLocation, Boolean> b = determineTextureAndModel(entityIn);
         this.currentTexture = b.getLeft();
-        this.entityModel = b.getRight() ? modelB : modelA;
+        this.model = b.getRight() ? modelB : modelA;
         this.renderSelected(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
@@ -68,7 +68,7 @@ public abstract class DualBipedRenderer<T extends MobEntity, M extends BipedMode
      * @return Array of texture and slim status
      */
     protected Pair<ResourceLocation, Boolean>[] gatherTextures(String dirPath, boolean required){
-        Collection<ResourceLocation> hunterTextures = new ArrayList<>(Minecraft.getInstance().getResourceManager().getAllResourceLocations(dirPath, s -> s.endsWith(".png")));
+        Collection<ResourceLocation> hunterTextures = new ArrayList<>(Minecraft.getInstance().getResourceManager().listResources(dirPath, s -> s.endsWith(".png")));
         Pair<ResourceLocation, Boolean>[] textures = separateSlimTextures(hunterTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
         if (textures.length == 0 && required) {
             throw new IllegalStateException("Must have at least one hunter texture: " + REFERENCE.MODID + ":" + dirPath + "/texture.png");

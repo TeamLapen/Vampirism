@@ -17,28 +17,28 @@ public class DefendLeaderGoal extends TargetGoal {
     public DefendLeaderGoal(BasicVampireEntity basicVampire) {
         super(basicVampire, false);
         this.entity = basicVampire;
-        this.setMutexFlags(EnumSet.of(Goal.Flag.TARGET));
+        this.setFlags(EnumSet.of(Goal.Flag.TARGET));
     }
 
-    public boolean shouldExecute() {
+    public boolean canUse() {
         IEntityLeader leader = this.entity.getAdvancedLeader();
         if (leader == null) {
             return false;
         } else {
-            this.attacker = leader.getRepresentingEntity().getRevengeTarget();
-            int i = leader.getRepresentingEntity().getRevengeTimer();
-            return i != this.timestamp && this.isSuitableTarget(this.attacker, EntityPredicate.DEFAULT);
+            this.attacker = leader.getRepresentingEntity().getLastHurtByMob();
+            int i = leader.getRepresentingEntity().getLastHurtByMobTimestamp();
+            return i != this.timestamp && this.canAttack(this.attacker, EntityPredicate.DEFAULT);
         }
 
     }
 
-    public void startExecuting() {
-        this.goalOwner.setAttackTarget(this.attacker);
+    public void start() {
+        this.mob.setTarget(this.attacker);
         IEntityLeader leader = this.entity.getAdvancedLeader();
         if (leader != null) {
-            this.timestamp = leader.getRepresentingEntity().getRevengeTimer();
+            this.timestamp = leader.getRepresentingEntity().getLastHurtByMobTimestamp();
         }
 
-        super.startExecuting();
+        super.start();
     }
 }

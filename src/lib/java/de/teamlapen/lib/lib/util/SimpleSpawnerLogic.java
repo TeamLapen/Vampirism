@@ -61,7 +61,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
     public boolean isActivated() {
         if (this.world == null) return false;
         if (this.pos == null) return false;
-        return this.world.isPlayerWithin(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D, this.activateRange);
+        return this.world.hasNearbyAlivePlayer(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D, this.activateRange);
     }
 
     public void readFromNbt(CompoundNBT nbt) {
@@ -86,7 +86,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
     }
 
     public boolean setDelayToMin(int id) {
-        if (id == 1 && (this.world == null || this.world.isRemote)) {
+        if (id == 1 && (this.world == null || this.world.isClientSide)) {
             this.spawnDelay = this.minSpawnDelay;
             return true;
         } else {
@@ -172,7 +172,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
                         break;
                     }
 
-                    int j = this.world.getEntitiesWithinAABB(entity.getClass(), getSpawningBox().grow(5)).size();
+                    int j = this.world.getEntitiesOfClass(entity.getClass(), getSpawningBox().inflate(5)).size();
 
                     if (j >= this.maxNearbyEntities) {
                         this.resetTimer();
@@ -181,8 +181,8 @@ public class SimpleSpawnerLogic<T extends Entity> {
 
                     if (limitType != null) {
                         @Nullable
-                        WorldEntitySpawner.EntityDensityManager densityManager = ((ServerWorld) this.world).getChunkProvider().func_241101_k_();
-                        if (densityManager != null && !densityManager.func_234991_a_(limitType)) {
+                        WorldEntitySpawner.EntityDensityManager densityManager = ((ServerWorld) this.world).getChunkSource().getLastSpawnState();
+                        if (densityManager != null && !densityManager.canSpawnForCategory(limitType)) {
                             this.resetTimer();
                             break;
                         }
@@ -211,14 +211,14 @@ public class SimpleSpawnerLogic<T extends Entity> {
     }
 
     protected AxisAlignedBB getSpawningBox() {
-        if (this.pos == null) return AxisAlignedBB.withSizeAtOrigin(0, 0, 0);
-        return (new AxisAlignedBB(this.pos.getX(), this.pos.getY(), this.pos.getZ(), this.pos.getX() + 1, this.pos.getY() + 1, this.pos.getZ() + 1)).grow(this.spawnRange, this.spawnRange, this.spawnRange);
+        if (this.pos == null) return AxisAlignedBB.ofSize(0, 0, 0);
+        return (new AxisAlignedBB(this.pos.getX(), this.pos.getY(), this.pos.getZ(), this.pos.getX() + 1, this.pos.getY() + 1, this.pos.getZ() + 1)).inflate(this.spawnRange, this.spawnRange, this.spawnRange);
 
     }
 
     protected void onSpawned(T e) {
         if (e instanceof MobEntity) {
-            ((MobEntity) e).spawnExplosionParticle();
+            ((MobEntity) e).spawnAnim();
         }
         if (this.onSpawned != null) {
             this.onSpawned.accept(e);
@@ -230,7 +230,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
             this.spawnDelay = this.minSpawnDelay;
         } else {
             int i = this.maxSpawnDelay - this.minSpawnDelay;
-            this.spawnDelay = this.minSpawnDelay + (this.world == null ? 0 : this.world.rand.nextInt(i));
+            this.spawnDelay = this.minSpawnDelay + (this.world == null ? 0 : this.world.random.nextInt(i));
         }
     }
 }

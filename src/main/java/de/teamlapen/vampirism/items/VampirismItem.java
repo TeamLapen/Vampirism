@@ -25,9 +25,9 @@ public class VampirismItem extends Item {
     }
 
     @Override
-    protected String getDefaultTranslationKey() {
+    protected String getOrCreateDescriptionId() {
         if (this.translation_key == null) {
-            this.translation_key = Util.makeTranslationKey("item", Registry.ITEM.getKey(this));
+            this.translation_key = Util.makeDescriptionId("item", Registry.ITEM.getKey(this));
         }
 
         return this.translation_key;
@@ -37,6 +37,6 @@ public class VampirismItem extends Item {
      * Set a custom translation key
      */
     protected void setTranslation_key(String name) {
-        this.translation_key = Util.makeTranslationKey("item", new ResourceLocation(REFERENCE.MODID, name));
+        this.translation_key = Util.makeDescriptionId("item", new ResourceLocation(REFERENCE.MODID, name));
     }
 }

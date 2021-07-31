@@ -41,8 +41,8 @@ public class BakedWeaponTableModel implements IBakedModel {
 
     @Nonnull
     @Override
-    public ItemCameraTransforms getItemCameraTransforms() {
-        return baseModel.getItemCameraTransforms();
+    public TextureAtlasSprite getParticleIcon() {
+        return baseModel.getParticleIcon();
     }
 
     @Nonnull
@@ -53,31 +53,31 @@ public class BakedWeaponTableModel implements IBakedModel {
 
     @Nonnull
     @Override
-    public TextureAtlasSprite getParticleTexture() {
-        return baseModel.getParticleTexture();
-    }
-
-    @Nonnull
-    @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand) {
         List<BakedQuad> quads = new LinkedList<>(baseModel.getQuads(state, side, rand));
-        int fluidLevel = state == null ? 0 : state.get(WeaponTableBlock.LAVA);
+        int fluidLevel = state == null ? 0 : state.getValue(WeaponTableBlock.LAVA);
 
         if (fluidLevel > 0 && fluidLevel <= FLUID_LEVELS) {
-            quads.addAll(FLUID_MODELS[fluidLevel - 1][state.get(WeaponTableBlock.FACING).getHorizontalIndex()].getQuads(state, side, rand));
+            quads.addAll(FLUID_MODELS[fluidLevel - 1][state.getValue(WeaponTableBlock.FACING).get2DDataValue()].getQuads(state, side, rand));
         }
 
         return quads;
     }
 
+    @Nonnull
     @Override
-    public boolean isAmbientOcclusion() {
-        return baseModel.isAmbientOcclusion();
+    public ItemCameraTransforms getTransforms() {
+        return baseModel.getTransforms();
     }
 
     @Override
-    public boolean isBuiltInRenderer() {
-        return baseModel.isBuiltInRenderer();
+    public boolean isCustomRenderer() {
+        return baseModel.isCustomRenderer();
+    }
+
+    @Override
+    public boolean useAmbientOcclusion() {
+        return baseModel.useAmbientOcclusion();
     }
 
     @Override
@@ -86,7 +86,7 @@ public class BakedWeaponTableModel implements IBakedModel {
     }
 
     @Override
-    public boolean isSideLit() {
-        return baseModel.isSideLit();
+    public boolean usesBlockLight() {
+        return baseModel.usesBlockLight();
     }
 }

@@ -44,7 +44,7 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
         int posX = pos.getX();
         int posY = pos.getY();
         int posZ = pos.getZ();
-        return worldIn.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(posX, posY + 0.5D, posZ, posX + 1D, posY + 1.5D, posZ + 1D), EntityPredicates.IS_ALIVE);
+        return worldIn.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(posX, posY + 0.5D, posZ, posX + 1D, posY + 1.5D, posZ + 1D), EntityPredicates.ENTITY_STILL_ALIVE);
     }
     //Used to provide ItemHandler compatibility
     private final IItemHandler itemHandler;
@@ -67,15 +67,22 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT tagCompound) {
-        super.read(state, tagCompound);
+    public void load(BlockState state, CompoundNBT tagCompound) {
+        super.load(state, tagCompound);
         cooldownPull = tagCompound.getInt("cooldown_pull");
         cooldownProcess = tagCompound.getInt("cooldown_process");
     }
 
     @Override
+    public CompoundNBT save(CompoundNBT compound) {
+        compound.putInt("cooldown_pull", cooldownPull);
+        compound.putInt("cooldown_process", cooldownProcess);
+        return super.save(compound);
+    }
+
+    @Override
     public void tick() {
-        if (this.world != null && !this.world.isRemote) {
+        if (this.level != null && !this.level.isClientSide) {
             --this.cooldownPull;
             if (cooldownPull <= 0) {
                 cooldownPull = 10;
@@ -91,17 +98,10 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
         }
     }
 
-    @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        compound.putInt("cooldown_pull", cooldownPull);
-        compound.putInt("cooldown_process", cooldownProcess);
-        return super.write(compound);
-    }
-
     @Nonnull
     @Override
     protected Container createMenu(int id, PlayerInventory player) {
-        return new BloodGrinderContainer(id, player, this, IWorldPosCallable.of(player.player.getEntityWorld(), this.getPos()));
+        return new BloodGrinderContainer(id, player, this, IWorldPosCallable.create(player.player.getCommandSenderWorld(), this.getBlockPos()));
     }
 
     @Override
@@ -110,10 +110,10 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
     }
 
     private boolean pullItems() {
-        if (world == null) return false;
+        if (level == null) return false;
 
 
-        boolean flag = de.teamlapen.lib.lib.inventory.InventoryHelper.tryGetItemHandler(this.world, this.pos.up(), Direction.DOWN).map(pair -> {
+        boolean flag = de.teamlapen.lib.lib.inventory.InventoryHelper.tryGetItemHandler(this.level, this.worldPosition.above(), Direction.DOWN).map(pair -> {
             IItemHandler handler = pair.getLeft();
             for (int i = 0; i < handler.getSlots(); i++) {
                 ItemStack extracted = handler.extractItem(i, 1, true);
@@ -134,7 +134,7 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
         if (flag) {
             return true;
         } else {
-            for (ItemEntity entityItem : getCaptureItems(this.world, this.pos)) {
+            for (ItemEntity entityItem : getCaptureItems(this.level, this.worldPosition)) {
                 ItemStack stack = entityItem.getItem();
                 for (int i = 0; i < itemHandler.getSlots(); i++) {
                     ItemStack stack2 = itemHandler.insertItem(i, stack, true);
@@ -155,19 +155,19 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
     }
 
     private void updateProcess() {
-        if (world != null && !isEmpty()) {
+        if (level != null && !isEmpty()) {
             for (int i = 0; i < itemHandler.getSlots(); i++) {
                 final int slot = i;
                 ItemStack stack = itemHandler.extractItem(i, 1, true);
                 int blood = BloodConversionRegistry.getImpureBloodValue(stack.getItem());
                 if (blood > 0) {
                     FluidStack fluid = new FluidStack(ModFluids.impure_blood, blood);
-                    FluidUtil.getFluidHandler(this.world, this.pos.down(), Direction.UP).ifPresent(handler -> {
+                    FluidUtil.getFluidHandler(this.level, this.worldPosition.below(), Direction.UP).ifPresent(handler -> {
                         int filled = handler.fill(fluid, IFluidHandler.FluidAction.SIMULATE);
                         if (filled >= 0.9f * blood) {
                             ItemStack extractedStack = itemHandler.extractItem(slot, 1, false);
                             handler.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
-                            this.world.playSound(null, this.getPos(), ModSounds.grinder, SoundCategory.BLOCKS, 0.5f, 0.7f);
+                            this.level.playSound(null, this.getBlockPos(), ModSounds.grinder, SoundCategory.BLOCKS, 0.5f, 0.7f);
                             this.cooldownProcess = MathHelper.clamp(20 * filled / VReference.FOOD_TO_FLUID_BLOOD, 20, 100);
                         }
                     });

@@ -16,7 +16,7 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
 
     public void addEffectInstance(T player, EffectInstance instance) {
         ((EffectInstanceWithSource) instance).setSource(this.getRegistryName());
-        player.getRepresentingPlayer().addPotionEffect(instance);
+        player.getRepresentingPlayer().addEffect(instance);
     }
 
     /**
@@ -66,7 +66,7 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
     }
 
     public void removePotionEffect(T player, Effect effect) {
-        EffectInstance ins = player.getRepresentingPlayer().getActivePotionEffect(effect);
+        EffectInstance ins = player.getRepresentingPlayer().getEffect(effect);
         while (ins != null) {
             EffectInstanceWithSource insM = ((EffectInstanceWithSource) ins);
             if (insM.hasSource()) {

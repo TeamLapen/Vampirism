@@ -41,11 +41,11 @@ public class UpdateEntityPacket implements IMessage {
         if (msg.playerItself) {
             tag.putBoolean("itself", true);
         }
-        buf.writeCompoundTag(tag);
+        buf.writeNbt(tag);
     }
 
     static UpdateEntityPacket decode(PacketBuffer buf) {
-        CompoundNBT tag = buf.readCompoundTag();
+        CompoundNBT tag = buf.readNbt();
         UpdateEntityPacket pkt = new UpdateEntityPacket();
         pkt.id = tag.getInt("id");
         if (tag.contains("data")) {
@@ -141,7 +141,7 @@ public class UpdateEntityPacket implements IMessage {
             throw new IllegalArgumentException("You cannot use this packet to sync this entity. The entity has to implement ISyncable");
         }
         UpdateEntityPacket packet = new UpdateEntityPacket();
-        packet.id = entity.getEntityId();
+        packet.id = entity.getId();
         packet.data = new CompoundNBT();
         ((ISyncable) entity).writeFullUpdateToNBT(packet.data);
         return packet;
@@ -156,7 +156,7 @@ public class UpdateEntityPacket implements IMessage {
      */
     public static <T extends Entity & ISyncable> UpdateEntityPacket create(T entity, CompoundNBT data) {
         UpdateEntityPacket packet = new UpdateEntityPacket();
-        packet.id = entity.getEntityId();
+        packet.id = entity.getId();
         packet.data = data;
         return packet;
     }

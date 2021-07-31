@@ -20,34 +20,34 @@ public class AttackMeleeNoSunGoal extends MeleeAttackGoal {
     }
 
     @Override
-    public boolean shouldExecute() {
-        boolean flag = super.shouldExecute();
+    public boolean canUse() {
+        boolean flag = super.canUse();
         if (flag) {
-            LivingEntity entitylivingbase = this.attacker.getAttackTarget();
+            LivingEntity entitylivingbase = this.mob.getTarget();
             if (entitylivingbase != null) {
-                double distance = this.attacker.getDistanceSq(entitylivingbase.getPosX(), entitylivingbase.getBoundingBox().minY, entitylivingbase.getPosZ());
+                double distance = this.mob.distanceToSqr(entitylivingbase.getX(), entitylivingbase.getBoundingBox().minY, entitylivingbase.getZ());
                 if (distance <= this.getAttackReachSqr(entitylivingbase)) {
                     return true;
                 }
             }
             boolean avoidSun = false;
-            if (attacker.getNavigator() instanceof GroundPathNavigator) {
-                avoidSun = ((GroundPathNavigator) attacker.getNavigator()).shouldAvoidSun;
+            if (mob.getNavigation() instanceof GroundPathNavigator) {
+                avoidSun = ((GroundPathNavigator) mob.getNavigation()).avoidSun;
             }
 
             if (avoidSun) {
 
                 Path path = this.path;
-                if (attacker.getEntityWorld().canBlockSeeSky(new BlockPos(MathHelper.floor(this.attacker.getPosX()), (int) (this.attacker.getBoundingBox().minY + 0.5D), MathHelper.floor(this.attacker.getPosZ())))) {
+                if (mob.getCommandSenderWorld().canSeeSkyFromBelowWater(new BlockPos(MathHelper.floor(this.mob.getX()), (int) (this.mob.getBoundingBox().minY + 0.5D), MathHelper.floor(this.mob.getZ())))) {
                     return false;
                 }
 
-                for (int j = 0; j < path.getCurrentPathLength(); ++j) {
-                    PathPoint pathpoint2 = path.getPathPointFromIndex(j);
+                for (int j = 0; j < path.getNodeCount(); ++j) {
+                    PathPoint pathpoint2 = path.getNode(j);
 
-                    if (this.attacker.getEntityWorld().canBlockSeeSky(new BlockPos(pathpoint2.x, pathpoint2.y, pathpoint2.z))) {
-                        path.setCurrentPathLength(Math.max(j - 1, 0));
-                        return path.getCurrentPathLength() > 1;
+                    if (this.mob.getCommandSenderWorld().canSeeSkyFromBelowWater(new BlockPos(pathpoint2.x, pathpoint2.y, pathpoint2.z))) {
+                        path.truncateNodes(Math.max(j - 1, 0));
+                        return path.getNodeCount() > 1;
                     }
 
                 }

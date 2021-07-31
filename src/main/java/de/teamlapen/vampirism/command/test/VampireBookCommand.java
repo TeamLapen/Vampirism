@@ -11,14 +11,14 @@ public class VampireBookCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("vampireBook")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
                 .executes(context -> {
-                    return vampireBook(context.getSource().asPlayer());
+                    return vampireBook(context.getSource().getPlayerOrException());
                 });
     }
 
     private static int vampireBook(ServerPlayerEntity asPlayer) {
-        asPlayer.inventory.addItemStackToInventory(VampireBookManager.getInstance().getRandomBook(asPlayer.getRNG()));
+        asPlayer.inventory.add(VampireBookManager.getInstance().getRandomBook(asPlayer.getRandom()));
         return 0;
     }
 }

@@ -49,9 +49,9 @@ public class Tests {
         LOGGER.warn("Clearing area", new Object[]{});
         clearArea(world);
         boolean wasCreative = player.isCreative();
-        player.setGameType(GameType.SURVIVAL);
-        player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 40, 100));
-        player.attemptTeleport(0, 5, 0, true);
+        player.setGameMode(GameType.SURVIVAL);
+        player.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 40, 100));
+        player.randomTeleport(0, 5, 0, true);
         TestInfo info = new TestInfo(world, player, new BlockPos(-20, 2, -20), "BloodFluidHandler");
 
         runTest(Tests::bloodFluidHandler, info);
@@ -59,8 +59,8 @@ public class Tests {
         runLightTest(Tests::checkObjectHolders, "Object holders", player);
 
         LOGGER.warn("Finished tests -> teleporting player", new Object[]{});
-        player.attemptTeleport(0, 5, 0, true);
-        if (wasCreative) player.setGameType(GameType.CREATIVE);
+        player.randomTeleport(0, 5, 0, true);
+        if (wasCreative) player.setGameMode(GameType.CREATIVE);
         sendMsg(player, "Finished tests");
     }
 
@@ -137,9 +137,9 @@ public class Tests {
     }
 
     private static boolean bloodFluidHandler(TestInfo info) {
-        info.world.setBlockState(info.pos, ModBlocks.blood_container.getDefaultState());
-        TileEntity t = info.world.getTileEntity(info.pos);
-        LazyOptional<IFluidHandler> opt = t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.getRandomDirection(info.world.rand));
+        info.world.setBlockAndUpdate(info.pos, ModBlocks.blood_container.defaultBlockState());
+        TileEntity t = info.world.getBlockEntity(info.pos);
+        LazyOptional<IFluidHandler> opt = t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.getRandom(info.world.random));
         opt.ifPresent(handler -> handler.fill(new FluidStack(ModFluids.blood, 10000000), IFluidHandler.FluidAction.EXECUTE));
         int blood = BloodHelper.getBlood(opt);
         assert blood > 0 : "Could not fill blood container";
@@ -167,27 +167,27 @@ public class Tests {
     }
 
     private static boolean blockWeaponTableFluids(TestInfo info) {
-        info.world.setBlockState(info.pos, ModBlocks.weapon_table.getDefaultState());
-        info.player.setHeldItem(info.player.getActiveHand(), new ItemStack(Items.LAVA_BUCKET));
+        info.world.setBlockAndUpdate(info.pos, ModBlocks.weapon_table.defaultBlockState());
+        info.player.setItemInHand(info.player.getUsedItemHand(), new ItemStack(Items.LAVA_BUCKET));
         BlockState block = info.world.getBlockState(info.pos);
-        block.onBlockActivated(info.world, info.player, info.player.getActiveHand(), new BlockRayTraceResult(new Vector3d(0, 0, 0), Direction.getRandomDirection(info.world.rand), info.pos, false));
+        block.use(info.world, info.player, info.player.getUsedItemHand(), new BlockRayTraceResult(new Vector3d(0, 0, 0), Direction.getRandom(info.world.random), info.pos, false));
         block = info.world.getBlockState(info.pos);
-        assert info.player.getHeldItem(info.player.getActiveHand()).getItem().equals(Items.BUCKET) : "Incorrect Fluid Container Handling";
-        LOGGER.warn("Block lava level: {}", new Object[]{block.get(WeaponTableBlock.LAVA)});
-        assert (block.get(WeaponTableBlock.LAVA) * WeaponTableBlock.MB_PER_META) == FluidAttributes.BUCKET_VOLUME : "Incorrect Fluid Transaction";
+        assert info.player.getItemInHand(info.player.getUsedItemHand()).getItem().equals(Items.BUCKET) : "Incorrect Fluid Container Handling";
+        LOGGER.warn("Block lava level: {}", new Object[]{block.getValue(WeaponTableBlock.LAVA)});
+        assert (block.getValue(WeaponTableBlock.LAVA) * WeaponTableBlock.MB_PER_META) == FluidAttributes.BUCKET_VOLUME : "Incorrect Fluid Transaction";
         return true;
     }
 
     private static void sendMsg(PlayerEntity player, String msg) {
-        player.sendStatusMessage(new StringTextComponent("§1[V-TEST]§r " + msg), false);
+        player.displayClientMessage(new StringTextComponent("§1[V-TEST]§r " + msg), false);
     }
 
     private static void clearArea(World world) {
         for (int x = -21; x < 22; x++) {
             for (int y = 1; y < 22; y++) {
                 for (int z = -21; z < 22; z++) {
-                    BlockState s = (y == 1 || x == -21 || x == 21 || z == -21 || z == 21 || y == 21) ? ModBlocks.castle_block_dark_stone.getDefaultState() : Blocks.AIR.getDefaultState();
-                    world.setBlockState(new BlockPos(x, y, z), s);
+                    BlockState s = (y == 1 || x == -21 || x == 21 || z == -21 || z == 21 || y == 21) ? ModBlocks.castle_block_dark_stone.defaultBlockState() : Blocks.AIR.defaultBlockState();
+                    world.setBlockAndUpdate(new BlockPos(x, y, z), s);
                 }
             }
         }

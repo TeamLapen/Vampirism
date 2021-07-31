@@ -16,16 +16,16 @@ public class InfoEntitiesCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("info-entities")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .executes(context -> {
-                    return infoEntities(context.getSource(), context.getSource().asPlayer());
+                    return infoEntities(context.getSource(), context.getSource().getPlayerOrException());
                 });
     }
 
     private static int infoEntities(CommandSource commandSource, ServerPlayerEntity asPlayer) {
-        WorldEntitySpawner.EntityDensityManager densityManager = asPlayer.getServerWorld().getChunkProvider().func_241101_k_();
-        Object2IntMap<EntityClassification> object2intmap = densityManager.func_234995_b_();
-        commandSource.sendFeedback(new StringTextComponent(String.format("Creature: %d (%d), Monster: %s (%s), Hunter: %s (%s), Vampire: %s (%s)", object2intmap.getOrDefault(EntityClassification.CREATURE, 0), EntityClassification.CREATURE.getMaxNumberOfCreature(), object2intmap.getOrDefault(EntityClassification.MONSTER, 0), EntityClassification.MONSTER.getMaxNumberOfCreature(), object2intmap.getOrDefault(VReference.HUNTER_CREATURE_TYPE, 0), VReference.HUNTER_CREATURE_TYPE.getMaxNumberOfCreature(), object2intmap.getOrDefault(VReference.VAMPIRE_CREATURE_TYPE, 0), VReference.VAMPIRE_CREATURE_TYPE.getMaxNumberOfCreature())), true);
+        WorldEntitySpawner.EntityDensityManager densityManager = asPlayer.getLevel().getChunkSource().getLastSpawnState();
+        Object2IntMap<EntityClassification> object2intmap = densityManager.getMobCategoryCounts();
+        commandSource.sendSuccess(new StringTextComponent(String.format("Creature: %d (%d), Monster: %s (%s), Hunter: %s (%s), Vampire: %s (%s)", object2intmap.getOrDefault(EntityClassification.CREATURE, 0), EntityClassification.CREATURE.getMaxInstancesPerChunk(), object2intmap.getOrDefault(EntityClassification.MONSTER, 0), EntityClassification.MONSTER.getMaxInstancesPerChunk(), object2intmap.getOrDefault(VReference.HUNTER_CREATURE_TYPE, 0), VReference.HUNTER_CREATURE_TYPE.getMaxInstancesPerChunk(), object2intmap.getOrDefault(VReference.VAMPIRE_CREATURE_TYPE, 0), VReference.VAMPIRE_CREATURE_TYPE.getMaxInstancesPerChunk())), true);
         return 0;
     }
 }

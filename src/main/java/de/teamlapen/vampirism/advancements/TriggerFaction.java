@@ -41,14 +41,14 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
      * Trigger this criterion
      */
     public void trigger(ServerPlayerEntity playerMP, IPlayableFaction<?> faction, int level, int lordLevel) {
-        this.triggerListeners(playerMP, (instance -> {
+        this.trigger(playerMP, (instance -> {
             return instance.test(faction, level, lordLevel);
         }));
     }
 
     @Nonnull
     @Override
-    protected Instance deserializeTrigger(JsonObject json, @Nonnull EntityPredicate.AndPredicate entityPredicate, @Nonnull ConditionArrayParser conditionsParser) {
+    protected Instance createInstance(JsonObject json, @Nonnull EntityPredicate.AndPredicate entityPredicate, @Nonnull ConditionArrayParser conditionsParser) {
         IPlayableFaction<?> faction = null;
         Type type = json.has("type") ? Type.valueOf(json.get("type").getAsString()) : Type.LEVEL;
         if (json.has("faction")) {
@@ -80,7 +80,7 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
         private final int level;
 
         Instance(@Nonnull Type type, @Nullable IPlayableFaction<?> faction, int level) {
-            super(ID, EntityPredicate.AndPredicate.ANY_AND); //TODO check what AndPredicate does
+            super(ID, EntityPredicate.AndPredicate.ANY); //TODO check what AndPredicate does
             this.type = type;
             this.faction = faction;
             this.level = level;
@@ -88,8 +88,8 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
 
         @Nonnull
         @Override
-        public JsonObject serialize(@Nonnull ConditionArraySerializer serializer) {
-            JsonObject json = super.serialize(serializer);
+        public JsonObject serializeToJson(@Nonnull ConditionArraySerializer serializer) {
+            JsonObject json = super.serializeToJson(serializer);
             json.addProperty("type", type.name());
             json.addProperty("faction", faction == null ? "null" : faction.getID().toString());
             json.addProperty("level", level);

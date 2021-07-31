@@ -45,46 +45,46 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
     }
 
     @Override
-    public ShapelessWeaponTableRecipeBuilder addCriterion(String name, ICriterionInstance criterionIn) {
-        return (ShapelessWeaponTableRecipeBuilder) super.addCriterion(name, criterionIn);
+    public ShapelessWeaponTableRecipeBuilder group(String groupIn) {
+        return (ShapelessWeaponTableRecipeBuilder) super.group(groupIn);
     }
 
     @Override
-    public ShapelessWeaponTableRecipeBuilder addIngredient(ITag<Item> tagIn) {
-        return (ShapelessWeaponTableRecipeBuilder) super.addIngredient(tagIn);
+    public ShapelessWeaponTableRecipeBuilder requires(IItemProvider itemIn) {
+        return (ShapelessWeaponTableRecipeBuilder) super.requires(itemIn);
     }
 
     @Override
-    public ShapelessWeaponTableRecipeBuilder addIngredient(IItemProvider itemIn) {
-        return (ShapelessWeaponTableRecipeBuilder) super.addIngredient(itemIn);
+    public ShapelessWeaponTableRecipeBuilder requires(IItemProvider itemIn, int quantity) {
+        return (ShapelessWeaponTableRecipeBuilder) super.requires(itemIn, quantity);
     }
 
     @Override
-    public ShapelessWeaponTableRecipeBuilder addIngredient(IItemProvider itemIn, int quantity) {
-        return (ShapelessWeaponTableRecipeBuilder) super.addIngredient(itemIn, quantity);
+    public ShapelessWeaponTableRecipeBuilder requires(Ingredient ingredientIn) {
+        return (ShapelessWeaponTableRecipeBuilder) super.requires(ingredientIn);
     }
 
     @Override
-    public ShapelessWeaponTableRecipeBuilder addIngredient(Ingredient ingredientIn) {
-        return (ShapelessWeaponTableRecipeBuilder) super.addIngredient(ingredientIn);
+    public ShapelessWeaponTableRecipeBuilder requires(Ingredient ingredientIn, int quantity) {
+        return (ShapelessWeaponTableRecipeBuilder) super.requires(ingredientIn, quantity);
     }
 
     @Override
-    public ShapelessWeaponTableRecipeBuilder addIngredient(Ingredient ingredientIn, int quantity) {
-        return (ShapelessWeaponTableRecipeBuilder) super.addIngredient(ingredientIn, quantity);
+    public ShapelessWeaponTableRecipeBuilder requires(ITag<Item> tagIn) {
+        return (ShapelessWeaponTableRecipeBuilder) super.requires(tagIn);
     }
 
     @Override
-    public void build(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
+    public void save(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
         id = new ResourceLocation(id.getNamespace(), "weapontable/" + id.getPath());
-        this.advancementBuilder.withCriterion("has_skill", SkillUnlockedTrigger.builder(this.skills != null && this.skills.length >= 1 ? this.skills[0] : HunterSkills.weapon_table));
-        this.validate(id);
-        this.advancementBuilder
-                .withParentId(new ResourceLocation("recipes/root"))
-                .withCriterion("has_the_recipe", RecipeUnlockedTrigger.create(id))
-                .withRewards(AdvancementRewards.Builder.recipe(id))
-                .withRequirementsStrategy(IRequirementsStrategy.OR);
-        consumerIn.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, this.ingredients, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getGroup().getPath() + "/" + id.getPath()), this.lava, this.skills != null ? this.skills : new ISkill[]{}, this.level));
+        this.advancement.addCriterion("has_skill", SkillUnlockedTrigger.builder(this.skills != null && this.skills.length >= 1 ? this.skills[0] : HunterSkills.weapon_table));
+        this.ensureValid(id);
+        this.advancement
+                .parent(new ResourceLocation("recipes/root"))
+                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
+                .rewards(AdvancementRewards.Builder.recipe(id))
+                .requirements(IRequirementsStrategy.OR);
+        consumerIn.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, this.ingredients, this.advancement, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItemCategory().getRecipeFolderName() + "/" + id.getPath()), this.lava, this.skills != null ? this.skills : new ISkill[]{}, this.level));
     }
 
     public ShapelessWeaponTableRecipeBuilder lava(int amount) {
@@ -98,8 +98,8 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
     }
 
     @Override
-    public ShapelessWeaponTableRecipeBuilder setGroup(String groupIn) {
-        return (ShapelessWeaponTableRecipeBuilder) super.setGroup(groupIn);
+    public ShapelessWeaponTableRecipeBuilder unlockedBy(String name, ICriterionInstance criterionIn) {
+        return (ShapelessWeaponTableRecipeBuilder) super.unlockedBy(name, criterionIn);
     }
 
     public ShapelessWeaponTableRecipeBuilder skills(ISkill... skills) {
@@ -120,13 +120,13 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
         }
 
         @Override
-        public IRecipeSerializer<?> getSerializer() {
+        public IRecipeSerializer<?> getType() {
             return ModRecipes.shapeless_crafting_weapontable;
         }
 
         @Override
-        public void serialize(JsonObject json) {
-            super.serialize(json);
+        public void serializeRecipeData(JsonObject json) {
+            super.serializeRecipeData(json);
             json.addProperty("lava", this.lava);
             JsonArray skills = new JsonArray();
             for (ISkill skill : this.skills) {

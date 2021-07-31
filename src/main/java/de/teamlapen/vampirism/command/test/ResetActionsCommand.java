@@ -18,9 +18,9 @@ public class ResetActionsCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("resetActions")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .executes(context -> {
-                    return resetActions(context.getSource(), Lists.newArrayList(context.getSource().asPlayer()));
+                    return resetActions(context.getSource(), Lists.newArrayList(context.getSource().getPlayerOrException()));
                 })
                 .then(Commands.argument("players", EntityArgument.entities())
                         .executes(context -> {
@@ -35,7 +35,7 @@ public class ResetActionsCommand extends BasicCommand {
                 IActionHandler<?> handler = factionPlayer.getActionHandler();
                 if (handler != null) {
                     handler.resetTimers();
-                    commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.resetactions"), false);
+                    commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.resetactions"), false);
                 }
             });
         }

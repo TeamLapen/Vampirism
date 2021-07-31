@@ -35,14 +35,14 @@ public class SkillUnlockedTrigger extends AbstractCriterionTrigger<SkillUnlocked
     }
 
     public void trigger(ServerPlayerEntity player, ISkill skill) {
-        this.triggerListeners(player, (instance -> {
+        this.trigger(player, (instance -> {
             return instance.test(skill);
         }));
     }
 
     @Override
-    protected Instance deserializeTrigger(JsonObject json, EntityPredicate.AndPredicate entityPredicate, ConditionArrayParser conditionsParser) {
-        return new Instance(new ResourceLocation(JSONUtils.getString(json, "skill")));
+    protected Instance createInstance(JsonObject json, EntityPredicate.AndPredicate entityPredicate, ConditionArrayParser conditionsParser) {
+        return new Instance(new ResourceLocation(JSONUtils.getAsString(json, "skill")));
     }
 
     static class Instance extends CriterionInstance {
@@ -50,18 +50,18 @@ public class SkillUnlockedTrigger extends AbstractCriterionTrigger<SkillUnlocked
         private final ResourceLocation skillId;
 
         Instance(@Nonnull ISkill skill) {
-            super(ID, EntityPredicate.AndPredicate.ANY_AND);
+            super(ID, EntityPredicate.AndPredicate.ANY);
             this.skillId = skill.getRegistryName();
         }
 
         Instance(@Nonnull ResourceLocation skillId) {
-            super(ID, EntityPredicate.AndPredicate.ANY_AND);
+            super(ID, EntityPredicate.AndPredicate.ANY);
             this.skillId = skillId;
         }
 
         @Override
-        public JsonObject serialize(ConditionArraySerializer serializer) {
-            JsonObject jsonObject = super.serialize(serializer);
+        public JsonObject serializeToJson(ConditionArraySerializer serializer) {
+            JsonObject jsonObject = super.serializeToJson(serializer);
             jsonObject.addProperty("skill", skillId.toString());
             return jsonObject;
         }

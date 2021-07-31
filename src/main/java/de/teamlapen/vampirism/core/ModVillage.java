@@ -59,8 +59,8 @@ public class ModVillage {
         }.setRegistryName(REFERENCE.MODID, "hunter_expert");
         registry.register(vampire_expert);
         registry.register(hunter_expert);
-        VillagerTrades.VILLAGER_DEFAULT_TRADES.computeIfAbsent(hunter_expert, trades -> new Int2ObjectOpenHashMap<>()).putAll(getHunterTrades());
-        VillagerTrades.VILLAGER_DEFAULT_TRADES.computeIfAbsent(vampire_expert, trades -> new Int2ObjectOpenHashMap<>()).putAll(getVampireTrades());
+        VillagerTrades.TRADES.computeIfAbsent(hunter_expert, trades -> new Int2ObjectOpenHashMap<>()).putAll(getHunterTrades());
+        VillagerTrades.TRADES.computeIfAbsent(vampire_expert, trades -> new Int2ObjectOpenHashMap<>()).putAll(getVampireTrades());
     }
 
     static void registerVillagePointOfInterestType(IForgeRegistry<PointOfInterestType> registry) {
@@ -80,11 +80,11 @@ public class ModVillage {
     }
 
     static void registerSchedule(IForgeRegistry<Schedule> registry) {
-        registry.register(new ScheduleBuilder(new Schedule()).add(12000, Activity.IDLE).add(10, Activity.REST).add(14000, Activity.WORK).add(21000, Activity.MEET).add(23000, Activity.IDLE).build().setRegistryName(REFERENCE.MODID, "converted_default"));
+        registry.register(new ScheduleBuilder(new Schedule()).changeActivityAt(12000, Activity.IDLE).changeActivityAt(10, Activity.REST).changeActivityAt(14000, Activity.WORK).changeActivityAt(21000, Activity.MEET).changeActivityAt(23000, Activity.IDLE).build().setRegistryName(REFERENCE.MODID, "converted_default"));
     }
 
     private static Set<BlockState> getAllStates(Block... blocks) {
-        return Arrays.stream(blocks).map(block -> block.getStateContainer().getBaseState()).collect(ImmutableSet.toImmutableSet());
+        return Arrays.stream(blocks).map(block -> block.getStateDefinition().any()).collect(ImmutableSet.toImmutableSet());
     }
 
     private static Map<Integer, VillagerTrades.ITrade[]> getHunterTrades() {

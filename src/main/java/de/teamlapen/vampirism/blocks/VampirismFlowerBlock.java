@@ -17,7 +17,7 @@ public class VampirismFlowerBlock extends FlowerBlock {
     private final TYPE type;
 
     public VampirismFlowerBlock(TYPE type) {
-        super(type.effect, type.duration, Properties.create(Material.PLANTS).zeroHardnessAndResistance().doesNotBlockMovement().sound(SoundType.PLANT));
+        super(type.effect, type.duration, Properties.of(Material.PLANT).instabreak().noCollission().sound(SoundType.GRASS));
         this.type = type;
         this.setRegistryName(REFERENCE.MODID, type.getName());
     }
@@ -37,12 +37,12 @@ public class VampirismFlowerBlock extends FlowerBlock {
         }
 
         public String getName() {
-            return this.getString();
+            return this.getSerializedName();
         }
 
         @Nonnull
         @Override
-        public String getString() {
+        public String getSerializedName() {
             return name;
         }
 

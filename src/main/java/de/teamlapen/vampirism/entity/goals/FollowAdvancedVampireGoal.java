@@ -25,28 +25,28 @@ public class FollowAdvancedVampireGoal extends Goal {
     public FollowAdvancedVampireGoal(BasicVampireEntity entity, double speed) {
         this.entity = entity;
         this.speed = speed;
-        this.setMutexFlags(EnumSet.of(Flag.MOVE));
+        this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean canContinueToUse() {
         if (this.entity.getAdvancedLeader() == null) {
             return false;
         } else {
-            double d0 = this.entity.getDistanceSq(this.entity.getAdvancedLeader().getRepresentingEntity());
+            double d0 = this.entity.distanceToSqr(this.entity.getAdvancedLeader().getRepresentingEntity());
             return d0 >= DIST && d0 <= 256.0D;
         }
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
 
         IEntityLeader leader = entity.getAdvancedLeader();
         if (leader != null) {
-            return leader.getRepresentingEntity().isAlive() && this.entity.getDistanceSq(leader.getRepresentingEntity()) > DIST;
+            return leader.getRepresentingEntity().isAlive() && this.entity.distanceToSqr(leader.getRepresentingEntity()) > DIST;
         }
 
-        List<VampireBaseEntity> list = this.entity.getEntityWorld().getEntitiesWithinAABB(VampireBaseEntity.class, this.entity.getBoundingBox().grow(8, 4, 8), entity -> entity instanceof IEntityLeader);
+        List<VampireBaseEntity> list = this.entity.getCommandSenderWorld().getEntitiesOfClass(VampireBaseEntity.class, this.entity.getBoundingBox().inflate(8, 4, 8), entity -> entity instanceof IEntityLeader);
 
 
         double d0 = Double.MAX_VALUE;
@@ -54,7 +54,7 @@ public class FollowAdvancedVampireGoal extends Goal {
         for (VampireBaseEntity entity1 : list) {
             IEntityLeader leader1 = ((IEntityLeader) entity1);
             if (entity1.isAlive() && leader1.getFollowingCount() < leader1.getMaxFollowerCount()) {
-                double d1 = this.entity.getDistanceSq(entity1);
+                double d1 = this.entity.distanceToSqr(entity1);
 
                 if (d1 <= d0) {
                     d0 = d1;
@@ -67,12 +67,12 @@ public class FollowAdvancedVampireGoal extends Goal {
         else {
             entity.setAdvancedLeader(leader);
             leader.increaseFollowerCount();
-            return this.entity.getDistanceSq(leader.getRepresentingEntity()) > DIST;
+            return this.entity.distanceToSqr(leader.getRepresentingEntity()) > DIST;
         }
     }
 
     @Override
-    public void startExecuting() {
+    public void start() {
         delayCounter = 0;
     }
 
@@ -80,8 +80,8 @@ public class FollowAdvancedVampireGoal extends Goal {
     public void tick() {
         if (--this.delayCounter <= 0 && entity.getAdvancedLeader() != null) {
             this.delayCounter = 10;
-            this.entity.getNavigator().tryMoveToEntityLiving(this.entity.getAdvancedLeader().getRepresentingEntity(), this.speed);
-            this.entity.lookAt(EntityAnchorArgument.Type.EYES, this.entity.getAdvancedLeader().getRepresentingEntity().getPositionVec().add(0, this.entity.getAdvancedLeader().getRepresentingEntity().getEyeHeight(), 0));
+            this.entity.getNavigation().moveTo(this.entity.getAdvancedLeader().getRepresentingEntity(), this.speed);
+            this.entity.lookAt(EntityAnchorArgument.Type.EYES, this.entity.getAdvancedLeader().getRepresentingEntity().position().add(0, this.entity.getAdvancedLeader().getRepresentingEntity().getEyeHeight(), 0));
         }
     }
 }

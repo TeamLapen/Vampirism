@@ -53,12 +53,12 @@ import java.util.UUID;
 
 
 public class ConvertedHorseEntity extends HorseEntity implements ICurableConvertedCreature<HorseEntity> {
-    private static final DataParameter<Boolean> CONVERTING = EntityDataManager.createKey(ConvertedHorseEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> CONVERTING = EntityDataManager.defineId(ConvertedHorseEntity.class, DataSerializers.BOOLEAN);
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return AbstractHorseEntity.func_234237_fg_()
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG)
-                .createMutableAttribute(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+        return AbstractHorseEntity.createBaseHorseAttributes()
+                .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG)
+                .add(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
     protected boolean vulnerableToFire = true;
     private EnumStrength garlicCache = EnumStrength.NONE;
@@ -75,20 +75,44 @@ public class ConvertedHorseEntity extends HorseEntity implements ICurableConvert
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damageSource, float amount) {
-        if (vulnerableToFire) {
-            if (DamageSource.IN_FIRE.equals(damageSource)) {
-                return this.attackEntityFrom(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amount));
-            } else if (DamageSource.ON_FIRE.equals(damageSource)) {
-                return this.attackEntityFrom(VReference.VAMPIRE_ON_FIRE, calculateFireDamage(amount));
-            }
+    public void addAdditionalSaveData(@Nonnull CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putInt("ConversionTime", this.isConverting(this) ? this.conversionTime : -1);
+        if (this.conversationStarter != null) {
+            compound.putUUID("ConversionPlayer", this.conversationStarter);
         }
-        return super.attackEntityFrom(damageSource, amount);
     }
 
     @Override
-    public boolean canDespawn(double distanceToClosestPlayer) {
-        return !isTame();
+    public void aiStep() {
+        if (!this.level.isClientSide && this.isAlive() && this.isConverting(this)) {
+            --this.conversionTime;
+            if (this.conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(this, EntityType.HORSE, (timer) -> this.conversionTime = timer)) {
+                this.cureEntity((ServerWorld) this.level, this, EntityType.HORSE);
+            }
+        }
+        if (this.tickCount % REFERENCE.REFRESH_GARLIC_TICKS == 1) {
+            isGettingGarlicDamage(this.level, true);
+        }
+        if (this.tickCount % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
+            isGettingSundamage(this.level, true);
+        }
+        if (!level.isClientSide) {
+            if (isGettingSundamage(level) && tickCount % 40 == 11) {
+                double dmg = getAttribute(ModAttributes.sundamage).getValue();
+                if (dmg > 0) this.hurt(VReference.SUNDAMAGE, (float) dmg);
+            }
+            if (isGettingGarlicDamage(level) != EnumStrength.NONE) {
+                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(level), this.tickCount);
+            }
+            if (isAlive() && isInWater()) {
+                setAirSupply(300);
+                if (tickCount % 16 == 4) {
+                    addEffect(new EffectInstance(Effects.WEAKNESS, 80, 0));
+                }
+            }
+        }
+        super.aiStep();
     }
 
     @Override
@@ -97,16 +121,23 @@ public class ConvertedHorseEntity extends HorseEntity implements ICurableConvert
     }
 
     @Override
-    public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
-        this.addPotionEffect(new EffectInstance(Effects.REGENERATION, amt * 20));
+    public void die(DamageSource cause) {
+        super.die(cause);
+        if (cause.getDirectEntity() instanceof CrossbowArrowEntity && Helper.isHunter(cause.getEntity())) {
+            dropSoul = true;
+        } else if (cause.getDirectEntity() instanceof PlayerEntity && Helper.isHunter(cause.getDirectEntity())) {
+            ItemStack weapon = ((PlayerEntity) cause.getDirectEntity()).getMainHandItem();
+            if (!weapon.isEmpty() && weapon.getItem() instanceof IVampireFinisher) {
+                dropSoul = true;
+            }
+        } else {
+            dropSoul = false;//In case a previous death has been canceled somehow
+        }
     }
 
-    @Nonnull
     @Override
-    public ActionResultType getEntityInteractionResult(@Nonnull PlayerEntity player, @Nonnull Hand hand) {
-        ItemStack stack = player.getHeldItem(hand);
-        if (stack.getItem() != ModItems.cure_apple) return super.getEntityInteractionResult(player, hand);
-        return interactWithCureItem(player, stack, this);
+    public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
+        this.addEffect(new EffectInstance(Effects.REGENERATION, amt * 20));
     }
 
     @Override
@@ -115,7 +146,7 @@ public class ConvertedHorseEntity extends HorseEntity implements ICurableConvert
     }
 
     @Override
-    public CreatureAttribute getCreatureAttribute() {
+    public CreatureAttribute getMobType() {
         return VReference.VAMPIRE_CREATURE_ATTRIBUTE;
     }
 
@@ -125,7 +156,7 @@ public class ConvertedHorseEntity extends HorseEntity implements ICurableConvert
             return super.getName();
         }
         if (name == null) {
-            this.name = new TranslationTextComponent("entity.vampirism.vampire").appendSibling(new TranslationTextComponent("entity.horse"));
+            this.name = new TranslationTextComponent("entity.vampirism.vampire").append(new TranslationTextComponent("entity.horse"));
         }
         return name;
     }
@@ -136,9 +167,9 @@ public class ConvertedHorseEntity extends HorseEntity implements ICurableConvert
     }
 
     @Override
-    public void handleStatusUpdate(byte id) {
+    public void handleEntityEvent(byte id) {
         if (!handleSound(id, this)) {
-            super.handleStatusUpdate(id);
+            super.handleEntityEvent(id);
         }
     }
 
@@ -152,69 +183,42 @@ public class ConvertedHorseEntity extends HorseEntity implements ICurableConvert
     }
 
     @Override
+    public boolean hurt(DamageSource damageSource, float amount) {
+        if (vulnerableToFire) {
+            if (DamageSource.IN_FIRE.equals(damageSource)) {
+                return this.hurt(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amount));
+            } else if (DamageSource.ON_FIRE.equals(damageSource)) {
+                return this.hurt(VReference.VAMPIRE_ON_FIRE, calculateFireDamage(amount));
+            }
+        }
+        return super.hurt(damageSource, amount);
+    }
+
+    @Override
     public boolean isGettingSundamage(IWorld iWorld, boolean forceRefresh) {
         if (!forceRefresh)
             return sundamageCache;
-        return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.world.getProfiler()));
+        return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.level.getProfiler()));
     }
 
     @Override
     public boolean isIgnoringSundamage() {
-        return this.isPotionActive(ModEffects.sunscreen);
+        return this.hasEffect(ModEffects.sunscreen);
+    }
+
+    @Nonnull
+    @Override
+    public ActionResultType mobInteract(@Nonnull PlayerEntity player, @Nonnull Hand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (stack.getItem() != ModItems.cure_apple) return super.mobInteract(player, hand);
+        return interactWithCureItem(player, stack, this);
     }
 
     @Override
-    public void livingTick() {
-        if (!this.world.isRemote && this.isAlive() && this.isConverting(this)) {
-            --this.conversionTime;
-            if (this.conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(this, EntityType.HORSE, (timer) -> this.conversionTime = timer)) {
-                this.cureEntity((ServerWorld) this.world, this, EntityType.HORSE);
-            }
-        }
-        if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 1) {
-            isGettingGarlicDamage(this.world, true);
-        }
-        if (this.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
-            isGettingSundamage(this.world, true);
-        }
-        if (!world.isRemote) {
-            if (isGettingSundamage(world) && ticksExisted % 40 == 11) {
-                double dmg = getAttribute(ModAttributes.sundamage).getValue();
-                if (dmg > 0) this.attackEntityFrom(VReference.SUNDAMAGE, (float) dmg);
-            }
-            if (isGettingGarlicDamage(world) != EnumStrength.NONE) {
-                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(world), this.ticksExisted);
-            }
-            if (isAlive() && isInWater()) {
-                setAir(300);
-                if (ticksExisted % 16 == 4) {
-                    addPotionEffect(new EffectInstance(Effects.WEAKNESS, 80, 0));
-                }
-            }
-        }
-        super.livingTick();
-    }
-
-    @Override
-    public void onDeath(DamageSource cause) {
-        super.onDeath(cause);
-        if (cause.getImmediateSource() instanceof CrossbowArrowEntity && Helper.isHunter(cause.getTrueSource())) {
-            dropSoul = true;
-        } else if (cause.getImmediateSource() instanceof PlayerEntity && Helper.isHunter(cause.getImmediateSource())) {
-            ItemStack weapon = ((PlayerEntity) cause.getImmediateSource()).getHeldItemMainhand();
-            if (!weapon.isEmpty() && weapon.getItem() instanceof IVampireFinisher) {
-                dropSoul = true;
-            }
-        } else {
-            dropSoul = false;//In case a previous death has been canceled somehow
-        }
-    }
-
-    @Override
-    public void readAdditional(@Nonnull CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(@Nonnull CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1) {
-            this.startConverting(compound.hasUniqueId("ConversionPlayer") ? compound.getUniqueId("ConversionPlayer") : null, compound.getInt("ConversionTime"), this);
+            this.startConverting(compound.hasUUID("ConversionPlayer") ? compound.getUUID("ConversionPlayer") : null, compound.getInt("ConversionTime"), this);
         }
     }
 
@@ -226,9 +230,8 @@ public class ConvertedHorseEntity extends HorseEntity implements ICurableConvert
     }
 
     @Override
-    public boolean useBlood(int amt, boolean allowPartial) {
-        this.addPotionEffect(new EffectInstance(Effects.WEAKNESS, amt * 20));
-        return true;
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+        return !isTamed();
     }
 
     @Override
@@ -237,12 +240,9 @@ public class ConvertedHorseEntity extends HorseEntity implements ICurableConvert
     }
 
     @Override
-    public void writeAdditional(@Nonnull CompoundNBT compound) {
-        super.writeAdditional(compound);
-        compound.putInt("ConversionTime", this.isConverting(this) ? this.conversionTime : -1);
-        if (this.conversationStarter != null) {
-            compound.putUniqueId("ConversionPlayer", this.conversationStarter);
-        }
+    public boolean useBlood(int amt, boolean allowPartial) {
+        this.addEffect(new EffectInstance(Effects.WEAKNESS, amt * 20));
+        return true;
     }
 
     /**
@@ -256,24 +256,14 @@ public class ConvertedHorseEntity extends HorseEntity implements ICurableConvert
     }
 
     @Override
-    protected void func_230273_eI_() {
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(this.getMaxHealth() * 1.5);
-    }
-
-    @Override
-    protected void onDeathUpdate() {
-        if (this.deathTime == 19) {
-            if (!this.world.isRemote && (dropSoul && this.world.getGameRules().getBoolean(GameRules.DO_MOB_LOOT))) {
-                this.world.addEntity(new SoulOrbEntity(this.world, this.getPosX(), this.getPosY(), this.getPosZ(), SoulOrbEntity.VARIANT.VAMPIRE));
-            }
-        }
-        super.onDeathUpdate();
-    }
-
-    @Override
-    protected void registerData() {
-        super.registerData();
+    protected void defineSynchedData() {
+        super.defineSynchedData();
         this.registerConvertingData(this);
+    }
+
+    @Override
+    protected void randomizeAttributes() {
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(this.getMaxHealth() * 1.5);
     }
 
     @Override
@@ -281,11 +271,21 @@ public class ConvertedHorseEntity extends HorseEntity implements ICurableConvert
         super.registerGoals();
         this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, CreatureEntity.class, 10, 1, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION)));
         this.goalSelector.addGoal(4, new RestrictSunGoal(this));
-        this.experienceValue = 2;
+        this.xpReward = 2;
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, false, false, false, null)));
+    }
+
+    @Override
+    protected void tickDeath() {
+        if (this.deathTime == 19) {
+            if (!this.level.isClientSide && (dropSoul && this.level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))) {
+                this.level.addFreshEntity(new SoulOrbEntity(this.level, this.getX(), this.getY(), this.getZ(), SoulOrbEntity.VARIANT.VAMPIRE));
+            }
+        }
+        super.tickDeath();
     }
 
     public static class ConvertingHandler extends DefaultConvertingHandler<HorseEntity> {
@@ -295,19 +295,19 @@ public class ConvertedHorseEntity extends HorseEntity implements ICurableConvert
 
         @Override
         public IConvertedCreature<HorseEntity> createFrom(HorseEntity entity) {
-            ConvertedHorseEntity converted = new ConvertedHorseEntity(ModEntities.converted_horse, entity.world);
+            ConvertedHorseEntity converted = new ConvertedHorseEntity(ModEntities.converted_horse, entity.level);
             copyImportantStuff(converted, entity);
-            converted.setUniqueId(MathHelper.getRandomUUID(converted.rand));
-            converted.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 200, 2));
+            converted.setUUID(MathHelper.createInsecureUUID(converted.random));
+            converted.addEffect(new EffectInstance(Effects.WEAKNESS, 200, 2));
             return converted;
         }
 
         protected void copyImportantStuff(ConvertedHorseEntity converted, HorseEntity entity) {
             CompoundNBT nbt = new CompoundNBT();
-            entity.writeWithoutTypeId(nbt);
-            converted.renderYawOffset = entity.renderYawOffset;
-            converted.rotationYawHead = entity.rotationYawHead;
-            converted.read(nbt);
+            entity.saveWithoutId(nbt);
+            converted.yBodyRot = entity.yBodyRot;
+            converted.yHeadRot = entity.yHeadRot;
+            converted.load(nbt);
             converted.setHealth(converted.getMaxHealth() / 3 * 2);
         }
     }

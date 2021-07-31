@@ -31,14 +31,14 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
      * @param centerOffset An offset from the center of the entity
      */
     public static CrossbowArrowEntity createWithShooter(World world, LivingEntity shooter, double heightOffset, double centerOffset, boolean rightHanded, ItemStack arrow) {
-        double yaw = ((shooter.rotationYaw - 90)) / 180 * Math.PI;
+        double yaw = ((shooter.yRot - 90)) / 180 * Math.PI;
         if (rightHanded) {
             yaw += Math.PI;
         }
-        double posX = shooter.getPosX() - Math.sin(yaw) * centerOffset;
-        double posZ = shooter.getPosZ() + Math.cos(yaw) * centerOffset;
-        CrossbowArrowEntity entityArrow = new CrossbowArrowEntity(world, posX, shooter.getPosY() + (double) shooter.getEyeHeight() - 0.10000000149011612D + heightOffset, posZ, arrow);
-        entityArrow.setShooter(shooter);
+        double posX = shooter.getX() - Math.sin(yaw) * centerOffset;
+        double posZ = shooter.getZ() + Math.cos(yaw) * centerOffset;
+        CrossbowArrowEntity entityArrow = new CrossbowArrowEntity(world, posX, shooter.getY() + (double) shooter.getEyeHeight() - 0.10000000149011612D + heightOffset, posZ, arrow);
+        entityArrow.setOwner(shooter);
         return entityArrow;
     }
 
@@ -57,28 +57,28 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
      */
     public CrossbowArrowEntity(World worldIn, double x, double y, double z, ItemStack arrow) {
         this(ModEntities.crossbow_arrow, worldIn);
-        this.setPosition(x, y, z);
+        this.setPos(x, y, z);
         this.arrowStack = arrow.copy();
         arrowStack.setCount(1);
     }
 
     @Override
-    public IPacket<?> createSpawnPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
+        compound.put("arrowStack", arrowStack.save(new CompoundNBT()));
     }
 
     public CrossbowArrowItem.EnumArrowType getArrowType() {
         return arrowStack.getItem() instanceof CrossbowArrowItem ? ((CrossbowArrowItem) arrowStack.getItem()).getType() : CrossbowArrowItem.EnumArrowType.NORMAL;
     }
 
-    public Random getRNG() {
-        return this.rand;
+    @Override
+    public IPacket<?> getAddEntityPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    @Override
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
-        arrowStack.deserializeNBT(compound.getCompound("arrowStack"));
+    public Random getRNG() {
+        return this.random;
     }
 
     /**
@@ -89,35 +89,35 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
-        compound.put("arrowStack", arrowStack.write(new CompoundNBT()));
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
+        arrowStack.deserializeNBT(compound.getCompound("arrowStack"));
     }
 
     @Override
-    protected void arrowHit(LivingEntity living) {
-        super.arrowHit(living);
+    protected void doPostHurtEffects(LivingEntity living) {
+        super.doPostHurtEffects(living);
         Item item = arrowStack.getItem();
         if (item instanceof IVampirismCrossbowArrow) {
-            if (ignoreHurtTimer && living.hurtResistantTime > 0) {
-                living.hurtResistantTime = 0;
+            if (ignoreHurtTimer && living.invulnerableTime > 0) {
+                living.invulnerableTime = 0;
             }
-            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, getShooter());
+            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, getOwner());
         }
-    }
-
-    @Override
-    protected void func_230299_a_(BlockRayTraceResult blockRayTraceResult) { //onHitBlock
-        Item item = arrowStack.getItem();
-        if (item instanceof IVampirismCrossbowArrow) {
-            ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, (blockRayTraceResult).getPos(), this, getShooter());
-        }
-        super.func_230299_a_(blockRayTraceResult);
     }
 
     @Nonnull
     @Override
-    protected ItemStack getArrowStack() {
+    protected ItemStack getPickupItem() {
         return arrowStack;
+    }
+
+    @Override
+    protected void onHitBlock(BlockRayTraceResult blockRayTraceResult) { //onHitBlock
+        Item item = arrowStack.getItem();
+        if (item instanceof IVampirismCrossbowArrow) {
+            ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, (blockRayTraceResult).getBlockPos(), this, getOwner());
+        }
+        super.onHitBlock(blockRayTraceResult);
     }
 }

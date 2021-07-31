@@ -7,7 +7,6 @@ import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nullable;
 
-
 public class SimpleMinionTask extends DefaultMinionTask<IMinionTask.NoDesc<MinionData>, MinionData> {
 
 

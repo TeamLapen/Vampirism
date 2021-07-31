@@ -18,20 +18,20 @@ public class RestrictSunVampireGoal<T extends CreatureEntity & IVampire> extends
         this.vampire = creature;
     }
 
-    public void resetTask() {
-        ((GroundPathNavigator) this.vampire.getNavigator()).setAvoidSun(false);
-    }
-
     @Override
-    public boolean shouldExecute() {
-        if (vampire.ticksExisted % 10 == 3) {
+    public boolean canUse() {
+        if (vampire.tickCount % 10 == 3) {
             ResourceLocation biome = Helper.getBiomeId(vampire);
-            cache = VampirismAPI.sundamageRegistry().getSundamageInDim(vampire.getEntityWorld().getDimensionKey()) && VampirismAPI.sundamageRegistry().getSundamageInBiome(biome) && !Helper.isEntityInArtificalVampireFogArea(vampire);
+            cache = VampirismAPI.sundamageRegistry().getSundamageInDim(vampire.getCommandSenderWorld().dimension()) && VampirismAPI.sundamageRegistry().getSundamageInBiome(biome) && !Helper.isEntityInArtificalVampireFogArea(vampire);
         }
-        return cache && vampire.getEntityWorld().isDaytime() && !vampire.isIgnoringSundamage();
+        return cache && vampire.getCommandSenderWorld().isDay() && !vampire.isIgnoringSundamage();
     }
 
-    public void startExecuting() {
-        ((GroundPathNavigator) this.vampire.getNavigator()).setAvoidSun(true);
+    public void start() {
+        ((GroundPathNavigator) this.vampire.getNavigation()).setAvoidSun(true);
+    }
+
+    public void stop() {
+        ((GroundPathNavigator) this.vampire.getNavigation()).setAvoidSun(false);
     }
 }

@@ -35,73 +35,81 @@ public class WeaponTableCraftingSlot extends Slot {
     }
 
     @Override
-    public ItemStack decrStackSize(int amount) {
-        if (this.getHasStack()) {
-            this.amountCrafted += Math.min(amount, this.getStack().getCount());
-
-        }
-        return super.decrStackSize(amount);
-    }
-
-    @Override
-    public boolean isItemValid(@Nullable ItemStack stack) {
+    public boolean mayPlace(@Nullable ItemStack stack) {
         return false;
     }
 
-
     @Override
     public ItemStack onTake(PlayerEntity playerIn, ItemStack stack) {
-        this.onCrafting(stack);
-        final int lava = worldPos.applyOrElse(((world, blockPos) -> {
+        this.checkTakeAchievements(stack);
+        final int lava = worldPos.evaluate(((world, blockPos) -> {
             if (world.getBlockState(blockPos).getBlock() instanceof WeaponTableBlock) {
-                return world.getBlockState(blockPos).get(WeaponTableBlock.LAVA);
+                return world.getBlockState(blockPos).getValue(WeaponTableBlock.LAVA);
             }
             return 0;
         }), 0);
         final HunterPlayer hunterPlayer = HunterPlayer.get(playerIn);
         final IWeaponTableRecipe recipe = findMatchingRecipe(playerIn, hunterPlayer, lava);
         if (recipe != null && recipe.getRequiredLavaUnits() > 0) {
-            worldPos.consume(((world, pos) -> {
+            worldPos.execute(((world, pos) -> {
                 int remainingLava = Math.max(0, lava - recipe.getRequiredLavaUnits());
                 if (world.getBlockState(pos).getBlock() instanceof WeaponTableBlock) {
-                    world.setBlockState(pos, world.getBlockState(pos).with(WeaponTableBlock.LAVA, remainingLava));
+                    world.setBlockAndUpdate(pos, world.getBlockState(pos).setValue(WeaponTableBlock.LAVA, remainingLava));
                 }
             }));
         }
         net.minecraftforge.common.ForgeHooks.setCraftingPlayer(playerIn);
-        NonNullList<ItemStack> remaining = playerIn.world.getRecipeManager().getRecipeNonNull(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, this.craftMatrix, playerIn.world);
+        NonNullList<ItemStack> remaining = playerIn.level.getRecipeManager().getRemainingItemsFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, this.craftMatrix, playerIn.level);
         net.minecraftforge.common.ForgeHooks.setCraftingPlayer(null);
         for (int i = 0; i < remaining.size(); ++i) {
-            ItemStack itemstack = this.craftMatrix.getStackInSlot(i);
+            ItemStack itemstack = this.craftMatrix.getItem(i);
             ItemStack itemstack1 = remaining.get(i);
 
             if (!itemstack.isEmpty()) {
-                this.craftMatrix.decrStackSize(i, 1);
-                itemstack = this.craftMatrix.getStackInSlot(i);
+                this.craftMatrix.removeItem(i, 1);
+                itemstack = this.craftMatrix.getItem(i);
             }
             if (!itemstack1.isEmpty()) {
                 if (itemstack.isEmpty()) {
-                    this.craftMatrix.setInventorySlotContents(i, itemstack1);
-                } else if (ItemStack.areItemsEqual(itemstack, itemstack1) && ItemStack.areItemStackTagsEqual(itemstack, itemstack1)) {
+                    this.craftMatrix.setItem(i, itemstack1);
+                } else if (ItemStack.isSame(itemstack, itemstack1) && ItemStack.tagMatches(itemstack, itemstack1)) {
                     itemstack1.grow(itemstack.getCount());
-                    this.craftMatrix.setInventorySlotContents(i, itemstack1);
-                } else if (!this.player.inventory.addItemStackToInventory(itemstack1)) {
-                    this.player.dropItem(itemstack1, false);
+                    this.craftMatrix.setItem(i, itemstack1);
+                } else if (!this.player.inventory.add(itemstack1)) {
+                    this.player.drop(itemstack1, false);
                 }
             }
         }
-        worldPos.consume(((world, pos) -> {
-            if (recipe != null && !world.isRemote) {
+        worldPos.execute(((world, pos) -> {
+            if (recipe != null && !world.isClientSide) {
                 //Play anvil sound
-                world.playEvent(1030, pos, 0);
+                world.levelEvent(1030, pos, 0);
             }
         }));
-        playerIn.addStat(ModStats.weapon_table);
+        playerIn.awardStat(ModStats.weapon_table);
         return stack;
     }
 
+    @Override
+    public ItemStack remove(int amount) {
+        if (this.hasItem()) {
+            this.amountCrafted += Math.min(amount, this.getItem().getCount());
+
+        }
+        return super.remove(amount);
+    }
+
+    @Override
+    protected void checkTakeAchievements(ItemStack stack) {
+        if (this.amountCrafted > 0) {
+            stack.onCraftedBy(this.player.getCommandSenderWorld(), this.player, this.amountCrafted);
+        }
+
+        this.amountCrafted = 0;
+    }
+
     protected IWeaponTableRecipe findMatchingRecipe(PlayerEntity playerIn, IFactionPlayer<?> factionPlayer, int lava) {
-        Optional<IWeaponTableRecipe> optional = playerIn.getEntityWorld().getRecipeManager().getRecipe(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, this.craftMatrix, playerIn.getEntityWorld());
+        Optional<IWeaponTableRecipe> optional = playerIn.getCommandSenderWorld().getRecipeManager().getRecipeFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, this.craftMatrix, playerIn.getCommandSenderWorld());
         if (optional.isPresent()) {
             IWeaponTableRecipe recipe = optional.get();
             if (factionPlayer.getLevel() >= recipe.getRequiredLevel() && lava >= recipe.getRequiredLavaUnits() && Helper.areSkillsEnabled(factionPlayer.getSkillHandler(), recipe.getRequiredSkills())) {
@@ -112,17 +120,8 @@ public class WeaponTableCraftingSlot extends Slot {
     }
 
     @Override
-    protected void onCrafting(ItemStack stack) {
-        if (this.amountCrafted > 0) {
-            stack.onCrafting(this.player.getEntityWorld(), this.player, this.amountCrafted);
-        }
-
-        this.amountCrafted = 0;
-    }
-
-    @Override
-    protected void onCrafting(ItemStack stack, int amount) {
+    protected void onQuickCraft(ItemStack stack, int amount) {
         this.amountCrafted += amount;
-        this.onCrafting(stack);
+        this.checkTakeAchievements(stack);
     }
 }

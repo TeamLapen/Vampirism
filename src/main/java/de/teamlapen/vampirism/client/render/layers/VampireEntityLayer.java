@@ -33,7 +33,7 @@ public class VampireEntityLayer<T extends CreatureEntity, U extends EntityModel<
     @Override
     public void render(MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, T entity, float v, float v1, float v2, float v3, float v4, float v5) {
         if (!entity.isInvisible() && (!checkIfRender || ConvertedCreatureRenderer.renderOverlay)) {
-            renderCutoutModel(this.getEntityModel(), overlay, matrixStack, iRenderTypeBuffer, i, entity, 1, 1, 1);
+            renderColoredCutoutModel(this.getParentModel(), overlay, matrixStack, iRenderTypeBuffer, i, entity, 1, 1, 1);
         }
     }
 }

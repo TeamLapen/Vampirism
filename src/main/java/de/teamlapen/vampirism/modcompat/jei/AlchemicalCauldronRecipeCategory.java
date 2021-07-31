@@ -41,7 +41,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
 
 
     AlchemicalCauldronRecipeCategory(IGuiHelper guiHelper) {
-        this.localizedName = UtilLib.translate(ModBlocks.alchemical_cauldron.getTranslationKey());
+        this.localizedName = UtilLib.translate(ModBlocks.alchemical_cauldron.getDescriptionId());
         this.icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.alchemical_cauldron));
         background = guiHelper.drawableBuilder(location, 38, 10, 120, 70).addPadding(0, 33, 0, 0).build();
 
@@ -66,16 +66,16 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
         int y = 65;
         if (recipe.getRequiredLevel() > 1) {
             ITextComponent level = new TranslationTextComponent("gui.vampirism.alchemical_cauldron.level", recipe.getRequiredLevel());
-            minecraft.fontRenderer.drawText(stack, level, x, y, Color.gray.getRGB());
-            y += minecraft.fontRenderer.FONT_HEIGHT + 2;
+            minecraft.font.draw(stack, level, x, y, Color.gray.getRGB());
+            y += minecraft.font.lineHeight + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {
             IFormattableTextComponent skillText = new TranslationTextComponent("gui.vampirism.alchemical_cauldron.skill", " ");
 
             for (ISkill s : recipe.getRequiredSkills()) {
-                skillText.appendSibling(s.getName()).appendString(" ");
+                skillText.append(s.getName()).append(" ");
             }
-            y += UtilLib.renderMultiLine(minecraft.fontRenderer, stack, skillText, 132, x, y, Color.gray.getRGB());
+            y += UtilLib.renderMultiLine(minecraft.font, stack, skillText, 132, x, y, Color.gray.getRGB());
         }
     }
 
@@ -110,12 +110,12 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     public void setIngredients(AlchemicalCauldronRecipe recipe, IIngredients iIngredients) {
         List<Ingredient> ingredients = new ArrayList<>();
 
-        recipe.getFluid().ifRight(fluidStack -> ingredients.add(Ingredient.fromItems(fluidStack.getFluid().getFilledBucket())));
+        recipe.getFluid().ifRight(fluidStack -> ingredients.add(Ingredient.of(fluidStack.getFluid().getBucket())));
         recipe.getFluid().ifLeft(ingredients::add);
         ingredients.addAll(recipe.getIngredients());
         iIngredients.setInputIngredients(ingredients);
 
-        iIngredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+        iIngredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
     }
 
     @Override

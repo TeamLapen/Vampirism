@@ -79,7 +79,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
             return TaskAction.COMPLETE;
         } else if (isTaskNotAccepted(taskInfo)) {
             return TaskAction.ACCEPT;
-        } else if (!taskInfo.isUnique() && this.factionPlayer.getRepresentingPlayer().world.getGameTime() > taskInfo.getTaskTimeStamp()) {
+        } else if (!taskInfo.isUnique() && this.factionPlayer.getRepresentingPlayer().level.getGameTime() > taskInfo.getTaskTimeStamp()) {
             return TaskAction.REMOVE;
         } else {
             return TaskAction.ABORT;
@@ -88,12 +88,30 @@ public class TaskBoardContainer extends Container implements TaskContainer {
 
     @Override
     public boolean canCompleteTask(@Nonnull ITaskInstance taskInfo) {
-        return this.completableTasks.contains(taskInfo.getId()) && (taskInfo.isUnique() || this.factionPlayer.getRepresentingPlayer().world.getGameTime() < taskInfo.getTaskTimeStamp());
+        return this.completableTasks.contains(taskInfo.getId()) && (taskInfo.isUnique() || this.factionPlayer.getRepresentingPlayer().level.getGameTime() < taskInfo.getTaskTimeStamp());
     }
 
     @Override
-    public boolean canInteractWith(@Nonnull PlayerEntity playerIn) {
-        return VampirismPlayerAttributes.get(playerIn).faction != null;
+    public void pressButton(@Nonnull ITaskInstance taskInfo) {
+        TaskAction action = buttonAction(taskInfo);
+        switch (action) {
+            case COMPLETE:
+                taskInfo.complete();
+                this.completableTasks.remove(taskInfo.getId());
+                this.taskInstances.remove(taskInfo);
+                VampLib.proxy.createMasterSoundReference(ModSounds.task_complete, 1, 1).startPlaying();
+                break;
+            case ACCEPT:
+                taskInfo.startTask(Minecraft.getInstance().level.getGameTime() + taskInfo.getTaskDuration());
+                break;
+            default:
+                taskInfo.aboardTask();
+                break;
+        }
+        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), action));
+        if (this.listener != null) {
+            this.listener.run();
+        }
     }
 
     @Nonnull
@@ -161,26 +179,8 @@ public class TaskBoardContainer extends Container implements TaskContainer {
     }
 
     @Override
-    public void pressButton(@Nonnull ITaskInstance taskInfo) {
-        TaskAction action = buttonAction(taskInfo);
-        switch (action) {
-            case COMPLETE:
-                taskInfo.complete();
-                this.completableTasks.remove(taskInfo.getId());
-                this.taskInstances.remove(taskInfo);
-                VampLib.proxy.createMasterSoundReference(ModSounds.task_complete, 1, 1).startPlaying();
-                break;
-            case ACCEPT:
-                taskInfo.startTask(Minecraft.getInstance().world.getGameTime() + taskInfo.getTaskDuration());
-                break;
-            default:
-                taskInfo.aboardTask();
-                break;
-        }
-        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), action));
-        if (this.listener != null) {
-            this.listener.run();
-        }
+    public boolean stillValid(@Nonnull PlayerEntity playerIn) {
+        return VampirismPlayerAttributes.get(playerIn).faction != null;
     }
 
     @Override

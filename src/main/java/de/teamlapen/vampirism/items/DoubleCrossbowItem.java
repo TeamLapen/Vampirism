@@ -33,8 +33,8 @@ public class DoubleCrossbowItem extends SimpleCrossbowItem {
 
     @Nonnull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull World worldIn, PlayerEntity playerIn, @Nonnull Hand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
+    public ActionResult<ItemStack> use(@Nonnull World worldIn, PlayerEntity playerIn, @Nonnull Hand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
         shoot(playerIn, 0, 0, worldIn, stack, handIn);
         shoot(playerIn, -0.2F, 0, worldIn, stack, handIn);
         return new ActionResult<>(ActionResultType.SUCCESS, stack);

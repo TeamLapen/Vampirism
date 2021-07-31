@@ -24,11 +24,11 @@ public class FlyingBloodEntityParticleData implements IParticleData {
             .apply(p_239803_0_, (e, d) -> new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, e, d)));
 
     public static final IParticleData.IDeserializer<FlyingBloodEntityParticleData> DESERIALIZER = new IParticleData.IDeserializer<FlyingBloodEntityParticleData>() {
-        public FlyingBloodEntityParticleData deserialize(ParticleType<FlyingBloodEntityParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
+        public FlyingBloodEntityParticleData fromCommand(ParticleType<FlyingBloodEntityParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
             return new FlyingBloodEntityParticleData(particleTypeIn, reader.readInt(), reader.readBoolean());
         }
 
-        public FlyingBloodEntityParticleData read(ParticleType<FlyingBloodEntityParticleData> particleTypeIn, PacketBuffer buffer) {
+        public FlyingBloodEntityParticleData fromNetwork(ParticleType<FlyingBloodEntityParticleData> particleTypeIn, PacketBuffer buffer) {
             return new FlyingBloodEntityParticleData(particleTypeIn, buffer.readVarInt(), buffer.readBoolean());
         }
     };
@@ -53,8 +53,9 @@ public class FlyingBloodEntityParticleData implements IParticleData {
     }
 
     @Override
-    public String getParameters() {
-        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + entity + "" + direct;
+    public void writeToNetwork(PacketBuffer buffer) {
+        buffer.writeVarInt(entity);
+        buffer.writeBoolean(direct);
     }
 
     @Override
@@ -63,8 +64,7 @@ public class FlyingBloodEntityParticleData implements IParticleData {
     }
 
     @Override
-    public void write(PacketBuffer buffer) {
-        buffer.writeVarInt(entity);
-        buffer.writeBoolean(direct);
+    public String writeToString() {
+        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + entity + "" + direct;
     }
 }

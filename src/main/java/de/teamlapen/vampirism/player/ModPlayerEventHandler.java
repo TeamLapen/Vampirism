@@ -92,17 +92,17 @@ public class ModPlayerEventHandler {
         //don't allow player to destroy blocks with PointOfInterests that are owned by a totem with different faction as the player
         if (event.getPlayer().isCreative()) return;
         Set<BlockPos> positions = new HashSet<>();
-        BlockPos totemPos = TotemHelper.getTotemPosition(((World) event.getWorld()).getDimensionKey(), event.getPos());
+        BlockPos totemPos = TotemHelper.getTotemPosition(((World) event.getWorld()).dimension(), event.getPos());
         Block block = event.getState().getBlock();
         //if the blockstate does not have a POI, but another blockstate of the specific block eg. the bed, search for the blockstate in a 3x3x3 radius
         //or the other way around
-        ImmutableList<BlockState> validStates = block.getStateContainer().getValidStates();
-        if (validStates.size() > 1 && PointOfInterestType.BLOCKS_OF_INTEREST.stream().anyMatch(validStates::contains)) {
+        ImmutableList<BlockState> validStates = block.getStateDefinition().getPossibleStates();
+        if (validStates.size() > 1 && PointOfInterestType.ALL_STATES.stream().anyMatch(validStates::contains)) {
             for (int x = event.getPos().getX() - 1; x <= event.getPos().getX() + 1; ++x) {
                 for (int z = event.getPos().getZ() - 1; z <= event.getPos().getZ() + 1; ++z) {
                     for (double y = event.getPos().getY() - 1; y <= event.getPos().getY() + 1; ++y) {
                         BlockPos pos1 = new BlockPos(x, y, z);
-                        if (event.getWorld().getChunkProvider().isChunkLoaded(new ChunkPos(pos1)) && event.getWorld().getBlockState(pos1).getBlock() == block) {
+                        if (event.getWorld().getChunkSource().isEntityTickingChunk(new ChunkPos(pos1)) && event.getWorld().getBlockState(pos1).getBlock() == block) {
                             BlockPos totemPos1 = TotemHelper.getTotemPosition(pos1);
                             if (totemPos1 != null && totemPos == null) {
                                 totemPos = totemPos1;
@@ -115,20 +115,20 @@ public class ModPlayerEventHandler {
         }
         //cancel the event and notify client about the failed block destroy.
         //also notify client about wrong destroyed neighbor blocks (bed)
-        if (totemPos != null && event.getWorld().isBlockLoaded(totemPos)) {
-            TileEntity totem = (event.getWorld().getTileEntity(totemPos));
+        if (totemPos != null && event.getWorld().hasChunkAt(totemPos)) {
+            TileEntity totem = (event.getWorld().getBlockEntity(totemPos));
             if (totem instanceof TotemTileEntity && ((TotemTileEntity) totem).getControllingFaction() != null && VampirismPlayerAttributes.get(event.getPlayer()).faction != ((TotemTileEntity) totem).getControllingFaction()) {
                 event.setCanceled(true);
-                event.getPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.village.totem_destroy.fail_totem_faction"), true);
+                event.getPlayer().displayClientMessage(new TranslationTextComponent("text.vampirism.village.totem_destroy.fail_totem_faction"), true);
                 if (!positions.isEmpty() && event.getPlayer() instanceof ServerPlayerEntity) {
                     ServerPlayerEntity playerMP = (ServerPlayerEntity) event.getPlayer();
                     positions.forEach(pos -> {
-                        playerMP.connection.sendPacket(new SChangeBlockPacket(event.getWorld(), pos));
-                        TileEntity tileentity = event.getWorld().getTileEntity(pos);
+                        playerMP.connection.send(new SChangeBlockPacket(event.getWorld(), pos));
+                        TileEntity tileentity = event.getWorld().getBlockEntity(pos);
                         if (tileentity != null) {
                             IPacket<?> pkt = tileentity.getUpdatePacket();
                             if (pkt != null) {
-                                playerMP.connection.sendPacket(pkt);
+                                playerMP.connection.send(pkt);
                             }
                         }
                     });
@@ -140,7 +140,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void eyeHeight(EntityEvent.Size event) {
         if (event.getEntity() instanceof PlayerEntity && ((PlayerEntity) event.getEntity()).inventory != null /*make sure we are not in the player's contructor*/) {
-            if (event.getEntity().isAlive() && event.getEntity().getPositionVec().lengthSquared() != 0) { //Do not attempt to get capability while entity is being initialized
+            if (event.getEntity().isAlive() && event.getEntity().position().lengthSqr() != 0) { //Do not attempt to get capability while entity is being initialized
                 if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().bat) {
                     event.setNewSize(BatVampireAction.BAT_SIZE);
                     event.setNewEyeHeight(BatVampireAction.BAT_EYE_HEIGHT);
@@ -174,7 +174,7 @@ public class ModPlayerEventHandler {
                 event.setCanceled(true);
             }
             HunterPlayer.getOpt(player).ifPresent(HunterPlayer::breakDisguise);
-            if (!checkItemUsePerm(player.getHeldItemMainhand(), player)) {
+            if (!checkItemUsePerm(player.getMainHandItem(), player)) {
                 event.setCanceled(true);
             }
         }
@@ -225,7 +225,7 @@ public class ModPlayerEventHandler {
 
         if ((event.getItemStack().getItem() instanceof ThrowablePotionItem || event.getItemStack().getItem() instanceof CrossbowItem)) {
             if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
-                event.setCancellationResult(ActionResultType.func_233537_a_(event.getWorld().isRemote()));
+                event.setCancellationResult(ActionResultType.sidedSuccess(event.getWorld().isClientSide()));
                 event.setCanceled(true);
             }
         }
@@ -249,7 +249,7 @@ public class ModPlayerEventHandler {
     public void onItemUse(LivingEntityUseItemEvent.Finish event) {
         if (Helper.isVampire(event.getEntity())) {
             if (event.getItem().getItem() instanceof GarlicBreadItem) {
-                if (!event.getEntity().getEntityWorld().isRemote) {
+                if (!event.getEntity().getCommandSenderWorld().isClientSide) {
                     if (event.getEntity() instanceof IVampire) {
                         DamageHandler.affectVampireGarlicDirect((IVampire) event.getEntity(), EnumStrength.MEDIUM);
                     } else if (event.getEntity() instanceof PlayerEntity) {
@@ -263,9 +263,9 @@ public class ModPlayerEventHandler {
         if (!Helper.isHunter(event.getEntity())) {
             ItemStack stack = event.getItem();
             if (stack.getItem() == Items.POTION) {
-                Potion p = PotionUtils.getPotionFromItem(stack);
-                if (p instanceof VampirismPotion.HunterPotion && p.getEffects().stream().map(EffectInstance::getPotion).anyMatch(Effect::isBeneficial)) {
-                    event.getEntityLiving().addPotionEffect(new EffectInstance(ModEffects.poison, Integer.MAX_VALUE, VampirismPoisonEffect.DEADLY_AMPLIFIER));
+                Potion p = PotionUtils.getPotion(stack);
+                if (p instanceof VampirismPotion.HunterPotion && p.getEffects().stream().map(EffectInstance::getEffect).anyMatch(Effect::isBeneficial)) {
+                    event.getEntityLiving().addEffect(new EffectInstance(ModEffects.poison, Integer.MAX_VALUE, VampirismPoisonEffect.DEADLY_AMPLIFIER));
                 }
             }
         }
@@ -278,8 +278,8 @@ public class ModPlayerEventHandler {
                 event.setCanceled(true);
             }
         }
-        if (event.getSource().getTrueSource() instanceof PlayerEntity) {
-            HunterPlayer.getOpt((PlayerEntity) event.getSource().getTrueSource()).ifPresent(HunterPlayer::breakDisguise);
+        if (event.getSource().getEntity() instanceof PlayerEntity) {
+            HunterPlayer.getOpt((PlayerEntity) event.getSource().getEntity()).ifPresent(HunterPlayer::breakDisguise);
         }
     }
 
@@ -301,7 +301,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onLivingHurt(LivingHurtEvent event) {
         DamageSource d = event.getSource();
-        if (!d.isDamageAbsolute() && !d.isUnblockable() && event.getEntityLiving() instanceof PlayerEntity) {
+        if (!d.isBypassMagic() && !d.isBypassArmor() && event.getEntityLiving() instanceof PlayerEntity) {
             if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().bat) {
                 event.setAmount(event.getAmount() * 2);
             }
@@ -311,13 +311,13 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onLivingJump(LivingEvent.LivingJumpEvent event) {
         if (event.getEntity() instanceof PlayerEntity) {
-            event.getEntity().setMotion(event.getEntity().getMotion().add(0.0D, (float) VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().getJumpBoost() * 0.1F, 0.0D));
+            event.getEntity().setDeltaMovement(event.getEntity().getDeltaMovement().add(0.0D, (float) VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().getJumpBoost() * 0.1F, 0.0D));
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onPlayerClone(PlayerEvent.Clone event) {
-        if (!event.getPlayer().getEntityWorld().isRemote) {
+        if (!event.getPlayer().getCommandSenderWorld().isClientSide) {
             FactionPlayerHandler.get(event.getPlayer()).copyFrom(event.getOriginal());
         }
     }
@@ -328,7 +328,7 @@ public class ModPlayerEventHandler {
         //To replace glas bottles with blood bottles if interacting with a blood container
         //Also used to force block interaction with blood container if sneaking
         //DoesSneakByPassUse on the blood bottle is not enough, since the item in the offhand can still block
-        if (event.getWorld().getWorldBorder().contains(event.getPos())) {
+        if (event.getWorld().getWorldBorder().isWithinBounds(event.getPos())) {
             ItemStack heldStack = event.getItemStack();
             if (!heldStack.isEmpty() && heldStack.getCount() == 1) {
                 boolean glasBottle = Items.GLASS_BOTTLE.equals(heldStack.getItem());
@@ -338,7 +338,7 @@ public class ModPlayerEventHandler {
                     BlockState state = event.getWorld().getBlockState(event.getPos());
                     boolean convert = false;
                     if (glasBottle && state.hasTileEntity()) {
-                        TileEntity entity = event.getWorld().getTileEntity(event.getPos());
+                        TileEntity entity = event.getWorld().getBlockEntity(event.getPos());
                         if (entity != null) {
                             convert = entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace()).map(fluidHandler -> {
                                 boolean flag = false;
@@ -363,9 +363,9 @@ public class ModPlayerEventHandler {
                     if (convert) {
                         //Dangerous, but only solution I found so far
                         //Changes the held stack while {@link NetHandlerPlayServer#processRightClickBlock} is running which has a hard reference to the old stack
-                        Hand hand = heldStack.equals(event.getPlayer().getHeldItemMainhand()) ? Hand.MAIN_HAND : (heldStack.equals(event.getPlayer().getHeldItemOffhand()) ? Hand.OFF_HAND : Hand.MAIN_HAND);
+                        Hand hand = heldStack.equals(event.getPlayer().getMainHandItem()) ? Hand.MAIN_HAND : (heldStack.equals(event.getPlayer().getOffhandItem()) ? Hand.OFF_HAND : Hand.MAIN_HAND);
                         heldStack = new ItemStack(ModItems.blood_bottle);
-                        event.getPlayer().setHeldItem(hand, heldStack);
+                        event.getPlayer().setItemInHand(hand, heldStack);
                     }
                 }
             }
@@ -375,25 +375,25 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onPlayerInteract(PlayerInteractEvent.EntityInteract event) {
         if (!(event.getTarget().getType() == EntityType.ZOMBIE)) return;
-        ItemStack stack = event.getPlayer().getHeldItem(event.getHand());
+        ItemStack stack = event.getPlayer().getItemInHand(event.getHand());
         if (stack.getItem() != ModItems.injection_empty) return;
-        event.getPlayer().setHeldItem(event.getHand(), new ItemStack(ModItems.injection_zombie_blood));
+        event.getPlayer().setItemInHand(event.getHand(), new ItemStack(ModItems.injection_zombie_blood));
         event.setCanceled(true);
     }
 
     @SubscribeEvent
     public void onPlayerLeftLickedBlock(PlayerInteractEvent.LeftClickBlock event) {
         assert event.getFace() != null;
-        BlockPos pos = event.getPos().offset(event.getFace());
+        BlockPos pos = event.getPos().relative(event.getFace());
         World world = event.getWorld();
         BlockState state = world.getBlockState(pos);
 
         if (state.getBlock() == ModBlocks.alchemical_fire) {
-            world.playEvent(null, 1009, pos, 0);
+            world.levelEvent(null, 1009, pos, 0);
             world.removeBlock(pos, false);
             event.setCanceled(true);
         } else if ((ModBlocks.garlic_beacon_normal.equals(state.getBlock()) || ModBlocks.garlic_beacon_weak.equals(state.getBlock()) || ModBlocks.garlic_beacon_improved.equals(state.getBlock())) && Helper.isVampire(event.getPlayer())) {
-            event.getPlayer().addPotionEffect(new EffectInstance(ModEffects.garlic));
+            event.getPlayer().addEffect(new EffectInstance(ModEffects.garlic));
         }
     }
 
@@ -406,11 +406,11 @@ public class ModPlayerEventHandler {
                     if (f != null) {
                         IFormattableTextComponent displayName;
                         if (fph.getLordLevel() > 0 && VampirismConfig.SERVER.lordPrefixInChat.get()) {
-                            displayName = new StringTextComponent("[").appendSibling(fph.getLordTitle()).appendString("] ").appendSibling(event.getDisplayname());
+                            displayName = new StringTextComponent("[").append(fph.getLordTitle()).append("] ").append(event.getDisplayname());
                         } else {
-                            displayName = event.getDisplayname().deepCopy();
+                            displayName = event.getDisplayname().copy();
                         }
-                        event.setDisplayname(displayName.mergeStyle(f.getChatColor()));
+                        event.setDisplayname(displayName.withStyle(f.getChatColor()));
                     }
                 });
             });
@@ -420,18 +420,18 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void sleepTimeCheck(SleepingTimeCheckEvent event) {
         if (Helper.isVampire(event.getPlayer())) {
-            event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getPlayer().world.getBlockState(blockPos).getBlock() instanceof CoffinBlock ? event.getPlayer().world.isDaytime() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));
+            event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getPlayer().level.getBlockState(blockPos).getBlock() instanceof CoffinBlock ? event.getPlayer().level.isDay() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));
         }
         if (Helper.isHunter(event.getPlayer())) {
-            event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getPlayer().getEntityWorld().getBlockState(blockPos).getBlock() instanceof TentBlock ? !event.getPlayer().getEntityWorld().isDaytime() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));
+            event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getPlayer().getCommandSenderWorld().getBlockState(blockPos).getBlock() instanceof TentBlock ? !event.getPlayer().getCommandSenderWorld().isDay() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));
         }
     }
 
     @SubscribeEvent
     public void sleepTimeFinish(SleepFinishedTimeEvent event) {
-        if (event.getWorld() instanceof ServerWorld && ((ServerWorld) event.getWorld()).isDaytime()) {
-            boolean sleepingInCoffin = event.getWorld().getPlayers().stream().anyMatch(player -> {
-                Optional<BlockPos> pos = player.getBedPosition();
+        if (event.getWorld() instanceof ServerWorld && ((ServerWorld) event.getWorld()).isDay()) {
+            boolean sleepingInCoffin = event.getWorld().players().stream().anyMatch(player -> {
+                Optional<BlockPos> pos = player.getSleepingPos();
                 return pos.isPresent() && event.getWorld().getBlockState(pos.get()).getBlock() instanceof CoffinBlock;
             });
             if (sleepingInCoffin) {
@@ -449,7 +449,7 @@ public class ModPlayerEventHandler {
      */
     private boolean checkItemUsePerm(ItemStack stack, PlayerEntity player) {
 
-        boolean message = !player.getEntityWorld().isRemote;
+        boolean message = !player.getCommandSenderWorld().isClientSide;
         if (!stack.isEmpty() && stack.getItem() instanceof IFactionLevelItem) {
             if (!player.isAlive()) return false;
             IFactionLevelItem item = (IFactionLevelItem) stack.getItem();
@@ -459,17 +459,17 @@ public class ModPlayerEventHandler {
             if (usingFaction != null && !handler.isInFaction(usingFaction)) {
 
                 if (message)
-                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by", usingFaction.getNamePlural()), true);
+                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by", usingFaction.getNamePlural()), true);
                 return false;
             } else if (handler.getCurrentLevel() < item.getMinLevel(stack)) {
                 if (message)
-                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by_level", usingFaction == null ? new TranslationTextComponent("text.vampirism.all") : usingFaction.getNamePlural(), item.getMinLevel(stack)), true);
+                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by_level", usingFaction == null ? new TranslationTextComponent("text.vampirism.all") : usingFaction.getNamePlural(), item.getMinLevel(stack)), true);
                 return false;
             } else if (requiredSkill != null) {
                 IFactionPlayer factionPlayer = handler.getCurrentFactionPlayer().orElse(null);
                 if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
                     if (message)
-                        player.sendStatusMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", requiredSkill.getName()), true);
+                        player.displayClientMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", requiredSkill.getName()), true);
                     return false;
                 }
             }

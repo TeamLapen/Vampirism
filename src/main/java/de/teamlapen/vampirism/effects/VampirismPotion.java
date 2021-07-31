@@ -13,7 +13,7 @@ import java.util.Optional;
 public class VampirismPotion extends Potion {
     public static Optional<VampirismPotion.HunterPotion> isHunterPotion(ItemStack stack, boolean onlyNormal) {
         if (stack.getItem() == Items.POTION || (!onlyNormal && (stack.getItem() == Items.LINGERING_POTION || stack.getItem() == Items.SPLASH_POTION))) {
-            Potion potion = PotionUtils.getPotionFromItem(stack);
+            Potion potion = PotionUtils.getPotion(stack);
             if (potion instanceof VampirismPotion.HunterPotion) {
                 return Optional.of((VampirismPotion.HunterPotion) potion);
             }

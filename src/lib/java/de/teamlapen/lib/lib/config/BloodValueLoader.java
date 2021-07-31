@@ -131,6 +131,6 @@ public class BloodValueLoader extends ReloadListener<Collection<ResourceLocation
     @Nonnull
     @Override
     protected Collection<ResourceLocation> prepare(IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
-        return resourceManagerIn.getAllResourceLocations(folderLocation, (file) -> file.endsWith(".txt"));
+        return resourceManagerIn.listResources(folderLocation, (file) -> file.endsWith(".txt"));
     }
 }

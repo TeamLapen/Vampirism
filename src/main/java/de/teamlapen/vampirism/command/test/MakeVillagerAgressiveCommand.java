@@ -15,14 +15,14 @@ public class MakeVillagerAgressiveCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("makeVillagerAgressive")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .executes(context -> {
-                    return makeVillagerAgressive(context.getSource().asPlayer());
+                    return makeVillagerAgressive(context.getSource().getPlayerOrException());
                 });
     }
 
     private static int makeVillagerAgressive(ServerPlayerEntity asPlayer) {
-        List<VillagerEntity> l = asPlayer.getEntityWorld().getEntitiesWithinAABB(VillagerEntity.class, asPlayer.getBoundingBox().grow(3, 2, 3));
+        List<VillagerEntity> l = asPlayer.getCommandSenderWorld().getEntitiesOfClass(VillagerEntity.class, asPlayer.getBoundingBox().inflate(3, 2, 3));
         for (VillagerEntity v : l) {
             if (v instanceof IFactionEntity) continue;
             TotemTileEntity.makeAgressive(v);

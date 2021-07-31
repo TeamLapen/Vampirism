@@ -23,10 +23,10 @@ public abstract class VampirismBlockContainer extends ContainerBlock {
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.hasTileEntity() && (state.getBlock() != newState.getBlock() || !newState.hasTileEntity())) {
             this.clearContainer(state, worldIn, pos);
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
+            super.onRemove(state, worldIn, pos, newState, isMoving);
         }
     }
 
@@ -38,24 +38,24 @@ public abstract class VampirismBlockContainer extends ContainerBlock {
      * drop all items from the tileentity's inventory if {@code instanceof} {@link IInventory}
      */
     protected void dropInventoryTileEntityItems(World world, BlockPos pos) {
-        TileEntity tileEntity = world.getTileEntity(pos);
+        TileEntity tileEntity = world.getBlockEntity(pos);
         if (!(tileEntity instanceof IInventory)) {
             return;
         }
         IInventory inventory = (IInventory) tileEntity;
 
-        for (int i = 0; i < inventory.getSizeInventory(); i++) {
-            ItemStack item = inventory.getStackInSlot(i);
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            ItemStack item = inventory.getItem(i);
 
             if (!item.isEmpty()) {
                 dropItem(world, pos, item);
-                inventory.setInventorySlotContents(i, ItemStack.EMPTY);
+                inventory.setItem(i, ItemStack.EMPTY);
             }
         }
     }
 
     protected void dropItem(World world, BlockPos pos, ItemStack stack) {
-        net.minecraft.inventory.InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+        net.minecraft.inventory.InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
     }
 
 

@@ -12,7 +12,7 @@ public class SanguinareEffectInstance extends EffectInstance {
     }
 
     @Override
-    public boolean combine(EffectInstance other) {
+    public boolean update(EffectInstance other) {
         //Sanguinare cannot be combined
         return false;
     }

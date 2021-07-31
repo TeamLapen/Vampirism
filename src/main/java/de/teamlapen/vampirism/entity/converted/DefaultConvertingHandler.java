@@ -30,9 +30,9 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
 
         @Override
         public double getConvertedDMG(EntityType<? extends CreatureEntity> entityType) {
-            AttributeModifierMap map = GlobalEntityTypeAttributes.getAttributesForEntity(entityType);
+            AttributeModifierMap map = GlobalEntityTypeAttributes.getSupplier(entityType);
             if (map.hasAttribute(Attributes.ATTACK_DAMAGE)) {
-                return map.getAttributeBaseValue(Attributes.ATTACK_DAMAGE) * 1.3;
+                return map.getBaseValue(Attributes.ATTACK_DAMAGE) * 1.3;
             } else {
                 return BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG;
             }
@@ -40,20 +40,20 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
 
         @Override
         public double getConvertedKnockbackResistance(EntityType<? extends CreatureEntity> entityType) {
-            AttributeModifierMap map = GlobalEntityTypeAttributes.getAttributesForEntity(entityType);
-            return map.getAttributeBaseValue(Attributes.KNOCKBACK_RESISTANCE) * 1.3;
+            AttributeModifierMap map = GlobalEntityTypeAttributes.getSupplier(entityType);
+            return map.getBaseValue(Attributes.KNOCKBACK_RESISTANCE) * 1.3;
         }
 
         @Override
         public double getConvertedMaxHealth(EntityType<? extends CreatureEntity> entityType) {
-            AttributeModifierMap map = GlobalEntityTypeAttributes.getAttributesForEntity(entityType);
-            return map.getAttributeBaseValue(Attributes.MAX_HEALTH) * 1.5;
+            AttributeModifierMap map = GlobalEntityTypeAttributes.getSupplier(entityType);
+            return map.getBaseValue(Attributes.MAX_HEALTH) * 1.5;
         }
 
         @Override
         public double getConvertedSpeed(EntityType<? extends CreatureEntity> entityType) {
-            AttributeModifierMap map = GlobalEntityTypeAttributes.getAttributesForEntity(entityType);
-            return Math.min(map.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 1.2, 2.9D);
+            AttributeModifierMap map = GlobalEntityTypeAttributes.getSupplier(entityType);
+            return Math.min(map.getBaseValue(Attributes.MOVEMENT_SPEED) * 1.2, 2.9D);
         }
     };
 
@@ -73,9 +73,9 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
     @Nullable
     @Override
     public IConvertedCreature<T> createFrom(T entity) {
-        return Helper.createEntity(ModEntities.converted_creature, entity.getEntityWorld()).map(convertedCreature -> {
+        return Helper.createEntity(ModEntities.converted_creature, entity.getCommandSenderWorld()).map(convertedCreature -> {
             copyImportantStuff(convertedCreature, entity);
-            convertedCreature.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 200, 2));
+            convertedCreature.addEffect(new EffectInstance(Effects.WEAKNESS, 200, 2));
             return convertedCreature;
         }).orElse(null);
     }
@@ -88,11 +88,11 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
     }
 
     protected void copyImportantStuff(ConvertedCreatureEntity<T> converted, T entity) {
-        converted.copyLocationAndAnglesFrom(entity);
+        converted.copyPosition(entity);
         converted.setEntityCreature(entity);
         converted.updateEntityAttributes();
         converted.setHealth(converted.getMaxHealth() / 3 * 2);
-        converted.renderYawOffset = entity.renderYawOffset;
-        converted.rotationYawHead = entity.rotationYawHead;
+        converted.yBodyRot = entity.yBodyRot;
+        converted.yHeadRot = entity.yHeadRot;
     }
 }

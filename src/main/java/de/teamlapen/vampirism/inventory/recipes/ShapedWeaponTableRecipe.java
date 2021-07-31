@@ -50,13 +50,13 @@ public class ShapedWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRec
     }
 
     @Override
-    public boolean canFit(int width, int height) {
-        return width >= this.recipeWidth && height >= this.recipeHeight;
+    public ItemStack assemble(CraftingInventory inv) {
+        return this.recipeOutput.copy();
     }
 
     @Override
-    public ItemStack getCraftingResult(CraftingInventory inv) {
-        return this.recipeOutput.copy();
+    public boolean canCraftInDimensions(int width, int height) {
+        return width >= this.recipeWidth && height >= this.recipeHeight;
     }
 
     public String getGroup() {
@@ -82,7 +82,7 @@ public class ShapedWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRec
     }
 
     @Override
-    public ItemStack getRecipeOutput() {
+    public ItemStack getResultItem() {
         return this.recipeOutput;
     }
 
@@ -152,7 +152,7 @@ public class ShapedWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRec
                     }
                 }
 
-                if (!ingredient.test(craftingInventory.getStackInSlot(i + j * craftingInventory.getWidth()))) {
+                if (!ingredient.test(craftingInventory.getItem(i + j * craftingInventory.getWidth()))) {
                     return false;
                 }
             }
@@ -163,57 +163,57 @@ public class ShapedWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRec
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapedWeaponTableRecipe> {
         @Override
-        public ShapedWeaponTableRecipe read(ResourceLocation recipeId, JsonObject json) {
-            String group = JSONUtils.getString(json, "group", "");
-            Map<String, Ingredient> map = VampirismRecipeHelper.deserializeKey(JSONUtils.getJsonObject(json, "key"));
-            String[] astring = VampirismRecipeHelper.shrink(VampirismRecipeHelper.patternFromJson(JSONUtils.getJsonArray(json, "pattern"), MAX_HEIGHT));
+        public ShapedWeaponTableRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+            String group = JSONUtils.getAsString(json, "group", "");
+            Map<String, Ingredient> map = VampirismRecipeHelper.deserializeKey(JSONUtils.getAsJsonObject(json, "key"));
+            String[] astring = VampirismRecipeHelper.shrink(VampirismRecipeHelper.patternFromJson(JSONUtils.getAsJsonArray(json, "pattern"), MAX_HEIGHT));
             int width = astring[0].length();
             int length = astring.length;
             NonNullList<Ingredient> ingredients = VampirismRecipeHelper.deserializeIngredients(astring, map, width, length);
-            ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(JSONUtils.getJsonObject(json, "result"), true);
-            int level = JSONUtils.getInt(json, "level", 1);
-            ISkill[] skill = VampirismRecipeHelper.deserializeSkills(JSONUtils.getJsonArray(json, "skill", null));
-            int lava = JSONUtils.getInt(json, "lava", 0);
+            ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(JSONUtils.getAsJsonObject(json, "result"), true);
+            int level = JSONUtils.getAsInt(json, "level", 1);
+            ISkill[] skill = VampirismRecipeHelper.deserializeSkills(JSONUtils.getAsJsonArray(json, "skill", null));
+            int lava = JSONUtils.getAsInt(json, "lava", 0);
 
             return new ShapedWeaponTableRecipe(recipeId, group, width, length, ingredients, result, level, skill, lava);
         }
 
         @Override
-        public ShapedWeaponTableRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+        public ShapedWeaponTableRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
             int width = buffer.readVarInt();
             int height = buffer.readVarInt();
-            String group = buffer.readString(32767);
+            String group = buffer.readUtf(32767);
             NonNullList<Ingredient> ingredients = NonNullList.withSize(height * width, Ingredient.EMPTY);
             for (int k = 0; k < ingredients.size(); ++k) {
-                ingredients.set(k, Ingredient.read(buffer));
+                ingredients.set(k, Ingredient.fromNetwork(buffer));
             }
-            ItemStack itemstack = buffer.readItemStack();
+            ItemStack itemstack = buffer.readItem();
             int level = buffer.readVarInt();
             int lava = buffer.readVarInt();
             ISkill[] skills = new ISkill[buffer.readVarInt()];
             if (skills.length != 0) {
                 for (int i = 0; i < skills.length; i++) {
-                    skills[i] = ModRegistries.SKILLS.getValue(new ResourceLocation(buffer.readString(32767)));
+                    skills[i] = ModRegistries.SKILLS.getValue(new ResourceLocation(buffer.readUtf(32767)));
                 }
             }
             return new ShapedWeaponTableRecipe(recipeId, group, width, height, ingredients, itemstack, level, skills, lava);
         }
 
         @Override
-        public void write(PacketBuffer buffer, ShapedWeaponTableRecipe recipe) {
+        public void toNetwork(PacketBuffer buffer, ShapedWeaponTableRecipe recipe) {
             buffer.writeVarInt(recipe.recipeWidth);
             buffer.writeVarInt(recipe.recipeHeight);
-            buffer.writeString(recipe.group);
+            buffer.writeUtf(recipe.group);
             for (Ingredient ingredient : recipe.recipeItems) {
-                ingredient.write(buffer);
+                ingredient.toNetwork(buffer);
             }
-            buffer.writeItemStack(recipe.recipeOutput);
+            buffer.writeItem(recipe.recipeOutput);
             buffer.writeVarInt(recipe.requiredLevel);
             buffer.writeVarInt(recipe.requiredLava);
             buffer.writeVarInt(recipe.requiredSkills.length);
             if (recipe.requiredSkills.length != 0) {
                 for (ISkill skill : recipe.requiredSkills) {
-                    buffer.writeString(skill.getRegistryName().toString());
+                    buffer.writeUtf(skill.getRegistryName().toString());
                 }
             }
         }

@@ -50,13 +50,13 @@ public class ShapelessWeaponTableRecipe implements ICraftingRecipe, IWeaponTable
     }
 
     @Override
-    public boolean canFit(int width, int height) {
-        return width * height >= this.recipeItems.size();
+    public ItemStack assemble(CraftingInventory inv) {
+        return this.recipeOutput.copy();
     }
 
     @Override
-    public ItemStack getCraftingResult(CraftingInventory inv) {
-        return this.recipeOutput.copy();
+    public boolean canCraftInDimensions(int width, int height) {
+        return width * height >= this.recipeItems.size();
     }
 
     @Override
@@ -75,7 +75,7 @@ public class ShapelessWeaponTableRecipe implements ICraftingRecipe, IWeaponTable
     }
 
     @Override
-    public ItemStack getRecipeOutput() {
+    public ItemStack getResultItem() {
         return recipeOutput;
     }
 
@@ -111,7 +111,7 @@ public class ShapelessWeaponTableRecipe implements ICraftingRecipe, IWeaponTable
 
         for (int j = 0; j < inv.getHeight(); ++j) {
             for (int k = 0; k < inv.getWidth(); ++k) {
-                ItemStack itemstack = inv.getStackInSlot(k + j * inv.getWidth());
+                ItemStack itemstack = inv.getItem(k + j * inv.getWidth());
                 if (!itemstack.isEmpty()) {
                     ++i;
                     if (isSimple)
@@ -128,52 +128,52 @@ public class ShapelessWeaponTableRecipe implements ICraftingRecipe, IWeaponTable
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapelessWeaponTableRecipe> {
         @Override
-        public ShapelessWeaponTableRecipe read(ResourceLocation recipeId, JsonObject json) {
-            String group = JSONUtils.getString(json, "group", "");
-            NonNullList<Ingredient> ingredients = VampirismRecipeHelper.readIngredients(JSONUtils.getJsonArray(json, "ingredients"));
-            int level = JSONUtils.getInt(json, "level", 1);
-            ISkill[] skills = VampirismRecipeHelper.deserializeSkills(JSONUtils.getJsonArray(json, "skill", null));
-            int lava = JSONUtils.getInt(json, "lava", 0);
+        public ShapelessWeaponTableRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+            String group = JSONUtils.getAsString(json, "group", "");
+            NonNullList<Ingredient> ingredients = VampirismRecipeHelper.readIngredients(JSONUtils.getAsJsonArray(json, "ingredients"));
+            int level = JSONUtils.getAsInt(json, "level", 1);
+            ISkill[] skills = VampirismRecipeHelper.deserializeSkills(JSONUtils.getAsJsonArray(json, "skill", null));
+            int lava = JSONUtils.getAsInt(json, "lava", 0);
             if (ingredients.isEmpty()) {
                 throw new JsonParseException("No ingredients for shapeless recipe");
             } else if (ingredients.size() > ShapelessWeaponTableRecipe.MAX_WIDTH * ShapelessWeaponTableRecipe.MAX_HEIGHT) {
                 throw new JsonParseException("Too many ingredients for shapeless recipe the max is " + (ShapelessWeaponTableRecipe.MAX_WIDTH * ShapelessWeaponTableRecipe.MAX_HEIGHT));
             } else {
-                ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(JSONUtils.getJsonObject(json, "result"), true);
+                ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(JSONUtils.getAsJsonObject(json, "result"), true);
                 return new ShapelessWeaponTableRecipe(recipeId, group, ingredients, result, level, lava, skills);
             }
         }
 
         @Override
-        public ShapelessWeaponTableRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-            String group = buffer.readString(32767);
+        public ShapelessWeaponTableRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+            String group = buffer.readUtf(32767);
             NonNullList<Ingredient> ingredients = NonNullList.withSize(buffer.readVarInt(), Ingredient.EMPTY);
             for (int j = 0; j < ingredients.size(); ++j) {
-                ingredients.set(j, Ingredient.read(buffer));
+                ingredients.set(j, Ingredient.fromNetwork(buffer));
             }
-            ItemStack result = buffer.readItemStack();
+            ItemStack result = buffer.readItem();
             int level = buffer.readVarInt();
             int lava = buffer.readVarInt();
             ISkill[] skills = new ISkill[buffer.readVarInt()];
             for (int i = 0; i < skills.length; i++) {
-                skills[i] = ModRegistries.SKILLS.getValue(new ResourceLocation(buffer.readString(32767)));
+                skills[i] = ModRegistries.SKILLS.getValue(new ResourceLocation(buffer.readUtf(32767)));
             }
             return new ShapelessWeaponTableRecipe(recipeId, group, ingredients, result, level, lava, skills);
         }
 
         @Override
-        public void write(PacketBuffer buffer, ShapelessWeaponTableRecipe recipe) {
-            buffer.writeString(recipe.group);
+        public void toNetwork(PacketBuffer buffer, ShapelessWeaponTableRecipe recipe) {
+            buffer.writeUtf(recipe.group);
             buffer.writeVarInt(recipe.recipeItems.size());
             for (Ingredient ingredient : recipe.recipeItems) {
-                ingredient.write(buffer);
+                ingredient.toNetwork(buffer);
             }
-            buffer.writeItemStack(recipe.recipeOutput);
+            buffer.writeItem(recipe.recipeOutput);
             buffer.writeVarInt(recipe.requiredLevel);
             buffer.writeVarInt(recipe.requiredLava);
             buffer.writeVarInt(recipe.requiredSkills.length);
             for (ISkill skill : recipe.requiredSkills) {
-                buffer.writeString(skill.getRegistryName().toString());
+                buffer.writeUtf(skill.getRegistryName().toString());
             }
         }
 

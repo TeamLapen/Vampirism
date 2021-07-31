@@ -14,32 +14,31 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
-
 public class VampirismItemBloodFood extends VampirismItem {
 
     private final Food vampireFood;
 
     public VampirismItemBloodFood(String regName, Food vampireFood, Food humanFood) {
-        super(regName, new Properties().group(VampirismMod.creativeTab).food(humanFood));
+        super(regName, new Properties().tab(VampirismMod.creativeTab).food(humanFood));
         this.vampireFood = vampireFood;
     }
 
     @Override
-    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {
         if (entityLiving instanceof PlayerEntity) {
-            assert stack.getItem().getFood() != null;//Don't shrink stack before retrieving food
+            assert stack.getItem().getFoodProperties() != null;//Don't shrink stack before retrieving food
             PlayerEntity player = (PlayerEntity) entityLiving;
-            VampirePlayer.getOpt(player).ifPresent(v -> v.drinkBlood(vampireFood.getHealing(), vampireFood.getSaturation()));
+            VampirePlayer.getOpt(player).ifPresent(v -> v.drinkBlood(vampireFood.getNutrition(), vampireFood.getSaturationModifier()));
         }
         if (entityLiving instanceof IVampire) {
-            ((IVampire) entityLiving).drinkBlood(vampireFood.getHealing(), vampireFood.getSaturation());
+            ((IVampire) entityLiving).drinkBlood(vampireFood.getNutrition(), vampireFood.getSaturationModifier());
             stack.shrink(1);
         } else {
-            entityLiving.onFoodEaten(worldIn, stack); //Shrinks stack and applies human food effects
+            entityLiving.eat(worldIn, stack); //Shrinks stack and applies human food effects
         }
-        worldIn.playSound(null, entityLiving.getPosX(), entityLiving.getPosY(), entityLiving.getPosZ(), SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+        worldIn.playSound(null, entityLiving.getX(), entityLiving.getY(), entityLiving.getZ(), SoundEvents.PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.random.nextFloat() * 0.1F + 0.9F);
         if (!Helper.isVampire(entityLiving)) {
-            entityLiving.addPotionEffect(new EffectInstance(Effects.NAUSEA, 20 * 20));
+            entityLiving.addEffect(new EffectInstance(Effects.CONFUSION, 20 * 20));
         }
         return stack;
     }

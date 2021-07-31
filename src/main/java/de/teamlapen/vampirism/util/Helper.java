@@ -73,21 +73,21 @@ public class Helper {
      * @return
      */
     public static boolean gettingSundamge(LivingEntity entity, IWorld world, @Nullable IProfiler profiler) {
-        if (profiler != null) profiler.startSection("vampirism_checkSundamage");
+        if (profiler != null) profiler.push("vampirism_checkSundamage");
         if (entity instanceof PlayerEntity && entity.isSpectator()) return false;
         RegistryKey<World> worldKey = Helper.getWorldKey(world);
         if (VampirismAPI.sundamageRegistry().getSundamageInDim(worldKey)) {
             if (!(world instanceof World) || !((World) world).isRaining()) {
-                float angle = world.func_242415_f(1.0F);
+                float angle = world.getTimeOfDay(1.0F);
                 //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
                 if (angle > 0.78 || angle < 0.24) {
-                    BlockPos pos = new BlockPos(entity.getPosX(), entity.getPosY() + MathHelper.clamp(entity.getHeight() / 2.0F, 0F, 2F), entity.getPosZ());
+                    BlockPos pos = new BlockPos(entity.getX(), entity.getY() + MathHelper.clamp(entity.getBbHeight() / 2.0F, 0F, 2F), entity.getZ());
                     if (canBlockSeeSun(world, pos)) {
                         try {
                             ResourceLocation biome = getBiomeId(world, pos);
                             if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biome)) {
-                                if (world instanceof World && !VampirismWorld.getOpt((World) world).map(vw -> vw.isInsideArtificialVampireFogArea(new BlockPos(entity.getPosX(), entity.getPosY() + 1, entity.getPosZ()))).orElse(false)) {
-                                    if (profiler != null) profiler.endSection();
+                                if (world instanceof World && !VampirismWorld.getOpt((World) world).map(vw -> vw.isInsideArtificialVampireFogArea(new BlockPos(entity.getX(), entity.getY() + 1, entity.getZ()))).orElse(false)) {
+                                    if (profiler != null) profiler.pop();
                                     return true;
                                 }
                             }
@@ -100,7 +100,7 @@ public class Helper {
 
             }
         }
-        if (profiler != null) profiler.endSection();
+        if (profiler != null) profiler.pop();
 
         return false;
     }
@@ -114,16 +114,16 @@ public class Helper {
                 return false;
             } else {
                 int liquidBlocks = 0;
-                for (blockpos = blockpos.down(); blockpos.getY() > pos.getY(); blockpos = blockpos.down()) {
+                for (blockpos = blockpos.below(); blockpos.getY() > pos.getY(); blockpos = blockpos.below()) {
                     BlockState state = world.getBlockState(blockpos);
                     if (state.getMaterial().isLiquid()) { // if fluid than it propagates the light until `vpSundamageWaterBlocks`
                         liquidBlocks++;
                         if (liquidBlocks >= VampirismConfig.BALANCE.vpSundamageWaterblocks.get()) {
                             return false;
                         }
-                    } else if (state.isSolid() && (state.isSolidSide(world, pos, Direction.DOWN) || state.isSolidSide(world, pos, Direction.UP))) { //solid block blocks the light (fence is solid too?)
+                    } else if (state.canOcclude() && (state.isFaceSturdy(world, pos, Direction.DOWN) || state.isFaceSturdy(world, pos, Direction.UP))) { //solid block blocks the light (fence is solid too?)
                         return false;
-                    } else if (state.getOpacity(world, blockpos) > 0) { //if not solid, but propagates no light
+                    } else if (state.getLightBlock(world, blockpos) > 0) { //if not solid, but propagates no light
                         return false;
                     }
                 }
@@ -139,7 +139,7 @@ public class Helper {
     @Deprecated
     @Nonnull
     public static EnumStrength getGarlicStrength(Entity e, RegistryKey<World> world) {
-        return getGarlicStrengthAt(world, e.getPosition());
+        return getGarlicStrengthAt(world, e.blockPosition());
     }
 
     /**
@@ -155,7 +155,7 @@ public class Helper {
 
     @Nonnull
     public static EnumStrength getGarlicStrength(Entity e, IWorld world) {
-        return getGarlicStrengthAt(world, e.getPosition());
+        return getGarlicStrengthAt(world, e.blockPosition());
     }
 
     @Nonnull
@@ -165,7 +165,7 @@ public class Helper {
 
     @Nonnull
     public static RegistryKey<World> getWorldKey(IWorld world) {
-        return world instanceof World ? ((World) world).getDimensionKey() : world instanceof IServerWorld ? ((IServerWorld) world).getWorld().getDimensionKey() : World.OVERWORLD;
+        return world instanceof World ? ((World) world).dimension() : world instanceof IServerWorld ? ((IServerWorld) world).getLevel().dimension() : World.OVERWORLD;
     }
 
     public static boolean canBecomeVampire(PlayerEntity player) {
@@ -217,8 +217,8 @@ public class Helper {
 
     public static boolean isEntityInVampireBiome(Entity e) {
         if (e == null) return false;
-        World w = e.getEntityWorld();
-        Biome b = w.getBiome(e.getPosition());
+        World w = e.getCommandSenderWorld();
+        Biome b = w.getBiome(e.blockPosition());
         ResourceLocation biomeId = getBiomeId(w, b);
         Objects.requireNonNull(biomeId, "Cannot determine id of local biome");
         return ModBiomes.vampire_forest.getRegistryName().equals(biomeId) || ModBiomes.vampire_forest_hills.getRegistryName().equals(biomeId);
@@ -229,12 +229,12 @@ public class Helper {
      */
     public static boolean isEntityInArtificalVampireFogArea(Entity e) {
         if (e == null) return false;
-        World w = e.getEntityWorld();
-        return VampirismWorld.getOpt(w).map(vh -> vh.isInsideArtificialVampireFogArea(e.getPosition())).orElse(false);
+        World w = e.getCommandSenderWorld();
+        return VampirismWorld.getOpt(w).map(vh -> vh.isInsideArtificialVampireFogArea(e.blockPosition())).orElse(false);
     }
 
     public static ResourceLocation getBiomeId(Entity e) {
-        return getBiomeId(e.getEntityWorld(), e.getPosition());
+        return getBiomeId(e.getCommandSenderWorld(), e.blockPosition());
     }
 
     public static ResourceLocation getBiomeId(IBiomeReader world, BlockPos pos) {
@@ -242,7 +242,7 @@ public class Helper {
     }
 
     public static ResourceLocation getBiomeId(IBiomeReader world, Biome biome) {
-        return world.func_241828_r().getRegistry(Registry.BIOME_KEY).getKey(biome);
+        return world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(biome);
     }
 
     /**
@@ -271,7 +271,7 @@ public class Helper {
      */
     public static boolean attemptToGuessGenderSafe(PlayerEntity p) {
         if (p instanceof ServerPlayerEntity) { //Could extend to also support client side, but have to use proxy then
-            Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> textureMap = ((ServerPlayerEntity) p).server.getMinecraftSessionService().getTextures(p.getGameProfile(), false);
+            Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> textureMap = ((ServerPlayerEntity) p).server.getSessionService().getTextures(p.getGameProfile(), false);
             if (textureMap.containsKey(MinecraftProfileTexture.Type.SKIN)) {
                 MinecraftProfileTexture skinTexture = textureMap.get(MinecraftProfileTexture.Type.SKIN);
                 return "slim".equals(skinTexture.getMetadata("model"));
@@ -318,13 +318,13 @@ public class Helper {
      * @return Whether the given damage source can kill a vampire player or go to DBNO state instead
      */
     public static boolean canKillVampires(DamageSource source) {
-        if (!source.canHarmInCreative()) {
-            if (VampirismConfig.BALANCE.vpImmortalFromDamageSources.get().contains(source.getDamageType())) {
-                if (source.getImmediateSource() instanceof LivingEntity) {
+        if (!source.isBypassInvul()) {
+            if (VampirismConfig.BALANCE.vpImmortalFromDamageSources.get().contains(source.getMsgId())) {
+                if (source.getDirectEntity() instanceof LivingEntity) {
                     //Maybe use all IVampireFinisher??
-                    return source.getImmediateSource() instanceof IHunterMob || ((LivingEntity) source.getImmediateSource()).getHeldItemMainhand().getItem() instanceof StakeItem;
-                } else if (source.getImmediateSource() instanceof CrossbowArrowEntity) {
-                    return ((CrossbowArrowEntity) source.getImmediateSource()).getArrowType() == CrossbowArrowItem.EnumArrowType.VAMPIRE_KILLER;
+                    return source.getDirectEntity() instanceof IHunterMob || ((LivingEntity) source.getDirectEntity()).getMainHandItem().getItem() instanceof StakeItem;
+                } else if (source.getDirectEntity() instanceof CrossbowArrowEntity) {
+                    return ((CrossbowArrowEntity) source.getDirectEntity()).getArrowType() == CrossbowArrowItem.EnumArrowType.VAMPIRE_KILLER;
                 }
                 return false;
             }

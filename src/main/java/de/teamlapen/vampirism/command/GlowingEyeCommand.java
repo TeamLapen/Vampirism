@@ -16,16 +16,16 @@ public class GlowingEyeCommand extends BasicCommand {
         return Commands.literal("glowingEye")
                 .then(Commands.argument("on", BoolArgumentType.bool())
                         .executes(context -> {
-                            return setGlowingEye(context, context.getSource().asPlayer(), BoolArgumentType.getBool(context, "on"));
+                            return setGlowingEye(context, context.getSource().getPlayerOrException(), BoolArgumentType.getBool(context, "on"));
                         }));
     }
 
     private static int setGlowingEye(CommandContext<CommandSource> context, PlayerEntity player, boolean on) {
         VampirePlayer.getOpt(player).ifPresent(vampire -> vampire.setGlowingEyes(on));
         if (on) {
-            context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.glowing_eyes.enabled", on), false);
+            context.getSource().sendSuccess(new TranslationTextComponent("command.vampirism.base.glowing_eyes.enabled", on), false);
         } else {
-            context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.glowing_eyes.disabled", on), false);
+            context.getSource().sendSuccess(new TranslationTextComponent("command.vampirism.base.glowing_eyes.disabled", on), false);
         }
         return 0;
     }

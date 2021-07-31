@@ -80,11 +80,11 @@ public class InputEventPacket implements IMessage {
     private static final String SPLIT = "&";
 
     static void encode(InputEventPacket msg, PacketBuffer buf) {
-        buf.writeString(msg.action + SPLIT + msg.param);
+        buf.writeUtf(msg.action + SPLIT + msg.param);
     }
 
     static InputEventPacket decode(PacketBuffer buf) {
-        String[] s = buf.readString(50).split(SPLIT);
+        String[] s = buf.readUtf(50).split(SPLIT);
         InputEventPacket msg = new InputEventPacket();
         msg.action = s[0];
         if (s.length > 1) {
@@ -127,16 +127,16 @@ public class InputEventPacket implements IMessage {
                             IAction.PERM r = actionHandler.toggleAction(action);
                             switch (r) {
                                 case NOT_UNLOCKED:
-                                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.action.not_unlocked"), true);
+                                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.action.not_unlocked"), true);
                                     break;
                                 case DISABLED:
-                                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.action.deactivated_by_serveradmin"), false);
+                                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.action.deactivated_by_serveradmin"), false);
                                     break;
                                 case COOLDOWN:
-                                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.action.cooldown_not_over"), true);
+                                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.action.cooldown_not_over"), true);
                                     break;
                                 case DISALLOWED:
-                                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.action.disallowed"), true);
+                                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.action.disallowed"), true);
                                 default://Everything alright
                             }
                         } else {
@@ -186,16 +186,16 @@ public class InputEventPacket implements IMessage {
                     factionPlayerOpt.ifPresent(OblivionItem::applyEffect);
                     break;
                 case TRAINERLEVELUP:
-                    if (player.openContainer instanceof HunterTrainerContainer) {
-                        ((HunterTrainerContainer) player.openContainer).onLevelupClicked();
+                    if (player.containerMenu instanceof HunterTrainerContainer) {
+                        ((HunterTrainerContainer) player.containerMenu).onLevelupClicked();
                     }
                     break;
                 case REVERTBACK:
                     FactionPlayerHandler.get(player).setFactionAndLevel(null, 0);
-                    player.sendStatusMessage(new TranslationTextComponent("command.vampirism.base.level.successful", player.getName(), VReference.VAMPIRE_FACTION.getName(), 0), true);
+                    player.displayClientMessage(new TranslationTextComponent("command.vampirism.base.level.successful", player.getName(), VReference.VAMPIRE_FACTION.getName(), 0), true);
                     LOGGER.debug("Player {} left faction", player);
                     if (!ServerLifecycleHooks.getCurrentServer().isHardcore()) {
-                        player.attackEntityFrom(DamageSource.MAGIC, 1000);
+                        player.hurt(DamageSource.MAGIC, 1000);
 
                     }
                     break;
@@ -203,20 +203,20 @@ public class InputEventPacket implements IMessage {
                     VampirePlayer.getOpt(player).ifPresent(VampirePlayer::switchVision);
                     break;
                 case BASICHUNTERLEVELUP:
-                    if (player.openContainer instanceof HunterBasicContainer) {
-                        ((HunterBasicContainer) player.openContainer).onLevelUpClicked();
+                    if (player.containerMenu instanceof HunterBasicContainer) {
+                        ((HunterBasicContainer) player.containerMenu).onLevelUpClicked();
                     }
                     break;
                 case NAME_ITEM:
                     String name = msg.param;
                     if (VampirismVampireSword.DO_NOT_NAME_STRING.equals(name)) {
-                        ItemStack stack = player.getHeldItemMainhand();
+                        ItemStack stack = player.getMainHandItem();
                         if (stack.getItem() instanceof VampirismVampireSword) {
                             ((VampirismVampireSword) stack.getItem()).doNotName(stack);
                         }
                     } else if (!org.apache.commons.lang3.StringUtils.isBlank(name)) {
-                        ItemStack stack = player.getHeldItemMainhand();
-                        stack.setDisplayName(new StringTextComponent(name).mergeStyle(TextFormatting.AQUA));
+                        ItemStack stack = player.getMainHandItem();
+                        stack.setHoverName(new StringTextComponent(name).withStyle(TextFormatting.AQUA));
                     }
                     break;
                 case SELECT_CALL_MINION:
@@ -225,7 +225,7 @@ public class InputEventPacket implements IMessage {
                         Collection<Integer> ids = controller.getCallableMinions();
                         if (ids.size() > 0) {
                             List<Pair<Integer, ITextComponent>> minions = new ArrayList<>(ids.size());
-                            ids.forEach(id -> controller.contactMinionData(id, data -> data.getFormattedName().deepCopy()).ifPresent(n -> minions.add(Pair.of(id, n))));
+                            ids.forEach(id -> controller.contactMinionData(id, data -> data.getFormattedName().copy()).ifPresent(n -> minions.add(Pair.of(id, n))));
                             VampirismMod.dispatcher.sendTo(new RequestMinionSelectPacket(RequestMinionSelectPacket.Action.CALL, minions), ctx.getSender());
                         } else {
                             SelectMinionTaskPacket.printRecoveringMinions(ctx.getSender(), controller.getRecoveringMinionNames());
@@ -249,7 +249,7 @@ public class InputEventPacket implements IMessage {
                 case OPEN_VAMPIRISM_MENU:
                     factionPlayerOpt.ifPresent(fPlayer -> {
                         if (player.isAlive()) {
-                            player.openContainer(new INamedContainerProvider() {
+                            player.openMenu(new INamedContainerProvider() {
                                 @Nonnull
                                 @Override
                                 public Container createMenu(int i, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity playerEntity) {
@@ -270,7 +270,7 @@ public class InputEventPacket implements IMessage {
                     VampirePlayer.getOpt(player).ifPresent(VampirePlayer::tryResurrect);
                     break;
                 case DIE:
-                    player.attackEntityFrom(DamageSource.GENERIC, 10000);
+                    player.hurt(DamageSource.GENERIC, 10000);
                     break;
             }
             ctx.setPacketHandled(true);

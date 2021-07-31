@@ -22,23 +22,23 @@ public class BaronWrapperModel extends EntityModel<VampireBaronEntity> {
 
 
     @Override
-    public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        EntityModel<VampireBaronEntity> model = lady ? baroness : baron;
-        model.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-    }
-
-    @Override
-    public void setLivingAnimations(VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
+    public void prepareMobModel(VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
         this.lady = entityIn.isLady();
         EntityModel<VampireBaronEntity> model = lady ? baroness : baron;
-        this.copyModelAttributesTo(model);
-        model.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
+        this.copyPropertiesTo(model);
+        model.prepareMobModel(entityIn, limbSwing, limbSwingAmount, partialTick);
     }
 
     @Override
-    public void setRotationAngles(VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void renderToBuffer(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+        EntityModel<VampireBaronEntity> model = lady ? baroness : baron;
+        model.renderToBuffer(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+    }
+
+    @Override
+    public void setupAnim(VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         EntityModel<VampireBaronEntity> model = entityIn.isLady() ? baroness : baron;
-        model.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        model.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
     }
 
 

@@ -96,7 +96,7 @@ public class ModBlocks {
         registry.register(itemBlock(altar_inspiration));
         registry.register(itemBlock(altar_pillar));
         registry.register(itemBlock(altar_tip));
-        registry.register(itemBlock(blood_container, new Item.Properties().group(VampirismMod.creativeTab).maxStackSize(1)));
+        registry.register(itemBlock(blood_container, new Item.Properties().tab(VampirismMod.creativeTab).stacksTo(1)));
         registry.register(itemBlock(blood_grinder));
         registry.register(itemBlock(blood_pedestal));
         registry.register(itemBlock(blood_sieve));
@@ -112,14 +112,14 @@ public class ModBlocks {
         registry.register(itemBlock(castle_slab_dark_brick));
         registry.register(itemBlock(castle_slab_dark_stone));
         registry.register(itemBlock(castle_slab_purple_brick));
-        registry.register(itemBlock(coffin, new Item.Properties().group(VampirismMod.creativeTab).setISTER(() -> VampirismItemStackTESR::new)));
+        registry.register(itemBlock(coffin, new Item.Properties().tab(VampirismMod.creativeTab).setISTER(() -> VampirismItemStackTESR::new)));
         registry.register(itemBlock(cursed_earth));
         registry.register(itemBlock(fire_place));
         registry.register(itemBlock(garlic_beacon_improved));
         registry.register(itemBlock(garlic_beacon_normal));
         registry.register(itemBlock(garlic_beacon_weak));
         registry.register(itemBlock(hunter_table));
-        registry.register(itemBlock(sunscreen_beacon, new Item.Properties().group(VampirismMod.creativeTab).rarity(Rarity.EPIC)));
+        registry.register(itemBlock(sunscreen_beacon, new Item.Properties().tab(VampirismMod.creativeTab).rarity(Rarity.EPIC)));
         registry.register(itemBlock(totem_base));
         registry.register(itemBlock(totem_top));
         registry.register(itemBlock(totem_top_crafted));
@@ -160,9 +160,9 @@ public class ModBlocks {
         registry.register(prepareRegister(new CastleSlabBlock(CastleBricksBlock.EnumVariant.DARK_BRICK)));
         registry.register(prepareRegister(new CastleSlabBlock(CastleBricksBlock.EnumVariant.DARK_STONE)));
         registry.register(prepareRegister(new CastleSlabBlock(CastleBricksBlock.EnumVariant.PURPLE_BRICK)));
-        registry.register(prepareRegister(new CastleStairsBlock(castle_block_dark_brick.getDefaultState(), CastleBricksBlock.EnumVariant.DARK_BRICK)));
-        registry.register(prepareRegister(new CastleStairsBlock(castle_block_dark_stone.getDefaultState(), CastleBricksBlock.EnumVariant.DARK_STONE)));
-        registry.register(prepareRegister(new CastleStairsBlock(castle_block_purple_brick.getDefaultState(), CastleBricksBlock.EnumVariant.PURPLE_BRICK)));
+        registry.register(prepareRegister(new CastleStairsBlock(castle_block_dark_brick.defaultBlockState(), CastleBricksBlock.EnumVariant.DARK_BRICK)));
+        registry.register(prepareRegister(new CastleStairsBlock(castle_block_dark_stone.defaultBlockState(), CastleBricksBlock.EnumVariant.DARK_STONE)));
+        registry.register(prepareRegister(new CastleStairsBlock(castle_block_purple_brick.defaultBlockState(), CastleBricksBlock.EnumVariant.PURPLE_BRICK)));
         registry.register(prepareRegister(new ChurchAltarBlock()));
         registry.register(prepareRegister(new CoffinBlock()));
         registry.register(prepareRegister(new CursedEarthBlock()));
@@ -173,7 +173,7 @@ public class ModBlocks {
         registry.register(prepareRegister(new GarlicBeaconBlock(GarlicBeaconBlock.Type.WEAK)));
         registry.register(prepareRegister(new HunterTableBlock()));
         registry.register(prepareRegister(new MedChairBlock()));
-        registry.register(prepareRegister(new FlowerPotBlock(vampire_orchid, Block.Properties.create(Material.MISCELLANEOUS).zeroHardnessAndResistance().notSolid()).setRegistryName(REFERENCE.MODID, "potted_vampire_orchid")));
+        registry.register(prepareRegister(new FlowerPotBlock(vampire_orchid, Block.Properties.of(Material.DECORATION).instabreak().noOcclusion()).setRegistryName(REFERENCE.MODID, "potted_vampire_orchid")));
         registry.register(prepareRegister(new SunscreenBeaconBlock()));
         registry.register(prepareRegister(new TentBlock()));
         registry.register(prepareRegister(new TentMainBlock()));
@@ -187,8 +187,8 @@ public class ModBlocks {
         registry.register(prepareRegister(vampire_orchid));
         registry.register(prepareRegister(new WeaponTableBlock()));
         registry.register(prepareRegister(new PotionTableBlock()));
-        Block log = Blocks.createLogBlock(MaterialColor.OBSIDIAN, MaterialColor.BROWN).setRegistryName(REFERENCE.MODID, "bloody_spruce_log");
-        ((FireBlock) Blocks.FIRE).setFireInfo(log, 5, 5);
+        Block log = Blocks.log(MaterialColor.PODZOL, MaterialColor.COLOR_BROWN).setRegistryName(REFERENCE.MODID, "bloody_spruce_log");
+        ((FireBlock) Blocks.FIRE).setFlammable(log, 5, 5);
         registry.register(prepareRegister(log));
         registry.register(prepareRegister(new BloodySpruceLeavesBlock("vampire_spruce_leaves")));
         registry.register(prepareRegister(new BloodySpruceLeavesBlock("bloody_spruce_leaves")));
@@ -227,7 +227,7 @@ public class ModBlocks {
 
     @Nonnull
     private static BlockItem itemBlock(@Nonnull Block block) {
-        return itemBlock(block, new Item.Properties().group(VampirismMod.creativeTab));
+        return itemBlock(block, new Item.Properties().tab(VampirismMod.creativeTab));
     }
 
     public static void fixMappings(RegistryEvent.MissingMappings<Block> event) {

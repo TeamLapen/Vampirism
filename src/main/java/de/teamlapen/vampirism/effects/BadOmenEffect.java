@@ -35,15 +35,15 @@ public abstract class BadOmenEffect extends Effect {
         if (offender instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) offender;
             IFaction<?> faction = victim.getFaction();
-            if (faction.getVillageData().isBanner(victim.getRepresentingEntity().getItemStackFromSlot(EquipmentSlotType.HEAD))) {
+            if (faction.getVillageData().isBanner(victim.getRepresentingEntity().getItemBySlot(EquipmentSlotType.HEAD))) {
                 IFaction<?> playerFaction = VampirismPlayerAttributes.get(player).faction;
                 if (playerFaction != null && playerFaction != faction) {
                     Effect badOmen = faction.getVillageData().getBadOmenEffect();
                     if (badOmen != null) {
-                        EffectInstance inst = player.getActivePotionEffect(badOmen);
+                        EffectInstance inst = player.getEffect(badOmen);
                         int i = inst != null ? Math.min(inst.getAmplifier() + 1, 4) : 0;
-                        if (inst != null) player.removeActivePotionEffect(badOmen);
-                        player.addPotionEffect(new EffectInstance(badOmen, 120000, i, false, false, true));
+                        if (inst != null) player.removeEffectNoUpdate(badOmen);
+                        player.addEffect(new EffectInstance(badOmen, 120000, i, false, false, true));
                     }
 
                 }
@@ -59,26 +59,26 @@ public abstract class BadOmenEffect extends Effect {
     public abstract IFaction<?> getFaction();
 
     @Override
-    public boolean isReady(int duration, int amplifier) {
-        return true;
-    }
-
-    @Override
-    public void performEffect(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
+    public void applyEffectTick(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
         if (entityLivingBaseIn instanceof ServerPlayerEntity && !entityLivingBaseIn.isSpectator()) {
             ServerPlayerEntity playerEntity = ((ServerPlayerEntity) entityLivingBaseIn);
-            ServerWorld serverWorld = playerEntity.getServerWorld();
+            ServerWorld serverWorld = playerEntity.getLevel();
             if (serverWorld.getDifficulty() == Difficulty.PEACEFUL) {
                 return;
             }
-            TotemHelper.getTotemNearPos(serverWorld, entityLivingBaseIn.getPosition(), true).ifPresent(totem -> {
+            TotemHelper.getTotemNearPos(serverWorld, entityLivingBaseIn.blockPosition(), true).ifPresent(totem -> {
                 if (totem.getControllingFaction() != getFaction()) {
                     int level = Math.min(amplifier, 4);
                     if (totem.initiateCaptureOrIncreaseBadOmenLevel(getFaction(), null, level + 1, 0)) {
-                        entityLivingBaseIn.removePotionEffect(this);
+                        entityLivingBaseIn.removeEffect(this);
                     }
                 }
             });
         }
+    }
+
+    @Override
+    public boolean isDurationEffectTick(int duration, int amplifier) {
+        return true;
     }
 }

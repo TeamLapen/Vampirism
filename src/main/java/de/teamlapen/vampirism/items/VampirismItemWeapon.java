@@ -23,7 +23,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nullable;
 import java.util.List;
 
-
 public class VampirismItemWeapon extends SwordItem {
 
     protected final String regName;
@@ -42,8 +41,8 @@ public class VampirismItemWeapon extends SwordItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (flagIn.isAdvanced()) {
             tooltip.add(new StringTextComponent("ModDamage: " + getAttackDamage(stack)));
             tooltip.add(new StringTextComponent("ModSpeed: " + getAttackSpeed(stack)));
@@ -54,8 +53,8 @@ public class VampirismItemWeapon extends SwordItem {
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
         if (equipmentSlot == EquipmentSlotType.MAINHAND) {
-            multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", getAttackDamage(stack), AttributeModifier.Operation.ADDITION));
-            multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", getAttackSpeed(stack), AttributeModifier.Operation.ADDITION));
+            multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", getAttackDamage(stack), AttributeModifier.Operation.ADDITION));
+            multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", getAttackSpeed(stack), AttributeModifier.Operation.ADDITION));
         }
 
         return multimap;
@@ -73,9 +72,9 @@ public class VampirismItemWeapon extends SwordItem {
     }
 
     @Override
-    protected String getDefaultTranslationKey() {
+    protected String getOrCreateDescriptionId() {
         if (this.translation_key == null) {
-            this.translation_key = Util.makeTranslationKey("item", ForgeRegistries.ITEMS.getKey(this));
+            this.translation_key = Util.makeDescriptionId("item", ForgeRegistries.ITEMS.getKey(this));
         }
 
         return this.translation_key;
@@ -85,6 +84,6 @@ public class VampirismItemWeapon extends SwordItem {
      * Set a custom translation key
      */
     protected void setTranslation_key(String name) {
-        this.translation_key = Util.makeTranslationKey("item", new ResourceLocation(REFERENCE.MODID, name));
+        this.translation_key = Util.makeDescriptionId("item", new ResourceLocation(REFERENCE.MODID, name));
     }
 }

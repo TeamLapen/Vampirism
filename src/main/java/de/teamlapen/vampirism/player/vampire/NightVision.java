@@ -20,28 +20,28 @@ public class NightVision implements IVampireVision {
     @Override
     public void onActivated(IVampirePlayer player) {
         if (player.isRemote()) {
-            player.getRepresentingPlayer().addPotionEffect(new VampireNightVisionEffectInstance());
+            player.getRepresentingPlayer().addEffect(new VampireNightVisionEffectInstance());
         }
     }
 
     @Override
     public void onDeactivated(IVampirePlayer player) {
-        EffectInstance nightVision = player.getRepresentingPlayer().getActivePotionEffect(Effects.NIGHT_VISION);
+        EffectInstance nightVision = player.getRepresentingPlayer().getEffect(Effects.NIGHT_VISION);
         if (nightVision instanceof VampireNightVisionEffectInstance) {
-            player.getRepresentingPlayer().removePotionEffect(nightVision.getPotion());
+            player.getRepresentingPlayer().removeEffect(nightVision.getEffect());
         }
     }
 
     @Override
     public void tick(IVampirePlayer player) {
-        if (player.getRepresentingPlayer().ticksExisted % 50 == 8) {
-            EffectInstance effect = player.getRepresentingPlayer().getActivePotionEffect(Effects.NIGHT_VISION);
+        if (player.getRepresentingPlayer().tickCount % 50 == 8) {
+            EffectInstance effect = player.getRepresentingPlayer().getEffect(Effects.NIGHT_VISION);
             if (!(effect instanceof VampireNightVisionEffectInstance)) {
-                player.getRepresentingPlayer().removeActivePotionEffect(Effects.NIGHT_VISION);
+                player.getRepresentingPlayer().removeEffectNoUpdate(Effects.NIGHT_VISION);
                 effect = null;
             }
             if (effect == null) {
-                player.getRepresentingPlayer().addPotionEffect(new VampireNightVisionEffectInstance());
+                player.getRepresentingPlayer().addEffect(new VampireNightVisionEffectInstance());
 
             }
         }

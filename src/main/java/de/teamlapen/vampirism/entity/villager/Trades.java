@@ -50,7 +50,7 @@ public class Trades {
 
         public MerchantOffer getOffer(Entity entity, Random random) {
             ItemStack second = new ItemStack(result.getItem(), resultAmount);
-            second.setDamage(result.getDamage());
+            second.setDamageValue(result.getDamageValue());
             return new MerchantOffer(new ItemStack(Items.EMERALD, this.emeraldAmount), second, this.maxUses, this.givenXP, this.priceMultiplier);
         }
     }
@@ -154,7 +154,7 @@ public class Trades {
         @Override
         public MerchantOffer getOffer(Entity entity, Random random) {
             ItemStack bottle = new ItemStack(ModItems.blood_bottle, selling.getPrice(random));
-            bottle.setDamage(damage);
+            bottle.setDamageValue(damage);
             return new MerchantOffer(new ItemStack(ModItems.human_heart, price.getPrice(random)), bottle, maxUses, xp, 0.2F);
         }
     }

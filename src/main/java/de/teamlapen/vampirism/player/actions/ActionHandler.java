@@ -197,7 +197,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
                     it.remove();
                 }
             }
-            for (String key : active.keySet()) {
+            for (String key : active.getAllKeys()) {
                 ResourceLocation id = new ResourceLocation(key);
                 ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(id);
                 if (action == null) {
@@ -356,11 +356,11 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
 
     private boolean isActionAllowedPermission(IAction action) {
         ResourceLocation id = action.getRegistryName();
-        return player.getRepresentingEntity().world.isRemote || PermissionAPI.hasPermission(player.getRepresentingPlayer(), Permissions.ACTION_PREFIX + id.getNamespace() + "." + id.getPath());
+        return player.getRepresentingEntity().level.isClientSide || PermissionAPI.hasPermission(player.getRepresentingPlayer(), Permissions.ACTION_PREFIX + id.getNamespace() + "." + id.getPath());
     }
 
     private void loadTimerMapFromNBT(CompoundNBT nbt, Object2IntMap<ResourceLocation> map) {
-        for (String key : nbt.keySet()) {
+        for (String key : nbt.getAllKeys()) {
             ResourceLocation id = new ResourceLocation(key);
             IAction action = ModRegistries.ACTIONS.getValue(id);
             if (action == null) {

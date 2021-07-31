@@ -34,24 +34,24 @@ public class AltarPillarBlock extends VampirismBlock {
     private final static String name = "altar_pillar";
 
     private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(3, 0, 3, 13, 1, 13);
-        VoxelShape b1 = Block.makeCuboidShape(3, 0, 3, 4, 16, 4);
-        VoxelShape b2 = Block.makeCuboidShape(12, 0, 3, 13, 16, 4);
-        VoxelShape b3 = Block.makeCuboidShape(3, 0, 12, 4, 16, 13);
-        VoxelShape b4 = Block.makeCuboidShape(12, 0, 12, 13, 16, 13);
-        VoxelShape c = Block.makeCuboidShape(3, 15, 3, 13, 16, 13);
+        VoxelShape a = Block.box(3, 0, 3, 13, 1, 13);
+        VoxelShape b1 = Block.box(3, 0, 3, 4, 16, 4);
+        VoxelShape b2 = Block.box(12, 0, 3, 13, 16, 4);
+        VoxelShape b3 = Block.box(3, 0, 12, 4, 16, 13);
+        VoxelShape b4 = Block.box(12, 0, 12, 13, 16, 13);
+        VoxelShape c = Block.box(3, 15, 3, 13, 16, 13);
         return VoxelShapes.or(a, b1, b2, b3, b4, c);
     }
 
     private static VoxelShape makeShapeFull() {
-        VoxelShape b = Block.makeCuboidShape(4, 1, 2, 12, 15, 14);
-        VoxelShape c = Block.makeCuboidShape(2, 1, 4, 14, 15, 12);
+        VoxelShape b = Block.box(4, 1, 2, 12, 15, 14);
+        VoxelShape c = Block.box(2, 1, 4, 14, 15, 12);
         return VoxelShapes.or(pillarShape, b, c);
     }
 
     public AltarPillarBlock() {
-        super(name, Properties.create(Material.ROCK).hardnessAndResistance(0.9f).notSolid());
-        this.setDefaultState(this.stateContainer.getBaseState().with(TYPE_PROPERTY, EnumPillarType.NONE));
+        super(name, Properties.of(Material.STONE).strength(0.9f).noOcclusion());
+        this.registerDefaultState(this.stateDefinition.any().setValue(TYPE_PROPERTY, EnumPillarType.NONE));
 
     }
 
@@ -69,29 +69,29 @@ public class AltarPillarBlock extends VampirismBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return state.get(TYPE_PROPERTY) != EnumPillarType.NONE ? pillarShapeFilled : pillarShape;
+        return state.getValue(TYPE_PROPERTY) != EnumPillarType.NONE ? pillarShapeFilled : pillarShape;
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit) {
-        EnumPillarType type = state.get(TYPE_PROPERTY);
-        ItemStack heldItem = playerIn.getHeldItem(hand);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit) {
+        EnumPillarType type = state.getValue(TYPE_PROPERTY);
+        ItemStack heldItem = playerIn.getItemInHand(hand);
         if (type != EnumPillarType.NONE && heldItem.isEmpty()) {
-            if (!playerIn.abilities.isCreativeMode) {
-                playerIn.setItemStackToSlot(hand == Hand.MAIN_HAND ? EquipmentSlotType.MAINHAND : EquipmentSlotType.OFFHAND, new ItemStack(Item.getItemFromBlock(type.fillerBlock)));
+            if (!playerIn.abilities.instabuild) {
+                playerIn.setItemSlot(hand == Hand.MAIN_HAND ? EquipmentSlotType.MAINHAND : EquipmentSlotType.OFFHAND, new ItemStack(Item.byBlock(type.fillerBlock)));
             }
 
-            worldIn.setBlockState(pos, state.with(TYPE_PROPERTY, EnumPillarType.NONE));
+            worldIn.setBlockAndUpdate(pos, state.setValue(TYPE_PROPERTY, EnumPillarType.NONE));
             return ActionResultType.SUCCESS;
         }
         if (type == EnumPillarType.NONE && !heldItem.isEmpty()) {
             for (EnumPillarType t : EnumPillarType.values()) {
                 if (heldItem.getItem().equals(t.fillerBlock.asItem())) {
-                    if (!playerIn.abilities.isCreativeMode) {
+                    if (!playerIn.abilities.instabuild) {
                         heldItem.shrink(1);
                     }
 
-                    worldIn.setBlockState(pos, state.with(TYPE_PROPERTY, t));
+                    worldIn.setBlockAndUpdate(pos, state.setValue(TYPE_PROPERTY, t));
                     return ActionResultType.SUCCESS;
                 }
             }
@@ -100,7 +100,7 @@ public class AltarPillarBlock extends VampirismBlock {
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(TYPE_PROPERTY);
     }
 
@@ -121,11 +121,11 @@ public class AltarPillarBlock extends VampirismBlock {
         }
 
         public String getName() {
-            return getString();
+            return getSerializedName();
         }
 
         @Override
-        public String getString() {
+        public String getSerializedName() {
             return name;
         }
 

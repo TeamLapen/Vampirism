@@ -21,26 +21,26 @@ public class VampireFangItem extends VampirismItem {
     private static final String name = "vampire_fang";
 
     public VampireFangItem() {
-        super(name, new Properties().group(VampirismMod.creativeTab));
+        super(name, new Properties().tab(VampirismMod.creativeTab));
     }
 
     @Nonnull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
 
-        ItemStack stack = playerIn.getHeldItem(handIn);
-        if (!worldIn.isRemote) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
+        if (!worldIn.isClientSide) {
             if (VampirismConfig.SERVER.disableFangInfection.get()) {
-                playerIn.sendStatusMessage(new TranslationTextComponent("text.vampirism.deactivated_by_serveradmin"), true);
+                playerIn.displayClientMessage(new TranslationTextComponent("text.vampirism.deactivated_by_serveradmin"), true);
             } else {
                 if (Helper.canBecomeVampire(playerIn)) {
                     SanguinareEffect.addRandom(playerIn, true);
-                    playerIn.addPotionEffect(new EffectInstance(ModEffects.poison, 60));
+                    playerIn.addEffect(new EffectInstance(ModEffects.poison, 60));
                 } else {
                     if (Helper.isVampire(playerIn)) {
-                        playerIn.sendStatusMessage(new TranslationTextComponent("text.vampirism.already_vampire"), true);
+                        playerIn.displayClientMessage(new TranslationTextComponent("text.vampirism.already_vampire"), true);
                     } else {
-                        playerIn.sendStatusMessage(new TranslationTextComponent("text.vampirism.immune_to").appendSibling(new TranslationTextComponent(ModEffects.sanguinare.getName())), true);
+                        playerIn.displayClientMessage(new TranslationTextComponent("text.vampirism.immune_to").append(new TranslationTextComponent(ModEffects.sanguinare.getDescriptionId())), true);
                     }
                 }
                 stack.shrink(1);

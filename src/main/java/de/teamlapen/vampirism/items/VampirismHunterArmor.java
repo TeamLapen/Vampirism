@@ -46,13 +46,13 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
         String regName = baseRegName + "_" + equipmentSlotIn.getName();
         if (suffix != null) regName += "_" + suffix;
         setRegistryName(REFERENCE.MODID, regName);
-        translation_key = Util.makeTranslationKey("item", new ResourceLocation(REFERENCE.MODID, baseRegName + "_" + equipmentSlotIn.getName()));
+        translation_key = Util.makeDescriptionId("item", new ResourceLocation(REFERENCE.MODID, baseRegName + "_" + equipmentSlotIn.getName()));
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         PlayerEntity player = VampirismMod.proxy.getClientPlayer();
         addFactionPoisonousToolTip(stack, worldIn, tooltip, flagIn, player);
     }
@@ -60,7 +60,7 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> map = HashMultimap.create(); //TODO 1.17 build in constructor
-        if (slot == this.getEquipmentSlot()) {
+        if (slot == this.getSlot()) {
             map.put(Attributes.ARMOR, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor modifier", this.getDamageReduction(slot.getIndex(), stack), AttributeModifier.Operation.ADDITION));
             map.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor toughness", this.getToughness(slot.getIndex(), stack), AttributeModifier.Operation.ADDITION));
             if (this.knockbackResistance > 0)
@@ -77,10 +77,10 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
 
     @Override
     public void onArmorTick(ItemStack stack, World world, PlayerEntity player) {
-        if (player.ticksExisted % 16 == 8) {
+        if (player.tickCount % 16 == 8) {
             IFaction<?> f = VampirismPlayerAttributes.get(player).faction;
             if (f != null && !VReference.HUNTER_FACTION.equals(f)) {
-                player.addPotionEffect(new EffectInstance(ModEffects.poison, 20, 1));
+                player.addEffect(new EffectInstance(ModEffects.poison, 20, 1));
             }
         }
     }
@@ -92,7 +92,7 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
     protected abstract int getDamageReduction(int slot, ItemStack stack);
 
     @Override
-    protected String getDefaultTranslationKey() {
+    protected String getOrCreateDescriptionId() {
         return translation_key;
     }
 

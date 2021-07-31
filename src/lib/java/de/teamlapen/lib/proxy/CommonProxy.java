@@ -55,7 +55,7 @@ public class CommonProxy implements IProxy {
     public World getWorldFromKey(RegistryKey<World> world) {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         if (server != null) {
-            return server.getWorld(world);
+            return server.getLevel(world);
         }
         return null;
     }

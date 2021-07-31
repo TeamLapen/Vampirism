@@ -20,14 +20,14 @@ public class ForceLookEntityGoal<T extends MobEntity & ForceLookEntityGoal.TaskO
     public ForceLookEntityGoal(T theTrainer) {
         super(theTrainer, PlayerEntity.class, 8.0F);
         this.theTrainer = theTrainer;
-        this.setMutexFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));
+        this.setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));
     }
 
     /**
      * Returns whether the EntityAIBase should begin execution.
      */
-    public boolean shouldExecute() {
-        return this.theTrainer.getForceLookTarget().map(t -> this.closestEntity = t).isPresent();
+    public boolean canUse() {
+        return this.theTrainer.getForceLookTarget().map(t -> this.lookAt = t).isPresent();
     }
 
 

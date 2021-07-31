@@ -136,7 +136,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     public IFaction getDisguisedAs() {
-        return player.isPotionActive(ModEffects.disguise_as_vampire) ? VReference.VAMPIRE_FACTION : getFaction();
+        return player.hasEffect(ModEffects.disguise_as_vampire) ? VReference.VAMPIRE_FACTION : getFaction();
     }
 
     @Override
@@ -174,12 +174,12 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     public int getTheEntityID() {
-        return player.getEntityId();
+        return player.getId();
     }
 
     @Override
     public boolean isDisguised() {
-        return player.isPotionActive(ModEffects.disguise_as_vampire);
+        return player.hasEffect(ModEffects.disguise_as_vampire);
     }
 
     public void loadData(CompoundNBT compound) {
@@ -197,8 +197,8 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     public void onDeath(DamageSource src) {
         super.onDeath(src);
         actionHandler.deactivateAllActions();
-        if (src.getTrueSource() instanceof ServerPlayerEntity && Helper.isVampire(((PlayerEntity) src.getTrueSource())) && this.getRepresentingPlayer().getActivePotionEffect(ModEffects.freeze) != null) {
-            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayerEntity) src.getTrueSource()), VampireActionTrigger.Action.KILL_FROZEN_HUNTER);
+        if (src.getEntity() instanceof ServerPlayerEntity && Helper.isVampire(((PlayerEntity) src.getEntity())) && this.getRepresentingPlayer().getEffect(ModEffects.freeze) != null) {
+            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayerEntity) src.getEntity()), VampireActionTrigger.Action.KILL_FROZEN_HUNTER);
         }
     }
 
@@ -254,7 +254,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     public void onUpdate() {
-        player.getEntityWorld().getProfiler().startSection("vampirism_hunterPlayer");
+        player.getCommandSenderWorld().getProfiler().push("vampirism_hunterPlayer");
         super.onUpdate();
         int level = getLevel();
         if (level > 0) {
@@ -282,7 +282,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         }
         getSpecialAttributes().fullHunterCoat = level > 0 ? HunterCoatItem.isFullyEquipped(player) : null;
 
-        player.getEntityWorld().getProfiler().endSection();
+        player.getCommandSenderWorld().getProfiler().pop();
     }
 
     @Override

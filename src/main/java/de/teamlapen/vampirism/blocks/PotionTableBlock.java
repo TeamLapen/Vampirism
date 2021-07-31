@@ -24,33 +24,31 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-
 public class PotionTableBlock extends VampirismBlockContainer {
     protected static final VoxelShape shape = makeShape();
     private final static String regName = "potion_table";
 
     private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(0, 0, 0, 16, 1, 16);
-        VoxelShape b = Block.makeCuboidShape(1, 1, 1, 15, 2, 15);
-        VoxelShape c = Block.makeCuboidShape(2, 2, 2, 14, 9, 14);
-        VoxelShape d = Block.makeCuboidShape(0, 9, 0, 16, 11, 16);
+        VoxelShape a = Block.box(0, 0, 0, 16, 1, 16);
+        VoxelShape b = Block.box(1, 1, 1, 15, 2, 15);
+        VoxelShape c = Block.box(2, 2, 2, 14, 9, 14);
+        VoxelShape d = Block.box(0, 9, 0, 16, 11, 16);
         return VoxelShapes.or(a, b, c, d);
     }
 
     public PotionTableBlock() {
-        super(regName, Properties.create(Material.IRON).hardnessAndResistance(1f).notSolid());
+        super(regName, Properties.of(Material.METAL).strength(1f).noOcclusion());
+    }
+
+    @Override
+    public BlockRenderType getRenderShape(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+    public TileEntity newBlockEntity(IBlockReader worldIn) {
         return new PotionTableTileEntity();
-    }
-
-
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
     }
 
 
@@ -59,15 +57,23 @@ public class PotionTableBlock extends VampirismBlockContainer {
         return shape;
     }
 
+    @Override
+    public void setPlacedBy(World world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack stack) {
+        super.setPlacedBy(world, blockPos, blockState, entity, stack);
+        TileEntity tile = world.getBlockEntity(blockPos);
+        if (entity instanceof PlayerEntity && tile instanceof PotionTableTileEntity) {
+            ((PotionTableTileEntity) tile).setOwnerID((PlayerEntity) entity);
+        }
+    }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!worldIn.isRemote && player instanceof ServerPlayerEntity) {
-            TileEntity tile = worldIn.getTileEntity(pos);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (!worldIn.isClientSide && player instanceof ServerPlayerEntity) {
+            TileEntity tile = worldIn.getBlockEntity(pos);
             if (tile instanceof PotionTableTileEntity) {
                 if (((PotionTableTileEntity) tile).canOpen(player)) {
                     NetworkHooks.openGui((ServerPlayerEntity) player, (PotionTableTileEntity) tile, buffer -> buffer.writeBoolean(((PotionTableTileEntity) tile).isExtended()));
-                    player.addStat(ModStats.interact_alchemical_cauldron);
+                    player.awardStat(ModStats.interact_alchemical_cauldron);
                 }
             }
         }
@@ -76,20 +82,11 @@ public class PotionTableBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack stack) {
-        super.onBlockPlacedBy(world, blockPos, blockState, entity, stack);
-        TileEntity tile = world.getTileEntity(blockPos);
-        if (entity instanceof PlayerEntity && tile instanceof PotionTableTileEntity) {
-            ((PotionTableTileEntity) tile).setOwnerID((PlayerEntity) entity);
-        }
-    }
-
-    @Override
     protected void clearContainer(BlockState state, World worldIn, BlockPos pos) {
-        TileEntity te = worldIn.getTileEntity(pos);
+        TileEntity te = worldIn.getBlockEntity(pos);
         if (te instanceof PotionTableTileEntity) {
             for (int i = 0; i < 8; ++i) {
-                this.dropItem(worldIn, pos, ((PotionTableTileEntity) te).removeStackFromSlot(i));
+                this.dropItem(worldIn, pos, ((PotionTableTileEntity) te).removeItemNoUpdate(i));
             }
         }
     }

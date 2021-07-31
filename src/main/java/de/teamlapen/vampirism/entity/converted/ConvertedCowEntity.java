@@ -21,15 +21,15 @@ public class ConvertedCowEntity extends ConvertedCreatureEntity<CowEntity> {
     }
 
     @Nonnull
-    public ActionResultType getEntityInteractionResult(PlayerEntity player, @Nonnull Hand hand) {
-        ItemStack itemstack = player.getHeldItem(hand);
-        if (itemstack.getItem() == Items.BUCKET && !this.isChild()) {
-            player.playSound(SoundEvents.ENTITY_COW_MILK, 1.0F, 1.0F);
-            ItemStack itemstack1 = DrinkHelper.fill(itemstack, player, Items.MILK_BUCKET.getDefaultInstance());
-            player.setHeldItem(hand, itemstack1);
-            return ActionResultType.func_233537_a_(this.world.isRemote);
+    public ActionResultType mobInteract(PlayerEntity player, @Nonnull Hand hand) {
+        ItemStack itemstack = player.getItemInHand(hand);
+        if (itemstack.getItem() == Items.BUCKET && !this.isBaby()) {
+            player.playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
+            ItemStack itemstack1 = DrinkHelper.createFilledResult(itemstack, player, Items.MILK_BUCKET.getDefaultInstance());
+            player.setItemInHand(hand, itemstack1);
+            return ActionResultType.sidedSuccess(this.level.isClientSide);
         } else {
-            return super.getEntityInteractionResult(player, hand);
+            return super.mobInteract(player, hand);
         }
     }
 
@@ -40,7 +40,7 @@ public class ConvertedCowEntity extends ConvertedCreatureEntity<CowEntity> {
 
         @Override
         public ConvertedCreatureEntity<CowEntity> createFrom(CowEntity entity) {
-            return Helper.createEntity(ModEntities.converted_cow, entity.getEntityWorld()).map(creature -> {
+            return Helper.createEntity(ModEntities.converted_cow, entity.getCommandSenderWorld()).map(creature -> {
                 this.copyImportantStuff(creature, entity);
                 return creature;
             }).orElse(null);

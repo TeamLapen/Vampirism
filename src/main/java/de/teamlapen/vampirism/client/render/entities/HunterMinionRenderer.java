@@ -30,7 +30,7 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
         textures = gatherTextures("textures/entity/hunter", true);
         minionSpecificTextures = gatherTextures("textures/entity/minion/hunter", false);
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
-        this.addLayer(new HunterEquipmentLayer<>(this, minion -> minion.getItemStackFromSlot(EquipmentSlotType.MAINHAND).isEmpty() ? minion.getItemStackFromSlot(EquipmentSlotType.OFFHAND).isEmpty() ? HunterEquipmentModel.StakeType.FULL : HunterEquipmentModel.StakeType.AXE_ONLY : HunterEquipmentModel.StakeType.NONE, HunterMinionEntity::getHatType));
+        this.addLayer(new HunterEquipmentLayer<>(this, minion -> minion.getItemBySlot(EquipmentSlotType.MAINHAND).isEmpty() ? minion.getItemBySlot(EquipmentSlotType.OFFHAND).isEmpty() ? HunterEquipmentModel.StakeType.FULL : HunterEquipmentModel.StakeType.AXE_ONLY : HunterEquipmentModel.StakeType.NONE, HunterMinionEntity::getHatType));
         this.addLayer(new BipedArmorLayer<>(this, new BipedModel<>(0.5f), new BipedModel<>(1f)));
     }
 
@@ -52,21 +52,21 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
     }
 
     @Override
-    protected void preRenderCallback(HunterMinionEntity entityIn, MatrixStack matrixStackIn, float partialTickTime) {
+    protected void renderSelected(HunterMinionEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+        if (entityIn.isSwingingArms()) {
+            this.model.rightArmPose = BipedModel.ArmPose.CROSSBOW_HOLD;
+        } else {
+            this.model.rightArmPose = BipedModel.ArmPose.ITEM;
+        }
+        super.renderSelected(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+    }
+
+    @Override
+    protected void scale(HunterMinionEntity entityIn, MatrixStack matrixStackIn, float partialTickTime) {
         float s = entityIn.getScale();
         //float off = (1 - s) * 1.95f;
         matrixStackIn.scale(s, s, s);
         //matrixStackIn.translate(0,off,0f);
-    }
-
-    @Override
-    protected void renderSelected(HunterMinionEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        if (entityIn.isSwingingArms()) {
-            this.entityModel.rightArmPose = BipedModel.ArmPose.CROSSBOW_HOLD;
-        } else {
-            this.entityModel.rightArmPose = BipedModel.ArmPose.ITEM;
-        }
-        super.renderSelected(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
 }

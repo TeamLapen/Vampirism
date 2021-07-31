@@ -33,17 +33,17 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
         super(dispatcher);
         this.model = new CoffinModel();
         for (DyeColor e : DyeColor.values()) {
-            textures[e.getId()] = new ResourceLocation(REFERENCE.MODID, "textures/block/coffin/coffin_" + e.getString() + ".png");
+            textures[e.getId()] = new ResourceLocation(REFERENCE.MODID, "textures/block/coffin/coffin_" + e.getSerializedName() + ".png");
         }
     }
 
     @Override
     public void render(CoffinTileEntity tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
         if (!tile.renderAsItem) {
-            if (!isHeadSafe(tile.getWorld(), tile.getPos())) return;
+            if (!isHeadSafe(tile.getLevel(), tile.getBlockPos())) return;
 
             // Calculate lid position
-            boolean occupied = tile.hasWorld() && CoffinBlock.isOccupied(tile.getWorld(), tile.getPos());
+            boolean occupied = tile.hasLevel() && CoffinBlock.isOccupied(tile.getLevel(), tile.getBlockPos());
             if (!occupied && tile.lidPos > 0)
                 tile.lidPos--;
             else if (occupied && tile.lidPos < maxLidPos)
@@ -53,16 +53,16 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
         }
         model.rotateLid(calcLidAngle(tile.lidPos));
         int color = Math.min(tile.color.getId(), 15);
-        matrixStack.push();
+        matrixStack.pushPose();
         matrixStack.translate(0.5F, +1.5F, 0.5F);
-        matrixStack.push();
+        matrixStack.pushPose();
         adjustRotatePivotViaState(tile, matrixStack);
-        matrixStack.rotate(Vector3f.XP.rotationDegrees(180));
+        matrixStack.mulPose(Vector3f.XP.rotationDegrees(180));
         matrixStack.translate(0, 0, -1);
-        IVertexBuilder vertexBuilder = iRenderTypeBuffer.getBuffer(RenderType.getEntitySolid(textures[color]));
-        this.model.render(matrixStack, vertexBuilder, i, i1, 1, 1, 1, 1);
-        matrixStack.pop();
-        matrixStack.pop();
+        IVertexBuilder vertexBuilder = iRenderTypeBuffer.getBuffer(RenderType.entitySolid(textures[color]));
+        this.model.renderToBuffer(matrixStack, vertexBuilder, i, i1, 1, 1, 1, 1);
+        matrixStack.popPose();
+        matrixStack.popPose();
 
     }
 

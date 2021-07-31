@@ -30,7 +30,7 @@ public class ModAttributes {
 
     static void registerAttributes(IForgeRegistry<Attribute> registry) {
         registry.register(new RangedAttribute("vampirism.sundamage", 0.0D, 0.0D, 1000D).setRegistryName(REFERENCE.MODID, "sundamage"));
-        registry.register(new RangedAttribute("vampirism.blood_exhaustion", 1.0, 0.0, 10).setShouldWatch(true)/*shouldWatch*/.setRegistryName(REFERENCE.MODID, "blood_exhaustion"));
+        registry.register(new RangedAttribute("vampirism.blood_exhaustion", 1.0, 0.0, 10).setSyncable(true)/*shouldWatch*/.setRegistryName(REFERENCE.MODID, "blood_exhaustion"));
         registry.register(new RangedAttribute("vampirism.bite_damage", 0.0, 0.0, 100).setRegistryName(REFERENCE.MODID, "bite_damage"));
     }
 

@@ -26,13 +26,13 @@ public class TaskInstance implements ITaskInstance {
     public static TaskInstance readNBT(@Nonnull CompoundNBT nbt) {
         Task task = ModRegistries.TASKS.getValue(new ResourceLocation(nbt.getString("task")));
         if (task == null) return null;
-        UUID id = nbt.getUniqueId("id");
-        UUID insId = nbt.getUniqueId("insId");
+        UUID id = nbt.getUUID("id");
+        UUID insId = nbt.getUUID("insId");
         boolean accepted = nbt.getBoolean("accepted");
         long taskTimer = nbt.getLong("taskTimer");
         CompoundNBT statsNBT = nbt.getCompound("stats");
         Map<ResourceLocation, Integer> stats = new HashMap<>();
-        statsNBT.keySet().forEach(name -> {
+        statsNBT.getAllKeys().forEach(name -> {
             stats.put(new ResourceLocation(name), statsNBT.getInt(name));
         });
         ResourceLocation rewardId = new ResourceLocation(nbt.getString("rewardId"));
@@ -42,9 +42,9 @@ public class TaskInstance implements ITaskInstance {
     }
 
     public static TaskInstance decode(PacketBuffer buffer) {
-        UUID id = buffer.readUniqueId();
+        UUID id = buffer.readUUID();
         Task task = ModRegistries.TASKS.getValue(buffer.readResourceLocation());
-        UUID insId = buffer.readUniqueId();
+        UUID insId = buffer.readUUID();
         boolean accepted = buffer.readBoolean();
         long taskTimer = buffer.readVarLong();
         int statsAmount = buffer.readVarInt();
@@ -104,9 +104,9 @@ public class TaskInstance implements ITaskInstance {
     }
 
     public void encode(PacketBuffer buffer) {
-        buffer.writeUniqueId(this.taskGiver);
+        buffer.writeUUID(this.taskGiver);
         buffer.writeResourceLocation(this.task.getRegistryName());
-        buffer.writeUniqueId(this.instanceId);
+        buffer.writeUUID(this.instanceId);
         buffer.writeBoolean(this.accepted);
         buffer.writeVarLong(this.taskTimeStamp);
         buffer.writeVarInt(this.stats.size());
@@ -189,9 +189,9 @@ public class TaskInstance implements ITaskInstance {
     }
 
     public CompoundNBT writeNBT(@Nonnull CompoundNBT nbt) {
-        nbt.putUniqueId("id", this.taskGiver);
+        nbt.putUUID("id", this.taskGiver);
         nbt.putString("task", this.task.getRegistryName().toString());
-        nbt.putUniqueId("insId", this.instanceId);
+        nbt.putUUID("insId", this.instanceId);
         nbt.putBoolean("accepted", this.accepted);
         nbt.putLong("taskTimer", this.taskTimeStamp);
         CompoundNBT stats = new CompoundNBT();

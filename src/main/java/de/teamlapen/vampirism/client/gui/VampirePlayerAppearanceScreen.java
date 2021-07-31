@@ -58,9 +58,9 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
     }
 
     @Override
-    public void onClose() {
-        VampirismMod.dispatcher.sendToServer(new AppearancePacket(this.entity.getEntityId(), "", fangType, eyeType, glowingEyes ? 1 : 0));
-        super.onClose();
+    public void removed() {
+        VampirismMod.dispatcher.sendToServer(new AppearancePacket(this.entity.getId(), "", fangType, eyeType, glowingEyes ? 1 : 0));
+        super.removed();
     }
 
     @Override
@@ -85,7 +85,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
             @Override
             public void onPress() {
                 super.onPress();
-                glowingEyes = isChecked();
+                glowingEyes = selected();
                 VampirePlayer.getOpt(entity).ifPresent(p -> p.setGlowingEyes(glowingEyes));
             }
         });
@@ -95,9 +95,9 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
 
     @Override
     protected void renderGuiBackground(MatrixStack mStack) {
-        GlStateManager.color4f(color[0], color[1], color[2], 1f);
+        GlStateManager._color4f(color[0], color[1], color[2], 1f);
         super.renderGuiBackground(mStack);
-        GlStateManager.color4f(1, 1, 1, 1);
+        GlStateManager._color4f(1, 1, 1, 1);
     }
 
     private void eye(int eyeType) {
@@ -139,7 +139,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
     }
 
     private void setEyeListVisibility(boolean show) {
-        eyeButton.setMessage(eyeList.getMessage().deepCopy().appendString(" " + (eyeType + 1)));
+        eyeButton.setMessage(eyeList.getMessage().copy().append(" " + (eyeType + 1)));
         this.eyeList.visible = show;
         this.fangButton.visible = !show;
         this.glowingEyesButton.visible = !show;
@@ -147,7 +147,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
     }
 
     private void setFangListVisibility(boolean show) {
-        fangButton.setMessage(fangList.getMessage().deepCopy().appendString(" " + (fangType + 1)));
+        fangButton.setMessage(fangList.getMessage().copy().append(" " + (fangType + 1)));
         this.fangList.visible = show;
         this.glowingEyesButton.visible = !show;
         if (show) this.eyeList.visible = false;

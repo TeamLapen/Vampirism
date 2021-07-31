@@ -14,11 +14,11 @@ public class ActionBindingPacket implements IMessage {
 
     static void encode(final ActionBindingPacket msg, PacketBuffer buf) {
         buf.writeVarInt(msg.actionBindingId);
-        buf.writeString(msg.action.getRegistryName().toString());
+        buf.writeUtf(msg.action.getRegistryName().toString());
     }
 
     static ActionBindingPacket decode(PacketBuffer buf) {
-        return new ActionBindingPacket(buf.readVarInt(), ModRegistries.ACTIONS.getValue(new ResourceLocation(buf.readString(32767))));
+        return new ActionBindingPacket(buf.readVarInt(), ModRegistries.ACTIONS.getValue(new ResourceLocation(buf.readUtf(32767))));
     }
 
     public static void handle(final ActionBindingPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {

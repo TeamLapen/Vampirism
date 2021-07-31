@@ -26,7 +26,7 @@ public class HunterTableScreen extends ContainerScreen<HunterTableContainer> {
     private final IWorldPosCallable worldPos;
 
     public HunterTableScreen(HunterTableContainer inventorySlotsIn, PlayerInventory playerInventory, ITextComponent name) {
-        this(inventorySlotsIn, playerInventory, name, IWorldPosCallable.DUMMY);
+        this(inventorySlotsIn, playerInventory, name, IWorldPosCallable.NULL);
     }
 
     public HunterTableScreen(HunterTableContainer inventorySlotsIn, PlayerInventory playerInventory, ITextComponent name, IWorldPosCallable worldPosIn) {
@@ -38,31 +38,31 @@ public class HunterTableScreen extends ContainerScreen<HunterTableContainer> {
     public void render(@Nonnull MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(stack, mouseX, mouseY);
+        this.renderTooltip(stack, mouseX, mouseY);
 
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(@Nonnull MatrixStack stack, float var1, int var2, int var3) {
+    protected void renderBg(@Nonnull MatrixStack stack, float var1, int var2, int var3) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(altarGuiTextures);
-        this.blit(stack, this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.minecraft.getTextureManager().bind(altarGuiTextures);
+        this.blit(stack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(@Nonnull MatrixStack stack, int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(stack, mouseX, mouseY);
+    protected void renderLabels(@Nonnull MatrixStack stack, int mouseX, int mouseY) {
+        super.renderLabels(stack, mouseX, mouseY);
 
         ITextComponent text = null;
-        if (!container.isLevelValid(false)) {
+        if (!menu.isLevelValid(false)) {
             text = new TranslationTextComponent("container.vampirism.hunter_table.level_wrong");
-        } else if (!container.isLevelValid(true)) {
+        } else if (!menu.isLevelValid(true)) {
             text = new TranslationTextComponent("container.vampirism.hunter_table.structure_level_wrong");
-        } else if (!container.getMissingItems().isEmpty()) {
-            ItemStack missing = container.getMissingItems();
-            ITextComponent item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : new TranslationTextComponent(missing.getTranslationKey());
+        } else if (!menu.getMissingItems().isEmpty()) {
+            ItemStack missing = menu.getMissingItems();
+            ITextComponent item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : new TranslationTextComponent(missing.getDescriptionId());
             text = new TranslationTextComponent("text.vampirism.hunter_table.ritual_missing_items", missing.getCount(), item);
         }
-        if (text != null) this.font.func_238418_a_(text, 8, 50, this.xSize - 10, 0x000000);
+        if (text != null) this.font.drawWordWrap(text, 8, 50, this.imageWidth - 10, 0x000000);
     }
 }

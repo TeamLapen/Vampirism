@@ -49,7 +49,7 @@ public class RegenerationEntityAction<T extends CreatureEntity & IEntityActionUs
     public void onUpdate(T entity, int duration) {
         entity.getRepresentingEntity().heal(entity.getMaxHealth() / 100f * VampirismConfig.BALANCE.eaRegenerationAmount.get() / (getDuration(entity.getLevel()) * 20f)); // seconds in ticks
         if (duration % 15 == 0) {
-            ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.HEART, entity.getPosX(), entity.getPosY() + 1, entity.getPosZ(), 3, 0.2, 0.2, 0.2, 0);
+            ModParticles.spawnParticlesServer(entity.getCommandSenderWorld(), ParticleTypes.HEART, entity.getX(), entity.getY() + 1, entity.getZ(), 3, 0.2, 0.2, 0.2, 0);
         }
 
     }

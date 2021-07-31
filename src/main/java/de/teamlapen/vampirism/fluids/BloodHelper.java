@@ -34,9 +34,9 @@ public class BloodHelper {
      * @return
      */
     public static ItemStack getBloodHandlerInHotbar(PlayerInventory inventory) {
-        int hotbarSize = PlayerInventory.getHotbarSize();
+        int hotbarSize = PlayerInventory.getSelectionSize();
         for (int i = 0; i < hotbarSize; i++) {
-            ItemStack stack = inventory.getStackInSlot(i);
+            ItemStack stack = inventory.getItem(i);
             if (!stack.isEmpty() && FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.blood, 1000), IFluidHandler.FluidAction.SIMULATE) > 0).orElse(false))
                 return stack;
         }
@@ -54,9 +54,9 @@ public class BloodHelper {
      * Returns the first glass bottle stack on the players hotbar
      */
     public static ItemStack getGlassBottleInHotbar(PlayerInventory inventory) {
-        int hotbarSize = PlayerInventory.getHotbarSize();
+        int hotbarSize = PlayerInventory.getSelectionSize();
         for (int i = 0; i < hotbarSize; i++) {
-            ItemStack itemStack = inventory.getStackInSlot(i);
+            ItemStack itemStack = inventory.getItem(i);
             if (!itemStack.isEmpty() && itemStack.getItem().equals(Items.GLASS_BOTTLE)) {
                 return itemStack;
             }
@@ -116,9 +116,9 @@ public class BloodHelper {
     public static int fillBloodIntoInventory(PlayerEntity player, int amt) {
         if (amt <= 0) return 0;
         ItemStack stack = ItemStack.EMPTY;
-        int hotbarSize = PlayerInventory.getHotbarSize();
+        int hotbarSize = PlayerInventory.getSelectionSize();
         for (int i = 0; i < hotbarSize; i++) {
-            ItemStack stack1 = player.inventory.getStackInSlot(i);
+            ItemStack stack1 = player.inventory.getItem(i);
             if (!stack1.isEmpty() && fill(stack1, amt, IFluidHandler.FluidAction.SIMULATE) > 0) {
                 stack = stack1;
                 break;
@@ -144,10 +144,10 @@ public class BloodHelper {
             }
             glass.shrink(1);
             if (glass.isEmpty()) {
-                player.inventory.deleteStack(glass);
+                player.inventory.removeItem(glass);
             }
-            if (!player.inventory.addItemStackToInventory(bloodBottle)) {
-                player.dropItem(bloodBottle, false);
+            if (!player.inventory.add(bloodBottle)) {
+                player.drop(bloodBottle, false);
             }
             return fillBloodIntoInventory(player, amt - filled);
         }
@@ -167,9 +167,9 @@ public class BloodHelper {
     }
 
     public static boolean hasFeedingAdapterInHotbar(PlayerInventory inventory) {
-        int hotbarSize = PlayerInventory.getHotbarSize();
+        int hotbarSize = PlayerInventory.getSelectionSize();
         for (int i = 0; i < hotbarSize; i++) {
-            ItemStack itemStack = inventory.getStackInSlot(i);
+            ItemStack itemStack = inventory.getItem(i);
             if (!itemStack.isEmpty() && itemStack.getItem().equals(ModItems.feeding_adapter)) {
                 return true;
             }
@@ -178,8 +178,8 @@ public class BloodHelper {
     }
 
     public static ItemStack getBloodContainerInInventory(PlayerInventory inventory, boolean allowFull, boolean allowEmpty) {
-        for (int i = 0; i < inventory.getSizeInventory(); i++) {
-            ItemStack stack = inventory.getStackInSlot(i);
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            ItemStack stack = inventory.getItem(i);
             FluidStack content = BloodContainerBlock.getFluidFromItemStack(stack);
             if (content.getRawFluid() == ModFluids.blood && (allowFull || content.getAmount() < BloodContainerTileEntity.CAPACITY) && (allowEmpty || content.getAmount() > 0)) {
                 return stack;

@@ -44,7 +44,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return the enchantment level
      */
     protected static int isCrossbowFrugal(ItemStack crossbowStack) {
-        return EnchantmentHelper.getEnchantmentLevel(ModEnchantments.crossbowfrugality, crossbowStack);
+        return EnchantmentHelper.getItemEnchantmentLevel(ModEnchantments.crossbowfrugality, crossbowStack);
     }
     private int enchantability = 0;
 
@@ -53,23 +53,23 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @param maxDamage Max damage or 0 if unbreakable
      */
     public VampirismItemCrossbow(String regName, int maxDamage) {
-        super(regName, new Properties().maxStackSize(1).defaultMaxDamage(maxDamage).group(VampirismMod.creativeTab));
+        super(regName, new Properties().stacksTo(1).defaultDurability(maxDamage).tab(VampirismMod.creativeTab));
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         this.addFactionLevelToolTip(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return super.canApplyAtEnchantingTable(stack, enchantment) || enchantment == Enchantments.INFINITY;
+        return super.canApplyAtEnchantingTable(stack, enchantment) || enchantment == Enchantments.INFINITY_ARROWS;
     }
 
     @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-        return Tags.Items.STRING.contains(repair.getItem()) || super.getIsRepairable(toRepair, repair);
+    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
+        return Tags.Items.STRING.contains(repair.getItem()) || super.isValidRepairItem(toRepair, repair);
     }
 
     @Override
@@ -94,16 +94,16 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
         return VReference.HUNTER_FACTION;
     }
 
-    @Nonnull
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull World worldIn, PlayerEntity playerIn, @Nonnull Hand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
-        shoot(playerIn, 0, 0, worldIn, stack, handIn);
-        return new ActionResult<>(ActionResultType.SUCCESS, stack);
+    public void setEnchantability(ItemTier material) {
+        this.enchantability = material.getEnchantmentValue();
     }
 
-    public void setEnchantability(ItemTier material) {
-        this.enchantability = material.getEnchantability();
+    @Nonnull
+    @Override
+    public ActionResult<ItemStack> use(@Nonnull World worldIn, PlayerEntity playerIn, @Nonnull Hand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
+        shoot(playerIn, 0, 0, worldIn, stack, handIn);
+        return new ActionResult<>(ActionResultType.SUCCESS, stack);
     }
 
     /**
@@ -116,13 +116,13 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     protected
     @Nonnull
     ItemStack findAmmo(PlayerEntity player, ItemStack bowStack) {
-        if (this.isArrow(player.getHeldItem(Hand.OFF_HAND))) {
-            return player.getHeldItem(Hand.OFF_HAND);
-        } else if (this.isArrow(player.getHeldItem(Hand.MAIN_HAND))) {
-            return player.getHeldItem(Hand.MAIN_HAND);
+        if (this.isArrow(player.getItemInHand(Hand.OFF_HAND))) {
+            return player.getItemInHand(Hand.OFF_HAND);
+        } else if (this.isArrow(player.getItemInHand(Hand.MAIN_HAND))) {
+            return player.getItemInHand(Hand.MAIN_HAND);
         } else {
-            for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
-                ItemStack itemstack = player.inventory.getStackInSlot(i);
+            for (int i = 0; i < player.inventory.getContainerSize(); ++i) {
+                ItemStack itemstack = player.inventory.getItem(i);
 
                 if (this.isArrow(itemstack)) {
                     return itemstack;
@@ -170,7 +170,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return If the crossbow can shoot without an arrow in the players inventory
      */
     protected boolean isCrossbowInfinite(ItemStack stack, PlayerEntity player) {
-        int enchant = EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, stack);
+        int enchant = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, stack);
         return enchant > 0 || player.isCreative();
     }
 
@@ -190,7 +190,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return If successful
      */
     protected boolean shoot(PlayerEntity player, float heightOffset, float centerOffset, World world, ItemStack stack, Hand hand) {
-        boolean creative = player.abilities.isCreativeMode;
+        boolean creative = player.abilities.instabuild;
         boolean bowInfinite = isCrossbowInfinite(stack, player);
         int bowFrugal = isCrossbowFrugal(stack);
 
@@ -204,48 +204,48 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
             float f = getArrowVelocity();
 
             if ((double) f >= 0.1D) {
-                boolean consumeArrow = shouldConsumeArrow(player.getRNG(), itemstack, creative, bowInfinite, bowFrugal);
+                boolean consumeArrow = shouldConsumeArrow(player.getRandom(), itemstack, creative, bowInfinite, bowFrugal);
 
-                if (!world.isRemote) {
-                    boolean rightHand = player.getPrimaryHand() == HandSide.RIGHT && hand == Hand.MAIN_HAND || player.getPrimaryHand() == HandSide.LEFT && hand == Hand.OFF_HAND;
+                if (!world.isClientSide) {
+                    boolean rightHand = player.getMainArm() == HandSide.RIGHT && hand == Hand.MAIN_HAND || player.getMainArm() == HandSide.LEFT && hand == Hand.OFF_HAND;
                     IVampirismCrossbowArrow<?> itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArrow ? (IVampirismCrossbowArrow<?>) itemstack.getItem() : ModItems.crossbow_arrow_normal;
                     AbstractArrowEntity entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset, 0.3F + centerOffset, rightHand);
 
-                    Vector3d vector3d = player.getLook(1.0F);
-                    entityarrow.shoot(vector3d.getX(), vector3d.getY(), vector3d.getZ(), f * 3, 1f);
+                    Vector3d vector3d = player.getViewVector(1.0F);
+                    entityarrow.shoot(vector3d.x(), vector3d.y(), vector3d.z(), f * 3, 1f);
 
-                    if (isCritical(player.getRNG())) {
-                        entityarrow.setIsCritical(true);
+                    if (isCritical(player.getRandom())) {
+                        entityarrow.setCritArrow(true);
                     }
 
                     if (isIgnoreHurtTime(stack)) {
                         ((IEntityCrossbowArrow) entityarrow).setIgnoreHurtTimer();
                     }
 
-                    int j = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, stack);
+                    int j = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
 
                     if (j > 0) {
-                        entityarrow.setDamage(entityarrow.getDamage() + (double) j * 0.5D + 0.5D);
+                        entityarrow.setBaseDamage(entityarrow.getBaseDamage() + (double) j * 0.5D + 0.5D);
                     }
 
-                    int k = EnchantmentHelper.getEnchantmentLevel(Enchantments.PUNCH, stack);
+                    int k = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, stack);
 
                     if (k > 0) {
-                        entityarrow.setKnockbackStrength(k);
+                        entityarrow.setKnockback(k);
                     }
 
-                    if (EnchantmentHelper.getEnchantmentLevel(Enchantments.FLAME, stack) > 0) {
-                        entityarrow.setFire(100);
+                    if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, stack) > 0) {
+                        entityarrow.setSecondsOnFire(100);
                     }
 
-                    stack.damageItem(1, player, (consumer) -> consumer.sendBreakAnimation(hand));
+                    stack.hurtAndBreak(1, player, (consumer) -> consumer.broadcastBreakEvent(hand));
 
                     if (!consumeArrow) {
-                        entityarrow.pickupStatus = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+                        entityarrow.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
                     }
 
-                    world.addEntity(entityarrow);
-                    world.playSound(null, player.getPosX(), player.getPosY() + 0.5, player.getPosZ(), ModSounds.crossbow, SoundCategory.PLAYERS, 1F, world.rand.nextFloat() * 0.1F + 0.9F);
+                    world.addFreshEntity(entityarrow);
+                    world.playSound(null, player.getX(), player.getY() + 0.5, player.getZ(), ModSounds.crossbow, SoundCategory.PLAYERS, 1F, world.random.nextFloat() * 0.1F + 0.9F);
 
                 }
 
@@ -254,11 +254,11 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
                     itemstack.shrink(1);
 
                     if (itemstack.isEmpty()) {
-                        player.inventory.deleteStack(itemstack);
+                        player.inventory.removeItem(itemstack);
                     }
                 }
 
-                player.getCooldownTracker().setCooldown(stack.getItem(), getCooldown(player, stack));
+                player.getCooldowns().addCooldown(stack.getItem(), getCooldown(player, stack));
                 return true;
             }
         }

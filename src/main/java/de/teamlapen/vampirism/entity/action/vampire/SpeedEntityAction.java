@@ -42,8 +42,8 @@ public class SpeedEntityAction<T extends CreatureEntity & IEntityActionUser> ext
 
     @Override
     public int getWeight(CreatureEntity entity) {
-        if (entity.getAttackTarget() == null) return 0;
-        double distanceToTarget = new Vector3d(entity.getPosX(), entity.getPosY(), entity.getPosZ()).subtract(entity.getAttackTarget().getPosX(), entity.getAttackTarget().getPosY(), entity.getAttackTarget().getPosZ()).length();
+        if (entity.getTarget() == null) return 0;
+        double distanceToTarget = new Vector3d(entity.getX(), entity.getY(), entity.getZ()).subtract(entity.getTarget().getX(), entity.getTarget().getY(), entity.getTarget().getZ()).length();
         if (distanceToTarget > 10) {
             return 3;
         } else if (distanceToTarget > 5) {
@@ -56,11 +56,11 @@ public class SpeedEntityAction<T extends CreatureEntity & IEntityActionUser> ext
     @Override
     public void onUpdate(T entity, int duration) {
         if (entity.getRepresentingEntity().getAttribute(Attributes.MOVEMENT_SPEED).getModifier(UUIDS) == null) {
-            entity.getRepresentingEntity().getAttribute(Attributes.MOVEMENT_SPEED).applyPersistentModifier(new AttributeModifier(UUIDS, "speedaction", VampirismConfig.BALANCE.eaSpeedAmount.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+            entity.getRepresentingEntity().getAttribute(Attributes.MOVEMENT_SPEED).addPermanentModifier(new AttributeModifier(UUIDS, "speedaction", VampirismConfig.BALANCE.eaSpeedAmount.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
         if (duration % 5 == 0) {
             double maxDist = 0.5D;
-            ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.CLOUD, entity.getPosX() + (entity.getRNG().nextDouble() * maxDist) - maxDist / 2, entity.getPosY() + 0.1, entity.getPosZ() + (entity.getRNG().nextDouble() * maxDist) - maxDist / 2, 3, 0.3f, 0.3f, 0.3f, 0.02f);
+            ModParticles.spawnParticlesServer(entity.getCommandSenderWorld(), ParticleTypes.CLOUD, entity.getX() + (entity.getRandom().nextDouble() * maxDist) - maxDist / 2, entity.getY() + 0.1, entity.getZ() + (entity.getRandom().nextDouble() * maxDist) - maxDist / 2, 3, 0.3f, 0.3f, 0.3f, 0.02f);
         }
     }
 }

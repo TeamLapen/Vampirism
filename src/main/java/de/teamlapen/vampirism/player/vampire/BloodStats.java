@@ -80,11 +80,11 @@ public class BloodStats implements IBloodStats {
      * @return Whether it changed or not
      */
     public boolean onUpdate() {
-        FoodStats foodStats = player.getFoodStats();
+        FoodStats foodStats = player.getFoodData();
         foodStats.setFoodLevel(10);
-        Difficulty enumDifficulty = player.getEntityWorld().getDifficulty();
-        float exhaustion = foodStats.foodExhaustionLevel;
-        foodStats.foodExhaustionLevel = 0;
+        Difficulty enumDifficulty = player.getCommandSenderWorld().getDifficulty();
+        float exhaustion = foodStats.exhaustionLevel;
+        foodStats.exhaustionLevel = 0;
         addExhaustion(exhaustion);
         this.prevBloodLevel = bloodLevel;
         if (this.bloodExhaustionLevel > 4.0F) {
@@ -95,8 +95,8 @@ public class BloodStats implements IBloodStats {
                 this.bloodLevel = Math.max(bloodLevel - 1, 0);
             }
         }
-        boolean regen = player.getEntityWorld().getGameRules().getBoolean(GameRules.NATURAL_REGENERATION);
-        if (regen && this.bloodSaturationLevel > 0 && player.shouldHeal() && this.bloodLevel >= maxBlood) {
+        boolean regen = player.getCommandSenderWorld().getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION);
+        if (regen && this.bloodSaturationLevel > 0 && player.isHurt() && this.bloodLevel >= maxBlood) {
             ++this.bloodTimer;
             if (this.bloodTimer >= 10) {
                 float f = Math.min(this.bloodSaturationLevel, 4F);
@@ -104,7 +104,7 @@ public class BloodStats implements IBloodStats {
                 this.addExhaustion(f, true);
                 this.bloodTimer = 0;
             }
-        } else if (regen && this.bloodLevel >= (18) && player.shouldHeal()) {
+        } else if (regen && this.bloodLevel >= (18) && player.isHurt()) {
             ++this.bloodTimer;
 
             if (this.bloodTimer >= 80) {
@@ -117,7 +117,7 @@ public class BloodStats implements IBloodStats {
 
             if (this.bloodTimer >= 80) {
                 if (player.getHealth() > 10.0F || enumDifficulty == Difficulty.HARD || player.getHealth() > 1.0F && enumDifficulty == Difficulty.NORMAL) {
-                    player.attackEntityFrom(DamageSource.STARVE, 1.5F);
+                    player.hurt(DamageSource.STARVE, 1.5F);
                 }
 
                 this.bloodTimer = 0;

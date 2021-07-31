@@ -24,7 +24,7 @@ public class GarlicItem extends VampirismItem implements IPlantable, IFactionExc
     private final static String regName = "item_garlic";
 
     public GarlicItem() {
-        super(regName, new Properties().group(VampirismMod.creativeTab));
+        super(regName, new Properties().tab(VampirismMod.creativeTab));
     }
 
     @Nonnull
@@ -35,7 +35,7 @@ public class GarlicItem extends VampirismItem implements IPlantable, IFactionExc
 
     @Override
     public BlockState getPlant(IBlockReader world, BlockPos pos) {
-        return ModBlocks.garlic.getDefaultState();
+        return ModBlocks.garlic.defaultBlockState();
     }
 
     @Override
@@ -45,15 +45,15 @@ public class GarlicItem extends VampirismItem implements IPlantable, IFactionExc
 
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext ctx) {
-        ItemStack stack = ctx.getItem();
-        BlockPos pos = ctx.getPos();
-        if (ctx.getFace() != Direction.UP) {
+    public ActionResultType useOn(ItemUseContext ctx) {
+        ItemStack stack = ctx.getItemInHand();
+        BlockPos pos = ctx.getClickedPos();
+        if (ctx.getClickedFace() != Direction.UP) {
             return ActionResultType.FAIL;
-        } else if (ctx.getPlayer() != null && !ctx.getPlayer().canPlayerEdit(pos.offset(ctx.getFace()), ctx.getFace(), stack)) {
+        } else if (ctx.getPlayer() != null && !ctx.getPlayer().mayUseItemAt(pos.relative(ctx.getClickedFace()), ctx.getClickedFace(), stack)) {
             return ActionResultType.FAIL;
-        } else if (ctx.getWorld().getBlockState(pos).getBlock().canSustainPlant(ctx.getWorld().getBlockState(pos), ctx.getWorld(), pos, Direction.UP, this) && ctx.getWorld().isAirBlock(pos.up())) {
-            ctx.getWorld().setBlockState(pos.up(), getPlant(ctx.getWorld(), pos));
+        } else if (ctx.getLevel().getBlockState(pos).getBlock().canSustainPlant(ctx.getLevel().getBlockState(pos), ctx.getLevel(), pos, Direction.UP, this) && ctx.getLevel().isEmptyBlock(pos.above())) {
+            ctx.getLevel().setBlockAndUpdate(pos.above(), getPlant(ctx.getLevel(), pos));
             stack.shrink(1);
             return ActionResultType.SUCCESS;
         } else {

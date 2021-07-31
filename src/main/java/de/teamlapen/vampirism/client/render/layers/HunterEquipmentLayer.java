@@ -41,7 +41,7 @@ public class HunterEquipmentLayer<T extends MobEntity, Q extends EntityModel<T>>
             equipmentModel.setHat(functionHat.apply(entityIn));
             equipmentModel.setWeapons(predicateStake.apply(entityIn));
 
-            renderCopyCutoutModel(this.getEntityModel(), this.equipmentModel, textureExtra, matrixStackIn, bufferIn, packedLightIn, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, partialTicks, 1, 1, 1);
+            coloredCutoutModelCopyLayerRender(this.getParentModel(), this.equipmentModel, textureExtra, matrixStackIn, bufferIn, packedLightIn, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, partialTicks, 1, 1, 1);
         }
     }
 }

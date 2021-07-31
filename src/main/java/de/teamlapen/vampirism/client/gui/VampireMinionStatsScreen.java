@@ -12,9 +12,9 @@ import javax.annotation.Nullable;
 
 public class VampireMinionStatsScreen extends MinionStatsScreen<VampireMinionEntity.VampireMinionData, VampireMinionEntity> {
     private final TranslationTextComponent inventoryLevel = new TranslationTextComponent("text.vampirism.minion.stats.inventory_level");
-    private final TranslationTextComponent healthLevel = new TranslationTextComponent(Attributes.MAX_HEALTH.getAttributeName());
-    private final TranslationTextComponent strengthLevel = new TranslationTextComponent(Attributes.ATTACK_DAMAGE.getAttributeName());
-    private final TranslationTextComponent speedLevel = new TranslationTextComponent(Attributes.MOVEMENT_SPEED.getAttributeName());
+    private final TranslationTextComponent healthLevel = new TranslationTextComponent(Attributes.MAX_HEALTH.getDescriptionId());
+    private final TranslationTextComponent strengthLevel = new TranslationTextComponent(Attributes.ATTACK_DAMAGE.getDescriptionId());
+    private final TranslationTextComponent speedLevel = new TranslationTextComponent(Attributes.MOVEMENT_SPEED.getDescriptionId());
 
 
     public VampireMinionStatsScreen(VampireMinionEntity entity, @Nullable Screen backScreen) {

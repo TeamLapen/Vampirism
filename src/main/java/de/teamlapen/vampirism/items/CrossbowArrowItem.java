@@ -39,15 +39,15 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
 
 
     public CrossbowArrowItem(EnumArrowType type) {
-        super(regName + "_" + type.getName(), new Properties().group(VampirismMod.creativeTab));
+        super(regName + "_" + type.getName(), new Properties().tab(VampirismMod.creativeTab));
         this.type = type;
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack itemStack, @Nullable World world, List<ITextComponent> textComponents, ITooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack itemStack, @Nullable World world, List<ITextComponent> textComponents, ITooltipFlag tooltipFlag) {
         if (type != EnumArrowType.NORMAL) {
-            textComponents.add(new TranslationTextComponent(type == EnumArrowType.VAMPIRE_KILLER ? "item.vampirism.crossbow_arrow_vampire_killer.tooltip" : "item.vampirism.crossbow_arrow_spitfire.tooltip").mergeStyle(TextFormatting.GRAY));
+            textComponents.add(new TranslationTextComponent(type == EnumArrowType.VAMPIRE_KILLER ? "item.vampirism.crossbow_arrow_vampire_killer.tooltip" : "item.vampirism.crossbow_arrow_spitfire.tooltip").withStyle(TextFormatting.GRAY));
         }
     }
 
@@ -59,9 +59,9 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
     @Override
     public CrossbowArrowEntity createEntity(ItemStack stack, World world, PlayerEntity player, double heightOffset, double centerOffset, boolean rightHand) {
         CrossbowArrowEntity entity = CrossbowArrowEntity.createWithShooter(world, player, heightOffset, centerOffset, rightHand, stack);
-        entity.setDamage(type.baseDamage * VampirismConfig.BALANCE.crossbowDamageMult.get());
+        entity.setBaseDamage(type.baseDamage * VampirismConfig.BALANCE.crossbowDamageMult.get());
         if (this.type == EnumArrowType.SPITFIRE) {
-            entity.setFire(100);
+            entity.setSecondsOnFire(100);
         }
         return entity;
     }
@@ -93,11 +93,11 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
             for (int dx = -1; dx < 2; dx++) {
                 for (int dy = -2; dy < 2; dy++) {
                     for (int dz = -1; dz < 2; dz++) {
-                        BlockPos pos = blockPos.add(dx, dy, dz);
-                        BlockState blockState = entity.getEntityWorld().getBlockState(pos);
+                        BlockPos pos = blockPos.offset(dx, dy, dz);
+                        BlockState blockState = entity.getCommandSenderWorld().getBlockState(pos);
                         if (blockState.getMaterial().isReplaceable()
-                                && entity.getEntityWorld().getBlockState(pos.down()).isSolidSide(entity.getEntityWorld(), pos.down(), Direction.UP) && (entity).getRNG().nextInt(4) != 0) {
-                            entity.getEntityWorld().setBlockState(pos, ModBlocks.alchemical_fire.getDefaultState());
+                                && entity.getCommandSenderWorld().getBlockState(pos.below()).isFaceSturdy(entity.getCommandSenderWorld(), pos.below(), Direction.UP) && (entity).getRNG().nextInt(4) != 0) {
+                            entity.getCommandSenderWorld().setBlockAndUpdate(pos, ModBlocks.alchemical_fire.defaultBlockState());
                         }
                     }
                 }
@@ -119,7 +119,7 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
             if (entity instanceof IVampireMob) {
                 float max = entity.getMaxHealth();
                 if (max < VampirismConfig.BALANCE.arrowVampireKillerMaxHealth.get()) {
-                    entity.attackEntityFrom(DamageSource.causeArrowDamage((AbstractArrowEntity) arrowEntity, shootingEntity), max);
+                    entity.hurt(DamageSource.arrow((AbstractArrowEntity) arrowEntity, shootingEntity), max);
                 }
             }
         }
@@ -139,11 +139,11 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
         }
 
         public String getName() {
-            return this.getString();
+            return this.getSerializedName();
         }
 
         @Override
-        public String getString() {
+        public String getSerializedName() {
             return name;
         }
     }

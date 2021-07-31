@@ -186,8 +186,8 @@ public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
         if (invOpt.isPresent()) {
             MinionInventory inv = invOpt.get();
             List<ItemStack> stacks = new ArrayList<>();
-            for (int i = 6 + getDefaultInventorySize(); i < inv.getSizeInventory(); ++i) {
-                ItemStack stack = inv.removeStackFromSlot(i);
+            for (int i = 6 + getDefaultInventorySize(); i < inv.getContainerSize(); ++i) {
+                ItemStack stack = inv.removeItemNoUpdate(i);
                 if (!stack.isEmpty()) {
                     stacks.add(stack);
                 }
@@ -198,8 +198,8 @@ public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
                     inv.addItemStack(stack);
                     if (!stack.isEmpty()) {
                         entity.getLordOpt().ifPresent(lord -> {
-                            if (!lord.getPlayer().addItemStackToInventory(stack)) {
-                                entity.entityDropItem(stack);
+                            if (!lord.getPlayer().addItem(stack)) {
+                                entity.spawnAtLocation(stack);
                             }
                         });
                     }

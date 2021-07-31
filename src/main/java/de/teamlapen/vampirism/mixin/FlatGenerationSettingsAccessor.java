@@ -12,7 +12,7 @@ import java.util.Map;
 @Mixin(FlatGenerationSettings.class)
 public interface FlatGenerationSettingsAccessor {
 
-    @Accessor("STRUCTURES")
+    @Accessor("STRUCTURE_FEATURES")
     static Map<Structure<?>, StructureFeature<?, ?>> getStructures_vampirism() {
         throw new IllegalStateException("Mixin not applied");
     }

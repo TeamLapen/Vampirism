@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class PotionResistanceHunterAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
 
     public static boolean shouldRemove(Effect effect) {
-        return effect == Effects.BLINDNESS || effect == Effects.NAUSEA || effect == Effects.HUNGER || effect == Effects.POISON || effect == ModEffects.freeze;
+        return effect == Effects.BLINDNESS || effect == Effects.CONFUSION || effect == Effects.HUNGER || effect == Effects.POISON || effect == ModEffects.freeze;
     }
 
     @Override
@@ -50,9 +50,9 @@ public class PotionResistanceHunterAction extends DefaultHunterAction implements
 
     @Override
     public boolean onUpdate(IHunterPlayer player) {
-        if (!(player.getRepresentingEntity().ticksExisted % 3 == 0)) {
-            Collection<EffectInstance> effects = player.getRepresentingEntity().getActivePotionEffects();
-            effects.stream().filter(instance -> shouldRemove(instance.getPotion())).collect(Collectors.toList()).forEach(s -> player.getRepresentingPlayer().removePotionEffect(s.getPotion()));
+        if (!(player.getRepresentingEntity().tickCount % 3 == 0)) {
+            Collection<EffectInstance> effects = player.getRepresentingEntity().getActiveEffects();
+            effects.stream().filter(instance -> shouldRemove(instance.getEffect())).collect(Collectors.toList()).forEach(s -> player.getRepresentingPlayer().removeEffect(s.getEffect()));
         }
         return false;
     }

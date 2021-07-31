@@ -19,32 +19,32 @@ public class PotionTableScreen extends ContainerScreen<PotionTableContainer> {
 
     public PotionTableScreen(PotionTableContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(screenContainer, inv, titleIn);
-        this.titleY = 5;
+        this.titleLabelY = 5;
     }
 
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(stack, mouseX, mouseY);
+        this.renderTooltip(stack, mouseX, mouseY);
 
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        int cX = (this.width - this.xSize) / 2;
-        int cY = (this.height - this.ySize) / 2;
-        this.minecraft.getTextureManager().bindTexture(this.container.isExtendedTable() ? TABLE_GUI_TEXTURES_EXTENDED : TABLE_GUI_TEXTURES);
-        this.blit(stack, cX, cY, 0, 0, this.xSize, this.ySize);
-        int fuelTime = this.container.getFuelTime();
+        int cX = (this.width - this.imageWidth) / 2;
+        int cY = (this.height - this.imageHeight) / 2;
+        this.minecraft.getTextureManager().bind(this.menu.isExtendedTable() ? TABLE_GUI_TEXTURES_EXTENDED : TABLE_GUI_TEXTURES);
+        this.blit(stack, cX, cY, 0, 0, this.imageWidth, this.imageHeight);
+        int fuelTime = this.menu.getFuelTime();
         int fuelIconWidth = MathHelper.clamp((18 * fuelTime + 20 - 1) / 20, 0, 18);
         if (fuelIconWidth > 0) {
             this.blit(stack, cX + 66, cY + 41, 176, 29, fuelIconWidth, 4);
         }
 
-        int brewTime = this.container.getBrewTime();
+        int brewTime = this.menu.getBrewTime();
         if (brewTime > 0) {
             int brewIconHeight = (int) (28.0F * (1.0F - (float) brewTime / 400.0F));
             if (brewIconHeight > 0) {

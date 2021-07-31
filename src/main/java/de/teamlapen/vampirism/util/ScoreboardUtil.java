@@ -10,9 +10,9 @@ public class ScoreboardUtil {
 
 
     public static void updateScoreboard(PlayerEntity player, ScoreCriteria crit, int value) {
-        if (!player.world.isRemote) {
-            player.getWorldScoreboard().forAllObjectives(crit, player.getScoreboardName(), (obj) -> {
-                obj.setScorePoints(value);
+        if (!player.level.isClientSide) {
+            player.getScoreboard().forAllObjectives(crit, player.getScoreboardName(), (obj) -> {
+                obj.setScore(value);
             });
         }
     }

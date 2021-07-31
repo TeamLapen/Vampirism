@@ -18,9 +18,7 @@ public class VampireNightVisionEffectInstance extends EffectInstance {
     }
 
     @Override
-    public boolean combine(EffectInstance other) {
-        //Don't change anything
-        return false;
+    public void applyEffect(LivingEntity entityIn) {
     }
 
     @Override
@@ -29,17 +27,18 @@ public class VampireNightVisionEffectInstance extends EffectInstance {
     }
 
     @Override
-    public String getEffectName() {
+    public String getDescriptionId() {
         return "effect.vampirism.nightVision";
     }
 
     @Override
-    public boolean getIsPotionDurationMax() {
+    public boolean isNoCounter() {
         return true;
     }
 
     @Override
-    public void performEffect(LivingEntity entityIn) {
+    public CompoundNBT save(CompoundNBT nbt) {
+        return nbt;
     }
 
     @Override
@@ -48,7 +47,8 @@ public class VampireNightVisionEffectInstance extends EffectInstance {
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt) {
-        return nbt;
+    public boolean update(EffectInstance other) {
+        //Don't change anything
+        return false;
     }
 }

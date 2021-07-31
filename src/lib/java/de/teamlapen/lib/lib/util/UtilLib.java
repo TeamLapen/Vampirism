@@ -71,7 +71,7 @@ public class UtilLib {
     }
 
     public static boolean doesBlockHaveSolidTopSurface(World worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos).isSolidSide(worldIn, pos, Direction.UP);
+        return worldIn.getBlockState(pos).isFaceSturdy(worldIn, pos, Direction.UP);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -79,13 +79,13 @@ public class UtilLib {
         float f = 1 / (float) texWidth;
         float f1 = 1 / (float) texHeight;
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder vertexbuffer = tessellator.getBuffer();
+        BufferBuilder vertexbuffer = tessellator.getBuilder();
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vertexbuffer.pos(matrix, x, y + height, zLevel).tex((float) (textureX) * f, (float) (textureY + height) * f1).endVertex();
-        vertexbuffer.pos(matrix, x + width, y + height, zLevel).tex((float) (textureX + width) * f, (float) (textureY + height) * f1).endVertex();
-        vertexbuffer.pos(matrix, x + width, y, zLevel).tex((float) (textureX + width) * f, (float) (textureY) * f1).endVertex();
-        vertexbuffer.pos(matrix, x, y, zLevel).tex((float) (textureX) * f, (float) (textureY) * f1).endVertex();
-        tessellator.draw();
+        vertexbuffer.vertex(matrix, x, y + height, zLevel).uv((float) (textureX) * f, (float) (textureY + height) * f1).endVertex();
+        vertexbuffer.vertex(matrix, x + width, y + height, zLevel).uv((float) (textureX + width) * f, (float) (textureY + height) * f1).endVertex();
+        vertexbuffer.vertex(matrix, x + width, y, zLevel).uv((float) (textureX + width) * f, (float) (textureY) * f1).endVertex();
+        vertexbuffer.vertex(matrix, x, y, zLevel).uv((float) (textureX) * f, (float) (textureY) * f1).endVertex();
+        tessellator.end();
     }
 
     /**
@@ -97,11 +97,11 @@ public class UtilLib {
      */
     public static RayTraceResult getPlayerLookingSpot(PlayerEntity player, double restriction) {
         float scale = 1.0F;
-        float pitch = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * scale;
-        float yaw = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * scale;
-        double x = player.prevPosX + (player.getPosX() - player.prevPosX) * scale;
-        double y = player.prevPosY + (player.getPosY() - player.prevPosY) * scale + 1.62D;
-        double z = player.prevPosZ + (player.getPosZ() - player.prevPosZ) * scale;
+        float pitch = player.xRotO + (player.xRot - player.xRotO) * scale;
+        float yaw = player.yRotO + (player.yRot - player.yRotO) * scale;
+        double x = player.xo + (player.getX() - player.xo) * scale;
+        double y = player.yo + (player.getY() - player.yo) * scale + 1.62D;
+        double z = player.zo + (player.getZ() - player.zo) * scale;
         Vector3d vector1 = new Vector3d(x, y, z);
         float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
         float sinYaw = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
@@ -117,22 +117,22 @@ public class UtilLib {
         }
 
         Vector3d vector2 = vector1.add(pitchAdjustedSinYaw * distance, sinPitch * distance, pitchAdjustedCosYaw * distance);
-        return player.getEntityWorld().rayTraceBlocks(new RayTraceContext(vector1, vector2, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player));
+        return player.getCommandSenderWorld().clip(new RayTraceContext(vector1, vector2, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player));
     }
 
     public static BlockPos getRandomPosInBox(World w, AxisAlignedBB box) {
-        int x = (int) box.minX + w.rand.nextInt((int) (box.maxX - box.minX) + 1);
-        int z = (int) box.minZ + w.rand.nextInt((int) (box.maxZ - box.minZ) + 1);
+        int x = (int) box.minX + w.random.nextInt((int) (box.maxX - box.minX) + 1);
+        int z = (int) box.minZ + w.random.nextInt((int) (box.maxZ - box.minZ) + 1);
         int y = w.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z) + 5;
         BlockPos.Mutable pos = new BlockPos.Mutable(x, y, z);
-        while (y > box.minY && !w.getBlockState(pos).isNormalCube(w, pos)) {
-            pos.setPos(x, --y, z);
+        while (y > box.minY && !w.getBlockState(pos).isRedstoneConductor(w, pos)) {
+            pos.set(x, --y, z);
         }
 
         if (y < box.minY || y > box.maxY - 1) {
-            pos.setPos(x, (int) box.minY + w.rand.nextInt((int) (box.maxY - box.minY) + 1), z);
+            pos.set(x, (int) box.minY + w.random.nextInt((int) (box.maxY - box.minY) + 1), z);
         }
-        return pos.up();
+        return pos.above();
     }
 
     /**
@@ -142,10 +142,10 @@ public class UtilLib {
         List<ChunkPos> chunks = Lists.newArrayList();
         int i = 0;
 
-        for (PlayerEntity entityplayer : world.getPlayers()) {
+        for (PlayerEntity entityplayer : world.players()) {
             if (!entityplayer.isSpectator()) {
-                int x = MathHelper.floor(entityplayer.getPosX() / 16.0D);
-                int z = MathHelper.floor(entityplayer.getPosZ() / 16.0D);
+                int x = MathHelper.floor(entityplayer.getX() / 16.0D);
+                int z = MathHelper.floor(entityplayer.getZ() / 16.0D);
 
                 for (int dx = -8; dx <= 8; ++dx) {
                     for (int dz = -8; dz <= 8; ++dz) {
@@ -174,30 +174,30 @@ public class UtilLib {
      */
     public static @Nonnull
     Vector3d getItemPosition(LivingEntity entity, boolean mainHand) {
-        boolean left = (mainHand ? entity.getPrimaryHand() : entity.getPrimaryHand().opposite()) == HandSide.LEFT;
-        boolean firstPerson = entity instanceof PlayerEntity && ((PlayerEntity) entity).isUser() && Minecraft.getInstance().gameSettings.getPointOfView().func_243192_a();
-        Vector3d dir = firstPerson ? entity.getForward() : Vector3d.fromPitchYaw(new Vector2f(entity.rotationPitch, entity.renderYawOffset));
-        dir = dir.rotateYaw((float) (Math.PI / 5f) * (left ? 1f : -1f)).scale(0.75f);
-        return dir.add(entity.getPosX(), entity.getPosY() + entity.getEyeHeight(), entity.getPosZ());
+        boolean left = (mainHand ? entity.getMainArm() : entity.getMainArm().getOpposite()) == HandSide.LEFT;
+        boolean firstPerson = entity instanceof PlayerEntity && ((PlayerEntity) entity).isLocalPlayer() && Minecraft.getInstance().options.getCameraType().isFirstPerson();
+        Vector3d dir = firstPerson ? entity.getForward() : Vector3d.directionFromRotation(new Vector2f(entity.xRot, entity.yBodyRot));
+        dir = dir.yRot((float) (Math.PI / 5f) * (left ? 1f : -1f)).scale(0.75f);
+        return dir.add(entity.getX(), entity.getY() + entity.getEyeHeight(), entity.getZ());
 
     }
 
     public static <T extends MobEntity> Entity spawnEntityBehindEntity(LivingEntity entity, EntityType<T> toSpawn, SpawnReason reason) {
 
         BlockPos behind = getPositionBehindEntity(entity, 2);
-        MobEntity e = toSpawn.create(entity.getEntityWorld());
+        MobEntity e = toSpawn.create(entity.getCommandSenderWorld());
         if (e == null) return null;
-        World world = entity.getEntityWorld();
-        e.setPosition(behind.getX(), entity.getPosY(), behind.getZ());
+        World world = entity.getCommandSenderWorld();
+        e.setPos(behind.getX(), entity.getY(), behind.getZ());
 
-        if (e.canSpawn(world, reason) && e.isNotColliding(world)) {
-            entity.getEntityWorld().addEntity(e);
+        if (e.checkSpawnRules(world, reason) && e.checkSpawnObstruction(world)) {
+            entity.getCommandSenderWorld().addFreshEntity(e);
             return e;
         } else {
-            int y = world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, behind).getY();
-            e.setPosition(behind.getX(), y, behind.getZ());
-            if (e.canSpawn(world, reason) && e.isNotColliding(world)) {
-                world.addEntity(e);
+            int y = world.getHeightmapPos(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, behind).getY();
+            e.setPos(behind.getX(), y, behind.getZ());
+            if (e.checkSpawnRules(world, reason) && e.checkSpawnObstruction(world)) {
+                world.addFreshEntity(e);
                 if (world instanceof ServerWorld) onInitialSpawn((ServerWorld) world, e, reason);
                 return e;
             }
@@ -211,17 +211,17 @@ public class UtilLib {
      */
     private static void onInitialSpawn(ServerWorld world, Entity e, SpawnReason reason) {
         if (e instanceof MobEntity) {
-            ((MobEntity) e).onInitialSpawn(world, e.getEntityWorld().getDifficultyForLocation(e.getPosition()), reason, null, null);
+            ((MobEntity) e).finalizeSpawn(world, e.getCommandSenderWorld().getCurrentDifficultyAt(e.blockPosition()), reason, null, null);
         }
     }
 
     public static BlockPos getPositionBehindEntity(LivingEntity p, float distance) {
-        float yaw = p.rotationYawHead;
+        float yaw = p.yHeadRot;
         float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
         float sinYaw = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
-        double x = p.getPosX() + sinYaw * distance;
-        double z = p.getPosZ() + cosYaw * distance;
-        return new BlockPos(x, p.getPosY(), z);
+        double x = p.getX() + sinYaw * distance;
+        double z = p.getZ() + cosYaw * distance;
+        return new BlockPos(x, p.getY(), z);
     }
 
     /**
@@ -234,7 +234,7 @@ public class UtilLib {
      * @return Successful spawn
      */
     public static boolean spawnEntityInWorld(ServerWorld world, AxisAlignedBB box, Entity e, int maxTry, @Nonnull List<? extends LivingEntity> avoidedEntities, SpawnReason reason) {
-        if (!world.isAreaLoaded((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ)) {
+        if (!world.hasChunksAt((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ)) {
             return false;
         }
         boolean flag = false;
@@ -242,13 +242,13 @@ public class UtilLib {
         BlockPos backupPos = null; //
         while (!flag && i++ < maxTry) {
             BlockPos c = getRandomPosInBox(world, box); //TODO select a better location (more viable)
-            if (world.isAreaLoaded(c, 5) && WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(e.getType()), world, c, e.getType())) {//i see no other way
-                e.setPosition(c.getX(), c.getY() + 0.2, c.getZ());
-                if (!(e instanceof MobEntity) || (((MobEntity) e).canSpawn(world, reason) && ((MobEntity) e).isNotColliding(e.getEntityWorld()))) {
+            if (world.isAreaLoaded(c, 5) && WorldEntitySpawner.isSpawnPositionOk(EntitySpawnPlacementRegistry.getPlacementType(e.getType()), world, c, e.getType())) {//i see no other way
+                e.setPos(c.getX(), c.getY() + 0.2, c.getZ());
+                if (!(e instanceof MobEntity) || (((MobEntity) e).checkSpawnRules(world, reason) && ((MobEntity) e).checkSpawnObstruction(e.getCommandSenderWorld()))) {
                     backupPos = c; //Store the location in case we do not find a better one
                     for (LivingEntity p : avoidedEntities) {
 
-                        if (!(p.getDistanceSq(e) < 500 && p.canEntityBeSeen(e))) {
+                        if (!(p.distanceToSqr(e) < 500 && p.canSee(e))) {
                             flag = true;
                         }
                     }
@@ -257,12 +257,12 @@ public class UtilLib {
         }
         if (!flag && backupPos != null) {
             //If we did not find a "hidden" position, use the last valid position (if available)
-            e.setPosition(backupPos.getX(), backupPos.getY() + 0.2, backupPos.getZ());
+            e.setPos(backupPos.getX(), backupPos.getY() + 0.2, backupPos.getZ());
             flag = true;
         }
 
         if (flag) {
-            world.addEntity(e);
+            world.addFreshEntity(e);
             onInitialSpawn(world, e, reason);
             return true;
         }
@@ -302,56 +302,56 @@ public class UtilLib {
      * @return Wether the teleport was successful or not
      */
     public static boolean teleportTo(MobEntity entity, double x, double y, double z, boolean sound) {
-        double d3 = entity.getPosX();
-        double d4 = entity.getPosY();
-        double d5 = entity.getPosZ();
-        entity.setRawPosition(x, y, z);
+        double d3 = entity.getX();
+        double d4 = entity.getY();
+        double d5 = entity.getZ();
+        entity.setPosRaw(x, y, z);
         boolean flag = false;
-        BlockPos blockPos = entity.getPosition(); //getPos
+        BlockPos blockPos = entity.blockPosition(); //getPos
         double ty = y;
 
 
-        if (entity.getEntityWorld().isBlockLoaded(blockPos)) {
+        if (entity.getCommandSenderWorld().hasChunkAt(blockPos)) {
             boolean flag1 = false;
 
             while (!flag1 && blockPos.getY() > 0) {
-                BlockState blockState = entity.getEntityWorld().getBlockState(blockPos.down());
-                if (blockState.getMaterial().blocksMovement())
+                BlockState blockState = entity.getCommandSenderWorld().getBlockState(blockPos.below());
+                if (blockState.getMaterial().blocksMotion())
                     flag1 = true;
                 else {
-                    entity.setRawPosition(x, --ty, z);
-                    blockPos = blockPos.down();
+                    entity.setPosRaw(x, --ty, z);
+                    blockPos = blockPos.below();
                 }
             }
 
             if (flag1) {
-                entity.setPosition(entity.getPosX(), entity.getPosY(), entity.getPosZ());
+                entity.setPos(entity.getX(), entity.getY(), entity.getZ());
 
-                if (entity.getEntityWorld().hasNoCollisions(entity) && !entity.getEntityWorld().containsAnyLiquid(entity.getBoundingBox()))
+                if (entity.getCommandSenderWorld().noCollision(entity) && !entity.getCommandSenderWorld().containsAnyLiquid(entity.getBoundingBox()))
                     flag = true;
             }
         }
 
         if (!flag) {
-            entity.setPosition(d3, d4, d5);
+            entity.setPos(d3, d4, d5);
             return false;
         } else {
             short short1 = 128;
 
             for (int l = 0; l < short1; ++l) {
                 double d6 = l / (short1 - 1.0D);
-                float f = (entity.getRNG().nextFloat() - 0.5F) * 0.2F;
-                float f1 = (entity.getRNG().nextFloat() - 0.5F) * 0.2F;
-                float f2 = (entity.getRNG().nextFloat() - 0.5F) * 0.2F;
-                double d7 = d3 + (entity.getPosX() - d3) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.getWidth() * 2.0D;
-                double d8 = d4 + (entity.getPosY() - d4) * d6 + entity.getRNG().nextDouble() * entity.getHeight();
-                double d9 = d5 + (entity.getPosZ() - d5) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.getWidth() * 2.0D;
-                entity.getEntityWorld().addParticle(ParticleTypes.PORTAL, d7, d8, d9, f, f1, f2);
+                float f = (entity.getRandom().nextFloat() - 0.5F) * 0.2F;
+                float f1 = (entity.getRandom().nextFloat() - 0.5F) * 0.2F;
+                float f2 = (entity.getRandom().nextFloat() - 0.5F) * 0.2F;
+                double d7 = d3 + (entity.getX() - d3) * d6 + (entity.getRandom().nextDouble() - 0.5D) * entity.getBbWidth() * 2.0D;
+                double d8 = d4 + (entity.getY() - d4) * d6 + entity.getRandom().nextDouble() * entity.getBbHeight();
+                double d9 = d5 + (entity.getZ() - d5) * d6 + (entity.getRandom().nextDouble() - 0.5D) * entity.getBbWidth() * 2.0D;
+                entity.getCommandSenderWorld().addParticle(ParticleTypes.PORTAL, d7, d8, d9, f, f1, f2);
             }
 
             if (sound) {
-                entity.getEntityWorld().playSound(d3, d4, d5, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.NEUTRAL, 1F, 1F, false);
-                entity.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1F, 1F);
+                entity.getCommandSenderWorld().playLocalSound(d3, d4, d5, SoundEvents.ENDERMAN_TELEPORT, SoundCategory.NEUTRAL, 1F, 1F, false);
+                entity.playSound(SoundEvents.ENDERMAN_TELEPORT, 1F, 1F);
             }
 
             return true;
@@ -367,7 +367,7 @@ public class UtilLib {
         double z = zCoord;
         for (int i = 0; i < amount; i++) {
             world.addParticle(particle, x, y, z, xSpeed, ySpeed, zSpeed);
-            Random ran = world.rand;
+            Random ran = world.random;
             x = xCoord + (ran.nextGaussian() * maxOffset);
             y = yCoord + (ran.nextGaussian() * maxOffset);
             z = zCoord + (ran.nextGaussian() * maxOffset);
@@ -380,13 +380,13 @@ public class UtilLib {
         short short1 = (short) amount;
         for (int l = 0; l < short1; ++l) {
             double d6 = l / (short1 - 1.0D) - 0.5D;
-            float f = (e.getRNG().nextFloat() - 0.5F) * 0.2F;
-            float f1 = (e.getRNG().nextFloat() - 0.5F) * 0.2F;
-            float f2 = (e.getRNG().nextFloat() - 0.5F) * 0.2F;
-            double d7 = e.getPosX() + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.getWidth() * 2.0D;
-            double d8 = e.getPosY() + (maxDistance / 2) * d6 + e.getRNG().nextDouble() * e.getHealth();
-            double d9 = e.getPosZ() + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.getWidth() * 2.0D;
-            e.getEntityWorld().addParticle(particle, d7, d8, d9, f, f1, f2);
+            float f = (e.getRandom().nextFloat() - 0.5F) * 0.2F;
+            float f1 = (e.getRandom().nextFloat() - 0.5F) * 0.2F;
+            float f2 = (e.getRandom().nextFloat() - 0.5F) * 0.2F;
+            double d7 = e.getX() + (maxDistance) * d6 + (e.getRandom().nextDouble() - 0.5D) * e.getBbWidth() * 2.0D;
+            double d8 = e.getY() + (maxDistance / 2) * d6 + e.getRandom().nextDouble() * e.getHealth();
+            double d9 = e.getZ() + (maxDistance) * d6 + (e.getRandom().nextDouble() - 0.5D) * e.getBbWidth() * 2.0D;
+            e.getCommandSenderWorld().addParticle(particle, d7, d8, d9, f, f1, f2);
         }
     }
 
@@ -400,7 +400,7 @@ public class UtilLib {
     public static void sendMessageToAllExcept(PlayerEntity player, ITextComponent message) {
         for (Object o : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
             if (!o.equals(player)) {
-                ((PlayerEntity) o).sendMessage(message, Util.DUMMY_UUID);
+                ((PlayerEntity) o).sendMessage(message, Util.NIL_UUID);
             }
         }
     }
@@ -418,17 +418,17 @@ public class UtilLib {
      * @return
      */
     public static boolean canReallySee(LivingEntity entity, LivingEntity target, boolean alsoRaytrace) {
-        if (alsoRaytrace && !entity.canEntityBeSeen(target)) {
+        if (alsoRaytrace && !entity.canSee(target)) {
             return false;
         }
-        Vector3d look1 = new Vector3d(-Math.sin(entity.rotationYawHead / 180 * Math.PI), 0, Math.cos(entity.rotationYawHead / 180 * Math.PI));
-        Vector3d dist = new Vector3d(target.getPosX() - entity.getPosX(), 0, target.getPosZ() - entity.getPosZ());
+        Vector3d look1 = new Vector3d(-Math.sin(entity.yHeadRot / 180 * Math.PI), 0, Math.cos(entity.yHeadRot / 180 * Math.PI));
+        Vector3d dist = new Vector3d(target.getX() - entity.getX(), 0, target.getZ() - entity.getZ());
         //look1.yCoord = 0;
         look1 = look1.normalize();
         dist = dist.normalize();
 
         //Check if the vector is left or right of look1
-        double alpha = Math.acos(look1.dotProduct(dist));
+        double alpha = Math.acos(look1.dot(dist));
         return alpha < Math.PI / 1.8;
 
     }
@@ -518,7 +518,7 @@ public class UtilLib {
     }
 
     private static ChunkPos isBiomeAt(ServerWorld world, int x, int z, List<Biome> biomes) {
-        BlockPos pos = (world.getChunkProvider()).getChunkGenerator().getBiomeProvider().findBiomePosition(x, world.getSeaLevel(), z, 32, b -> biomes.contains(b), new Random());//findBiomePosition
+        BlockPos pos = (world.getChunkSource()).getGenerator().getBiomeSource().findBiomeHorizontal(x, world.getSeaLevel(), z, 32, b -> biomes.contains(b), new Random());//findBiomePosition
         if (pos != null) {
             return new ChunkPos(pos.getX() >> 4, pos.getZ() >> 4);
         }
@@ -577,7 +577,7 @@ public class UtilLib {
     }
 
     public static boolean isPlayerOp(PlayerEntity player) {
-        return ServerLifecycleHooks.getCurrentServer().getPlayerList().getOppedPlayers().getEntry(player.getGameProfile()) != null;
+        return ServerLifecycleHooks.getCurrentServer().getPlayerList().getOps().get(player.getGameProfile()) != null;
     }
 
     public static boolean isSameInstanceAsServer() {
@@ -633,21 +633,21 @@ public class UtilLib {
     public static VoxelShape rotateShape(VoxelShape shape, RotationAmount rotation) {
         Set<VoxelShape> rotatedShapes = new HashSet<VoxelShape>();
 
-        shape.forEachBox((x1, y1, z1, x2, y2, z2) -> {
+        shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
             x1 = (x1 * 16) - 8;
             x2 = (x2 * 16) - 8;
             z1 = (z1 * 16) - 8;
             z2 = (z2 * 16) - 8;
 
             if (rotation == RotationAmount.NINETY)
-                rotatedShapes.add(Block.makeCuboidShape(8 - z1, y1 * 16, 8 + x1, 8 - z2, y2 * 16, 8 + x2));
+                rotatedShapes.add(Block.box(8 - z1, y1 * 16, 8 + x1, 8 - z2, y2 * 16, 8 + x2));
             else if (rotation == RotationAmount.HUNDRED_EIGHTY)
-                rotatedShapes.add(Block.makeCuboidShape(8 - x1, y1 * 16, 8 - z1, 8 - x2, y2 * 16, 8 - z2));
+                rotatedShapes.add(Block.box(8 - x1, y1 * 16, 8 - z1, 8 - x2, y2 * 16, 8 - z2));
             else if (rotation == RotationAmount.TWO_HUNDRED_SEVENTY)
-                rotatedShapes.add(Block.makeCuboidShape(8 + z1, y1 * 16, 8 - x1, 8 + z2, y2 * 16, 8 - x2));
+                rotatedShapes.add(Block.box(8 + z1, y1 * 16, 8 - x1, 8 + z2, y2 * 16, 8 - x2));
         });
 
-        return rotatedShapes.stream().reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).orElseGet(() -> Block.makeCuboidShape(0, 0, 0, 16, 16, 16));
+        return rotatedShapes.stream().reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).orElseGet(() -> Block.box(0, 0, 0, 16, 16, 16));
     }
 
     public static String aiTaskListToStringDebug(GoalSelector tasks) {
@@ -684,7 +684,7 @@ public class UtilLib {
 
     @Nullable
     public static StructureStart<?> getStructureStartAt(Entity entity, Structure<?> s) {
-        return getStructureStartAt(entity.getEntityWorld(), entity.getPosition(), s);
+        return getStructureStartAt(entity.getCommandSenderWorld(), entity.blockPosition(), s);
     }
 
     @Nullable
@@ -697,7 +697,7 @@ public class UtilLib {
 
     @Nonnull
     public static StructureStart<?> getStructureStartAt(ServerWorld w, BlockPos pos, Structure<?> s) {
-        return (w).getStructureManager()/*getStructureManager*/.getStructureStart(pos, false, s);
+        return (w).structureFeatureManager()/*getStructureManager*/.getStructureAt(pos, false, s);
     }
 
     /**
@@ -727,7 +727,7 @@ public class UtilLib {
 
     @Nonnull
     public static int[] mbToInt(@Nonnull MutableBoundingBox bb) {
-        return new int[]{bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ};
+        return new int[]{bb.x0, bb.y0, bb.z0, bb.x1, bb.y1, bb.z1};
     }
 
     @Nonnull
@@ -747,7 +747,7 @@ public class UtilLib {
 
     @Nonnull
     public static AxisAlignedBB MBtoAABB(@Nonnull MutableBoundingBox bb) {
-        return new AxisAlignedBB(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
+        return new AxisAlignedBB(bb.x0, bb.y0, bb.z0, bb.x1, bb.y1, bb.z1);
     }
 
     /**
@@ -757,9 +757,9 @@ public class UtilLib {
      */
     public static int renderMultiLine(FontRenderer fontRenderer, MatrixStack stack, ITextComponent text, int textLength, int x, int y, int color) {
         int d = 0;
-        for (IReorderingProcessor ireorderingprocessor : fontRenderer.trimStringToWidth(text, textLength)) {
-            fontRenderer.func_238422_b_(stack, ireorderingprocessor, x, y + d, color);
-            d += fontRenderer.FONT_HEIGHT;
+        for (IReorderingProcessor ireorderingprocessor : fontRenderer.split(text, textLength)) {
+            fontRenderer.draw(stack, ireorderingprocessor, x, y + d, color);
+            d += fontRenderer.lineHeight;
         }
         return d;
     }
@@ -774,7 +774,7 @@ public class UtilLib {
     }
 
     public static boolean isValidResourceLocation(String loc) {
-        return ResourceLocation.tryCreate(loc) != null;
+        return ResourceLocation.tryParse(loc) != null;
     }
 
     /**
@@ -784,9 +784,9 @@ public class UtilLib {
      * @param replacement To be added
      */
     public static void replaceEntity(LivingEntity old, LivingEntity replacement) {
-        World w = old.getEntityWorld();
+        World w = old.getCommandSenderWorld();
         MinecraftForge.EVENT_BUS.post(new LivingConversionEvent.Post(old, replacement));
-        w.addEntity(replacement);
+        w.addFreshEntity(replacement);
         old.remove();
     }
 

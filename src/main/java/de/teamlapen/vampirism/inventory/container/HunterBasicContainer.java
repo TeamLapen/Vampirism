@@ -34,20 +34,10 @@ public class HunterBasicContainer extends InventoryContainer {
     }
 
     public HunterBasicContainer(int id, PlayerInventory playerInventory, @Nullable BasicHunterEntity hunter) {
-        super(ModContainer.hunter_basic, id, playerInventory, hunter == null ? IWorldPosCallable.DUMMY : IWorldPosCallable.of(hunter.world, hunter.getPosition()), new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
+        super(ModContainer.hunter_basic, id, playerInventory, hunter == null ? IWorldPosCallable.NULL : IWorldPosCallable.create(hunter.level, hunter.blockPosition()), new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
         player = HunterPlayer.get(playerInventory.player);
         this.addPlayerSlots(playerInventory);
         this.entity = hunter;
-    }
-
-    @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        if (entity == null) return false;
-        return new Vector3d(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()).distanceTo(new Vector3d(entity.getPosX(), entity.getPosY(), entity.getPosZ())) < 5;
-    }
-
-    public boolean canLevelUp() {
-        return getMissingCount() == 0;
     }
 
     /**
@@ -55,7 +45,7 @@ public class HunterBasicContainer extends InventoryContainer {
      */
     public int getMissingCount() {
         int targetLevel = player.getLevel() + 1;
-        ItemStack blood = inventory.getStackInSlot(0);
+        ItemStack blood = inventory.getItem(0);
 
         HunterLevelingConf conf = HunterLevelingConf.instance();
         if (!conf.isLevelValidForBasicHunter(targetLevel)) return -1;
@@ -63,22 +53,32 @@ public class HunterBasicContainer extends InventoryContainer {
         return (blood.isEmpty() || !blood.getItem().equals(ModItems.vampire_blood_bottle)) ? required : Math.max(0, required - blood.getCount());
     }
 
-    @Override
-    public void onContainerClosed(PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
-        if (!playerIn.getEntityWorld().isRemote) {
-            this.clearContainer(playerIn, playerIn.getEntityWorld(), inventory);
-        }
+    public boolean canLevelUp() {
+        return getMissingCount() == 0;
     }
 
     public void onLevelUpClicked() {
         if (!canLevelUp()) return;
         int target = player.getLevel() + 1;
-        inventory.decrStackSize(0, HunterLevelingConf.instance().getVampireBloodCountForBasicHunter(target));
+        inventory.removeItem(0, HunterLevelingConf.instance().getVampireBloodCountForBasicHunter(target));
         FactionPlayerHandler.getOpt(player.getRepresentingPlayer()).ifPresent(h -> h.setFactionLevel(VReference.HUNTER_FACTION, target));
-        player.getRepresentingPlayer().sendStatusMessage(new TranslationTextComponent("container.vampirism.basic_hunter.levelup"), false);
-        player.getRepresentingPlayer().closeScreen();
+        player.getRepresentingPlayer().displayClientMessage(new TranslationTextComponent("container.vampirism.basic_hunter.levelup"), false);
+        player.getRepresentingPlayer().closeContainer();
 
+    }
+
+    @Override
+    public void removed(PlayerEntity playerIn) {
+        super.removed(playerIn);
+        if (!playerIn.getCommandSenderWorld().isClientSide) {
+            this.clearContainer(playerIn, playerIn.getCommandSenderWorld(), inventory);
+        }
+    }
+
+    @Override
+    public boolean stillValid(PlayerEntity playerIn) {
+        if (entity == null) return false;
+        return new Vector3d(playerIn.getX(), playerIn.getY(), playerIn.getZ()).distanceTo(new Vector3d(entity.getX(), entity.getY(), entity.getZ())) < 5;
     }
 
 }

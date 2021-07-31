@@ -37,12 +37,12 @@ public abstract class InventoryContainer extends Container {
     public InventoryContainer(ContainerType<? extends InventoryContainer> containerType, int id, PlayerInventory playerInventory, IWorldPosCallable worldPos, @Nonnull IInventory inventory, SelectorSlotFactory factory, SelectorInfo... selectorInfos) {
         this(containerType, id, worldPos, inventory, selectorInfos.length);
 
-        if (inventory.getSizeInventory() < selectorInfos.length) {
+        if (inventory.getContainerSize() < selectorInfos.length) {
             throw new IllegalArgumentException("Inventory size smaller than selector infos");
         }
-        inventory.openInventory(playerInventory.player);
+        inventory.startOpen(playerInventory.player);
         for (int i = 0; i < selectorInfos.length; i++) {
-            SelectorSlot slot = factory.create(inventory, i, selectorInfos[i], this::onCraftMatrixChanged, this::isSlotEnabled);
+            SelectorSlot slot = factory.create(inventory, i, selectorInfos[i], this::slotsChanged, this::isSlotEnabled);
             slot.setContainer(this);
             this.addSlot(slot);
         }
@@ -57,46 +57,35 @@ public abstract class InventoryContainer extends Container {
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return true;
-    }
-
-    @Override
-    public void onContainerClosed(PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
-        inventory.closeInventory(playerIn);
-    }
-
-    @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
+    public ItemStack quickMoveStack(PlayerEntity playerEntity, int index) {
         ItemStack result = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack slotStack = slot.getStack();
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack slotStack = slot.getItem();
             result = slotStack.copy();
             if (index < size) {
-                if (!this.mergeItemStack(slotStack, size, 36 + size, false)) {
+                if (!this.moveItemStackTo(slotStack, size, 36 + size, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (index >= size && index < 27 + size) {
-                if (!this.mergeItemStack(slotStack, 0, size, false)) {
+                if (!this.moveItemStackTo(slotStack, 0, size, false)) {
                     if (slotStack.isEmpty()) {
                         return ItemStack.EMPTY;
                     }
                 }
-                if (!this.mergeItemStack(slotStack, 27 + size, 36 + size, false)) {
+                if (!this.moveItemStackTo(slotStack, 27 + size, 36 + size, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (index >= 27 + size && index < 36 + size) {
-                if (!this.mergeItemStack(slotStack, 0, 27 + size, false)) {
+                if (!this.moveItemStackTo(slotStack, 0, 27 + size, false)) {
                     return ItemStack.EMPTY;
                 }
             }
 
             if (slotStack.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (slotStack.getCount() == result.getCount()) {
@@ -107,6 +96,17 @@ public abstract class InventoryContainer extends Container {
         }
 
         return result;
+    }
+
+    @Override
+    public void removed(PlayerEntity playerIn) {
+        super.removed(playerIn);
+        inventory.stopOpen(playerIn);
+    }
+
+    @Override
+    public boolean stillValid(PlayerEntity playerIn) {
+        return true;
     }
 
     protected void addPlayerSlots(PlayerInventory playerInventory, int baseX, int baseY) {
@@ -139,7 +139,7 @@ public abstract class InventoryContainer extends Container {
         private final SelectorInfo info;
         private final Function<Integer, Boolean> activeFunc;
         private final Consumer<IInventory> refreshInvFunc;
-        private InventoryContainer container;
+        private InventoryContainer ourContainer;
 
         public SelectorSlot(IInventory inventoryIn, int index, SelectorInfo info, Consumer<IInventory> refreshInvFunc, Function<Integer, Boolean> activeFunc) {
             super(inventoryIn, index, info.xDisplay, info.yDisplay);
@@ -148,45 +148,45 @@ public abstract class InventoryContainer extends Container {
             this.refreshInvFunc = refreshInvFunc;
         }
 
-        @Nullable
-        @OnlyIn(Dist.CLIENT)
-        @Override
-        public Pair<ResourceLocation, ResourceLocation> getBackground() {
-            return info.background;
-        }
-
         public InventoryContainer getContainer() {
-            return container;
+            return ourContainer;
         }
 
         public void setContainer(InventoryContainer container) {
-            this.container = container;
+            this.ourContainer = container;
         }
 
         @Override
-        public int getItemStackLimit(ItemStack stack) {
+        public int getMaxStackSize(ItemStack stack) {
             return info.stackLimit;
         }
 
         @Override
-        public int getSlotStackLimit() {
+        public int getMaxStackSize() {
             return info.stackLimit;
         }
 
+        @Nullable
+        @OnlyIn(Dist.CLIENT)
         @Override
-        public boolean isEnabled() {
-            return activeFunc.apply(this.slotNumber);
+        public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+            return info.background;
         }
 
         @Override
-        public boolean isItemValid(ItemStack stack) {
+        public boolean isActive() {
+            return activeFunc.apply(this.index);
+        }
+
+        @Override
+        public boolean mayPlace(ItemStack stack) {
             return info.validate(stack);
         }
 
         @Override
-        public void onSlotChange(ItemStack oldStackIn, ItemStack newStackIn) {
-            super.onSlotChange(oldStackIn, newStackIn);
-            this.refreshInvFunc.accept(this.inventory);
+        public void onQuickCraft(ItemStack oldStackIn, ItemStack newStackIn) {
+            super.onQuickCraft(oldStackIn, newStackIn);
+            this.refreshInvFunc.accept(this.container);
         }
 
     }
@@ -231,7 +231,7 @@ public abstract class InventoryContainer extends Container {
 
 
         public SelectorInfo(ITag<Item> tag, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
-            this(itemStack -> tag.contains(itemStack.getItem()) || tag.getAllElements().isEmpty(), x, y, inverted, stackLimit, background);
+            this(itemStack -> tag.contains(itemStack.getItem()) || tag.getValues().isEmpty(), x, y, inverted, stackLimit, background);
         }
 
 

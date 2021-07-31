@@ -17,18 +17,18 @@ public class BloodBarCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("bloodBar")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
                 .then(Commands.literal("fill")
-                        .executes(context -> setBloodBar(Integer.MAX_VALUE, Lists.newArrayList(context.getSource().asPlayer())))
+                        .executes(context -> setBloodBar(Integer.MAX_VALUE, Lists.newArrayList(context.getSource().getPlayerOrException())))
                         .then(Commands.argument("player", EntityArgument.players())
                                 .executes(context -> setBloodBar(Integer.MAX_VALUE, EntityArgument.getPlayers(context, "player")))))
                 .then(Commands.literal("empty")
-                        .executes(context -> setBloodBar(0, Lists.newArrayList(context.getSource().asPlayer())))
+                        .executes(context -> setBloodBar(0, Lists.newArrayList(context.getSource().getPlayerOrException())))
                         .then(Commands.argument("player", EntityArgument.players())
                                 .executes(context -> setBloodBar(0, EntityArgument.getPlayers(context, "player")))))
                 .then(Commands.literal("set")
                         .then(Commands.argument("amount", IntegerArgumentType.integer(0))
-                                .executes(context -> setBloodBar(IntegerArgumentType.getInteger(context, "amount"), Lists.newArrayList(context.getSource().asPlayer())))
+                                .executes(context -> setBloodBar(IntegerArgumentType.getInteger(context, "amount"), Lists.newArrayList(context.getSource().getPlayerOrException())))
                                 .then(Commands.argument("player", EntityArgument.players())
                                         .executes(context -> setBloodBar(IntegerArgumentType.getInteger(context, "amount"), EntityArgument.getPlayers(context, "player"))))));
     }

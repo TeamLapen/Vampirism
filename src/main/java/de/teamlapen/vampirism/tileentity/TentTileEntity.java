@@ -34,15 +34,15 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
 
     public TentTileEntity() {
         super(ModTiles.tent);
-        this.spawnerLogicHunter = new SimpleSpawnerLogic<>(ModEntities.hunter).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(600).setMaxSpawnDelay(1000).setMaxNearbyEntities(2).setDailyLimit(VampirismConfig.BALANCE.hunterTentMaxSpawn.get()).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.pos));
-        this.spawnerLogicAdvancedHunter = new SimpleSpawnerLogic<>(ModEntities.advanced_hunter).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(1200).setMaxSpawnDelay(2000).setMaxNearbyEntities(1).setDailyLimit(1).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.pos));
+        this.spawnerLogicHunter = new SimpleSpawnerLogic<>(ModEntities.hunter).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(600).setMaxSpawnDelay(1000).setMaxNearbyEntities(2).setDailyLimit(VampirismConfig.BALANCE.hunterTentMaxSpawn.get()).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.worldPosition));
+        this.spawnerLogicAdvancedHunter = new SimpleSpawnerLogic<>(ModEntities.advanced_hunter).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(1200).setMaxSpawnDelay(2000).setMaxNearbyEntities(1).setDailyLimit(1).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.worldPosition));
     }
 
     @Nonnull
     @OnlyIn(Dist.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return super.getRenderBoundingBox().grow(1, 0, 1);
+        return super.getRenderBoundingBox().inflate(1, 0, 1);
     }
 
     public boolean isSpawner() {
@@ -50,8 +50,8 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT nbt) {
-        super.read(state, nbt);
+    public void load(BlockState state, CompoundNBT nbt) {
+        super.load(state, nbt);
         if (nbt.contains("spawner_logic_1")) {
             spawnerLogicHunter.readFromNbt(nbt.getCompound("spawner_logic_1"));
         }
@@ -64,8 +64,19 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
         spawn = nbt.getBoolean("spawn");
     }
 
-    public boolean receiveClientEvent(int id, int type) {
-        return (this.spawnerLogicHunter.setDelayToMin(id) || this.spawnerLogicAdvancedHunter.setDelayToMin(id)) || super.receiveClientEvent(id, type);
+    @Nonnull
+    @Override
+    public CompoundNBT save(CompoundNBT compound) {
+        CompoundNBT nbt = super.save(compound);
+        CompoundNBT logic1 = new CompoundNBT();
+        CompoundNBT logic2 = new CompoundNBT();
+        this.spawnerLogicHunter.writeToNbt(logic1);
+        this.spawnerLogicAdvancedHunter.writeToNbt(logic2);
+        nbt.put("spawner_logic_1", logic1);
+        nbt.put("spawner_logic_2", logic2);
+        nbt.putBoolean("spawn", this.spawn);
+        nbt.putBoolean("advanced", this.advanced);
+        return nbt;
     }
 
     public void setAdvanced(boolean advanced) {
@@ -73,10 +84,12 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void setPos(BlockPos posIn) {
-        super.setPos(posIn);
-        this.spawnerLogicHunter.setBlockPos(this.pos); //Internal position should be set here using the immutable version of the given block pos
-        this.spawnerLogicAdvancedHunter.setBlockPos(this.pos);
+    public void setLevelAndPosition(World worldIn, BlockPos pos) {
+        super.setLevelAndPosition(worldIn, pos);
+        this.spawnerLogicHunter.setWorld(worldIn);
+        this.spawnerLogicAdvancedHunter.setWorld(worldIn);
+        this.spawnerLogicHunter.setBlockPos(this.worldPosition); //Internal position should be set here using the immutable version of the given block pos
+        this.spawnerLogicAdvancedHunter.setBlockPos(this.worldPosition);
     }
 
     public void setSpawn(boolean spawn) {
@@ -84,21 +97,19 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void setWorldAndPos(World worldIn, BlockPos pos) {
-        super.setWorldAndPos(worldIn, pos);
-        this.spawnerLogicHunter.setWorld(worldIn);
-        this.spawnerLogicAdvancedHunter.setWorld(worldIn);
-        this.spawnerLogicHunter.setBlockPos(this.pos); //Internal position should be set here using the immutable version of the given block pos
-        this.spawnerLogicAdvancedHunter.setBlockPos(this.pos);
+    public void setPosition(BlockPos posIn) {
+        super.setPosition(posIn);
+        this.spawnerLogicHunter.setBlockPos(this.worldPosition); //Internal position should be set here using the immutable version of the given block pos
+        this.spawnerLogicAdvancedHunter.setBlockPos(this.worldPosition);
     }
 
     @Override
     public void tick() {
-        if (world == null) return;
+        if (level == null) return;
 
         if (spawn) {
-            if (!this.world.isRemote && this.world.getGameTime() % 64 == 0) {
-                if (UtilLib.isInsideStructure(this.world, this.pos, Structure.VILLAGE)) {
+            if (!this.level.isClientSide && this.level.getGameTime() % 64 == 0) {
+                if (UtilLib.isInsideStructure(this.level, this.worldPosition, Structure.VILLAGE)) {
                     this.spawn = false; //Disable spawning inside villages
                 }
             }
@@ -109,18 +120,7 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
         }
     }
 
-    @Nonnull
-    @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        CompoundNBT nbt = super.write(compound);
-        CompoundNBT logic1 = new CompoundNBT();
-        CompoundNBT logic2 = new CompoundNBT();
-        this.spawnerLogicHunter.writeToNbt(logic1);
-        this.spawnerLogicAdvancedHunter.writeToNbt(logic2);
-        nbt.put("spawner_logic_1", logic1);
-        nbt.put("spawner_logic_2", logic2);
-        nbt.putBoolean("spawn", this.spawn);
-        nbt.putBoolean("advanced", this.advanced);
-        return nbt;
+    public boolean triggerEvent(int id, int type) {
+        return (this.spawnerLogicHunter.setDelayToMin(id) || this.spawnerLogicAdvancedHunter.setDelayToMin(id)) || super.triggerEvent(id, type);
     }
 }

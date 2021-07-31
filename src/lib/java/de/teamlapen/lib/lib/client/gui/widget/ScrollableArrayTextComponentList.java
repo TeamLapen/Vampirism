@@ -27,7 +27,7 @@ public class ScrollableArrayTextComponentList extends ScrollableListWidget<Pair<
     private static Supplier<ITextComponent[]> createTextArray(int amount, TextComponent baseName) {
         ITextComponent[] array = new ITextComponent[amount];
         for (int i = 0; i < array.length; i++) {
-            array[i] = baseName.copyRaw().appendString(" " + (i + 1));
+            array[i] = baseName.plainCopy().append(" " + (i + 1));
         }
         return () -> array;
     }
@@ -73,13 +73,13 @@ public class ScrollableArrayTextComponentList extends ScrollableListWidget<Pair<
         @Override
         public void render(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
             super.render(matrixStack, x - 1, y, listWidth + 1, listHeight, itemHeight, mouseX, mouseY, partialTicks, zLevel);
-            FontRenderer font = Minecraft.getInstance().fontRenderer;
-            int width = font.getStringPropertyWidth(this.item.getRight());
+            FontRenderer font = Minecraft.getInstance().font;
+            int width = font.width(this.item.getRight());
             if (width > listWidth) {
                 width = listWidth;
             }
 
-            Minecraft.getInstance().fontRenderer.drawTextWithShadow(matrixStack, this.item.getRight(), x + (listWidth / 2) - (width / 2), y + 7, -1);
+            Minecraft.getInstance().font.drawShadow(matrixStack, this.item.getRight(), x + (listWidth / 2) - (width / 2), y + 7, -1);
 
             if (this.onHover != null) {
                 boolean newHovered = mouseX >= x && mouseX < x + listWidth && mouseY >= y && mouseY < y + itemHeight;

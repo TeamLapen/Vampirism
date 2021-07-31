@@ -55,26 +55,26 @@ public class CustomBossInfoOverlay extends AbstractGui {
     }
 
     public void render(MatrixStack stack) {
-        int i = Minecraft.getInstance().getMainWindow().getScaledWidth();
-        int j = 12 + ((BossOverlayGuiAccessor) this.client.ingameGUI.getBossOverlay()).getMapBossInfos().size() * (10 + this.client.fontRenderer.FONT_HEIGHT);
+        int i = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+        int j = 12 + ((BossOverlayGuiAccessor) this.client.gui.getBossOverlay()).getMapBossInfos().size() * (10 + this.client.font.lineHeight);
         for (MultiBossInfo value : bossInfoMap.values()) {
             int k = i / 2 - 91;
             net.minecraftforge.client.event.RenderGameOverlayEvent.BossInfo event =
-                    net.minecraftforge.client.ForgeHooksClient.bossBarRenderPre(stack, this.client.getMainWindow(), new DummyBossInfo(value.getUniqueId(), value.getName()), k, j, 10 + this.client.fontRenderer.FONT_HEIGHT);
+                    net.minecraftforge.client.ForgeHooksClient.bossBarRenderPre(stack, this.client.getWindow(), new DummyBossInfo(value.getUniqueId(), value.getName()), k, j, 10 + this.client.font.lineHeight);
             if (!event.isCanceled()) {
                 RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-                Minecraft.getInstance().getTextureManager().bindTexture(GUI_BARS_TEXTURES);
+                Minecraft.getInstance().getTextureManager().bind(GUI_BARS_TEXTURES);
                 this.render(stack, k, j, value);
                 ITextComponent itextcomponent = value.getName();
-                int l = this.client.fontRenderer.getStringPropertyWidth(itextcomponent);
+                int l = this.client.font.width(itextcomponent);
                 int i1 = i / 2 - l / 2;
                 int j1 = j - 9;
-                this.client.fontRenderer.drawTextWithShadow(stack, itextcomponent, (float) i1, (float) j1, 16777215);
+                this.client.font.drawShadow(stack, itextcomponent, (float) i1, (float) j1, 16777215);
             }
             j += event.getIncrement();
-            net.minecraftforge.client.ForgeHooksClient.bossBarRenderPost(stack, this.client.getMainWindow());
+            net.minecraftforge.client.ForgeHooksClient.bossBarRenderPost(stack, this.client.getWindow());
 
-            if (j >= this.client.getMainWindow().getScaledHeight() / 3) {
+            if (j >= this.client.getWindow().getGuiScaledHeight() / 3) {
                 break;
             }
         }

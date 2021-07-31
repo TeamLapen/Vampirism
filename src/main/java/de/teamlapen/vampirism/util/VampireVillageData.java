@@ -28,18 +28,18 @@ import java.util.List;
 public class VampireVillageData implements IVillageFactionData {
     public static ItemStack createBanner() {
         ItemStack itemStack = new ItemStack(Items.BLACK_BANNER);
-        CompoundNBT compoundNBT = itemStack.getOrCreateChildTag("BlockEntityTag");
+        CompoundNBT compoundNBT = itemStack.getOrCreateTagElement("BlockEntityTag");
         ListNBT listNBT = new BannerPattern.Builder()
-                .setPatternWithColor(BannerPattern.TRIANGLES_BOTTOM, DyeColor.RED)
-                .setPatternWithColor(BannerPattern.TRIANGLES_TOP, DyeColor.RED)
-                .setPatternWithColor(BannerPattern.BORDER, DyeColor.PURPLE)
-                .setPatternWithColor(BannerPattern.RHOMBUS_MIDDLE, DyeColor.RED)
-                .setPatternWithColor(BannerPattern.STRAIGHT_CROSS, DyeColor.RED)
-                .setPatternWithColor(BannerPattern.CIRCLE_MIDDLE, DyeColor.PURPLE)
-                .buildNBT();
+                .addPattern(BannerPattern.TRIANGLES_BOTTOM, DyeColor.RED)
+                .addPattern(BannerPattern.TRIANGLES_TOP, DyeColor.RED)
+                .addPattern(BannerPattern.BORDER, DyeColor.PURPLE)
+                .addPattern(BannerPattern.RHOMBUS_MIDDLE, DyeColor.RED)
+                .addPattern(BannerPattern.STRAIGHT_CROSS, DyeColor.RED)
+                .addPattern(BannerPattern.CIRCLE_MIDDLE, DyeColor.PURPLE)
+                .toListTag();
         compoundNBT.put("Patterns", listNBT);
-        itemStack.func_242395_a(ItemStack.TooltipDisplayFlags.ADDITIONAL);
-        itemStack.setDisplayName(new TranslationTextComponent("block.minecraft.ominous_banner").mergeStyle(TextFormatting.GOLD));
+        itemStack.hideTooltipPart(ItemStack.TooltipDisplayFlags.ADDITIONAL);
+        itemStack.setHoverName(new TranslationTextComponent("block.minecraft.ominous_banner").withStyle(TextFormatting.GOLD));
         return itemStack;
     }
     private final ItemStack banner = createBanner();
@@ -81,6 +81,6 @@ public class VampireVillageData implements IVillageFactionData {
 
     @Override
     public boolean isBanner(@Nonnull ItemStack stack) {
-        return ItemStack.areItemStacksEqual(this.banner, stack);
+        return ItemStack.matches(this.banner, stack);
     }
 }

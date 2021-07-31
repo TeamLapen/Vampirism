@@ -32,8 +32,8 @@ abstract class VampirismTESR<T extends TileEntity> extends TileEntityRenderer<T>
     protected void adjustRotatePivotViaState(@Nullable TileEntity tile, MatrixStack matrixStack) {
         if (tile == null) return;
         Direction dir = Direction.NORTH;
-        if (tile.getWorld() != null)
-            dir = tile.getWorld().getBlockState(tile.getPos()).get(HorizontalBlock.HORIZONTAL_FACING);
-        matrixStack.rotate(Vector3f.YP.rotationDegrees((dir.getHorizontalIndex() - 2) * -90));
+        if (tile.getLevel() != null)
+            dir = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(HorizontalBlock.FACING);
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees((dir.get2DDataValue() - 2) * -90));
     }
 }

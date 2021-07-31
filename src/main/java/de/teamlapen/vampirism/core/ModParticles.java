@@ -27,21 +27,21 @@ public class ModParticles {
         registry.register(new ParticleType<FlyingBloodParticleData>(false, FlyingBloodParticleData.DESERIALIZER) {
 
             @Override
-            public Codec<FlyingBloodParticleData> func_230522_e_() {
+            public Codec<FlyingBloodParticleData> codec() {
                 return FlyingBloodParticleData.CODEC;
             }
         }.setRegistryName(new ResourceLocation(REFERENCE.MODID, "flying_blood")));
         registry.register(new ParticleType<FlyingBloodEntityParticleData>(false, FlyingBloodEntityParticleData.DESERIALIZER) {
 
             @Override
-            public Codec<FlyingBloodEntityParticleData> func_230522_e_() {
+            public Codec<FlyingBloodEntityParticleData> codec() {
                 return FlyingBloodEntityParticleData.CODEC;
             }
         }.setRegistryName(new ResourceLocation(REFERENCE.MODID, "flying_blood_entity")));
         registry.register(new ParticleType<GenericParticleData>(false, GenericParticleData.DESERIALIZER) {
 
             @Override
-            public Codec<GenericParticleData> func_230522_e_() {
+            public Codec<GenericParticleData> codec() {
                 return GenericParticleData.CODEC;
             }
         }.setRegistryName(new ResourceLocation(REFERENCE.MODID, "generic")));
@@ -81,7 +81,7 @@ public class ModParticles {
     public static int spawnParticlesServer(World worldIn, IParticleData particle, double posX, double posY, double posZ, int particleCount, double xOffset, double yOffset, double zOffset, double speed) {
         assert worldIn instanceof ServerWorld : "Calling spawnParticlesServer on client side is pointless";
         if (worldIn instanceof ServerWorld) {
-            return ((ServerWorld) worldIn).spawnParticle(particle, posX, posY, posZ, particleCount, xOffset, yOffset, zOffset, speed);
+            return ((ServerWorld) worldIn).sendParticles(particle, posX, posY, posZ, particleCount, xOffset, yOffset, zOffset, speed);
         }
         return 0;
     }

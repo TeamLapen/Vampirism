@@ -28,7 +28,7 @@ public class PedestalBlock extends VampirismBlockContainer {
     private static final VoxelShape pedestalShape = makeShape();
 
     private static void takeItemPlayer(PlayerEntity player, Hand hand, ItemStack stack) {
-        player.setHeldItem(hand, stack);
+        player.setItemInHand(hand, stack);
         if (stack.getItem() instanceof VampirismVampireSword) {
             if (((VampirismVampireSword) stack.getItem()).isFullyCharged(stack)) {
                 ((VampirismVampireSword) stack.getItem()).tryName(stack, player);
@@ -37,28 +37,27 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(1, 0, 1, 15, 1, 15);
-        VoxelShape b = Block.makeCuboidShape(2, 1, 2, 14, 2, 14);
-        VoxelShape c = Block.makeCuboidShape(5, 2, 5, 11, 3, 11);
-        VoxelShape d = Block.makeCuboidShape(6, 3, 6, 10, 7, 10);
-        VoxelShape e = Block.makeCuboidShape(5, 7, 5, 11, 8, 11);
-        VoxelShape f = Block.makeCuboidShape(3, 8, 3, 13, 9, 13);
-        VoxelShape g1 = Block.makeCuboidShape(4, 9, 4, 5, 11, 5);
-        VoxelShape g2 = Block.makeCuboidShape(12, 9, 4, 11, 11, 5);
-        VoxelShape g3 = Block.makeCuboidShape(4, 9, 12, 5, 11, 11);
-        VoxelShape g4 = Block.makeCuboidShape(12, 9, 12, 11, 11, 11);
+        VoxelShape a = Block.box(1, 0, 1, 15, 1, 15);
+        VoxelShape b = Block.box(2, 1, 2, 14, 2, 14);
+        VoxelShape c = Block.box(5, 2, 5, 11, 3, 11);
+        VoxelShape d = Block.box(6, 3, 6, 10, 7, 10);
+        VoxelShape e = Block.box(5, 7, 5, 11, 8, 11);
+        VoxelShape f = Block.box(3, 8, 3, 13, 9, 13);
+        VoxelShape g1 = Block.box(4, 9, 4, 5, 11, 5);
+        VoxelShape g2 = Block.box(12, 9, 4, 11, 11, 5);
+        VoxelShape g3 = Block.box(4, 9, 12, 5, 11, 11);
+        VoxelShape g4 = Block.box(12, 9, 12, 11, 11, 11);
 
         return VoxelShapes.or(a, b, c, d, e, f, g1, g2, g3, g4);
     }
 
     public PedestalBlock() {
-        super(regName, Properties.create(Material.ROCK).hardnessAndResistance(3f).notSolid());
+        super(regName, Properties.of(Material.STONE).strength(3f).noOcclusion());
     }
 
-    @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new PedestalTileEntity();
+    public BlockRenderType getRenderShape(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
     @Override
@@ -72,10 +71,10 @@ public class PedestalBlock extends VampirismBlockContainer {
         return ToolType.PICKAXE;
     }
 
-
+    @Nullable
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public TileEntity newBlockEntity(IBlockReader worldIn) {
+        return new PedestalTileEntity();
     }
 
     @Override
@@ -83,12 +82,11 @@ public class PedestalBlock extends VampirismBlockContainer {
         return pedestalShape;
     }
 
-
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         PedestalTileEntity tile = getTileEntity(world, pos);
         if (tile == null) return ActionResultType.SUCCESS;
-        ItemStack stack = player.getHeldItem(hand);
+        ItemStack stack = player.getItemInHand(hand);
         if (stack.isEmpty() && !tile.extractItem(0, 1, true).isEmpty()) {
             ItemStack stack2 = tile.extractItem(0, 1, false);
             takeItemPlayer(player, hand, stack2);
@@ -106,7 +104,7 @@ public class PedestalBlock extends VampirismBlockContainer {
             }
             return ActionResultType.SUCCESS;
         }
-        return super.onBlockActivated(state, world, pos, player, hand, hit);
+        return super.use(state, world, pos, player, hand, hit);
     }
 
     @Override
@@ -119,7 +117,7 @@ public class PedestalBlock extends VampirismBlockContainer {
 
     @Nullable
     private PedestalTileEntity getTileEntity(IBlockReader world, BlockPos pos) {
-        TileEntity tile = world.getTileEntity(pos);
+        TileEntity tile = world.getBlockEntity(pos);
         if (tile instanceof PedestalTileEntity) {
             return (PedestalTileEntity) tile;
         }

@@ -59,7 +59,7 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
     }
 
     public StakeItem() {
-        super(regName, ItemTier.WOOD, 1, -1, new Properties().group(VampirismMod.creativeTab));
+        super(regName, ItemTier.WOOD, 1, -1, new Properties().tab(VampirismMod.creativeTab));
     }
 
     @Nonnull
@@ -69,13 +69,13 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (!attacker.getEntityWorld().isRemote) {
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        if (!attacker.getCommandSenderWorld().isClientSide) {
             if (target instanceof IVampireMob || (target instanceof PlayerEntity && Helper.isVampire(((PlayerEntity) target)))) {
                 if (canKillInstant(target, attacker)) {
-                    DamageSource dmg = attacker instanceof PlayerEntity ? DamageSource.causePlayerDamage((PlayerEntity) attacker) : DamageSource.causeMobDamage(attacker);
-                    dmg = dmg.setDamageBypassesArmor();
-                    target.attackEntityFrom(dmg, 10000F);
+                    DamageSource dmg = attacker instanceof PlayerEntity ? DamageSource.playerAttack((PlayerEntity) attacker) : DamageSource.mobAttack(attacker);
+                    dmg = dmg.bypassArmor();
+                    target.hurt(dmg, 10000F);
                     if (attacker instanceof ServerPlayerEntity) {
                         ModAdvancements.TRIGGER_HUNTER_ACTION.trigger((ServerPlayerEntity) attacker, HunterActionTrigger.Action.STAKE);
                     }
@@ -84,6 +84,6 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
             }
         }
 
-        return super.hitEntity(stack, target, attacker);
+        return super.hurtEnemy(stack, target, attacker);
     }
 }

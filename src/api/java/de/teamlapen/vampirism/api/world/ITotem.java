@@ -21,7 +21,7 @@ public interface ITotem {
     IFaction getControllingFaction();
 
     default World getTileWorld() {
-        return ((TileEntity) this).getWorld();
+        return ((TileEntity) this).getLevel();
     }
 
     @Nonnull

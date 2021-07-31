@@ -12,13 +12,13 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class ModSuggestionProvider {
     public static final SuggestionProvider<CommandSource> ENTITIES = SuggestionProviders.register(new ResourceLocation(REFERENCE.MODID, "entities"), (context, builder) -> {
-        return ISuggestionProvider.func_201725_a(ForgeRegistries.ENTITIES.getValues().stream(), builder, ForgeRegistries.ENTITIES::getKey, (c) -> {
-            return new TranslationTextComponent(Util.makeTranslationKey("entity", ForgeRegistries.ENTITIES.getKey(c)));
+        return ISuggestionProvider.suggestResource(ForgeRegistries.ENTITIES.getValues().stream(), builder, ForgeRegistries.ENTITIES::getKey, (c) -> {
+            return new TranslationTextComponent(Util.makeDescriptionId("entity", ForgeRegistries.ENTITIES.getKey(c)));
         });
     });
     public static final SuggestionProvider<CommandSource> BIOMES = SuggestionProviders.register(new ResourceLocation(REFERENCE.MODID, "biomes"), (context, builder) -> {
-        return ISuggestionProvider.func_201725_a(ForgeRegistries.BIOMES.getValues().stream(), builder, ForgeRegistries.BIOMES::getKey, (c) -> {
-            return new TranslationTextComponent(Util.makeTranslationKey("biome", ForgeRegistries.BIOMES.getKey(c)));
+        return ISuggestionProvider.suggestResource(ForgeRegistries.BIOMES.getValues().stream(), builder, ForgeRegistries.BIOMES::getKey, (c) -> {
+            return new TranslationTextComponent(Util.makeDescriptionId("biome", ForgeRegistries.BIOMES.getKey(c)));
         });
     });
 }

@@ -28,10 +28,10 @@ public class CloakLayer<T extends MobEntity, Q extends BipedCloakedModel<T>> ext
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (!entitylivingbaseIn.isInvisible() && renderPredicate.test(entitylivingbaseIn)) {
-            matrixStackIn.push();
-            IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.getEntitySolid(textureCloak));
-            this.getEntityModel().renderCloak(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY);
-            matrixStackIn.pop();
+            matrixStackIn.pushPose();
+            IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.entitySolid(textureCloak));
+            this.getParentModel().renderCloak(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY);
+            matrixStackIn.popPose();
         }
     }
 }

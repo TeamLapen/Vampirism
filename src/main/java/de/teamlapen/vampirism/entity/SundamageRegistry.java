@@ -28,8 +28,8 @@ public class SundamageRegistry implements ISundamageRegistry {
 
     public SundamageRegistry() {
         sundamageDims.put(World.OVERWORLD, true);
-        sundamageDims.put(World.THE_NETHER, false);
-        sundamageDims.put(World.THE_END, false);
+        sundamageDims.put(World.NETHER, false);
+        sundamageDims.put(World.END, false);
     }
 
 
@@ -68,13 +68,13 @@ public class SundamageRegistry implements ISundamageRegistry {
         List<? extends String> negative = VampirismConfig.SERVER.sundamageDimensionsOverrideNegative.get();
         for (String s : negative) {
             ResourceLocation id = new ResourceLocation(s); //Should be safe because config validates values?
-            RegistryKey<World> key = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, id);
+            RegistryKey<World> key = RegistryKey.create(Registry.DIMENSION_REGISTRY, id);
             sundamageConfiguredDims.put(key, false);
         }
         List<? extends String> positive = VampirismConfig.SERVER.sundamageDimensionsOverridePositive.get();
         for (String s : positive) {
             ResourceLocation id = new ResourceLocation(s); //Should be safe because config validates values?
-            RegistryKey<World> key = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, id);
+            RegistryKey<World> key = RegistryKey.create(Registry.DIMENSION_REGISTRY, id);
             sundamageConfiguredDims.put(key, true);
         }
 

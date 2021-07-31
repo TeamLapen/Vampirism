@@ -12,14 +12,14 @@ public class CurrentDimensionCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("currentDimension")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ALL))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ALL))
                 .executes(context -> {
-                    return currentDimension(context, context.getSource().asPlayer());
+                    return currentDimension(context, context.getSource().getPlayerOrException());
                 });
     }
 
     private static int currentDimension(CommandContext<CommandSource> context, ServerPlayerEntity asPlayer) {
-        context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.currentdimension.dimension", asPlayer.getEntityWorld().getDimensionKey().getLocation() + " (" + asPlayer.getServer().getDynamicRegistries().func_230520_a_().getKey(asPlayer.getEntityWorld().getDimensionType())), false);
+        context.getSource().sendSuccess(new TranslationTextComponent("command.vampirism.base.currentdimension.dimension", asPlayer.getCommandSenderWorld().dimension().location() + " (" + asPlayer.getServer().registryAccess().dimensionTypes().getKey(asPlayer.getCommandSenderWorld().dimensionType())), false);
         return 0;
     }
 }

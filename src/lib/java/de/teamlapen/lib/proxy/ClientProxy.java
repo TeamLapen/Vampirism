@@ -59,7 +59,7 @@ public class ClientProxy extends CommonProxy {
     @Nonnull
     @Override
     public ISoundReference createMasterSoundReference(SoundEvent event, float volume, float pinch) {
-        return new SoundReference(SimpleSound.master(event, volume, pinch));
+        return new SoundReference(SimpleSound.forUI(event, volume, pinch));
     }
 
     @Nonnull
@@ -76,7 +76,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public String getActiveLanguage() {
-        return Minecraft.getInstance().getLanguageManager().getCurrentLanguage().toString();
+        return Minecraft.getInstance().getLanguageManager().getSelected().toString();
     }
 
     @Override
@@ -89,9 +89,9 @@ public class ClientProxy extends CommonProxy {
     public World getWorldFromKey(RegistryKey<World> world) {
         World serverWorld = super.getWorldFromKey(world);
         if (serverWorld != null) return serverWorld;
-        World clientWorld = Minecraft.getInstance().world;
+        World clientWorld = Minecraft.getInstance().level;
         if (clientWorld != null) {
-            if (clientWorld.getDimensionKey().equals(world)) {
+            if (clientWorld.dimension().equals(world)) {
                 return clientWorld;
             }
         }
@@ -104,11 +104,11 @@ public class ClientProxy extends CommonProxy {
         if (player == null) {
             LOGGER.error("Cannot handle update package because sending player entity is null. Message: {}", msg);
         } else {
-            Entity e = player.getEntityWorld().getEntityByID(msg.getId());
+            Entity e = player.getCommandSenderWorld().getEntity(msg.getId());
             if (e == null) {
                 LOGGER.error("Did not find entity {}", msg.getId());
                 if (msg.isPlayerItself()) {
-                    LOGGER.error("Message is meant for player itself, but id mismatch {} {}. Loading anyway.", player.getEntityId(), msg.getId());
+                    LOGGER.error("Message is meant for player itself, but id mismatch {} {}. Loading anyway.", player.getId(), msg.getId());
                     e = player;
                 }
             }
@@ -125,7 +125,7 @@ public class ClientProxy extends CommonProxy {
                 }
                 if (msg.getCaps() != null) {
 
-                    for (String key : msg.getCaps().keySet()) {
+                    for (String key : msg.getCaps().getAllKeys()) {
                         handleCapability(e, new ResourceLocation(key), msg.getCaps().getCompound(key));
                     }
 

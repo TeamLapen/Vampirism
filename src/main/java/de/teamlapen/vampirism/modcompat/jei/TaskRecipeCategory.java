@@ -43,23 +43,23 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
         Minecraft minecraft = Minecraft.getInstance();
         int x = 4;
         int y = 40;
-        minecraft.fontRenderer.drawText(stack, task.getTranslation(), 1, 1, Color.gray.getRGB());
+        minecraft.font.draw(stack, task.getTranslation(), 1, 1, Color.gray.getRGB());
         IPlayableFaction<?> f = task.getFaction();
-        ITextComponent taskmasterComponent = f == null || f.getVillageData().getTaskMasterEntity() == null ? new TranslationTextComponent("text.vampirism.faction_representative") : new TranslationTextComponent(f.getVillageData().getTaskMasterEntity().getTranslationKey());
+        ITextComponent taskmasterComponent = f == null || f.getVillageData().getTaskMasterEntity() == null ? new TranslationTextComponent("text.vampirism.faction_representative") : new TranslationTextComponent(f.getVillageData().getTaskMasterEntity().getDescriptionId());
         ITextComponent text = new TranslationTextComponent("text.vampirism.task.reward_obtain", taskmasterComponent);
-        y += UtilLib.renderMultiLine(minecraft.fontRenderer, stack, text, 160, x, y, Color.gray.getRGB());
+        y += UtilLib.renderMultiLine(minecraft.font, stack, text, 160, x, y, Color.gray.getRGB());
 
-        IFormattableTextComponent prerequisites = new TranslationTextComponent("text.vampirism.task.prerequisites").appendString(":\n");
+        IFormattableTextComponent prerequisites = new TranslationTextComponent("text.vampirism.task.prerequisites").append(":\n");
         TaskUnlocker[] unlockers = task.getUnlocker();
         if (unlockers.length > 0) {
             StringTextComponent newLine = new StringTextComponent("\n");
             for (TaskUnlocker u : unlockers) {
-                prerequisites.appendSibling(new StringTextComponent("- ")).appendSibling(u.getDescription()).appendSibling(newLine);
+                prerequisites.append(new StringTextComponent("- ")).append(u.getDescription()).append(newLine);
             }
         } else {
-            prerequisites.appendSibling(new TranslationTextComponent("text.vampirism.task.prerequisites.none"));
+            prerequisites.append(new TranslationTextComponent("text.vampirism.task.prerequisites.none"));
         }
-        y += UtilLib.renderMultiLine(minecraft.fontRenderer, stack, prerequisites, 160, x, y, Color.gray.getRGB());
+        y += UtilLib.renderMultiLine(minecraft.font, stack, prerequisites, 160, x, y, Color.gray.getRGB());
 
     }
 

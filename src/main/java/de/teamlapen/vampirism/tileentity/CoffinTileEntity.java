@@ -44,65 +44,65 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
 
     public void changeColor(DyeColor color) {
         this.color = color;
-        markDirty();
+        setChanged();
     }
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(pos.getX() - 4, pos.getY(), pos.getZ() - 4, pos.getX() + 4, pos.getY() + 2, pos.getZ() + 4);
+        return new AxisAlignedBB(worldPosition.getX() - 4, worldPosition.getY(), worldPosition.getZ() - 4, worldPosition.getX() + 4, worldPosition.getY() + 2, worldPosition.getZ() + 4);
     }
 
     @Nullable
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.getPos(), 1, getUpdateTag());
+        return new SUpdateTileEntityPacket(this.getBlockPos(), 1, getUpdateTag());
     }
 
     @Nonnull
     @Override
     public CompoundNBT getUpdateTag() {
-        return write(new CompoundNBT());
+        return save(new CompoundNBT());
     }
 
     @Override
-    public void markDirty() {
-        super.markDirty();
-        if (world != null)
-            world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
+        this.color = compound.contains("color") ? DyeColor.byId(compound.getInt("color")) : DyeColor.BLACK;
+
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
-        if (hasWorld()) read(world.getBlockState(packet.getPos()), packet.getNbtCompound());
+        if (hasLevel()) load(level.getBlockState(packet.getPos()), packet.getTag());
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
-        this.color = compound.contains("color") ? DyeColor.byId(compound.getInt("color")) : DyeColor.BLACK;
+    public CompoundNBT save(CompoundNBT compound) {
+        CompoundNBT nbt = super.save(compound);
+        nbt.putInt("color", color.getId());
+        return nbt;
+    }
 
+    @Override
+    public void setChanged() {
+        super.setChanged();
+        if (level != null)
+            level.sendBlockUpdated(getBlockPos(), level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
     }
 
     @Override
     public void tick() {
-        if (!hasWorld() || !CoffinBlock.isHead(world, pos)) {
+        if (!hasLevel() || !CoffinBlock.isHead(level, worldPosition)) {
             return;
 
         }
-        boolean occupied = CoffinBlock.isOccupied(world, pos);
+        boolean occupied = CoffinBlock.isOccupied(level, worldPosition);
         if (lastTickOccupied != occupied) {
-            this.world.playSound(pos.getX(), (double) this.pos.getY() + 0.5D, pos.getZ(), ModSounds.coffin_lid, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F, true);
+            this.level.playLocalSound(worldPosition.getX(), (double) this.worldPosition.getY() + 0.5D, worldPosition.getZ(), ModSounds.coffin_lid, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F, true);
             lastTickOccupied = occupied;
         }
 
 
-    }
-
-    @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        CompoundNBT nbt = super.write(compound);
-        nbt.putInt("color", color.getId());
-        return nbt;
     }
 }

@@ -90,7 +90,7 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
     }
 
     public void onServerStarting(MinecraftServer server) {
-        bloodValueWorldFile = new File(server.func_240776_a_(worldSubFolder).toFile(), "calculated-" + name + "-blood-values.txt");
+        bloodValueWorldFile = new File(server.getWorldPath(worldSubFolder).toFile(), "calculated-" + name + "-blood-values.txt");
         if (bloodValueWorldFile.exists()) {
             loadDynamicBloodValues(bloodValueWorldFile);
         }

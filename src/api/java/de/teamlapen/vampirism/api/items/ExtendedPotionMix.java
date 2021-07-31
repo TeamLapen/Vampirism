@@ -40,7 +40,7 @@ public class ExtendedPotionMix {
 
     public static class Builder {
         private final static NonNullSupplier<Ingredient> EMPTY_SUPPLIER = () -> Ingredient.EMPTY;
-        private static final NonNullSupplier<Ingredient> VAMPIRE_BLOOD = () -> Ingredient.fromItems(ForgeRegistries.ITEMS.getValue(new ResourceLocation("vampirism", "vampire_blood_bottle")));
+        private static final NonNullSupplier<Ingredient> VAMPIRE_BLOOD = () -> Ingredient.of(ForgeRegistries.ITEMS.getValue(new ResourceLocation("vampirism", "vampire_blood_bottle")));
         private final net.minecraftforge.registries.IRegistryDelegate<Potion> input;
         private final net.minecraftforge.registries.IRegistryDelegate<Potion> output;
         private LazyOptional<Ingredient> reagent1 = LazyOptional.of(EMPTY_SUPPLIER);

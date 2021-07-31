@@ -24,7 +24,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-
 public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemWithTier, IDyeableArmorItem {
 
     private final static String baseRegName = "armor_of_swiftness";
@@ -35,14 +34,14 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
     private final TIER tier;
 
     public ArmorOfSwiftnessItem(EquipmentSlotType equipmentSlotIn, TIER tier) {
-        super(baseRegName, tier.getString(), ArmorMaterial.LEATHER, equipmentSlotIn, new Item.Properties().group(VampirismMod.creativeTab));
+        super(baseRegName, tier.getSerializedName(), ArmorMaterial.LEATHER, equipmentSlotIn, new Item.Properties().tab(VampirismMod.creativeTab));
         this.tier = tier;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
     }
 
@@ -65,7 +64,7 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> multimap = super.getAttributeModifiers(equipmentSlot, stack);
 
-        if (equipmentSlot == this.getEquipmentSlot()) {
+        if (equipmentSlot == this.getSlot()) {
             multimap.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[equipmentSlot.getIndex()], "Armor Swiftness", getSpeedBoost(tier), AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
 
@@ -85,11 +84,11 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
     @Override
     public void onArmorTick(ItemStack itemStack, World world, PlayerEntity player) {
         super.onArmorTick(itemStack, world, player);
-        if (player.ticksExisted % 45 == 3) {
-            if (this.getEquipmentSlot() == EquipmentSlotType.CHEST) {
+        if (player.tickCount % 45 == 3) {
+            if (this.getSlot() == EquipmentSlotType.CHEST) {
                 boolean flag = true;
                 int boost = Integer.MAX_VALUE;
-                for (ItemStack stack : player.inventory.armorInventory) {
+                for (ItemStack stack : player.inventory.armor) {
                     if (!stack.isEmpty() && stack.getItem() instanceof ArmorOfSwiftnessItem) {
                         int b = getJumpBoost(getVampirismTier());
                         if (b < boost) {
@@ -101,7 +100,7 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
                     }
                 }
                 if (flag && boost > -1) {
-                    player.addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, 50, boost, false, false));
+                    player.addEffect(new EffectInstance(Effects.JUMP, 50, boost, false, false));
                 }
             }
         }

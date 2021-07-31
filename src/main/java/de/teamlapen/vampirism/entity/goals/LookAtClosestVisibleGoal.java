@@ -18,12 +18,12 @@ public class LookAtClosestVisibleGoal extends LookAtGoal {
     }
 
     @Override
-    public boolean shouldExecute() {
-        if (super.shouldExecute()) {
-            if (this.closestEntity != null && !this.closestEntity.isInvisible() && !(this.closestEntity instanceof PlayerEntity && ((PlayerEntity) this.closestEntity).abilities.isCreativeMode)) {
+    public boolean canUse() {
+        if (super.canUse()) {
+            if (this.lookAt != null && !this.lookAt.isInvisible() && !(this.lookAt instanceof PlayerEntity && ((PlayerEntity) this.lookAt).abilities.instabuild)) {
                 return true;
             } else {
-                this.closestEntity = null;
+                this.lookAt = null;
             }
         }
         return false;

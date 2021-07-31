@@ -27,15 +27,15 @@ public class HunterTrainerRenderer extends BipedRenderer<MobEntity, PlayerModel<
 
 
     @Override
-    public ResourceLocation getEntityTexture(MobEntity entity) {
+    public ResourceLocation getTextureLocation(MobEntity entity) {
         return texture;
     }
 
     @Override
-    protected void renderName(MobEntity entityIn, ITextComponent displayNameIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        double dist = this.renderManager.squareDistanceTo(entityIn);
+    protected void renderNameTag(MobEntity entityIn, ITextComponent displayNameIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+        double dist = this.entityRenderDispatcher.distanceToSqr(entityIn);
         if (dist <= 128) {
-            super.renderName(entityIn, displayNameIn, matrixStackIn, bufferIn, packedLightIn);
+            super.renderNameTag(entityIn, displayNameIn, matrixStackIn, bufferIn, packedLightIn);
         }
     }
 

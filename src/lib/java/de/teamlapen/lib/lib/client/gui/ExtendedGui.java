@@ -22,7 +22,7 @@ public class ExtendedGui extends AbstractGui {
      * Similar to fillGradient, but with gradient on the horizontal axis
      */
     protected void fillGradient2(MatrixStack stack, int left, int top, int right, int bottom, int startColor, int endColor) {
-        Matrix4f matrix = stack.getLast().getMatrix();
+        Matrix4f matrix = stack.last().pose();
         float f = (float) (startColor >> 24 & 255) / 255.0F;
         float f1 = (float) (startColor >> 16 & 255) / 255.0F;
         float f2 = (float) (startColor >> 8 & 255) / 255.0F;
@@ -31,23 +31,23 @@ public class ExtendedGui extends AbstractGui {
         float f5 = (float) (endColor >> 16 & 255) / 255.0F;
         float f6 = (float) (endColor >> 8 & 255) / 255.0F;
         float f7 = (float) (endColor & 255) / 255.0F;
-        GlStateManager.disableTexture();
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlphaTest();
-        GlStateManager.blendFuncSeparate(770, 771, 1, 0);
-        GlStateManager.shadeModel(7425);
+        GlStateManager._disableTexture();
+        GlStateManager._enableBlend();
+        GlStateManager._disableAlphaTest();
+        GlStateManager._blendFuncSeparate(770, 771, 1, 0);
+        GlStateManager._shadeModel(7425);
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder worldrenderer = tessellator.getBuffer();
+        BufferBuilder worldrenderer = tessellator.getBuilder();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldrenderer.pos(matrix, right, top, this.getBlitOffset()).color(f1, f2, f3, f).endVertex();
-        worldrenderer.pos(matrix, left, top, this.getBlitOffset()).color(f5, f6, f7, f4).endVertex();
-        worldrenderer.pos(matrix, left, bottom, this.getBlitOffset()).color(f5, f6, f7, f4).endVertex();
-        worldrenderer.pos(matrix, right, bottom, this.getBlitOffset()).color(f1, f2, f3, f).endVertex();
-        tessellator.draw();
-        GlStateManager.shadeModel(7424);
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlphaTest();
-        GlStateManager.enableTexture();
+        worldrenderer.vertex(matrix, right, top, this.getBlitOffset()).color(f1, f2, f3, f).endVertex();
+        worldrenderer.vertex(matrix, left, top, this.getBlitOffset()).color(f5, f6, f7, f4).endVertex();
+        worldrenderer.vertex(matrix, left, bottom, this.getBlitOffset()).color(f5, f6, f7, f4).endVertex();
+        worldrenderer.vertex(matrix, right, bottom, this.getBlitOffset()).color(f1, f2, f3, f).endVertex();
+        tessellator.end();
+        GlStateManager._shadeModel(7424);
+        GlStateManager._disableBlend();
+        GlStateManager._enableAlphaTest();
+        GlStateManager._enableTexture();
     }
 
 

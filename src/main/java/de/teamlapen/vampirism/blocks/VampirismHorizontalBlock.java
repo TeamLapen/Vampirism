@@ -39,7 +39,7 @@ public class VampirismHorizontalBlock extends VampirismBlock {
      */
     public VampirismHorizontalBlock(String regName, Block.Properties properties, VoxelShape shape) {
         super(regName, properties);
-        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
 
         NORTH = shape;
         EAST = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.NINETY);
@@ -48,12 +48,12 @@ public class VampirismHorizontalBlock extends VampirismBlock {
     }
 
     public VampirismHorizontalBlock(String regName, Block.Properties properties) {
-        this(regName, properties, VoxelShapes.fullCube());
+        this(regName, properties, VoxelShapes.block());
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING)) {
+        switch (state.getValue(FACING)) {
             case NORTH:
                 return NORTH;
             case EAST:
@@ -69,21 +69,21 @@ public class VampirismHorizontalBlock extends VampirismBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing());
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 }

@@ -19,7 +19,7 @@ public class DarkBloodProjectileRenderer extends EntityRenderer<DarkBloodProject
      * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
      */
     @Override
-    public ResourceLocation getEntityTexture(DarkBloodProjectileEntity entity) {
+    public ResourceLocation getTextureLocation(DarkBloodProjectileEntity entity) {
         return null;
     }
 }

@@ -38,7 +38,7 @@ public class AlchemicalCauldronRecipeBuilder {
         return new AlchemicalCauldronRecipeBuilder(item, count);
     }
     private final ItemStack result;
-    private final Advancement.Builder advancementBuilder = Advancement.Builder.builder();
+    private final Advancement.Builder advancementBuilder = Advancement.Builder.advancement();
     private String group;
     private Ingredient ingredient;
     private Either<Ingredient, FluidStack> fluid;
@@ -55,11 +55,11 @@ public class AlchemicalCauldronRecipeBuilder {
         id = new ResourceLocation(id.getNamespace(), "alchemical_cauldron/" + id.getPath());
         this.validate(id);
         this.advancementBuilder
-                .withParentId(new ResourceLocation("recipes/root"))
-                .withCriterion("has_the_recipe", RecipeUnlockedTrigger.create(id))
-                .withRewards(AdvancementRewards.Builder.recipe(id))
-                .withRequirementsStrategy(IRequirementsStrategy.OR);
-        consumer.accept(new Result(id, this.group != null ? this.group : "", this.ingredient, this.fluid, this.result, this.skills != null ? skills : new ISkill[]{HunterSkills.basic_alchemy}, this.reqLevel, this.cookTime, this.exp, advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItem().getGroup().getPath() + "/" + id.getPath())));
+                .parent(new ResourceLocation("recipes/root"))
+                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
+                .rewards(AdvancementRewards.Builder.recipe(id))
+                .requirements(IRequirementsStrategy.OR);
+        consumer.accept(new Result(id, this.group != null ? this.group : "", this.ingredient, this.fluid, this.result, this.skills != null ? skills : new ISkill[]{HunterSkills.basic_alchemy}, this.reqLevel, this.cookTime, this.exp, advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItem().getItemCategory().getRecipeFolderName() + "/" + id.getPath())));
     }
 
     public AlchemicalCauldronRecipeBuilder cookTime(int cookTime) {
@@ -83,12 +83,12 @@ public class AlchemicalCauldronRecipeBuilder {
     }
 
     public AlchemicalCauldronRecipeBuilder withCriterion(String name, ICriterionInstance criterion) {
-        this.advancementBuilder.withCriterion(name, criterion);
+        this.advancementBuilder.addCriterion(name, criterion);
         return this;
     }
 
     public AlchemicalCauldronRecipeBuilder withFluid(ITag<Item> tag) {
-        this.fluid = Either.left(Ingredient.fromTag(tag));
+        this.fluid = Either.left(Ingredient.of(tag));
         return this;
     }
 
@@ -98,27 +98,27 @@ public class AlchemicalCauldronRecipeBuilder {
     }
 
     public AlchemicalCauldronRecipeBuilder withFluid(IItemProvider... item) {
-        this.fluid = Either.left(Ingredient.fromItems(item));
+        this.fluid = Either.left(Ingredient.of(item));
         return this;
     }
 
     public AlchemicalCauldronRecipeBuilder withFluid(ItemStack... stacks) {
-        this.fluid = Either.left(Ingredient.fromStacks(stacks));
+        this.fluid = Either.left(Ingredient.of(stacks));
         return this;
     }
 
     public AlchemicalCauldronRecipeBuilder withIngredient(IItemProvider... items) {
-        this.ingredient = Ingredient.fromItems(items);
+        this.ingredient = Ingredient.of(items);
         return this;
     }
 
     public AlchemicalCauldronRecipeBuilder withIngredient(ItemStack... stacks) {
-        this.ingredient = Ingredient.fromStacks(stacks);
+        this.ingredient = Ingredient.of(stacks);
         return this;
     }
 
     public AlchemicalCauldronRecipeBuilder withIngredient(ITag<Item> tag) {
-        this.ingredient = Ingredient.fromTag(tag);
+        this.ingredient = Ingredient.of(tag);
         return this;
     }
 
@@ -164,30 +164,30 @@ public class AlchemicalCauldronRecipeBuilder {
 
         @Nullable
         @Override
-        public ResourceLocation getAdvancementID() {
+        public ResourceLocation getAdvancementId() {
             return this.advancementId;
-        }
-
-        @Nullable
-        @Override
-        public JsonObject getAdvancementJson() {
-            return this.advancementBuilder.serialize();
         }
 
         @Nonnull
         @Override
-        public ResourceLocation getID() {
+        public ResourceLocation getId() {
             return id;
         }
 
         @Nonnull
         @Override
-        public IRecipeSerializer<?> getSerializer() {
+        public IRecipeSerializer<?> getType() {
             return ModRecipes.alchemical_cauldron;
         }
 
+        @Nullable
         @Override
-        public void serialize(JsonObject jsonObject) {
+        public JsonObject serializeAdvancement() {
+            return this.advancementBuilder.serializeToJson();
+        }
+
+        @Override
+        public void serializeRecipeData(JsonObject jsonObject) {
             if (!this.group.isEmpty()) {
                 jsonObject.addProperty("group", this.group);
             }
@@ -199,9 +199,9 @@ public class AlchemicalCauldronRecipeBuilder {
             }
             jsonObject.add("result", result);
 
-            jsonObject.add("ingredient", this.ingredient.serialize());
+            jsonObject.add("ingredient", this.ingredient.toJson());
 
-            this.fluid.ifLeft(ingredient1 -> jsonObject.add("fluidItem", ingredient1.serialize()));
+            this.fluid.ifLeft(ingredient1 -> jsonObject.add("fluidItem", ingredient1.toJson()));
             this.fluid.ifRight(fluidStack -> {
                 JsonObject fluid = new JsonObject();
                 fluid.addProperty("fluid", fluidStack.getFluid().getRegistryName().toString());

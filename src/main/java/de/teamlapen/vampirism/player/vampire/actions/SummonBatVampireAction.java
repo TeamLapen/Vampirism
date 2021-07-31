@@ -29,14 +29,14 @@ public class SummonBatVampireAction extends DefaultVampireAction {
             amount = amount / 2;
         }
         for (int i = 0; i < amount; i++) {
-            BlindingBatEntity e = ModEntities.blinding_bat.create(entityPlayer.getEntityWorld());
+            BlindingBatEntity e = ModEntities.blinding_bat.create(entityPlayer.getCommandSenderWorld());
             e.restrictLiveSpan();
             if (refined) e.setTargeting();
-            e.setIsBatHanging(false);
-            e.copyLocationAndAnglesFrom(player.getRepresentingPlayer());
-            player.getRepresentingPlayer().getEntityWorld().addEntity(e);
+            e.setResting(false);
+            e.copyPosition(player.getRepresentingPlayer());
+            player.getRepresentingPlayer().getCommandSenderWorld().addFreshEntity(e);
         }
-        entityPlayer.getEntityWorld().playSound(null, entityPlayer.getPosX(), entityPlayer.getPosY(), entityPlayer.getPosZ(), ModSounds.bat_swarm, SoundCategory.PLAYERS, 1.3F, entityPlayer.getEntityWorld().rand.nextFloat() * 0.2F + 1.3F);
+        entityPlayer.getCommandSenderWorld().playSound(null, entityPlayer.getX(), entityPlayer.getY(), entityPlayer.getZ(), ModSounds.bat_swarm, SoundCategory.PLAYERS, 1.3F, entityPlayer.getCommandSenderWorld().random.nextFloat() * 0.2F + 1.3F);
         return true;
     }
 

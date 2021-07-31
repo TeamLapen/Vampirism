@@ -20,7 +20,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
-
 /**
  * Default Implementation of {@link IVampirePlayer} for the entity capability which is never used, since a default implementation, does not accept constructor parameter.
  */

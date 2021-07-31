@@ -89,7 +89,7 @@ public class VampireBookManager {
                     line = line.substring(pos + 1);
                 }
             }
-            CompoundNBT nbt = JsonToNBT.getTagFromJson(line);
+            CompoundNBT nbt = JsonToNBT.parseTag(line);
             books.add(nbt);
             if (id != null) {
                 booksById.put(id, nbt);

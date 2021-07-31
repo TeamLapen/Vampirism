@@ -29,11 +29,11 @@ public class FlyingBloodParticleData implements IParticleData {
             .apply(p_239803_0_, (a, d, x, y, z, t) -> new FlyingBloodParticleData(ModParticles.flying_blood, a, d, x, y, z, new ResourceLocation(t))));
 
     public static final IParticleData.IDeserializer<FlyingBloodParticleData> DESERIALIZER = new IParticleData.IDeserializer<FlyingBloodParticleData>() {
-        public FlyingBloodParticleData deserialize(ParticleType<FlyingBloodParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
+        public FlyingBloodParticleData fromCommand(ParticleType<FlyingBloodParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
             return new FlyingBloodParticleData(particleTypeIn, reader.readInt(), reader.readBoolean(), reader.readDouble(), reader.readDouble(), reader.readDouble(), ResourceLocation.read(reader));
         }
 
-        public FlyingBloodParticleData read(ParticleType<FlyingBloodParticleData> particleTypeIn, PacketBuffer buffer) {
+        public FlyingBloodParticleData fromNetwork(ParticleType<FlyingBloodParticleData> particleTypeIn, PacketBuffer buffer) {
             return new FlyingBloodParticleData(particleTypeIn, buffer.readVarInt(), buffer.readBoolean(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readResourceLocation());
         }
     };
@@ -65,8 +65,13 @@ public class FlyingBloodParticleData implements IParticleData {
     }
 
     @Override
-    public String getParameters() {
-        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + maxAge + " " + texture;
+    public void writeToNetwork(PacketBuffer buffer) {
+        buffer.writeVarInt(maxAge);
+        buffer.writeBoolean(direct);
+        buffer.writeDouble(targetX);
+        buffer.writeDouble(targetY);
+        buffer.writeDouble(targetZ);
+        buffer.writeResourceLocation(texture);
     }
 
     public double getTargetX() {
@@ -97,12 +102,7 @@ public class FlyingBloodParticleData implements IParticleData {
     }
 
     @Override
-    public void write(PacketBuffer buffer) {
-        buffer.writeVarInt(maxAge);
-        buffer.writeBoolean(direct);
-        buffer.writeDouble(targetX);
-        buffer.writeDouble(targetY);
-        buffer.writeDouble(targetZ);
-        buffer.writeResourceLocation(texture);
+    public String writeToString() {
+        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + maxAge + " " + texture;
     }
 }

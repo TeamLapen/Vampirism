@@ -17,7 +17,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-
 public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTier {
 
     private final static String baseRegName = "hunter_coat";
@@ -31,7 +30,7 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
     @Nullable
     public static TIER isFullyEquipped(PlayerEntity player) {
         int minLevel = 1000;
-        for (ItemStack stack : player.inventory.armorInventory) {
+        for (ItemStack stack : player.inventory.armor) {
             if (stack.isEmpty() || !(stack.getItem() instanceof HunterCoatItem)) {
                 return null;
             } else {
@@ -48,14 +47,14 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
     private final TIER tier;
 
     public HunterCoatItem(EquipmentSlotType equipmentSlotIn, TIER tier) {
-        super(baseRegName, tier.getName(), ArmorMaterial.IRON, equipmentSlotIn, new Properties().group(VampirismMod.creativeTab));
+        super(baseRegName, tier.getName(), ArmorMaterial.IRON, equipmentSlotIn, new Properties().tab(VampirismMod.creativeTab));
         this.tier = tier;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
     }
 

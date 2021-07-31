@@ -41,7 +41,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
 
 
     WeaponTableRecipeCategory(IGuiHelper guiHelper) {
-        localizedName = UtilLib.translate(ModBlocks.weapon_table.getTranslationKey());
+        localizedName = UtilLib.translate(ModBlocks.weapon_table.getDescriptionId());
         background = guiHelper.drawableBuilder(location, 32, 14, 134, 77).addPadding(0, 33, 0, 0).build();
         icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.weapon_table));
     }
@@ -54,25 +54,25 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
         Minecraft minecraft = Minecraft.getInstance();
         if (recipe.getRequiredLavaUnits() > 0) {
             RenderSystem.pushMatrix();
-            RenderSystem.multMatrix(stack.getLast().getMatrix());
-            minecraft.getItemRenderer().renderItemIntoGUI(lavaStack, 83, 13);
+            RenderSystem.multMatrix(stack.last().pose());
+            minecraft.getItemRenderer().renderGuiItem(lavaStack, 83, 13);
             RenderSystem.popMatrix();
         }
         if (recipe.getRequiredLevel() > 1) {
             ITextComponent level = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
 
-            minecraft.fontRenderer.drawText(stack, level, x, y, Color.gray.getRGB());
-            y += minecraft.fontRenderer.FONT_HEIGHT + 2;
+            minecraft.font.draw(stack, level, x, y, Color.gray.getRGB());
+            y += minecraft.font.lineHeight + 2;
         }
         ISkill[] requiredSkills = recipe.getRequiredSkills();
         if (requiredSkills.length > 0) {
             IFormattableTextComponent skillText = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.skill", " ");
 
             for (ISkill skill : recipe.getRequiredSkills()) {
-                skillText.appendSibling(skill.getName()).appendString(" ");
+                skillText.append(skill.getName()).append(" ");
 
             }
-            y += UtilLib.renderMultiLine(minecraft.fontRenderer, stack, skillText, 132, x, y, Color.gray.getRGB());
+            y += UtilLib.renderMultiLine(minecraft.font, stack, skillText, 132, x, y, Color.gray.getRGB());
 
         }
     }
@@ -108,7 +108,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
     @Override
     public void setIngredients(IWeaponTableRecipe recipe, IIngredients ingredients) {
         ingredients.setInputIngredients(recipe.getIngredients());
-        ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+        ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
     }
 
     @Override

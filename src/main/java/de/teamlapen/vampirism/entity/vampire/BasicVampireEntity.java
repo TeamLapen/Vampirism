@@ -64,15 +64,16 @@ import javax.annotation.Nullable;
  */
 public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampire, IEntityActionUser {
 
-    private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(BasicVampireEntity.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(BasicVampireEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> LEVEL = EntityDataManager.defineId(BasicVampireEntity.class, DataSerializers.INT);
+    private static final DataParameter<Integer> TYPE = EntityDataManager.defineId(BasicVampireEntity.class, DataSerializers.INT);
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 1)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.VAMPIRE_SPEED);
+                .add(Attributes.MAX_HEALTH, 1)
+                .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE)
+                .add(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.VAMPIRE_SPEED);
     }
+
     private final int MAX_LEVEL = 2;
     private final int ANGRY_TICKS_PER_ATTACK = 120;
     /**
@@ -95,17 +96,22 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         hasArms = true;
         this.setSpawnRestriction(SpawnRestriction.SPECIAL);
         entitytier = EntityActionTier.Medium;
-        entityclass = EntityClassType.getRandomClass(this.getRNG());
+        entityclass = EntityClassType.getRandomClass(this.getRandom());
         IEntityActionUser.applyAttributes(this);
         this.entityActionHandler = new ActionHandlerEntity<>(this);
         this.enableImobConversion();
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damageSource, float amount) {
-        boolean flag = super.attackEntityFrom(damageSource, amount);
-        if (flag) angryTimer += ANGRY_TICKS_PER_ATTACK;
-        return flag;
+    public void addAdditionalSaveData(CompoundNBT nbt) {
+        super.addAdditionalSaveData(nbt);
+        nbt.putInt("level", getLevel());
+        nbt.putInt("type", getEntityTextureType());
+        nbt.putBoolean("attack", this.attack);
+        nbt.putInt("entityclasstype", EntityClassType.getID(this.entityclass));
+        if (this.entityActionHandler != null) {
+            this.entityActionHandler.write(nbt);
+        }
     }
 
     @Override
@@ -113,6 +119,36 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.goalSelector.removeGoal(tasks_avoidHunter);
         this.villageAttributes = totem;
         this.attack = true;
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (bloodtimer > 0) {
+            bloodtimer--;
+        }
+        if (angryTimer > 0) {
+            angryTimer--;
+        }
+
+        if (this.tickCount % 9 == 3) {
+            if (VampirismConfig.BALANCE.vpFireResistanceReplace.get() && this.hasEffect(Effects.FIRE_RESISTANCE)) {
+                EffectInstance fireResistance = this.removeEffectNoUpdate(Effects.FIRE_RESISTANCE);
+                assert fireResistance != null;
+                onEffectRemoved(fireResistance);
+                this.addEffect(new EffectInstance(ModEffects.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
+            }
+        }
+        if (entityActionHandler != null) {
+            entityActionHandler.handle();
+        }
+    }
+
+    @Override
+    public void defendVillage(ICaptureAttributes totem) {
+        this.goalSelector.removeGoal(tasks_avoidHunter);
+        this.villageAttributes = totem;
+        this.attack = false;
     }
 
     /**
@@ -123,7 +159,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     public void convertToMinion(PlayerEntity lord) {
         FactionPlayerHandler.getOpt(lord).ifPresent(fph -> {
             if (fph.getMaxMinions() > 0) {
-                MinionWorldData.getData(lord.world).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
+                MinionWorldData.getData(lord.level).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
                     if (controller.hasFreeMinionSlot()) {
                         if (fph.getCurrentFaction() == this.getFaction()) {
                             VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData("Minion", this.getEntityTextureType(), false);
@@ -132,9 +168,9 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                                 LOGGER.error("Failed to get minion slot");
                                 return;
                             }
-                            VampireMinionEntity minion = ModEntities.vampire_minion.create(this.world);
+                            VampireMinionEntity minion = ModEntities.vampire_minion.create(this.level);
                             minion.claimMinionSlot(id, controller);
-                            minion.copyLocationAndAnglesFrom(this);
+                            minion.copyPosition(this);
                             minion.markAsConverted();
                             controller.activateTask(0, MinionTasks.stay);
                             UtilLib.replaceEntity(this, minion);
@@ -153,20 +189,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             }
         });
 
-    }
-
-    @Override
-    public void defendVillage(ICaptureAttributes totem) {
-        this.goalSelector.removeGoal(tasks_avoidHunter);
-        this.villageAttributes = totem;
-        this.attack = false;
-    }
-
-    @Override
-    public void drinkBlood(int amt, float saturationMod) {
-        super.drinkBlood(amt, saturationMod);
-        boolean dedicated = ServerLifecycleHooks.getCurrentServer().isDedicatedServer();
-        bloodtimer += amt * 40 + this.getRNG().nextInt(1000) * (dedicated ? 2 : 1);
     }
 
     @Override
@@ -203,9 +225,11 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public int getEntityTextureType() {
-        int i = getDataManager().get(TYPE);
-        return Math.max(i, 0);
+    public void die(DamageSource cause) {
+        if (this.villageAttributes == null) {
+            BadOmenEffect.handlePotentialBannerKill(cause.getEntity(), this);
+        }
+        super.die(cause);
     }
 
     @Override
@@ -214,25 +238,19 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public int getLevel() {
-        return getDataManager().get(LEVEL);
+    public void drinkBlood(int amt, float saturationMod) {
+        super.drinkBlood(amt, saturationMod);
+        boolean dedicated = ServerLifecycleHooks.getCurrentServer().isDedicatedServer();
+        bloodtimer += amt * 40 + this.getRandom().nextInt(1000) * (dedicated ? 2 : 1);
     }
 
+    @Nullable
     @Override
-    public void setLevel(int level) {
-        if (level >= 0) {
-            getDataManager().set(LEVEL, level);
-            this.updateEntityAttributes();
-            if (level == 2) {
-                this.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 1000000, 1));
-            }
-            if (level == 1) {
-                this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.IRON_SWORD));
-            } else {
-                this.setItemStackToSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
-            }
-
+    public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        if ((reason == SpawnReason.NATURAL || reason == SpawnReason.STRUCTURE) && this.getRandom().nextInt(50) == 0) {
+            this.setItemSlot(EquipmentSlotType.HEAD, VampireVillageData.createBanner());
         }
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
     @Override
@@ -241,7 +259,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public int getTalkInterval() {
+    public int getAmbientSoundInterval() {
         return 2400;
     }
 
@@ -270,69 +288,46 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
-        if (bloodtimer > 0) {
-            bloodtimer--;
-        }
-        if (angryTimer > 0) {
-            angryTimer--;
-        }
-
-        if (this.ticksExisted % 9 == 3) {
-            if (VampirismConfig.BALANCE.vpFireResistanceReplace.get() && this.isPotionActive(Effects.FIRE_RESISTANCE)) {
-                EffectInstance fireResistance = this.removeActivePotionEffect(Effects.FIRE_RESISTANCE);
-                assert fireResistance != null;
-                onFinishedPotionEffect(fireResistance);
-                this.addPotionEffect(new EffectInstance(ModEffects.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
-            }
-        }
-        if (entityActionHandler != null) {
-            entityActionHandler.handle();
-        }
+    public int getEntityTextureType() {
+        int i = getEntityData().get(TYPE);
+        return Math.max(i, 0);
     }
     //Entityactions ----------------------------------------------------------------------------------------------------
 
     @Override
+    public int getLevel() {
+        return getEntityData().get(LEVEL);
+    }
+
+    @Override
+    public void setLevel(int level) {
+        if (level >= 0) {
+            getEntityData().set(LEVEL, level);
+            this.updateEntityAttributes();
+            if (level == 2) {
+                this.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 1000000, 1));
+            }
+            if (level == 1) {
+                this.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.IRON_SWORD));
+            } else {
+                this.setItemSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
+            }
+
+        }
+    }
+
+    @Override
+    public boolean hurt(DamageSource damageSource, float amount) {
+        boolean flag = super.hurt(damageSource, amount);
+        if (flag) angryTimer += ANGRY_TICKS_PER_ATTACK;
+        return flag;
+    }
+
+    @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
-        if (getDataManager().get(TYPE) == -1) {
-            getDataManager().set(TYPE, this.getRNG().nextInt(TYPES));
-        }
-    }
-
-    @Override
-    public void onDeath(DamageSource cause) {
-        if (this.villageAttributes == null) {
-            BadOmenEffect.handlePotentialBannerKill(cause.getTrueSource(), this);
-        }
-        super.onDeath(cause);
-    }
-
-    @Nullable
-    @Override
-    public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        if ((reason == SpawnReason.NATURAL || reason == SpawnReason.STRUCTURE) && this.getRNG().nextInt(50) == 0) {
-            this.setItemStackToSlot(EquipmentSlotType.HEAD, VampireVillageData.createBanner());
-        }
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-    }
-
-    @Override
-    public void readAdditional(CompoundNBT tagCompund) {
-        super.readAdditional(tagCompund);
-        if (tagCompund.contains("level")) {
-            setLevel(tagCompund.getInt("level"));
-        }
-        if (tagCompund.contains("attack")) {
-            this.attack = tagCompund.getBoolean("attack");
-        }
-        if (tagCompund.contains("type")) {
-            int t = tagCompund.getInt("type");
-            getDataManager().set(TYPE, t < TYPES && t >= 0 ? t : -1);
-        }
-        if (entityActionHandler != null) {
-            entityActionHandler.read(tagCompund);
+        if (getEntityData().get(TYPE) == -1) {
+            getEntityData().set(TYPE, this.getRandom().nextInt(TYPES));
         }
     }
 
@@ -351,16 +346,20 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public int suggestLevel(Difficulty d) {
-        switch (this.rand.nextInt(5)) {
-            case 0:
-                return (int) (d.minPercLevel / 100F * MAX_LEVEL);
-            case 1:
-                return (int) (d.avgPercLevel / 100F * MAX_LEVEL);
-            case 2:
-                return (int) (d.maxPercLevel / 100F * MAX_LEVEL);
-            default:
-                return this.rand.nextInt(MAX_LEVEL + 1);
+    public void readAdditionalSaveData(CompoundNBT tagCompund) {
+        super.readAdditionalSaveData(tagCompund);
+        if (tagCompund.contains("level")) {
+            setLevel(tagCompund.getInt("level"));
+        }
+        if (tagCompund.contains("attack")) {
+            this.attack = tagCompund.getBoolean("attack");
+        }
+        if (tagCompund.contains("type")) {
+            int t = tagCompund.getInt("type");
+            getEntityData().set(TYPE, t < TYPES && t >= 0 ? t : -1);
+        }
+        if (entityActionHandler != null) {
+            entityActionHandler.read(tagCompund);
         }
     }
 
@@ -378,21 +377,23 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt) {
-        super.writeAdditional(nbt);
-        nbt.putInt("level", getLevel());
-        nbt.putInt("type", getEntityTextureType());
-        nbt.putBoolean("attack", this.attack);
-        nbt.putInt("entityclasstype", EntityClassType.getID(this.entityclass));
-        if (this.entityActionHandler != null) {
-            this.entityActionHandler.write(nbt);
+    public int suggestLevel(Difficulty d) {
+        switch (this.random.nextInt(5)) {
+            case 0:
+                return (int) (d.minPercLevel / 100F * MAX_LEVEL);
+            case 1:
+                return (int) (d.avgPercLevel / 100F * MAX_LEVEL);
+            case 2:
+                return (int) (d.maxPercLevel / 100F * MAX_LEVEL);
+            default:
+                return this.random.nextInt(MAX_LEVEL + 1);
         }
     }
 
     @Override
     protected float calculateFireDamage(float amount) {
         float protectionMod = 1F;
-        EffectInstance protection = this.getActivePotionEffect(ModEffects.fire_protection);
+        EffectInstance protection = this.getEffect(ModEffects.fire_protection);
         if (protection != null) {
             protectionMod = 1F / (2F + protection.getAmplifier());
         }
@@ -401,22 +402,44 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    protected ActionResultType getEntityInteractionResult(PlayerEntity player, Hand hand) {
-        if (this.isAlive() && !player.isSneaking()) {
-            if (!world.isRemote) {
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(LEVEL, -1);
+        getEntityData().define(TYPE, -1);
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return ModSounds.entity_vampire_scream;
+    }
+
+    @Override
+    protected int getExperienceReward(PlayerEntity player) {
+        return 6 + getLevel();
+    }
+
+    @Override
+    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+        return iMob ? ModEntities.vampire_imob : ModEntities.vampire;
+    }
+
+    @Override
+    protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+        if (this.isAlive() && !player.isShiftKeyDown()) {
+            if (!level.isClientSide) {
                 int vampireLevel = FactionPlayerHandler.getOpt(player).map(fph -> fph.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0);
                 if (vampireLevel > 0) {
                     return FactionPlayerHandler.getOpt(player).map(fph -> {
                         if (fph.getMaxMinions() > 0) {
-                            ItemStack heldItem = player.getHeldItem(hand);
-                            boolean freeSlot = MinionWorldData.getData(player.world).map(data -> data.getOrCreateController(fph)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
-                            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.available"), true);
+                            ItemStack heldItem = player.getItemInHand(hand);
+                            boolean freeSlot = MinionWorldData.getData(player.level).map(data -> data.getOrCreateController(fph)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
+                            player.displayClientMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.available"), true);
                             if (heldItem.getItem() == ModItems.vampire_minion_binding) {
                                 if (!freeSlot) {
-                                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.no_free_slot"), true);
+                                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.no_free_slot"), true);
                                 } else {
                                     String key;
-                                    switch (this.getRNG().nextInt(3)) {
+                                    switch (this.getRandom().nextInt(3)) {
                                         case 0:
                                             key = "text.vampirism.basic_vampire.minion.start_serving1";
                                             break;
@@ -427,12 +450,12 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                                             key = "text.vampirism.basic_vampire.minion.start_serving3";
                                             break;
                                     }
-                                    player.sendStatusMessage(new TranslationTextComponent(key), false);
+                                    player.displayClientMessage(new TranslationTextComponent(key), false);
                                     convertToMinion(player);
-                                    if (!player.abilities.isCreativeMode) heldItem.shrink(1);
+                                    if (!player.abilities.instabuild) heldItem.shrink(1);
                                 }
                             } else if (freeSlot) {
-                                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.require_binding", UtilLib.translate(ModItems.vampire_minion_binding.getTranslationKey())), true);
+                                player.displayClientMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.require_binding", UtilLib.translate(ModItems.vampire_minion_binding.getDescriptionId())), true);
                             }
                             return ActionResultType.SUCCESS;
                         }
@@ -442,29 +465,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             }
             return ActionResultType.PASS;
         }
-        return super.getEntityInteractionResult(player, hand);
-    }
-
-    @Override
-    protected SoundEvent getAmbientSound() {
-        return ModSounds.entity_vampire_scream;
-    }
-
-    @Override
-    protected int getExperiencePoints(PlayerEntity player) {
-        return 6 + getLevel();
-    }
-
-    @Override
-    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
-        return iMob ? ModEntities.vampire_imob : ModEntities.vampire;
-    }
-
-    @Override
-    protected void registerData() {
-        super.registerData();
-        getDataManager().register(LEVEL, -1);
-        getDataManager().register(TYPE, -1);
+        return super.mobInteract(player, hand);
     }
 
     @Override

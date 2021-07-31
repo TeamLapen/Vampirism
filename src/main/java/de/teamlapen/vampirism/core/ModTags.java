@@ -24,7 +24,7 @@ public class ModTags {
         public static final ITag.INamedTag<Block> CASTLE_SLAPS = tag("castle_slaps");
 
         private static ITag.INamedTag<Block> tag(ResourceLocation resourceLocation) {
-            return BlockTags.makeWrapperTag(resourceLocation.toString());
+            return BlockTags.bind(resourceLocation.toString());
         }
 
         private static ITag.INamedTag<Block> tag(String name) {
@@ -47,7 +47,7 @@ public class ModTags {
 
 
         private static ITag.INamedTag<Item> tag(ResourceLocation resourceLocation) {
-            return ItemTags.makeWrapperTag(resourceLocation.toString());
+            return ItemTags.bind(resourceLocation.toString());
         }
 
         private static ITag.INamedTag<Item> tag(String name) {
@@ -74,7 +74,7 @@ public class ModTags {
         public static final ITag.INamedTag<EntityType<?>> ADVANCED_VAMPIRE = tag("advanced_vampire");
 
         private static ITag.INamedTag<EntityType<?>> tag(ResourceLocation resourceLocation) {
-            return EntityTypeTags.getTagById(resourceLocation.toString());
+            return EntityTypeTags.bind(resourceLocation.toString());
         }
 
         private static ITag.INamedTag<EntityType<?>> tag(String name) {
@@ -87,7 +87,7 @@ public class ModTags {
         public static final ITag.INamedTag<Fluid> IMPURE_BLOOD = tag("vampirism_impure_blood");
 
         private static ITag.INamedTag<Fluid> tag(ResourceLocation resourceLocation) {
-            return FluidTags.makeWrapperTag(resourceLocation.toString());
+            return FluidTags.bind(resourceLocation.toString());
         }
 
         private static ITag.INamedTag<Fluid> tag(String name) {

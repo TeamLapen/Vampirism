@@ -12,17 +12,17 @@ public class SpawnTestAnimalCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("spawnTestAnimal")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .executes(context -> {
-                    return spawnTestAnimal(context.getSource().asPlayer());
+                    return spawnTestAnimal(context.getSource().getPlayerOrException());
                 });
     }
 
     private static int spawnTestAnimal(ServerPlayerEntity asPlayer) {
-        CowEntity cow = EntityType.COW.create(asPlayer.getEntityWorld());
+        CowEntity cow = EntityType.COW.create(asPlayer.getCommandSenderWorld());
         cow.setHealth(cow.getMaxHealth() / 4.2f);
-        cow.copyLocationAndAnglesFrom(asPlayer);
-        asPlayer.world.addEntity(cow);
+        cow.copyPosition(asPlayer);
+        asPlayer.level.addFreshEntity(cow);
         return 0;
     }
 }

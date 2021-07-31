@@ -39,7 +39,7 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     @Override
     public void onDeactivated(IVampirePlayer player) {
         ((VampirePlayer) player).getSpecialAttributes().half_invulnerable = false;
-        removePotionEffect(player, Effects.SLOWNESS);
+        removePotionEffect(player, Effects.MOVEMENT_SLOWDOWN);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     @Override
     protected boolean activate(IVampirePlayer vampire) {
         ((VampirePlayer) vampire).getSpecialAttributes().half_invulnerable = true;
-        addEffectInstance(vampire, new EffectInstance(Effects.SLOWNESS, getDuration(vampire) - 1, 1, false, false));
+        addEffectInstance(vampire, new EffectInstance(Effects.MOVEMENT_SLOWDOWN, getDuration(vampire) - 1, 1, false, false));
         return true;
     }
 

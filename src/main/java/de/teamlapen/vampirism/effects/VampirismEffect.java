@@ -27,16 +27,16 @@ public class VampirismEffect extends Effect {
     }
 
     @Override
-    public boolean isReady(int duration, int amplifier) {
-        return this == ModEffects.armor_regeneration && duration % 100 == 1;
-    }
-
-    @Override
-    public void performEffect(LivingEntity entityLivingBaseIn, int amplifier) {
+    public void applyEffectTick(LivingEntity entityLivingBaseIn, int amplifier) {
         if (this == ModEffects.armor_regeneration) {
             if (entityLivingBaseIn instanceof PlayerEntity) {
                 VampirePlayer.getOpt((PlayerEntity) entityLivingBaseIn).ifPresent(VampirePlayer::requestNaturalArmorUpdate);
             }
         }
+    }
+
+    @Override
+    public boolean isDurationEffectTick(int duration, int amplifier) {
+        return this == ModEffects.armor_regeneration && duration % 100 == 1;
     }
 }

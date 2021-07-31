@@ -48,7 +48,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return VampirismEntity.getAttributeBuilder().createMutableAttribute(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+        return VampirismEntity.getAttributeBuilder().add(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
     private final boolean countAsMonsterForSpawn;
     protected EnumStrength garlicResist = EnumStrength.NONE;
@@ -76,50 +76,45 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public boolean attackEntityAsMob(Entity entity) {
-        if (canSuckBloodFromPlayer && !world.isRemote && wantsBlood() && entity instanceof PlayerEntity && !Helper.isHunter(entity) && !UtilLib.canReallySee((LivingEntity) entity, this, true)) {
-            int amt = VampirePlayer.getOpt((PlayerEntity) entity).map(v -> v.onBite(this)).orElse(0);
-            drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
-            return true;
+    public void aiStep() {
+        if (this.tickCount % REFERENCE.REFRESH_GARLIC_TICKS == 3) {
+            isGettingGarlicDamage(level, true);
         }
-        for (ItemStack e : entity.getArmorInventoryList()) {
-            if (e != null && e.getItem() instanceof HunterCoatItem) {
-                int j = 1;
-                if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.TIER.ENHANCED))
-                    j = 2;
-                else if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.TIER.ULTIMATE))
-                    j = 3;
-                if (getRNG().nextInt((4 - j) * 2) == 0)
-                    addPotionEffect(new EffectInstance(ModEffects.poison, (int) (20 * Math.sqrt(j)), j));
+        if (this.tickCount % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
+            isGettingSundamage(level, true);
+        }
+        if (!level.isClientSide) {
+            if (isGettingSundamage(level) && tickCount % 40 == 11) {
+                double dmg = getAttribute(ModAttributes.sundamage).getValue();
+                if (dmg > 0) this.hurt(VReference.SUNDAMAGE, (float) dmg);
+            }
+            if (isGettingGarlicDamage(level) != EnumStrength.NONE) {
+                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(level), this.tickCount);
             }
         }
-        return super.attackEntityAsMob(entity);
+        if (!this.level.isClientSide) {
+            if (isAlive() && isInWater()) {
+                setAirSupply(300);
+                if (tickCount % 16 == 4) {
+                    addEffect(new EffectInstance(Effects.WEAKNESS, 80, 0));
+                }
+            }
+        }
+        super.aiStep();
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damageSource, float amount) {
-        if (vulnerableToFire) {
-            if (DamageSource.IN_FIRE.equals(damageSource)) {
-                return this.attackEntityFrom(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amount));
-            } else if (DamageSource.ON_FIRE.equals(damageSource)) {
-                return this.attackEntityFrom(VReference.VAMPIRE_ON_FIRE, calculateFireDamage(amount));
-            }
-        }
-        return super.attackEntityFrom(damageSource, amount);
-    }
-
-    @Override
-    public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
+    public boolean checkSpawnRules(IWorld worldIn, SpawnReason spawnReasonIn) {
         if (spawnRestriction.level >= SpawnRestriction.SIMPLE.level) {
             if (isGettingSundamage(worldIn, true) || isGettingGarlicDamage(worldIn, true) != EnumStrength.NONE)
                 return false;
             if (spawnRestriction.level >= SpawnRestriction.NORMAL.level) {
-                if (worldIn.getBrightness(getPosition()) > 0.5 && rand.nextInt(5) != 0) {
+                if (worldIn.getBrightness(blockPosition()) > 0.5 && random.nextInt(5) != 0) {
                     return false;
                 }
-                if (this.world.isBlockPresent(getPosition()) && worldIn instanceof ServerWorld) { //TODO check performance
-                    if (((ServerWorld) world).getWorldServer().func_241827_a(SectionPos.from(getPosition()), Structure.VILLAGE).findAny().isPresent()) {
-                        if (getRNG().nextInt(60) != 0) {
+                if (this.level.isLoaded(blockPosition()) && worldIn instanceof ServerWorld) { //TODO check performance
+                    if (((ServerWorld) level).getWorldServer().startsForFeature(SectionPos.of(blockPosition()), Structure.VILLAGE).findAny().isPresent()) {
+                        if (getRandom().nextInt(60) != 0) {
                             return false;
                         }
                     }
@@ -132,7 +127,22 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
             }
         }
 
-        return super.canSpawn(worldIn, spawnReasonIn);
+        return super.checkSpawnRules(worldIn, spawnReasonIn);
+    }
+
+    @Override
+    public void die(DamageSource cause) {
+        super.die(cause);
+        if (cause.getDirectEntity() instanceof CrossbowArrowEntity && Helper.isHunter(cause.getEntity())) {
+            dropSoul = true;
+        } else if (cause.getDirectEntity() instanceof PlayerEntity && Helper.isHunter(cause.getDirectEntity())) {
+            ItemStack weapon = ((PlayerEntity) cause.getDirectEntity()).getMainHandItem();
+            if (!weapon.isEmpty() && weapon.getItem() instanceof IVampireFinisher) {
+                dropSoul = true;
+            }
+        } else {
+            dropSoul = false;//In case a previous death has been canceled somehow
+        }
     }
 
     @Override
@@ -141,8 +151,24 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
-        this.addPotionEffect(new EffectInstance(Effects.REGENERATION, amt * 20));
+    public boolean doHurtTarget(Entity entity) {
+        if (canSuckBloodFromPlayer && !level.isClientSide && wantsBlood() && entity instanceof PlayerEntity && !Helper.isHunter(entity) && !UtilLib.canReallySee((LivingEntity) entity, this, true)) {
+            int amt = VampirePlayer.getOpt((PlayerEntity) entity).map(v -> v.onBite(this)).orElse(0);
+            drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
+            return true;
+        }
+        for (ItemStack e : entity.getArmorSlots()) {
+            if (e != null && e.getItem() instanceof HunterCoatItem) {
+                int j = 1;
+                if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.TIER.ENHANCED))
+                    j = 2;
+                else if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.TIER.ULTIMATE))
+                    j = 3;
+                if (getRandom().nextInt((4 - j) * 2) == 0)
+                    addEffect(new EffectInstance(ModEffects.poison, (int) (20 * Math.sqrt(j)), j));
+            }
+        }
+        return super.doHurtTarget(entity);
     }
 
     @Override
@@ -154,8 +180,8 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public CreatureAttribute getCreatureAttribute() {
-        return VReference.VAMPIRE_CREATURE_ATTRIBUTE;
+    public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
+        this.addEffect(new EffectInstance(Effects.REGENERATION, amt * 20));
     }
 
     @Override
@@ -173,57 +199,31 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
+    public CreatureAttribute getMobType() {
+        return VReference.VAMPIRE_CREATURE_ATTRIBUTE;
+    }
+
+    @Override
+    public boolean hurt(DamageSource damageSource, float amount) {
+        if (vulnerableToFire) {
+            if (DamageSource.IN_FIRE.equals(damageSource)) {
+                return this.hurt(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amount));
+            } else if (DamageSource.ON_FIRE.equals(damageSource)) {
+                return this.hurt(VReference.VAMPIRE_ON_FIRE, calculateFireDamage(amount));
+            }
+        }
+        return super.hurt(damageSource, amount);
+    }
+
+    @Override
     public boolean isGettingSundamage(IWorld iWorld, boolean forceRefresh) {
         if (!forceRefresh) return sundamageCache;
-        return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.world.getProfiler()));
+        return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.level.getProfiler()));
     }
 
     @Override
     public boolean isIgnoringSundamage() {
-        return this.isPotionActive(ModEffects.sunscreen);
-    }
-
-    @Override
-    public void livingTick() {
-        if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 3) {
-            isGettingGarlicDamage(world, true);
-        }
-        if (this.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
-            isGettingSundamage(world, true);
-        }
-        if (!world.isRemote) {
-            if (isGettingSundamage(world) && ticksExisted % 40 == 11) {
-                double dmg = getAttribute(ModAttributes.sundamage).getValue();
-                if (dmg > 0) this.attackEntityFrom(VReference.SUNDAMAGE, (float) dmg);
-            }
-            if (isGettingGarlicDamage(world) != EnumStrength.NONE) {
-                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(world), this.ticksExisted);
-            }
-        }
-        if (!this.world.isRemote) {
-            if (isAlive() && isInWater()) {
-                setAir(300);
-                if (ticksExisted % 16 == 4) {
-                    addPotionEffect(new EffectInstance(Effects.WEAKNESS, 80, 0));
-                }
-            }
-        }
-        super.livingTick();
-    }
-
-    @Override
-    public void onDeath(DamageSource cause) {
-        super.onDeath(cause);
-        if (cause.getImmediateSource() instanceof CrossbowArrowEntity && Helper.isHunter(cause.getTrueSource())) {
-            dropSoul = true;
-        } else if (cause.getImmediateSource() instanceof PlayerEntity && Helper.isHunter(cause.getImmediateSource())) {
-            ItemStack weapon = ((PlayerEntity) cause.getImmediateSource()).getHeldItemMainhand();
-            if (!weapon.isEmpty() && weapon.getItem() instanceof IVampireFinisher) {
-                dropSoul = true;
-            }
-        } else {
-            dropSoul = false;//In case a previous death has been canceled somehow
-        }
+        return this.hasEffect(ModEffects.sunscreen);
     }
 
     /**
@@ -235,7 +235,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
     @Override
     public boolean useBlood(int amt, boolean allowPartial) {
-        this.addPotionEffect(new EffectInstance(Effects.WEAKNESS, amt * 20));
+        this.addEffect(new EffectInstance(Effects.WEAKNESS, amt * 20));
         return true;
     }
 
@@ -255,13 +255,13 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    protected void onDeathUpdate() {
+    protected void tickDeath() {
         if (this.deathTime == 19) {
-            if (!this.world.isRemote && (dropSoul && this.world.getGameRules().getBoolean(GameRules.DO_MOB_LOOT))) {
-                this.world.addEntity(new SoulOrbEntity(this.world, this.getPosX(), this.getPosY(), this.getPosZ(), SoulOrbEntity.VARIANT.VAMPIRE));
+            if (!this.level.isClientSide && (dropSoul && this.level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))) {
+                this.level.addFreshEntity(new SoulOrbEntity(this.level, this.getX(), this.getY(), this.getZ(), SoulOrbEntity.VARIANT.VAMPIRE));
             }
         }
-        super.onDeathUpdate();
+        super.tickDeath();
     }
 
     @Override
@@ -275,9 +275,9 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
      * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#cursed_earth}
      */
     private boolean getCanSpawnHereRestricted(IWorld iWorld) {
-        boolean vampireBiome = ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(iWorld, this.getPosition())) || ModBiomes.vampire_forest_hills.getRegistryName().equals(Helper.getBiomeId(iWorld, this.getPosition()));
+        boolean vampireBiome = ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(iWorld, this.blockPosition())) || ModBiomes.vampire_forest_hills.getRegistryName().equals(Helper.getBiomeId(iWorld, this.blockPosition()));
         if (!vampireBiome) return isLowLightLevel(iWorld);
-        BlockState iblockstate = iWorld.getBlockState((this.getPosition()).down());
+        BlockState iblockstate = iWorld.getBlockState((this.blockPosition()).below());
         return ModBlocks.cursed_earth.equals(iblockstate.getBlock());
     }
 

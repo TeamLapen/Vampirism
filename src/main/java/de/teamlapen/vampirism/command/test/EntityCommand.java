@@ -18,20 +18,20 @@ public class EntityCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("entity")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ALL))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ALL))
                 .executes(context -> {
-                    return entity(context.getSource(), context.getSource().asPlayer());
+                    return entity(context.getSource(), context.getSource().getPlayerOrException());
                 });
     }
 
     private static int entity(CommandSource commandSource, ServerPlayerEntity asPlayer) {
-        List<Entity> l = asPlayer.getEntityWorld().getEntitiesWithinAABBExcludingEntity(asPlayer, asPlayer.getBoundingBox().grow(3, 2, 3));
+        List<Entity> l = asPlayer.getCommandSenderWorld().getEntities(asPlayer, asPlayer.getBoundingBox().inflate(3, 2, 3));
         for (Entity entity : l) {
             if (entity instanceof CreatureEntity) {
                 ResourceLocation id = Helper.getIDSafe(entity.getType());
-                commandSource.sendFeedback(new StringTextComponent(id.toString()), true);
+                commandSource.sendSuccess(new StringTextComponent(id.toString()), true);
             } else {
-                commandSource.sendFeedback(new TranslationTextComponent("Not biteable %s", entity.getClass().getName()), true);
+                commandSource.sendSuccess(new TranslationTextComponent("Not biteable %s", entity.getClass().getName()), true);
             }
         }
         return 0;

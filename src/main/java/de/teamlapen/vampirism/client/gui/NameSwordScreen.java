@@ -50,31 +50,31 @@ public class NameSwordScreen extends Screen {
     @Override
     public void init() {
         super.init();
-        this.addButton(new OptionButton(this.width / 2 - 155, this.height / 6 + 96, 150, 20, AbstractOption.AO, this.yes, (context) -> {
-            if (!StringUtils.isBlank(nameField.getText())) {
-                NameSwordScreen.this.sword.setDisplayName(new StringTextComponent(nameField.getText()));
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, nameField.getText()));
+        this.addButton(new OptionButton(this.width / 2 - 155, this.height / 6 + 96, 150, 20, AbstractOption.AMBIENT_OCCLUSION, this.yes, (context) -> {
+            if (!StringUtils.isBlank(nameField.getValue())) {
+                NameSwordScreen.this.sword.setHoverName(new StringTextComponent(nameField.getValue()));
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, nameField.getValue()));
             }
-            this.minecraft.displayGuiScreen(null);
-            this.minecraft.setGameFocused(true);
+            this.minecraft.setScreen(null);
+            this.minecraft.setWindowActive(true);
         }));
-        this.addButton(new OptionButton(this.width / 2 - 155 + 160, this.height / 6 + 96, 150, 20, AbstractOption.AO, this.no, (context) -> {
+        this.addButton(new OptionButton(this.width / 2 - 155 + 160, this.height / 6 + 96, 150, 20, AbstractOption.AMBIENT_OCCLUSION, this.no, (context) -> {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, VampirismVampireSword.DO_NOT_NAME_STRING));
-            this.minecraft.displayGuiScreen(null);
-            this.minecraft.setGameFocused(true);
+            this.minecraft.setScreen(null);
+            this.minecraft.setWindowActive(true);
         }));
 
         this.listLines.clear();
-        this.listLines.addAll(this.font.trimStringToWidth(this.text2, this.width - 50));
+        this.listLines.addAll(this.font.split(this.text2, this.width - 50));
 
         this.nameField = new TextFieldWidget(this.font, this.width / 2 - 155 + 77, this.height / 6 + 70, 155, 20, new StringTextComponent("text_sword"));
         this.nameField.setTextColor(-1);
-        this.nameField.setDisabledTextColour(-1);
-        this.nameField.setEnableBackgroundDrawing(true);
-        this.nameField.setMaxStringLength(35);
-        this.nameField.setText(sword_names[new Random().nextInt(sword_names.length)]);
+        this.nameField.setTextColorUneditable(-1);
+        this.nameField.setBordered(true);
+        this.nameField.setMaxLength(35);
+        this.nameField.setValue(sword_names[new Random().nextInt(sword_names.length)]);
         this.children.add(nameField);
-        this.setFocusedDefault(nameField);
+        this.setInitialFocus(nameField);
     }
 
     @Override
@@ -83,8 +83,8 @@ public class NameSwordScreen extends Screen {
         drawCenteredString(stack, this.font, this.text1, this.width / 2, 70, 16777215);
         int i = 90;
         for (IReorderingProcessor s : this.listLines) {
-            font.func_238422_b_(stack, s, (float) this.width / 2 - (float) font.func_243245_a(s) / 2.0F, (float) i, 16777215);
-            i += this.font.FONT_HEIGHT;
+            font.draw(stack, s, (float) this.width / 2 - (float) font.width(s) / 2.0F, (float) i, 16777215);
+            i += this.font.lineHeight;
         }
         this.nameField.render(stack, mouseX, mouseY, partialTicks);
 
@@ -96,9 +96,9 @@ public class NameSwordScreen extends Screen {
 
     @Override
     public void resize(Minecraft p_resize_1_, int p_resize_2_, int p_resize_3_) {
-        String text = nameField.getText();
+        String text = nameField.getValue();
         super.resize(p_resize_1_, p_resize_2_, p_resize_3_); //Text gets deleted as this calls init again
-        nameField.setText(text);
+        nameField.setValue(text);
     }
 
     @Override

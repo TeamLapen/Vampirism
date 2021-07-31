@@ -60,20 +60,13 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource source, float amount) {
-        return false;
-    }
-
-    @Override
-    public IPacket<?> createSpawnPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    /**
-     * Exclude shooter from area of effect damage
-     */
-    public void excludeShooter() {
-        this.excludeShooter = true;
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putFloat("direct_damage", directDamage);
+        compound.putFloat("indirect_damage", indirectDamage);
+        compound.putBoolean("gothrough", gothrough);
+        compound.putInt("max_ticks", maxTicks);
+        compound.putFloat("motion_factor", motionFactor);
     }
 
     /**
@@ -83,38 +76,45 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
      * @param excludeEntity If given this will not receive AOE damage
      */
     public void explode(int distanceSq, @Nullable Entity excludeEntity) {
-        @Nullable Entity shootingEntity = getShooter();
-        List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(distanceSq / 2d), EntityPredicates.IS_ALIVE.and(EntityPredicates.NOT_SPECTATING));
+        @Nullable Entity shootingEntity = getOwner();
+        List<Entity> list = this.level.getEntities(this, this.getBoundingBox().inflate(distanceSq / 2d), EntityPredicates.ENTITY_STILL_ALIVE.and(EntityPredicates.NO_SPECTATORS));
         for (Entity e : list) {
             if ((excludeShooter && e == shootingEntity) || e == excludeEntity) {
                 continue;
             }
-            if (e instanceof LivingEntity && e.getDistanceSq(this) < distanceSq) {
+            if (e instanceof LivingEntity && e.distanceToSqr(this) < distanceSq) {
                 LivingEntity entity = (LivingEntity) e;
-                entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 200, 1));
-                entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, getShooter()), indirectDamage);
+                entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 200, 1));
+                entity.hurt(DamageSource.indirectMagic(this, getOwner()), indirectDamage);
             }
         }
-        if (!this.world.isRemote) {
-            ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_1"), 7, 0xA01010, 0.2F), this.getPosX(), this.getPosY(), this.getPosZ(), 40, 1, 1, 1, 0);
-            ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_6"), 10, 0x700505), this.getPosX(), this.getPosY(), this.getPosZ(), 15, 1, 1, 1, 0);
+        if (!this.level.isClientSide) {
+            ModParticles.spawnParticlesServer(this.level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_1"), 7, 0xA01010, 0.2F), this.getX(), this.getY(), this.getZ(), 40, 1, 1, 1, 0);
+            ModParticles.spawnParticlesServer(this.level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_6"), 10, 0x700505), this.getX(), this.getY(), this.getZ(), 15, 1, 1, 1, 0);
         }
         this.remove();
     }
 
+    /**
+     * Exclude shooter from area of effect damage
+     */
+    public void excludeShooter() {
+        this.excludeShooter = true;
+    }
+
     @Override
-    public float getCollisionBorderSize() {
+    public IPacket<?> getAddEntityPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    public float getPickRadius() {
         return 0.5f;
     }
 
     @Override
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
-        this.directDamage = compound.getFloat("direct_damage");
-        this.indirectDamage = compound.getFloat("indirect_damage");
-        this.gothrough = compound.getBoolean("gothrough");
-        this.maxTicks = compound.getInt("max_ticks");
-        this.motionFactor = compound.getFloat("motion_factor");
+    public boolean hurt(DamageSource source, float amount) {
+        return false;
     }
 
     /**
@@ -143,19 +143,29 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
     }
 
     @Override
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
+        this.directDamage = compound.getFloat("direct_damage");
+        this.indirectDamage = compound.getFloat("indirect_damage");
+        this.gothrough = compound.getBoolean("gothrough");
+        this.maxTicks = compound.getInt("max_ticks");
+        this.motionFactor = compound.getFloat("motion_factor");
+    }
+
+    @Override
     public void tick() {
         super.tick();
-        if (this.world.isRemote) {
-            Vector3d center = this.getPositionVec();
-            ModParticles.spawnParticlesClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010, 0f), center.x, center.y, center.z, 5, getCollisionBorderSize(), this.rand);
+        if (this.level.isClientSide) {
+            Vector3d center = this.position();
+            ModParticles.spawnParticlesClient(this.level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010, 0f), center.x, center.y, center.z, 5, getPickRadius(), this.random);
 
-            if (this.ticksExisted % 3 == 0) {
-                ModParticles.spawnParticleClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);
+            if (this.tickCount % 3 == 0) {
+                ModParticles.spawnParticleClient(this.level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);
             }
         }
 
-        if (this.ticksExisted > this.maxTicks) {
-            if (!this.world.isRemote()) {
+        if (this.tickCount > this.maxTicks) {
+            if (!this.level.isClientSide()) {
                 explode(4, null);
             } else {
                 this.remove();
@@ -165,17 +175,7 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
-        compound.putFloat("direct_damage", directDamage);
-        compound.putFloat("indirect_damage", indirectDamage);
-        compound.putBoolean("gothrough", gothrough);
-        compound.putInt("max_ticks", maxTicks);
-        compound.putFloat("motion_factor", motionFactor);
-    }
-
-    @Override
-    protected float getMotionFactor() {
+    protected float getInertia() {
         return motionFactor;
     }
 
@@ -187,19 +187,14 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
     }
 
     @Override
-    protected IParticleData getParticle() {
+    protected IParticleData getTrailParticle() {
         return ParticleTypes.UNDERWATER;
     }
 
     @Override
-    protected boolean isFireballFiery() {
-        return false;
-    }
-
-    @Override
-    protected void onImpact(RayTraceResult result) {
-        if (!this.world.isRemote) {
-            if (initialNoClip && this.ticksExisted > 20) {
+    protected void onHit(RayTraceResult result) {
+        if (!this.level.isClientSide) {
+            if (initialNoClip && this.tickCount > 20) {
                 if (result.getType() == RayTraceResult.Type.BLOCK) {
                     return;
                 }
@@ -219,13 +214,18 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
         }
     }
 
+    @Override
+    protected boolean shouldBurn() {
+        return false;
+    }
+
     private void hitEntity(Entity entity) {
-        entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, getShooter()), directDamage);
+        entity.hurt(DamageSource.indirectMagic(this, getOwner()), directDamage);
         if (entity instanceof LivingEntity) {
-            if (this.rand.nextInt(3) == 0) {
-                ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.BLINDNESS, 100));
-                ((LivingEntity) entity).applyKnockback(1f, -this.getMotion().x, -this.getMotion().z); //knockback
-                ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 200, 1));
+            if (this.random.nextInt(3) == 0) {
+                ((LivingEntity) entity).addEffect(new EffectInstance(Effects.BLINDNESS, 100));
+                ((LivingEntity) entity).knockback(1f, -this.getDeltaMovement().x, -this.getDeltaMovement().z); //knockback
+                ((LivingEntity) entity).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 200, 1));
 
             }
         }

@@ -53,7 +53,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     /**
      * Used for holding a crossbow
      */
-    private static final DataParameter<Boolean> RAISED_ARM = EntityDataManager.createKey(HunterMinionEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> RAISED_ARM = EntityDataManager.defineId(HunterMinionEntity.class, DataSerializers.BOOLEAN);
 
     static {
         MinionData.registerDataType(HunterMinionData.ID, HunterMinionData::new);
@@ -89,8 +89,12 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         return Lists.newArrayList(MinionTasks.follow_lord, MinionTasks.defend_area, MinionTasks.stay, MinionTasks.collect_hunter_items, MinionTasks.protect_lord);
     }
 
-    public int getHatType() {
-        return this.getItemStackFromSlot(EquipmentSlotType.HEAD).isEmpty() ? this.getMinionData().map(d -> d.hat).orElse(0) : -2;
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (this.tickCount % 100 == 0) {
+            this.updateAttackGoal();
+        }
     }
 
     public void setHatType(int type) {
@@ -114,37 +118,33 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         return this.getMinionData().map(d -> d.minionSkin).orElse(false);
     }
 
+    public int getHatType() {
+        return this.getItemBySlot(EquipmentSlotType.HEAD).isEmpty() ? this.getMinionData().map(d -> d.hat).orElse(0) : -2;
+    }
+
     @Override
     public boolean isCrossbowInMainhand() {
-        return this.getHeldItemMainhand().getItem() instanceof VampirismItemCrossbow;
+        return this.getMainHandItem().getItem() instanceof VampirismItemCrossbow;
     }
 
     public boolean isSwingingArms() {
-        return this.getDataManager().get(RAISED_ARM);
+        return this.getEntityData().get(RAISED_ARM);
     }
 
     protected void setSwingingArms(boolean b) {
-        this.getDataManager().set(RAISED_ARM, b);
-    }
-
-    @Override
-    public void livingTick() {
-        super.livingTick();
-        if (this.ticksExisted % 100 == 0) {
-            this.updateAttackGoal();
-        }
+        this.getEntityData().set(RAISED_ARM, b);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void openAppearanceScreen() {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().displayGuiScreen(new HunterMinionAppearanceScreen(this, Minecraft.getInstance().currentScreen)));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().setScreen(new HunterMinionAppearanceScreen(this, Minecraft.getInstance().screen)));
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void openStatsScreen() {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().displayGuiScreen(new HunterMinionStatsScreen(this, Minecraft.getInstance().currentScreen)));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().setScreen(new HunterMinionStatsScreen(this, Minecraft.getInstance().screen)));
     }
 
     public void setHunterType(int type, boolean minionSkin) {
@@ -176,27 +176,14 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     protected boolean canConsume(ItemStack stack) {
         if (!super.canConsume(stack)) return false;
         boolean fullHealth = this.getHealth() == this.getMaxHealth();
-        return !stack.isFood() || !fullHealth || stack.getItem().getFood().canEatWhenFull();
+        return !stack.isEdible() || !fullHealth || stack.getItem().getFoodProperties().canAlwaysEat();
     }
 
     @Override
-    protected ActionResultType getEntityInteractionResult(PlayerEntity player, Hand hand) {
-        if (!this.world.isRemote() && isLord(player) && minionData != null) {
-            ItemStack heldItem = player.getHeldItem(hand);
-            if (heldItem.getItem() instanceof MinionUpgradeItem && ((MinionUpgradeItem) heldItem.getItem()).getFaction() == this.getFaction()) {
-                if (this.minionData.level + 1 >= ((MinionUpgradeItem) heldItem.getItem()).getMinLevel() && this.minionData.level + 1 <= ((MinionUpgradeItem) heldItem.getItem()).getMaxLevel()) {
-                    this.minionData.level++;
-                    if (!player.abilities.isCreativeMode) heldItem.shrink(1);
-                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_upgrade"), false);
-                    HelperLib.sync(this);
-                } else {
-                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_wrong"), false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.getEntityData().define(RAISED_ARM, false);
 
-                }
-                return ActionResultType.SUCCESS;
-            }
-        }
-        return super.getEntityInteractionResult(player, hand);
     }
 
     @Override
@@ -207,10 +194,23 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.getDataManager().register(RAISED_ARM, false);
+    protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+        if (!this.level.isClientSide() && isLord(player) && minionData != null) {
+            ItemStack heldItem = player.getItemInHand(hand);
+            if (heldItem.getItem() instanceof MinionUpgradeItem && ((MinionUpgradeItem) heldItem.getItem()).getFaction() == this.getFaction()) {
+                if (this.minionData.level + 1 >= ((MinionUpgradeItem) heldItem.getItem()).getMinLevel() && this.minionData.level + 1 <= ((MinionUpgradeItem) heldItem.getItem()).getMaxLevel()) {
+                    this.minionData.level++;
+                    if (!player.abilities.instabuild) heldItem.shrink(1);
+                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_upgrade"), false);
+                    HelperLib.sync(this);
+                } else {
+                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_wrong"), false);
 
+                }
+                return ActionResultType.SUCCESS;
+            }
+        }
+        return super.mobInteract(player, hand);
     }
 
     @Override
@@ -224,7 +224,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     private void updateAttackGoal() {
-        if (this.world.isRemote()) return;
+        if (this.level.isClientSide()) return;
         boolean usingCrossbow = isCrossbowInMainhand();
         if (crossbowTask && !usingCrossbow) {
             this.goalSelector.removeGoal(crossbowGoal);
@@ -296,7 +296,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
         @Override
         public IFormattableTextComponent getFormattedName() {
-            return super.getFormattedName().mergeStyle(VReference.HUNTER_FACTION.getChatColor());
+            return super.getFormattedName().withStyle(VReference.HUNTER_FACTION.getChatColor());
         }
 
         public int getHealthLevel() {

@@ -20,17 +20,17 @@ public class MinionUpgradeItem extends VampirismItem {
     private final IFaction<?> faction;
 
     public MinionUpgradeItem(String regName, int minLevel, int maxLevel, IFaction<?> faction) {
-        super(regName, new Item.Properties().group(VampirismMod.creativeTab));
+        super(regName, new Item.Properties().tab(VampirismMod.creativeTab));
         this.faction = faction;
         this.maxLevel = maxLevel;
         this.minLevel = minLevel;
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslationTextComponent("item.vampirism.minion_upgrade_item.desc").mergeStyle(TextFormatting.GRAY));
-        tooltip.add(new TranslationTextComponent("text.vampirism.for_to_levels", minLevel + 1, maxLevel + 1).mergeStyle(TextFormatting.GRAY));
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        tooltip.add(new TranslationTextComponent("item.vampirism.minion_upgrade_item.desc").withStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent("text.vampirism.for_to_levels", minLevel + 1, maxLevel + 1).withStyle(TextFormatting.GRAY));
     }
 
     public IFaction<?> getFaction() {

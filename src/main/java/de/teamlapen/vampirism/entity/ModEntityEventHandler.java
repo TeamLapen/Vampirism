@@ -75,9 +75,9 @@ public class ModEntityEventHandler {
 
     public static <T extends MobEntity, S extends LivingEntity, Q extends NearestAttackableTargetGoal<S>> void makeVampireFriendly(String name, T e, Class<Q> targetClass, Class<S> targetEntityClass, int attackPriority, BiFunction<T, Predicate<LivingEntity>, Q> replacement, Predicate<EntityType<? extends T>> typeCheck) {
         Goal target = null;
-        for (PrioritizedGoal t : e.targetSelector.goals) {
+        for (PrioritizedGoal t : e.targetSelector.availableGoals) {
             Goal g = t.getGoal();
-            if (targetClass.equals(g.getClass()) && t.getPriority() == attackPriority && targetEntityClass.equals(((NearestAttackableTargetGoal<?>) g).targetClass)) {
+            if (targetClass.equals(g.getClass()) && t.getPriority() == attackPriority && targetEntityClass.equals(((NearestAttackableTargetGoal<?>) g).targetType)) {
                 target = g;
                 break;
             }
@@ -90,7 +90,7 @@ public class ModEntityEventHandler {
             }
         } else {
             if (entityAIReplacementWarnMap.getOrDefault(name, true)) {
-                LOGGER.warn("Could not replace {} attack target task for {}", name, e.getType().getName());
+                LOGGER.warn("Could not replace {} attack target task for {}", name, e.getType().getDescription());
                 entityAIReplacementWarnMap.put(name, false);
             }
 
@@ -112,8 +112,8 @@ public class ModEntityEventHandler {
     public void onEntityAttacked(LivingAttackEvent event) {
         //Probably not a very "clean" solution, but the only one I found
         boolean client = EffectiveSide.get().isClient();
-        if (!(client ? skipAttackDamageOnceClient : skipAttackDamageOnceServer) && "player".equals(event.getSource().getDamageType()) && event.getSource().getTrueSource() instanceof PlayerEntity) {
-            ItemStack stack = ((PlayerEntity) event.getSource().getTrueSource()).getHeldItemMainhand();
+        if (!(client ? skipAttackDamageOnceClient : skipAttackDamageOnceServer) && "player".equals(event.getSource().getMsgId()) && event.getSource().getEntity() instanceof PlayerEntity) {
+            ItemStack stack = ((PlayerEntity) event.getSource().getEntity()).getMainHandItem();
             if (!stack.isEmpty() && stack.getItem() instanceof IFactionSlayerItem) {
                 IFactionSlayerItem item = (IFactionSlayerItem) stack.getItem();
                 IFaction faction = VampirismAPI.factionRegistry().getFaction(event.getEntity());
@@ -125,7 +125,7 @@ public class ModEntityEventHandler {
                     } else {
                         skipAttackDamageOnceServer = true;
                     }
-                    boolean result = event.getEntityLiving().attackEntityFrom(event.getSource(), amt);
+                    boolean result = event.getEntityLiving().hurt(event.getSource(), amt);
                     if (client) {
                         skipAttackDamageOnceClient = false;
                     } else {
@@ -139,8 +139,8 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onEntityCheckSpawn(LivingSpawnEvent.CheckSpawn event) {
-        BlockPos pos = new BlockPos(event.getX() - 0.4F, event.getY(), event.getZ() - 0.4F).down();
-        if (!event.getWorld().isBlockLoaded(pos)) return;
+        BlockPos pos = new BlockPos(event.getX() - 0.4F, event.getY(), event.getZ() - 0.4F).below();
+        if (!event.getWorld().hasChunkAt(pos)) return;
         BlockState blockState = event.getWorld().getBlockState(pos);
         Block b = blockState.getBlock();
         boolean deny = false;
@@ -163,18 +163,18 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onEntityEquipmentChange(LivingEquipmentChangeEvent event) {
-        if (event.getSlot().getSlotType() == EquipmentSlotType.Group.ARMOR && event.getEntity() instanceof PlayerEntity) {
+        if (event.getSlot().getType() == EquipmentSlotType.Group.ARMOR && event.getEntity() instanceof PlayerEntity) {
             VampirePlayer.getOpt((PlayerEntity) event.getEntity()).ifPresent(VampirePlayer::requestNaturalArmorUpdate);
         }
     }
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (!event.getWorld().isRemote()) {
+        if (!event.getWorld().isClientSide()) {
             if (event.getEntity() instanceof IAdjustableLevel) {
                 IAdjustableLevel entity = (IAdjustableLevel) event.getEntity();
                 if (entity.getLevel() == -1) {
-                    Difficulty d = DifficultyCalculator.findDifficultyForPos(event.getWorld(), event.getEntity().getPosition(), 30);
+                    Difficulty d = DifficultyCalculator.findDifficultyForPos(event.getWorld(), event.getEntity().blockPosition(), 30);
                     int l = entity.suggestLevel(d);
                     if (l > entity.getMaxLevel()) {
                         l = entity.getMaxLevel();
@@ -204,7 +204,7 @@ public class ModEntityEventHandler {
             //Zombie AI changes
             if (VampirismConfig.BALANCE.zombieIgnoreVampire.get()) {
                 if (event.getEntity() instanceof ZombieEntity) {
-                    makeVampireFriendly("zombie", (ZombieEntity) event.getEntity(), NearestAttackableTargetGoal.class, PlayerEntity.class, 2, (entity, predicate) -> entity instanceof DrownedEntity ? new NearestAttackableTargetGoal<>(entity, PlayerEntity.class, 10, true, false, predicate.and(((DrownedEntity) entity)::shouldAttack)) : new NearestAttackableTargetGoal<>(entity, PlayerEntity.class, 10, true, false, predicate), type -> type == EntityType.ZOMBIE || type == EntityType.HUSK || type == EntityType.ZOMBIE_VILLAGER || type == EntityType.DROWNED);
+                    makeVampireFriendly("zombie", (ZombieEntity) event.getEntity(), NearestAttackableTargetGoal.class, PlayerEntity.class, 2, (entity, predicate) -> entity instanceof DrownedEntity ? new NearestAttackableTargetGoal<>(entity, PlayerEntity.class, 10, true, false, predicate.and(((DrownedEntity) entity)::okTarget)) : new NearestAttackableTargetGoal<>(entity, PlayerEntity.class, 10, true, false, predicate), type -> type == EntityType.ZOMBIE || type == EntityType.HUSK || type == EntityType.ZOMBIE_VILLAGER || type == EntityType.DROWNED);
                     //Also replace attack villager task for entities that have it
                     makeVampireFriendly("villager zombie", (ZombieEntity) event.getEntity(), NearestAttackableTargetGoal.class, AbstractVillagerEntity.class, 3, (entity, predicate) -> new NearestAttackableTargetGoal<>(entity, AbstractVillagerEntity.class, 10, true, false, predicate), type -> type == EntityType.ZOMBIE || type == EntityType.HUSK || type == EntityType.ZOMBIE_VILLAGER || type == EntityType.DROWNED);
                     return;
@@ -222,8 +222,8 @@ public class ModEntityEventHandler {
 
                 Goal mobTarget = null;
 
-                for (PrioritizedGoal t : ((IronGolemEntity) event.getEntity()).targetSelector.goals) {
-                    if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 3 && MobEntity.class.equals(((NearestAttackableTargetGoal<?>) t.getGoal()).targetClass)) {
+                for (PrioritizedGoal t : ((IronGolemEntity) event.getEntity()).targetSelector.availableGoals) {
+                    if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 3 && MobEntity.class.equals(((NearestAttackableTargetGoal<?>) t.getGoal()).targetType)) {
                         mobTarget = t.getGoal();
                         break;
                     }
@@ -241,7 +241,7 @@ public class ModEntityEventHandler {
             }
 
             if (event.getEntity() instanceof VillagerEntity) {
-                Optional<TotemTileEntity> tile = TotemHelper.getTotemNearPos(((ServerWorld) event.getWorld()), event.getEntity().getPosition(), true);
+                Optional<TotemTileEntity> tile = TotemHelper.getTotemNearPos(((ServerWorld) event.getWorld()), event.getEntity().blockPosition(), true);
                 if (tile.filter(t -> VReference.HUNTER_FACTION.equals(t.getControllingFaction())).isPresent()) {
                     ExtendedCreature.getSafe(event.getEntity()).ifPresent(e -> e.setPoisonousBlood(true));
                 }
@@ -252,9 +252,9 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onEntityLootingEvent(LootingLevelEvent event) {
-        if (event.getDamageSource() != null && event.getDamageSource().getTrueSource() instanceof PlayerEntity) {
+        if (event.getDamageSource() != null && event.getDamageSource().getEntity() instanceof PlayerEntity) {
             @Nullable
-            IItemWithTier.TIER hunterCoatTier = VampirismPlayerAttributes.get((PlayerEntity) event.getDamageSource().getTrueSource()).getHuntSpecial().fullHunterCoat;
+            IItemWithTier.TIER hunterCoatTier = VampirismPlayerAttributes.get((PlayerEntity) event.getDamageSource().getEntity()).getHuntSpecial().fullHunterCoat;
             if (hunterCoatTier == IItemWithTier.TIER.ENHANCED || hunterCoatTier == IItemWithTier.TIER.ULTIMATE) {
                 event.setLootingLevel(Math.min(event.getLootingLevel() + 1, 3));
             }
@@ -302,9 +302,9 @@ public class ModEntityEventHandler {
     @SubscribeEvent
     public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
         if (event.getEntity() instanceof CreatureEntity) {
-            event.getEntity().getEntityWorld().getProfiler().startSection("vampirism_extended_creature");
+            event.getEntity().getCommandSenderWorld().getProfiler().push("vampirism_extended_creature");
             ExtendedCreature.getSafe(event.getEntity()).ifPresent(IExtendedCreatureVampirism::tick);
-            event.getEntity().getEntityWorld().getProfiler().endSection();
+            event.getEntity().getCommandSenderWorld().getProfiler().pop();
 
         }
     }

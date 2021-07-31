@@ -49,11 +49,11 @@ import java.util.UUID;
  */
 public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBaseEntity implements ICurableConvertedCreature<T>, ISyncable {
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final DataParameter<Boolean> CONVERTING = EntityDataManager.createKey(ConvertedCreatureEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> CONVERTING = EntityDataManager.defineId(ConvertedCreatureEntity.class, DataSerializers.BOOLEAN);
 
 
     public static boolean spawnPredicate(EntityType<? extends ConvertedCreatureEntity> entityType, IWorld iWorld, SpawnReason spawnReason, BlockPos blockPos, Random random) {
-        return (iWorld.getBlockState(blockPos.down()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.down()).getBlock() == ModBlocks.cursed_earth) && iWorld.getLightSubtracted(blockPos, 0) > 8;
+        return (iWorld.getBlockState(blockPos.below()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.below()).getBlock() == ModBlocks.cursed_earth) && iWorld.getRawBrightness(blockPos, 0) > 8;
     }
 
     private T entityCreature;
@@ -70,46 +70,25 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     }
 
     @Override
-    public void baseTick() {
-        super.baseTick();
-        if (!nil()) {
-            entityCreature.copyLocationAndAnglesFrom(this);
-            entityCreature.prevPosZ = this.prevPosZ;
-            entityCreature.prevPosY = this.prevPosY;
-            entityCreature.prevPosX = this.prevPosX;
-            entityCreature.rotationYawHead = this.rotationYawHead;
-            entityCreature.prevRotationPitch = this.prevRotationPitch;
-            entityCreature.prevRotationYaw = this.prevRotationYaw;
-            entityCreature.prevRotationYawHead = this.prevRotationYawHead;
-            entityCreature.setMotion(this.getMotion());
-            entityCreature.lastTickPosX = this.lastTickPosX;
-            entityCreature.lastTickPosY = this.lastTickPosY;
-            entityCreature.lastTickPosZ = this.lastTickPosZ;
-            entityCreature.hurtTime = this.hurtTime;
-            entityCreature.maxHurtTime = this.maxHurtTime;
-            entityCreature.attackedAtYaw = this.attackedAtYaw;
-            entityCreature.swingProgress = this.swingProgress;
-            entityCreature.prevSwingProgress = this.prevSwingProgress;
-            entityCreature.prevLimbSwingAmount = this.prevLimbSwingAmount;
-            entityCreature.limbSwingAmount = this.limbSwingAmount;
-            entityCreature.limbSwing = this.limbSwing;
-            entityCreature.renderYawOffset = this.renderYawOffset;
-            entityCreature.prevRenderYawOffset = this.prevRenderYawOffset;
-            entityCreature.deathTime = this.deathTime;
-
-//            if (world.isRemote) {
-//                entityCreature.func_242277_a(this.positionOffset()); //Careful not available on server, so if needed we have to use a proxy here
-//            }
-        }
-        if (entityChanged) {
-            this.updateEntityAttributes();
-            entityChanged = false;
+    public void addAdditionalSaveData(CompoundNBT nbt) {
+        super.addAdditionalSaveData(nbt);
+        writeOldEntityToNBT(nbt);
+        nbt.putBoolean("converter_canDespawn", canDespawn);
+        nbt.putInt("ConversionTime", this.isConverting(this) ? this.conversionTime : -1);
+        if (this.conversationStarter != null) {
+            nbt.putUUID("ConversionPlayer", this.conversationStarter);
         }
     }
 
     @Override
-    public boolean canDespawn(double distanceToClosestPlayer) {
-        return super.canDespawn(distanceToClosestPlayer) && canDespawn;
+    public void aiStep() {
+        if (!this.level.isClientSide && this.isAlive() && this.isConverting(this)) {
+            --this.conversionTime;
+            if (this.conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(this, EntityType.VILLAGER, (timer) -> this.conversionTime = timer)) {
+                this.cureEntity((ServerWorld) this.level, this, ((EntityType<T>) entityCreature.getType()));
+            }
+        }
+        super.aiStep();
     }
 
     @Override
@@ -118,17 +97,42 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         return this.entityCreature;
     }
 
-    @Nullable
     @Override
-    public ItemEntity entityDropItem(ItemStack stack, float offsetY) {
-        ItemStack actualDrop = stack;
-        Item item = stack.getItem();
-        if (item.isFood()) {
-            if (item.getFood().isMeat()) {
-                actualDrop = new ItemStack(Items.ROTTEN_FLESH, stack.getCount()); //Replace all meat with rotten flesh
-            }
+    public void baseTick() {
+        super.baseTick();
+        if (!nil()) {
+            entityCreature.copyPosition(this);
+            entityCreature.zo = this.zo;
+            entityCreature.yo = this.yo;
+            entityCreature.xo = this.xo;
+            entityCreature.yHeadRot = this.yHeadRot;
+            entityCreature.xRotO = this.xRotO;
+            entityCreature.yRotO = this.yRotO;
+            entityCreature.yHeadRotO = this.yHeadRotO;
+            entityCreature.setDeltaMovement(this.getDeltaMovement());
+            entityCreature.xOld = this.xOld;
+            entityCreature.yOld = this.yOld;
+            entityCreature.zOld = this.zOld;
+            entityCreature.hurtTime = this.hurtTime;
+            entityCreature.hurtDuration = this.hurtDuration;
+            entityCreature.hurtDir = this.hurtDir;
+            entityCreature.attackAnim = this.attackAnim;
+            entityCreature.oAttackAnim = this.oAttackAnim;
+            entityCreature.animationSpeedOld = this.animationSpeedOld;
+            entityCreature.animationSpeed = this.animationSpeed;
+            entityCreature.animationPosition = this.animationPosition;
+            entityCreature.yBodyRot = this.yBodyRot;
+            entityCreature.yBodyRotO = this.yBodyRotO;
+            entityCreature.deathTime = this.deathTime;
+
+//            if (world.isRemote) {
+//                entityCreature.setPacketCoordinates(this.positionOffset()); //Careful not available on server, so if needed we have to use a proxy here
+//            }
         }
-        return super.entityDropItem(actualDrop, offsetY);
+        if (entityChanged) {
+            this.updateEntityAttributes();
+            entityChanged = false;
+        }
     }
 
     @Override
@@ -143,7 +147,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
             return super.getName();
         }
         if (name == null) {
-            this.name = new TranslationTextComponent("entity.vampirism.vampire").appendString(" ").appendSibling((nil() ? super.getName() : entityCreature.getName()));
+            this.name = new TranslationTextComponent("entity.vampirism.vampire").append(" ").append((nil() ? super.getName() : entityCreature.getName()));
         }
         return name;
     }
@@ -153,27 +157,35 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     }
 
     @Override
-    public void handleStatusUpdate(byte id) {
+    public void handleEntityEvent(byte id) {
         if (!handleSound(id, this)) {
-            super.handleStatusUpdate(id);
+            super.handleEntityEvent(id);
         }
-    }
-
-    @Override
-    public void livingTick() {
-        if (!this.world.isRemote && this.isAlive() && this.isConverting(this)) {
-            --this.conversionTime;
-            if (this.conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(this, EntityType.VILLAGER, (timer) -> this.conversionTime = timer)) {
-                this.cureEntity((ServerWorld) this.world, this, ((EntityType<T>) entityCreature.getType()));
-            }
-        }
-        super.livingTick();
     }
 
     @Override
     public void loadUpdateFromNBT(CompoundNBT nbt) {
         if (nbt.contains("entity_old")) {
-            setEntityCreature((T) EntityType.loadEntityUnchecked(nbt.getCompound("entity_old"), getEntityWorld()).orElse(null));
+            setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), getCommandSenderWorld()).orElse(null));
+        }
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundNBT nbt) {
+        super.readAdditionalSaveData(nbt);
+        if (nbt.contains("entity_old")) {
+            setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), level).orElse(null));
+            if (nil()) {
+                LOGGER.warn("Failed to create old entity {}. Maybe the entity does not exist anymore", nbt.getCompound("entity_old"));
+            }
+        } else {
+            LOGGER.warn("Saved entity did not have a old entity");
+        }
+        if (nbt.contains("converted_canDespawn")) {
+            canDespawn = nbt.getBoolean("converted_canDespawn");
+        }
+        if (nbt.contains("ConversionTime", 99) && nbt.getInt("ConversionTime") > -1) {
+            this.startConverting(nbt.hasUUID("ConversionPlayer") ? nbt.getUUID("ConversionPlayer") : null, nbt.getInt("ConversionTime"), this);
         }
     }
 
@@ -185,28 +197,14 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     }
 
     @Override
-    public void readAdditional(CompoundNBT nbt) {
-        super.readAdditional(nbt);
-        if (nbt.contains("entity_old")) {
-            setEntityCreature((T) EntityType.loadEntityUnchecked(nbt.getCompound("entity_old"), world).orElse(null));
-            if (nil()) {
-                LOGGER.warn("Failed to create old entity {}. Maybe the entity does not exist anymore", nbt.getCompound("entity_old"));
-            }
-        } else {
-            LOGGER.warn("Saved entity did not have a old entity");
-        }
-        if (nbt.contains("converted_canDespawn")) {
-            canDespawn = nbt.getBoolean("converted_canDespawn");
-        }
-        if (nbt.contains("ConversionTime", 99) && nbt.getInt("ConversionTime") > -1) {
-            this.startConverting(nbt.hasUniqueId("ConversionPlayer") ? nbt.getUniqueId("ConversionPlayer") : null, nbt.getInt("ConversionTime"), this);
-        }
+    public void refreshDimensions() {
+        super.refreshDimensions();
+        this.eyeHeight = entityCreature == null ? 0.5f : entityCreature.getEyeHeight();
     }
 
     @Override
-    public void recalculateSize() {
-        super.recalculateSize();
-        this.eyeHeight = entityCreature == null ? 0.5f : entityCreature.getEyeHeight();
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+        return super.removeWhenFarAway(distanceToClosestPlayer) && canDespawn;
     }
 
     /**
@@ -229,7 +227,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
             if (!creature.equals(entityCreature)) {
                 entityCreature = creature;
                 entityChanged = true;
-                this.size = creature.size;
+                this.dimensions = creature.dimensions;
             }
         }
         if (entityCreature != null && getConvertedHelper() == null) {
@@ -245,13 +243,17 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         this.conversionTime = conversionTimeIn;
     }
 
+    @Nullable
     @Override
-    public void tick() {
-        super.tick();
-        if (!world.isRemote && entityCreature == null) {
-            LOGGER.debug("Setting dead, since creature is null");
-            this.remove();
+    public ItemEntity spawnAtLocation(ItemStack stack, float offsetY) {
+        ItemStack actualDrop = stack;
+        Item item = stack.getItem();
+        if (item.isEdible()) {
+            if (item.getFoodProperties().isMeat()) {
+                actualDrop = new ItemStack(Items.ROTTEN_FLESH, stack.getCount()); //Replace all meat with rotten flesh
+            }
         }
+        return super.spawnAtLocation(actualDrop, offsetY);
     }
 
     @Nonnull
@@ -261,13 +263,11 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt) {
-        super.writeAdditional(nbt);
-        writeOldEntityToNBT(nbt);
-        nbt.putBoolean("converter_canDespawn", canDespawn);
-        nbt.putInt("ConversionTime", this.isConverting(this) ? this.conversionTime : -1);
-        if (this.conversationStarter != null) {
-            nbt.putUniqueId("ConversionPlayer", this.conversationStarter);
+    public void tick() {
+        super.tick();
+        if (!level.isClientSide && entityCreature == null) {
+            LOGGER.debug("Setting dead, since creature is null");
+            this.remove();
         }
     }
 
@@ -277,12 +277,10 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
 
     }
 
-    @Nonnull
     @Override
-    protected ActionResultType getEntityInteractionResult(PlayerEntity player, @Nonnull Hand hand) {
-        ItemStack stack = player.getHeldItem(hand);
-        if (stack.getItem() != ModItems.cure_apple) return super.getEntityInteractionResult(player, hand);
-        return interactWithCureItem(player, stack, this);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.registerConvertingData(this);
     }
 
     /**
@@ -310,21 +308,23 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
 
     @Nonnull
     @Override
-    protected ResourceLocation getLootTable() {
+    protected ResourceLocation getDefaultLootTable() {
         if (entityCreature != null) {
-            return entityCreature.getLootTableResourceLocation();
+            return entityCreature.getLootTable();
         }
-        return super.getLootTable();
+        return super.getDefaultLootTable();
     }
 
     protected boolean nil() {
         return entityCreature == null;
     }
 
+    @Nonnull
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.registerConvertingData(this);
+    protected ActionResultType mobInteract(PlayerEntity player, @Nonnull Hand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (stack.getItem() != ModItems.cure_apple) return super.mobInteract(player, hand);
+        return interactWithCureItem(player, stack, this);
     }
 
     @Override
@@ -334,7 +334,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         //this.tasks.addTask(3, new FleeSunVampireGoal(this, 1F));
         this.goalSelector.addGoal(4, new RestrictSunGoal(this));
         this.goalSelector.addGoal(5, new AttackMeleeNoSunGoal(this, 0.9D, false));
-        this.experienceValue = 2;
+        this.xpReward = 2;
 
         this.goalSelector.addGoal(11, new RandomWalkingGoal(this, 0.7));
         this.goalSelector.addGoal(13, new LookAtGoal(this, PlayerEntity.class, 6.0F));
@@ -376,7 +376,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
             try {
                 CompoundNBT entity = new CompoundNBT();
                 entityCreature.removed = false;
-                entityCreature.writeUnlessPassenger(entity);
+                entityCreature.save(entity);
                 entityCreature.removed = true;
                 nbt.put("entity_old", entity);
             } catch (Exception e) {

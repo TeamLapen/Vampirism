@@ -17,23 +17,24 @@ import javax.annotation.Nullable;
 @Mixin(EffectInstance.class)
 public class MixinEffectInstance implements EffectInstanceWithSource {
 
-    @Inject(method = "readInternal(Lnet/minecraft/potion/Effect;Lnet/minecraft/nbt/CompoundNBT;)Lnet/minecraft/potion/EffectInstance;", at = @At("RETURN"))
+    @Inject(method = "loadSpecifiedEffect(Lnet/minecraft/potion/Effect;Lnet/minecraft/nbt/CompoundNBT;)Lnet/minecraft/potion/EffectInstance;", at = @At("RETURN"))
     private static void readInternal_vampirism(Effect effect, CompoundNBT nbt, CallbackInfoReturnable<EffectInstance> cir) {
         if (nbt.contains("source")) {
             ((EffectInstanceWithSource) cir.getReturnValue()).setSource(new ResourceLocation(nbt.getString("source")));
         }
     }
+
     @Shadow
     private int duration;
     @Shadow
     @Nullable
-    private EffectInstance hiddenEffects;
+    private EffectInstance hiddenEffect;
     private ResourceLocation source;
 
     @Override
     @Nullable
     public EffectInstance getHiddenEffect() {
-        return this.hiddenEffects;
+        return this.hiddenEffect;
     }
 
     @Override
@@ -57,17 +58,17 @@ public class MixinEffectInstance implements EffectInstanceWithSource {
         this.duration = 1;
     }
 
-    @Inject(method = "combine(Lnet/minecraft/potion/EffectInstance;)Z", at = @At(value = "JUMP", ordinal = 2))
+    @Inject(method = "update(Lnet/minecraft/potion/EffectInstance;)Z", at = @At(value = "JUMP", ordinal = 2))
     private void copySource(EffectInstance other, CallbackInfoReturnable<Boolean> cir) {
         this.source = ((EffectInstanceWithSource) other).getSource();
     }
 
-    @Inject(method = "func_230117_a_(Lnet/minecraft/potion/EffectInstance;)V", at = @At("TAIL"))
+    @Inject(method = "setDetailsFrom(Lnet/minecraft/potion/EffectInstance;)V", at = @At("TAIL"))
     private void copySource1(EffectInstance other, CallbackInfo ci) {
         this.source = ((EffectInstanceWithSource) other).getSource();
     }
 
-    @Inject(method = "writeInternal(Lnet/minecraft/nbt/CompoundNBT;)V", at = @At("TAIL"))
+    @Inject(method = "writeDetailsTo(Lnet/minecraft/nbt/CompoundNBT;)V", at = @At("TAIL"))
     private void writeInternal_vampirism(CompoundNBT nbt, CallbackInfo ci) {
         if (source != null) {
             nbt.putString("source", source.toString());

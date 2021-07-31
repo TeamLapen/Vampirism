@@ -11,13 +11,13 @@ public class WeaponTableRecipePlacer<C extends IInventory> extends ServerRecipeP
         super(recipeBookContainer);
     }
 
-    protected void clear() {
-        for (int i = 0; i < this.recipeBookContainer.getWidth() * this.recipeBookContainer.getHeight() + 1; ++i) {
-            if (i != this.recipeBookContainer.getOutputSlot() || !(this.recipeBookContainer instanceof WeaponTableContainer) && !(this.recipeBookContainer instanceof PlayerContainer)) {
-                this.giveToPlayer(i);
+    protected void clearGrid() {
+        for (int i = 0; i < this.menu.getGridWidth() * this.menu.getGridHeight() + 1; ++i) {
+            if (i != this.menu.getResultSlotIndex() || !(this.menu instanceof WeaponTableContainer) && !(this.menu instanceof PlayerContainer)) {
+                this.moveItemToInventory(i);
             }
         }
 
-        this.recipeBookContainer.clear();
+        this.menu.clearCraftingContent();
     }
 }

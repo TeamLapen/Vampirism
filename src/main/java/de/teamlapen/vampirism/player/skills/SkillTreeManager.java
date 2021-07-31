@@ -22,7 +22,7 @@ public class SkillTreeManager extends JsonReloadListener {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Gson GSON = new GsonBuilder().registerTypeHierarchyAdapter(SkillNode.Builder.class, (JsonDeserializer<SkillNode.Builder>) (json, typeOfT, context) -> {
-        JsonObject asObject = JSONUtils.getJsonObject(json, "skillnode");
+        JsonObject asObject = JSONUtils.convertToJsonObject(json, "skillnode");
         return SkillNode.Builder.deserialize(asObject, context);
     }).create();
     private static SkillTreeManager instance;

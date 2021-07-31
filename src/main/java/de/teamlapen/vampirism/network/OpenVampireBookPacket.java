@@ -19,11 +19,11 @@ public class OpenVampireBookPacket implements IMessage {
     }
 
     static void encode(OpenVampireBookPacket msg, PacketBuffer buf) {
-        buf.writeItemStack(msg.itemStack);
+        buf.writeItem(msg.itemStack);
     }
 
     static OpenVampireBookPacket decode(PacketBuffer buf) {
-        return new OpenVampireBookPacket(buf.readItemStack());
+        return new OpenVampireBookPacket(buf.readItem());
     }
 
     public final ItemStack itemStack;

@@ -119,60 +119,60 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     @Override
-    public boolean isGettingSundamage(IWorld iWorld, boolean forceRefresh) {
-        if (!forceRefresh) return sundamageCache;
-        return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.world.getProfiler()));
-    }
-
-    @Override
-    public boolean isIgnoringSundamage() {
-        return this.isPotionActive(ModEffects.sunscreen);
-    }
-
-    @Override
-    public void livingTick() {
-        if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 3) {
-            isGettingGarlicDamage(world, true);
+    public void aiStep() {
+        if (this.tickCount % REFERENCE.REFRESH_GARLIC_TICKS == 3) {
+            isGettingGarlicDamage(level, true);
         }
-        if (this.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
-            isGettingSundamage(world, true);
+        if (this.tickCount % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
+            isGettingSundamage(level, true);
         }
-        if (!world.isRemote) {
-            if (isGettingSundamage(world) && ticksExisted % 40 == 11) {
+        if (!level.isClientSide) {
+            if (isGettingSundamage(level) && tickCount % 40 == 11) {
                 double dmg = getAttribute(ModAttributes.sundamage).getValue();
-                if (dmg > 0) this.attackEntityFrom(VReference.SUNDAMAGE, (float) dmg);
+                if (dmg > 0) this.hurt(VReference.SUNDAMAGE, (float) dmg);
             }
-            if (isGettingGarlicDamage(world) != EnumStrength.NONE) {
-                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(world), this.ticksExisted);
+            if (isGettingGarlicDamage(level) != EnumStrength.NONE) {
+                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(level), this.tickCount);
             }
         }
-        if (!this.world.isRemote) {
+        if (!this.level.isClientSide) {
             if (isAlive() && isInWater()) {
-                setAir(300);
-                if (ticksExisted % 16 == 4) {
-                    addPotionEffect(new EffectInstance(Effects.WEAKNESS, 80, 0));
+                setAirSupply(300);
+                if (tickCount % 16 == 4) {
+                    addEffect(new EffectInstance(Effects.WEAKNESS, 80, 0));
                 }
             }
         }
-        super.livingTick();
+        super.aiStep();
     }
 
     @Nonnull
     @Override
-    public ItemStack onFoodEaten(@Nonnull World world, @Nonnull ItemStack stack) {
+    public ItemStack eat(@Nonnull World world, @Nonnull ItemStack stack) {
         return stack;
+    }
+
+    @Override
+    public boolean isGettingSundamage(IWorld iWorld, boolean forceRefresh) {
+        if (!forceRefresh) return sundamageCache;
+        return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.level.getProfiler()));
+    }
+
+    @Override
+    public boolean isIgnoringSundamage() {
+        return this.hasEffect(ModEffects.sunscreen);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void openAppearanceScreen() {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().displayGuiScreen(new VampireMinionAppearanceScreen(this, Minecraft.getInstance().currentScreen)));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().setScreen(new VampireMinionAppearanceScreen(this, Minecraft.getInstance().screen)));
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void openStatsScreen() {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().displayGuiScreen(new VampireMinionStatsScreen(this, Minecraft.getInstance().currentScreen)));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().setScreen(new VampireMinionStatsScreen(this, Minecraft.getInstance().screen)));
     }
 
     public void setUseLordSkin(boolean useLordSkin) {
@@ -203,31 +203,31 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     @Override
     protected boolean canConsume(ItemStack stack) {
         if (!super.canConsume(stack)) return false;
-        if ((stack.isFood() && !(stack.getItem() instanceof VampirismItemBloodFood))) return false;
+        if ((stack.isEdible() && !(stack.getItem() instanceof VampirismItemBloodFood))) return false;
         boolean fullHealth = this.getHealth() == this.getMaxHealth();
-        if (fullHealth && (stack.isFood() && stack.getItem() instanceof VampirismItemBloodFood)) return false;
-        if (stack.getItem() instanceof BloodBottleItem && stack.getDamage() == 0) return false;
+        if (fullHealth && (stack.isEdible() && stack.getItem() instanceof VampirismItemBloodFood)) return false;
+        if (stack.getItem() instanceof BloodBottleItem && stack.getDamageValue() == 0) return false;
         return !fullHealth || !(stack.getItem() instanceof BloodBottleItem);
     }
 
     @Override
-    protected ActionResultType getEntityInteractionResult(PlayerEntity player, Hand hand) {
-        if (!this.world.isRemote() && isLord(player) && minionData != null) {
-            ItemStack heldItem = player.getHeldItem(hand);
+    protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+        if (!this.level.isClientSide() && isLord(player) && minionData != null) {
+            ItemStack heldItem = player.getItemInHand(hand);
             if (heldItem.getItem() instanceof MinionUpgradeItem && ((MinionUpgradeItem) heldItem.getItem()).getFaction() == this.getFaction()) {
                 if (this.minionData.level + 1 >= ((MinionUpgradeItem) heldItem.getItem()).getMinLevel() && this.minionData.level + 1 <= ((MinionUpgradeItem) heldItem.getItem()).getMaxLevel()) {
                     this.minionData.level++;
-                    if (!player.abilities.isCreativeMode) heldItem.shrink(1);
-                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.vampire_minion.binding_upgrade"), false);
+                    if (!player.abilities.instabuild) heldItem.shrink(1);
+                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.vampire_minion.binding_upgrade"), false);
                     HelperLib.sync(this);
                 } else {
-                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.vampire_minion.binding_wrong"), false);
+                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.vampire_minion.binding_wrong"), false);
 
                 }
                 return ActionResultType.SUCCESS;
             }
         }
-        return super.getEntityInteractionResult(player, hand);
+        return super.mobInteract(player, hand);
     }
 
     @Override
@@ -297,7 +297,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
         @Override
         public IFormattableTextComponent getFormattedName() {
-            return super.getFormattedName().mergeStyle(VReference.VAMPIRE_FACTION.getChatColor());
+            return super.getFormattedName().withStyle(VReference.VAMPIRE_FACTION.getChatColor());
         }
 
         public int getHealthLevel() {

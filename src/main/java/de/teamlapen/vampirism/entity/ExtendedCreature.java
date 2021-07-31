@@ -172,7 +172,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
     @Override
     public int getTheEntityID() {
-        return entity.getEntityId();
+        return entity.getId();
     }
 
     @Override
@@ -223,7 +223,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         boolean killed = false;
         boolean converted = false;
         if (blood == 0) {
-            if (canBecomeVampire && entity.getRNG().nextBoolean()) {
+            if (canBecomeVampire && entity.getRandom().nextBoolean()) {
                 if (VampirismConfig.SERVER.infectCreaturesSanguinare.get()) {
                     SanguinareEffect.addRandom(entity, false);
                 } else {
@@ -232,28 +232,28 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
                 converted = true;
 
             } else {
-                entity.attackEntityFrom(VReference.NO_BLOOD, 1000);
+                entity.hurt(VReference.NO_BLOOD, 1000);
                 killed = true;
             }
         }
 
         this.sync();
-        entity.setRevengeTarget(biter.getRepresentingEntity());
+        entity.setLastHurtByMob(biter.getRepresentingEntity());
 
         // If entity is a child only give 1/3 blood
         if (entity instanceof AgeableEntity) {
-            if (((AgeableEntity) entity).getGrowingAge() < 0) {
+            if (((AgeableEntity) entity).getAge() < 0) {
                 amt = Math.round((float) amt / 3f);
             }
         }
         //If advanced biter, sometimes return twice the blood amount
         if (biter.isAdvancedBiter()) {
-            if (entity.getRNG().nextInt(4) == 0) {
+            if (entity.getRandom().nextInt(4) == 0) {
                 amt = 2 * amt;
             }
         }
         if (converted && biter instanceof IVampirePlayer) {
-            ((IVampirePlayer) biter).getRepresentingPlayer().addStat(ModStats.infected_creatures);
+            ((IVampirePlayer) biter).getRepresentingPlayer().awardStat(ModStats.infected_creatures);
         }
         return amt;
     }
@@ -268,11 +268,11 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
     @Override
     public void tick() {
-        if (!entity.getEntityWorld().isRemote) {
-            if (blood > 0 && blood < getMaxBlood() && entity.ticksExisted % 40 == 8) {
-                entity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 41));
-                entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 41, 2));
-                if (entity.getRNG().nextInt(BalanceMobProps.mobProps.BLOOD_REGEN_CHANCE) == 0) {
+        if (!entity.getCommandSenderWorld().isClientSide) {
+            if (blood > 0 && blood < getMaxBlood() && entity.tickCount % 40 == 8) {
+                entity.addEffect(new EffectInstance(Effects.WEAKNESS, 41));
+                entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 41, 2));
+                if (entity.getRandom().nextInt(BalanceMobProps.mobProps.BLOOD_REGEN_CHANCE) == 0) {
                     setBlood(getBlood() + 1);
                 }
             }

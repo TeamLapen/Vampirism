@@ -44,7 +44,7 @@ public class VampirismWorldGen {
         VampirismWorldGen.setupSingleJigsawPieceGeneration();
 
         //init pools for modification
-        VillagesPools.func_244194_a();
+        VillagesPools.bootstrap();
 
         Pair<Map<String, List<Pair<JigsawPiece, Integer>>>, Map<String, JigsawPattern>> structures = getStructures();
 
@@ -72,16 +72,16 @@ public class VampirismWorldGen {
     //
     private static Pair<Map<String, List<Pair<JigsawPiece, Integer>>>, Map<String, JigsawPattern>> getStructures() {
         Map<String, JigsawPattern> patterns = new HashMap<String, JigsawPattern>() {{
-            put("plains", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/plains/houses")).get());
-            put("desert", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/desert/houses")).get());
-            put("savanna", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/savanna/houses")).get());
-            put("taiga", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/taiga/houses")).get());
-            put("snowy", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/snowy/houses")).get());
-            put("plains_zombie", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/plains/zombie/houses")).get());
-            put("desert_zombie", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/desert/zombie/houses")).get());
-            put("savanna_zombie", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/savanna/zombie/houses")).get());
-            put("taiga_zombie", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/taiga/zombie/houses")).get());
-            put("snowy_zombie", WorldGenRegistries.JIGSAW_POOL.getOptional(new ResourceLocation("village/snowy/zombie/houses")).get());
+            put("plains", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/plains/houses")).get());
+            put("desert", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/desert/houses")).get());
+            put("savanna", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/savanna/houses")).get());
+            put("taiga", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/taiga/houses")).get());
+            put("snowy", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/snowy/houses")).get());
+            put("plains_zombie", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/plains/zombie/houses")).get());
+            put("desert_zombie", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/desert/zombie/houses")).get());
+            put("savanna_zombie", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/savanna/zombie/houses")).get());
+            put("taiga_zombie", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/taiga/zombie/houses")).get());
+            put("snowy_zombie", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/snowy/zombie/houses")).get());
         }};
 
         //biome string -> list of all JigsawPieces with weight
@@ -165,7 +165,7 @@ public class VampirismWorldGen {
         Map<String, StructureProcessorList> processors = ImmutableMap.of("plains_zombie", ProcessorLists.ZOMBIE_PLAINS, "desert_zombie", ProcessorLists.ZOMBIE_DESERT, "snowy_zombie", ProcessorLists.ZOMBIE_SNOWY, "savanna_zombie", ProcessorLists.ZOMBIE_SAVANNA, "taiga_zombie", ProcessorLists.ZOMBIE_TAIGA);
 
         //hunter trainer JigsawPattern
-        JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(REFERENCE.MODID, "village/entities/hunter_trainer"), new ResourceLocation("empty"), Lists.newArrayList(Pair.of(singleJigsawPieceFunction("village/entities/hunter_trainer"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
+        JigsawPatternRegistry.register(new JigsawPattern(new ResourceLocation(REFERENCE.MODID, "village/entities/hunter_trainer"), new ResourceLocation("empty"), Lists.newArrayList(Pair.of(singleJigsawPieceFunction("village/entities/hunter_trainer"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
 
         buildings.forEach((name, list) -> {
             list.removeIf(pair -> pair.getFirst().toString().equals(singleJigsawString(REFERENCE.MODID + ":village/" + name.replace("_zombie", "") + "/houses/hunter_trainer")));
@@ -177,8 +177,8 @@ public class VampirismWorldGen {
      * adds totem to every village
      */
     private static void addTotem(Map<String, List<Pair<JigsawPiece, Integer>>> buildings) {
-        StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, TOTEM_PRESET_PERCENTAGE), AlwaysTrueRuleTest.INSTANCE, ModBlocks.totem_top.getDefaultState(), TotemTopBlock.getBlocks().stream().filter(totem -> totem != ModBlocks.totem_top && !totem.isCrafted()).map(Block::getDefaultState).collect(Collectors.toList()))));
-        StructureProcessor totemTopBlock = new BiomeTopBlockProcessor(Blocks.BRICK_WALL.getDefaultState());
+        StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, TOTEM_PRESET_PERCENTAGE), AlwaysTrueRuleTest.INSTANCE, ModBlocks.totem_top.defaultBlockState(), TotemTopBlock.getBlocks().stream().filter(totem -> totem != ModBlocks.totem_top && !totem.isCrafted()).map(Block::defaultBlockState).collect(Collectors.toList()))));
+        StructureProcessor totemTopBlock = new BiomeTopBlockProcessor(Blocks.BRICK_WALL.defaultBlockState());
         JigsawPiece totem = singleJigsawPiece("village/totem", new StructureProcessorList(Lists.newArrayList(totemProcessor, totemTopBlock)));
         buildings.values().forEach(list -> list.removeIf(pair -> pair.getFirst().toString().equals(singleJigsawString(REFERENCE.MODID + ":village/totem"))));
         buildings.values().forEach(list -> list.add(Pair.of(totem, VampirismConfig.BALANCE.viTotemWeight.get())));
@@ -206,10 +206,10 @@ public class VampirismWorldGen {
 
         //sync all JigsawPattern JigsawPattern#rawTemplates (pairs piece with weight) with JigsawPattern#jigsawPieces (list of pieces * weights)
         patterns.values().forEach(pattern -> {
-            pattern.jigsawPieces.clear();
+            pattern.templates.clear();
             pattern.rawTemplates.forEach(pair -> {
                 for (int i = 0; i < pair.getSecond(); i++) {
-                    pattern.jigsawPieces.add(pair.getFirst());
+                    pattern.templates.add(pair.getFirst());
                 }
             });
         });
@@ -220,7 +220,7 @@ public class VampirismWorldGen {
     }
 
     private static SingleJigsawPiece singleJigsawPiece(@Nonnull String path, @Nonnull StructureProcessorList processors) {
-        return SingleJigsawPiece.func_242861_b(REFERENCE.MODID + ":" + path, processors).apply(JigsawPattern.PlacementBehaviour.RIGID);
+        return SingleJigsawPiece.single(REFERENCE.MODID + ":" + path, processors).apply(JigsawPattern.PlacementBehaviour.RIGID);
     }
 
     private static Function<JigsawPattern.PlacementBehaviour, SingleJigsawPiece> singleJigsawPieceFunction(@Nonnull String path) {
@@ -228,7 +228,7 @@ public class VampirismWorldGen {
     }
 
     private static Function<JigsawPattern.PlacementBehaviour, SingleJigsawPiece> singleJigsawPieceFunction(@Nonnull String path, @Nonnull StructureProcessorList processors) {
-        return SingleJigsawPiece.func_242861_b(REFERENCE.MODID + ":" + path, processors);
+        return SingleJigsawPiece.single(REFERENCE.MODID + ":" + path, processors);
     }
 
     private static String singleJigsawString(String resourceLocation) {

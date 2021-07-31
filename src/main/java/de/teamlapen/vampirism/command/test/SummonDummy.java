@@ -15,15 +15,15 @@ public class SummonDummy extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("summonDummy")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
-                .then(Commands.literal("vampire").executes(context -> summon(context.getSource().asPlayer(), true)))
-                .then(Commands.literal("hunter").executes(context -> summon(context.getSource().asPlayer(), false)));
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
+                .then(Commands.literal("vampire").executes(context -> summon(context.getSource().getPlayerOrException(), true)))
+                .then(Commands.literal("hunter").executes(context -> summon(context.getSource().getPlayerOrException(), false)));
     }
 
     private static int summon(ServerPlayerEntity p, boolean b) {
-        VampirismEntity t = b ? new TrainingDummyVampireEntity(ModEntities.vampire, p.world) : new TrainingDummyHunterEntity(ModEntities.hunter, p.world);
-        t.copyLocationAndAnglesFrom(p);
-        p.world.addEntity(t);
+        VampirismEntity t = b ? new TrainingDummyVampireEntity(ModEntities.vampire, p.level) : new TrainingDummyHunterEntity(ModEntities.hunter, p.level);
+        t.copyPosition(p);
+        p.level.addFreshEntity(t);
         return 0;
     }
 }

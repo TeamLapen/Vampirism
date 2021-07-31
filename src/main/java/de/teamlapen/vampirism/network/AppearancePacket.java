@@ -12,7 +12,7 @@ public class AppearancePacket implements IMessage {
 
     static void encode(AppearancePacket msg, PacketBuffer buf) {
         buf.writeVarInt(msg.entityId);
-        buf.writeString(msg.name);
+        buf.writeUtf(msg.name);
         buf.writeVarInt(msg.data.length);
         for (int value : msg.data) {
             buf.writeVarInt(value);
@@ -21,7 +21,7 @@ public class AppearancePacket implements IMessage {
 
     static AppearancePacket decode(PacketBuffer buf) {
         int entityId = buf.readVarInt();
-        String newName = buf.readString(MinionData.MAX_NAME_LENGTH);
+        String newName = buf.readUtf(MinionData.MAX_NAME_LENGTH);
         int[] data = new int[buf.readVarInt()];
         for (int i = 0; i < data.length; i++) {
             data[i] = buf.readVarInt();

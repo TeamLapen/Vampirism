@@ -31,15 +31,15 @@ public class VampireTaskMasterRenderer extends MobRenderer<VampireTaskMasterEnti
     }
 
     @Override
-    public ResourceLocation getEntityTexture(VampireTaskMasterEntity entity) {
+    public ResourceLocation getTextureLocation(VampireTaskMasterEntity entity) {
         return texture;
     }
 
     @Override
-    protected void renderName(VampireTaskMasterEntity entityIn, ITextComponent displayNameIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        double dist = this.renderManager.squareDistanceTo(entityIn);
+    protected void renderNameTag(VampireTaskMasterEntity entityIn, ITextComponent displayNameIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+        double dist = this.entityRenderDispatcher.distanceToSqr(entityIn);
         if (dist <= 128) {
-            super.renderName(entityIn, displayNameIn, matrixStackIn, bufferIn, packedLightIn);
+            super.renderNameTag(entityIn, displayNameIn, matrixStackIn, bufferIn, packedLightIn);
         }
     }
 

@@ -86,27 +86,13 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
 
         }
 
-        public int size() {
+        public int getCount() {
             return 2;
         }
     };
 
     public PotionTableTileEntity() {
         super(ModTiles.potion_table);
-    }
-
-    @Override
-    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
-        if (index == 1 || index == 2) {
-            return stack.getItem() == Items.GLASS_BOTTLE;
-        } else {
-            return true;
-        }
-    }
-
-    @Override
-    public boolean canInsertItem(int index, ItemStack itemStackIn, @Nullable Direction direction) {
-        return this.isItemValidForSlot(index, itemStackIn);
     }
 
     @Override
@@ -118,14 +104,14 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
                         setOwnerID(player);
                         this.config.deriveFromHunter(hp);
                         return true;
-                    } else if (ownerID.equals(player.getUniqueID())) {
+                    } else if (ownerID.equals(player.getUUID())) {
                         this.config.deriveFromHunter(hp);
                         return true;
                     } else {
-                        player.sendStatusMessage(new TranslationTextComponent("text.vampirism.potion_table.other", getOwnerName()), true);
+                        player.displayClientMessage(new TranslationTextComponent("text.vampirism.potion_table.other", getOwnerName()), true);
                     }
                 } else {
-                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.potion_table.cannot_use", getOwnerName()), true);
+                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.potion_table.cannot_use", getOwnerName()), true);
                 }
                 return false;
 
@@ -136,18 +122,41 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
     }
 
     @Override
-    public void clear() {
+    public boolean canPlaceItem(int index, ItemStack stack) {
+        if (index == 2) {
+            return net.minecraftforge.common.brewing.BrewingRecipeRegistry.isValidIngredient(stack);
+        } else {
+            Item item = stack.getItem();
+            if (index == 0) {
+                return item == Items.BLAZE_POWDER;
+            } else {
+                return net.minecraftforge.common.brewing.BrewingRecipeRegistry.isValidInput(stack) && this.getItem(index).isEmpty();
+            }
+        }
+    }
+
+    @Override
+    public boolean canPlaceItemThroughFace(int index, ItemStack itemStackIn, @Nullable Direction direction) {
+        return this.canPlaceItem(index, itemStackIn);
+    }
+
+    @Override
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
+        if (index == 1 || index == 2) {
+            return stack.getItem() == Items.GLASS_BOTTLE;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void clearContent() {
         this.brewingItemStacks.clear();
     }
 
     @Override
-    public ItemStack decrStackSize(int index, int count) {
-        return ItemStackHelper.getAndSplit(this.brewingItemStacks, index, count);
-    }
-
-    @Override
     public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
-        if (!this.removed && facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (!this.remove && facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             if (facing == Direction.UP)
                 return handlers[0].cast();
             else if (facing == Direction.DOWN)
@@ -170,7 +179,7 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
     }
 
     @Override
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return this.brewingItemStacks.size();
     }
 
@@ -184,7 +193,7 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
     }
 
     @Override
-    public ItemStack getStackInSlot(int index) {
+    public ItemStack getItem(int index) {
         return index >= 0 && index < this.brewingItemStacks.size() ? this.brewingItemStacks.get(index) : ItemStack.EMPTY;
     }
 
@@ -204,55 +213,43 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
     }
 
     @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        if (index == 2) {
-            return net.minecraftforge.common.brewing.BrewingRecipeRegistry.isValidIngredient(stack);
-        } else {
-            Item item = stack.getItem();
-            if (index == 0) {
-                return item == Items.BLAZE_POWDER;
-            } else {
-                return net.minecraftforge.common.brewing.BrewingRecipeRegistry.isValidInput(stack) && this.getStackInSlot(index).isEmpty();
-            }
-        }
-    }
-
-    @Override
-    public boolean isUsableByPlayer(PlayerEntity player) {
-        if (!hasWorld()) return false;
-        if (this.world.getTileEntity(this.pos) != this) {
-            return false;
-        } else {
-            return !(player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) > 64.0D);
-        }
-    }
-
-    @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
-        this.brewingItemStacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
+        this.brewingItemStacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, this.brewingItemStacks);
         this.brewTime = compound.getShort("BrewTime");
         this.fuel = compound.getByte("Fuel");
         this.config.fromByte(compound.getByte("config"));
-        this.ownerID = compound.hasUniqueId("owner") ? compound.getUniqueId("owner") : null;
-        this.ownerName = compound.contains("owner_name") ? ITextComponent.Serializer.getComponentFromJsonLenient(compound.getString("owner_name")) : null;
+        this.ownerID = compound.hasUUID("owner") ? compound.getUUID("owner") : null;
+        this.ownerName = compound.contains("owner_name") ? ITextComponent.Serializer.fromJsonLenient(compound.getString("owner_name")) : null;
     }
 
     @Override
-    public void remove() {
-        super.remove();
-        for (int x = 0; x < handlers.length; x++)
-            handlers[x].invalidate();
+    public ItemStack removeItem(int index, int count) {
+        return ItemStackHelper.removeItem(this.brewingItemStacks, index, count);
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index) {
-        return ItemStackHelper.getAndRemove(this.brewingItemStacks, index);
+    public ItemStack removeItemNoUpdate(int index) {
+        return ItemStackHelper.takeItem(this.brewingItemStacks, index);
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
+        compound.putShort("BrewTime", (short) this.brewTime);
+        ItemStackHelper.saveAllItems(compound, this.brewingItemStacks);
+        compound.putByte("Fuel", (byte) this.fuel);
+        compound.putByte("config", this.config.toByte());
+        if (ownerID != null) {
+            compound.putUUID("owner", ownerID);
+            compound.putString("owner_name", ITextComponent.Serializer.toJson(ownerName));
+        }
+        return compound;
+    }
+
+    @Override
+    public void setItem(int index, ItemStack stack) {
         if (index >= 0 && index < this.brewingItemStacks.size()) {
             this.brewingItemStacks.set(index, stack);
         }
@@ -260,9 +257,26 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
     }
 
     public void setOwnerID(PlayerEntity player) {
-        ownerID = player.getUniqueID();
+        ownerID = player.getUUID();
         ownerName = player.getDisplayName();
-        this.markDirty();
+        this.setChanged();
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        for (int x = 0; x < handlers.length; x++)
+            handlers[x].invalidate();
+    }
+
+    @Override
+    public boolean stillValid(PlayerEntity player) {
+        if (!hasLevel()) return false;
+        if (this.level.getBlockEntity(this.worldPosition) != this) {
+            return false;
+        } else {
+            return !(player.distanceToSqr((double) this.worldPosition.getX() + 0.5D, (double) this.worldPosition.getY() + 0.5D, (double) this.worldPosition.getZ() + 0.5D) > 64.0D);
+        }
     }
 
     @Override
@@ -271,12 +285,12 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
         if (this.fuel <= 0 && itemstack.getItem() == Items.BLAZE_POWDER) {
             this.fuel = 20;
             itemstack.shrink(1);
-            this.markDirty();
+            this.setChanged();
         }
 
         //Periodically update table capabilities if player is loaded
-        if (ownerID != null && this.hasWorld() && this.world.getGameTime() % 64 == 0) {
-            PlayerEntity owner = this.world.getPlayerByUuid(ownerID);
+        if (ownerID != null && this.hasLevel() && this.level.getGameTime() % 64 == 0) {
+            PlayerEntity owner = this.level.getPlayerByUUID(ownerID);
             if (owner != null) HunterPlayer.getOpt(owner).ifPresent(this.config::deriveFromHunter);
         }
 
@@ -286,38 +300,24 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
             --this.brewTime;
             if (this.brewTime == 0 && canBrew) { //Finish brewing
                 this.brewPotions();
-                this.markDirty();
+                this.setChanged();
             } else if (!canBrew || this.ingredientID != this.brewingItemStacks.get(2).getItem() || this.extraIngredientID != this.brewingItemStacks.get(1).getItem()) {//Abort brewing if ingredients changed
                 this.brewTime = 0;
-                this.markDirty();
+                this.setChanged();
             }
         } else if (canBrew && this.fuel > 0) {
             --this.fuel;
             this.brewTime = config.isSwiftBrewing() ? 400 : 200;
             this.ingredientID = this.brewingItemStacks.get(2).getItem();
             this.extraIngredientID = this.brewingItemStacks.get(1).getItem();
-            this.markDirty();
+            this.setChanged();
         }
 
-    }
-
-    @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
-        compound.putShort("BrewTime", (short) this.brewTime);
-        ItemStackHelper.saveAllItems(compound, this.brewingItemStacks);
-        compound.putByte("Fuel", (byte) this.fuel);
-        compound.putByte("config", this.config.toByte());
-        if (ownerID != null) {
-            compound.putUniqueId("owner", ownerID);
-            compound.putString("owner_name", ITextComponent.Serializer.toJson(ownerName));
-        }
-        return compound;
     }
 
     @Override
     protected Container createMenu(int id, PlayerInventory player) {
-        return new PotionTableContainer(id, player, IWorldPosCallable.of(this.world, this.getPos()), this, this.config.multiTaskBrewing, syncedProperties);
+        return new PotionTableContainer(id, player, IWorldPosCallable.create(this.level, this.getBlockPos()), this, this.config.multiTaskBrewing, syncedProperties);
     }
 
     @Override
@@ -332,7 +332,7 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
         boolean brewed = VampirismAPI.extendedBrewingRecipeRegistry().brewPotions(brewingItemStacks, ingredientStack, extraIngredient, this.config, this.config.multiTaskBrewing ? OUTPUT_SLOTS_EXTENDED : OUTPUT_SLOTS, true);
 
         if (!brewed) {
-            NonNullList<ItemStack> copiedBrewingItemStack = NonNullList.from(ItemStack.EMPTY, this.brewingItemStacks.get(3).copy(), this.brewingItemStacks.get(4).copy(), this.brewingItemStacks.get(5).copy(), this.brewingItemStacks.get(2).copy(), this.brewingItemStacks.get(0).copy());
+            NonNullList<ItemStack> copiedBrewingItemStack = NonNullList.of(ItemStack.EMPTY, this.brewingItemStacks.get(3).copy(), this.brewingItemStacks.get(4).copy(), this.brewingItemStacks.get(5).copy(), this.brewingItemStacks.get(2).copy(), this.brewingItemStacks.get(0).copy());
             if (net.minecraftforge.event.ForgeEventFactory.onPotionAttemptBrew(copiedBrewingItemStack)) {
                 this.brewingItemStacks.set(3, copiedBrewingItemStack.get(0));
                 this.brewingItemStacks.set(4, copiedBrewingItemStack.get(1));
@@ -342,7 +342,7 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
                 return;
             }
             VampirismAPI.extendedBrewingRecipeRegistry().brewPotions(brewingItemStacks, ingredientStack, extraIngredient, this.config, this.config.multiTaskBrewing ? OUTPUT_SLOTS_EXTENDED : OUTPUT_SLOTS, false);
-            copiedBrewingItemStack = NonNullList.from(ItemStack.EMPTY, this.brewingItemStacks.get(3).copy(), this.brewingItemStacks.get(4).copy(), this.brewingItemStacks.get(5).copy(), this.brewingItemStacks.get(2).copy(), this.brewingItemStacks.get(0).copy());
+            copiedBrewingItemStack = NonNullList.of(ItemStack.EMPTY, this.brewingItemStacks.get(3).copy(), this.brewingItemStacks.get(4).copy(), this.brewingItemStacks.get(5).copy(), this.brewingItemStacks.get(2).copy(), this.brewingItemStacks.get(0).copy());
             net.minecraftforge.event.ForgeEventFactory.onPotionBrewed(brewingItemStacks);
             this.brewingItemStacks.set(3, copiedBrewingItemStack.get(0));
             this.brewingItemStacks.set(4, copiedBrewingItemStack.get(1));
@@ -352,27 +352,27 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
         }
 
 
-        BlockPos blockpos = this.getPos();
+        BlockPos blockpos = this.getBlockPos();
         if (ingredientStack.hasContainerItem()) {
             ItemStack itemstack1 = ingredientStack.getContainerItem();
             if (ingredientStack.isEmpty()) {
                 ingredientStack = itemstack1;
-            } else if (!this.world.isRemote) {
-                InventoryHelper.spawnItemStack(this.world, blockpos.getX(), blockpos.getY(), blockpos.getZ(), itemstack1);
+            } else if (!this.level.isClientSide) {
+                InventoryHelper.dropItemStack(this.level, blockpos.getX(), blockpos.getY(), blockpos.getZ(), itemstack1);
             }
         }
         if (extraIngredient.hasContainerItem()) {
             ItemStack itemstack1 = extraIngredient.getContainerItem();
             if (extraIngredient.isEmpty()) {
                 extraIngredient = itemstack1;
-            } else if (!this.world.isRemote) {
-                InventoryHelper.spawnItemStack(this.world, blockpos.getX(), blockpos.getY(), blockpos.getZ(), itemstack1);
+            } else if (!this.level.isClientSide) {
+                InventoryHelper.dropItemStack(this.level, blockpos.getX(), blockpos.getY(), blockpos.getZ(), itemstack1);
             }
         }
 
         this.brewingItemStacks.set(2, ingredientStack);
         this.brewingItemStacks.set(1, extraIngredient);
-        this.world.playEvent(1035, blockpos, 0);
+        this.level.levelEvent(1035, blockpos, 0);
     }
 
     private boolean canBrew() {

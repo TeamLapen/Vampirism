@@ -16,22 +16,22 @@ public class BindActionCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("bind-action")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ALL))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ALL))
                 .then(Commands.argument("shortcutnumber", IntegerArgumentType.integer(1, 3))
                         .then(Commands.argument("action", ActionArgument.actions())
-                                .executes(context -> bindAction(context, context.getSource().asPlayer(), IntegerArgumentType.getInteger(context, "shortcutnumber"), ActionArgument.getAction(context, "action")))))
+                                .executes(context -> bindAction(context, context.getSource().getPlayerOrException(), IntegerArgumentType.getInteger(context, "shortcutnumber"), ActionArgument.getAction(context, "action")))))
                 .then(Commands.literal("help")
                         .executes(BindActionCommand::help));
     }
 
     private static int bindAction(CommandContext<CommandSource> context, ServerPlayerEntity asPlayer, int number, IAction action) {
         FactionPlayerHandler.get(asPlayer).setBoundAction(number, action, true, true);
-        context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.bind_action.success", action.getName(), number), false);
+        context.getSource().sendSuccess(new TranslationTextComponent("command.vampirism.base.bind_action.success", action.getName(), number), false);
         return 0;
     }
 
     private static int help(CommandContext<CommandSource> context) {
-        context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.bind_action.help"), false);
+        context.getSource().sendSuccess(new TranslationTextComponent("command.vampirism.base.bind_action.help"), false);
         return 0;
     }
 

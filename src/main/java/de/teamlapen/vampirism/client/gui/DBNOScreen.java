@@ -83,14 +83,14 @@ public class DBNOScreen extends Screen {
         this.enableButtonsTimer = 0;
         dieButton = this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 72, 200, 20, new TranslationTextComponent("gui.vampirism.dbno.die"), (p_213021_1_) -> {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DIE, ""));
-            this.minecraft.displayGuiScreen(null);
+            this.minecraft.setScreen(null);
         }));
         dieButton.active = false;
         resurrectButton = this.addButton(new CooldownButton(this.width / 2 - 100, this.height / 4 + 96, 200, 20, new TranslationTextComponent("gui.vampirism.dbno.resurrect"), (p_213020_1_) -> {
             if (this.minecraft.player != null)
                 VampirePlayer.getOpt(this.minecraft.player).ifPresent(VampirePlayer::tryResurrect);
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESURRECT, ""));
-            this.minecraft.displayGuiScreen(null);
+            this.minecraft.setScreen(null);
         }));
         resurrectButton.updateState(1f);
 
@@ -102,10 +102,10 @@ public class DBNOScreen extends Screen {
         if (this.causeOfDeath == null) {
             return null;
         } else {
-            int i = this.minecraft.fontRenderer.getStringPropertyWidth(this.causeOfDeath);
+            int i = this.minecraft.font.width(this.causeOfDeath);
             int j = this.width / 2 - i / 2;
             int k = this.width / 2 + i / 2;
-            return mouseX >= j && mouseX <= k ? this.minecraft.fontRenderer.getCharacterManager().func_238357_a_(this.causeOfDeath, mouseX - j) : null;
+            return mouseX >= j && mouseX <= k ? this.minecraft.font.getSplitter().componentStyleAtWidth(this.causeOfDeath, mouseX - j) : null;
         }
     }
 }

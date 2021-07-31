@@ -19,16 +19,16 @@ import java.util.function.Supplier;
 public class TaskStatusPacket implements IMessage {
 
     static void encode(@Nonnull TaskStatusPacket msg, @Nonnull PacketBuffer buf) {
-        buf.writeString(msg.taskBoardId.toString());
+        buf.writeUtf(msg.taskBoardId.toString());
         buf.writeVarInt(msg.containerId);
         buf.writeVarInt(msg.completableTasks.size());
-        msg.completableTasks.forEach(buf::writeUniqueId);
+        msg.completableTasks.forEach(buf::writeUUID);
         buf.writeVarInt(msg.available.size());
         msg.available.forEach(ins -> ins.encode(buf));
         buf.writeVarInt(msg.completedRequirements.size());
         msg.completedRequirements.forEach(((id, resourceLocations) -> {
             buf.writeVarInt(resourceLocations.size());
-            buf.writeUniqueId(id);
+            buf.writeUUID(id);
             resourceLocations.forEach((loc, val) -> {
                 buf.writeResourceLocation(loc);
                 buf.writeVarInt(val);
@@ -37,12 +37,12 @@ public class TaskStatusPacket implements IMessage {
     }
 
     static TaskStatusPacket decode(@Nonnull PacketBuffer buf) {
-        UUID taskBoardId = UUID.fromString(buf.readString());
+        UUID taskBoardId = UUID.fromString(buf.readUtf());
         int containerId = buf.readVarInt();
         int completableTaskSize = buf.readVarInt();
         Set<UUID> completableTasks = Sets.newHashSetWithExpectedSize(completableTaskSize);
         for (int i = 0; i < completableTaskSize; i++) {
-            completableTasks.add(buf.readUniqueId());
+            completableTasks.add(buf.readUUID());
         }
         int taskSize = buf.readVarInt();
         Set<ITaskInstance> taskInstances = Sets.newHashSetWithExpectedSize(taskSize);
@@ -53,7 +53,7 @@ public class TaskStatusPacket implements IMessage {
         Map<UUID, Map<ResourceLocation, Integer>> completedRequirements = Maps.newHashMapWithExpectedSize(completedReqSize);
         for (int i = 0; i < completedReqSize; ++i) {
             int l = buf.readVarInt();
-            UUID id = buf.readUniqueId();
+            UUID id = buf.readUUID();
             Map<ResourceLocation, Integer> req = Maps.newHashMapWithExpectedSize(l);
             for (; l > 0; --l) {
                 req.put(buf.readResourceLocation(), buf.readVarInt());

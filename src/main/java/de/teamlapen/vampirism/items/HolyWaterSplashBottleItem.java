@@ -28,7 +28,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
     public final static String regName = "holy_water_splash_bottle";
 
     public HolyWaterSplashBottleItem(TIER tier) {
-        super(regName + "_" + tier.getName(), tier, new Properties().group(VampirismMod.creativeTab));
+        super(regName + "_" + tier.getName(), tier, new Properties().tab(VampirismMod.creativeTab));
         setTranslation_key(regName);
     }
 
@@ -36,17 +36,17 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
     public void onImpact(ThrowableItemEntity entity, ItemStack stack, RayTraceResult result, boolean remote) {
         TIER tier = getVampirismTier();
         if (!remote) {
-            AxisAlignedBB axisalignedbb = entity.getBoundingBox().grow(4.0D, 2.0D, 4.0D);
-            List<LivingEntity> list1 = entity.getEntityWorld().getEntitiesWithinAABB(LivingEntity.class, axisalignedbb);
-            @Nullable Entity thrower = entity.getShooter();
+            AxisAlignedBB axisalignedbb = entity.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
+            List<LivingEntity> list1 = entity.getCommandSenderWorld().getEntitiesOfClass(LivingEntity.class, axisalignedbb);
+            @Nullable Entity thrower = entity.getOwner();
 
             if (!list1.isEmpty()) {
                 for (LivingEntity entitylivingbase : list1) {
-                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.getDistanceSq(entitylivingbase), result.getType() == RayTraceResult.Type.ENTITY, thrower instanceof LivingEntity ? (LivingEntity) thrower : null);
+                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.distanceToSqr(entitylivingbase), result.getType() == RayTraceResult.Type.ENTITY, thrower instanceof LivingEntity ? (LivingEntity) thrower : null);
                 }
             }
 
-            entity.getEntityWorld().playEvent(2002, entity.getPosition(), PotionUtils.getPotionColor(Potions.MUNDANE));
+            entity.getCommandSenderWorld().levelEvent(2002, entity.blockPosition(), PotionUtils.getColor(Potions.MUNDANE));
         }
 
     }
@@ -54,22 +54,22 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
 
     @Nonnull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
 
 
-        worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_SPLASH_POTION_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+        worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SPLASH_POTION_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 
-        if (!worldIn.isRemote) {
+        if (!worldIn.isClientSide) {
             ThrowableItemEntity entityThrowable = new ThrowableItemEntity(worldIn, playerIn);
             ItemStack throwStack = stack.copy();
             throwStack.setCount(1);
             entityThrowable.setItem(throwStack);
-            entityThrowable.setDirectionAndMovement(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
-            worldIn.addEntity(entityThrowable);
+            entityThrowable.shootFromRotation(playerIn, playerIn.xRot, playerIn.yRot, -20.0F, 0.5F, 1.0F);
+            worldIn.addFreshEntity(entityThrowable);
         }
 
-        if (!playerIn.abilities.isCreativeMode) {
+        if (!playerIn.abilities.instabuild) {
             stack.shrink(1);
         }
         return new ActionResult<>(ActionResultType.SUCCESS, stack);

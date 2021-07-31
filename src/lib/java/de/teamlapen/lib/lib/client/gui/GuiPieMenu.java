@@ -72,18 +72,18 @@ public abstract class GuiPieMenu<T> extends Screen {
     }
 
     @Override
-    public void closeScreen() {
-        super.closeScreen();
-        ForgeIngameGui.renderCrosshairs = true;
-    }
-
-    @Override
     public void init() {
         this.onGuiInit();
         this.elementCount = elements.size();
         radDiff = 2D * Math.PI / elementCount;// gap in rad
-        GLFW.glfwSetInputMode(minecraft.getMainWindow().getHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
+        GLFW.glfwSetInputMode(minecraft.getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
         ForgeIngameGui.renderCrosshairs = false;
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        ForgeIngameGui.renderCrosshairs = true;
     }
 
     @Override
@@ -115,9 +115,9 @@ public abstract class GuiPieMenu<T> extends Screen {
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
-        GLFW.glfwSetInputMode(Minecraft.getInstance().getMainWindow().getHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
+    public void removed() {
+        super.removed();
+        GLFW.glfwSetInputMode(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
         ForgeIngameGui.renderCrosshairs = true;
     }
 
@@ -152,7 +152,7 @@ public abstract class GuiPieMenu<T> extends Screen {
             // Draw box and, if selected, highlight
             Color col = this.getColor(element);
             RenderSystem.color4f(col.getRed(), col.getGreen(), col.getBlue(), 0.5F);
-            this.minecraft.getTextureManager().bindTexture(WIDGETS);
+            this.minecraft.getTextureManager().bind(WIDGETS);
             blit(stack, x - 2, y - 2, 1, 1, 20, 20);
             if (selected) {
                 blit(stack, x - 3, y - 3, 1, 23, 22, 22);
@@ -163,8 +163,8 @@ public abstract class GuiPieMenu<T> extends Screen {
             }
             // Draw Icon
             RenderSystem.color4f(1F, 1F, 1F, 1F);
-            this.minecraft.getTextureManager().bindTexture(getIconLoc(element));
-            UtilLib.drawTexturedModalRect(stack.getLast().getMatrix(), getBlitOffset(), x, y, 0, 0, 16, 16, 16, 16);
+            this.minecraft.getTextureManager().bind(getIconLoc(element));
+            UtilLib.drawTexturedModalRect(stack.last().pose(), getBlitOffset(), x, y, 0, 0, 16, 16, 16, 16);
 
             this.afterIconDraw(stack, element, x, y);
 
@@ -173,9 +173,9 @@ public abstract class GuiPieMenu<T> extends Screen {
             this.drawUnselectedCenter(stack, cX, cY);
         } else {
             ITextComponent name = getName(elements.get(selectedElement));
-            int tx = cX - minecraft.fontRenderer.getStringPropertyWidth(name) / 2;
+            int tx = cX - minecraft.font.width(name) / 2;
             int ty = this.height / 7;
-            minecraft.fontRenderer.drawTextWithShadow(stack, name, tx, ty, Color.WHITE.getRGB());
+            minecraft.font.drawShadow(stack, name, tx, ty, Color.WHITE.getRGB());
         }
         super.render(stack, mouseX, mouseY, partialTicks);
     }
@@ -189,11 +189,11 @@ public abstract class GuiPieMenu<T> extends Screen {
             if (!this.minecraft
                     .player.isAlive()) {
                 this.minecraft
-                        .player.closeScreen();
+                        .player.closeContainer();
             } else {
                 this.minecraft
-                        .player.movementInput.tickMovement(this.minecraft
-                        .player.isForcedDown()); //shouldRenderSneaking
+                        .player.input.tick(this.minecraft
+                        .player.isMovingSlowly()); //shouldRenderSneaking
             }
         }
     }
@@ -207,15 +207,15 @@ public abstract class GuiPieMenu<T> extends Screen {
      */
     protected void drawLine(MatrixStack stack, double x1, double y1, double x2, double y2) {
         RenderSystem.disableTexture();
-        BufferBuilder builder = Tessellator.getInstance().getBuffer();
+        BufferBuilder builder = Tessellator.getInstance().getBuilder();
         builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
         RenderSystem.lineWidth(2F);
 
-        builder.pos(stack.getLast().getMatrix(), (float) x1, (float) y1, this.getBlitOffset
+        builder.vertex(stack.last().pose(), (float) x1, (float) y1, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).endVertex();
-        builder.pos(stack.getLast().getMatrix(), (float) x2, (float) y2, this.getBlitOffset
+        builder.vertex(stack.last().pose(), (float) x2, (float) y2, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).endVertex();
-        Tessellator.getInstance().draw();
+        Tessellator.getInstance().end();
         RenderSystem.enableTexture();
     }
 
@@ -248,7 +248,7 @@ public abstract class GuiPieMenu<T> extends Screen {
     }
 
     protected boolean isKeyBindingStillPressed() {
-        return getMenuKeyBinding().isKeyDown();
+        return getMenuKeyBinding().isDown();
     }
 
     protected void onElementSelected(T id) {
@@ -258,7 +258,7 @@ public abstract class GuiPieMenu<T> extends Screen {
     protected abstract void onGuiInit();
 
     protected void selectedAndClose() {
-        closeScreen();
+        onClose();
         if (selectedElement >= 0) {
             this.onElementSelected(elements.get(selectedElement));
         }
@@ -274,28 +274,28 @@ public abstract class GuiPieMenu<T> extends Screen {
         // Calculate the scale which has to be applied for the image to fit
         float scale = (this.height
                 / 2F + 16 + 16) / BGS;
-        stack.push();
+        stack.pushPose();
         RenderSystem.enableBlend();
         stack.translate(cX, cY, this.getBlitOffset());
         stack.scale(scale, scale, 1);
 
         // Draw the cicle image
         this.minecraft
-                .getTextureManager().bindTexture(backgroundTex);
-        Matrix4f matrix = stack.getLast().getMatrix();
+                .getTextureManager().bind(backgroundTex);
+        Matrix4f matrix = stack.last().pose();
 
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder builder = tessellator.getBuffer();
+        BufferBuilder builder = tessellator.getBuilder();
         builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
-        builder.pos(matrix, BGS / 2f, BGS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(1, 1).endVertex();
-        builder.pos(matrix, BGS / 2f, -BGS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(1, 0).endVertex();
-        builder.pos(matrix, -BGS / 2f, -BGS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0, 0).endVertex();
-        builder.pos(matrix, -BGS / 2f, BGS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0, 1).endVertex();
-        tessellator.draw();
+        builder.vertex(matrix, BGS / 2f, BGS / 2f, this.getBlitOffset
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(1, 1).endVertex();
+        builder.vertex(matrix, BGS / 2f, -BGS / 2f, this.getBlitOffset
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(1, 0).endVertex();
+        builder.vertex(matrix, -BGS / 2f, -BGS / 2f, this.getBlitOffset
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0, 0).endVertex();
+        builder.vertex(matrix, -BGS / 2f, BGS / 2f, this.getBlitOffset
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0, 1).endVertex();
+        tessellator.end();
 
 
         // Draw the lines
@@ -308,7 +308,7 @@ public abstract class GuiPieMenu<T> extends Screen {
             }
         }
         RenderSystem.disableBlend();
-        stack.pop();
+        stack.popPose();
 
     }
 
@@ -325,34 +325,34 @@ public abstract class GuiPieMenu<T> extends Screen {
         double deg = Math.toDegrees(-rad);
         float scale = (this.height
         ) / 4F / CS;
-        stack.push();
+        stack.pushPose();
         RenderSystem.enableBlend();
         // Move origin to center, scale and rotate
         stack.translate(cX, cY, this.getBlitOffset
                 ());
         stack.scale(scale, scale, 1);
-        stack.rotate(Vector3f.ZP.rotationDegrees((float) deg));
+        stack.mulPose(Vector3f.ZP.rotationDegrees((float) deg));
 
         // Draw
-        Matrix4f matrix = stack.getLast().getMatrix();
+        Matrix4f matrix = stack.last().pose();
         this.minecraft
-                .getTextureManager().bindTexture(centerTex);
+                .getTextureManager().bind(centerTex);
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder builder = tessellator.getBuffer();
+        BufferBuilder builder = tessellator.getBuilder();
         builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
-        builder.pos(matrix, CS / 2f, CS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0.5f, 1).endVertex();
-        builder.pos(matrix, CS / 2f, -CS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0.5f, 0).endVertex();
-        builder.pos(matrix, -CS / 2f, -CS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0, 0).endVertex();
-        builder.pos(matrix, -CS / 2f, CS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0, 1).endVertex();
-        tessellator.draw();
+        builder.vertex(matrix, CS / 2f, CS / 2f, this.getBlitOffset
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0.5f, 1).endVertex();
+        builder.vertex(matrix, CS / 2f, -CS / 2f, this.getBlitOffset
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0.5f, 0).endVertex();
+        builder.vertex(matrix, -CS / 2f, -CS / 2f, this.getBlitOffset
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0, 0).endVertex();
+        builder.vertex(matrix, -CS / 2f, CS / 2f, this.getBlitOffset
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0, 1).endVertex();
+        tessellator.end();
 
 
         RenderSystem.disableBlend();
-        stack.pop();
+        stack.popPose();
     }
 
     private void drawUnselectedCenter(MatrixStack stack, double cX, double cY) {
@@ -360,7 +360,7 @@ public abstract class GuiPieMenu<T> extends Screen {
         float scale = (this.height
         ) / 4F / CS;
 
-        stack.push();
+        stack.pushPose();
         RenderSystem.enableBlend();
         // Move origin to center, scale and rotate
         stack.translate(cX, cY, this.getBlitOffset
@@ -368,27 +368,27 @@ public abstract class GuiPieMenu<T> extends Screen {
         stack.scale(scale, scale, 1);
 
         // Draw
-        Matrix4f matrix = stack.getLast().getMatrix();
+        Matrix4f matrix = stack.last().pose();
 
         this.minecraft
-                .getTextureManager().bindTexture(centerTex);
+                .getTextureManager().bind(centerTex);
 
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder builder = tessellator.getBuffer();
+        BufferBuilder builder = tessellator.getBuilder();
         builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
-        builder.pos(matrix, CS / 2f, CS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(1, 1).endVertex();
-        builder.pos(matrix, CS / 2f, -CS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(1, 0).endVertex();
-        builder.pos(matrix, -CS / 2f, -CS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0.5f, 0).endVertex();
-        builder.pos(matrix, -CS / 2f, CS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0.5f, 1).endVertex();
-        tessellator.draw();
+        builder.vertex(matrix, CS / 2f, CS / 2f, this.getBlitOffset
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(1, 1).endVertex();
+        builder.vertex(matrix, CS / 2f, -CS / 2f, this.getBlitOffset
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(1, 0).endVertex();
+        builder.vertex(matrix, -CS / 2f, -CS / 2f, this.getBlitOffset
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0.5f, 0).endVertex();
+        builder.vertex(matrix, -CS / 2f, CS / 2f, this.getBlitOffset
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0.5f, 1).endVertex();
+        tessellator.end();
 
 
         RenderSystem.disableBlend();
-        stack.pop();
+        stack.popPose();
     }
 
     /**
@@ -399,14 +399,14 @@ public abstract class GuiPieMenu<T> extends Screen {
      */
     private void setAbsoluteMouse(double x, double y) {
         x = x * this.minecraft
-                .getMainWindow().getFramebufferWidth() / this.width
+                .getWindow().getWidth() / this.width
         ;
         y = -(y + 1 - height
         ) * this.minecraft
-                .getMainWindow().getFramebufferHeight() / height
+                .getWindow().getHeight() / height
         ;
         GLFW.glfwSetCursorPos(this.minecraft
-                .getMainWindow().getHandle(), x, y);
+                .getWindow().getWindow(), x, y);
     }
 
     /**

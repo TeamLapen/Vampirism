@@ -110,89 +110,89 @@ public class TentBlock extends VampirismBlock {
     }
 
     public static void setTentSleepPosition(PlayerEntity player, BlockPos blockPos, int position, Direction facing) {
-        player.setPosition(blockPos.getX() + offsets.get(position, facing).getFirst(), blockPos.getY() + 0.0625, blockPos.getZ() + offsets.get(position, facing).getSecond());
+        player.setPos(blockPos.getX() + offsets.get(position, facing).getFirst(), blockPos.getY() + 0.0625, blockPos.getZ() + offsets.get(position, facing).getSecond());
     }
 
     private static VoxelShape makeShape() {
         return VoxelShapes.or(
-                Block.makeCuboidShape(0, 0, 0, 16, 1, 16),
-                Block.makeCuboidShape(0.5, 1, 0, 1.4, 1.45, 16),
-                Block.makeCuboidShape(0.9, 1.4, 0, 1.8, 1.85, 16),
-                Block.makeCuboidShape(1.3, 1.8, 0, 2.2, 2.25, 16),
-                Block.makeCuboidShape(1.7, 2.2, 0, 2.6, 2.65, 16),
-                Block.makeCuboidShape(2.1, 2.6, 0, 3.0, 3.05, 16),
-                Block.makeCuboidShape(2.5, 3.0, 0, 3.4, 3.45, 16),
-                Block.makeCuboidShape(2.9, 3.4, 0, 3.8, 3.85, 16),
-                Block.makeCuboidShape(3.3, 3.8, 0, 4.2, 4.25, 16),
-                Block.makeCuboidShape(3.7, 4.2, 0, 4.6, 4.65, 16),
-                Block.makeCuboidShape(4.1, 4.6, 0, 5.0, 5.05, 16),
-                Block.makeCuboidShape(4.5, 5.0, 0, 5.4, 5.45, 16),
-                Block.makeCuboidShape(4.9, 5.4, 0, 5.8, 5.85, 16),
-                Block.makeCuboidShape(5.3, 5.8, 0, 6.2, 6.25, 16),
-                Block.makeCuboidShape(5.7, 6.2, 0, 6.6, 6.65, 16),
-                Block.makeCuboidShape(6.1, 6.6, 0, 7.0, 7.05, 16),
-                Block.makeCuboidShape(6.5, 7.0, 0, 7.4, 7.45, 16),
-                Block.makeCuboidShape(6.9, 7.4, 0, 7.8, 7.85, 16),
-                Block.makeCuboidShape(7.3, 7.8, 0, 8.2, 8.25, 16),
-                Block.makeCuboidShape(7.7, 8.2, 0, 8.6, 8.65, 16),
-                Block.makeCuboidShape(8.1, 8.6, 0, 9.0, 9.05, 16),
-                Block.makeCuboidShape(8.5, 9.0, 0, 9.4, 9.45, 16),
-                Block.makeCuboidShape(8.9, 9.4, 0, 9.8, 9.85, 16),
-                Block.makeCuboidShape(9.3, 9.8, 0, 10.2, 10.25, 16),
-                Block.makeCuboidShape(9.7, 10.2, 0, 10.6, 10.65, 16),
-                Block.makeCuboidShape(10.1, 10.6, 0, 11.0, 11.05, 16),
-                Block.makeCuboidShape(10.5, 11.0, 0, 11.4, 11.45, 16),
-                Block.makeCuboidShape(10.9, 11.4, 0, 11.8, 11.85, 16),
-                Block.makeCuboidShape(11.3, 11.8, 0, 12.2, 12.25, 16),
-                Block.makeCuboidShape(11.7, 12.2, 0, 12.6, 12.65, 16),
-                Block.makeCuboidShape(12.1, 12.6, 0, 13.0, 13.05, 16),
-                Block.makeCuboidShape(12.5, 13.0, 0, 13.4, 13.45, 16),
-                Block.makeCuboidShape(12.9, 13.4, 0, 13.8, 13.85, 16),
-                Block.makeCuboidShape(13.3, 13.8, 0, 14.2, 14.25, 16),
-                Block.makeCuboidShape(13.7, 14.2, 0, 14.6, 14.65, 16),
-                Block.makeCuboidShape(14.1, 14.6, 0, 15.0, 15.05, 16),
-                Block.makeCuboidShape(14.5, 15.0, 0, 15.4, 15.45, 16),
-                Block.makeCuboidShape(14.9, 15.4, 0, 15.8, 15.85, 16),
-                Block.makeCuboidShape(15, 15, 0, 16, 16, 16)
+                Block.box(0, 0, 0, 16, 1, 16),
+                Block.box(0.5, 1, 0, 1.4, 1.45, 16),
+                Block.box(0.9, 1.4, 0, 1.8, 1.85, 16),
+                Block.box(1.3, 1.8, 0, 2.2, 2.25, 16),
+                Block.box(1.7, 2.2, 0, 2.6, 2.65, 16),
+                Block.box(2.1, 2.6, 0, 3.0, 3.05, 16),
+                Block.box(2.5, 3.0, 0, 3.4, 3.45, 16),
+                Block.box(2.9, 3.4, 0, 3.8, 3.85, 16),
+                Block.box(3.3, 3.8, 0, 4.2, 4.25, 16),
+                Block.box(3.7, 4.2, 0, 4.6, 4.65, 16),
+                Block.box(4.1, 4.6, 0, 5.0, 5.05, 16),
+                Block.box(4.5, 5.0, 0, 5.4, 5.45, 16),
+                Block.box(4.9, 5.4, 0, 5.8, 5.85, 16),
+                Block.box(5.3, 5.8, 0, 6.2, 6.25, 16),
+                Block.box(5.7, 6.2, 0, 6.6, 6.65, 16),
+                Block.box(6.1, 6.6, 0, 7.0, 7.05, 16),
+                Block.box(6.5, 7.0, 0, 7.4, 7.45, 16),
+                Block.box(6.9, 7.4, 0, 7.8, 7.85, 16),
+                Block.box(7.3, 7.8, 0, 8.2, 8.25, 16),
+                Block.box(7.7, 8.2, 0, 8.6, 8.65, 16),
+                Block.box(8.1, 8.6, 0, 9.0, 9.05, 16),
+                Block.box(8.5, 9.0, 0, 9.4, 9.45, 16),
+                Block.box(8.9, 9.4, 0, 9.8, 9.85, 16),
+                Block.box(9.3, 9.8, 0, 10.2, 10.25, 16),
+                Block.box(9.7, 10.2, 0, 10.6, 10.65, 16),
+                Block.box(10.1, 10.6, 0, 11.0, 11.05, 16),
+                Block.box(10.5, 11.0, 0, 11.4, 11.45, 16),
+                Block.box(10.9, 11.4, 0, 11.8, 11.85, 16),
+                Block.box(11.3, 11.8, 0, 12.2, 12.25, 16),
+                Block.box(11.7, 12.2, 0, 12.6, 12.65, 16),
+                Block.box(12.1, 12.6, 0, 13.0, 13.05, 16),
+                Block.box(12.5, 13.0, 0, 13.4, 13.45, 16),
+                Block.box(12.9, 13.4, 0, 13.8, 13.85, 16),
+                Block.box(13.3, 13.8, 0, 14.2, 14.25, 16),
+                Block.box(13.7, 14.2, 0, 14.6, 14.65, 16),
+                Block.box(14.1, 14.6, 0, 15.0, 15.05, 16),
+                Block.box(14.5, 15.0, 0, 15.4, 15.45, 16),
+                Block.box(14.9, 15.4, 0, 15.8, 15.85, 16),
+                Block.box(15, 15, 0, 16, 16, 16)
         );
     }
 
     private static VoxelShape makeShapeBack2() {
         return VoxelShapes.or(
-                Block.makeCuboidShape(15, 1, 0, 16, 15.85, 1),
-                Block.makeCuboidShape(14, 1, 0, 15, 14.65, 1),
-                Block.makeCuboidShape(13, 1, 0, 14, 13.85, 1),
-                Block.makeCuboidShape(12, 1, 0, 13, 12.65, 1),
-                Block.makeCuboidShape(11, 1, 0, 12, 11.85, 1),
-                Block.makeCuboidShape(10, 1, 0, 11, 10.65, 1),
-                Block.makeCuboidShape(9, 1, 0, 10, 9.85, 1),
-                Block.makeCuboidShape(8, 1, 0, 9, 8.65, 1),
-                Block.makeCuboidShape(7, 1, 0, 8, 7.85, 1),
-                Block.makeCuboidShape(6, 1, 0, 7, 6.65, 1),
-                Block.makeCuboidShape(5, 1, 0, 6, 5.85, 1),
-                Block.makeCuboidShape(4, 1, 0, 5, 4.65, 1),
-                Block.makeCuboidShape(3, 1, 0, 4, 3.85, 1),
-                Block.makeCuboidShape(2, 1, 0, 3, 2.65, 1),
-                Block.makeCuboidShape(1, 1, 0, 2, 1.85, 1));
+                Block.box(15, 1, 0, 16, 15.85, 1),
+                Block.box(14, 1, 0, 15, 14.65, 1),
+                Block.box(13, 1, 0, 14, 13.85, 1),
+                Block.box(12, 1, 0, 13, 12.65, 1),
+                Block.box(11, 1, 0, 12, 11.85, 1),
+                Block.box(10, 1, 0, 11, 10.65, 1),
+                Block.box(9, 1, 0, 10, 9.85, 1),
+                Block.box(8, 1, 0, 9, 8.65, 1),
+                Block.box(7, 1, 0, 8, 7.85, 1),
+                Block.box(6, 1, 0, 7, 6.65, 1),
+                Block.box(5, 1, 0, 6, 5.85, 1),
+                Block.box(4, 1, 0, 5, 4.65, 1),
+                Block.box(3, 1, 0, 4, 3.85, 1),
+                Block.box(2, 1, 0, 3, 2.65, 1),
+                Block.box(1, 1, 0, 2, 1.85, 1));
     }
 
     private static VoxelShape makeShapeBack1() {
         return VoxelShapes.or(
-                Block.makeCuboidShape(14, 1, 0, 15, 1.85, 1),
-                Block.makeCuboidShape(13, 1, 0, 14, 2.65, 1),
-                Block.makeCuboidShape(12, 1, 0, 13, 3.85, 1),
-                Block.makeCuboidShape(11, 1, 0, 12, 4.65, 1),
-                Block.makeCuboidShape(10, 1, 0, 11, 5.85, 1),
-                Block.makeCuboidShape(9, 1, 0, 10, 6.65, 1),
-                Block.makeCuboidShape(8, 1, 0, 9, 7.85, 1),
-                Block.makeCuboidShape(7, 1, 0, 8, 8.65, 1),
-                Block.makeCuboidShape(6, 1, 0, 7, 9.85, 1),
-                Block.makeCuboidShape(5, 1, 0, 6, 10.65, 1),
-                Block.makeCuboidShape(4, 1, 0, 5, 11.85, 1),
-                Block.makeCuboidShape(3, 1, 0, 4, 12.65, 1),
-                Block.makeCuboidShape(2, 1, 0, 3, 13.85, 1),
-                Block.makeCuboidShape(1, 1, 0, 2, 14.65, 1),
-                Block.makeCuboidShape(0, 1, 0, 1, 15.85, 1));
+                Block.box(14, 1, 0, 15, 1.85, 1),
+                Block.box(13, 1, 0, 14, 2.65, 1),
+                Block.box(12, 1, 0, 13, 3.85, 1),
+                Block.box(11, 1, 0, 12, 4.65, 1),
+                Block.box(10, 1, 0, 11, 5.85, 1),
+                Block.box(9, 1, 0, 10, 6.65, 1),
+                Block.box(8, 1, 0, 9, 7.85, 1),
+                Block.box(7, 1, 0, 8, 8.65, 1),
+                Block.box(6, 1, 0, 7, 9.85, 1),
+                Block.box(5, 1, 0, 6, 10.65, 1),
+                Block.box(4, 1, 0, 5, 11.85, 1),
+                Block.box(3, 1, 0, 4, 12.65, 1),
+                Block.box(2, 1, 0, 3, 13.85, 1),
+                Block.box(1, 1, 0, 2, 14.65, 1),
+                Block.box(0, 1, 0, 1, 15.85, 1));
     }
 
     public TentBlock() {
@@ -200,8 +200,8 @@ public class TentBlock extends VampirismBlock {
     }
 
     protected TentBlock(String name) {
-        super(name, Properties.create(Material.WOOL).hardnessAndResistance(0.6f).sound(SoundType.CLOTH).notSolid());
-        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(POSITION, 0).with(BedBlock.OCCUPIED, false));
+        super(name, Properties.of(Material.WOOL).strength(0.6f).sound(SoundType.WOOL).noOcclusion());
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POSITION, 0).setValue(BedBlock.OCCUPIED, false));
     }
 
     @Override
@@ -210,14 +210,8 @@ public class TentBlock extends VampirismBlock {
     }
 
     @Override
-    public Direction getBedDirection(BlockState state, IWorldReader world, BlockPos pos) {
-        switch (state.get(POSITION)) {
-            case 0:
-            case 3:
-                return state.get(HORIZONTAL_FACING).getOpposite();
-            default:
-                return state.get(HORIZONTAL_FACING);
-        }
+    public boolean canSurvive(BlockState blockState, IWorldReader worldReader, BlockPos blockPos) {
+        return worldReader.getBlockState(blockPos).isAir(worldReader, blockPos);
     }
 
     @Override
@@ -225,10 +219,9 @@ public class TentBlock extends VampirismBlock {
         return new ItemStack(ModItems.item_tent);
     }
 
-    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState blockState, IBlockReader blockReader, BlockPos blockPos, ISelectionContext context) {
-        return shapes.get(blockState.get(FACING), blockState.get(POSITION));
+    public void fallOn(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
+        super.fallOn(worldIn, pos, entityIn, fallDistance * 0.7F);
     }
 
     @Override
@@ -237,84 +230,43 @@ public class TentBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean isValidPosition(BlockState blockState, IWorldReader worldReader, BlockPos blockPos) {
-        return worldReader.getBlockState(blockPos).isAir(worldReader, blockPos);
+    public Direction getBedDirection(BlockState state, IWorldReader world, BlockPos pos) {
+        switch (state.getValue(POSITION)) {
+            case 0:
+            case 3:
+                return state.getValue(HORIZONTAL_FACING).getOpposite();
+            default:
+                return state.getValue(HORIZONTAL_FACING);
+        }
     }
 
+    @Nonnull
     @Override
-    public ActionResultType onBlockActivated(BlockState blockState, World world, final BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
-        if (world.isRemote()) return ActionResultType.SUCCESS;
-        if (VampirismPlayerAttributes.get(player).hunterLevel == 0) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.tent.cant_use"), true);
-            return ActionResultType.SUCCESS;
-        }
-
-        if (!BedBlock.doesBedWork(world)) {
-            world.removeBlock(pos, false);
-            BlockPos blockpos = pos.offset(blockState.get(HORIZONTAL_FACING).getOpposite());
-            if (world.getBlockState(blockpos).matchesBlock(this)) {
-                world.removeBlock(blockpos, false);
-            }
-
-            world.createExplosion(null, DamageSource.causeBedExplosionDamage(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
-            return ActionResultType.SUCCESS;
-        } else if (blockState.get(BedBlock.OCCUPIED)) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.tent.occupied"), true);
-            return ActionResultType.SUCCESS;
-        } else {
-            final BlockPos finalPos = pos;
-            player.trySleep(pos).ifLeft(sleepResult1 -> {
-                if (sleepResult1 != null) {
-                    player.sendStatusMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
-                }
-            }).ifRight(u -> {
-                this.setBedOccupied(blockState, world, pos, null, true);
-                setTentSleepPosition(player, pos, player.world.getBlockState(pos).get(POSITION), player.world.getBlockState(pos).get(HORIZONTAL_FACING));
-            });
-            return ActionResultType.SUCCESS;
-        }
+    public VoxelShape getShape(BlockState blockState, IBlockReader blockReader, BlockPos blockPos, ISelectionContext context) {
+        return shapes.get(blockState.getValue(FACING), blockState.getValue(POSITION));
     }
 
     @Override
     public void onBlockExploded(BlockState state, World world, BlockPos pos, Explosion explosion) {
         forWholeTent(pos, state, (di, pos1) -> {
             if (world.getBlockState(pos1).getBlock() instanceof TentBlock) {
-                world.setBlockState(pos1, Blocks.AIR.getDefaultState(), 3);
-                getBlock().onExplosionDestroy(world, pos1, explosion);
+                world.setBlock(pos1, Blocks.AIR.defaultBlockState(), 3);
+                getBlock().wasExploded(world, pos1, explosion);
             }
         });
     }
 
     @Override
-    public void onBlockHarvested(World world, @Nonnull BlockPos blockPos, BlockState blockState, @Nonnull PlayerEntity playerEntity) {
+    public void playerWillDestroy(World world, @Nonnull BlockPos blockPos, BlockState blockState, @Nonnull PlayerEntity playerEntity) {
         forWholeTent(blockPos, blockState, (direction, blockPos1) -> {
             world.destroyBlock(blockPos1, true);
-            if (!world.isRemote) {
-                VampirismMod.dispatcher.sendToAllAround(new PlayEventPacket(1, blockPos1, Block.getStateId(world.getBlockState(blockPos1))), world.getDimensionKey(), blockPos1.getX(), blockPos1.getY(), blockPos1.getZ(), 64);
+            if (!world.isClientSide) {
+                VampirismMod.dispatcher.sendToAllAround(new PlayEventPacket(1, blockPos1, Block.getId(world.getBlockState(blockPos1))), world.dimension(), blockPos1.getX(), blockPos1.getY(), blockPos1.getZ(), 64);
                 if (!playerEntity.isCreative()) {
-                    spawnDrops(world.getBlockState(blockPos1), world, blockPos1, null, playerEntity, playerEntity.getHeldItemMainhand());
+                    dropResources(world.getBlockState(blockPos1), world, blockPos1, null, playerEntity, playerEntity.getMainHandItem());
                 }
             }
         });
-    }
-
-    @Override
-    public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
-        super.onFallenUpon(worldIn, pos, entityIn, fallDistance * 0.7F);
-    }
-
-    @Override
-    public void onLanded(IBlockReader worldIn, Entity entityIn) {
-        if (entityIn.isSneaking()) {
-            super.onLanded(worldIn, entityIn);
-        } else {
-            Vector3d vec3d = entityIn.getMotion();
-            if (vec3d.y < 0.0D) {
-                double d0 = entityIn instanceof LivingEntity ? 1.0D : 0.8D;
-                entityIn.setMotion(vec3d.x, -vec3d.y * (double) 0.33F * d0, vec3d.z);
-            }
-        }
-
     }
 
     @Override
@@ -322,38 +274,86 @@ public class TentBlock extends VampirismBlock {
         forWholeTent(pos, state, ((direction, blockPos) -> {
             BlockState blockState = world.getBlockState(blockPos);
             if (blockState.getBlock() instanceof TentBlock) {
-                ((IWorldWriter & IWorldReader) world).setBlockState(pos, world.getBlockState(pos).with(BlockStateProperties.OCCUPIED, occupied), 2);
+                ((IWorldWriter & IWorldReader) world).setBlock(pos, world.getBlockState(pos).setValue(BlockStateProperties.OCCUPIED, occupied), 2);
             }
         }));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    public void updateEntityAfterFallOn(IBlockReader worldIn, Entity entityIn) {
+        if (entityIn.isShiftKeyDown()) {
+            super.updateEntityAfterFallOn(worldIn, entityIn);
+        } else {
+            Vector3d vec3d = entityIn.getDeltaMovement();
+            if (vec3d.y < 0.0D) {
+                double d0 = entityIn instanceof LivingEntity ? 1.0D : 0.8D;
+                entityIn.setDeltaMovement(vec3d.x, -vec3d.y * (double) 0.33F * d0, vec3d.z);
+            }
+        }
+
+    }
+
+    @Override
+    public ActionResultType use(BlockState blockState, World world, final BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
+        if (world.isClientSide()) return ActionResultType.SUCCESS;
+        if (VampirismPlayerAttributes.get(player).hunterLevel == 0) {
+            player.displayClientMessage(new TranslationTextComponent("text.vampirism.tent.cant_use"), true);
+            return ActionResultType.SUCCESS;
+        }
+
+        if (!BedBlock.canSetSpawn(world)) {
+            world.removeBlock(pos, false);
+            BlockPos blockpos = pos.relative(blockState.getValue(HORIZONTAL_FACING).getOpposite());
+            if (world.getBlockState(blockpos).is(this)) {
+                world.removeBlock(blockpos, false);
+            }
+
+            world.explode(null, DamageSource.badRespawnPointExplosion(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
+            return ActionResultType.SUCCESS;
+        } else if (blockState.getValue(BedBlock.OCCUPIED)) {
+            player.displayClientMessage(new TranslationTextComponent("text.vampirism.tent.occupied"), true);
+            return ActionResultType.SUCCESS;
+        } else {
+            final BlockPos finalPos = pos;
+            player.startSleepInBed(pos).ifLeft(sleepResult1 -> {
+                if (sleepResult1 != null) {
+                    player.displayClientMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
+                }
+            }).ifRight(u -> {
+                this.setBedOccupied(blockState, world, pos, null, true);
+                setTentSleepPosition(player, pos, player.level.getBlockState(pos).getValue(POSITION), player.level.getBlockState(pos).getValue(HORIZONTAL_FACING));
+            });
+            return ActionResultType.SUCCESS;
+        }
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, POSITION, BlockStateProperties.OCCUPIED);
     }
 
     private void forWholeTent(BlockPos blockPos, BlockState blockState, BiConsumer<Direction, BlockPos> consumer) {
         BlockPos main = blockPos;
-        Direction dir = blockState.get(FACING);
-        int p = blockState.get(POSITION);
+        Direction dir = blockState.getValue(FACING);
+        int p = blockState.getValue(POSITION);
         if (p == 0) {
             dir = dir.getOpposite();
         } else if (p == 1) {
-            main = blockPos.offset(dir.rotateY());
+            main = blockPos.relative(dir.getClockWise());
         } else if (p == 2) {
-            main = blockPos.offset(dir.rotateY()).offset(dir.getOpposite());
+            main = blockPos.relative(dir.getClockWise()).relative(dir.getOpposite());
         } else if (p == 3) {
-            main = blockPos.offset(dir);
+            main = blockPos.relative(dir);
             dir = dir.getOpposite();
         }
         consumer.accept(dir, blockPos);
         BlockPos cur = main;
         if (cur != blockPos) consumer.accept(dir, cur);
-        cur = main.offset(dir);
+        cur = main.relative(dir);
         if (cur != blockPos) consumer.accept(dir, cur);
-        cur = main.offset(dir.rotateYCCW());
+        cur = main.relative(dir.getCounterClockWise());
         if (cur != blockPos) consumer.accept(dir, cur);
-        cur = main.offset(dir).offset(dir.rotateYCCW());
+        cur = main.relative(dir).relative(dir.getCounterClockWise());
         if (cur != blockPos) consumer.accept(dir, cur);
     }
 }

@@ -25,7 +25,7 @@ public class MixinHooks {
 
     public static boolean checkStructures(List<? super AbstractVillagePiece> pieces, JigsawPiece jigsawPiece) {
         if (!onlyOneStructure.contains(jigsawPiece.toString())) return false;
-        return pieces.stream().anyMatch(structurePiece -> onlyOneStructure.stream().anyMatch(string -> ((AbstractVillagePiece) structurePiece).getJigsawPiece().toString().equals(string)));
+        return pieces.stream().anyMatch(structurePiece -> onlyOneStructure.stream().anyMatch(string -> ((AbstractVillagePiece) structurePiece).getElement().toString().equals(string)));
     }
 
 }

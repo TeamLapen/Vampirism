@@ -90,7 +90,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
         List<IAction> actions = Lists.newArrayList(ModRegistries.ACTIONS.getValues());
         String[] actionOrder = VampirismConfig.CLIENT.actionOrder.get().split(",");
         for (String s : actionOrder) {
-            ResourceLocation name = ResourceLocation.tryCreate(s);
+            ResourceLocation name = ResourceLocation.tryParse(s);
             if (name != null) {
                 IAction a = ModRegistries.ACTIONS.getValue(name);
                 if (a == null) continue;
@@ -112,26 +112,17 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
     }
 
     @Override
-    public void closeScreen() {
-        if (editActions) {
-            saveActionOrder();
-            SELECTEDACTION = null;
-        }
-        super.closeScreen();
-    }
-
-    @Override
     public boolean keyPressed(int key, int scancode, int modifiers) {
         if (editActions && key == GLFW.GLFW_KEY_ESCAPE) {
-            closeScreen();
+            onClose();
             return true;
         } else if (key == GLFW.GLFW_KEY_SPACE && !this.editActions) { //TODO as long as minion tasks are not editable prevent switching to them
             if (FactionPlayerHandler.getOpt(minecraft.player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
-                this.minecraft.displayGuiScreen(new SelectMinionTaskScreen());
+                this.minecraft.setScreen(new SelectMinionTaskScreen());
             }
         }
         if (getSelectedElement() >= 0) {
-            if (checkBinding(binding -> binding.matchesKey(key, scancode))) {
+            if (checkBinding(binding -> binding.matches(key, scancode))) {
                 return true;
             }
         }
@@ -141,8 +132,8 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
     @Override
     public boolean keyReleased(int key, int scancode, int modifiers) {
         if (!editActions) {
-            if (ModKeys.getKeyBinding(ModKeys.KEY.MINION).matchesKey(key, scancode) || ModKeys.getKeyBinding(ModKeys.KEY.ACTION).matchesKey(key, scancode)) {
-                this.closeScreen();
+            if (ModKeys.getKeyBinding(ModKeys.KEY.MINION).matches(key, scancode) || ModKeys.getKeyBinding(ModKeys.KEY.ACTION).matches(key, scancode)) {
+                this.onClose();
                 if (getSelectedElement() >= 0) {
                     this.onElementSelected(elements.get(getSelectedElement()));
                 }
@@ -159,16 +150,25 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
                     if (elements.get(getSelectedElement()) != fakeAction) {
                         SELECTEDACTION = elements.get(getSelectedElement());
                     } else {
-                        closeScreen();
+                        onClose();
                     }
                 }
 
             }
-            if (checkBinding(binding -> binding.matchesMouseKey(mouseButton))) {
+            if (checkBinding(binding -> binding.matchesMouse(mouseButton))) {
                 return true;
             }
         }
         return super.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    @Override
+    public void onClose() {
+        if (editActions) {
+            saveActionOrder();
+            SELECTEDACTION = null;
+        }
+        super.onClose();
     }
 
     @Override
@@ -191,7 +191,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
         if (editActions)
-            GuiUtils.drawHoveringText(stack, Lists.newArrayList(new TranslationTextComponent("gui.vampirism.action_select.action_binding"), ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).func_238171_j_().copyRaw().mergeStyle(TextFormatting.AQUA), ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).func_238171_j_().copyRaw().mergeStyle(TextFormatting.AQUA)), 0, ((int) (this.height * 0.8)), width, height, this.width / 4, this.font);
+            GuiUtils.drawHoveringText(stack, Lists.newArrayList(new TranslationTextComponent("gui.vampirism.action_select.action_binding"), ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).getTranslatedKeyMessage().plainCopy().withStyle(TextFormatting.AQUA), ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).getTranslatedKeyMessage().plainCopy().withStyle(TextFormatting.AQUA)), 0, ((int) (this.height * 0.8)), width, height, this.width / 4, this.font);
     }
 
     @Override
@@ -300,8 +300,8 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
         FactionPlayerHandler.get(minecraft.player).setBoundAction(id, action, false, true);
         VampirismMod.dispatcher.sendToServer(new ActionBindingPacket(id, action));
         if (!editActions) {
-            GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
-            closeScreen();
+            GLFW.glfwSetCursorPos(this.minecraft.getWindow().getWindow(), this.minecraft.getWindow().getScreenWidth() / 2f, this.minecraft.getWindow().getScreenHeight() / 2f);
+            onClose();
         }
     }
 

@@ -10,7 +10,6 @@ import net.minecraft.util.EntityPredicates;
 import java.util.EnumSet;
 import java.util.List;
 
-
 public class MoveToBiteableVampireGoal<T extends MobEntity & IVampireMob> extends Goal {
 
 
@@ -26,28 +25,22 @@ public class MoveToBiteableVampireGoal<T extends MobEntity & IVampireMob> extend
     public MoveToBiteableVampireGoal(T vampire, double movementSpeed) {
         this.vampire = vampire;
         this.movementSpeed = movementSpeed;
-        this.setMutexFlags(EnumSet.of(Flag.MOVE));
+        this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
     @Override
-    public void resetTask() {
-        target = null;
-        timeout = (vampire.getRNG().nextInt(5) == 0 ? 80 : 3);
+    public boolean canContinueToUse() {
+        return (!this.vampire.getNavigation().isDone() && target.isAlive());
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
-        return (!this.vampire.getNavigator().noPath() && target.isAlive());
-    }
-
-    @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         if (timeout > 0) {
             timeout--;
             return false;
         }
         if (!vampire.wantsBlood()) return false;
-        List<CreatureEntity> list = vampire.getEntityWorld().getEntitiesWithinAABB(CreatureEntity.class, vampire.getBoundingBox().grow(10, 3, 10), EntityPredicates.NOT_SPECTATING.and((entity) -> entity != vampire && entity.isAlive()));
+        List<CreatureEntity> list = vampire.getCommandSenderWorld().getEntitiesOfClass(CreatureEntity.class, vampire.getBoundingBox().inflate(10, 3, 10), EntityPredicates.NO_SPECTATORS.and((entity) -> entity != vampire && entity.isAlive()));
         for (CreatureEntity o : list) {
             if (ExtendedCreature.getSafe(o).map(creature -> creature.canBeBitten(vampire) && !creature.getEntity().hasCustomName() && !creature.hasPoisonousBlood()).orElse(false)) {
                 this.target = o;
@@ -59,7 +52,13 @@ public class MoveToBiteableVampireGoal<T extends MobEntity & IVampireMob> extend
     }
 
     @Override
-    public void startExecuting() {
-        vampire.getNavigator().tryMoveToEntityLiving(target, 1.0);
+    public void start() {
+        vampire.getNavigation().moveTo(target, 1.0);
+    }
+
+    @Override
+    public void stop() {
+        target = null;
+        timeout = (vampire.getRandom().nextInt(5) == 0 ? 80 : 3);
     }
 }

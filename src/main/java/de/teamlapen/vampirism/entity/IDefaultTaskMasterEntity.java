@@ -26,16 +26,16 @@ public interface IDefaultTaskMasterEntity extends ForceLookEntityGoal.TaskOwner,
     VillagerType getBiomeType();
 
     default boolean processInteraction(PlayerEntity playerEntity, Entity entity) {
-        if (FactionPlayerHandler.getOpt(playerEntity).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(taskManager -> taskManager.hasAvailableTasks(entity.getUniqueID())).orElse(false)) {
-            OptionalInt containerIdOpt = playerEntity.openContainer(new SimpleNamedContainerProvider((containerId, playerInventory, player) -> new TaskBoardContainer(containerId, playerInventory), entity.getDisplayName().copyRaw()));
+        if (FactionPlayerHandler.getOpt(playerEntity).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(taskManager -> taskManager.hasAvailableTasks(entity.getUUID())).orElse(false)) {
+            OptionalInt containerIdOpt = playerEntity.openMenu(new SimpleNamedContainerProvider((containerId, playerInventory, player) -> new TaskBoardContainer(containerId, playerInventory), entity.getDisplayName().plainCopy()));
             if (containerIdOpt.isPresent()) {
                 FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(iFactionPlayer -> {
-                    iFactionPlayer.getTaskManager().openTaskMasterScreen(entity.getUniqueID());
+                    iFactionPlayer.getTaskManager().openTaskMasterScreen(entity.getUUID());
                 }));
                 return true;
             }
         } else {
-            playerEntity.sendStatusMessage(NO_TASK, true);
+            playerEntity.displayClientMessage(NO_TASK, true);
         }
         return false;
     }

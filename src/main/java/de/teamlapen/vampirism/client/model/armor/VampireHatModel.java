@@ -23,19 +23,19 @@ public class VampireHatModel extends VampirismArmorModel {
     public VampireHatModel() {
         super(64, 32);
         this.base = new ModelRenderer(this, 16, 0);
-        this.base.setRotationPoint(0.0F, 0.0F, 0.0F);
+        this.base.setPos(0.0F, 0.0F, 0.0F);
         this.base.addBox(-4.5F, -8.4F, -3.5F, 7.0F, 0.4F, 7.0F, 0.25F, 0.25F, 0.25F);
         this.top = new ModelRenderer(this, 0, 0);
-        this.top.setRotationPoint(0.0F, 0.0F, 0.0F);
+        this.top.setPos(0.0F, 0.0F, 0.0F);
         this.top.addBox(-0.6F, -14.5F, -3.0F, 4.0F, 7.0F, 4.0F, 0.25F, 0.25F, 0.25F);
         this.setRotateAngle(top, -0.22217304763960307F, 0.0F, -0.27750734440919567F);
         this.base.addChild(this.top);
     }
 
     public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-        modelRenderer.rotateAngleX = x;
-        modelRenderer.rotateAngleY = y;
-        modelRenderer.rotateAngleZ = z;
+        modelRenderer.xRot = x;
+        modelRenderer.yRot = y;
+        modelRenderer.zRot = z;
     }
 
 

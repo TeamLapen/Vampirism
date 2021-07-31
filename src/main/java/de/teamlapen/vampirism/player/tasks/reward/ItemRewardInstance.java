@@ -14,11 +14,11 @@ public class ItemRewardInstance implements ITaskRewardInstance {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "item");
 
     public static ItemRewardInstance decode(PacketBuffer buffer) {
-        return new ItemRewardInstance(buffer.readItemStack());
+        return new ItemRewardInstance(buffer.readItem());
     }
 
     public static ItemRewardInstance readNbt(CompoundNBT nbt) {
-        return new ItemRewardInstance(ItemStack.read(nbt.getCompound("reward")));
+        return new ItemRewardInstance(ItemStack.of(nbt.getCompound("reward")));
     }
     @Nonnull
     protected final ItemStack reward;
@@ -29,14 +29,14 @@ public class ItemRewardInstance implements ITaskRewardInstance {
 
     @Override
     public void applyReward(IFactionPlayer<?> player) {
-        if (!player.getRepresentingPlayer().addItemStackToInventory(this.reward.copy())) {
-            player.getRepresentingPlayer().dropItem(this.reward.copy(), true);
+        if (!player.getRepresentingPlayer().addItem(this.reward.copy())) {
+            player.getRepresentingPlayer().drop(this.reward.copy(), true);
         }
     }
 
     @Override
     public void encode(PacketBuffer buffer) {
-        buffer.writeItemStack(this.reward);
+        buffer.writeItem(this.reward);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class ItemRewardInstance implements ITaskRewardInstance {
 
     @Override
     public CompoundNBT writeNBT(@Nonnull CompoundNBT nbt) {
-        nbt.put("reward", this.reward.write(new CompoundNBT()));
+        nbt.put("reward", this.reward.save(new CompoundNBT()));
         return nbt;
     }
 }

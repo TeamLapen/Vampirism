@@ -35,51 +35,51 @@ public abstract class MoveToPositionGoal<T extends CreatureEntity> extends Goal 
 
     public MoveToPositionGoal(T entity, double followSpeed, float minDist, float maxDist, boolean doTeleport, boolean look) {
         this.entity = entity;
-        this.world = entity.getEntityWorld();
+        this.world = entity.getCommandSenderWorld();
         this.followSpeed = followSpeed;
         this.minDist = minDist;
-        this.navigator = entity.getNavigator();
+        this.navigator = entity.getNavigation();
         this.maxDist = maxDist;
         this.doTeleport = doTeleport;
         this.look = look;
-        this.setMutexFlags(look ? EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Flag.JUMP) : EnumSet.of(Goal.Flag.MOVE, Flag.JUMP));
-        if (!(entity.getNavigator() instanceof GroundPathNavigator) && !(entity.getNavigator() instanceof FlyingPathNavigator)) {
+        this.setFlags(look ? EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Flag.JUMP) : EnumSet.of(Goal.Flag.MOVE, Flag.JUMP));
+        if (!(entity.getNavigation() instanceof GroundPathNavigator) && !(entity.getNavigation() instanceof FlyingPathNavigator)) {
             throw new IllegalArgumentException("Unsupported mob type for MoveToPositionGoal");
         }
     }
 
     @Override
-    public void resetTask() {
-        this.navigator.clearPath();
-        this.entity.setPathPriority(PathNodeType.WATER, this.oldWaterCost);
+    public boolean canContinueToUse() {
+        return this.getTargetPosition().distSqr(this.entity.blockPosition()) > this.minDist * minDist;
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
-        return this.getTargetPosition().distanceSq(this.entity.getPosition()) > this.minDist * minDist;
+    public boolean canUse() {
+        return this.getTargetPosition().distSqr(entity.blockPosition()) > this.minDist * minDist;
     }
 
     @Override
-    public boolean shouldExecute() {
-        return this.getTargetPosition().distanceSq(entity.getPosition()) > this.minDist * minDist;
-    }
-
-    @Override
-    public void startExecuting() {
+    public void start() {
         this.timeToRecalcPath = 0;
-        this.oldWaterCost = this.entity.getPathPriority(PathNodeType.WATER);
-        this.entity.setPathPriority(PathNodeType.WATER, 0.0F);
+        this.oldWaterCost = this.entity.getPathfindingMalus(PathNodeType.WATER);
+        this.entity.setPathfindingMalus(PathNodeType.WATER, 0.0F);
+    }
+
+    @Override
+    public void stop() {
+        this.navigator.stop();
+        this.entity.setPathfindingMalus(PathNodeType.WATER, this.oldWaterCost);
     }
 
     @Override
     public void tick() {
         Vector3i target = getTargetPosition();
-        if (look) this.entity.getLookController().setLookPosition(getLookPosition());
+        if (look) this.entity.getLookControl().setLookAt(getLookPosition());
         if (--this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = 10;
-            boolean flag = this.navigator.tryMoveToXYZ(target.getX(), target.getY(), target.getZ(), this.followSpeed);
-            if (doTeleport && (!flag || this.entity.getRNG().nextInt(8) == 0)) {
-                if (!(this.entity.getDistanceSq(target.getX(), target.getY(), target.getZ()) < maxDist * maxDist)) {
+            boolean flag = this.navigator.moveTo(target.getX(), target.getY(), target.getZ(), this.followSpeed);
+            if (doTeleport && (!flag || this.entity.getRandom().nextInt(8) == 0)) {
+                if (!(this.entity.distanceToSqr(target.getX(), target.getY(), target.getZ()) < maxDist * maxDist)) {
                     int sX = target.getX() - 2;
                     int sZ = target.getZ() - 2;
                     int sY = target.getY();
@@ -87,8 +87,8 @@ public abstract class MoveToPositionGoal<T extends CreatureEntity> extends Goal 
                     for (int dX = 0; dX <= 4; ++dX) {
                         for (int dZ = 0; dZ <= 4; ++dZ) {
                             if ((dX < 1 || dZ < 1 || dX > 3 || dZ > 3) && this.canTeleportToBlock(new BlockPos(sX + dX, sY - 1, sZ + dZ))) {
-                                this.entity.setLocationAndAngles(((float) (sX + dX) + 0.5F), sY, ((float) (sZ + dZ) + 0.5F), this.entity.rotationYaw, this.entity.rotationPitch);
-                                this.navigator.clearPath();
+                                this.entity.moveTo(((float) (sX + dX) + 0.5F), sY, ((float) (sZ + dZ) + 0.5F), this.entity.yRot, this.entity.xRot);
+                                this.navigator.stop();
                                 return;
                             }
                         }
@@ -103,7 +103,7 @@ public abstract class MoveToPositionGoal<T extends CreatureEntity> extends Goal 
 
     protected boolean canTeleportToBlock(BlockPos pos) {
         BlockState blockstate = this.world.getBlockState(pos);
-        return blockstate.canEntitySpawn(this.world, pos, this.entity.getType()) && this.world.isAirBlock(pos.up()) && this.world.isAirBlock(pos.up(2));
+        return blockstate.isValidSpawn(this.world, pos, this.entity.getType()) && this.world.isEmptyBlock(pos.above()) && this.world.isEmptyBlock(pos.above(2));
     }
 
     protected abstract Vector3d getLookPosition();

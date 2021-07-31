@@ -33,9 +33,9 @@ public class BiomeTopBlockProcessor extends StructureProcessor {
     @Nullable
     public Template.BlockInfo process(@Nonnull IWorldReader worldReaderIn, @Nonnull BlockPos pos, @Nonnull BlockPos pos1, @Nonnull Template.BlockInfo blockInfo, Template.BlockInfo blockInfo1, @Nonnull PlacementSettings placementSettings, @Nullable Template template) {
         if (blockInfo1.state.equals(replaceBlock)) {
-            BlockState topBlock = worldReaderIn.getBiome(blockInfo1.pos).getGenerationSettings().getSurfaceBuilderConfig().getTop();
+            BlockState topBlock = worldReaderIn.getBiome(blockInfo1.pos).getGenerationSettings().getSurfaceBuilderConfig().getTopMaterial();
             if (streetBlocks.containsKey(topBlock.getBlock())) {
-                topBlock = streetBlocks.get(topBlock.getBlock()).getDefaultState();
+                topBlock = streetBlocks.get(topBlock.getBlock()).defaultBlockState();
             }
             return new Template.BlockInfo(blockInfo1.pos, topBlock, null);
         }

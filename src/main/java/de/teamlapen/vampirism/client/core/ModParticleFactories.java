@@ -13,9 +13,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ModParticleFactories {
 
     public static void registerFactories() {
-        ParticleManager manager = Minecraft.getInstance().particles;
-        manager.registerFactory(ModParticles.flying_blood, new FlyingBloodParticle.Factory());
-        manager.registerFactory(ModParticles.flying_blood_entity, new FlyingBloodEntityParticle.Factory());
-        manager.registerFactory(ModParticles.generic, new GenericParticle.Factory());
+        ParticleManager manager = Minecraft.getInstance().particleEngine;
+        manager.register(ModParticles.flying_blood, new FlyingBloodParticle.Factory());
+        manager.register(ModParticles.flying_blood_entity, new FlyingBloodEntityParticle.Factory());
+        manager.register(ModParticles.generic, new GenericParticle.Factory());
     }
 }

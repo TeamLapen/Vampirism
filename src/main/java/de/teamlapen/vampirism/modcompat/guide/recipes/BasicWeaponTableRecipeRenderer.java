@@ -39,18 +39,18 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
 
 
         CRAFTING_GRID.draw(stack, guiLeft + 62, guiTop + 43);
-        baseScreen.drawCenteredStringWithoutShadow(stack, fontRenderer, ModBlocks.weapon_table.getTranslatedName(), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
-        baseScreen.drawCenteredStringWithoutShadow(stack, fontRenderer, getRecipeName().modifyStyle(style -> style.setItalic(true)), guiLeft + baseScreen.xSize / 2, guiTop + 14 + fontRenderer.FONT_HEIGHT, 0);
+        baseScreen.drawCenteredStringWithoutShadow(stack, fontRenderer, ModBlocks.weapon_table.getName(), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
+        baseScreen.drawCenteredStringWithoutShadow(stack, fontRenderer, getRecipeName().withStyle(style -> style.withItalic(true)), guiLeft + baseScreen.xSize / 2, guiTop + 14 + fontRenderer.lineHeight, 0);
 
         int outputX = guiLeft + 152;
         int outputY = guiTop + 72;
 
-        ItemStack itemStack = recipe.getRecipeOutput();
+        ItemStack itemStack = recipe.getResultItem();
 
 
         GuiHelper.drawItemStack(stack, itemStack, outputX, outputY);
         if (GuiHelper.isMouseBetween(mouseX, mouseY, outputX, outputY, 15, 15)) {
-            tooltips = GuiHelper.getTooltip(recipe.getRecipeOutput());
+            tooltips = GuiHelper.getTooltip(recipe.getResultItem());
         }
 
         if (recipe.getRequiredLavaUnits() > 0) {
@@ -60,18 +60,18 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
         int y = guiTop + 120;
         if (recipe.getRequiredLevel() > 1) {
             ITextComponent level = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
-            fontRenderer.drawText(stack, level, guiLeft + 40, y, Color.gray.getRGB());
-            y += fontRenderer.FONT_HEIGHT + 2;
+            fontRenderer.draw(stack, level, guiLeft + 40, y, Color.gray.getRGB());
+            y += fontRenderer.lineHeight + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {
             ITextProperties newLine = new StringTextComponent("\n");
             List<ITextProperties> skills = new ArrayList<>();
             skills.add(new TranslationTextComponent("gui.vampirism.hunter_weapon_table.skill", "\n"));
             for (ISkill skill : recipe.getRequiredSkills()) {
-                skills.add(skill.getName().deepCopy().mergeStyle(TextFormatting.ITALIC));
+                skills.add(skill.getName().copy().withStyle(TextFormatting.ITALIC));
                 skills.add(newLine);
             }
-            fontRenderer.func_238418_a_(ITextProperties.func_240654_a_(skills), guiLeft + 40, y, 110, Color.gray.getRGB());
+            fontRenderer.drawWordWrap(ITextProperties.composite(skills), guiLeft + 40, y, 110, Color.gray.getRGB());
         }
     }
 

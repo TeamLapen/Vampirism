@@ -16,12 +16,12 @@ public class FangCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("fang")
                 .then(Commands.argument("type", IntegerArgumentType.integer(0, REFERENCE.FANG_TYPE_COUNT - 1))
-                        .executes(context -> setFang(context, context.getSource().asPlayer(), IntegerArgumentType.getInteger(context, "type"))));
+                        .executes(context -> setFang(context, context.getSource().getPlayerOrException(), IntegerArgumentType.getInteger(context, "type"))));
     }
 
     private static int setFang(CommandContext<CommandSource> context, PlayerEntity player, int type) {
         if (VampirePlayer.getOpt(player).map(vampire -> vampire.setFangType(type)).orElse(false)) {
-            context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.fang.success", type), false);
+            context.getSource().sendSuccess(new TranslationTextComponent("command.vampirism.base.fang.success", type), false);
         }
         return type;
     }

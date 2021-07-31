@@ -27,7 +27,7 @@ public class LvlUnlocker implements TaskUnlocker {
     public ITextComponent getDescription() {
         TextComponent t = new TranslationTextComponent("text.vampirism.level_min", reqLevel);
         if (maxLevel > 0) {
-            t.appendString(" ").appendSibling(new TranslationTextComponent("text.vampirism.level_max", maxLevel));
+            t.append(" ").append(new TranslationTextComponent("text.vampirism.level_max", maxLevel));
         }
         return t;
     }

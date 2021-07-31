@@ -26,10 +26,10 @@ public class ProgressBar extends Widget {
     }
 
     @Override
-    public void renderWidget(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
-        FontRenderer fontrenderer = minecraft.fontRenderer;
-        minecraft.getTextureManager().bindTexture(WIDGETS);
+        FontRenderer fontrenderer = minecraft.font;
+        minecraft.getTextureManager().bind(WIDGETS);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.alpha);
         int i = this.getYImage(this.isHovered());
         RenderSystem.enableBlend();
@@ -37,7 +37,7 @@ public class ProgressBar extends Widget {
         RenderSystem.enableDepthTest();
         GuiUtils.drawContinuousTexturedBox(matrixStack, WIDGETS, x, y, 0, 46 + i * 20, this.width, 20, 200, 20, 3, 0);
         RenderSystem.color4f((color >> 16) / 256f, ((color >> 8) & 0xFF) / 256f, (color & 0xFF) / 256f, this.alpha);
-        minecraft.getTextureManager().bindTexture(WIDGETS);
+        minecraft.getTextureManager().bind(WIDGETS);
         if (this.active) blit(matrixStack, x + 3, y + 3, 0, 32, (int) ((progress) * (this.width - 6)), 14);
         this.renderBg(matrixStack, minecraft, mouseX, mouseY);
         int j = getFGColor();

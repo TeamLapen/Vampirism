@@ -23,27 +23,21 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
 
     public BiteNearbyEntityVampireGoal(T vampire) {
         this.vampire = vampire;
-        this.setMutexFlags(EnumSet.of(Flag.MOVE));
+        this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
     @Override
-    public void resetTask() {
-        creature = null;
-
-    }
-
-    @Override
-    public boolean shouldContinueExecuting() {
+    public boolean canContinueToUse() {
         return this.timer > 0 && creature.getEntity().isAlive() && creature.getEntity().getBoundingBox().intersects(getBiteBoundingBox());
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         if (vampire.wantsBlood()) {
-            List<CreatureEntity> list = vampire.getEntityWorld().getEntitiesWithinAABB(CreatureEntity.class, getBiteBoundingBox(), EntityPredicates.NOT_SPECTATING.and((entity) -> entity != vampire && entity.isAlive()));
+            List<CreatureEntity> list = vampire.getCommandSenderWorld().getEntitiesOfClass(CreatureEntity.class, getBiteBoundingBox(), EntityPredicates.NO_SPECTATORS.and((entity) -> entity != vampire && entity.isAlive()));
             if (list.size() > 1) {
                 try {
-                    list.sort((o1, o2) -> (int) (vampire.getDistanceSq(o1) - vampire.getDistanceSq(o2)));
+                    list.sort((o1, o2) -> (int) (vampire.distanceToSqr(o1) - vampire.distanceToSqr(o2)));
                 } catch (IllegalArgumentException e) {
                     //Might be caused by two entities with the same id (Entity#equals -> true) being included in the list for some reason, which habe different positions (compare -> !=0). This violates the comparator contract.
                     //Alternatively, some mod has a strange equals implementation
@@ -53,7 +47,7 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
             }
 
             for (CreatureEntity o : list) {
-                if (!vampire.getEntitySenses().canSee(o) || o.hasCustomName()) {
+                if (!vampire.getSensing().canSee(o) || o.hasCustomName()) {
                     continue;
                 }
                 if (ExtendedCreature.getSafe(o).filter(this::canFeed).map(creature -> {
@@ -69,14 +63,20 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
     }
 
     @Override
-    public void startExecuting() {
-        timer = 20 + vampire.getRNG().nextInt(20);
+    public void start() {
+        timer = 20 + vampire.getRandom().nextInt(20);
+    }
+
+    @Override
+    public void stop() {
+        creature = null;
+
     }
 
     @Override
     public void tick() {
         CreatureEntity e = creature.getEntity();
-        vampire.lookAt(EntityAnchorArgument.Type.EYES, new Vector3d(e.getPosX(), e.getPosY() + (double) e.getEyeHeight(), e.getPosZ()));
+        vampire.lookAt(EntityAnchorArgument.Type.EYES, new Vector3d(e.getX(), e.getY() + (double) e.getEyeHeight(), e.getZ()));
 
 
         timer--;
@@ -94,6 +94,6 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
     }
 
     protected AxisAlignedBB getBiteBoundingBox() {
-        return vampire.getBoundingBox().grow(0.5, 0.7, 0.5);
+        return vampire.getBoundingBox().inflate(0.5, 0.7, 0.5);
     }
 }

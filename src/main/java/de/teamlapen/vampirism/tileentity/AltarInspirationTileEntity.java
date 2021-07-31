@@ -46,7 +46,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
     public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
 
     public static void setBloodValue(IBlockReader worldIn, Random randomIn, BlockPos blockPosIn) {
-        TileEntity tileEntity = worldIn.getTileEntity(blockPosIn);
+        TileEntity tileEntity = worldIn.getBlockEntity(blockPosIn);
         if (tileEntity instanceof AltarInspirationTileEntity) {
             tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(fluidHandler -> fluidHandler.fill(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))), IFluidHandler.FluidAction.EXECUTE));
         }
@@ -70,31 +70,21 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(getPos(), 1, getUpdateTag());
+        return new SUpdateTileEntityPacket(getBlockPos(), 1, getUpdateTag());
     }
 
     @Nonnull
     @Override
     public CompoundNBT getUpdateTag() {
-        return write(new CompoundNBT());
-    }
-
-    @Override
-    public void markDirty() {
-        if (world != null) {
-            if (world.isRemote)
-                updateModelData(true);
-            world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
-            super.markDirty();
-        }
+        return save(new CompoundNBT());
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        if (!hasWorld()) return;
+        if (!hasLevel()) return;
         FluidStack old = tank.getFluid();
-        this.read(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
+        this.load(this.level.getBlockState(pkt.getPos()), pkt.getTag());
         if (!old.isFluidStackIdentical(tank.getFluid())) {
             updateModelData(true);
         }
@@ -102,7 +92,17 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
 
     @Override
     public void onTankContentChanged() {
-        markDirty();
+        setChanged();
+    }
+
+    @Override
+    public void setChanged() {
+        if (level != null) {
+            if (level.isClientSide)
+                updateModelData(true);
+            level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+            super.setChanged();
+        }
     }
 
     public void startRitual(PlayerEntity p) {
@@ -110,18 +110,18 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
         int targetLevel = VampirismPlayerAttributes.get(p).vampireLevel + 1;
         VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
         if (!levelingConf.isLevelValidForAltarInspiration(targetLevel)) {
-            if (p.world.isRemote)
-                p.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_level_wrong"), true);
+            if (p.level.isClientSide)
+                p.displayClientMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_level_wrong"), true);
             return;
         }
         int neededBlood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
         if (tank.getFluidAmount() + 99 < neededBlood) {//Since the container can only be filled in 100th steps
-            if (p.world.isRemote)
-                p.sendStatusMessage(new TranslationTextComponent("text.vampirism.not_enough_blood"), true);
+            if (p.level.isClientSide)
+                p.displayClientMessage(new TranslationTextComponent("text.vampirism.not_enough_blood"), true);
             return;
         }
-        if (!p.world.isRemote) {
-            ModParticles.spawnParticlesServer(p.world, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, p.getEntityId(), false), this.pos.getX() + 0.5, this.pos.getY() + 1, this.pos.getZ() + 0.5, 40, 0.1F, 0.1f, 0.1f, 0);
+        if (!p.level.isClientSide) {
+            ModParticles.spawnParticlesServer(p.level, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, p.getId(), false), this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 1, this.worldPosition.getZ() + 0.5, 40, 0.1F, 0.1f, 0.1f, 0);
         } else {
             ((InternalTank) tank).doDrain(neededBlood, IFluidHandler.FluidAction.EXECUTE);
         }
@@ -131,15 +131,15 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
 
     @Override
     public void tick() {
-        if (ritualTicksLeft == 0 || world == null || ritualPlayer == null || !ritualPlayer.isAlive()) return;
+        if (ritualTicksLeft == 0 || level == null || ritualPlayer == null || !ritualPlayer.isAlive()) return;
 
-        if (!world.isRemote) {
+        if (!level.isClientSide) {
             switch (ritualTicksLeft) {
                 case 5:
-                    LightningBoltEntity lightningboltentity = EntityType.LIGHTNING_BOLT.create(this.world);
-                    lightningboltentity.moveForced(Vector3d.copyCenteredHorizontally(pos));
-                    lightningboltentity.setEffectOnly(true);
-                    this.world.addEntity(lightningboltentity);
+                    LightningBoltEntity lightningboltentity = EntityType.LIGHTNING_BOLT.create(this.level);
+                    lightningboltentity.moveTo(Vector3d.atBottomCenterOf(worldPosition));
+                    lightningboltentity.setVisualOnly(true);
+                    this.level.addFreshEntity(lightningboltentity);
                     ritualPlayer.setHealth(ritualPlayer.getMaxHealth());
                     break;
                 case 1:
@@ -148,7 +148,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
                     int blood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
                     ((InternalTank) tank).doDrain(blood, IFluidHandler.FluidAction.EXECUTE);
 
-                    ritualPlayer.addPotionEffect(new EffectInstance(Effects.REGENERATION, targetLevel * 10 * 20));
+                    ritualPlayer.addEffect(new EffectInstance(Effects.REGENERATION, targetLevel * 10 * 20));
                     FactionPlayerHandler.get(ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, targetLevel);
                     VampirePlayer.get(ritualPlayer).drinkBlood(Integer.MAX_VALUE, 0, false);
                     break;
@@ -177,7 +177,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
     private static class InternalTank extends FluidTankWithListener {
 
         private InternalTank(int capacity) {
-            super(capacity, fluidStack -> ModFluids.blood.isEquivalentTo(fluidStack.getFluid()));
+            super(capacity, fluidStack -> ModFluids.blood.isSame(fluidStack.getFluid()));
             setDrainable(false);
         }
 

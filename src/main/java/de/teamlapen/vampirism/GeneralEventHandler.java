@@ -62,29 +62,29 @@ public class GeneralEventHandler {
         boolean isAdminLikePlayer = !ServerLifecycleHooks.getCurrentServer().isDedicatedServer() || UtilLib.isPlayerOp(event.getPlayer());
 
         if (VampirismConfig.COMMON.versionCheck.get() && versionInfo.isNewVersionAvailable()) {
-            if (isAdminLikePlayer || event.getPlayer().getRNG().nextInt(5) == 0) {
-                if (event.getPlayer().getRNG().nextInt(4) == 0) {
+            if (isAdminLikePlayer || event.getPlayer().getRandom().nextInt(5) == 0) {
+                if (event.getPlayer().getRandom().nextInt(4) == 0) {
                     VersionChecker.Version newVersion = versionInfo.getNewVersion();
-                    event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.outdated", versionInfo.getCurrentVersion().name, newVersion.name), Util.DUMMY_UUID);
-                    ITextComponent download = new TranslationTextComponent("text.vampirism.update_message.download").modifyStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, newVersion.getUrl() == null ? versionInfo.getHomePage() : newVersion.getUrl())).setUnderlined(true).applyFormatting(TextFormatting.BLUE));
-                    ITextComponent changelog = new TranslationTextComponent("text.vampirism.update_message.changelog").modifyStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vampirism changelog")).setUnderlined(true));
-                    ITextComponent modpage = new TranslationTextComponent("text.vampirism.update_message.modpage").modifyStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, versionInfo.getHomePage())).setUnderlined(true).applyFormatting(TextFormatting.BLUE));
-                    event.getPlayer().sendMessage(new StringTextComponent("").appendSibling(download).appendSibling(new StringTextComponent(" ")).appendSibling(changelog).appendSibling(new StringTextComponent(" ")).appendSibling(modpage), Util.DUMMY_UUID);
+                    event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.outdated", versionInfo.getCurrentVersion().name, newVersion.name), Util.NIL_UUID);
+                    ITextComponent download = new TranslationTextComponent("text.vampirism.update_message.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, newVersion.getUrl() == null ? versionInfo.getHomePage() : newVersion.getUrl())).setUnderlined(true).applyFormat(TextFormatting.BLUE));
+                    ITextComponent changelog = new TranslationTextComponent("text.vampirism.update_message.changelog").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vampirism changelog")).setUnderlined(true));
+                    ITextComponent modpage = new TranslationTextComponent("text.vampirism.update_message.modpage").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, versionInfo.getHomePage())).setUnderlined(true).applyFormat(TextFormatting.BLUE));
+                    event.getPlayer().sendMessage(new StringTextComponent("").append(download).append(new StringTextComponent(" ")).append(changelog).append(new StringTextComponent(" ")).append(modpage), Util.NIL_UUID);
                 }
             }
         }
         if (isAdminLikePlayer) {
             List<String> mods = IntegrationsNotifier.shouldNotifyAboutIntegrations();
             if (!mods.isEmpty()) {
-                event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.integrations_available.first"), Util.DUMMY_UUID);
-                event.getPlayer().sendMessage(new StringTextComponent(TextFormatting.BLUE + TextFormatting.ITALIC.toString() + org.apache.commons.lang3.StringUtils.join(mods, ", ") + TextFormatting.RESET), Util.DUMMY_UUID);
-                event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.integrations_available.download").modifyStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.INTEGRATIONS_LINK)).setUnderlined(true)), Util.DUMMY_UUID);
+                event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.integrations_available.first"), Util.NIL_UUID);
+                event.getPlayer().sendMessage(new StringTextComponent(TextFormatting.BLUE + TextFormatting.ITALIC.toString() + org.apache.commons.lang3.StringUtils.join(mods, ", ") + TextFormatting.RESET), Util.NIL_UUID);
+                event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.integrations_available.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.INTEGRATIONS_LINK)).setUnderlined(true)), Util.NIL_UUID);
             }
 
             if (!ModList.get().isLoaded("guideapi-vp")) {
                 if (VampirismConfig.SERVER.infoAboutGuideAPI.get()) {
-                    event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.guideapi_available.first"), Util.DUMMY_UUID);
-                    event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.guideapi_available.download").modifyStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.GUIDEAPI_LINK)).setUnderlined(true)), Util.DUMMY_UUID);
+                    event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.guideapi_available.first"), Util.NIL_UUID);
+                    event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.guideapi_available.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.GUIDEAPI_LINK)).setUnderlined(true)), Util.NIL_UUID);
 
                     VampirismConfig.SERVER.infoAboutGuideAPI.set(false);
                 }
@@ -106,7 +106,7 @@ public class GeneralEventHandler {
         FactionPlayerHandler.getOpt(event.getPlayer()).ifPresent(FactionPlayerHandler::onPlayerLoggedIn);
 
         if (!PermissionAPI.hasPermission(event.getPlayer(), Permissions.VAMPIRISM)) {
-            event.getPlayer().sendMessage(new StringTextComponent("[" + TextFormatting.DARK_PURPLE + "Vampirism" + TextFormatting.RESET + "] It seems like the permission plugin used is not properly set up. Make sure all players have 'vampirism.*' for the mod to work (or at least '" + Permissions.VAMPIRISM + "' to suppress this warning)."), Util.DUMMY_UUID);
+            event.getPlayer().sendMessage(new StringTextComponent("[" + TextFormatting.DARK_PURPLE + "Vampirism" + TextFormatting.RESET + "] It seems like the permission plugin used is not properly set up. Make sure all players have 'vampirism.*' for the mod to work (or at least '" + Permissions.VAMPIRISM + "' to suppress this warning)."), Util.NIL_UUID);
         }
     }
 
@@ -121,8 +121,8 @@ public class GeneralEventHandler {
     public void onWorldLoad(WorldEvent.Load event) {
         if (event.getWorld() instanceof ServerWorld) {
             ServerWorld w = (ServerWorld) event.getWorld();
-            ServerChunkProvider p = w.getChunkProvider();
-            ModFeatures.checkWorldStructureSeparation(w.getDimensionKey(), p.getChunkGenerator() instanceof FlatChunkGenerator, p.getChunkGenerator().func_235957_b_());
+            ServerChunkProvider p = w.getChunkSource();
+            ModFeatures.checkWorldStructureSeparation(w.dimension(), p.getGenerator() instanceof FlatChunkGenerator, p.getGenerator().getSettings());
 
         }
     }

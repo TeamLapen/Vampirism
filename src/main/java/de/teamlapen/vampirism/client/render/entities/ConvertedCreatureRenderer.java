@@ -23,7 +23,7 @@ public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureE
 
 
     @Override
-    public ResourceLocation getEntityTexture(ConvertedCreatureEntity entity) {
+    public ResourceLocation getTextureLocation(ConvertedCreatureEntity entity) {
         return null;
     }
 
@@ -33,7 +33,7 @@ public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureE
         if (creature != null) {
             creature.removed = false;
             renderOverlay = true;
-            this.renderManager.renderEntityStatic(creature, 0, 0, 0, 0, 0, matrixStack, renderTypeBuffer, packedLightIn);
+            this.entityRenderDispatcher.render(creature, 0, 0, 0, 0, 0, matrixStack, renderTypeBuffer, packedLightIn);
             renderOverlay = false;
             creature.removed = true;
         }

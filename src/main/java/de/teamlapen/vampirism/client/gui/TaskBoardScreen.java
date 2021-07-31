@@ -31,11 +31,11 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> impleme
 
     public TaskBoardScreen(TaskBoardContainer container, PlayerInventory playerInventory, ITextComponent containerName) {
         super(container, playerInventory, containerName);
-        this.xSize = 176;
-        this.ySize = 181;
+        this.imageWidth = 176;
+        this.imageHeight = 181;
         //noinspection OptionalGetWithoutIsPresent
         this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().get();
-        this.container.setReloadListener(() -> this.list.refresh());
+        this.menu.setReloadListener(() -> this.list.refresh());
     }
 
     @Override
@@ -45,13 +45,13 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> impleme
 
     @Override
     public TaskContainer getTaskContainer() {
-        return this.container;
+        return this.menu;
     }
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int buttonId, double dragX, double dragY) {
         super.mouseDragged(mouseX, mouseY, buttonId, dragX, dragY);
-        if (!this.dragSplitting) {
+        if (!this.isQuickCrafting) {
             this.list.mouseDragged(mouseX, mouseY, buttonId, dragX, dragY);
         }
         return true;
@@ -64,26 +64,26 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> impleme
     }
 
     public Collection<ITaskInstance> taskSupplier() {
-        return this.container.getVisibleTasks();
-    }
-
-    @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack mStack, float partialTicks, int mouseX, int mouseY) {
-        this.renderBackground(mStack);
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(TASKMASTER_GUI_TEXTURE);
-        blit(mStack, this.guiLeft, this.guiTop, this.getBlitOffset(), 0, 0, this.xSize, this.ySize, 256, 256);
-    }
-
-    @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack mStack, int mouseX, int mouseY) {
-        this.font.drawText(mStack, this.title, (float) (this.xSize / 2 - this.font.getStringPropertyWidth(this.title) / 2), 5.0F, 4210752);
+        return this.menu.getVisibleTasks();
     }
 
     @Override
     protected void init() {
         super.init();
-        this.addButton(list = new ScrollableListWithDummyWidget<>(this.guiLeft + 16, this.guiTop + 16, 145, 149, 21, this::taskSupplier, (item, list1, isDummy) -> new TaskItem<>(item, list1, isDummy, this, this.factionPlayer)));
+        this.addButton(list = new ScrollableListWithDummyWidget<>(this.leftPos + 16, this.topPos + 16, 145, 149, 21, this::taskSupplier, (item, list1, isDummy) -> new TaskItem<>(item, list1, isDummy, this, this.factionPlayer)));
+    }
+
+    @Override
+    protected void renderBg(MatrixStack mStack, float partialTicks, int mouseX, int mouseY) {
+        this.renderBackground(mStack);
+        GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        this.minecraft.getTextureManager().bind(TASKMASTER_GUI_TEXTURE);
+        blit(mStack, this.leftPos, this.topPos, this.getBlitOffset(), 0, 0, this.imageWidth, this.imageHeight, 256, 256);
+    }
+
+    @Override
+    protected void renderLabels(MatrixStack mStack, int mouseX, int mouseY) {
+        this.font.draw(mStack, this.title, (float) (this.imageWidth / 2 - this.font.width(this.title) / 2), 5.0F, 4210752);
     }
 
 

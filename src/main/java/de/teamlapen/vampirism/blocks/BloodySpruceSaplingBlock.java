@@ -10,7 +10,7 @@ import net.minecraft.block.material.Material;
 public class BloodySpruceSaplingBlock extends SaplingBlock {
 
     public BloodySpruceSaplingBlock() {
-        super(new BloodySpruceTree(), Block.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().zeroHardnessAndResistance().sound(SoundType.PLANT));
+        super(new BloodySpruceTree(), Block.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS));
         this.setRegistryName(REFERENCE.MODID, "bloody_spruce_sapling");
     }
 }

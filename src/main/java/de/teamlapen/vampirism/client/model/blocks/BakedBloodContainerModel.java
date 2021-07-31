@@ -63,8 +63,8 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
 
     @Nonnull
     @Override
-    public ItemCameraTransforms getItemCameraTransforms() {
-        return baseModel.getItemCameraTransforms();
+    public TextureAtlasSprite getParticleIcon() {
+        return baseModel.getParticleIcon();
     }
 
     @Nonnull
@@ -75,8 +75,8 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
 
     @Nonnull
     @Override
-    public TextureAtlasSprite getParticleTexture() {
-        return baseModel.getParticleTexture();
+    public ItemCameraTransforms getTransforms() {
+        return baseModel.getTransforms();
     }
 
     @Nonnull
@@ -99,13 +99,13 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
     }
 
     @Override
-    public boolean isAmbientOcclusion() {
-        return baseModel.isAmbientOcclusion();
+    public boolean isCustomRenderer() {
+        return baseModel.isCustomRenderer();
     }
 
     @Override
-    public boolean isBuiltInRenderer() {
-        return baseModel.isBuiltInRenderer();
+    public boolean useAmbientOcclusion() {
+        return baseModel.useAmbientOcclusion();
     }
 
     @Override
@@ -114,8 +114,8 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
     }
 
     @Override
-    public boolean isSideLit() {
-        return baseModel.isSideLit();
+    public boolean usesBlockLight() {
+        return baseModel.usesBlockLight();
     }
 
     private static class CustomItemOverride extends ItemOverrideList {
@@ -125,7 +125,7 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
         }
 
         @Override
-        public IBakedModel getOverrideModel/*getModelWithOverrides*/(@Nonnull IBakedModel originalModel, @Nonnull ItemStack stack, ClientWorld world, LivingEntity entity) {
+        public IBakedModel resolve/*getModelWithOverrides*/(@Nonnull IBakedModel originalModel, @Nonnull ItemStack stack, ClientWorld world, LivingEntity entity) {
             if (originalModel instanceof BakedBloodContainerModel) {
                 if (stack.hasTag() && stack.getTag().contains("fluid")) {
                     FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag().getCompound("fluid"));

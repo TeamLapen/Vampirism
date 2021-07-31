@@ -28,7 +28,7 @@ public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, BaronW
     }
 
     @Override
-    public ResourceLocation getEntityTexture(VampireBaronEntity entity) {
+    public ResourceLocation getTextureLocation(VampireBaronEntity entity) {
         return entity.isEnraged() ? (entity.isLady() ? textureLadyEnraged : textureLordEnraged) : (entity.isLady() ? textureLady : textureLord);
     }
 

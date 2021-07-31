@@ -32,48 +32,81 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-
 public class GarlicBeaconBlock extends VampirismBlockContainer {
 
     public final static String regName = "garlic_beacon";
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = HorizontalBlock.FACING;
     private final static AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0.07, 0, 0.07, 0.93, 0.75, 0.93);
     private static final VoxelShape shape = makeShape();
 
     private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(1, 0, 1, 15, 2, 15);
-        VoxelShape b = Block.makeCuboidShape(3, 2, 3, 13, 12, 13);
+        VoxelShape a = Block.box(1, 0, 1, 15, 2, 15);
+        VoxelShape b = Block.box(3, 2, 3, 13, 12, 13);
         return VoxelShapes.or(a, b);
     }
 
     private final Type type;
 
     public GarlicBeaconBlock(Type type) {
-        super(regName + "_" + type.getName(), Properties.create(Material.ROCK).hardnessAndResistance(3f).sound(SoundType.STONE).notSolid());
+        super(regName + "_" + type.getName(), Properties.of(Material.STONE).strength(3f).sound(SoundType.STONE).noOcclusion());
         this.type = type;
-        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
+    public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
         if (type == Type.WEAK || type == Type.IMPROVED) {
-            tooltip.add(new TranslationTextComponent(getTranslationKey() + "." + type.getName()).mergeStyle(TextFormatting.AQUA));
+            tooltip.add(new TranslationTextComponent(getDescriptionId() + "." + type.getName()).withStyle(TextFormatting.AQUA));
         }
 
-        tooltip.add(new TranslationTextComponent("block.vampirism.garlic_beacon.tooltip1").mergeStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent("block.vampirism.garlic_beacon.tooltip1").withStyle(TextFormatting.GRAY));
         int c = VampirismConfig.BALANCE.hsGarlicDiffusorEnhancedDist == null /* During game start config is not yet set*/ ? 1 : 1 + 2 * (type == Type.IMPROVED ? VampirismConfig.BALANCE.hsGarlicDiffusorEnhancedDist.get() : (type == Type.WEAK ? VampirismConfig.BALANCE.hsGarlicDiffusorWeakDist.get() : VampirismConfig.BALANCE.hsGarlicDiffusorNormalDist.get()));
-        tooltip.add(new TranslationTextComponent("block.vampirism.garlic_beacon.tooltip2", c, c).mergeStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent("block.vampirism.garlic_beacon.tooltip2", c, c).withStyle(TextFormatting.GRAY));
+    }
+
+    @Override
+    public void attack(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn) {
+        GarlicBeaconTileEntity tile = getTile(worldIn, pos);
+        if (tile != null) {
+            tile.onTouched(playerIn);
+        }
+    }
+
+    @Override
+    public String getDescriptionId() {
+        return "block.vampirism.garlic_beacon";
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return shape;
+    }
+
+    @Override
+    public BlockRenderType getRenderShape(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirrorIn) {
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
+    }
+
+    @Nullable
+    @Override
+    public TileEntity newBlockEntity(IBlockReader worldIn) {
         GarlicBeaconTileEntity tile = new GarlicBeaconTileEntity();
         tile.setType(type);
         int bootTime = VampirismConfig.BALANCE.garlicDiffusorStartupTime.get() * 20;
         if (worldIn instanceof ServerWorld) {
-            if (((ServerWorld) worldIn).getPlayers().size() <= 1) {
+            if (((ServerWorld) worldIn).players().size() <= 1) {
                 bootTime >>= 2; // /4
             }
         }
@@ -82,62 +115,41 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return shape;
-    }
-
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing());
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return "block.vampirism.garlic_beacon";
-    }
-
-    @Override
-    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
-        super.harvestBlock(worldIn, player, pos, state, te, stack);
+    public void playerDestroy(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
+        super.playerDestroy(worldIn, player, pos, state, te, stack);
         if (te instanceof GarlicBeaconTileEntity) {
             ((GarlicBeaconTileEntity) te).onTouched(player);
         }
     }
 
     @Override
-    public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+    public BlockState rotate(BlockState state, Rotation rot) {
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        ItemStack heldItem = player.getHeldItem(hand);
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ItemStack heldItem = player.getItemInHand(hand);
         if (!heldItem.isEmpty() && ModItems.purified_garlic.equals(heldItem.getItem())) {
-            if (!world.isRemote) {
+            if (!world.isClientSide) {
                 GarlicBeaconTileEntity t = getTile(world, pos);
                 if (t != null) {
                     if (t.getFuelTime() > 0) {
-                        player.sendMessage(new TranslationTextComponent("block.vampirism.garlic_beacon.already_fueled"), Util.DUMMY_UUID);
+                        player.sendMessage(new TranslationTextComponent("block.vampirism.garlic_beacon.already_fueled"), Util.NIL_UUID);
                     } else {
                         t.onFueled();
                         if (!player.isCreative()) heldItem.shrink(1);
-                        player.sendMessage(new TranslationTextComponent("block.vampirism.garlic_beacon.successfully_fueled"), Util.DUMMY_UUID);
+                        player.sendMessage(new TranslationTextComponent("block.vampirism.garlic_beacon.successfully_fueled"), Util.NIL_UUID);
                     }
 
                 }
             }
             return ActionResultType.SUCCESS;
         } else {
-            if (world.isRemote) {
+            if (world.isClientSide) {
                 GarlicBeaconTileEntity t = getTile(world, pos);
                 if (t != null) {
-                    VampirismMod.proxy.displayGarlicBeaconScreen(t, getTranslatedName());
+                    VampirismMod.proxy.displayGarlicBeaconScreen(t, getName());
                 }
             }
         }
@@ -145,26 +157,13 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn) {
-        GarlicBeaconTileEntity tile = getTile(worldIn, pos);
-        if (tile != null) {
-            tile.onTouched(playerIn);
-        }
-    }
-
-    @Override
-    public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
-    }
-
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
     @Nullable
     private GarlicBeaconTileEntity getTile(IBlockReader world, BlockPos pos) {
-        TileEntity t = world.getTileEntity(pos);
+        TileEntity t = world.getBlockEntity(pos);
         if (t instanceof GarlicBeaconTileEntity) {
             return (GarlicBeaconTileEntity) t;
         }
@@ -184,11 +183,11 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
         }
 
         public String getName() {
-            return this.getString();
+            return this.getSerializedName();
         }
 
         @Override
-        public String getString() {
+        public String getSerializedName() {
             return name;
         }
     }

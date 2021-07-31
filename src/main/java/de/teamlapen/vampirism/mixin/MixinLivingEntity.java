@@ -22,13 +22,13 @@ public abstract class MixinLivingEntity extends Entity {
     }
 
     @Shadow
-    public abstract boolean addPotionEffect(EffectInstance effectInstanceIn);
+    public abstract boolean addEffect(EffectInstance effectInstanceIn);
 
     @Inject(method = "checkTotemDeathProtection", at = @At("RETURN"), cancellable = true)
     private void handleTotemOfUndying(DamageSource damageSourceIn, CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() && Helper.isVampire(this)) {
-            this.addPotionEffect(new EffectInstance(ModEffects.fire_protection, 800, 5));
-            this.addPotionEffect(new EffectInstance(ModEffects.sunscreen, 800, 4));
+            this.addEffect(new EffectInstance(ModEffects.fire_protection, 800, 5));
+            this.addEffect(new EffectInstance(ModEffects.sunscreen, 800, 4));
         }
     }
 }

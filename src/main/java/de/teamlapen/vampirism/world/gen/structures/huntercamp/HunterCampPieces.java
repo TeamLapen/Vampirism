@@ -33,9 +33,9 @@ import java.util.Random;
 @ParametersAreNonnullByDefault
 public abstract class HunterCampPieces extends StructurePiece {
     public static void init(int chunkX, int chunkZ, Biome biomeIn, Random rand, List<StructurePiece> componentsIn) {
-        Fireplace hunterCamp = new Fireplace(rand, chunkX * 16 + rand.nextInt(16), 63, chunkZ * 16 + rand.nextInt(16), biomeIn.getGenerationSettings().getSurfaceBuilderConfig().getTop().getBlock());
+        Fireplace hunterCamp = new Fireplace(rand, chunkX * 16 + rand.nextInt(16), 63, chunkZ * 16 + rand.nextInt(16), biomeIn.getGenerationSettings().getSurfaceBuilderConfig().getTopMaterial().getBlock());
         componentsIn.add(hunterCamp);
-        hunterCamp.buildComponent(hunterCamp, componentsIn, rand);
+        hunterCamp.addChildren(hunterCamp, componentsIn, rand);
     }
     protected final int x, z;
     protected final Block baseBlock;
@@ -60,7 +60,7 @@ public abstract class HunterCampPieces extends StructurePiece {
     }
 
     @Override
-    public boolean func_230383_a_/*addComponentParts*/(ISeedReader worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
+    public boolean postProcess/*addComponentParts*/(ISeedReader worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
         this.y = worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, x, z);
         this.setBoundingBox();
 
@@ -69,7 +69,7 @@ public abstract class HunterCampPieces extends StructurePiece {
     }
 
     @Override
-    protected void readAdditional(CompoundNBT tagCompound) {
+    protected void addAdditionalSaveData(CompoundNBT tagCompound) {
         tagCompound.putInt("x", x);
         tagCompound.putInt("y", y);
         tagCompound.putInt("z", z);
@@ -83,14 +83,14 @@ public abstract class HunterCampPieces extends StructurePiece {
 
     protected boolean testPreconditions(ISeedReader worldIn, StructureManager manager, ChunkPos chunkPos) {
         if (!VampirismConfig.COMMON.enableHunterTentGeneration.get()) return false;
-        for (StructureStart<?> value : worldIn.getChunk(chunkPos.x, chunkPos.z).getStructureStarts().values()) {
-            if (value != StructureStart.DUMMY && value.getStructure() != ModFeatures.hunter_camp) {
+        for (StructureStart<?> value : worldIn.getChunk(chunkPos.x, chunkPos.z).getAllStarts().values()) {
+            if (value != StructureStart.INVALID_START && value.getFeature() != ModFeatures.hunter_camp) {
                 return false;
             }
         }
         return this.y >= 63
                 && !worldIn.getBlockState(new BlockPos(x, y - 1, z)).getMaterial().isLiquid()
-                && !manager.getStructureStart(new BlockPos(x, y, z), false, Structure.VILLAGE).isValid();
+                && !manager.getStructureAt(new BlockPos(x, y, z), false, Structure.VILLAGE).isValid();
     }
 
     public static class Fireplace extends HunterCampPieces {
@@ -99,7 +99,7 @@ public abstract class HunterCampPieces extends StructurePiece {
 
         public Fireplace(Random random, int x, int y, int z, Block baseBlock) {
             super(ModFeatures.hunter_camp_fireplace, 0, x, y, z, baseBlock);
-            this.setCoordBaseMode(Direction.Plane.HORIZONTAL.random(random));
+            this.setOrientation(Direction.Plane.HORIZONTAL.getRandomDirection(random));
         }
 
         public Fireplace(@SuppressWarnings("unused") TemplateManager templateManager, CompoundNBT nbt) {
@@ -109,7 +109,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        public void buildComponent(StructurePiece componentIn, List<StructurePiece> listIn, Random rand) {
+        public void addChildren(StructurePiece componentIn, List<StructurePiece> listIn, Random rand) {
             //adds 1-4 tent or crafting table elements to the structure (max 1 per direction && max 1 crafting table)
             @Nonnull List<Direction> directions = Lists.newArrayList(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
             if (rand.nextInt(3) == 0) {
@@ -131,22 +131,22 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        public boolean func_230383_a_/*addComponentParts*/(ISeedReader worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
+        public boolean postProcess/*addComponentParts*/(ISeedReader worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
             //preconditions
-            if (!super.func_230383_a_/*addComponentParts*/(worldIn, structureManager, chunkGenerator, random, structureBoundingBoxIn, chunkPos, blockPos)) {
+            if (!super.postProcess/*addComponentParts*/(worldIn, structureManager, chunkGenerator, random, structureBoundingBoxIn, chunkPos, blockPos)) {
                 return false;
             }
 
             //generation
-            this.setBlockState(worldIn, VampirismConfig.COMMON.useVanillaCampfire.get() ? Blocks.CAMPFIRE.getDefaultState() : ModBlocks.fire_place.getDefaultState(), 1, 0, 1, structureBoundingBoxIn);
-            this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), 1, 1, 1, structureBoundingBoxIn);
+            this.placeBlock(worldIn, VampirismConfig.COMMON.useVanillaCampfire.get() ? Blocks.CAMPFIRE.defaultBlockState() : ModBlocks.fire_place.defaultBlockState(), 1, 0, 1, structureBoundingBoxIn);
+            this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), 1, 1, 1, structureBoundingBoxIn);
 
             return true;
         }
 
         @Override
-        protected void readAdditional(CompoundNBT tagCompound) {
-            super.readAdditional(tagCompound);
+        protected void addAdditionalSaveData(CompoundNBT tagCompound) {
+            super.addAdditionalSaveData(tagCompound);
             tagCompound.putBoolean("advanced", this.advanced);
             tagCompound.putBoolean("specialComponentAdd", this.specialComponentAdd);
         }
@@ -189,20 +189,20 @@ public abstract class HunterCampPieces extends StructurePiece {
 
         public Tent(int x, int y, int z, Direction direction, Block baseBlock, boolean advanced) {
             super(ModFeatures.hunter_camp_tent, 1, x, y, z, baseBlock);
-            this.setCoordBaseMode(direction);
+            this.setOrientation(direction);
             this.direction = direction;
             this.advanced = advanced;
         }
 
         public Tent(@SuppressWarnings("unused") TemplateManager templateManager, CompoundNBT nbt) {
             super(ModFeatures.hunter_camp_tent, nbt);
-            direction = Direction.byHorizontalIndex(nbt.getInt("direction"));
+            direction = Direction.from2DDataValue(nbt.getInt("direction"));
             mirror = nbt.getInt("mirror");
             advanced = nbt.getBoolean("advanced");
         }
 
         @Override
-        public boolean func_230383_a_/*addComponentParts*/(ISeedReader worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
+        public boolean postProcess/*addComponentParts*/(ISeedReader worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
             //set helper variables
             if (mirror == 0 ? (mirror = random.nextInt(2) + 1) == 1 : mirror == 1) {
                 xDiff = 2;
@@ -213,15 +213,15 @@ public abstract class HunterCampPieces extends StructurePiece {
             }
 
             //preconditions
-            if (!super.func_230383_a_/*addComponentParts*/(worldIn, structureManager, chunkGenerator, random, structureBoundingBoxIn, chunkPos, blockPos))
+            if (!super.postProcess/*addComponentParts*/(worldIn, structureManager, chunkGenerator, random, structureBoundingBoxIn, chunkPos, blockPos))
                 return false;
 
             //helper variable for tent blockstates
             Direction dir = direction == Direction.SOUTH || direction == Direction.WEST ? direction.getOpposite() : direction;
-            int nul = this.direction.getHorizontalIndex() % 4;
-            int one = (this.direction.getHorizontalIndex() + 1) % 4;
-            int two = (this.direction.getHorizontalIndex() + 2) % 4;
-            int three = (this.direction.getHorizontalIndex() + 3) % 4;
+            int nul = this.direction.get2DDataValue() % 4;
+            int one = (this.direction.get2DDataValue() + 1) % 4;
+            int two = (this.direction.get2DDataValue() + 2) % 4;
+            int three = (this.direction.get2DDataValue() + 3) % 4;
             boolean positiveAxisDirection = this.direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE);
             boolean xAxis = this.direction.getAxis().equals(Direction.Axis.X);
             int a = positiveAxisDirection ? one : xAxis ? nul : two;
@@ -233,18 +233,18 @@ public abstract class HunterCampPieces extends StructurePiece {
 
             //generation of tent blocks
             if (mirror == 1) {
-                this.setBlockState(worldIn, ModBlocks.tent.getDefaultState().with(TentBlock.FACING, dir.getOpposite()).with(TentBlock.POSITION, a), xDiff, 0, 0, structureBoundingBoxIn);
-                this.setBlockState(worldIn, ModBlocks.tent.getDefaultState().with(TentBlock.FACING, dir).with(TentBlock.POSITION, b), 1, 0, 0, structureBoundingBoxIn);
-                this.setBlockState(worldIn, ModBlocks.tent_main.getDefaultState().with(TentBlock.FACING, dir).with(TentBlock.POSITION, c), 1, 0, 1, structureBoundingBoxIn);
-                this.setBlockState(worldIn, ModBlocks.tent.getDefaultState().with(TentBlock.FACING, dir.getOpposite()).with(TentBlock.POSITION, d), xDiff, 0, 1, structureBoundingBoxIn);
+                this.placeBlock(worldIn, ModBlocks.tent.defaultBlockState().setValue(TentBlock.FACING, dir.getOpposite()).setValue(TentBlock.POSITION, a), xDiff, 0, 0, structureBoundingBoxIn);
+                this.placeBlock(worldIn, ModBlocks.tent.defaultBlockState().setValue(TentBlock.FACING, dir).setValue(TentBlock.POSITION, b), 1, 0, 0, structureBoundingBoxIn);
+                this.placeBlock(worldIn, ModBlocks.tent_main.defaultBlockState().setValue(TentBlock.FACING, dir).setValue(TentBlock.POSITION, c), 1, 0, 1, structureBoundingBoxIn);
+                this.placeBlock(worldIn, ModBlocks.tent.defaultBlockState().setValue(TentBlock.FACING, dir.getOpposite()).setValue(TentBlock.POSITION, d), xDiff, 0, 1, structureBoundingBoxIn);
             } else {
-                this.setBlockState(worldIn, ModBlocks.tent.getDefaultState().with(TentBlock.FACING, dir).with(TentBlock.POSITION, b), xDiff, 0, 0, structureBoundingBoxIn);
-                this.setBlockState(worldIn, ModBlocks.tent.getDefaultState().with(TentBlock.FACING, dir.getOpposite()).with(TentBlock.POSITION, a), 1, 0, 0, structureBoundingBoxIn);
-                this.setBlockState(worldIn, ModBlocks.tent_main.getDefaultState().with(TentBlock.FACING, dir.getOpposite()).with(TentBlock.POSITION, d), 1, 0, 1, structureBoundingBoxIn);
-                this.setBlockState(worldIn, ModBlocks.tent.getDefaultState().with(TentBlock.FACING, dir).with(TentBlock.POSITION, c), xDiff, 0, 1, structureBoundingBoxIn);
+                this.placeBlock(worldIn, ModBlocks.tent.defaultBlockState().setValue(TentBlock.FACING, dir).setValue(TentBlock.POSITION, b), xDiff, 0, 0, structureBoundingBoxIn);
+                this.placeBlock(worldIn, ModBlocks.tent.defaultBlockState().setValue(TentBlock.FACING, dir.getOpposite()).setValue(TentBlock.POSITION, a), 1, 0, 0, structureBoundingBoxIn);
+                this.placeBlock(worldIn, ModBlocks.tent_main.defaultBlockState().setValue(TentBlock.FACING, dir.getOpposite()).setValue(TentBlock.POSITION, d), 1, 0, 1, structureBoundingBoxIn);
+                this.placeBlock(worldIn, ModBlocks.tent.defaultBlockState().setValue(TentBlock.FACING, dir).setValue(TentBlock.POSITION, c), xDiff, 0, 1, structureBoundingBoxIn);
             }
 
-            TileEntity tile = worldIn.getTileEntity(new BlockPos(x, y, z));
+            TileEntity tile = worldIn.getBlockEntity(new BlockPos(x, y, z));
             if (tile instanceof TentTileEntity) {
                 ((TentTileEntity) tile).setSpawn(true);
                 if (this.advanced) {
@@ -255,47 +255,47 @@ public abstract class HunterCampPieces extends StructurePiece {
             //generate floor
             BlockPos pos1 = new BlockPos(xCenter, y - 1, z - 1);
             if (worldIn.getBlockState(pos1).getMaterial().isReplaceable())
-                this.setBlockState(worldIn, baseBlock.getDefaultState(), xDiff, -1, 0, structureBoundingBoxIn);
+                this.placeBlock(worldIn, baseBlock.defaultBlockState(), xDiff, -1, 0, structureBoundingBoxIn);
             BlockPos pos2 = new BlockPos(x, y - 1, z - 1);
             if (worldIn.getBlockState(pos2).getMaterial().isReplaceable())
-                this.setBlockState(worldIn, baseBlock.getDefaultState(), 1, -1, 0, structureBoundingBoxIn);
+                this.placeBlock(worldIn, baseBlock.defaultBlockState(), 1, -1, 0, structureBoundingBoxIn);
             BlockPos pos3 = new BlockPos(x, y - 1, z);
             if (worldIn.getBlockState(pos3).getMaterial().isReplaceable())
-                this.setBlockState(worldIn, baseBlock.getDefaultState(), 1, -1, 1, structureBoundingBoxIn);
+                this.placeBlock(worldIn, baseBlock.defaultBlockState(), 1, -1, 1, structureBoundingBoxIn);
             BlockPos pos4 = new BlockPos(xCenter, y - 1, z);
             if (worldIn.getBlockState(pos4).getMaterial().isReplaceable())
-                this.setBlockState(worldIn, baseBlock.getDefaultState(), xDiff, -1, 1, structureBoundingBoxIn);
+                this.placeBlock(worldIn, baseBlock.defaultBlockState(), xDiff, -1, 1, structureBoundingBoxIn);
 
             //generate air
-            BlockState air = Blocks.AIR.getDefaultState();
+            BlockState air = Blocks.AIR.defaultBlockState();
             //generate air towards fireplace
-            this.setBlockState(worldIn, air, 1, 0, -1, structureBoundingBoxIn);
-            this.setBlockState(worldIn, air, xDiff, 0, -1, structureBoundingBoxIn);
-            this.setBlockState(worldIn, air, 1, 1, -1, structureBoundingBoxIn);
-            this.setBlockState(worldIn, air, xDiff, 1, -1, structureBoundingBoxIn);
+            this.placeBlock(worldIn, air, 1, 0, -1, structureBoundingBoxIn);
+            this.placeBlock(worldIn, air, xDiff, 0, -1, structureBoundingBoxIn);
+            this.placeBlock(worldIn, air, 1, 1, -1, structureBoundingBoxIn);
+            this.placeBlock(worldIn, air, xDiff, 1, -1, structureBoundingBoxIn);
             //generate air above
-            this.setBlockState(worldIn, air, xDiff, 1, 0, structureBoundingBoxIn);
-            this.setBlockState(worldIn, air, 1, 1, 0, structureBoundingBoxIn);
-            this.setBlockState(worldIn, air, 1, 1, 1, structureBoundingBoxIn);
-            this.setBlockState(worldIn, air, xDiff, 1, 1, structureBoundingBoxIn);
+            this.placeBlock(worldIn, air, xDiff, 1, 0, structureBoundingBoxIn);
+            this.placeBlock(worldIn, air, 1, 1, 0, structureBoundingBoxIn);
+            this.placeBlock(worldIn, air, 1, 1, 1, structureBoundingBoxIn);
+            this.placeBlock(worldIn, air, xDiff, 1, 1, structureBoundingBoxIn);
 
             //replace top level dirt with grass
             if (Tags.Blocks.DIRT.contains/*contains*/(worldIn.getBlockState(new BlockPos(x, y - 1, z - 2)).getBlock())) {
-                this.setBlockState(worldIn, Blocks.GRASS_BLOCK.getDefaultState(), 1, -1, -1, structureBoundingBoxIn);
+                this.placeBlock(worldIn, Blocks.GRASS_BLOCK.defaultBlockState(), 1, -1, -1, structureBoundingBoxIn);
             }
             if (Tags.Blocks.DIRT.contains/*contains*/(worldIn.getBlockState(new BlockPos(xCenter, y - 1, z - 2)).getBlock())) {
-                this.setBlockState(worldIn, Blocks.GRASS_BLOCK.getDefaultState(), xDiff, -1, -1, structureBoundingBoxIn);
+                this.placeBlock(worldIn, Blocks.GRASS_BLOCK.defaultBlockState(), xDiff, -1, -1, structureBoundingBoxIn);
             }
 
             return true;
         }
 
         @Override
-        protected void readAdditional(CompoundNBT tagCompound) {
-            tagCompound.putInt("direction", this.direction.getHorizontalIndex());
+        protected void addAdditionalSaveData(CompoundNBT tagCompound) {
+            tagCompound.putInt("direction", this.direction.get2DDataValue());
             tagCompound.putInt("mirror", this.mirror);
             tagCompound.putBoolean("advanced", this.advanced);
-            super.readAdditional(tagCompound);
+            super.addAdditionalSaveData(tagCompound);
         }
 
         @Override
@@ -315,39 +315,39 @@ public abstract class HunterCampPieces extends StructurePiece {
 
         public SpecialBlock(int x, int y, int z, Direction direction, Block baseBlocks, boolean advanced) {
             super(ModFeatures.hunter_camp_special, 2, x, y, z, baseBlocks);
-            this.setCoordBaseMode(direction);
+            this.setOrientation(direction);
             this.direction = direction;
             this.advanced = advanced;
         }
 
         public SpecialBlock(@SuppressWarnings("unused") TemplateManager templateManager, CompoundNBT compoundNBT) {
             super(ModFeatures.hunter_camp_special, compoundNBT);
-            this.direction = Direction.byHorizontalIndex(compoundNBT.getInt("dir"));
+            this.direction = Direction.from2DDataValue(compoundNBT.getInt("dir"));
             this.advanced = compoundNBT.getBoolean("advanced");
         }
 
         @Override
-        public boolean func_230383_a_/*addComponentParts*/(ISeedReader worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
+        public boolean postProcess/*addComponentParts*/(ISeedReader worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
             //preconditions
-            if (!super.func_230383_a_/*addComponentParts*/(worldIn, structureManager, chunkGenerator, random, structureBoundingBoxIn, chunkPos, blockPos))
+            if (!super.postProcess/*addComponentParts*/(worldIn, structureManager, chunkGenerator, random, structureBoundingBoxIn, chunkPos, blockPos))
                 return false;
 
             //generation
             if (advanced) {
                 if (!worldIn.getBlockState(new BlockPos(this.x + 1, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + 1, this.z) - 1, z)).getMaterial().isReplaceable())
-                    this.setBlockState(worldIn, ModBlocks.weapon_table.getDefaultState(), 2, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + 1, this.z) - y, 1, structureBoundingBoxIn);
+                    this.placeBlock(worldIn, ModBlocks.weapon_table.defaultBlockState(), 2, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + 1, this.z) - y, 1, structureBoundingBoxIn);
                 if (!worldIn.getBlockState(new BlockPos(this.x - 1, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x - 1, this.z) - 1, z)).getMaterial().isReplaceable())
-                    this.setBlockState(worldIn, Blocks.CRAFTING_TABLE.getDefaultState(), 0, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x - 1, this.z) - y, 1, structureBoundingBoxIn);
+                    this.placeBlock(worldIn, Blocks.CRAFTING_TABLE.defaultBlockState(), 0, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x - 1, this.z) - y, 1, structureBoundingBoxIn);
             } else {
-                this.setBlockState(worldIn, Blocks.CRAFTING_TABLE.getDefaultState(), 1, 0, 1, structureBoundingBoxIn);
+                this.placeBlock(worldIn, Blocks.CRAFTING_TABLE.defaultBlockState(), 1, 0, 1, structureBoundingBoxIn);
             }
             return true;
         }
 
         @Override
-        protected void readAdditional(CompoundNBT tagCompound) {
-            super.readAdditional(tagCompound);
-            tagCompound.putInt("dir", this.direction.getHorizontalIndex());
+        protected void addAdditionalSaveData(CompoundNBT tagCompound) {
+            super.addAdditionalSaveData(tagCompound);
+            tagCompound.putInt("dir", this.direction.get2DDataValue());
             tagCompound.putBoolean("advanced", this.advanced);
         }
 

@@ -14,14 +14,14 @@ public class GiveBannerCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("banner")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
                 .then(Commands.argument("faction", FactionArgument.factionArgument())
-                        .executes(context -> giveBannerItem(FactionArgument.getFaction(context, "faction"), context.getSource().asPlayer()))
+                        .executes(context -> giveBannerItem(FactionArgument.getFaction(context, "faction"), context.getSource().getPlayerOrException()))
                 );
     }
 
     private static int giveBannerItem(@Nonnull IFaction<?> faction, @Nonnull ServerPlayerEntity player) {
-        player.addItemStackToInventory(faction.getVillageData().getBanner());
+        player.addItem(faction.getVillageData().getBanner());
         return 0;
     }
 }

@@ -32,14 +32,14 @@ public class VampireActionTrigger extends AbstractCriterionTrigger<VampireAction
     }
 
     public void trigger(ServerPlayerEntity player, Action action) {
-        this.triggerListeners(player, (instance) -> {
+        this.trigger(player, (instance) -> {
             return instance.test(action);
         });
     }
 
     @Nonnull
     @Override
-    protected Instance deserializeTrigger(JsonObject json, @Nonnull EntityPredicate.AndPredicate entityPredicate, @Nonnull ConditionArrayParser conditionsParser) {
+    protected Instance createInstance(JsonObject json, @Nonnull EntityPredicate.AndPredicate entityPredicate, @Nonnull ConditionArrayParser conditionsParser) {
         Action action = Action.NONE;
         if (json.has("action")) {
             String name = json.get("action").getAsString();
@@ -64,14 +64,14 @@ public class VampireActionTrigger extends AbstractCriterionTrigger<VampireAction
         private final Action action;
 
         Instance(@Nonnull Action action) {
-            super(ID, EntityPredicate.AndPredicate.ANY_AND);
+            super(ID, EntityPredicate.AndPredicate.ANY);
             this.action = action;
         }
 
         @Nonnull
         @Override
-        public JsonObject serialize(@Nonnull ConditionArraySerializer serializer) {
-            JsonObject json = super.serialize(serializer);
+        public JsonObject serializeToJson(@Nonnull ConditionArraySerializer serializer) {
+            JsonObject json = super.serializeToJson(serializer);
             json.addProperty("action", action.name());
             return json;
         }

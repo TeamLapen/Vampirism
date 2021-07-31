@@ -90,7 +90,7 @@ public class ScrollableListButton extends ExtendedButton {
     }
 
     @Override
-    public void renderWidget(MatrixStack mStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(MatrixStack mStack, int mouseX, int mouseY, float partialTicks) {
         if (this.visible) {
             this.hLine(mStack, this.x, this.x + this.width, this.y - 1, alternate ? 0xff373737 : 0xff000000);
             GuiUtils.drawContinuousTexturedBox(mStack, MISC, this.x + width - 8, this.y - 1, alternate ? 23 : 0, 0, 9, this.height + 2, 9, 200, 2, 2, 2, 2, this.getBlitOffset());
@@ -110,7 +110,7 @@ public class ScrollableListButton extends ExtendedButton {
     }
 
     protected void renderScroller(MatrixStack mStack) {
-        Minecraft.getInstance().textureManager.bindTexture(MISC);
+        Minecraft.getInstance().textureManager.bind(MISC);
         int i = this.itemCount - this.menuSize;
         if (i >= 1) {
             float k = (float) (this.height + 3 - 30) / i;
@@ -130,8 +130,8 @@ public class ScrollableListButton extends ExtendedButton {
             if (this.elements[i].visible) {
                 this.elements[i].render(mStack, mouseX, mouseY, partialTicks);
                 ITextComponent desc = this.desc != null ? this.desc[this.scrolled + i] : new StringTextComponent("Type " + (i + this.scrolled + 1));
-                int x = this.x + (this.width - 8) / 2 - Minecraft.getInstance().fontRenderer.getStringPropertyWidth(desc) / 2;
-                Minecraft.getInstance().fontRenderer.drawTextWithShadow(mStack, desc, x, this.y + 6 + i * 20, this.elements[i].getFGColor());
+                int x = this.x + (this.width - 8) / 2 - Minecraft.getInstance().font.width(desc) / 2;
+                Minecraft.getInstance().font.drawShadow(mStack, desc, x, this.y + 6 + i * 20, this.elements[i].getFGColor());
             }
         }
     }

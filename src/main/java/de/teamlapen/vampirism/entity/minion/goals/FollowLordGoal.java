@@ -21,18 +21,12 @@ public class FollowLordGoal extends MoveToPositionGoal<MinionEntity<?>> {
     }
 
     @Override
-    public void resetTask() {
-        super.resetTask();
-        this.lord = null;
+    public boolean canContinueToUse() {
+        return super.canContinueToUse() && this.entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.follow_lord || task.getTask() == MinionTasks.protect_lord).isPresent();
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
-        return super.shouldContinueExecuting() && this.entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.follow_lord || task.getTask() == MinionTasks.protect_lord).isPresent();
-    }
-
-    @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         if (!this.entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.follow_lord || task.getTask() == MinionTasks.protect_lord).isPresent())
             return false;
         Optional<ILordPlayer> lord = this.entity.getLordOpt();
@@ -40,12 +34,18 @@ public class FollowLordGoal extends MoveToPositionGoal<MinionEntity<?>> {
             return false;
         }
         this.lord = lord.get();
-        if (!super.shouldExecute()) {
+        if (!super.canUse()) {
             this.lord = null;
             return false;
         } else {
             return true;
         }
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        this.lord = null;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class FollowLordGoal extends MoveToPositionGoal<MinionEntity<?>> {
 
     @Override
     protected Vector3i getTargetPosition() {
-        return lord.getPlayer().getPosition();
+        return lord.getPlayer().blockPosition();
     }
 
 }

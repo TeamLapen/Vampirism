@@ -37,8 +37,8 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
     public void draw(MatrixStack stack, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen baseScreen, FontRenderer fontRenderer, IngredientCycler ingredientCycler) {
 
         CRAFTING_GRID.draw(stack, guiLeft + 60, guiTop + 42);
-        AbstractGui.drawCenteredString(stack, fontRenderer, UtilLib.translate(ModBlocks.alchemical_cauldron.getTranslationKey()), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
-        AbstractGui.drawCenteredString(stack, fontRenderer, "§o" + UtilLib.translate("guideapi.text.crafting.shaped") + "§r", guiLeft + baseScreen.xSize / 2, guiTop + 14 + fontRenderer.FONT_HEIGHT, 0);
+        AbstractGui.drawCenteredString(stack, fontRenderer, UtilLib.translate(ModBlocks.alchemical_cauldron.getDescriptionId()), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
+        AbstractGui.drawCenteredString(stack, fontRenderer, "§o" + UtilLib.translate("guideapi.text.crafting.shaped") + "§r", guiLeft + baseScreen.xSize / 2, guiTop + 14 + fontRenderer.lineHeight, 0);
 
         int outputX = guiLeft + 150;
         int outputY = guiTop + 72;
@@ -47,7 +47,7 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
         int in2X = guiLeft + 108;
         int in2Y = guiTop + 59;
 
-        ItemStack itemStack = recipe.getRecipeOutput();
+        ItemStack itemStack = recipe.getResultItem();
 
 
         GuiHelper.drawItemStack(stack, itemStack, outputX, outputY);
@@ -65,7 +65,7 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
         });
 
 
-        Ingredient liquid = recipe.getFluid().map(ingredient -> ingredient, fluidStack -> Ingredient.fromItems(fluidStack.getFluid().getFilledBucket()));
+        Ingredient liquid = recipe.getFluid().map(ingredient -> ingredient, fluidStack -> Ingredient.of(fluidStack.getFluid().getBucket()));
 
         ingredientCycler.getCycledIngredientStack(liquid, 1).ifPresent(fluidStack -> {
             GuiHelper.drawItemStack(stack, fluidStack, in1X, in1Y);
@@ -78,18 +78,18 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
         int y = guiTop + 120;
         if (recipe.getRequiredLevel() > 1) {
             ITextComponent level = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
-            fontRenderer.drawText(stack, level, guiLeft + 50, y, Color.gray.getRGB());
-            y += fontRenderer.FONT_HEIGHT + 2;
+            fontRenderer.draw(stack, level, guiLeft + 50, y, Color.gray.getRGB());
+            y += fontRenderer.lineHeight + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {
             ITextProperties newLine = new StringTextComponent("\n");
             List<ITextProperties> skills = new ArrayList<>();
             skills.add(new TranslationTextComponent("gui.vampirism.alchemical_cauldron.skill", "\n"));
             for (ISkill skill : recipe.getRequiredSkills()) {
-                skills.add(skill.getName().deepCopy().mergeStyle(TextFormatting.ITALIC));
+                skills.add(skill.getName().copy().withStyle(TextFormatting.ITALIC));
                 skills.add(newLine);
             }
-            fontRenderer.func_238418_a_(ITextProperties.func_240654_a_(skills), guiLeft + 50, y, 100, Color.gray.getRGB());
+            fontRenderer.drawWordWrap(ITextProperties.composite(skills), guiLeft + 50, y, 100, Color.gray.getRGB());
         }
     }
 

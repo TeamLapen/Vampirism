@@ -93,29 +93,29 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         int arrows = getArrowsLeft(stack);
         if (arrows == -1) {
-            tooltip.add(new TranslationTextComponent(Enchantments.INFINITY.getName()).mergeStyle(TextFormatting.DARK_GRAY));
+            tooltip.add(new TranslationTextComponent(Enchantments.INFINITY_ARROWS.getDescriptionId()).withStyle(TextFormatting.DARK_GRAY));
         } else if (arrows == 0) {
-            tooltip.add(new TranslationTextComponent("text.vampirism.crossbow.not_loaded").mergeStyle(TextFormatting.DARK_GRAY));
+            tooltip.add(new TranslationTextComponent("text.vampirism.crossbow.not_loaded").withStyle(TextFormatting.DARK_GRAY));
 
         } else {
-            tooltip.add(new TranslationTextComponent("text.vampirism.crossbow.loaded_arrow_count", arrows).mergeStyle(TextFormatting.DARK_GRAY));
+            tooltip.add(new TranslationTextComponent("text.vampirism.crossbow.loaded_arrow_count", arrows).withStyle(TextFormatting.DARK_GRAY));
         }
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        if (this.isInGroup(group)) {
+    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+        if (this.allowdedIn(group)) {
             items.add(setArrowsLeft(new ItemStack(this), 0));
             items.add(setArrowsLeft(new ItemStack(this), MAX_ARROW_COUNT));
         }
     }
 
     @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
         return Tags.Items.INGOTS_IRON.contains(repair.getItem());
     }
 
@@ -128,17 +128,17 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     @Nonnull
     @Override
     protected ItemStack findAmmo(PlayerEntity player, ItemStack bowStack) {
-        boolean arrow = reduceArrowCount(bowStack, player.getRNG());
+        boolean arrow = reduceArrowCount(bowStack, player.getRandom());
         if (!arrow) {
-            for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
-                ItemStack itemstack = player.inventory.getStackInSlot(i);
+            for (int i = 0; i < player.inventory.getContainerSize(); ++i) {
+                ItemStack itemstack = player.inventory.getItem(i);
 
                 if (!itemstack.isEmpty() && this.isArrowPackage(itemstack)) {
                     setArrowsLeft(bowStack, MAX_ARROW_COUNT);
-                    if (!player.abilities.isCreativeMode) {
-                        player.inventory.decrStackSize(i, 1);
+                    if (!player.abilities.instabuild) {
+                        player.inventory.removeItem(i, 1);
                     }
-                    player.getCooldownTracker().setCooldown(bowStack.getItem(), getReloadCooldown(player, bowStack));
+                    player.getCooldowns().addCooldown(bowStack.getItem(), getReloadCooldown(player, bowStack));
                 }
             }
             return ItemStack.EMPTY;

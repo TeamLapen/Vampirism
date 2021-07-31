@@ -28,18 +28,18 @@ import java.util.List;
 public class HunterVillageData implements IVillageFactionData {
     public static ItemStack createBanner() {
         ItemStack itemStack = new ItemStack(Items.BLUE_BANNER);
-        CompoundNBT compoundNBT = itemStack.getOrCreateChildTag("BlockEntityTag");
+        CompoundNBT compoundNBT = itemStack.getOrCreateTagElement("BlockEntityTag");
         ListNBT listNBT = new BannerPattern.Builder()
-                .setPatternWithColor(BannerPattern.STRIPE_SMALL, DyeColor.BLACK)
-                .setPatternWithColor(BannerPattern.STRIPE_CENTER, DyeColor.BLACK)
-                .setPatternWithColor(BannerPattern.BORDER, DyeColor.WHITE)
-                .setPatternWithColor(BannerPattern.STRIPE_MIDDLE, DyeColor.BLACK)
-                .setPatternWithColor(BannerPattern.CURLY_BORDER, DyeColor.BLACK)
-                .setPatternWithColor(BannerPattern.STRAIGHT_CROSS, DyeColor.WHITE)
-                .buildNBT();
+                .addPattern(BannerPattern.STRIPE_SMALL, DyeColor.BLACK)
+                .addPattern(BannerPattern.STRIPE_CENTER, DyeColor.BLACK)
+                .addPattern(BannerPattern.BORDER, DyeColor.WHITE)
+                .addPattern(BannerPattern.STRIPE_MIDDLE, DyeColor.BLACK)
+                .addPattern(BannerPattern.CURLY_BORDER, DyeColor.BLACK)
+                .addPattern(BannerPattern.STRAIGHT_CROSS, DyeColor.WHITE)
+                .toListTag();
         compoundNBT.put("Patterns", listNBT);
-        itemStack.func_242395_a(ItemStack.TooltipDisplayFlags.ADDITIONAL);
-        itemStack.setDisplayName(new TranslationTextComponent("block.minecraft.ominous_banner").mergeStyle(TextFormatting.GOLD));
+        itemStack.hideTooltipPart(ItemStack.TooltipDisplayFlags.ADDITIONAL);
+        itemStack.setHoverName(new TranslationTextComponent("block.minecraft.ominous_banner").withStyle(TextFormatting.GOLD));
         return itemStack;
     }
     private final ItemStack banner = createBanner();
@@ -81,6 +81,6 @@ public class HunterVillageData implements IVillageFactionData {
 
     @Override
     public boolean isBanner(@Nonnull ItemStack stack) {
-        return ItemStack.areItemStacksEqual(this.banner, stack);
+        return ItemStack.matches(this.banner, stack);
     }
 }

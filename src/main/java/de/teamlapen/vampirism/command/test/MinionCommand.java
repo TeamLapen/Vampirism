@@ -33,7 +33,7 @@ public class MinionCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("minion")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
                 .then(Commands.literal("spawnNew")
                         .then(Commands.literal("vampire").executes(context -> spawnNewVampireMinion(context.getSource(), "Minion", -1, false))
                                 .then(Commands.argument("name", StringArgumentType.string()).executes(context -> spawnNewVampireMinion(context.getSource(), StringArgumentType.getString(context, "name"), -1, false))
@@ -66,7 +66,7 @@ public class MinionCommand extends BasicCommand {
     }
 
     private static <T extends MinionData> int spawnNewMinion(CommandSource ctx, IPlayableFaction<?> faction, T data, EntityType<? extends MinionEntity<T>> type) throws CommandSyntaxException {
-        PlayerEntity p = ctx.asPlayer();
+        PlayerEntity p = ctx.getPlayerOrException();
         FactionPlayerHandler fph = FactionPlayerHandler.get(p);
         if (fph.getMaxMinions() > 0) {
             PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
@@ -95,7 +95,7 @@ public class MinionCommand extends BasicCommand {
     }
 
     private static int recall(CommandSource ctx) throws CommandSyntaxException {
-        PlayerEntity p = ctx.asPlayer();
+        PlayerEntity p = ctx.getPlayerOrException();
         FactionPlayerHandler fph = FactionPlayerHandler.get(p);
         if (fph.getMaxMinions() > 0) {
             PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
@@ -112,7 +112,7 @@ public class MinionCommand extends BasicCommand {
 
 
     private static int respawn(CommandSource ctx) throws CommandSyntaxException {
-        PlayerEntity p = ctx.asPlayer();
+        PlayerEntity p = ctx.getPlayerOrException();
         FactionPlayerHandler fph = FactionPlayerHandler.get(p);
         if (fph.getMaxMinions() > 0) {
             PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
@@ -129,9 +129,9 @@ public class MinionCommand extends BasicCommand {
     }
 
     private static int purge(CommandSource ctx) throws CommandSyntaxException {
-        PlayerEntity p = ctx.asPlayer();
-        MinionWorldData.getData(ctx.getServer()).purgeController(p.getUniqueID());
-        p.sendStatusMessage(new StringTextComponent("Reload world"), false);
+        PlayerEntity p = ctx.getPlayerOrException();
+        MinionWorldData.getData(ctx.getServer()).purgeController(p.getUUID());
+        p.displayClientMessage(new StringTextComponent("Reload world"), false);
         return 0;
     }
 }

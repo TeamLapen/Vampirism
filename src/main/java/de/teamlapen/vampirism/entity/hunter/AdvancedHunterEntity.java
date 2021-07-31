@@ -56,17 +56,18 @@ import java.util.Optional;
  * Advanced hunter. Is strong. Represents supporters
  */
 public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedHunter, IPlayerOverlay, IEntityActionUser {
-    private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(AdvancedHunterEntity.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(AdvancedHunterEntity.class, DataSerializers.VARINT);
-    private static final DataParameter<String> NAME = EntityDataManager.createKey(AdvancedHunterEntity.class, DataSerializers.STRING);
-    private static final DataParameter<String> TEXTURE = EntityDataManager.createKey(AdvancedHunterEntity.class, DataSerializers.STRING);
+    private static final DataParameter<Integer> LEVEL = EntityDataManager.defineId(AdvancedHunterEntity.class, DataSerializers.INT);
+    private static final DataParameter<Integer> TYPE = EntityDataManager.defineId(AdvancedHunterEntity.class, DataSerializers.INT);
+    private static final DataParameter<String> NAME = EntityDataManager.defineId(AdvancedHunterEntity.class, DataSerializers.STRING);
+    private static final DataParameter<String> TEXTURE = EntityDataManager.defineId(AdvancedHunterEntity.class, DataSerializers.STRING);
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder()
-                .createMutableAttribute(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.ADVANCED_HUNTER_MAX_HEALTH)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.ADVANCED_HUNTER_SPEED);
+                .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.ADVANCED_HUNTER_MAX_HEALTH)
+                .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE)
+                .add(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.ADVANCED_HUNTER_SPEED);
     }
+
     private final int MAX_LEVEL = 1;
     private final int MOVE_TO_RESTRICT_PRIO = 3;
     /**
@@ -94,24 +95,32 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     public AdvancedHunterEntity(EntityType<? extends AdvancedHunterEntity> type, World world) {
         super(type, world, true);
         saveHome = true;
-        ((GroundPathNavigator) this.getNavigator()).setBreakDoors(true);
+        ((GroundPathNavigator) this.getNavigation()).setCanOpenDoors(true);
 
 
         this.setDontDropEquipment();
         entitytier = EntityActionTier.High;
-        entityclass = EntityClassType.getRandomClass(this.getRNG());
+        entityclass = EntityClassType.getRandomClass(this.getRandom());
         IEntityActionUser.applyAttributes(this);
         this.entityActionHandler = new ActionHandlerEntity<>(this);
         this.enableImobConversion();
     }
 
     @Override
-    public boolean attackEntityAsMob(Entity entity) {
-        boolean flag = super.attackEntityAsMob(entity);
-        if (flag && this.getHeldItemMainhand().isEmpty()) {
-            this.swingArm(Hand.MAIN_HAND);  //Swing stake if nothing else is held
+    public void addAdditionalSaveData(CompoundNBT nbt) {
+        super.addAdditionalSaveData(nbt);
+        nbt.putInt("level", getLevel());
+        nbt.putInt("type", getHunterType());
+        nbt.putString("texture", getEntityData().get(TEXTURE));
+        nbt.putString("name", getEntityData().get(NAME));
+        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
+        if (entityActionHandler != null) {
+            entityActionHandler.write(nbt);
         }
-        return flag;
+        nbt.putBoolean("attack", attack);
+        if (lootBookId != null) {
+            nbt.putString("lootBookId", lootBookId);
+        }
     }
 
     @Override
@@ -121,8 +130,11 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public boolean canDespawn(double distanceToClosestPlayer) {
-        return super.canDespawn(distanceToClosestPlayer) && isLookingForHome();
+    public void aiStep() {
+        super.aiStep();
+        if (entityActionHandler != null) {
+            entityActionHandler.handle();
+        }
     }
 
     @Override
@@ -137,8 +149,12 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public boolean getAlwaysRenderNameTagForRender() {
-        return true;
+    public boolean doHurtTarget(Entity entity) {
+        boolean flag = super.doHurtTarget(entity);
+        if (flag && this.getMainHandItem().isEmpty()) {
+            this.swing(Hand.MAIN_HAND);  //Swing stake if nothing else is held
+        }
+        return flag;
     }
 
     public Optional<String> getBookLootId() {
@@ -163,21 +179,21 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
 
     @Override
     public int getHunterType() {
-        return this.getDataManager().get(TYPE);
+        return this.getEntityData().get(TYPE);
     }
 
     @Override
     public int getLevel() {
-        return getDataManager().get(LEVEL);
+        return getEntityData().get(LEVEL);
     }
 
     @Override
     public void setLevel(int level) {
         if (level >= 0) {
-            getDataManager().set(LEVEL, level);
+            getEntityData().set(LEVEL, level);
             this.updateEntityAttributes();
             if (level == 1) {
-                this.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 1000000, 1));
+                this.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 1000000, 1));
             }
 
         }
@@ -191,7 +207,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Nonnull
     @Override
     public ITextComponent getName() {
-        String senderName = this.getDataManager().get(NAME);
+        String senderName = this.getEntityData().get(NAME);
         return "none".equals(senderName) ? super.getName() : new StringTextComponent(senderName);
     }
 
@@ -216,7 +232,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Nullable
     @Override
     public String getTextureName() {
-        String texture = this.getDataManager().get(TEXTURE);
+        String texture = this.getEntityData().get(TEXTURE);
         return "none".equals(texture) ? null : texture;
     }
 
@@ -236,23 +252,15 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
-        if (entityActionHandler != null) {
-            entityActionHandler.handle();
-        }
-    }
-
-    @Override
-    public void readAdditional(CompoundNBT tagCompund) {
-        super.readAdditional(tagCompund);
+    public void readAdditionalSaveData(CompoundNBT tagCompund) {
+        super.readAdditionalSaveData(tagCompund);
         if (tagCompund.contains("level")) {
             setLevel(tagCompund.getInt("level"));
         }
         if (tagCompund.contains("type")) {
-            getDataManager().set(TYPE, tagCompund.getInt("type"));
-            getDataManager().set(NAME, tagCompund.getString("name"));
-            getDataManager().set(TEXTURE, tagCompund.getString("texture"));
+            getEntityData().set(TYPE, tagCompund.getInt("type"));
+            getEntityData().set(NAME, tagCompund.getString("name"));
+            getEntityData().set(TEXTURE, tagCompund.getString("texture"));
         }
         if (entityActionHandler != null) {
             entityActionHandler.read(tagCompund);
@@ -263,6 +271,11 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         if (tagCompund.contains("lootBookId")) {
             this.lootBookId = tagCompund.getString("lootBookId");
         }
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+        return super.removeWhenFarAway(distanceToClosestPlayer) && isLookingForHome();
     }
 
     @Override
@@ -278,39 +291,33 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
+    public boolean shouldShowName() {
+        return true;
+    }
+
+    @Override
     public int suggestLevel(Difficulty d) {
-        if (rand.nextBoolean()) {
+        if (random.nextBoolean()) {
             return (int) (d.avgPercLevel * MAX_LEVEL / 100F);
         }
-        return rand.nextInt(MAX_LEVEL + 1);
+        return random.nextInt(MAX_LEVEL + 1);
 
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt) {
-        super.writeAdditional(nbt);
-        nbt.putInt("level", getLevel());
-        nbt.putInt("type", getHunterType());
-        nbt.putString("texture", getDataManager().get(TEXTURE));
-        nbt.putString("name", getDataManager().get(NAME));
-        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
-        if (entityActionHandler != null) {
-            entityActionHandler.write(nbt);
-        }
-        nbt.putBoolean("attack", attack);
-        if (lootBookId != null) {
-            nbt.putString("lootBookId", lootBookId);
-        }
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        SupporterManager.Supporter supporter = SupporterManager.getInstance().getRandomHunter(random);
+        this.getEntityData().define(LEVEL, -1);
+        this.getEntityData().define(TYPE, supporter.typeId);
+        this.getEntityData().define(NAME, supporter.senderName == null ? "none" : supporter.senderName);
+        this.getEntityData().define(TEXTURE, supporter.textureName == null ? "none" : supporter.textureName);
+        this.lootBookId = supporter.bookID;
+
     }
 
     @Override
-    protected ActionResultType getEntityInteractionResult(PlayerEntity player, Hand hand) { //processInteract
-        if (hand == Hand.MAIN_HAND && tryCureSanguinare(player)) return ActionResultType.SUCCESS;
-        return super.getEntityInteractionResult(player, hand);
-    }
-
-    @Override
-    protected int getExperiencePoints(PlayerEntity player) {
+    protected int getExperienceReward(PlayerEntity player) {
         return 10 * (1 + getLevel());
     }
 
@@ -320,15 +327,9 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        SupporterManager.Supporter supporter = SupporterManager.getInstance().getRandomHunter(rand);
-        this.getDataManager().register(LEVEL, -1);
-        this.getDataManager().register(TYPE, supporter.typeId);
-        this.getDataManager().register(NAME, supporter.senderName == null ? "none" : supporter.senderName);
-        this.getDataManager().register(TEXTURE, supporter.textureName == null ? "none" : supporter.textureName);
-        this.lootBookId = supporter.bookID;
-
+    protected ActionResultType mobInteract(PlayerEntity player, Hand hand) { //processInteract
+        if (hand == Hand.MAIN_HAND && tryCureSanguinare(player)) return ActionResultType.SUCCESS;
+        return super.mobInteract(player, hand);
     }
 
     @Override

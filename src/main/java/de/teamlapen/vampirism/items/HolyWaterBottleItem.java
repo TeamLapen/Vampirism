@@ -25,7 +25,7 @@ public class HolyWaterBottleItem extends VampirismItem implements IItemWithTier,
     private final TIER tier;
 
     public HolyWaterBottleItem(TIER tier) {
-        this(regName + "_" + tier.getName(), tier, new Properties().group(VampirismMod.creativeTab));
+        this(regName + "_" + tier.getName(), tier, new Properties().tab(VampirismMod.creativeTab));
         setTranslation_key(regName);
     }
 
@@ -35,8 +35,8 @@ public class HolyWaterBottleItem extends VampirismItem implements IItemWithTier,
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
     }
 

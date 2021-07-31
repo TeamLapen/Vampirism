@@ -11,7 +11,7 @@ public class MarkerCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("marker")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .executes(context -> {
                     return marker(null);
                 }).then(Commands.argument("args", StringArgumentType.greedyString())

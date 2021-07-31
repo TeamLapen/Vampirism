@@ -9,7 +9,7 @@ import java.util.UUID;
 @Mixin(ArmorItem.class)
 public interface ArmorItemAccessor {
 
-    @Accessor("ARMOR_MODIFIERS")
+    @Accessor("ARMOR_MODIFIER_UUID_PER_SLOT")
     static UUID[] getModifierUUID_vampirism() {
         throw new IllegalStateException("Mixin not applied");
     }

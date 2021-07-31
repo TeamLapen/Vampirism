@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 public class ThrowableItemEntity extends ThrowableEntity implements IRendersAsItem {
 
     private final static Logger LOGGER = LogManager.getLogger(ThrowableItemEntity.class);
-    private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(ThrowableItemEntity.class, DataSerializers.ITEMSTACK);
+    private static final DataParameter<ItemStack> ITEM = EntityDataManager.defineId(ThrowableItemEntity.class, DataSerializers.ITEM_STACK);
 
     public ThrowableItemEntity(EntityType<? extends ThrowableItemEntity> type, World worldIn) {
         super(type, worldIn);
@@ -40,7 +40,16 @@ public class ThrowableItemEntity extends ThrowableEntity implements IRendersAsIt
     }
 
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
+        ItemStack stack = getItem();
+        if (!stack.isEmpty()) {
+            compound.put("thrownItem", stack.save(new CompoundNBT()));
+        }
+    }
+
+    @Override
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -50,7 +59,7 @@ public class ThrowableItemEntity extends ThrowableEntity implements IRendersAsIt
     public
     @Nonnull
     ItemStack getItem() {
-        return this.getDataManager().get(ITEM);
+        return this.getEntityData().get(ITEM);
     }
 
     /**
@@ -62,13 +71,13 @@ public class ThrowableItemEntity extends ThrowableEntity implements IRendersAsIt
     public void setItem(@Nonnull ItemStack stack) {
         if (!stack.isEmpty() && !(stack.getItem() instanceof IVampirismThrowableItem))
             throw new IllegalArgumentException("EntityThrowable only accepts IVampirismThrowableItem, but not " + stack);
-        this.getDataManager().set(ITEM, stack);
+        this.getEntityData().set(ITEM, stack);
     }
 
     @Override
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
-        ItemStack stack = ItemStack.read(compound.getCompound("thrownItem"));
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
+        ItemStack stack = ItemStack.of(compound.getCompound("thrownItem"));
         if (stack.isEmpty()) {
             this.remove();
         } else {
@@ -77,35 +86,26 @@ public class ThrowableItemEntity extends ThrowableEntity implements IRendersAsIt
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
-        ItemStack stack = getItem();
-        if (!stack.isEmpty()) {
-            compound.put("thrownItem", stack.write(new CompoundNBT()));
-        }
+    protected void defineSynchedData() {
+        this.getEntityData().define(ITEM, ItemStack.EMPTY);
     }
 
-    protected float getGravityVelocity() {
+    protected float getGravity() {
         return 0.05F;
     }
 
     @Override
-    protected void onImpact(RayTraceResult result) {
+    protected void onHit(RayTraceResult result) {
         ItemStack stack = getItem();
         if (!stack.isEmpty()) {
             Item item = stack.getItem();
             if (item instanceof IVampirismThrowableItem) {
-                ((IVampirismThrowableItem) item).onImpact(this, stack, result, this.world.isRemote);
+                ((IVampirismThrowableItem) item).onImpact(this, stack, result, this.level.isClientSide);
             } else {
                 LOGGER.warn("Saved item ({}) is not an instance of IVampirismThrowableItem. This should not be able to happen", stack);
             }
         }
-        if (!this.world.isRemote) this.remove();
-    }
-
-    @Override
-    protected void registerData() {
-        this.getDataManager().register(ITEM, ItemStack.EMPTY);
+        if (!this.level.isClientSide) this.remove();
     }
 
     /**

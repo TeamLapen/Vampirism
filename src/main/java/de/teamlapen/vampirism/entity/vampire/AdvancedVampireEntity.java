@@ -52,18 +52,19 @@ import java.util.Optional;
  * Advanced vampire. Is strong. Represents supporters
  */
 public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvancedVampire, IPlayerOverlay, IEntityActionUser {
-    private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(AdvancedVampireEntity.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(AdvancedVampireEntity.class, DataSerializers.VARINT);
-    private static final DataParameter<String> NAME = EntityDataManager.createKey(AdvancedVampireEntity.class, DataSerializers.STRING);
-    private static final DataParameter<String> TEXTURE = EntityDataManager.createKey(AdvancedVampireEntity.class, DataSerializers.STRING);
+    private static final DataParameter<Integer> LEVEL = EntityDataManager.defineId(AdvancedVampireEntity.class, DataSerializers.INT);
+    private static final DataParameter<Integer> TYPE = EntityDataManager.defineId(AdvancedVampireEntity.class, DataSerializers.INT);
+    private static final DataParameter<String> NAME = EntityDataManager.defineId(AdvancedVampireEntity.class, DataSerializers.STRING);
+    private static final DataParameter<String> TEXTURE = EntityDataManager.defineId(AdvancedVampireEntity.class, DataSerializers.STRING);
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
-                .createMutableAttribute(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_SPEED)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 13);
+                .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH)
+                .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE)
+                .add(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_SPEED)
+                .add(Attributes.FOLLOW_RANGE, 13);
     }
+
     private final int MAX_LEVEL = 1;
     /**
      * available actions for AI task & task
@@ -98,19 +99,27 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         this.setSpawnRestriction(SpawnRestriction.SPECIAL);
         this.setDontDropEquipment();
         entitytier = EntityActionTier.High;
-        entityclass = EntityClassType.getRandomClass(this.getRNG());
+        entityclass = EntityClassType.getRandomClass(this.getRandom());
         IEntityActionUser.applyAttributes(this);
         this.entityActionHandler = new ActionHandlerEntity<>(this);
         this.enableImobConversion();
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damageSource, float amount) {
-        boolean flag = super.attackEntityFrom(damageSource, amount);
-        if (flag && damageSource.getTrueSource() instanceof PlayerEntity && this.rand.nextInt(4) == 0) {
-            this.addPotionEffect(new EffectInstance(ModEffects.sunscreen, 150, 2));
+    public void addAdditionalSaveData(CompoundNBT nbt) {
+        super.addAdditionalSaveData(nbt);
+        nbt.putInt("level", getLevel());
+        nbt.putInt("type", getEyeType());
+        nbt.putString("texture", getEntityData().get(TEXTURE));
+        nbt.putString("name", getEntityData().get(NAME));
+        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
+        if (entityActionHandler != null) {
+            entityActionHandler.write(nbt);
         }
-        return flag;
+        nbt.putBoolean("attack", this.attack);
+        if (lootBookId != null) {
+            nbt.putString("lootBookId", lootBookId);
+        }
     }
 
     @Override
@@ -136,8 +145,11 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public boolean getAlwaysRenderNameTagForRender() {
-        return true;
+    public void aiStep() {
+        super.aiStep();
+        if (entityActionHandler != null) {
+            entityActionHandler.handle();
+        }
     }
 
     public Optional<String> getBookLootId() {
@@ -162,7 +174,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
     @Override
     public int getEyeType() {
-        return getDataManager().get(TYPE);
+        return getEntityData().get(TYPE);
     }
 
     @Override
@@ -172,16 +184,16 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
     @Override
     public int getLevel() {
-        return getDataManager().get(LEVEL);
+        return getEntityData().get(LEVEL);
     }
 
     @Override
     public void setLevel(int level) {
         if (level >= 0) {
-            getDataManager().set(LEVEL, level);
+            getEntityData().set(LEVEL, level);
             this.updateEntityAttributes();
             if (level == 1) {
-                this.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 1000000, 0));
+                this.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 1000000, 0));
             }
         }
     }
@@ -199,7 +211,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     @Nonnull
     @Override
     public ITextComponent getName() {
-        String senderName = this.getDataManager().get(NAME);
+        String senderName = this.getEntityData().get(NAME);
         return "none".equals(senderName) ? super.getName() : new StringTextComponent(senderName);
     }
 
@@ -224,7 +236,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
     @Nullable
     public String getTextureName() {
-        String texture = this.getDataManager().get(TEXTURE);
+        String texture = this.getEntityData().get(TEXTURE);
         return "none".equals(texture) ? null : texture;
     }
 
@@ -248,23 +260,24 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
-        if (entityActionHandler != null) {
-            entityActionHandler.handle();
+    public boolean hurt(DamageSource damageSource, float amount) {
+        boolean flag = super.hurt(damageSource, amount);
+        if (flag && damageSource.getEntity() instanceof PlayerEntity && this.random.nextInt(4) == 0) {
+            this.addEffect(new EffectInstance(ModEffects.sunscreen, 150, 2));
         }
+        return flag;
     }
 
     @Override
-    public void readAdditional(CompoundNBT tagCompund) {
-        super.readAdditional(tagCompund);
+    public void readAdditionalSaveData(CompoundNBT tagCompund) {
+        super.readAdditionalSaveData(tagCompund);
         if (tagCompund.contains("level")) {
             setLevel(tagCompund.getInt("level"));
         }
         if (tagCompund.contains("type")) {
-            getDataManager().set(TYPE, tagCompund.getInt("type"));
-            getDataManager().set(NAME, tagCompund.getString("name"));
-            getDataManager().set(TEXTURE, tagCompund.getString("texture"));
+            getEntityData().set(TYPE, tagCompund.getInt("type"));
+            getEntityData().set(NAME, tagCompund.getString("name"));
+            getEntityData().set(TEXTURE, tagCompund.getString("texture"));
         }
         if (entityActionHandler != null) {
             entityActionHandler.read(tagCompund);
@@ -284,29 +297,17 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public int suggestLevel(Difficulty d) {
-        if (rand.nextBoolean()) {
-            return (int) (d.avgPercLevel * MAX_LEVEL / 100F);
-        }
-        return rand.nextInt(MAX_LEVEL + 1);
-
+    public boolean shouldShowName() {
+        return true;
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt) {
-        super.writeAdditional(nbt);
-        nbt.putInt("level", getLevel());
-        nbt.putInt("type", getEyeType());
-        nbt.putString("texture", getDataManager().get(TEXTURE));
-        nbt.putString("name", getDataManager().get(NAME));
-        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
-        if (entityActionHandler != null) {
-            entityActionHandler.write(nbt);
+    public int suggestLevel(Difficulty d) {
+        if (random.nextBoolean()) {
+            return (int) (d.avgPercLevel * MAX_LEVEL / 100F);
         }
-        nbt.putBoolean("attack", this.attack);
-        if (lootBookId != null) {
-            nbt.putString("lootBookId", lootBookId);
-        }
+        return random.nextInt(MAX_LEVEL + 1);
+
     }
 
     @Override
@@ -315,8 +316,15 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    protected int getExperiencePoints(PlayerEntity player) {
-        return 10 * (1 + getLevel());
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        SupporterManager.Supporter supporter = SupporterManager.getInstance().getRandomVampire(random);
+        lootBookId = supporter.bookID;
+        this.getEntityData().define(LEVEL, -1);
+        this.getEntityData().define(TYPE, supporter.typeId);
+        this.getEntityData().define(NAME, supporter.senderName == null ? "none" : supporter.senderName);
+        this.getEntityData().define(TEXTURE, supporter.textureName == null ? "none" : supporter.textureName);
+
     }
 
     @Override
@@ -325,15 +333,8 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        SupporterManager.Supporter supporter = SupporterManager.getInstance().getRandomVampire(rand);
-        lootBookId = supporter.bookID;
-        this.getDataManager().register(LEVEL, -1);
-        this.getDataManager().register(TYPE, supporter.typeId);
-        this.getDataManager().register(NAME, supporter.senderName == null ? "none" : supporter.senderName);
-        this.getDataManager().register(TEXTURE, supporter.textureName == null ? "none" : supporter.textureName);
-
+    protected int getExperienceReward(PlayerEntity player) {
+        return 10 * (1 + getLevel());
     }
 
     @Override

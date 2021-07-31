@@ -39,22 +39,23 @@ public abstract class InventoryTileEntity extends LockableTileEntity implements 
     }
 
     @Override
-    public void clear() {
+    public boolean canPlaceItem(int slot, ItemStack stack) {
+        if (slot < 0 || slot >= selectors.length) return false;
+        return selectors[slot].validate(stack);
+    }
+
+    @Override
+    public void clearContent() {
         inventorySlots.clear();
     }
 
     @Override
-    public ItemStack decrStackSize(int slot, int amt) {
-        return ItemStackHelper.getAndSplit(inventorySlots, slot, amt);
-    }
-
-    @Override
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return inventorySlots.size();
     }
 
     @Override
-    public ItemStack getStackInSlot(int index) {
+    public ItemStack getItem(int index) {
         return inventorySlots.get(index);
     }
 
@@ -64,53 +65,52 @@ public abstract class InventoryTileEntity extends LockableTileEntity implements 
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        if (slot < 0 || slot >= selectors.length) return false;
-        return selectors[slot].validate(stack);
-    }
-
-    @Override
-    public boolean isUsableByPlayer(PlayerEntity player) {
-        if (!hasWorld()) return false;
-        if (this.world.getTileEntity(this.pos) != this) {
-            return false;
-        } else {
-            return player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= MAX_DIST_SQRT;
-        }
-    }
-
-    @Override
-    public void openInventory(PlayerEntity player) {
-    }
-
-    @Override
-    public void read(BlockState state, CompoundNBT tagCompound) {
-        super.read(state, tagCompound);
+    public void load(BlockState state, CompoundNBT tagCompound) {
+        super.load(state, tagCompound);
         inventorySlots.clear();
         ItemStackHelper.loadAllItems(tagCompound, this.inventorySlots);
 
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index) {
-        return ItemStackHelper.getAndRemove(inventorySlots, index);
+    public ItemStack removeItem(int slot, int amt) {
+        return ItemStackHelper.removeItem(inventorySlots, slot, amt);
     }
 
     @Override
-    public void setInventorySlotContents(int slot, ItemStack stack) {
-        inventorySlots.set(slot, stack);
-        if (stack.getCount() > getInventoryStackLimit()) {
-            stack.setCount(getInventoryStackLimit());
-        }
-        this.markDirty();//Not sure
-
+    public ItemStack removeItemNoUpdate(int index) {
+        return ItemStackHelper.takeItem(inventorySlots, index);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         ItemStackHelper.saveAllItems(compound, inventorySlots);
         return compound;
+    }
+
+    @Override
+    public void setItem(int slot, ItemStack stack) {
+        inventorySlots.set(slot, stack);
+        if (stack.getCount() > getMaxStackSize()) {
+            stack.setCount(getMaxStackSize());
+        }
+        this.setChanged();//Not sure
+
+    }
+
+    @Override
+    public void startOpen(PlayerEntity player) {
+    }
+
+    @Override
+    public boolean stillValid(PlayerEntity player) {
+        if (!hasLevel()) return false;
+        if (this.level.getBlockEntity(this.worldPosition) != this) {
+            return false;
+        } else {
+            return player.distanceToSqr((double) this.worldPosition.getX() + 0.5D, (double) this.worldPosition.getY() + 0.5D, (double) this.worldPosition.getZ() + 0.5D) <= MAX_DIST_SQRT;
+        }
     }
 
     @Nonnull

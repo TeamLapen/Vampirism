@@ -48,6 +48,6 @@ public class ModTiles {
     }
 
     private static <T extends TileEntity> TileEntityType<?> create(String id, Supplier<? extends T> factoryIn, Block... blocks) {
-        return TileEntityType.Builder.create(factoryIn, blocks).build(null).setRegistryName(REFERENCE.MODID, id);
+        return TileEntityType.Builder.of(factoryIn, blocks).build(null).setRegistryName(REFERENCE.MODID, id);
     }
 }

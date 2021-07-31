@@ -29,9 +29,9 @@ public class LordCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSource, ?> register() {
 
         return Commands.literal("lord-level")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
                 .then(Commands.argument("level", IntegerArgumentType.integer(0))
-                        .executes(context -> setLevel(context, IntegerArgumentType.getInteger(context, "level"), Lists.newArrayList(context.getSource().asPlayer())))
+                        .executes(context -> setLevel(context, IntegerArgumentType.getInteger(context, "level"), Lists.newArrayList(context.getSource().getPlayerOrException())))
                         .then(Commands.argument("player", EntityArgument.entities())
                                 .executes(context -> setLevel(context, IntegerArgumentType.getInteger(context, "level"), EntityArgument.getPlayers(context, "player")))));
 
@@ -53,7 +53,7 @@ public class LordCommand extends BasicCommand {
             level = Math.min(level, faction.getHighestLordLevel());
 
             if (handler.setLordLevel(level)) {
-                context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.lord.successful", player.getName(), faction.getName(), level), true);
+                context.getSource().sendSuccess(new TranslationTextComponent("command.vampirism.base.lord.successful", player.getName(), faction.getName(), level), true);
             } else {
                 throw LORD_FAILED.create();
             }

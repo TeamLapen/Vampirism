@@ -18,14 +18,14 @@ public class IgnoreSunDamageEntityAction<T extends CreatureEntity & IEntityActio
 
     @Override
     public void activate(T entity) {
-        entity.addPotionEffect(new EffectInstance(ModEffects.sunscreen, getDuration(entity.getLevel()), 0));
+        entity.addEffect(new EffectInstance(ModEffects.sunscreen, getDuration(entity.getLevel()), 0));
 
     }
 
     @Override
     public void deactivate(T entity) {
-        if (entity.getActivePotionEffect(ModEffects.sunscreen) != null && entity.getActivePotionEffect(ModEffects.sunscreen).getAmplifier() == 0) {
-            entity.removePotionEffect(ModEffects.sunscreen);
+        if (entity.getEffect(ModEffects.sunscreen) != null && entity.getEffect(ModEffects.sunscreen).getAmplifier() == 0) {
+            entity.removeEffect(ModEffects.sunscreen);
         }
     }
 
@@ -41,10 +41,10 @@ public class IgnoreSunDamageEntityAction<T extends CreatureEntity & IEntityActio
 
     @Override
     public int getWeight(CreatureEntity entity) {
-        if (!entity.getEntityWorld().isDaytime() || entity.getEntityWorld().isRaining()) {//Not perfectly accurate (the actual sundamage checks for celestial angle and also might exclude certain dimensions and biomes
+        if (!entity.getCommandSenderWorld().isDay() || entity.getCommandSenderWorld().isRaining()) {//Not perfectly accurate (the actual sundamage checks for celestial angle and also might exclude certain dimensions and biomes
             return 0;
         }
-        return ((IVampire) entity).isGettingSundamage(entity.world) ? 3 : 1;
+        return ((IVampire) entity).isGettingSundamage(entity.level) ? 3 : 1;
     }
 
     @Override

@@ -26,36 +26,35 @@ public class ImpureBloodFluid extends VampirismFluid {
         super("impure_blood");
     }
 
-    @Nonnull
     @Override
-    public VoxelShape func_215664_b(@Nonnull FluidState fluidState, @Nonnull IBlockReader blockReader, @Nonnull BlockPos blockPos) {
-        return VoxelShapes.fullCube();
-    }
-
-    @Override
-    public float getActualHeight(@Nonnull FluidState fluidState, @Nonnull IBlockReader blockReader, @Nonnull BlockPos blockPos) {
+    public int getAmount(@Nonnull FluidState fluidState) {
         return 0;
     }
 
     @Nonnull
     @Override
-    public Item getFilledBucket() {
+    public Item getBucket() {
         return ModItems.impure_blood_bucket;
     }
 
     @Override
-    public float getHeight(@Nonnull FluidState fluidState) {
+    public float getHeight(@Nonnull FluidState fluidState, @Nonnull IBlockReader blockReader, @Nonnull BlockPos blockPos) {
         return 0;
     }
 
     @Override
-    public int getLevel(@Nonnull FluidState fluidState) {
+    public float getOwnHeight(@Nonnull FluidState fluidState) {
         return 0;
     }
 
+    @Nonnull
+    @Override
+    public VoxelShape getShape(@Nonnull FluidState fluidState, @Nonnull IBlockReader blockReader, @Nonnull BlockPos blockPos) {
+        return VoxelShapes.block();
+    }
 
     @Override
-    public int getTickRate(@Nonnull IWorldReader worldReader) {
+    public int getTickDelay(@Nonnull IWorldReader worldReader) {
         return 5;
     }
 
@@ -65,7 +64,7 @@ public class ImpureBloodFluid extends VampirismFluid {
     }
 
     @Override
-    protected boolean canDisplace(@Nonnull FluidState fluidState, @Nonnull IBlockReader blockReader, @Nonnull BlockPos blockPos, @Nonnull Fluid fluid, @Nonnull Direction direction) {
+    protected boolean canBeReplacedWith(@Nonnull FluidState fluidState, @Nonnull IBlockReader blockReader, @Nonnull BlockPos blockPos, @Nonnull Fluid fluid, @Nonnull Direction direction) {
         return false;
     }
 
@@ -77,8 +76,8 @@ public class ImpureBloodFluid extends VampirismFluid {
 
     @Nonnull
     @Override
-    protected BlockState getBlockState(@Nonnull FluidState state) {
-        return Blocks.AIR.getDefaultState();
+    protected BlockState createLegacyBlock(@Nonnull FluidState state) {
+        return Blocks.AIR.defaultBlockState();
     }
 
     @Override

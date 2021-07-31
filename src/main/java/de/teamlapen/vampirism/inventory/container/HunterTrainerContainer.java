@@ -41,7 +41,7 @@ public class HunterTrainerContainer extends InventoryContainer implements IInven
     }
 
     public HunterTrainerContainer(int id, PlayerInventory playerInventory, @Nullable HunterTrainerEntity trainer) {
-        super(ModContainer.hunter_trainer, id, playerInventory, trainer == null ? IWorldPosCallable.DUMMY : IWorldPosCallable.of(trainer.world, trainer.getPosition()), new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
+        super(ModContainer.hunter_trainer, id, playerInventory, trainer == null ? IWorldPosCallable.NULL : IWorldPosCallable.create(trainer.level, trainer.blockPosition()), new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
         ((Inventory) this.inventory).addListener(this);
         this.player = playerInventory.player;
         this.addPlayerSlots(playerInventory);
@@ -49,9 +49,8 @@ public class HunterTrainerContainer extends InventoryContainer implements IInven
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity player) {
-        if (entity == null) return false;
-        return new Vector3d(player.getPosX(), player.getPosY(), player.getPosZ()).distanceTo(new Vector3d(entity.getPosX(), entity.getPosY(), entity.getPosZ())) < 5;
+    public void containerChanged(IInventory iInventory) {
+        changed = true;
     }
 
     /**
@@ -85,19 +84,6 @@ public class HunterTrainerContainer extends InventoryContainer implements IInven
         return false;
     }
 
-    @Override
-    public void onContainerClosed(PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
-        if (!playerIn.getEntityWorld().isRemote) {
-            clearContainer(playerIn, playerIn.getEntityWorld(), inventory);
-        }
-    }
-
-    @Override
-    public void onInventoryChanged(IInventory iInventory) {
-        changed = true;
-    }
-
     /**
      * Called via input packet, when the player clicks the levelup button.
      */
@@ -107,9 +93,23 @@ public class HunterTrainerContainer extends InventoryContainer implements IInven
             FactionPlayerHandler.get(player).setFactionLevel(VReference.HUNTER_FACTION, old + 1);
             int[] req = HunterLevelingConf.instance().getItemRequirementsForTrainer(old + 1);
             InventoryHelper.removeItems(inventory, new int[]{req[0], req[1], 1});
-            player.addPotionEffect(new EffectInstance(ModEffects.saturation, 400, 2));
+            player.addEffect(new EffectInstance(ModEffects.saturation, 400, 2));
             changed = true;
         }
+    }
+
+    @Override
+    public void removed(PlayerEntity playerIn) {
+        super.removed(playerIn);
+        if (!playerIn.getCommandSenderWorld().isClientSide) {
+            clearContainer(playerIn, playerIn.getCommandSenderWorld(), inventory);
+        }
+    }
+
+    @Override
+    public boolean stillValid(PlayerEntity player) {
+        if (entity == null) return false;
+        return new Vector3d(player.getX(), player.getY(), player.getZ()).distanceTo(new Vector3d(entity.getX(), entity.getY(), entity.getZ())) < 5;
     }
 
 }

@@ -101,11 +101,11 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
             }
             Integer blood = valuesIn.remove(id);
             if (blood == null) {
-                LOGGER.warn("Missing blood value for convertible creature {} ({})", entry.getKey().getName(), id);
+                LOGGER.warn("Missing blood value for convertible creature {} ({})", entry.getKey().getDescription(), id);
                 continue;
             }
             blood = Math.round(blood * bloodValueMultiplier);
-            LOGGER.debug("Registering convertible {} with blood {} and handler {}", entry.getKey().getName().getString(), blood, entry.getValue().getClass().getName());
+            LOGGER.debug("Registering convertible {} with blood {} and handler {}", entry.getKey().getDescription().getString(), blood, entry.getValue().getClass().getName());
             BiteableEntry biteEntry = new BiteableEntry(blood, (entry.getValue() == null ? defaultHandler : entry.getValue()));
             biteables.put(id, biteEntry);
         }

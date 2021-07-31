@@ -76,8 +76,8 @@ public class ModLootTables {
     }
 
     private static LootPool getInjectPool(String entryName) {
-        LootEntry.Builder<?> entryBuilder = TableLootEntry.builder(INJECTION_TABLES.get(entryName)).weight(1);
-        return LootPool.builder().name("vampirism_inject_pool").bonusRolls(0, 1).rolls(new RandomValueRange(1)).addEntry(entryBuilder).build();
+        LootEntry.Builder<?> entryBuilder = TableLootEntry.lootTableReference(INJECTION_TABLES.get(entryName)).setWeight(1);
+        return LootPool.lootPool().name("vampirism_inject_pool").bonusRolls(0, 1).setRolls(new RandomValueRange(1)).add(entryBuilder).build();
     }
 
     public static boolean checkAndResetInsertedAll() {

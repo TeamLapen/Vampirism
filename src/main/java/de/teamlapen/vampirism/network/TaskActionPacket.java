@@ -12,13 +12,13 @@ import java.util.function.Supplier;
 public class TaskActionPacket implements IMessage {
 
     static void encode(TaskActionPacket msg, PacketBuffer buf) {
-        buf.writeUniqueId(msg.task);
-        buf.writeUniqueId(msg.entityId);
+        buf.writeUUID(msg.task);
+        buf.writeUUID(msg.entityId);
         buf.writeVarInt(msg.action.ordinal());
     }
 
     static TaskActionPacket decode(PacketBuffer buf) {
-        return new TaskActionPacket(buf.readUniqueId(), buf.readUniqueId(), TaskContainer.TaskAction.values()[buf.readVarInt()]);
+        return new TaskActionPacket(buf.readUUID(), buf.readUUID(), TaskContainer.TaskAction.values()[buf.readVarInt()]);
     }
 
     public static void handle(final TaskActionPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {

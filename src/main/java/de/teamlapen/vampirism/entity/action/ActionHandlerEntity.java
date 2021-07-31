@@ -46,8 +46,8 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> i
     }
 
     public void handle() {
-        if (!entity.world.isRemote && availableActions != null && !availableActions.isEmpty()) {
-            if (entity.getAttackTarget() instanceof PlayerEntity) {
+        if (!entity.level.isClientSide && availableActions != null && !availableActions.isEmpty()) {
+            if (entity.getTarget() instanceof PlayerEntity) {
                 if (isPlayerTarget) {
                     updateHandler();
                 } else {
@@ -126,7 +126,7 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> i
             }
         }
         if (weightsum > 0) {
-            return WeightedRandom.getRandomItem(entity.getRNG(), entry, weightsum).getAction();
+            return WeightedRandom.getRandomItem(entity.getRandom(), entry, weightsum).getAction();
         }
         return null;
     }

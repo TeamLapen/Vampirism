@@ -37,38 +37,38 @@ public class GarlicBlock extends CropsBlock {
 
     private static VoxelShape[] makeShape() {
         return new VoxelShape[]{
-                Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D),
-                Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D),
-                Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 4.0D, 16.0D),
-                Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 5.0D, 16.0D),
-                Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D),
-                Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D),
-                Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D),
-                Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 9.0D, 16.0D)
+                Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D),
+                Block.box(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D),
+                Block.box(0.0D, 0.0D, 0.0D, 16.0D, 4.0D, 16.0D),
+                Block.box(0.0D, 0.0D, 0.0D, 16.0D, 5.0D, 16.0D),
+                Block.box(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D),
+                Block.box(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D),
+                Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D),
+                Block.box(0.0D, 0.0D, 0.0D, 16.0D, 9.0D, 16.0D)
         };
     }
 
     public GarlicBlock() {
-        super(Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().zeroHardnessAndResistance().sound(SoundType.CROP));
+        super(Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.CROP));
         setRegistryName(REFERENCE.MODID, regName);
     }
 
-    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return shape[state.get(this.getAgeProperty())];
-    }
-
-    @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (state.get(AGE) > 5 && Helper.isVampire(entity)) {
+    public void entityInside(BlockState state, World world, BlockPos pos, Entity entity) {
+        if (state.getValue(AGE) > 5 && Helper.isVampire(entity)) {
             DamageHandler.affectVampireGarlicDirect(entity instanceof PlayerEntity ? VReference.VAMPIRE_FACTION.getPlayerCapability((PlayerEntity) entity).orElseThrow(() -> new IllegalStateException("Capability cannot be null")) : (IVampire) entity, EnumStrength.WEAK);
         }
     }
 
     @Nonnull
     @Override
-    protected IItemProvider getSeedsItem() {
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return shape[state.getValue(this.getAgeProperty())];
+    }
+
+    @Nonnull
+    @Override
+    protected IItemProvider getBaseSeedId() {
         return ModItems.item_garlic;
     }
 }

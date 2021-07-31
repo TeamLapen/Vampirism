@@ -106,8 +106,8 @@ public class BloodConversionRegistry {
         } else if (items_blacklist.contains(item.getRegistryName())) {
             return false;
         } else {
-            if (item.isFood() && item.getFood().isMeat()) {
-                int value = MathHelper.clamp((item.getRegistryName() != null && item.getRegistryName().getPath().contains("cooked")) ? 0 : item.getFood().getHealing() / 2, 0, 5);
+            if (item.isEdible() && item.getFoodProperties().isMeat()) {
+                int value = MathHelper.clamp((item.getRegistryName() != null && item.getRegistryName().getPath().contains("cooked")) ? 0 : item.getFoodProperties().getNutrition() / 2, 0, 5);
                 if (value > 0) {
                     items_calculated.put(item.getRegistryName(), value);
                     return true;
@@ -142,7 +142,7 @@ public class BloodConversionRegistry {
      * @return Impure blood amount in mB or 0
      */
     public static FluidStack getBloodFromFluid(@Nonnull FluidStack fluid) {
-        if (fluid.getFluid().isEquivalentTo(VReference.blood_fluid))
+        if (fluid.getFluid().isSame(VReference.blood_fluid))
             return fluid;
         return new FluidStack(VReference.blood_fluid, (int) (getBloodValue(fluid) * fluid.getAmount()));
     }

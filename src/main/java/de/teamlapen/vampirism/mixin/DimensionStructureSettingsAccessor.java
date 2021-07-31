@@ -12,7 +12,7 @@ import java.util.Map;
 public interface DimensionStructureSettingsAccessor {
 
 
-    @Accessor("field_236193_d_")
+    @Accessor("structureConfig")
     void setStructureSeparation_vampirism(Map<Structure<?>, StructureSeparationSettings> separation);
 
 

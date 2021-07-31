@@ -32,42 +32,41 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
 
     private static VoxelShape makeShape() {
         //base
-        VoxelShape a = Block.makeCuboidShape(5, 0, 5, 11, 4, 11);
-        VoxelShape b = Block.makeCuboidShape(2, 4, 2, 14, 5, 14);
-        VoxelShape c = Block.makeCuboidShape(1, 5, 1, 15, 6, 15);
+        VoxelShape a = Block.box(5, 0, 5, 11, 4, 11);
+        VoxelShape b = Block.box(2, 4, 2, 14, 5, 14);
+        VoxelShape c = Block.box(1, 5, 1, 15, 6, 15);
         //side
-        VoxelShape d1 = Block.makeCuboidShape(1, 6, 1, 3, 7, 15);
-        VoxelShape d2 = Block.makeCuboidShape(1, 6, 1, 15, 7, 3);
-        VoxelShape d3 = Block.makeCuboidShape(15, 6, 15, 15, 7, 3);
-        VoxelShape d4 = Block.makeCuboidShape(15, 6, 15, 3, 7, 15);
+        VoxelShape d1 = Block.box(1, 6, 1, 3, 7, 15);
+        VoxelShape d2 = Block.box(1, 6, 1, 15, 7, 3);
+        VoxelShape d3 = Block.box(15, 6, 15, 15, 7, 3);
+        VoxelShape d4 = Block.box(15, 6, 15, 3, 7, 15);
         //pillar
-        VoxelShape e1 = Block.makeCuboidShape(1, 6, 1, 3, 12, 3);
-        VoxelShape e2 = Block.makeCuboidShape(13, 6, 1, 15, 12, 3);
-        VoxelShape e3 = Block.makeCuboidShape(13, 6, 13, 15, 12, 15);
-        VoxelShape e4 = Block.makeCuboidShape(1, 6, 13, 3, 12, 15);
+        VoxelShape e1 = Block.box(1, 6, 1, 3, 12, 3);
+        VoxelShape e2 = Block.box(13, 6, 1, 15, 12, 3);
+        VoxelShape e3 = Block.box(13, 6, 13, 15, 12, 15);
+        VoxelShape e4 = Block.box(1, 6, 13, 3, 12, 15);
         //pillar top
-        VoxelShape f1 = Block.makeCuboidShape(1, 12, 1, 2, 13, 2);
-        VoxelShape f2 = Block.makeCuboidShape(14, 12, 1, 15, 13, 2);
-        VoxelShape f3 = Block.makeCuboidShape(1, 12, 14, 2, 13, 15);
-        VoxelShape f4 = Block.makeCuboidShape(14, 12, 14, 15, 13, 15);
+        VoxelShape f1 = Block.box(1, 12, 1, 2, 13, 2);
+        VoxelShape f2 = Block.box(14, 12, 1, 15, 13, 2);
+        VoxelShape f3 = Block.box(1, 12, 14, 2, 13, 15);
+        VoxelShape f4 = Block.box(14, 12, 14, 15, 13, 15);
         //middle base
-        VoxelShape g = Block.makeCuboidShape(5, 6, 5, 11, 7, 11);
+        VoxelShape g = Block.box(5, 6, 5, 11, 7, 11);
         //blood
-        VoxelShape h1 = Block.makeCuboidShape(5, 9, 5, 11, 11, 11);
-        VoxelShape h2 = Block.makeCuboidShape(7, 7, 7, 9, 13, 9);
-        VoxelShape h3 = Block.makeCuboidShape(6, 8, 6, 10, 12, 10);
+        VoxelShape h1 = Block.box(5, 9, 5, 11, 11, 11);
+        VoxelShape h2 = Block.box(7, 7, 7, 9, 13, 9);
+        VoxelShape h3 = Block.box(6, 8, 6, 10, 12, 10);
 
         return VoxelShapes.or(a, b, c, d1, d2, d3, d4, e1, e2, e3, e4, f1, f2, f3, f4, g, h1, h2, h3);
     }
 
     public AltarInfusionBlock() {
-        super(name, Properties.create(Material.ROCK).hardnessAndResistance(5).notSolid());
+        super(name, Properties.of(Material.STONE).strength(5).noOcclusion());
     }
 
-    @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader world) {
-        return new AltarInfusionTileEntity();
+    public BlockRenderType getRenderShape(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
     @Override
@@ -81,10 +80,10 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
         return ToolType.PICKAXE;
     }
 
-
+    @Nullable
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public TileEntity newBlockEntity(IBlockReader world) {
+        return new AltarInfusionTileEntity();
     }
 
     @Override
@@ -93,13 +92,13 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        ItemStack heldItem = player.getHeldItem(hand);
-        AltarInfusionTileEntity te = (AltarInfusionTileEntity) worldIn.getTileEntity(pos);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ItemStack heldItem = player.getItemInHand(hand);
+        AltarInfusionTileEntity te = (AltarInfusionTileEntity) worldIn.getBlockEntity(pos);
         //If empty hand and can start -> StartAdvanced
-        if (worldIn.isRemote || te == null) return ActionResultType.SUCCESS;
+        if (worldIn.isClientSide || te == null) return ActionResultType.SUCCESS;
         if (!Helper.isVampire(player)) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual.wrong_faction"), true);
+            player.displayClientMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual.wrong_faction"), true);
             return ActionResultType.SUCCESS;
         }
         AltarInfusionTileEntity.Result result = te.canActivate(player, true);
@@ -113,10 +112,10 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
         //If non empty hand or missing tileInventory -> open GUI
         if (!heldItem.isEmpty() || result == AltarInfusionTileEntity.Result.INVMISSING) {
             if (te.getCurrentPhase() != AltarInfusionTileEntity.PHASE.NOT_RUNNING) {
-                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"), true);
+                player.displayClientMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"), true);
                 return ActionResultType.SUCCESS;
             }
-            player.openContainer(te);
+            player.openMenu(te);
             return ActionResultType.SUCCESS;
         }
         return ActionResultType.SUCCESS;

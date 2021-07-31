@@ -19,10 +19,10 @@ public class SetSwordChargedCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("setSwordCharged")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
                 .then(Commands.argument("charge", FloatArgumentType.floatArg(0))
                         .executes(context -> {
-                            return setSwordCharged(context.getSource(), Collections.singleton(context.getSource().asPlayer()), FloatArgumentType.getFloat(context, "charge"));
+                            return setSwordCharged(context.getSource(), Collections.singleton(context.getSource().getPlayerOrException()), FloatArgumentType.getFloat(context, "charge"));
                         })
                         .then(Commands.argument("players", EntityArgument.players())
                                 .executes(context -> {
@@ -32,13 +32,13 @@ public class SetSwordChargedCommand extends BasicCommand {
 
     private static int setSwordCharged(CommandSource commandSource, Collection<ServerPlayerEntity> players, float charge) {
         for (ServerPlayerEntity player : players) {
-            ItemStack held = player.getHeldItemMainhand();
+            ItemStack held = player.getMainHandItem();
 
             if (held.getItem() instanceof VampirismVampireSword) {
                 ((VampirismVampireSword) held.getItem()).setCharged(held, charge);
-                player.setHeldItem(Hand.MAIN_HAND, held);
+                player.setItemInHand(Hand.MAIN_HAND, held);
             } else {
-                commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.swordcharged.nosword"), false);
+                commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.swordcharged.nosword"), false);
             }
         }
         return 0;

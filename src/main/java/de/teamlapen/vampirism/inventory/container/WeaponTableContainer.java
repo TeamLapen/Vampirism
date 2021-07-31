@@ -73,64 +73,64 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
             this.addSlot(new Slot(playerInventory, l, 18 + l * 18, 165));
         }
 
-        this.onCraftMatrixChanged(this.craftMatrix);
+        this.slotsChanged(this.craftMatrix);
     }
 
     @Override
-    public boolean canInteractWith(@Nonnull PlayerEntity playerIn) {
-        return isWithinUsableDistance(this.worldPos, playerIn, ModBlocks.weapon_table);
-    }
-
-    /**
-     * Called to determine if the current slot is valid for the stack merging (double-click) code. The stack passed in
-     * is null for the initial slot that was double-clicked.
-     */
-    public boolean canMergeSlot(ItemStack stack, Slot slotIn) {
-        return slotIn.inventory != this.craftResult && super.canMergeSlot(stack, slotIn);
-    }
-
-    @Override
-    public void clear() {
-        craftMatrix.clear();
-        craftResult.clear();
-    }
-
-    @Override
-    public void detectAndSendChanges() {
-        super.detectAndSendChanges();
-        for (IContainerListener icontainerlistener : this.listeners) {
+    public void broadcastChanges() {
+        super.broadcastChanges();
+        for (IContainerListener icontainerlistener : this.containerListeners) {
             if (this.prevMissingLava != this.missingLava) {
-                icontainerlistener.sendWindowProperty(this, 0, missingLava ? 1 : 0);
+                icontainerlistener.setContainerData(this, 0, missingLava ? 1 : 0);
             }
 
         }
         this.prevMissingLava = missingLava;
     }
 
+    /**
+     * Called to determine if the current slot is valid for the stack merging (double-click) code. The stack passed in
+     * is null for the initial slot that was double-clicked.
+     */
+    public boolean canTakeItemForPickAll(ItemStack stack, Slot slotIn) {
+        return slotIn.container != this.craftResult && super.canTakeItemForPickAll(stack, slotIn);
+    }
+
     @Override
-    public void fillStackedContents(@Nonnull RecipeItemHelper recipeItemHelper) {
+    public void clearCraftingContent() {
+        craftMatrix.clearContent();
+        craftResult.clearContent();
+    }
+
+    @Override
+    public void fillCraftSlotsStackedContents(@Nonnull RecipeItemHelper recipeItemHelper) {
         craftMatrix.fillStackedContents(recipeItemHelper);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void func_217056_a(boolean shouldPlaceAll, @Nonnull IRecipe<?> recipe, @Nonnull ServerPlayerEntity serverPlayer) {
-        new WeaponTableRecipePlacer<>(this).place(serverPlayer, (IRecipe<CraftingInventory>) recipe, shouldPlaceAll);
-    }
-
-    @Override
-    public RecipeBookCategory func_241850_m() {
-        return RecipeBookCategory.CRAFTING;
-    }
-
-    @Override
-    public int getHeight() {
+    public int getGridHeight() {
         return craftMatrix.getHeight();
     }
 
     @Override
-    public int getOutputSlot() {
+    public int getGridWidth() {
+        return craftMatrix.getWidth();
+    }
+
+    @Override
+    public RecipeBookCategory getRecipeBookType() {
+        return RecipeBookCategory.CRAFTING;
+    }
+
+    @Override
+    public int getResultSlotIndex() {
         return 0;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void handlePlacement(boolean shouldPlaceAll, @Nonnull IRecipe<?> recipe, @Nonnull ServerPlayerEntity serverPlayer) {
+        new WeaponTableRecipePlacer<>(this).recipeClicked(serverPlayer, (IRecipe<CraftingInventory>) recipe, shouldPlaceAll);
     }
 
     @Nonnull
@@ -144,81 +144,40 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
         return 17;
     }
 
-    @Override
-    public int getWidth() {
-        return craftMatrix.getWidth();
-    }
-
     public boolean hasLava() {
-        return worldPos.applyOrElse(((world, blockPos) -> world.getBlockState(blockPos).get(WeaponTableBlock.LAVA) > 0), false);
-    }
-
-    /**
-     * @return if there's a recipe available for the given setup, which requires more lava
-     */
-    public boolean isMissingLava() {
-        return missingLava;
-
-    }
-
-    @Override
-    public boolean matches(IRecipe<? super CraftingInventory> recipeIn) {
-        return recipeIn.matches(craftMatrix, this.player.world);
-    }
-
-    @Override
-    public void onContainerClosed(PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
-        this.worldPos.consume((world, pos) -> {
-            this.clearContainer(playerIn, world, craftMatrix);
-            for (int i = 0; i < this.craftMatrix.getSizeInventory(); ++i) {
-                ItemStack itemstack = this.craftMatrix.removeStackFromSlot(i);
-
-                if (!itemstack.isEmpty()) {
-                    playerIn.dropItem(itemstack, false);
-                }
-            }
-            missingLava = false;
-        });
-    }
-
-    @Override
-    public void onCraftMatrixChanged(IInventory inventoryIn) {
-        this.worldPos.consume((world, pos) -> {
-            slotChangedCraftingGrid(world, this.player, this.hunterPlayer, this.craftMatrix, this.craftResult);
-        });
+        return worldPos.evaluate(((world, blockPos) -> world.getBlockState(blockPos).getValue(WeaponTableBlock.LAVA) > 0), false);
     }
 
     @Nonnull
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
         ItemStack itemStackCopy = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
+        Slot slot = this.slots.get(index);
 
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
             itemStackCopy = itemstack1.copy();
             if (index == 0) {
-                if (!this.mergeItemStack(itemstack1, 17, 53, true)) {
+                if (!this.moveItemStackTo(itemstack1, 17, 53, true)) {
                     return ItemStack.EMPTY;
                 }
 
-                slot.onSlotChange(itemstack1, itemStackCopy);
+                slot.onQuickCraft(itemstack1, itemStackCopy);
             } else if (index >= 17 && index < 44) {
-                if (!this.mergeItemStack(itemstack1, 44, 53, false)) {
+                if (!this.moveItemStackTo(itemstack1, 44, 53, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (index >= 44 && index < 53) {
-                if (!this.mergeItemStack(itemstack1, 17, 44, false)) {
+                if (!this.moveItemStackTo(itemstack1, 17, 44, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 17, 53, false)) {
+            } else if (!this.moveItemStackTo(itemstack1, 17, 53, false)) {
                 return ItemStack.EMPTY;
             }
 
             if (itemstack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (itemStackCopy.getCount() == itemstack1.getCount()) {
@@ -231,33 +190,74 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
         return itemStackCopy;
     }
 
+    /**
+     * @return if there's a recipe available for the given setup, which requires more lava
+     */
+    public boolean isMissingLava() {
+        return missingLava;
+
+    }
+
+    @Override
+    public boolean recipeMatches(IRecipe<? super CraftingInventory> recipeIn) {
+        return recipeIn.matches(craftMatrix, this.player.level);
+    }
+
+    @Override
+    public void removed(PlayerEntity playerIn) {
+        super.removed(playerIn);
+        this.worldPos.execute((world, pos) -> {
+            this.clearContainer(playerIn, world, craftMatrix);
+            for (int i = 0; i < this.craftMatrix.getContainerSize(); ++i) {
+                ItemStack itemstack = this.craftMatrix.removeItemNoUpdate(i);
+
+                if (!itemstack.isEmpty()) {
+                    playerIn.drop(itemstack, false);
+                }
+            }
+            missingLava = false;
+        });
+    }
+
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void updateProgressBar(int id, int data) {
+    public void setData(int id, int data) {
         if (id == 0) {
             missingLava = data != 0;
         }
     }
 
+    @Override
+    public void slotsChanged(IInventory inventoryIn) {
+        this.worldPos.execute((world, pos) -> {
+            slotChangedCraftingGrid(world, this.player, this.hunterPlayer, this.craftMatrix, this.craftResult);
+        });
+    }
+
+    @Override
+    public boolean stillValid(@Nonnull PlayerEntity playerIn) {
+        return stillValid(this.worldPos, playerIn, ModBlocks.weapon_table);
+    }
+
     private void slotChangedCraftingGrid(World worldIn, PlayerEntity playerIn, HunterPlayer hunter, CraftingInventory craftMatrixIn, CraftResultInventory craftResultIn) {
-        if (!worldIn.isRemote && playerIn instanceof ServerPlayerEntity) {
+        if (!worldIn.isClientSide && playerIn instanceof ServerPlayerEntity) {
             ServerPlayerEntity entityplayermp = (ServerPlayerEntity) playerIn;
-            Optional<IWeaponTableRecipe> optional = worldIn.getServer() == null ? Optional.empty() : worldIn.getServer().getRecipeManager().getRecipe(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, craftMatrixIn, worldIn);
+            Optional<IWeaponTableRecipe> optional = worldIn.getServer() == null ? Optional.empty() : worldIn.getServer().getRecipeManager().getRecipeFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, craftMatrixIn, worldIn);
             this.missingLava = false;
-            craftResultIn.setInventorySlotContents(0, ItemStack.EMPTY);
+            craftResultIn.setItem(0, ItemStack.EMPTY);
             if (optional.isPresent()) {
                 IWeaponTableRecipe recipe = optional.get();
-                if ((craftResultIn.canUseRecipe(worldIn, entityplayermp, recipe) || ModList.get().isLoaded("fastbench")) && recipe.getRequiredLevel() <= hunter.getLevel() && Helper.areSkillsEnabled(hunter.getSkillHandler(), recipe.getRequiredSkills())) {
-                    this.worldPos.consume((world, pos) -> {
-                        if (world.getBlockState(pos).get(WeaponTableBlock.LAVA) >= recipe.getRequiredLavaUnits()) {
-                            craftResultIn.setInventorySlotContents(0, recipe.getCraftingResult(craftMatrixIn));
+                if ((craftResultIn.setRecipeUsed(worldIn, entityplayermp, recipe) || ModList.get().isLoaded("fastbench")) && recipe.getRequiredLevel() <= hunter.getLevel() && Helper.areSkillsEnabled(hunter.getSkillHandler(), recipe.getRequiredSkills())) {
+                    this.worldPos.execute((world, pos) -> {
+                        if (world.getBlockState(pos).getValue(WeaponTableBlock.LAVA) >= recipe.getRequiredLavaUnits()) {
+                            craftResultIn.setItem(0, recipe.assemble(craftMatrixIn));
                         } else {
                             this.missingLava = true;
                         }
                     });
                 }
             }
-            entityplayermp.connection.sendPacket(new SSetSlotPacket(this.windowId, 0, craftResultIn.getStackInSlot(0)));
+            entityplayermp.connection.send(new SSetSlotPacket(this.containerId, 0, craftResultIn.getItem(0)));
         }
     }
 
@@ -266,7 +266,7 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
         @Override
         public WeaponTableContainer create(int windowId, PlayerInventory inv, PacketBuffer data) {
             BlockPos pos = data.readBlockPos();
-            return new WeaponTableContainer(windowId, inv, IWorldPosCallable.of(inv.player.world, pos));
+            return new WeaponTableContainer(windowId, inv, IWorldPosCallable.create(inv.player.level, pos));
         }
     }
 }

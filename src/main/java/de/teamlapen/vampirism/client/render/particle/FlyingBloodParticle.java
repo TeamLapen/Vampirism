@@ -27,27 +27,27 @@ public class FlyingBloodParticle extends SpriteTexturedParticle {
 
     public FlyingBloodParticle(ClientWorld world, double posX, double posY, double posZ, double destX, double destY, double destZ, int maxage, boolean direct, ResourceLocation particleId) {
         super(world, posX, posY, posZ);
-        this.maxAge = maxage;
+        this.lifetime = maxage;
         this.destX = destX;
         this.destY = destY;
         this.destZ = destZ;
         this.direct = direct;
-        this.particleRed = 0.95F;
-        this.particleBlue = this.particleGreen = 0.05F;
-        double wayX = destX - this.posX;
-        double wayZ = destZ - this.posZ;
-        double wayY = destY - this.posY;
+        this.rCol = 0.95F;
+        this.bCol = this.gCol = 0.05F;
+        double wayX = destX - this.x;
+        double wayZ = destZ - this.z;
+        double wayY = destY - this.y;
         if (direct) {
-            this.motionX = wayX / maxage;
-            this.motionY = wayY / maxage;
-            this.motionZ = wayZ / maxage;
+            this.xd = wayX / maxage;
+            this.yd = wayY / maxage;
+            this.zd = wayZ / maxage;
         } else {
-            this.motionX = (this.world.rand.nextDouble() / 10 - 0.05) + wayX / maxAge;
-            this.motionY = (this.world.rand.nextDouble() / 10 - 0.01) + wayY / maxAge;
-            this.motionZ = (this.world.rand.nextDouble() / 10 - 0.05) + wayZ / maxAge;
+            this.xd = (this.level.random.nextDouble() / 10 - 0.05) + wayX / lifetime;
+            this.yd = (this.level.random.nextDouble() / 10 - 0.01) + wayY / lifetime;
+            this.zd = (this.level.random.nextDouble() / 10 - 0.05) + wayZ / lifetime;
         }
 
-        this.setSprite(Minecraft.getInstance().particles.atlas.getSprite(new ResourceLocation(particleId.getNamespace(), "particle/" + particleId.getPath())));
+        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(new ResourceLocation(particleId.getNamespace(), "particle/" + particleId.getPath())));
     }
 
     @Override
@@ -59,24 +59,24 @@ public class FlyingBloodParticle extends SpriteTexturedParticle {
     @Override
     public void tick() {
 
-        this.prevPosX = this.posX;
-        this.prevPosY = this.posY;
-        this.prevPosZ = this.posZ;
+        this.xo = this.x;
+        this.yo = this.y;
+        this.zo = this.z;
 
-        double wayX = destX - this.posX;
-        double wayY = destY - this.posY;
-        double wayZ = destZ - this.posZ;
+        double wayX = destX - this.x;
+        double wayY = destY - this.y;
+        double wayZ = destZ - this.z;
 
-        int tleft = this.maxAge - this.age;
-        if (direct || tleft < this.maxAge / 1.2) {
-            this.motionX = wayX / tleft;
-            this.motionY = wayY / tleft;
-            this.motionZ = wayZ / tleft;
+        int tleft = this.lifetime - this.age;
+        if (direct || tleft < this.lifetime / 1.2) {
+            this.xd = wayX / tleft;
+            this.yd = wayY / tleft;
+            this.zd = wayZ / tleft;
         }
-        this.move(this.motionX, this.motionY, this.motionZ);
+        this.move(this.xd, this.yd, this.zd);
 
-        if (++this.age >= this.maxAge) {
-            this.setExpired();
+        if (++this.age >= this.lifetime) {
+            this.remove();
         }
     }
 
@@ -86,7 +86,7 @@ public class FlyingBloodParticle extends SpriteTexturedParticle {
 
         @Nullable
         @Override
-        public Particle makeParticle(FlyingBloodParticleData typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle createParticle(FlyingBloodParticleData typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             return new FlyingBloodParticle(worldIn, x, y, z, typeIn.getTargetX(), typeIn.getTargetY(), typeIn.getTargetZ(), typeIn.getMaxAge(), typeIn.isDirect(), typeIn.getTexturePos());
         }
     }

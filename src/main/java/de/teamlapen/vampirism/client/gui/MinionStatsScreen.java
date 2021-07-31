@@ -83,26 +83,26 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
         this.addButton(new Button(this.guiLeft + this.xSize - 80 - 20, this.guiTop + 152, 80, 20, new TranslationTextComponent("gui.done"), (context) -> {
-            this.closeScreen();
+            this.removed();
         }));
         if (backScreen != null) {
             this.addButton(new Button(this.guiLeft + 20, this.guiTop + 152, 80, 20, new TranslationTextComponent("gui.back"), (context) -> {
-                Minecraft.getInstance().displayGuiScreen(this.backScreen);
+                Minecraft.getInstance().setScreen(this.backScreen);
             }));
         }
         for (int i = 0; i < statCount; i++) {
             int finalI = i;
-            Button button = this.addButton(new Button(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, new StringTextComponent("+"), (b) -> VampirismMod.dispatcher.sendToServer(new UpgradeMinionStatPacket(entity.getEntityId(), finalI))));
+            Button button = this.addButton(new Button(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, new StringTextComponent("+"), (b) -> VampirismMod.dispatcher.sendToServer(new UpgradeMinionStatPacket(entity.getId(), finalI))));
             statButtons.add(button);
             button.visible = false;
         }
 
         reset = this.addButton(new ImageButton(this.guiLeft + 225, this.guiTop + 8, 20, 20, 0, 0, 20, RESET, 20, 40, (context) -> {
-            VampirismMod.dispatcher.sendToServer(new UpgradeMinionStatPacket(entity.getEntityId(), -1));
+            VampirismMod.dispatcher.sendToServer(new UpgradeMinionStatPacket(entity.getId(), -1));
             getOblivionPotion().ifPresent(stack -> stack.shrink(1));//server syncs after the screen is closed
         }, (button, matrixStack, mouseX, mouseY) -> {
             MinionStatsScreen.this.renderTooltip(matrixStack, button.getMessage(), mouseX, mouseY);
-        }, new TranslationTextComponent("text.vampirism.minion_screen.reset_stats", ModItems.oblivion_potion.getName())) {
+        }, new TranslationTextComponent("text.vampirism.minion_screen.reset_stats", ModItems.oblivion_potion.getDescription())) {
             @Override
             public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
                 if (this.visible) {
@@ -110,7 +110,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
                     if (!this.active) {
                         RenderSystem.color4f(0.65f, 0.65f, 0.65f, 1);
                     }
-                    super.renderWidget(matrixStack, mouseX, mouseY, partialTicks);
+                    super.renderButton(matrixStack, mouseX, mouseY, partialTicks);
                 }
             }
 
@@ -121,24 +121,24 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     protected abstract boolean isActive(T data, int i);
 
     protected void renderGuiBackground(MatrixStack mStack) {
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
+        this.minecraft.getTextureManager().bind(BACKGROUND);
         blit(mStack, this.guiLeft, this.guiTop, this.getBlitOffset(), 0, 0, this.xSize, this.ySize, 256, 300);
     }
 
     protected void renderLevelRow(MatrixStack mStack, int current, int max) {
-        this.font.drawText(mStack, textLevel, guiLeft + 10, guiTop + 30, 0x0);
-        this.font.drawString(mStack, current + "/" + max, guiLeft + 145, guiTop + 30, 0x404040);
+        this.font.draw(mStack, textLevel, guiLeft + 10, guiTop + 30, 0x0);
+        this.font.draw(mStack, current + "/" + max, guiLeft + 145, guiTop + 30, 0x404040);
         int remainingPoints = entity.getMinionData().map(this::getRemainingStatPoints).orElse(0);
         if (remainingPoints > 0) {
-            this.font.drawString(mStack, "(" + remainingPoints + ")", guiLeft + 228, guiTop + 30, 0x404040);
+            this.font.draw(mStack, "(" + remainingPoints + ")", guiLeft + 228, guiTop + 30, 0x404040);
         }
         this.hLine(mStack, guiLeft + 10, guiLeft + xSize - 10, guiTop + 40, 0xF0303030);
     }
 
     protected void renderStatRow(MatrixStack mStack, int i, TranslationTextComponent name, StringTextComponent value, int currentLevel, int maxLevel) {
-        this.font.drawText(mStack, name.appendString(":"), guiLeft + 10, guiTop + 50 + 26 * i, 0x404040);
-        this.font.drawText(mStack, value, guiLeft + 145, guiTop + 50 + 26 * i, 0x404040);
-        this.font.drawString(mStack, UtilLib.translate("text.vampirism.level_short") + ": " + currentLevel + "/" + maxLevel, guiLeft + 175, guiTop + 50 + 26 * i, 0x404040);
+        this.font.draw(mStack, name.append(":"), guiLeft + 10, guiTop + 50 + 26 * i, 0x404040);
+        this.font.draw(mStack, value, guiLeft + 145, guiTop + 50 + 26 * i, 0x404040);
+        this.font.draw(mStack, UtilLib.translate("text.vampirism.level_short") + ": " + currentLevel + "/" + maxLevel, guiLeft + 175, guiTop + 50 + 26 * i, 0x404040);
     }
 
     protected void renderStats(MatrixStack mStack, T data) {
@@ -146,7 +146,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     }
 
     private void drawTitle(MatrixStack mStack) {
-        this.font.drawTextWithShadow(mStack, this.title, this.guiLeft + 10, this.guiTop + 10, 0xFFFFFF);
+        this.font.drawShadow(mStack, this.title, this.guiLeft + 10, this.guiTop + 10, 0xFFFFFF);
     }
 
     private Optional<ItemStack> getOblivionPotion() {

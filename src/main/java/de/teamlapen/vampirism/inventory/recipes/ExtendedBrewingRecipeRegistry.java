@@ -15,7 +15,6 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.*;
 
-
 public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegistry {
 
     private final List<ExtendedPotionMix> conversionMixes = new ArrayList<>();
@@ -69,8 +68,8 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
     public Optional<Triple<ItemStack, Integer, Integer>> getOutput(ItemStack bottle, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities, boolean onlyExtended) {
         if (bottle.isEmpty() || bottle.getCount() != 1) return Optional.empty();
         if (ingredient.isEmpty()) return Optional.empty();
-        Potion potion = PotionUtils.getPotionFromItem(bottle);
-        if (bottle.getItem() instanceof ThrowablePotionItem && potion.getEffects().stream().anyMatch(a -> a.getPotion().getEffectType() == EffectType.BENEFICIAL)) {
+        Potion potion = PotionUtils.getPotion(bottle);
+        if (bottle.getItem() instanceof ThrowablePotionItem && potion.getEffects().stream().anyMatch(a -> a.getEffect().getCategory() == EffectType.BENEFICIAL)) {
             return Optional.empty();
         }
         Item item = bottle.getItem();
@@ -87,7 +86,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
                     mix1.efficient ? (mix2.efficient ? 0 : -1) : (mix2.efficient ? 1 : 0)
             );
             ExtendedPotionMix mix = possibleResults.get(0);
-            return Optional.of(Triple.of(PotionUtils.addPotionToItemStack(new ItemStack(item), mix.output.get()), mix.reagent1Count, mix.reagent2Count));
+            return Optional.of(Triple.of(PotionUtils.setPotion(new ItemStack(item), mix.output.get()), mix.reagent1Count, mix.reagent2Count));
 
         }
         ItemStack output = BrewingRecipeRegistry.getOutput(bottle, ingredient);

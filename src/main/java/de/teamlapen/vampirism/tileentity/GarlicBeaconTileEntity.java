@@ -54,52 +54,55 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
         return this.fueled / (float) FUEL_DURATION;
     }
 
+    @Override
+    public void clearRemoved() {
+        super.clearRemoved();
+        if (isActive()) {
+            register();
+        }
+    }
+
     @Nullable
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(getPos(), 1, getUpdateTag());
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return new SUpdateTileEntityPacket(getBlockPos(), 1, getUpdateTag());
     }
 
     public boolean isActive() {
         return bootTimer == 0;
     }
 
+    @Override
+    public CompoundNBT getUpdateTag() {
+        return this.save(new CompoundNBT());
+    }
+
     /**
      * @return If inside effective distance
      */
     public boolean isInRange(BlockPos pos) {
-        return new ChunkPos(this.getPos()).getChessboardDistance(new ChunkPos(pos)) <= r;
+        return new ChunkPos(this.getBlockPos()).getChessboardDistance(new ChunkPos(pos)) <= r;
     }
 
     @Override
-    public void markDirty() {
-        super.markDirty();
-        if (hasWorld()) {
-            BlockState state = world.getBlockState(pos);
-            this.world.notifyBlockUpdate(pos, state, state, 3);
-        }
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
+        r = compound.getInt("radius");
+        defaultStrength = EnumStrength.getFromStrenght(compound.getInt("strength"));
+        bootTimer = compound.getInt("boot_timer");
+        setFueledTime(compound.getInt("fueled"));
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        if (hasWorld()) {
-            CompoundNBT nbt = pkt.getNbtCompound();
-            handleUpdateTag(this.world.getBlockState(pkt.getPos()), nbt);
+        if (hasLevel()) {
+            CompoundNBT nbt = pkt.getTag();
+            handleUpdateTag(this.level.getBlockState(pkt.getPos()), nbt);
             if (isActive()) {
                 register(); //Register in case we weren't active before. Shouldn't have an effect when already registered
             }
         }
-    }
-
-    public void onFueled() {
-        setFueledTime(FUEL_DURATION);
-        this.markDirty();
     }
 
     public void onTouched(PlayerEntity player) {
@@ -111,20 +114,21 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
 
     }
 
-    @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
-        r = compound.getInt("radius");
-        defaultStrength = EnumStrength.getFromStrenght(compound.getInt("strength"));
-        bootTimer = compound.getInt("boot_timer");
-        setFueledTime(compound.getInt("fueled"));
+    public void onFueled() {
+        setFueledTime(FUEL_DURATION);
+        this.setChanged();
     }
 
     @Override
-    public void remove() {
-        super.remove();
-        unregister();
-
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
+        compound.putInt("radius", r);
+        compound.putInt("strength", defaultStrength.getStrength());
+        compound.putInt("fueled", fueled);
+        if (bootTimer != 0) {
+            compound.putInt("boot_timer", bootTimer);
+        }
+        return compound;
     }
 
     public void setNewBootDelay(int delayTicks) {
@@ -151,49 +155,44 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
     }
 
     @Override
+    public void setChanged() {
+        super.setChanged();
+        if (hasLevel()) {
+            BlockState state = level.getBlockState(worldPosition);
+            this.level.sendBlockUpdated(worldPosition, state, state, 3);
+        }
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        unregister();
+
+    }
+
+    @Override
     public void tick() {
         if (bootTimer > 0) {
             if (--bootTimer == 0) {
-                this.markDirty();
+                this.setChanged();
                 register();
             }
         } else if (fueled > 0) {
             if (fueled == 1) {
                 setFueledTime(0);
-                this.markDirty();
+                this.setChanged();
             } else {
                 fueled--;
             }
         }
     }
 
-    @Override
-    public void validate() {
-        super.validate();
-        if (isActive()) {
-            register();
-        }
-    }
-
-    @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
-        compound.putInt("radius", r);
-        compound.putInt("strength", defaultStrength.getStrength());
-        compound.putInt("fueled", fueled);
-        if (bootTimer != 0) {
-            compound.putInt("boot_timer", bootTimer);
-        }
-        return compound;
-    }
-
-
     private void register() {
-        if (registered || !hasWorld()) {
+        if (registered || !hasLevel()) {
             return;
         }
-        int baseX = (getPos().getX() >> 4);
-        int baseZ = (getPos().getZ() >> 4);
+        int baseX = (getBlockPos().getX() >> 4);
+        int baseZ = (getBlockPos().getZ() >> 4);
         ChunkPos[] chunks = new ChunkPos[(2 * r + 1) * (2 * r + 1)];
         int i = 0;
         for (int x = -r; x <= +r; x++) {
@@ -201,7 +200,7 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
                 chunks[i++] = new ChunkPos(x + baseX, z + baseZ);
             }
         }
-        id = VampirismAPI.getVampirismWorld(getWorld()).map(vw -> vw.registerGarlicBlock(strength, chunks)).orElse(0);
+        id = VampirismAPI.getVampirismWorld(getLevel()).map(vw -> vw.registerGarlicBlock(strength, chunks)).orElse(0);
         registered = i != 0;
 
     }
@@ -223,8 +222,8 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
     }
 
     private void unregister() {
-        if (registered && hasWorld()) {
-            VampirismAPI.getVampirismWorld(getWorld()).ifPresent(vw -> vw.removeGarlicBlock(id));
+        if (registered && hasLevel()) {
+            VampirismAPI.getVampirismWorld(getLevel()).ifPresent(vw -> vw.removeGarlicBlock(id));
             registered = false;
         }
     }

@@ -24,14 +24,14 @@ public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity
     public VampireMinionRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new PlayerModel<>(0F, false), new PlayerModel<>(0f, true), 0.5F);
         IResourceManager rm = Minecraft.getInstance().getResourceManager();
-        textures = gatherTextures("textures/entity/vampire",true);
+        textures = gatherTextures("textures/entity/vampire", true);
         minionSpecificTextures = gatherTextures("textures/entity/minion/vampire", false);
 
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
         this.addLayer(new BipedArmorLayer<>(this, new BipedModel<>(0.5f), new BipedModel<>(1f)));
-        this.getEntityModel().bipedBody.showModel = this.getEntityModel().bipedBodyWear.showModel = false;
-        this.getEntityModel().bipedLeftArm.showModel = this.getEntityModel().bipedLeftArmwear.showModel = this.getEntityModel().bipedRightArm.showModel = this.getEntityModel().bipedRightArmwear.showModel = false;
-        this.getEntityModel().bipedRightLeg.showModel = this.getEntityModel().bipedRightLegwear.showModel = this.getEntityModel().bipedLeftLeg.showModel = this.getEntityModel().bipedLeftLegwear.showModel = false;
+        this.getModel().body.visible = this.getModel().jacket.visible = false;
+        this.getModel().leftArm.visible = this.getModel().leftSleeve.visible = this.getModel().rightArm.visible = this.getModel().rightSleeve.visible = false;
+        this.getModel().rightLeg.visible = this.getModel().rightPants.visible = this.getModel().leftLeg.visible = this.getModel().leftPants.visible = false;
     }
 
     public int getMinionSpecificTextureCount() {
@@ -52,7 +52,7 @@ public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity
     }
 
     @Override
-    protected void preRenderCallback(VampireMinionEntity entityIn, MatrixStack matrixStackIn, float partialTickTime) {
+    protected void scale(VampireMinionEntity entityIn, MatrixStack matrixStackIn, float partialTickTime) {
         float s = entityIn.getScale();
         //float off = (1 - s) * 1.95f;
         matrixStackIn.scale(s, s, s);

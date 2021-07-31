@@ -25,7 +25,7 @@ import java.util.List;
  * Allows converted sheep to be sheared
  */
 public class ConvertedSheepEntity extends ConvertedCreatureEntity<SheepEntity> implements net.minecraftforge.common.IForgeShearable {
-    private final static DataParameter<Byte> COAT = EntityDataManager.createKey(ConvertedSheepEntity.class, DataSerializers.BYTE);
+    private final static DataParameter<Byte> COAT = EntityDataManager.defineId(ConvertedSheepEntity.class, DataSerializers.BYTE);
 
     private Boolean lastSheared = null;
 
@@ -44,61 +44,61 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<SheepEntity> i
         }
     }
 
+    @Override
+    public void addAdditionalSaveData(CompoundNBT nbt) {
+        super.addAdditionalSaveData(nbt);
+        nbt.putBoolean("Sheared", this.getSheared());
+    }
+
     public DyeColor getFleeceColor() {
-        return nil() ? DyeColor.WHITE : this.getOldCreature().getFleeceColor();
+        return nil() ? DyeColor.WHITE : this.getOldCreature().getColor();
     }
 
     public boolean getSheared() {
-        return (this.dataManager.get(COAT) & 16) != 0;
+        return (this.entityData.get(COAT) & 16) != 0;
     }
 
     public void setSheared(boolean sheared) {
-        byte b0 = this.dataManager.get(COAT);
+        byte b0 = this.entityData.get(COAT);
 
         if (sheared) {
-            this.dataManager.set(COAT, (byte) (b0 | 16));
+            this.entityData.set(COAT, (byte) (b0 | 16));
         } else {
-            this.dataManager.set(COAT, (byte) (b0 & -17));
+            this.entityData.set(COAT, (byte) (b0 & -17));
         }
     }
 
     @Override
     public boolean isShearable(@Nonnull ItemStack item, World world, BlockPos pos) {
-        return !getSheared() && !isChild();
+        return !getSheared() && !isBaby();
     }
 
     @Override
     public List<ItemStack> onSheared(@Nullable PlayerEntity player, ItemStack item, World world, BlockPos pos, int fortune) {
         java.util.List<ItemStack> ret = new java.util.ArrayList<>();
-        if (!world.isRemote()) {
+        if (!world.isClientSide()) {
             this.setSheared(true);
-            int i = 1 + this.rand.nextInt(3);
+            int i = 1 + this.random.nextInt(3);
 
             for (int j = 0; j < i; ++j)
-                ret.add(new ItemStack(SheepEntity.WOOL_BY_COLOR.get(this.getFleeceColor())));
+                ret.add(new ItemStack(SheepEntity.ITEM_BY_DYE.get(this.getFleeceColor())));
 
-            this.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+            this.playSound(SoundEvents.SHEEP_SHEAR, 1.0F, 1.0F);
         }
         return ret;
     }
 
     @Override
-    public void readAdditional(CompoundNBT nbt) {
-        super.readAdditional(nbt);
+    public void readAdditionalSaveData(CompoundNBT nbt) {
+        super.readAdditionalSaveData(nbt);
         this.setSheared(nbt.getBoolean("Sheared"));
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt) {
-        super.writeAdditional(nbt);
-        nbt.putBoolean("Sheared", this.getSheared());
-    }
+    protected void defineSynchedData() {
+        super.defineSynchedData();
 
-    @Override
-    protected void registerData() {
-        super.registerData();
-
-        this.dataManager.register(COAT, (byte) 0);
+        this.entityData.define(COAT, (byte) 0);
     }
 
     public static class ConvertingHandler extends DefaultConvertingHandler<SheepEntity> {
@@ -108,9 +108,9 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<SheepEntity> i
 
         @Override
         public ConvertedCreatureEntity<SheepEntity> createFrom(SheepEntity entity) {
-            return Helper.createEntity(ModEntities.converted_sheep, entity.getEntityWorld()).map(creature -> {
+            return Helper.createEntity(ModEntities.converted_sheep, entity.getCommandSenderWorld()).map(creature -> {
                 this.copyImportantStuff(creature, entity);
-                creature.setSheared(entity.getSheared());
+                creature.setSheared(entity.isSheared());
                 return creature;
             }).orElse(null);
         }

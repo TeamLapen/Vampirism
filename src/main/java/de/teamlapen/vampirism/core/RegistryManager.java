@@ -43,7 +43,6 @@ import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ObjectHolderRegistry;
 
-
 /**
  * Handles registrations of all registrable things as well as a few additional
  * dependent things

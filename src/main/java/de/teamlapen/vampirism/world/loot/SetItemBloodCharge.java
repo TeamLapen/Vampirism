@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 public class SetItemBloodCharge extends LootFunction {
 
     public static Builder<?> builder(IRandomRange p_215931_0_) {
-        return builder((p_215930_1_) -> new SetItemBloodCharge(p_215930_1_, p_215931_0_));
+        return simpleBuilder((p_215930_1_) -> new SetItemBloodCharge(p_215930_1_, p_215931_0_));
     }
     /**
      * In blood mB
@@ -34,15 +34,15 @@ public class SetItemBloodCharge extends LootFunction {
 
     @Nonnull
     @Override
-    public ItemStack doApply(@Nonnull ItemStack stack, @Nonnull LootContext context) {
-        ((IBloodChargeable) stack.getItem()).charge(stack, charge.generateInt(context.getRandom()));
-        return stack;
+    public LootFunctionType getType() {
+        return ModLoot.set_item_blood_charge;
     }
 
     @Nonnull
     @Override
-    public LootFunctionType getFunctionType() {
-        return ModLoot.set_item_blood_charge;
+    public ItemStack run(@Nonnull ItemStack stack, @Nonnull LootContext context) {
+        ((IBloodChargeable) stack.getItem()).charge(stack, charge.getInt(context.getRandom()));
+        return stack;
     }
 
     public static class Serializer extends LootFunction.Serializer<SetItemBloodCharge> {

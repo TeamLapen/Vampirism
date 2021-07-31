@@ -60,7 +60,7 @@ public interface IVillageFactionData {
 
         @Override
         public boolean isBanner(@Nonnull ItemStack stack) {
-            return ItemStack.areItemStacksEqual(getBanner(), stack);
+            return ItemStack.matches(getBanner(), stack);
         }
     };
 

@@ -35,7 +35,7 @@ public class SkillNodeGenerator implements IDataProvider {
     }
 
     @Override
-    public void act(DirectoryCache cache) {
+    public void run(DirectoryCache cache) {
         Path path = this.generator.getOutputFolder();
         Set<ResourceLocation> set = Sets.newHashSet();
         this.registerSkillNodes((node) -> {
@@ -121,15 +121,15 @@ public class SkillNodeGenerator implements IDataProvider {
         try {
             String s = GSON.toJson(nodeJson);
             @SuppressWarnings("UnstableApiUsage")
-            String s1 = HASH_FUNCTION.hashUnencodedChars(s).toString();
-            if (!Objects.equals(cache.getPreviousHash(path), s1) || !Files.exists(path)) {
+            String s1 = SHA1.hashUnencodedChars(s).toString();
+            if (!Objects.equals(cache.getHash(path), s1) || !Files.exists(path)) {
                 Files.createDirectories(path.getParent());
 
                 try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path)) {
                     bufferedWriter.write(s);
                 }
             }
-            cache.recordHash(path, s1);
+            cache.putNew(path, s1);
         } catch (IOException ioExeption) {
             LOGGER.error("Couldn't save skill node {}", path, ioExeption);
         }

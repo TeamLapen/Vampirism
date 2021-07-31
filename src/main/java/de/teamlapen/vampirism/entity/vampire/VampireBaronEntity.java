@@ -46,9 +46,9 @@ import java.util.Random;
 public class VampireBaronEntity extends VampireBaseEntity implements IVampireBaron {
     public static final int MAX_LEVEL = 4;
     private final static Logger LOGGER = LogManager.getLogger(VampireBaronEntity.class);
-    private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(VampireBaronEntity.class, DataSerializers.VARINT);
-    private static final DataParameter<Boolean> ENRAGED = EntityDataManager.createKey(VampireBaronEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> LADY = EntityDataManager.createKey(VampireBaronEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> LEVEL = EntityDataManager.defineId(VampireBaronEntity.class, DataSerializers.INT);
+    private static final DataParameter<Boolean> ENRAGED = EntityDataManager.defineId(VampireBaronEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> LADY = EntityDataManager.defineId(VampireBaronEntity.class, DataSerializers.BOOLEAN);
     private final static int ENRAGED_TRANSITION_TIME = 15;
 
     public static boolean spawnPredicateBaron(EntityType<? extends VampireBaronEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
@@ -57,10 +57,10 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
-                .createMutableAttribute(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_BARON_MAX_HEALTH)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 5);
+                .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_BARON_MAX_HEALTH)
+                .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE)
+                .add(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED)
+                .add(Attributes.FOLLOW_RANGE, 5);
     }
     /**
      * Used for ranged vs melee attack decision
@@ -85,8 +85,75 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public boolean attackEntityAsMob(Entity entity) {
-        boolean flag = super.attackEntityAsMob(entity);
+    public void addAdditionalSaveData(CompoundNBT nbt) {
+        super.addAdditionalSaveData(nbt);
+        nbt.putInt("level", getLevel());
+        nbt.putBoolean("lady", isLady());
+    }
+
+    @Override
+    public void aiStep() {
+        if (!prevAttacking && this.getTarget() != null) {
+            prevAttacking = true;
+            updateEntityAttributes(true);
+        }
+        if (prevAttacking && this.getTarget() == null) {
+            prevAttacking = false;
+            this.rangedAttack = false;
+            this.attackDecisionCounter = 0;
+            updateEntityAttributes(false);
+        }
+
+        if (!this.level.isClientSide && this.isGettingSundamage(level)) {
+            this.teleportAway();
+
+        }
+        if (!this.level.isClientSide && this.getTarget() != null && this.tickCount % 128 == 0) {
+            if (rangedAttack) {
+                if (this.random.nextInt(2) == 0 && this.navigation.createPath(this.getTarget(), 0) != null) {
+                    rangedAttack = false;
+                }
+            } else {
+                if (attackDecisionCounter > 4 || this.random.nextInt(6) == 0) {
+                    rangedAttack = true;
+                    attackDecisionCounter = 0;
+                }
+            }
+            if (getLevel() > 3 && this.random.nextInt(9) == 0) {
+                this.addEffect(new EffectInstance(Effects.INVISIBILITY, 60));
+            }
+        }
+        if (this.level.isClientSide()) {
+            if (isEnraged() && enragedTransitionTime < ENRAGED_TRANSITION_TIME) {
+                enragedTransitionTime++;
+            } else if (!isEnraged() && enragedTransitionTime > 0) {
+                enragedTransitionTime--;
+            }
+        }
+        super.aiStep();
+    }
+
+    @Override
+    public boolean checkSpawnRules(IWorld worldIn, SpawnReason spawnReasonIn) {
+        int i = MathHelper.floor(this.getBoundingBox().minY);
+        //Only spawn on the surface
+        if (i < 60) return false;
+//        CastlePositionData data = CastlePositionData.get(world);
+//        if (data.isPosAt(MathHelper.floor_double(posX), MathHelper.floor_double(posZ))) {
+//            return false;
+//        }
+        BlockPos blockpos = new BlockPos(this.getX(), this.getBoundingBox().minY, this.getZ());
+        return ModBlocks.cursed_earth.equals(worldIn.getBlockState(blockpos.below()).getBlock()) && super.checkSpawnRules(worldIn, spawnReasonIn);
+    }
+
+    @Override
+    public void decreaseFollowerCount() {
+        followingEntities = Math.max(0, followingEntities - 1);
+    }
+
+    @Override
+    public boolean doHurtTarget(Entity entity) {
+        boolean flag = super.doHurtTarget(entity);
         if (flag && entity instanceof LivingEntity) {
             float tm = 1f;
             int mr = 1;
@@ -99,50 +166,20 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
                 }
             }
             if (entity instanceof VampireBaronEntity) {
-                ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.STRENGTH, 40, 5));
+                ((LivingEntity) entity).addEffect(new EffectInstance(Effects.DAMAGE_BOOST, 40, 5));
             }
-            ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.WEAKNESS, (int) (200 * tm), rand.nextInt(mr)));
-            ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.SLOWNESS, (int) (100 * tm), rand.nextInt(mr)));
+            ((LivingEntity) entity).addEffect(new EffectInstance(Effects.WEAKNESS, (int) (200 * tm), random.nextInt(mr)));
+            ((LivingEntity) entity).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, (int) (100 * tm), random.nextInt(mr)));
             attackDecisionCounter = 0;
         }
         return flag;
     }
 
+    @Nullable
     @Override
-    public boolean attackEntityFrom(DamageSource damageSource, float amount) {
-        attackDecisionCounter++;
-        return super.attackEntityFrom(damageSource, amount);
-    }
-
-    @Override
-    public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
-        int i = MathHelper.floor(this.getBoundingBox().minY);
-        //Only spawn on the surface
-        if (i < 60) return false;
-//        CastlePositionData data = CastlePositionData.get(world);
-//        if (data.isPosAt(MathHelper.floor_double(posX), MathHelper.floor_double(posZ))) {
-//            return false;
-//        }
-        BlockPos blockpos = new BlockPos(this.getPosX(), this.getBoundingBox().minY, this.getPosZ());
-        return ModBlocks.cursed_earth.equals(worldIn.getBlockState(blockpos.down()).getBlock()) && super.canSpawn(worldIn, spawnReasonIn);
-    }
-
-    @Override
-    public void decreaseFollowerCount() {
-        followingEntities = Math.max(0, followingEntities - 1);
-    }
-
-    @Override
-    public void onKillEntity(ServerWorld world, LivingEntity entity) {
-        super.onKillEntity(world, entity);
-        if (entity instanceof VampireBaronEntity) {
-            this.setHealth(this.getMaxHealth());
-        }
-    }
-
-    @Override
-    public boolean getAlwaysRenderNameTagForRender() {
-        return true;
+    public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        this.getEntityData().set(LADY, this.getRandom().nextBoolean());
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
     /**
@@ -159,26 +196,26 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public int getHorizontalFaceSpeed() {
-        return 5; //Don't move the head too far
-    }
-
-    @Override
     public int getLevel() {
-        return getDataManager().get(LEVEL);
+        return getEntityData().get(LEVEL);
     }
 
     @Override
     public void setLevel(int level) {
         if (level >= 0) {
-            getDataManager().set(LEVEL, level);
+            getEntityData().set(LEVEL, level);
             this.updateEntityAttributes(false);
             float hp = this.getHealth() / this.getMaxHealth();
             this.setHealth(this.getMaxHealth() * hp);
-            this.setCustomName(getProfessionName().copyRaw().appendSibling(new TranslationTextComponent("entity.vampirism.vampire_baron.level", level + 1)));
+            this.setCustomName(getTypeName().plainCopy().append(new TranslationTextComponent("entity.vampirism.vampire_baron.level", level + 1)));
         } else {
             this.setCustomName(null);
         }
+    }
+
+    @Override
+    public int getMaxHeadXRot() {
+        return 5; //Turn around slowly
     }
 
     @Override
@@ -187,8 +224,8 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public int getMaxInPortalTime() {
-        return 500;
+    public int getMaxHeadYRot() {
+        return 5; //Don't move the head too far
     }
 
     @Override
@@ -202,8 +239,8 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public int getVerticalFaceSpeed() {
-        return 5; //Turn around slowly
+    public int getPortalWaitTime() {
+        return 500;
     }
 
     @Override
@@ -215,78 +252,48 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         return false;
     }
 
+    @Override
+    public boolean hurt(DamageSource damageSource, float amount) {
+        attackDecisionCounter++;
+        return super.hurt(damageSource, amount);
+    }
+
     public boolean isEnraged() {
-        return getDataManager().get(ENRAGED);
+        return getEntityData().get(ENRAGED);
     }
 
     public boolean isLady() {
-        return getDataManager().get(LADY);
+        return getEntityData().get(LADY);
     }
 
     public void setLady(boolean lady) {
-        getDataManager().set(LADY, lady);
+        getEntityData().set(LADY, lady);
     }
 
     @Override
-    public void livingTick() {
-        if (!prevAttacking && this.getAttackTarget() != null) {
-            prevAttacking = true;
-            updateEntityAttributes(true);
+    public void killed(ServerWorld world, LivingEntity entity) {
+        super.killed(world, entity);
+        if (entity instanceof VampireBaronEntity) {
+            this.setHealth(this.getMaxHealth());
         }
-        if (prevAttacking && this.getAttackTarget() == null) {
-            prevAttacking = false;
-            this.rangedAttack = false;
-            this.attackDecisionCounter = 0;
-            updateEntityAttributes(false);
-        }
-
-        if (!this.world.isRemote && this.isGettingSundamage(world)) {
-            this.teleportAway();
-
-        }
-        if (!this.world.isRemote && this.getAttackTarget() != null && this.ticksExisted % 128 == 0) {
-            if (rangedAttack) {
-                if (this.rand.nextInt(2) == 0 && this.navigator.pathfind(this.getAttackTarget(), 0) != null) {
-                    rangedAttack = false;
-                }
-            } else {
-                if (attackDecisionCounter > 4 || this.rand.nextInt(6) == 0) {
-                    rangedAttack = true;
-                    attackDecisionCounter = 0;
-                }
-            }
-            if (getLevel() > 3 && this.rand.nextInt(9) == 0) {
-                this.addPotionEffect(new EffectInstance(Effects.INVISIBILITY, 60));
-            }
-        }
-        if (this.world.isRemote()) {
-            if (isEnraged() && enragedTransitionTime < ENRAGED_TRANSITION_TIME) {
-                enragedTransitionTime++;
-            } else if (!isEnraged() && enragedTransitionTime > 0) {
-                enragedTransitionTime--;
-            }
-        }
-        super.livingTick();
-    }
-
-    @Nullable
-    @Override
-    public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        this.getDataManager().set(LADY, this.getRNG().nextBoolean());
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
     @Override
-    public void readAdditional(CompoundNBT nbt) {
-        super.readAdditional(nbt);
+    public void readAdditionalSaveData(CompoundNBT nbt) {
+        super.readAdditionalSaveData(nbt);
         setLevel(MathHelper.clamp(nbt.getInt("level"), 0, MAX_LEVEL));
-        this.getDataManager().set(LADY, nbt.getBoolean("lady"));
+        this.getEntityData().set(LADY, nbt.getBoolean("lady"));
     }
 
     @Override
-    public void setAttackTarget(@Nullable LivingEntity target) {
-        super.setAttackTarget(target);
-        this.getDataManager().set(ENRAGED, target != null);
+    public void setTarget(@Nullable LivingEntity target) {
+        super.setTarget(target);
+        this.getEntityData().set(ENRAGED, target != null);
+    }
+
+    @Override
+    public boolean shouldShowName() {
+        return true;
     }
 
     @Override
@@ -295,7 +302,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         int max = Math.round(((d.maxPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
         int min = Math.round(((d.minPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * (MAX_LEVEL));
 
-        switch (rand.nextInt(7)) {
+        switch (random.nextInt(7)) {
             case 0:
                 return min;
             case 1:
@@ -306,17 +313,10 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
                 return avg + 1;
             case 4:
             case 5:
-                return rand.nextInt(MAX_LEVEL + 1);
+                return random.nextInt(MAX_LEVEL + 1);
             default:
-                return rand.nextInt(max + 2 - min) + min;
+                return random.nextInt(max + 2 - min) + min;
         }
-    }
-
-    @Override
-    public void writeAdditional(CompoundNBT nbt) {
-        super.writeAdditional(nbt);
-        nbt.putInt("level", getLevel());
-        nbt.putBoolean("lady", isLady());
     }
 
     @Override
@@ -325,16 +325,16 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    protected int getExperiencePoints(PlayerEntity player) {
-        return 20 + 5 * getLevel();
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(LEVEL, -1);
+        getEntityData().define(ENRAGED, false);
+        getEntityData().define(LADY, false);
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        getDataManager().register(LEVEL, -1);
-        getDataManager().register(ENRAGED, false);
-        getDataManager().register(LADY, false);
+    protected int getExperienceReward(PlayerEntity player) {
+        return 20 + 5 * getLevel();
     }
 
     @Override
@@ -383,13 +383,13 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         }
 
         @Override
-        public boolean shouldContinueExecuting() {
-            return !VampireBaronEntity.this.rangedAttack && super.shouldContinueExecuting();
+        public boolean canContinueToUse() {
+            return !VampireBaronEntity.this.rangedAttack && super.canContinueToUse();
         }
 
         @Override
-        public boolean shouldExecute() {
-            return !VampireBaronEntity.this.rangedAttack && super.shouldExecute();
+        public boolean canUse() {
+            return !VampireBaronEntity.this.rangedAttack && super.canUse();
         }
     }
 
@@ -400,8 +400,8 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         }
 
         @Override
-        public boolean shouldExecute() {
-            return VampireBaronEntity.this.getAttackTarget() != null && (VampireBaronEntity.this.rangedAttack || !VampireBaronEntity.this.hasPath());
+        public boolean canUse() {
+            return VampireBaronEntity.this.getTarget() != null && (VampireBaronEntity.this.rangedAttack || !VampireBaronEntity.this.isPathFinding());
         }
     }
 }

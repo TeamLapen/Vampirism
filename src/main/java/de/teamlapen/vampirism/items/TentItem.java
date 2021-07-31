@@ -25,7 +25,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-
 /**
  * Item used to place a tent
  */
@@ -46,15 +45,15 @@ public class TentItem extends VampirismItem {
 
         Block tent = ModBlocks.tent;
         Block main = ModBlocks.tent_main;
-        BlockState mainState = main.getDefaultState();
+        BlockState mainState = main.defaultBlockState();
         if (force || canPlaceAt(mainState, tent, world, x, y, z) && canPlaceAt(mainState, tent, world, x1, y, z1) && canPlaceAt(mainState, tent, world, x2, y, z2) && canPlaceAt(mainState, tent, world, x3, y, z3)) {
-            boolean flag = world.setBlockState(pos, main.getDefaultState().with(TentBlock.FACING, dir.getOpposite()), 3);
+            boolean flag = world.setBlock(pos, main.defaultBlockState().setValue(TentBlock.FACING, dir.getOpposite()), 3);
             if (flag) {
-                world.setBlockState(new BlockPos(x1, y, z1), tent.getDefaultState().with(TentBlock.FACING, dir).with(TentBlock.POSITION, 1), 3);
-                world.setBlockState(new BlockPos(x2, y, z2), tent.getDefaultState().with(TentBlock.FACING, dir).with(TentBlock.POSITION, 2), 3);
-                world.setBlockState(new BlockPos(x3, y, z3), tent.getDefaultState().with(TentBlock.FACING, dir.getOpposite()).with(TentBlock.POSITION, 3), 3);
+                world.setBlock(new BlockPos(x1, y, z1), tent.defaultBlockState().setValue(TentBlock.FACING, dir).setValue(TentBlock.POSITION, 1), 3);
+                world.setBlock(new BlockPos(x2, y, z2), tent.defaultBlockState().setValue(TentBlock.FACING, dir).setValue(TentBlock.POSITION, 2), 3);
+                world.setBlock(new BlockPos(x3, y, z3), tent.defaultBlockState().setValue(TentBlock.FACING, dir.getOpposite()).setValue(TentBlock.POSITION, 3), 3);
                 if (spawner) {
-                    TileEntity tile = world.getTileEntity(pos);
+                    TileEntity tile = world.getBlockEntity(pos);
                     if (tile instanceof TentTileEntity) {
                         ((TentTileEntity) tile).setSpawn(true);
                     }
@@ -66,46 +65,46 @@ public class TentItem extends VampirismItem {
     }
 
     private static boolean canPlaceAt(BlockState state, Block block, IWorld world, int x, int y, int z) {
-        return block.isValidPosition(state, world, new BlockPos(x, y, z));
+        return block.canSurvive(state, world, new BlockPos(x, y, z));
     }
 
     private final boolean spawner;
 
     public TentItem(boolean spawner) {
-        super(spawner ? name_spawner : name, new Properties().group(VampirismMod.creativeTab));
+        super(spawner ? name_spawner : name, new Properties().tab(VampirismMod.creativeTab));
         this.spawner = spawner;
         this.setTranslation_key(name);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (spawner) {
-            tooltip.add(new TranslationTextComponent("tile.vampirism.tent.spawner").mergeStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("tile.vampirism.tent.spawner").withStyle(TextFormatting.GRAY));
         }
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext ctx) {
-        if (ctx.getFace() != Direction.UP)
+    public ActionResultType useOn(ItemUseContext ctx) {
+        if (ctx.getClickedFace() != Direction.UP)
             return ActionResultType.PASS;
-        if (ctx.getWorld().isRemote) return ActionResultType.PASS;
+        if (ctx.getLevel().isClientSide) return ActionResultType.PASS;
 
-        ItemStack stack = ctx.getItem();
+        ItemStack stack = ctx.getItemInHand();
         PlayerEntity player = ctx.getPlayer();
 
-        Direction dir = player == null ? Direction.NORTH : Direction.fromAngle(ctx.getPlayer().rotationYaw);
-        boolean flag = placeAt(ctx.getWorld(), ctx.getPos().up(), dir, false, false);
+        Direction dir = player == null ? Direction.NORTH : Direction.fromYRot(ctx.getPlayer().yRot);
+        boolean flag = placeAt(ctx.getLevel(), ctx.getClickedPos().above(), dir, false, false);
         if (flag) {
-            TileEntity tile = ctx.getWorld().getTileEntity(ctx.getPos().up());
+            TileEntity tile = ctx.getLevel().getBlockEntity(ctx.getClickedPos().above());
             if (tile instanceof TentTileEntity) {
                 if (spawner) {
                     ((TentTileEntity) tile).setSpawn(true);
                 }
             }
 
-            if (player == null || !player.abilities.isCreativeMode) {
+            if (player == null || !player.abilities.instabuild) {
                 stack.shrink(1);
             }
         }

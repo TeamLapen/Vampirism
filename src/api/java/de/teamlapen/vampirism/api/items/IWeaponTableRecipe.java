@@ -17,8 +17,8 @@ public interface IWeaponTableRecipe extends IRecipe<CraftingInventory> {
     /**
      * Returns an Item that is the result of this recipe
      */
-    default ItemStack getCraftingResult(CraftingInventory inv) {
-        return getRecipeOutput().copy();
+    default ItemStack assemble(CraftingInventory inv) {
+        return getResultItem().copy();
     }
 
     default NonNullList<Ingredient> getIngredients() {

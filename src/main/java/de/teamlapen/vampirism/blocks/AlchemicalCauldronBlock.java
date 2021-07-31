@@ -41,15 +41,15 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     protected static final VoxelShape cauldronShape = makeShape();
 
     private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(2, 0, 2, 14, 9, 14);
-        VoxelShape b = Block.makeCuboidShape(1, 9, 1, 15, 13, 15);
-        VoxelShape c = Block.makeCuboidShape(2, 13, 2, 14, 14, 14);
+        VoxelShape a = Block.box(2, 0, 2, 14, 9, 14);
+        VoxelShape b = Block.box(1, 9, 1, 15, 13, 15);
+        VoxelShape c = Block.box(2, 13, 2, 14, 14, 14);
         return VoxelShapes.or(a, b, c);
     }
 
     public AlchemicalCauldronBlock() {
-        super(Block.Properties.create(Material.IRON).hardnessAndResistance(4f).notSolid());
-        this.setDefaultState(this.stateContainer.getBaseState().with(LIQUID, 0).with(FACING, Direction.NORTH).with(LIT, false));
+        super(Block.Properties.of(Material.METAL).strength(4f).noOcclusion());
+        this.registerDefaultState(this.stateDefinition.any().setValue(LIQUID, 0).setValue(FACING, Direction.NORTH).setValue(LIT, false));
         this.setRegistryName(REFERENCE.MODID, regName);
     }
 
@@ -57,14 +57,14 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     @Override
     public void animateTick(BlockState state, World world, BlockPos pos, Random rng) {
         super.animateTick(state, world, pos, rng);
-        if (state.get(LIQUID) == 2) {
-            world.playSound(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, ModSounds.boiling, SoundCategory.BLOCKS, 0.05F, 1, false);
+        if (state.getValue(LIQUID) == 2) {
+            world.playLocalSound(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, ModSounds.boiling, SoundCategory.BLOCKS, 0.05F, 1, false);
         }
     }
 
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+    public TileEntity newBlockEntity(IBlockReader worldIn) {
         return new AlchemicalCauldronTileEntity();
     }
 
@@ -74,25 +74,25 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack stack) {
-        super.onBlockPlacedBy(world, blockPos, blockState, entity, stack);
-        TileEntity tile = world.getTileEntity(blockPos);
+    public void setPlacedBy(World world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack stack) {
+        super.setPlacedBy(world, blockPos, blockState, entity, stack);
+        TileEntity tile = world.getBlockEntity(blockPos);
         if (entity instanceof PlayerEntity && tile instanceof AlchemicalCauldronTileEntity) {
             ((AlchemicalCauldronTileEntity) tile).setOwnerID((PlayerEntity) entity);
         }
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(LIT, FACING, LIQUID);
     }
 
     @Override
-    protected void interactWith(World world, BlockPos blockPos, PlayerEntity playerEntity) {
-        TileEntity tile = world.getTileEntity(blockPos);
+    protected void openContainer(World world, BlockPos blockPos, PlayerEntity playerEntity) {
+        TileEntity tile = world.getBlockEntity(blockPos);
         if (tile instanceof AlchemicalCauldronTileEntity) {
-            playerEntity.openContainer((INamedContainerProvider) tile);
-            playerEntity.addStat(ModStats.interact_alchemical_cauldron);
+            playerEntity.openMenu((INamedContainerProvider) tile);
+            playerEntity.awardStat(ModStats.interact_alchemical_cauldron);
         }
     }
 }

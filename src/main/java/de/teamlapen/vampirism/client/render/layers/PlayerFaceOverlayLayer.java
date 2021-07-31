@@ -29,14 +29,14 @@ public class PlayerFaceOverlayLayer<T extends MobEntity & IPlayerOverlay, M exte
 
     @Override
     public void render(MatrixStack stack, IRenderTypeBuffer buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        ResourceLocation loc = entity.getOverlayPlayerProperties().map(Pair::getLeft).orElse(DefaultPlayerSkin.getDefaultSkinLegacy());
-        IVertexBuilder vertexBuilder = buffer.getBuffer(RenderType.getEntityCutoutNoCull(loc));
-        this.getEntityModel().bipedHead.showModel = true;
-        this.getEntityModel().bipedHeadwear.showModel = true;
-        this.getEntityModel().bipedHead.render(stack, vertexBuilder, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
-        this.getEntityModel().bipedHeadwear.render(stack, vertexBuilder, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
-        this.getEntityModel().bipedHead.showModel = false;
-        this.getEntityModel().bipedHeadwear.showModel = false;
+        ResourceLocation loc = entity.getOverlayPlayerProperties().map(Pair::getLeft).orElse(DefaultPlayerSkin.getDefaultSkin());
+        IVertexBuilder vertexBuilder = buffer.getBuffer(RenderType.entityCutoutNoCull(loc));
+        this.getParentModel().head.visible = true;
+        this.getParentModel().hat.visible = true;
+        this.getParentModel().head.render(stack, vertexBuilder, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+        this.getParentModel().hat.render(stack, vertexBuilder, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+        this.getParentModel().head.visible = false;
+        this.getParentModel().hat.visible = false;
 
     }
 

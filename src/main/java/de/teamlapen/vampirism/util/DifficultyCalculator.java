@@ -59,7 +59,7 @@ public class DifficultyCalculator {
      * @return A difficulty level based on the world's player's faction levels
      */
     public static Difficulty getWorldDifficulty(World w) {
-        return calculateDifficulty(w.getPlayers());
+        return calculateDifficulty(w.players());
     }
 
     /**
@@ -69,7 +69,7 @@ public class DifficultyCalculator {
      */
     public static Difficulty getLocalDifficulty(World w, BlockPos center, int radius) {
 
-        List<PlayerEntity> list = w.getEntitiesWithinAABB(PlayerEntity.class, UtilLib.createBB(center, radius, true));
+        List<PlayerEntity> list = w.getEntitiesOfClass(PlayerEntity.class, UtilLib.createBB(center, radius, true));
         return calculateDifficulty(list);
     }
 

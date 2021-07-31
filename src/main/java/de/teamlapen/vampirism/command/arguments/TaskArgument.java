@@ -39,7 +39,7 @@ public class TaskArgument implements ArgumentType<Task> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return ISuggestionProvider.suggestIterable(ModRegistries.TASKS.getKeys(), builder);
+        return ISuggestionProvider.suggestResource(ModRegistries.TASKS.getKeys(), builder);
     }
 
     @Override

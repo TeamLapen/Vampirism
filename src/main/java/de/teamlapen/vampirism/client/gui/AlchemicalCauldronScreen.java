@@ -27,31 +27,31 @@ public class AlchemicalCauldronScreen extends ContainerScreen<AlchemicalCauldron
         this.renderBackground(stack);
         super.render
                 (stack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(stack, mouseX, mouseY);
+        this.renderTooltip(stack, mouseX, mouseY);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1, 1, 1, 1);
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
-        int i = (this.width - this.xSize) / 2;
-        int j = (this.height - this.ySize) / 2;
-        this.blit(stack, i, j, 0, 0, this.xSize, this.ySize);
+        this.minecraft.getTextureManager().bind(BACKGROUND);
+        int i = (this.width - this.imageWidth) / 2;
+        int j = (this.height - this.imageHeight) / 2;
+        this.blit(stack, i, j, 0, 0, this.imageWidth, this.imageHeight);
 
-        int k = container.getBurnLeftScaled();
+        int k = menu.getLitProgress();
         if (k > 0) this.blit(stack, i + 56, j + 36 + 12 - k, 176, 12 - k, 14, k + 1);
 
-        int l = container.getCookProgressionScaled();
+        int l = menu.getBurnProgress();
         this.blit(stack, i + 79, j + 34, 176, 14, l + 1, 16);
         l = l / 24 * 30;
         this.blit(stack, i + 142, j + 28 + 30 - l, 176, 60 - l, 12, l);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
-        ITextComponent name = new TranslationTextComponent("tile.vampirism.alchemical_cauldron.display", minecraft.player.getDisplayName().deepCopy().mergeStyle(TextFormatting.DARK_BLUE), ModBlocks.alchemical_cauldron.getTranslatedName());
-        this.font.drawText(stack, name, 5, 6, 0x404040);
-        this.font.drawText(stack, this.playerInventory.getDisplayName(), (float) this.playerInventoryTitleX, (float) this.playerInventoryTitleY, 4210752);
+    protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
+        ITextComponent name = new TranslationTextComponent("tile.vampirism.alchemical_cauldron.display", minecraft.player.getDisplayName().copy().withStyle(TextFormatting.DARK_BLUE), ModBlocks.alchemical_cauldron.getName());
+        this.font.draw(stack, name, 5, 6, 0x404040);
+        this.font.draw(stack, this.inventory.getDisplayName(), (float) this.inventoryLabelX, (float) this.inventoryLabelY, 4210752);
     }
 
 }

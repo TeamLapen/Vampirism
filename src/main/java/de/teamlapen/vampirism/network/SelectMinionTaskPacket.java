@@ -44,7 +44,7 @@ public class SelectMinionTaskPacket implements IMessage {
                     if (controller.recallMinion(msg.minionID)) {
                         controller.createMinionEntityAtPlayer(msg.minionID, ctx.getSender());
                     } else {
-                        ctx.getSender().sendStatusMessage(new TranslationTextComponent("text.vampirism.minion_is_still_recovering", controller.contactMinionData(msg.minionID, MinionData::getFormattedName).orElse(new StringTextComponent("1"))), true);
+                        ctx.getSender().displayClientMessage(new TranslationTextComponent("text.vampirism.minion_is_still_recovering", controller.contactMinionData(msg.minionID, MinionData::getFormattedName).orElse(new StringTextComponent("1"))), true);
                     }
                 }
             } else if (RESPAWN.equals(msg.taskID)) {
@@ -72,9 +72,9 @@ public class SelectMinionTaskPacket implements IMessage {
 
     public static void printRecoveringMinions(ServerPlayerEntity player, List<IFormattableTextComponent> recoveringMinions) {
         if (recoveringMinions.size() == 1) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion_is_still_recovering", recoveringMinions.get(0)), true);
+            player.displayClientMessage(new TranslationTextComponent("text.vampirism.minion_is_still_recovering", recoveringMinions.get(0)), true);
         } else if (recoveringMinions.size() > 1) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.n_minions_are_still_recovering", recoveringMinions.size()), true);
+            player.displayClientMessage(new TranslationTextComponent("text.vampirism.n_minions_are_still_recovering", recoveringMinions.size()), true);
         }
     }
 

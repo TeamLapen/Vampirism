@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 public class GrinderBlock extends VampirismBlockContainer {
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = HorizontalBlock.FACING;
     private final static String regName = "blood_grinder";
     private static final VoxelShape SOUTH = makeShape();
     private static final VoxelShape WEST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.NINETY);
@@ -29,28 +29,28 @@ public class GrinderBlock extends VampirismBlockContainer {
     private static final VoxelShape EAST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
 
     private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(0, 0, 0, 16, 1, 16);
-        VoxelShape b = Block.makeCuboidShape(1, 1, 1, 15, 3, 15);
+        VoxelShape a = Block.box(0, 0, 0, 16, 1, 16);
+        VoxelShape b = Block.box(1, 1, 1, 15, 3, 15);
 
-        VoxelShape b1 = Block.makeCuboidShape(2, 3, 2, 3, 4, 3);
-        VoxelShape b2 = Block.makeCuboidShape(13, 3, 2, 14, 4, 3);
-        VoxelShape b3 = Block.makeCuboidShape(2, 3, 13, 3, 4, 14);
-        VoxelShape b4 = Block.makeCuboidShape(13, 3, 14, 13, 4, 14);
+        VoxelShape b1 = Block.box(2, 3, 2, 3, 4, 3);
+        VoxelShape b2 = Block.box(13, 3, 2, 14, 4, 3);
+        VoxelShape b3 = Block.box(2, 3, 13, 3, 4, 14);
+        VoxelShape b4 = Block.box(13, 3, 14, 13, 4, 14);
 
-        VoxelShape c = Block.makeCuboidShape(5, 3, 5, 11, 7, 11);
+        VoxelShape c = Block.box(5, 3, 5, 11, 7, 11);
 
-        VoxelShape d1 = Block.makeCuboidShape(5, 7, 2, 11, 12, 14);
-        VoxelShape d2 = Block.makeCuboidShape(2, 7, 5, 14, 12, 11);
-        VoxelShape d3 = Block.makeCuboidShape(3, 7, 4, 13, 12, 12);
-        VoxelShape d4 = Block.makeCuboidShape(4, 7, 3, 12, 12, 13);
+        VoxelShape d1 = Block.box(5, 7, 2, 11, 12, 14);
+        VoxelShape d2 = Block.box(2, 7, 5, 14, 12, 11);
+        VoxelShape d3 = Block.box(3, 7, 4, 13, 12, 12);
+        VoxelShape d4 = Block.box(4, 7, 3, 12, 12, 13);
         VoxelShape d5 = VoxelShapes.or(d1, d2);
         VoxelShape d6 = VoxelShapes.or(d3, d4);
         VoxelShape d = VoxelShapes.or(d5, d6);
 
-        VoxelShape e = Block.makeCuboidShape(8, 12, 8, 12, 16, 12);
+        VoxelShape e = Block.box(8, 12, 8, 12, 16, 12);
 
-        VoxelShape e1 = Block.makeCuboidShape(4, 12, 5, 7, 13, 6);
-        VoxelShape e2 = Block.makeCuboidShape(5, 12, 4, 6, 13, 7);
+        VoxelShape e1 = Block.box(4, 12, 5, 7, 13, 6);
+        VoxelShape e2 = Block.box(5, 12, 4, 6, 13, 7);
         VoxelShape e3 = VoxelShapes.or(e1, e2);
         VoxelShape e4 = VoxelShapes.or(e, e3);
 
@@ -68,25 +68,19 @@ public class GrinderBlock extends VampirismBlockContainer {
     }
 
     public GrinderBlock() {
-        super(regName, Properties.create(Material.IRON).hardnessAndResistance(5).sound(SoundType.METAL).notSolid());
-        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
+        super(regName, Properties.of(Material.METAL).strength(5).sound(SoundType.METAL).noOcclusion());
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
 
     }
 
-    @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new BloodGrinderTileEntity();
-    }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING)) {
+        switch (state.getValue(FACING)) {
             case NORTH:
                 return NORTH;
             case EAST:
@@ -102,24 +96,30 @@ public class GrinderBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing());
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
+    @Nullable
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (world.isRemote) return ActionResultType.SUCCESS;
-        player.openContainer(world.getTileEntity(pos) instanceof BloodGrinderTileEntity ? (BloodGrinderTileEntity) world.getTileEntity(pos) : null);
-        return ActionResultType.SUCCESS;
+    public TileEntity newBlockEntity(IBlockReader worldIn) {
+        return new BloodGrinderTileEntity();
     }
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
+    }
+
+    @Override
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (world.isClientSide) return ActionResultType.SUCCESS;
+        player.openMenu(world.getBlockEntity(pos) instanceof BloodGrinderTileEntity ? (BloodGrinderTileEntity) world.getBlockEntity(pos) : null);
+        return ActionResultType.SUCCESS;
     }
 
     @Override
@@ -128,7 +128,7 @@ public class GrinderBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 

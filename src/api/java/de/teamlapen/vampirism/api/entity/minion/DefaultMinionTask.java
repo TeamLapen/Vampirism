@@ -15,7 +15,7 @@ public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>
     @Override
     public ITextComponent getName() {
         if (name == null) {
-            name = new TranslationTextComponent(Util.makeTranslationKey("minion_task", getRegistryName()));
+            name = new TranslationTextComponent(Util.makeDescriptionId("minion_task", getRegistryName()));
         }
         return name;
     }

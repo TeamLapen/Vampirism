@@ -18,15 +18,15 @@ public class TaskPacket implements IMessage {
         buffer.writeVarInt(msg.completedRequirements.size());
         buffer.writeVarInt(msg.taskWrappers.size());
         msg.completableTasks.forEach((uuid, tasks) -> {
-            buffer.writeUniqueId(uuid);
+            buffer.writeUUID(uuid);
             buffer.writeVarInt(tasks.size());
-            tasks.forEach(buffer::writeUniqueId);
+            tasks.forEach(buffer::writeUUID);
         });
         msg.completedRequirements.forEach(((uuid, taskMapMap) -> {
-            buffer.writeUniqueId(uuid);
+            buffer.writeUUID(uuid);
             buffer.writeVarInt(taskMapMap.size());
             taskMapMap.forEach((task, data) -> {
-                buffer.writeUniqueId(task);
+                buffer.writeUUID(task);
                 buffer.writeVarInt(data.size());
                 data.forEach((loc, val) -> {
                     buffer.writeResourceLocation(loc);
@@ -44,21 +44,21 @@ public class TaskPacket implements IMessage {
         int taskWrapperSIze = buffer.readVarInt();
         Map<UUID, Set<UUID>> completableTasks = new HashMap<>();
         for (int i = 0; i < completableSize; i++) {
-            UUID uuid = buffer.readUniqueId();
+            UUID uuid = buffer.readUUID();
             Set<UUID> task = new HashSet<>();
             int taskSize = buffer.readVarInt();
             for (int i1 = 0; i1 < taskSize; i1++) {
-                task.add(buffer.readUniqueId());
+                task.add(buffer.readUUID());
             }
             completableTasks.put(uuid, task);
         }
         Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements = new HashMap<>();
         for (int i = 0; i < statSize; i++) {
-            UUID uuid = buffer.readUniqueId();
+            UUID uuid = buffer.readUUID();
             Map<UUID, Map<ResourceLocation, Integer>> taskRequirements = new HashMap<>();
             int taskRequirementSize = buffer.readVarInt();
             for (int i1 = 0; i1 < taskRequirementSize; i1++) {
-                UUID task = buffer.readUniqueId();
+                UUID task = buffer.readUUID();
                 int requirementSize = buffer.readVarInt();
                 Map<ResourceLocation, Integer> requirements = new HashMap<>();
                 for (int i2 = 0; i2 < requirementSize; i2++) {

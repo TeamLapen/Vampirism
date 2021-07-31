@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(PotionBrewing.class)
 public class MixinPotionBrewing {
 
-    @Inject(method = "hasItemConversions", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "hasContainerMix", at = @At("HEAD"), cancellable = true)
     private static void handleItemConversionHunterPotion(ItemStack input, ItemStack reagent, CallbackInfoReturnable<Boolean> cir) {
         if (shouldBlockBrewing_vampirism(input, reagent)) {
 
@@ -23,7 +23,7 @@ public class MixinPotionBrewing {
         }
     }
 
-    @Inject(method = "doReaction", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "mix", at = @At("HEAD"), cancellable = true)
     private static void handleDoReactionHunterPotion(ItemStack reagent, ItemStack potionIn, CallbackInfoReturnable<ItemStack> cir) {
         if (shouldBlockBrewing_vampirism(potionIn, reagent)) {
             cir.setReturnValue(potionIn);
@@ -32,7 +32,7 @@ public class MixinPotionBrewing {
     }
 
     private static boolean shouldBlockBrewing_vampirism(ItemStack input, ItemStack reagent) {
-        return VampirismPotion.isHunterPotion(input, true).map(Potion::getEffects).flatMap(effects -> effects.stream().map(EffectInstance::getPotion).filter(Effect::isBeneficial).findAny()).isPresent();
+        return VampirismPotion.isHunterPotion(input, true).map(Potion::getEffects).flatMap(effects -> effects.stream().map(EffectInstance::getEffect).filter(Effect::isBeneficial).findAny()).isPresent();
 
     }
 }

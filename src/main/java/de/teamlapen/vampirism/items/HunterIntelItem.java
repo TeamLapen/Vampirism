@@ -64,22 +64,22 @@ public class HunterIntelItem extends VampirismItem {
     private ITextComponent tooltip;
 
     public HunterIntelItem(int level) {
-        super(name + "_" + level, new Properties().group(VampirismMod.creativeTab));
+        super(name + "_" + level, new Properties().tab(VampirismMod.creativeTab));
         this.level = level;
         setTranslation_key(name);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltips, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltips, ITooltipFlag flagIn) {
         if (this.tooltip == null) {
-            this.tooltip = new TranslationTextComponent("text.vampirism.for_up_to_level").appendSibling(new StringTextComponent(": " + (level + 5))).mergeStyle(TextFormatting.RED);
+            this.tooltip = new TranslationTextComponent("text.vampirism.for_up_to_level").append(new StringTextComponent(": " + (level + 5))).withStyle(TextFormatting.RED);
         }
         tooltips.add(this.tooltip);
     }
 
     public ITextComponent getCustomName() {
-        return new TranslationTextComponent(this.getDefaultTranslationKey()).appendSibling(new StringTextComponent(" ")).appendSibling(new TranslationTextComponent("text.vampirism.for_up_to_level").appendSibling(new StringTextComponent(" " + (level + 5))));
+        return new TranslationTextComponent(this.getOrCreateDescriptionId()).append(new StringTextComponent(" ")).append(new TranslationTextComponent("text.vampirism.for_up_to_level").append(new StringTextComponent(" " + (level + 5))));
     }
 
     /**
@@ -90,7 +90,7 @@ public class HunterIntelItem extends VampirismItem {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public boolean hasEffect(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return true;
     }
 }

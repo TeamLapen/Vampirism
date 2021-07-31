@@ -11,14 +11,14 @@ public class RunTestsCommand extends BasicCommand { //TODO "unit test" can poten
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("runTests")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .executes(context -> {
-                    return runTests(context.getSource().asPlayer());
+                    return runTests(context.getSource().getPlayerOrException());
                 });
     }
 
     private static int runTests(ServerPlayerEntity asPlayer) {
-        Tests.runTests(asPlayer.getEntityWorld(), asPlayer);
+        Tests.runTests(asPlayer.getCommandSenderWorld(), asPlayer);
         return 0;
     }
 }

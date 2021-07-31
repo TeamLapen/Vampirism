@@ -25,7 +25,7 @@ public class RequestMinionSelectPacket implements IMessage {
         buf.writeVarInt(msg.minions.size());
         for (Pair<Integer, ITextComponent> minion : msg.minions) {
             buf.writeVarInt(minion.getLeft());
-            buf.writeTextComponent(minion.getRight());
+            buf.writeComponent(minion.getRight());
         }
 
     }
@@ -35,7 +35,7 @@ public class RequestMinionSelectPacket implements IMessage {
         int count = buf.readVarInt();
         List<Pair<Integer, ITextComponent>> minions = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            minions.add(Pair.of(buf.readVarInt(), buf.readTextComponent()));
+            minions.add(Pair.of(buf.readVarInt(), buf.readComponent()));
         }
         return new RequestMinionSelectPacket(a, minions);
     }

@@ -17,7 +17,7 @@ public class RenderAreaParticleCloud extends EntityRenderer<BasicEntityAreaParti
     }
 
     @Override
-    public ResourceLocation getEntityTexture(@Nonnull BasicEntityAreaParticleCloud entity) {
+    public ResourceLocation getTextureLocation(@Nonnull BasicEntityAreaParticleCloud entity) {
         return null;
     }
 }

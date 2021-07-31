@@ -24,33 +24,33 @@ public class SunscreenBeaconTileEntity extends TileEntity implements ITickableTi
 
     @Override
     public void tick() {
-        if (world == null) return;
-        if (this.world.getGameTime() % 80L == 0L) {
+        if (level == null) return;
+        if (this.level.getGameTime() % 80L == 0L) {
             this.updateBeacon();
         }
     }
 
     private void updateBeacon() {
 
-        if (this.world != null && !this.world.isRemote) {
+        if (this.level != null && !this.level.isClientSide) {
             //Position check is probably not necessary, but not sure
-            if (oldPos == null || selector == null || !oldPos.equals(this.pos)) {
-                oldPos = this.pos;
-                final BlockPos center = new BlockPos(this.pos.getX(), 0, this.pos.getZ());
+            if (oldPos == null || selector == null || !oldPos.equals(this.worldPosition)) {
+                oldPos = this.worldPosition;
+                final BlockPos center = new BlockPos(this.worldPosition.getX(), 0, this.worldPosition.getZ());
                 final int distSq = VampirismConfig.SERVER.sunscreenBeaconDistance.get() * VampirismConfig.SERVER.sunscreenBeaconDistance.get();
                 selector = input -> {
                     if (input == null) return false;
-                    BlockPos player = new BlockPos(input.getPosX(), 0, input.getPosZ());
-                    return player.distanceSq(center) < distSq;
+                    BlockPos player = new BlockPos(input.getX(), 0, input.getZ());
+                    return player.distSqr(center) < distSq;
                 };
             }
 
-            List<? extends PlayerEntity> list = this.world.getPlayers();
+            List<? extends PlayerEntity> list = this.level.players();
 
             for (PlayerEntity player : list) {
                 if (player.isAlive() && selector.test(player)) {
                     if (VampirismPlayerAttributes.get(player).vampireLevel > 0) {
-                        player.addPotionEffect(new EffectInstance(ModEffects.sunscreen, 160, 5, true, false));
+                        player.addEffect(new EffectInstance(ModEffects.sunscreen, 160, 5, true, false));
                     }
                 }
             }

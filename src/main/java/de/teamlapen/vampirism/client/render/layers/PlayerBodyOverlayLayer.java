@@ -24,18 +24,18 @@ public class PlayerBodyOverlayLayer<T extends MinionEntity<?> & IPlayerOverlay, 
 
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        ResourceLocation loc = getEntityTexture(entitylivingbaseIn);
+        ResourceLocation loc = getTextureLocation(entitylivingbaseIn);
         if (entitylivingbaseIn.shouldRenderLordSkin()) {
             loc = entitylivingbaseIn.getOverlayPlayerProperties().map(Pair::getLeft).orElse(loc);
         }
 
-        IVertexBuilder vertexBuilder = bufferIn.getBuffer(RenderType.getEntityCutoutNoCull(loc));
-        ((AgeableModelAccessor) this.getEntityModel()).getBodyParts_vampirism().forEach(
-                b -> b.showModel = true
+        IVertexBuilder vertexBuilder = bufferIn.getBuffer(RenderType.entityCutoutNoCull(loc));
+        ((AgeableModelAccessor) this.getParentModel()).getBodyParts_vampirism().forEach(
+                b -> b.visible = true
         );
-        ((AgeableModelAccessor) this.getEntityModel()).getBodyParts_vampirism().forEach(b -> b.render(matrixStackIn, vertexBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1));
-        ((AgeableModelAccessor) this.getEntityModel()).getBodyParts_vampirism().forEach(
-                b -> b.showModel = false
+        ((AgeableModelAccessor) this.getParentModel()).getBodyParts_vampirism().forEach(b -> b.render(matrixStackIn, vertexBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1));
+        ((AgeableModelAccessor) this.getParentModel()).getBodyParts_vampirism().forEach(
+                b -> b.visible = false
         );
     }
 }

@@ -32,19 +32,19 @@ public class SanguinareEffect extends VampirismEffect {
      */
     public static void addRandom(LivingEntity entity, boolean player) {
         int avgDuration = 20 * (player ? VampirismConfig.BALANCE.vpSanguinareAverageDuration.get() : BalanceMobProps.mobProps.SANGUINARE_AVG_DURATION);
-        int duration = (int) ((entity.getRNG().nextFloat() + 0.5F) * avgDuration);
+        int duration = (int) ((entity.getRandom().nextFloat() + 0.5F) * avgDuration);
         EffectInstance effect = new SanguinareEffectInstance(duration);
         Preconditions.checkNotNull(effect);
         if (!VampirismConfig.BALANCE.canCancelSanguinare.get()) {
             effect.setCurativeItems(new ArrayList<>());
         }
-        entity.addPotionEffect(effect);
+        entity.addEffect(effect);
 
     }
 
     public SanguinareEffect(String name, EffectType effectType, int potionColor) {
         super(name, effectType, potionColor);
-        addAttributesModifier(Attributes.ATTACK_DAMAGE, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, AttributeModifier.Operation.ADDITION);
+        addAttributeModifier(Attributes.ATTACK_DAMAGE, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, AttributeModifier.Operation.ADDITION);
     }
 
     @Override
@@ -55,13 +55,8 @@ public class SanguinareEffect extends VampirismEffect {
     }
 
     @Override
-    public boolean isReady(int duration, int amplifier) {
-        return duration == 2;
-    }
-
-    @Override
-    public void performEffect(LivingEntity entity, int amplifier) {
-        if (entity.world.isRemote || !entity.isAlive()) return;
+    public void applyEffectTick(LivingEntity entity, int amplifier) {
+        if (entity.level.isClientSide || !entity.isAlive()) return;
         if (entity instanceof CreatureEntity) {
             ExtendedCreature.getSafe(entity).ifPresent(IExtendedCreatureVampirism::makeVampire);
         }
@@ -70,12 +65,17 @@ public class SanguinareEffect extends VampirismEffect {
         }
     }
 
+    @Override
+    public boolean isDurationEffectTick(int duration, int amplifier) {
+        return duration == 2;
+    }
+
     @OnlyIn(Dist.CLIENT)
     @Override
     public void renderInventoryEffect(EffectInstance effect, DisplayEffectsScreen<?> gui, MatrixStack mStack, int x, int y, float z) {
-        String s = UtilLib.translate(effect.getPotion().getName());
+        String s = UtilLib.translate(effect.getEffect().getDescriptionId());
         gui.font
-                .drawStringWithShadow/*drawStringWithShadow*/
+                .drawShadow/*drawStringWithShadow*/
                 (mStack, s, (float) (x + 10 + 18), (float) (y + 6), 16777215);
     }
 

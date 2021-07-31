@@ -38,7 +38,7 @@ public class VampirismEntitySelectors {
             IFaction[] factions = VampirismAPI.factionRegistry().getFactions();
             for (final IFaction f : factions) {
                 if (f.getID().equals(factionID)) {
-                    parser.addFilter(input -> {
+                    parser.addPredicate(input -> {
                         if (input instanceof IFactionEntity) {
                             boolean flag1 = f.equals(((IFactionEntity) input).getFaction());
                             return invert != flag1;
@@ -60,7 +60,7 @@ public class VampirismEntitySelectors {
             StringReader reader = parser.getReader();
             MinMaxBounds.IntBound bound = MinMaxBounds.IntBound.fromReader(reader);
             if ((bound.getMin() == null || bound.getMin() >= 0) && (bound.getMax() == null || bound.getMax() >= 0)) {
-                parser.addFilter(input -> {
+                parser.addPredicate(input -> {
                     if (input instanceof PlayerEntity) {
                         int level = FactionPlayerHandler.getOpt((PlayerEntity) input).map(FactionPlayerHandler::getCurrentLevel).orElse(0);
                         return (bound.getMin() == null || bound.getMin() <= level) && (bound.getMax() == null || bound.getMax() >= level);
@@ -68,7 +68,7 @@ public class VampirismEntitySelectors {
                     return false;
                 });
             } else {
-                throw EntityOptions.NEGATIVE_LEVEL.createWithContext(reader);
+                throw EntityOptions.ERROR_LEVEL_NEGATIVE.createWithContext(reader);
             }
 
         }, (parser) -> true, new TranslationTextComponent("vampirism.argument.entity.options.level.desc"));

@@ -25,8 +25,8 @@ public class Permissions {
     }
 
     public static boolean isPvpEnabled(PlayerEntity player) {
-        if (!player.getEntityWorld().isRemote) {
-            return ServerLifecycleHooks.getCurrentServer().isPVPEnabled();
+        if (!player.getCommandSenderWorld().isClientSide) {
+            return ServerLifecycleHooks.getCurrentServer().isPvpAllowed();
         }
         return true;
     }

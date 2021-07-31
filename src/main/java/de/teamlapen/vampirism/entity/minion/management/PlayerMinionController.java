@@ -129,8 +129,8 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     public <T extends MinionData> T checkoutMinion(int id, int token, MinionEntity<T> entity) {
         MinionInfo i = getMinionInfo(id, token);
         if (i != null) {
-            int entityId = entity.getEntityId();
-            RegistryKey<World> dimension = entity.world.getDimensionKey();
+            int entityId = entity.getId();
+            RegistryKey<World> dimension = entity.level.dimension();
             if (i.checkout(entityId, dimension)) {
                 return (T) i.data;
             }
@@ -191,15 +191,15 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         if (type == null) {
             LOGGER.warn("Cannot create minion because type does not exist");
         } else {
-            return Helper.createEntity(type, p.getEntityWorld()).map(m -> {
+            return Helper.createEntity(type, p.getCommandSenderWorld()).map(m -> {
                 if (faction == null || faction.isEntityOfFaction(m)) {
                     LOGGER.warn("Specified minion entity is of wrong faction. This: {} Minion: {}", faction, m.getFaction());
                     m.remove();
                     return null;
                 } else {
                     m.claimMinionSlot(id, this);
-                    m.copyLocationAndAnglesFrom(p);
-                    p.world.addEntity(m);
+                    m.copyPosition(p);
+                    p.level.addFreshEntity(m);
                     activateTask(id, MinionTasks.stay);
                     return m;
                 }
@@ -427,7 +427,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
                 i.deathCooldown--;
                 if (i.deathCooldown == 0) {
                     i.data.setHealth(i.data.getMaxHealth());
-                    getLordPlayer().ifPresent(player -> player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.can_respawn", i.data.getFormattedName()), true));
+                    getLordPlayer().ifPresent(player -> player.displayClientMessage(new TranslationTextComponent("text.vampirism.minion.can_respawn", i.data.getFormattedName()), true));
                 }
             } else {
                 IMinionTask.IMinionTaskDesc<MinionData> taskDesc = i.data.getCurrentTaskDesc();
@@ -440,7 +440,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         @Nullable
         IMinionTask.IMinionTaskDesc desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data);
         if (desc == null) {
-            getLordPlayer().ifPresent(player -> player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.could_not_activate"), false));
+            getLordPlayer().ifPresent(player -> player.displayClientMessage(new TranslationTextComponent("text.vampirism.minion.could_not_activate"), false));
         } else {
             MinionData d = info.data;
             d.switchTask(d.getCurrentTaskDesc().getTask(), d.getCurrentTaskDesc(), desc);
@@ -453,15 +453,15 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     }
 
     private Optional<PlayerEntity> getLordPlayer() {
-        return Optional.ofNullable(server.getPlayerList().getPlayerByUUID(lordID));
+        return Optional.ofNullable(server.getPlayerList().getPlayer(lordID));
     }
 
     private Optional<MinionEntity<?>> getMinionEntity(MinionInfo info) {
         if (info.isActive()) {
             assert info.dimension != null;
-            World w = server.getWorld(info.dimension);
+            World w = server.getLevel(info.dimension);
             if (w != null) {
-                Entity e = w.getEntityByID(info.entityId);
+                Entity e = w.getEntity(info.entityId);
                 if (e instanceof MinionEntity) {
                     return Optional.of((MinionEntity<?>) e);
                 } else {

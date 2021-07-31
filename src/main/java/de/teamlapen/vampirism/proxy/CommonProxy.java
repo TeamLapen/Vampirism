@@ -35,7 +35,7 @@ public abstract class CommonProxy implements IProxy {
 
     @Override
     public void handleAppearancePacket(PlayerEntity player, AppearancePacket msg) {
-        Entity entity = player.world.getEntityByID(msg.entityId);
+        Entity entity = player.level.getEntity(msg.entityId);
         if (entity instanceof PlayerEntity) {
             VampirePlayer.getOpt(player).ifPresent(vampire -> {
                 vampire.setSkinData(msg.data);

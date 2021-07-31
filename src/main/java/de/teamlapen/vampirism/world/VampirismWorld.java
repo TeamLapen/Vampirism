@@ -116,15 +116,15 @@ public class VampirismWorld implements IVampirismWorld {
 
     @Override
     public boolean isInsideArtificialVampireFogArea(BlockPos blockPos) {
-        return Stream.concat(fogAreas.entrySet().stream(), tmpFogAreas.entrySet().stream()).anyMatch(entry -> entry.getValue().isVecInside(blockPos));
+        return Stream.concat(fogAreas.entrySet().stream(), tmpFogAreas.entrySet().stream()).anyMatch(entry -> entry.getValue().isInside(blockPos));
     }
 
     public void printDebug(CommandSource sender) {
         for (Emitter e : emitterHashMap.values()) {
-            sender.sendFeedback(new StringTextComponent("E: " + e.toString()), true);
+            sender.sendSuccess(new StringTextComponent("E: " + e.toString()), true);
         }
         for (Map.Entry<ChunkPos, EnumStrength> e : strengthHashMap.entrySet()) {
-            sender.sendFeedback(new StringTextComponent("S: " + e.toString()), true);
+            sender.sendSuccess(new StringTextComponent("S: " + e.toString()), true);
         }
     }
 

@@ -181,10 +181,10 @@ public class VampirismAPI {
         World w = DistExecutor.safeRunForDist(() -> () -> {
             MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
             if (server != null) {
-                return server.getWorld(world);
+                return server.getLevel(world);
             }
             return ClientHelper.getAndCheckWorld(world);
-        }, () -> () -> ServerLifecycleHooks.getCurrentServer().getWorld(world));
+        }, () -> () -> ServerLifecycleHooks.getCurrentServer().getLevel(world));
         if (w != null) {
             return w.getCapability(CAP_WORLD).map(iw -> (IGarlicChunkHandler) iw).orElse(dummyGarlicChunkHandler);
         }

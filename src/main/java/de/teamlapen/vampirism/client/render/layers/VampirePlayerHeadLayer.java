@@ -42,12 +42,12 @@ public class VampirePlayerHeadLayer extends LayerRenderer<AbstractClientPlayerEn
         if (atts.vampireLevel > 0 && !atts.getVampSpecial().disguised && !player.isInvisible()) {
             int eyeType = Math.max(0, Math.min(atts.getVampSpecial().eyeType, eyeOverlays.length - 1));
             int fangType = Math.max(0, Math.min(atts.getVampSpecial().fangType, fangOverlays.length - 1));
-            RenderType eyeRenderType = atts.getVampSpecial().glowingEyes ? RenderType.getEyes(eyeOverlays[eyeType]) : RenderType.getEntityCutoutNoCull(eyeOverlays[eyeType]);
+            RenderType eyeRenderType = atts.getVampSpecial().glowingEyes ? RenderType.eyes(eyeOverlays[eyeType]) : RenderType.entityCutoutNoCull(eyeOverlays[eyeType]);
             IVertexBuilder vertexBuilderEye = iRenderTypeBuffer.getBuffer(eyeRenderType);
-            int packerOverlay = LivingRenderer.getPackedOverlay(player, 0);
-            ModelRenderer head = this.getEntityModel().bipedHead;
+            int packerOverlay = LivingRenderer.getOverlayCoords(player, 0);
+            ModelRenderer head = this.getParentModel().head;
             head.render(stack, vertexBuilderEye, i, packerOverlay);
-            IVertexBuilder vertexBuilderFang = iRenderTypeBuffer.getBuffer(RenderType.getEntityCutoutNoCull(fangOverlays[fangType]));
+            IVertexBuilder vertexBuilderFang = iRenderTypeBuffer.getBuffer(RenderType.entityCutoutNoCull(fangOverlays[fangType]));
             head.render(stack, vertexBuilderFang, i, packerOverlay);
 
 

@@ -36,15 +36,10 @@ public class OblivionEffect extends VampirismEffect {
     }
 
     @Override
-    public boolean isReady(int duration, int amplifier) {
-        return duration % getTickDuration(amplifier) == 0;
-    }
-
-    @Override
-    public void performEffect(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
-        if (!entityLivingBaseIn.getEntityWorld().isRemote) {
+    public void applyEffectTick(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
+        if (!entityLivingBaseIn.getCommandSenderWorld().isClientSide) {
             if (entityLivingBaseIn instanceof PlayerEntity) {
-                entityLivingBaseIn.addPotionEffect(new EffectInstance(Effects.NAUSEA, getTickDuration(amplifier), 5, false, false, false, null));
+                entityLivingBaseIn.addEffect(new EffectInstance(Effects.CONFUSION, getTickDuration(amplifier), 5, false, false, false, null));
                 FactionPlayerHandler.getOpt(((PlayerEntity) entityLivingBaseIn)).map(FactionPlayerHandler::getCurrentFactionPlayer).flatMap(factionPlayer -> factionPlayer).ifPresent(factionPlayer -> {
                     ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
                     Optional<SkillNode> nodeOPT = ((SkillHandler<?>) skillHandler).anyLastNode();
@@ -53,13 +48,18 @@ public class OblivionEffect extends VampirismEffect {
                             skillHandler.disableSkill(element);
                         }
                     } else {
-                        entityLivingBaseIn.removePotionEffect(ModEffects.oblivion);
-                        ((PlayerEntity) entityLivingBaseIn).sendStatusMessage(new TranslationTextComponent("text.vampirism.skill.skills_reset"), true);
+                        entityLivingBaseIn.removeEffect(ModEffects.oblivion);
+                        ((PlayerEntity) entityLivingBaseIn).displayClientMessage(new TranslationTextComponent("text.vampirism.skill.skills_reset"), true);
                         LOGGER.debug(LogUtil.FACTION, "Skills were reset for {}", entityLivingBaseIn.getName().getString());
                     }
                 });
             }
         }
+    }
+
+    @Override
+    public boolean isDurationEffectTick(int duration, int amplifier) {
+        return duration % getTickDuration(amplifier) == 0;
     }
 
     private int getTickDuration(int amplifier) {

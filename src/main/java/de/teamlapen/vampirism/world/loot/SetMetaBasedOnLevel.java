@@ -23,21 +23,21 @@ public class SetMetaBasedOnLevel extends LootFunction {
 
     @Nonnull
     @Override
-    public ItemStack doApply(@Nonnull ItemStack stack, LootContext context) {
-        if (context.get(target.getParameter()) instanceof IAdjustableLevel) {
-            int l = ((IAdjustableLevel) target.getParameter()).getLevel();
-            int amount = max.generateInt(context.getRandom());
-            if (amount != -1)
-                l = Math.min(amount, l);
-            stack.setDamage(l);
-        }
-        return stack;
+    public LootFunctionType getType() {
+        return ModLoot.set_meta_from_level;
     }
 
     @Nonnull
     @Override
-    public LootFunctionType getFunctionType() {
-        return ModLoot.set_meta_from_level;
+    public ItemStack run(@Nonnull ItemStack stack, LootContext context) {
+        if (context.getParamOrNull(target.getParam()) instanceof IAdjustableLevel) {
+            int l = ((IAdjustableLevel) target.getParam()).getLevel();
+            int amount = max.getInt(context.getRandom());
+            if (amount != -1)
+                l = Math.min(amount, l);
+            stack.setDamageValue(l);
+        }
+        return stack;
     }
 
     public static class Serializer extends LootFunction.Serializer<SetMetaBasedOnLevel> {

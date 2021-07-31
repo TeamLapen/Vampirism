@@ -29,54 +29,54 @@ public class VillagerWithArmsModel<T extends MobEntity> extends VillagerModel<T>
 
     public VillagerWithArmsModel(float scale, float p_i1164_2_, int width, int height) {
         super(scale, width, height);
-        this.villagerArms.showModel = false;
-        this.rightArm = (new ModelRenderer(this).setTextureSize(width, height));
-        this.rightArm.setTextureOffset(44, 22).addBox(-4F, -2F, -2F, 4, 8, 4, scale);
-        this.rightArm.setRotationPoint(0, 2 + p_i1164_2_, 0);
+        this.arms.visible = false;
+        this.rightArm = (new ModelRenderer(this).setTexSize(width, height));
+        this.rightArm.texOffs(44, 22).addBox(-4F, -2F, -2F, 4, 8, 4, scale);
+        this.rightArm.setPos(0, 2 + p_i1164_2_, 0);
         this.rightArm.addBox(-4, 6, -2, 4, 3, 4);
 
-        this.leftArm = new ModelRenderer(this).setTextureSize(width, height);
-        this.leftArm.setTextureOffset(44, 22).addBox(0, -2, -2, 4, 8, 4, scale);
+        this.leftArm = new ModelRenderer(this).setTexSize(width, height);
+        this.leftArm.texOffs(44, 22).addBox(0, -2, -2, 4, 8, 4, scale);
         this.leftArm.addBox(0, 6, -2, 4, 3, 4, scale);
-        this.leftArm.setRotationPoint(-5, 2 + p_i1164_2_, 0);
+        this.leftArm.setPos(-5, 2 + p_i1164_2_, 0);
         this.leftArm.mirror = true;
 
     }
 
     @Override
-    public Iterable<ModelRenderer> getParts() {
-        return Iterables.concat(super.getParts(), ImmutableList.of(leftArm, rightArm));
+    public Iterable<ModelRenderer> parts() {
+        return Iterables.concat(super.parts(), ImmutableList.of(leftArm, rightArm));
     }
 
     @Override
-    public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        this.leftArm.setRotationPoint(4, 3, -1);
-        this.rightArm.setRotationPoint(-4, 3, -1);
-        this.leftArm.rotateAngleX = -0.75F;
-        this.rightArm.rotateAngleX = -0.75F;
+    public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        this.leftArm.setPos(4, 3, -1);
+        this.rightArm.setPos(-4, 3, -1);
+        this.leftArm.xRot = -0.75F;
+        this.rightArm.xRot = -0.75F;
 
-        if (this.swingProgress > 0.0F) {
+        if (this.attackTime > 0.0F) {
             HandSide enumhandside = this.getMainHand(entityIn);
             ModelRenderer modelrenderer = this.getArmForSide(enumhandside);
             float f1;
-            f1 = 1.0F - this.swingProgress;
+            f1 = 1.0F - this.attackTime;
             f1 = f1 * f1;
             f1 = f1 * f1;
             f1 = 1.0F - f1;
             float f2 = MathHelper.sin(f1 * (float) Math.PI);
-            float f3 = MathHelper.sin(this.swingProgress * (float) Math.PI) * -(this.villagerHead.rotateAngleX - 0.7F) * 0.75F;
-            modelrenderer.rotateAngleX = (float) ((double) modelrenderer.rotateAngleX - ((double) f2 * 1.2D + (double) f3));
+            float f3 = MathHelper.sin(this.attackTime * (float) Math.PI) * -(this.head.xRot - 0.7F) * 0.75F;
+            modelrenderer.xRot = (float) ((double) modelrenderer.xRot - ((double) f2 * 1.2D + (double) f3));
         }
     }
 
     @Override
-    public void translateHand(HandSide handSide, MatrixStack matrixStack) {
+    public void translateToHand(HandSide handSide, MatrixStack matrixStack) {
         float f = handSide == HandSide.RIGHT ? 1.0F : -1.0F;
         ModelRenderer arm = getArmForSide(handSide);
-        arm.rotationPointX += f;
-        arm.translateRotate(matrixStack);
-        arm.rotationPointX -= f;
+        arm.x += f;
+        arm.translateAndRotate(matrixStack);
+        arm.x -= f;
     }
 
 
@@ -85,6 +85,6 @@ public class VillagerWithArmsModel<T extends MobEntity> extends VillagerModel<T>
     }
 
     protected HandSide getMainHand(Entity entityIn) {
-        return entityIn instanceof LivingEntity ? ((LivingEntity) entityIn).getPrimaryHand() : HandSide.RIGHT;
+        return entityIn instanceof LivingEntity ? ((LivingEntity) entityIn).getMainArm() : HandSide.RIGHT;
     }
 }

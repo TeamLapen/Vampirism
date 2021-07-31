@@ -16,9 +16,9 @@ class ClientHelper {
      */
     @Nullable
     static World getAndCheckWorld(RegistryKey<World> dimension) {
-        World clientWorld = Minecraft.getInstance().world;
+        World clientWorld = Minecraft.getInstance().level;
         if (clientWorld != null) {
-            if (clientWorld.getDimensionKey().equals(dimension)) {
+            if (clientWorld.dimension().equals(dimension)) {
                 return clientWorld;
             }
         }

@@ -68,13 +68,13 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         this.addFactionLevelToolTip(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
         float charged = getCharged(stack);
         float trained = getTrained(stack, VampirismMod.proxy.getClientPlayer());
-        tooltip.add(new TranslationTextComponent("text.vampirism.sword_charged").appendSibling(new StringTextComponent(" " + ((int) Math.ceil(charged * 100f)) + "%")).mergeStyle(TextFormatting.DARK_AQUA));
-        tooltip.add(new TranslationTextComponent("text.vampirism.sword_trained").appendSibling(new StringTextComponent(" " + ((int) Math.ceil(trained * 100f)) + "%")).mergeStyle(TextFormatting.DARK_AQUA));
+        tooltip.add(new TranslationTextComponent("text.vampirism.sword_charged").append(new StringTextComponent(" " + ((int) Math.ceil(charged * 100f)) + "%")).withStyle(TextFormatting.DARK_AQUA));
+        tooltip.add(new TranslationTextComponent("text.vampirism.sword_trained").append(new StringTextComponent(" " + ((int) Math.ceil(trained * 100f)) + "%")).withStyle(TextFormatting.DARK_AQUA));
     }
 
     @Override
@@ -103,7 +103,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      * Prevent the player from being asked to name this item
      */
     public void doNotName(ItemStack stack) {
-        stack.setTagInfo("dont_name", ByteNBT.valueOf(Byte.MAX_VALUE));
+        stack.addTagElement("dont_name", ByteNBT.valueOf(Byte.MAX_VALUE));
     }
 
     @Nonnull
@@ -135,16 +135,31 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+    public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {
+        if (!(entityLiving instanceof PlayerEntity)) return stack;
+        VReference.VAMPIRE_FACTION.getPlayerCapability((PlayerEntity) entityLiving).ifPresent(vampire -> {
+            int amount = (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.blood_charge_speed) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get() : 2);
+            if (((PlayerEntity) entityLiving).isCreative() || vampire.useBlood(amount, false)) {
+                this.charge(stack, amount * VReference.FOOD_TO_FLUID_BLOOD);
+            }
+        });
+        if (getCharged(stack) == 1) {
+            tryName(stack, (PlayerEntity) entityLiving);
+        }
+        return stack;
+    }
+
+    @Override
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         //Vampire Finisher skill
         if (attacker instanceof PlayerEntity && !Helper.isVampire(target)) {
             double relTh = VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() * VampirePlayer.getOpt((PlayerEntity) attacker).map(VampirePlayer::getSkillHandler).map(h -> h.isSkillEnabled(VampireSkills.sword_finisher) ? (h.isRefinementEquipped(ModRefinements.sword_finisher) ? VampirismConfig.BALANCE.vrSwordFinisherThresholdMod.get() : 1d) : 0d).orElse(0d);
             if (relTh > 0 && target.getHealth() <= target.getMaxHealth() * relTh) {
-                DamageSource dmg = DamageSource.causePlayerDamage((PlayerEntity) attacker).setDamageBypassesArmor();
-                target.attackEntityFrom(dmg, 10000F);
-                Vector3d center = Vector3d.copy(target.getPosition());
-                center.add(0, target.getHeight() / 2d, 0);
-                ModParticles.spawnParticlesServer(target.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xE02020), center.x, center.y, center.z, 15, 0.5, 0.5, 0.5, 0);
+                DamageSource dmg = DamageSource.playerAttack((PlayerEntity) attacker).bypassArmor();
+                target.hurt(dmg, 10000F);
+                Vector3d center = Vector3d.atLowerCornerOf(target.blockPosition());
+                center.add(0, target.getBbHeight() / 2d, 0);
+                ModParticles.spawnParticlesServer(target.level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xE02020), center.x, center.y, center.z, 15, 0.5, 0.5, 0.5, 0);
             }
         }
         //Update training on kill
@@ -162,23 +177,9 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         float charged = getCharged(stack);
         charged -= getChargeUsage();
         setCharged(stack, charged);
-        attacker.setHeldItem(Hand.MAIN_HAND, stack);
+        attacker.setItemInHand(Hand.MAIN_HAND, stack);
 
-        return super.hitEntity(stack, target, attacker);
-    }
-
-    @Override
-    public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        //Try to minimize execution time, but tricky since off hand selection is not directly available, but it can only be off hand if itemSlot 0
-        if (worldIn.isRemote && (isSelected || itemSlot == 0)) {
-            float charged = getCharged(stack);
-            if (charged > 0 && entityIn.ticksExisted % ((int) (20 + 100 * (1f - charged))) == 0 && entityIn instanceof LivingEntity) {
-                boolean secondHand = !isSelected && ((LivingEntity) entityIn).getHeldItem(Hand.OFF_HAND).equals(stack);
-                if (isSelected || secondHand) {
-                    spawnChargedParticle((LivingEntity) entityIn, isSelected);
-                }
-            }
-        }
+        return super.hurtEnemy(stack, target, attacker);
     }
 
     public boolean isFullyCharged(ItemStack stack) {
@@ -191,47 +192,31 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
-        return VampirePlayer.getOpt(playerIn).map(vampire -> {
-            if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
-
-            if (this.canBeCharged(stack) && playerIn.isSneaking() && vampire.getSkillHandler().isSkillEnabled(VampireSkills.blood_charge) && (playerIn.isCreative() || vampire.getBloodLevel() >= (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.blood_charge_speed) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get() : 2))) {
-                playerIn.setActiveHand(handIn);
-                return new ActionResult<>(ActionResultType.SUCCESS, stack);
+    public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+        //Try to minimize execution time, but tricky since off hand selection is not directly available, but it can only be off hand if itemSlot 0
+        if (worldIn.isClientSide && (isSelected || itemSlot == 0)) {
+            float charged = getCharged(stack);
+            if (charged > 0 && entityIn.tickCount % ((int) (20 + 100 * (1f - charged))) == 0 && entityIn instanceof LivingEntity) {
+                boolean secondHand = !isSelected && ((LivingEntity) entityIn).getItemInHand(Hand.OFF_HAND).equals(stack);
+                if (isSelected || secondHand) {
+                    spawnChargedParticle((LivingEntity) entityIn, isSelected);
+                }
             }
-
-            return new ActionResult<>(ActionResultType.PASS, stack);
-        }).orElse(new ActionResult<>(ActionResultType.PASS, stack));
+        }
     }
 
     @Override
-    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
-        if (!(entityLiving instanceof PlayerEntity)) return stack;
-        VReference.VAMPIRE_FACTION.getPlayerCapability((PlayerEntity) entityLiving).ifPresent(vampire -> {
-            int amount = (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.blood_charge_speed) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get() : 2);
-            if (((PlayerEntity) entityLiving).isCreative() || vampire.useBlood(amount, false)) {
-                this.charge(stack, amount * VReference.FOOD_TO_FLUID_BLOOD);
+    public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
+        if (player.getCommandSenderWorld().isClientSide) {
+            if (count % 3 == 0) {
+                spawnChargingParticle(player, player.getMainHandItem().equals(stack));
             }
-        });
-        if (getCharged(stack) == 1) {
-            tryName(stack, (PlayerEntity) entityLiving);
         }
-        return stack;
     }
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
         return !Helper.isVampire(player);
-    }
-
-    @Override
-    public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
-        if (player.getEntityWorld().isRemote) {
-            if (count % 3 == 0) {
-                spawnChargingParticle(player, player.getHeldItemMainhand().equals(stack));
-            }
-        }
     }
 
     /**
@@ -240,7 +225,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      * @param value Is clamped between 0 and 1
      */
     public void setCharged(@Nonnull ItemStack stack, float value) {
-        stack.setTagInfo("charged", FloatNBT.valueOf(MathHelper.clamp(value, 0f, 1f)));
+        stack.addTagElement("charged", FloatNBT.valueOf(MathHelper.clamp(value, 0f, 1f)));
     }
 
     /**
@@ -249,17 +234,17 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      * @param value Clamped between 0 and 1
      */
     public void setTrained(@Nonnull ItemStack stack, @Nonnull LivingEntity player, float value) {
-        CompoundNBT nbt = stack.getOrCreateChildTag("trained");
-        nbt.putFloat(player.getUniqueID().toString(), MathHelper.clamp(value, 0f, 1f));
+        CompoundNBT nbt = stack.getOrCreateTagElement("trained");
+        nbt.putFloat(player.getUUID().toString(), MathHelper.clamp(value, 0f, 1f));
     }
 
     /**
      * If the stack is not named and the player hasn't been named before, ask the player to name this stack
      */
     public void tryName(ItemStack stack, PlayerEntity player) {
-        if (!stack.hasDisplayName() && player.world.isRemote() && (!stack.hasTag() || !stack.getTag().getBoolean("dont_name"))) {
+        if (!stack.hasCustomHoverName() && player.level.isClientSide() && (!stack.hasTag() || !stack.getTag().getBoolean("dont_name"))) {
             VampirismMod.proxy.displayNameSwordScreen(stack);
-            player.world.playSound((player).getPosX(), (player).getPosY(), (player).getPosZ(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1f, 1f, false);
+            player.level.playLocalSound((player).getX(), (player).getY(), (player).getZ(), SoundEvents.PLAYER_LEVELUP, SoundCategory.PLAYERS, 1f, 1f, false);
         }
     }
 
@@ -274,10 +259,25 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         float cached = getTrained(stack);
         float trained = getTrained(stack, player);
         if (cached != trained) {
-            stack.setTagInfo("trained-cache", FloatNBT.valueOf(trained));
+            stack.addTagElement("trained-cache", FloatNBT.valueOf(trained));
             return true;
         }
         return false;
+    }
+
+    @Override
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
+        return VampirePlayer.getOpt(playerIn).map(vampire -> {
+            if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
+
+            if (this.canBeCharged(stack) && playerIn.isShiftKeyDown() && vampire.getSkillHandler().isSkillEnabled(VampireSkills.blood_charge) && (playerIn.isCreative() || vampire.getBloodLevel() >= (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.blood_charge_speed) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get() : 2))) {
+                playerIn.startUsingItem(handIn);
+                return new ActionResult<>(ActionResultType.SUCCESS, stack);
+            }
+
+            return new ActionResult<>(ActionResultType.PASS, stack);
+        }).orElse(new ActionResult<>(ActionResultType.PASS, stack));
     }
 
     @Override
@@ -346,8 +346,8 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      */
     protected float getTrained(@Nonnull ItemStack stack, @Nullable LivingEntity player) {
         if (player == null) return getTrained(stack);
-        UUID id = player.getUniqueID();
-        CompoundNBT nbt = stack.getChildTag("trained");
+        UUID id = player.getUUID();
+        CompoundNBT nbt = stack.getTagElement("trained");
         if (nbt != null) {
             if (nbt.contains(id.toString())) {
                 return nbt.getFloat(id.toString());
@@ -360,17 +360,17 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     private void spawnChargedParticle(LivingEntity player, boolean mainHand) {
         Vector3d mainPos = UtilLib.getItemPosition(player, mainHand);
         for (int j = 0; j < 3; ++j) {
-            Vector3d pos = mainPos.add((player.getRNG().nextFloat() - 0.5f) * 0.1f, (player.getRNG().nextFloat() - 0.3f) * 0.9f, (player.getRNG().nextFloat() - 0.5f) * 0.1f);
-            ModParticles.spawnParticleClient(player.getEntityWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (player.getRNG().nextFloat() * 0.9F + 0.1F)), true, pos.x + (player.getRNG().nextFloat() - 0.5D) * 0.1D, pos.y + (player.getRNG().nextFloat() - 0.5D) * 0.1D, pos.z + (player.getRNG().nextFloat() - 0.5D) * 0.1D, new ResourceLocation("minecraft", "glitter_1")), pos.x, pos.y, pos.z);
+            Vector3d pos = mainPos.add((player.getRandom().nextFloat() - 0.5f) * 0.1f, (player.getRandom().nextFloat() - 0.3f) * 0.9f, (player.getRandom().nextFloat() - 0.5f) * 0.1f);
+            ModParticles.spawnParticleClient(player.getCommandSenderWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (player.getRandom().nextFloat() * 0.9F + 0.1F)), true, pos.x + (player.getRandom().nextFloat() - 0.5D) * 0.1D, pos.y + (player.getRandom().nextFloat() - 0.5D) * 0.1D, pos.z + (player.getRandom().nextFloat() - 0.5D) * 0.1D, new ResourceLocation("minecraft", "glitter_1")), pos.x, pos.y, pos.z);
         }
     }
 
     @OnlyIn(Dist.CLIENT)
     private void spawnChargingParticle(LivingEntity player, boolean mainHand) {
         Vector3d pos = UtilLib.getItemPosition(player, mainHand);
-        if (player.getSwingProgress(1f) > 0f) return;
-        pos = pos.add((player.getRNG().nextFloat() - 0.5f) * 0.1f, (player.getRNG().nextFloat() - 0.3f) * 0.9f, (player.getRNG().nextFloat() - 0.5f) * 0.1f);
-        Vector3d playerPos = new Vector3d((player).getPosX(), (player).getPosY() + player.getEyeHeight() - 0.2f, (player).getPosZ());
-        ModParticles.spawnParticleClient(player.getEntityWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (player.getRNG().nextFloat() * 0.6F + 0.1F)), true, pos.x, pos.y, pos.z), playerPos.x, playerPos.y, playerPos.z);
+        if (player.getAttackAnim(1f) > 0f) return;
+        pos = pos.add((player.getRandom().nextFloat() - 0.5f) * 0.1f, (player.getRandom().nextFloat() - 0.3f) * 0.9f, (player.getRandom().nextFloat() - 0.5f) * 0.1f);
+        Vector3d playerPos = new Vector3d((player).getX(), (player).getY() + player.getEyeHeight() - 0.2f, (player).getZ());
+        ModParticles.spawnParticleClient(player.getCommandSenderWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (player.getRandom().nextFloat() * 0.6F + 0.1F)), true, pos.x, pos.y, pos.z), playerPos.x, playerPos.y, playerPos.z);
     }
 }

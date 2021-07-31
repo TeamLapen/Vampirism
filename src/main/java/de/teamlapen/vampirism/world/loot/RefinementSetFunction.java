@@ -21,11 +21,11 @@ import javax.annotation.Nullable;
 public class RefinementSetFunction extends LootFunction {
 
     public static Builder<?> builder(IFaction<?> faction) {
-        return builder(conditions -> new RefinementSetFunction(conditions, faction));
+        return simpleBuilder(conditions -> new RefinementSetFunction(conditions, faction));
     }
 
     public static Builder<?> builder() {
-        return builder(conditions -> new RefinementSetFunction(conditions, null));
+        return simpleBuilder(conditions -> new RefinementSetFunction(conditions, null));
     }
     @Nullable
     public final IFaction<?> faction;
@@ -37,13 +37,13 @@ public class RefinementSetFunction extends LootFunction {
 
     @Nonnull
     @Override
-    public LootFunctionType getFunctionType() {
+    public LootFunctionType getType() {
         return ModLoot.add_refinement_set;
     }
 
     @Nonnull
     @Override
-    protected ItemStack doApply(@Nonnull ItemStack stack, @Nonnull LootContext context) {
+    protected ItemStack run(@Nonnull ItemStack stack, @Nonnull LootContext context) {
         if (stack.getItem() instanceof VampireRefinementItem) {
             IRefinementSet set = VampireRefinementItem.getRandomRefinementForItem(faction, ((VampireRefinementItem) stack.getItem()));
             if (set != null) {

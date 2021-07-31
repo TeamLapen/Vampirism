@@ -14,18 +14,18 @@ public class VampirismPoisonEffect extends VampirismEffect {
     }
 
     @Override
-    public boolean isReady(int duration, int amplifier) {
+    public void applyEffectTick(LivingEntity entityLivingBaseIn, int amplifier) {
+        if (entityLivingBaseIn.getHealth() > 1f || amplifier >= DEADLY_AMPLIFIER) {
+            entityLivingBaseIn.hurt(DamageSource.MAGIC, amplifier + 1);
+        }
+    }
+
+    @Override
+    public boolean isDurationEffectTick(int duration, int amplifier) {
         int j = 25 >> amplifier;
         if (j > 0)
             return duration % j == 0;
         else
             return true;
-    }
-
-    @Override
-    public void performEffect(LivingEntity entityLivingBaseIn, int amplifier) {
-        if (entityLivingBaseIn.getHealth() > 1f || amplifier >= DEADLY_AMPLIFIER) {
-            entityLivingBaseIn.attackEntityFrom(DamageSource.MAGIC, amplifier + 1);
-        }
     }
 }

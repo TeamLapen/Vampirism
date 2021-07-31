@@ -24,16 +24,16 @@ public class InjectionItem extends VampirismItem {
     private final TYPE type;
 
     public InjectionItem(TYPE type) {
-        super(regName + "_" + type.getName(), new Properties().group(VampirismMod.creativeTab));
+        super(regName + "_" + type.getName(), new Properties().tab(VampirismMod.creativeTab));
         this.type = type;
     }
 
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
         if (type == TYPE.SANGUINARE) {
-            playerIn.sendStatusMessage(new StringTextComponent("Please use a ").appendSibling(new TranslationTextComponent(ModBlocks.med_chair.getTranslationKey())), true);
+            playerIn.displayClientMessage(new StringTextComponent("Please use a ").append(new TranslationTextComponent(ModBlocks.med_chair.getDescriptionId())), true);
         }
         return new ActionResult<>(ActionResultType.PASS, stack);
     }
@@ -49,12 +49,12 @@ public class InjectionItem extends VampirismItem {
         }
 
         public String getName() {
-            return this.getString();
+            return this.getSerializedName();
         }
 
         @Override
         @Nonnull
-        public String getString() {
+        public String getSerializedName() {
             return name;
         }
     }

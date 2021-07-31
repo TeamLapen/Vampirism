@@ -216,23 +216,23 @@ public class ModItems {
 
     static void registerCraftingRecipes() {
         // Brewing
-        BrewingRecipeRegistry.addRecipe(Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER)), Ingredient.fromStacks(new ItemStack(holy_salt)), new ItemStack(holy_salt_water));
+        BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)), Ingredient.of(new ItemStack(holy_salt)), new ItemStack(holy_salt_water));
 
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.fromItems(holy_water_bottle_normal), Ingredient.fromItems(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_normal)) {
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(holy_water_bottle_normal), Ingredient.of(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_normal)) {
             @Override
             public boolean isInput(@Nonnull ItemStack stack) {
 
                 return holy_water_bottle_normal.equals(stack.getItem());
             }
         });
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.fromItems(holy_water_bottle_enhanced), Ingredient.fromItems(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_enhanced)) {
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(holy_water_bottle_enhanced), Ingredient.of(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_enhanced)) {
             @Override
             public boolean isInput(@Nonnull ItemStack stack) {
 
                 return holy_water_bottle_enhanced.equals(stack.getItem());
             }
         });
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.fromItems(holy_water_bottle_ultimate), Ingredient.fromItems(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_ultimate)) {
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(holy_water_bottle_ultimate), Ingredient.of(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_ultimate)) {
             @Override
             public boolean isInput(@Nonnull ItemStack stack) {
                 return holy_water_bottle_ultimate.equals(stack.getItem());
@@ -244,8 +244,8 @@ public class ModItems {
 
     static void registerItems(IForgeRegistry<Item> registry) {
         registry.register(new VampireFangItem());
-        registry.register(new VampirismItemBloodFood("human_heart", (new Food.Builder()).hunger(20).saturation(1.5F).build(), new Food.Builder().hunger(5).saturation(1f).build()));
-        registry.register(new VampirismItemBloodFood("weak_human_heart", (new Food.Builder()).hunger(10).saturation(0.9F).build(), new Food.Builder().hunger(3).saturation(1f).build()));
+        registry.register(new VampirismItemBloodFood("human_heart", (new Food.Builder()).nutrition(20).saturationMod(1.5F).build(), new Food.Builder().nutrition(5).saturationMod(1f).build()));
+        registry.register(new VampirismItemBloodFood("weak_human_heart", (new Food.Builder()).nutrition(10).saturationMod(0.9F).build(), new Food.Builder().nutrition(3).saturationMod(1f).build()));
         registry.register(new BloodBottleItem());
         registry.register(new TentItem(true));
         registry.register(new TentItem(false));
@@ -291,12 +291,12 @@ public class ModItems {
         TechCrossbowItem enhanced_tech_crossbow = new TechCrossbowItem("enhanced_tech_crossbow", 1.7F, 4, 450);
         enhanced_tech_crossbow.setEnchantability(ItemTier.DIAMOND);
         registry.register(enhanced_tech_crossbow);
-        registry.register(new VampirismItem("tech_crossbow_ammo_package", new Item.Properties().group(VampirismMod.creativeTab)) {
+        registry.register(new VampirismItem("tech_crossbow_ammo_package", new Item.Properties().tab(VampirismMod.creativeTab)) {
 
             @OnlyIn(Dist.CLIENT)
             @Override
-            public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-                tooltip.add(new TranslationTextComponent("item.vampirism." + regName + ".tooltip", new TranslationTextComponent(basic_tech_crossbow.getTranslationKey())).mergeStyle(TextFormatting.GRAY));
+            public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+                tooltip.add(new TranslationTextComponent("item.vampirism." + regName + ".tooltip", new TranslationTextComponent(basic_tech_crossbow.getDescriptionId())).withStyle(TextFormatting.GRAY));
             }
 
         });
@@ -313,17 +313,17 @@ public class ModItems {
         registry.register(new VampirismItem("holy_salt", creativeTabProps()) {
 
             @Override
-            public boolean hasEffect(ItemStack stack) {
+            public boolean isFoil(ItemStack stack) {
 
                 return true;
             }
         });
         registry.register(new VampirismItem("pure_salt", creativeTabProps()));
 
-        registry.register(new VampirismItem("holy_salt_water", new Item.Properties().maxStackSize(1)) {
+        registry.register(new VampirismItem("holy_salt_water", new Item.Properties().stacksTo(1)) {
 
             @Override
-            public boolean hasEffect(ItemStack stack) {
+            public boolean isFoil(ItemStack stack) {
 
                 return true;
             }
@@ -397,15 +397,15 @@ public class ModItems {
         registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKWHITE));
         registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.WHITEBLACK));
 
-        registry.register(new SpawnEggItem(ModEntities.vampire, 0x8B15A3, 0xa735e3, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.hunter, 0x2d05f2, 0x2600e0, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_hunter_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.advanced_vampire, 0x8B15A3, 0x560a7e, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "advanced_vampire_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.advanced_hunter, 0x2d05f2, 0x1a028c, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "advanced_vampire_hunter_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.vampire_baron, 0x8B15A3, 0x15acda, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_baron_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.hunter_trainer, 0x2d05f2, 0x1cdb49, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "hunter_trainer_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.vampire, 0x8B15A3, 0xa735e3, new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "vampire_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.hunter, 0x2d05f2, 0x2600e0, new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "vampire_hunter_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.advanced_vampire, 0x8B15A3, 0x560a7e, new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "advanced_vampire_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.advanced_hunter, 0x2d05f2, 0x1a028c, new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "advanced_vampire_hunter_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.vampire_baron, 0x8B15A3, 0x15acda, new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "vampire_baron_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.hunter_trainer, 0x2d05f2, 0x1cdb49, new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "hunter_trainer_spawn_egg"));
 
-        registry.register(new BucketItem(ModFluids.blood, new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "blood_bucket"));
-        registry.register(new BucketItem(ModFluids.impure_blood, new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "impure_blood_bucket"));
+        registry.register(new BucketItem(ModFluids.blood, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "blood_bucket"));
+        registry.register(new BucketItem(ModFluids.impure_blood, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "impure_blood_bucket"));
 
         registry.register(new GarlicBreadItem());
         registry.register(new UmbrellaItem());
@@ -435,7 +435,7 @@ public class ModItems {
         registry.register(new VampirismItem("cure_apple", creativeTabProps().rarity(Rarity.RARE)));
         registry.register(new VampirismItem("garlic_finder", creativeTabProps().rarity(Rarity.RARE)));
 
-        registry.register(new WallOrFloorItem(ModBlocks.candelabra, ModBlocks.candelabra_wall, new Item.Properties().group(VampirismMod.creativeTab)).setRegistryName(REFERENCE.MODID, "item_candelabra"));
+        registry.register(new WallOrFloorItem(ModBlocks.candelabra, ModBlocks.candelabra_wall, new Item.Properties().tab(VampirismMod.creativeTab)).setRegistryName(REFERENCE.MODID, "item_candelabra"));
 
 
         if (VampirismMod.inDataGen) {
@@ -444,7 +444,7 @@ public class ModItems {
     }
 
     private static Item.Properties creativeTabProps() {
-        return new Item.Properties().group(VampirismMod.creativeTab);
+        return new Item.Properties().tab(VampirismMod.creativeTab);
     }
 
     public static void fixMappings(RegistryEvent.MissingMappings<Item> event) {

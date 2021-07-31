@@ -10,13 +10,13 @@ public class FreezeEffect extends VampirismEffect {
     }
 
     @Override
-    public boolean isReady(int duration, int amplifier) {
-        return true;
+    public void applyEffectTick(LivingEntity entityLivingBaseIn, int amplifier) {
+        entityLivingBaseIn.setDeltaMovement(0, Math.min(0, entityLivingBaseIn.getDeltaMovement().y()), 0);
     }
 
     @Override
-    public void performEffect(LivingEntity entityLivingBaseIn, int amplifier) {
-        entityLivingBaseIn.setMotion(0, Math.min(0, entityLivingBaseIn.getMotion().getY()), 0);
+    public boolean isDurationEffectTick(int duration, int amplifier) {
+        return true;
     }
 
     @Override

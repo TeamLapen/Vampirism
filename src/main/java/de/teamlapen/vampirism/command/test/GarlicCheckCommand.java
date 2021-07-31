@@ -16,22 +16,22 @@ public class GarlicCheckCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("garlicCheck")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
                 .executes(context -> {
-                    return garlicCheck(context.getSource(), context.getSource().asPlayer(), false);
+                    return garlicCheck(context.getSource(), context.getSource().getPlayerOrException(), false);
                 })
                 .then(Commands.literal("print"))
                 .executes(context -> {
-                    return garlicCheck(context.getSource(), context.getSource().asPlayer(), true);
+                    return garlicCheck(context.getSource(), context.getSource().getPlayerOrException(), true);
                 });
     }
 
     private static int garlicCheck(CommandSource commandSource, ServerPlayerEntity asPlayer, boolean print) {
         if (commandSource.getEntity() != null && commandSource.getEntity() instanceof PlayerEntity) {
-            commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.garliccheck.strength" + VampirismAPI.getVampirismWorld(asPlayer.getEntityWorld()).map(w -> w.getStrengthAtChunk(new ChunkPos(asPlayer.getPosition()))).orElse(EnumStrength.NONE)), true);
+            commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.garliccheck.strength" + VampirismAPI.getVampirismWorld(asPlayer.getCommandSenderWorld()).map(w -> w.getStrengthAtChunk(new ChunkPos(asPlayer.blockPosition()))).orElse(EnumStrength.NONE)), true);
         }
         if (print) {
-            VampirismWorld.getOpt(asPlayer.getEntityWorld()).ifPresent(vw -> vw.printDebug(commandSource));
+            VampirismWorld.getOpt(asPlayer.getCommandSenderWorld()).ifPresent(vw -> vw.printDebug(commandSource));
         }
         return 0;
     }

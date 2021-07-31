@@ -58,13 +58,13 @@ public class DamageHandler {
     private static void affectVampireGarlic(IVampire vampire, EnumStrength strength, float multiplier, boolean ambient) {
         if (strength == EnumStrength.NONE) return;
         LivingEntity entity = vampire.getRepresentingEntity();
-        entity.addPotionEffect(new EffectInstance(ModEffects.garlic, (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
-        if (entity instanceof PlayerEntity && ((PlayerEntity) entity).abilities.isCreativeMode) return;
-        entity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
+        entity.addEffect(new EffectInstance(ModEffects.garlic, (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
+        if (entity instanceof PlayerEntity && ((PlayerEntity) entity).abilities.instabuild) return;
+        entity.addEffect(new EffectInstance(Effects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
         if (strength == EnumStrength.MEDIUM || strength == EnumStrength.STRONG) {
-            entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, (int) (multiplier * 20), 1, ambient, false));
+            entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, (int) (multiplier * 20), 1, ambient, false));
             if (strength == EnumStrength.STRONG) {
-                entity.addPotionEffect(new EffectInstance(Effects.BLINDNESS, (int) (multiplier / 2 * 20), 0, ambient, false));
+                entity.addEffect(new EffectInstance(Effects.BLINDNESS, (int) (multiplier / 2 * 20), 0, ambient, false));
             }
         }
         if (vampire instanceof IVampirePlayer) {
@@ -115,7 +115,7 @@ public class DamageHandler {
     public static void affectEntityHolyWaterSplash(LivingEntity entity, EnumStrength strength, double distSq, boolean directHit, @Nullable LivingEntity source) {
         if (!entity.isAlive()) return;
         boolean vampire = Helper.isVampire(entity);
-        if (entity.canBeHitWithPotion() && (vampire || CreatureAttribute.UNDEAD.equals(entity.getCreatureAttribute()))) {
+        if (entity.isAffectedByPotions() && (vampire || CreatureAttribute.UNDEAD.equals(entity.getMobType()))) {
             if (distSq < 16.0D) {
                 double affect = 1.0D - Math.sqrt(distSq) / 4.0D;
 
@@ -135,7 +135,7 @@ public class DamageHandler {
                     int l = ((VampireBaronEntity) entity).getLevel();
                     amount = scaleDamageWithLevel(l, VampireBaronEntity.MAX_LEVEL, amount * 0.8, amount * 2);
                 }
-                entity.attackEntityFrom(VReference.HOLY_WATER, (float) amount);
+                entity.hurt(VReference.HOLY_WATER, (float) amount);
             }
         }
         if (vampire && entity instanceof PlayerEntity) {
@@ -155,10 +155,10 @@ public class DamageHandler {
         }
         if (vampire) {
             if (strength.isStrongerThan(EnumStrength.WEAK)) {
-                entity.addPotionEffect(new EffectInstance(Effects.NAUSEA, VampirismConfig.BALANCE.holyWaterNauseaDuration.get(), 2));
+                entity.addEffect(new EffectInstance(Effects.CONFUSION, VampirismConfig.BALANCE.holyWaterNauseaDuration.get(), 2));
             }
             if (strength.isStrongerThan(EnumStrength.MEDIUM)) {
-                entity.addPotionEffect(new EffectInstance(Effects.BLINDNESS, VampirismConfig.BALANCE.holyWaterBlindnessDuration.get(), 1));
+                entity.addEffect(new EffectInstance(Effects.BLINDNESS, VampirismConfig.BALANCE.holyWaterBlindnessDuration.get(), 1));
             }
         }
     }

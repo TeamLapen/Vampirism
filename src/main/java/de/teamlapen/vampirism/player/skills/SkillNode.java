@@ -113,23 +113,23 @@ public class SkillNode {
 
     public static class Builder {
         public static Builder deserialize(JsonObject json, @SuppressWarnings("unused") JsonDeserializationContext context) {
-            if (json.has("remove") && JSONUtils.getBoolean(json, "remove")) return null;
-            ResourceLocation parent = json.has("parent") ? new ResourceLocation(JSONUtils.getString(json, "parent")) : null;
-            ResourceLocation merge = json.has("merge") ? new ResourceLocation(JSONUtils.getString(json, "merge")) : null;
-            JsonArray skills = JSONUtils.getJsonArray(json, "skills", new JsonArray());
+            if (json.has("remove") && JSONUtils.getAsBoolean(json, "remove")) return null;
+            ResourceLocation parent = json.has("parent") ? new ResourceLocation(JSONUtils.getAsString(json, "parent")) : null;
+            ResourceLocation merge = json.has("merge") ? new ResourceLocation(JSONUtils.getAsString(json, "merge")) : null;
+            JsonArray skills = JSONUtils.getAsJsonArray(json, "skills", new JsonArray());
             List<ISkill> skillList = new ArrayList<>();
             for (int i = 0; i < skills.size(); i++) {
-                ResourceLocation id = new ResourceLocation(JSONUtils.getString(skills.get(i), "skill"));
+                ResourceLocation id = new ResourceLocation(JSONUtils.convertToString(skills.get(i), "skill"));
                 ISkill s = ModRegistries.SKILLS.getValue(id);
                 if (s == null) {
                     throw new IllegalArgumentException("Skill " + id + " is not registered");
                 }
                 skillList.add(s);
             }
-            JsonArray locking = JSONUtils.getJsonArray(json, "locking", new JsonArray());
+            JsonArray locking = JSONUtils.getAsJsonArray(json, "locking", new JsonArray());
             List<ResourceLocation> lockingList = new ArrayList<>();
             for (int i = 0; i < locking.size(); i++) {
-                lockingList.add(new ResourceLocation(JSONUtils.getString(locking.get(i), "skill")));
+                lockingList.add(new ResourceLocation(JSONUtils.convertToString(locking.get(i), "skill")));
             }
             return new Builder(parent, merge, skillList, lockingList);
         }

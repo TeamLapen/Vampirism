@@ -20,13 +20,13 @@ public class VampirismArmorModel extends BipedModel<LivingEntity> {
     }
 
     @Override
-    protected final Iterable<ModelRenderer> getBodyParts() {
+    protected final Iterable<ModelRenderer> bodyParts() {
         Iterable<ModelRenderer> b = getBodyModels();
-        b.forEach(p -> p.copyModelAngles(this.bipedBody));
+        b.forEach(p -> p.copyFrom(this.body));
         Iterable<ModelRenderer> ll = getLeftLegModels();
-        ll.forEach(p -> p.copyModelAngles(this.bipedLeftLeg));
+        ll.forEach(p -> p.copyFrom(this.leftLeg));
         Iterable<ModelRenderer> rl = getRightLegModels();
-        rl.forEach(p -> p.copyModelAngles(this.bipedRightLeg));
+        rl.forEach(p -> p.copyFrom(this.rightLeg));
         return Iterables.concat(b, ll, rl);
     }
 
@@ -35,9 +35,9 @@ public class VampirismArmorModel extends BipedModel<LivingEntity> {
     }
 
     @Override
-    protected final Iterable<ModelRenderer> getHeadParts() {
+    protected final Iterable<ModelRenderer> headParts() {
         Iterable<ModelRenderer> l = getHeadModels();
-        l.forEach(p -> p.copyModelAngles(this.bipedHead));
+        l.forEach(p -> p.copyFrom(this.head));
         return l;
     }
 

@@ -17,7 +17,6 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-
 /**
  * Fluid handler capability for blood bottles.
  * Only allows storing fluid amounts that are a multiple of {@link VReference#FOOD_TO_FLUID_BLOOD}
@@ -89,7 +88,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     }
 
     public int getBlood(ItemStack stack) {
-        return stack.getItem() == ModItems.blood_bottle ? stack.getDamage() * MULTIPLIER : 0;
+        return stack.getItem() == ModItems.blood_bottle ? stack.getDamageValue() * MULTIPLIER : 0;
     }
 
     @Nonnull
@@ -123,10 +122,10 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
 
     @Override
     public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
-        return ModFluids.blood.isEquivalentTo(stack.getFluid());
+        return ModFluids.blood.isSame(stack.getFluid());
     }
 
     public void setBlood(ItemStack stack, int amt) {
-        stack.setDamage(amt / MULTIPLIER);
+        stack.setDamageValue(amt / MULTIPLIER);
     }
 }

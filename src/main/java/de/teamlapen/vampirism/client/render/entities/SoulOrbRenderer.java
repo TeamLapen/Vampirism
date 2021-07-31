@@ -21,7 +21,7 @@ public class SoulOrbRenderer extends SpriteRenderer<SoulOrbEntity> {
     public boolean shouldRender(SoulOrbEntity livingEntity, ClippingHelper camera, double camX, double camY, double camZ) { //shouldRender
         boolean flag = true;
         if (Minecraft.getInstance().player != null) {
-            flag = !livingEntity.isInvisibleToPlayer(Minecraft.getInstance().player);
+            flag = !livingEntity.isInvisibleTo(Minecraft.getInstance().player);
         }
         return flag && super.shouldRender(livingEntity, camera, camX, camY, camZ);
     }

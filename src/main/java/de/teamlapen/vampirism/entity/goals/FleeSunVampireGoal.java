@@ -18,11 +18,11 @@ public class FleeSunVampireGoal<T extends CreatureEntity & IVampire> extends Fle
 
     @Override
     protected boolean isPositionAcceptable(World world, BlockPos pos) {
-        return !world.canBlockSeeSky(pos);
+        return !world.canSeeSkyFromBelowWater(pos);
     }
 
     @Override
     protected boolean shouldFlee() {
-        return vampire.isGettingSundamage(vampire.world) && !vampire.isIgnoringSundamage();
+        return vampire.isGettingSundamage(vampire.level) && !vampire.isIgnoringSundamage();
     }
 }

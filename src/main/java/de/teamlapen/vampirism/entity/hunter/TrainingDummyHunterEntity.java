@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 public class TrainingDummyHunterEntity extends BasicHunterEntity {
 
-    private final EntityPredicate PREDICATE = new EntityPredicate().allowInvulnerable().setSkipAttackChecks().setIgnoresLineOfSight();
+    private final EntityPredicate PREDICATE = new EntityPredicate().allowInvulnerable().allowNonAttackable().allowUnseeable();
     private int startTicks = 0;
     private float damageTaken = 0;
 
@@ -21,12 +21,12 @@ public class TrainingDummyHunterEntity extends BasicHunterEntity {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damageSource, float amount) {
-        if (!this.world.isRemote) {
-            this.world.getTargettablePlayersWithinAABB(PREDICATE, this, this.getBoundingBox().grow(40)).forEach(p -> p.sendStatusMessage(new StringTextComponent("Damage " + amount + " from " + damageSource.damageType), false));
+    public boolean hurt(DamageSource damageSource, float amount) {
+        if (!this.level.isClientSide) {
+            this.level.getNearbyPlayers(PREDICATE, this, this.getBoundingBox().inflate(40)).forEach(p -> p.displayClientMessage(new StringTextComponent("Damage " + amount + " from " + damageSource.msgId), false));
             if (this.startTicks != 0) this.damageTaken += amount;
         }
-        return super.attackEntityFrom(damageSource, amount);
+        return super.hurt(damageSource, amount);
 
     }
 
@@ -36,20 +36,20 @@ public class TrainingDummyHunterEntity extends BasicHunterEntity {
     }
 
     @Override
-    protected void damageEntity(DamageSource damageSrc, float damageAmount) {
-        if (damageSrc.canHarmInCreative()) {
-            super.damageEntity(damageSrc, damageAmount);
+    protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
+        if (damageSrc.isBypassInvul()) {
+            super.actuallyHurt(damageSrc, damageAmount);
         }
     }
 
     @Override
-    protected ActionResultType getEntityInteractionResult(PlayerEntity player, Hand hand) { //processInteract
-        if (!this.world.isRemote && hand == Hand.MAIN_HAND) {
+    protected ActionResultType mobInteract(PlayerEntity player, Hand hand) { //processInteract
+        if (!this.level.isClientSide && hand == Hand.MAIN_HAND) {
             if (startTicks == 0) {
-                player.sendStatusMessage(new StringTextComponent("Start recording"), false);
-                this.startTicks = this.ticksExisted;
+                player.displayClientMessage(new StringTextComponent("Start recording"), false);
+                this.startTicks = this.tickCount;
             } else {
-                player.sendStatusMessage(new StringTextComponent("Damage: " + damageTaken + " - DPS: " + (damageTaken / ((float) (this.ticksExisted - this.startTicks)) * 20f)), false);
+                player.displayClientMessage(new StringTextComponent("Damage: " + damageTaken + " - DPS: " + (damageTaken / ((float) (this.tickCount - this.startTicks)) * 20f)), false);
                 this.remove();
             }
         }

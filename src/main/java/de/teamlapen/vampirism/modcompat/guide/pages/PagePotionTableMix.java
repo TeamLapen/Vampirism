@@ -63,7 +63,7 @@ public class PagePotionTableMix extends Page {
     @OnlyIn(Dist.CLIENT)
     public void draw(MatrixStack stack, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, FontRenderer fontRendererObj) {
         //Update cycle
-        long time = guiBase.getMinecraft().world != null ? guiBase.getMinecraft().world.getGameTime() : 0L;
+        long time = guiBase.getMinecraft().level != null ? guiBase.getMinecraft().level.getGameTime() : 0L;
         if (this.lastCycle < 0L || this.lastCycle < time - 60L) {
             if (this.lastCycle > 0L) {
                 this.cycle();
@@ -103,7 +103,7 @@ public class PagePotionTableMix extends Page {
         PageHelper.drawFormattedText(stack, guiLeft + 43, yStart + 80, guiBase, description);
 
         if (tooltip != null) {
-            guiBase.func_243308_b(stack, tooltip, mouseX, mouseY);
+            guiBase.renderComponentTooltip(stack, tooltip, mouseX, mouseY);
         }
 
     }
@@ -125,10 +125,10 @@ public class PagePotionTableMix extends Page {
     }
 
     private void deriveItemStacks(ExtendedPotionMix recipe) {
-        input = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), recipe.input.get());
-        output = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), recipe.output.get());
-        ingredients1 = recipe.reagent1.map(Ingredient::getMatchingStacks).map(Arrays::stream).orElse(Stream.empty()).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent1Count)).toArray(ItemStack[]::new);
-        ingredients2 = recipe.reagent2.map(Ingredient::getMatchingStacks).map(Arrays::stream).orElse(Stream.empty()).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent2Count)).toArray(ItemStack[]::new);
+        input = PotionUtils.setPotion(new ItemStack(Items.POTION), recipe.input.get());
+        output = PotionUtils.setPotion(new ItemStack(Items.POTION), recipe.output.get());
+        ingredients1 = recipe.reagent1.map(Ingredient::getItems).map(Arrays::stream).orElse(Stream.empty()).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent1Count)).toArray(ItemStack[]::new);
+        ingredients2 = recipe.reagent2.map(Ingredient::getItems).map(Arrays::stream).orElse(Stream.empty()).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent2Count)).toArray(ItemStack[]::new);
         if (ingredients1.length == 0) {
             ingredients1 = new ItemStack[]{ItemStack.EMPTY};
         }

@@ -101,11 +101,11 @@ public class SkillsScreen extends Screen {
         int guiTop = (this.height - display_height) / 2;
         if (this.backScreen != null) {
             this.addButton(new Button(guiLeft + 5, guiTop + 175, 80, 20, new TranslationTextComponent("gui.back"), (context) -> {
-                this.minecraft.displayGuiScreen(this.backScreen);
+                this.minecraft.setScreen(this.backScreen);
             }));
         }
         this.addButton(new Button(guiLeft + 171, guiTop + 175, 80, 20, new TranslationTextComponent("gui.done"), (context) -> {
-            this.minecraft.displayGuiScreen(null);
+            this.minecraft.setScreen(null);
         }));
         FactionPlayerHandler.getOpt(minecraft.player).ifPresent(fph -> {
             lordTitle = fph.getLordTitle();
@@ -130,17 +130,17 @@ public class SkillsScreen extends Screen {
                 resetSkills = this.addButton(new Button(guiLeft + 88, guiTop + 175, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
                     InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().inventory, new ItemStack(ModItems.oblivion_potion)); //server syncs after the screen is closed
-                    if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.count(ModItems.oblivion_potion) <= 1) && !test) {
+                    if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.oblivion_potion) <= 1) && !test) {
                         context.active = false;
                     }
                 }, (button, stack, mouseX, mouseY) -> {
                     if (button.active) {
-                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_consume", ModItems.oblivion_potion.getName()), mouseX, mouseY);
+                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_consume", ModItems.oblivion_potion.getDescription()), mouseX, mouseY);
                     } else {
-                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_req", ModItems.oblivion_potion.getName()), mouseX, mouseY);
+                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_req", ModItems.oblivion_potion.getDescription()), mouseX, mouseY);
                     }
                 }));
-                if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.count(ModItems.oblivion_potion) <= 0) && !test) {
+                if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.oblivion_potion) <= 0) && !test) {
                     resetSkills.active = false;
                 }
             });
@@ -158,9 +158,9 @@ public class SkillsScreen extends Screen {
 
     @Override
     public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-        if (p_keyPressed_1_ == 256 || ModKeys.getKeyBinding(ModKeys.KEY.SKILL).getKey().getKeyCode() == p_keyPressed_1_) {
-            this.minecraft.displayGuiScreen(null);
-            this.minecraft.setGameFocused(true);
+        if (p_keyPressed_1_ == 256 || ModKeys.getKeyBinding(ModKeys.KEY.SKILL).getKey().getValue() == p_keyPressed_1_) {
+            this.minecraft.setScreen(null);
+            this.minecraft.setWindowActive(true);
             return true;
         } else {
             super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
@@ -218,27 +218,27 @@ public class SkillsScreen extends Screen {
     @Override
     public void tick() {
         if (!this.minecraft.player.isAlive()) {
-            this.minecraft.player.closeScreen();
+            this.minecraft.player.closeContainer();
         }
     }
 
     protected void drawTitle(MatrixStack stack) {
         ITextComponent title;
         if (lordTitle != null) {
-            title = lordTitle.deepCopy().appendString(" (" + lordLevel + ")");
+            title = lordTitle.copy().append(" (" + lordLevel + ")");
         } else {
             title = new TranslationTextComponent("text.vampirism.skills.gui_title");
         }
         int x = (this.width - display_width) / 2;
         int y = (this.height - display_height) / 2;
-        this.font.drawTextWithShadow(stack, title.func_241878_f(), x + 15, y + 5, 0xFFFFFFFF);
+        this.font.drawShadow(stack, title.getVisualOrderText(), x + 15, y + 5, 0xFFFFFFFF);
         IFormattableTextComponent points = new TranslationTextComponent("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
-        if (this.minecraft.player.getActivePotionEffect(ModEffects.oblivion) != null) {
-            points.mergeStyle(TextFormatting.DARK_RED);
+        if (this.minecraft.player.getEffect(ModEffects.oblivion) != null) {
+            points.withStyle(TextFormatting.DARK_RED);
         }
-        x = (this.width + display_width) / 2 - this.font.getStringPropertyWidth(points);
+        x = (this.width + display_width) / 2 - this.font.width(points);
 //        this.font.drawText(stack, points, x - 15, y + 5, 0xFFFFFFFF);
-        this.font.drawTextWithShadow(stack, points.func_241878_f(), x - 15, y + 5, 0xFFFFFFFF);
+        this.font.drawShadow(stack, points.getVisualOrderText(), x - 15, y + 5, 0xFFFFFFFF);
     }
 
     /**
@@ -267,7 +267,7 @@ public class SkillsScreen extends Screen {
     }
 
     private void drawDisableText(MatrixStack mStack) {
-        if (this.minecraft.player.getActivePotionEffect(ModEffects.oblivion) == null) return;
+        if (this.minecraft.player.getEffect(ModEffects.oblivion) == null) return;
         int tooltipX = (this.width - this.display_width) / 2 + 19 + 3;
         int tooltipY = (this.height - this.display_height) / 2 + 4 + 19;
         int tooltipTextWidth = this.display_width - 19 - 19 - 6;
@@ -277,8 +277,8 @@ public class SkillsScreen extends Screen {
         int borderColorEnd = (borderColorStart & 0xFEFEFE) >> 1 | borderColorStart & 0xFF000000;
         int zLevel = this.getBlitOffset();
 
-        mStack.push();
-        Matrix4f mat = mStack.getLast().getMatrix();
+        mStack.pushPose();
+        Matrix4f mat = mStack.last().pose();
         GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 4, tooltipX + tooltipTextWidth + 3, tooltipY - 3, backgroundColor, backgroundColor);
         GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY + tooltipHeight + 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 4, backgroundColor, backgroundColor);
         GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
@@ -289,18 +289,18 @@ public class SkillsScreen extends Screen {
         GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3 + 1, borderColorStart, borderColorStart);
         GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY + tooltipHeight + 2, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
 
-        IRenderTypeBuffer.Impl renderType = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
+        IRenderTypeBuffer.Impl renderType = IRenderTypeBuffer.immediate(Tessellator.getInstance().getBuilder());
         mStack.translate(0.0D, 0.0D, zLevel);
 
-        ITextComponent f = new TranslationTextComponent("text.vampirism.skill.unlock_unavailable").mergeStyle(TextFormatting.WHITE);
+        ITextComponent f = new TranslationTextComponent("text.vampirism.skill.unlock_unavailable").withStyle(TextFormatting.WHITE);
 
-        IReorderingProcessor s = LanguageMap.getInstance().func_241870_a(f);
+        IReorderingProcessor s = LanguageMap.getInstance().getVisualOrder(f);
 
 
-        font.drawEntityText(s, (float) tooltipX + (tooltipTextWidth / 2) - this.font.getStringPropertyWidth(f) / 2, (float) tooltipY + (tooltipHeight / 2) - 3, -1, true, mat, renderType, false, 0, 15728880);
+        font.drawInBatch(s, (float) tooltipX + (tooltipTextWidth / 2) - this.font.width(f) / 2, (float) tooltipY + (tooltipHeight / 2) - 3, -1, true, mat, renderType, false, 0, 15728880);
 
-        renderType.finish();
-        mStack.pop();
+        renderType.endBatch();
+        mStack.popPose();
     }
 
     private void drawSkills(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
@@ -329,13 +329,13 @@ public class SkillsScreen extends Screen {
 
         //Limit render area
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        double scale = minecraft.getMainWindow().getGuiScaleFactor();
+        double scale = minecraft.getWindow().getGuiScale();
         GL11.glScissor((int) (k * scale), (int) (l * scale),
                 (int) (display_width * scale), (int) (display_height * scale));
 
         this.setBlitOffset(0);
         RenderSystem.depthFunc(518);
-        stack.push();
+        stack.pushPose();
         stack.translate(i1, j1, -200);
         stack.scale(1 / this.zoomOut, 1 / this.zoomOut, 1);
         RenderSystem.enableTexture();
@@ -356,7 +356,7 @@ public class SkillsScreen extends Screen {
             RenderSystem.color4f(f2, f2, f2, 1.0F);
 
             for (int x = 0; (float) x * f1 - (float) i2 < 224.0F; ++x) {
-                random.setSeed(this.minecraft.getSession().getPlayerID().hashCode() + k1 + x + (l1 + y) * 16);
+                random.setSeed(this.minecraft.getUser().getUuid().hashCode() + k1 + x + (l1 + y) * 16);
                 int j4 = random.nextInt(1 + l1 + y) + (l1 + y) / 2;
                 TextureAtlasSprite textureatlassprite = this.getTexture(Blocks.SAND);
 
@@ -382,7 +382,7 @@ public class SkillsScreen extends Screen {
                     textureatlassprite = this.getTexture(block);
                 }
 
-                this.minecraft.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+                this.minecraft.getTextureManager().bind(AtlasTexture.LOCATION_BLOCKS);
                 blit(stack, x * 16 - i2, y * 16 - j2, this.getBlitOffset(), 16, 16, textureatlassprite);
             }
         }
@@ -390,7 +390,7 @@ public class SkillsScreen extends Screen {
         //Draw lines/arrows
         RenderSystem.enableDepthTest();
         RenderSystem.depthFunc(515);
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
+        this.minecraft.getTextureManager().bind(BACKGROUND);
 
         for (SkillNode node : skillNodes) {
             if (node.getParent() != null) {
@@ -425,7 +425,7 @@ public class SkillsScreen extends Screen {
 
         float mMouseX = (float) (mouseX - i1) * this.zoomOut;
         float mMouseY = (float) (mouseY - j1) * this.zoomOut;
-        RenderHelper.enableStandardItemLighting(); //enableStandardGUIItemLighting
+        RenderHelper.turnBackOn(); //enableStandardGUIItemLighting
         RenderSystem.disableLighting();
         RenderSystem.enableRescaleNormal();
         RenderSystem.enableColorMaterial();
@@ -467,18 +467,18 @@ public class SkillsScreen extends Screen {
                         RenderSystem.color4f(f7, f7, f7, 1.0F);
                     }
 
-                    this.minecraft.getTextureManager().bindTexture(BACKGROUND);
+                    this.minecraft.getTextureManager().bind(BACKGROUND);
 
                     RenderSystem.enableBlend();
                     this.blit(stack, x - 2, y - 2, node.getLockingNodes().length == 0 ? 0 : 26, 202, 26, 26);
                     RenderSystem.disableBlend();
 
-                    this.minecraft.getTextureManager().bindTexture(getIconLoc(skill));
+                    this.minecraft.getTextureManager().bind(getIconLoc(skill));
 
                     RenderSystem.disableLighting();
                     //GlStateManager.enableCull();
                     RenderSystem.enableBlend();
-                    UtilLib.drawTexturedModalRect(stack.getLast().getMatrix(), this.getBlitOffset(), x + 3, y + 3, 0, 0, 16, 16, 16, 16);
+                    UtilLib.drawTexturedModalRect(stack.last().pose(), this.getBlitOffset(), x + 3, y + 3, 0, 0, 16, 16, 16, 16);
                     //GlStateManager.blendFunc(770, 771);
                     RenderSystem.disableLighting();
 
@@ -491,7 +491,7 @@ public class SkillsScreen extends Screen {
                     }
 
                     if (i + 1 < elements.length) {
-                        drawCenteredString(stack, this.font, "OR", x + skill_width + skill_width / 2, y + 1 + (skill_width - this.font.FONT_HEIGHT) / 2, 0xFFFFFF);
+                        drawCenteredString(stack, this.font, "OR", x + skill_width + skill_width / 2, y + 1 + (skill_width - this.font.lineHeight) / 2, 0xFFFFFF);
                     }
                 }
             }
@@ -501,12 +501,12 @@ public class SkillsScreen extends Screen {
 
         RenderSystem.disableDepthTest();
         RenderSystem.enableBlend();
-        stack.pop();
+        stack.popPose();
 
         //Draw "window" and buttons
         Color color = skillHandler.getPlayer().getFaction().getColor();
         RenderSystem.color4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
+        this.minecraft.getTextureManager().bind(BACKGROUND);
         this.blit(stack, k, l, 0, 0, this.display_width, this.display_height);
         this.setBlitOffset(0);
         RenderSystem.depthFunc(515);
@@ -525,18 +525,18 @@ public class SkillsScreen extends Screen {
         selected = newSelected;
         selectedNode = newSelectedNode;
         if (selected != null) {
-            stack.push();
+            stack.pushPose();
             stack.translate(0, 0, 1); //Render tooltips in front of buttons
 
             List<ITextComponent> tooltips = skillToolTipsCache.computeIfAbsent(selected, (skill) -> new ArrayList<>());
 
             if (tooltips.isEmpty()) {
-                ITextComponent name = selected.getName().copyRaw().mergeStyle(TextFormatting.GRAY);
+                ITextComponent name = selected.getName().plainCopy().withStyle(TextFormatting.GRAY);
                 ITextComponent desc = selected.getDescription();
 
                 tooltips.add(name);
                 if (desc != null) {
-                    tooltips.add(desc.deepCopy().mergeStyle(TextFormatting.DARK_GRAY));
+                    tooltips.add(desc.copy().withStyle(TextFormatting.DARK_GRAY));
                 }
 
                 ISkillHandler.Result result = skillHandler.canSkillBeEnabled(selected);
@@ -548,29 +548,29 @@ public class SkillsScreen extends Screen {
                     lockingColor = result == ISkillHandler.Result.ALREADY_ENABLED ? TextFormatting.DARK_GRAY : lockingSkills.stream().anyMatch(skill -> skillHandler.isSkillEnabled(skill)) ? TextFormatting.DARK_RED : TextFormatting.YELLOW;
                 }
                 if (lockingSkills != null) {
-                    tooltips.add(new TranslationTextComponent("text.vampirism.skill.excluding").mergeStyle(lockingColor));
+                    tooltips.add(new TranslationTextComponent("text.vampirism.skill.excluding").withStyle(lockingColor));
                     for (ISkill lockingSkill : lockingSkills) {
-                        tooltips.add(new StringTextComponent("  ").appendSibling(lockingSkill.getName().deepCopy().mergeStyle(lockingColor)));
+                        tooltips.add(new StringTextComponent("  ").append(lockingSkill.getName().copy().withStyle(lockingColor)));
                     }
                 }
 
                 if (result == ISkillHandler.Result.ALREADY_ENABLED) {
-                    tooltips.add(new TranslationTextComponent("text.vampirism.skill.unlocked").mergeStyle(TextFormatting.GOLD));
+                    tooltips.add(new TranslationTextComponent("text.vampirism.skill.unlocked").withStyle(TextFormatting.GOLD));
                 } else if (result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
-                    tooltips.add(new TranslationTextComponent("text.vampirism.skill.unlock_parent_first").mergeStyle(TextFormatting.DARK_RED));
+                    tooltips.add(new TranslationTextComponent("text.vampirism.skill.unlock_parent_first").withStyle(TextFormatting.DARK_RED));
                 }
             }
-            int width_name = Math.max(this.font.getStringPropertyWidth(tooltips.get(0)), 110);
+            int width_name = Math.max(this.font.width(tooltips.get(0)), 110);
 
             GuiUtils.drawHoveringText(stack, tooltips, mouseX, mouseY, width, height, width_name, -1073741824, -1073741824, -1073741824, this.font);
 
-            stack.pop();
+            stack.popPose();
         }
 
 
         RenderSystem.enableDepthTest();
         RenderSystem.enableLighting();
-        RenderHelper.disableStandardItemLighting();
+        RenderHelper.turnOff();
 
     }
 
@@ -589,23 +589,23 @@ public class SkillsScreen extends Screen {
 
 
     private TextureAtlasSprite getTexture(BlockState blockstate) {
-        return Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getTexture(blockstate);
+        return Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getParticleIcon(blockstate);
     }
 
     private TextureAtlasSprite getTexture(Block block) {
-        return getTexture(block.getDefaultState());
+        return getTexture(block.defaultBlockState());
     }
 
     private void playSoundEffect(SoundEvent event, float pitch) {
-        minecraft.getSoundHandler().play(SimpleSound.master(event, 1.0F));
+        minecraft.getSoundManager().play(SimpleSound.forUI(event, 1.0F));
     }
 
     private void unlockSkill() {
         if (canUnlockSkill()) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, selected.getRegistryName().toString()));
-            playSoundEffect(SoundEvents.ENTITY_PLAYER_LEVELUP, 0.7F);
+            playSoundEffect(SoundEvents.PLAYER_LEVELUP, 0.7F);
         } else {
-            playSoundEffect(SoundEvents.BLOCK_NOTE_BLOCK_BASS, 0.5F);
+            playSoundEffect(SoundEvents.NOTE_BLOCK_BASS, 0.5F);
         }
     }
 

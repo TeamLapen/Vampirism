@@ -54,7 +54,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.isGettingSundamage(vampire.getRepresentingEntity().world) && !ModItems.umbrella.equals(vampire.getRepresentingEntity().getHeldItemMainhand().getItem()) && vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().world) == EnumStrength.NONE && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && !vampire.getRepresentingPlayer().isInWater() && (VampirismConfig.SERVER.batModeInEnd.get() || !(vampire.getRepresentingPlayer().getEntityWorld().getDimensionKey() == World.THE_END));
+        return !vampire.isGettingSundamage(vampire.getRepresentingEntity().level) && !ModItems.umbrella.equals(vampire.getRepresentingEntity().getMainHandItem().getItem()) && vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().level) == EnumStrength.NONE && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && !vampire.getRepresentingPlayer().isInWater() && (VampirismConfig.SERVER.batModeInEnd.get() || !(vampire.getRepresentingPlayer().getCommandSenderWorld().dimension() == World.END));
     }
 
     @Override
@@ -84,7 +84,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         PlayerEntity player = vampire.getRepresentingPlayer();
         setModifier(player, false);
         if (!player.isOnGround()) {
-            player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 20, 100, false, false));
+            player.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 20, 100, false, false));
         }
         //player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 0, false, false));
         updatePlayer((VampirePlayer) vampire, false);
@@ -100,17 +100,17 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
-        if (vampire.isGettingSundamage(vampire.getRepresentingEntity().world) && !vampire.isRemote()) {
-            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_day"), Util.DUMMY_UUID);
+        if (vampire.isGettingSundamage(vampire.getRepresentingEntity().level) && !vampire.isRemote()) {
+            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_day"), Util.NIL_UUID);
             return true;
-        } else if (ModItems.umbrella.equals(vampire.getRepresentingEntity().getHeldItemMainhand().getItem()) && !vampire.isRemote()) {
-            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_umbrella"), Util.DUMMY_UUID);
+        } else if (ModItems.umbrella.equals(vampire.getRepresentingEntity().getMainHandItem().getItem()) && !vampire.isRemote()) {
+            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_umbrella"), Util.NIL_UUID);
             return true;
-        } else if (vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().world) != EnumStrength.NONE && !vampire.isRemote()) {
-            vampire.getRepresentingEntity().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_garlic"), Util.DUMMY_UUID);
+        } else if (vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().level) != EnumStrength.NONE && !vampire.isRemote()) {
+            vampire.getRepresentingEntity().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_garlic"), Util.NIL_UUID);
             return true;
-        } else if (!VampirismConfig.SERVER.batModeInEnd.get() && vampire.getRepresentingPlayer().getEntityWorld().getDimensionKey() == World.THE_END) {
-            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_end"), Util.DUMMY_UUID);
+        } else if (!VampirismConfig.SERVER.batModeInEnd.get() && vampire.getRepresentingPlayer().getCommandSenderWorld().dimension() == World.END) {
+            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_end"), Util.NIL_UUID);
             return true;
         } else return vampire.getRepresentingPlayer().isInWater();
     }
@@ -119,7 +119,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
      * Set's flightspeed capability
      */
     private void setFlightSpeed(PlayerEntity player, float speed) {
-        player.abilities.flySpeed = speed;
+        player.abilities.flyingSpeed = speed;
     }
 
     private void setModifier(PlayerEntity player, boolean enabled) {
@@ -128,15 +128,15 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             ModifiableAttributeInstance armorAttributeInst = player.getAttribute(Attributes.ARMOR);
 
             if (armorAttributeInst.getModifier(armorModifierUUID) == null) {
-                armorAttributeInst.applyPersistentModifier(new AttributeModifier(armorModifierUUID, "Bat Armor Disabled", -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                armorAttributeInst.addPermanentModifier(new AttributeModifier(armorModifierUUID, "Bat Armor Disabled", -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
             ModifiableAttributeInstance armorToughnessAttributeInst = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
             if (armorToughnessAttributeInst.getModifier(armorToughnessModifierUUID) == null) {
-                armorToughnessAttributeInst.applyPersistentModifier(new AttributeModifier(armorToughnessModifierUUID, "Bat Armor Disabled", -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                armorToughnessAttributeInst.addPermanentModifier(new AttributeModifier(armorToughnessModifierUUID, "Bat Armor Disabled", -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
 
-            player.abilities.allowFlying = true;
-            player.abilities.isFlying = true;
+            player.abilities.mayfly = true;
+            player.abilities.flying = true;
             setFlightSpeed(player, (float) 0.03);
         } else {
             // Health modifier
@@ -151,13 +151,13 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
                 armorToughnessAttributeInst.removeModifier(m2);
             }
 
-            if (!player.abilities.isCreativeMode) {
-                player.abilities.allowFlying = false;
+            if (!player.abilities.instabuild) {
+                player.abilities.mayfly = false;
             }
-            player.abilities.isFlying = false;
+            player.abilities.flying = false;
             setFlightSpeed(player, 0.05F);
         }
-        player.sendPlayerAbilities();
+        player.onUpdateAbilities();
 
     }
 
@@ -172,9 +172,9 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         player.setForcedPose(bat ? Pose.STANDING : null);
         //Eye height is set in {@link ModPlayerEventHandler} on {@link EyeHeight} event
         //Entity size is hacked in via {@link ASMHooks}
-        player.recalculateSize();
+        player.refreshDimensions();
         if (bat)
-            player.setPosition(player.getPosX(), player.getPosY() + (PLAYER_HEIGHT - BAT_SIZE.height), player.getPosZ());
+            player.setPos(player.getX(), player.getY() + (PLAYER_HEIGHT - BAT_SIZE.height), player.getZ());
     }
 
 }

@@ -228,7 +228,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     @Override
     public int getTheEntityID() {
-        return player.getEntityId();
+        return player.getId();
     }
 
     @Override
@@ -276,8 +276,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
         if (VampirismConfig.SERVER.pvpOnlyBetweenFactions.get() && src instanceof EntityDamageSource) {
-            if (src.getTrueSource() instanceof PlayerEntity) {
-                FactionPlayerHandler other = get((PlayerEntity) src.getTrueSource());
+            if (src.getEntity() instanceof PlayerEntity) {
+                FactionPlayerHandler other = get((PlayerEntity) src.getEntity());
                 if (this.currentFaction == null || other.currentFaction == null) {
                     return VampirismConfig.SERVER.pvpOnlyBetweenFactionsIncludeHumans.get();
                 }
@@ -312,7 +312,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             this.boundActions.put(id, boundAction);
         }
         if (notify) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", boundAction != null ? boundAction.getName() : "none", id), true);
+            player.displayClientMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", boundAction != null ? boundAction.getName() : "none", id), true);
         }
         if (sync) {
             this.sync(false);
@@ -403,7 +403,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (titleGender == null || female != this.titleGender) {
             this.titleGender = female;
             player.refreshDisplayName();
-            if (!player.world.isRemote()) {
+            if (!player.level.isClientSide()) {
                 sync(true);
             }
         }
@@ -440,7 +440,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             this.boundActions.put(3, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound3"))));
         }
         CompoundNBT bounds = nbt.getCompound("bound_actions");
-        for (String s : bounds.keySet()) {
+        for (String s : bounds.getAllKeys()) {
             int id = Integer.parseInt(s);
             IAction action = ModRegistries.ACTIONS.getValue(new ResourceLocation(bounds.getString(s)));
             this.boundActions.put(id, action);
@@ -509,8 +509,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
         this.currentLordLevel = level;
         this.updateCache();
-        MinionWorldData.getData(player.world).ifPresent(data -> {
-            PlayerMinionController c = data.getController(this.player.getUniqueID());
+        MinionWorldData.getData(player.level).ifPresent(data -> {
+            PlayerMinionController c = data.getController(this.player.getUUID());
             if (c != null) {
                 c.setMaxMinions(this.currentFaction, this.getMaxMinions());
             }

@@ -17,8 +17,8 @@ public class RevertBackScreen extends ConfirmScreen {
 
     private static String getDescription() {
         String s = UtilLib.translate("gui.vampirism.revertback.desc");
-        World w = Minecraft.getInstance().world;
-        if (w != null && w.getWorldInfo().isHardcore()) {
+        World w = Minecraft.getInstance().level;
+        if (w != null && w.getLevelData().isHardcore()) {
             s += " You won't die in hardcore mode.";
         }
         return s;
@@ -29,7 +29,7 @@ public class RevertBackScreen extends ConfirmScreen {
             if (context) {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.REVERTBACK, "0"));
             }
-            Minecraft.getInstance().displayGuiScreen(null);
+            Minecraft.getInstance().setScreen(null);
         }, new TranslationTextComponent("gui.vampirism.revertback.head"), new StringTextComponent(getDescription()));
     }
 }

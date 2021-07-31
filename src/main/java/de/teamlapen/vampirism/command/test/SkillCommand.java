@@ -23,25 +23,25 @@ public class SkillCommand extends BasicCommand {
     }
 
     private static ArgumentBuilder<CommandSource, ?> create(ArgumentBuilder<CommandSource, ?> builder) {
-        return builder.requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+        return builder.requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .then(Commands.argument("type", SkillArgument.skills())
                         .executes(context -> {
-                            return skill(context.getSource(), context.getSource().asPlayer(), SkillArgument.getSkill(context, "type"), false);
+                            return skill(context.getSource(), context.getSource().getPlayerOrException(), SkillArgument.getSkill(context, "type"), false);
                         })
                         .then(Commands.literal("force")
                                 .executes(context -> {
-                                    return skill(context.getSource(), context.getSource().asPlayer(), SkillArgument.getSkill(context, "type"), true);
+                                    return skill(context.getSource(), context.getSource().getPlayerOrException(), SkillArgument.getSkill(context, "type"), true);
                                 })))
                 .then(Commands.literal("disableall")
                         .executes(context -> {
-                            return disableall(context.getSource(), context.getSource().asPlayer());
+                            return disableall(context.getSource(), context.getSource().getPlayerOrException());
                         }));
     }
 
     private static int disableall(CommandSource commandSource, ServerPlayerEntity asPlayer) {
         IFactionPlayer factionPlayer = asPlayer.isAlive() ? FactionPlayerHandler.get(asPlayer).getCurrentFactionPlayer().orElse(null) : null;
         if (factionPlayer == null) {
-            commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.noinfaction"), false);
+            commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.skill.noinfaction"), false);
             return 0;
         }
         factionPlayer.getSkillHandler().resetSkills();
@@ -51,12 +51,12 @@ public class SkillCommand extends BasicCommand {
     private static int skill(CommandSource commandSource, ServerPlayerEntity asPlayer, ISkill skill, boolean force) {
         IFactionPlayer factionPlayer = asPlayer.isAlive() ? FactionPlayerHandler.get(asPlayer).getCurrentFactionPlayer().orElse(null) : null;
         if (factionPlayer == null) {
-            commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.noinfaction"), false);
+            commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.skill.noinfaction"), false);
             return 0;
         }
         if (factionPlayer.getSkillHandler().isSkillEnabled(skill)) {
             factionPlayer.getSkillHandler().disableSkill(skill);
-            commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.disabled"), false);
+            commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.skill.disabled"), false);
             return 0;
         }
         ISkillHandler.Result result = factionPlayer.getSkillHandler().canSkillBeEnabled(skill);
@@ -66,33 +66,33 @@ public class SkillCommand extends BasicCommand {
         switch (result) {
             case OK:
                 factionPlayer.getSkillHandler().enableSkill(skill);
-                commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.enabled", skill.getRegistryName() + " (" + skill.getName().getString() + ")"), false);
+                commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.skill.enabled", skill.getRegistryName() + " (" + skill.getName().getString() + ")"), false);
                 return 0;
             case ALREADY_ENABLED:
-                commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.alreadyenabled", skill.getName()), false);
+                commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.skill.alreadyenabled", skill.getName()), false);
                 return 0;
             case PARENT_NOT_ENABLED:
                 ISkill[] skills = factionPlayer.getSkillHandler().getParentSkills(skill);
                 if (skills == null || skills.length == 0) return 0;
                 if (skills.length == 1)
-                    commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.parent", skills[0].getRegistryName()), false);
+                    commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.skill.parent", skills[0].getRegistryName()), false);
                 else
-                    commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.parents", skills[0].getRegistryName(), skills[1].getRegistryName()), false);
+                    commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.skill.parents", skills[0].getRegistryName(), skills[1].getRegistryName()), false);
                 return 0;
             case NO_POINTS:
-                commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.nopoints"), false);
+                commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.skill.nopoints"), false);
                 return 0;
             case OTHER_NODE_SKILL:
-                commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.othernode"), false);
+                commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.skill.othernode"), false);
                 return 0;
             case NOT_FOUND:
-                commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.otherfaction"), false);
+                commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.skill.otherfaction"), false);
                 return 0;
             case LOCKED_BY_OTHER_NODE:
-                commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.locked"), false);
+                commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.skill.locked"), false);
                 return 0;
             case LOCKED_BY_PLAYER_STATE:
-                commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.locked_player_state"), false);
+                commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.skill.locked_player_state"), false);
                 return 0;
             default:
         }

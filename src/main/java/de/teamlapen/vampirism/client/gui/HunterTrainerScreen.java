@@ -38,12 +38,12 @@ public class HunterTrainerScreen extends ContainerScreen<HunterTrainerContainer>
     public void init() {
         super.init();
         ITextComponent name = new TranslationTextComponent("text.vampirism.level_up");
-        this.addButton(this.buttonLevelup = new Button(this.guiLeft + 120, this.guiTop + 24, this.font.getStringPropertyWidth(name) + 5, 20, name, (context) -> {
+        this.addButton(this.buttonLevelup = new Button(this.leftPos + 120, this.topPos + 24, this.font.width(name) + 5, 20, name, (context) -> {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TRAINERLEVELUP, ""));
             PlayerEntity player = Minecraft.getInstance().player;
-            UtilLib.spawnParticles(player.getEntityWorld(), ParticleTypes.ENCHANT, player.getPosX(), player.getPosY(), player.getPosZ(), 1, 1, 1, 100, 1);
-            player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_HARP, 4.0F, (1.0F + (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F) * 0.7F);
-            this.closeScreen();
+            UtilLib.spawnParticles(player.getCommandSenderWorld(), ParticleTypes.ENCHANT, player.getX(), player.getY(), player.getZ(), 1, 1, 1, 100, 1);
+            player.playSound(SoundEvents.NOTE_BLOCK_HARP, 4.0F, (1.0F + (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F) * 0.7F);
+            this.onClose();
         }));
         this.buttonLevelup.active = false;
     }
@@ -52,36 +52,36 @@ public class HunterTrainerScreen extends ContainerScreen<HunterTrainerContainer>
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(stack, mouseX, mouseY);
+        this.renderTooltip(stack, mouseX, mouseY);
 
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (container.hasChanged() || this.minecraft.player.getRNG().nextInt(40) == 6) {
-            buttonLevelup.active = container.canLevelup();
+        if (menu.hasChanged() || this.minecraft.player.getRandom().nextInt(40) == 6) {
+            buttonLevelup.active = menu.canLevelup();
         }
 
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float var1, int var2, int var3) {
+    protected void renderBg(MatrixStack stack, float var1, int var2, int var3) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(altarGuiTextures);
-        this.blit(stack, this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.minecraft.getTextureManager().bind(altarGuiTextures);
+        this.blit(stack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack stack, int par1, int par2) {
-        super.drawGuiContainerForegroundLayer(stack, par1, par2);
+    protected void renderLabels(MatrixStack stack, int par1, int par2) {
+        super.renderLabels(stack, par1, par2);
 
         ITextComponent text = null;
-        if (!container.getMissingItems().isEmpty()) {
-            ItemStack missing = container.getMissingItems();
-            ITextComponent item = missing.getItem() instanceof HunterIntelItem ? ((HunterIntelItem) missing.getItem()).getCustomName() : new TranslationTextComponent(missing.getTranslationKey());
+        if (!menu.getMissingItems().isEmpty()) {
+            ItemStack missing = menu.getMissingItems();
+            ITextComponent item = missing.getItem() instanceof HunterIntelItem ? ((HunterIntelItem) missing.getItem()).getCustomName() : new TranslationTextComponent(missing.getDescriptionId());
             text = new TranslationTextComponent("text.vampirism.hunter_trainer.ritual_missing_items", missing.getCount(), item);
         }
-        if (text != null) this.font.func_238418_a_(text, 8, 50, this.xSize - 10, 0x000000);
+        if (text != null) this.font.drawWordWrap(text, 8, 50, this.imageWidth - 10, 0x000000);
     }
 }

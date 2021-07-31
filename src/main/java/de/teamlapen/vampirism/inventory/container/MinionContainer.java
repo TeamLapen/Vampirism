@@ -33,7 +33,6 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-
 public class MinionContainer extends InventoryContainer {
     private final static Logger LOGGER = LogManager.getLogger();
 
@@ -47,11 +46,11 @@ public class MinionContainer extends InventoryContainer {
         Predicate<ItemStack> factionPredicate = itemStack -> !(itemStack.getItem() instanceof IFactionExclusiveItem) || ((IFactionExclusiveItem) itemStack.getItem()).getExclusiveFaction().equals(minionEntity.getFaction());
         SelectorInfo[] slots = new SelectorInfo[6 + extraSlots];
         slots[0] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.MAINHAND, minionEntity)), 7, 60, false, 1, null);
-        slots[1] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.OFFHAND, minionEntity) || stack.getUseAction() == UseAction.DRINK || stack.getUseAction() == UseAction.EAT), 7, 78, false, 5, null);
-        slots[2] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.FEET, minionEntity)), 81, 22, false, 1, Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE, PlayerContainer.EMPTY_ARMOR_SLOT_BOOTS));
-        slots[3] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.LEGS, minionEntity)), 63, 22, false, 1, Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE, PlayerContainer.EMPTY_ARMOR_SLOT_LEGGINGS));
-        slots[4] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.CHEST, minionEntity)), 45, 22, false, 1, Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE, PlayerContainer.EMPTY_ARMOR_SLOT_CHESTPLATE));
-        slots[5] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.HEAD, minionEntity)), 27, 22, false, 1, Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE, PlayerContainer.EMPTY_ARMOR_SLOT_HELMET));
+        slots[1] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.OFFHAND, minionEntity) || stack.getUseAnimation() == UseAction.DRINK || stack.getUseAnimation() == UseAction.EAT), 7, 78, false, 5, null);
+        slots[2] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.FEET, minionEntity)), 81, 22, false, 1, Pair.of(PlayerContainer.BLOCK_ATLAS, PlayerContainer.EMPTY_ARMOR_SLOT_BOOTS));
+        slots[3] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.LEGS, minionEntity)), 63, 22, false, 1, Pair.of(PlayerContainer.BLOCK_ATLAS, PlayerContainer.EMPTY_ARMOR_SLOT_LEGGINGS));
+        slots[4] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.CHEST, minionEntity)), 45, 22, false, 1, Pair.of(PlayerContainer.BLOCK_ATLAS, PlayerContainer.EMPTY_ARMOR_SLOT_CHESTPLATE));
+        slots[5] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.HEAD, minionEntity)), 27, 22, false, 1, Pair.of(PlayerContainer.BLOCK_ATLAS, PlayerContainer.EMPTY_ARMOR_SLOT_HELMET));
 
         assert extraSlots == 9 || extraSlots == 12 || extraSlots == 15 : "Minion inventory has unexpected size";
         for (int i = 0; i < extraSlots; i++) {
@@ -73,7 +72,7 @@ public class MinionContainer extends InventoryContainer {
     private boolean taskLocked;
 
     public MinionContainer(int id, PlayerInventory playerInventory, MinionEntity<?> minionEntity, @Nonnull IInventory inventory, int extraSlots, SelectorInfo... selectorInfos) {
-        super(ModContainer.minion, id, playerInventory, IWorldPosCallable.of(minionEntity.world, minionEntity.getPosition()), inventory, selectorInfos);
+        super(ModContainer.minion, id, playerInventory, IWorldPosCallable.create(minionEntity.level, minionEntity.blockPosition()), inventory, selectorInfos);
         this.minionEntity = minionEntity;
         this.extraSlots = extraSlots;
         this.availableTasks = this.minionEntity.getAvailableTasks().toArray(new IMinionTask[0]);
@@ -85,8 +84,12 @@ public class MinionContainer extends InventoryContainer {
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return minionEntity.isAlive();
+    public void removed(PlayerEntity playerIn) {
+        super.removed(playerIn);
+        if (this.minionEntity.level.isClientSide()) {
+            sendChanges();
+        }
+        minionEntity.setInteractingPlayer(null);
     }
 
     @Nonnull
@@ -116,12 +119,8 @@ public class MinionContainer extends InventoryContainer {
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
-        if (this.minionEntity.world.isRemote()) {
-            sendChanges();
-        }
-        minionEntity.setInteractingPlayer(null);
+    public boolean stillValid(PlayerEntity playerIn) {
+        return minionEntity.isAlive();
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -160,7 +159,7 @@ public class MinionContainer extends InventoryContainer {
         public MinionContainer create(int windowId, PlayerInventory inv, PacketBuffer data) {
             if (data == null) return null;
             int entityId = data.readVarInt(); //Anything read here has to be written to buffer in open method (in MinionEntity)
-            Entity e = inv.player.world == null ? null : inv.player.world.getEntityByID(entityId);
+            Entity e = inv.player.level == null ? null : inv.player.level.getEntity(entityId);
             if (!(e instanceof MinionEntity)) {
                 LOGGER.error("Cannot find related minion entity {}", entityId);
                 return null;

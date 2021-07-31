@@ -47,24 +47,24 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
      * @param villager Is not modified or removed
      */
     public static AggressiveVillagerEntity makeHunter(@Nonnull VillagerEntity villager) {
-        AggressiveVillagerEntity hunter = ModEntities.villager_angry.create(villager.world);
+        AggressiveVillagerEntity hunter = ModEntities.villager_angry.create(villager.level);
         assert hunter != null;
         CompoundNBT nbt = new CompoundNBT();
         if (villager.isSleeping()) {
-            villager.wakeUp();
+            villager.stopSleeping();
         }
-        villager.writeWithoutTypeId(nbt);
-        hunter.read(nbt);
-        hunter.setUniqueId(MathHelper.getRandomUUID(hunter.rand));
-        hunter.setHeldItem(Hand.MAIN_HAND, new ItemStack(ModItems.pitchfork));
+        villager.saveWithoutId(nbt);
+        hunter.load(nbt);
+        hunter.setUUID(MathHelper.createInsecureUUID(hunter.random));
+        hunter.setItemInHand(Hand.MAIN_HAND, new ItemStack(ModItems.pitchfork));
         return hunter;
     }
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
         return VampirismVillagerEntity.getAttributeBuilder()
-                .createMutableAttribute(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.HUNTER_VILLAGER_MAX_HEALTH)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.HUNTER_VILLAGER_ATTACK_DAMAGE)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 32);
+                .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.HUNTER_VILLAGER_MAX_HEALTH)
+                .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.HUNTER_VILLAGER_ATTACK_DAMAGE)
+                .add(Attributes.FOLLOW_RANGE, 32);
     }
     //Village capture---------------------------------------------------------------------------------------------------
     @Nullable
@@ -72,7 +72,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
 
     public AggressiveVillagerEntity(EntityType<? extends AggressiveVillagerEntity> type, World worldIn) {
         super(type, worldIn);
-        ((GroundPathNavigator) getNavigator()).setBreakDoors(true);
+        ((GroundPathNavigator) getNavigation()).setCanOpenDoors(true);
     }
 
     @Override
@@ -113,35 +113,35 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    public ILivingEntityData onInitialSpawn(@Nonnull IServerWorld worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        ILivingEntityData data = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-        this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.pitchfork));
+    public ILivingEntityData finalizeSpawn(@Nonnull IServerWorld worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        ILivingEntityData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        this.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.pitchfork));
         return data;
     }
 
     @Override
-    public void resetBrain(@Nonnull ServerWorld serverWorldIn) {
+    public void refreshBrain(@Nonnull ServerWorld serverWorldIn) {
     }
 
     @Override
     public void stopVillageAttackDefense() {
-        VillagerEntity villager = EntityType.VILLAGER.create(this.world);
+        VillagerEntity villager = EntityType.VILLAGER.create(this.level);
         assert villager != null;
-        this.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
+        this.setItemInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
         CompoundNBT nbt = new CompoundNBT();
-        this.writeWithoutTypeId(nbt);
-        villager.read(nbt);
-        villager.setUniqueId(MathHelper.getRandomUUID(this.rand));
+        this.saveWithoutId(nbt);
+        villager.load(nbt);
+        villager.setUUID(MathHelper.createInsecureUUID(this.random));
         UtilLib.replaceEntity(this, villager);
     }
 
     @Override
-    protected ITextComponent getProfessionName() {
-        return this.getType().getName(); //Don't use profession as part of the translation key
+    protected ITextComponent getTypeName() {
+        return this.getType().getDescription(); //Don't use profession as part of the translation key
     }
 
     @Override
-    protected void initBrain(Brain<VillagerEntity> brainIn) {
+    protected void registerBrainGoals(Brain<VillagerEntity> brainIn) {
     }
 
     @Override
@@ -156,8 +156,8 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
 
             @Override
-            protected double getTargetDistance() {
-                return super.getTargetDistance() / 2;
+            protected double getFollowDistance() {
+                return super.getFollowDistance() / 2;
             }
         });
     }

@@ -29,7 +29,6 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nullable;
 import java.util.List;
 
-
 public class PureBloodItem extends VampirismItem {
 
     public static final int COUNT = 5;
@@ -57,28 +56,36 @@ public class PureBloodItem extends VampirismItem {
     private final int level;
 
     public PureBloodItem(int level) {
-        super(name + "_" + level, new Properties().group(VampirismMod.creativeTab));
+        super(name + "_" + level, new Properties().tab(VampirismMod.creativeTab));
         this.level = level;
         this.setTranslation_key(name);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("item.vampirism.pure_blood.purity").appendSibling(new StringTextComponent(": " + (level + 1 + "/" + COUNT))).mergeStyle(TextFormatting.RED));
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(new TranslationTextComponent("item.vampirism.pure_blood.purity").append(new StringTextComponent(": " + (level + 1 + "/" + COUNT))).withStyle(TextFormatting.RED));
     }
 
-    public ITextComponent getCustomName() {
-        return new TranslationTextComponent(this.getDefaultTranslationKey()).appendSibling(new StringTextComponent(" " + (level + 1)));
+    @Override
+    public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {
+        if (entityLiving instanceof PlayerEntity) {
+            VampirePlayer.getOpt((PlayerEntity) entityLiving).ifPresent(v -> {
+                v.drinkBlood(50, 0.3f, false);
+                entityLiving.addEffect(new EffectInstance(ModEffects.saturation));
+                stack.shrink(1);
+                checkWingConditions(v);
+            });
+        }
+        return stack;
     }
 
     public int getLevel() {
         return this.level;
     }
 
-    @Override
-    public UseAction getUseAction(ItemStack stack) {
-        return UseAction.DRINK;
+    public ITextComponent getCustomName() {
+        return new TranslationTextComponent(this.getOrCreateDescriptionId()).append(new StringTextComponent(" " + (level + 1)));
     }
 
     @Override
@@ -87,34 +94,26 @@ public class PureBloodItem extends VampirismItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public UseAction getUseAnimation(ItemStack stack) {
+        return UseAction.DRINK;
+    }
+
+    @Override
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         int playerLevel = VampirismAPI.getFactionPlayerHandler(playerIn).map(fph -> fph.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0);
         if (VampireLevelingConf.getInstance().isLevelValidForAltarInfusion(playerLevel)) {
             int pureLevel = VampireLevelingConf.getInstance().getAltarInfusionRequirements(playerLevel).pureBloodLevel;
             if (getLevel() < pureLevel) {
-                playerIn.setActiveHand(handIn);
+                playerIn.startUsingItem(handIn);
             }
         }
-        return super.onItemRightClick(worldIn, playerIn, handIn);
-    }
-
-    @Override
-    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
-        if (entityLiving instanceof PlayerEntity) {
-            VampirePlayer.getOpt((PlayerEntity) entityLiving).ifPresent(v -> {
-                v.drinkBlood(50, 0.3f, false);
-                entityLiving.addPotionEffect(new EffectInstance(ModEffects.saturation));
-                stack.shrink(1);
-                checkWingConditions(v);
-            });
-        }
-        return stack;
+        return super.use(worldIn, playerIn, handIn);
     }
 
     private void checkWingConditions(VampirePlayer p) {
         net.minecraft.entity.player.PlayerEntity e = p.getRepresentingPlayer();
-        if (!e.abilities.isCreativeMode && !e.world.isRemote()) {
-            if (e.getItemStackFromSlot(net.minecraft.inventory.EquipmentSlotType.CHEST).getItem() instanceof VampireClothingItem) {
+        if (!e.abilities.instabuild && !e.level.isClientSide()) {
+            if (e.getItemBySlot(net.minecraft.inventory.EquipmentSlotType.CHEST).getItem() instanceof VampireClothingItem) {
                 p.triggerWings();
             }
         }

@@ -39,7 +39,7 @@ public class PlayerSkinHelper {
                 callback.accept(input);
             } else if (SkullTileEntity.profileCache != null && SkullTileEntity.sessionService != null) {
                 THREAD_POOL.submit(() -> {
-                    GameProfile gameprofile = input.getId() == null ? SkullTileEntity.profileCache.getGameProfileForUsername(input.getName()) : SkullTileEntity.profileCache.getProfileByUUID(input.getId()); //This might create race conditions with other game profile updates. Maybe this has to be moved to the main thread
+                    GameProfile gameprofile = input.getId() == null ? SkullTileEntity.profileCache.get(input.getName()) : SkullTileEntity.profileCache.get(input.getId()); //This might create race conditions with other game profile updates. Maybe this has to be moved to the main thread
 
                     if (gameprofile == null) {
                         gameprofile = input;
@@ -66,14 +66,14 @@ public class PlayerSkinHelper {
         updateGameProfileAsync(input, p -> {
             ResourceLocation loc;
             boolean alex;
-            Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(p);
+            Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().getInsecureSkinInformation(p);
             if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
                 MinecraftProfileTexture t = map.get(MinecraftProfileTexture.Type.SKIN);
-                loc = Minecraft.getInstance().getSkinManager().loadSkin(t, MinecraftProfileTexture.Type.SKIN);
+                loc = Minecraft.getInstance().getSkinManager().registerTexture(t, MinecraftProfileTexture.Type.SKIN);
                 alex = "slim".equals(t.getMetadata("model"));
             } else {
                 loc = DefaultPlayerSkin.getDefaultSkin(p.getId());
-                alex = "slim".equals(DefaultPlayerSkin.getSkinType(p.getId()));
+                alex = "slim".equals(DefaultPlayerSkin.getSkinModelName(p.getId()));
             }
             callback.accept(Pair.of(loc, alex));
         });

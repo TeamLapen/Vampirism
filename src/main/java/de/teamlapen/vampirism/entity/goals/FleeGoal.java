@@ -25,16 +25,12 @@ public abstract class FleeGoal extends Goal {
         this.theCreature = theCreature;
         this.movementSpeed = movementSpeed;
         this.restrictToHome = restrictToHome;
-        world = theCreature.getEntityWorld();
-        this.setMutexFlags(EnumSet.of(Flag.MOVE));
-    }
-
-    public boolean continueExecuting() {
-        return !this.theCreature.getNavigator().noPath();
+        world = theCreature.getCommandSenderWorld();
+        this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         if (!shouldFlee()) return false;
         Vector3d vec3 = this.findPossibleShelter();
 
@@ -48,8 +44,12 @@ public abstract class FleeGoal extends Goal {
         }
     }
 
-    public void startExecuting() {
-        this.theCreature.getNavigator().tryMoveToXYZ(this.shelterX, this.shelterY, this.shelterZ, this.movementSpeed);
+    public boolean continueExecuting() {
+        return !this.theCreature.getNavigation().isDone();
+    }
+
+    public void start() {
+        this.theCreature.getNavigation().moveTo(this.shelterX, this.shelterY, this.shelterZ, this.movementSpeed);
     }
 
     protected abstract boolean isPositionAcceptable(World world, BlockPos pos);
@@ -57,16 +57,16 @@ public abstract class FleeGoal extends Goal {
     protected abstract boolean shouldFlee();
 
     private Vector3d findPossibleShelter() {
-        Random random = this.theCreature.getRNG();
-        BlockPos blockpos = new BlockPos(this.theCreature.getPosX(), this.theCreature.getBoundingBox().minY, this.theCreature.getPosZ());
+        Random random = this.theCreature.getRandom();
+        BlockPos blockpos = new BlockPos(this.theCreature.getX(), this.theCreature.getBoundingBox().minY, this.theCreature.getZ());
 
         for (int i = 0; i < 10; ++i) {
-            BlockPos blockpos1 = blockpos.add(random.nextInt(20) - 10, random.nextInt(6) - 3, random.nextInt(20) - 10);
+            BlockPos blockpos1 = blockpos.offset(random.nextInt(20) - 10, random.nextInt(6) - 3, random.nextInt(20) - 10);
 
             if (isPositionAcceptable(world, blockpos1)) {
-                if (restrictToHome && !theCreature.getHomePosition().equals(BlockPos.ZERO)) {
+                if (restrictToHome && !theCreature.getRestrictCenter().equals(BlockPos.ZERO)) {
 
-                    if (!theCreature.isWithinHomeDistanceFromPosition(blockpos1)) continue;
+                    if (!theCreature.isWithinRestriction(blockpos1)) continue;
                 }
                 return new Vector3d(blockpos1.getX(), blockpos1.getY(), blockpos1.getZ());
             }

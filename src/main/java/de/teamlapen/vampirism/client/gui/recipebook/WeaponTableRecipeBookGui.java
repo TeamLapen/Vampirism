@@ -19,13 +19,13 @@ public class WeaponTableRecipeBookGui extends RecipeBookGui {
 
     @Override
     public void updateCollections(boolean forceFirstPage) { //nearly copied from super method. Only added additional filter using faction player
-        List<RecipeList> recipeLists = this.recipeBook.getRecipes(this.currentTab.func_201503_d());
+        List<RecipeList> recipeLists = this.book.getCollection(this.selectedTab.getCategory());
         recipeLists.forEach((p_193944_1_) -> {
-            p_193944_1_.canCraft(this.stackedContents, this.field_201522_g.getWidth(), this.field_201522_g.getHeight(), this.recipeBook);
+            p_193944_1_.canCraft(this.stackedContents, this.menu.getGridWidth(), this.menu.getGridHeight(), this.book);
         });
 
         List<RecipeList> list1 = Lists.newArrayList(recipeLists);
-        FactionPlayerHandler.getOpt(this.mc.player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).ifPresent(player -> {
+        FactionPlayerHandler.getOpt(this.minecraft.player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).ifPresent(player -> {
             list1.removeIf(recipeList -> {
                 if (recipeList.getRecipes().stream().anyMatch(recipe -> recipe.getType() != ModRecipes.WEAPONTABLE_CRAFTING_TYPE)) {
                     return true;
@@ -44,16 +44,16 @@ public class WeaponTableRecipeBookGui extends RecipeBookGui {
                 });
             });
         });
-        list1.removeIf((recipeList) -> !recipeList.isNotEmpty());
-        list1.removeIf((p_193953_0_) -> !p_193953_0_.containsValidRecipes());
-        String s = this.searchBar.getText();
+        list1.removeIf((recipeList) -> !recipeList.hasKnownRecipes());
+        list1.removeIf((p_193953_0_) -> !p_193953_0_.hasFitting());
+        String s = this.searchBox.getValue();
         if (!s.isEmpty()) {
-            ObjectSet<RecipeList> objectset = new ObjectLinkedOpenHashSet<>(this.mc.getSearchTree(SearchTreeManager.RECIPES).search(s.toLowerCase(Locale.ROOT)));
+            ObjectSet<RecipeList> objectset = new ObjectLinkedOpenHashSet<>(this.minecraft.getSearchTree(SearchTreeManager.RECIPE_COLLECTIONS).search(s.toLowerCase(Locale.ROOT)));
             list1.removeIf((p_193947_1_) -> !objectset.contains(p_193947_1_));
         }
-        if (this.recipeBook.func_242141_a(this.field_201522_g)) {
-            list1.removeIf((p_193958_0_) -> !p_193958_0_.containsCraftableRecipes());
+        if (this.book.isFiltering(this.menu)) {
+            list1.removeIf((p_193958_0_) -> !p_193958_0_.hasCraftable());
         }
-        this.recipeBookPage.updateLists(list1, forceFirstPage);
+        this.recipeBookPage.updateCollections(list1, forceFirstPage);
     }
 }

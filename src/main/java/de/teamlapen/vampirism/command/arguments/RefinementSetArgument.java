@@ -39,7 +39,7 @@ public class RefinementSetArgument implements ArgumentType<IRefinementSet> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return ISuggestionProvider.suggestIterable(ModRegistries.REFINEMENT_SETS.getKeys(), builder);
+        return ISuggestionProvider.suggestResource(ModRegistries.REFINEMENT_SETS.getKeys(), builder);
     }
 
     @Override

@@ -77,7 +77,7 @@ public class BiteableEntryManager {
         double v = bb.maxX - bb.minX;
         v *= bb.maxY - bb.minY;
         v *= bb.maxZ - bb.minZ;
-        if (creature.isChild()) {
+        if (creature.isBaby()) {
             v *= 8; //Rough approximation. Should work for most vanilla animals. Avoids having to change the entities scale
         }
         int blood = 0;
@@ -163,7 +163,7 @@ public class BiteableEntryManager {
         if (!(creature instanceof AnimalEntity)) return true;
         if (creature instanceof IVampire) return true;
         EntityType<?> type = creature.getType();
-        if (type.getClassification() == EntityClassification.MONSTER || type.getClassification() == EntityClassification.WATER_CREATURE)
+        if (type.getCategory() == EntityClassification.MONSTER || type.getCategory() == EntityClassification.WATER_CREATURE)
             return true;
         if (ModTags.Entities.VAMPIRE.contains(type)) return true;
         //noinspection ConstantConditions

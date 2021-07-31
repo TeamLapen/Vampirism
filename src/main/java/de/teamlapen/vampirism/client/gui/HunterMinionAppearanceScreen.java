@@ -50,26 +50,26 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
     }
 
     @Override
-    public void onClose() {
-        String name = nameWidget.getText();
+    public void removed() {
+        String name = nameWidget.getValue();
         if (name.isEmpty()) {
             name = new TranslationTextComponent("text.vampirism.minion").toString() + entity.getMinionId().orElse(0);
         }
-        VampirismMod.dispatcher.sendToServer(new AppearancePacket(this.entity.getEntityId(), name, this.skinType, this.hatType, (this.isMinionSpecificSkin ? 0b10 : 0b0) | (this.useLordSkin ? 0b1 : 0b0)));
-        super.onClose();
+        VampirismMod.dispatcher.sendToServer(new AppearancePacket(this.entity.getId(), name, this.skinType, this.hatType, (this.isMinionSpecificSkin ? 0b10 : 0b0) | (this.useLordSkin ? 0b1 : 0b0)));
+        super.removed();
     }
 
     @Override
     protected void init() {
         super.init();
         this.nameWidget = this.addButton(new TextFieldWidget(font, this.guiLeft + 21, this.guiTop + 29, 98, 12, new TranslationTextComponent("gui.vampirism.minion_appearance.name")));
-        this.nameWidget.setText(entity.getMinionData().map(MinionData::getName).orElse("Minion"));
-        this.nameWidget.setDisabledTextColour(-1);
+        this.nameWidget.setValue(entity.getMinionData().map(MinionData::getName).orElse("Minion"));
+        this.nameWidget.setTextColorUneditable(-1);
         this.nameWidget.setTextColor(-1);
-        this.nameWidget.setMaxStringLength(MinionData.MAX_NAME_LENGTH);
+        this.nameWidget.setMaxLength(MinionData.MAX_NAME_LENGTH);
         this.nameWidget.setResponder(this::onNameChanged);
-        this.normalSkinCount = ((HunterMinionRenderer) Minecraft.getInstance().getRenderManager().getRenderer(this.entity)).getHunterTextureCount();
-        this.minionSkinCount = ((HunterMinionRenderer) Minecraft.getInstance().getRenderManager().getRenderer(this.entity)).getMinionSpecificTextureCount(); //Can be 0
+        this.normalSkinCount = ((HunterMinionRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(this.entity)).getHunterTextureCount();
+        this.minionSkinCount = ((HunterMinionRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(this.entity)).getMinionSpecificTextureCount(); //Can be 0
         this.isMinionSpecificSkin = this.entity.hasMinionSpecificSkin();
         if (this.isMinionSpecificSkin && this.minionSkinCount > 0) {
             this.skinType = this.skinType % this.minionSkinCount;
@@ -92,7 +92,7 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
             @Override
             public void onPress() {
                 super.onPress();
-                useLordSkin = isChecked();
+                useLordSkin = selected();
                 entity.setUseLordSkin(useLordSkin);
             }
         });
@@ -131,14 +131,14 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
     }
 
     private void setHatListVisibility(boolean show) {
-        hatButton.setMessage(hatList.getMessage().deepCopy().appendString(" " + (hatType + 1)));
+        hatButton.setMessage(hatList.getMessage().copy().append(" " + (hatType + 1)));
         hatList.visible = show;
         if (show) skinList.visible = false;
         useLordSkinButton.visible = !show;
     }
 
     private void setSkinListVisibility(boolean show) {
-        skinButton.setMessage(skinList.getMessage().deepCopy().appendString(" " + (skinType + 1)));
+        skinButton.setMessage(skinList.getMessage().copy().append(" " + (skinType + 1)));
         this.skinList.visible = show;
         this.hatButton.visible = !show;
         this.useLordSkinButton.visible = !show;

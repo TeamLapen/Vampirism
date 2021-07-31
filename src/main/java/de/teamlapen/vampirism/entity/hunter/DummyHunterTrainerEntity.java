@@ -27,18 +27,18 @@ public class DummyHunterTrainerEntity extends VampirismEntity implements ICaptur
         super(type, world);
         saveHome = true;
         hasArms = true;
-        ((GroundPathNavigator) this.getNavigator()).setBreakDoors(true);
+        ((GroundPathNavigator) this.getNavigation()).setCanOpenDoors(true);
 
         this.setDontDropEquipment();
     }
 
     @Override
-    public boolean canDespawn(double distanceToClosestPlayer) {
-        return super.canDespawn(distanceToClosestPlayer) && getHome() != null;
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+        return super.removeWhenFarAway(distanceToClosestPlayer) && getHome() != null;
     }
 
     @Override
-    public boolean getAlwaysRenderNameTagForRender() {
+    public boolean shouldShowName() {
         return true;
     }
 
@@ -49,23 +49,23 @@ public class DummyHunterTrainerEntity extends VampirismEntity implements ICaptur
     }
 
     @Override
-    protected ActionResultType getEntityInteractionResult(PlayerEntity player, Hand hand) {
-        ItemStack stack = player.getHeldItem(hand);
+    protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getItemInHand(hand);
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 
-        if (!flag && this.isAlive() && !player.isSneaking()) {
-            if (!this.world.isRemote) {
+        if (!flag && this.isAlive() && !player.isShiftKeyDown()) {
+            if (!this.level.isClientSide) {
                 if (Helper.isHunter(player)) {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_disabled_hunter"), Util.DUMMY_UUID);
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_disabled_hunter"), Util.NIL_UUID);
                 } else {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_disabled"), Util.DUMMY_UUID);
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_disabled"), Util.NIL_UUID);
                 }
             }
             return ActionResultType.SUCCESS;
         }
 
 
-        return super.getEntityInteractionResult(player, hand);
+        return super.mobInteract(player, hand);
     }
 
 

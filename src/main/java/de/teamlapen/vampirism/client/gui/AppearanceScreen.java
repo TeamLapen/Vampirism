@@ -53,7 +53,7 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
         this.renderGuiBackground(mStack);
 
         this.drawTitle(mStack);
-        InventoryScreen.drawEntityOnScreen(this.guiLeft + 200, this.guiTop + 145, 60, (float) (this.guiLeft + 200) - mouseX, (float) (this.guiTop + 45) - mouseY, this.entity);
+        InventoryScreen.renderEntityInInventory(this.guiLeft + 200, this.guiTop + 145, 60, (float) (this.guiLeft + 200) - mouseX, (float) (this.guiTop + 45) - mouseY, this.entity);
 
         super.render(mStack, mouseX, mouseY, partialTicks);
 
@@ -69,21 +69,21 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
         this.guiTop = (this.height - this.ySize) / 2;
 
         this.addButton(new Button(this.guiLeft + this.xSize - 80 - 10, this.guiTop + 152, 80, 20, new TranslationTextComponent("gui.done"), (context) -> {
-            this.closeScreen();
+            this.onClose();
         }));
         if (this.backScreen != null) {
             this.addButton(new Button(this.guiLeft + 10, this.guiTop + 152, 80, 20, new TranslationTextComponent("gui.back"), (context) -> {
-                if (this.minecraft != null) this.minecraft.displayGuiScreen(this.backScreen);
+                if (this.minecraft != null) this.minecraft.setScreen(this.backScreen);
             }));
         }
     }
 
     protected void renderGuiBackground(MatrixStack mStack) {
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
+        this.minecraft.getTextureManager().bind(BACKGROUND);
         blit(mStack, this.guiLeft, this.guiTop, this.getBlitOffset(), 0, 0, this.xSize, this.ySize, 256, 300);
     }
 
     private void drawTitle(MatrixStack mStack) {
-        this.font.drawTextWithShadow(mStack, title, this.guiLeft + 15, this.guiTop + 5, 0xFFFFFFFF);
+        this.font.drawShadow(mStack, title, this.guiLeft + 15, this.guiTop + 5, 0xFFFFFFFF);
     }
 }

@@ -51,9 +51,9 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
             minion.recallMinion();
         }
         if (lord != null) {
-            lord.sendStatusMessage(new TranslationTextComponent(Util.makeTranslationKey("minion_task", getRegistryName()) + ".start"), true);
+            lord.displayClientMessage(new TranslationTextComponent(Util.makeDescriptionId("minion_task", getRegistryName()) + ".start"), true);
         }
-        return new Desc<>(this, this.coolDownSupplier.apply(data), lord != null ? lord.getUniqueID() : null);
+        return new Desc<>(this, this.coolDownSupplier.apply(data), lord != null ? lord.getUUID() : null);
     }
 
     @Override
@@ -68,13 +68,13 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
 
     @Override
     public Desc<Q> readFromNBT(CompoundNBT nbt) {
-        return new Desc<>(this, nbt.getInt("cooldown"), nbt.contains("lordid") ? nbt.getUniqueId("lordid") : null);
+        return new Desc<>(this, nbt.getInt("cooldown"), nbt.contains("lordid") ? nbt.getUUID("lordid") : null);
     }
 
     @Override
     public void tickBackground(Desc<Q> desc, @Nonnull Q data) {
         if (--desc.coolDown <= 0) {
-            boolean lordOnline = desc.lordEntityID != null && ServerLifecycleHooks.getCurrentServer() != null && ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayerByUUID(desc.lordEntityID) != null;
+            boolean lordOnline = desc.lordEntityID != null && ServerLifecycleHooks.getCurrentServer() != null && ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(desc.lordEntityID) != null;
             desc.coolDown = lordOnline ? coolDownSupplier.apply(data) : (int) (coolDownSupplier.apply(data) * VampirismConfig.BALANCE.miResourceCooldownOfflineMult.get());
             data.getInventory().addItemStack(WeightedRandom.getRandomItem(rng, resources).getItem().copy());
         }
@@ -101,7 +101,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
         public void writeToNBT(CompoundNBT nbt) {
             nbt.putInt("cooldown", coolDown);
             if (lordEntityID != null) {
-                nbt.putUniqueId("lordid", lordEntityID);
+                nbt.putUUID("lordid", lordEntityID);
             }
         }
     }

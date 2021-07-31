@@ -16,12 +16,12 @@ public class EyeCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("eye")
                 .then(Commands.argument("type", IntegerArgumentType.integer(0, REFERENCE.EYE_TYPE_COUNT - 1))
-                        .executes(context -> setEye(context, context.getSource().asPlayer(), IntegerArgumentType.getInteger(context, "type"))));
+                        .executes(context -> setEye(context, context.getSource().getPlayerOrException(), IntegerArgumentType.getInteger(context, "type"))));
     }
 
     private static int setEye(CommandContext<CommandSource> context, PlayerEntity player, int type) {
         if (VampirePlayer.getOpt(player).map(vampire -> vampire.setEyeType(type)).orElse(false)) {
-            context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.eye.success", type), false);
+            context.getSource().sendSuccess(new TranslationTextComponent("command.vampirism.base.eye.success", type), false);
         }
         return type;
     }

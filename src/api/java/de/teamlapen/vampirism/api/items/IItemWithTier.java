@@ -19,7 +19,7 @@ public interface IItemWithTier {
         TIER t = getVampirismTier();
         if (t != TIER.NORMAL) {
             TextFormatting format = t == TIER.ENHANCED ? TextFormatting.YELLOW : TextFormatting.AQUA;
-            tooltip.add(new TranslationTextComponent("item.vampirism.item.tier." + t.getString().toLowerCase()).mergeStyle(format));
+            tooltip.add(new TranslationTextComponent("item.vampirism.item.tier." + t.getSerializedName().toLowerCase()).withStyle(format));
         }
     }
 
@@ -43,11 +43,11 @@ public interface IItemWithTier {
         }
 
         public String getName() {
-            return this.getString();
+            return this.getSerializedName();
         }
 
         @Override
-        public String getString() {
+        public String getSerializedName() {
             return name;
         }
     }

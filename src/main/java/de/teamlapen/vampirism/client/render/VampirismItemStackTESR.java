@@ -17,7 +17,7 @@ public class VampirismItemStackTESR extends ItemStackTileEntityRenderer {
 
 
     @Override
-    public void func_239207_a_(ItemStack itemStack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+    public void renderByItem(ItemStack itemStack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
         Item item = itemStack.getItem();
         if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof CoffinBlock) {
             if (coffin == null) {
@@ -25,7 +25,7 @@ public class VampirismItemStackTESR extends ItemStackTileEntityRenderer {
             }
             TileEntityRendererDispatcher.instance.renderItem(this.coffin, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
         } else {
-            super.func_239207_a_(itemStack, transformType, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
+            super.renderByItem(itemStack, transformType, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
         }
     }
 }

@@ -21,7 +21,7 @@ public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {
 
     @Deprecated
     public AlchemicalCauldronContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, new Inventory(4), new IntArray(4), IWorldPosCallable.DUMMY);
+        this(id, playerInventory, new Inventory(4), new IntArray(4), IWorldPosCallable.NULL);
     }
 
     public AlchemicalCauldronContainer(int id, PlayerInventory playerInventory, IInventory inv, IIntArray data, IWorldPosCallable worldPos) {
@@ -31,41 +31,41 @@ public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {
 
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
+    public ItemStack quickMoveStack(PlayerEntity playerEntity, int index) {
         ItemStack stackCopy = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack slotStack = slot.getStack();
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack slotStack = slot.getItem();
             stackCopy = slotStack.copy();
             if (index == 2) {
-                if (!this.mergeItemStack(slotStack, 4, 40, true)) {
+                if (!this.moveItemStackTo(slotStack, 4, 40, true)) {
                     return ItemStack.EMPTY;
                 }
-                slot.onSlotChange(slotStack, stackCopy);
+                slot.onQuickCraft(slotStack, stackCopy);
             } else if (index != 1 && index != 0 && index != 3) {
                 if (this.isFuel(slotStack)) {
-                    if (!this.mergeItemStack(slotStack, 3, 4, false)) {
+                    if (!this.moveItemStackTo(slotStack, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }
 
-                } else if (!this.mergeItemStack(slotStack, 0, 2, false)) {
+                } else if (!this.moveItemStackTo(slotStack, 0, 2, false)) {
                     return ItemStack.EMPTY;
 
                 } else if (index >= 4 && index < 31) {
-                    if (!this.mergeItemStack(slotStack, 31, 40, false)) {
+                    if (!this.moveItemStackTo(slotStack, 31, 40, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (index >= 31 && index < 40 && !this.mergeItemStack(slotStack, 4, 31, false)) {
+                } else if (index >= 31 && index < 40 && !this.moveItemStackTo(slotStack, 4, 31, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(slotStack, 4, 40, false)) {
+            } else if (!this.moveItemStackTo(slotStack, 4, 40, false)) {
                 return ItemStack.EMPTY;
             }
 
             if (slotStack.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (slotStack.getCount() == stackCopy.getCount()) {
@@ -79,13 +79,13 @@ public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {
     }
 
     private void setSlots(PlayerInventory playerInv) {
-        this.inventorySlots.clear();
-        this.inventoryItemStacks.clear();
+        this.slots.clear();
+        this.lastSlots.clear();
         //Keep order
-        this.addSlot(new Slot(furnaceInventory, 0, 44, 17));
-        this.addSlot(new Slot(furnaceInventory, 1, 68, 17));
-        this.addSlot(new FurnaceResultSlot(playerInv.player, furnaceInventory, 2, 116, 35));
-        this.addSlot(new FurnaceFuelSlot(this, furnaceInventory, 3, 56, 53));
+        this.addSlot(new Slot(container, 0, 44, 17));
+        this.addSlot(new Slot(container, 1, 68, 17));
+        this.addSlot(new FurnaceResultSlot(playerInv.player, container, 2, 116, 35));
+        this.addSlot(new FurnaceFuelSlot(this, container, 3, 56, 53));
 
         int i;
         for (i = 0; i < 3; ++i) {

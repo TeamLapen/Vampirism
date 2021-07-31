@@ -41,13 +41,13 @@ import java.util.Optional;
 
 public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefaultTaskMasterEntity {
 
-    private static final DataParameter<String> BIOME_TYPE = EntityDataManager.createKey(VampireTaskMasterEntity.class, DataSerializers.STRING);
+    private static final DataParameter<String> BIOME_TYPE = EntityDataManager.defineId(VampireTaskMasterEntity.class, DataSerializers.STRING);
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
-                .createMutableAttribute(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_MAX_HEALTH)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.VAMPIRE_SPEED);
+                .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_MAX_HEALTH)
+                .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE)
+                .add(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.VAMPIRE_SPEED);
     }
     @Nullable
     private PlayerEntity interactor;
@@ -57,25 +57,30 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
     }
 
     @Override
-    public boolean canDespawn(double distanceToClosestPlayer) {
-        return false;
+    public void aiStep() {
+        super.aiStep();
+        if (interactor != null && !(interactor.isAlive() && interactor.containerMenu instanceof TaskBoardContainer)) {
+            this.interactor = null;
+        }
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Nullable
     @Override
-    public boolean getAlwaysRenderNameTagForRender() {
-        return Helper.isVampire(Minecraft.getInstance().player);
+    public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        ILivingEntityData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        this.setBiomeType(VillagerType.byBiome(worldIn.getBiomeName(this.blockPosition())));
+        return data;
     }
 
     @Override
     public VillagerType getBiomeType() {
-        String key = this.dataManager.get(BIOME_TYPE);
+        String key = this.entityData.get(BIOME_TYPE);
         ResourceLocation id = new ResourceLocation(key);
-        return Registry.VILLAGER_TYPE.getOrDefault(id);
+        return Registry.VILLAGER_TYPE.get(id);
     }
 
     protected void setBiomeType(VillagerType type) {
-        this.dataManager.set(BIOME_TYPE, Registry.VILLAGER_TYPE.getKey(type).toString());
+        this.entityData.set(BIOME_TYPE, Registry.VILLAGER_TYPE.getKey(type).toString());
     }
 
     @Nonnull
@@ -85,39 +90,34 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
-        if (interactor != null && !(interactor.isAlive() && interactor.openContainer instanceof TaskBoardContainer)) {
-            this.interactor = null;
-        }
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+        return false;
     }
 
-    @Nullable
+    @OnlyIn(Dist.CLIENT)
     @Override
-    public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        ILivingEntityData data = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-        this.setBiomeType(VillagerType.func_242371_a(worldIn.func_242406_i(this.getPosition())));
-        return data;
+    public boolean shouldShowName() {
+        return Helper.isVampire(Minecraft.getInstance().player);
     }
 
     @Override
-    protected ActionResultType getEntityInteractionResult(@Nonnull PlayerEntity playerEntity, @Nonnull Hand hand) {
-        if (this.world.isRemote)
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(BIOME_TYPE, Registry.VILLAGER_TYPE.getDefaultKey().toString());
+    }
+
+    @Override
+    protected ActionResultType mobInteract(@Nonnull PlayerEntity playerEntity, @Nonnull Hand hand) {
+        if (this.level.isClientSide)
             return Helper.isVampire(playerEntity) ? ActionResultType.SUCCESS : ActionResultType.PASS;
         if (Helper.isVampire(playerEntity) && interactor == null) {
             if (this.processInteraction(playerEntity, this)) {
-                this.getNavigator().clearPath();
+                this.getNavigation().stop();
                 this.interactor = playerEntity;
             }
             return ActionResultType.SUCCESS;
         }
         return ActionResultType.PASS;
-    }
-
-    @Override
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(BIOME_TYPE, Registry.VILLAGER_TYPE.getDefaultKey().toString());
     }
 
     @Override

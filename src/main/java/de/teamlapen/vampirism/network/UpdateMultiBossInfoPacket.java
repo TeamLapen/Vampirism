@@ -16,14 +16,14 @@ import java.util.function.Supplier;
 
 public class UpdateMultiBossInfoPacket implements IMessage {
     static void encode(UpdateMultiBossInfoPacket msg, PacketBuffer buf) {
-        buf.writeUniqueId(msg.uniqueId);
-        buf.writeEnumValue(msg.operation);
+        buf.writeUUID(msg.uniqueId);
+        buf.writeEnum(msg.operation);
         switch (msg.operation) {
             case ADD:
-                buf.writeTextComponent(msg.name);
+                buf.writeComponent(msg.name);
                 buf.writeVarInt(msg.colors.size());
                 msg.colors.forEach(color -> buf.writeVarInt(color.getRGB()));
-                buf.writeEnumValue(msg.overlay);
+                buf.writeEnum(msg.overlay);
             case UPDATE_PCT:
                 buf.writeVarInt(msg.entries.size());
                 for (Map.Entry<Color, Float> value : msg.entries.entrySet()) {
@@ -32,28 +32,28 @@ public class UpdateMultiBossInfoPacket implements IMessage {
                 }
                 break;
             case UPDATE_NAME:
-                buf.writeTextComponent(msg.name);
+                buf.writeComponent(msg.name);
                 break;
             case UPDATE_STYLE:
-                buf.writeEnumValue(msg.overlay);
+                buf.writeEnum(msg.overlay);
                 break;
         }
     }
 
     static UpdateMultiBossInfoPacket decode(PacketBuffer buf) {
-        UUID uuid = buf.readUniqueId();
-        SUpdateBossInfoPacket.Operation operation = buf.readEnumValue(SUpdateBossInfoPacket.Operation.class);
+        UUID uuid = buf.readUUID();
+        SUpdateBossInfoPacket.Operation operation = buf.readEnum(SUpdateBossInfoPacket.Operation.class);
         UpdateMultiBossInfoPacket packet = new UpdateMultiBossInfoPacket(operation, uuid);
         switch (operation) {
             case ADD:
-                packet.name = buf.readTextComponent();
+                packet.name = buf.readComponent();
                 int size = buf.readVarInt();
                 List<Color> colors = new LinkedList<>();
                 for (int i = 0; i < size; i++) {
                     colors.add(new Color(buf.readVarInt(), true));
                 }
                 packet.colors = colors;
-                packet.overlay = buf.readEnumValue(BossInfo.Overlay.class);
+                packet.overlay = buf.readEnum(BossInfo.Overlay.class);
             case UPDATE_PCT:
                 Map<Color, Float> entries = new LinkedHashMap<>();
                 int size2 = buf.readVarInt();
@@ -65,10 +65,10 @@ public class UpdateMultiBossInfoPacket implements IMessage {
                 packet.entries = entries;
                 break;
             case UPDATE_NAME:
-                packet.name = buf.readTextComponent();
+                packet.name = buf.readComponent();
                 break;
             case UPDATE_STYLE:
-                packet.overlay = buf.readEnumValue(BossInfo.Overlay.class);
+                packet.overlay = buf.readEnum(BossInfo.Overlay.class);
                 break;
         }
         return packet;

@@ -22,7 +22,7 @@ public class CastleSlabBlock extends SlabBlock {
     private final CastleBricksBlock.EnumVariant variant;
 
     public CastleSlabBlock(CastleBricksBlock.EnumVariant variant) {
-        super(Properties.create(Material.ROCK).hardnessAndResistance(2, 10).sound(SoundType.STONE));
+        super(Properties.of(Material.STONE).strength(2, 10).sound(SoundType.STONE));
         this.variant = variant;
 
         this.setRegistryName(REFERENCE.MODID, regName + "_" + variant.getName());
@@ -30,9 +30,9 @@ public class CastleSlabBlock extends SlabBlock {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader player, List<ITextComponent> tooltip, ITooltipFlag advanced) {
-        super.addInformation(stack, player, tooltip, advanced);
-        tooltip.add(new TranslationTextComponent("block.vampirism.castle_block" + (variant == CastleBricksBlock.EnumVariant.DARK_STONE ? ".no_spawn" : ".vampire_spawn")).mergeStyle(TextFormatting.ITALIC, TextFormatting.GRAY));
+    public void appendHoverText(ItemStack stack, @Nullable IBlockReader player, List<ITextComponent> tooltip, ITooltipFlag advanced) {
+        super.appendHoverText(stack, player, tooltip, advanced);
+        tooltip.add(new TranslationTextComponent("block.vampirism.castle_block" + (variant == CastleBricksBlock.EnumVariant.DARK_STONE ? ".no_spawn" : ".vampire_spawn")).withStyle(TextFormatting.ITALIC, TextFormatting.GRAY));
 
     }
 

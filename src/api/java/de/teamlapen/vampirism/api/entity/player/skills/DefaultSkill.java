@@ -124,7 +124,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
             if (iattributeinstance != null) {
                 AttributeModifier attributemodifier = entry.getValue().orElseThrow(IllegalStateException::new);
                 iattributeinstance.removeModifier(attributemodifier);
-                iattributeinstance.applyPersistentModifier(new AttributeModifier(attributemodifier.getID(), this.getRegistryName().toString(), attributemodifier.getAmount(), attributemodifier.getOperation()));
+                iattributeinstance.addPermanentModifier(new AttributeModifier(attributemodifier.getId(), this.getRegistryName().toString(), attributemodifier.getAmount(), attributemodifier.getOperation()));
             }
         }
     }

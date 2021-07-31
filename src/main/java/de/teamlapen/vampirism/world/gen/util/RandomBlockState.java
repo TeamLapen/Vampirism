@@ -37,9 +37,9 @@ public class RandomBlockState extends RuleEntry {
         return instance.group(RuleTest.CODEC.fieldOf("input_predicate").forGetter((getter) -> {
             return getter.inputPredicate;
         }), RuleTest.CODEC.fieldOf("location_predicate").forGetter(entry -> {
-            return entry.locationPredicate;
+            return entry.locPredicate;
         }), PAIR_CODEC.fieldOf("default_state").forGetter(entry -> {
-            return Pair.of(entry.outputState, Optional.ofNullable(entry.outputNbt));
+            return Pair.of(entry.outputState, Optional.ofNullable(entry.outputTag));
         }), PAIR_CODEC.listOf().fieldOf("states").forGetter(entry -> {
             return Lists.newArrayList(entry.states);
         })).apply(instance, RandomBlockState::new);
@@ -53,7 +53,7 @@ public class RandomBlockState extends RuleEntry {
     }
 
     public RandomBlockState(RuleTest inputPredicate, RuleTest locationPredicate, Pair<BlockState, Optional<CompoundNBT>> defaultState, List<Pair<BlockState, Optional<CompoundNBT>>> states) {
-        super(inputPredicate, locationPredicate, AlwaysTrueTest.field_237100_b_, defaultState.getLeft(), defaultState.getRight());
+        super(inputPredicate, locationPredicate, AlwaysTrueTest.INSTANCE, defaultState.getLeft(), defaultState.getRight());
         this.states = states;
     }
 
@@ -62,7 +62,7 @@ public class RandomBlockState extends RuleEntry {
             int type = RNG.nextInt(states.size());
             return states.get(type);
         } else {
-            return Pair.of(this.outputState, Optional.ofNullable(outputNbt));
+            return Pair.of(this.outputState, Optional.ofNullable(outputTag));
         }
     }
 }

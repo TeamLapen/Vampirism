@@ -26,7 +26,7 @@ import java.util.Random;
 
 public class VampireDungeonFeature extends DungeonsFeature {
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final BlockState CAVE_AIR = Blocks.CAVE_AIR.getDefaultState();
+    private static final BlockState CAVE_AIR = Blocks.CAVE_AIR.defaultBlockState();
 
 
     public VampireDungeonFeature(Codec<NoFeatureConfig> featureConfig) {
@@ -44,7 +44,7 @@ public class VampireDungeonFeature extends DungeonsFeature {
      * - changed {@link DungeonsFeature#getRandomDungeonMob(Random)} to {@link ModEntities#vampire}
      */
     @Override
-    public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) {
+    public boolean place(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) {
         int j = rand.nextInt(2) + 2;
         int k = -j - 1;
         int l = j + 1;
@@ -56,7 +56,7 @@ public class VampireDungeonFeature extends DungeonsFeature {
         for (int k2 = k; k2 <= l; ++k2) {
             for (int l2 = -1; l2 <= 4; ++l2) {
                 for (int i3 = l1; i3 <= i2; ++i3) {
-                    BlockPos blockpos = pos.add(k2, l2, i3);
+                    BlockPos blockpos = pos.offset(k2, l2, i3);
                     Material material = reader.getBlockState(blockpos).getMaterial();
                     boolean flag = material.isSolid();
                     if (l2 == -1 && !flag) {
@@ -67,7 +67,7 @@ public class VampireDungeonFeature extends DungeonsFeature {
                         return false;
                     }
 
-                    if ((k2 == k || k2 == l || i3 == l1 || i3 == i2) && l2 == 0 && reader.isAirBlock(blockpos) && reader.isAirBlock(blockpos.up())) {
+                    if ((k2 == k || k2 == l || i3 == l1 || i3 == i2) && l2 == 0 && reader.isEmptyBlock(blockpos) && reader.isEmptyBlock(blockpos.above())) {
                         ++j2;
                     }
                 }
@@ -78,22 +78,22 @@ public class VampireDungeonFeature extends DungeonsFeature {
             for (int k3 = k; k3 <= l; ++k3) {
                 for (int i4 = 3; i4 >= -1; --i4) {
                     for (int k4 = l1; k4 <= i2; ++k4) {
-                        BlockPos blockpos1 = pos.add(k3, i4, k4);
+                        BlockPos blockpos1 = pos.offset(k3, i4, k4);
                         BlockState blockstate = reader.getBlockState(blockpos1);
                         if (k3 != k && i4 != -1 && k4 != l1 && k3 != l && i4 != 4 && k4 != i2) {
-                            if (!blockstate.matchesBlock(Blocks.CHEST) && !blockstate.matchesBlock(Blocks.SPAWNER)) {
-                                reader.setBlockState(blockpos1, CAVE_AIR, 2);
+                            if (!blockstate.is(Blocks.CHEST) && !blockstate.is(Blocks.SPAWNER)) {
+                                reader.setBlock(blockpos1, CAVE_AIR, 2);
                             }
-                        } else if (blockpos1.getY() >= 0 && !reader.getBlockState(blockpos1.down()).getMaterial().isSolid()) {
-                            reader.setBlockState(blockpos1, CAVE_AIR, 2);
-                        } else if (blockstate.getMaterial().isSolid() && !blockstate.matchesBlock(Blocks.CHEST)) {
+                        } else if (blockpos1.getY() >= 0 && !reader.getBlockState(blockpos1.below()).getMaterial().isSolid()) {
+                            reader.setBlock(blockpos1, CAVE_AIR, 2);
+                        } else if (blockstate.getMaterial().isSolid() && !blockstate.is(Blocks.CHEST)) {
                             if (i4 == -1 && rand.nextInt(4) != 0) {
                                 if (rand.nextInt(20) == 0) // changed to castle bricks
-                                    reader.setBlockState(blockpos1, ModBlocks.castle_block_dark_brick_bloody.getDefaultState(), 2);
+                                    reader.setBlock(blockpos1, ModBlocks.castle_block_dark_brick_bloody.defaultBlockState(), 2);
                                 else
-                                    reader.setBlockState(blockpos1, ModBlocks.castle_block_dark_brick.getDefaultState(), 2);
+                                    reader.setBlock(blockpos1, ModBlocks.castle_block_dark_brick.defaultBlockState(), 2);
                             } else {
-                                reader.setBlockState(blockpos1, Blocks.SPRUCE_PLANKS.getDefaultState(), 2);
+                                reader.setBlock(blockpos1, Blocks.SPRUCE_PLANKS.defaultBlockState(), 2);
                             }
                         }
                     }
@@ -106,17 +106,17 @@ public class VampireDungeonFeature extends DungeonsFeature {
                     int i5 = pos.getY();
                     int j5 = pos.getZ() + rand.nextInt(k1 * 2 + 1) - k1;
                     BlockPos blockpos2 = new BlockPos(l4, i5, j5);
-                    if (reader.isAirBlock(blockpos2)) {
+                    if (reader.isEmptyBlock(blockpos2)) {
                         int j3 = 0;
 
                         for (Direction direction : Direction.Plane.HORIZONTAL) {
-                            if (reader.getBlockState(blockpos2.offset(direction)).getMaterial().isSolid()) {
+                            if (reader.getBlockState(blockpos2.relative(direction)).getMaterial().isSolid()) {
                                 ++j3;
                             }
                         }
 
                         if (j3 == 1) {
-                            reader.setBlockState(blockpos2, StructurePiece.correctFacing(reader, blockpos2, Blocks.CHEST.getDefaultState()), 2);
+                            reader.setBlock(blockpos2, StructurePiece.reorient(reader, blockpos2, Blocks.CHEST.defaultBlockState()), 2);
                             LockableLootTileEntity.setLootTable(reader, rand, blockpos2, ModLootTables.chest_vampire_dungeon);
                             break;
                         }
@@ -124,10 +124,10 @@ public class VampireDungeonFeature extends DungeonsFeature {
                 }
             }
 
-            reader.setBlockState(pos, Blocks.SPAWNER.getDefaultState(), 2);
-            TileEntity tileentity = reader.getTileEntity(pos);
+            reader.setBlock(pos, Blocks.SPAWNER.defaultBlockState(), 2);
+            TileEntity tileentity = reader.getBlockEntity(pos);
             if (tileentity instanceof MobSpawnerTileEntity) {
-                ((MobSpawnerTileEntity) tileentity).getSpawnerBaseLogic().setEntityType(ModEntities.vampire);
+                ((MobSpawnerTileEntity) tileentity).getSpawner().setEntityId(ModEntities.vampire);
             } else {
                 LOGGER.error("Failed to fetch mob spawner entity at ({}, {}, {})", pos.getX(), pos.getY(), pos.getZ());
             }

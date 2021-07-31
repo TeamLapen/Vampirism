@@ -76,17 +76,17 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
     private final AccessorySlotType type;
 
     public VampireRefinementItem(Properties properties, AccessorySlotType type) {
-        super(properties.defaultMaxDamage(MAX_DAMAGE).setNoRepair());
+        super(properties.defaultDurability(MAX_DAMAGE).setNoRepair());
         this.type = type;
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
             for (IRefinement refinement : set.getRefinements()) {
-                tooltip.add(new StringTextComponent(" - ").appendSibling(refinement.getDescription()).mergeStyle(TextFormatting.GRAY));
+                tooltip.add(new StringTextComponent(" - ").append(refinement.getDescription()).withStyle(TextFormatting.GRAY));
             }
         }
     }
@@ -107,12 +107,12 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
     }
 
     @Override
-    public ITextComponent getDisplayName(@Nonnull ItemStack stack) {
+    public ITextComponent getName(@Nonnull ItemStack stack) {
         IRefinementSet set = getRefinementSet(stack);
         if (set == null) {
-            return super.getDisplayName(stack);
+            return super.getName(stack);
         }
-        return new TranslationTextComponent(this.getTranslationKey() + ".of").appendString(" ").appendSibling(set.getName()).mergeStyle(set.getRarity().color);
+        return new TranslationTextComponent(this.getDescriptionId() + ".of").append(" ").append(set.getName()).withStyle(set.getRarity().color);
     }
 
     @Nullable
@@ -133,14 +133,14 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        if (!worldIn.isRemote()) {
-            ItemStack stack = playerIn.getHeldItem(handIn);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        if (!worldIn.isClientSide()) {
+            ItemStack stack = playerIn.getItemInHand(handIn);
             if (FactionPlayerHandler.getOpt(playerIn).map(v -> v).flatMap(FactionPlayerHandler::getCurrentFactionPlayer).map(ISkillPlayer::getSkillHandler).map(sh -> sh.equipRefinementItem(stack)).orElse(false)) {
-                return ActionResult.resultConsume(ItemStack.EMPTY);
+                return ActionResult.consume(ItemStack.EMPTY);
             }
 
         }
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+        return super.use(worldIn, playerIn, handIn);
     }
 }

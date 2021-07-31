@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 public class VampirismVillagerEntity extends VillagerEntity {
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return VillagerEntity.registerAttributes().createMutableAttribute(Attributes.ATTACK_DAMAGE);
+        return VillagerEntity.createAttributes().add(Attributes.ATTACK_DAMAGE);
     }
     protected boolean peaceful = false;
     /**
@@ -37,49 +37,15 @@ public class VampirismVillagerEntity extends VillagerEntity {
         super(type, worldIn, villagerType);
     }
 
-    public boolean attackEntityAsMob(Entity entity) {
-        float f = (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
-        int i = 0;
-
-        if (entity instanceof LivingEntity) {
-            f += EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(), ((LivingEntity) entity).getCreatureAttribute());
-            i += EnchantmentHelper.getKnockbackModifier(this);
-        }
-
-        boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), f);
-
-        if (flag) {
-            if (i > 0) {
-                entity.addVelocity(-MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F, 0.1D, MathHelper.cos(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F);
-                this.setMotion(this.getMotion().mul(0.6D, 1D, 0.6D));
-            }
-
-            int j = EnchantmentHelper.getFireAspectModifier(this);
-
-            if (j > 0) {
-                entity.setFire(j * 4);
-            }
-
-            this.applyEnchantments(this, entity);
-
-        }
-
-
-        return flag;
+    @Override
+    public void aiStep() {
+        this.updateSwingTime();
+        super.aiStep();
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource src, float amount) {
-        if (this.isInvulnerableTo(src)) {
-            return false;
-        } else if (super.attackEntityFrom(src, amount)) {
-            Entity entity = src.getTrueSource();
-            if (entity instanceof LivingEntity) {
-                this.setAttackTarget((LivingEntity) entity);
-            }
-            return true;
-        }
-        return false;
+    public boolean checkSpawnRules(IWorld worldIn, SpawnReason spawnReasonIn) {
+        return (peaceful || worldIn.getDifficulty() != Difficulty.PEACEFUL) && super.checkSpawnRules(worldIn, spawnReasonIn);
     }
 
 //    @Nullable
@@ -89,29 +55,63 @@ public class VampirismVillagerEntity extends VillagerEntity {
 //        return cachedVillage;
 //    }
 
-    @Override
-    public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
-        return (peaceful || worldIn.getDifficulty() != Difficulty.PEACEFUL) && super.canSpawn(worldIn, spawnReasonIn);
+    public boolean doHurtTarget(Entity entity) {
+        float f = (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
+        int i = 0;
+
+        if (entity instanceof LivingEntity) {
+            f += EnchantmentHelper.getDamageBonus(this.getMainHandItem(), ((LivingEntity) entity).getMobType());
+            i += EnchantmentHelper.getKnockbackBonus(this);
+        }
+
+        boolean flag = entity.hurt(DamageSource.mobAttack(this), f);
+
+        if (flag) {
+            if (i > 0) {
+                entity.push(-MathHelper.sin(this.yRot * (float) Math.PI / 180.0F) * (float) i * 0.5F, 0.1D, MathHelper.cos(this.yRot * (float) Math.PI / 180.0F) * (float) i * 0.5F);
+                this.setDeltaMovement(this.getDeltaMovement().multiply(0.6D, 1D, 0.6D));
+            }
+
+            int j = EnchantmentHelper.getFireAspect(this);
+
+            if (j > 0) {
+                entity.setSecondsOnFire(j * 4);
+            }
+
+            this.doEnchantDamageEffects(this, entity);
+
+        }
+
+
+        return flag;
     }
 
     @Override
-    public void livingTick() {
-        this.updateArmSwingProgress();
-        super.livingTick();
+    public boolean hurt(DamageSource src, float amount) {
+        if (this.isInvulnerableTo(src)) {
+            return false;
+        } else if (super.hurt(src, amount)) {
+            Entity entity = src.getEntity();
+            if (entity instanceof LivingEntity) {
+                this.setTarget((LivingEntity) entity);
+            }
+            return true;
+        }
+        return false;
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (!this.world.isRemote && !peaceful && this.world.getDifficulty() == Difficulty.PEACEFUL) {
+        if (!this.level.isClientSide && !peaceful && this.level.getDifficulty() == Difficulty.PEACEFUL) {
             this.remove();
         }
     }
 
     @Override
-    protected void updateAITasks() {
-        super.updateAITasks();
+    protected void customServerAiStep() {
+        super.customServerAiStep();
         if (--this.randomTickDivider <= 0) {
             this.randomTickDivider = 200;
         }

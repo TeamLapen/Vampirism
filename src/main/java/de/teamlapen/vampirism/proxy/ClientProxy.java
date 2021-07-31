@@ -77,7 +77,7 @@ public class ClientProxy extends CommonProxy {
         //Minecraft.instance is null during runData.
         //noinspection ConstantConditions
         if (Minecraft.getInstance() != null)
-            ((IReloadableResourceManager) Minecraft.getInstance().getResourceManager()).addReloadListener(renderHandler); // Must be added before initial resource manager load
+            ((IReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener(renderHandler); // Must be added before initial resource manager load
     }
 
     public void clearBossBarOverlay() {
@@ -86,17 +86,17 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void displayGarlicBeaconScreen(GarlicBeaconTileEntity tile, ITextComponent title) {
-        Minecraft.getInstance().displayGuiScreen(new GarlicBeaconScreen(tile, title));
+        Minecraft.getInstance().setScreen(new GarlicBeaconScreen(tile, title));
     }
 
     @Override
     public void displayNameSwordScreen(ItemStack stack) {
-        Minecraft.getInstance().displayGuiScreen(new NameSwordScreen(stack));
+        Minecraft.getInstance().setScreen(new NameSwordScreen(stack));
     }
 
     @Override
     public void displayRevertBackScreen() {
-        Minecraft.getInstance().displayGuiScreen(new RevertBackScreen());
+        Minecraft.getInstance().setScreen(new RevertBackScreen());
     }
 
     @Nullable
@@ -108,14 +108,14 @@ public class ClientProxy extends CommonProxy {
     @Nullable
     @Override
     public Entity getMouseOverEntity() {
-        RayTraceResult r = Minecraft.getInstance().objectMouseOver;
+        RayTraceResult r = Minecraft.getInstance().hitResult;
         if (r instanceof EntityRayTraceResult) return ((EntityRayTraceResult) r).getEntity();
         return null;
     }
 
     @Override
     public float getRenderPartialTick() {
-        return Minecraft.getInstance().getRenderPartialTicks();
+        return Minecraft.getInstance().getFrameTime();
     }
 
     @Override
@@ -133,13 +133,13 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void handlePlayEventPacket(PlayEventPacket msg) {
         if (msg.type == 1) {
-            spawnParticles(Minecraft.getInstance().world, msg.pos, Block.getStateById(msg.stateId));
+            spawnParticles(Minecraft.getInstance().level, msg.pos, Block.stateById(msg.stateId));
         }
     }
 
     @Override
     public void handleRequestMinionSelect(RequestMinionSelectPacket.Action action, List<Pair<Integer, ITextComponent>> minions) {
-        Minecraft.getInstance().displayGuiScreen(new SelectMinionScreen(action, minions));
+        Minecraft.getInstance().setScreen(new SelectMinionScreen(action, minions));
     }
 
     @Override
@@ -150,15 +150,15 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void handleSleepClient(PlayerEntity player) {
         if (player.isSleeping()) {
-            player.getBedPosition().ifPresent(pos -> {
-                if (player.world.getBlockState(pos).getBlock() instanceof TentBlock) {
-                    if (Minecraft.getInstance().currentScreen instanceof SleepInMultiplayerScreen && !(Minecraft.getInstance().currentScreen instanceof SleepInMultiplayerModScreen)) {
-                        Minecraft.getInstance().displayGuiScreen(new SleepInMultiplayerModScreen("text.vampirism.tent.stop_sleeping"));
+            player.getSleepingPos().ifPresent(pos -> {
+                if (player.level.getBlockState(pos).getBlock() instanceof TentBlock) {
+                    if (Minecraft.getInstance().screen instanceof SleepInMultiplayerScreen && !(Minecraft.getInstance().screen instanceof SleepInMultiplayerModScreen)) {
+                        Minecraft.getInstance().setScreen(new SleepInMultiplayerModScreen("text.vampirism.tent.stop_sleeping"));
                     }
-                    TentBlock.setTentSleepPosition(player, pos, player.world.getBlockState(pos).get(POSITION), player.world.getBlockState(pos).get(FACING));
-                } else if (player.world.getBlockState(pos).getBlock() instanceof CoffinBlock) {
-                    if (Minecraft.getInstance().currentScreen instanceof SleepInMultiplayerScreen && !(Minecraft.getInstance().currentScreen instanceof SleepInMultiplayerModScreen)) {
-                        Minecraft.getInstance().displayGuiScreen(new SleepInMultiplayerModScreen("text.vampirism.coffin.stop_sleeping"));
+                    TentBlock.setTentSleepPosition(player, pos, player.level.getBlockState(pos).getValue(POSITION), player.level.getBlockState(pos).getValue(FACING));
+                } else if (player.level.getBlockState(pos).getBlock() instanceof CoffinBlock) {
+                    if (Minecraft.getInstance().screen instanceof SleepInMultiplayerScreen && !(Minecraft.getInstance().screen instanceof SleepInMultiplayerModScreen)) {
+                        Minecraft.getInstance().setScreen(new SleepInMultiplayerModScreen("text.vampirism.coffin.stop_sleeping"));
                     }
                 }
             });
@@ -167,16 +167,16 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void handleTaskPacket(TaskPacket msg) {
-        Container container = Minecraft.getInstance().player.openContainer;
-        if (msg.containerId == container.windowId && container instanceof VampirismContainer) {
+        Container container = Minecraft.getInstance().player.containerMenu;
+        if (msg.containerId == container.containerId && container instanceof VampirismContainer) {
             ((VampirismContainer) container).init(msg.taskWrappers, msg.completableTasks, msg.completedRequirements);
         }
     }
 
     @Override
     public void handleTaskStatusPacket(TaskStatusPacket msg) {
-        Container container = Objects.requireNonNull(Minecraft.getInstance().player).openContainer;
-        if (msg.containerId == container.windowId && container instanceof TaskBoardContainer) {
+        Container container = Objects.requireNonNull(Minecraft.getInstance().player).containerMenu;
+        if (msg.containerId == container.containerId && container instanceof TaskBoardContainer) {
             ((TaskBoardContainer) container).init(msg.available, msg.completableTasks, msg.completedRequirements, msg.taskBoardId);
         }
     }
@@ -188,7 +188,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void handleVampireBookPacket(OpenVampireBookPacket msg) {
-        Minecraft.getInstance().displayGuiScreen(new ReadBookScreen(new ReadBookScreen.WrittenBookInfo(msg.itemStack)));
+        Minecraft.getInstance().setScreen(new ReadBookScreen(new ReadBookScreen.WrittenBookInfo(msg.itemStack)));
     }
 
     @Override
@@ -201,7 +201,7 @@ public class ClientProxy extends CommonProxy {
                 registerSubscriptions();
                 SelectActionScreen.loadActionOrder();
                 ModBlocksRender.register();
-                ((FMLClientSetupEvent) event).getMinecraftSupplier().get().getRenderManager().getSkinMap().forEach((k, r) -> r.addLayer(new WingsLayer<>(r, player -> VampirePlayer.getOpt(player).map(VampirePlayer::getWingCounter).filter(i -> i > 0).isPresent(), (e, m) -> m.bipedBody)));
+                ((FMLClientSetupEvent) event).getMinecraftSupplier().get().getEntityRenderDispatcher().getSkinMap().forEach((k, r) -> r.addLayer(new WingsLayer<>(r, player -> VampirePlayer.getOpt(player).map(VampirePlayer::getWingCounter).filter(i -> i > 0).isPresent(), (e, m) -> m.body)));
                 break;
             case LOAD_COMPLETE:
                 ModBlocksRender.registerColors();
@@ -223,15 +223,15 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void resetSkillScreenCache() {
-        if (Minecraft.getInstance().currentScreen instanceof SkillsScreen) {
-            ((SkillsScreen) Minecraft.getInstance().currentScreen).resetToolTipCache();
+        if (Minecraft.getInstance().screen instanceof SkillsScreen) {
+            ((SkillsScreen) Minecraft.getInstance().screen).resetToolTipCache();
         }
     }
 
     @Override
     public void showDBNOScreen(PlayerEntity playerEntity, @Nullable ITextComponent deathMessage) {
-        if (playerEntity == Minecraft.getInstance().player && !playerEntity.getShouldBeDead()) {
-            Minecraft.getInstance().displayGuiScreen(new DBNOScreen(deathMessage));
+        if (playerEntity == Minecraft.getInstance().player && !playerEntity.isDeadOrDying()) {
+            Minecraft.getInstance().setScreen(new DBNOScreen(deathMessage));
         }
     }
 
@@ -259,7 +259,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     private void registerVampireEntityOverlays() {
-        EntityRendererManager manager = Minecraft.getInstance().getRenderManager();
+        EntityRendererManager manager = Minecraft.getInstance().getEntityRenderDispatcher();
         registerVampirePlayerHead(manager);
         for (Map.Entry<EntityType<? extends CreatureEntity>, ResourceLocation> entry : VampirismAPI.entityRegistry().getConvertibleOverlay().entrySet()) {
             registerVampireEntityOverlay(manager, entry.getKey(), entry.getValue());
@@ -278,7 +278,7 @@ public class ClientProxy extends CommonProxy {
     private void spawnParticles(World world, BlockPos pos, BlockState state) {
         if (!(world instanceof ClientWorld)) return;
         VoxelShape voxelshape = state.getShape(world, pos);
-        voxelshape.forEachBox((p_199284_3_, p_199284_5_, p_199284_7_, p_199284_9_, p_199284_11_, p_199284_13_) -> {
+        voxelshape.forAllBoxes((p_199284_3_, p_199284_5_, p_199284_7_, p_199284_9_, p_199284_11_, p_199284_13_) -> {
             double d1 = Math.min(1.0D, p_199284_9_ - p_199284_3_);
             double d2 = Math.min(1.0D, p_199284_11_ - p_199284_5_);
             double d3 = Math.min(1.0D, p_199284_13_ - p_199284_7_);
@@ -295,7 +295,7 @@ public class ClientProxy extends CommonProxy {
                         double d7 = d4 * d1 + p_199284_3_;
                         double d8 = d5 * d2 + p_199284_5_;
                         double d9 = d6 * d3 + p_199284_7_;
-                        Minecraft.getInstance().particles.addEffect((new DiggingParticle((ClientWorld) world, (double) pos.getX() + d7, (double) pos.getY() + d8, (double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state)).setBlockPos(pos));
+                        Minecraft.getInstance().particleEngine.add((new DiggingParticle((ClientWorld) world, (double) pos.getX() + d7, (double) pos.getY() + d8, (double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state)).init(pos));
                     }
                 }
             }

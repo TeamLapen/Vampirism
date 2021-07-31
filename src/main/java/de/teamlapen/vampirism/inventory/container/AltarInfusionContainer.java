@@ -16,7 +16,7 @@ public class AltarInfusionContainer extends InventoryContainer {
 
     @Deprecated
     public AltarInfusionContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, new Inventory(3), IWorldPosCallable.DUMMY);
+        this(id, playerInventory, new Inventory(3), IWorldPosCallable.NULL);
         this.addPlayerSlots(playerInventory);
     }
 
@@ -27,7 +27,7 @@ public class AltarInfusionContainer extends InventoryContainer {
 
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return isWithinUsableDistance(this.worldPos, playerIn, ModBlocks.altar_infusion);
+    public boolean stillValid(PlayerEntity playerIn) {
+        return stillValid(this.worldPos, playerIn, ModBlocks.altar_infusion);
     }
 }

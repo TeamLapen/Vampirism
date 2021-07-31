@@ -69,18 +69,18 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
 
     @Override
     public int getTheEntityID() {
-        return player.getEntityId();
+        return player.getId();
     }
 
 
     @SuppressWarnings("ConstantConditions")
     @Override
     public boolean isRemote() {
-        if (player.getEntityWorld() == null) {
+        if (player.getCommandSenderWorld() == null) {
             LOGGER.error("Trying to check if remote, but world is not set yet", new Throwable("World not loaded").fillInStackTrace());
             return false;
         }
-        return player.getEntityWorld().isRemote;
+        return player.getCommandSenderWorld().isClientSide;
     }
 
     public void loadData(CompoundNBT nbt) {

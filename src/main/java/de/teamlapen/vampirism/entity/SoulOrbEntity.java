@@ -39,7 +39,7 @@ import javax.annotation.Nullable;
 )
 public class SoulOrbEntity extends Entity implements IRendersAsItem {
 
-    public static final DataParameter<String> TYPE_PARAMETER = EntityDataManager.createKey(SoulOrbEntity.class, DataSerializers.STRING);
+    public static final DataParameter<String> TYPE_PARAMETER = EntityDataManager.defineId(SoulOrbEntity.class, DataSerializers.STRING);
     private int delayBeforePickup;
     private PlayerEntity player;
     private int age;
@@ -50,9 +50,9 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
         super(ModEntities.soul_orb, worldIn);
         this.setVariant(type);
         delayBeforePickup = 10;
-        this.setPosition(x, y, z);
-        this.rotationYaw = (float) (Math.random() * 360.0D);
-        this.setMotion((this.rand.nextDouble() * (double) 0.2F - (double) 0.1F) * 2.0D, this.rand.nextDouble() * 0.2D * 2.0D, (this.rand.nextDouble() * (double) 0.2F - (double) 0.1F) * 2.0D);
+        this.setPos(x, y, z);
+        this.yRot = (float) (Math.random() * 360.0D);
+        this.setDeltaMovement((this.random.nextDouble() * (double) 0.2F - (double) 0.1F) * 2.0D, this.random.nextDouble() * 0.2D * 2.0D, (this.random.nextDouble() * (double) 0.2F - (double) 0.1F) * 2.0D);
     }
 
     public SoulOrbEntity(EntityType<? extends SoulOrbEntity> type, World worldIn) {
@@ -60,18 +60,16 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource source, float amount) {
-        return false;
-    }
-
-    @Override
-    public boolean canBeAttackedWithItem() {
-        return false;
-    }
-
-    @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    public VARIANT getVariant() {
+        return VARIANT.valueOf(getEntityData().get(TYPE_PARAMETER));
+    }
+
+    private void setVariant(VARIANT type) {
+        getEntityData().set(TYPE_PARAMETER, type.name());
     }
 
 
@@ -88,16 +86,18 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
         return soulItemStack;
     }
 
-    public VARIANT getVariant() {
-        return VARIANT.valueOf(getDataManager().get(TYPE_PARAMETER));
-    }
-
-    private void setVariant(VARIANT type) {
-        getDataManager().set(TYPE_PARAMETER, type.name());
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        return false;
     }
 
     @Override
-    public boolean isInvisibleToPlayer(@Nonnull PlayerEntity player) {
+    public boolean isAttackable() {
+        return false;
+    }
+
+    @Override
+    public boolean isInvisibleTo(@Nonnull PlayerEntity player) {
         if (getVariant() == VARIANT.VAMPIRE) {
             return !Helper.isHunter(player) || player.isSpectator();
         }
@@ -105,12 +105,12 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
     }
 
     @Override
-    public void onCollideWithPlayer(PlayerEntity entityIn) {
-        if (!this.world.isRemote) {
+    public void playerTouch(PlayerEntity entityIn) {
+        if (!this.level.isClientSide) {
             if (delayBeforePickup == 0) {
                 if (Helper.isHunter(entityIn)) {
-                    if (entityIn.inventory.addItemStackToInventory(getSoulItemStack())) {
-                        entityIn.onItemPickup(this, 1);
+                    if (entityIn.inventory.add(getSoulItemStack())) {
+                        entityIn.take(this, 1);
                         this.remove();
                     }
                 }
@@ -125,52 +125,52 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
             delayBeforePickup--;
         }
 
-        this.prevPosX = this.getPosX();
-        this.prevPosY = this.getPosY();
-        this.prevPosZ = this.getPosZ();
+        this.xo = this.getX();
+        this.yo = this.getY();
+        this.zo = this.getZ();
 
-        if (this.areEyesInFluid(FluidTags.WATER)) {
-            Vector3d vec3d = this.getMotion();
-            this.setMotion(vec3d.x * (double) 0.99F, Math.min(vec3d.y + (double) 5.0E-4F, 0.06F), vec3d.z * (double) 0.99F);
-        } else if (!this.hasNoGravity()) {
-            this.setMotion(this.getMotion().add(0.0D, -0.03D, 0.0D));
+        if (this.isEyeInFluid(FluidTags.WATER)) {
+            Vector3d vec3d = this.getDeltaMovement();
+            this.setDeltaMovement(vec3d.x * (double) 0.99F, Math.min(vec3d.y + (double) 5.0E-4F, 0.06F), vec3d.z * (double) 0.99F);
+        } else if (!this.isNoGravity()) {
+            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.03D, 0.0D));
         }
 
-        if (this.world.getFluidState(getPosition()).isTagged(FluidTags.LAVA)) {
-            this.setMotion((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F, 0.2F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
-            this.playSound(SoundEvents.ENTITY_GENERIC_BURN, 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
+        if (this.level.getFluidState(blockPosition()).is(FluidTags.LAVA)) {
+            this.setDeltaMovement((this.random.nextFloat() - this.random.nextFloat()) * 0.2F, 0.2F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
+            this.playSound(SoundEvents.GENERIC_BURN, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
         }
-        if (!this.world.hasNoCollisions(this.getBoundingBox())) { //areCollisionShapesEmpty
-            this.pushOutOfBlocks(this.getPosX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.getPosZ());
+        if (!this.level.noCollision(this.getBoundingBox())) { //areCollisionShapesEmpty
+            this.moveTowardsClosestSpace(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.getZ());
         }
 
 
-        if (this.age % 10 == 5 & (this.player == null || !this.player.isAlive() || this.player.getDistanceSq(this) > 64)) {
-            this.player = this.world.getClosestPlayer(this.getPosX(), this.getPosY(), this.getPosZ(), 8, EntityPredicates.NOT_SPECTATING.and(Helper::isHunter));
+        if (this.age % 10 == 5 & (this.player == null || !this.player.isAlive() || this.player.distanceToSqr(this) > 64)) {
+            this.player = this.level.getNearestPlayer(this.getX(), this.getY(), this.getZ(), 8, EntityPredicates.NO_SPECTATORS.and(Helper::isHunter));
         }
 
         if (this.player != null) {
-            Vector3d vec3d = new Vector3d(this.player.getPosX() - this.getPosX(), this.player.getPosY() + (double) this.player.getEyeHeight() / 2.0D - this.getPosY(), this.player.getPosZ() - this.getPosZ());
-            double d1 = vec3d.lengthSquared();
+            Vector3d vec3d = new Vector3d(this.player.getX() - this.getX(), this.player.getY() + (double) this.player.getEyeHeight() / 2.0D - this.getY(), this.player.getZ() - this.getZ());
+            double d1 = vec3d.lengthSqr();
             if (d1 < 64.0D) {
                 double d2 = 1.0D - Math.sqrt(d1) / 8.0D;
-                this.setMotion(this.getMotion().add(vec3d.normalize().scale(d2 * d2 * 0.1D)));
+                this.setDeltaMovement(this.getDeltaMovement().add(vec3d.normalize().scale(d2 * d2 * 0.1D)));
             }
         }
 
-        this.move(MoverType.SELF, this.getMotion());
+        this.move(MoverType.SELF, this.getDeltaMovement());
         float f = 0.98F;
 
         if (this.onGround) {
-            BlockPos underPos = new BlockPos(MathHelper.floor(this.getPosX()), MathHelper.floor(this.getBoundingBox().minY) - 1, MathHelper.floor(this.getPosZ()));
-            BlockState underState = this.world.getBlockState(underPos);
-            f = underState.getBlock().getSlipperiness(underState, this.world, underPos, this) * 0.98F;
+            BlockPos underPos = new BlockPos(MathHelper.floor(this.getX()), MathHelper.floor(this.getBoundingBox().minY) - 1, MathHelper.floor(this.getZ()));
+            BlockState underState = this.level.getBlockState(underPos);
+            f = underState.getBlock().getSlipperiness(underState, this.level, underPos, this) * 0.98F;
         }
 
-        this.setMotion(this.getMotion().mul(f, 0.9800000190734863D, f));
+        this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.9800000190734863D, f));
 
         if (this.onGround) {
-            this.setMotion(this.getMotion().mul(1D, -0.8999999761581421D, 1D));
+            this.setDeltaMovement(this.getDeltaMovement().multiply(1D, -0.8999999761581421D, 1D));
         }
 
 
@@ -182,26 +182,26 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
     }
 
     @Override
-    protected boolean canTriggerWalking() {
+    protected void addAdditionalSaveData(CompoundNBT compound) {
+        compound.putString("type", this.getVariant().name());
+        compound.putInt("age", age);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        this.getEntityData().define(TYPE_PARAMETER, VARIANT.NONE.name());
+    }
+
+    @Override
+    protected boolean isMovementNoisy() {
         return false;
     }
 
     @Override
-    protected void readAdditional(CompoundNBT compound) {
+    protected void readAdditionalSaveData(CompoundNBT compound) {
         this.setVariant(VARIANT.valueOf(compound.getString("type")));
         this.age = compound.getInt("age");
         soulItemStack = null;//Reset item just in case a item of a different type has been created beforehand
-    }
-
-    @Override
-    protected void registerData() {
-        this.getDataManager().register(TYPE_PARAMETER, VARIANT.NONE.name());
-    }
-
-    @Override
-    protected void writeAdditional(CompoundNBT compound) {
-        compound.putString("type", this.getVariant().name());
-        compound.putInt("age", age);
     }
 
     private ItemStack createSoulItemStack() {

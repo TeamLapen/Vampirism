@@ -38,13 +38,13 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
     private static final VoxelShape EAST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
 
     private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(0, 0, 0, 2, 10, 2);
-        VoxelShape b = Block.makeCuboidShape(14, 0, 0, 16, 10, 2);
-        VoxelShape c = Block.makeCuboidShape(0, 0, 14, 2, 10, 16);
-        VoxelShape d = Block.makeCuboidShape(14, 0, 14, 16, 10, 16);
+        VoxelShape a = Block.box(0, 0, 0, 2, 10, 2);
+        VoxelShape b = Block.box(14, 0, 0, 16, 10, 2);
+        VoxelShape c = Block.box(0, 0, 14, 2, 10, 16);
+        VoxelShape d = Block.box(14, 0, 14, 16, 10, 16);
 
-        VoxelShape e = Block.makeCuboidShape(1, 8, 1, 15, 10, 15);
-        VoxelShape f = Block.makeCuboidShape(8.5, 10, 3.5, 13.5, 11, 10);
+        VoxelShape e = Block.box(1, 8, 1, 15, 10, 15);
+        VoxelShape f = Block.box(8.5, 10, 3.5, 13.5, 11, 10);
 
         VoxelShape d1 = VoxelShapes.or(a, b);
         VoxelShape d2 = VoxelShapes.or(c, d);
@@ -61,13 +61,13 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
 
 
     public HunterTableBlock() {
-        super(name, Properties.create(Material.WOOD).hardnessAndResistance(0.5f).notSolid());
-        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(VARIANT, TABLE_VARIANT.SIMPLE));
+        super(name, Properties.of(Material.WOOD).strength(0.5f).noOcclusion());
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(VARIANT, TABLE_VARIANT.SIMPLE));
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING)) {
+        switch (state.getValue(FACING)) {
             case NORTH:
                 return NORTH;
             case EAST:
@@ -83,45 +83,45 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        Direction facing = context.getPlacementHorizontalFacing();
-        return this.getDefaultState().with(FACING, facing).with(VARIANT, determineTier(context.getWorld(), context.getPos(), facing));
+        Direction facing = context.getHorizontalDirection();
+        return this.defaultBlockState().setValue(FACING, facing).setValue(VARIANT, determineTier(context.getLevel(), context.getClickedPos(), facing));
     }
 
     @Override
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         if (fromPos.getY() != pos.getY()) return;
-        TABLE_VARIANT newVariant = determineTier(worldIn, pos, state.get(FACING));
-        if (newVariant != state.get(VARIANT)) {
-            worldIn.setBlockState(pos, state.with(VARIANT, newVariant), 2);
+        TABLE_VARIANT newVariant = determineTier(worldIn, pos, state.getValue(FACING));
+        if (newVariant != state.getValue(VARIANT)) {
+            worldIn.setBlock(pos, state.setValue(VARIANT, newVariant), 2);
         }
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (!worldIn.isRemote) {
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (!worldIn.isClientSide) {
             if (player instanceof ServerPlayerEntity) {
-                NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new HunterTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, pos)), new TranslationTextComponent("container.crafting")), pos);
+                NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new HunterTableContainer(id, playerInventory, IWorldPosCallable.create(playerIn.level, pos)), new TranslationTextComponent("container.crafting")), pos);
             }
         }
 
         return ActionResultType.SUCCESS;
     }
 
+    @Override
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(FACING, VARIANT);
+    }
+
     protected TABLE_VARIANT determineTier(IWorldReader world, BlockPos pos, Direction facing) {
-        Block behind = world.getBlockState(pos.offset(facing)).getBlock();
-        Block left = world.getBlockState(pos.offset(facing.rotateY())).getBlock();
-        Block right = world.getBlockState(pos.offset(facing.rotateYCCW())).getBlock();
-        Block front = world.getBlockState(pos.offset(facing.getOpposite())).getBlock();
+        Block behind = world.getBlockState(pos.relative(facing)).getBlock();
+        Block left = world.getBlockState(pos.relative(facing.getClockWise())).getBlock();
+        Block right = world.getBlockState(pos.relative(facing.getCounterClockWise())).getBlock();
+        Block front = world.getBlockState(pos.relative(facing.getOpposite())).getBlock();
         boolean weapon_table = left == ModBlocks.weapon_table || right == ModBlocks.weapon_table || behind == ModBlocks.weapon_table || front == ModBlocks.weapon_table;
         boolean potion_table = left == ModBlocks.potion_table || right == ModBlocks.potion_table || behind == ModBlocks.potion_table || front == ModBlocks.potion_table;
         boolean cauldron = left == ModBlocks.alchemical_cauldron || right == ModBlocks.alchemical_cauldron || behind == ModBlocks.alchemical_cauldron || front == ModBlocks.alchemical_cauldron;
 
         return getTierFor(weapon_table, potion_table, cauldron);
-    }
-
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, VARIANT);
     }
 
     public enum TABLE_VARIANT implements IStringSerializable {
@@ -135,7 +135,7 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
         }
 
         @Override
-        public String getString() {
+        public String getSerializedName() {
             return name;
         }
     }

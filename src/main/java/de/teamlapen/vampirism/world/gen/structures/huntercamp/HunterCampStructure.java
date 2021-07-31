@@ -32,9 +32,9 @@ public class HunterCampStructure extends Structure<NoFeatureConfig> {
         }
 
         @Override
-        public void func_230364_a_(DynamicRegistries registries, ChunkGenerator chunkGenerator, TemplateManager templateManager, int chunkX, int chunkZ, Biome biomeIn, NoFeatureConfig featureConfig) {
-            HunterCampPieces.init(chunkX, chunkZ, biomeIn, this.rand, this.components);
-            this.recalculateStructureSize();
+        public void generatePieces(DynamicRegistries registries, ChunkGenerator chunkGenerator, TemplateManager templateManager, int chunkX, int chunkZ, Biome biomeIn, NoFeatureConfig featureConfig) {
+            HunterCampPieces.init(chunkX, chunkZ, biomeIn, this.random, this.pieces);
+            this.calculateBoundingBox();
         }
     }
 }

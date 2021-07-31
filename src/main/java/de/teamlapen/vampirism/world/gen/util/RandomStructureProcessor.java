@@ -35,7 +35,7 @@ public class RandomStructureProcessor extends RuleStructureProcessor {
 
     @Nullable
     public Template.BlockInfo process(IWorldReader worldReaderIn, @Nonnull BlockPos pos, @Nonnull BlockPos pos2, @Nonnull Template.BlockInfo blockInfo, Template.BlockInfo blockInfo1, @Nonnull PlacementSettings placementSettings, @Nullable Template template) {
-        Random random = new Random(MathHelper.getPositionRandom(blockInfo1.pos));
+        Random random = new Random(MathHelper.getSeed(blockInfo1.pos));
         BlockState blockstate = worldReaderIn.getBlockState(blockInfo1.pos);
 
         for (RandomBlockState ruleEntry : this.rules) {

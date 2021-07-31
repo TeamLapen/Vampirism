@@ -18,12 +18,12 @@ public class SunscreenEntityAction<T extends CreatureEntity & IEntityActionUser>
 
     @Override
     public void activate(T entity) {
-        entity.getRepresentingEntity().addPotionEffect(new EffectInstance(ModEffects.sunscreen, getDuration(entity.getLevel()), 3, false, false));
+        entity.getRepresentingEntity().addEffect(new EffectInstance(ModEffects.sunscreen, getDuration(entity.getLevel()), 3, false, false));
     }
 
     @Override
     public void deactivate(T entity) {
-        entity.getRepresentingEntity().removePotionEffect(ModEffects.sunscreen);
+        entity.getRepresentingEntity().removeEffect(ModEffects.sunscreen);
     }
 
     @Override
@@ -38,10 +38,10 @@ public class SunscreenEntityAction<T extends CreatureEntity & IEntityActionUser>
 
     @Override
     public int getWeight(CreatureEntity entity) {
-        if (!entity.getEntityWorld().isDaytime() || entity.getEntityWorld().isRaining()) {//Not perfectly accurate (the actual sundamage checks for celestial angle and also might exclude certain dimensions and biomes
+        if (!entity.getCommandSenderWorld().isDay() || entity.getCommandSenderWorld().isRaining()) {//Not perfectly accurate (the actual sundamage checks for celestial angle and also might exclude certain dimensions and biomes
             return 0;
         }
-        return ((IVampire) entity).isGettingSundamage(entity.getEntityWorld()) ? 3 : 1;
+        return ((IVampire) entity).isGettingSundamage(entity.getCommandSenderWorld()) ? 3 : 1;
     }
 
     @Override

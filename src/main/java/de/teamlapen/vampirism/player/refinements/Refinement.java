@@ -53,7 +53,7 @@ public class Refinement extends ForgeRegistryEntry<IRefinement> implements IRefi
     public ITextComponent getDescription() {
         if (description == null) {
             description = new TranslationTextComponent("refinement." + getRegistryName().getNamespace() + "." + getRegistryName().getPath() + ".desc");
-            if (detrimental) description.mergeStyle(TextFormatting.RED);
+            if (detrimental) description.withStyle(TextFormatting.RED);
         }
         return description;
     }

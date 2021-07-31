@@ -17,7 +17,7 @@ public class StayTask extends DefaultMinionTask<StayTask.Desc, MinionData> {
     @Override
     public Desc activateTask(@Nullable PlayerEntity lord, @Nullable IMinionEntity minion, MinionData inventory) {
         this.triggerAdvancements(lord);
-        BlockPos pos = minion != null ? minion.getRepresentingEntity().getPosition() : (lord != null ? lord.getPosition() : null);
+        BlockPos pos = minion != null ? minion.getRepresentingEntity().blockPosition() : (lord != null ? lord.blockPosition() : null);
         return pos == null ? null : new Desc(pos);
     }
 

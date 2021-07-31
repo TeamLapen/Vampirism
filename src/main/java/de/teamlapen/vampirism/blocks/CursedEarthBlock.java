@@ -24,18 +24,17 @@ import net.minecraftforge.common.ToolType;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-
 public class CursedEarthBlock extends VampirismBlock implements IGrowable {
 
     private static final String name = "cursed_earth";
 
     public CursedEarthBlock() {
-        super(name, Properties.create(Material.EARTH).hardnessAndResistance(0.5f, 2.0f).sound(SoundType.GROUND));
+        super(name, Properties.of(Material.DIRT).strength(0.5f, 2.0f).sound(SoundType.GRAVEL));
 
     }
 
     @Override
-    public boolean canGrow(IBlockReader iBlockReader, BlockPos blockPos, BlockState iBlockState, boolean b) {
+    public boolean isBonemealSuccess(World worldIn, Random rand, BlockPos pos, BlockState state) {
         return true;
     }
 
@@ -45,7 +44,7 @@ public class CursedEarthBlock extends VampirismBlock implements IGrowable {
     }
 
     @Override
-    public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, BlockState state) {
+    public boolean isValidBonemealTarget(IBlockReader iBlockReader, BlockPos blockPos, BlockState iBlockState, boolean b) {
         return true;
     }
 
@@ -61,8 +60,13 @@ public class CursedEarthBlock extends VampirismBlock implements IGrowable {
     }
 
     @Override
-    public void grow(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
-        BlockPos blockpos = pos.up();
+    public void onPlantGrow(BlockState state, IWorld world, BlockPos pos, BlockPos source) {
+        world.setBlock(pos, ModBlocks.cursed_earth.defaultBlockState(), 2);
+    }
+
+    @Override
+    public void performBonemeal(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
+        BlockPos blockpos = pos.above();
 
         for (int i = 0; i < 128; ++i) {
             BlockPos blockpos1 = blockpos;
@@ -70,19 +74,19 @@ public class CursedEarthBlock extends VampirismBlock implements IGrowable {
 
             while (true) {
                 if (j >= i / 16) {
-                    if (worldIn.isAirBlock(blockpos1)) {
+                    if (worldIn.isEmptyBlock(blockpos1)) {
                         if (rand.nextInt(8) == 0) {
                             VampirismFlowerBlock blockflower = ModBlocks.vampire_orchid;
-                            BlockState iblockstate = blockflower.getDefaultState();
+                            BlockState iblockstate = blockflower.defaultBlockState();
 
-                            if (blockflower.isValidPosition(iblockstate, worldIn, blockpos1)) {
-                                worldIn.setBlockState(blockpos1, iblockstate, 3);
+                            if (blockflower.canSurvive(iblockstate, worldIn, blockpos1)) {
+                                worldIn.setBlock(blockpos1, iblockstate, 3);
                             }
                         } else {
-                            BlockState iblockstate1 = Blocks.TALL_GRASS.getDefaultState();
+                            BlockState iblockstate1 = Blocks.TALL_GRASS.defaultBlockState();
 
-                            if (Blocks.TALL_GRASS.isValidPosition(iblockstate1, worldIn, blockpos1)) {
-                                worldIn.setBlockState(blockpos1, iblockstate1, 3);
+                            if (Blocks.TALL_GRASS.canSurvive(iblockstate1, worldIn, blockpos1)) {
+                                worldIn.setBlock(blockpos1, iblockstate1, 3);
                             }
                         }
                     }
@@ -90,9 +94,9 @@ public class CursedEarthBlock extends VampirismBlock implements IGrowable {
                     break;
                 }
 
-                blockpos1 = blockpos1.add(rand.nextInt(3) - 1, (rand.nextInt(3) - 1) * rand.nextInt(3) / 2, rand.nextInt(3) - 1);
+                blockpos1 = blockpos1.offset(rand.nextInt(3) - 1, (rand.nextInt(3) - 1) * rand.nextInt(3) / 2, rand.nextInt(3) - 1);
 
-                if (worldIn.getBlockState(blockpos1.down()).getBlock() != ModBlocks.cursed_earth || worldIn.getBlockState(blockpos1).isNormalCube(worldIn, blockpos1)) {
+                if (worldIn.getBlockState(blockpos1.below()).getBlock() != ModBlocks.cursed_earth || worldIn.getBlockState(blockpos1).isRedstoneConductor(worldIn, blockpos1)) {
                     break;
                 }
 
@@ -102,22 +106,17 @@ public class CursedEarthBlock extends VampirismBlock implements IGrowable {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        ItemStack heldItemStack = player.getHeldItem(handIn);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        ItemStack heldItemStack = player.getItemInHand(handIn);
         Item heldItem = heldItemStack.getItem();
         if (heldItem instanceof HolyWaterBottleItem) {
             int uses = heldItem == ModItems.holy_water_bottle_ultimate ? 100 : (heldItem == ModItems.holy_water_bottle_enhanced ? 50 : 25);
-            if (player.getRNG().nextInt(uses) == 0) {
+            if (player.getRandom().nextInt(uses) == 0) {
                 heldItemStack.setCount(heldItemStack.getCount() - 1);
             }
-            worldIn.setBlockState(pos, Blocks.GRASS_BLOCK.getDefaultState());
+            worldIn.setBlockAndUpdate(pos, Blocks.GRASS_BLOCK.defaultBlockState());
             return ActionResultType.SUCCESS;
         }
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
-    }
-
-    @Override
-    public void onPlantGrow(BlockState state, IWorld world, BlockPos pos, BlockPos source) {
-        world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState(), 2);
+        return super.use(state, worldIn, pos, player, handIn, hit);
     }
 }

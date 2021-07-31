@@ -17,7 +17,7 @@ public class VampireVillagerHostilesSensor extends VillagerHostilesSensor {
 
     static {
         //Adding entries will probably not work outside Dev as hasPresence is not called for some reason
-        hostiles = Maps.newHashMap(VillagerHostilesSensor.enemyPresenceRange);
+        hostiles = Maps.newHashMap(VillagerHostilesSensor.ACCEPTABLE_DISTANCE_FROM_HOSTILES);
         hostiles.remove(EntityType.ZOMBIE);
         hostiles.remove(EntityType.ZOMBIE_VILLAGER);
         hostiles.remove(EntityType.DROWNED);
@@ -25,15 +25,15 @@ public class VampireVillagerHostilesSensor extends VillagerHostilesSensor {
     }
 
     @Override
-    public boolean canNoticePresence(@Nonnull LivingEntity villager, LivingEntity hostile) {
+    public boolean isClose(@Nonnull LivingEntity villager, LivingEntity hostile) {
         //hasPresence is not checked first, so entries may not be present
         @Nullable Float f = hostiles.get(hostile.getType()); //Careful about unboxing nullpointer
         if (f == null) return false;
-        return hostile.getDistanceSq(villager) <= (double) (f * f);
+        return hostile.distanceToSqr(villager) <= (double) (f * f);
     }
 
     @Override
-    public boolean hasPresence(LivingEntity hostile) { //For some reason this method is not called (as it does not properly override somehow maybe) outside dev
+    public boolean isHostile(LivingEntity hostile) { //For some reason this method is not called (as it does not properly override somehow maybe) outside dev
         return hostiles.containsKey(hostile.getType());
     }
 

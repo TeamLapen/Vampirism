@@ -55,7 +55,7 @@ public class SkillManager implements ISkillManager {
      */
     public void printSkills(IPlayableFaction faction, CommandSource sender) {
         for (ISkill s : getSkillsForFaction(faction)) {
-            sender.sendFeedback(new StringTextComponent("ID: " + ModRegistries.SKILLS.getKey(s) + " Skill: ").appendSibling(s.getName()), true);
+            sender.sendSuccess(new StringTextComponent("ID: " + ModRegistries.SKILLS.getKey(s) + " Skill: ").append(s.getName()), true);
         }
     }
 

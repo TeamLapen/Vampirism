@@ -11,7 +11,7 @@ public class DebugGenCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("debugGen")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .executes(context -> {
                     return debugGen(context.getSource());
                 });
@@ -20,10 +20,10 @@ public class DebugGenCommand extends BasicCommand {
     private static int debugGen(CommandSource commandSource) {
         if (VampirismWorldGen.debug) {
             VampirismWorldGen.debug = false;
-            commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.gen_debug.false"), true);
+            commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.gen_debug.false"), true);
         } else {
             VampirismWorldGen.debug = true;
-            commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.gen_debug.true"), true);
+            commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.gen_debug.true"), true);
         }
         return 0;
     }

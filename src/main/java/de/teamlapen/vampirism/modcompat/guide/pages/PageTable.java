@@ -46,24 +46,24 @@ public class PageTable extends Page {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void draw(MatrixStack stack, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, FontRenderer fontRendererObj) {
-        float charWidth = fontRendererObj.getStringWidth("W");
+        float charWidth = fontRendererObj.width("W");
         int y = guiTop + 12;
         int x = guiLeft + 39;
         if (headline != null) {
-            fontRendererObj.drawText(stack, headline.mergeStyle(TextFormatting.BOLD), x, y, 0);
-            y += fontRendererObj.FONT_HEIGHT;
+            fontRendererObj.draw(stack, headline.withStyle(TextFormatting.BOLD), x, y, 0);
+            y += fontRendererObj.lineHeight;
         }
-        drawLine(stack, x, y + fontRendererObj.FONT_HEIGHT, x + (guiBase.xSize * 3F / 5F), y + fontRendererObj.FONT_HEIGHT, guiBase.publicZLevel);
+        drawLine(stack, x, y + fontRendererObj.lineHeight, x + (guiBase.xSize * 3F / 5F), y + fontRendererObj.lineHeight, guiBase.publicZLevel);
         for (String[] l : lines) {
             x = guiLeft + 39;
             for (int i = 0; i < l.length; i++) {
                 int mw = (int) (width[i] * charWidth);
-                int aw = fontRendererObj.getStringWidth(l[i]);
+                int aw = fontRendererObj.width(l[i]);
                 int dw = (mw - aw) / 2;
-                fontRendererObj.drawString(stack, l[i], x + dw, y, 0);
+                fontRendererObj.draw(stack, l[i], x + dw, y, 0);
                 x += mw;
             }
-            y += fontRendererObj.FONT_HEIGHT;
+            y += fontRendererObj.lineHeight;
 
         }
 
@@ -73,17 +73,17 @@ public class PageTable extends Page {
      * Copied from GuiPieMenu
      */
     protected void drawLine(MatrixStack stack, double x1, double y1, double x2, double y2, float publicZLevel) {
-        stack.push();
-        Matrix4f matrix = stack.getLast().getMatrix();
+        stack.pushPose();
+        Matrix4f matrix = stack.last().pose();
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         RenderSystem.lineWidth(2F);
-        BufferBuilder builder = Tessellator.getInstance().getBuffer();
+        BufferBuilder builder = Tessellator.getInstance().getBuilder();
         builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-        builder.pos(matrix, (float) x1, (float) y1, publicZLevel).color(0, 0, 0, 255).endVertex();
-        builder.pos(matrix, (float) x2, (float) y2, publicZLevel).color(0, 0, 0, 255).endVertex();
-        Tessellator.getInstance().draw();
+        builder.vertex(matrix, (float) x1, (float) y1, publicZLevel).color(0, 0, 0, 255).endVertex();
+        builder.vertex(matrix, (float) x2, (float) y2, publicZLevel).color(0, 0, 0, 255).endVertex();
+        Tessellator.getInstance().end();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-        stack.pop();
+        stack.popPose();
     }
 
 

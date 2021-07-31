@@ -43,11 +43,11 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
      * @return the new entity
      */
     default T createCuredEntity(CreatureEntity entity, EntityType<T> newType) {
-        T newEntity = newType.create(entity.world);
-        newEntity.read(entity.writeWithoutTypeId(new CompoundNBT()));
-        newEntity.renderYawOffset = entity.renderYawOffset;
-        newEntity.rotationYawHead = entity.rotationYawHead;
-        newEntity.setUniqueId(UUID.randomUUID());
+        T newEntity = newType.create(entity.level);
+        newEntity.load(entity.saveWithoutId(new CompoundNBT()));
+        newEntity.yBodyRot = entity.yBodyRot;
+        newEntity.yHeadRot = entity.yHeadRot;
+        newEntity.setUUID(UUID.randomUUID());
         return newEntity;
     }
 
@@ -65,10 +65,10 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
     default T cureEntity(ServerWorld world, CreatureEntity entity, EntityType<T> newType) {
         T newEntity = createCuredEntity(entity, newType);
         entity.remove();
-        entity.world.addEntity(newEntity);
-        newEntity.addPotionEffect(new EffectInstance(Effects.NAUSEA, 200, 0));
+        entity.level.addFreshEntity(newEntity);
+        newEntity.addEffect(new EffectInstance(Effects.CONFUSION, 200, 0));
         if (!entity.isSilent()) {
-            world.playEvent(null, 1027, entity.getPosition(), 0);
+            world.levelEvent(null, 1027, entity.blockPosition(), 0);
         }
         VampirismAPI.getExtendedCreatureVampirism(newEntity).ifPresent(creature -> {
             creature.setBlood(1);
@@ -89,7 +89,7 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
     default boolean handleSound(byte id, CreatureEntity entity) {
         if (id == 16) {
             if (!entity.isSilent()) {
-                entity.world.playSound(entity.getPosX(), entity.getPosYEye(), entity.getPosZ(), SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE, entity.getSoundCategory(), 1.0F + entity.getRNG().nextFloat(), entity.getRNG().nextFloat() * 0.7F + 0.3F, false);
+                entity.level.playLocalSound(entity.getX(), entity.getEyeY(), entity.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, entity.getSoundSource(), 1.0F + entity.getRandom().nextFloat(), entity.getRandom().nextFloat() * 0.7F + 0.3F, false);
             }
             return true;
         }
@@ -105,12 +105,12 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
      * @return the action result
      */
     default ActionResultType interactWithCureItem(PlayerEntity player, ItemStack stack, CreatureEntity entity) {
-        if (!entity.isPotionActive(Effects.WEAKNESS)) return ActionResultType.CONSUME;
-        if (!player.abilities.isCreativeMode) {
+        if (!entity.hasEffect(Effects.WEAKNESS)) return ActionResultType.CONSUME;
+        if (!player.abilities.instabuild) {
             stack.shrink(1);
         }
-        if (!entity.world.isRemote) {
-            this.startConverting(player.getUniqueID(), entity.getRNG().nextInt(2400) + 2400, entity);
+        if (!entity.level.isClientSide) {
+            this.startConverting(player.getUUID(), entity.getRandom().nextInt(2400) + 2400, entity);
         }
         return ActionResultType.SUCCESS;
     }
@@ -120,7 +120,7 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
      * @return if the entity is in progress of converting
      */
     default boolean isConverting(CreatureEntity entity) {
-        return entity.getDataManager().get(this.getConvertingDataParam());
+        return entity.getEntityData().get(this.getConvertingDataParam());
     }
 
     /**
@@ -129,7 +129,7 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
      * @param entity the entity that extends this interface
      */
     default void registerConvertingData(@Nonnull CreatureEntity entity) {
-        entity.getDataManager().register(this.getConvertingDataParam(), false);
+        entity.getEntityData().define(this.getConvertingDataParam(), false);
     }
 
     /**
@@ -140,8 +140,8 @@ public interface ICurableConvertedCreature<T extends CreatureEntity> extends ICo
      * @param entity              the entity that extends this interface
      */
     default void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @Nonnull CreatureEntity entity) {
-        entity.getDataManager().set(this.getConvertingDataParam(), true);
-        entity.removePotionEffect(Effects.WEAKNESS);
-        entity.world.setEntityState(entity, (byte) 16);
+        entity.getEntityData().set(this.getConvertingDataParam(), true);
+        entity.removeEffect(Effects.WEAKNESS);
+        entity.level.broadcastEntityEvent(entity, (byte) 16);
     }
 }

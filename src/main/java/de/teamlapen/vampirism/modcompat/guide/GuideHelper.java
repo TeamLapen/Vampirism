@@ -44,7 +44,7 @@ public class GuideHelper {
      */
     public static PageItemStack createItemTaskDescription(Task task) {
         assert task.getReward() instanceof ItemReward;
-        Ingredient ingredient = Ingredient.fromStacks(((ItemReward) task.getReward()).getAllPossibleRewards().stream());
+        Ingredient ingredient = Ingredient.of(((ItemReward) task.getReward()).getAllPossibleRewards().stream());
         List<ITextProperties> text = new ArrayList<>();
         StringTextComponent newLine = new StringTextComponent("\n");
         IPlayableFaction<?> f = task.getFaction();
@@ -59,14 +59,14 @@ public class GuideHelper {
         TaskUnlocker[] unlockers = task.getUnlocker();
         if (unlockers.length > 0) {
             for (TaskUnlocker u : unlockers) {
-                text.add(new StringTextComponent("- ").appendSibling(u.getDescription()).appendSibling(newLine));
+                text.add(new StringTextComponent("- ").append(u.getDescription()).append(newLine));
             }
 
 
         } else {
             text.add(new TranslationTextComponent("text.vampirism.task.prerequisites.none"));
         }
-        return new PageItemStack(ITextProperties.func_240654_a_(text), ingredient);
+        return new PageItemStack(ITextProperties.composite(text), ingredient);
     }
 
     /**

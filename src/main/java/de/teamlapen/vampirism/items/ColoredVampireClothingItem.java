@@ -60,11 +60,11 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
         }
 
         public String getName() {
-            return getString();
+            return getSerializedName();
         }
 
         @Override
-        public String getString() {
+        public String getSerializedName() {
             return this.name;
         }
 

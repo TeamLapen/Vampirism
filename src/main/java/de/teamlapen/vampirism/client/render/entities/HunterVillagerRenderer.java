@@ -26,7 +26,7 @@ public class HunterVillagerRenderer extends MobRenderer<VillagerEntity, Villager
     }
 
     @Override
-    public ResourceLocation getEntityTexture(VillagerEntity villagerEntity) {
+    public ResourceLocation getTextureLocation(VillagerEntity villagerEntity) {
         return texture;
     }
 
@@ -34,13 +34,13 @@ public class HunterVillagerRenderer extends MobRenderer<VillagerEntity, Villager
      * Copied from VillagerRenderer
      */
     @Override
-    protected void preRenderCallback(VillagerEntity entity, MatrixStack matrixStack, float partialTickTime) {
+    protected void scale(VillagerEntity entity, MatrixStack matrixStack, float partialTickTime) {
         float s = 0.9375F;
-        if (entity.isChild()) {
+        if (entity.isBaby()) {
             s = (float) ((double) s * 0.5D);
-            this.shadowSize = 0.25F;
+            this.shadowRadius = 0.25F;
         } else {
-            this.shadowSize = 0.5F;
+            this.shadowRadius = 0.5F;
         }
 
         matrixStack.scale(s, s, s);

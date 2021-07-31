@@ -50,7 +50,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     public final static String regName = "blood_container";
     @ObjectHolder("vampirism:blood_container")
     public static final Item item = UtilLib.getNull();
-    protected static final VoxelShape containerShape = Block.makeCuboidShape(2, 0, 2, 14, 16, 14);
+    protected static final VoxelShape containerShape = Block.box(2, 0, 2, 14, 16, 14);
     private final static Logger LOGGER = LogManager.getLogger();
 
     public static FluidStack getFluidFromItemStack(ItemStack stack) {
@@ -71,43 +71,43 @@ public class BloodContainerBlock extends VampirismBlockContainer {
                 stack.getTag().remove("fluid");
             }
         } else {
-            stack.setTagInfo("fluid", fluid.writeToNBT(new CompoundNBT()));
+            stack.addTagElement("fluid", fluid.writeToNBT(new CompoundNBT()));
         }
     }
 
     public BloodContainerBlock() {
-        super(regName, Properties.create(Material.GLASS).hardnessAndResistance(1f).notSolid());
+        super(regName, Properties.of(Material.GLASS).strength(1f).noOcclusion());
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (stack.hasTag() && stack.getTag().contains("fluid")) {
             CompoundNBT nbt = stack.getTag().getCompound("fluid");
             FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
             if (fluid != null) {
-                tooltip.add(new TranslationTextComponent(fluid.getTranslationKey()).appendSibling(new StringTextComponent(": " + fluid.getAmount() + "mB")).mergeStyle(TextFormatting.DARK_RED));
+                tooltip.add(new TranslationTextComponent(fluid.getTranslationKey()).append(new StringTextComponent(": " + fluid.getAmount() + "mB")).withStyle(TextFormatting.DARK_RED));
             }
 
         }
     }
 
     @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new BloodContainerTileEntity();
-    }
-
-    @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        super.fillItemGroup(group, items);
+    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+        super.fillItemCategory(group, items);
         ItemStack stack = new ItemStack(this, 1);
         FluidStack fluid = new FluidStack(ModFluids.blood, BloodContainerTileEntity.CAPACITY);
-        stack.setTagInfo("fluid", fluid.writeToNBT(new CompoundNBT()));
+        stack.addTagElement("fluid", fluid.writeToNBT(new CompoundNBT()));
         items.add(stack);
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.MODEL;
+    }
+
+    @Override
+    public TileEntity newBlockEntity(IBlockReader worldIn) {
+        return new BloodContainerTileEntity();
     }
 
     @Override
@@ -116,7 +116,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack heldStack) {
+    public void playerDestroy(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack heldStack) {
         ItemStack stack = new ItemStack(ModBlocks.blood_container, 1);
         if (te != null) {
             FluidStack fluid = ((BloodContainerTileEntity) te).getFluid();
@@ -124,40 +124,40 @@ public class BloodContainerBlock extends VampirismBlockContainer {
                 writeFluidToItemStack(stack, fluid);
             }
         }
-        spawnAsEntity(worldIn, pos, stack);
+        popResource(worldIn, pos, stack);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit) {
-        if (!FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, hit.getFace()) && playerIn.getHeldItem(hand).getItem().equals(Items.GLASS_BOTTLE) && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
-            FluidUtil.getFluidHandler(worldIn, pos, hit.getFace()).ifPresent((fluidHandler -> {
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(worldIn, pos, state, placer, stack);
+        FluidStack fluid = getFluidFromItemStack(stack);
+        if (!stack.isEmpty()) {
+            TileEntity tile = (worldIn.getBlockEntity(pos));
+            if (tile instanceof BloodContainerTileEntity) {
+                ((BloodContainerTileEntity) tile).setFluidStack(fluid);
+            }
+        }
+    }
+
+    @Override
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit) {
+        if (!FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, hit.getDirection()) && playerIn.getItemInHand(hand).getItem().equals(Items.GLASS_BOTTLE) && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
+            FluidUtil.getFluidHandler(worldIn, pos, hit.getDirection()).ifPresent((fluidHandler -> {
                 if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.blood)) {
-                    ItemStack glass = playerIn.getHeldItem(hand);
+                    ItemStack glass = playerIn.getItemInHand(hand);
                     ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle, 1);
-                    playerIn.setHeldItem(hand, bloodBottle);
+                    playerIn.setItemInHand(hand, bloodBottle);
                     bloodBottle = FluidUtil.tryFillContainer(bloodBottle, fluidHandler, Integer.MAX_VALUE, playerIn, true).getResult();
                     if (glass.getCount() > 1) {
                         glass.shrink(1);
-                        playerIn.setHeldItem(hand, glass);
-                        playerIn.addItemStackToInventory(bloodBottle);
+                        playerIn.setItemInHand(hand, glass);
+                        playerIn.addItem(bloodBottle);
                     } else {
-                        playerIn.setHeldItem(hand, bloodBottle);
+                        playerIn.setItemInHand(hand, bloodBottle);
                     }
                 }
             }));
         }
         return ActionResultType.SUCCESS;
-    }
-
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
-        FluidStack fluid = getFluidFromItemStack(stack);
-        if (!stack.isEmpty()) {
-            TileEntity tile = (worldIn.getTileEntity(pos));
-            if (tile instanceof BloodContainerTileEntity) {
-                ((BloodContainerTileEntity) tile).setFluidStack(fluid);
-            }
-        }
     }
 }

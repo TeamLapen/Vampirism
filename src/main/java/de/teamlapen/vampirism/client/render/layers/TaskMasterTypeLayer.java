@@ -27,9 +27,9 @@ public class TaskMasterTypeLayer<T extends MobEntity & IDefaultTaskMasterEntity>
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, T entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (!entityIn.isInvisible()) {
             VillagerType type = entityIn.getBiomeType();
-            VillagerModel<T> m = getEntityModel();
-            renderCutoutModel(m, this.deriveTypeTextureOverlay(Registry.VILLAGER_TYPE.getKey(type)), matrixStackIn, bufferIn, packedLightIn, entityIn, 1.0F, 1.0F, 1.0F);
-            renderCutoutModel(m, additionalOverlay, matrixStackIn, bufferIn, packedLightIn, entityIn, 1.0F, 1.0F, 1.0F);
+            VillagerModel<T> m = getParentModel();
+            renderColoredCutoutModel(m, this.deriveTypeTextureOverlay(Registry.VILLAGER_TYPE.getKey(type)), matrixStackIn, bufferIn, packedLightIn, entityIn, 1.0F, 1.0F, 1.0F);
+            renderColoredCutoutModel(m, additionalOverlay, matrixStackIn, bufferIn, packedLightIn, entityIn, 1.0F, 1.0F, 1.0F);
         }
     }
 

@@ -39,7 +39,7 @@ public class BaronAttireLayer extends LayerRenderer<VampireBaronEntity, BaronWra
         if (!entityIn.isInvisible()) {
             boolean female = predicateFemale.test(entityIn);
             EntityModel<VampireBaronEntity> model = female ? baroness : baron;
-            renderCopyCutoutModel(this.getEntityModel(), model, female ? textureBaroness : textureBaron, matrixStackIn, bufferIn, packedLightIn, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, partialTicks, 1, 1, 1);
+            coloredCutoutModelCopyLayerRender(this.getParentModel(), model, female ? textureBaroness : textureBaron, matrixStackIn, bufferIn, packedLightIn, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, partialTicks, 1, 1, 1);
         }
     }
 

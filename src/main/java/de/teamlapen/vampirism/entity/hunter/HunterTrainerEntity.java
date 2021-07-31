@@ -40,10 +40,10 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 300)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 19)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.17)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 5);
+                .add(Attributes.MAX_HEALTH, 300)
+                .add(Attributes.ATTACK_DAMAGE, 19)
+                .add(Attributes.MOVEMENT_SPEED, 0.17)
+                .add(Attributes.FOLLOW_RANGE, 5);
     }
     private final int MOVE_TO_RESTRICT_PRIO = 3;
     private PlayerEntity trainee;
@@ -53,24 +53,28 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
         super(type, world, false);
         saveHome = true;
         hasArms = true;
-        ((GroundPathNavigator) this.getNavigator()).setBreakDoors(true);
+        ((GroundPathNavigator) this.getNavigation()).setCanOpenDoors(true);
 
         this.setDontDropEquipment();
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource source, float amount) {
-        return super.attackEntityFrom(source, amount);
+    public void addAdditionalSaveData(CompoundNBT nbt) {
+        super.addAdditionalSaveData(nbt);
+        nbt.putBoolean("createHome", this.shouldCreateHome);
     }
 
     @Override
-    public boolean canDespawn(double distanceToClosestPlayer) {
-        return super.canDespawn(distanceToClosestPlayer) && getHome() == null;
+    public void aiStep() {
+        super.aiStep();
+        if (trainee != null && !(trainee.containerMenu instanceof HunterTrainerContainer)) {
+            this.trainee = null;
+        }
     }
 
     @Override
-    public boolean getAlwaysRenderNameTagForRender() {
-        return true;
+    public boolean hurt(DamageSource source, float amount) {
+        return super.hurt(source, amount);
     }
 
     /**
@@ -83,21 +87,18 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
-        if (trainee != null && !(trainee.openContainer instanceof HunterTrainerContainer)) {
-            this.trainee = null;
+    public void readAdditionalSaveData(CompoundNBT nbt) {
+        super.readAdditionalSaveData(nbt);
+        if (nbt.contains("createHome") && (this.shouldCreateHome = nbt.getBoolean("createHome"))) {
+            if (this.getRestrictCenter().equals(BlockPos.ZERO)) {
+                restrictTo(this.blockPosition(), 5);
+            }
         }
     }
 
     @Override
-    public void readAdditional(CompoundNBT nbt) {
-        super.readAdditional(nbt);
-        if (nbt.contains("createHome") && (this.shouldCreateHome = nbt.getBoolean("createHome"))) {
-            if (this.getHomePosition().equals(BlockPos.ZERO)) {
-                setHomePosAndDistance(this.getPosition(), 5);
-            }
-        }
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+        return super.removeWhenFarAway(distanceToClosestPlayer) && getHome() == null;
     }
 
     @Override
@@ -107,34 +108,33 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt) {
-        super.writeAdditional(nbt);
-        nbt.putBoolean("createHome", this.shouldCreateHome);
+    public boolean shouldShowName() {
+        return true;
     }
 
     @Override
-    protected ActionResultType getEntityInteractionResult(PlayerEntity player, Hand hand) {
+    protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
         if (tryCureSanguinare(player)) return ActionResultType.SUCCESS;
-        ItemStack stack = player.getHeldItem(hand);
+        ItemStack stack = player.getItemInHand(hand);
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 
-        if (!flag && this.isAlive() && !player.isSneaking() && hand == Hand.MAIN_HAND) {
+        if (!flag && this.isAlive() && !player.isShiftKeyDown() && hand == Hand.MAIN_HAND) {
             int lvl = VampirismPlayerAttributes.get(player).hunterLevel;
-            if (!this.world.isRemote && lvl > 0) {
+            if (!this.level.isClientSide && lvl > 0) {
                 int levelCorrect = HunterLevelingConf.instance().isLevelValidForTrainer(lvl + 1);
                 if (levelCorrect == 0) {
                     if (trainee == null) {
-                        player.openContainer(new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new HunterTrainerContainer(id, playerInventory, this), name));
+                        player.openMenu(new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new HunterTrainerContainer(id, playerInventory, this), name));
                         this.trainee = player;
-                        this.getNavigator().clearPath();
+                        this.getNavigation().stop();
                     } else {
-                        player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"), Util.DUMMY_UUID);
+                        player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"), Util.NIL_UUID);
                     }
 
                 } else if (levelCorrect == -1) {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_trainer.trainer_level_wrong"), Util.DUMMY_UUID);
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_trainer.trainer_level_wrong"), Util.NIL_UUID);
                 } else {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_trainer.trainer_level_to_high"), Util.DUMMY_UUID);
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_trainer.trainer_level_to_high"), Util.NIL_UUID);
                 }
 
             }
@@ -143,7 +143,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
         }
 
 
-        return super.getEntityInteractionResult(player, hand);
+        return super.mobInteract(player, hand);
     }
 
     @Override

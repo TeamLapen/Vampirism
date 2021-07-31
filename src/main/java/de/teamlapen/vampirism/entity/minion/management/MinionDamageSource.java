@@ -30,27 +30,27 @@ public class MinionDamageSource extends EntityDamageSource {
     }
 
     @Override
-    public ITextComponent getDeathMessage(LivingEntity entityLivingBaseIn) {
-        ITextComponent minionName = this.damageSourceEntity.getDisplayName();
-        ItemStack itemstack = minionEntity.getHeldItemMainhand();
-        String s = "death.attack." + this.damageType;
-        String s1 = s + ".item";
-        IFormattableTextComponent msg = !itemstack.isEmpty() && itemstack.hasDisplayName() ? new TranslationTextComponent(s1, entityLivingBaseIn.getDisplayName(), minionName, itemstack.getTextComponent()) : new TranslationTextComponent(s, entityLivingBaseIn.getDisplayName(), minionName);
-        if (playerEntity != null) {
-            msg.appendSibling(new StringTextComponent(" ")).appendSibling(new TranslationTextComponent("death.minion.on_behalf", playerEntity.getDisplayName()));
-        }
-        return msg;
-    }
-
-    @Override
     @Nullable
-    public Entity getImmediateSource() {
+    public Entity getDirectEntity() {
         return this.minionEntity;
     }
 
     @Override
     @Nullable
-    public Entity getTrueSource() {
+    public Entity getEntity() {
         return this.playerEntity;
+    }
+
+    @Override
+    public ITextComponent getLocalizedDeathMessage(LivingEntity entityLivingBaseIn) {
+        ITextComponent minionName = this.entity.getDisplayName();
+        ItemStack itemstack = minionEntity.getMainHandItem();
+        String s = "death.attack." + this.msgId;
+        String s1 = s + ".item";
+        IFormattableTextComponent msg = !itemstack.isEmpty() && itemstack.hasCustomHoverName() ? new TranslationTextComponent(s1, entityLivingBaseIn.getDisplayName(), minionName, itemstack.getDisplayName()) : new TranslationTextComponent(s, entityLivingBaseIn.getDisplayName(), minionName);
+        if (playerEntity != null) {
+            msg.append(new StringTextComponent(" ")).append(new TranslationTextComponent("death.minion.on_behalf", playerEntity.getDisplayName()));
+        }
+        return msg;
     }
 }

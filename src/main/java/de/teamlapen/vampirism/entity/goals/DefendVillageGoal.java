@@ -14,34 +14,34 @@ public class DefendVillageGoal<T extends CreatureEntity & IVillageCaptureEntity>
 
     private final T creature;
     protected final EntityPredicate entityPredicate;
-    private final double distance = getTargetDistance() * 4;
+    private final double distance = getFollowDistance() * 4;
 
     public DefendVillageGoal(T creature) {
         super(creature, false, false);
         this.creature = creature;
         this.entityPredicate = new EntityPredicate() {
             @Override
-            public boolean canTarget(@Nullable LivingEntity attackEntity, LivingEntity targetEntity) {
-                if (creature.getCaptureInfo() != null && creature.getCaptureInfo().shouldForceTargets() && getTargetDistance() > 0) {
-                    setDistance(-1.0D);
-                } else if (getTargetDistance() < 0) {
-                    setDistance(distance);
+            public boolean test(@Nullable LivingEntity attackEntity, LivingEntity targetEntity) {
+                if (creature.getCaptureInfo() != null && creature.getCaptureInfo().shouldForceTargets() && getFollowDistance() > 0) {
+                    range(-1.0D);
+                } else if (getFollowDistance() < 0) {
+                    range(distance);
                 }
-                return super.canTarget(attackEntity, targetEntity);
+                return super.test(attackEntity, targetEntity);
             }
-        }.setCustomPredicate(VampirismAPI.factionRegistry().getPredicate(creature.getFaction(), false)).setIgnoresLineOfSight();
+        }.selector(VampirismAPI.factionRegistry().getPredicate(creature.getFaction(), false)).allowUnseeable();
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         if (!creature.isDefendingVillage()) return false;
-        this.target = this.creature.world.getClosestEntityWithinAABB(LivingEntity.class, entityPredicate, this.goalOwner, this.goalOwner.getPosX(), this.goalOwner.getPosY() + (double) this.goalOwner.getEyeHeight(), this.goalOwner.getPosZ(), creature.getTargetVillageArea());
-        return target != null;
+        this.targetMob = this.creature.level.getNearestEntity(LivingEntity.class, entityPredicate, this.mob, this.mob.getX(), this.mob.getY() + (double) this.mob.getEyeHeight(), this.mob.getZ(), creature.getTargetVillageArea());
+        return targetMob != null;
     }
 
     @Override
-    public void startExecuting() {
-        this.creature.setAttackTarget(this.target);
-        super.startExecuting();
+    public void start() {
+        this.creature.setTarget(this.targetMob);
+        super.start();
     }
 }

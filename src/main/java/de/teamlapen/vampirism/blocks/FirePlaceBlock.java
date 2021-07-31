@@ -19,18 +19,17 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Random;
 
-
 public class FirePlaceBlock extends VampirismBlock {
     private static final VoxelShape shape = makeShape();
     private final static String regName = "fire_place";
 
     private static VoxelShape makeShape() {
-        return Block.makeCuboidShape(0, 0.01, 0, 16, 4, 16);
+        return Block.box(0, 0.01, 0, 16, 4, 16);
     }
 
 
     public FirePlaceBlock() {
-        super(regName, Properties.create(Material.WOOD).setLightLevel(s -> 15).hardnessAndResistance(1).notSolid());
+        super(regName, Properties.of(Material.WOOD).lightLevel(s -> 15).strength(1).noOcclusion());
 
     }
 
@@ -38,7 +37,7 @@ public class FirePlaceBlock extends VampirismBlock {
     @OnlyIn(Dist.CLIENT)
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         if (rand.nextInt(24) == 0) {
-            worldIn.playSound((float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F, SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
+            worldIn.playLocalSound((float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F, SoundEvents.FIRE_AMBIENT, SoundCategory.BLOCKS, 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
         }
 
 
@@ -57,13 +56,13 @@ public class FirePlaceBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos.down()).isSolidSide(worldIn, pos.down(), Direction.UP);
+    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        return worldIn.getBlockState(pos.below()).isFaceSturdy(worldIn, pos.below(), Direction.UP);
     }
 
     @Override
     public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
-        if (!isValidPosition(state, world, pos)) {
+        if (!canSurvive(state, world, pos)) {
             if (world instanceof IWorldWriter) {
                 ((IWorldWriter) world).destroyBlock(pos, true);
             }

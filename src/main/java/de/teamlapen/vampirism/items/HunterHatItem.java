@@ -19,7 +19,7 @@ public class HunterHatItem extends VampirismHunterArmor {
     private final int type;
 
     public HunterHatItem(int type) {
-        super(baseRegName, "" + type, ArmorMaterial.IRON, EquipmentSlotType.HEAD, new Properties().group(VampirismMod.creativeTab));
+        super(baseRegName, "" + type, ArmorMaterial.IRON, EquipmentSlotType.HEAD, new Properties().tab(VampirismMod.creativeTab));
         this.type = type;
     }
 

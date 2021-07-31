@@ -20,8 +20,8 @@ public class ItemReward implements TaskReward {
 
     @Override
     public void applyReward(IFactionPlayer<?> player) {
-        if (!player.getRepresentingPlayer().addItemStackToInventory(this.reward.copy())) {
-            player.getRepresentingPlayer().dropItem(this.reward.copy(), true);
+        if (!player.getRepresentingPlayer().addItem(this.reward.copy())) {
+            player.getRepresentingPlayer().drop(this.reward.copy(), true);
         }
     }
 

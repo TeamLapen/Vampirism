@@ -39,7 +39,7 @@ public class OblivionItem extends VampirismItem {
             if (((SkillHandler<?>) skillHandler).getRootNode().getChildren().stream().flatMap(a -> Arrays.stream(a.getElements())).noneMatch(skillHandler::isSkillEnabled))
                 return;
             boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
-            player.addPotionEffect(new EffectInstance(ModEffects.oblivion, Integer.MAX_VALUE, test ? 100 : 4));
+            player.addEffect(new EffectInstance(ModEffects.oblivion, Integer.MAX_VALUE, test ? 100 : 4));
             if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst) {
                 HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, factionPlayer.getRepresentingPlayer(), false);
             }
@@ -48,19 +48,26 @@ public class OblivionItem extends VampirismItem {
     }
 
     public OblivionItem(String regName, Properties properties) {
-        super(regName, properties.maxStackSize(1).rarity(Rarity.UNCOMMON));
+        super(regName, properties.stacksTo(1).rarity(Rarity.UNCOMMON));
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslationTextComponent("text.vampirism.oblivion_potion.resets_skills").mergeStyle(TextFormatting.GRAY));
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        tooltip.add(new TranslationTextComponent("text.vampirism.oblivion_potion.resets_skills").withStyle(TextFormatting.GRAY));
     }
 
     @Nonnull
     @Override
-    public UseAction getUseAction(@Nonnull ItemStack stack) {
-        return UseAction.DRINK;
+    public ItemStack finishUsingItem(ItemStack stack, @Nonnull World worldIn, LivingEntity entityLiving) {
+        stack.shrink(1);
+        if (entityLiving instanceof PlayerEntity) {
+            FactionPlayerHandler.getOpt(((PlayerEntity) entityLiving)).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty()).ifPresent(OblivionItem::applyEffect);
+        }
+        if (entityLiving instanceof MinionEntity) {
+            ((MinionEntity<?>) entityLiving).getMinionData().ifPresent(d -> d.upgradeStat(-1, (MinionEntity<?>) entityLiving));
+        }
+        return stack;
     }
 
     @Override
@@ -70,20 +77,13 @@ public class OblivionItem extends VampirismItem {
 
     @Nonnull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull World worldIn, @Nonnull PlayerEntity playerIn, @Nonnull Hand handIn) {
-        return DrinkHelper.startDrinking(worldIn, playerIn, handIn);
+    public UseAction getUseAnimation(@Nonnull ItemStack stack) {
+        return UseAction.DRINK;
     }
 
     @Nonnull
     @Override
-    public ItemStack onItemUseFinish(ItemStack stack, @Nonnull World worldIn, LivingEntity entityLiving) {
-        stack.shrink(1);
-        if (entityLiving instanceof PlayerEntity) {
-            FactionPlayerHandler.getOpt(((PlayerEntity) entityLiving)).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty()).ifPresent(OblivionItem::applyEffect);
-        }
-        if (entityLiving instanceof MinionEntity) {
-            ((MinionEntity<?>) entityLiving).getMinionData().ifPresent(d -> d.upgradeStat(-1, (MinionEntity<?>) entityLiving));
-        }
-        return stack;
+    public ActionResult<ItemStack> use(@Nonnull World worldIn, @Nonnull PlayerEntity playerIn, @Nonnull Hand handIn) {
+        return DrinkHelper.useDrink(worldIn, playerIn, handIn);
     }
 }

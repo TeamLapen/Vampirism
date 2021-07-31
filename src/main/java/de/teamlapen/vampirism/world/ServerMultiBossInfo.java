@@ -19,7 +19,7 @@ public class ServerMultiBossInfo extends MultiBossInfo {
 
 
     public ServerMultiBossInfo(ITextComponent nameIn, BossInfo.Overlay overlayIn, Color... entries) {
-        super(MathHelper.getRandomUUID(), nameIn, overlayIn, entries);
+        super(MathHelper.createInsecureUUID(), nameIn, overlayIn, entries);
     }
 
     public void addPlayer(ServerPlayerEntity player) {

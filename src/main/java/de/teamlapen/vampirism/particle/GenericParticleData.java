@@ -28,11 +28,11 @@ public class GenericParticleData implements IParticleData {
 
 
     public static final IParticleData.IDeserializer<GenericParticleData> DESERIALIZER = new IParticleData.IDeserializer<GenericParticleData>() {
-        public GenericParticleData deserialize(ParticleType<GenericParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
+        public GenericParticleData fromCommand(ParticleType<GenericParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
             return new GenericParticleData(particleTypeIn, ResourceLocation.read(reader), reader.readInt(), reader.readInt());
         }
 
-        public GenericParticleData read(ParticleType<GenericParticleData> particleTypeIn, PacketBuffer buffer) {
+        public GenericParticleData fromNetwork(ParticleType<GenericParticleData> particleTypeIn, PacketBuffer buffer) {
             return new GenericParticleData(particleTypeIn, buffer.readResourceLocation(), buffer.readVarInt(), buffer.readVarInt(), buffer.readFloat());
         }
     };
@@ -65,8 +65,11 @@ public class GenericParticleData implements IParticleData {
     }
 
     @Override
-    public String getParameters() {
-        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + texture + " " + maxAge + " " + color;
+    public void writeToNetwork(PacketBuffer packetBuffer) {
+        packetBuffer.writeResourceLocation(texture);
+        packetBuffer.writeVarInt(maxAge);
+        packetBuffer.writeVarInt(color);
+        packetBuffer.writeFloat(speed);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -85,10 +88,7 @@ public class GenericParticleData implements IParticleData {
     }
 
     @Override
-    public void write(PacketBuffer packetBuffer) {
-        packetBuffer.writeResourceLocation(texture);
-        packetBuffer.writeVarInt(maxAge);
-        packetBuffer.writeVarInt(color);
-        packetBuffer.writeFloat(speed);
+    public String writeToString() {
+        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + texture + " " + maxAge + " " + color;
     }
 }

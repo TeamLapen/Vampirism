@@ -67,12 +67,12 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
 
     @Override
     public boolean matches(IInventory inv, World worldIn) {
-        boolean match = this.ingredient.test(inv.getStackInSlot(1));
+        boolean match = this.ingredient.test(inv.getItem(1));
         AtomicBoolean fluidMatch = new AtomicBoolean(true);
-        fluid.ifLeft((ingredient1 -> fluidMatch.set(ingredient1.test(inv.getStackInSlot(0)))));
+        fluid.ifLeft((ingredient1 -> fluidMatch.set(ingredient1.test(inv.getItem(0)))));
         fluid.ifRight((ingredient1 -> {
             fluidMatch.set(false);
-            Optional<FluidStack> stack = FluidUtil.getFluidContained(inv.getStackInSlot(0));
+            Optional<FluidStack> stack = FluidUtil.getFluidContained(inv.getItem(0));
             stack.ifPresent((handlerItem) -> fluidMatch.set(ingredient1.isFluidEqual(handlerItem) && ingredient1.getAmount() <= handlerItem.getAmount()));
         }));
         return match && fluidMatch.get();
@@ -81,7 +81,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
     @Override
     public String toString() {
         return "AlchemicalCauldronRecipe{" +
-                "cookingTime=" + cookTime +
+                "cookingTime=" + cookingTime +
                 ", skills=" + Arrays.toString(skills) +
                 ", output=" + result +
                 ", ingredient=" + ingredient +
@@ -93,26 +93,26 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<AlchemicalCauldronRecipe> {
         @Override
-        public AlchemicalCauldronRecipe read(ResourceLocation recipeId, JsonObject json) {
-            String group = JSONUtils.getString(json, "group", "");
-            Ingredient ingredients = Ingredient.deserialize(JSONUtils.isJsonArray(json, "ingredient") ? JSONUtils.getJsonArray(json, "ingredient") : JSONUtils.getJsonObject(json, "ingredient"));
-            int level = JSONUtils.getInt(json, "level", 1);
-            ISkill[] skills = VampirismRecipeHelper.deserializeSkills(JSONUtils.getJsonArray(json, "skill", null));
-            ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(JSONUtils.getJsonObject(json, "result"), true);
+        public AlchemicalCauldronRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+            String group = JSONUtils.getAsString(json, "group", "");
+            Ingredient ingredients = Ingredient.fromJson(JSONUtils.isArrayNode(json, "ingredient") ? JSONUtils.getAsJsonArray(json, "ingredient") : JSONUtils.getAsJsonObject(json, "ingredient"));
+            int level = JSONUtils.getAsInt(json, "level", 1);
+            ISkill[] skills = VampirismRecipeHelper.deserializeSkills(JSONUtils.getAsJsonArray(json, "skill", null));
+            ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(JSONUtils.getAsJsonObject(json, "result"), true);
             Either<Ingredient, FluidStack> fluid = VampirismRecipeHelper.getFluidOrItem(json);
-            int cookTime = JSONUtils.getInt(json, "cookTime", 200);
-            float exp = JSONUtils.getFloat(json, "experience", 0.2F);
+            int cookTime = JSONUtils.getAsInt(json, "cookTime", 200);
+            float exp = JSONUtils.getAsFloat(json, "experience", 0.2F);
             return new AlchemicalCauldronRecipe(recipeId, group, ingredients, fluid, result, skills, level, cookTime, exp);
         }
 
         @Override
-        public AlchemicalCauldronRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-            String group = buffer.readString(32767);
-            ItemStack result = buffer.readItemStack();
-            Ingredient ingredient = Ingredient.read(buffer);
+        public AlchemicalCauldronRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+            String group = buffer.readUtf(32767);
+            ItemStack result = buffer.readItem();
+            Ingredient ingredient = Ingredient.fromNetwork(buffer);
             Either<Ingredient, FluidStack> fluid;
             if (buffer.readBoolean()) {
-                fluid = Either.left(Ingredient.read(buffer));
+                fluid = Either.left(Ingredient.fromNetwork(buffer));
             } else {
                 fluid = Either.right(FluidStack.readFromPacket(buffer));
             }
@@ -121,30 +121,30 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
             int level = buffer.readVarInt();
             ISkill[] skills = new ISkill[buffer.readVarInt()];
             for (int i = 0; i < skills.length; i++) {
-                skills[i] = ModRegistries.SKILLS.getValue(new ResourceLocation(buffer.readString(32767)));
+                skills[i] = ModRegistries.SKILLS.getValue(new ResourceLocation(buffer.readUtf(32767)));
             }
             return new AlchemicalCauldronRecipe(recipeId, group, ingredient, fluid, result, skills, level, cookingtime, exp);
         }
 
         @Override
-        public void write(PacketBuffer buffer, AlchemicalCauldronRecipe recipe) {
-            buffer.writeString(recipe.group);
-            buffer.writeItemStack(recipe.result);
-            recipe.ingredient.write(buffer);
+        public void toNetwork(PacketBuffer buffer, AlchemicalCauldronRecipe recipe) {
+            buffer.writeUtf(recipe.group);
+            buffer.writeItem(recipe.result);
+            recipe.ingredient.toNetwork(buffer);
             if (recipe.fluid.left().isPresent()) {
                 buffer.writeBoolean(true);
-                recipe.fluid.left().get().write(buffer);
+                recipe.fluid.left().get().toNetwork(buffer);
             } else {
                 assert recipe.fluid.right().isPresent();
                 buffer.writeBoolean(false);
                 recipe.fluid.right().get().writeToPacket(buffer);
             }
             buffer.writeFloat(recipe.experience);
-            buffer.writeVarInt(recipe.cookTime);
+            buffer.writeVarInt(recipe.cookingTime);
             buffer.writeVarInt(recipe.reqLevel);
             buffer.writeVarInt(recipe.skills.length);
             for (ISkill skill : recipe.skills) {
-                buffer.writeString(skill.getRegistryName().toString());
+                buffer.writeUtf(skill.getRegistryName().toString());
             }
         }
 

@@ -8,6 +8,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(AgeableModel.class)
 public interface AgeableModelAccessor {
 
-    @Invoker("getBodyParts")
+    @Invoker("bodyParts")
     Iterable<ModelRenderer> getBodyParts_vampirism();
 }

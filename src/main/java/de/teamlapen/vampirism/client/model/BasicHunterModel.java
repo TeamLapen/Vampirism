@@ -23,12 +23,12 @@ public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<
     }
 
     @Override
-    public void setLivingAnimations(T entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime) {
+    public void prepareMobModel(T entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime) {
         this.targetingRight = false;
         this.targetingLeft = false;
-        ItemStack itemStack = entitylivingbaseIn.getHeldItem(Hand.MAIN_HAND);
+        ItemStack itemStack = entitylivingbaseIn.getItemInHand(Hand.MAIN_HAND);
         if (!itemStack.isEmpty() && itemStack.getItem() instanceof VampirismItemCrossbow && entitylivingbaseIn instanceof BasicHunterEntity && ((BasicHunterEntity) entitylivingbaseIn).isSwingingArms()) {
-            if (entitylivingbaseIn.getPrimaryHand() == HandSide.RIGHT) {
+            if (entitylivingbaseIn.getMainArm() == HandSide.RIGHT) {
                 this.targetingRight = true;
             } else {
                 this.targetingLeft = true;
@@ -36,21 +36,21 @@ public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<
             xAngle = -((BasicHunterEntity) entitylivingbaseIn).getTargetAngle() - (float) Math.PI / 3;
         }
 
-        super.setLivingAnimations(entitylivingbaseIn, p_78086_2_, p_78086_3_, partialTickTime);
+        super.prepareMobModel(entitylivingbaseIn, p_78086_2_, p_78086_3_, partialTickTime);
 
     }
 
     @Override
-    public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+    public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
         if (targetingRight) {
-            this.bipedRightArm.rotateAngleY = -0.1F + this.bipedHead.rotateAngleY;
-            this.bipedRightArm.rotateAngleX = xAngle;
-            this.bipedLeftArm.rotateAngleX = xAngle / 2F;
+            this.rightArm.yRot = -0.1F + this.head.yRot;
+            this.rightArm.xRot = xAngle;
+            this.leftArm.xRot = xAngle / 2F;
         } else if (targetingLeft) {
-            this.bipedLeftArm.rotateAngleY = 0.1F + this.bipedHead.rotateAngleY;
-            this.bipedRightArm.rotateAngleX = xAngle / 2F;
-            this.bipedLeftArm.rotateAngleX = xAngle;
+            this.leftArm.yRot = 0.1F + this.head.yRot;
+            this.rightArm.xRot = xAngle / 2F;
+            this.leftArm.xRot = xAngle;
         }
     }
 }

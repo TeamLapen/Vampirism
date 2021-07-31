@@ -73,11 +73,11 @@ public class GarlicBeaconScreen extends Screen {
     }
 
     protected void renderGuiBackground(MatrixStack mStack) {
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
+        this.minecraft.getTextureManager().bind(BACKGROUND);
         blit(mStack, this.guiLeft, this.guiTop, this.getBlitOffset(), 0, 0, this.xSize, this.ySize, 256, 256);
     }
 
     private void drawTitle(MatrixStack mStack) {
-        this.font.drawTextWithShadow(mStack, title, this.guiLeft + 15, this.guiTop + 5, 0xFFFFFFFF);
+        this.font.drawShadow(mStack, title, this.guiLeft + 15, this.guiTop + 5, 0xFFFFFFFF);
     }
 }

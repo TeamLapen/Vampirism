@@ -24,30 +24,30 @@ public class SieveBlock extends VampirismBlockContainer {
     private final static String regName = "blood_sieve";
 
     private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(1, 0, 1, 15, 1, 15);
-        VoxelShape b = Block.makeCuboidShape(2, 1, 2, 14, 2, 14);
-        VoxelShape c = Block.makeCuboidShape(5, 2, 5, 11, 12, 11);
-        VoxelShape d = Block.makeCuboidShape(3, 6, 3, 13, 9, 13);
-        VoxelShape e = Block.makeCuboidShape(1, 12, 1, 15, 14, 15);
-        VoxelShape f = Block.makeCuboidShape(0, 14, 0, 16, 16, 16);
+        VoxelShape a = Block.box(1, 0, 1, 15, 1, 15);
+        VoxelShape b = Block.box(2, 1, 2, 14, 2, 14);
+        VoxelShape c = Block.box(5, 2, 5, 11, 12, 11);
+        VoxelShape d = Block.box(3, 6, 3, 13, 9, 13);
+        VoxelShape e = Block.box(1, 12, 1, 15, 14, 15);
+        VoxelShape f = Block.box(0, 14, 0, 16, 16, 16);
 
         return VoxelShapes.or(a, b, c, d, e, f);
     }
 
     public SieveBlock() {
-        super(regName, Properties.create(Material.WOOD).hardnessAndResistance(2.5f).sound(SoundType.WOOD).notSolid());
-        this.setDefaultState(this.getStateContainer().getBaseState().with(PROPERTY_ACTIVE, false));
+        super(regName, Properties.of(Material.WOOD).strength(2.5f).sound(SoundType.WOOD).noOcclusion());
+        this.registerDefaultState(this.getStateDefinition().any().setValue(PROPERTY_ACTIVE, false));
+    }
+
+    @Override
+    public BlockRenderType getRenderShape(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+    public TileEntity newBlockEntity(IBlockReader worldIn) {
         return new SieveTileEntity();
-    }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class SieveBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(PROPERTY_ACTIVE);
     }
 }

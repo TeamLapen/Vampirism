@@ -83,7 +83,7 @@ public class VampirismMod {
     public static final ItemGroup creativeTab = new ItemGroup(REFERENCE.MODID) {
 
         @Override
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
 
             return new ItemStack(ModItems.vampire_fang);
         }

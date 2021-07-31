@@ -44,8 +44,8 @@ public class BakedAltarInspirationModel implements IDynamicBakedModel {
     }
 
     @Override
-    public ItemCameraTransforms getItemCameraTransforms() {
-        return baseModel.getItemCameraTransforms();
+    public TextureAtlasSprite getParticleIcon() {
+        return baseModel.getParticleIcon();
     }
 
     @Override
@@ -53,10 +53,9 @@ public class BakedAltarInspirationModel implements IDynamicBakedModel {
         return baseModel.getOverrides();
     }
 
-
     @Override
-    public TextureAtlasSprite getParticleTexture() {
-        return baseModel.getParticleTexture();
+    public ItemCameraTransforms getTransforms() {
+        return baseModel.getTransforms();
     }
 
     @Nonnull
@@ -71,13 +70,13 @@ public class BakedAltarInspirationModel implements IDynamicBakedModel {
     }
 
     @Override
-    public boolean isAmbientOcclusion() {
-        return baseModel.isAmbientOcclusion();
+    public boolean isCustomRenderer() {
+        return baseModel.isCustomRenderer();
     }
 
     @Override
-    public boolean isBuiltInRenderer() {
-        return baseModel.isBuiltInRenderer();
+    public boolean useAmbientOcclusion() {
+        return baseModel.useAmbientOcclusion();
     }
 
     @Override
@@ -86,8 +85,8 @@ public class BakedAltarInspirationModel implements IDynamicBakedModel {
     }
 
     @Override
-    public boolean isSideLit() {
-        return baseModel.isSideLit();
+    public boolean usesBlockLight() {
+        return baseModel.usesBlockLight();
     }
 
 }

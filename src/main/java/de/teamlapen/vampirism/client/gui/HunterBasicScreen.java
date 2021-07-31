@@ -33,12 +33,12 @@ public class HunterBasicScreen extends ContainerScreen<HunterBasicContainer> {
         super.init();
 
         ITextComponent name = new TranslationTextComponent("text.vampirism.level_up");
-        int wid = this.font.getStringPropertyWidth(name) + 5;
-        int i = (this.xSize - wid) / 2;
-        int j = (this.height - this.ySize) / 2;
-        addButton(buttonLevelup = new Button(this.guiLeft + i, j + 50, wid, 20, name, (context) -> {
+        int wid = this.font.width(name) + 5;
+        int i = (this.imageWidth - wid) / 2;
+        int j = (this.height - this.imageHeight) / 2;
+        addButton(buttonLevelup = new Button(this.leftPos + i, j + 50, wid, 20, name, (context) -> {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.BASICHUNTERLEVELUP, ""));
-            this.closeScreen();
+            this.onClose();
         }));
         buttonLevelup.active = false;
     }
@@ -47,7 +47,7 @@ public class HunterBasicScreen extends ContainerScreen<HunterBasicContainer> {
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(stack, mouseX, mouseY);
+        this.renderTooltip(stack, mouseX, mouseY);
 
     }
 
@@ -56,21 +56,21 @@ public class HunterBasicScreen extends ContainerScreen<HunterBasicContainer> {
         super.tick();
         timer = (timer + 1) % 10;
         if (timer == 0) {
-            this.missing = container.getMissingCount();
+            this.missing = menu.getMissingCount();
             this.buttonLevelup.active = missing == 0;
         }
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(guiTexture);
-        this.blit(stack, this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.minecraft.getTextureManager().bind(guiTexture);
+        this.blit(stack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(stack, mouseX, mouseY);
+    protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
+        super.renderLabels(stack, mouseX, mouseY);
 
         ITextComponent text = null;
         if (missing == 0) {
@@ -79,7 +79,7 @@ public class HunterBasicScreen extends ContainerScreen<HunterBasicContainer> {
             text = new TranslationTextComponent("text.vampirism.basic_hunter.pay_n_vampire_blood_more", missing);
         }
         if (text != null) {
-            this.font.func_238418_a_(text, 50, 12, 120, 0);
+            this.font.drawWordWrap(text, 50, 12, 120, 0);
         }
     }
 }

@@ -26,33 +26,33 @@ public class DefendAreaGoal extends TargetGoal {
     public DefendAreaGoal(MinionEntity<?> entity) {
         super(entity, false);
         this.entity = entity;
-        this.setMutexFlags(EnumSet.of(Goal.Flag.TARGET));
-        this.predicate = new EntityPredicate().setCustomPredicate(e -> entity.getAttackPredicate(true).test(e)).setUseInvisibilityCheck().setDistance(60);
+        this.setFlags(EnumSet.of(Goal.Flag.TARGET));
+        this.predicate = new EntityPredicate().selector(e -> entity.getAttackPredicate(true).test(e)).ignoreInvisibilityTesting().range(60);
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
-        return entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.defend_area).isPresent() && super.shouldContinueExecuting();
+    public boolean canContinueToUse() {
+        return entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.defend_area).isPresent() && super.canContinueToUse();
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         return entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.defend_area && ((DefendAreaTask.Desc) task).center != null).map(task -> {
                     BlockPos newCenter = ((DefendAreaTask.Desc) task).center;
                     if (bb == null || center == null || !center.equals(newCenter)) {
-                        this.bb = new AxisAlignedBB(newCenter).grow(((DefendAreaTask.Desc) task).distance);
+                        this.bb = new AxisAlignedBB(newCenter).inflate(((DefendAreaTask.Desc) task).distance);
                         this.center = newCenter;
                     }
 
-                    this.target = entity.world.getClosestEntityWithinAABB(LivingEntity.class, predicate, entity, entity.getPosX(), entity.getPosY(), entity.getPosZ(), bb);
-                    return this.target != null;
+                    this.targetMob = entity.level.getNearestEntity(LivingEntity.class, predicate, entity, entity.getX(), entity.getY(), entity.getZ(), bb);
+                    return this.targetMob != null;
                 }
         ).orElse(false);
     }
 
     @Override
-    public void startExecuting() {
-        super.startExecuting();
-        this.entity.setAttackTarget(this.target);
+    public void start() {
+        super.start();
+        this.entity.setTarget(this.targetMob);
     }
 }

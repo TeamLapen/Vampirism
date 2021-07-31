@@ -37,15 +37,15 @@ public class AlchemicalFireBlock extends VampirismBlock {
     private static final String name = "alchemical_fire";
 
     public AlchemicalFireBlock() {
-        super(name, Properties.create(Material.FIRE, MaterialColor.TNT).hardnessAndResistance(0.0f).setLightLevel(s -> 15).sound(SoundType.CLOTH).doesNotBlockMovement().tickRandomly().notSolid().noDrops());
-        this.setDefaultState(this.stateContainer.getBaseState().with(AGE, 0));
+        super(name, Properties.of(Material.FIRE, MaterialColor.FIRE).strength(0.0f).lightLevel(s -> 15).sound(SoundType.WOOL).noCollission().randomTicks().noOcclusion().noDrops());
+        this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         if (rand.nextInt(24) == 0) {
-            worldIn.playSound((float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F, SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
+            worldIn.playLocalSound((float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F, SoundEvents.FIRE_AMBIENT, SoundCategory.BLOCKS, 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
         }
 
 
@@ -53,7 +53,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
             double d0 = (double) pos.getX() + rand.nextDouble();
             double d1 = (double) pos.getY() + rand.nextDouble() * 0.5D + 0.5D;
             double d2 = (double) pos.getZ() + rand.nextDouble();
-            IParticleData type = i == 0 ? ParticleTypes.LARGE_SMOKE : i == 1 ? ParticleTypes.WITCH : rand.nextInt(10) == 0 ? ParticleTypes.FIREWORK : RedstoneParticleData.REDSTONE_DUST;
+            IParticleData type = i == 0 ? ParticleTypes.LARGE_SMOKE : i == 1 ? ParticleTypes.WITCH : rand.nextInt(10) == 0 ? ParticleTypes.FIREWORK : RedstoneParticleData.REDSTONE;
             worldIn.addParticle(type, d0, d1, d2, 0.0D, i == 2 ? 0.1D : 0.0D, 0.0D);
         }
     }
@@ -69,29 +69,29 @@ public class AlchemicalFireBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos.down()).isSolidSide(worldIn, pos.down(), Direction.UP);
+    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        return worldIn.getBlockState(pos.below()).isFaceSturdy(worldIn, pos.below(), Direction.UP);
+    }
+
+    @Override
+    public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+        if (!entityIn.fireImmune()) {
+            entityIn.setRemainingFireTicks(entityIn.getRemainingFireTicks() + 1);
+            if (entityIn.getRemainingFireTicks() == 0) {
+                entityIn.setSecondsOnFire(8);
+            }
+
+            entityIn.hurt(DamageSource.IN_FIRE, 1);
+        }
+
+        super.entityInside(state, worldIn, pos, entityIn);
     }
 
     @Override
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        if (!isValidPosition(state, worldIn, pos)) {
+        if (!canSurvive(state, worldIn, pos)) {
             worldIn.removeBlock(pos, isMoving);
         }
-    }
-
-    @Override
-    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        if (!entityIn.isImmuneToFire()) {
-            entityIn.forceFireTicks(entityIn.getFireTimer() + 1);
-            if (entityIn.getFireTimer() == 0) {
-                entityIn.setFire(8);
-            }
-
-            entityIn.attackEntityFrom(DamageSource.IN_FIRE, 1);
-        }
-
-        super.onEntityCollision(state, worldIn, pos, entityIn);
     }
 
     /**
@@ -102,31 +102,31 @@ public class AlchemicalFireBlock extends VampirismBlock {
      * @param state
      */
     public void setBurningInfinite(World worldIn, BlockPos pos, BlockState state) {
-        worldIn.setBlockState(pos, state.with(AGE, 15), 4);
+        worldIn.setBlock(pos, state.setValue(AGE, 15), 4);
     }
 
     @Override
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-        if (!this.isValidPosition(state, worldIn, pos)) {
-            worldIn.removeBlock(pos, this.canCollide);
+        if (!this.canSurvive(state, worldIn, pos)) {
+            worldIn.removeBlock(pos, this.hasCollision);
         }
 
 
-        int age = (state.get(AGE));
+        int age = (state.getValue(AGE));
 
 
         if (age < 14) {
-            state = state.with(AGE, age + 1);
-            worldIn.setBlockState(pos, state, 4);
+            state = state.setValue(AGE, age + 1);
+            worldIn.setBlock(pos, state, 4);
         } else if (age == 14) {
-            worldIn.removeBlock(pos, this.canCollide);
+            worldIn.removeBlock(pos, this.hasCollision);
         }
-        worldIn.getPendingBlockTicks().scheduleTick(pos, this, 30 + random.nextInt(10));
+        worldIn.getBlockTicks().scheduleTick(pos, this, 30 + random.nextInt(10));
     }
 
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(AGE);
     }
 

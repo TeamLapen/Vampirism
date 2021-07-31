@@ -15,22 +15,22 @@ public class VillageCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("village")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
                 .then(Commands.literal("capture")
                         .then(Commands.argument("faction", FactionArgument.factionArgument())
-                                .executes(context -> capture(context.getSource(), context.getSource().asPlayer(), FactionArgument.getFaction(context, "faction")))))
+                                .executes(context -> capture(context.getSource(), context.getSource().getPlayerOrException(), FactionArgument.getFaction(context, "faction")))))
                 .then(Commands.literal("abort")
                         .executes(context -> abort(context.getSource())));
 
     }
 
     private static int capture(CommandSource source, ServerPlayerEntity player, IPlayableFaction<?> faction) {
-        source.sendFeedback(TotemHelper.forceFactionCommand(faction, player), true);
+        source.sendSuccess(TotemHelper.forceFactionCommand(faction, player), true);
         return 0;
     }
 
     private static int abort(CommandSource source) {
-        TotemHelper.getTotemNearPos(source.getWorld(), new BlockPos(source.getPos()), true).ifPresent(TotemTileEntity::breakCapture);
+        TotemHelper.getTotemNearPos(source.getLevel(), new BlockPos(source.getPosition()), true).ifPresent(TotemTileEntity::breakCapture);
         return 0;
     }
 }

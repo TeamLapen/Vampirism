@@ -28,12 +28,12 @@ public class MinionTaskTrigger extends AbstractCriterionTrigger<MinionTaskTrigge
     }
 
     public void trigger(ServerPlayerEntity player, IMinionTask<?, ?> task) {
-        this.triggerListeners(player, instance -> instance.test(task));
+        this.trigger(player, instance -> instance.test(task));
     }
 
     @Nonnull
     @Override
-    protected Instance deserializeTrigger(@Nonnull JsonObject json, @Nonnull EntityPredicate.AndPredicate entityPredicate, @Nonnull ConditionArrayParser conditionsParser) {
+    protected Instance createInstance(@Nonnull JsonObject json, @Nonnull EntityPredicate.AndPredicate entityPredicate, @Nonnull ConditionArrayParser conditionsParser) {
         IMinionTask<?, ?> task = ModRegistries.MINION_TASKS.getValue(new ResourceLocation(json.get("action").getAsString()));
         if (task != null) {
             return new Instance(task);
@@ -47,14 +47,14 @@ public class MinionTaskTrigger extends AbstractCriterionTrigger<MinionTaskTrigge
         private final IMinionTask<?, ?> task;
 
         Instance(@Nonnull IMinionTask<?, ?> task) {
-            super(ID, EntityPredicate.AndPredicate.ANY_AND);
+            super(ID, EntityPredicate.AndPredicate.ANY);
             this.task = task;
         }
 
         @Nonnull
         @Override
-        public JsonObject serialize(@Nonnull ConditionArraySerializer serializer) {
-            JsonObject json = super.serialize(serializer);
+        public JsonObject serializeToJson(@Nonnull ConditionArraySerializer serializer) {
+            JsonObject json = super.serializeToJson(serializer);
             json.addProperty("action", task.getRegistryName().toString());
             return json;
         }

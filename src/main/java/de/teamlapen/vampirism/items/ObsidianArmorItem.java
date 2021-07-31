@@ -20,13 +20,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-
 public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWithTier {
 
     private final static String baseRegName = "obsidian_armor";
 
     public static boolean isFullyEquipped(PlayerEntity player) {
-        for (ItemStack stack : player.inventory.armorInventory) {
+        for (ItemStack stack : player.inventory.armor) {
             if (stack.isEmpty() || !(stack.getItem() instanceof ObsidianArmorItem)) {
                 return false;
             }
@@ -42,14 +41,14 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
     private final float[] SPEED_REDUCTION = new float[]{-0.025F, -0.1F, -0.05F, -0.025F};
 
     public ObsidianArmorItem(EquipmentSlotType equipmentSlotIn, TIER tier) {
-        super(baseRegName, tier.getName(), VampirismArmorMaterials.OBSIDIAN, equipmentSlotIn, new Properties().group(VampirismMod.creativeTab).isImmuneToFire());
+        super(baseRegName, tier.getName(), VampirismArmorMaterials.OBSIDIAN, equipmentSlotIn, new Properties().tab(VampirismMod.creativeTab).fireResistant());
         this.tier = tier;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
     }
 
@@ -69,7 +68,7 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> map = super.getAttributeModifiers(slot, stack);
-        if (slot == this.getEquipmentSlot()) {
+        if (slot == this.getSlot()) {
             map.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Speed modifier", this.getSpeedReduction(slot.getIndex()), AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
         return map;

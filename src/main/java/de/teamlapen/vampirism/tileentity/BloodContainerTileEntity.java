@@ -36,7 +36,7 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
     public static final ModelProperty<Boolean> FLUID_IMPURE = new ModelProperty<>();
 
     public static void setBloodValue(IBlockReader worldIn, Random randomIn, BlockPos blockPosIn) {
-        TileEntity tileEntity = worldIn.getTileEntity(blockPosIn);
+        TileEntity tileEntity = worldIn.getBlockEntity(blockPosIn);
         if (tileEntity instanceof BloodContainerTileEntity) {
             ((BloodContainerTileEntity) tileEntity).setFluidStack(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))));
         }
@@ -46,7 +46,7 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
 
     public BloodContainerTileEntity() {
         super(ModTiles.blood_container);
-        this.tank = new FluidTankWithListener(CAPACITY, fluidStack -> ModFluids.blood.isEquivalentTo(fluidStack.getFluid()) || ModFluids.impure_blood.isEquivalentTo(fluidStack.getFluid())).setListener(this);
+        this.tank = new FluidTankWithListener(CAPACITY, fluidStack -> ModFluids.blood.isSame(fluidStack.getFluid()) || ModFluids.impure_blood.isSame(fluidStack.getFluid())).setListener(this);
 
     }
 
@@ -65,35 +65,24 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
         CompoundNBT nbtTag = new CompoundNBT();
-        this.write(nbtTag);
-        return new SUpdateTileEntityPacket(getPos(), 1, getUpdateTag());
+        this.save(nbtTag);
+        return new SUpdateTileEntityPacket(getBlockPos(), 1, getUpdateTag());
     }
 
     @Nonnull
     @Override
     public CompoundNBT getUpdateTag() {
-        return write(new CompoundNBT());
-    }
-
-    @Override
-    public void markDirty() {
-        if (world != null) {
-            if (world.isRemote)
-                updateModelData(true);
-            world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
-            super.markDirty();
-        }
-
+        return save(new CompoundNBT());
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         FluidStack old = tank.getFluid();
-        if (hasWorld()) {
-            this.read(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
+        if (hasLevel()) {
+            this.load(this.level.getBlockState(pkt.getPos()), pkt.getTag());
             if (!old.isEmpty() && !old.isFluidStackIdentical(tank.getFluid()) || old.isEmpty() && !tank.getFluid().isEmpty()) {
-                markDirty();
+                setChanged();
             }
         }
     }
@@ -102,8 +91,19 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
     public void onTankContentChanged() {
         FluidStack fluid = tank.getFluid();
         if (lastSyncedAmount != Integer.MIN_VALUE || !fluid.isEmpty() && Math.abs(fluid.getAmount() - lastSyncedAmount) >= VReference.FOOD_TO_FLUID_BLOOD) {
-            this.markDirty();
+            this.setChanged();
             this.lastSyncedAmount = fluid.isEmpty() ? Integer.MIN_VALUE : fluid.getAmount();
+        }
+
+    }
+
+    @Override
+    public void setChanged() {
+        if (level != null) {
+            if (level.isClientSide)
+                updateModelData(true);
+            level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+            super.setChanged();
         }
 
     }

@@ -39,7 +39,7 @@ public class ActionArgument implements ArgumentType<IAction> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return ISuggestionProvider.suggestIterable(ModRegistries.ACTIONS.getKeys(), builder);
+        return ISuggestionProvider.suggestResource(ModRegistries.ACTIONS.getKeys(), builder);
     }
 
     @Override

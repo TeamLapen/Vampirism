@@ -18,9 +18,9 @@ public class BipedCloakedModel<T extends LivingEntity> extends PlayerModel<T> {
     public BipedCloakedModel(float modelSize, boolean smallArms) {
         super(modelSize, smallArms);
         bipedCloak = new ModelRenderer(this, 0, 0);
-        bipedCloak.setTextureSize(64, 32);
+        bipedCloak.setTexSize(64, 32);
         bipedCloak.addBox(-7.0F, 0.0F, 0.4F, 14, 20, 1);
-        bipedCloak.setRotationPoint(0, 0, 2);
+        bipedCloak.setPos(0, 0, 2);
     }
 
     public void renderCloak(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn) {
@@ -28,18 +28,18 @@ public class BipedCloakedModel<T extends LivingEntity> extends PlayerModel<T> {
     }
 
     @Override
-    public void setRotationAngles(T entity, float f, float f1, float f2, float f3, float f4) {
-        super.setRotationAngles(entity, f, f1, f2, f3, f4);
-        if (entity.isCrouching()) {
-            this.bipedCloak.rotationPointY = 2.0F;
-        } else {
-            this.bipedCloak.rotationPointY = 0.0F;
-        }
+    public void setAllVisible(boolean visible) {
+        super.setAllVisible(visible);
+        bipedCloak.visible = visible;
     }
 
     @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
-        bipedCloak.showModel = visible;
+    public void setupAnim(T entity, float f, float f1, float f2, float f3, float f4) {
+        super.setupAnim(entity, f, f1, f2, f3, f4);
+        if (entity.isCrouching()) {
+            this.bipedCloak.y = 2.0F;
+        } else {
+            this.bipedCloak.y = 0.0F;
+        }
     }
 }

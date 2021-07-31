@@ -37,7 +37,7 @@ public class ConfigCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("config")
-                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .executes(context -> {
                     throw NO_CONFIG_TYPE.create();
                 })
@@ -50,9 +50,9 @@ public class ConfigCommand extends BasicCommand {
                                     throw NO_BLOOD_VALUE_BLACKLIST_TYPE.create();
                                 })
                                 .then(Commands.literal("entity")
-                                        .executes(context -> blacklistEntity(context.getSource().asPlayer()))
-                                        .then(Commands.argument("entity", EntitySummonArgument.entitySummon()).suggests(ModSuggestionProvider.ENTITIES)
-                                                .executes(context -> blacklistEntity(context.getSource().asPlayer(), EntitySummonArgument.getEntityId(context, "entity")))))))
+                                        .executes(context -> blacklistEntity(context.getSource().getPlayerOrException()))
+                                        .then(Commands.argument("entity", EntitySummonArgument.id()).suggests(ModSuggestionProvider.ENTITIES)
+                                                .executes(context -> blacklistEntity(context.getSource().getPlayerOrException(), EntitySummonArgument.getSummonableEntity(context, "entity")))))))
                 .then(Commands.literal("sundamage")
                         .executes(context -> {
                             throw NO_SUN_DAMAGE_TYPE.create();
@@ -62,30 +62,30 @@ public class ConfigCommand extends BasicCommand {
                                     throw NO_SUN_DAMAGE_BLACKLIST_TYPE.create();
                                 })
                                 .then(Commands.literal("biome")
-                                        .executes(context -> blacklistBiome(context.getSource().asPlayer()))
+                                        .executes(context -> blacklistBiome(context.getSource().getPlayerOrException()))
                                         .then(Commands.argument("biome", BiomeArgument.biome()).suggests(ModSuggestionProvider.BIOMES)
-                                                .executes(context -> blacklistBiome(context.getSource().asPlayer(), BiomeArgument.getBiomeId(context, "biome")))))
+                                                .executes(context -> blacklistBiome(context.getSource().getPlayerOrException(), BiomeArgument.getBiomeId(context, "biome")))))
                                 .then(Commands.literal("dimension")
-                                        .executes(context -> blacklistDimension(context.getSource().asPlayer()))
-                                        .then(Commands.argument("dimension", DimensionArgument.getDimension())
-                                                .executes(context -> blacklistDimension(context.getSource().asPlayer(), DimensionArgument.getDimensionArgument(context, "dimension"))))))
+                                        .executes(context -> blacklistDimension(context.getSource().getPlayerOrException()))
+                                        .then(Commands.argument("dimension", DimensionArgument.dimension())
+                                                .executes(context -> blacklistDimension(context.getSource().getPlayerOrException(), DimensionArgument.getDimension(context, "dimension"))))))
                         .then(Commands.literal("enforce")
                                 .then(Commands.literal("dimension")
-                                        .executes(context -> enforceDimension(context.getSource().asPlayer()))
-                                        .then(Commands.argument("dimension", DimensionArgument.getDimension())
-                                                .executes(context -> enforceDimension(context.getSource().asPlayer(), DimensionArgument.getDimensionArgument(context, "dimension")))))));
+                                        .executes(context -> enforceDimension(context.getSource().getPlayerOrException()))
+                                        .then(Commands.argument("dimension", DimensionArgument.dimension())
+                                                .executes(context -> enforceDimension(context.getSource().getPlayerOrException(), DimensionArgument.getDimension(context, "dimension")))))));
     }
 
     private static int blacklistEntity(ServerPlayerEntity player) throws CommandSyntaxException {
         Vector3d vec3d = player.getEyePosition(1.0F);
         double d0 = 50;
 
-        Vector3d vec3d1 = player.getLook(1.0F);
+        Vector3d vec3d1 = player.getViewVector(1.0F);
         Vector3d vec3d2 = vec3d.add(vec3d1.x * d0, vec3d1.y * d0, vec3d1.z * d0);
-        AxisAlignedBB axisalignedbb = player.getBoundingBox().expand(vec3d1.scale(d0)).grow(1);
+        AxisAlignedBB axisalignedbb = player.getBoundingBox().expandTowards(vec3d1.scale(d0)).inflate(1);
 
 
-        EntityRayTraceResult result = ProjectileHelper.rayTraceEntities(player.world, player, vec3d, vec3d2, axisalignedbb, (a) -> !a.isSpectator());
+        EntityRayTraceResult result = ProjectileHelper.getEntityHitResult(player.level, player, vec3d, vec3d2, axisalignedbb, (a) -> !a.isSpectator());
         if (result == null) {
             throw NO_SELECTED_ENTITY.create();
         } else {
@@ -100,7 +100,7 @@ public class ConfigCommand extends BasicCommand {
     }
 
     private static int blacklistBiome(ServerPlayerEntity player) {
-        return blacklistBiome(player, player.getEntityWorld().getBiome(player.getPosition()).getRegistryName());
+        return blacklistBiome(player, player.getCommandSenderWorld().getBiome(player.blockPosition()).getRegistryName());
     }
 
     private static int blacklistBiome(ServerPlayerEntity player, ResourceLocation biome) {
@@ -108,29 +108,29 @@ public class ConfigCommand extends BasicCommand {
     }
 
     private static int blacklistDimension(ServerPlayerEntity player) {
-        return blacklistDimension(player, player.getServerWorld());
+        return blacklistDimension(player, player.getLevel());
     }
 
     private static int blacklistDimension(ServerPlayerEntity player, ServerWorld dimension) {
-        return modifyList(player, dimension.getDimensionKey().getLocation(), VampirismConfig.SERVER.sundamageDimensionsOverrideNegative, "command.vampirism.base.config.dimension.blacklisted", "command.vampirism.base.config.dimension.not_blacklisted");
+        return modifyList(player, dimension.dimension().location(), VampirismConfig.SERVER.sundamageDimensionsOverrideNegative, "command.vampirism.base.config.dimension.blacklisted", "command.vampirism.base.config.dimension.not_blacklisted");
     }
 
     private static int enforceDimension(ServerPlayerEntity player) {
-        return enforceDimension(player, player.getServerWorld());
+        return enforceDimension(player, player.getLevel());
     }
 
     private static int enforceDimension(ServerPlayerEntity player, ServerWorld dimension) {
-        return modifyList(player, dimension.getDimensionKey().getLocation(), VampirismConfig.SERVER.sundamageDimensionsOverridePositive, "command.vampirism.base.config.dimension.enforced", "command.vampirism.base.config.dimension.not_enforced");
+        return modifyList(player, dimension.dimension().location(), VampirismConfig.SERVER.sundamageDimensionsOverridePositive, "command.vampirism.base.config.dimension.enforced", "command.vampirism.base.config.dimension.not_enforced");
     }
 
     private static int modifyList(ServerPlayerEntity player, ResourceLocation id, ForgeConfigSpec.ConfigValue<List<? extends String>> configList, String blacklist, String not_blacklist) {
         List<? extends String> list = configList.get();
         if (!list.contains(id.toString())) {
             ((List<String>) list).add(id.toString());
-            player.sendStatusMessage(new TranslationTextComponent(blacklist, id), false);
+            player.displayClientMessage(new TranslationTextComponent(blacklist, id), false);
         } else {
             list.remove(id.toString());
-            player.sendStatusMessage(new TranslationTextComponent(not_blacklist, id), false);
+            player.displayClientMessage(new TranslationTextComponent(not_blacklist, id), false);
         }
         configList.set(list);
         return 0;

@@ -14,7 +14,6 @@ import net.minecraft.tileentity.TileEntity;
 
 import javax.annotation.Nonnull;
 
-
 public class TentSpawnerCondition implements ILootCondition {
 
     private final static TentSpawnerCondition INSTANCE = new TentSpawnerCondition();
@@ -25,13 +24,13 @@ public class TentSpawnerCondition implements ILootCondition {
 
     @Nonnull
     @Override
-    public LootConditionType getConditionType() {
+    public LootConditionType getType() {
         return ModLoot.is_tent_spawner;
     }
 
     @Override
     public boolean test(LootContext lootContext) {
-        TileEntity t = lootContext.get(LootParameters.BLOCK_ENTITY);
+        TileEntity t = lootContext.getParamOrNull(LootParameters.BLOCK_ENTITY);
         if (t instanceof TentTileEntity) {
             return ((TentTileEntity) t).isSpawner();
         }

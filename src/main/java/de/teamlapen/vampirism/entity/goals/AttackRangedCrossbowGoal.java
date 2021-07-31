@@ -35,41 +35,41 @@ public class AttackRangedCrossbowGoal<T extends VampirismEntity & AttackRangedCr
         this.moveSpeedAmp = speedAmplifier;
         this.attackCooldown = delay;
         this.maxAttackDistance = maxDistance * maxDistance;
-        this.setMutexFlags(EnumSet.of(Flag.MOVE));
+        this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
     @Override
-    public void resetTask() {
-        super.resetTask();
+    public boolean canContinueToUse() {
+        return (this.canUse() || !this.entity.getNavigation().isDone()) && entity.isCrossbowInMainhand();
+    }
+
+    @Override
+    public boolean canUse() {
+        return this.entity.getTarget() != null && entity.isCrossbowInMainhand();
+    }
+
+    @Override
+    public void start() {
+        super.start();
+        entity.startTargeting();
+
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
         this.seeTime = 0;
         this.attackTime = -1;
         entity.stopTargeting();
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
-        return (this.shouldExecute() || !this.entity.getNavigator().noPath()) && entity.isCrossbowInMainhand();
-    }
-
-    @Override
-    public boolean shouldExecute() {
-        return this.entity.getAttackTarget() != null && entity.isCrossbowInMainhand();
-    }
-
-    @Override
-    public void startExecuting() {
-        super.startExecuting();
-        entity.startTargeting();
-
-    }
-
-    @Override
     public void tick() {
-        LivingEntity entitylivingbase = this.entity.getAttackTarget();
+        LivingEntity entitylivingbase = this.entity.getTarget();
 
         if (entitylivingbase != null) {
-            double d0 = this.entity.getDistanceSq(entitylivingbase.getPosX(), entitylivingbase.getBoundingBox().minY, entitylivingbase.getPosZ());
-            boolean canSee = this.entity.getEntitySenses().canSee(entitylivingbase);
+            double d0 = this.entity.distanceToSqr(entitylivingbase.getX(), entitylivingbase.getBoundingBox().minY, entitylivingbase.getZ());
+            boolean canSee = this.entity.getSensing().canSee(entitylivingbase);
             boolean couldSee = this.seeTime > 0;
 
             if (canSee != couldSee) {
@@ -83,19 +83,19 @@ public class AttackRangedCrossbowGoal<T extends VampirismEntity & AttackRangedCr
             }
 
             if (d0 <= (double) this.maxAttackDistance && this.seeTime >= 20) {
-                this.entity.getNavigator().clearPath();
+                this.entity.getNavigation().stop();
                 ++this.strafingTime;
             } else {
-                this.entity.getNavigator().tryMoveToEntityLiving(entitylivingbase, this.moveSpeedAmp);
+                this.entity.getNavigation().moveTo(entitylivingbase, this.moveSpeedAmp);
                 this.strafingTime = -1;
             }
 
             if (this.strafingTime >= 20) {
-                if ((double) this.entity.getRNG().nextFloat() < 0.3D) {
+                if ((double) this.entity.getRandom().nextFloat() < 0.3D) {
                     this.strafingClockwise = !this.strafingClockwise;
                 }
 
-                if ((double) this.entity.getRNG().nextFloat() < 0.3D) {
+                if ((double) this.entity.getRandom().nextFloat() < 0.3D) {
                     this.strafingBackwards = !this.strafingBackwards;
                 }
 
@@ -109,8 +109,8 @@ public class AttackRangedCrossbowGoal<T extends VampirismEntity & AttackRangedCr
                     this.strafingBackwards = true;
                 }
 
-                this.entity.getMoveHelper().strafe(this.strafingBackwards ? -0.5F : 0.5F, this.strafingClockwise ? 0.5F : -0.5F);
-                this.entity.faceEntity(entitylivingbase, 30.0F, 30.0F);
+                this.entity.getMoveControl().strafe(this.strafingBackwards ? -0.5F : 0.5F, this.strafingClockwise ? 0.5F : -0.5F);
+                this.entity.lookAt(entitylivingbase, 30.0F, 30.0F);
             } else {
                 this.entity.lookAt(EntityAnchorArgument.Type.EYES, entitylivingbase.getEyePosition(1.0F));
             }
@@ -125,14 +125,14 @@ public class AttackRangedCrossbowGoal<T extends VampirismEntity & AttackRangedCr
 
     protected void attackWithCrossbow(LivingEntity target) {
         ItemStack arrows = entity.getArrowStackForAttack(target);
-        CrossbowArrowEntity entityArrow = CrossbowArrowEntity.createWithShooter(entity.getEntityWorld(), entity, 0, 0.3F, !entity.isLeftHanded(), arrows);
-        double sx = target.getPosX() - entityArrow.getPosX();
-        double sy = target.getBoundingBox().minY + (double) (target.getHeight() / 3.0F) - entityArrow.getPosY();
-        double sz = target.getPosZ() - entityArrow.getPosZ();
+        CrossbowArrowEntity entityArrow = CrossbowArrowEntity.createWithShooter(entity.getCommandSenderWorld(), entity, 0, 0.3F, !entity.isLeftHanded(), arrows);
+        double sx = target.getX() - entityArrow.getX();
+        double sy = target.getBoundingBox().minY + (double) (target.getBbHeight() / 3.0F) - entityArrow.getY();
+        double sz = target.getZ() - entityArrow.getZ();
         double dist = MathHelper.sqrt(sx * sx + sz * sz);
-        entityArrow.shoot(sx, sy + dist * 0.2, sz, 1.6F, (float) (13 - target.getEntityWorld().getDifficulty().getId() * 4));
+        entityArrow.shoot(sx, sy + dist * 0.2, sz, 1.6F, (float) (13 - target.getCommandSenderWorld().getDifficulty().getId() * 4));
         this.entity.playSound(ModSounds.crossbow, 0.5F, 1);
-        this.entity.getEntityWorld().addEntity(entityArrow);
+        this.entity.getCommandSenderWorld().addFreshEntity(entityArrow);
     }
 
     public interface IAttackWithCrossbow {

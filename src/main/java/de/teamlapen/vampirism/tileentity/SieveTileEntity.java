@@ -51,7 +51,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(getPos(), 1, getUpdateTag());
+        return new SUpdateTileEntityPacket(getBlockPos(), 1, getUpdateTag());
     }
 
     @Override
@@ -66,21 +66,21 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
         return active;
     }
 
-    private void setActive(boolean active) {
-        if (this.active != active) {
-            this.active = active;
-            if (this.world != null)
-                this.world.setBlockState(getPos(), world.getBlockState(pos).with(SieveBlock.PROPERTY_ACTIVE, active));
-        }
+    @Override
+    public void load(BlockState state, CompoundNBT tag) {
+        super.load(state, tag);
+        tank.readFromNBT(tag);
+        cooldownProcess = tag.getInt("cooldown_process");
+        cooldownPull = tag.getInt("cooldown_pull");
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         boolean old = active;
-        active = pkt.getNbtCompound().getBoolean("active");
-        if (active != old && world != null)
-            this.world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
+        active = pkt.getTag().getBoolean("active");
+        if (active != old && level != null)
+            this.level.sendBlockUpdated(getBlockPos(), level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
 
     }
 
@@ -90,21 +90,22 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT tag) {
-        super.read(state, tag);
-        tank.readFromNBT(tag);
+    public CompoundNBT save(CompoundNBT tag) {
+        tag = super.save(tag);
+        tank.writeToNBT(tag);
         cooldownProcess = tag.getInt("cooldown_process");
         cooldownPull = tag.getInt("cooldown_pull");
+        return tag;
     }
 
     @Override
     public void tick() {
-        if (world == null) return;
+        if (level == null) return;
         //Process content
         if (--cooldownProcess < 0) {
             cooldownProcess = 15;
             if (tank.getFluidAmount() > 0) {
-                FluidUtil.getFluidHandler(this.world, this.pos.down(), Direction.UP).ifPresent(handler -> {
+                FluidUtil.getFluidHandler(this.level, this.worldPosition.below(), Direction.UP).ifPresent(handler -> {
                     tank.setDrainable(true);
                     FluidStack transferred = FluidUtil.tryFluidTransfer(handler, tank, 2 * VReference.FOOD_TO_FLUID_BLOOD, true);
                     tank.setDrainable(false);
@@ -120,20 +121,19 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
         //Pull new content. Cooldown is increased when liquid is filled into the tank (regardless of way)
         if (--cooldownPull < 0) {
             cooldownPull = 10;
-            FluidUtil.getFluidHandler(this.world, this.pos.up(), Direction.DOWN).ifPresent(handler -> {
+            FluidUtil.getFluidHandler(this.level, this.worldPosition.above(), Direction.DOWN).ifPresent(handler -> {
                 FluidStack transferred = FluidUtil.tryFluidTransfer(tank, handler, 2 * VReference.FOOD_TO_FLUID_BLOOD, true);
             });
         }
 
     }
 
-    @Override
-    public CompoundNBT write(CompoundNBT tag) {
-        tag = super.write(tag);
-        tank.writeToNBT(tag);
-        cooldownProcess = tag.getInt("cooldown_process");
-        cooldownPull = tag.getInt("cooldown_pull");
-        return tag;
+    private void setActive(boolean active) {
+        if (this.active != active) {
+            this.active = active;
+            if (this.level != null)
+                this.level.setBlockAndUpdate(getBlockPos(), level.getBlockState(worldPosition).setValue(SieveBlock.PROPERTY_ACTIVE, active));
+        }
     }
 
     private class FilteringFluidTank extends FluidTankWithListener {

@@ -25,12 +25,11 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-
 public class VampireBookItem extends VampirismItem {
     private static final String regName = "vampire_book";
 
     public static boolean validBookTagContents(CompoundNBT nbt) {
-        if (!WritableBookItem.isNBTValid(nbt)) {
+        if (!WritableBookItem.makeSureTagIsValid(nbt)) {
             return false;
         } else if (!nbt.contains("title")) {
             return false;
@@ -41,33 +40,33 @@ public class VampireBookItem extends VampirismItem {
     }
 
     public VampireBookItem() {
-        super(regName, new Properties().rarity(Rarity.UNCOMMON).maxStackSize(1).group(VampirismMod.creativeTab));
+        super(regName, new Properties().rarity(Rarity.UNCOMMON).stacksTo(1).tab(VampirismMod.creativeTab));
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (stack.hasTag()) {
             CompoundNBT compoundnbt = stack.getTag();
             String s = compoundnbt.getString("author");
             if (!StringUtils.isNullOrEmpty(s)) {
-                tooltip.add((new TranslationTextComponent("book.byAuthor", s)).mergeStyle(TextFormatting.GRAY));
+                tooltip.add((new TranslationTextComponent("book.byAuthor", s)).withStyle(TextFormatting.GRAY));
             }
 
-            tooltip.add((new StringTextComponent("Vampirism knowledge").mergeStyle(TextFormatting.GRAY)));
+            tooltip.add((new StringTextComponent("Vampirism knowledge").withStyle(TextFormatting.GRAY)));
         }
 
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        if (isInGroup(group)) {
+    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+        if (allowdedIn(group)) {
             items.add(VampireBookManager.getInstance().getRandomBook(new Random()));
         }
     }
 
     @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
+    public ITextComponent getName(ItemStack stack) {
         if (stack.hasTag()) {
             CompoundNBT nbttagcompound = stack.getTag();
             String s = nbttagcompound.getString("title");
@@ -75,18 +74,18 @@ public class VampireBookItem extends VampirismItem {
                 return new StringTextComponent(s);
             }
         }
-        return super.getDisplayName(stack);
+        return super.getName(stack);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public boolean hasEffect(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return true;
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
-        if (!worldIn.isRemote && playerIn instanceof ServerPlayerEntity) {
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
+        if (!worldIn.isClientSide && playerIn instanceof ServerPlayerEntity) {
             this.resolveContents(stack, playerIn);
             VampirismMod.dispatcher.sendTo(new OpenVampireBookPacket(stack), (ServerPlayerEntity) playerIn);
         }
@@ -106,8 +105,8 @@ public class VampireBookItem extends VampirismItem {
 
                         Object lvt_7_1_;
                         try {
-                            ITextComponent var11 = ITextComponent.Serializer.getComponentFromJsonLenient(s);
-                            lvt_7_1_ = TextComponentUtils.func_240645_a_(null, var11, player, 0);
+                            ITextComponent var11 = ITextComponent.Serializer.fromJsonLenient(s);
+                            lvt_7_1_ = TextComponentUtils.updateForEntity(null, var11, player, 0);
                         } catch (Exception var9) {
                             lvt_7_1_ = new StringTextComponent(s);
                         }
@@ -116,9 +115,9 @@ public class VampireBookItem extends VampirismItem {
                     }
 
                     nbttagcompound.put("pages", nbttaglist);
-                    if (player instanceof ServerPlayerEntity && player.getHeldItemMainhand() == stack) {
-                        Slot var10 = player.openContainer.inventorySlots.get(player.inventory.currentItem);
-                        ((ServerPlayerEntity) player).connection.sendPacket(new SSetSlotPacket(0, var10.slotNumber, stack));
+                    if (player instanceof ServerPlayerEntity && player.getMainHandItem() == stack) {
+                        Slot var10 = player.containerMenu.slots.get(player.inventory.selected);
+                        ((ServerPlayerEntity) player).connection.send(new SSetSlotPacket(0, var10.index, stack));
                     }
                 }
             }

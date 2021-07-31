@@ -37,24 +37,24 @@ public class ChurchAltarBlock extends VampirismHorizontalBlock {
     private static final VoxelShape SHAPEZ = UtilLib.rotateShape(SHAPEX, UtilLib.RotationAmount.NINETY);
 
     private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(1, 0, 5, 15, 1, 12);
-        VoxelShape b = Block.makeCuboidShape(7, 1, 7, 9, 12, 11);
-        VoxelShape c = Block.makeCuboidShape(1, 9, 3, 15, 14, 13);
+        VoxelShape a = Block.box(1, 0, 5, 15, 1, 12);
+        VoxelShape b = Block.box(7, 1, 7, 9, 12, 11);
+        VoxelShape c = Block.box(1, 9, 3, 15, 14, 13);
         VoxelShape r = VoxelShapes.or(a, b);
         return VoxelShapes.or(r, c);
     }
 
 
     public ChurchAltarBlock() {
-        super(regName, Properties.create(Material.WOOD).hardnessAndResistance(0.5f).notSolid());
-        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
+        super(regName, Properties.of(Material.WOOD).strength(0.5f).noOcclusion());
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }
 
 
     @Nonnull
     @Override
     public VoxelShape getShape(BlockState blockState, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        Direction dir = blockState.get(FACING);
+        Direction dir = blockState.getValue(FACING);
         if (dir == Direction.NORTH || dir == Direction.SOUTH) return SHAPEX;
         return SHAPEZ;
     }
@@ -62,28 +62,28 @@ public class ChurchAltarBlock extends VampirismHorizontalBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlacementHorizontalFacing().getOpposite());
+        return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite());
     }
 
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!player.isAlive()) return ActionResultType.PASS;
         IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
-        ItemStack heldItem = player.getHeldItem(hand);
+        ItemStack heldItem = player.getItemInHand(hand);
         if (handler.isInFaction(VReference.VAMPIRE_FACTION)) {
             VampirismMod.proxy.displayRevertBackScreen();
             return ActionResultType.SUCCESS;
         } else if (!heldItem.isEmpty()) {
             if (ModItems.holy_salt_water.equals(heldItem.getItem())) {
-                if (world.isRemote) return ActionResultType.SUCCESS;
+                if (world.isClientSide) return ActionResultType.SUCCESS;
                 boolean enhanced = handler.isInFaction(VReference.HUNTER_FACTION) && handler.getCurrentFactionPlayer().map(s -> s.getSkillHandler()).map(s -> s.isSkillEnabled(HunterSkills.holy_water_enhanced)).orElse(false);
                 ItemStack newStack = new ItemStack(enhanced ? ModItems.holy_water_bottle_enhanced : ModItems.holy_water_bottle_normal, heldItem.getCount());
-                player.setHeldItem(hand, newStack);
+                player.setItemInHand(hand, newStack);
                 return ActionResultType.SUCCESS;
             } else if (ModItems.pure_salt.equals(heldItem.getItem())) {
-                if (world.isRemote) return ActionResultType.SUCCESS;
-                player.setHeldItem(hand, new ItemStack(ModItems.holy_salt, heldItem.getCount()));
+                if (world.isClientSide) return ActionResultType.SUCCESS;
+                player.setItemInHand(hand, new ItemStack(ModItems.holy_salt, heldItem.getCount()));
             }
         }
         return ActionResultType.PASS;

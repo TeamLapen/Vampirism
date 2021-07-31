@@ -45,7 +45,7 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
         ((Inventory) inventory).addListener(this);
         slotResult = new SlotResult(this, new CraftResultInventory() {
             @Override
-            public int getInventoryStackLimit() {
+            public int getMaxStackSize() {
                 return 1;
             }
         }, 4, 146, 28);
@@ -55,8 +55,8 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return isWithinUsableDistance(worldPos, playerIn, ModBlocks.hunter_table);
+    public void containerChanged(IInventory invBasic) {
+        slotsChanged(invBasic);
     }
 
     public ItemStack getMissingItems() {
@@ -64,36 +64,36 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
     }
 
     public boolean isLevelValid(boolean considerTier) {
-        return considerTier ? levelingConf.isLevelValidForTableTier(hunterLevel + 1, worldPos.apply(((world, blockPos) -> {
+        return considerTier ? levelingConf.isLevelValidForTableTier(hunterLevel + 1, worldPos.evaluate(((world, blockPos) -> {
             BlockState state = world.getBlockState(blockPos);
-            return state.hasProperty(HunterTableBlock.VARIANT) ? state.get(HunterTableBlock.VARIANT).tier : 0;
+            return state.hasProperty(HunterTableBlock.VARIANT) ? state.getValue(HunterTableBlock.VARIANT).tier : 0;
         })).orElse(0)) : levelingConf.isLevelValidForTable(hunterLevel + 1);
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
-        if (!playerIn.getEntityWorld().isRemote) {
-            clearContainer(playerIn, playerIn.world, inventory);
+    public void removed(PlayerEntity playerIn) {
+        super.removed(playerIn);
+        if (!playerIn.getCommandSenderWorld().isClientSide) {
+            clearContainer(playerIn, playerIn.level, inventory);
         }
     }
 
     @Override
-    public void onCraftMatrixChanged(IInventory inventoryIn) {
+    public void slotsChanged(IInventory inventoryIn) {
         if (isLevelValid(true)) {
             int[] req = levelingConf.getItemRequirementsForTable(hunterLevel + 1);
             missing = checkItems(req[0], req[1], req[2], req[3]);
             if (missing.isEmpty()) {
-                slotResult.inventory.setInventorySlotContents(0, new ItemStack(HunterIntelItem.getIntelForExactlyLevel(hunterLevel + 1)));
+                slotResult.container.setItem(0, new ItemStack(HunterIntelItem.getIntelForExactlyLevel(hunterLevel + 1)));
             } else {
-                slotResult.inventory.setInventorySlotContents(0, ItemStack.EMPTY);
+                slotResult.container.setItem(0, ItemStack.EMPTY);
             }
         }
     }
 
     @Override
-    public void onInventoryChanged(IInventory invBasic) {
-        onCraftMatrixChanged(invBasic);
+    public boolean stillValid(PlayerEntity playerIn) {
+        return stillValid(worldPos, playerIn, ModBlocks.hunter_table);
     }
 
 
@@ -117,7 +117,7 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
         @Override
         public HunterTableContainer create(int windowId, PlayerInventory inv, PacketBuffer data) {
             BlockPos pos = data.readBlockPos();
-            return new HunterTableContainer(windowId, inv, IWorldPosCallable.of(inv.player.world, pos));
+            return new HunterTableContainer(windowId, inv, IWorldPosCallable.create(inv.player.level, pos));
         }
     }
 
@@ -131,7 +131,7 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
         }
 
         @Override
-        public boolean isItemValid(ItemStack stack) {
+        public boolean mayPlace(ItemStack stack) {
             return false;
         }
 

@@ -26,7 +26,7 @@ public interface IFactionExclusiveItem {
     default void addFactionPoisonousToolTip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn, @Nullable PlayerEntity player) {
         IFaction<?> faction = player != null ? VampirismAPI.factionRegistry().getFaction(player) : null;
         if (faction == null ? !VReference.HUNTER_FACTION.equals(getExclusiveFaction()) : faction != getExclusiveFaction()) {
-            tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_non", getExclusiveFaction().getNamePlural()).mergeStyle(TextFormatting.DARK_RED));
+            tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_non", getExclusiveFaction().getNamePlural()).withStyle(TextFormatting.DARK_RED));
         }
     }
 

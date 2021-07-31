@@ -12,7 +12,7 @@ public class BloodySpruceTree extends Tree {
 
     @Nullable
     @Override
-    protected ConfiguredFeature<BaseTreeFeatureConfig, ?> getTreeFeature(Random randomIn, boolean largeHive) {
+    protected ConfiguredFeature<BaseTreeFeatureConfig, ?> getConfiguredFeature(Random randomIn, boolean largeHive) {
         return randomIn.nextInt(10) < 7 ? VampirismBiomeFeatures.vampire_tree : VampirismBiomeFeatures.vampire_tree_red;
     }
 }

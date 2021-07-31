@@ -19,33 +19,30 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-
 public class CastleBricksBlock extends VampirismBlock {
     private static final String name = "castle_block";
     private final EnumVariant variant;
 
     public CastleBricksBlock(EnumVariant variant) {
-        super(name + "_" + variant.getName(), Properties.create(Material.ROCK).hardnessAndResistance(2, 10).sound(SoundType.STONE));
+        super(name + "_" + variant.getName(), Properties.of(Material.STONE).strength(2, 10).sound(SoundType.STONE));
         this.variant = variant;
 
     }
 
-
-    @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
-        super.addInformation(stack, world, tooltip, advanced);
-        tooltip.add(new TranslationTextComponent("block.vampirism.castle_block" + (variant == EnumVariant.DARK_STONE ? ".no_spawn" : ".vampire_spawn")).mergeStyle(TextFormatting.ITALIC, TextFormatting.GRAY));
-    }
-
-
     @Override
     public void animateTick(BlockState state, World world, BlockPos pos, Random rand) {
-        if (!CastleStairsBlock.isBlockStairs(state) && variant == EnumVariant.DARK_BRICK_BLOODY) {
+        if (!CastleStairsBlock.isStairs(state) && variant == EnumVariant.DARK_BRICK_BLOODY) {
             if (rand.nextInt(180) == 0) {
-                world.playSound(pos.getX(), pos.getY(), pos.getZ(), ModSounds.ambient_castle, SoundCategory.AMBIENT, 0.8F, 1.0F, false);
+                world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), ModSounds.ambient_castle, SoundCategory.AMBIENT, 0.8F, 1.0F, false);
             }
 
         }
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
+        super.appendHoverText(stack, world, tooltip, advanced);
+        tooltip.add(new TranslationTextComponent("block.vampirism.castle_block" + (variant == EnumVariant.DARK_STONE ? ".no_spawn" : ".vampire_spawn")).withStyle(TextFormatting.ITALIC, TextFormatting.GRAY));
     }
 
     public EnumVariant getVariant() {
@@ -67,11 +64,11 @@ public class CastleBricksBlock extends VampirismBlock {
         }
 
         public String getName() {
-            return this.getString();
+            return this.getSerializedName();
         }
 
         @Override
-        public String getString() {
+        public String getSerializedName() {
             return this.name;
         }
     }
