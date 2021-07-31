@@ -43,7 +43,7 @@ public class ModTasks {
 
     public static void registerTasks(IForgeRegistry<Task> registry) {
         //Vampire gadgets
-        registry.register(TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).unlockedBy(new LvlUnlocker(4)).addRequirement("advanced_hunter", ModEntities.advanced_hunter, 10).addRequirement("item", new ItemStack(Items.GOLD_INGOT, 5)).setReward(new ItemStack(ModItems.feeding_adapter)).build("feeding_adapter"));
+        registry.register(TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).unlockedBy(new LvlUnlocker(4)).addRequirement("advanced_hunter", ModTags.Entities.ADVANCED_HUNTER, 10).addRequirement("item", new ItemStack(Items.GOLD_INGOT, 5)).setReward(new ItemStack(ModItems.feeding_adapter)).build("feeding_adapter"));
         registry.register(TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement("magma", new ItemStack(Items.MAGMA_CREAM, 3)).addRequirement("hunter", ModTags.Entities.HUNTER, 10).setReward(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), ModPotions.vampire_fire_resistance)).build("fire_resistance1"));
         registry.register(TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).unlockedBy(new LvlUnlocker(7)).addRequirement("magma", new ItemStack(Items.MAGMA_CREAM, 5)).addRequirement("hunter", ModTags.Entities.HUNTER, 15).setReward(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), ModPotions.long_vampire_fire_resistance)).build("fire_resistance2"));
 
