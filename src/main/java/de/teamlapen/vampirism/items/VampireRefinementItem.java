@@ -112,7 +112,7 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
         if (set == null) {
             return super.getName(stack);
         }
-        return new TranslationTextComponent(this.getDescriptionId() + ".of").append(" ").append(set.getName()).withStyle(set.getRarity().color);
+        return new TranslationTextComponent(this.getDescriptionId()).append(" ").append(set.getName()).withStyle(set.getRarity().color);
     }
 
     @Nullable
