@@ -1,4 +1,4 @@
-Vampirism for Minecraft 1.16 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![Build Status](https://github.com/TeamLapen/Vampirism/workflows/Java%20CI/badge.svg?branch=1.16)](https://github.com/TeamLapen/Vampirism/actions) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) [![Discord Server](https://img.shields.io/discord/430326060635258881)](https://discord.gg/wuamm4P) [![Crowdin](https://badges.crowdin.net/vampirism/localized.svg)](https://crowdin.com/project/vampirism) [![](https://badgen.net/maven/v/metadata-url/https/maven.maxanier.de/releases/de/teamlapen/vampirism/Vampirism/maven-metadata.xml)](https://maven.maxanier.de/releases/de/teamlapen/vampirism/Vampirism)
+Vampirism for Minecraft 1.16 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![Build Status](https://github.com/TeamLapen/Vampirism/workflows/Java%20CI/badge.svg?branch=1.16)](https://github.com/TeamLapen/Vampirism/actions) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) [![Discord Server](https://img.shields.io/discord/430326060635258881)](https://discord.gg/wuamm4P) [![Crowdin](https://badges.crowdin.net/vampirism/localized.svg)](https://crowdin.com/project/vampirism)
 ============================================
 
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://maxanier.de)  
@@ -74,9 +74,10 @@ the [maven listing](https://maven.maxanier.de/de/teamlapen/vampirism/Vampirism/)
 
 These properties can be set in a file named `gradle.properties`, placed in the same directory as your `build.gradle`
 file. Example `gradle.properties`:
+
 ```
-mc_version=1.10.2
-vampirism_version=1.0.3
+mc_version=1.16.5
+vampirism_version=1.7.12
 ```
 
 #### Rerun Gradle setup commands
@@ -92,8 +93,8 @@ from the one Vampirism uses) you have to enable remapping the refmap:
 Add
 
 ```
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+     property 'mixin.env.remapRefMap', 'true'
+     property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 ```
 
 to your run configurations in your `build.gradle` and then regenerate your IDE run configurations (`genIntelliJRuns` or
