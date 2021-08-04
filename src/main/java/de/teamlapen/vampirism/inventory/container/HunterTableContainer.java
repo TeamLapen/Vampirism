@@ -121,13 +121,13 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
         }
     }
 
-    private class SlotResult extends Slot {
+    private static class SlotResult extends Slot {
 
-        private final HunterTableContainer container;
+        private final HunterTableContainer hunterTableContainer;
 
         public SlotResult(HunterTableContainer container, IInventory inventory, int index, int xPosition, int yPosition) {
             super(inventory, index, xPosition, yPosition);
-            this.container = container;
+            this.hunterTableContainer = container;
         }
 
         @Override
@@ -137,7 +137,7 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
 
         @Override
         public ItemStack onTake(PlayerEntity playerIn, ItemStack stack) {
-            container.onPickupResult();
+            hunterTableContainer.onPickupResult();
             return stack;
         }
     }
