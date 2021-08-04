@@ -32,17 +32,18 @@ For a more detailed description head over to the Minecraft Forum or the Cursefor
 - Alis _Textures_
 - dimensionpainter _Textures_
 - S_olace _Textures_
-- Mistadon _Code/Models_  
-- wildbill22 _Code_  
+- Mistadon _Code/Models_
+- wildbill22 _Code_
 - LRA_10 _Models/Textures_
 - Oreo365 _Models_
 - Slippingchip400 _Models_
 - Йода _Textures_
 - XxKidDowdallxX _Textures_
-- F_Spade _Textures_  
+- F_Spade _Textures_
 - Matheo _Lore_
 - cournualllama2 _Lore_
-- Random _Textures_
+- Random _Textures/Models_
+- Shumnik _Textures/Models_
 
 ## API
 Vampirism has an API you can use to add blood values to your mod's creatures or make them convertible and more.

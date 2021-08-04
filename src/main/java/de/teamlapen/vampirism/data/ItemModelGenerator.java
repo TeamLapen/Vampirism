@@ -261,8 +261,9 @@ public class ItemModelGenerator extends ItemModelProvider {
         withExistingParent(ModItems.heart_striker_ultimate, modLoc("item/heart_striker_model")).texture("texture", "item/heart_striker_ultimate");
 
         withExistingParent(ModItems.hunter_axe_normal, modLoc("item/hunter_axe"));
-        withExistingParent(ModItems.hunter_axe_enhanced, modLoc("item/hunter_axe"));
-        withExistingParent(ModItems.hunter_axe_ultimate, modLoc("item/hunter_axe"));
+        withExistingParent(ModItems.hunter_axe_enhanced, modLoc("item/hunter_axe")).texture("texture", "item/hunter_axe_enhanced");
+        withExistingParent(ModItems.hunter_axe_ultimate, modLoc("item/hunter_axe")).texture("texture", "item/hunter_axe_ultimate");
+
         withExistingParent(ModItems.hunter_intel_0, modLoc("item/hunter_intel"));
         withExistingParent(ModItems.hunter_intel_1, modLoc("item/hunter_intel"));
         withExistingParent(ModItems.hunter_intel_2, modLoc("item/hunter_intel"));
