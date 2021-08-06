@@ -1,6 +1,6 @@
 {
   "parent": "vampirism:item/heart_seeker_model",
   "textures": {
-    "texture": "vampirism:item/heart_seeker_ultimate"
+    "3": "vampirism:item/heart_seeker_ultimate"
   }
 }

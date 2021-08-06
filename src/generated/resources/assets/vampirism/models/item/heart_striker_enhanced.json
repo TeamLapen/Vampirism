@@ -1,6 +1,6 @@
 {
   "parent": "vampirism:item/heart_striker_model",
   "textures": {
-    "texture": "vampirism:item/heart_striker_enhanced"
+    "2": "vampirism:item/heart_striker_enhanced"
   }
 }

@@ -253,12 +253,12 @@ public class ItemModelGenerator extends ItemModelProvider {
         withExistingParent(ModItems.garlic_beacon_core_improved, ModItems.garlic_beacon_core).texture("texture", "block/garlic_beacon_inside_improved");
 
         withExistingParent(ModItems.heart_seeker_normal, modLoc("item/heart_seeker_model"));
-        withExistingParent(ModItems.heart_seeker_enhanced, modLoc("item/heart_seeker_model")).texture("texture", "item/heart_seeker_enhanced");
-        withExistingParent(ModItems.heart_seeker_ultimate, modLoc("item/heart_seeker_model")).texture("texture", "item/heart_seeker_ultimate");
+        withExistingParent(ModItems.heart_seeker_enhanced, modLoc("item/heart_seeker_model")).texture("3", "item/heart_seeker_enhanced");
+        withExistingParent(ModItems.heart_seeker_ultimate, modLoc("item/heart_seeker_model")).texture("3", "item/heart_seeker_ultimate");
 
         withExistingParent(ModItems.heart_striker_normal, modLoc("item/heart_striker_model"));
-        withExistingParent(ModItems.heart_striker_enhanced, modLoc("item/heart_striker_model")).texture("texture", "item/heart_striker_enhanced");
-        withExistingParent(ModItems.heart_striker_ultimate, modLoc("item/heart_striker_model")).texture("texture", "item/heart_striker_ultimate");
+        withExistingParent(ModItems.heart_striker_enhanced, modLoc("item/heart_striker_model")).texture("2", "item/heart_striker_enhanced");
+        withExistingParent(ModItems.heart_striker_ultimate, modLoc("item/heart_striker_model")).texture("2", "item/heart_striker_ultimate");
 
         withExistingParent(ModItems.hunter_axe_normal, modLoc("item/hunter_axe"));
         withExistingParent(ModItems.hunter_axe_enhanced, modLoc("item/hunter_axe")).texture("texture", "item/hunter_axe_enhanced");
