@@ -281,6 +281,10 @@ public class LootTablesGenerator extends LootTableProvider {
             this.add(ModBlocks.candelabra_wall, createSingleItemTable(ModItems.item_candelabra));
             this.add(ModBlocks.candelabra, createSingleItemTable(ModItems.item_candelabra));
             this.dropSelf(ModBlocks.cross);
+            this.dropSelf(ModBlocks.tombstone1);
+            this.dropSelf(ModBlocks.tombstone2);
+            this.dropSelf(ModBlocks.tombstone3);
+            this.dropSelf(ModBlocks.grave_cage);
         }
 
         @Nonnull

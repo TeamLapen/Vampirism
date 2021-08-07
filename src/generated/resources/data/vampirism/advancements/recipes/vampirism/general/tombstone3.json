@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:general/tombstone3"
+    ]
+  },
+  "criteria": {
+    "has_tomb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:tombstone2"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:general/tombstone3"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_tomb",
+      "has_the_recipe"
+    ]
+  ]
+}

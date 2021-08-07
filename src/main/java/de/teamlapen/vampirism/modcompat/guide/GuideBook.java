@@ -502,6 +502,11 @@ public class GuideBook implements IGuideBook {
         decorativeBlocks.add(helper.getRecipePage(new ResourceLocation(REFERENCE.MODID, "vampire/candelabra")));
         decorativeBlocks.add(helper.getRecipePage(new ResourceLocation(REFERENCE.MODID, "vampire/chandelier")));
         decorativeBlocks.add(helper.getRecipePage(new ResourceLocation(REFERENCE.MODID, "hunter/cross")));
+        decorativeBlocks.add(helper.getRecipePage(new ResourceLocation(REFERENCE.MODID, "general/tombstone1")));
+        decorativeBlocks.add(helper.getRecipePage(new ResourceLocation(REFERENCE.MODID, "general/tombstone2")));
+        decorativeBlocks.add(helper.getRecipePage(new ResourceLocation(REFERENCE.MODID, "general/tombstone3")));
+        decorativeBlocks.add(helper.getRecipePage(new ResourceLocation(REFERENCE.MODID, "general/grave_cage")));
+
         entries.put(new ResourceLocation(base + "decorative"), new EntryItemStack(decorativeBlocks, new TranslationTextComponent(base + "decorative.title"), new ItemStack(ModItems.item_candelabra)));
         return entries;
     }

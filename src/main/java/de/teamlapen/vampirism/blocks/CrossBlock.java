@@ -29,6 +29,7 @@ public class CrossBlock extends VampirismHorizontalBlock {
 
     public CrossBlock() {
         super("cross", Block.Properties.of(Material.WOOD).strength(2).noOcclusion(), makeCross());
+        markDecorativeBlock();
     }
 
     @Override

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "vampirism:tombstone2"
+    }
+  ],
+  "result": {
+    "item": "vampirism:tombstone1"
+  }
+}
