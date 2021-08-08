@@ -12,19 +12,19 @@ import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.SelectMinionTaskPacket;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.UseAction;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.IContainerFactory;
+import net.minecraftforge.fmllegacy.network.IContainerFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,11 +33,13 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorInfo;
+
 public class MinionContainer extends InventoryContainer {
     private final static Logger LOGGER = LogManager.getLogger();
 
     @Nullable
-    public static MinionContainer create(int id, PlayerInventory playerInventory, MinionEntity<?> minionEntity) {
+    public static MinionContainer create(int id, Inventory playerInventory, MinionEntity<?> minionEntity) {
         Optional<IMinionInventory> minionInv = minionEntity.getInventory();
         return minionInv.map(inv -> new MinionContainer(id, playerInventory, minionEntity, inv, inv.getAvailableSize(), createSelectors(minionEntity, inv.getAvailableSize()))).orElse(null);
     }
@@ -45,12 +47,12 @@ public class MinionContainer extends InventoryContainer {
     private static SelectorInfo[] createSelectors(MinionEntity<?> minionEntity, int extraSlots) {
         Predicate<ItemStack> factionPredicate = itemStack -> !(itemStack.getItem() instanceof IFactionExclusiveItem) || ((IFactionExclusiveItem) itemStack.getItem()).getExclusiveFaction().equals(minionEntity.getFaction());
         SelectorInfo[] slots = new SelectorInfo[6 + extraSlots];
-        slots[0] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.MAINHAND, minionEntity)), 7, 60, false, 1, null);
-        slots[1] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.OFFHAND, minionEntity) || stack.getUseAnimation() == UseAction.DRINK || stack.getUseAnimation() == UseAction.EAT), 7, 78, false, 5, null);
-        slots[2] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.FEET, minionEntity)), 81, 22, false, 1, Pair.of(PlayerContainer.BLOCK_ATLAS, PlayerContainer.EMPTY_ARMOR_SLOT_BOOTS));
-        slots[3] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.LEGS, minionEntity)), 63, 22, false, 1, Pair.of(PlayerContainer.BLOCK_ATLAS, PlayerContainer.EMPTY_ARMOR_SLOT_LEGGINGS));
-        slots[4] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.CHEST, minionEntity)), 45, 22, false, 1, Pair.of(PlayerContainer.BLOCK_ATLAS, PlayerContainer.EMPTY_ARMOR_SLOT_CHESTPLATE));
-        slots[5] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlotType.HEAD, minionEntity)), 27, 22, false, 1, Pair.of(PlayerContainer.BLOCK_ATLAS, PlayerContainer.EMPTY_ARMOR_SLOT_HELMET));
+        slots[0] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlot.MAINHAND, minionEntity)), 7, 60, false, 1, null);
+        slots[1] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlot.OFFHAND, minionEntity) || stack.getUseAnimation() == UseAnim.DRINK || stack.getUseAnimation() == UseAnim.EAT), 7, 78, false, 5, null);
+        slots[2] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlot.FEET, minionEntity)), 81, 22, false, 1, Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS));
+        slots[3] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlot.LEGS, minionEntity)), 63, 22, false, 1, Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS));
+        slots[4] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlot.CHEST, minionEntity)), 45, 22, false, 1, Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE));
+        slots[5] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlot.HEAD, minionEntity)), 27, 22, false, 1, Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_HELMET));
 
         assert extraSlots == 9 || extraSlots == 12 || extraSlots == 15 : "Minion inventory has unexpected size";
         for (int i = 0; i < extraSlots; i++) {
@@ -71,8 +73,8 @@ public class MinionContainer extends InventoryContainer {
     private IMinionTask<?, ?> taskToActivate;
     private boolean taskLocked;
 
-    public MinionContainer(int id, PlayerInventory playerInventory, MinionEntity<?> minionEntity, @Nonnull IInventory inventory, int extraSlots, SelectorInfo... selectorInfos) {
-        super(ModContainer.minion, id, playerInventory, IWorldPosCallable.create(minionEntity.level, minionEntity.blockPosition()), inventory, selectorInfos);
+    public MinionContainer(int id, Inventory playerInventory, MinionEntity<?> minionEntity, @Nonnull Container inventory, int extraSlots, SelectorInfo... selectorInfos) {
+        super(ModContainer.minion, id, playerInventory, ContainerLevelAccess.create(minionEntity.level, minionEntity.blockPosition()), inventory, selectorInfos);
         this.minionEntity = minionEntity;
         this.extraSlots = extraSlots;
         this.availableTasks = this.minionEntity.getAvailableTasks().toArray(new IMinionTask[0]);
@@ -84,7 +86,7 @@ public class MinionContainer extends InventoryContainer {
     }
 
     @Override
-    public void removed(PlayerEntity playerIn) {
+    public void removed(Player playerIn) {
         super.removed(playerIn);
         if (this.minionEntity.level.isClientSide()) {
             sendChanges();
@@ -119,7 +121,7 @@ public class MinionContainer extends InventoryContainer {
     }
 
     @Override
-    public boolean stillValid(PlayerEntity playerIn) {
+    public boolean stillValid(Player playerIn) {
         return minionEntity.isAlive();
     }
 
@@ -156,7 +158,7 @@ public class MinionContainer extends InventoryContainer {
 
         @Nullable
         @Override
-        public MinionContainer create(int windowId, PlayerInventory inv, PacketBuffer data) {
+        public MinionContainer create(int windowId, Inventory inv, FriendlyByteBuf data) {
             if (data == null) return null;
             int entityId = data.readVarInt(); //Anything read here has to be written to buffer in open method (in MinionEntity)
             Entity e = inv.player.level == null ? null : inv.player.level.getEntity(entityId);

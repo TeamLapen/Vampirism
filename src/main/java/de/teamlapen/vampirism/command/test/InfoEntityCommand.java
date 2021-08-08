@@ -3,19 +3,19 @@ package de.teamlapen.vampirism.command.test;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.lib.lib.util.LogUtil;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TranslatableComponent;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.List;
 
 public class InfoEntityCommand extends BasicCommand {
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("printEntityNBT")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .executes(context -> {
@@ -23,14 +23,14 @@ public class InfoEntityCommand extends BasicCommand {
                 });
     }
 
-    private static int infoEntity(CommandSource commandSource, ServerPlayerEntity asPlayer) {
+    private static int infoEntity(CommandSourceStack commandSource, ServerPlayer asPlayer) {
         List<Entity> l = asPlayer.getCommandSenderWorld().getEntities(asPlayer, asPlayer.getBoundingBox().inflate(3, 2, 3));
         for (Entity o : l) {
-            CompoundNBT nbt = new CompoundNBT();
+            CompoundTag nbt = new CompoundTag();
             o.saveAsPassenger(nbt);
             LogManager.getLogger().info(LogUtil.TEST, "Data {}", nbt);
         }
-        commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.infoentity.printed"), false);
+        commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.infoentity.printed"), false);
         return 0;
     }
 }

@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.effects;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.potion.EffectType;
-import net.minecraft.util.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.damagesource.DamageSource;
 
 
 public class VampirismPoisonEffect extends VampirismEffect {
@@ -10,7 +10,7 @@ public class VampirismPoisonEffect extends VampirismEffect {
     public static int DEADLY_AMPLIFIER = 4;
 
     public VampirismPoisonEffect(String name, int potionColor) {
-        super(name, EffectType.HARMFUL, potionColor);
+        super(name, MobEffectCategory.HARMFUL, potionColor);
     }
 
     @Override

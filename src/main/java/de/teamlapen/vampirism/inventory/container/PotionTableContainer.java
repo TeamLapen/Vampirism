@@ -3,19 +3,21 @@ package de.teamlapen.vampirism.inventory.container;
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.core.ModContainer;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.IntArray;
-import net.minecraftforge.fml.network.IContainerFactory;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraftforge.fmllegacy.network.IContainerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorInfo;
 
 public class PotionTableContainer extends InventoryContainer {
     public static SelectorInfo[] SELECTOR_INFOS;
@@ -35,12 +37,12 @@ public class PotionTableContainer extends InventoryContainer {
     }
 
     private final boolean extended;
-    private final IIntArray syncedProperties;
+    private final ContainerData syncedProperties;
 
-    public PotionTableContainer(int id, PlayerInventory playerInventory, IWorldPosCallable worldPos, @Nonnull IInventory inventory, boolean extended, @Nullable IIntArray syncedProperties) {
+    public PotionTableContainer(int id, Inventory playerInventory, ContainerLevelAccess worldPos, @Nonnull Container inventory, boolean extended, @Nullable ContainerData syncedProperties) {
         super(ModContainer.extended_potion_table, id, playerInventory, worldPos, inventory, extended ? SELECTOR_INFOS_EXTENDED : SELECTOR_INFOS);
         assert inventory.getContainerSize() >= (extended ? 8 : 6);
-        this.syncedProperties = syncedProperties == null ? new IntArray(2) : syncedProperties;
+        this.syncedProperties = syncedProperties == null ? new SimpleContainerData(2) : syncedProperties;
         addPlayerSlots(playerInventory);
         this.addDataSlots(this.syncedProperties);
         this.extended = extended;
@@ -67,11 +69,11 @@ public class PotionTableContainer extends InventoryContainer {
 
         @Nullable
         @Override
-        public PotionTableContainer create(int windowId, PlayerInventory inv, PacketBuffer data) {
+        public PotionTableContainer create(int windowId, Inventory inv, FriendlyByteBuf data) {
             if (data == null)
-                return new PotionTableContainer(windowId, inv, IWorldPosCallable.NULL, new Inventory(6), false, null);
+                return new PotionTableContainer(windowId, inv, ContainerLevelAccess.NULL, new SimpleContainer(6), false, null);
             boolean extraSlots = data.readBoolean(); //Anything read here has to be written to buffer in open method (in ExtendedPotionTableTileEntity)
-            return new PotionTableContainer(windowId, inv, IWorldPosCallable.NULL, new Inventory(extraSlots ? 8 : 6), extraSlots, null);
+            return new PotionTableContainer(windowId, inv, ContainerLevelAccess.NULL, new SimpleContainer(extraSlots ? 8 : 6), extraSlots, null);
         }
     }
 }

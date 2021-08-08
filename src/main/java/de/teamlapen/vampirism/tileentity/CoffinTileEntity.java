@@ -3,15 +3,16 @@ package de.teamlapen.vampirism.tileentity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.DyeColor;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -21,24 +22,24 @@ import javax.annotation.Nullable;
 /**
  * TileEntity for coffins. Handles coffin lid position and color
  */
-public class CoffinTileEntity extends TileEntity implements ITickableTileEntity {
+public class CoffinTileEntity extends BlockEntity {
     public final boolean renderAsItem;
     public int lidPos;
     public DyeColor color = DyeColor.BLACK;
     private boolean lastTickOccupied;
 
-    public CoffinTileEntity() {
-        super(ModTiles.coffin);
+    public CoffinTileEntity(BlockPos pos, BlockState state) {
+        super(ModTiles.coffin, pos, state);
         this.renderAsItem = false;
     }
 
-    public CoffinTileEntity(boolean renderAsItem) {
-        super(ModTiles.coffin);
+    public CoffinTileEntity(boolean renderAsItem, BlockPos pos, BlockState state) {
+        super(ModTiles.coffin, pos, state);
         this.renderAsItem = renderAsItem;
     }
 
-    public CoffinTileEntity(DyeColor color) {
-        this();
+    public CoffinTileEntity(DyeColor color, BlockPos pos, BlockState state) {
+        this(pos, state);
         this.changeColor(color);
     }
 
@@ -48,38 +49,38 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
     }
 
     @Override
-    public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(worldPosition.getX() - 4, worldPosition.getY(), worldPosition.getZ() - 4, worldPosition.getX() + 4, worldPosition.getY() + 2, worldPosition.getZ() + 4);
+    public AABB getRenderBoundingBox() {
+        return new AABB(worldPosition.getX() - 4, worldPosition.getY(), worldPosition.getZ() - 4, worldPosition.getX() + 4, worldPosition.getY() + 2, worldPosition.getZ() + 4);
     }
 
     @Nullable
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.getBlockPos(), 1, getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.getBlockPos(), 1, getUpdateTag());
     }
 
     @Nonnull
     @Override
-    public CompoundNBT getUpdateTag() {
-        return save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return save(new CompoundTag());
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         this.color = compound.contains("color") ? DyeColor.byId(compound.getInt("color")) : DyeColor.BLACK;
 
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
-        if (hasLevel()) load(level.getBlockState(packet.getPos()), packet.getTag());
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
+        if (hasLevel()) load(packet.getTag());
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
-        CompoundNBT nbt = super.save(compound);
+    public CompoundTag save(CompoundTag compound) {
+        CompoundTag nbt = super.save(compound);
         nbt.putInt("color", color.getId());
         return nbt;
     }
@@ -91,18 +92,12 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
             level.sendBlockUpdated(getBlockPos(), level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
     }
 
-    @Override
-    public void tick() {
-        if (!hasLevel() || !CoffinBlock.isHead(level, worldPosition)) {
-            return;
-
+    public static void clientTickHead(Level level, BlockPos pos, BlockState state, CoffinTileEntity blockEntity) {
+        boolean occupied = CoffinBlock.isOccupied(level, pos);
+        if (blockEntity.lastTickOccupied != occupied) {
+            level.playLocalSound(pos.getX(), (double) pos.getY() + 0.5D, pos.getZ(), ModSounds.coffin_lid, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F, true);
+            blockEntity.lastTickOccupied = occupied;
         }
-        boolean occupied = CoffinBlock.isOccupied(level, worldPosition);
-        if (lastTickOccupied != occupied) {
-            this.level.playLocalSound(worldPosition.getX(), (double) this.worldPosition.getY() + 0.5D, worldPosition.getZ(), ModSounds.coffin_lid, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F, true);
-            lastTickOccupied = occupied;
-        }
-
 
     }
 }

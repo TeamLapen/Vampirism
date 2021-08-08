@@ -9,17 +9,17 @@ import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.ICriterionInstance;
-import net.minecraft.advancements.IRequirementsStrategy;
-import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.RequirementsStrategy;
+import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -51,14 +51,14 @@ public class AlchemicalCauldronRecipeBuilder {
         this.result = new ItemStack(result, count);
     }
 
-    public void build(Consumer<IFinishedRecipe> consumer, ResourceLocation id) {
+    public void build(Consumer<FinishedRecipe> consumer, ResourceLocation id) {
         id = new ResourceLocation(id.getNamespace(), "alchemical_cauldron/" + id.getPath());
         this.validate(id);
         this.advancementBuilder
                 .parent(new ResourceLocation("recipes/root"))
                 .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
                 .rewards(AdvancementRewards.Builder.recipe(id))
-                .requirements(IRequirementsStrategy.OR);
+                .requirements(RequirementsStrategy.OR);
         consumer.accept(new Result(id, this.group != null ? this.group : "", this.ingredient, this.fluid, this.result, this.skills != null ? skills : new ISkill[]{HunterSkills.basic_alchemy}, this.reqLevel, this.cookTime, this.exp, advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItem().getItemCategory().getRecipeFolderName() + "/" + id.getPath())));
     }
 
@@ -82,12 +82,12 @@ public class AlchemicalCauldronRecipeBuilder {
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withCriterion(String name, ICriterionInstance criterion) {
+    public AlchemicalCauldronRecipeBuilder withCriterion(String name, CriterionTriggerInstance criterion) {
         this.advancementBuilder.addCriterion(name, criterion);
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withFluid(ITag<Item> tag) {
+    public AlchemicalCauldronRecipeBuilder withFluid(Tag<Item> tag) {
         this.fluid = Either.left(Ingredient.of(tag));
         return this;
     }
@@ -97,7 +97,7 @@ public class AlchemicalCauldronRecipeBuilder {
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withFluid(IItemProvider... item) {
+    public AlchemicalCauldronRecipeBuilder withFluid(ItemLike... item) {
         this.fluid = Either.left(Ingredient.of(item));
         return this;
     }
@@ -107,7 +107,7 @@ public class AlchemicalCauldronRecipeBuilder {
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withIngredient(IItemProvider... items) {
+    public AlchemicalCauldronRecipeBuilder withIngredient(ItemLike... items) {
         this.ingredient = Ingredient.of(items);
         return this;
     }
@@ -117,7 +117,7 @@ public class AlchemicalCauldronRecipeBuilder {
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withIngredient(ITag<Item> tag) {
+    public AlchemicalCauldronRecipeBuilder withIngredient(Tag<Item> tag) {
         this.ingredient = Ingredient.of(tag);
         return this;
     }
@@ -135,7 +135,7 @@ public class AlchemicalCauldronRecipeBuilder {
         }
     }
 
-    public static class Result implements IFinishedRecipe {
+    public static class Result implements FinishedRecipe {
         private final ResourceLocation id;
         private final String group;
         private final Ingredient ingredient;
@@ -176,7 +176,7 @@ public class AlchemicalCauldronRecipeBuilder {
 
         @Nonnull
         @Override
-        public IRecipeSerializer<?> getType() {
+        public RecipeSerializer<?> getType() {
             return ModRecipes.alchemical_cauldron;
         }
 

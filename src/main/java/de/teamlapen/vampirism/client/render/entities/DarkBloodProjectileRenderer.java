@@ -2,15 +2,15 @@ package de.teamlapen.vampirism.client.render.entities;
 
 import de.teamlapen.vampirism.entity.DarkBloodProjectileEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class DarkBloodProjectileRenderer extends EntityRenderer<DarkBloodProjectileEntity> {
 
-    public DarkBloodProjectileRenderer(EntityRendererManager renderManagerIn) {
+    public DarkBloodProjectileRenderer(EntityRenderDispatcher renderManagerIn) {
         super(renderManagerIn);
 
     }

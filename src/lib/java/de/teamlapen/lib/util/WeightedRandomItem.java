@@ -1,9 +1,9 @@
 package de.teamlapen.lib.util;
 
-import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.WeighedRandom;
 
 
-public class WeightedRandomItem<T> extends WeightedRandom.Item {
+public class WeightedRandomItem<T> extends WeighedRandom.WeighedRandomItem {
     private final T item;
 
     public WeightedRandomItem(T item, int itemWeightIn) {

@@ -4,44 +4,46 @@ import de.teamlapen.vampirism.inventory.container.WeaponTableContainer;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nullable;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class WeaponTableBlock extends VampirismHorizontalBlock {
     public final static String regName = "weapon_table";
     public static final int MAX_LAVA = 5;
     public static final int MB_PER_META = 200;
     public static final IntegerProperty LAVA = IntegerProperty.create("lava", 0, MAX_LAVA);
-    private static final ITextComponent name = new TranslationTextComponent("gui.vampirism.hunter_weapon_table");
+    private static final Component name = new TranslatableComponent("gui.vampirism.hunter_weapon_table");
 
     private static VoxelShape makeShape() {
         VoxelShape a = Block.box(3, 0, 0, 13, 2, 8);
@@ -63,7 +65,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
         VoxelShape f = Block.box(10, 0, 11, 15, 3, 14);
         VoxelShape g = Block.box(12, 3, 12, 13, 10, 13);
 
-        return VoxelShapes.or(a, b, c, d, e, e1, e2, e3, e4, e5, e6, e7, e8, f, g);
+        return Shapes.or(a, b, c, d, e, e1, e2, e3, e4, e5, e6, e7, e8, f, g);
     }
 
     public WeaponTableBlock() {
@@ -74,12 +76,12 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
 
     @Nullable
     @Override
-    public INamedContainerProvider getMenuProvider(BlockState state, World worldIn, BlockPos pos) {
-        return new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new WeaponTableContainer(id, playerInventory, IWorldPosCallable.create(worldIn, pos)), name);
+    public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos) {
+        return new SimpleMenuProvider((id, playerInventory, playerEntity) -> new WeaponTableContainer(id, playerInventory, ContainerLevelAccess.create(worldIn, pos)), name);
     }
 
     @Override
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!world.isClientSide) {
             int fluid = world.getBlockState(pos).getValue(LAVA);
             boolean flag = false;
@@ -106,25 +108,25 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
             }
             if (!flag) {
 
-                if (canUse(player) && player instanceof ServerPlayerEntity) {
-                    NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new WeaponTableContainer(id, playerInventory, IWorldPosCallable.create(playerIn.level, pos)), name), pos);
+                if (canUse(player) && player instanceof ServerPlayer) {
+                    NetworkHooks.openGui((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableContainer(id, playerInventory, ContainerLevelAccess.create(playerIn.level, pos)), name), pos);
                 } else {
-                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.weapon_table.cannot_use"), true);
+                    player.displayClientMessage(new TranslatableComponent("text.vampirism.weapon_table.cannot_use"), true);
                 }
             }
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(LAVA, FACING);
     }
 
     /**
      * @return If the given player is allowed to use this.
      */
-    private boolean canUse(PlayerEntity player) {
+    private boolean canUse(Player player) {
         if (Helper.isHunter(player)) {
             return HunterPlayer.getOpt(player).map(HunterPlayer::getSkillHandler).map(handler -> handler.isSkillEnabled(HunterSkills.weapon_table)).orElse(false);
         }

@@ -2,18 +2,20 @@ package de.teamlapen.vampirism.api.event;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.world.ITotem;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraftforge.eventbus.api.Event.HasResult;
 
 @SuppressWarnings("unused")
 public abstract class VampirismVillageEvent extends Event {
@@ -40,16 +42,16 @@ public abstract class VampirismVillageEvent extends Event {
     }
 
     @Nonnull
-    public AxisAlignedBB getVillageArea() {
+    public AABB getVillageArea() {
         return this.totem.getVillageArea();
     }
 
     @Nonnull
-    public AxisAlignedBB getVillageAreaReduced() {
+    public AABB getVillageAreaReduced() {
         return totem.getVillageAreaReduced();
     }
 
-    public World getWorld() {
+    public Level getWorld() {
         return this.totem.getTileWorld();
     }
 
@@ -71,13 +73,13 @@ public abstract class VampirismVillageEvent extends Event {
          * Used as a "seed" villager to get a valid spawn point.
          */
         private final @Nullable
-        MobEntity oldEntity;
+        Mob oldEntity;
         private final boolean replace;
         private @Nullable
-        VillagerEntity newVillager;
+        Villager newVillager;
         private boolean willBeConverted;
 
-        public SpawnNewVillager(ITotem totem, @Nullable MobEntity oldEntity, @Nonnull VillagerEntity newVillager, boolean replace, boolean willBeConverted) {
+        public SpawnNewVillager(ITotem totem, @Nullable Mob oldEntity, @Nonnull Villager newVillager, boolean replace, boolean willBeConverted) {
             super(totem);
             this.oldEntity = oldEntity;
             this.newVillager = newVillager;
@@ -93,7 +95,7 @@ public abstract class VampirismVillageEvent extends Event {
         }
 
         @Nullable
-        public VillagerEntity getNewVillager() {
+        public Villager getNewVillager() {
             return newVillager;
         }
 
@@ -103,7 +105,7 @@ public abstract class VampirismVillageEvent extends Event {
          *
          * @param newVillager
          */
-        public void setNewVillager(@Nullable VillagerEntity newVillager) {
+        public void setNewVillager(@Nullable Villager newVillager) {
             this.newVillager = newVillager;
         }
 
@@ -113,7 +115,7 @@ public abstract class VampirismVillageEvent extends Event {
          * @return
          */
         @Nullable
-        public MobEntity getOldEntity() {
+        public Mob getOldEntity() {
             return oldEntity;
         }
 
@@ -147,9 +149,9 @@ public abstract class VampirismVillageEvent extends Event {
     @Cancelable
     public static class MakeAggressive extends VampirismVillageEvent {
 
-        private final VillagerEntity oldVillager;
+        private final Villager oldVillager;
 
-        public MakeAggressive(ITotem totem, @Nonnull VillagerEntity villager) {
+        public MakeAggressive(ITotem totem, @Nonnull Villager villager) {
             super(totem);
             this.oldVillager = villager;
         }
@@ -157,7 +159,7 @@ public abstract class VampirismVillageEvent extends Event {
         /**
          * @return The villager which should be made aggressive
          */
-        public VillagerEntity getOldVillager() {
+        public Villager getOldVillager() {
             return oldVillager;
         }
     }
@@ -170,10 +172,10 @@ public abstract class VampirismVillageEvent extends Event {
     public static abstract class VillagerCaptureFinish extends VampirismVillageEvent {
 
         @Nonnull
-        private final List<VillagerEntity> villager;
+        private final List<Villager> villager;
         private final boolean forced;
 
-        public VillagerCaptureFinish(ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
+        public VillagerCaptureFinish(ITotem totem, @Nonnull List<Villager> villagerIn, boolean forced) {
             super(totem);
             villager = villagerIn;
             this.forced = forced;
@@ -183,7 +185,7 @@ public abstract class VampirismVillageEvent extends Event {
          * @return all {@link VillagerEntity} that are in the village boundingBox
          */
         @Nonnull
-        public List<VillagerEntity> getVillager() {
+        public List<Villager> getVillager() {
             return villager;
         }
 
@@ -192,13 +194,13 @@ public abstract class VampirismVillageEvent extends Event {
         }
 
         public static class Post extends VillagerCaptureFinish {
-            public Post(ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
+            public Post(ITotem totem, @Nonnull List<Villager> villagerIn, boolean forced) {
                 super(totem, villagerIn, forced);
             }
         }
 
         public static class Pre extends VillagerCaptureFinish {
-            public Pre(ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
+            public Pre(ITotem totem, @Nonnull List<Villager> villagerIn, boolean forced) {
                 super(totem, villagerIn, forced);
             }
         }

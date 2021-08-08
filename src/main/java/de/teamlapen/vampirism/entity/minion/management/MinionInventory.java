@@ -3,14 +3,14 @@ package de.teamlapen.vampirism.entity.minion.management;
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.NonNullList;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -68,7 +68,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
                 if (itemstack.getItem() instanceof ArmorItem) {
                     final int i_final = i;
                     itemstack.hurtAndBreak((int) damage, entity, (e) -> {
-                        e.broadcastBreakEvent(EquipmentSlotType.byTypeAndIndex(EquipmentSlotType.Group.ARMOR, i_final));
+                        e.broadcastBreakEvent(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i_final));
                     });
                 }
             }
@@ -116,13 +116,13 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         return ItemStack.EMPTY;
     }
 
-    public void read(ListNBT nbtTagListIn) {
+    public void read(ListTag nbtTagListIn) {
         this.inventory.clear();
         this.inventoryArmor.clear();
         this.inventoryHands.clear();
 
         for (int i = 0; i < nbtTagListIn.size(); ++i) {
-            CompoundNBT compoundnbt = nbtTagListIn.getCompound(i);
+            CompoundTag compoundnbt = nbtTagListIn.getCompound(i);
             int j = compoundnbt.getByte("Slot") & 255;
             ItemStack itemstack = ItemStack.of(compoundnbt);
             if (!itemstack.isEmpty()) {
@@ -195,14 +195,14 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return true;
     }
 
-    public ListNBT write(ListNBT nbt) {
+    public ListTag write(ListTag nbt) {
         for (int i = 0; i < this.inventoryHands.size(); ++i) {
             if (!this.inventoryHands.get(i).isEmpty()) {
-                CompoundNBT compoundnbt = new CompoundNBT();
+                CompoundTag compoundnbt = new CompoundTag();
                 compoundnbt.putByte("Slot", (byte) i);
                 this.inventoryHands.get(i).save(compoundnbt);
                 nbt.add(compoundnbt);
@@ -211,7 +211,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
 
         for (int j = 0; j < this.inventoryArmor.size(); ++j) {
             if (!this.inventoryArmor.get(j).isEmpty()) {
-                CompoundNBT compoundnbt1 = new CompoundNBT();
+                CompoundTag compoundnbt1 = new CompoundTag();
                 compoundnbt1.putByte("Slot", (byte) (j + 10));
                 this.inventoryArmor.get(j).save(compoundnbt1);
                 nbt.add(compoundnbt1);
@@ -220,7 +220,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
 
         for (int k = 0; k < this.inventory.size(); ++k) {
             if (!this.inventory.get(k).isEmpty()) {
-                CompoundNBT compoundnbt2 = new CompoundNBT();
+                CompoundTag compoundnbt2 = new CompoundTag();
                 compoundnbt2.putByte("Slot", (byte) (k + 20));
                 this.inventory.get(k).save(compoundnbt2);
                 nbt.add(compoundnbt2);

@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.entity.factions;
 import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -57,8 +57,8 @@ public class PredicateFaction implements Predicate<LivingEntity> {
             return !thisFaction.equals(other) && (otherFaction == null || otherFaction.equals(other));
 
         }
-        if (player && input instanceof PlayerEntity && input.isAlive()) {
-            return FactionPlayerHandler.getOpt((PlayerEntity) input).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty()).map(fp -> {
+        if (player && input instanceof Player && input.isAlive()) {
+            return FactionPlayerHandler.getOpt((Player) input).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty()).map(fp -> {
                         IFaction<?> f = (ignoreDisguise ? fp.getFaction() : fp.getDisguisedAs());
                         return !thisFaction.equals(f) && (otherFaction == null || otherFaction.equals(f));
                     }

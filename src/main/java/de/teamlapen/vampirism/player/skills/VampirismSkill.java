@@ -7,9 +7,9 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -19,18 +19,18 @@ import java.util.function.Supplier;
  * Extension of {@link DefaultSkill} with vampirism default unloc names/descriptions
  */
 public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSkill<T> {
-    private Supplier<ITextComponent> description = () -> null;
+    private Supplier<Component> description = () -> null;
     private Consumer<T> activate = (T player) -> {
     };
     private Consumer<T> deactivate = (T player) -> {
     };
 
     @Override
-    public ITextComponent getDescription() {
+    public Component getDescription() {
         return description.get();
     }
 
-    public VampirismSkill<T> setDescription(Supplier<ITextComponent> descriptionIn) {
+    public VampirismSkill<T> setDescription(Supplier<Component> descriptionIn) {
         this.description = descriptionIn;
         return this;
     }
@@ -39,7 +39,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
      * Enable description using "text.vampirism.skill."+getID()+".desc" as unloc key
      */
     public VampirismSkill<T> setHasDefaultDescription() {
-        description = () -> new TranslationTextComponent(getTranslationKey() + ".desc");
+        description = () -> new TranslatableComponent(getTranslationKey() + ".desc");
         return this;
     }
 

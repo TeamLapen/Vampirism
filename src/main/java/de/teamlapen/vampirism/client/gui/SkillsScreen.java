@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.lib.lib.util.UtilLib;
@@ -18,26 +18,26 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.skills.SkillNode;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.MultiBufferSource;
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.vertex.Tesselator;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import com.mojang.math.Matrix4f;
 import net.minecraft.util.text.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -49,6 +49,13 @@ import javax.annotation.Nullable;
 import java.awt.Color;
 import java.util.List;
 import java.util.*;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.locale.Language;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 /**
  * Gui screen which displays the skills available to the players and allows him to unlock some.
@@ -64,7 +71,7 @@ public class SkillsScreen extends Screen {
     private final int display_height = 202;
     @Nullable
     private final Screen backScreen;
-    private final Map<ISkill, List<ITextComponent>> skillToolTipsCache = new HashMap<>();
+    private final Map<ISkill, List<Component>> skillToolTipsCache = new HashMap<>();
     private int area_min_x = 0;
     private int area_max_x = 0;
     private int area_max_y;
@@ -80,7 +87,7 @@ public class SkillsScreen extends Screen {
     private int displayXWidth;
     private int displayYHeight;
     @Nullable
-    private ITextComponent lordTitle;
+    private Component lordTitle;
     private int lordLevel;
     private Button resetSkills;
 
@@ -89,7 +96,7 @@ public class SkillsScreen extends Screen {
     }
 
     public SkillsScreen(@Nullable Screen backScreen) {
-        super(new TranslationTextComponent("screen.vampirism.skills"));
+        super(new TranslatableComponent("screen.vampirism.skills"));
         this.width = display_width;
         this.height = display_height;
         this.backScreen = backScreen;
@@ -100,11 +107,11 @@ public class SkillsScreen extends Screen {
         int guiLeft = (this.width - display_width) / 2;
         int guiTop = (this.height - display_height) / 2;
         if (this.backScreen != null) {
-            this.addButton(new Button(guiLeft + 5, guiTop + 175, 80, 20, new TranslationTextComponent("gui.back"), (context) -> {
+            this.addButton(new Button(guiLeft + 5, guiTop + 175, 80, 20, new TranslatableComponent("gui.back"), (context) -> {
                 this.minecraft.setScreen(this.backScreen);
             }));
         }
-        this.addButton(new Button(guiLeft + 171, guiTop + 175, 80, 20, new TranslationTextComponent("gui.done"), (context) -> {
+        this.addButton(new Button(guiLeft + 171, guiTop + 175, 80, 20, new TranslatableComponent("gui.done"), (context) -> {
             this.minecraft.setScreen(null);
         }));
         FactionPlayerHandler.getOpt(minecraft.player).ifPresent(fph -> {
@@ -127,7 +134,7 @@ public class SkillsScreen extends Screen {
 
                 boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
 
-                resetSkills = this.addButton(new Button(guiLeft + 88, guiTop + 175, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
+                resetSkills = this.addButton(new Button(guiLeft + 88, guiTop + 175, 80, 20, new TranslatableComponent("text.vampirism.skill.resetall"), (context) -> {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
                     InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().inventory, new ItemStack(ModItems.oblivion_potion)); //server syncs after the screen is closed
                     if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.oblivion_potion) <= 1) && !test) {
@@ -135,9 +142,9 @@ public class SkillsScreen extends Screen {
                     }
                 }, (button, stack, mouseX, mouseY) -> {
                     if (button.active) {
-                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_consume", ModItems.oblivion_potion.getDescription()), mouseX, mouseY);
+                        SkillsScreen.this.renderTooltip(stack, new TranslatableComponent("text.vampirism.skills.reset_consume", ModItems.oblivion_potion.getDescription()), mouseX, mouseY);
                     } else {
-                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_req", ModItems.oblivion_potion.getDescription()), mouseX, mouseY);
+                        SkillsScreen.this.renderTooltip(stack, new TranslatableComponent("text.vampirism.skills.reset_req", ModItems.oblivion_potion.getDescription()), mouseX, mouseY);
                     }
                 }));
                 if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.oblivion_potion) <= 0) && !test) {
@@ -189,13 +196,13 @@ public class SkillsScreen extends Screen {
     @Override
     public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
         zoomOut += p_mouseScrolled_5_ > 0 ? -0.25 : 0.25;
-        zoomOut = MathHelper.clamp(this.zoomOut, 1.0F, 2.0F);
+        zoomOut = Mth.clamp(this.zoomOut, 1.0F, 2.0F);
         checkDisplay();
         return true;
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         if (!display) {
             super.render(stack, mouseX, mouseY, partialTicks);
             return;
@@ -222,19 +229,19 @@ public class SkillsScreen extends Screen {
         }
     }
 
-    protected void drawTitle(MatrixStack stack) {
-        ITextComponent title;
+    protected void drawTitle(PoseStack stack) {
+        Component title;
         if (lordTitle != null) {
             title = lordTitle.copy().append(" (" + lordLevel + ")");
         } else {
-            title = new TranslationTextComponent("text.vampirism.skills.gui_title");
+            title = new TranslatableComponent("text.vampirism.skills.gui_title");
         }
         int x = (this.width - display_width) / 2;
         int y = (this.height - display_height) / 2;
         this.font.drawShadow(stack, title.getVisualOrderText(), x + 15, y + 5, 0xFFFFFFFF);
-        IFormattableTextComponent points = new TranslationTextComponent("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
+        MutableComponent points = new TranslatableComponent("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
         if (this.minecraft.player.getEffect(ModEffects.oblivion) != null) {
-            points.withStyle(TextFormatting.DARK_RED);
+            points.withStyle(ChatFormatting.DARK_RED);
         }
         x = (this.width + display_width) / 2 - this.font.width(points);
 //        this.font.drawText(stack, points, x - 15, y + 5, 0xFFFFFFFF);
@@ -260,13 +267,13 @@ public class SkillsScreen extends Screen {
     }
 
     private void checkDisplay() {
-        displayY = MathHelper.clamp(displayY, -20 / zoomOut, (this.displayYHeight - 20) / zoomOut);
-        displayX = MathHelper.clamp(displayX, (-400 - displayXWidth) / zoomOut + (zoomOut - 2.0F) * (-1) * 250, (-400 + displayXWidth) / zoomOut + (zoomOut - 2.0F) * (-1) * 250);
+        displayY = Mth.clamp(displayY, -20 / zoomOut, (this.displayYHeight - 20) / zoomOut);
+        displayX = Mth.clamp(displayX, (-400 - displayXWidth) / zoomOut + (zoomOut - 2.0F) * (-1) * 250, (-400 + displayXWidth) / zoomOut + (zoomOut - 2.0F) * (-1) * 250);
         displayXNew = displayX;
         displayYNew = displayY;
     }
 
-    private void drawDisableText(MatrixStack mStack) {
+    private void drawDisableText(PoseStack mStack) {
         if (this.minecraft.player.getEffect(ModEffects.oblivion) == null) return;
         int tooltipX = (this.width - this.display_width) / 2 + 19 + 3;
         int tooltipY = (this.height - this.display_height) / 2 + 4 + 19;
@@ -289,12 +296,12 @@ public class SkillsScreen extends Screen {
         GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3 + 1, borderColorStart, borderColorStart);
         GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY + tooltipHeight + 2, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
 
-        IRenderTypeBuffer.Impl renderType = IRenderTypeBuffer.immediate(Tessellator.getInstance().getBuilder());
+        MultiBufferSource.BufferSource renderType = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
         mStack.translate(0.0D, 0.0D, zLevel);
 
-        ITextComponent f = new TranslationTextComponent("text.vampirism.skill.unlock_unavailable").withStyle(TextFormatting.WHITE);
+        Component f = new TranslatableComponent("text.vampirism.skill.unlock_unavailable").withStyle(ChatFormatting.WHITE);
 
-        IReorderingProcessor s = LanguageMap.getInstance().getVisualOrder(f);
+        FormattedCharSequence s = Language.getInstance().getVisualOrder(f);
 
 
         font.drawInBatch(s, (float) tooltipX + (tooltipTextWidth / 2) - this.font.width(f) / 2, (float) tooltipY + (tooltipHeight / 2) - 3, -1, true, mat, renderType, false, 0, 15728880);
@@ -303,9 +310,9 @@ public class SkillsScreen extends Screen {
         mStack.popPose();
     }
 
-    private void drawSkills(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        int offsetX = MathHelper.floor(this.displayX + (this.displayXNew - this.displayX) * (double) partialTicks);
-        int offsetY = MathHelper.floor(this.displayY + (this.displayYNew - this.displayY) * (double) partialTicks);
+    private void drawSkills(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+        int offsetX = Mth.floor(this.displayX + (this.displayXNew - this.displayX) * (double) partialTicks);
+        int offsetY = Mth.floor(this.displayY + (this.displayYNew - this.displayY) * (double) partialTicks);
 
         if (offsetX < area_min_x) {
             offsetX = area_min_x;
@@ -382,7 +389,7 @@ public class SkillsScreen extends Screen {
                     textureatlassprite = this.getTexture(block);
                 }
 
-                this.minecraft.getTextureManager().bind(AtlasTexture.LOCATION_BLOCKS);
+                this.minecraft.getTextureManager().bind(TextureAtlas.LOCATION_BLOCKS);
                 blit(stack, x * 16 - i2, y * 16 - j2, this.getBlitOffset(), 16, 16, textureatlassprite);
             }
         }
@@ -425,7 +432,7 @@ public class SkillsScreen extends Screen {
 
         float mMouseX = (float) (mouseX - i1) * this.zoomOut;
         float mMouseY = (float) (mouseY - j1) * this.zoomOut;
-        RenderHelper.turnBackOn(); //enableStandardGUIItemLighting
+        Lighting.turnBackOn(); //enableStandardGUIItemLighting
         RenderSystem.disableLighting();
         RenderSystem.enableRescaleNormal();
         RenderSystem.enableColorMaterial();
@@ -515,7 +522,7 @@ public class SkillsScreen extends Screen {
         super.render(stack, mouseX, mouseY, partialTicks);
 
         //Don't render skill tooltip when hovering over button
-        for (Widget button : this.buttons) {
+        for (AbstractWidget button : this.buttons) {
             if (button.isHovered()) {
                 newSelected = null;
                 newSelectedNode = null;
@@ -528,36 +535,36 @@ public class SkillsScreen extends Screen {
             stack.pushPose();
             stack.translate(0, 0, 1); //Render tooltips in front of buttons
 
-            List<ITextComponent> tooltips = skillToolTipsCache.computeIfAbsent(selected, (skill) -> new ArrayList<>());
+            List<Component> tooltips = skillToolTipsCache.computeIfAbsent(selected, (skill) -> new ArrayList<>());
 
             if (tooltips.isEmpty()) {
-                ITextComponent name = selected.getName().plainCopy().withStyle(TextFormatting.GRAY);
-                ITextComponent desc = selected.getDescription();
+                Component name = selected.getName().plainCopy().withStyle(ChatFormatting.GRAY);
+                Component desc = selected.getDescription();
 
                 tooltips.add(name);
                 if (desc != null) {
-                    tooltips.add(desc.copy().withStyle(TextFormatting.DARK_GRAY));
+                    tooltips.add(desc.copy().withStyle(ChatFormatting.DARK_GRAY));
                 }
 
                 ISkillHandler.Result result = skillHandler.canSkillBeEnabled(selected);
 
                 List<ISkill> lockingSkills = null;
-                TextFormatting lockingColor = TextFormatting.BLACK;
+                ChatFormatting lockingColor = ChatFormatting.BLACK;
                 if (selectedNode.getLockingNodes().length != 0) {
                     lockingSkills = skillHandler.getLockingSkills(selectedNode);
-                    lockingColor = result == ISkillHandler.Result.ALREADY_ENABLED ? TextFormatting.DARK_GRAY : lockingSkills.stream().anyMatch(skill -> skillHandler.isSkillEnabled(skill)) ? TextFormatting.DARK_RED : TextFormatting.YELLOW;
+                    lockingColor = result == ISkillHandler.Result.ALREADY_ENABLED ? ChatFormatting.DARK_GRAY : lockingSkills.stream().anyMatch(skill -> skillHandler.isSkillEnabled(skill)) ? ChatFormatting.DARK_RED : ChatFormatting.YELLOW;
                 }
                 if (lockingSkills != null) {
-                    tooltips.add(new TranslationTextComponent("text.vampirism.skill.excluding").withStyle(lockingColor));
+                    tooltips.add(new TranslatableComponent("text.vampirism.skill.excluding").withStyle(lockingColor));
                     for (ISkill lockingSkill : lockingSkills) {
-                        tooltips.add(new StringTextComponent("  ").append(lockingSkill.getName().copy().withStyle(lockingColor)));
+                        tooltips.add(new TextComponent("  ").append(lockingSkill.getName().copy().withStyle(lockingColor)));
                     }
                 }
 
                 if (result == ISkillHandler.Result.ALREADY_ENABLED) {
-                    tooltips.add(new TranslationTextComponent("text.vampirism.skill.unlocked").withStyle(TextFormatting.GOLD));
+                    tooltips.add(new TranslatableComponent("text.vampirism.skill.unlocked").withStyle(ChatFormatting.GOLD));
                 } else if (result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
-                    tooltips.add(new TranslationTextComponent("text.vampirism.skill.unlock_parent_first").withStyle(TextFormatting.DARK_RED));
+                    tooltips.add(new TranslatableComponent("text.vampirism.skill.unlock_parent_first").withStyle(ChatFormatting.DARK_RED));
                 }
             }
             int width_name = Math.max(this.font.width(tooltips.get(0)), 110);
@@ -570,7 +577,7 @@ public class SkillsScreen extends Screen {
 
         RenderSystem.enableDepthTest();
         RenderSystem.enableLighting();
-        RenderHelper.turnOff();
+        Lighting.turnOff();
 
     }
 
@@ -597,7 +604,7 @@ public class SkillsScreen extends Screen {
     }
 
     private void playSoundEffect(SoundEvent event, float pitch) {
-        minecraft.getSoundManager().play(SimpleSound.forUI(event, 1.0F));
+        minecraft.getSoundManager().play(SimpleSoundInstance.forUI(event, 1.0F));
     }
 
     private void unlockSkill() {

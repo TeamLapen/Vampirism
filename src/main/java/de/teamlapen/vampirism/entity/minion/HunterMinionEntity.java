@@ -20,26 +20,26 @@ import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.items.MinionUpgradeItem;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
@@ -53,7 +53,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     /**
      * Used for holding a crossbow
      */
-    private static final DataParameter<Boolean> RAISED_ARM = EntityDataManager.defineId(HunterMinionEntity.class, DataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> RAISED_ARM = SynchedEntityData.defineId(HunterMinionEntity.class, EntityDataSerializers.BOOLEAN);
 
     static {
         MinionData.registerDataType(HunterMinionData.ID, HunterMinionData::new);
@@ -66,7 +66,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
     }
 
-    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+    public static AttributeSupplier.Builder getAttributeBuilder() {
         return BasicHunterEntity.getAttributeBuilder();
     }
 
@@ -74,8 +74,8 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     private AttackRangedCrossbowGoal<HunterMinionEntity> crossbowGoal;
     private MeleeAttackGoal meleeGoal;
 
-    public HunterMinionEntity(EntityType<? extends VampirismEntity> type, World world) {
-        super(type, world, VampirismAPI.factionRegistry().getPredicate(VReference.HUNTER_FACTION, true, true, false, false, null).or(e -> !(e instanceof IFactionEntity) && (e instanceof IMob) && !(e instanceof CreeperEntity)));
+    public HunterMinionEntity(EntityType<? extends VampirismEntity> type, Level world) {
+        super(type, world, VampirismAPI.factionRegistry().getPredicate(VReference.HUNTER_FACTION, true, true, false, false, null).or(e -> !(e instanceof IFactionEntity) && (e instanceof Enemy) && !(e instanceof Creeper)));
     }
 
     @Nonnull
@@ -119,7 +119,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     public int getHatType() {
-        return this.getItemBySlot(EquipmentSlotType.HEAD).isEmpty() ? this.getMinionData().map(d -> d.hat).orElse(0) : -2;
+        return this.getItemBySlot(EquipmentSlot.HEAD).isEmpty() ? this.getMinionData().map(d -> d.hat).orElse(0) : -2;
     }
 
     @Override
@@ -194,20 +194,20 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     @Override
-    protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         if (!this.level.isClientSide() && isLord(player) && minionData != null) {
             ItemStack heldItem = player.getItemInHand(hand);
             if (heldItem.getItem() instanceof MinionUpgradeItem && ((MinionUpgradeItem) heldItem.getItem()).getFaction() == this.getFaction()) {
                 if (this.minionData.level + 1 >= ((MinionUpgradeItem) heldItem.getItem()).getMinLevel() && this.minionData.level + 1 <= ((MinionUpgradeItem) heldItem.getItem()).getMaxLevel()) {
                     this.minionData.level++;
                     if (!player.abilities.instabuild) heldItem.shrink(1);
-                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_upgrade"), false);
+                    player.displayClientMessage(new TranslatableComponent("text.vampirism.hunter_minion.equipment_upgrade"), false);
                     HelperLib.sync(this);
                 } else {
-                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_wrong"), false);
+                    player.displayClientMessage(new TranslatableComponent("text.vampirism.hunter_minion.equipment_wrong"), false);
 
                 }
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         }
         return super.mobInteract(player, hand);
@@ -280,7 +280,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
-        public void deserializeNBT(CompoundNBT nbt) {
+        public void deserializeNBT(CompoundTag nbt) {
             super.deserializeNBT(nbt);
             type = nbt.getInt("hunter_type");
             hat = nbt.getInt("hunter_hat");
@@ -295,7 +295,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
-        public IFormattableTextComponent getFormattedName() {
+        public MutableComponent getFormattedName() {
             return super.getFormattedName().withStyle(VReference.HUNTER_FACTION.getChatColor());
         }
 
@@ -358,7 +358,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
-        public void serializeNBT(CompoundNBT tag) {
+        public void serializeNBT(CompoundTag tag) {
             super.serializeNBT(tag);
             tag.putInt("hunter_type", type);
             tag.putInt("hunter_hat", hat);

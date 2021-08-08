@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.api;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
@@ -15,8 +15,8 @@ class ClientHelper {
      * @return The client world if it matches the given dimension key
      */
     @Nullable
-    static World getAndCheckWorld(RegistryKey<World> dimension) {
-        World clientWorld = Minecraft.getInstance().level;
+    static Level getAndCheckWorld(ResourceKey<Level> dimension) {
+        Level clientWorld = Minecraft.getInstance().level;
         if (clientWorld != null) {
             if (clientWorld.dimension().equals(dimension)) {
                 return clientWorld;

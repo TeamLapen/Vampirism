@@ -1,21 +1,21 @@
 package de.teamlapen.vampirism.entity.hunter;
 
-import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.Level;
 
 public class TrainingDummyHunterEntity extends BasicHunterEntity {
 
-    private final EntityPredicate PREDICATE = new EntityPredicate().allowInvulnerable().allowNonAttackable().allowUnseeable();
+    private final TargetingConditions PREDICATE = new TargetingConditions().allowInvulnerable().allowNonAttackable().allowUnseeable();
     private int startTicks = 0;
     private float damageTaken = 0;
 
-    public TrainingDummyHunterEntity(EntityType<? extends BasicHunterEntity> type, World world) {
+    public TrainingDummyHunterEntity(EntityType<? extends BasicHunterEntity> type, Level world) {
         super(type, world);
         this.disableImobConversion();
     }
@@ -23,7 +23,7 @@ public class TrainingDummyHunterEntity extends BasicHunterEntity {
     @Override
     public boolean hurt(DamageSource damageSource, float amount) {
         if (!this.level.isClientSide) {
-            this.level.getNearbyPlayers(PREDICATE, this, this.getBoundingBox().inflate(40)).forEach(p -> p.displayClientMessage(new StringTextComponent("Damage " + amount + " from " + damageSource.msgId), false));
+            this.level.getNearbyPlayers(PREDICATE, this, this.getBoundingBox().inflate(40)).forEach(p -> p.displayClientMessage(new TextComponent("Damage " + amount + " from " + damageSource.msgId), false));
             if (this.startTicks != 0) this.damageTaken += amount;
         }
         return super.hurt(damageSource, amount);
@@ -31,7 +31,7 @@ public class TrainingDummyHunterEntity extends BasicHunterEntity {
     }
 
     @Override
-    public void convertToMinion(PlayerEntity lord) {
+    public void convertToMinion(Player lord) {
         super.convertToMinion(lord);
     }
 
@@ -43,17 +43,17 @@ public class TrainingDummyHunterEntity extends BasicHunterEntity {
     }
 
     @Override
-    protected ActionResultType mobInteract(PlayerEntity player, Hand hand) { //processInteract
-        if (!this.level.isClientSide && hand == Hand.MAIN_HAND) {
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) { //processInteract
+        if (!this.level.isClientSide && hand == InteractionHand.MAIN_HAND) {
             if (startTicks == 0) {
-                player.displayClientMessage(new StringTextComponent("Start recording"), false);
+                player.displayClientMessage(new TextComponent("Start recording"), false);
                 this.startTicks = this.tickCount;
             } else {
-                player.displayClientMessage(new StringTextComponent("Damage: " + damageTaken + " - DPS: " + (damageTaken / ((float) (this.tickCount - this.startTicks)) * 20f)), false);
+                player.displayClientMessage(new TextComponent("Damage: " + damageTaken + " - DPS: " + (damageTaken / ((float) (this.tickCount - this.startTicks)) * 20f)), false);
                 this.remove();
             }
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override

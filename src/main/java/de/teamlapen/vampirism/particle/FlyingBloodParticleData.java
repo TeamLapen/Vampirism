@@ -5,15 +5,15 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.core.ModParticles;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class FlyingBloodParticleData implements IParticleData {
+public class FlyingBloodParticleData implements ParticleOptions {
 
     /**
      * CODEC appears to be an alternative to De/Serializer. Not sure why both exist
@@ -28,12 +28,12 @@ public class FlyingBloodParticleData implements IParticleData {
                     Codec.STRING.fieldOf("t").forGetter((p_239804_0_) -> p_239804_0_.texture.toString()))
             .apply(p_239803_0_, (a, d, x, y, z, t) -> new FlyingBloodParticleData(ModParticles.flying_blood, a, d, x, y, z, new ResourceLocation(t))));
 
-    public static final IParticleData.IDeserializer<FlyingBloodParticleData> DESERIALIZER = new IParticleData.IDeserializer<FlyingBloodParticleData>() {
+    public static final ParticleOptions.Deserializer<FlyingBloodParticleData> DESERIALIZER = new ParticleOptions.Deserializer<FlyingBloodParticleData>() {
         public FlyingBloodParticleData fromCommand(ParticleType<FlyingBloodParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
             return new FlyingBloodParticleData(particleTypeIn, reader.readInt(), reader.readBoolean(), reader.readDouble(), reader.readDouble(), reader.readDouble(), ResourceLocation.read(reader));
         }
 
-        public FlyingBloodParticleData fromNetwork(ParticleType<FlyingBloodParticleData> particleTypeIn, PacketBuffer buffer) {
+        public FlyingBloodParticleData fromNetwork(ParticleType<FlyingBloodParticleData> particleTypeIn, FriendlyByteBuf buffer) {
             return new FlyingBloodParticleData(particleTypeIn, buffer.readVarInt(), buffer.readBoolean(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readResourceLocation());
         }
     };
@@ -65,7 +65,7 @@ public class FlyingBloodParticleData implements IParticleData {
     }
 
     @Override
-    public void writeToNetwork(PacketBuffer buffer) {
+    public void writeToNetwork(FriendlyByteBuf buffer) {
         buffer.writeVarInt(maxAge);
         buffer.writeBoolean(direct);
         buffer.writeDouble(targetX);

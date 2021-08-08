@@ -4,11 +4,11 @@ import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModSounds;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.PrioritizedGoal;
-import net.minecraft.entity.ai.goal.TargetGoal;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.phys.AABB;
 
 public class HissingAction extends DefaultVampireAction {
 
@@ -24,10 +24,10 @@ public class HissingAction extends DefaultVampireAction {
 
     @Override
     protected boolean activate(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().playNotifySound(ModSounds.entity_vampire_scream, SoundCategory.PLAYERS, 1, 1);
-        vampire.getRepresentingPlayer().getCommandSenderWorld().getLoadedEntitiesOfClass(MobEntity.class, new AxisAlignedBB(vampire.getRepresentingPlayer().blockPosition()).inflate(10, 10, 10)).forEach(e -> {
+        vampire.getRepresentingPlayer().playNotifySound(ModSounds.entity_vampire_scream, SoundSource.PLAYERS, 1, 1);
+        vampire.getRepresentingPlayer().getCommandSenderWorld().getLoadedEntitiesOfClass(Mob.class, new AABB(vampire.getRepresentingPlayer().blockPosition()).inflate(10, 10, 10)).forEach(e -> {
             if (e.getTarget() == vampire.getRepresentingPlayer()) {
-                e.targetSelector.getRunningGoals().filter(g -> g.getGoal() instanceof TargetGoal).forEach(PrioritizedGoal::stop);
+                e.targetSelector.getRunningGoals().filter(g -> g.getGoal() instanceof TargetGoal).forEach(WrappedGoal::stop);
                 e.setTarget(null);
             }
         });

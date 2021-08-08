@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.entity.player.actions;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * Interface for player capability that can use actions
@@ -9,5 +9,5 @@ import net.minecraft.entity.player.PlayerEntity;
 public interface IActionPlayer<T extends IActionPlayer> {
     IActionHandler<T> getActionHandler();
 
-    PlayerEntity getRepresentingPlayer();
+    Player getRepresentingPlayer();
 }

@@ -8,26 +8,28 @@ import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.Direction;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 /**
  * Ammo for the crossbows. Has different subtypes with different base damage/names/special effects.
@@ -45,9 +47,9 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack itemStack, @Nullable World world, List<ITextComponent> textComponents, ITooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack itemStack, @Nullable Level world, List<Component> textComponents, TooltipFlag tooltipFlag) {
         if (type != EnumArrowType.NORMAL) {
-            textComponents.add(new TranslationTextComponent(type == EnumArrowType.VAMPIRE_KILLER ? "item.vampirism.crossbow_arrow_vampire_killer.tooltip" : "item.vampirism.crossbow_arrow_spitfire.tooltip").withStyle(TextFormatting.GRAY));
+            textComponents.add(new TranslatableComponent(type == EnumArrowType.VAMPIRE_KILLER ? "item.vampirism.crossbow_arrow_vampire_killer.tooltip" : "item.vampirism.crossbow_arrow_spitfire.tooltip").withStyle(ChatFormatting.GRAY));
         }
     }
 
@@ -57,7 +59,7 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
      * @return An arrow entity at the players position using the given itemstack
      */
     @Override
-    public CrossbowArrowEntity createEntity(ItemStack stack, World world, PlayerEntity player, double heightOffset, double centerOffset, boolean rightHand) {
+    public CrossbowArrowEntity createEntity(ItemStack stack, Level world, Player player, double heightOffset, double centerOffset, boolean rightHand) {
         CrossbowArrowEntity entity = CrossbowArrowEntity.createWithShooter(world, player, heightOffset, centerOffset, rightHand, stack);
         entity.setBaseDamage(type.baseDamage * VampirismConfig.BALANCE.crossbowDamageMult.get());
         if (this.type == EnumArrowType.SPITFIRE) {
@@ -119,14 +121,14 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
             if (entity instanceof IVampireMob) {
                 float max = entity.getMaxHealth();
                 if (max < VampirismConfig.BALANCE.arrowVampireKillerMaxHealth.get()) {
-                    entity.hurt(DamageSource.arrow((AbstractArrowEntity) arrowEntity, shootingEntity), max);
+                    entity.hurt(DamageSource.arrow((AbstractArrow) arrowEntity, shootingEntity), max);
                 }
             }
         }
     }
 
 
-    public enum EnumArrowType implements IStringSerializable {
+    public enum EnumArrowType implements StringRepresentable {
         NORMAL("normal", 2.0, 0xFFFFFF), VAMPIRE_KILLER("vampire_killer", 0.5, 0x7A0073), SPITFIRE("spitfire", 0.5, 0xFF2211);
         public final int color;
         final String name;

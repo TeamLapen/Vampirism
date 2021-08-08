@@ -6,16 +6,16 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Collection;
 
 public class BloodBarCommand extends BasicCommand {
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("bloodBar")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
                 .then(Commands.literal("fill")
@@ -33,7 +33,7 @@ public class BloodBarCommand extends BasicCommand {
                                         .executes(context -> setBloodBar(IntegerArgumentType.getInteger(context, "amount"), EntityArgument.getPlayers(context, "player"))))));
     }
 
-    private static int setBloodBar(int amount, Collection<ServerPlayerEntity> player) {
+    private static int setBloodBar(int amount, Collection<ServerPlayer> player) {
         player.stream().map(VampirePlayer::getOpt).filter(player1 -> player1.map(VampirismPlayer::getLevel).orElse(0) > 0).forEach(player1 -> player1.ifPresent(vampire -> {
             vampire.useBlood(Integer.MAX_VALUE, true);
             vampire.drinkBlood(amount, 0, false);

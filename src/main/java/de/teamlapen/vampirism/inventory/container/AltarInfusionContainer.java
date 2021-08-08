@@ -5,29 +5,31 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModTags;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+
+import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorInfo;
 
 public class AltarInfusionContainer extends InventoryContainer {
     public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(ModTags.Items.PURE_BLOOD, 44, 34), new SelectorInfo(ModItems.human_heart, 80, 34), new SelectorInfo(ModItems.vampire_book, 116, 34)};
 
     @Deprecated
-    public AltarInfusionContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, new Inventory(3), IWorldPosCallable.NULL);
+    public AltarInfusionContainer(int id, Inventory playerInventory) {
+        this(id, playerInventory, new SimpleContainer(3), ContainerLevelAccess.NULL);
         this.addPlayerSlots(playerInventory);
     }
 
-    public AltarInfusionContainer(int id, PlayerInventory playerInventory, IInventory inventory, IWorldPosCallable worldPosCallable) {
+    public AltarInfusionContainer(int id, Inventory playerInventory, Container inventory, ContainerLevelAccess worldPosCallable) {
         super(ModContainer.altar_infusion, id, playerInventory, worldPosCallable, inventory, SELECTOR_INFOS);
         this.addPlayerSlots(playerInventory);
     }
 
 
     @Override
-    public boolean stillValid(PlayerEntity playerIn) {
+    public boolean stillValid(Player playerIn) {
         return stillValid(this.worldPos, playerIn, ModBlocks.altar_infusion);
     }
 }

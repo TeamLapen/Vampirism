@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.api.items;
 
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -15,11 +15,11 @@ import java.util.List;
 public interface IItemWithTier {
 
     @OnlyIn(Dist.CLIENT)
-    default void addTierInformation(List<ITextComponent> tooltip) {
+    default void addTierInformation(List<Component> tooltip) {
         TIER t = getVampirismTier();
         if (t != TIER.NORMAL) {
-            TextFormatting format = t == TIER.ENHANCED ? TextFormatting.YELLOW : TextFormatting.AQUA;
-            tooltip.add(new TranslationTextComponent("item.vampirism.item.tier." + t.getSerializedName().toLowerCase()).withStyle(format));
+            ChatFormatting format = t == TIER.ENHANCED ? ChatFormatting.YELLOW : ChatFormatting.AQUA;
+            tooltip.add(new TranslatableComponent("item.vampirism.item.tier." + t.getSerializedName().toLowerCase()).withStyle(format));
         }
     }
 
@@ -33,7 +33,7 @@ public interface IItemWithTier {
      */
     TIER getVampirismTier();
 
-    enum TIER implements IStringSerializable {
+    enum TIER implements StringRepresentable {
         NORMAL("normal"), ENHANCED("enhanced"), ULTIMATE("ultimate");
 
         private final String name;

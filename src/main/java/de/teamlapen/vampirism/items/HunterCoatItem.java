@@ -3,19 +3,22 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorMaterials;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import de.teamlapen.vampirism.api.items.IItemWithTier.TIER;
+import net.minecraft.world.item.Item.Properties;
 
 public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTier {
 
@@ -28,7 +31,7 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
      * @return if fully equipped the tier of the worst item, otherwise null
      */
     @Nullable
-    public static TIER isFullyEquipped(PlayerEntity player) {
+    public static TIER isFullyEquipped(Player player) {
         int minLevel = 1000;
         for (ItemStack stack : player.inventory.armor) {
             if (stack.isEmpty() || !(stack.getItem() instanceof HunterCoatItem)) {
@@ -46,20 +49,20 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
 
     private final TIER tier;
 
-    public HunterCoatItem(EquipmentSlotType equipmentSlotIn, TIER tier) {
-        super(baseRegName, tier.getName(), ArmorMaterial.IRON, equipmentSlotIn, new Properties().tab(VampirismMod.creativeTab));
+    public HunterCoatItem(EquipmentSlot equipmentSlotIn, TIER tier) {
+        super(baseRegName, tier.getName(), ArmorMaterials.IRON, equipmentSlotIn, new Properties().tab(VampirismMod.creativeTab));
         this.tier = tier;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
         switch (getVampirismTier()) {
             case ENHANCED:
                 return getTextureLocation("hunter_coat_enhanced", slot, type);

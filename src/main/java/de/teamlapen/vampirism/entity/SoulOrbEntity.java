@@ -3,29 +3,29 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IRendersAsItem;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.ItemSupplier;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,32 +35,32 @@ import javax.annotation.Nullable;
  */
 @OnlyIn(
         value = Dist.CLIENT,
-        _interface = IRendersAsItem.class
+        _interface = ItemSupplier.class
 )
-public class SoulOrbEntity extends Entity implements IRendersAsItem {
+public class SoulOrbEntity extends Entity implements ItemSupplier {
 
-    public static final DataParameter<String> TYPE_PARAMETER = EntityDataManager.defineId(SoulOrbEntity.class, DataSerializers.STRING);
+    public static final EntityDataAccessor<String> TYPE_PARAMETER = SynchedEntityData.defineId(SoulOrbEntity.class, EntityDataSerializers.STRING);
     private int delayBeforePickup;
-    private PlayerEntity player;
+    private Player player;
     private int age;
     @Nullable
     private ItemStack soulItemStack;
 
-    public SoulOrbEntity(World worldIn, double x, double y, double z, VARIANT type) {
+    public SoulOrbEntity(Level worldIn, double x, double y, double z, VARIANT type) {
         super(ModEntities.soul_orb, worldIn);
         this.setVariant(type);
         delayBeforePickup = 10;
         this.setPos(x, y, z);
-        this.yRot = (float) (Math.random() * 360.0D);
+        this.setYRot((float) (Math.random() * 360.0D));
         this.setDeltaMovement((this.random.nextDouble() * (double) 0.2F - (double) 0.1F) * 2.0D, this.random.nextDouble() * 0.2D * 2.0D, (this.random.nextDouble() * (double) 0.2F - (double) 0.1F) * 2.0D);
     }
 
-    public SoulOrbEntity(EntityType<? extends SoulOrbEntity> type, World worldIn) {
+    public SoulOrbEntity(EntityType<? extends SoulOrbEntity> type, Level worldIn) {
         super(type, worldIn);
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -97,7 +97,7 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
     }
 
     @Override
-    public boolean isInvisibleTo(@Nonnull PlayerEntity player) {
+    public boolean isInvisibleTo(@Nonnull Player player) {
         if (getVariant() == VARIANT.VAMPIRE) {
             return !Helper.isHunter(player) || player.isSpectator();
         }
@@ -105,13 +105,13 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
     }
 
     @Override
-    public void playerTouch(PlayerEntity entityIn) {
+    public void playerTouch(Player entityIn) {
         if (!this.level.isClientSide) {
             if (delayBeforePickup == 0) {
                 if (Helper.isHunter(entityIn)) {
-                    if (entityIn.inventory.add(getSoulItemStack())) {
+                    if (entityIn.getInventory().add(getSoulItemStack())) {
                         entityIn.take(this, 1);
-                        this.remove();
+                        this.discard();
                     }
                 }
             }
@@ -130,7 +130,7 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
         this.zo = this.getZ();
 
         if (this.isEyeInFluid(FluidTags.WATER)) {
-            Vector3d vec3d = this.getDeltaMovement();
+            Vec3 vec3d = this.getDeltaMovement();
             this.setDeltaMovement(vec3d.x * (double) 0.99F, Math.min(vec3d.y + (double) 5.0E-4F, 0.06F), vec3d.z * (double) 0.99F);
         } else if (!this.isNoGravity()) {
             this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.03D, 0.0D));
@@ -146,11 +146,11 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
 
 
         if (this.age % 10 == 5 & (this.player == null || !this.player.isAlive() || this.player.distanceToSqr(this) > 64)) {
-            this.player = this.level.getNearestPlayer(this.getX(), this.getY(), this.getZ(), 8, EntityPredicates.NO_SPECTATORS.and(Helper::isHunter));
+            this.player = this.level.getNearestPlayer(this.getX(), this.getY(), this.getZ(), 8, EntitySelector.NO_SPECTATORS.and(Helper::isHunter));
         }
 
         if (this.player != null) {
-            Vector3d vec3d = new Vector3d(this.player.getX() - this.getX(), this.player.getY() + (double) this.player.getEyeHeight() / 2.0D - this.getY(), this.player.getZ() - this.getZ());
+            Vec3 vec3d = new Vec3(this.player.getX() - this.getX(), this.player.getY() + (double) this.player.getEyeHeight() / 2.0D - this.getY(), this.player.getZ() - this.getZ());
             double d1 = vec3d.lengthSqr();
             if (d1 < 64.0D) {
                 double d2 = 1.0D - Math.sqrt(d1) / 8.0D;
@@ -162,9 +162,9 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
         float f = 0.98F;
 
         if (this.onGround) {
-            BlockPos underPos = new BlockPos(MathHelper.floor(this.getX()), MathHelper.floor(this.getBoundingBox().minY) - 1, MathHelper.floor(this.getZ()));
+            BlockPos underPos = new BlockPos(Mth.floor(this.getX()), Mth.floor(this.getBoundingBox().minY) - 1, Mth.floor(this.getZ()));
             BlockState underState = this.level.getBlockState(underPos);
-            f = underState.getBlock().getSlipperiness(underState, this.level, underPos, this) * 0.98F;
+            f = underState.getBlock().getFriction(underState, this.level, underPos, this) * 0.98F;
         }
 
         this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.9800000190734863D, f));
@@ -177,12 +177,12 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
         this.age++;
 
         if (this.age >= 6000) {
-            this.remove();
+            this.discard();
         }
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundNBT compound) {
+    protected void addAdditionalSaveData(CompoundTag compound) {
         compound.putString("type", this.getVariant().name());
         compound.putInt("age", age);
     }
@@ -193,12 +193,13 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
     }
 
     @Override
-    protected boolean isMovementNoisy() {
-        return false;
+    protected MovementEmission getMovementEmission() {
+        return MovementEmission.NONE;
     }
 
+
     @Override
-    protected void readAdditionalSaveData(CompoundNBT compound) {
+    protected void readAdditionalSaveData(CompoundTag compound) {
         this.setVariant(VARIANT.valueOf(compound.getString("type")));
         this.age = compound.getInt("age");
         soulItemStack = null;//Reset item just in case a item of a different type has been created beforehand

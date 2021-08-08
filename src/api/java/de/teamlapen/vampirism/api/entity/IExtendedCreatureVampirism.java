@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.api.entity;
 
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
-import net.minecraft.entity.CreatureEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.PathfinderMob;
 
 import javax.annotation.Nullable;
 
@@ -29,7 +30,7 @@ public interface IExtendedCreatureVampirism extends IBiteableEntity {
     /**
      * @return the representing entity
      */
-    CreatureEntity getEntity();
+    PathfinderMob getEntity();
 
     /**
      * @return Max blood level
@@ -59,4 +60,8 @@ public interface IExtendedCreatureVampirism extends IBiteableEntity {
      * Called every tick
      */
     void tick();
+
+    void loadData(CompoundTag tag);
+
+    void saveData(CompoundTag tag);
 }

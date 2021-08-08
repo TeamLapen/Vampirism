@@ -6,26 +6,28 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModRegistries;
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.*;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-/**
- * @author Cheaterpaul
- */
-@MethodsReturnNonnullByDefault
+import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+
+
 @ParametersAreNonnullByDefault
-public class ShapelessWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRecipe {
+public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableRecipe {
     protected static int MAX_WIDTH = 4;
     protected static int MAX_HEIGHT = 4;
 
@@ -50,7 +52,7 @@ public class ShapelessWeaponTableRecipe implements ICraftingRecipe, IWeaponTable
     }
 
     @Override
-    public ItemStack assemble(CraftingInventory inv) {
+    public ItemStack assemble(CraftingContainer inv) {
         return this.recipeOutput.copy();
     }
 
@@ -94,18 +96,18 @@ public class ShapelessWeaponTableRecipe implements ICraftingRecipe, IWeaponTable
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return ModRecipes.shapeless_crafting_weapontable;
     }
 
     @Override
-    public IRecipeType<? extends IRecipe> getType() {
+    public RecipeType<? extends Recipe> getType() {
         return ModRecipes.WEAPONTABLE_CRAFTING_TYPE;
     }
 
     @Override
-    public boolean matches(CraftingInventory inv, World worldIn) {
-        RecipeItemHelper recipeitemhelper = new RecipeItemHelper();
+    public boolean matches(CraftingContainer inv, Level worldIn) {
+        StackedContents recipeitemhelper = new StackedContents();
         java.util.List<ItemStack> inputs = new java.util.ArrayList<>();
         int i = 0;
 
@@ -126,26 +128,26 @@ public class ShapelessWeaponTableRecipe implements ICraftingRecipe, IWeaponTable
 
     }
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapelessWeaponTableRecipe> {
+    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapelessWeaponTableRecipe> {
         @Override
         public ShapelessWeaponTableRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            String group = JSONUtils.getAsString(json, "group", "");
-            NonNullList<Ingredient> ingredients = VampirismRecipeHelper.readIngredients(JSONUtils.getAsJsonArray(json, "ingredients"));
-            int level = JSONUtils.getAsInt(json, "level", 1);
-            ISkill[] skills = VampirismRecipeHelper.deserializeSkills(JSONUtils.getAsJsonArray(json, "skill", null));
-            int lava = JSONUtils.getAsInt(json, "lava", 0);
+            String group = GsonHelper.getAsString(json, "group", "");
+            NonNullList<Ingredient> ingredients = VampirismRecipeHelper.readIngredients(GsonHelper.getAsJsonArray(json, "ingredients"));
+            int level = GsonHelper.getAsInt(json, "level", 1);
+            ISkill[] skills = VampirismRecipeHelper.deserializeSkills(GsonHelper.getAsJsonArray(json, "skill", null));
+            int lava = GsonHelper.getAsInt(json, "lava", 0);
             if (ingredients.isEmpty()) {
                 throw new JsonParseException("No ingredients for shapeless recipe");
             } else if (ingredients.size() > ShapelessWeaponTableRecipe.MAX_WIDTH * ShapelessWeaponTableRecipe.MAX_HEIGHT) {
                 throw new JsonParseException("Too many ingredients for shapeless recipe the max is " + (ShapelessWeaponTableRecipe.MAX_WIDTH * ShapelessWeaponTableRecipe.MAX_HEIGHT));
             } else {
-                ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(JSONUtils.getAsJsonObject(json, "result"), true);
+                ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
                 return new ShapelessWeaponTableRecipe(recipeId, group, ingredients, result, level, lava, skills);
             }
         }
 
         @Override
-        public ShapelessWeaponTableRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+        public ShapelessWeaponTableRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
             String group = buffer.readUtf(32767);
             NonNullList<Ingredient> ingredients = NonNullList.withSize(buffer.readVarInt(), Ingredient.EMPTY);
             for (int j = 0; j < ingredients.size(); ++j) {
@@ -162,7 +164,7 @@ public class ShapelessWeaponTableRecipe implements ICraftingRecipe, IWeaponTable
         }
 
         @Override
-        public void toNetwork(PacketBuffer buffer, ShapelessWeaponTableRecipe recipe) {
+        public void toNetwork(FriendlyByteBuf buffer, ShapelessWeaponTableRecipe recipe) {
             buffer.writeUtf(recipe.group);
             buffer.writeVarInt(recipe.recipeItems.size());
             for (Ingredient ingredient : recipe.recipeItems) {

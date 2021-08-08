@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.api.entity.player.refinement;
 
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -19,7 +19,7 @@ public interface IRefinement extends IForgeRegistryEntry<IRefinement> {
     Attribute getAttribute();
 
     @Nonnull
-    ITextComponent getDescription();
+    Component getDescription();
 
     double getModifierValue();
 

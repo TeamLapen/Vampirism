@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.mixin.client;
 
-import net.minecraft.client.renderer.entity.model.AgeableModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.client.model.AgeableListModel;
+import net.minecraft.client.model.geom.ModelPart;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(AgeableModel.class)
+@Mixin(AgeableListModel.class)
 public interface AgeableModelAccessor {
 
     @Invoker("bodyParts")
-    Iterable<ModelRenderer> getBodyParts_vampirism();
+    Iterable<ModelPart> getBodyParts_vampirism();
 }

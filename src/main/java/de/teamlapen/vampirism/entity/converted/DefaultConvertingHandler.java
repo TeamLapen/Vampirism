@@ -5,23 +5,25 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.util.Mth;
 
 import javax.annotation.Nullable;
+
+import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler.IDefaultHelper;
 
 /**
  * Default converting handler for entities.
  * Used for some vanilla entities, but can also be used for third party entities.
  * Converts the entity into a {@link ConvertedCreatureEntity}
  */
-public class DefaultConvertingHandler<T extends CreatureEntity> implements IConvertingHandler<T> {
+public class DefaultConvertingHandler<T extends PathfinderMob> implements IConvertingHandler<T> {
 
     /**
      * Used if no helper is specified
@@ -30,8 +32,8 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
 
 
         @Override
-        public double getConvertedDMG(EntityType<? extends CreatureEntity> entityType) {
-            AttributeModifierMap map = GlobalEntityTypeAttributes.getSupplier(entityType);
+        public double getConvertedDMG(EntityType<? extends PathfinderMob> entityType) {
+            AttributeSupplier map = DefaultAttributes.getSupplier(entityType);
             if (map.hasAttribute(Attributes.ATTACK_DAMAGE)) {
                 return map.getBaseValue(Attributes.ATTACK_DAMAGE) * 1.3;
             } else {
@@ -40,20 +42,20 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
         }
 
         @Override
-        public double getConvertedKnockbackResistance(EntityType<? extends CreatureEntity> entityType) {
-            AttributeModifierMap map = GlobalEntityTypeAttributes.getSupplier(entityType);
+        public double getConvertedKnockbackResistance(EntityType<? extends PathfinderMob> entityType) {
+            AttributeSupplier map = DefaultAttributes.getSupplier(entityType);
             return map.getBaseValue(Attributes.KNOCKBACK_RESISTANCE) * 1.3;
         }
 
         @Override
-        public double getConvertedMaxHealth(EntityType<? extends CreatureEntity> entityType) {
-            AttributeModifierMap map = GlobalEntityTypeAttributes.getSupplier(entityType);
+        public double getConvertedMaxHealth(EntityType<? extends PathfinderMob> entityType) {
+            AttributeSupplier map = DefaultAttributes.getSupplier(entityType);
             return map.getBaseValue(Attributes.MAX_HEALTH) * 1.5;
         }
 
         @Override
-        public double getConvertedSpeed(EntityType<? extends CreatureEntity> entityType) {
-            AttributeModifierMap map = GlobalEntityTypeAttributes.getSupplier(entityType);
+        public double getConvertedSpeed(EntityType<? extends PathfinderMob> entityType) {
+            AttributeSupplier map = DefaultAttributes.getSupplier(entityType);
             return Math.min(map.getBaseValue(Attributes.MOVEMENT_SPEED) * 1.2, 2.9D);
         }
     };
@@ -76,8 +78,8 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
     public IConvertedCreature<T> createFrom(T entity) {
         return Helper.createEntity(ModEntities.converted_creature, entity.getCommandSenderWorld()).map(convertedCreature -> {
             copyImportantStuff(convertedCreature, entity);
-            convertedCreature.setUUID(MathHelper.createInsecureUUID(convertedCreature.getRandom()));
-            convertedCreature.addEffect(new EffectInstance(Effects.WEAKNESS, 200, 2));
+            convertedCreature.setUUID(Mth.createInsecureUUID(convertedCreature.getRandom()));
+            convertedCreature.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 2));
             return convertedCreature;
         }).orElse(null);
     }

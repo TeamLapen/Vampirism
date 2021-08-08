@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -16,8 +16,8 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
 
 import java.awt.*;
 
@@ -47,7 +47,7 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
     }
 
     @Override
-    public void draw(JEIPotionMix recipe, MatrixStack stack, double mouseX, double mouseY) {
+    public void draw(JEIPotionMix recipe, PoseStack stack, double mouseX, double mouseY) {
         this.blazeHeat.draw(stack, 1, 35);
         this.bubbles.draw(stack, 3, 4);
         this.arrow.draw(stack, 80, 10);

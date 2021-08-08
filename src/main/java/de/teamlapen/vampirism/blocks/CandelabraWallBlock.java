@@ -1,18 +1,18 @@
 package de.teamlapen.vampirism.blocks;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
@@ -34,15 +34,15 @@ public class CandelabraWallBlock extends VampirismHorizontalBlock {
                 Block.box(1.5, 7, 11.5, 4.5, 8, 14.5),
                 Block.box(12, 8, 12, 14, 12, 14),
                 Block.box(11.5, 7, 11.5, 14.5, 8, 14.5)
-        ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).orElse(VoxelShapes.empty());
+        ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElse(Shapes.empty());
     }
 
     public CandelabraWallBlock() {
-        super("candelabra_wall", AbstractBlock.Properties.of(Material.METAL).lightLevel(s -> 14).noOcclusion(), makeWallCandelabraShape());
+        super("candelabra_wall", BlockBehaviour.Properties.of(Material.METAL).lightLevel(s -> 14).noOcclusion(), makeWallCandelabraShape());
     }
 
     @Override
-    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
         Direction direction = state.getValue(FACING);
         BlockPos blockpos = pos.relative(direction.getOpposite());
         BlockState blockstate = worldIn.getBlockState(blockpos);
@@ -50,9 +50,9 @@ public class CandelabraWallBlock extends VampirismHorizontalBlock {
     }
 
     @Nullable
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState blockstate = this.defaultBlockState();
-        IWorldReader iworldreader = context.getLevel();
+        LevelReader iworldreader = context.getLevel();
         BlockPos blockpos = context.getClickedPos();
         Direction[] adirection = context.getNearestLookingDirections();
 
@@ -70,7 +70,7 @@ public class CandelabraWallBlock extends VampirismHorizontalBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         return facing.getOpposite() == stateIn.getValue(FACING) && !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : stateIn;
     }
 }

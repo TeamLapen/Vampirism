@@ -7,15 +7,15 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.command.*;
 import de.teamlapen.vampirism.command.arguments.*;
 import de.teamlapen.vampirism.command.test.*;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.arguments.ArgumentSerializer;
-import net.minecraft.command.arguments.ArgumentTypes;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.synchronization.EmptyArgumentSerializer;
+import net.minecraft.commands.synchronization.ArgumentTypes;
 
 import java.util.List;
 
 public class ModCommands {
 
-    public static void registerCommands(CommandDispatcher<CommandSource> dispatcher) {
+    public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
         List<String> vampirism = Lists.newArrayList("vampirism");
         List<String> test = Lists.newArrayList("vampirism-test");
         if (VampirismMod.inDev) {
@@ -26,7 +26,7 @@ public class ModCommands {
         //Vampirism commands
         for (String s : vampirism) {
             dispatcher.register(
-                    LiteralArgumentBuilder.<CommandSource>literal(s)
+                    LiteralArgumentBuilder.<CommandSourceStack>literal(s)
                             .then(BindActionCommand.register())
                             .then(VersionCheckCommand.registerChangelog())//TODO 1.17 remove
                             .then(VersionCheckCommand.register())
@@ -47,7 +47,7 @@ public class ModCommands {
         //Test commands
         for (String s : test) {
             dispatcher.register(
-                    LiteralArgumentBuilder.<CommandSource>literal(s)
+                    LiteralArgumentBuilder.<CommandSourceStack>literal(s)
                             .then(InfoEntitiesCommand.register())
                             .then(MarkerCommand.register())
                             .then(SkillCommand.registerTest())//TODO 1.17 remove
@@ -80,11 +80,11 @@ public class ModCommands {
      * Make sure to use deferred queue
      */
     static void registerArgumentTypesUsage() {
-        ArgumentTypes.register("vampirism_faction", FactionArgument.class, new ArgumentSerializer<>(FactionArgument::new));
-        ArgumentTypes.register("vampirism_skill", SkillArgument.class, new ArgumentSerializer<>(SkillArgument::new));
-        ArgumentTypes.register("vampirism_action", ActionArgument.class, new ArgumentSerializer<>(ActionArgument::new));
-        ArgumentTypes.register("vampirism_refinement_set", RefinementSetArgument.class, new ArgumentSerializer<>(RefinementSetArgument::new));
-        ArgumentTypes.register("vampirism_task", TaskArgument.class, new ArgumentSerializer<>(TaskArgument::new));
-        ArgumentTypes.register("vampirism_biome", BiomeArgument.class, new ArgumentSerializer<>(BiomeArgument::new));
+        ArgumentTypes.register("vampirism_faction", FactionArgument.class, new EmptyArgumentSerializer<>(FactionArgument::new));
+        ArgumentTypes.register("vampirism_skill", SkillArgument.class, new EmptyArgumentSerializer<>(SkillArgument::new));
+        ArgumentTypes.register("vampirism_action", ActionArgument.class, new EmptyArgumentSerializer<>(ActionArgument::new));
+        ArgumentTypes.register("vampirism_refinement_set", RefinementSetArgument.class, new EmptyArgumentSerializer<>(RefinementSetArgument::new));
+        ArgumentTypes.register("vampirism_task", TaskArgument.class, new EmptyArgumentSerializer<>(TaskArgument::new));
+        ArgumentTypes.register("vampirism_biome", BiomeArgument.class, new EmptyArgumentSerializer<>(BiomeArgument::new));
     }
 }

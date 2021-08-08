@@ -5,17 +5,23 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.core.ModLoot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.loot.*;
-import net.minecraft.loot.conditions.ILootCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import javax.annotation.Nonnull;
 
-public class SetMetaBasedOnLevel extends LootFunction {
-    private final IRandomRange max;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.RandomIntGenerator;
+import net.minecraft.world.level.storage.loot.RandomIntGenerators;
+import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+
+public class SetMetaBasedOnLevel extends LootItemConditionalFunction {
+    private final RandomIntGenerator max;
     private final LootContext.EntityTarget target;
 
-    protected SetMetaBasedOnLevel(ILootCondition[] conditions, IRandomRange max, LootContext.EntityTarget targetIn) {
+    protected SetMetaBasedOnLevel(LootItemCondition[] conditions, RandomIntGenerator max, LootContext.EntityTarget targetIn) {
         super(conditions);
         this.max = max;
         this.target = targetIn;
@@ -23,7 +29,7 @@ public class SetMetaBasedOnLevel extends LootFunction {
 
     @Nonnull
     @Override
-    public LootFunctionType getType() {
+    public LootItemFunctionType getType() {
         return ModLoot.set_meta_from_level;
     }
 
@@ -40,12 +46,12 @@ public class SetMetaBasedOnLevel extends LootFunction {
         return stack;
     }
 
-    public static class Serializer extends LootFunction.Serializer<SetMetaBasedOnLevel> {
+    public static class Serializer extends LootItemConditionalFunction.Serializer<SetMetaBasedOnLevel> {
 
         @Nonnull
         @Override
-        public SetMetaBasedOnLevel deserialize(@Nonnull JsonObject jsonObject, @Nonnull JsonDeserializationContext jsonDeserializationContext, @Nonnull ILootCondition[] iLootConditions) {
-            IRandomRange range = RandomRanges.deserialize(jsonObject.get("max"), jsonDeserializationContext);
+        public SetMetaBasedOnLevel deserialize(@Nonnull JsonObject jsonObject, @Nonnull JsonDeserializationContext jsonDeserializationContext, @Nonnull LootItemCondition[] iLootConditions) {
+            RandomIntGenerator range = RandomIntGenerators.deserialize(jsonObject.get("max"), jsonDeserializationContext);
             LootContext.EntityTarget target = jsonDeserializationContext.deserialize(jsonObject.get("entity"), LootContext.EntityTarget.class);
             return new SetMetaBasedOnLevel(iLootConditions, range, target);
         }
@@ -53,7 +59,7 @@ public class SetMetaBasedOnLevel extends LootFunction {
         @Override
         public void serialize(@Nonnull JsonObject json, @Nonnull SetMetaBasedOnLevel lootFunction, @Nonnull JsonSerializationContext context) {
             super.serialize(json, lootFunction, context);
-            json.add("max", RandomRanges.serialize(lootFunction.max, context));
+            json.add("max", RandomIntGenerators.serialize(lootFunction.max, context));
             json.add("entity", context.serialize(lootFunction.target));
         }
     }

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.modcompat.guide.pages;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.maxanier.guideapi.api.SubTexture;
 import de.maxanier.guideapi.api.impl.Book;
 import de.maxanier.guideapi.api.impl.Page;
@@ -10,13 +10,13 @@ import de.maxanier.guideapi.api.util.GuiHelper;
 import de.maxanier.guideapi.api.util.PageHelper;
 import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 public class PagePotionTableMix extends Page {
     private final static Logger LOGGER = LogManager.getLogger();
     private static final SubTexture POTION_GRID = new SubTexture(new ResourceLocation("vampirismguide", "textures/gui/potion_table.png"), 0, 0, 89, 75);
-    private final ITextComponent description;
+    private final Component description;
     private final ExtendedPotionMix[] recipes;
     private long lastCycle = -1L;
     private ItemStack input;
@@ -46,7 +46,7 @@ public class PagePotionTableMix extends Page {
     @Nonnull
     private ItemStack[] ingredients2 = new ItemStack[0];
 
-    public PagePotionTableMix(ITextComponent description, ExtendedPotionMix... recipes) {
+    public PagePotionTableMix(Component description, ExtendedPotionMix... recipes) {
         assert recipes.length > 0;
         this.description = description;
         this.recipes = recipes;
@@ -55,13 +55,13 @@ public class PagePotionTableMix extends Page {
         in2 = ingredients2[0];
     }
 
-    public PagePotionTableMix(ITextComponent description, List<ExtendedPotionMix> recipes) {
+    public PagePotionTableMix(Component description, List<ExtendedPotionMix> recipes) {
         this(description, recipes.toArray(new ExtendedPotionMix[0]));
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void draw(MatrixStack stack, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, FontRenderer fontRendererObj) {
+    public void draw(PoseStack stack, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, Font fontRendererObj) {
         //Update cycle
         long time = guiBase.getMinecraft().level != null ? guiBase.getMinecraft().level.getGameTime() : 0L;
         if (this.lastCycle < 0L || this.lastCycle < time - 60L) {
@@ -77,7 +77,7 @@ public class PagePotionTableMix extends Page {
         int yStart = guiTop + 20;
         POTION_GRID.draw(stack, xStart, yStart);
 
-        List<ITextComponent> tooltip = null;
+        List<Component> tooltip = null;
         int x = xStart + 7;
         int y = yStart + 55;
         GuiHelper.drawItemStack(stack, input, x, y);

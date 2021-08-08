@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.items;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public interface IBloodChargeable {
 

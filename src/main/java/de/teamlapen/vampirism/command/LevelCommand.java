@@ -9,18 +9,18 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.command.arguments.FactionArgument;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.Collection;
 
 public class LevelCommand extends BasicCommand {
 
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
 
         return Commands.literal("level")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
@@ -36,25 +36,25 @@ public class LevelCommand extends BasicCommand {
                                 .executes(context -> leaveFaction(EntityArgument.getPlayers(context, "player")))));
     }
 
-    private static int setLevel(CommandContext<CommandSource> context, IPlayableFaction<IFactionPlayer<?>> faction, int level, Collection<ServerPlayerEntity> players) {
-        for (ServerPlayerEntity player : players) {
+    private static int setLevel(CommandContext<CommandSourceStack> context, IPlayableFaction<IFactionPlayer<?>> faction, int level, Collection<ServerPlayer> players) {
+        for (ServerPlayer player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             if (level == 0 && !handler.canLeaveFaction()) {
-                context.getSource().sendFailure(new TranslationTextComponent("command.vampirism.base.level.cant_leave", players.size() > 1 ? player.getDisplayName() : "Player", handler.getCurrentFaction().getName()));
+                context.getSource().sendFailure(new TranslatableComponent("command.vampirism.base.level.cant_leave", players.size() > 1 ? player.getDisplayName() : "Player", handler.getCurrentFaction().getName()));
             } else {
                 level = Math.min(level, faction.getHighestReachableLevel());
                 if (handler.setFactionAndLevel(faction, level)) {
-                    context.getSource().sendSuccess(new TranslationTextComponent("command.vampirism.base.level.successful", player.getName(), faction.getName(), level), true);
+                    context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.base.level.successful", player.getName(), faction.getName(), level), true);
                 } else {
-                    context.getSource().sendFailure(players.size() > 1 ? new TranslationTextComponent("command.vampirism.failed_to_execute.players", player.getDisplayName()) : new TranslationTextComponent("command.vampirism.failed_to_execute"));
+                    context.getSource().sendFailure(players.size() > 1 ? new TranslatableComponent("command.vampirism.failed_to_execute.players", player.getDisplayName()) : new TranslatableComponent("command.vampirism.failed_to_execute"));
                 }
             }
         }
         return 0;
     }
 
-    private static int leaveFaction(Collection<ServerPlayerEntity> players) {
-        for (ServerPlayerEntity player : players) {
+    private static int leaveFaction(Collection<ServerPlayer> players) {
+        for (ServerPlayer player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             handler.setFactionAndLevel(null, 0);
         }

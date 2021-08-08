@@ -6,16 +6,17 @@ import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -30,7 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class PedestalTileEntity extends TileEntity implements ITickableTileEntity, IItemHandler {
+public class PedestalTileEntity extends BlockEntity implements IItemHandler {
 
     private final Random rand = new Random();
     private final LazyOptional<IItemHandler> opt = LazyOptional.of(() -> this);
@@ -46,8 +47,8 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
     @Nonnull
     private ItemStack internalStack;
 
-    public PedestalTileEntity() {
-        super(ModTiles.blood_pedestal);
+    public PedestalTileEntity(BlockPos pos, BlockState state) {
+        super(ModTiles.blood_pedestal, pos, state);
         this.internalStack = ItemStack.EMPTY;
     }
 
@@ -103,14 +104,14 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
 
     @Nullable
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(getBlockPos(), 1, getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(getBlockPos(), 1, getUpdateTag());
     }
 
     @Nonnull
     @Override
-    public CompoundNBT getUpdateTag() {
-        return save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return save(new CompoundTag());
     }
 
     public boolean hasStack() {
@@ -138,8 +139,8 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         if (compound.contains("item")) {
             this.internalStack = ItemStack.of(compound.getCompound("item"));
         } else {
@@ -150,8 +151,8 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        if (hasLevel()) handleUpdateTag(this.level.getBlockState(pkt.getPos()), pkt.getTag());
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        if (hasLevel()) handleUpdateTag(pkt.getTag());
     }
 
     @Nonnull
@@ -163,7 +164,7 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
 
     @Nonnull
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         if (hasStack()) {
             compound.put("item", this.internalStack.serializeNBT());
         }
@@ -172,45 +173,43 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
         return super.save(compound);
     }
 
-    @Override
-    public void tick() {
-        if (level == null) return;
-        if (!this.level.isClientSide) {
-            if (chargingTicks > 0) {
-                chargingTicks--;
-                if (chargingTicks == 0) {
-                    IBloodChargeable chargeable = getChargeItem(this.internalStack);
+    public static void serverTick(Level level, BlockPos pos, BlockState state, PedestalTileEntity blockEntity) {
+            if (blockEntity.chargingTicks > 0) {
+                blockEntity.chargingTicks--;
+                if (blockEntity.chargingTicks == 0) {
+                    IBloodChargeable chargeable = getChargeItem(blockEntity.internalStack);
                     if (chargeable != null) {
-                        if (this.bloodStored > 0) {
-                            int charged = chargeable.charge(this.internalStack, this.bloodStored);
-                            this.bloodStored -= Math.max(0, charged);
+                        if (blockEntity.bloodStored > 0) {
+                            int charged = chargeable.charge(blockEntity.internalStack, blockEntity.bloodStored);
+                            blockEntity.bloodStored -= Math.max(0, charged);
                         }
                     }
-                    this.markDirtyAndUpdateClient();
+                    blockEntity.markDirtyAndUpdateClient();
                 }
-            } else if (chargingTicks == 0) {
-                IBloodChargeable chargeable = getChargeItem(this.internalStack);
-                if (chargeable != null && chargeable.canBeCharged(internalStack)) {
-                    if (this.bloodStored < chargeRate) {
-                        this.drainBlood();
+            } else if (blockEntity.chargingTicks == 0) {
+                IBloodChargeable chargeable = getChargeItem(blockEntity.internalStack);
+                if (chargeable != null && chargeable.canBeCharged(blockEntity.internalStack)) {
+                    if (blockEntity.bloodStored < blockEntity.chargeRate) {
+                        blockEntity.drainBlood();
                     }
-                    if (this.bloodStored > 0) {
-                        this.chargingTicks = 20;
-                        this.markDirtyAndUpdateClient();
+                    if (blockEntity.bloodStored > 0) {
+                        blockEntity.chargingTicks = 20;
+                        blockEntity.markDirtyAndUpdateClient();
                     } else {
-                        this.chargingTicks = -40;
+                        blockEntity.chargingTicks = -40;
                     }
                 } else {
-                    this.chargingTicks = -40;
+                    blockEntity.chargingTicks = -40;
                 }
             } else {
-                this.chargingTicks++;
+                blockEntity.chargingTicks++;
             }
-        } else {
-            this.ticksExistedClient++;
-            if (chargingTicks > 0 && ticksExistedClient % 8 == 0) {
-                spawnChargedParticle();
-            }
+    }
+
+    public static void clientTick(Level level, BlockPos pos, BlockState state, PedestalTileEntity blockEntity) {
+        blockEntity.ticksExistedClient++;
+        if (blockEntity.chargingTicks > 0 && blockEntity.ticksExistedClient % 8 == 0) {
+            spawnChargedParticle(level, pos, blockEntity.rand);
         }
     }
 
@@ -231,7 +230,7 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
      * @return May be null
      */
     @Nullable
-    private IBloodChargeable getChargeItem(@Nonnull ItemStack stack) {
+    private static IBloodChargeable getChargeItem(@Nonnull ItemStack stack) {
         return stack.isEmpty() ? null : (stack.getItem() instanceof IBloodChargeable ? (IBloodChargeable) stack.getItem() : null);
     }
 
@@ -254,12 +253,12 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
     }
 
     @OnlyIn(Dist.CLIENT)
-    private void spawnChargedParticle() {
-        Vector3d pos = Vector3d.upFromBottomCenterOf(this.getBlockPos(), 0.8);
-        ModParticles.spawnParticleClient(getLevel(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), this.worldPosition.getX() + 0.20, this.getBlockPos().getY() + 0.65, this.getBlockPos().getZ() + 0.20);
-        ModParticles.spawnParticleClient(getLevel(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), this.worldPosition.getX() + 0.80, this.getBlockPos().getY() + 0.65, this.getBlockPos().getZ() + 0.20);
-        ModParticles.spawnParticleClient(getLevel(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), this.worldPosition.getX() + 0.20, this.getBlockPos().getY() + 0.65, this.getBlockPos().getZ() + 0.80);
-        ModParticles.spawnParticleClient(getLevel(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (3.0F / (rand.nextFloat() * 0.6F + 0.4F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), this.worldPosition.getX() + 0.80, this.getBlockPos().getY() + 0.65, this.getBlockPos().getZ() + 0.80);
+    private static void spawnChargedParticle(Level level, BlockPos blockPos, Random rand) {
+        Vec3 pos = Vec3.upFromBottomCenterOf(blockPos, 0.8);
+        ModParticles.spawnParticleClient(level, new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), blockPos.getX() + 0.20, blockPos.getY() + 0.65, blockPos.getZ() + 0.20);
+        ModParticles.spawnParticleClient(level, new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), blockPos.getX() + 0.80, blockPos.getY() + 0.65, blockPos.getZ() + 0.20);
+        ModParticles.spawnParticleClient(level, new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), blockPos.getX() + 0.20, blockPos.getY() + 0.65, blockPos.getZ() + 0.80);
+        ModParticles.spawnParticleClient(level, new FlyingBloodParticleData(ModParticles.flying_blood, (int) (3.0F / (rand.nextFloat() * 0.6F + 0.4F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), blockPos.getX() + 0.80, blockPos.getY() + 0.65, blockPos.getZ() + 0.80);
 
     }
 }

@@ -2,12 +2,12 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.model.armor.CloakModel;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.StringRepresentable;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -19,7 +19,7 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
     private final EnumClothingColor color;
     private final EnumModel model;
 
-    public ColoredVampireClothingItem(EquipmentSlotType slotType, EnumModel model, String baseRegName, EnumClothingColor color) {
+    public ColoredVampireClothingItem(EquipmentSlot slotType, EnumModel model, String baseRegName, EnumClothingColor color) {
         super(slotType, baseRegName + "_" + color.getName());
         this.baseName = baseRegName;
         this.color = color;
@@ -29,7 +29,7 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
     @Nullable
     @OnlyIn(Dist.CLIENT)
     @Override
-    public BipedModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, BipedModel _default) {
+    public HumanoidModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel _default) {
         switch (model) {
             case CLOAK:
                 return CloakModel.getRotatedCloak();
@@ -39,7 +39,7 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
         return String.format(REFERENCE.MODID + ":textures/models/armor/%s/%s_%s.png", baseName, baseName,
                 color.getName());
     }
@@ -48,7 +48,7 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
         CLOAK
     }
 
-    public enum EnumClothingColor implements IStringSerializable {
+    public enum EnumClothingColor implements StringRepresentable {
         REDBLACK("red_black"), BLACKRED("black_red"), BLACKWHITE("black_white"), WHITEBLACK(
                 "white_black"), BLACKBLUE("black_blue");
 

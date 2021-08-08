@@ -10,18 +10,18 @@ import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
  * - Checkin minion slot if entity is removed from world {@link PlayerMinionController#checkInMinion(int, int)}
  * - Release minion slot if minion dies {@link PlayerMinionController#markDeadAndReleaseMinionSlot(int, int)}
  */
-public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
+public class PlayerMinionController implements INBTSerializable<CompoundTag> {
 
     private final static Logger LOGGER = LogManager.getLogger();
 
@@ -130,7 +130,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         MinionInfo i = getMinionInfo(id, token);
         if (i != null) {
             int entityId = entity.getId();
-            RegistryKey<World> dimension = entity.level.dimension();
+            ResourceKey<Level> dimension = entity.level.dimension();
             if (i.checkout(entityId, dimension)) {
                 return (T) i.data;
             }
@@ -185,7 +185,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     }
 
     @Nullable
-    public MinionEntity<?> createMinionEntityAtPlayer(int id, PlayerEntity p) {
+    public MinionEntity<?> createMinionEntityAtPlayer(int id, Player p) {
         assert id >= 0;
         EntityType<? extends MinionEntity<?>> type = minions[id].minionType;
         if (type == null) {
@@ -230,7 +230,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         IFaction<?> f = VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(nbt.getString("faction")));
         if (!(f instanceof IPlayableFaction)) {
             this.maxMinions = 0;
@@ -238,12 +238,12 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         }
         this.faction = (IPlayableFaction<?>) f;
         this.maxMinions = nbt.getInt("max_minions");
-        ListNBT data = nbt.getList("data", 10);
+        ListTag data = nbt.getList("data", 10);
         MinionInfo[] infos = new MinionInfo[data.size()];
         //noinspection unchecked
         Optional<Integer>[] tokens = new Optional[data.size()];
-        for (INBT n : data) {
-            CompoundNBT tag = (CompoundNBT) n;
+        for (Tag n : data) {
+            CompoundTag tag = (CompoundTag) n;
             int id = tag.getInt("id");
             MinionData d = MinionData.fromNBT(tag);
             ResourceLocation entityTypeID = new ResourceLocation(tag.getString("entity_type"));
@@ -281,7 +281,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         return ids;
     }
 
-    public List<IFormattableTextComponent> getRecoveringMinionNames() {
+    public List<MutableComponent> getRecoveringMinionNames() {
         return Arrays.stream(this.minions).filter(MinionInfo::isStillRecovering).map(i -> i.data).map(MinionData::getFormattedName).collect(Collectors.toList());
     }
 
@@ -370,15 +370,15 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
-        CompoundNBT nbt = new CompoundNBT();
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
         nbt.putInt("max_minions", maxMinions);
         if (faction != null) {
             nbt.putString("faction", faction.getID().toString());
         }
-        ListNBT data = new ListNBT();
+        ListTag data = new ListTag();
         for (MinionInfo i : minions) {
-            CompoundNBT d = i.data.serializeNBT();
+            CompoundTag d = i.data.serializeNBT();
             d.putInt("death_timer", i.deathCooldown);
             d.putInt("id", i.minionID);
             if (i.minionType != null) d.putString("entity_type", i.minionType.getRegistryName().toString());
@@ -427,7 +427,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
                 i.deathCooldown--;
                 if (i.deathCooldown == 0) {
                     i.data.setHealth(i.data.getMaxHealth());
-                    getLordPlayer().ifPresent(player -> player.displayClientMessage(new TranslationTextComponent("text.vampirism.minion.can_respawn", i.data.getFormattedName()), true));
+                    getLordPlayer().ifPresent(player -> player.displayClientMessage(new TranslatableComponent("text.vampirism.minion.can_respawn", i.data.getFormattedName()), true));
                 }
             } else {
                 IMinionTask.IMinionTaskDesc<MinionData> taskDesc = i.data.getCurrentTaskDesc();
@@ -440,7 +440,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         @Nullable
         IMinionTask.IMinionTaskDesc desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data);
         if (desc == null) {
-            getLordPlayer().ifPresent(player -> player.displayClientMessage(new TranslationTextComponent("text.vampirism.minion.could_not_activate"), false));
+            getLordPlayer().ifPresent(player -> player.displayClientMessage(new TranslatableComponent("text.vampirism.minion.could_not_activate"), false));
         } else {
             MinionData d = info.data;
             d.switchTask(d.getCurrentTaskDesc().getTask(), d.getCurrentTaskDesc(), desc);
@@ -452,14 +452,14 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         return getLordPlayer().map(FactionPlayerHandler::get);
     }
 
-    private Optional<PlayerEntity> getLordPlayer() {
+    private Optional<Player> getLordPlayer() {
         return Optional.ofNullable(server.getPlayerList().getPlayer(lordID));
     }
 
     private Optional<MinionEntity<?>> getMinionEntity(MinionInfo info) {
         if (info.isActive()) {
             assert info.dimension != null;
-            World w = server.getLevel(info.dimension);
+            Level w = server.getLevel(info.dimension);
             if (w != null) {
                 Entity e = w.getEntity(info.entityId);
                 if (e instanceof MinionEntity) {
@@ -515,7 +515,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         int entityId = -1;
         int deathCooldown = 0;
         @Nullable
-        RegistryKey<World> dimension;
+        ResourceKey<Level> dimension;
 
         private MinionInfo(int id, @Nonnull MinionData data, @Nullable EntityType<? extends MinionEntity<?>> minionType) {
             this.minionID = id;
@@ -531,7 +531,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             this.dimension = null;
         }
 
-        boolean checkout(int entityId, RegistryKey<World> dim) {
+        boolean checkout(int entityId, ResourceKey<Level> dim) {
             if (this.entityId != -1 || isStillRecovering()) {
                 return false;
             }

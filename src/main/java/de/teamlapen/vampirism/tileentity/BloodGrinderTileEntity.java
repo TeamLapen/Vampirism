@@ -7,23 +7,23 @@ import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.inventory.container.BloodGrinderContainer;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -37,14 +37,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BloodGrinderTileEntity extends InventoryTileEntity implements ITickableTileEntity {
+public class BloodGrinderTileEntity extends InventoryTileEntity{
 
 
-    private static List<ItemEntity> getCaptureItems(World worldIn, BlockPos pos) {
+    private static List<ItemEntity> getCaptureItems(Level worldIn, BlockPos pos) {
         int posX = pos.getX();
         int posY = pos.getY();
         int posZ = pos.getZ();
-        return worldIn.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(posX, posY + 0.5D, posZ, posX + 1D, posY + 1.5D, posZ + 1D), EntityPredicates.ENTITY_STILL_ALIVE);
+        return worldIn.getEntitiesOfClass(ItemEntity.class, new AABB(posX, posY + 0.5D, posZ, posX + 1D, posY + 1.5D, posZ + 1D), EntitySelector.ENTITY_STILL_ALIVE);
     }
     //Used to provide ItemHandler compatibility
     private final IItemHandler itemHandler;
@@ -52,8 +52,8 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
     private int cooldownPull = 0;
     private int cooldownProcess = 0;
 
-    public BloodGrinderTileEntity() {
-        super(ModTiles.grinder, 1, BloodGrinderContainer.SELECTOR_INFOS);
+    public BloodGrinderTileEntity(BlockPos pos, BlockState state) {
+        super(ModTiles.grinder, pos, state, 1, BloodGrinderContainer.SELECTOR_INFOS);
         this.itemHandler = createWrapper();
         this.itemHandlerOptional = LazyOptional.of(() -> itemHandler);
     }
@@ -67,62 +67,61 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tagCompound) {
-        super.load(state, tagCompound);
+    public void load(CompoundTag tagCompound) {
+        super.load(tagCompound);
         cooldownPull = tagCompound.getInt("cooldown_pull");
         cooldownProcess = tagCompound.getInt("cooldown_process");
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         compound.putInt("cooldown_pull", cooldownPull);
         compound.putInt("cooldown_process", cooldownProcess);
         return super.save(compound);
     }
 
-    @Override
-    public void tick() {
-        if (this.level != null && !this.level.isClientSide) {
-            --this.cooldownPull;
-            if (cooldownPull <= 0) {
-                cooldownPull = 10;
-                this.updatePull();
+    public static void serverTick(Level level, BlockPos pos, BlockState state, BloodGrinderTileEntity blockEntity) {
+            --blockEntity.cooldownPull;
+            if (blockEntity.cooldownPull <= 0) {
+                blockEntity.cooldownPull = 10;
+                if (!blockEntity.isFull()) {
+                    boolean flag = pullItems(blockEntity, level, pos);
+                    if (flag) {
+                        blockEntity.cooldownPull = 20;
+                    }
+                }
             }
 
-            --this.cooldownProcess;
-            if (cooldownProcess <= 0) {
-                cooldownProcess = 10;
-                this.updateProcess();
+            --blockEntity.cooldownProcess;
+            if (blockEntity.cooldownProcess <= 0) {
+                blockEntity.cooldownProcess = 10;
+                blockEntity.updateProcess();
             }
-
-        }
     }
 
     @Nonnull
     @Override
-    protected Container createMenu(int id, PlayerInventory player) {
-        return new BloodGrinderContainer(id, player, this, IWorldPosCallable.create(player.player.getCommandSenderWorld(), this.getBlockPos()));
+    protected AbstractContainerMenu createMenu(int id, Inventory player) {
+        return new BloodGrinderContainer(id, player, this, ContainerLevelAccess.create(player.player.getCommandSenderWorld(), this.getBlockPos()));
     }
 
     @Override
-    protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent("tile.vampirism.blood_grinder");
+    protected Component getDefaultName() {
+        return new TranslatableComponent("tile.vampirism.blood_grinder");
     }
 
-    private boolean pullItems() {
-        if (level == null) return false;
+    private static boolean pullItems(BloodGrinderTileEntity blockEntity, Level level, BlockPos pos) {
 
-
-        boolean flag = de.teamlapen.lib.lib.inventory.InventoryHelper.tryGetItemHandler(this.level, this.worldPosition.above(), Direction.DOWN).map(pair -> {
+        boolean flag = de.teamlapen.lib.lib.inventory.InventoryHelper.tryGetItemHandler(level, pos.above(), Direction.DOWN).map(pair -> {
             IItemHandler handler = pair.getLeft();
             for (int i = 0; i < handler.getSlots(); i++) {
                 ItemStack extracted = handler.extractItem(i, 1, true);
                 if (!extracted.isEmpty()) {
-                    ItemStack simulated = ItemHandlerHelper.insertItemStacked(itemHandler, extracted, true);
+                    ItemStack simulated = ItemHandlerHelper.insertItemStacked(blockEntity.itemHandler, extracted, true);
 
                     if (simulated.isEmpty()) {
                         extracted = handler.extractItem(i, 1, false);
-                        ItemHandlerHelper.insertItemStacked(itemHandler, extracted, false);
+                        ItemHandlerHelper.insertItemStacked(blockEntity.itemHandler, extracted, false);
                         return true;
                     }
 
@@ -134,14 +133,14 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
         if (flag) {
             return true;
         } else {
-            for (ItemEntity entityItem : getCaptureItems(this.level, this.worldPosition)) {
+            for (ItemEntity entityItem : getCaptureItems(level, pos)) {
                 ItemStack stack = entityItem.getItem();
-                for (int i = 0; i < itemHandler.getSlots(); i++) {
-                    ItemStack stack2 = itemHandler.insertItem(i, stack, true);
+                for (int i = 0; i < blockEntity.itemHandler.getSlots(); i++) {
+                    ItemStack stack2 = blockEntity.itemHandler.insertItem(i, stack, true);
                     if (stack2.isEmpty()) {
-                        stack2 = itemHandler.insertItem(i, stack, false);
+                        stack2 = blockEntity.itemHandler.insertItem(i, stack, false);
                         if (stack2.getCount() < stack.getCount()) {
-                            entityItem.remove();
+                            entityItem.discard();
                         } else {
                             entityItem.setItem(stack2);
                         }
@@ -167,8 +166,8 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
                         if (filled >= 0.9f * blood) {
                             ItemStack extractedStack = itemHandler.extractItem(slot, 1, false);
                             handler.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
-                            this.level.playSound(null, this.getBlockPos(), ModSounds.grinder, SoundCategory.BLOCKS, 0.5f, 0.7f);
-                            this.cooldownProcess = MathHelper.clamp(20 * filled / VReference.FOOD_TO_FLUID_BLOOD, 20, 100);
+                            this.level.playSound(null, this.getBlockPos(), ModSounds.grinder, SoundSource.BLOCKS, 0.5f, 0.7f);
+                            this.cooldownProcess = Mth.clamp(20 * filled / VReference.FOOD_TO_FLUID_BLOOD, 20, 100);
                         }
                     });
 
@@ -177,14 +176,4 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
         }
     }
 
-    private boolean updatePull() {
-        if (!isFull()) {
-            boolean flag = pullItems();
-            if (flag) {
-                this.cooldownPull = 20;
-            }
-            return flag;
-        }
-        return false;
-    }
 }

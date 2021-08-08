@@ -8,13 +8,11 @@ import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.BatRenderer;
 import net.minecraft.client.renderer.entity.HorseRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.resources.IReloadableResourceManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.function.Supplier;
@@ -49,7 +47,7 @@ public class ModEntitiesRender {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.advanced_vampire, safeFactory(AdvancedVampireRenderer::new));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.advanced_vampire_imob, safeFactory(AdvancedVampireRenderer::new));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.villager_converted, safeFactory(ConvertedVillagerRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.villager_angry, (renderManager) -> new HunterVillagerRenderer(renderManager, (IReloadableResourceManager) minecraftSupplier.get().getResourceManager()));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.villager_angry, (renderManager) -> new HunterVillagerRenderer(renderManager, (ReloadableResourceManager) minecraftSupplier.get().getResourceManager()));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.crossbow_arrow, safeFactory(CrossbowArrowRenderer::new));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.particle_cloud, safeFactory(RenderAreaParticleCloud::new));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.throwable_item, manager -> new ThrowableItemRenderer(manager, Minecraft.getInstance().getItemRenderer()));

@@ -11,20 +11,21 @@ import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelDataManager;
@@ -38,26 +39,28 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import javax.annotation.Nonnull;
 import java.util.Random;
 
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+
 /**
  * Handle blood storage and leveling
  */
-public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capability.TileFluidHandler implements ITickableTileEntity, FluidTankWithListener.IFluidTankListener {
+public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capability.TileFluidHandler implements FluidTankWithListener.IFluidTankListener {
     public static final int CAPACITY = 100 * VReference.FOOD_TO_FLUID_BLOOD;
     public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
 
-    public static void setBloodValue(IBlockReader worldIn, Random randomIn, BlockPos blockPosIn) {
-        TileEntity tileEntity = worldIn.getBlockEntity(blockPosIn);
+    public static void setBloodValue(BlockGetter worldIn, Random randomIn, BlockPos blockPosIn) {
+        BlockEntity tileEntity = worldIn.getBlockEntity(blockPosIn);
         if (tileEntity instanceof AltarInspirationTileEntity) {
             tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(fluidHandler -> fluidHandler.fill(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))), IFluidHandler.FluidAction.EXECUTE));
         }
     }
     private final int RITUAL_TIME = 60;
     private int ritualTicksLeft = 0;
-    private PlayerEntity ritualPlayer;
+    private Player ritualPlayer;
     private IModelData modelData;
 
-    public AltarInspirationTileEntity() {
-        super(ModTiles.altar_inspiration);
+    public AltarInspirationTileEntity(BlockPos pos, BlockState state) {
+        super(ModTiles.altar_inspiration, pos, state);
         this.tank = new InternalTank(CAPACITY).setListener(this);
     }
 
@@ -69,22 +72,22 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(getBlockPos(), 1, getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(getBlockPos(), 1, getUpdateTag());
     }
 
     @Nonnull
     @Override
-    public CompoundNBT getUpdateTag() {
-        return save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return save(new CompoundTag());
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         if (!hasLevel()) return;
         FluidStack old = tank.getFluid();
-        this.load(this.level.getBlockState(pkt.getPos()), pkt.getTag());
+        this.load(pkt.getTag());
         if (!old.isFluidStackIdentical(tank.getFluid())) {
             updateModelData(true);
         }
@@ -105,19 +108,19 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
         }
     }
 
-    public void startRitual(PlayerEntity p) {
+    public void startRitual(Player p) {
         if (ritualTicksLeft > 0 || !p.isAlive()) return;
         int targetLevel = VampirismPlayerAttributes.get(p).vampireLevel + 1;
         VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
         if (!levelingConf.isLevelValidForAltarInspiration(targetLevel)) {
             if (p.level.isClientSide)
-                p.displayClientMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_level_wrong"), true);
+                p.displayClientMessage(new TranslatableComponent("text.vampirism.altar_infusion.ritual_level_wrong"), true);
             return;
         }
         int neededBlood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
         if (tank.getFluidAmount() + 99 < neededBlood) {//Since the container can only be filled in 100th steps
             if (p.level.isClientSide)
-                p.displayClientMessage(new TranslationTextComponent("text.vampirism.not_enough_blood"), true);
+                p.displayClientMessage(new TranslatableComponent("text.vampirism.not_enough_blood"), true);
             return;
         }
         if (!p.level.isClientSide) {
@@ -129,36 +132,32 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
         ritualTicksLeft = RITUAL_TIME;
     }
 
-    @Override
-    public void tick() {
-        if (ritualTicksLeft == 0 || level == null || ritualPlayer == null || !ritualPlayer.isAlive()) return;
+    public static void serverTick(Level level, BlockPos pos, BlockState state, AltarInspirationTileEntity blockEntity) {
+        if (blockEntity.ritualTicksLeft == 0 || blockEntity.ritualPlayer == null || !blockEntity.ritualPlayer.isAlive()) return;
 
-        if (!level.isClientSide) {
-            switch (ritualTicksLeft) {
+            switch (blockEntity.ritualTicksLeft) {
                 case 5:
-                    LightningBoltEntity lightningboltentity = EntityType.LIGHTNING_BOLT.create(this.level);
-                    lightningboltentity.moveTo(Vector3d.atBottomCenterOf(worldPosition));
+                    LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(level);
+                    lightningboltentity.moveTo(Vec3.atBottomCenterOf(pos));
                     lightningboltentity.setVisualOnly(true);
-                    this.level.addFreshEntity(lightningboltentity);
-                    ritualPlayer.setHealth(ritualPlayer.getMaxHealth());
+                    level.addFreshEntity(lightningboltentity);
+                    blockEntity.ritualPlayer.setHealth(blockEntity.ritualPlayer.getMaxHealth());
                     break;
                 case 1:
-                    int targetLevel = VampirePlayer.get(ritualPlayer).getLevel() + 1;
+                    int targetLevel = VampirePlayer.get(blockEntity.ritualPlayer).getLevel() + 1;
                     VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
                     int blood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
-                    ((InternalTank) tank).doDrain(blood, IFluidHandler.FluidAction.EXECUTE);
+                    ((InternalTank) blockEntity.tank).doDrain(blood, IFluidHandler.FluidAction.EXECUTE);
 
-                    ritualPlayer.addEffect(new EffectInstance(Effects.REGENERATION, targetLevel * 10 * 20));
-                    FactionPlayerHandler.get(ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, targetLevel);
-                    VampirePlayer.get(ritualPlayer).drinkBlood(Integer.MAX_VALUE, 0, false);
+                    blockEntity.ritualPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, targetLevel * 10 * 20));
+                    FactionPlayerHandler.get(blockEntity.ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, targetLevel);
+                    VampirePlayer.get(blockEntity.ritualPlayer).drinkBlood(Integer.MAX_VALUE, 0, false);
                     break;
                 default:
                     break;
             }
-        }
 
-
-        ritualTicksLeft--;
+        blockEntity.ritualTicksLeft--;
     }
 
     private void updateModelData(boolean refresh) {

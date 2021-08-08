@@ -1,23 +1,29 @@
 package de.teamlapen.lib.lib.util;
 
-import net.minecraft.entity.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.spawner.AbstractSpawner;
-import net.minecraft.world.spawner.WorldEntitySpawner;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.NaturalSpawner;
+import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
+import java.util.Random;
 import java.util.function.Consumer;
 
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.MobSpawnType;
+
 /**
- * Simple mob spawning logic. More configurable than {@link AbstractSpawner} but less functional.
+ * Simple mob spawning logic. More configurable than {@link net.minecraft.world.level.BaseSpawner} but less functional.
  */
 public class SimpleSpawnerLogic<T extends Entity> {
 
@@ -26,10 +32,6 @@ public class SimpleSpawnerLogic<T extends Entity> {
 
     private @Nonnull
     final EntityType<T> entityType;
-    private @Nullable
-    BlockPos pos;
-    private @Nullable
-    World world;
     private @Nullable
     Consumer<T> onSpawned;
     private int minSpawnDelay = 200;
@@ -43,7 +45,8 @@ public class SimpleSpawnerLogic<T extends Entity> {
     private int spawnedToday = 0;
     private long spawnedLast = 0L;
     private boolean flag = true;
-    private EntityClassification limitType;
+    private MobCategory limitType;
+    private Random rng = new Random();
 
     public SimpleSpawnerLogic(@Nonnull EntityType<T> entityTypeIn) {
         this.entityType = entityTypeIn;
@@ -58,13 +61,13 @@ public class SimpleSpawnerLogic<T extends Entity> {
         return spawnedToday;
     }
 
-    public boolean isActivated() {
-        if (this.world == null) return false;
-        if (this.pos == null) return false;
-        return this.world.hasNearbyAlivePlayer(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D, this.activateRange);
+    public boolean isActivated(Level level, BlockPos pos) {
+        if (level == null) return false;
+        if (pos == null) return false;
+        return level.hasNearbyAlivePlayer(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, this.activateRange);
     }
 
-    public void readFromNbt(CompoundNBT nbt) {
+    public void readFromNbt(CompoundTag nbt) {
         this.spawnDelay = nbt.getInt("delay");
         this.spawnedToday = nbt.getInt("spawned_today");
         this.spawnedLast = nbt.getLong("spawned_last");
@@ -76,17 +79,13 @@ public class SimpleSpawnerLogic<T extends Entity> {
         return this;
     }
 
-    public void setBlockPos(BlockPos blockPosIn) {
-        this.pos = blockPosIn;
-    }
-
     public SimpleSpawnerLogic<T> setDailyLimit(int dailyLimit) {
         this.dailyLimit = dailyLimit;
         return this;
     }
 
-    public boolean setDelayToMin(int id) {
-        if (id == 1 && (this.world == null || this.world.isClientSide)) {
+    public boolean setDelayToMin(int id, Level level) {
+        if (id == 1 && (level.isClientSide)) {
             this.spawnDelay = this.minSpawnDelay;
             return true;
         } else {
@@ -97,7 +96,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
     /**
      * Checks if any more creatures of the given type are allowed in the world before spawning
      */
-    public SimpleSpawnerLogic<T> setLimitTotalEntities(EntityClassification creatureType) {
+    public SimpleSpawnerLogic<T> setLimitTotalEntities(MobCategory creatureType) {
         limitType = creatureType;
         return this;
     }
@@ -137,13 +136,9 @@ public class SimpleSpawnerLogic<T extends Entity> {
         return this;
     }
 
-    public void setWorld(@Nullable World worldIn) {
-        this.world = worldIn;
-    }
-
-    public void updateSpawner() {
-        if (isActivated()) {
-            if (this.world instanceof ServerWorld) {
+    public void serverTick(Level level, BlockPos pos) {
+        if (isActivated(level, pos)) {
+            if (level instanceof ServerLevel) {
                 if (this.spawnDelay == -1) {
                     this.resetTimer();
                 }
@@ -154,7 +149,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
                 }
 
 
-                if ((this.world.getGameTime()) > this.spawnedLast + 24000) {
+                if ((level.getGameTime()) > this.spawnedLast + 24000) {
                     this.spawnedToday = 0;
                     this.flag = true;
                 } else if (this.spawnedToday >= dailyLimit) {
@@ -166,13 +161,13 @@ public class SimpleSpawnerLogic<T extends Entity> {
                 boolean flag1 = false;
 
                 for (int i = 0; i < this.spawnCount; ++i) {
-                    T entity = this.getEntityType().create(this.world);
+                    T entity = this.getEntityType().create(level);
 
                     if (entity == null) {
                         break;
                     }
 
-                    int j = this.world.getEntitiesOfClass(entity.getClass(), getSpawningBox().inflate(5)).size();
+                    int j = level.getEntitiesOfClass(entity.getClass(), getSpawningBox(pos).inflate(5)).size();
 
                     if (j >= this.maxNearbyEntities) {
                         this.resetTimer();
@@ -181,7 +176,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
 
                     if (limitType != null) {
                         @Nullable
-                        WorldEntitySpawner.EntityDensityManager densityManager = ((ServerWorld) this.world).getChunkSource().getLastSpawnState();
+                        NaturalSpawner.SpawnState densityManager = ((ServerLevel) level).getChunkSource().getLastSpawnState();
                         if (densityManager != null && !densityManager.canSpawnForCategory(limitType)) {
                             this.resetTimer();
                             break;
@@ -189,7 +184,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
 
                     }
 
-                    if (UtilLib.spawnEntityInWorld((ServerWorld) this.world, getSpawningBox(), entity, 1, Collections.emptyList(), SpawnReason.SPAWNER)) {
+                    if (UtilLib.spawnEntityInWorld((ServerLevel) level, getSpawningBox(pos), entity, 1, Collections.emptyList(), MobSpawnType.SPAWNER)) {
                         onSpawned(entity);
                         flag1 = true;
                     }
@@ -197,28 +192,28 @@ public class SimpleSpawnerLogic<T extends Entity> {
                 if (flag1) {
                     this.resetTimer();
                     this.spawnedToday++;
-                    this.spawnedLast = this.world.getGameTime();
+                    this.spawnedLast = level.getGameTime();
                 }
             }
         }
     }
 
-    public void writeToNbt(CompoundNBT nbt) {
+    public void writeToNbt(CompoundTag nbt) {
         nbt.putInt("delay", spawnDelay);
         nbt.putInt("spawned_today", spawnedToday);
         nbt.putLong("spawned_last", spawnedLast);
         nbt.putBoolean("spawner_flag", flag);
     }
 
-    protected AxisAlignedBB getSpawningBox() {
-        if (this.pos == null) return AxisAlignedBB.ofSize(0, 0, 0);
-        return (new AxisAlignedBB(this.pos.getX(), this.pos.getY(), this.pos.getZ(), this.pos.getX() + 1, this.pos.getY() + 1, this.pos.getZ() + 1)).inflate(this.spawnRange, this.spawnRange, this.spawnRange);
+    protected AABB getSpawningBox(BlockPos pos) {
+        if (pos == null) return AABB.ofSize(Vec3.ZERO, 0, 0, 0);
+        return (new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1)).inflate(this.spawnRange, this.spawnRange, this.spawnRange);
 
     }
 
     protected void onSpawned(T e) {
-        if (e instanceof MobEntity) {
-            ((MobEntity) e).spawnAnim();
+        if (e instanceof Mob) {
+            ((Mob) e).spawnAnim();
         }
         if (this.onSpawned != null) {
             this.onSpawned.accept(e);
@@ -230,7 +225,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
             this.spawnDelay = this.minSpawnDelay;
         } else {
             int i = this.maxSpawnDelay - this.minSpawnDelay;
-            this.spawnDelay = this.minSpawnDelay + (this.world == null ? 0 : this.world.random.nextInt(i));
+            this.spawnDelay = this.minSpawnDelay + (rng.nextInt(i));
         }
     }
 }

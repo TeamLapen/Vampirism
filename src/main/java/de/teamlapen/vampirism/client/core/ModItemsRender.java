@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.items.ArmorOfSwiftnessItem;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.color.ItemColors;
+import net.minecraft.client.color.item.ItemColors;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 

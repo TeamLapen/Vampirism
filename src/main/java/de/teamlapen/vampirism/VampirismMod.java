@@ -44,13 +44,13 @@ import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import de.teamlapen.vampirism.world.WorldGenManager;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.entity.CreatureAttribute;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
@@ -80,7 +80,7 @@ import java.util.Optional;
 public class VampirismMod {
 
     public static final AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
-    public static final ItemGroup creativeTab = new ItemGroup(REFERENCE.MODID) {
+    public static final CreativeModeTab creativeTab = new CreativeModeTab(REFERENCE.MODID) {
 
         @Override
         public ItemStack makeIcon() {
@@ -99,19 +99,19 @@ public class VampirismMod {
      * {@link VReference} instead of this one. This is only here to init it as early
      * as possible
      */
-    private final static EntityClassification HUNTER_CREATURE_TYPE = EntityClassification.create("vampirism_hunter", "vampirism_hunter", 25, false, false, 128);
+    private final static MobCategory HUNTER_CREATURE_TYPE = MobCategory.create("vampirism_hunter", "vampirism_hunter", 25, false, false, 128);
     /**
      * Vampire creatures are of this creature type. Use the instance in
      * {@link VReference} instead of this one. This is only here to init it as early
      * as possible
      */
-    private static final EntityClassification VAMPIRE_CREATURE_TYPE = EntityClassification.create("vampirism_vampire", "vampirism_vampire", 30, false, false, 128);
+    private static final MobCategory VAMPIRE_CREATURE_TYPE = MobCategory.create("vampirism_vampire", "vampirism_vampire", 30, false, false, 128);
     /**
      * Vampire creatures have this attribute Vampire creatures are of this creature
      * type. Use the instance in {@link VReference} instead of this one. This is
      * only here to init it as early as possible
      */
-    private static final CreatureAttribute VAMPIRE_CREATURE_ATTRIBUTE = new CreatureAttribute();
+    private static final MobType VAMPIRE_CREATURE_ATTRIBUTE = new MobType();
 
     public static VampirismMod instance;
     public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
@@ -288,9 +288,9 @@ public class VampirismMod {
 
 
         VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction(REFERENCE.VAMPIRE_PLAYER_KEY, IVampirePlayer.class, Color.MAGENTA.darker().darker(), true, () -> VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL, REFERENCE.HIGHEST_VAMPIRE_LORD, LordTitles::getVampireTitle, new VampireVillageData());
-        VReference.VAMPIRE_FACTION.setChatColor(TextFormatting.DARK_PURPLE).setTranslationKeys("text.vampirism.vampire", "text.vampirism.vampires");
+        VReference.VAMPIRE_FACTION.setChatColor(ChatFormatting.DARK_PURPLE).setTranslationKeys("text.vampirism.vampire", "text.vampirism.vampires");
         VReference.HUNTER_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction(REFERENCE.HUNTER_PLAYER_KEY, IHunterPlayer.class, Color.BLUE, false, () -> HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL, REFERENCE.HIGHEST_HUNTER_LORD, LordTitles::getHunterTitle, new HunterVillageData());
-        VReference.HUNTER_FACTION.setChatColor(TextFormatting.BLUE).setTranslationKeys("text.vampirism.hunter", "text.vampirism.hunters");
+        VReference.HUNTER_FACTION.setChatColor(ChatFormatting.BLUE).setTranslationKeys("text.vampirism.hunter", "text.vampirism.hunters");
         VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_TYPE = VAMPIRE_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_ATTRIBUTE = VAMPIRE_CREATURE_ATTRIBUTE;

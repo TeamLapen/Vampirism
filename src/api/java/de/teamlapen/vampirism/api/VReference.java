@@ -5,11 +5,11 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
-import net.minecraft.enchantment.EnchantmentType;
-import net.minecraft.entity.CreatureAttribute;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.util.DamageSource;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraftforge.common.PlantType;
 
 /**
@@ -34,21 +34,21 @@ public class VReference {
     /**
      * Enchantment type for crossbows
      */
-    public static final EnchantmentType CROSSBOW_ENCHANTMENT = EnchantmentType.create("VAMPIRISM_CROSSBOW", input -> input instanceof IVampirismCrossbow);
+    public static final EnchantmentCategory CROSSBOW_ENCHANTMENT = EnchantmentCategory.create("VAMPIRISM_CROSSBOW", input -> input instanceof IVampirismCrossbow);
     public static Fluid blood_fluid;
     /**
      * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link EntityClassification#MONSTER}
      */
-    public static EntityClassification HUNTER_CREATURE_TYPE;
+    public static MobCategory HUNTER_CREATURE_TYPE;
     /**
      * Vampire creatures are of this creature type. But when they are counted for spawning they belong to {@link EntityClassification#MONSTER}
      */
-    public static EntityClassification VAMPIRE_CREATURE_TYPE;
+    public static MobCategory VAMPIRE_CREATURE_TYPE;
     /**
      * Vampire creatures have this creature attribute.
      * Don't know why this exists alongside EnumCreatureType, but this is used by enchanments
      */
-    public static CreatureAttribute VAMPIRE_CREATURE_ATTRIBUTE;
+    public static MobType VAMPIRE_CREATURE_ATTRIBUTE;
     /**
      * Vampire Player Faction
      * Filled during pre-init.

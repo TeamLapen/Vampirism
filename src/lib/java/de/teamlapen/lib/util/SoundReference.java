@@ -1,7 +1,7 @@
 package de.teamlapen.lib.util;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -13,9 +13,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class SoundReference implements ISoundReference {
 
-    private final ISound sound;
+    private final SoundInstance sound;
 
-    public SoundReference(ISound sound) {
+    public SoundReference(SoundInstance sound) {
         this.sound = sound;
     }
 

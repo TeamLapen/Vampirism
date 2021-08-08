@@ -2,18 +2,20 @@ package de.teamlapen.vampirism.inventory.recipes;
 
 import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
 import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.ThrowablePotionItem;
-import net.minecraft.potion.EffectType;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ThrowablePotionItem;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.core.NonNullList;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.*;
+
+import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities;
 
 public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegistry {
 
@@ -69,7 +71,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
         if (bottle.isEmpty() || bottle.getCount() != 1) return Optional.empty();
         if (ingredient.isEmpty()) return Optional.empty();
         Potion potion = PotionUtils.getPotion(bottle);
-        if (bottle.getItem() instanceof ThrowablePotionItem && potion.getEffects().stream().anyMatch(a -> a.getEffect().getCategory() == EffectType.BENEFICIAL)) {
+        if (bottle.getItem() instanceof ThrowablePotionItem && potion.getEffects().stream().anyMatch(a -> a.getEffect().getCategory() == MobEffectCategory.BENEFICIAL)) {
             return Optional.empty();
         }
         Item item = bottle.getItem();

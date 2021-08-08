@@ -11,10 +11,10 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.player.tasks.req.*;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
 import de.teamlapen.vampirism.player.tasks.unlock.ParentUnlocker;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.tags.Tag;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,7 +48,7 @@ public class TaskBuilder {
     }
 
     @Nonnull
-    public TaskBuilder addRequirement(String name, @Nonnull ITag<EntityType<?>> entityType, int amount) {
+    public TaskBuilder addRequirement(String name, @Nonnull Tag<EntityType<?>> entityType, int amount) {
         return this.addRequirement(new EntityTypeRequirement(new ResourceLocation(modId(), name), entityType, amount));
     }
 

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.modcompat.guide.pages;
 
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.maxanier.guideapi.api.impl.Book;
 import de.maxanier.guideapi.api.impl.Page;
@@ -9,13 +9,13 @@ import de.maxanier.guideapi.api.impl.abstraction.CategoryAbstract;
 import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
 import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.lib.lib.util.UtilLib;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.gui.Font;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.math.Matrix4f;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
@@ -34,9 +34,9 @@ public class PageTable extends Page {
      * Max char count in one cell for each column
      */
     private final int[] width;
-    private final IFormattableTextComponent headline;
+    private final MutableComponent headline;
 
-    private PageTable(List<String[]> lines, int[] width, IFormattableTextComponent headline) {
+    private PageTable(List<String[]> lines, int[] width, MutableComponent headline) {
         this.lines = lines;
         this.width = width;
         this.headline = headline;
@@ -45,12 +45,12 @@ public class PageTable extends Page {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void draw(MatrixStack stack, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, FontRenderer fontRendererObj) {
+    public void draw(PoseStack stack, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, Font fontRendererObj) {
         float charWidth = fontRendererObj.width("W");
         int y = guiTop + 12;
         int x = guiLeft + 39;
         if (headline != null) {
-            fontRendererObj.draw(stack, headline.withStyle(TextFormatting.BOLD), x, y, 0);
+            fontRendererObj.draw(stack, headline.withStyle(ChatFormatting.BOLD), x, y, 0);
             y += fontRendererObj.lineHeight;
         }
         drawLine(stack, x, y + fontRendererObj.lineHeight, x + (guiBase.xSize * 3F / 5F), y + fontRendererObj.lineHeight, guiBase.publicZLevel);
@@ -72,16 +72,16 @@ public class PageTable extends Page {
     /**
      * Copied from GuiPieMenu
      */
-    protected void drawLine(MatrixStack stack, double x1, double y1, double x2, double y2, float publicZLevel) {
+    protected void drawLine(PoseStack stack, double x1, double y1, double x2, double y2, float publicZLevel) {
         stack.pushPose();
         Matrix4f matrix = stack.last().pose();
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         RenderSystem.lineWidth(2F);
-        BufferBuilder builder = Tessellator.getInstance().getBuilder();
-        builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+        BufferBuilder builder = Tesselator.getInstance().getBuilder();
+        builder.begin(GL11.GL_LINES, DefaultVertexFormat.POSITION_COLOR);
         builder.vertex(matrix, (float) x1, (float) y1, publicZLevel).color(0, 0, 0, 255).endVertex();
         builder.vertex(matrix, (float) x2, (float) y2, publicZLevel).color(0, 0, 0, 255).endVertex();
-        Tessellator.getInstance().end();
+        Tesselator.getInstance().end();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         stack.popPose();
     }
@@ -90,7 +90,7 @@ public class PageTable extends Page {
     public static class Builder {
         int columns;
         List<String[]> lines;
-        IFormattableTextComponent headline;
+        MutableComponent headline;
 
         public Builder(int columns) {
             this.columns = columns;
@@ -131,7 +131,7 @@ public class PageTable extends Page {
             return new PageTable(lines, width, headline);
         }
 
-        public Builder setHeadline(IFormattableTextComponent s) {
+        public Builder setHeadline(MutableComponent s) {
             headline = s;
             return this;
         }

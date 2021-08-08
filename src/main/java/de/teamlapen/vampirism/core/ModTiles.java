@@ -3,9 +3,9 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.tileentity.*;
-import net.minecraft.block.Block;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -17,21 +17,21 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 @ObjectHolder(REFERENCE.MODID)
 public class ModTiles {
 
-    public static final TileEntityType<AlchemicalCauldronTileEntity> alchemical_cauldron = getNull();
-    public static final TileEntityType<TentTileEntity> tent = getNull();
-    public static final TileEntityType<CoffinTileEntity> coffin = getNull();
-    public static final TileEntityType<AltarInfusionTileEntity> altar_infusion = getNull();
-    public static final TileEntityType<BloodContainerTileEntity> blood_container = getNull();
-    public static final TileEntityType<AltarInspirationTileEntity> altar_inspiration = getNull();
-    public static final TileEntityType<SunscreenBeaconTileEntity> sunscreen_beacon = getNull();
-    public static final TileEntityType<GarlicBeaconTileEntity> garlic_beacon = getNull();
-    public static final TileEntityType<PedestalTileEntity> blood_pedestal = getNull();
-    public static final TileEntityType<BloodGrinderTileEntity> grinder = getNull();
-    public static final TileEntityType<SieveTileEntity> sieve = getNull();
-    public static final TileEntityType<TotemTileEntity> totem = getNull();
-    public static final TileEntityType<PotionTableTileEntity> potion_table = getNull();
+    public static final BlockEntityType<AlchemicalCauldronTileEntity> alchemical_cauldron = getNull();
+    public static final BlockEntityType<TentTileEntity> tent = getNull();
+    public static final BlockEntityType<CoffinTileEntity> coffin = getNull();
+    public static final BlockEntityType<AltarInfusionTileEntity> altar_infusion = getNull();
+    public static final BlockEntityType<BloodContainerTileEntity> blood_container = getNull();
+    public static final BlockEntityType<AltarInspirationTileEntity> altar_inspiration = getNull();
+    public static final BlockEntityType<SunscreenBeaconTileEntity> sunscreen_beacon = getNull();
+    public static final BlockEntityType<GarlicBeaconTileEntity> garlic_beacon = getNull();
+    public static final BlockEntityType<PedestalTileEntity> blood_pedestal = getNull();
+    public static final BlockEntityType<BloodGrinderTileEntity> grinder = getNull();
+    public static final BlockEntityType<SieveTileEntity> sieve = getNull();
+    public static final BlockEntityType<TotemTileEntity> totem = getNull();
+    public static final BlockEntityType<PotionTableTileEntity> potion_table = getNull();
 
-    static void registerTiles(IForgeRegistry<TileEntityType<?>> registry) {
+    static void registerTiles(IForgeRegistry<BlockEntityType<?>> registry) {
         registry.register(create("tent", TentTileEntity::new, ModBlocks.tent_main));
         registry.register(create("coffin", CoffinTileEntity::new, ModBlocks.coffin));
         registry.register(create("altar_infusion", AltarInfusionTileEntity::new, ModBlocks.altar_infusion));
@@ -47,7 +47,7 @@ public class ModTiles {
         registry.register(create("potion_table", PotionTableTileEntity::new, ModBlocks.potion_table));
     }
 
-    private static <T extends TileEntity> TileEntityType<?> create(String id, Supplier<? extends T> factoryIn, Block... blocks) {
-        return TileEntityType.Builder.of(factoryIn, blocks).build(null).setRegistryName(REFERENCE.MODID, id);
+    private static <T extends BlockEntity> BlockEntityType<?> create(String id, Supplier<? extends T> factoryIn, Block... blocks) {
+        return BlockEntityType.Builder.of(factoryIn, blocks).build(null).setRegistryName(REFERENCE.MODID, id);
     }
 }

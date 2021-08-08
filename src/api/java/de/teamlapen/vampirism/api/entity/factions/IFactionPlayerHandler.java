@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.DamageSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.damagesource.DamageSource;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -66,7 +66,7 @@ public interface IFactionPlayerHandler extends ILordPlayer {
      * @return The player represented by this handler
      */
     @Nonnull
-    PlayerEntity getPlayer();
+    Player getPlayer();
 
     /**
      * @return If the given faction is equal to the current one

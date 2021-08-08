@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.entity.minion.goals;
 
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
-import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.TargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 
 import java.util.EnumSet;
 
@@ -13,7 +13,7 @@ import java.util.EnumSet;
 public class DefendLordGoal extends TargetGoal {
 
     protected final MinionEntity<?> entity;
-    private final EntityPredicate predicate;
+    private final TargetingConditions predicate;
     private final int maxStartDistSQ = 200;
     private final int maxStopDistSQ = 500;
 
@@ -21,7 +21,7 @@ public class DefendLordGoal extends TargetGoal {
         super(mobIn, false, false);
         this.setFlags(EnumSet.of(Goal.Flag.TARGET));
         this.entity = mobIn;
-        this.predicate = new EntityPredicate().selector(e -> entity.getAttackPredicate(false).test(e) && entity.getLordOpt().map(lp -> lp.getPlayer().distanceToSqr(e) < maxStartDistSQ).orElse(true)).ignoreInvisibilityTesting().range(60);
+        this.predicate = new TargetingConditions().selector(e -> entity.getAttackPredicate(false).test(e) && entity.getLordOpt().map(lp -> lp.getPlayer().distanceToSqr(e) < maxStartDistSQ).orElse(true)).ignoreInvisibilityTesting().range(60);
 
     }
 

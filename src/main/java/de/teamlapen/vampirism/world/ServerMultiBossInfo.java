@@ -3,38 +3,38 @@ package de.teamlapen.vampirism.world;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.UpdateMultiBossInfoPacket;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.play.server.SUpdateBossInfoPacket;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.BossInfo;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.BossEvent;
 
 import java.awt.*;
 import java.util.Set;
 
 public class ServerMultiBossInfo extends MultiBossInfo {
 
-    private final Set<ServerPlayerEntity> players = Sets.newHashSet();
+    private final Set<ServerPlayer> players = Sets.newHashSet();
     private boolean visible = true;
 
 
-    public ServerMultiBossInfo(ITextComponent nameIn, BossInfo.Overlay overlayIn, Color... entries) {
-        super(MathHelper.createInsecureUUID(), nameIn, overlayIn, entries);
+    public ServerMultiBossInfo(Component nameIn, BossEvent.BossBarOverlay overlayIn, Color... entries) {
+        super(Mth.createInsecureUUID(), nameIn, overlayIn, entries);
     }
 
-    public void addPlayer(ServerPlayerEntity player) {
+    public void addPlayer(ServerPlayer player) {
         if (this.players.add(player) && this.visible) {
-            VampirismMod.dispatcher.sendTo(new UpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation.ADD, this), player);
+            VampirismMod.dispatcher.sendTo(new UpdateMultiBossInfoPacket(UpdateMultiBossInfoPacket.OperationType.ADD, this), player);
         }
     }
 
     @Override
     public void clear() {
         super.clear();
-        this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_PCT);
+        this.sendUpdate(UpdateMultiBossInfoPacket.OperationType.UPDATE_PROGRESS);
     }
 
-    public Set<ServerPlayerEntity> getPlayers() {
+    public Set<ServerPlayer> getPlayers() {
         return players;
     }
 
@@ -46,53 +46,53 @@ public class ServerMultiBossInfo extends MultiBossInfo {
         if (this.visible != visible) {
             this.visible = visible;
 
-            for (ServerPlayerEntity player : this.players) {
-                VampirismMod.dispatcher.sendTo(new UpdateMultiBossInfoPacket(visible ? SUpdateBossInfoPacket.Operation.ADD : SUpdateBossInfoPacket.Operation.REMOVE, this), player);
+            for (ServerPlayer player : this.players) {
+                VampirismMod.dispatcher.sendTo(new UpdateMultiBossInfoPacket(visible ? UpdateMultiBossInfoPacket.OperationType.ADD : UpdateMultiBossInfoPacket.OperationType.REMOVE, this), player);
             }
         }
     }
 
-    public void removePlayer(ServerPlayerEntity player) {
+    public void removePlayer(ServerPlayer player) {
         if (this.players.remove(player) && this.visible) {
-            VampirismMod.dispatcher.sendTo(new UpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation.REMOVE, this), player);
+            VampirismMod.dispatcher.sendTo(new UpdateMultiBossInfoPacket(UpdateMultiBossInfoPacket.OperationType.REMOVE, this), player);
         }
     }
 
     @Override
     public void setColors(Color... entries) {
         super.setColors(entries);
-        this.sendUpdate(SUpdateBossInfoPacket.Operation.ADD);
+        this.sendUpdate(UpdateMultiBossInfoPacket.OperationType.ADD);
     }
 
     @Override
-    public void setName(ITextComponent name) {
+    public void setName(Component name) {
         super.setName(name);
-        this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_NAME);
+        this.sendUpdate(UpdateMultiBossInfoPacket.OperationType.UPDATE_NAME);
     }
 
     @Override
-    public void setOverlay(BossInfo.Overlay overlay) {
+    public void setOverlay(BossEvent.BossBarOverlay overlay) {
         super.setOverlay(overlay);
-        this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_STYLE);
+        this.sendUpdate(UpdateMultiBossInfoPacket.OperationType.UPDATE_STYLE);
     }
 
     @Override
     public void setPercentage(Color color, float perc) {
         super.setPercentage(color, perc);
-        this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_PCT);
+        this.sendUpdate(UpdateMultiBossInfoPacket.OperationType.UPDATE_PROGRESS);
     }
 
     @Override
     public void setPercentage(float... perc) {
         super.setPercentage(perc);
-        this.sendUpdate(SUpdateBossInfoPacket.Operation.UPDATE_PCT);
+        this.sendUpdate(UpdateMultiBossInfoPacket.OperationType.UPDATE_PROGRESS);
     }
 
-    private void sendUpdate(SUpdateBossInfoPacket.Operation operation) {
+    private void sendUpdate(UpdateMultiBossInfoPacket.OperationType operation) {
         if (this.visible) {
             UpdateMultiBossInfoPacket packet = new UpdateMultiBossInfoPacket(operation, this);
 
-            for (ServerPlayerEntity player : this.players) {
+            for (ServerPlayer player : this.players) {
                 VampirismMod.dispatcher.sendTo(packet, player);
             }
         }

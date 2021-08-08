@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
@@ -17,12 +17,12 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.awt.*;
 import java.util.Collection;
@@ -39,25 +39,25 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
     }
 
     @Override
-    public void draw(Task task, MatrixStack stack, double mouseX, double mouseY) {
+    public void draw(Task task, PoseStack stack, double mouseX, double mouseY) {
         Minecraft minecraft = Minecraft.getInstance();
         int x = 4;
         int y = 40;
         minecraft.font.draw(stack, task.getTranslation(), 1, 1, Color.gray.getRGB());
         IPlayableFaction<?> f = task.getFaction();
-        ITextComponent taskmasterComponent = f == null || f.getVillageData().getTaskMasterEntity() == null ? new TranslationTextComponent("text.vampirism.faction_representative") : new TranslationTextComponent(f.getVillageData().getTaskMasterEntity().getDescriptionId());
-        ITextComponent text = new TranslationTextComponent("text.vampirism.task.reward_obtain", taskmasterComponent);
+        Component taskmasterComponent = f == null || f.getVillageData().getTaskMasterEntity() == null ? new TranslatableComponent("text.vampirism.faction_representative") : new TranslatableComponent(f.getVillageData().getTaskMasterEntity().getDescriptionId());
+        Component text = new TranslatableComponent("text.vampirism.task.reward_obtain", taskmasterComponent);
         y += UtilLib.renderMultiLine(minecraft.font, stack, text, 160, x, y, Color.gray.getRGB());
 
-        IFormattableTextComponent prerequisites = new TranslationTextComponent("text.vampirism.task.prerequisites").append(":\n");
+        MutableComponent prerequisites = new TranslatableComponent("text.vampirism.task.prerequisites").append(":\n");
         TaskUnlocker[] unlockers = task.getUnlocker();
         if (unlockers.length > 0) {
-            StringTextComponent newLine = new StringTextComponent("\n");
+            TextComponent newLine = new TextComponent("\n");
             for (TaskUnlocker u : unlockers) {
-                prerequisites.append(new StringTextComponent("- ")).append(u.getDescription()).append(newLine);
+                prerequisites.append(new TextComponent("- ")).append(u.getDescription()).append(newLine);
             }
         } else {
-            prerequisites.append(new TranslationTextComponent("text.vampirism.task.prerequisites.none"));
+            prerequisites.append(new TranslatableComponent("text.vampirism.task.prerequisites.none"));
         }
         y += UtilLib.renderMultiLine(minecraft.font, stack, prerequisites, 160, x, y, Color.gray.getRGB());
 

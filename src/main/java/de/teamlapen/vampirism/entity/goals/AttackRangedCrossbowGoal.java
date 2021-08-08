@@ -3,14 +3,16 @@ package de.teamlapen.vampirism.entity.goals;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.VampirismEntity;
-import net.minecraft.command.arguments.EntityAnchorArgument;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.Mth;
 
 import javax.annotation.Nonnull;
 import java.util.EnumSet;
+
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 /**
  * Similar to vanilla ranged bow.
@@ -112,7 +114,7 @@ public class AttackRangedCrossbowGoal<T extends VampirismEntity & AttackRangedCr
                 this.entity.getMoveControl().strafe(this.strafingBackwards ? -0.5F : 0.5F, this.strafingClockwise ? 0.5F : -0.5F);
                 this.entity.lookAt(entitylivingbase, 30.0F, 30.0F);
             } else {
-                this.entity.lookAt(EntityAnchorArgument.Type.EYES, entitylivingbase.getEyePosition(1.0F));
+                this.entity.lookAt(EntityAnchorArgument.Anchor.EYES, entitylivingbase.getEyePosition(1.0F));
             }
 
             if (--this.attackTime <= 0 && this.seeTime >= -30) {
@@ -129,7 +131,7 @@ public class AttackRangedCrossbowGoal<T extends VampirismEntity & AttackRangedCr
         double sx = target.getX() - entityArrow.getX();
         double sy = target.getBoundingBox().minY + (double) (target.getBbHeight() / 3.0F) - entityArrow.getY();
         double sz = target.getZ() - entityArrow.getZ();
-        double dist = MathHelper.sqrt(sx * sx + sz * sz);
+        double dist = Mth.sqrt(sx * sx + sz * sz);
         entityArrow.shoot(sx, sy + dist * 0.2, sz, 1.6F, (float) (13 - target.getCommandSenderWorld().getDifficulty().getId() * 4));
         this.entity.playSound(ModSounds.crossbow, 0.5F, 1);
         this.entity.getCommandSenderWorld().addFreshEntity(entityArrow);

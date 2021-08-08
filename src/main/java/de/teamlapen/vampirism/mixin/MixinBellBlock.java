@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.mixin;
 
 import de.teamlapen.vampirism.tileentity.TotemHelper;
-import net.minecraft.block.BellBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.BellBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinBellBlock {
 
     @Inject(method = "onHit", at = @At(value = "RETURN", ordinal = 0))
-    public void ringTotem(World world, BlockState state, BlockRayTraceResult result, PlayerEntity player, boolean canRingBell, CallbackInfoReturnable<Boolean> cir) {
+    public void ringTotem(Level world, BlockState state, BlockHitResult result, Player player, boolean canRingBell, CallbackInfoReturnable<Boolean> cir) {
         if (player != null) TotemHelper.ringBell(world, player);
     }
 }

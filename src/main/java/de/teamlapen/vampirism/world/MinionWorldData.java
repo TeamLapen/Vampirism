@@ -3,13 +3,13 @@ package de.teamlapen.vampirism.world;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.saveddata.SavedData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,25 +19,25 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-public class MinionWorldData extends WorldSavedData {
+public class MinionWorldData extends SavedData {
     private final static Logger LOGGER = LogManager.getLogger();
     private final static String ID = "vampirism-minion-data";
 
     @Nonnull
-    public static MinionWorldData getData(ServerWorld world) {
+    public static MinionWorldData getData(ServerLevel world) {
         return getData(world.getServer());
     }
 
     @Nonnull
     public static MinionWorldData getData(final MinecraftServer server) {
-        return server.getLevel(World.OVERWORLD).getDataStorage().computeIfAbsent(() -> new MinionWorldData(server), ID);
+        return server.getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(() -> new MinionWorldData(server), ID);
     }
 
 
     @Nonnull
-    public static Optional<MinionWorldData> getData(World world) {
-        if (world instanceof ServerWorld) {
-            return Optional.of(getData(((ServerWorld) world).getWorldServer()));
+    public static Optional<MinionWorldData> getData(Level world) {
+        if (world instanceof ServerLevel) {
+            return Optional.of(getData(((ServerLevel) world).getWorldServer()));
         }
         return Optional.empty();
     }
@@ -82,12 +82,12 @@ public class MinionWorldData extends WorldSavedData {
     }
 
     @Override
-    public void load(CompoundNBT nbt) {
+    public void load(CompoundTag nbt) {
 
         controllers.clear();
-        ListNBT all = nbt.getList("controllers", 10);
-        for (INBT inbt : all) {
-            CompoundNBT tag = (CompoundNBT) inbt;
+        ListTag all = nbt.getList("controllers", 10);
+        for (Tag inbt : all) {
+            CompoundTag tag = (CompoundTag) inbt;
             UUID id = tag.getUUID("uuid");
             PlayerMinionController c = new PlayerMinionController(server, id);
             c.deserializeNBT(tag);
@@ -104,11 +104,11 @@ public class MinionWorldData extends WorldSavedData {
 
     @Nonnull
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
-        ListNBT all = new ListNBT();
+    public CompoundTag save(CompoundTag compound) {
+        ListTag all = new ListTag();
         controllers.object2ObjectEntrySet().fastForEach((entry) -> {
             if (entry.getValue().hasMinions()) {
-                CompoundNBT tag = entry.getValue().serializeNBT();
+                CompoundTag tag = entry.getValue().serializeNBT();
                 tag.putUUID("uuid", entry.getKey());
                 all.add(tag);
             }

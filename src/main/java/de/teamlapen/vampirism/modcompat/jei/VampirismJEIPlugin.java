@@ -18,13 +18,13 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTier;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nonnull;
@@ -71,7 +71,7 @@ public class VampirismJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        ClientWorld world = Minecraft.getInstance().level;
+        ClientLevel world = Minecraft.getInstance().level;
         RecipeManager recipeManager = world.getRecipeManager();
         registration.addRecipes(recipeManager.byType(ModRecipes.ALCHEMICAL_CAULDRON_TYPE).values(), ALCHEMICAL_CAULDRON_RECIPE_UID);
         registration.addRecipes(recipeManager.byType(ModRecipes.WEAPONTABLE_CRAFTING_TYPE).values(), WEAPON_TABLE_RECIPE_ID);
@@ -88,7 +88,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     private Collection<Object> getRepairRecipes(IVanillaRecipeFactory factory) {
         List<Object> recipes = new ArrayList<>();
         Map<Ingredient, List<Item>> items = Maps.newHashMap();
-        Ingredient ironIngredient = ItemTier.IRON.getRepairIngredient();
+        Ingredient ironIngredient = Tiers.IRON.getRepairIngredient();
         items.put(ironIngredient, Lists.newArrayList(ModItems.hunter_axe_normal, ModItems.hunter_axe_enhanced, ModItems.hunter_axe_ultimate, ModItems.basic_tech_crossbow, ModItems.enhanced_tech_crossbow, ModItems.hunter_coat_chest_normal, ModItems.hunter_coat_chest_enhanced, ModItems.hunter_coat_chest_ultimate, ModItems.hunter_coat_head_normal, ModItems.hunter_coat_head_enhanced, ModItems.hunter_coat_head_ultimate, ModItems.hunter_coat_legs_normal, ModItems.hunter_coat_legs_enhanced, ModItems.hunter_coat_legs_ultimate, ModItems.hunter_coat_feet_normal, ModItems.hunter_coat_feet_enhanced, ModItems.hunter_coat_feet_ultimate));
         Ingredient stringIngredient = Ingredient.of(Tags.Items.STRING);
         items.put(stringIngredient, Lists.newArrayList(ModItems.basic_crossbow, ModItems.basic_double_crossbow, ModItems.enhanced_crossbow, ModItems.enhanced_double_crossbow));

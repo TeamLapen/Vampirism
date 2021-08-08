@@ -5,11 +5,11 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.actions.*;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.WeightedRandom;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.WeighedRandom;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
  * is used with {@link ActionHandlerEntity#handle()} in UpdateLiving in an VampirismEntity
  * Entity Actions are server side only
  */
-public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> implements IActionHandlerEntity {
+public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> implements IActionHandlerEntity {
 
     private final T entity;
     private final List<IEntityAction> availableActions;
@@ -47,7 +47,7 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> i
 
     public void handle() {
         if (!entity.level.isClientSide && availableActions != null && !availableActions.isEmpty()) {
-            if (entity.getTarget() instanceof PlayerEntity) {
+            if (entity.getTarget() instanceof Player) {
                 if (isPlayerTarget) {
                     updateHandler();
                 } else {
@@ -71,7 +71,7 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> i
         return isPlayerTarget;
     }
 
-    public void read(CompoundNBT nbt) {
+    public void read(CompoundTag nbt) {
         if (nbt.contains("activeAction")) {
             deactivateAction(VampirismAPI.entityActionManager().getRegistry().getValue(new ResourceLocation(nbt.getString("activeAction"))));
             isPlayerTarget = true;
@@ -85,7 +85,7 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> i
         preActivation = -1;
     }
 
-    public void write(CompoundNBT nbt) {
+    public void write(CompoundTag nbt) {
         if (isPlayerTarget() && action != null) {
             nbt.putString("activeAction", action.getRegistryName().toString());
         }
@@ -126,7 +126,7 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> i
             }
         }
         if (weightsum > 0) {
-            return WeightedRandom.getRandomItem(entity.getRandom(), entry, weightsum).getAction();
+            return WeighedRandom.getRandomItem(entity.getRandom(), entry, weightsum).getAction();
         }
         return null;
     }

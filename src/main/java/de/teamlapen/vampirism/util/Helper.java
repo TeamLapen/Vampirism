@@ -22,29 +22,29 @@ import de.teamlapen.vampirism.items.StakeItem;
 import de.teamlapen.vampirism.mixin.LivingEntityAccessor;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.world.VampirismWorld;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.DoubleNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.profiler.IProfiler;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.IBiomeReader;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.util.Mth;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.CommonLevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
@@ -72,21 +72,21 @@ public class Helper {
      * @param entity
      * @return
      */
-    public static boolean gettingSundamge(LivingEntity entity, IWorld world, @Nullable IProfiler profiler) {
+    public static boolean gettingSundamge(LivingEntity entity, LevelAccessor world, @Nullable ProfilerFiller profiler) {
         if (profiler != null) profiler.push("vampirism_checkSundamage");
-        if (entity instanceof PlayerEntity && entity.isSpectator()) return false;
-        RegistryKey<World> worldKey = Helper.getWorldKey(world);
+        if (entity instanceof Player && entity.isSpectator()) return false;
+        ResourceKey<Level> worldKey = Helper.getWorldKey(world);
         if (VampirismAPI.sundamageRegistry().getSundamageInDim(worldKey)) {
-            if (!(world instanceof World) || !((World) world).isRaining()) {
+            if (!(world instanceof Level) || !((Level) world).isRaining()) {
                 float angle = world.getTimeOfDay(1.0F);
                 //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
                 if (angle > 0.78 || angle < 0.24) {
-                    BlockPos pos = new BlockPos(entity.getX(), entity.getY() + MathHelper.clamp(entity.getBbHeight() / 2.0F, 0F, 2F), entity.getZ());
+                    BlockPos pos = new BlockPos(entity.getX(), entity.getY() + Mth.clamp(entity.getBbHeight() / 2.0F, 0F, 2F), entity.getZ());
                     if (canBlockSeeSun(world, pos)) {
                         try {
                             ResourceLocation biome = getBiomeId(world, pos);
                             if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biome)) {
-                                if (world instanceof World && !VampirismWorld.getOpt((World) world).map(vw -> vw.isInsideArtificialVampireFogArea(new BlockPos(entity.getX(), entity.getY() + 1, entity.getZ()))).orElse(false)) {
+                                if (world instanceof Level && !VampirismWorld.getOpt((Level) world).map(vw -> vw.isInsideArtificialVampireFogArea(new BlockPos(entity.getX(), entity.getY() + 1, entity.getZ()))).orElse(false)) {
                                     if (profiler != null) profiler.pop();
                                     return true;
                                 }
@@ -105,7 +105,7 @@ public class Helper {
         return false;
     }
 
-    public static boolean canBlockSeeSun(IWorld world, BlockPos pos) {
+    public static boolean canBlockSeeSun(LevelAccessor world, BlockPos pos) {
         if (pos.getY() >= world.getSeaLevel()) {
             return world.canSeeSky(pos);
         } else {
@@ -138,7 +138,7 @@ public class Helper {
      */
     @Deprecated
     @Nonnull
-    public static EnumStrength getGarlicStrength(Entity e, RegistryKey<World> world) {
+    public static EnumStrength getGarlicStrength(Entity e, ResourceKey<Level> world) {
         return getGarlicStrengthAt(world, e.blockPosition());
     }
 
@@ -148,31 +148,31 @@ public class Helper {
      */
     @Deprecated
     @Nonnull
-    public static EnumStrength getGarlicStrengthAt(RegistryKey<World> world, BlockPos pos) {
+    public static EnumStrength getGarlicStrengthAt(ResourceKey<Level> world, BlockPos pos) {
         return VampirismAPI.getGarlicChunkHandler(world).getStrengthAtChunk(new ChunkPos(pos));
     }
 
 
     @Nonnull
-    public static EnumStrength getGarlicStrength(Entity e, IWorld world) {
+    public static EnumStrength getGarlicStrength(Entity e, LevelAccessor world) {
         return getGarlicStrengthAt(world, e.blockPosition());
     }
 
     @Nonnull
-    public static EnumStrength getGarlicStrengthAt(IWorld world, BlockPos pos) {
-        return world instanceof World ? VampirismAPI.getVampirismWorld((World) world).map(vw -> vw.getStrengthAtChunk(new ChunkPos(pos))).orElse(EnumStrength.NONE) : EnumStrength.NONE;
+    public static EnumStrength getGarlicStrengthAt(LevelAccessor world, BlockPos pos) {
+        return world instanceof Level ? VampirismAPI.getVampirismWorld((Level) world).map(vw -> vw.getStrengthAtChunk(new ChunkPos(pos))).orElse(EnumStrength.NONE) : EnumStrength.NONE;
     }
 
     @Nonnull
-    public static RegistryKey<World> getWorldKey(IWorld world) {
-        return world instanceof World ? ((World) world).dimension() : world instanceof IServerWorld ? ((IServerWorld) world).getLevel().dimension() : World.OVERWORLD;
+    public static ResourceKey<Level> getWorldKey(LevelAccessor world) {
+        return world instanceof Level ? ((Level) world).dimension() : world instanceof ServerLevelAccessor ? ((ServerLevelAccessor) world).getLevel().dimension() : Level.OVERWORLD;
     }
 
-    public static boolean canBecomeVampire(PlayerEntity player) {
+    public static boolean canBecomeVampire(Player player) {
         return FactionPlayerHandler.getOpt(player).map(v -> v.canJoin(VReference.VAMPIRE_FACTION)).orElse(false);
     }
 
-    public static boolean canTurnPlayer(IVampire biter, @Nullable PlayerEntity target) {
+    public static boolean canTurnPlayer(IVampire biter, @Nullable Player target) {
         if (biter instanceof IVampirePlayer) {
             if (!VampirismConfig.SERVER.playerCanTurnPlayer.get()) return false;
             return PermissionAPI.hasPermission(((IVampirePlayer) biter).getRepresentingPlayer(), Permissions.INFECT_PLAYER);
@@ -194,11 +194,11 @@ public class Helper {
         return VReference.HUNTER_FACTION.equals(VampirismAPI.factionRegistry().getFaction(entity));
     }
 
-    public static boolean isHunter(PlayerEntity entity) {
+    public static boolean isHunter(Player entity) {
         return VReference.HUNTER_FACTION.equals(VampirismPlayerAttributes.get(entity).faction);
     }
 
-    public static boolean isVampire(PlayerEntity entity) {
+    public static boolean isVampire(Player entity) {
         return VReference.VAMPIRE_FACTION.equals(VampirismPlayerAttributes.get(entity).faction);
     }
 
@@ -217,7 +217,7 @@ public class Helper {
 
     public static boolean isEntityInVampireBiome(Entity e) {
         if (e == null) return false;
-        World w = e.getCommandSenderWorld();
+        Level w = e.getCommandSenderWorld();
         Biome b = w.getBiome(e.blockPosition());
         ResourceLocation biomeId = getBiomeId(w, b);
         Objects.requireNonNull(biomeId, "Cannot determine id of local biome");
@@ -229,7 +229,7 @@ public class Helper {
      */
     public static boolean isEntityInArtificalVampireFogArea(Entity e) {
         if (e == null) return false;
-        World w = e.getCommandSenderWorld();
+        Level w = e.getCommandSenderWorld();
         return VampirismWorld.getOpt(w).map(vh -> vh.isInsideArtificialVampireFogArea(e.blockPosition())).orElse(false);
     }
 
@@ -237,11 +237,11 @@ public class Helper {
         return getBiomeId(e.getCommandSenderWorld(), e.blockPosition());
     }
 
-    public static ResourceLocation getBiomeId(IBiomeReader world, BlockPos pos) {
+    public static ResourceLocation getBiomeId(CommonLevelAccessor world, BlockPos pos) {
         return getBiomeId(world, world.getBiome(pos));
     }
 
-    public static ResourceLocation getBiomeId(IBiomeReader world, Biome biome) {
+    public static ResourceLocation getBiomeId(CommonLevelAccessor world, Biome biome) {
         return world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(biome);
     }
 
@@ -258,7 +258,7 @@ public class Helper {
         return playerHandler.getCurrentFactionPlayer().map(ISkillPlayer::getSkillHandler).map(s -> s.isSkillEnabled(requiredSkill)).orElse(false);
     }
 
-    public static int getExperiencePoints(LivingEntity entity, PlayerEntity player) {
+    public static int getExperiencePoints(LivingEntity entity, Player player) {
         return ((LivingEntityAccessor) entity).invokeGetExperiencePoints_vampirism(player); //Use mixin instead of AT since AT does not want to work for this specific method for some reason
     }
 
@@ -269,9 +269,9 @@ public class Helper {
      * @param p Player
      * @return True if female
      */
-    public static boolean attemptToGuessGenderSafe(PlayerEntity p) {
-        if (p instanceof ServerPlayerEntity) { //Could extend to also support client side, but have to use proxy then
-            Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> textureMap = ((ServerPlayerEntity) p).server.getSessionService().getTextures(p.getGameProfile(), false);
+    public static boolean attemptToGuessGenderSafe(Player p) {
+        if (p instanceof ServerPlayer) { //Could extend to also support client side, but have to use proxy then
+            Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> textureMap = ((ServerPlayer) p).server.getSessionService().getTextures(p.getGameProfile(), false);
             if (textureMap.containsKey(MinecraftProfileTexture.Type.SKIN)) {
                 MinecraftProfileTexture skinTexture = textureMap.get(MinecraftProfileTexture.Type.SKIN);
                 return "slim".equals(skinTexture.getMetadata("model"));
@@ -280,7 +280,7 @@ public class Helper {
         return false;
     }
 
-    public static <T extends Entity> Optional<T> createEntity(@Nonnull EntityType<T> type, @Nonnull World world) {
+    public static <T extends Entity> Optional<T> createEntity(@Nonnull EntityType<T> type, @Nonnull Level world) {
         T e = type.create(world);
         if (e == null) {
             LOGGER.warn("Failed to create entity of type {}", type.getRegistryName());
@@ -302,11 +302,11 @@ public class Helper {
     /**
      * blockpos to nbt
      */
-    public static ListNBT newDoubleNBTList(double... numbers) {
-        ListNBT listnbt = new ListNBT();
+    public static ListTag newDoubleNBTList(double... numbers) {
+        ListTag listnbt = new ListTag();
 
         for (double d0 : numbers) {
-            listnbt.add(DoubleNBT.valueOf(d0));
+            listnbt.add(DoubleTag.valueOf(d0));
         }
 
         return listnbt;

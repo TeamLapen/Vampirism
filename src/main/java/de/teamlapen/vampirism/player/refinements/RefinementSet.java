@@ -7,8 +7,8 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -16,14 +16,16 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.Set;
 
+import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet.Rarity;
+
 public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> implements IRefinementSet {
 
     private final Set<IRefinement> refinements;
     private final Rarity rarity;
     private final int color;
     private final WeightedRandomItem<IRefinementSet> weightedRandom;
-    private ITextComponent name;
-    private ITextComponent desc;
+    private Component name;
+    private Component desc;
     @Nullable
     private IRefinementItem.AccessorySlotType restrictedType;
 
@@ -45,8 +47,8 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
 
     @Nonnull
     @Override
-    public ITextComponent getName() {
-        return this.name != null ? this.name : (this.name = new TranslationTextComponent("refinement_set." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()));
+    public Component getName() {
+        return this.name != null ? this.name : (this.name = new TranslatableComponent("refinement_set." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()));
     }
 
     @Nonnull

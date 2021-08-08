@@ -1,12 +1,8 @@
 package de.teamlapen.vampirism.api.entity;
 
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 
-/**
- * 1.14
- *
- * @author maxanier
- */
+
 public interface IEntityLeader {
     /**
      * Call this if an entity stops following this one

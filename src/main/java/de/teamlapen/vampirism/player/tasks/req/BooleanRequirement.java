@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.player.tasks.req;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import java.util.function.Function;

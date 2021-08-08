@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.api.entity;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 
 /**
  * Manages sundamage for biomes and dimensions
@@ -33,13 +33,13 @@ public interface ISundamageRegistry {
      * @param dim
      * @return
      */
-    boolean getSundamageInDim(RegistryKey<World> dim);
+    boolean getSundamageInDim(ResourceKey<Level> dim);
 
     /**
      * Checks if the given entity could receive sun damage at its current position.
      * Do not use entity.getEntityWorld during world gen
      */
-    boolean isGettingSundamage(LivingEntity entity, IWorld world);
+    boolean isGettingSundamage(LivingEntity entity, LevelAccessor world);
 
     /**
      * Specifies if vampires should get sundamage in this dimension
@@ -47,5 +47,5 @@ public interface ISundamageRegistry {
      * @param dimension
      * @param sundamage
      */
-    void specifySundamageForDim(RegistryKey<World> dimension, boolean sundamage);
+    void specifySundamageForDim(ResourceKey<Level> dimension, boolean sundamage);
 }

@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
 import java.util.UUID;
@@ -22,7 +22,7 @@ public interface ITaskInstance {
     /**
      * encodes this instance in the packet buffer
      */
-    void encode(PacketBuffer buffer);
+    void encode(FriendlyByteBuf buffer);
 
     /**
      * @return unique identifier of this instance
@@ -88,5 +88,5 @@ public interface ITaskInstance {
      *
      * @return parameter compoundNBT
      */
-    CompoundNBT writeNBT(CompoundNBT compoundNBT);
+    CompoundTag writeNBT(CompoundTag compoundNBT);
 }

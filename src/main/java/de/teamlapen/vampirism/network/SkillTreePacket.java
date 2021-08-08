@@ -3,9 +3,9 @@ package de.teamlapen.vampirism.network;
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.player.skills.SkillNode;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,9 +14,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class SkillTreePacket implements IMessage {
-    private final static Logger LOGGER = LogManager.getLogger();
-
-    static void encode(SkillTreePacket msg, PacketBuffer buf) {
+    static void encode(SkillTreePacket msg, FriendlyByteBuf buf) {
         buf.writeVarInt(msg.nodes.size());
         for (Map.Entry<ResourceLocation, SkillNode.Builder> e : msg.nodes.entrySet()) {
             buf.writeResourceLocation(e.getKey());
@@ -25,7 +23,7 @@ public class SkillTreePacket implements IMessage {
     }
 
 
-    static SkillTreePacket decode(PacketBuffer buf) {
+    static SkillTreePacket decode(FriendlyByteBuf buf) {
         SkillTreePacket pkt = new SkillTreePacket();
         int count = buf.readVarInt();
         for (int i = 0; i < count; i++) {

@@ -20,34 +20,45 @@ import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.SectionPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.world.*;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nonnull;
 import java.util.Random;
 
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.npc.Npc;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
+
 /**
  * Base class for Vampirism's vampire entities
  */
-public abstract class VampireBaseEntity extends VampirismEntity implements IVampireMob, INPC/*mainly for JourneyMap*/ {
+public abstract class VampireBaseEntity extends VampirismEntity implements IVampireMob, Npc/*mainly for JourneyMap*/ {
 
-    public static boolean spawnPredicateVampire(EntityType<? extends VampirismEntity> entityType, IServerWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
+    public static boolean spawnPredicateVampire(EntityType<? extends VampirismEntity> entityType, ServerLevelAccessor world, MobSpawnType spawnReason, BlockPos blockPos, Random random) {
         return world.getDifficulty() != Difficulty.PEACEFUL && (spawnPredicateLight(world, blockPos, random) || spawnPredicateVampireFog(world, blockPos)) && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
     }
 
-    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+    public static AttributeSupplier.Builder getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder().add(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
     private final boolean countAsMonsterForSpawn;
@@ -69,7 +80,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     /**
      * @param countAsMonsterForSpawn If this entity should be counted as vampire and as monster during spawning
      */
-    public VampireBaseEntity(EntityType<? extends VampireBaseEntity> type, World world, boolean countAsMonsterForSpawn) {
+    public VampireBaseEntity(EntityType<? extends VampireBaseEntity> type, Level world, boolean countAsMonsterForSpawn) {
         super(type, world);
         this.countAsMonsterForSpawn = countAsMonsterForSpawn;
 
@@ -96,7 +107,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
             if (isAlive() && isInWater()) {
                 setAirSupply(300);
                 if (tickCount % 16 == 4) {
-                    addEffect(new EffectInstance(Effects.WEAKNESS, 80, 0));
+                    addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 80, 0));
                 }
             }
         }
@@ -104,7 +115,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public boolean checkSpawnRules(IWorld worldIn, SpawnReason spawnReasonIn) {
+    public boolean checkSpawnRules(LevelAccessor worldIn, MobSpawnType spawnReasonIn) {
         if (spawnRestriction.level >= SpawnRestriction.SIMPLE.level) {
             if (isGettingSundamage(worldIn, true) || isGettingGarlicDamage(worldIn, true) != EnumStrength.NONE)
                 return false;
@@ -112,8 +123,8 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                 if (worldIn.getBrightness(blockPosition()) > 0.5 && random.nextInt(5) != 0) {
                     return false;
                 }
-                if (this.level.isLoaded(blockPosition()) && worldIn instanceof ServerWorld) { //TODO check performance
-                    if (((ServerWorld) level).getWorldServer().startsForFeature(SectionPos.of(blockPosition()), Structure.VILLAGE).findAny().isPresent()) {
+                if (this.level.isLoaded(blockPosition()) && worldIn instanceof ServerLevel) { //TODO check performance
+                    if (((ServerLevel) level).startsForFeature(SectionPos.of(blockPosition()), StructureFeature.VILLAGE).findAny().isPresent()) {
                         if (getRandom().nextInt(60) != 0) {
                             return false;
                         }
@@ -135,8 +146,8 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
         super.die(cause);
         if (cause.getDirectEntity() instanceof CrossbowArrowEntity && Helper.isHunter(cause.getEntity())) {
             dropSoul = true;
-        } else if (cause.getDirectEntity() instanceof PlayerEntity && Helper.isHunter(cause.getDirectEntity())) {
-            ItemStack weapon = ((PlayerEntity) cause.getDirectEntity()).getMainHandItem();
+        } else if (cause.getDirectEntity() instanceof Player && Helper.isHunter(cause.getDirectEntity())) {
+            ItemStack weapon = ((Player) cause.getDirectEntity()).getMainHandItem();
             if (!weapon.isEmpty() && weapon.getItem() instanceof IVampireFinisher) {
                 dropSoul = true;
             }
@@ -152,8 +163,8 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
     @Override
     public boolean doHurtTarget(Entity entity) {
-        if (canSuckBloodFromPlayer && !level.isClientSide && wantsBlood() && entity instanceof PlayerEntity && !Helper.isHunter(entity) && !UtilLib.canReallySee((LivingEntity) entity, this, true)) {
-            int amt = VampirePlayer.getOpt((PlayerEntity) entity).map(v -> v.onBite(this)).orElse(0);
+        if (canSuckBloodFromPlayer && !level.isClientSide && wantsBlood() && entity instanceof Player && !Helper.isHunter(entity) && !UtilLib.canReallySee((LivingEntity) entity, this, true)) {
+            int amt = VampirePlayer.getOpt((Player) entity).map(v -> v.onBite(this)).orElse(0);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
             return true;
         }
@@ -165,23 +176,23 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                 else if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.TIER.ULTIMATE))
                     j = 3;
                 if (getRandom().nextInt((4 - j) * 2) == 0)
-                    addEffect(new EffectInstance(ModEffects.poison, (int) (20 * Math.sqrt(j)), j));
+                    addEffect(new MobEffectInstance(ModEffects.poison, (int) (20 * Math.sqrt(j)), j));
             }
         }
         return super.doHurtTarget(entity);
     }
 
     @Override
-    public EntityClassification getClassification(boolean forSpawnCount) {
+    public MobCategory getClassification(boolean forSpawnCount) {
         if (forSpawnCount && countAsMonsterForSpawn) {
-            return EntityClassification.MONSTER;
+            return MobCategory.MONSTER;
         }
         return super.getClassification(forSpawnCount);
     }
 
     @Override
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
-        this.addEffect(new EffectInstance(Effects.REGENERATION, amt * 20));
+        this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, amt * 20));
     }
 
     @Override
@@ -191,7 +202,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
     @Nonnull
     @Override
-    public EnumStrength isGettingGarlicDamage(IWorld iWorld, boolean forcerefresh) {
+    public EnumStrength isGettingGarlicDamage(LevelAccessor iWorld, boolean forcerefresh) {
         if (forcerefresh) {
             garlicCache = Helper.getGarlicStrength(this, iWorld);
         }
@@ -199,7 +210,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public CreatureAttribute getMobType() {
+    public MobType getMobType() {
         return VReference.VAMPIRE_CREATURE_ATTRIBUTE;
     }
 
@@ -216,7 +227,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public boolean isGettingSundamage(IWorld iWorld, boolean forceRefresh) {
+    public boolean isGettingSundamage(LevelAccessor iWorld, boolean forceRefresh) {
         if (!forceRefresh) return sundamageCache;
         return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.level.getProfiler()));
     }
@@ -235,7 +246,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
     @Override
     public boolean useBlood(int amt, boolean allowPartial) {
-        this.addEffect(new EffectInstance(Effects.WEAKNESS, amt * 20));
+        this.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, amt * 20));
         return true;
     }
 
@@ -267,14 +278,14 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
     }
 
     /**
      * Checks if light level is low enough
      * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#cursed_earth}
      */
-    private boolean getCanSpawnHereRestricted(IWorld iWorld) {
+    private boolean getCanSpawnHereRestricted(LevelAccessor iWorld) {
         boolean vampireBiome = ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(iWorld, this.blockPosition())) || ModBiomes.vampire_forest_hills.getRegistryName().equals(Helper.getBiomeId(iWorld, this.blockPosition()));
         if (!vampireBiome) return isLowLightLevel(iWorld);
         BlockState iblockstate = iWorld.getBlockState((this.blockPosition()).below());

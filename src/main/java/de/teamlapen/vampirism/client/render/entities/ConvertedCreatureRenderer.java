@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.client.render.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.entity.converted.ConvertedCreatureEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -17,7 +17,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureEntity> {
     public static boolean renderOverlay = false;
 
-    public ConvertedCreatureRenderer(EntityRendererManager renderManager) {
+    public ConvertedCreatureRenderer(EntityRenderDispatcher renderManager) {
         super(renderManager);
     }
 
@@ -28,8 +28,8 @@ public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureE
     }
 
     @Override
-    public void render(ConvertedCreatureEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int packedLightIn) {
-        CreatureEntity creature = entity.getOldCreature();
+    public void render(ConvertedCreatureEntity entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource renderTypeBuffer, int packedLightIn) {
+        PathfinderMob creature = entity.getOldCreature();
         if (creature != null) {
             creature.removed = false;
             renderOverlay = true;

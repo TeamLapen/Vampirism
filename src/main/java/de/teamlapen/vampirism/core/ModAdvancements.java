@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.advancements.*;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.ICriterionInstance;
-import net.minecraft.advancements.ICriterionTrigger;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.CriterionTrigger;
 
 /**
  * Actual advancements are loaded from assets (JSON)
@@ -19,7 +19,7 @@ public class ModAdvancements {
     public static final CuredVampireVillagerTrigger TRIGGER_CURED_VAMPIRE_VILLAGER = register(new CuredVampireVillagerTrigger());
 
 
-    private static <Z extends ICriterionInstance, T extends ICriterionTrigger<Z>> T register(T trigger) {
+    private static <Z extends CriterionTriggerInstance, T extends CriterionTrigger<Z>> T register(T trigger) {
         return CriteriaTriggers.register(trigger);
     }
 

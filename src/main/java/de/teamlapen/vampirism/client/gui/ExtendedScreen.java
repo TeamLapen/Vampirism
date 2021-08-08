@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 

@@ -1,31 +1,33 @@
 package de.teamlapen.vampirism.entity.goals;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.pathfinding.FlyingPathNavigator;
-import net.minecraft.pathfinding.GroundPathNavigator;
-import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.LevelReader;
 
 import java.util.EnumSet;
+
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 /**
  * 1.14
  *
  * @author maxanier
  */
-public abstract class MoveToPositionGoal<T extends CreatureEntity> extends Goal {
+public abstract class MoveToPositionGoal<T extends PathfinderMob> extends Goal {
 
 
     protected final T entity;
-    protected final IWorldReader world;
+    protected final LevelReader world;
     private final double followSpeed;
-    private final PathNavigator navigator;
+    private final PathNavigation navigator;
     private final float minDist;
     private final float maxDist;
     private final boolean doTeleport;
@@ -43,7 +45,7 @@ public abstract class MoveToPositionGoal<T extends CreatureEntity> extends Goal 
         this.doTeleport = doTeleport;
         this.look = look;
         this.setFlags(look ? EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Flag.JUMP) : EnumSet.of(Goal.Flag.MOVE, Flag.JUMP));
-        if (!(entity.getNavigation() instanceof GroundPathNavigator) && !(entity.getNavigation() instanceof FlyingPathNavigator)) {
+        if (!(entity.getNavigation() instanceof GroundPathNavigation) && !(entity.getNavigation() instanceof FlyingPathNavigation)) {
             throw new IllegalArgumentException("Unsupported mob type for MoveToPositionGoal");
         }
     }
@@ -61,19 +63,19 @@ public abstract class MoveToPositionGoal<T extends CreatureEntity> extends Goal 
     @Override
     public void start() {
         this.timeToRecalcPath = 0;
-        this.oldWaterCost = this.entity.getPathfindingMalus(PathNodeType.WATER);
-        this.entity.setPathfindingMalus(PathNodeType.WATER, 0.0F);
+        this.oldWaterCost = this.entity.getPathfindingMalus(BlockPathTypes.WATER);
+        this.entity.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
     }
 
     @Override
     public void stop() {
         this.navigator.stop();
-        this.entity.setPathfindingMalus(PathNodeType.WATER, this.oldWaterCost);
+        this.entity.setPathfindingMalus(BlockPathTypes.WATER, this.oldWaterCost);
     }
 
     @Override
     public void tick() {
-        Vector3i target = getTargetPosition();
+        Vec3i target = getTargetPosition();
         if (look) this.entity.getLookControl().setLookAt(getLookPosition());
         if (--this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = 10;
@@ -106,7 +108,7 @@ public abstract class MoveToPositionGoal<T extends CreatureEntity> extends Goal 
         return blockstate.isValidSpawn(this.world, pos, this.entity.getType()) && this.world.isEmptyBlock(pos.above()) && this.world.isEmptyBlock(pos.above(2));
     }
 
-    protected abstract Vector3d getLookPosition();
+    protected abstract Vec3 getLookPosition();
 
-    protected abstract Vector3i getTargetPosition();
+    protected abstract Vec3i getTargetPosition();
 }

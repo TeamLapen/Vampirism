@@ -7,10 +7,10 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.tileentity.TotemHelper;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.server.level.ServerLevel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,10 +22,10 @@ import java.util.function.Predicate;
  */
 public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoal<LivingEntity> {
     private static final Map<IFaction<?>, Predicate<LivingEntity>> predicates = new HashMap<>();
-    private final IronGolemEntity golem;
+    private final IronGolem golem;
     private IFaction<?> faction;
 
-    public GolemTargetNonVillageFactionGoal(IronGolemEntity creature) {
+    public GolemTargetNonVillageFactionGoal(IronGolem creature) {
         super(creature, LivingEntity.class, 4, false, false, null);
         this.golem = creature;
     }
@@ -34,7 +34,7 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
     public boolean canUse() {
         IFaction<?> faction = VReference.HUNTER_FACTION;
         if (VampirismConfig.BALANCE.golemAttackNonVillageFaction.get()) {
-            Optional<TotemTileEntity> tile = TotemHelper.getTotemNearPos(((ServerWorld) this.golem.level), this.golem.blockPosition(), true);
+            Optional<TotemTileEntity> tile = TotemHelper.getTotemNearPos(((ServerLevel) this.golem.level), this.golem.blockPosition(), true);
             faction = tile.map(TotemTileEntity::getControllingFaction).orElse(((IPlayableFaction) VReference.HUNTER_FACTION));
         }
 

@@ -7,10 +7,10 @@ import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.potion.EffectInstance;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.effect.MobEffectInstance;
 
-public class SunscreenEntityAction<T extends CreatureEntity & IEntityActionUser> extends VampireEntityAction<T> implements ILastingAction<T> {
+public class SunscreenEntityAction<T extends PathfinderMob & IEntityActionUser> extends VampireEntityAction<T> implements ILastingAction<T> {
 
     public SunscreenEntityAction(EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
@@ -18,7 +18,7 @@ public class SunscreenEntityAction<T extends CreatureEntity & IEntityActionUser>
 
     @Override
     public void activate(T entity) {
-        entity.getRepresentingEntity().addEffect(new EffectInstance(ModEffects.sunscreen, getDuration(entity.getLevel()), 3, false, false));
+        entity.getRepresentingEntity().addEffect(new MobEffectInstance(ModEffects.sunscreen, getDuration(entity.getLevel()), 3, false, false));
     }
 
     @Override
@@ -37,7 +37,7 @@ public class SunscreenEntityAction<T extends CreatureEntity & IEntityActionUser>
     }
 
     @Override
-    public int getWeight(CreatureEntity entity) {
+    public int getWeight(PathfinderMob entity) {
         if (!entity.getCommandSenderWorld().isDay() || entity.getCommandSenderWorld().isRaining()) {//Not perfectly accurate (the actual sundamage checks for celestial angle and also might exclude certain dimensions and biomes
             return 0;
         }

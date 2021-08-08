@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.modcompat.guide.recipes;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.maxanier.guideapi.api.impl.Book;
 import de.maxanier.guideapi.api.impl.abstraction.CategoryAbstract;
 import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
@@ -8,7 +8,7 @@ import de.maxanier.guideapi.api.util.GuiHelper;
 import de.maxanier.guideapi.api.util.IngredientCycler;
 import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.vampirism.inventory.recipes.ShapedWeaponTableRecipe;
-import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Font;
 
 public class ShapedWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRenderer<ShapedWeaponTableRecipe> {
     public ShapedWeaponTableRecipeRenderer(ShapedWeaponTableRecipe recipe) {
@@ -16,7 +16,7 @@ public class ShapedWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRende
     }
 
     @Override
-    public void draw(MatrixStack stack, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen baseScreen, FontRenderer fontRenderer, IngredientCycler ingredientCycler) {
+    public void draw(PoseStack stack, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen baseScreen, Font fontRenderer, IngredientCycler ingredientCycler) {
         super.draw(stack, book, categoryAbstract, entryAbstract, guiLeft, guiTop, mouseX, mouseY, baseScreen, fontRenderer, ingredientCycler);
         for (int y = 0; y < recipe.getRecipeHeight(); y++) {
             for (int x = 0; x < recipe.getRecipeWidth(); x++) {

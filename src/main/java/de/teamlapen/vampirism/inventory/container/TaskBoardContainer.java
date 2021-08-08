@@ -13,11 +13,11 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskActionPacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 
-public class TaskBoardContainer extends Container implements TaskContainer {
+public class TaskBoardContainer extends AbstractContainerMenu implements TaskContainer {
 
     /**
      * all tasks that can be completed by the player
@@ -36,7 +36,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
     @Nonnull
     private final List<ITaskInstance> taskInstances = new ArrayList<>();
     @Nonnull
-    private final TextFormatting factionColor;
+    private final ChatFormatting factionColor;
     @Nonnull
     private final IFactionPlayer<?> factionPlayer;
     /**
@@ -49,7 +49,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
     @Nullable
     private Runnable listener;
 
-    public TaskBoardContainer(int id, PlayerInventory playerInventory) {
+    public TaskBoardContainer(int id, Inventory playerInventory) {
         super(ModContainer.task_master, id);
         //noinspection OptionalGetWithoutIsPresent
         this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().get();
@@ -120,7 +120,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
     }
 
     @Nonnull
-    public TextFormatting getFactionColor() {
+    public ChatFormatting getFactionColor() {
         return this.factionColor;
     }
 
@@ -179,7 +179,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
     }
 
     @Override
-    public boolean stillValid(@Nonnull PlayerEntity playerIn) {
+    public boolean stillValid(@Nonnull Player playerIn) {
         return VampirismPlayerAttributes.get(playerIn).faction != null;
     }
 

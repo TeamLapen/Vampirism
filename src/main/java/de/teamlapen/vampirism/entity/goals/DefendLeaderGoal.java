@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.entity.goals;
 
 import de.teamlapen.vampirism.api.entity.IEntityLeader;
 import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
-import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.TargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 
 import java.util.EnumSet;
 
@@ -27,7 +27,7 @@ public class DefendLeaderGoal extends TargetGoal {
         } else {
             this.attacker = leader.getRepresentingEntity().getLastHurtByMob();
             int i = leader.getRepresentingEntity().getLastHurtByMobTimestamp();
-            return i != this.timestamp && this.canAttack(this.attacker, EntityPredicate.DEFAULT);
+            return i != this.timestamp && this.canAttack(this.attacker, TargetingConditions.DEFAULT);
         }
 
     }

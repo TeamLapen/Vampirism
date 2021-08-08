@@ -2,21 +2,21 @@ package de.teamlapen.vampirism.network;
 
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.BlockPos;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class PlayEventPacket implements IMessage {
+public record PlayEventPacket(int type, BlockPos pos, int stateId) implements IMessage {
 
-    static void encode(PlayEventPacket msg, PacketBuffer buf) {
+    static void encode(PlayEventPacket msg, FriendlyByteBuf buf) {
         buf.writeVarInt(msg.type);
         buf.writeBlockPos(msg.pos);
         buf.writeVarInt(msg.stateId);
     }
 
-    static PlayEventPacket decode(PacketBuffer buf) {
+    static PlayEventPacket decode(FriendlyByteBuf buf) {
         return new PlayEventPacket(buf.readVarInt(), buf.readBlockPos(), buf.readVarInt());
     }
 
@@ -26,13 +26,4 @@ public class PlayEventPacket implements IMessage {
         ctx.setPacketHandled(true);
     }
 
-    public final int type;
-    public final BlockPos pos;
-    public final int stateId;
-
-    public PlayEventPacket(int type, BlockPos pos, int stateId) {
-        this.type = type;
-        this.pos = pos;
-        this.stateId = stateId;
-    }
 }

@@ -4,16 +4,16 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
 
 public class MakeVillagerAgressiveCommand extends BasicCommand {
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("makeVillagerAgressive")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .executes(context -> {
@@ -21,9 +21,9 @@ public class MakeVillagerAgressiveCommand extends BasicCommand {
                 });
     }
 
-    private static int makeVillagerAgressive(ServerPlayerEntity asPlayer) {
-        List<VillagerEntity> l = asPlayer.getCommandSenderWorld().getEntitiesOfClass(VillagerEntity.class, asPlayer.getBoundingBox().inflate(3, 2, 3));
-        for (VillagerEntity v : l) {
+    private static int makeVillagerAgressive(ServerPlayer asPlayer) {
+        List<Villager> l = asPlayer.getCommandSenderWorld().getEntitiesOfClass(Villager.class, asPlayer.getBoundingBox().inflate(3, 2, 3));
+        for (Villager v : l) {
             if (v instanceof IFactionEntity) continue;
             TotemTileEntity.makeAgressive(v);
         }

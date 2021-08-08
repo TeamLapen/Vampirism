@@ -6,12 +6,13 @@ import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.items.BloodBottleItem;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelDataManager;
@@ -35,8 +36,8 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
     public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
     public static final ModelProperty<Boolean> FLUID_IMPURE = new ModelProperty<>();
 
-    public static void setBloodValue(IBlockReader worldIn, Random randomIn, BlockPos blockPosIn) {
-        TileEntity tileEntity = worldIn.getBlockEntity(blockPosIn);
+    public static void setBloodValue(BlockGetter worldIn, Random randomIn, BlockPos blockPosIn) {
+        BlockEntity tileEntity = worldIn.getBlockEntity(blockPosIn);
         if (tileEntity instanceof BloodContainerTileEntity) {
             ((BloodContainerTileEntity) tileEntity).setFluidStack(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))));
         }
@@ -44,8 +45,8 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
     private int lastSyncedAmount = Integer.MIN_VALUE;
     private IModelData modelData;
 
-    public BloodContainerTileEntity() {
-        super(ModTiles.blood_container);
+    public BloodContainerTileEntity(BlockPos pos, BlockState state) {
+        super(ModTiles.blood_container, pos, state);
         this.tank = new FluidTankWithListener(CAPACITY, fluidStack -> ModFluids.blood.isSame(fluidStack.getFluid()) || ModFluids.impure_blood.isSame(fluidStack.getFluid())).setListener(this);
 
     }
@@ -63,24 +64,24 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        CompoundNBT nbtTag = new CompoundNBT();
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        CompoundTag nbtTag = new CompoundTag();
         this.save(nbtTag);
-        return new SUpdateTileEntityPacket(getBlockPos(), 1, getUpdateTag());
+        return new ClientboundBlockEntityDataPacket(getBlockPos(), 1, getUpdateTag());
     }
 
     @Nonnull
     @Override
-    public CompoundNBT getUpdateTag() {
-        return save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return save(new CompoundTag());
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         FluidStack old = tank.getFluid();
         if (hasLevel()) {
-            this.load(this.level.getBlockState(pkt.getPos()), pkt.getTag());
+            this.load(pkt.getTag());
             if (!old.isEmpty() && !old.isFluidStackIdentical(tank.getFluid()) || old.isEmpty() && !tank.getFluid().isEmpty()) {
                 setChanged();
             }

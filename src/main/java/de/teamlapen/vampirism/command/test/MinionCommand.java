@@ -19,19 +19,19 @@ import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.world.MinionWorldData;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.chat.TextComponent;
 
 import java.util.Collection;
 
 
 public class MinionCommand extends BasicCommand {
-    private static final DynamicCommandExceptionType fail = new DynamicCommandExceptionType((msg) -> new StringTextComponent("Failed: " + msg));
+    private static final DynamicCommandExceptionType fail = new DynamicCommandExceptionType((msg) -> new TextComponent("Failed: " + msg));
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("minion")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
                 .then(Commands.literal("spawnNew")
@@ -55,18 +55,18 @@ public class MinionCommand extends BasicCommand {
     }
 
 
-    private static int spawnNewVampireMinion(CommandSource ctx, String name, int type, boolean useLordSkin) throws CommandSyntaxException {
+    private static int spawnNewVampireMinion(CommandSourceStack ctx, String name, int type, boolean useLordSkin) throws CommandSyntaxException {
         VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData(name, type, useLordSkin);
         return spawnNewMinion(ctx, VReference.VAMPIRE_FACTION, data, ModEntities.vampire_minion);
     }
 
-    private static int spawnNewHunterMinion(CommandSource ctx, String name, int type, int hat, boolean useLordSkin) throws CommandSyntaxException {
+    private static int spawnNewHunterMinion(CommandSourceStack ctx, String name, int type, int hat, boolean useLordSkin) throws CommandSyntaxException {
         HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData(name, type, hat, useLordSkin);
         return spawnNewMinion(ctx, VReference.HUNTER_FACTION, data, ModEntities.hunter_minion);
     }
 
-    private static <T extends MinionData> int spawnNewMinion(CommandSource ctx, IPlayableFaction<?> faction, T data, EntityType<? extends MinionEntity<T>> type) throws CommandSyntaxException {
-        PlayerEntity p = ctx.getPlayerOrException();
+    private static <T extends MinionData> int spawnNewMinion(CommandSourceStack ctx, IPlayableFaction<?> faction, T data, EntityType<? extends MinionEntity<T>> type) throws CommandSyntaxException {
+        Player p = ctx.getPlayerOrException();
         FactionPlayerHandler fph = FactionPlayerHandler.get(p);
         if (fph.getMaxMinions() > 0) {
             PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
@@ -94,8 +94,8 @@ public class MinionCommand extends BasicCommand {
         return 0;
     }
 
-    private static int recall(CommandSource ctx) throws CommandSyntaxException {
-        PlayerEntity p = ctx.getPlayerOrException();
+    private static int recall(CommandSourceStack ctx) throws CommandSyntaxException {
+        Player p = ctx.getPlayerOrException();
         FactionPlayerHandler fph = FactionPlayerHandler.get(p);
         if (fph.getMaxMinions() > 0) {
             PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
@@ -111,8 +111,8 @@ public class MinionCommand extends BasicCommand {
     }
 
 
-    private static int respawn(CommandSource ctx) throws CommandSyntaxException {
-        PlayerEntity p = ctx.getPlayerOrException();
+    private static int respawn(CommandSourceStack ctx) throws CommandSyntaxException {
+        Player p = ctx.getPlayerOrException();
         FactionPlayerHandler fph = FactionPlayerHandler.get(p);
         if (fph.getMaxMinions() > 0) {
             PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
@@ -128,10 +128,10 @@ public class MinionCommand extends BasicCommand {
         return 0;
     }
 
-    private static int purge(CommandSource ctx) throws CommandSyntaxException {
-        PlayerEntity p = ctx.getPlayerOrException();
+    private static int purge(CommandSourceStack ctx) throws CommandSyntaxException {
+        Player p = ctx.getPlayerOrException();
         MinionWorldData.getData(ctx.getServer()).purgeController(p.getUUID());
-        p.displayClientMessage(new StringTextComponent("Reload world"), false);
+        p.displayClientMessage(new TextComponent("Reload world"), false);
         return 0;
     }
 }

@@ -5,15 +5,15 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.core.ModParticles;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class GenericParticleData implements IParticleData {
+public class GenericParticleData implements ParticleOptions {
 
     /**
      * CODEC appears to be an alternative to De/Serializer. Not sure why both exist
@@ -27,12 +27,12 @@ public class GenericParticleData implements IParticleData {
             .apply(p_239803_0_, (t, a, c, s) -> new GenericParticleData(ModParticles.generic, new ResourceLocation(t), a, c, s)));
 
 
-    public static final IParticleData.IDeserializer<GenericParticleData> DESERIALIZER = new IParticleData.IDeserializer<GenericParticleData>() {
+    public static final ParticleOptions.Deserializer<GenericParticleData> DESERIALIZER = new ParticleOptions.Deserializer<GenericParticleData>() {
         public GenericParticleData fromCommand(ParticleType<GenericParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
             return new GenericParticleData(particleTypeIn, ResourceLocation.read(reader), reader.readInt(), reader.readInt());
         }
 
-        public GenericParticleData fromNetwork(ParticleType<GenericParticleData> particleTypeIn, PacketBuffer buffer) {
+        public GenericParticleData fromNetwork(ParticleType<GenericParticleData> particleTypeIn, FriendlyByteBuf buffer) {
             return new GenericParticleData(particleTypeIn, buffer.readResourceLocation(), buffer.readVarInt(), buffer.readVarInt(), buffer.readFloat());
         }
     };
@@ -65,7 +65,7 @@ public class GenericParticleData implements IParticleData {
     }
 
     @Override
-    public void writeToNetwork(PacketBuffer packetBuffer) {
+    public void writeToNetwork(FriendlyByteBuf packetBuffer) {
         packetBuffer.writeResourceLocation(texture);
         packetBuffer.writeVarInt(maxAge);
         packetBuffer.writeVarInt(color);

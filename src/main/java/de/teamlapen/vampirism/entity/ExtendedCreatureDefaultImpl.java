@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import net.minecraft.entity.CreatureEntity;
+import net.minecraft.world.entity.PathfinderMob;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -48,7 +48,7 @@ class ExtendedCreatureDefaultImpl implements IExtendedCreatureVampirism {
     }
 
     @Override
-    public CreatureEntity getEntity() {
+    public PathfinderMob getEntity() {
         return null;
     }
 

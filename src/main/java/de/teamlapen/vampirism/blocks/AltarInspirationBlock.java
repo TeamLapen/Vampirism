@@ -1,23 +1,26 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.FluidLib;
+import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.tileentity.AltarInspirationTileEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidUtil;
@@ -25,6 +28,8 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 /**
  * Altar of inspiration used for vampire levels 1-4
@@ -51,7 +56,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
         VoxelShape c10 = Block.box(5, 12, 5, 11, 13, 11);
         VoxelShape c11 = Block.box(6, 13, 6, 10, 14, 10);
 
-        return VoxelShapes.or(a, b1, b2, b3, b4, c1, c2, c3, c4, c5, c5, c6, c7, c8, c9, c10, c11);
+        return Shapes.or(a, b1, b2, b3, b4, c1, c2, c3, c4, c5, c5, c6, c7, c8, c9, c10, c11);
     }
 
     public AltarInspirationBlock() {
@@ -60,8 +65,8 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
 
     @Nonnull
     @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
@@ -76,17 +81,17 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public TileEntity newBlockEntity(IBlockReader worldIn) {
-        return new AltarInspirationTileEntity();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new AltarInspirationTileEntity(pos, state);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return altarShape;
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(hand);
         if (!stack.isEmpty()) {
             LazyOptional<IFluidHandlerItem> opt = FluidLib.getFluidItemCap(stack);
@@ -95,16 +100,21 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
                 if (!player.isShiftKeyDown() && tileEntity != null) {
                     FluidUtil.interactWithFluidHandler(player, hand, worldIn, pos, hit.getDirection());
                 }
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         } else {
-            TileEntity tileEntity = worldIn.getBlockEntity(pos);
+            BlockEntity tileEntity = worldIn.getBlockEntity(pos);
             if (tileEntity instanceof AltarInspirationTileEntity) {
                 ((AltarInspirationTileEntity) tileEntity).startRitual(player);
             }
         }
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return level.isClientSide() ? null: createTickerHelper(type, ModTiles.altar_inspiration, AltarInspirationTileEntity::serverTick);
+    }
 }

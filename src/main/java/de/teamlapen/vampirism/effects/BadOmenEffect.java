@@ -4,17 +4,17 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.tileentity.TotemHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.EffectType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 /**
  * does not extends {@link VampirismEffect} so other mods can use this too
  */
-public abstract class BadOmenEffect extends Effect {
+public abstract class BadOmenEffect extends MobEffect {
 
     /**
      * Call this if onDeath of an entity that might carry a faction banner.
@@ -32,18 +32,18 @@ public abstract class BadOmenEffect extends Effect {
      * @param victim   The killed faction entity
      */
     public static void handlePotentialBannerKill(@Nullable Entity offender, IFactionEntity victim) {
-        if (offender instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) offender;
+        if (offender instanceof Player) {
+            Player player = (Player) offender;
             IFaction<?> faction = victim.getFaction();
-            if (faction.getVillageData().isBanner(victim.getRepresentingEntity().getItemBySlot(EquipmentSlotType.HEAD))) {
+            if (faction.getVillageData().isBanner(victim.getRepresentingEntity().getItemBySlot(EquipmentSlot.HEAD))) {
                 IFaction<?> playerFaction = VampirismPlayerAttributes.get(player).faction;
                 if (playerFaction != null && playerFaction != faction) {
-                    Effect badOmen = faction.getVillageData().getBadOmenEffect();
+                    MobEffect badOmen = faction.getVillageData().getBadOmenEffect();
                     if (badOmen != null) {
-                        EffectInstance inst = player.getEffect(badOmen);
+                        MobEffectInstance inst = player.getEffect(badOmen);
                         int i = inst != null ? Math.min(inst.getAmplifier() + 1, 4) : 0;
                         if (inst != null) player.removeEffectNoUpdate(badOmen);
-                        player.addEffect(new EffectInstance(badOmen, 120000, i, false, false, true));
+                        player.addEffect(new MobEffectInstance(badOmen, 120000, i, false, false, true));
                     }
 
                 }
@@ -52,7 +52,7 @@ public abstract class BadOmenEffect extends Effect {
     }
 
     public BadOmenEffect(String modID, ResourceLocation faction) {
-        super(EffectType.NEUTRAL, 745784);
+        super(MobEffectCategory.NEUTRAL, 745784);
         this.setRegistryName(modID, "bad_omen_" + faction.getPath());
     }
 
@@ -60,9 +60,9 @@ public abstract class BadOmenEffect extends Effect {
 
     @Override
     public void applyEffectTick(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
-        if (entityLivingBaseIn instanceof ServerPlayerEntity && !entityLivingBaseIn.isSpectator()) {
-            ServerPlayerEntity playerEntity = ((ServerPlayerEntity) entityLivingBaseIn);
-            ServerWorld serverWorld = playerEntity.getLevel();
+        if (entityLivingBaseIn instanceof ServerPlayer && !entityLivingBaseIn.isSpectator()) {
+            ServerPlayer playerEntity = ((ServerPlayer) entityLivingBaseIn);
+            ServerLevel serverWorld = playerEntity.getLevel();
             if (serverWorld.getDifficulty() == Difficulty.PEACEFUL) {
                 return;
             }

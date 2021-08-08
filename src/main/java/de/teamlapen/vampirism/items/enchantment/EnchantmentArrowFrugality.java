@@ -3,17 +3,19 @@ package de.teamlapen.vampirism.items.enchantment;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+
+import net.minecraft.world.item.enchantment.Enchantment.Rarity;
 
 /**
  * Makes tech crossbows use less arrows
  */
 public class EnchantmentArrowFrugality extends Enchantment {
     public EnchantmentArrowFrugality(Rarity rarityIn) {
-        super(rarityIn, VReference.CROSSBOW_ENCHANTMENT, new EquipmentSlotType[]{EquipmentSlotType.MAINHAND});
+        super(rarityIn, VReference.CROSSBOW_ENCHANTMENT, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
         this.setRegistryName(REFERENCE.MODID, "crossbowfrugality");
 
     }

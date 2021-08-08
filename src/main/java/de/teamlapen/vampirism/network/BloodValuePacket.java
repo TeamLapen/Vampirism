@@ -4,17 +4,18 @@ import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.lang.reflect.Array;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class BloodValuePacket implements IMessage {
+public record BloodValuePacket(
+        Pair<Map<ResourceLocation, Integer>, Integer>[] values) implements IMessage {
 
-    static void encode(BloodValuePacket msg, PacketBuffer buf) {
+    static void encode(BloodValuePacket msg, FriendlyByteBuf buf) {
         for (Pair<Map<ResourceLocation, Integer>, Integer> e : msg.values) {
             buf.writeVarInt(e.getFirst().size());
             for (Map.Entry<ResourceLocation, Integer> f : e.getFirst().entrySet()) {
@@ -25,7 +26,7 @@ public class BloodValuePacket implements IMessage {
         }
     }
 
-    static BloodValuePacket decode(PacketBuffer buf) {
+    static BloodValuePacket decode(FriendlyByteBuf buf) {
         @SuppressWarnings("unchecked")
         Pair<Map<ResourceLocation, Integer>, Integer>[] values = (Pair<Map<ResourceLocation, Integer>, Integer>[]) Array.newInstance(Pair.class, 3);
         for (int i = 0; i < 3; i++) {
@@ -43,12 +44,6 @@ public class BloodValuePacket implements IMessage {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleBloodValuePacket(msg));
         ctx.setPacketHandled(true);
-    }
-
-    private final Pair<Map<ResourceLocation, Integer>, Integer>[] values;
-
-    public BloodValuePacket(Pair<Map<ResourceLocation, Integer>, Integer>[] values) {
-        this.values = values;
     }
 
     public Pair<Map<ResourceLocation, Integer>, Integer>[] getValues() {

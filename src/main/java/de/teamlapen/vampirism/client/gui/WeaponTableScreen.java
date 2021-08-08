@@ -1,19 +1,19 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.gui.recipebook.WeaponTableRecipeBookGui;
 import de.teamlapen.vampirism.inventory.container.WeaponTableContainer;
-import net.minecraft.client.gui.recipebook.IRecipeShownListener;
-import net.minecraft.client.gui.recipebook.RecipeBookGui;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -21,16 +21,16 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Gui for the weapon table. Only draws the background and the lava status
  */
 @OnlyIn(Dist.CLIENT)
-public class WeaponTableScreen extends ContainerScreen<WeaponTableContainer> implements IRecipeShownListener {
+public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableContainer> implements RecipeUpdateListener {
 
     private static final ResourceLocation TABLE_GUI_TEXTURES = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table.png");
     private static final ResourceLocation TABLE_GUI_TEXTURES_LAVA = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table_lava.png");
     private static final ResourceLocation TABLE_GUI_TEXTURES_MISSING_LAVA = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table_missing_lava.png");
     private static final ResourceLocation RECIPE_BUTTON_TEXTURE = new ResourceLocation("textures/gui/recipe_button.png");
-    private final RecipeBookGui recipeBookGui = new WeaponTableRecipeBookGui();
+    private final RecipeBookComponent recipeBookGui = new WeaponTableRecipeBookGui();
     private boolean widthTooNarrow;
 
-    public WeaponTableScreen(WeaponTableContainer inventorySlotsIn, PlayerInventory inventoryPlayer, ITextComponent name) {
+    public WeaponTableScreen(WeaponTableContainer inventorySlotsIn, Inventory inventoryPlayer, Component name) {
         super(inventorySlotsIn, inventoryPlayer, name);
         this.imageWidth = 196;
         this.imageHeight = 191;
@@ -38,7 +38,7 @@ public class WeaponTableScreen extends ContainerScreen<WeaponTableContainer> imp
     }
 
     @Override
-    public RecipeBookGui getRecipeBookComponent() {
+    public RecipeBookComponent getRecipeBookComponent() {
         return recipeBookGui;
     }
 
@@ -63,7 +63,7 @@ public class WeaponTableScreen extends ContainerScreen<WeaponTableContainer> imp
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
         this.renderBackground(stack);
         if (this.recipeBookGui.isVisible() && this.widthTooNarrow) {
@@ -113,7 +113,7 @@ public class WeaponTableScreen extends ContainerScreen<WeaponTableContainer> imp
     }
 
     @Override
-    protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         int i = this.leftPos;

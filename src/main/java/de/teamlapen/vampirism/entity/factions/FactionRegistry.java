@@ -5,12 +5,12 @@ import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.factions.*;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.NonNullSupplier;
 
@@ -25,10 +25,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
-import static net.minecraft.world.biome.Biome.LOGGER;
 
 
-@SuppressWarnings("rawtypes")
 public class FactionRegistry implements IFactionRegistry {
     private final Map<Integer, Predicate<LivingEntity>> predicateMap = new HashMap<>();
     private List<Faction> temp = new CopyOnWriteArrayList<>(); //Copy on write is costly, but we only expect very few elements anyway
@@ -56,8 +54,8 @@ public class FactionRegistry implements IFactionRegistry {
     IFaction getFaction(Entity entity) {
         if (entity instanceof IFactionEntity) {
             return ((IFactionEntity) entity).getFaction();
-        } else if (entity instanceof PlayerEntity) {
-            return VampirismPlayerAttributes.get((PlayerEntity) entity).faction;
+        } else if (entity instanceof Player) {
+            return VampirismPlayerAttributes.get((Player) entity).faction;
         }
         return null;
     }
@@ -145,7 +143,7 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull BiFunction<Integer, Boolean, ITextComponent> lordTitleFunction, @Nullable IVillageFactionData villageFactionData) {
+    public <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull BiFunction<Integer, Boolean, Component> lordTitleFunction, @Nullable IVillageFactionData villageFactionData) {
         if (!UtilLib.isNonNull(id, entityInterface, playerCapabilitySupplier)) {
             throw new IllegalArgumentException("[Vampirism]Parameters for faction cannot be null");
         }
@@ -158,7 +156,7 @@ public class FactionRegistry implements IFactionRegistry {
     @ThreadSafeAPI
     @Override
     public <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel) {
-        return registerPlayableFaction(id, entityInterface, color, hostileTowardsNeutral, playerCapabilitySupplier, highestLevel, 0, (a, b) -> new StringTextComponent("Lord " + a), null);
+        return registerPlayableFaction(id, entityInterface, color, hostileTowardsNeutral, playerCapabilitySupplier, highestLevel, 0, (a, b) -> new TextComponent("Lord " + a), null);
     }
 
     @ThreadSafeAPI

@@ -12,8 +12,8 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -141,7 +141,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     /**
      * Should only be called by the corresponding Capability instance
      **/
-    public void loadFromNbt(CompoundNBT nbt) {
+    public void loadFromNbt(CompoundTag nbt) {
         //If loading from save we want to clear everything beforehand.
         //NBT only contains actions that are active/cooldown
         activeTimers.clear();
@@ -169,7 +169,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      * <p>
      * Attention: nbt is modified in the process
      **/
-    public void readUpdateFromServer(CompoundNBT nbt) {
+    public void readUpdateFromServer(CompoundTag nbt) {
         /*
          * This happens client side
          * We want to:
@@ -183,7 +183,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
          *
          */
         if (nbt.contains("actions_active")) {
-            CompoundNBT active = nbt.getCompound("actions_active");
+            CompoundTag active = nbt.getCompound("actions_active");
             for (ObjectIterator<Object2IntMap.Entry<ResourceLocation>> it = activeTimers.object2IntEntrySet().iterator(); it.hasNext(); ) {
                 Object2IntMap.Entry<ResourceLocation> client_active = it.next();
                 String key = client_active.getKey().toString();
@@ -245,7 +245,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      *
      * @param nbt
      */
-    public void saveToNbt(CompoundNBT nbt) {
+    public void saveToNbt(CompoundTag nbt) {
 
         nbt.put("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));
         nbt.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
@@ -349,7 +349,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      *
      * @param nbt
      */
-    public void writeUpdateForClient(CompoundNBT nbt) {
+    public void writeUpdateForClient(CompoundTag nbt) {
         nbt.put("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));
         nbt.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
     }
@@ -359,7 +359,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         return player.getRepresentingEntity().level.isClientSide || PermissionAPI.hasPermission(player.getRepresentingPlayer(), Permissions.ACTION_PREFIX + id.getNamespace() + "." + id.getPath());
     }
 
-    private void loadTimerMapFromNBT(CompoundNBT nbt, Object2IntMap<ResourceLocation> map) {
+    private void loadTimerMapFromNBT(CompoundTag nbt, Object2IntMap<ResourceLocation> map) {
         for (String key : nbt.getAllKeys()) {
             ResourceLocation id = new ResourceLocation(key);
             IAction action = ModRegistries.ACTIONS.getValue(id);
@@ -371,8 +371,8 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         }
     }
 
-    private CompoundNBT writeTimersToNBT(ObjectSet<Object2IntMap.Entry<ResourceLocation>> set) {
-        CompoundNBT nbt = new CompoundNBT();
+    private CompoundTag writeTimersToNBT(ObjectSet<Object2IntMap.Entry<ResourceLocation>> set) {
+        CompoundTag nbt = new CompoundTag();
         for (Object2IntMap.Entry<ResourceLocation> entry : set) {
             nbt.putInt(entry.getKey().toString(), entry.getIntValue());
         }

@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.effects;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,8 +15,8 @@ import java.util.List;
 /**
  * Base class for Vampirism's potions
  */
-public class VampirismEffect extends Effect {
-    public VampirismEffect(String name, EffectType effectType, int potionColor) {
+public class VampirismEffect extends MobEffect {
+    public VampirismEffect(String name, MobEffectCategory effectType, int potionColor) {
         super(effectType, potionColor);
         this.setRegistryName(REFERENCE.MODID, name);
     }
@@ -29,8 +29,8 @@ public class VampirismEffect extends Effect {
     @Override
     public void applyEffectTick(LivingEntity entityLivingBaseIn, int amplifier) {
         if (this == ModEffects.armor_regeneration) {
-            if (entityLivingBaseIn instanceof PlayerEntity) {
-                VampirePlayer.getOpt((PlayerEntity) entityLivingBaseIn).ifPresent(VampirePlayer::requestNaturalArmorUpdate);
+            if (entityLivingBaseIn instanceof Player) {
+                VampirePlayer.getOpt((Player) entityLivingBaseIn).ifPresent(VampirePlayer::requestNaturalArmorUpdate);
             }
         }
     }

@@ -8,8 +8,8 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
 import de.teamlapen.vampirism.player.refinements.RefinementSet;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.WeightedRandom;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.WeighedRandom;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -60,7 +60,7 @@ public class RefinementItemReward extends ItemReward {
                 .filter(set -> set.getSlotType().map(slot1 -> slot1 == slot).orElse(true))
                 .map(set -> ((RefinementSet) set).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return new ItemStack(item);
-        IRefinementSet set = WeightedRandom.getRandomItem(RANDOM, sets).getItem();
+        IRefinementSet set = WeighedRandom.getRandomItem(RANDOM, sets).getItem();
         ItemStack stack = new ItemStack(item);
         item.applyRefinementSet(stack, set);
         return stack;

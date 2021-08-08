@@ -8,17 +8,19 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.core.ModLoot;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootFunction;
-import net.minecraft.loot.LootFunctionType;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class RefinementSetFunction extends LootFunction {
+import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction.Builder;
+
+public class RefinementSetFunction extends LootItemConditionalFunction {
 
     public static Builder<?> builder(IFaction<?> faction) {
         return simpleBuilder(conditions -> new RefinementSetFunction(conditions, faction));
@@ -30,14 +32,14 @@ public class RefinementSetFunction extends LootFunction {
     @Nullable
     public final IFaction<?> faction;
 
-    public RefinementSetFunction(@Nonnull ILootCondition[] conditionsIn, @Nullable IFaction<?> faction) {
+    public RefinementSetFunction(@Nonnull LootItemCondition[] conditionsIn, @Nullable IFaction<?> faction) {
         super(conditionsIn);
         this.faction = faction;
     }
 
     @Nonnull
     @Override
-    public LootFunctionType getType() {
+    public LootItemFunctionType getType() {
         return ModLoot.add_refinement_set;
     }
 
@@ -53,11 +55,11 @@ public class RefinementSetFunction extends LootFunction {
         return stack;
     }
 
-    public static class Serializer extends LootFunction.Serializer<RefinementSetFunction> {
+    public static class Serializer extends LootItemConditionalFunction.Serializer<RefinementSetFunction> {
 
         @Nonnull
         @Override
-        public RefinementSetFunction deserialize(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context, @Nonnull ILootCondition[] conditionsIn) {
+        public RefinementSetFunction deserialize(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context, @Nonnull LootItemCondition[] conditionsIn) {
             IFaction<?> faction = null;
             if (json.has("faction")) {
                 String string = json.get("faction").getAsString();

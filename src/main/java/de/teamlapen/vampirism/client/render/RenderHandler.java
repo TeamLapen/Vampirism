@@ -16,22 +16,23 @@ import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.MixinHooks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.FogRenderer;
-import net.minecraft.client.renderer.OutlineLayerBuffer;
+import net.minecraft.client.renderer.OutlineBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
-import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.client.shader.Shader;
-import net.minecraft.client.shader.ShaderGroup;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.BatEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.model.PlayerModel;
+import com.mojang.blaze3d.pipeline.RenderTarget;
+import net.minecraft.client.renderer.PostPass;
+import net.minecraft.client.renderer.PostChain;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ambient.Bat;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
@@ -40,7 +41,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.resource.IResourceType;
-import net.minecraftforge.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.resource.VanillaResourceType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,7 +53,7 @@ import java.util.function.Predicate;
  * Handle most general rendering related stuff
  */
 @OnlyIn(Dist.CLIENT)
-public class RenderHandler implements ISelectiveResourceReloadListener {
+public class RenderHandler implements ResourceManagerReloadListener {
     private static final int ENTITY_NEAR_SQ_DISTANCE = 100;
     @Nonnull
     private final Minecraft mc;
@@ -62,8 +62,8 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     private final int VAMPIRE_BIOME_FADE_TICKS = 60;
     private final Logger LOGGER = LogManager.getLogger();
     @Nullable
-    private OutlineLayerBuffer bloodVisionBuffer;
-    private BatEntity entityBat;
+    private OutlineBufferSource bloodVisionBuffer;
+    private Bat entityBat;
     /**
      * Fog fade counter
      * Between 0 and {@link #BLOOD_VISION_FADE_TICKS}
@@ -79,7 +79,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     private int lastBloodVisionTicks = 0;
     private float vampireBiomeFogDistanceMultiplier = 1;
     @Nullable
-    private ShaderGroup blurShader;
+    private PostChain blurShader;
     /**
      * Store the last used framebuffer size to be able to rebind shader buffer when size changes
      */
@@ -87,7 +87,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     private boolean reducedBloodVision = false;
 
     @Nullable
-    private Shader blur1, blur2, blit0;
+    private PostPass blur1, blur2, blit0;
     private boolean isInsideBloodVisionRendering = false;
 
     public RenderHandler(@Nonnull Minecraft mc) {
@@ -184,8 +184,8 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         f *= vampireBiomeFogDistanceMultiplier;
         float fogStart = Math.min(event.getFarPlaneDistance() * 0.75f, 6 * f);
         float fogEnd = Math.min(event.getFarPlaneDistance(), 50 * f);
-        RenderSystem.fogStart(event.getType() == FogRenderer.FogType.FOG_SKY ? 0 : fogStart); //maybe invert
-        RenderSystem.fogEnd(fogEnd);
+        RenderSystem.setShaderFogStart(event.getType() == FogRenderer.FogMode.FOG_SKY ? 0 : fogStart); //maybe invert
+        RenderSystem.setShaderFogEnd(fogEnd);
     }
 
     @SubscribeEvent
@@ -200,14 +200,14 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         if (!isInsideBloodVisionRendering && shouldRenderBloodVision() && !reducedBloodVision) {
             Entity entity = event.getEntity();
 
-            boolean flag = !(entity instanceof PlayerEntity) || VampirismPlayerAttributes.get((PlayerEntity) entity).getHuntSpecial().fullHunterCoat == null;
+            boolean flag = !(entity instanceof Player) || VampirismPlayerAttributes.get((Player) entity).getHuntSpecial().fullHunterCoat == null;
             double dist = mc.player.distanceToSqr(entity);
             if (dist > VampirismConfig.BALANCE.vsBloodVisionDistanceSq.get()) {
                 flag = false;
             }
             if (flag) {
                 int color;
-                LazyOptional<IExtendedCreatureVampirism> opt = entity instanceof CreatureEntity && entity.isAlive() ? ExtendedCreature.getSafe(entity) : LazyOptional.empty();
+                LazyOptional<IExtendedCreatureVampirism> opt = entity instanceof PathfinderMob && entity.isAlive() ? ExtendedCreature.getSafe(entity) : LazyOptional.empty();
                 if (opt.map(creature -> creature.getBlood() > 0 && !creature.hasPoisonousBlood()).orElse(false)) {
                     color = 0xFF0000;
                 } else if (VampirismPlayerAttributes.get(mc.player).getVampSpecial().blood_vision_garlic && ((opt.map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) || entity instanceof IHunterMob)) {
@@ -215,16 +215,16 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
                 } else {
                     color = 0xA0A0A0;
                 }
-                EntityRendererManager renderManager = mc.getEntityRenderDispatcher();
+                EntityRenderDispatcher renderManager = mc.getEntityRenderDispatcher();
                 if (bloodVisionBuffer == null) {
-                    bloodVisionBuffer = new OutlineLayerBuffer(mc.renderBuffers().bufferSource());
+                    bloodVisionBuffer = new OutlineBufferSource(mc.renderBuffers().bufferSource());
                 }
                 int r = color >> 16 & 255;
                 int g = color >> 8 & 255;
                 int b = color & 255;
                 int alpha = (int) ((dist > ENTITY_NEAR_SQ_DISTANCE ? 50 : (dist / (double) ENTITY_NEAR_SQ_DISTANCE * 50d)) * getBloodVisionProgress(event.getPartialRenderTick()));
                 bloodVisionBuffer.setColor(r, g, b, alpha);
-                float f = MathHelper.lerp(event.getPartialRenderTick(), entity.yRotO, entity.yRot);
+                float f = Mth.lerp(event.getPartialRenderTick(), entity.yRotO, entity.getYRot());
                 isInsideBloodVisionRendering = true;
                 EntityRenderer<? super Entity> entityrenderer = renderManager.getRenderer(entity);
                 entityrenderer.render(entity, f, event.getPartialRenderTick(), event.getMatrixStack(), bloodVisionBuffer, renderManager.getPackedLightCoords(entity, event.getPartialRenderTick()));
@@ -236,14 +236,14 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     }
 
     @SubscribeEvent
-    public void onRenderLivingPre(RenderLivingEvent.Pre<PlayerEntity, PlayerModel<PlayerEntity>> event) {
+    public void onRenderLivingPre(RenderLivingEvent.Pre<Player, PlayerModel<Player>> event) {
         LivingEntity entity = event.getEntity();
-        if (entity instanceof PlayerEntity && VampirismPlayerAttributes.get(mc.player).getHuntSpecial().isDisguised()) {
+        if (entity instanceof Player && VampirismPlayerAttributes.get(mc.player).getHuntSpecial().isDisguised()) {
             double dist = this.mc.player == null ? 0 : entity.distanceToSqr(this.mc.player);
             if (dist > 64) {
                 event.setCanceled(true);
             } else if (dist > 16) {
-                IItemWithTier.TIER hunterCoatTier = VampirismPlayerAttributes.get((PlayerEntity) entity).getHuntSpecial().fullHunterCoat;
+                IItemWithTier.TIER hunterCoatTier = VampirismPlayerAttributes.get((Player) entity).getHuntSpecial().fullHunterCoat;
                 if (hunterCoatTier == IItemWithTier.TIER.ENHANCED || hunterCoatTier == IItemWithTier.TIER.ULTIMATE) {
                     event.setCanceled(true);
                 }
@@ -253,7 +253,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
 
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
-        PlayerEntity player = event.getPlayer();
+        Player player = event.getPlayer();
         VampirePlayerSpecialAttributes vAtt = VampirismPlayerAttributes.get(player).getVampSpecial();
         if (vAtt.invisible) {
             event.setCanceled(true);
@@ -270,8 +270,8 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
             entityBat.yBodyRotO = player.yBodyRotO;
             entityBat.yBodyRot = player.yBodyRot;
             entityBat.tickCount = player.tickCount;
-            entityBat.xRot = player.xRot;
-            entityBat.yRot = player.yRot;
+            entityBat.setXRot(player.getXRot());
+            entityBat.setYRot(player.getYRot());
             entityBat.yHeadRot = player.yHeadRot;
             entityBat.yRotO = player.yRotO;
             entityBat.xRotO = player.xRotO;
@@ -279,10 +279,10 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
             entityBat.setInvisible(player.isInvisible());
 
             // Calculate render parameter
-            double d0 = MathHelper.lerp(partialTicks, entityBat.xOld, entityBat.getX());
-            double d1 = MathHelper.lerp(partialTicks, entityBat.yOld, entityBat.getY());
-            double d2 = MathHelper.lerp(partialTicks, entityBat.zOld, entityBat.getZ());
-            float f = MathHelper.lerp(partialTicks, entityBat.yRotO, entityBat.yRot);
+            double d0 = Mth.lerp(partialTicks, entityBat.xOld, entityBat.getX());
+            double d1 = Mth.lerp(partialTicks, entityBat.yOld, entityBat.getY());
+            double d2 = Mth.lerp(partialTicks, entityBat.zOld, entityBat.getZ());
+            float f = Mth.lerp(partialTicks, entityBat.yRotO, entityBat.getYRot());
             mc.getEntityRenderDispatcher().render(entityBat, d0, d1, d2, f, partialTicks, event.getMatrixStack(), mc.renderBuffers().bufferSource(), mc.getEntityRenderDispatcher().getPackedLightCoords(entityBat, partialTicks));
 
         } else if (vAtt.isDBNO) {
@@ -318,7 +318,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     }
 
     @Override
-    public void onResourceManagerReload(IResourceManager resourceManager, Predicate<IResourceType> resourcePredicate) {
+    public void onResourceManagerReload(ResourceManager resourceManager) {
         this.reMakeBloodVisionShader();
 
     }
@@ -334,7 +334,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
 
     private void adjustBloodVisionShaders(float progress) {
         if (blit0 == null || blur1 == null || blur2 == null) return;
-        progress = MathHelper.clamp(progress, 0, 1);
+        progress = Mth.clamp(progress, 0, 1);
         blit0.getEffect().safeGetUniform("ColorModulate").set((1 - 0.4F * progress), (1 - 0.5F * progress), (1 - 0.3F * progress), 1);
         blur1.getEffect().safeGetUniform("Radius").set(Math.round(15 * progress));
         blur2.getEffect().safeGetUniform("Radius").set(Math.round(15 * progress));
@@ -351,8 +351,8 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         }
         ResourceLocation resourcelocationBlur = new ResourceLocation(REFERENCE.MODID, "shaders/blank.json");
         try {
-            this.blurShader = new ShaderGroup(this.mc.getTextureManager(), this.mc.getResourceManager(), this.mc.getMainRenderTarget(), resourcelocationBlur);
-            Framebuffer swap = this.blurShader.getTempTarget("swap");
+            this.blurShader = new PostChain(this.mc.getTextureManager(), this.mc.getResourceManager(), this.mc.getMainRenderTarget(), resourcelocationBlur);
+            RenderTarget swap = this.blurShader.getTempTarget("swap");
 
             blit0 = blurShader.addPass("blit", swap, this.mc.getMainRenderTarget());
             blur1 = blurShader.addPass("blur", this.mc.getMainRenderTarget(), swap);

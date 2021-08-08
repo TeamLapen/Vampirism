@@ -1,12 +1,11 @@
 package de.teamlapen.vampirism.api.entity.actions;
 
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.world.entity.PathfinderMob;
 
 /**
  * {@link IEntityAction} that takes several ticks to execute.
  */
-public interface ILastingAction<T extends CreatureEntity & IEntityActionUser> extends IEntityAction {
+public interface ILastingAction<T extends PathfinderMob & IEntityActionUser> extends IEntityAction {
 
     /**
      * called to activate the action
@@ -29,7 +28,7 @@ public interface ILastingAction<T extends CreatureEntity & IEntityActionUser> ex
     int getDuration(int level);
 
     /**
-     * (should be) called every LivingUpdate of {@link MobEntity}
+     * (should be) called every LivingUpdate of {@link net.minecraft.world.entity.Mob}
      *
      * @param entity   entity whose action is to be updated
      * @param duration lasting duration of the action

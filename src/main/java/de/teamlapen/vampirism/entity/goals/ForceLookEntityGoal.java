@@ -1,24 +1,26 @@
 package de.teamlapen.vampirism.entity.goals;
 
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nonnull;
 import java.util.EnumSet;
 import java.util.Optional;
 
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
+
 /**
  * Makes the hunter trainer look at his trainee
  */
-public class ForceLookEntityGoal<T extends MobEntity & ForceLookEntityGoal.TaskOwner> extends LookAtGoal {
+public class ForceLookEntityGoal<T extends Mob & ForceLookEntityGoal.TaskOwner> extends LookAtPlayerGoal {
     private final T theTrainer;
 
     /**
      * @param theTrainer Has to be instance of ITrainer
      */
     public ForceLookEntityGoal(T theTrainer) {
-        super(theTrainer, PlayerEntity.class, 8.0F);
+        super(theTrainer, Player.class, 8.0F);
         this.theTrainer = theTrainer;
         this.setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));
     }
@@ -39,6 +41,6 @@ public class ForceLookEntityGoal<T extends MobEntity & ForceLookEntityGoal.TaskO
          * @return The player currently being trained or null
          */
         @Nonnull
-        Optional<PlayerEntity> getForceLookTarget();
+        Optional<Player> getForceLookTarget();
     }
 }

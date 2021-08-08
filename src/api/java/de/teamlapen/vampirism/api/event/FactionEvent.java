@@ -8,6 +8,8 @@ import net.minecraftforge.eventbus.api.Event;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.minecraftforge.eventbus.api.Event.HasResult;
+
 /**
  * Event related to any faction changes of players
  */

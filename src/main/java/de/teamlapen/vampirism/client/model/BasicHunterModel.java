@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.client.model;
 
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.HandSide;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -26,9 +26,9 @@ public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<
     public void prepareMobModel(T entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime) {
         this.targetingRight = false;
         this.targetingLeft = false;
-        ItemStack itemStack = entitylivingbaseIn.getItemInHand(Hand.MAIN_HAND);
+        ItemStack itemStack = entitylivingbaseIn.getItemInHand(InteractionHand.MAIN_HAND);
         if (!itemStack.isEmpty() && itemStack.getItem() instanceof VampirismItemCrossbow && entitylivingbaseIn instanceof BasicHunterEntity && ((BasicHunterEntity) entitylivingbaseIn).isSwingingArms()) {
-            if (entitylivingbaseIn.getMainArm() == HandSide.RIGHT) {
+            if (entitylivingbaseIn.getMainArm() == HumanoidArm.RIGHT) {
                 this.targetingRight = true;
             } else {
                 this.targetingLeft = true;

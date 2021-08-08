@@ -1,27 +1,32 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.tileentity.AltarInfusionTileEntity;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 /**
  * Altar of infusion
@@ -57,7 +62,7 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
         VoxelShape h2 = Block.box(7, 7, 7, 9, 13, 9);
         VoxelShape h3 = Block.box(6, 8, 6, 10, 12, 10);
 
-        return VoxelShapes.or(a, b, c, d1, d2, d3, d4, e1, e2, e3, e4, f1, f2, f3, f4, g, h1, h2, h3);
+        return Shapes.or(a, b, c, d1, d2, d3, d4, e1, e2, e3, e4, f1, f2, f3, f4, g, h1, h2, h3);
     }
 
     public AltarInfusionBlock() {
@@ -65,8 +70,8 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
@@ -82,47 +87,53 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public TileEntity newBlockEntity(IBlockReader world) {
-        return new AltarInfusionTileEntity();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new AltarInfusionTileEntity(pos, state);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return altarBase;
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack heldItem = player.getItemInHand(hand);
         AltarInfusionTileEntity te = (AltarInfusionTileEntity) worldIn.getBlockEntity(pos);
         //If empty hand and can start -> StartAdvanced
-        if (worldIn.isClientSide || te == null) return ActionResultType.SUCCESS;
+        if (worldIn.isClientSide || te == null) return InteractionResult.SUCCESS;
         if (!Helper.isVampire(player)) {
-            player.displayClientMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual.wrong_faction"), true);
-            return ActionResultType.SUCCESS;
+            player.displayClientMessage(new TranslatableComponent("text.vampirism.altar_infusion.ritual.wrong_faction"), true);
+            return InteractionResult.SUCCESS;
         }
         AltarInfusionTileEntity.Result result = te.canActivate(player, true);
         if (heldItem.isEmpty()) {
             if (result == AltarInfusionTileEntity.Result.OK) {
                 te.startRitual(player);
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
 
         }
         //If non empty hand or missing tileInventory -> open GUI
         if (!heldItem.isEmpty() || result == AltarInfusionTileEntity.Result.INVMISSING) {
             if (te.getCurrentPhase() != AltarInfusionTileEntity.PHASE.NOT_RUNNING) {
-                player.displayClientMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"), true);
-                return ActionResultType.SUCCESS;
+                player.displayClientMessage(new TranslatableComponent("text.vampirism.altar_infusion.ritual_still_running"), true);
+                return InteractionResult.SUCCESS;
             }
             player.openMenu(te);
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    protected void clearContainer(BlockState state, World worldIn, BlockPos pos) {
+    protected void clearContainer(BlockState state, Level worldIn, BlockPos pos) {
         dropInventoryTileEntityItems(worldIn, pos);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, ModTiles.altar_infusion, AltarInfusionTileEntity::tick);
     }
 }

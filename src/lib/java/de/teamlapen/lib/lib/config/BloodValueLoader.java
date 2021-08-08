@@ -2,10 +2,10 @@ package de.teamlapen.lib.lib.config;
 
 import com.google.common.collect.Maps;
 import de.teamlapen.lib.lib.util.LogUtil;
-import net.minecraft.client.resources.ReloadListener;
-import net.minecraft.profiler.IProfiler;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.ModList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public class BloodValueLoader extends ReloadListener<Collection<ResourceLocation>> {
+public class BloodValueLoader extends SimplePreparableReloadListener<Collection<ResourceLocation>> {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String BLOODVALUEDIRECTORY = "vampirism_blood_values/";
 
@@ -45,7 +45,7 @@ public class BloodValueLoader extends ReloadListener<Collection<ResourceLocation
     }
 
     @Override
-    protected void apply(@Nonnull Collection<ResourceLocation> splashList, @Nonnull IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
+    protected void apply(@Nonnull Collection<ResourceLocation> splashList, @Nonnull ResourceManager resourceManagerIn, @Nonnull ProfilerFiller profilerIn) {
         Map<ResourceLocation, Integer> values = Maps.newConcurrentMap();
         for (ResourceLocation location : splashList) {
             String modId = location.getPath().substring(folderLocation.length() + 1, location.getPath().length() - 4);
@@ -65,7 +65,7 @@ public class BloodValueLoader extends ReloadListener<Collection<ResourceLocation
      * @param modId should be equals to the file name of location
      */
     @Nullable
-    protected Map<ResourceLocation, Integer> loadBloodValuesFromDataPack(ResourceLocation location, String modId, IResourceManager resourceManager) {
+    protected Map<ResourceLocation, Integer> loadBloodValuesFromDataPack(ResourceLocation location, String modId, ResourceManager resourceManager) {
         if (!ModList.get().isLoaded(modId)) return null;
         try {
             return loadBloodValuesFromReader(new InputStreamReader(resourceManager.getResource(location).getInputStream()), modId);
@@ -130,7 +130,7 @@ public class BloodValueLoader extends ReloadListener<Collection<ResourceLocation
 
     @Nonnull
     @Override
-    protected Collection<ResourceLocation> prepare(IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
+    protected Collection<ResourceLocation> prepare(ResourceManager resourceManagerIn, @Nonnull ProfilerFiller profilerIn) {
         return resourceManagerIn.listResources(folderLocation, (file) -> file.endsWith(".txt"));
     }
 }

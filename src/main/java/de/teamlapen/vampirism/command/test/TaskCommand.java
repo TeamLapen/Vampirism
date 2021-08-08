@@ -3,10 +3,10 @@ package de.teamlapen.vampirism.command.test;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -14,7 +14,7 @@ import java.util.Collections;
 public class TaskCommand extends BasicCommand {
 
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("tasks")
 
                 .then(Commands.literal("clear").requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
@@ -37,30 +37,30 @@ public class TaskCommand extends BasicCommand {
 
     }
 
-    private static int refreshTasksList(Collection<ServerPlayerEntity> players) {
-        for (ServerPlayerEntity player : players) {
+    private static int refreshTasksList(Collection<ServerPlayer> players) {
+        for (ServerPlayer player : players) {
             FactionPlayerHandler.getOpt(player).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getTaskManager().updateTaskLists()));
         }
         return 0;
     }
 
-    private static int resetTasksList(Collection<ServerPlayerEntity> players) {
-        for (ServerPlayerEntity player : players) {
+    private static int resetTasksList(Collection<ServerPlayer> players) {
+        for (ServerPlayer player : players) {
             FactionPlayerHandler.getOpt(player).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getTaskManager().resetTaskLists()));
         }
         return 0;
     }
 
-    private static int clearTasks(Collection<ServerPlayerEntity> players) {
-        for (ServerPlayerEntity player : players) {
+    private static int clearTasks(Collection<ServerPlayer> players) {
+        for (ServerPlayer player : players) {
             FactionPlayerHandler.getOpt(player).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getTaskManager().reset()));
         }
 
         return 0;
     }
 
-    private static int resetLordTasks(Collection<ServerPlayerEntity> players) {
-        for (ServerPlayerEntity player : players) {
+    private static int resetLordTasks(Collection<ServerPlayer> players) {
+        for (ServerPlayer player : players) {
             FactionPlayerHandler.getOpt(player).ifPresent(fph -> fph.resetLordTasks(fph.getLordLevel()));
         }
         return 0;

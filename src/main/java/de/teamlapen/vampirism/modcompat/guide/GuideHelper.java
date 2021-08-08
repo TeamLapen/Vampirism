@@ -7,11 +7,11 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.ITextProperties;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,43 +45,43 @@ public class GuideHelper {
     public static PageItemStack createItemTaskDescription(Task task) {
         assert task.getReward() instanceof ItemReward;
         Ingredient ingredient = Ingredient.of(((ItemReward) task.getReward()).getAllPossibleRewards().stream());
-        List<ITextProperties> text = new ArrayList<>();
-        StringTextComponent newLine = new StringTextComponent("\n");
+        List<FormattedText> text = new ArrayList<>();
+        TextComponent newLine = new TextComponent("\n");
         IPlayableFaction<?> f = task.getFaction();
         String type = f == null ? "" : f.getName().getString() + " ";
-        text.add(new TranslationTextComponent("text.vampirism.task.reward_obtain", type));
+        text.add(new TranslatableComponent("text.vampirism.task.reward_obtain", type));
         text.add(newLine);
         text.add(newLine);
         text.add(task.getTranslation());
         text.add(newLine);
-        text.add(new TranslationTextComponent("text.vampirism.task.prerequisites"));
+        text.add(new TranslatableComponent("text.vampirism.task.prerequisites"));
         text.add(newLine);
         TaskUnlocker[] unlockers = task.getUnlocker();
         if (unlockers.length > 0) {
             for (TaskUnlocker u : unlockers) {
-                text.add(new StringTextComponent("- ").append(u.getDescription()).append(newLine));
+                text.add(new TextComponent("- ").append(u.getDescription()).append(newLine));
             }
 
 
         } else {
-            text.add(new TranslationTextComponent("text.vampirism.task.prerequisites.none"));
+            text.add(new TranslatableComponent("text.vampirism.task.prerequisites.none"));
         }
-        return new PageItemStack(ITextProperties.composite(text), ingredient);
+        return new PageItemStack(FormattedText.composite(text), ingredient);
     }
 
     /**
      * TODO 1.17 remove
      */
     public static class URLLink extends PageHolderWithLinks.URLLink {
-        private final ITextComponent name;
+        private final Component name;
 
-        public URLLink(ITextComponent name, URI link) {
+        public URLLink(Component name, URI link) {
             super("dummy", link);
             this.name = name;
         }
 
         @Override
-        public ITextComponent getDisplayName() {
+        public Component getDisplayName() {
             return name;
         }
     }

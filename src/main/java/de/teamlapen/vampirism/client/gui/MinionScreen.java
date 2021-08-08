@@ -1,32 +1,30 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableArrayTextComponentList;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.inventory.container.MinionContainer;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.client.gui.widget.button.LockIconButton;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.LockIconButton;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.gui.GuiUtils;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
 @OnlyIn(Dist.CLIENT)
-public class MinionScreen extends ContainerScreen<MinionContainer> {
+public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
 
     private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/minion_inventory.png");
     private final int extraSlots;
@@ -36,7 +34,7 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
     private Button statButton;
     private LockIconButton lockActionButton;
 
-    public MinionScreen(MinionContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
+    public MinionScreen(MinionContainer screenContainer, Inventory inv, Component titleIn) {
         super(Objects.requireNonNull(screenContainer), inv, titleIn);
         this.imageWidth = 214;
         this.imageHeight = 185;
@@ -50,7 +48,7 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
     }
 
     @Override
-    public void render(MatrixStack mStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(mStack);
         super.render(mStack, mouseX, mouseY, partialTicks);
         this.renderTooltip(mStack, mouseX, mouseY);
@@ -64,7 +62,7 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
         this.lockActionButton = this.addButton(new LockIconButton(this.leftPos + 99, this.topPos + 19, this::toggleActionLock));
         this.statButton = this.addButton(new ImageButton(this.leftPos + 6, this.topPos + 40, 18, 18, 220, 0, 18, GUI_TEXTURE, this::onStatsPressed));
         this.lockActionButton.setLocked(this.menu.isTaskLocked());
-        ITextComponent[] taskNames = Arrays.stream(menu.getAvailableTasks()).map(IMinionTask::getName).toArray(ITextComponent[]::new);
+        Component[] taskNames = Arrays.stream(menu.getAvailableTasks()).map(IMinionTask::getName).toArray(Component[]::new);
 
         this.taskList = this.addButton(new ScrollableArrayTextComponentList(this.leftPos + 120, this.topPos + 19 + 19, 86, Math.min(3 * 20, taskNames.length * 20), 20, () -> taskNames, this::selectTask).scrollSpeed(2D));
         this.taskList.visible = false;
@@ -74,7 +72,7 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
     }
 
     @Override
-    protected void renderBg(MatrixStack mStack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack mStack, float partialTicks, int mouseX, int mouseY) {
         GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         int i = (this.width - this.imageWidth) / 2;
@@ -88,31 +86,31 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
     }
 
     @Override
-    protected void renderLabels(MatrixStack mStack, int mouseX, int mouseY) {
+    protected void renderLabels(PoseStack mStack, int mouseX, int mouseY) {
         this.font.draw(mStack, title, 5, 6.0F, 0x404040);
-        this.font.draw(mStack, new TranslationTextComponent("gui.vampirism.minion.active_task"), 120, 10.0F, 0x404040);
+        this.font.draw(mStack, new TranslatableComponent("gui.vampirism.minion.active_task"), 120, 10.0F, 0x404040);
 
     }
 
     @Override
-    protected void renderTooltip(MatrixStack mStack, int mouseX, int mouseY) {
+    protected void renderTooltip(PoseStack mStack, int mouseX, int mouseY) {
         if (this.lockActionButton.isMouseOver(mouseX, mouseY)) {
-            drawButtonTip(mStack, new TranslationTextComponent("gui.vampirism.minion.lock_action"), mouseX, mouseY);
+            drawButtonTip(mStack, new TranslatableComponent("gui.vampirism.minion.lock_action"), mouseX, mouseY);
         } else if (this.appearanceButton.isMouseOver(mouseX, mouseY)) {
-            drawButtonTip(mStack, new TranslationTextComponent("gui.vampirism.minion.appearance"), mouseX, mouseY);
+            drawButtonTip(mStack, new TranslatableComponent("gui.vampirism.minion.appearance"), mouseX, mouseY);
         } else if (this.statButton.isMouseOver(mouseX, mouseY)) {
-            drawButtonTip(mStack, new TranslationTextComponent("gui.vampirism.minion_stats"), mouseX, mouseY);
+            drawButtonTip(mStack, new TranslatableComponent("gui.vampirism.minion_stats"), mouseX, mouseY);
         } else {
             super.renderTooltip(mStack, mouseX, mouseY);
         }
     }
 
 
-    private void drawButtonTip(MatrixStack mStack, ITextComponent text, int mouseX, int mouseY) {
+    private void drawButtonTip(PoseStack mStack, Component text, int mouseX, int mouseY) {
         GuiUtils.drawHoveringText(ItemStack.EMPTY, mStack, Collections.singletonList(text), mouseX, mouseY, minecraft.getWindow().getGuiScaledWidth(), minecraft.getWindow().getGuiScaledHeight(), -1, font);
     }
 
-    private ITextComponent getActiveTaskName() {
+    private Component getActiveTaskName() {
         return menu.getSelectedTask().getName();
     }
 

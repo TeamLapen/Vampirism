@@ -7,14 +7,14 @@ import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.command.arguments.ActionArgument;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class BindActionCommand extends BasicCommand {
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("bind-action")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ALL))
                 .then(Commands.argument("shortcutnumber", IntegerArgumentType.integer(1, 3))
@@ -24,14 +24,14 @@ public class BindActionCommand extends BasicCommand {
                         .executes(BindActionCommand::help));
     }
 
-    private static int bindAction(CommandContext<CommandSource> context, ServerPlayerEntity asPlayer, int number, IAction action) {
+    private static int bindAction(CommandContext<CommandSourceStack> context, ServerPlayer asPlayer, int number, IAction action) {
         FactionPlayerHandler.get(asPlayer).setBoundAction(number, action, true, true);
-        context.getSource().sendSuccess(new TranslationTextComponent("command.vampirism.base.bind_action.success", action.getName(), number), false);
+        context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.base.bind_action.success", action.getName(), number), false);
         return 0;
     }
 
-    private static int help(CommandContext<CommandSource> context) {
-        context.getSource().sendSuccess(new TranslationTextComponent("command.vampirism.base.bind_action.help"), false);
+    private static int help(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.base.bind_action.help"), false);
         return 0;
     }
 

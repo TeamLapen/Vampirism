@@ -7,23 +7,23 @@ import de.teamlapen.lib.network.UpdateEntityPacket;
 import de.teamlapen.lib.util.ISoundReference;
 import de.teamlapen.lib.util.SoundReference;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.common.thread.EffectiveSide;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fml.util.thread.EffectiveSide;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,9 +33,9 @@ import javax.annotation.Nonnull;
 public class ClientProxy extends CommonProxy {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private static void handleCapability(Entity e, ResourceLocation key, CompoundNBT data) {
+    private static void handleCapability(Entity e, ResourceLocation key, CompoundTag data) {
         Capability cap = HelperRegistry.getSyncableEntityCaps().get(key);
-        if (cap == null && e instanceof PlayerEntity) {
+        if (cap == null && e instanceof Player) {
             cap = HelperRegistry.getSyncablePlayerCaps().get(key);
         }
         if (cap == null) {
@@ -59,19 +59,19 @@ public class ClientProxy extends CommonProxy {
     @Nonnull
     @Override
     public ISoundReference createMasterSoundReference(SoundEvent event, float volume, float pinch) {
-        return new SoundReference(SimpleSound.forUI(event, volume, pinch));
+        return new SoundReference(SimpleSoundInstance.forUI(event, volume, pinch));
     }
 
     @Nonnull
     @Override
-    public ISoundReference createSoundReference(SoundEvent event, SoundCategory category, BlockPos pos, float volume, float pinch) {
-        return new SoundReference(new SimpleSound(event, category, volume, pinch, pos));
+    public ISoundReference createSoundReference(SoundEvent event, SoundSource category, BlockPos pos, float volume, float pinch) {
+        return new SoundReference(new SimpleSoundInstance(event, category, volume, pinch, pos));
     }
 
     @Nonnull
     @Override
-    public ISoundReference createSoundReference(SoundEvent event, SoundCategory category, double x, double y, double z, float volume, float pinch) {
-        return new SoundReference(new SimpleSound(event, category, volume, pinch, (float) x, (float) y, (float) z));
+    public ISoundReference createSoundReference(SoundEvent event, SoundSource category, double x, double y, double z, float volume, float pinch) {
+        return new SoundReference(new SimpleSoundInstance(event, category, volume, pinch, (float) x, (float) y, (float) z));
     }
 
     @Override
@@ -80,16 +80,16 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public PlayerEntity getPlayerEntity(NetworkEvent.Context ctx) {
+    public Player getPlayerEntity(NetworkEvent.Context ctx) {
         //Need to double check the side for some reason
         return (EffectiveSide.get() == LogicalSide.CLIENT ? Minecraft.getInstance().player : super.getPlayerEntity(ctx));
     }
 
     @Override
-    public World getWorldFromKey(RegistryKey<World> world) {
-        World serverWorld = super.getWorldFromKey(world);
+    public Level getWorldFromKey(ResourceKey<Level> world) {
+        Level serverWorld = super.getWorldFromKey(world);
         if (serverWorld != null) return serverWorld;
-        World clientWorld = Minecraft.getInstance().level;
+        Level clientWorld = Minecraft.getInstance().level;
         if (clientWorld != null) {
             if (clientWorld.dimension().equals(world)) {
                 return clientWorld;
@@ -100,7 +100,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void handleUpdateEntityPacket(UpdateEntityPacket msg) {
-        PlayerEntity player = Minecraft.getInstance().player;
+        Player player = Minecraft.getInstance().player;
         if (player == null) {
             LOGGER.error("Cannot handle update package because sending player entity is null. Message: {}", msg);
         } else {

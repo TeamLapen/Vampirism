@@ -1,16 +1,16 @@
 package de.teamlapen.vampirism.client.render.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.render.layers.HunterEquipmentLayer;
 import de.teamlapen.vampirism.client.render.layers.TaskMasterTypeLayer;
 import de.teamlapen.vampirism.entity.hunter.HunterTaskMasterEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.model.VillagerModel;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.model.VillagerModel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -24,7 +24,7 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
     private final static ResourceLocation texture = new ResourceLocation("textures/entity/villager/villager.png");
     private final static ResourceLocation overlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_task_master_overlay.png");
 
-    public HunterTaskMasterRenderer(EntityRendererManager renderManagerIn) {
+    public HunterTaskMasterRenderer(EntityRenderDispatcher renderManagerIn) {
         super(renderManagerIn, new VillagerModel<>(0f), 0.5F);
 //        this.addLayer(new HeldItemLayer<>(this));
         this.addLayer(new TaskMasterTypeLayer<>(this, overlay));
@@ -37,7 +37,7 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
     }
 
     @Override
-    protected void renderNameTag(HunterTaskMasterEntity entityIn, ITextComponent displayNameIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+    protected void renderNameTag(HunterTaskMasterEntity entityIn, Component displayNameIn, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
         double dist = this.entityRenderDispatcher.distanceToSqr(entityIn);
         if (dist <= 128) {
             super.renderNameTag(entityIn, displayNameIn, matrixStackIn, bufferIn, packedLightIn);

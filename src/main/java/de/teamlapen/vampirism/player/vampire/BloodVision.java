@@ -4,8 +4,8 @@ import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.chat.TranslatableComponent;
 
 /**
  * Blood vision
@@ -19,12 +19,12 @@ public class BloodVision implements IVampireVision {
     @Override
     public void onActivated(IVampirePlayer player) {
         ((VampirePlayer) player).getSpecialAttributes().blood_vision = true;
-        PlayerEntity entity = player.getRepresentingPlayer();
+        Player entity = player.getRepresentingPlayer();
         if (entity.level.isClientSide() && OptifineHandler.isShaders()) {
             if (!VampirismConfig.COMMON.optifineBloodvisionWarning.get()) {
                 VampirismConfig.COMMON.optifineBloodvisionWarning.set(true);
                 VampirismConfig.COMMON.optifineBloodvisionWarning.save();
-                entity.displayClientMessage(new TranslationTextComponent("text.vampirism.warning_optifine_bloodvision"), false);
+                entity.displayClientMessage(new TranslatableComponent("text.vampirism.warning_optifine_bloodvision"), false);
             }
         }
     }

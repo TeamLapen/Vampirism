@@ -11,10 +11,10 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,10 +24,10 @@ import java.util.concurrent.CompletableFuture;
 public class FactionArgument implements ArgumentType<IPlayableFaction<?>> {
     private static final Collection<String> EXAMPLES = Arrays.asList("vampirism:vampire", "vampirism:hunter");
 
-    private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((id) -> new TranslationTextComponent("command.vampirism.argument.faction.notfound", id));
-    private static final DynamicCommandExceptionType FACTION_NOT_PLAYABLE = new DynamicCommandExceptionType((id) -> new TranslationTextComponent("command.vampirism.argument.faction.notplayable", id));
+    private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((id) -> new TranslatableComponent("command.vampirism.argument.faction.notfound", id));
+    private static final DynamicCommandExceptionType FACTION_NOT_PLAYABLE = new DynamicCommandExceptionType((id) -> new TranslatableComponent("command.vampirism.argument.faction.notplayable", id));
 
-    public static IPlayableFaction<IFactionPlayer<?>> getFaction(CommandContext<CommandSource> context, String id) {
+    public static IPlayableFaction<IFactionPlayer<?>> getFaction(CommandContext<CommandSourceStack> context, String id) {
         return (IPlayableFaction<IFactionPlayer<?>>) context.getArgument(id, IFaction.class);
     }
 
@@ -42,7 +42,7 @@ public class FactionArgument implements ArgumentType<IPlayableFaction<?>> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return ISuggestionProvider.suggest(Arrays.stream(VampirismAPI.factionRegistry().getFactions()).map(i -> i.getID().toString()), builder);
+        return SharedSuggestionProvider.suggest(Arrays.stream(VampirismAPI.factionRegistry().getFactions()).map(i -> i.getID().toString()), builder);
     }
 
     @Override

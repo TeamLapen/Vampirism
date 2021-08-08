@@ -2,12 +2,12 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -22,14 +22,14 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
     private final Map<Attribute, LazyOptional<AttributeModifier>> attributeModifierMap = new HashMap<>();
     private int renderRow;
     private int renderColumn;
-    private ITextComponent name;
+    private Component name;
 
     @Override
-    public ITextComponent getName() {
-        return name == null ? name = new TranslationTextComponent(getTranslationKey()) : name;
+    public Component getName() {
+        return name == null ? name = new TranslatableComponent(getTranslationKey()) : name;
     }
 
-    public DefaultSkill<T> setName(ITextComponent name) {
+    public DefaultSkill<T> setName(Component name) {
         this.name = name;
         return this;
     }
@@ -117,9 +117,9 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
     protected void onEnabled(T player) {
     }
 
-    private void applyAttributesModifiersToEntity(PlayerEntity player) {
+    private void applyAttributesModifiersToEntity(Player player) {
         for (Map.Entry<Attribute, LazyOptional<AttributeModifier>> entry : this.attributeModifierMap.entrySet()) {
-            ModifiableAttributeInstance iattributeinstance = player.getAttribute(entry.getKey());
+            AttributeInstance iattributeinstance = player.getAttribute(entry.getKey());
 
             if (iattributeinstance != null) {
                 AttributeModifier attributemodifier = entry.getValue().orElseThrow(IllegalStateException::new);
@@ -140,9 +140,9 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
         return collection;
     }
 
-    private void removeAttributesModifiersFromEntity(PlayerEntity player) {
+    private void removeAttributesModifiersFromEntity(Player player) {
         for (Map.Entry<Attribute, LazyOptional<AttributeModifier>> entry : this.attributeModifierMap.entrySet()) {
-            ModifiableAttributeInstance iattributeinstance = player.getAttribute(entry.getKey());
+            AttributeInstance iattributeinstance = player.getAttribute(entry.getKey());
 
             if (iattributeinstance != null) {
                 iattributeinstance.removeModifier(entry.getValue().orElseThrow(IllegalStateException::new));

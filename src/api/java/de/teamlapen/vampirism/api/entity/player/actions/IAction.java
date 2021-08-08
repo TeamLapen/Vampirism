@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -42,8 +42,8 @@ public interface IAction extends IForgeRegistryEntry<IAction> {
     @Nonnull
     IPlayableFaction getFaction();
 
-    default ITextComponent getName() {
-        return new TranslationTextComponent(getTranslationKey());
+    default Component getName() {
+        return new TranslatableComponent(getTranslationKey());
     }
 
     /**
@@ -60,7 +60,7 @@ public interface IAction extends IForgeRegistryEntry<IAction> {
      */
     boolean onActivated(IFactionPlayer player);
 
-    default boolean showInSelectAction(PlayerEntity player) {
+    default boolean showInSelectAction(Player player) {
         return true;
     }
 

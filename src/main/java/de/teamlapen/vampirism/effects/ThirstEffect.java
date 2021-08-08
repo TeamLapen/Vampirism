@@ -2,22 +2,22 @@ package de.teamlapen.vampirism.effects;
 
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.EffectType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.effect.MobEffectCategory;
 
 
 public class ThirstEffect extends VampirismEffect {
-    public ThirstEffect(String name, EffectType effectType, int potionColor) {
+    public ThirstEffect(String name, MobEffectCategory effectType, int potionColor) {
         super(name, effectType, potionColor);
         addAttributeModifier(ModAttributes.blood_exhaustion, "f6d9889e-dfdc-11e5-b86d-9a79f06e9478", 0.5F, AttributeModifier.Operation.ADDITION);
     }
 
     @Override
     public void applyEffectTick(LivingEntity entity, int amplifier) {
-        if (entity instanceof PlayerEntity && entity.isAlive()) {
-            VampirePlayer.getOpt((PlayerEntity) entity).ifPresent(v -> v.addExhaustion(0.005F * (amplifier + 1)));
+        if (entity instanceof Player && entity.isAlive()) {
+            VampirePlayer.getOpt((Player) entity).ifPresent(v -> v.addExhaustion(0.005F * (amplifier + 1)));
         }
     }
 

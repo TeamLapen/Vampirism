@@ -9,29 +9,35 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.stats.Stats;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import net.minecraft.Util;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 /**
  * Block which represents the top and the bottom part of a "Medical Chair" used for injections
@@ -53,23 +59,23 @@ public class MedChairBlock extends VampirismHorizontalBlock {
 
     @Nonnull
     @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         return new ItemStack(ModItems.item_med_chair);
     }
 
     @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
         return state.getValue(PART) == EnumPart.BOTTOM ? SHAPE_BOTTOM : SHAPE_TOP;
     }
 
     @Override
-    public void playerDestroy(@Nonnull World worldIn, @Nonnull PlayerEntity player, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable TileEntity te, @Nonnull ItemStack stack) {
+    public void playerDestroy(@Nonnull Level worldIn, @Nonnull Player player, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable BlockEntity te, @Nonnull ItemStack stack) {
         super.playerDestroy(worldIn, player, pos, Blocks.AIR.defaultBlockState(), te, stack);
     }
 
     @Override
-    public void playerWillDestroy(@Nonnull World worldIn, @Nonnull BlockPos pos, BlockState state, @Nonnull PlayerEntity player) {
+    public void playerWillDestroy(@Nonnull Level worldIn, @Nonnull BlockPos pos, BlockState state, @Nonnull Player player) {
         EnumPart part = state.getValue(PART);
         BlockPos other;
         Direction dir = state.getValue(FACING);
@@ -94,7 +100,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
 
     @Nonnull
     @Override
-    public ActionResultType use(@Nonnull BlockState state, @Nonnull World world, @Nonnull BlockPos pos, PlayerEntity player, @Nonnull Hand hand, @Nonnull BlockRayTraceResult hit) {
+    public InteractionResult use(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
         if (player.isAlive()) {
             ItemStack stack = player.getItemInHand(hand);
             if (handleInjections(player, world, stack)) {
@@ -104,34 +110,34 @@ public class MedChairBlock extends VampirismHorizontalBlock {
                 }
             }
         } else if (world.isClientSide) {
-            player.displayClientMessage(new TranslationTextComponent("text.vampirism.need_item_to_use", new TranslationTextComponent((new ItemStack(ModItems.injection_garlic).getDescriptionId()))), true);
+            player.displayClientMessage(new TranslatableComponent("text.vampirism.need_item_to_use", new TranslatableComponent((new ItemStack(ModItems.injection_garlic).getDescriptionId()))), true);
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, PART);
     }
 
-    private boolean handleGarlicInjection(@Nonnull PlayerEntity player, @Nonnull World world, @Nonnull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
+    private boolean handleGarlicInjection(@Nonnull Player player, @Nonnull Level world, @Nonnull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
         if (handler.canJoin(VReference.HUNTER_FACTION)) {
             if (world.isClientSide) {
                 VampirismMod.proxy.renderScreenFullColor(4, 30, 0xBBBBBBFF);
             } else {
                 handler.joinFaction(VReference.HUNTER_FACTION);
-                player.addEffect(new EffectInstance(ModEffects.poison, 200, 1));
+                player.addEffect(new MobEffectInstance(ModEffects.poison, 200, 1));
             }
             return true;
         } else if (currentFaction != null) {
             if (!world.isClientSide) {
-                player.sendMessage(new TranslationTextComponent("text.vampirism.med_chair_other_faction", currentFaction.getName()), Util.NIL_UUID);
+                player.sendMessage(new TranslatableComponent("text.vampirism.med_chair_other_faction", currentFaction.getName()), Util.NIL_UUID);
             }
         }
         return false;
     }
 
-    private boolean handleInjections(PlayerEntity player, World world, ItemStack stack) {
+    private boolean handleInjections(Player player, Level world, ItemStack stack) {
         IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
         IPlayableFaction<?> faction = handler.getCurrentFaction();
         if (stack.getItem().equals(ModItems.injection_garlic)) {
@@ -146,9 +152,9 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         return false;
     }
 
-    private boolean handleSanguinareInjection(@Nonnull PlayerEntity player, @Nonnull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
+    private boolean handleSanguinareInjection(@Nonnull Player player, @Nonnull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
         if (VReference.VAMPIRE_FACTION.equals(currentFaction)) {
-            player.displayClientMessage(new TranslationTextComponent("text.vampirism.already_vampire"), false);
+            player.displayClientMessage(new TranslatableComponent("text.vampirism.already_vampire"), false);
             return false;
         }
         if (VReference.HUNTER_FACTION.equals(currentFaction)) {
@@ -158,10 +164,10 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         if (currentFaction == null) {
             if (handler.canJoin(VReference.VAMPIRE_FACTION)) {
                 if (VampirismConfig.SERVER.disableFangInfection.get()) {
-                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.deactivated_by_serveradmin"), true);
+                    player.displayClientMessage(new TranslatableComponent("text.vampirism.deactivated_by_serveradmin"), true);
                 } else {
                     SanguinareEffect.addRandom(player, true);
-                    player.addEffect(new EffectInstance(ModEffects.poison, 60));
+                    player.addEffect(new MobEffectInstance(ModEffects.poison, 60));
                     return true;
                 }
             }
@@ -169,13 +175,13 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         return false;
     }
 
-    private boolean handleZombieBloodInjection(@Nonnull PlayerEntity player) {
-        player.addEffect(new EffectInstance(ModEffects.poison, 200));
+    private boolean handleZombieBloodInjection(@Nonnull Player player) {
+        player.addEffect(new MobEffectInstance(ModEffects.poison, 200));
         return true;
     }
 
 
-    public enum EnumPart implements IStringSerializable {
+    public enum EnumPart implements StringRepresentable {
         TOP("top", 0), BOTTOM("bottom", 1);
 
         public static EnumPart fromMeta(int meta) {

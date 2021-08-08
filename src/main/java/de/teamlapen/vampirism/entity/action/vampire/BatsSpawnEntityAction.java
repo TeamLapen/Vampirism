@@ -8,10 +8,10 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.sounds.SoundSource;
 
-public class BatsSpawnEntityAction<T extends CreatureEntity & IEntityActionUser> extends VampireEntityAction<T> implements IInstantAction<T> {
+public class BatsSpawnEntityAction<T extends PathfinderMob & IEntityActionUser> extends VampireEntityAction<T> implements IInstantAction<T> {
 
     public BatsSpawnEntityAction(EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
@@ -28,7 +28,7 @@ public class BatsSpawnEntityAction<T extends CreatureEntity & IEntityActionUser>
                 entity.getCommandSenderWorld().addFreshEntity(e);
             });
         }
-        entity.getCommandSenderWorld().playSound(null, entity.getX(), entity.getY(), entity.getZ(), ModSounds.bat_swarm, SoundCategory.PLAYERS, 1.3F, entity.getCommandSenderWorld().random.nextFloat() * 0.2F + 1.3F);
+        entity.getCommandSenderWorld().playSound(null, entity.getX(), entity.getY(), entity.getZ(), ModSounds.bat_swarm, SoundSource.PLAYERS, 1.3F, entity.getCommandSenderWorld().random.nextFloat() * 0.2F + 1.3F);
         return true;
     }
 

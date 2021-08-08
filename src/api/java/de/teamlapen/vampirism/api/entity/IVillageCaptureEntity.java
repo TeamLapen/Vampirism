@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.api.entity;
 
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nullable;
 
@@ -26,7 +26,7 @@ public interface IVillageCaptureEntity extends IFactionEntity {
      * @return The village area that is target of the capture
      */
     @Nullable
-    AxisAlignedBB getTargetVillageArea();
+    AABB getTargetVillageArea();
 
     /**
      * if this village is

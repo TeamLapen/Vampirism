@@ -6,14 +6,14 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.command.arguments.FactionArgument;
 import de.teamlapen.vampirism.tileentity.TotemHelper;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.BlockPos;
 
 public class VillageCommand extends BasicCommand {
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("village")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
                 .then(Commands.literal("capture")
@@ -24,12 +24,12 @@ public class VillageCommand extends BasicCommand {
 
     }
 
-    private static int capture(CommandSource source, ServerPlayerEntity player, IPlayableFaction<?> faction) {
+    private static int capture(CommandSourceStack source, ServerPlayer player, IPlayableFaction<?> faction) {
         source.sendSuccess(TotemHelper.forceFactionCommand(faction, player), true);
         return 0;
     }
 
-    private static int abort(CommandSource source) {
+    private static int abort(CommandSourceStack source) {
         TotemHelper.getTotemNearPos(source.getLevel(), new BlockPos(source.getPosition()), true).ifPresent(TotemTileEntity::breakCapture);
         return 0;
     }

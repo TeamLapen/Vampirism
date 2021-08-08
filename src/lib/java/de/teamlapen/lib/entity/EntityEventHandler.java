@@ -5,9 +5,9 @@ import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.network.UpdateEntityPacket;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -38,7 +38,7 @@ public class EntityEventHandler {
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (event.getEntity() instanceof PlayerEntity) {
+        if (event.getEntity() instanceof Player) {
             for (Capability listener : listeners) {
 
                 (event.getEntity().getCapability(listener, null)).ifPresent(cap -> {
@@ -51,7 +51,7 @@ public class EntityEventHandler {
 
     @SubscribeEvent
     public void onLivingAttack(LivingAttackEvent event) {
-        if (event.getEntity() instanceof PlayerEntity) {
+        if (event.getEntity() instanceof Player) {
             for (Capability listener : listeners) {
                 boolean cancel = (boolean) event.getEntity().getCapability(listener, null).map(cap -> ((IPlayerEventListener) cap).onEntityAttacked(event.getSource(), event.getAmount())).orElse(false);
                 if (cancel) {
@@ -63,12 +63,12 @@ public class EntityEventHandler {
 
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event) {
-        if (event.getEntity() instanceof PlayerEntity) {
+        if (event.getEntity() instanceof Player) {
             for (Capability listener : listeners) {
                 (event.getEntity().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onDeath(event.getSource()));
             }
         }
-        if (event.getSource().getEntity() instanceof PlayerEntity) {
+        if (event.getSource().getEntity() instanceof Player) {
             for (Capability listener : listeners) {
                 (event.getSource().getEntity().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onEntityKilled(event.getEntityLiving(), event.getSource()));
             }
@@ -77,7 +77,7 @@ public class EntityEventHandler {
 
     @SubscribeEvent
     public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
-        if (event.getEntity() instanceof PlayerEntity) {
+        if (event.getEntity() instanceof Player) {
             for (Capability listener : listeners) {
                 event.getEntity().getCapability(listener, null).ifPresent(cap -> ((IPlayerEventListener) cap).onUpdate());
             }
@@ -115,10 +115,10 @@ public class EntityEventHandler {
 
     @SubscribeEvent
     public void onStartTracking(PlayerEvent.StartTracking event) {
-        if ((event.getTarget() instanceof CreatureEntity && HelperRegistry.getSyncableEntityCaps().size() > 0) || event.getTarget() instanceof ISyncable || (event.getTarget() instanceof PlayerEntity && HelperRegistry.getSyncablePlayerCaps().size() > 0)) {
+        if ((event.getTarget() instanceof PathfinderMob && HelperRegistry.getSyncableEntityCaps().size() > 0) || event.getTarget() instanceof ISyncable || (event.getTarget() instanceof Player && HelperRegistry.getSyncablePlayerCaps().size() > 0)) {
             UpdateEntityPacket packet = UpdateEntityPacket.createJoinWorldPacket(event.getTarget());
             if (packet != null) {
-                VampLib.dispatcher.sendTo(packet, (ServerPlayerEntity) event.getPlayer());
+                VampLib.dispatcher.sendTo(packet, (ServerPlayer) event.getPlayer());
             }
         }
     }

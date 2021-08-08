@@ -4,21 +4,21 @@ import com.google.common.base.Stopwatch;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.fluids.BloodHelper;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.GameType;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -44,13 +44,13 @@ public class Tests {
 
     private final static Logger LOGGER = LogManager.getLogger(Tests.class);
 
-    public static void runTests(World world, PlayerEntity player) {
+    public static void runTests(Level world, Player player) {
         sendMsg(player, "Starting tests");
         LOGGER.warn("Clearing area", new Object[]{});
         clearArea(world);
         boolean wasCreative = player.isCreative();
         player.setGameMode(GameType.SURVIVAL);
-        player.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 40, 100));
+        player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 40, 100));
         player.randomTeleport(0, 5, 0, true);
         TestInfo info = new TestInfo(world, player, new BlockPos(-20, 2, -20), "BloodFluidHandler");
 
@@ -75,7 +75,7 @@ public class Tests {
         sendMsg(info.player, info.name + " test " + (result ? "§2was successful§r" : "§4failed§r"));
     }
 
-    private static void runLightTest(LightTester tester, String name, @Nullable PlayerEntity player) {
+    private static void runLightTest(LightTester tester, String name, @Nullable Player player) {
         boolean result;
         try {
             result = tester.run();
@@ -138,7 +138,7 @@ public class Tests {
 
     private static boolean bloodFluidHandler(TestInfo info) {
         info.world.setBlockAndUpdate(info.pos, ModBlocks.blood_container.defaultBlockState());
-        TileEntity t = info.world.getBlockEntity(info.pos);
+        BlockEntity t = info.world.getBlockEntity(info.pos);
         LazyOptional<IFluidHandler> opt = t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.getRandom(info.world.random));
         opt.ifPresent(handler -> handler.fill(new FluidStack(ModFluids.blood, 10000000), IFluidHandler.FluidAction.EXECUTE));
         int blood = BloodHelper.getBlood(opt);
@@ -170,7 +170,7 @@ public class Tests {
         info.world.setBlockAndUpdate(info.pos, ModBlocks.weapon_table.defaultBlockState());
         info.player.setItemInHand(info.player.getUsedItemHand(), new ItemStack(Items.LAVA_BUCKET));
         BlockState block = info.world.getBlockState(info.pos);
-        block.use(info.world, info.player, info.player.getUsedItemHand(), new BlockRayTraceResult(new Vector3d(0, 0, 0), Direction.getRandom(info.world.random), info.pos, false));
+        block.use(info.world, info.player, info.player.getUsedItemHand(), new BlockHitResult(new Vec3(0, 0, 0), Direction.getRandom(info.world.random), info.pos, false));
         block = info.world.getBlockState(info.pos);
         assert info.player.getItemInHand(info.player.getUsedItemHand()).getItem().equals(Items.BUCKET) : "Incorrect Fluid Container Handling";
         LOGGER.warn("Block lava level: {}", new Object[]{block.getValue(WeaponTableBlock.LAVA)});
@@ -178,11 +178,11 @@ public class Tests {
         return true;
     }
 
-    private static void sendMsg(PlayerEntity player, String msg) {
-        player.displayClientMessage(new StringTextComponent("§1[V-TEST]§r " + msg), false);
+    private static void sendMsg(Player player, String msg) {
+        player.displayClientMessage(new TextComponent("§1[V-TEST]§r " + msg), false);
     }
 
-    private static void clearArea(World world) {
+    private static void clearArea(Level world) {
         for (int x = -21; x < 22; x++) {
             for (int y = 1; y < 22; y++) {
                 for (int z = -21; z < 22; z++) {
@@ -216,12 +216,12 @@ public class Tests {
     }
 
     private static class TestInfo {
-        final World world;
-        final PlayerEntity player;
+        final Level world;
+        final Player player;
         BlockPos pos;
         String name;
 
-        private TestInfo(World world, PlayerEntity player, BlockPos pos, String name) {
+        private TestInfo(Level world, Player player, BlockPos pos, String name) {
             this.world = world;
             this.player = player;
             this.pos = pos;

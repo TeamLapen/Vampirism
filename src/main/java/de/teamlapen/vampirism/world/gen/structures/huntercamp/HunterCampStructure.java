@@ -1,38 +1,40 @@
 package de.teamlapen.vampirism.world.gen.structures.huntercamp;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.registry.DynamicRegistries;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.feature.structure.StructureStart;
-import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-@ParametersAreNonnullByDefault
-public class HunterCampStructure extends Structure<NoFeatureConfig> {
+import net.minecraft.world.level.levelgen.feature.StructureFeature.StructureStartFactory;
 
-    public HunterCampStructure(Codec<NoFeatureConfig> deserializer) {
+@ParametersAreNonnullByDefault
+public class HunterCampStructure extends StructureFeature<NoneFeatureConfiguration> {
+
+    public HunterCampStructure(Codec<NoneFeatureConfiguration> deserializer) {
         super(deserializer);
     }
 
     @Nonnull
     @Override
-    public IStartFactory<NoFeatureConfig> getStartFactory() {
+    public StructureStartFactory<NoneFeatureConfiguration> getStartFactory() {
         return Start::new;
     }
 
-    public static class Start extends StructureStart<NoFeatureConfig> {
-        public Start(Structure<NoFeatureConfig> structure, int chunkX, int chunkZ, MutableBoundingBox boundsIn, int referenceIn, long seed) {
+    public static class Start extends StructureStart<NoneFeatureConfiguration> {
+        public Start(StructureFeature<NoneFeatureConfiguration> structure, int chunkX, int chunkZ, BoundingBox boundsIn, int referenceIn, long seed) {
             super(structure, chunkX, chunkZ, boundsIn, referenceIn, seed);
         }
 
         @Override
-        public void generatePieces(DynamicRegistries registries, ChunkGenerator chunkGenerator, TemplateManager templateManager, int chunkX, int chunkZ, Biome biomeIn, NoFeatureConfig featureConfig) {
+        public void generatePieces(RegistryAccess registries, ChunkGenerator chunkGenerator, StructureManager templateManager, int chunkX, int chunkZ, Biome biomeIn, NoneFeatureConfiguration featureConfig) {
             HunterCampPieces.init(chunkX, chunkZ, biomeIn, this.random, this.pieces);
             this.calculateBoundingBox();
         }

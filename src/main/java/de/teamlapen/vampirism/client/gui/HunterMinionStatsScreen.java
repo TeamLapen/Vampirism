@@ -1,21 +1,21 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.Nullable;
 
 
 public class HunterMinionStatsScreen extends MinionStatsScreen<HunterMinionEntity.HunterMinionData, HunterMinionEntity> {
 
-    private final TranslationTextComponent inventoryLevel = new TranslationTextComponent("text.vampirism.minion.stats.inventory_level");
-    private final TranslationTextComponent healthLevel = new TranslationTextComponent(Attributes.MAX_HEALTH.getDescriptionId());
-    private final TranslationTextComponent strengthLevel = new TranslationTextComponent(Attributes.ATTACK_DAMAGE.getDescriptionId());
-    private final TranslationTextComponent resourceLevel = new TranslationTextComponent("text.vampirism.minion.stats.resource_level");
+    private final TranslatableComponent inventoryLevel = new TranslatableComponent("text.vampirism.minion.stats.inventory_level");
+    private final TranslatableComponent healthLevel = new TranslatableComponent(Attributes.MAX_HEALTH.getDescriptionId());
+    private final TranslatableComponent strengthLevel = new TranslatableComponent(Attributes.ATTACK_DAMAGE.getDescriptionId());
+    private final TranslatableComponent resourceLevel = new TranslatableComponent("text.vampirism.minion.stats.resource_level");
 
     public HunterMinionStatsScreen(HunterMinionEntity entity, @Nullable Screen backScreen) {
         super(entity, 4, backScreen);
@@ -48,12 +48,12 @@ public class HunterMinionStatsScreen extends MinionStatsScreen<HunterMinionEntit
     }
 
     @Override
-    protected void renderStats(MatrixStack mStack, HunterMinionEntity.HunterMinionData data) {
+    protected void renderStats(PoseStack mStack, HunterMinionEntity.HunterMinionData data) {
         renderLevelRow(mStack, data.getLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL + 1);
-        renderStatRow(mStack, 0, inventoryLevel, new StringTextComponent("" + data.getInventorySize()), data.getInventoryLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_INVENTORY + 1);
-        renderStatRow(mStack, 1, healthLevel, new StringTextComponent("" + entity.getAttribute(Attributes.MAX_HEALTH).getBaseValue()), data.getHealthLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_HEALTH + 1);
-        renderStatRow(mStack, 2, strengthLevel, new StringTextComponent("" + entity.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue()), data.getStrengthLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_STRENGTH + 1);
-        renderStatRow(mStack, 3, resourceLevel, new StringTextComponent("" + (int) (Math.ceil((float) (data.getResourceEfficiencyLevel() + 1) / (HunterMinionEntity.HunterMinionData.MAX_LEVEL_RESOURCES + 1) * 100)) + "%"), data.getResourceEfficiencyLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_RESOURCES + 1);
+        renderStatRow(mStack, 0, inventoryLevel, new TextComponent("" + data.getInventorySize()), data.getInventoryLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_INVENTORY + 1);
+        renderStatRow(mStack, 1, healthLevel, new TextComponent("" + entity.getAttribute(Attributes.MAX_HEALTH).getBaseValue()), data.getHealthLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_HEALTH + 1);
+        renderStatRow(mStack, 2, strengthLevel, new TextComponent("" + entity.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue()), data.getStrengthLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_STRENGTH + 1);
+        renderStatRow(mStack, 3, resourceLevel, new TextComponent("" + (int) (Math.ceil((float) (data.getResourceEfficiencyLevel() + 1) / (HunterMinionEntity.HunterMinionData.MAX_LEVEL_RESOURCES + 1) * 100)) + "%"), data.getResourceEfficiencyLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_RESOURCES + 1);
 
     }
 }

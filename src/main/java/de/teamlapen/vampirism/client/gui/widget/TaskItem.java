@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.gui.widget;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWithDummyWidget;
 import de.teamlapen.vampirism.REFERENCE;
@@ -15,29 +15,33 @@ import de.teamlapen.vampirism.client.gui.ExtendedScreen;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.player.tasks.reward.ItemRewardInstance;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.*;
-import net.minecraftforge.fml.client.gui.GuiUtils;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.tags.Tag;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 /**
  * Element for {@link ScrollableListWithDummyWidget} that presents a {@link Task}
@@ -46,9 +50,9 @@ import java.util.Optional;
  */
 public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListWithDummyWidget.ListItem<ITaskInstance> {
     protected static final ResourceLocation TASKMASTER_GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/taskmaster.png");
-    protected static final ITextComponent REWARD = new TranslationTextComponent("gui.vampirism.taskmaster.reward").withStyle(TextFormatting.UNDERLINE);
-    protected static final ITextComponent REQUIREMENT = new TranslationTextComponent("gui.vampirism.taskmaster.requirement").withStyle(TextFormatting.UNDERLINE);
-    protected static final ITextComponent REQUIREMENT_STRIKE = REQUIREMENT.plainCopy().withStyle(TextFormatting.STRIKETHROUGH);
+    protected static final Component REWARD = new TranslatableComponent("gui.vampirism.taskmaster.reward").withStyle(ChatFormatting.UNDERLINE);
+    protected static final Component REQUIREMENT = new TranslatableComponent("gui.vampirism.taskmaster.requirement").withStyle(ChatFormatting.UNDERLINE);
+    protected static final Component REQUIREMENT_STRIKE = REQUIREMENT.plainCopy().withStyle(ChatFormatting.STRIKETHROUGH);
     protected static final ItemStack SKULL_ITEM = new ItemStack(Blocks.SKELETON_SKULL);
     protected static final ItemStack PAPER = new ItemStack(Items.PAPER);
 
@@ -56,7 +60,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     protected final IFactionPlayer<?> factionPlayer;
     private final TaskActionButton taskButton;
 
-    private final Map<ITaskInstance, List<ITextComponent>> toolTips = Maps.newHashMap();
+    private final Map<ITaskInstance, List<Component>> toolTips = Maps.newHashMap();
 
 
     public TaskItem(ITaskInstance item, ScrollableListWithDummyWidget<ITaskInstance> list, boolean isDummy, T screen, IFactionPlayer<?> factionPlayer) {
@@ -66,16 +70,16 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         this.taskButton = isDummy ? new TaskActionButton(0, 0) : null;
     }
 
-    public List<ITextComponent> getTooltipFromItem2(ItemStack itemStack, boolean strikeThough, @Nullable String bonus) {
-        List<ITextComponent> list = itemStack.getTooltipLines(Minecraft.getInstance().player, Minecraft.getInstance().options.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
-        List<ITextComponent> list1 = Lists.newArrayList();
+    public List<Component> getTooltipFromItem2(ItemStack itemStack, boolean strikeThough, @Nullable String bonus) {
+        List<Component> list = itemStack.getTooltipLines(Minecraft.getInstance().player, Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL);
+        List<Component> list1 = Lists.newArrayList();
         for (int i = 0; i < list.size(); i++) {
             if (i == 0) {
-                IFormattableTextComponent t = list.get(0).copy().append(" " + (bonus != null ? bonus : "") + itemStack.getCount());
-                if (strikeThough) t.withStyle(TextFormatting.STRIKETHROUGH);
+                MutableComponent t = list.get(0).copy().append(" " + (bonus != null ? bonus : "") + itemStack.getCount());
+                if (strikeThough) t.withStyle(ChatFormatting.STRIKETHROUGH);
                 list1.add(t);
             } else {
-                list1.add(strikeThough ? list.get(i).copy().withStyle(TextFormatting.STRIKETHROUGH) : list.get(i));
+                list1.add(strikeThough ? list.get(i).copy().withStyle(ChatFormatting.STRIKETHROUGH) : list.get(i));
             }
         }
         return list1;
@@ -88,7 +92,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     }
 
     @Override
-    public void renderDummy(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
+    public void renderDummy(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
         //render background
         RenderSystem.enableDepthTest();
         GuiUtils.drawContinuousTexturedBox(matrixStack, TASKMASTER_GUI_TEXTURE, x, y, 17, 208, listWidth, itemHeight, 136, 21, 3, 3, 3, 3, zLevel);
@@ -129,7 +133,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     }
 
     @Override
-    public void renderDummyToolTip(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
+    public void renderDummyToolTip(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
         if (mouseX >= x + 3 + 113 - 21 + 1 && mouseX < x + 3 + 113 - 21 + 16 + 1 && mouseY >= y + 2 && mouseY < y + 2 + 16) {
             ITaskRewardInstance reward = this.item.getReward();
             if (reward instanceof ItemRewardInstance) {
@@ -148,23 +152,23 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     }
 
     @Override
-    public void renderItem(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
+    public void renderItem(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
         //render background
         RenderSystem.enableDepthTest();
 
         this.colorTask();
         Minecraft.getInstance().textureManager.bind(TASKMASTER_GUI_TEXTURE);
-        AbstractGui.blit(matrixStack, x, y, this.screen.getBlitOffset(), 17, 187, 136, 21, 256, 256);
-        AbstractGui.blit(matrixStack, x + 132, y, this.screen.getBlitOffset(), 17 + 133, 187, 136 - 133, 21, 256, 256);
+        GuiComponent.blit(matrixStack, x, y, this.screen.getBlitOffset(), 17, 187, 136, 21, 256, 256);
+        GuiComponent.blit(matrixStack, x + 132, y, this.screen.getBlitOffset(), 17 + 133, 187, 136 - 133, 21, 256, 256);
         RenderSystem.color4f(1, 1, 1, 1);
 
         //render name
-        Optional<IReorderingProcessor> text = Optional.ofNullable(this.screen.font.split(this.item.getTask().getTranslation(), 131).get(0));
+        Optional<FormattedCharSequence> text = Optional.ofNullable(this.screen.font.split(this.item.getTask().getTranslation(), 131).get(0));
         text.ifPresent(t -> this.screen.font.draw(matrixStack, t, x + 2, y + 4, 3419941));//(6839882 & 16711422) >> 1 //8453920 //4226832
 
         if (!this.screen.getTaskContainer().isTaskNotAccepted(this.item) && !this.item.isUnique()) {
             long remainingTime = this.item.getTaskTimeStamp() - Minecraft.getInstance().level.getGameTime();
-            ITextComponent msg;
+            Component msg;
             if (remainingTime >= 0) {
                 remainingTime = remainingTime / 20;
                 long hours = remainingTime / 60 / 60;
@@ -175,9 +179,9 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
                 time += minutes + ":";
                 if (seconds < 10) time += "0";
                 time += seconds;
-                msg = new StringTextComponent(time);
+                msg = new TextComponent(time);
             } else {
-                msg = new TranslationTextComponent("text.vampirism.task_failed");
+                msg = new TranslatableComponent("text.vampirism.task_failed");
             }
             int width = this.screen.font.width(msg);
             int color = 11184810;
@@ -192,9 +196,9 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     }
 
     @Override
-    public void renderItemToolTip(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
+    public void renderItemToolTip(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
         //default task tooltips
-        List<ITextComponent> toolTips = this.toolTips.getOrDefault(this.item, Lists.newArrayList());
+        List<Component> toolTips = this.toolTips.getOrDefault(this.item, Lists.newArrayList());
         if (toolTips.isEmpty()) {
             generateTaskToolTip(this.item, toolTips);
         }
@@ -239,98 +243,98 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         }
     }
 
-    private void generateTaskToolTip(ITaskInstance taskInfo, List<ITextComponent> toolTips) {
+    private void generateTaskToolTip(ITaskInstance taskInfo, List<Component> toolTips) {
         Task task = taskInfo.getTask();
         toolTips.clear();
         toolTips.add(task.getTranslation().plainCopy().withStyle(this.screen.getTaskContainer().getFactionColor()));
         if (task.useDescription()) {
             toolTips.add(task.getDescription());
-            toolTips.add(new StringTextComponent(" "));
+            toolTips.add(new TextComponent(" "));
         }
         if (this.screen.getTaskContainer().isTaskNotAccepted(taskInfo)) {
-            toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.not_accepted"));
+            toolTips.add(new TranslatableComponent("gui.vampirism.taskmaster.not_accepted"));
         } else {
             for (List<TaskRequirement.Requirement<?>> requirements : task.getRequirement().requirements().values()) {
                 if (requirements == null) continue;
                 TaskRequirement.Type type = requirements.get(0).getType();
                 boolean completed = this.screen.getTaskContainer().areRequirementsCompleted(taskInfo, type);
-                IFormattableTextComponent title = new TranslationTextComponent(type.getTranslationKey()).append(":");
+                MutableComponent title = new TranslatableComponent(type.getTranslationKey()).append(":");
 
                 if (completed) {
-                    title.withStyle(TextFormatting.STRIKETHROUGH);
+                    title.withStyle(ChatFormatting.STRIKETHROUGH);
                 }
                 toolTips.add(title);
                 for (TaskRequirement.Requirement<?> requirement : requirements) {
-                    IFormattableTextComponent desc;
+                    MutableComponent desc;
                     int completedAmount = this.screen.getTaskContainer().getRequirementStatus(taskInfo, requirement);
                     switch (type) {
                         case ITEMS:
                             desc = ((Item) requirement.getStat(this.factionPlayer)).getDescription().plainCopy().append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
                             break;
                         case STATS:
-                            desc = new TranslationTextComponent("stat." + requirement.getStat(this.factionPlayer).toString().replace(':', '.')).append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
+                            desc = new TranslatableComponent("stat." + requirement.getStat(this.factionPlayer).toString().replace(':', '.')).append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
                             break;
                         case ENTITY:
                             desc = (((EntityType<?>) requirement.getStat(this.factionPlayer)).getDescription().plainCopy().append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer)));
                             break;
                         case ENTITY_TAG:
                             //noinspection unchecked
-                            desc = new TranslationTextComponent("tasks.vampirism." + ((ITag.INamedTag<EntityType<?>>) requirement.getStat(this.factionPlayer)).getName()).append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
+                            desc = new TranslatableComponent("tasks.vampirism." + ((Tag.Named<EntityType<?>>) requirement.getStat(this.factionPlayer)).getName()).append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
                             break;
                         default:
-                            desc = new TranslationTextComponent(task.getTranslationKey() + ".req." + requirement.getId().toString().replace(':', '.'));
+                            desc = new TranslatableComponent(task.getTranslationKey() + ".req." + requirement.getId().toString().replace(':', '.'));
                             break;
                     }
                     if (completed || this.screen.getTaskContainer().isRequirementCompleted(taskInfo, requirement)) {
-                        desc.withStyle(TextFormatting.STRIKETHROUGH);
+                        desc.withStyle(ChatFormatting.STRIKETHROUGH);
                     }
-                    toolTips.add(new StringTextComponent("  ").append(desc));
+                    toolTips.add(new TextComponent("  ").append(desc));
                 }
             }
         }
         this.toolTips.put(taskInfo, toolTips);
     }
 
-    private void renderDefaultRequirementToolTip(MatrixStack mStack, ITaskInstance task, TaskRequirement.Requirement<?> requirement, int x, int y, boolean strikeThrough) {
-        List<ITextComponent> tooltips = Lists.newArrayList();
+    private void renderDefaultRequirementToolTip(PoseStack mStack, ITaskInstance task, TaskRequirement.Requirement<?> requirement, int x, int y, boolean strikeThrough) {
+        List<Component> tooltips = Lists.newArrayList();
         tooltips.add((strikeThrough ? REQUIREMENT_STRIKE : REQUIREMENT));
-        IFormattableTextComponent text = new TranslationTextComponent(task.getTask().getTranslationKey() + ".req." + requirement.getId().toString().replace(':', '.'));
+        MutableComponent text = new TranslatableComponent(task.getTask().getTranslationKey() + ".req." + requirement.getId().toString().replace(':', '.'));
         if (strikeThrough) {
-            text.withStyle(TextFormatting.STRIKETHROUGH);
+            text.withStyle(ChatFormatting.STRIKETHROUGH);
         }
         tooltips.add(text);
         this.screen.renderComponentTooltip(mStack, tooltips, x, y);
     }
 
-    private void renderGenericRequirementTooltip(MatrixStack mStack, TaskRequirement.Type type, int x, int y, IFormattableTextComponent text, boolean strikeThrough) {
-        List<ITextComponent> tooltips = Lists.newArrayList();
-        IFormattableTextComponent title = new TranslationTextComponent(type.getTranslationKey()).append(":");
+    private void renderGenericRequirementTooltip(PoseStack mStack, TaskRequirement.Type type, int x, int y, MutableComponent text, boolean strikeThrough) {
+        List<Component> tooltips = Lists.newArrayList();
+        MutableComponent title = new TranslatableComponent(type.getTranslationKey()).append(":");
         if (strikeThrough) {
-            text.withStyle(TextFormatting.STRIKETHROUGH);
-            title.withStyle(TextFormatting.STRIKETHROUGH);
+            text.withStyle(ChatFormatting.STRIKETHROUGH);
+            title.withStyle(ChatFormatting.STRIKETHROUGH);
         }
         tooltips.add((strikeThrough ? REQUIREMENT_STRIKE : REQUIREMENT));
-        tooltips.add(title.withStyle(TextFormatting.ITALIC));
-        tooltips.add(new StringTextComponent("  ").append(text));
+        tooltips.add(title.withStyle(ChatFormatting.ITALIC));
+        tooltips.add(new TextComponent("  ").append(text));
         this.screen.renderWrappedToolTip(mStack, tooltips, x, y, this.screen.font);
     }
 
-    private void renderItemTooltip(MatrixStack mStack, ItemStack stack, int x, int y, ITextComponent text, boolean strikeThrough, @Nullable String bonus) {
-        FontRenderer font = stack.getItem().getFontRenderer(stack);
+    private void renderItemTooltip(PoseStack mStack, ItemStack stack, int x, int y, Component text, boolean strikeThrough, @Nullable String bonus) {
+        Font font = stack.getItem().getFontRenderer(stack);
         GuiUtils.preItemToolTip(stack);
-        List<ITextComponent> tooltips = getTooltipFromItem2(stack, strikeThrough, bonus);
+        List<Component> tooltips = getTooltipFromItem2(stack, strikeThrough, bonus);
         tooltips.add(0, text);
         this.screen.renderWrappedToolTip(mStack, tooltips, x, y, (font == null ? this.screen.font : font));
         GuiUtils.postItemToolTip();
     }
 
-    private void renderItemTooltip(MatrixStack mStack, Task task, int x, int y) {
-        List<ITextComponent> tooltips = Lists.newArrayList(REWARD);
-        tooltips.add(new TranslationTextComponent(task.getTranslationKey() + ".reward"));
+    private void renderItemTooltip(PoseStack mStack, Task task, int x, int y) {
+        List<Component> tooltips = Lists.newArrayList(REWARD);
+        tooltips.add(new TranslatableComponent(task.getTranslationKey() + ".reward"));
         this.screen.renderComponentTooltip(mStack, tooltips, x, y);
     }
 
-    private void renderRequirementTool(MatrixStack mStack, ITaskInstance task, TaskRequirement.Requirement<?> requirement, int x, int y) {
+    private void renderRequirementTool(PoseStack mStack, ITaskInstance task, TaskRequirement.Requirement<?> requirement, int x, int y) {
         boolean notAccepted = this.screen.getTaskContainer().isTaskNotAccepted(this.item);
         boolean completed = this.screen.getTaskContainer().isRequirementCompleted(this.item, requirement);
         int completedAmount = this.screen.getTaskContainer().getRequirementStatus(this.item, requirement);
@@ -343,10 +347,10 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
                 break;
             case ENTITY_TAG:
                 //noinspection unchecked
-                this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.ENTITY_TAG, x, y, new TranslationTextComponent("tasks.vampirism." + ((ITag.INamedTag<EntityType<?>>) requirement.getStat(this.factionPlayer)).getName()).append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
+                this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.ENTITY_TAG, x, y, new TranslatableComponent("tasks.vampirism." + ((Tag.Named<EntityType<?>>) requirement.getStat(this.factionPlayer)).getName()).append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
                 break;
             case STATS:
-                this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.STATS, x, y, new TranslationTextComponent("stat." + requirement.getStat(this.factionPlayer).toString().replace(':', '.')).append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
+                this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.STATS, x, y, new TranslatableComponent("stat." + requirement.getStat(this.factionPlayer).toString().replace(':', '.')).append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
                 break;
             default:
                 this.renderDefaultRequirementToolTip(mStack, task, requirement, x, y, completed);
@@ -356,7 +360,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     private class TaskActionButton extends ImageButton {
 
         public TaskActionButton(int xPos, int yPos) {
-            super(xPos, yPos, 14, 13, 0, 0, 0, TASKMASTER_GUI_TEXTURE, 0, 0, TaskItem.this::clickButton, new StringTextComponent(""));
+            super(xPos, yPos, 14, 13, 0, 0, 0, TASKMASTER_GUI_TEXTURE, 0, 0, TaskItem.this::clickButton, new TextComponent(""));
         }
 
         @Override
@@ -367,7 +371,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         }
 
         @Override
-        public void renderButton(@Nonnull MatrixStack mStack, int mouseX, int mouseY, float p_renderButton_3_) {
+        public void renderButton(@Nonnull PoseStack mStack, int mouseX, int mouseY, float p_renderButton_3_) {
             TaskContainer.TaskAction action = TaskItem.this.screen.getTaskContainer().buttonAction(TaskItem.this.item);
             RenderSystem.enableDepthTest();
             Minecraft minecraft = Minecraft.getInstance();
@@ -391,10 +395,10 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         }
 
         @Override
-        public void renderToolTip(@Nonnull MatrixStack mStack, int mouseX, int mouseY) {
+        public void renderToolTip(@Nonnull PoseStack mStack, int mouseX, int mouseY) {
             if (this.isHovered && this.visible) {
                 TaskContainer.TaskAction action = TaskItem.this.screen.getTaskContainer().buttonAction(TaskItem.this.item);
-                TaskItem.this.screen.renderTooltip(mStack, new TranslationTextComponent(action.getTranslationKey()), mouseX, mouseY);
+                TaskItem.this.screen.renderTooltip(mStack, new TranslatableComponent(action.getTranslationKey()), mouseX, mouseY);
             }
         }
     }

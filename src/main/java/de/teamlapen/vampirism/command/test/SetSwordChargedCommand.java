@@ -4,20 +4,20 @@ import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.Collection;
 import java.util.Collections;
 
 public class SetSwordChargedCommand extends BasicCommand {
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("setSwordCharged")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
                 .then(Commands.argument("charge", FloatArgumentType.floatArg(0))
@@ -30,15 +30,15 @@ public class SetSwordChargedCommand extends BasicCommand {
                                 })));
     }
 
-    private static int setSwordCharged(CommandSource commandSource, Collection<ServerPlayerEntity> players, float charge) {
-        for (ServerPlayerEntity player : players) {
+    private static int setSwordCharged(CommandSourceStack commandSource, Collection<ServerPlayer> players, float charge) {
+        for (ServerPlayer player : players) {
             ItemStack held = player.getMainHandItem();
 
             if (held.getItem() instanceof VampirismVampireSword) {
                 ((VampirismVampireSword) held.getItem()).setCharged(held, charge);
-                player.setItemInHand(Hand.MAIN_HAND, held);
+                player.setItemInHand(InteractionHand.MAIN_HAND, held);
             } else {
-                commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.swordcharged.nosword"), false);
+                commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.swordcharged.nosword"), false);
             }
         }
         return 0;

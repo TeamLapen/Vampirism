@@ -1,36 +1,35 @@
 package de.teamlapen.lib.lib.entity;
 
-import net.minecraft.entity.AreaEffectCloudEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntitySize;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 /**
- * Only spawns particles, similar to {@link AreaEffectCloudEntity}
+ * Only spawns particles, similar to {@link net.minecraft.world.entity.AreaEffectCloud}
  */
-public class BasicEntityAreaParticleCloud extends Entity {
+public class BasicAreaParticleCloud extends Entity {
 
-    private static final DataParameter<Float> RADIUS = EntityDataManager.defineId(BasicEntityAreaParticleCloud.class, DataSerializers.FLOAT);
-    private static final DataParameter<Float> HEIGHT = EntityDataManager.defineId(BasicEntityAreaParticleCloud.class, DataSerializers.FLOAT);
-    private static final DataParameter<IParticleData> PARTICLE = EntityDataManager.defineId(BasicEntityAreaParticleCloud.class, DataSerializers.PARTICLE);
-    private static final DataParameter<Float> SPAWN_RATE = EntityDataManager.defineId(BasicEntityAreaParticleCloud.class, DataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> RADIUS = SynchedEntityData.defineId(BasicAreaParticleCloud.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> HEIGHT = SynchedEntityData.defineId(BasicAreaParticleCloud.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<ParticleOptions> PARTICLE = SynchedEntityData.defineId(BasicAreaParticleCloud.class, EntityDataSerializers.PARTICLE);
+    private static final EntityDataAccessor<Float> SPAWN_RATE = SynchedEntityData.defineId(BasicAreaParticleCloud.class, EntityDataSerializers.FLOAT);
 
-    private static final DataParameter<Integer> COLOR = EntityDataManager.defineId(BasicEntityAreaParticleCloud.class, DataSerializers.INT);
+    private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(BasicAreaParticleCloud.class, EntityDataSerializers.INT);
     private int duration;
     private int waitTime;
     private float radiusPerTick;
 
-    public BasicEntityAreaParticleCloud(EntityType type, World worldIn) {
+    public BasicAreaParticleCloud(EntityType type, Level worldIn) {
         super(type, worldIn);
         this.duration = 60;
         this.waitTime = 0;
@@ -40,7 +39,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -60,11 +59,11 @@ public class BasicEntityAreaParticleCloud extends Entity {
         this.duration = duration;
     }
 
-    public IParticleData getParticle() {
+    public ParticleOptions getParticle() {
         return this.getEntityData().get(PARTICLE);
     }
 
-    public void setParticle(IParticleData particleData) {
+    public void setParticle(ParticleOptions particleData) {
         this.getEntityData().set(PARTICLE, particleData);
     }
 
@@ -77,7 +76,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
         double d0 = this.getX();
         double d1 = this.getY();
         double d2 = this.getZ();
-        this.dimensions = new EntitySize(radius * 2.0F, getBbHeight(), dimensions.fixed);
+        this.dimensions = new EntityDimensions(radius * 2.0F, getBbHeight(), dimensions.fixed);
         this.setPos(d0, d1, d2);
 
         if (!this.level.isClientSide) {
@@ -102,7 +101,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
     }
 
     @Override
-    public boolean save(CompoundNBT compound) {
+    public boolean save(CompoundTag compound) {
         return false;
     }
 
@@ -111,7 +110,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
     }
 
     @Override
-    public boolean saveAsPassenger(CompoundNBT compound) {
+    public boolean saveAsPassenger(CompoundTag compound) {
         return false;
     }
 
@@ -119,7 +118,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
         double d0 = this.getX();
         double d1 = this.getY();
         double d2 = this.getZ();
-        this.dimensions = new EntitySize(getRadius() * 2, height, dimensions.fixed);
+        this.dimensions = new EntityDimensions(getRadius() * 2, height, dimensions.fixed);
         this.setPos(d0, d1, d2);
 
         if (!this.level.isClientSide) {
@@ -132,13 +131,13 @@ public class BasicEntityAreaParticleCloud extends Entity {
         super.tick();
         float radius = this.getRadius();
         if (this.level.isClientSide) {
-            IParticleData particle = getParticle();
+            ParticleOptions particle = getParticle();
             float amount = (float) (Math.PI * radius * radius) * getSpawnRate();
             for (int i = 0; i < amount; i++) {
                 float phi = this.random.nextFloat() * (float) Math.PI * 2;
-                float r = MathHelper.sqrt(this.random.nextFloat()) * radius;
-                float dx = MathHelper.cos(phi) * r;
-                float dz = MathHelper.sin(phi) * r;
+                float r = Mth.sqrt(this.random.nextFloat()) * radius;
+                float dx = Mth.cos(phi) * r;
+                float dz = Mth.sin(phi) * r;
                 float dy = this.random.nextFloat() * getBbHeight();
 
 
@@ -154,7 +153,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
             }
         } else {
             if (this.tickCount >= this.waitTime + this.duration) {
-                this.remove();
+                this.remove(RemovalReason.DISCARDED);
                 return;
             }
 
@@ -163,7 +162,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
                 radius += this.radiusPerTick;
 
                 if (radius < 0.3F) {
-                    this.remove();
+                    this.remove(RemovalReason.DISCARDED);
                     return;
                 }
 
@@ -173,7 +172,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundNBT compound) {
+    protected void addAdditionalSaveData(CompoundTag compound) {
 
     }
 
@@ -188,7 +187,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundNBT compound) {
+    protected void readAdditionalSaveData(CompoundTag compound) {
 
     }
 }

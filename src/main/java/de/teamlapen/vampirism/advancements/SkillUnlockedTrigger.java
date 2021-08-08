@@ -4,21 +4,21 @@ import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.advancements.criterion.AbstractCriterionTrigger;
-import net.minecraft.advancements.criterion.CriterionInstance;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.loot.ConditionArrayParser;
-import net.minecraft.loot.ConditionArraySerializer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.SerializationContext;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class SkillUnlockedTrigger extends AbstractCriterionTrigger<SkillUnlockedTrigger.Instance> {
+public class SkillUnlockedTrigger extends SimpleCriterionTrigger<SkillUnlockedTrigger.Instance> {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "skill_unlocked");
 
     public static Instance builder(ISkill skill) {
@@ -34,33 +34,33 @@ public class SkillUnlockedTrigger extends AbstractCriterionTrigger<SkillUnlocked
         return ID;
     }
 
-    public void trigger(ServerPlayerEntity player, ISkill skill) {
+    public void trigger(ServerPlayer player, ISkill skill) {
         this.trigger(player, (instance -> {
             return instance.test(skill);
         }));
     }
 
     @Override
-    protected Instance createInstance(JsonObject json, EntityPredicate.AndPredicate entityPredicate, ConditionArrayParser conditionsParser) {
-        return new Instance(new ResourceLocation(JSONUtils.getAsString(json, "skill")));
+    protected Instance createInstance(JsonObject json, EntityPredicate.Composite entityPredicate, DeserializationContext conditionsParser) {
+        return new Instance(new ResourceLocation(GsonHelper.getAsString(json, "skill")));
     }
 
-    static class Instance extends CriterionInstance {
+    static class Instance extends AbstractCriterionTriggerInstance {
         @Nonnull
         private final ResourceLocation skillId;
 
         Instance(@Nonnull ISkill skill) {
-            super(ID, EntityPredicate.AndPredicate.ANY);
+            super(ID, EntityPredicate.Composite.ANY);
             this.skillId = skill.getRegistryName();
         }
 
         Instance(@Nonnull ResourceLocation skillId) {
-            super(ID, EntityPredicate.AndPredicate.ANY);
+            super(ID, EntityPredicate.Composite.ANY);
             this.skillId = skillId;
         }
 
         @Override
-        public JsonObject serializeToJson(ConditionArraySerializer serializer) {
+        public JsonObject serializeToJson(SerializationContext serializer) {
             JsonObject jsonObject = super.serializeToJson(serializer);
             jsonObject.addProperty("skill", skillId.toString());
             return jsonObject;

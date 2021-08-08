@@ -3,12 +3,12 @@ package de.teamlapen.vampirism.entity.factions;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IVillageFactionData;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +33,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private String translationKey;
     @Nullable
     private String translationKeyPlural;
-    private TextFormatting chatColor;
+    private ChatFormatting chatColor;
 
     Faction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, @Nonnull IVillageFactionData villageFactionData) {
         this.id = id;
@@ -50,11 +50,11 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     }
 
     @Override
-    public TextFormatting getChatColor() {
-        return chatColor == null ? TextFormatting.WHITE : chatColor;
+    public ChatFormatting getChatColor() {
+        return chatColor == null ? ChatFormatting.WHITE : chatColor;
     }
 
-    public Faction<T> setChatColor(TextFormatting chatColor) {
+    public Faction<T> setChatColor(ChatFormatting chatColor) {
         this.chatColor = chatColor;
         return this;
     }
@@ -75,13 +75,13 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     }
 
     @Override
-    public ITextComponent getName() {
-        return translationKey == null ? new StringTextComponent(id.toString()) : new TranslationTextComponent(translationKey);
+    public Component getName() {
+        return translationKey == null ? new TextComponent(id.toString()) : new TranslatableComponent(translationKey);
     }
 
     @Override
-    public ITextComponent getNamePlural() {
-        return translationKeyPlural == null ? new StringTextComponent(id.toString()) : new TranslationTextComponent(translationKeyPlural);
+    public Component getNamePlural() {
+        return translationKeyPlural == null ? new TextComponent(id.toString()) : new TranslatableComponent(translationKeyPlural);
     }
 
     @Nonnull
@@ -96,7 +96,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     }
 
     @Override
-    public boolean isEntityOfFaction(CreatureEntity creature) {
+    public boolean isEntityOfFaction(PathfinderMob creature) {
         return entityInterface.isInstance(creature);
     }
 

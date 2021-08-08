@@ -3,13 +3,13 @@ package de.teamlapen.vampirism.player.vampire;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAttributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.FoodStats;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.food.FoodData;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.GameRules;
+import net.minecraft.world.level.GameRules;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class BloodStats implements IBloodStats {
     private final static Logger LOGGER = LogManager.getLogger(BloodStats.class);
-    private final PlayerEntity player;
+    private final Player player;
     private int maxBlood = 20;
     private int bloodLevel = 20;
     private float bloodSaturationLevel = 5.0F;
@@ -29,7 +29,7 @@ public class BloodStats implements IBloodStats {
     private int prevBloodLevel = 20;
     private boolean changed = false;
 
-    BloodStats(PlayerEntity player) {
+    BloodStats(Player player) {
         this.player = player;
     }
 
@@ -80,7 +80,7 @@ public class BloodStats implements IBloodStats {
      * @return Whether it changed or not
      */
     public boolean onUpdate() {
-        FoodStats foodStats = player.getFoodData();
+        FoodData foodStats = player.getFoodData();
         foodStats.setFoodLevel(10);
         Difficulty enumDifficulty = player.getCommandSenderWorld().getDifficulty();
         float exhaustion = foodStats.exhaustionLevel;
@@ -137,7 +137,7 @@ public class BloodStats implements IBloodStats {
      *
      * @param nbt
      */
-    public void readNBT(CompoundNBT nbt) {
+    public void readNBT(CompoundTag nbt) {
         if (nbt.contains("bloodLevel")) {
             bloodLevel = nbt.getInt("bloodLevel");
             if (nbt.contains("bloodTimer")) {
@@ -175,7 +175,7 @@ public class BloodStats implements IBloodStats {
      * @param ignoreModifier If the entity exhaustion attribute {@link de.teamlapen.vampirism.core.ModAttributes#blood_exhaustion} should be ignored
      */
     void addExhaustion(float amount, boolean ignoreModifier) {
-        ModifiableAttributeInstance attribute = player.getAttribute(ModAttributes.blood_exhaustion);
+        AttributeInstance attribute = player.getAttribute(ModAttributes.blood_exhaustion);
         float mult;
         if (ignoreModifier) {
             mult = 1F;
@@ -188,7 +188,7 @@ public class BloodStats implements IBloodStats {
         this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount * mult, 40F);
     }
 
-    void loadUpdate(CompoundNBT nbt) {
+    void loadUpdate(CompoundTag nbt) {
         if (nbt.contains("maxBlood")) {
             setMaxBlood(nbt.getInt("maxBlood"));
         }
@@ -214,7 +214,7 @@ public class BloodStats implements IBloodStats {
      *
      * @param nbt
      */
-    void writeNBT(CompoundNBT nbt) {
+    void writeNBT(CompoundTag nbt) {
         writeNBTBlood(nbt);
         nbt.putInt("bloodTimer", bloodTimer);
         nbt.putFloat("bloodSaturation", bloodSaturationLevel);
@@ -227,11 +227,11 @@ public class BloodStats implements IBloodStats {
      *
      * @param nbt
      */
-    void writeNBTBlood(CompoundNBT nbt) {
+    void writeNBTBlood(CompoundTag nbt) {
         nbt.putInt("bloodLevel", bloodLevel);
     }
 
-    CompoundNBT writeUpdate(CompoundNBT nbt) {
+    CompoundTag writeUpdate(CompoundTag nbt) {
         nbt.putInt("bloodLevel", bloodLevel);
         nbt.putInt("maxBlood", maxBlood);
         return nbt;

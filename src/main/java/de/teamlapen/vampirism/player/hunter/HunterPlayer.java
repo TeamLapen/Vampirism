@@ -23,18 +23,18 @@ import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
@@ -60,14 +60,14 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
      * Don't call before the construction event of the player entity is finished
      * Must check Entity#isAlive before
      */
-    public static HunterPlayer get(@Nonnull PlayerEntity player) {
+    public static HunterPlayer get(@Nonnull Player player) {
         return (HunterPlayer) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get HunterPlayer from player " + player));
     }
 
     /**
      * Return a LazyOptional, but print a warning message if not present.
      */
-    public static LazyOptional<HunterPlayer> getOpt(@Nonnull PlayerEntity player) {
+    public static LazyOptional<HunterPlayer> getOpt(@Nonnull Player player) {
         LazyOptional<HunterPlayer> opt = player.getCapability(CAP, null).cast();
         if (!opt.isPresent()) {
             LOGGER.warn("Cannot get Hunter player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
@@ -76,18 +76,18 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     }
 
     public static void registerCapability() {
-        CapabilityManager.INSTANCE.register(IHunterPlayer.class, new Storage(), HunterPlayerDefaultImpl::new);
+        CapabilityManager.INSTANCE.register(IHunterPlayer.class);
     }
 
-    public static ICapabilityProvider createNewCapability(final PlayerEntity player) {
-        return new ICapabilitySerializable<CompoundNBT>() {
+    public static ICapabilityProvider createNewCapability(final Player player) {
+        return new ICapabilitySerializable<CompoundTag>() {
 
-            final IHunterPlayer inst = new HunterPlayer(player);
+            final HunterPlayer inst = new HunterPlayer(player);
             final LazyOptional<IHunterPlayer> opt = LazyOptional.of(() -> inst);
 
             @Override
-            public void deserializeNBT(CompoundNBT nbt) {
-                CAP.getStorage().readNBT(CAP, inst, null, nbt);
+            public void deserializeNBT(CompoundTag nbt) {
+                inst.loadData(nbt);
             }
 
             @Nonnull
@@ -97,8 +97,10 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
             }
 
             @Override
-            public CompoundNBT serializeNBT() {
-                return (CompoundNBT) CAP.getStorage().writeNBT(CAP, inst, null);
+            public CompoundTag serializeNBT() {
+                CompoundTag tag = new CompoundTag();
+                inst.saveData(tag);
+                return tag;
             }
         };
     }
@@ -106,7 +108,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     private final ActionHandler<IHunterPlayer> actionHandler;
     private final SkillHandler<IHunterPlayer> skillHandler;
 
-    public HunterPlayer(PlayerEntity player) {
+    public HunterPlayer(Player player) {
         super(player);
         actionHandler = new ActionHandler<>(this);
         skillHandler = new SkillHandler<>(this, VReference.HUNTER_FACTION);
@@ -182,14 +184,14 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         return player.hasEffect(ModEffects.disguise_as_vampire);
     }
 
-    public void loadData(CompoundNBT compound) {
+    public void loadData(CompoundTag compound) {
         super.loadData(compound);
         actionHandler.loadFromNbt(compound);
         skillHandler.loadFromNbt(compound);
     }
 
     @Override
-    public void onChangedDimension(RegistryKey<World> from, RegistryKey<World> to) {
+    public void onChangedDimension(ResourceKey<Level> from, ResourceKey<Level> to) {
 
     }
 
@@ -197,8 +199,8 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     public void onDeath(DamageSource src) {
         super.onDeath(src);
         actionHandler.deactivateAllActions();
-        if (src.getEntity() instanceof ServerPlayerEntity && Helper.isVampire(((PlayerEntity) src.getEntity())) && this.getRepresentingPlayer().getEffect(ModEffects.freeze) != null) {
-            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayerEntity) src.getEntity()), VampireActionTrigger.Action.KILL_FROZEN_HUNTER);
+        if (src.getEntity() instanceof ServerPlayer && Helper.isVampire(((Player) src.getEntity())) && this.getRepresentingPlayer().getEffect(ModEffects.freeze) != null) {
+            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayer) src.getEntity()), VampireActionTrigger.Action.KILL_FROZEN_HUNTER);
         }
     }
 
@@ -261,7 +263,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
             if (!isRemote()) {
                 boolean sync = false;
                 boolean syncToAll = false;
-                CompoundNBT syncPacket = new CompoundNBT();
+                CompoundTag syncPacket = new CompoundTag();
                 if (actionHandler.updateActions()) {
                     sync = true;
                     syncToAll = true;
@@ -290,46 +292,32 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     }
 
-    public void saveData(CompoundNBT compound) {
+    public void saveData(CompoundTag compound) {
         super.saveData(compound);
         actionHandler.saveToNbt(compound);
         skillHandler.saveToNbt(compound);
     }
 
     @Override
-    protected VampirismPlayer copyFromPlayer(PlayerEntity old) {
+    protected VampirismPlayer copyFromPlayer(Player old) {
         HunterPlayer oldHunter = get(old);
-        CompoundNBT nbt = new CompoundNBT();
+        CompoundTag nbt = new CompoundTag();
         oldHunter.saveData(nbt);
         this.loadData(nbt);
         return oldHunter;
     }
 
     @Override
-    protected void loadUpdate(CompoundNBT nbt) {
+    protected void loadUpdate(CompoundTag nbt) {
         super.loadUpdate(nbt);
         actionHandler.readUpdateFromServer(nbt);
         skillHandler.readUpdateFromServer(nbt);
     }
 
     @Override
-    protected void writeFullUpdate(CompoundNBT nbt) {
+    protected void writeFullUpdate(CompoundTag nbt) {
         super.writeFullUpdate(nbt);
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);
-    }
-
-    private static class Storage implements Capability.IStorage<IHunterPlayer> {
-        @Override
-        public void readNBT(Capability<IHunterPlayer> capability, IHunterPlayer instance, Direction side, INBT nbt) {
-            ((HunterPlayer) instance).loadData((CompoundNBT) nbt);
-        }
-
-        @Override
-        public INBT writeNBT(Capability<IHunterPlayer> capability, IHunterPlayer instance, Direction side) {
-            CompoundNBT nbt = new CompoundNBT();
-            ((HunterPlayer) instance).saveData(nbt);
-            return nbt;
-        }
     }
 }

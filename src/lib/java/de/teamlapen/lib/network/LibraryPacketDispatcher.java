@@ -2,8 +2,8 @@ package de.teamlapen.lib.network;
 
 import de.teamlapen.lib.LIBREFERENCE;
 import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fmllegacy.network.NetworkRegistry;
 
 /**
  * PacketDispatcher implementation used by the library mod.

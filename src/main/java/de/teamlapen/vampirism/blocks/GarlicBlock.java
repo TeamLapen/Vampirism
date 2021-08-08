@@ -7,21 +7,23 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CropsBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 /**
  * Garlic Plant
@@ -30,7 +32,7 @@ import javax.annotation.Nonnull;
  *
  * @author Maxanier
  */
-public class GarlicBlock extends CropsBlock {
+public class GarlicBlock extends CropBlock {
 
     public static final String regName = "garlic";
     private static final VoxelShape[] shape = makeShape();
@@ -54,21 +56,21 @@ public class GarlicBlock extends CropsBlock {
     }
 
     @Override
-    public void entityInside(BlockState state, World world, BlockPos pos, Entity entity) {
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         if (state.getValue(AGE) > 5 && Helper.isVampire(entity)) {
-            DamageHandler.affectVampireGarlicDirect(entity instanceof PlayerEntity ? VReference.VAMPIRE_FACTION.getPlayerCapability((PlayerEntity) entity).orElseThrow(() -> new IllegalStateException("Capability cannot be null")) : (IVampire) entity, EnumStrength.WEAK);
+            DamageHandler.affectVampireGarlicDirect(entity instanceof Player ? VReference.VAMPIRE_FACTION.getPlayerCapability((Player) entity).orElseThrow(() -> new IllegalStateException("Capability cannot be null")) : (IVampire) entity, EnumStrength.WEAK);
         }
     }
 
     @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return shape[state.getValue(this.getAgeProperty())];
     }
 
     @Nonnull
     @Override
-    protected IItemProvider getBaseSeedId() {
+    protected ItemLike getBaseSeedId() {
         return ModItems.item_garlic;
     }
 }

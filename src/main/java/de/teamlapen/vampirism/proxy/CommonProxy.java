@@ -11,9 +11,11 @@ import de.teamlapen.vampirism.network.TaskActionPacket;
 import de.teamlapen.vampirism.player.skills.SkillTree;
 import de.teamlapen.vampirism.player.skills.SkillTreeManager;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
+
+import de.teamlapen.lib.lib.util.IInitListener.Step;
 
 /**
  * Abstract proxy base for both client and server.
@@ -29,14 +31,14 @@ public abstract class CommonProxy implements IProxy {
     }
 
     @Override
-    public void handleActionBindingPacket(ActionBindingPacket msg, PlayerEntity playerEntity) {
+    public void handleActionBindingPacket(ActionBindingPacket msg, Player playerEntity) {
         FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.setBoundAction(msg.actionBindingId, msg.action, false, false));
     }
 
     @Override
-    public void handleAppearancePacket(PlayerEntity player, AppearancePacket msg) {
+    public void handleAppearancePacket(Player player, AppearancePacket msg) {
         Entity entity = player.level.getEntity(msg.entityId);
-        if (entity instanceof PlayerEntity) {
+        if (entity instanceof Player) {
             VampirePlayer.getOpt(player).ifPresent(vampire -> {
                 vampire.setSkinData(msg.data);
             });
@@ -47,7 +49,7 @@ public abstract class CommonProxy implements IProxy {
     }
 
     @Override
-    public void handleTaskActionPacket(TaskActionPacket msg, PlayerEntity playerEntity) {
+    public void handleTaskActionPacket(TaskActionPacket msg, Player playerEntity) {
         FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> {
             switch (msg.action) {
                 case COMPLETE:

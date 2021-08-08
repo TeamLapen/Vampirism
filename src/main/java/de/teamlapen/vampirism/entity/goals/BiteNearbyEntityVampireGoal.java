@@ -4,19 +4,21 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
-import net.minecraft.command.arguments.EntityAnchorArgument;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 import java.util.List;
 
-public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> extends Goal {
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
+
+public class BiteNearbyEntityVampireGoal<T extends Mob & IVampireMob> extends Goal {
     private final T vampire;
     private IExtendedCreatureVampirism creature;
     private int timer;
@@ -34,7 +36,7 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
     @Override
     public boolean canUse() {
         if (vampire.wantsBlood()) {
-            List<CreatureEntity> list = vampire.getCommandSenderWorld().getEntitiesOfClass(CreatureEntity.class, getBiteBoundingBox(), EntityPredicates.NO_SPECTATORS.and((entity) -> entity != vampire && entity.isAlive()));
+            List<PathfinderMob> list = vampire.getCommandSenderWorld().getEntitiesOfClass(PathfinderMob.class, getBiteBoundingBox(), EntitySelector.NO_SPECTATORS.and((entity) -> entity != vampire && entity.isAlive()));
             if (list.size() > 1) {
                 try {
                     list.sort((o1, o2) -> (int) (vampire.distanceToSqr(o1) - vampire.distanceToSqr(o2)));
@@ -46,7 +48,7 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
                 }
             }
 
-            for (CreatureEntity o : list) {
+            for (PathfinderMob o : list) {
                 if (!vampire.getSensing().canSee(o) || o.hasCustomName()) {
                     continue;
                 }
@@ -75,8 +77,8 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
 
     @Override
     public void tick() {
-        CreatureEntity e = creature.getEntity();
-        vampire.lookAt(EntityAnchorArgument.Type.EYES, new Vector3d(e.getX(), e.getY() + (double) e.getEyeHeight(), e.getZ()));
+        PathfinderMob e = creature.getEntity();
+        vampire.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(e.getX(), e.getY() + (double) e.getEyeHeight(), e.getZ()));
 
 
         timer--;
@@ -90,10 +92,10 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
     }
 
     protected boolean canFeed(IExtendedCreatureVampirism entity) {
-        return entity.canBeBitten(vampire) && !entity.hasPoisonousBlood() && (!(entity.getEntity() instanceof VillagerEntity) || entity.getBlood() > (entity.getMaxBlood() / 2f));
+        return entity.canBeBitten(vampire) && !entity.hasPoisonousBlood() && (!(entity.getEntity() instanceof Villager) || entity.getBlood() > (entity.getMaxBlood() / 2f));
     }
 
-    protected AxisAlignedBB getBiteBoundingBox() {
+    protected AABB getBiteBoundingBox() {
         return vampire.getBoundingBox().inflate(0.5, 0.7, 0.5);
     }
 }

@@ -1,35 +1,35 @@
 package de.teamlapen.vampirism.client.render.layers;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.teamlapen.vampirism.client.model.BipedCloakedModel;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.IEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Predicate;
 
 
-public class CloakLayer<T extends MobEntity, Q extends BipedCloakedModel<T>> extends LayerRenderer<T, Q> {
+public class CloakLayer<T extends Mob, Q extends BipedCloakedModel<T>> extends RenderLayer<T, Q> {
 
     private final ResourceLocation textureCloak;
     private final Predicate<T> renderPredicate;
 
-    public CloakLayer(IEntityRenderer<T, Q> entityRendererIn, ResourceLocation texture, Predicate<T> predicate) {
+    public CloakLayer(RenderLayerParent<T, Q> entityRendererIn, ResourceLocation texture, Predicate<T> predicate) {
         super(entityRendererIn);
         this.textureCloak = texture;
         this.renderPredicate = predicate;
     }
 
     @Override
-    public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (!entitylivingbaseIn.isInvisible() && renderPredicate.test(entitylivingbaseIn)) {
             matrixStackIn.pushPose();
-            IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.entitySolid(textureCloak));
+            VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.entitySolid(textureCloak));
             this.getParentModel().renderCloak(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY);
             matrixStackIn.popPose();
         }

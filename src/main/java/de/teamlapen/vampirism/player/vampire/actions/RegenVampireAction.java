@@ -5,9 +5,9 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModRefinements;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 
 
 public class RegenVampireAction extends DefaultVampireAction {
@@ -18,10 +18,10 @@ public class RegenVampireAction extends DefaultVampireAction {
 
     @Override
     public boolean activate(IVampirePlayer vampire) {
-        PlayerEntity player = vampire.getRepresentingPlayer();
+        Player player = vampire.getRepresentingPlayer();
         int dur = VampirismConfig.BALANCE.vaRegenerationDuration.get() * 20;
-        player.addEffect(new EffectInstance(Effects.REGENERATION, dur, vampire.getSkillHandler().isRefinementEquipped(ModRefinements.regeneration) ? 1 : 0));
-        player.addEffect(new EffectInstance(ModEffects.thirst, dur, 2));
+        player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, dur, vampire.getSkillHandler().isRefinementEquipped(ModRefinements.regeneration) ? 1 : 0));
+        player.addEffect(new MobEffectInstance(ModEffects.thirst, dur, 2));
         return true;
     }
 

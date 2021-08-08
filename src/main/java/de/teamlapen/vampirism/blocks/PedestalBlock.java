@@ -1,33 +1,38 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.tileentity.PedestalTileEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class PedestalBlock extends VampirismBlockContainer {
 
     public final static String regName = "blood_pedestal";
     private static final VoxelShape pedestalShape = makeShape();
 
-    private static void takeItemPlayer(PlayerEntity player, Hand hand, ItemStack stack) {
+    private static void takeItemPlayer(Player player, InteractionHand hand, ItemStack stack) {
         player.setItemInHand(hand, stack);
         if (stack.getItem() instanceof VampirismVampireSword) {
             if (((VampirismVampireSword) stack.getItem()).isFullyCharged(stack)) {
@@ -48,7 +53,7 @@ public class PedestalBlock extends VampirismBlockContainer {
         VoxelShape g3 = Block.box(4, 9, 12, 5, 11, 11);
         VoxelShape g4 = Block.box(12, 9, 12, 11, 11, 11);
 
-        return VoxelShapes.or(a, b, c, d, e, f, g1, g2, g3, g4);
+        return Shapes.or(a, b, c, d, e, f, g1, g2, g3, g4);
     }
 
     public PedestalBlock() {
@@ -56,8 +61,8 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
@@ -73,24 +78,24 @@ public class PedestalBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public TileEntity newBlockEntity(IBlockReader worldIn) {
-        return new PedestalTileEntity();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new PedestalTileEntity(pos, state);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return pedestalShape;
     }
 
     @Override
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         PedestalTileEntity tile = getTileEntity(world, pos);
-        if (tile == null) return ActionResultType.SUCCESS;
+        if (tile == null) return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(hand);
         if (stack.isEmpty() && !tile.extractItem(0, 1, true).isEmpty()) {
             ItemStack stack2 = tile.extractItem(0, 1, false);
             takeItemPlayer(player, hand, stack2);
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
 
         } else if (!stack.isEmpty()) {
             ItemStack stack2 = ItemStack.EMPTY;
@@ -102,13 +107,13 @@ public class PedestalBlock extends VampirismBlockContainer {
             } else {
                 tile.insertItem(0, stack2, false);
             }
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
         return super.use(state, world, pos, player, hand, hit);
     }
 
     @Override
-    protected void clearContainer(BlockState state, World worldIn, BlockPos pos) {
+    protected void clearContainer(BlockState state, Level worldIn, BlockPos pos) {
         PedestalTileEntity tile = getTileEntity(worldIn, pos);
         if (tile != null && tile.hasStack()) {
             dropItem(worldIn, pos, tile.removeStack());
@@ -116,11 +121,17 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Nullable
-    private PedestalTileEntity getTileEntity(IBlockReader world, BlockPos pos) {
-        TileEntity tile = world.getBlockEntity(pos);
+    private PedestalTileEntity getTileEntity(BlockGetter world, BlockPos pos) {
+        BlockEntity tile = world.getBlockEntity(pos);
         if (tile instanceof PedestalTileEntity) {
             return (PedestalTileEntity) tile;
         }
         return null;
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+            return createTickerHelper(type, ModTiles.blood_pedestal, level.isClientSide() ? PedestalTileEntity::clientTick : PedestalTileEntity::serverTick);
     }
 }

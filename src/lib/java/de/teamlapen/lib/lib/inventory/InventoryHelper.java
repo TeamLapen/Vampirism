@@ -1,18 +1,18 @@
 package de.teamlapen.lib.lib.inventory;
 
 import de.teamlapen.lib.lib.util.ItemStackUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -35,7 +35,7 @@ public class InventoryHelper {
      * @param compareFunction Used to determine if the first items can be used in place of the second one (most simple -> equals)
      * @return Null if all tileInventory are present otherwise an itemstack which represents the missing tileInventory
      */
-    public static ItemStack checkItems(IInventory inventory, Item[] items, int[] amounts, BiPredicate<Item, Item> compareFunction) {
+    public static ItemStack checkItems(Container inventory, Item[] items, int[] amounts, BiPredicate<Item, Item> compareFunction) {
         if (inventory.getContainerSize() < amounts.length || items.length != amounts.length) {
             throw new IllegalArgumentException("There has to be one itemstack and amount value for each item");
         }
@@ -49,7 +49,7 @@ public class InventoryHelper {
         return ItemStack.EMPTY;
     }
 
-    public static ItemStack checkItems(IInventory inventory, Item[] items, int[] amounts) {
+    public static ItemStack checkItems(Container inventory, Item[] items, int[] amounts) {
         return checkItems(inventory, items, amounts, Object::equals);
     }
 
@@ -59,7 +59,7 @@ public class InventoryHelper {
      * @param inventory
      * @param amounts   Has to have the same size as the inventory
      */
-    public static void removeItems(IInventory inventory, int[] amounts) {
+    public static void removeItems(Container inventory, int[] amounts) {
         if (inventory.getContainerSize() < amounts.length) {
             throw new IllegalArgumentException("There has to be one itemstack value for each amount");
         }
@@ -69,10 +69,10 @@ public class InventoryHelper {
     }
 
     @Nonnull
-    public static Optional<Pair<IItemHandler, TileEntity>> tryGetItemHandler(IBlockReader world, BlockPos pos, @Nullable Direction side) {
+    public static Optional<Pair<IItemHandler, BlockEntity>> tryGetItemHandler(BlockGetter world, BlockPos pos, @Nullable Direction side) {
         BlockState state = world.getBlockState(pos);
-        if (state.getBlock().hasTileEntity(state)) {
-            TileEntity tile = world.getBlockEntity(pos);
+        if (state.hasBlockEntity()) {
+            BlockEntity tile = world.getBlockEntity(pos);
             if (tile != null) {
                 return tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side).map(capability -> ImmutablePair.of(capability, tile));
 
@@ -84,13 +84,13 @@ public class InventoryHelper {
     /**
      * Write the given inventory as new ListNBT "inventory" to given tag
      */
-    public static void writeInventoryToTag(CompoundNBT tag, Inventory inventory) {
-        ListNBT listnbt = new ListNBT();
+    public static void writeInventoryToTag(CompoundTag tag, SimpleContainer inventory) {
+        ListTag listnbt = new ListTag();
 
         for (int i = 0; i < inventory.getContainerSize(); ++i) {
             ItemStack itemstack = inventory.getItem(i);
             if (!itemstack.isEmpty()) {
-                listnbt.add(itemstack.save(new CompoundNBT()));
+                listnbt.add(itemstack.save(new CompoundTag()));
             }
         }
         tag.put("inventory", listnbt);
@@ -99,8 +99,8 @@ public class InventoryHelper {
     /**
      * Write the given inventory from ListNBT "inventory" in the given tag
      */
-    public static void readInventoryFromTag(CompoundNBT tag, Inventory inventory) {
-        ListNBT listnbt = tag.getList("inventory", 10);
+    public static void readInventoryFromTag(CompoundTag tag, SimpleContainer inventory) {
+        ListTag listnbt = tag.getList("inventory", 10);
 
         for (int i = 0; i < listnbt.size(); ++i) {
             ItemStack itemstack = ItemStack.of(listnbt.getCompound(i));
@@ -122,7 +122,7 @@ public class InventoryHelper {
      * @param slot
      * @param addStack is Modified to remove the added items
      */
-    public static void addStackToSlotWithoutCheck(IInventory inv, int slot, ItemStack addStack) {
+    public static void addStackToSlotWithoutCheck(Container inv, int slot, ItemStack addStack) {
 
         int newCount = addStack.getCount();
         ItemStack existingStack = inv.getItem(slot);
@@ -176,7 +176,7 @@ public class InventoryHelper {
     }
 
 
-    public static boolean removeItemFromInventory(IInventory inventory, ItemStack item) {
+    public static boolean removeItemFromInventory(Container inventory, ItemStack item) {
         int i = item.getCount();
 
         for (int j = 0; j < inventory.getContainerSize(); ++j) {
@@ -196,7 +196,7 @@ public class InventoryHelper {
         return i <= 0;
     }
 
-    public static ItemStack getFirst(IInventory inventory, Item set) {
+    public static ItemStack getFirst(Container inventory, Item set) {
         for (int i = 0; i < inventory.getContainerSize(); ++i) {
             ItemStack itemstack = inventory.getItem(i);
             if (set == itemstack.getItem() && itemstack.getCount() > 0) {

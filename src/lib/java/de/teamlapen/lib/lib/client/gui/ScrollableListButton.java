@@ -1,15 +1,17 @@
 package de.teamlapen.lib.lib.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.LIBREFERENCE;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.fml.client.gui.GuiUtils;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraftforge.fmlclient.gui.GuiUtils;
+import net.minecraftforge.fmlclient.gui.widget.ExtendedButton;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
@@ -26,13 +28,13 @@ public class ScrollableListButton extends ExtendedButton {
     protected final int menuSize;
     protected final Button[] elements;
     private final Consumer<Integer> pressConsumer;
-    private final ITextComponent[] desc;
+    private final Component[] desc;
     private final boolean alternate;
     protected int itemCount;
     protected int scrolled;
     private boolean scrollerPressed;
 
-    public ScrollableListButton(int xPos, int yPos, int width, int shownItems, int maxItemCount, @Nullable ITextComponent[] strings, ITextComponent displayString, Consumer<Integer> elementPressAction, boolean alternate) {
+    public ScrollableListButton(int xPos, int yPos, int width, int shownItems, int maxItemCount, @Nullable Component[] strings, Component displayString, Consumer<Integer> elementPressAction, boolean alternate) {
         super(xPos, yPos + 1, width, Math.min(shownItems, maxItemCount) * 20, displayString, button -> {
         });
         this.itemCount = maxItemCount;
@@ -45,7 +47,7 @@ public class ScrollableListButton extends ExtendedButton {
         this.fillElements();
     }
 
-    public ScrollableListButton(int xPos, int yPos, int width, int height, int itemCount, ITextComponent[] strings, ITextComponent displayString, Consumer<Integer> elementPressAction) {
+    public ScrollableListButton(int xPos, int yPos, int width, int height, int itemCount, Component[] strings, Component displayString, Consumer<Integer> elementPressAction) {
         this(xPos, yPos, width, height, itemCount, strings, displayString, elementPressAction, false);
     }
 
@@ -72,7 +74,7 @@ public class ScrollableListButton extends ExtendedButton {
         if (scrollerPressed) {
             float amount = ((float) p_mouseDragged_3_ - (float) this.y - 13.5F) / ((float) (this.height) - 27.0F);
             amount = amount * (float) (this.itemCount - this.menuSize) + 0.5f;
-            this.scrolled = MathHelper.clamp((int) amount, 0, this.itemCount - this.menuSize);
+            this.scrolled = Mth.clamp((int) amount, 0, this.itemCount - this.menuSize);
             return true;
         } else {
             return super.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
@@ -84,13 +86,13 @@ public class ScrollableListButton extends ExtendedButton {
         int scrollItems = this.itemCount - this.menuSize;
         if (scrollItems > 0) {
             this.scrolled = (int) ((double) this.scrolled - p_mouseScrolled_5_);
-            this.scrolled = MathHelper.clamp(this.scrolled, 0, scrollItems);
+            this.scrolled = Mth.clamp(this.scrolled, 0, scrollItems);
         }
         return true;
     }
 
     @Override
-    public void renderButton(MatrixStack mStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
         if (this.visible) {
             this.hLine(mStack, this.x, this.x + this.width, this.y - 1, alternate ? 0xff373737 : 0xff000000);
             GuiUtils.drawContinuousTexturedBox(mStack, MISC, this.x + width - 8, this.y - 1, alternate ? 23 : 0, 0, 9, this.height + 2, 9, 200, 2, 2, 2, 2, this.getBlitOffset());
@@ -105,12 +107,14 @@ public class ScrollableListButton extends ExtendedButton {
     protected void fillElements() {
         for (int i = 0; i < this.elements.length; i++) {
             int finalI = i;
-            this.elements[i] = new ExtendedButton(this.x, this.y + i * 20, width - 7, 20, new StringTextComponent(""), (button -> this.pressConsumer.accept(finalI + this.scrolled)));
+            this.elements[i] = new ExtendedButton(this.x, this.y + i * 20, width - 7, 20, new TextComponent(""), (button -> this.pressConsumer.accept(finalI + this.scrolled)));
         }
     }
 
-    protected void renderScroller(MatrixStack mStack) {
-        Minecraft.getInstance().textureManager.bind(MISC);
+    protected void renderScroller(PoseStack mStack) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1f);
+        RenderSystem.setShaderTexture(0, MISC);
         int i = this.itemCount - this.menuSize;
         if (i >= 1) {
             float k = (float) (this.height + 3 - 30) / i;
@@ -124,12 +128,12 @@ public class ScrollableListButton extends ExtendedButton {
         }
     }
 
-    private void renderListButtons(MatrixStack mStack, int mouseX, int mouseY, float partialTicks) {
+    private void renderListButtons(PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
         for (int i = 0; i < this.elements.length; i++) {
             this.elements[i].visible = itemCount > menuSize || i < itemCount;
             if (this.elements[i].visible) {
                 this.elements[i].render(mStack, mouseX, mouseY, partialTicks);
-                ITextComponent desc = this.desc != null ? this.desc[this.scrolled + i] : new StringTextComponent("Type " + (i + this.scrolled + 1));
+                Component desc = this.desc != null ? this.desc[this.scrolled + i] : new TextComponent("Type " + (i + this.scrolled + 1));
                 int x = this.x + (this.width - 8) / 2 - Minecraft.getInstance().font.width(desc) / 2;
                 Minecraft.getInstance().font.drawShadow(mStack, desc, x, this.y + 6 + i * 20, this.elements[i].getFGColor());
             }

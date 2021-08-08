@@ -10,9 +10,9 @@ import de.teamlapen.vampirism.data.recipebuilder.SkillNodeBuilder;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DirectoryCache;
-import net.minecraft.data.IDataProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.data.HashCache;
+import net.minecraft.data.DataProvider;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class SkillNodeGenerator implements IDataProvider {
+public class SkillNodeGenerator implements DataProvider {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -35,7 +35,7 @@ public class SkillNodeGenerator implements IDataProvider {
     }
 
     @Override
-    public void run(DirectoryCache cache) {
+    public void run(HashCache cache) {
         Path path = this.generator.getOutputFolder();
         Set<ResourceLocation> set = Sets.newHashSet();
         this.registerSkillNodes((node) -> {
@@ -117,7 +117,7 @@ public class SkillNodeGenerator implements IDataProvider {
         return new ResourceLocation(REFERENCE.MODID, string);
     }
 
-    private void saveSkillNode(DirectoryCache cache, JsonObject nodeJson, Path path) {
+    private void saveSkillNode(HashCache cache, JsonObject nodeJson, Path path) {
         try {
             String s = GSON.toJson(nodeJson);
             @SuppressWarnings("UnstableApiUsage")

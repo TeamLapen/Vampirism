@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.REFERENCE;
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.world.item.Item;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.Util;
+import net.minecraft.core.Registry;
 
 /**
  * Base class for most of Vampirism's tileInventory

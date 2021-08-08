@@ -1,27 +1,42 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.tileentity.BloodGrinderTileEntity;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.BlockState;
+
 public class GrinderBlock extends VampirismBlockContainer {
-    public static final DirectionProperty FACING = HorizontalBlock.FACING;
+    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     private final static String regName = "blood_grinder";
     private static final VoxelShape SOUTH = makeShape();
     private static final VoxelShape WEST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.NINETY);
@@ -43,28 +58,28 @@ public class GrinderBlock extends VampirismBlockContainer {
         VoxelShape d2 = Block.box(2, 7, 5, 14, 12, 11);
         VoxelShape d3 = Block.box(3, 7, 4, 13, 12, 12);
         VoxelShape d4 = Block.box(4, 7, 3, 12, 12, 13);
-        VoxelShape d5 = VoxelShapes.or(d1, d2);
-        VoxelShape d6 = VoxelShapes.or(d3, d4);
-        VoxelShape d = VoxelShapes.or(d5, d6);
+        VoxelShape d5 = Shapes.or(d1, d2);
+        VoxelShape d6 = Shapes.or(d3, d4);
+        VoxelShape d = Shapes.or(d5, d6);
 
         VoxelShape e = Block.box(8, 12, 8, 12, 16, 12);
 
         VoxelShape e1 = Block.box(4, 12, 5, 7, 13, 6);
         VoxelShape e2 = Block.box(5, 12, 4, 6, 13, 7);
-        VoxelShape e3 = VoxelShapes.or(e1, e2);
-        VoxelShape e4 = VoxelShapes.or(e, e3);
+        VoxelShape e3 = Shapes.or(e1, e2);
+        VoxelShape e4 = Shapes.or(e, e3);
 
-        VoxelShape f = VoxelShapes.or(a, b);
-        VoxelShape g = VoxelShapes.or(c, d);
+        VoxelShape f = Shapes.or(a, b);
+        VoxelShape g = Shapes.or(c, d);
 
-        VoxelShape g1 = VoxelShapes.or(b1, b2);
-        VoxelShape g2 = VoxelShapes.or(b3, b4);
-        VoxelShape g3 = VoxelShapes.or(g1, g2);
-        VoxelShape g4 = VoxelShapes.or(g, g3);
+        VoxelShape g1 = Shapes.or(b1, b2);
+        VoxelShape g2 = Shapes.or(b3, b4);
+        VoxelShape g3 = Shapes.or(g1, g2);
+        VoxelShape g4 = Shapes.or(g, g3);
 
-        VoxelShape h = VoxelShapes.or(f, g4);
+        VoxelShape h = Shapes.or(f, g4);
 
-        return VoxelShapes.or(h, e4);
+        return Shapes.or(h, e4);
     }
 
     public GrinderBlock() {
@@ -74,12 +89,12 @@ public class GrinderBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         switch (state.getValue(FACING)) {
             case NORTH:
                 return NORTH;
@@ -95,7 +110,7 @@ public class GrinderBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
     }
 
@@ -106,8 +121,8 @@ public class GrinderBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public TileEntity newBlockEntity(IBlockReader worldIn) {
-        return new BloodGrinderTileEntity();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new BloodGrinderTileEntity(pos, state);
     }
 
     @Override
@@ -116,20 +131,25 @@ public class GrinderBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (world.isClientSide) return ActionResultType.SUCCESS;
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (world.isClientSide) return InteractionResult.SUCCESS;
         player.openMenu(world.getBlockEntity(pos) instanceof BloodGrinderTileEntity ? (BloodGrinderTileEntity) world.getBlockEntity(pos) : null);
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    protected void clearContainer(BlockState state, World worldIn, BlockPos pos) {
+    protected void clearContainer(BlockState state, Level worldIn, BlockPos pos) {
         dropInventoryTileEntityItems(worldIn, pos);
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState p_153213_, BlockEntityType<T> p_153214_) {
+        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModTiles.grinder, BloodGrinderTileEntity::serverTick);
+    }
 }

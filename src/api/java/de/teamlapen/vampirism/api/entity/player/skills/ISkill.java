@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -19,7 +19,7 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
      * The description for this skill. Can be null
      */
     @OnlyIn(Dist.CLIENT)
-    ITextComponent getDescription();
+    Component getDescription();
 
     /**
      * @return The faction this skill belongs to
@@ -27,8 +27,8 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
     @Nonnull
     IPlayableFaction getFaction();
 
-    default ITextComponent getName() {
-        return new TranslationTextComponent(getTranslationKey());
+    default Component getName() {
+        return new TranslatableComponent(getTranslationKey());
     }
 
     /**

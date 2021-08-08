@@ -3,17 +3,17 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
@@ -35,7 +35,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
      * @return The loaded arrows or -1 if infinite
      */
     private static int getArrowsLeft(@Nonnull ItemStack bowStack) {
-        CompoundNBT nbt = bowStack.getTag();
+        CompoundTag nbt = bowStack.getTag();
         if (nbt == null || !nbt.contains("arrows")) return 0;
         return nbt.getInt("arrows");
 
@@ -47,7 +47,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
      */
     private static ItemStack setArrowsLeft(@Nonnull ItemStack bowStack, int arrows) {
         int i = Math.max(-1, Math.min(MAX_ARROW_COUNT, arrows));
-        CompoundNBT nbt = bowStack.hasTag() ? bowStack.getTag() : new CompoundNBT();
+        CompoundTag nbt = bowStack.hasTag() ? bowStack.getTag() : new CompoundTag();
         nbt.putInt("arrows", i);
         bowStack.setTag(nbt);
         return bowStack;
@@ -60,7 +60,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
      * @return If there was an arrow
      */
     private static boolean reduceArrowCount(@Nonnull ItemStack bowStack, Random rnd) {
-        CompoundNBT nbt = bowStack.getTag();
+        CompoundTag nbt = bowStack.getTag();
         if (nbt == null || !nbt.contains("arrows")) return false;
         int count = nbt.getInt("arrows");
         if (count == -1) return true;
@@ -93,21 +93,21 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         int arrows = getArrowsLeft(stack);
         if (arrows == -1) {
-            tooltip.add(new TranslationTextComponent(Enchantments.INFINITY_ARROWS.getDescriptionId()).withStyle(TextFormatting.DARK_GRAY));
+            tooltip.add(new TranslatableComponent(Enchantments.INFINITY_ARROWS.getDescriptionId()).withStyle(ChatFormatting.DARK_GRAY));
         } else if (arrows == 0) {
-            tooltip.add(new TranslationTextComponent("text.vampirism.crossbow.not_loaded").withStyle(TextFormatting.DARK_GRAY));
+            tooltip.add(new TranslatableComponent("text.vampirism.crossbow.not_loaded").withStyle(ChatFormatting.DARK_GRAY));
 
         } else {
-            tooltip.add(new TranslationTextComponent("text.vampirism.crossbow.loaded_arrow_count", arrows).withStyle(TextFormatting.DARK_GRAY));
+            tooltip.add(new TranslatableComponent("text.vampirism.crossbow.loaded_arrow_count", arrows).withStyle(ChatFormatting.DARK_GRAY));
         }
     }
 
     @Override
-    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
         if (this.allowdedIn(group)) {
             items.add(setArrowsLeft(new ItemStack(this), 0));
             items.add(setArrowsLeft(new ItemStack(this), MAX_ARROW_COUNT));
@@ -127,7 +127,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
 
     @Nonnull
     @Override
-    protected ItemStack findAmmo(PlayerEntity player, ItemStack bowStack) {
+    protected ItemStack findAmmo(Player player, ItemStack bowStack) {
         boolean arrow = reduceArrowCount(bowStack, player.getRandom());
         if (!arrow) {
             for (int i = 0; i < player.inventory.getContainerSize(); ++i) {
@@ -152,12 +152,12 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     }
 
     @Override
-    protected int getCooldown(PlayerEntity player, ItemStack stack) {
+    protected int getCooldown(Player player, ItemStack stack) {
         return 8;
     }
 
     @Override
-    protected boolean isCrossbowInfinite(ItemStack stack, PlayerEntity player) {
+    protected boolean isCrossbowInfinite(ItemStack stack, Player player) {
         return false;
     }
 
@@ -166,7 +166,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
         return false;
     }
 
-    private int getReloadCooldown(PlayerEntity player, ItemStack bowStack) {
+    private int getReloadCooldown(Player player, ItemStack bowStack) {
         return 100;
     }
 

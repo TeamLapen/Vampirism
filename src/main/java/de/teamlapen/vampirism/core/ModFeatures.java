@@ -13,19 +13,19 @@ import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampStructure;
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.DimensionSettings;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.BlockStateFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.structure.IStructurePieceType;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.feature.template.IStructureProcessorType;
-import net.minecraft.world.gen.settings.DimensionStructuresSettings;
-import net.minecraft.world.gen.settings.StructureSeparationSettings;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.StructurePieceType;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import net.minecraft.world.level.levelgen.StructureSettings;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,17 +35,17 @@ import java.util.Map;
 
 public class ModFeatures {
     //features
-    public static final VampireDungeonFeature vampire_dungeon = new VampireDungeonFeature(NoFeatureConfig.CODEC);
-    public static final VampirismLakeFeature mod_lake = new VampirismLakeFeature(BlockStateFeatureConfig.CODEC);
+    public static final VampireDungeonFeature vampire_dungeon = new VampireDungeonFeature(NoneFeatureConfiguration.CODEC);
+    public static final VampirismLakeFeature mod_lake = new VampirismLakeFeature(BlockStateConfiguration.CODEC);
     //structures
-    public static final Structure<NoFeatureConfig> hunter_camp = new HunterCampStructure(NoFeatureConfig.CODEC/*deserialize*/);
+    public static final StructureFeature<NoneFeatureConfiguration> hunter_camp = new HunterCampStructure(NoneFeatureConfiguration.CODEC/*deserialize*/);
     //structure pieces
-    public static final IStructurePieceType hunter_camp_fireplace = IStructurePieceType.setPieceId(HunterCampPieces.Fireplace::new, REFERENCE.MODID + ":hunter_camp_fireplace");
-    public static final IStructurePieceType hunter_camp_tent = IStructurePieceType.setPieceId(HunterCampPieces.Tent::new, REFERENCE.MODID + ":hunter_camp_tent");
-    public static final IStructurePieceType hunter_camp_special = IStructurePieceType.setPieceId(HunterCampPieces.SpecialBlock::new, REFERENCE.MODID + ":hunter_camp_craftingtable");
+    public static final StructurePieceType hunter_camp_fireplace = StructurePieceType.setPieceId(HunterCampPieces.Fireplace::new, REFERENCE.MODID + ":hunter_camp_fireplace");
+    public static final StructurePieceType hunter_camp_tent = StructurePieceType.setPieceId(HunterCampPieces.Tent::new, REFERENCE.MODID + ":hunter_camp_tent");
+    public static final StructurePieceType hunter_camp_special = StructurePieceType.setPieceId(HunterCampPieces.SpecialBlock::new, REFERENCE.MODID + ":hunter_camp_craftingtable");
     //structure proccesor
-    public static final IStructureProcessorType<RandomStructureProcessor> random_selector = IStructureProcessorType.register/*register*/(REFERENCE.MODID + ":random_selector", RandomStructureProcessor.CODEC);
-    public static final IStructureProcessorType<BiomeTopBlockProcessor> biome_based = IStructureProcessorType.register/*register*/(REFERENCE.MODID + ":biome_based", BiomeTopBlockProcessor.CODEC);
+    public static final StructureProcessorType<RandomStructureProcessor> random_selector = StructureProcessorType.register/*register*/(REFERENCE.MODID + ":random_selector", RandomStructureProcessor.CODEC);
+    public static final StructureProcessorType<BiomeTopBlockProcessor> biome_based = StructureProcessorType.register/*register*/(REFERENCE.MODID + ":biome_based", BiomeTopBlockProcessor.CODEC);
     private static final Logger LOGGER = LogManager.getLogger();
 
     static void registerFeatures(IForgeRegistry<Feature<?>> registry) {
@@ -53,14 +53,14 @@ public class ModFeatures {
         registry.register(mod_lake.setRegistryName(REFERENCE.MODID, "mod_lake"));
     }
 
-    static void registerStructures(IForgeRegistry<Structure<?>> registry) {
-        Structure.STEP.put(hunter_camp, GenerationStage.Decoration.SURFACE_STRUCTURES);
-        Structure.STRUCTURES_REGISTRY.put(REFERENCE.MODID + ":hunter_camp", hunter_camp);
+    static void registerStructures(IForgeRegistry<StructureFeature<?>> registry) {
+        StructureFeature.STEP.put(hunter_camp, GenerationStep.Decoration.SURFACE_STRUCTURES);
+        StructureFeature.STRUCTURES_REGISTRY.put(REFERENCE.MODID + ":hunter_camp", hunter_camp);
         registry.register(hunter_camp.setRegistryName(REFERENCE.MODID, "hunter_camp"));
     }
 
     static void registerIgnoredBiomesForStructures() {
-        VampirismAPI.worldGenRegistry().removeStructureFromBiomeCategories(hunter_camp.getRegistryName(), Lists.newArrayList(Biome.Category.OCEAN, Biome.Category.THEEND, Biome.Category.NETHER, Biome.Category.BEACH, Biome.Category.ICY, Biome.Category.RIVER, Biome.Category.JUNGLE));
+        VampirismAPI.worldGenRegistry().removeStructureFromBiomeCategories(hunter_camp.getRegistryName(), Lists.newArrayList(Biome.BiomeCategory.OCEAN, Biome.BiomeCategory.THEEND, Biome.BiomeCategory.NETHER, Biome.BiomeCategory.BEACH, Biome.BiomeCategory.ICY, Biome.BiomeCategory.RIVER, Biome.BiomeCategory.JUNGLE));
         VampirismAPI.worldGenRegistry().removeStructureFromBiomes(hunter_camp.getRegistryName(), Lists.newArrayList(ModBiomes.VAMPIRE_FOREST_KEY.location()));
         VampirismAPI.worldGenRegistry().removeStructureFromBiomes(hunter_camp.getRegistryName(), Lists.newArrayList(ModBiomes.VAMPIRE_FOREST_HILLS_KEY.location()));
 
@@ -73,13 +73,13 @@ public class ModFeatures {
     public static void registerStructureSeparation() {
         //https://github.com/MinecraftForge/MinecraftForge/pull/7232
         //https://github.com/MinecraftForge/MinecraftForge/pull/7331
-        DimensionStructuresSettings settings = DimensionSettings.bootstrap().structureSettings();
+        StructureSettings settings = NoiseGeneratorSettings.bootstrap().structureSettings();
         //Copy/Overwrite
-        Map<Structure<?>, StructureSeparationSettings> structureSettingsMapOverworld = new HashMap<>(settings.structureConfig()); //TODO 1.17 check if any PR has been accepted
+        Map<StructureFeature<?>, StructureFeatureConfiguration> structureSettingsMapOverworld = new HashMap<>(settings.structureConfig()); //TODO 1.17 check if any PR has been accepted
         addStructureSeparationSettings(structureSettingsMapOverworld);
         if (VampirismConfig.COMMON.villageModify.get()) {
             LOGGER.info("Replacing vanilla village structure separation settings for the overworld dimension preset");
-            structureSettingsMapOverworld.put(Structure.VILLAGE, new ConfigurableStructureSeparationSettings(VampirismConfig.COMMON.villageDistance, VampirismConfig.COMMON.villageSeparation, DimensionStructuresSettings.DEFAULTS.get(Structure.VILLAGE).salt()));
+            structureSettingsMapOverworld.put(StructureFeature.VILLAGE, new ConfigurableStructureSeparationSettings(VampirismConfig.COMMON.villageDistance, VampirismConfig.COMMON.villageSeparation, StructureSettings.DEFAULTS.get(StructureFeature.VILLAGE).salt()));
         } else {
             LOGGER.trace("Not modifying village");
         }
@@ -92,11 +92,11 @@ public class ModFeatures {
      *
      * @param settings
      */
-    public static void checkWorldStructureSeparation(RegistryKey<World> dimension, boolean flatWorld, DimensionStructuresSettings settings) {
-        if (dimension.compareTo(World.OVERWORLD) != 0 || flatWorld) return;
+    public static void checkWorldStructureSeparation(ResourceKey<Level> dimension, boolean flatWorld, StructureSettings settings) {
+        if (dimension.compareTo(Level.OVERWORLD) != 0 || flatWorld) return;
         if (!VampirismConfig.COMMON.enforceTentGeneration.get()) return;
         //Copy/Overwrite
-        Map<Structure<?>, StructureSeparationSettings> structureSettings = new HashMap<>(settings.structureConfig());
+        Map<StructureFeature<?>, StructureFeatureConfiguration> structureSettings = new HashMap<>(settings.structureConfig());
         if (!structureSettings.containsKey(hunter_camp)) {
             LOGGER.info("Cannot find hunter camp configuration for loaded world -> Adding");
             int dist = VampirismConfig.COMMON.hunterTentDistance.get();
@@ -105,12 +105,12 @@ public class ModFeatures {
                 LOGGER.warn("Hunter tent distance must be larger than separation. Adjusting");
                 dist = sep + 1;
             }
-            structureSettings.put(hunter_camp, new StructureSeparationSettings(dist, sep, 14357719));
+            structureSettings.put(hunter_camp, new StructureFeatureConfiguration(dist, sep, 14357719));
         }
         ((DimensionStructureSettingsAccessor) settings).setStructureSeparation_vampirism(structureSettings);
     }
 
-    private static void addStructureSeparationSettings(Map<Structure<?>, StructureSeparationSettings> settings) {
+    private static void addStructureSeparationSettings(Map<StructureFeature<?>, StructureFeatureConfiguration> settings) {
         settings.put(hunter_camp, new ConfigurableStructureSeparationSettings(VampirismConfig.COMMON.hunterTentDistance, VampirismConfig.COMMON.hunterTentSeparation, 14357719));
 
     }

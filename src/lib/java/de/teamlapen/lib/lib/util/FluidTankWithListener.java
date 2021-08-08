@@ -6,6 +6,8 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+
 /**
  * normal {@link FluidTank} with the ability do disable the draining out of this tank and adding a listener for notifications if the content of the tank changes
  */

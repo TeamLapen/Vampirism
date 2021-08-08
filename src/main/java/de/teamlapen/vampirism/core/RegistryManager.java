@@ -15,33 +15,35 @@ import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.world.biome.VampirismBiomeFeatures;
-import net.minecraft.block.Block;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.brain.schedule.Schedule;
-import net.minecraft.entity.ai.brain.sensor.SensorType;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.Item;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.Potion;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.schedule.Schedule;
+import net.minecraft.world.entity.ai.sensing.SensorType;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.stats.StatType;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.village.PointOfInterestType;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.registries.ObjectHolderRegistry;
+
+import de.teamlapen.lib.lib.util.IInitListener.Step;
 
 /**
  * Handles registrations of all registrable things as well as a few additional
@@ -147,12 +149,12 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterContainer(RegistryEvent.Register<ContainerType<?>> event) {
+    public void onRegisterContainer(RegistryEvent.Register<MenuType<?>> event) {
         ModContainer.registerContainer(event.getRegistry());
     }
 
     @SubscribeEvent
-    public void onRegisterEffects(RegistryEvent.Register<Effect> event) {
+    public void onRegisterEffects(RegistryEvent.Register<MobEffect> event) {
         ModEffects.registerEffects(event.getRegistry());
     }
 
@@ -199,7 +201,7 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterPointOfInterest(RegistryEvent.Register<PointOfInterestType> event) {
+    public void onRegisterPointOfInterest(RegistryEvent.Register<PoiType> event) {
         ModVillage.registerVillagePointOfInterestType(event.getRegistry());
     }
 
@@ -214,7 +216,7 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterRecipeSerializer(RegistryEvent.Register<IRecipeSerializer<?>> event) {
+    public void onRegisterRecipeSerializer(RegistryEvent.Register<RecipeSerializer<?>> event) {
         ModRecipes.registerSerializer(event.getRegistry());
     }
 
@@ -256,7 +258,7 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterStructures(RegistryEvent.Register<Structure<?>> event) {
+    public void onRegisterStructures(RegistryEvent.Register<StructureFeature<?>> event) {
         ModFeatures.registerStructures(event.getRegistry());
     }
 
@@ -266,7 +268,7 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterTiles(RegistryEvent.Register<TileEntityType<?>> event) {
+    public void onRegisterTiles(RegistryEvent.Register<BlockEntityType<?>> event) {
         ModTiles.registerTiles(event.getRegistry());
     }
 }

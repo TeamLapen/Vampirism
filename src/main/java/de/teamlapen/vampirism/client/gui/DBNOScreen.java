@@ -1,16 +1,16 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -19,14 +19,14 @@ import javax.annotation.Nullable;
 @OnlyIn(Dist.CLIENT)
 public class DBNOScreen extends Screen {
 
-    private final ITextComponent causeOfDeath;
+    private final Component causeOfDeath;
     private int enableButtonsTimer;
     private CooldownButton resurrectButton;
     private Button dieButton;
 
 
-    public DBNOScreen(@Nullable ITextComponent textComponent) {
-        super(new TranslationTextComponent("gui.vampirism.dbno.title"));
+    public DBNOScreen(@Nullable Component textComponent) {
+        super(new TranslatableComponent("gui.vampirism.dbno.title"));
         this.causeOfDeath = textComponent;
     }
 
@@ -46,7 +46,7 @@ public class DBNOScreen extends Screen {
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.fillGradient(matrixStack, 0, 0, this.width, this.height, 1615855616, -1602211792);
         RenderSystem.pushMatrix();
         RenderSystem.scalef(2.0F, 2.0F, 2.0F);
@@ -81,12 +81,12 @@ public class DBNOScreen extends Screen {
 
     protected void init() {
         this.enableButtonsTimer = 0;
-        dieButton = this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 72, 200, 20, new TranslationTextComponent("gui.vampirism.dbno.die"), (p_213021_1_) -> {
+        dieButton = this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 72, 200, 20, new TranslatableComponent("gui.vampirism.dbno.die"), (p_213021_1_) -> {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DIE, ""));
             this.minecraft.setScreen(null);
         }));
         dieButton.active = false;
-        resurrectButton = this.addButton(new CooldownButton(this.width / 2 - 100, this.height / 4 + 96, 200, 20, new TranslationTextComponent("gui.vampirism.dbno.resurrect"), (p_213020_1_) -> {
+        resurrectButton = this.addButton(new CooldownButton(this.width / 2 - 100, this.height / 4 + 96, 200, 20, new TranslatableComponent("gui.vampirism.dbno.resurrect"), (p_213020_1_) -> {
             if (this.minecraft.player != null)
                 VampirePlayer.getOpt(this.minecraft.player).ifPresent(VampirePlayer::tryResurrect);
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESURRECT, ""));

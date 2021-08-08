@@ -4,20 +4,21 @@ import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.core.ModRegistries;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ActionBindingPacket implements IMessage {
+public record ActionBindingPacket(int actionBindingId,
+                                  IAction action) implements IMessage {
 
-    static void encode(final ActionBindingPacket msg, PacketBuffer buf) {
+    static void encode(final ActionBindingPacket msg, FriendlyByteBuf buf) {
         buf.writeVarInt(msg.actionBindingId);
         buf.writeUtf(msg.action.getRegistryName().toString());
     }
 
-    static ActionBindingPacket decode(PacketBuffer buf) {
+    static ActionBindingPacket decode(FriendlyByteBuf buf) {
         return new ActionBindingPacket(buf.readVarInt(), ModRegistries.ACTIONS.getValue(new ResourceLocation(buf.readUtf(32767))));
     }
 
@@ -27,11 +28,4 @@ public class ActionBindingPacket implements IMessage {
         ctx.setPacketHandled(true);
     }
 
-    public final int actionBindingId;
-    public final IAction action;
-
-    public ActionBindingPacket(int actionBindingId, IAction action) {
-        this.actionBindingId = actionBindingId;
-        this.action = action;
-    }
 }

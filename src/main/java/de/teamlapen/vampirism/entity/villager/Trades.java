@@ -2,24 +2,24 @@ package de.teamlapen.vampirism.entity.villager;
 
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.BloodBottleItem;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.merchant.villager.VillagerTrades;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.MerchantOffer;
-import net.minecraft.util.IItemProvider;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.level.ItemLike;
 
 import javax.annotation.Nullable;
 import java.util.Random;
 
 public class Trades {
-    public static final VillagerTrades.ITrade[] converted_trades = new VillagerTrades.ITrade[]{new net.minecraft.entity.merchant.villager.VillagerTrades.EmeraldForItemsTrade(ModItems.human_heart, 9, 2, 2), new VillagerTrades.ItemsForEmeraldsTrade(ModItems.human_heart, 3, 9, 2), new ItemsForEmeraldsTradeWithDamage(BloodBottleItem.getStackWithDamage(9), 1, 3, 12, 2)};
+    public static final VillagerTrades.ItemListing[] converted_trades = new VillagerTrades.ItemListing[]{new net.minecraft.world.entity.npc.VillagerTrades.EmeraldForItems(ModItems.human_heart, 9, 2, 2), new VillagerTrades.ItemsForEmeralds(ModItems.human_heart, 3, 9, 2), new ItemsForEmeraldsTradeWithDamage(BloodBottleItem.getStackWithDamage(9), 1, 3, 12, 2)};
 
     /**
      * copy of {@link VillagerTrades.ItemsForEmeraldsTrade} with damage of itemstack
      */
-    public static class ItemsForEmeraldsTradeWithDamage implements VillagerTrades.ITrade {
+    public static class ItemsForEmeraldsTradeWithDamage implements VillagerTrades.ItemListing {
         private final ItemStack result;
         private final int emeraldAmount;
         private final int resultAmount;
@@ -55,14 +55,14 @@ public class Trades {
         }
     }
 
-    public static class ItemsForSouls implements VillagerTrades.ITrade {
+    public static class ItemsForSouls implements VillagerTrades.ItemListing {
         private final int xp;
         private final Price price;
         private final ItemStack[] sellingItem;
         private final Price selling;
         private final int maxUses;
 
-        public ItemsForSouls(Price priceIn, IItemProvider sellingItemIn, Price sellingIn) {
+        public ItemsForSouls(Price priceIn, ItemLike sellingItemIn, Price sellingIn) {
             this(priceIn, new ItemStack[]{new ItemStack(sellingItemIn.asItem())}, sellingIn, 2, 8);
         }
 
@@ -70,7 +70,7 @@ public class Trades {
             this(priceIn, sellingItemIn, sellingIn, 2, 8);
         }
 
-        public ItemsForSouls(Price priceIn, IItemProvider sellingItemIn, Price sellingIn, int xpIn, int maxUsesIn) {
+        public ItemsForSouls(Price priceIn, ItemLike sellingItemIn, Price sellingIn, int xpIn, int maxUsesIn) {
             this.price = priceIn;
             this.sellingItem = new ItemStack[]{new ItemStack(sellingItemIn.asItem())};
             this.selling = sellingIn;
@@ -93,14 +93,14 @@ public class Trades {
         }
     }
 
-    public static class ItemsForHeart implements VillagerTrades.ITrade {
+    public static class ItemsForHeart implements VillagerTrades.ItemListing {
         private final int xp;
         private final Price price;
         private final ItemStack[] sellingItem;
         private final Price selling;
         private final int maxUses;
 
-        public ItemsForHeart(Price priceIn, IItemProvider sellingItemIn, Price sellingIn) {
+        public ItemsForHeart(Price priceIn, ItemLike sellingItemIn, Price sellingIn) {
             this(priceIn, new ItemStack[]{new ItemStack(sellingItemIn.asItem())}, sellingIn, 2, 8);
         }
 
@@ -108,7 +108,7 @@ public class Trades {
             this(priceIn, sellingItemIn, sellingIn, 2, 8);
         }
 
-        public ItemsForHeart(Price priceIn, IItemProvider sellingItemIn, Price sellingIn, int xpIn, int maxUsesIn) {
+        public ItemsForHeart(Price priceIn, ItemLike sellingItemIn, Price sellingIn, int xpIn, int maxUsesIn) {
             this.price = priceIn;
             this.sellingItem = new ItemStack[]{new ItemStack(sellingItemIn.asItem())};
             this.selling = sellingIn;
@@ -131,7 +131,7 @@ public class Trades {
         }
     }
 
-    public static class BloodBottleForHeart implements VillagerTrades.ITrade {
+    public static class BloodBottleForHeart implements VillagerTrades.ItemListing {
         private final int xp;
         private final Price price;
         private final Price selling;

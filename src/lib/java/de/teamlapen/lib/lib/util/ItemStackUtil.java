@@ -1,7 +1,7 @@
 package de.teamlapen.lib.lib.util;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
@@ -11,7 +11,7 @@ public class ItemStackUtil {
      * Can be used in {@link IInventory#decrStackSize(int, int)}
      */
     public static @Nonnull
-    ItemStack decrIInventoryStackSize(IInventory inv, int slot, int amt) {
+    ItemStack decrIInventoryStackSize(Container inv, int slot, int amt) {
         ItemStack stack = inv.getItem(slot);
         if (!stack.isEmpty()) {
             if (stack.getCount() <= amt) {

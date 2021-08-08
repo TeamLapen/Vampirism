@@ -3,19 +3,21 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Food;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class GarlicBreadItem extends VampirismItem implements IFactionExclusiveItem {
     private static final String regName = "garlic_bread";
 
     public GarlicBreadItem() {
-        super(regName, new Properties().food((new Food.Builder()).nutrition(6).saturationMod(0.7F).build()).tab(ItemGroup.TAB_FOOD));
+        super(regName, new Properties().food((new FoodProperties.Builder()).nutrition(6).saturationMod(0.7F).build()).tab(CreativeModeTab.TAB_FOOD));
     }
 
     @Nonnull
@@ -26,7 +28,7 @@ public class GarlicBreadItem extends VampirismItem implements IFactionExclusiveI
 
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
         if (!worldIn.isClientSide) {
             entityLiving.curePotionEffects(stack);
         }

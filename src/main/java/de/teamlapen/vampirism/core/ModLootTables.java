@@ -4,11 +4,11 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.REFERENCE;
-import net.minecraft.loot.LootEntry;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.RandomValueRange;
-import net.minecraft.loot.TableLootEntry;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.RandomValueBounds;
+import net.minecraft.world.level.storage.loot.entries.LootTableReference;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
@@ -76,8 +76,8 @@ public class ModLootTables {
     }
 
     private static LootPool getInjectPool(String entryName) {
-        LootEntry.Builder<?> entryBuilder = TableLootEntry.lootTableReference(INJECTION_TABLES.get(entryName)).setWeight(1);
-        return LootPool.lootPool().name("vampirism_inject_pool").bonusRolls(0, 1).setRolls(new RandomValueRange(1)).add(entryBuilder).build();
+        LootPoolEntryContainer.Builder<?> entryBuilder = LootTableReference.lootTableReference(INJECTION_TABLES.get(entryName)).setWeight(1);
+        return LootPool.lootPool().name("vampirism_inject_pool").bonusRolls(0, 1).setRolls(new RandomValueBounds(1)).add(entryBuilder).build();
     }
 
     public static boolean checkAndResetInsertedAll() {

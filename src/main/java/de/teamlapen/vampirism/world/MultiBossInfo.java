@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.world;
 
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.network.UpdateMultiBossInfoPacket;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.BossInfo;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.BossEvent;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -13,12 +13,12 @@ import java.util.UUID;
 
 public class MultiBossInfo {
     private final UUID uniqueId;
-    protected ITextComponent name;
-    protected BossInfo.Overlay overlay;
+    protected Component name;
+    protected BossEvent.BossBarOverlay overlay;
     protected List<Color> colors;
     protected Map<Color, Float> entries;
 
-    public MultiBossInfo(UUID uniqueIdIn, ITextComponent nameIn, BossInfo.Overlay overlayIn, Color... entries) {
+    public MultiBossInfo(UUID uniqueIdIn, Component nameIn, BossEvent.BossBarOverlay overlayIn, Color... entries) {
         this.uniqueId = uniqueIdIn;
         this.name = nameIn;
         this.overlay = overlayIn;
@@ -50,19 +50,19 @@ public class MultiBossInfo {
         return entries;
     }
 
-    public ITextComponent getName() {
+    public Component getName() {
         return name;
     }
 
-    public void setName(ITextComponent name) {
+    public void setName(Component name) {
         this.name = name;
     }
 
-    public BossInfo.Overlay getOverlay() {
+    public BossEvent.BossBarOverlay getOverlay() {
         return overlay;
     }
 
-    public void setOverlay(BossInfo.Overlay overlay) {
+    public void setOverlay(BossEvent.BossBarOverlay overlay) {
         this.overlay = overlay;
     }
 
@@ -90,7 +90,7 @@ public class MultiBossInfo {
             case UPDATE_NAME:
                 this.name = packet.getName();
                 break;
-            case UPDATE_PCT:
+            case UPDATE_PROGRESS:
                 this.entries = packet.getEntries();
                 break;
             case UPDATE_STYLE:

@@ -2,14 +2,14 @@ package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
 import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.potion.Effect;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.effect.MobEffect;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -22,7 +22,7 @@ public interface IVillageFactionData {
     IVillageFactionData INSTANCE = new IVillageFactionData() {
         @Nullable
         @Override
-        public Effect getBadOmenEffect() {
+        public MobEffect getBadOmenEffect() {
             return null;
         }
 
@@ -43,8 +43,8 @@ public interface IVillageFactionData {
         }
 
         @Override
-        public Class<? extends MobEntity> getGuardSuperClass() {
-            return MobEntity.class;
+        public Class<? extends Mob> getGuardSuperClass() {
+            return Mob.class;
         }
 
         @Nullable
@@ -70,7 +70,7 @@ public interface IVillageFactionData {
      * @return A faction specific bad omen effect
      */
     @Nullable
-    default Effect getBadOmenEffect() {
+    default MobEffect getBadOmenEffect() {
         return null;
     }
 
@@ -83,7 +83,7 @@ public interface IVillageFactionData {
 
     VillagerProfession getFactionVillageProfession();
 
-    Class<? extends MobEntity> getGuardSuperClass();
+    Class<? extends Mob> getGuardSuperClass();
 
     @Nullable
     EntityType<? extends ITaskMasterEntity> getTaskMasterEntity();

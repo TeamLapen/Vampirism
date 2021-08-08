@@ -3,9 +3,9 @@ package de.teamlapen.vampirism.api.entity;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -27,7 +27,7 @@ public interface IVampirismEntityRegistry {
      * @param overlay_loc Location of the overlay texture file
      */
     @ThreadSafeAPI
-    void addConvertible(EntityType<? extends CreatureEntity> type, ResourceLocation overlay_loc);
+    void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc);
 
     /**
      * Register a {@link EntityType} which can be converted using a default {@link IConvertingHandler} and thereby being turned into Vampirim's default {@link IConvertedCreature}
@@ -38,7 +38,7 @@ public interface IVampirismEntityRegistry {
      * @param overlay_loc Location of the overlay texture file
      */
     @ThreadSafeAPI
-    void addConvertible(EntityType<? extends CreatureEntity> type, ResourceLocation overlay_loc, IConvertingHandler.IDefaultHelper helper);
+    void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc, IConvertingHandler.IDefaultHelper helper);
 
     /**
      * Register a {@link EntityType} which can be converted
@@ -49,7 +49,7 @@ public interface IVampirismEntityRegistry {
      * @param handler     Handles the conversion
      */
     @ThreadSafeAPI
-    void addConvertible(EntityType<? extends CreatureEntity> type, ResourceLocation overlay_loc, IConvertingHandler handler);
+    void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc, IConvertingHandler handler);
 
     /**
      * Registers a custom {@link IExtendedCreatureVampirism} for a entity class
@@ -59,22 +59,22 @@ public interface IVampirismEntityRegistry {
      * @param <T>         The base class type
      */
     @ThreadSafeAPI
-    <T extends CreatureEntity> void addCustomExtendedCreature(Class<? extends T> clazz, Function<T, IExtendedCreatureVampirism> constructor);
+    <T extends PathfinderMob> void addCustomExtendedCreature(Class<? extends T> clazz, Function<T, IExtendedCreatureVampirism> constructor);
 
     @Nullable
-    IConvertedCreature convert(CreatureEntity entity);
+    IConvertedCreature convert(PathfinderMob entity);
 
     /**
      * @return A map mapping the overlay resource location string to e convertible entity's class
      */
     @OnlyIn(Dist.CLIENT)
-    Map<EntityType<? extends CreatureEntity>, ResourceLocation> getConvertibleOverlay();
+    Map<EntityType<? extends PathfinderMob>, ResourceLocation> getConvertibleOverlay();
 
     /**
      * @return The custom constructor registered for the given entity's class. Can be null if none is registered
      */
     @Nullable
-    <T extends CreatureEntity> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(T entity);
+    <T extends PathfinderMob> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(T entity);
 
     /**
      * Check the biteable entry for the given creature.
@@ -84,5 +84,5 @@ public interface IVampirismEntityRegistry {
      * Returns null otherwise
      */
     @Nullable
-    BiteableEntry getEntry(CreatureEntity creature);
+    BiteableEntry getEntry(PathfinderMob creature);
 }

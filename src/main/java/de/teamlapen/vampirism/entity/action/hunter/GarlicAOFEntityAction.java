@@ -8,14 +8,14 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.phys.AABB;
 
 import java.util.List;
 
-public class GarlicAOFEntityAction<T extends CreatureEntity & IEntityActionUser> extends HunterEntityAction<T> implements ILastingAction<T> {
+public class GarlicAOFEntityAction<T extends PathfinderMob & IEntityActionUser> extends HunterEntityAction<T> implements ILastingAction<T> {
 
     public GarlicAOFEntityAction(EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
@@ -41,11 +41,11 @@ public class GarlicAOFEntityAction<T extends CreatureEntity & IEntityActionUser>
 
     @Override
     public void onUpdate(T entity, int duration) {
-        List<PlayerEntity> players = entity.getCommandSenderWorld().getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(entity.getX() - 4, entity.getY() - 1, entity.getZ() - 4, entity.getX() + 4, entity.getY() + 3, entity.getZ() + 4));
-        for (PlayerEntity e : players) {
+        List<Player> players = entity.getCommandSenderWorld().getEntitiesOfClass(Player.class, new AABB(entity.getX() - 4, entity.getY() - 1, entity.getZ() - 4, entity.getX() + 4, entity.getY() + 3, entity.getZ() + 4));
+        for (Player e : players) {
             if (VampirismAPI.factionRegistry().getFaction(e) == VReference.VAMPIRE_FACTION) {
                 if (e.getEffect(ModEffects.garlic) == null || e.getEffect(ModEffects.garlic).getDuration() <= 60) {
-                    e.addEffect(new EffectInstance(ModEffects.garlic, 99));
+                    e.addEffect(new MobEffectInstance(ModEffects.garlic, 99));
                 }
             }
         }

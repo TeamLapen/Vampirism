@@ -6,13 +6,13 @@ import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Util;
-import net.minecraft.util.WeightedRandom;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.Util;
+import net.minecraft.util.WeighedRandom;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,13 +45,13 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     }
 
     @Override
-    public Desc<Q> activateTask(@Nullable PlayerEntity lord, @Nullable IMinionEntity minion, Q data) {
+    public Desc<Q> activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, Q data) {
         this.triggerAdvancements(lord);
         if (minion != null) {
             minion.recallMinion();
         }
         if (lord != null) {
-            lord.displayClientMessage(new TranslationTextComponent(Util.makeDescriptionId("minion_task", getRegistryName()) + ".start"), true);
+            lord.displayClientMessage(new TranslatableComponent(Util.makeDescriptionId("minion_task", getRegistryName()) + ".start"), true);
         }
         return new Desc<>(this, this.coolDownSupplier.apply(data), lord != null ? lord.getUUID() : null);
     }
@@ -67,7 +67,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     }
 
     @Override
-    public Desc<Q> readFromNBT(CompoundNBT nbt) {
+    public Desc<Q> readFromNBT(CompoundTag nbt) {
         return new Desc<>(this, nbt.getInt("cooldown"), nbt.contains("lordid") ? nbt.getUUID("lordid") : null);
     }
 
@@ -76,7 +76,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
         if (--desc.coolDown <= 0) {
             boolean lordOnline = desc.lordEntityID != null && ServerLifecycleHooks.getCurrentServer() != null && ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(desc.lordEntityID) != null;
             desc.coolDown = lordOnline ? coolDownSupplier.apply(data) : (int) (coolDownSupplier.apply(data) * VampirismConfig.BALANCE.miResourceCooldownOfflineMult.get());
-            data.getInventory().addItemStack(WeightedRandom.getRandomItem(rng, resources).getItem().copy());
+            WeighedRandom.getRandomItem(rng, resources).map(WeightedRandomItem::getItem).map(ItemStack::copy).ifPresent(s->data.getInventory().addItemStack(s));
         }
     }
 
@@ -98,7 +98,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
         }
 
         @Override
-        public void writeToNBT(CompoundNBT nbt) {
+        public void writeToNBT(CompoundTag nbt) {
             nbt.putInt("cooldown", coolDown);
             if (lordEntityID != null) {
                 nbt.putUUID("lordid", lordEntityID);

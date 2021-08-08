@@ -5,10 +5,10 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.event.FactionEvent;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
 import de.teamlapen.vampirism.api.world.ITotem;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 import org.apache.commons.lang3.tuple.Pair;
@@ -19,17 +19,17 @@ import java.util.List;
 
 public class VampirismEventFactory {
 
-    public static boolean fireVillagerCaptureEventPre(@Nonnull ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
+    public static boolean fireVillagerCaptureEventPre(@Nonnull ITotem totem, @Nonnull List<Villager> villagerIn, boolean forced) {
         VampirismVillageEvent.VillagerCaptureFinish.Pre event = new VampirismVillageEvent.VillagerCaptureFinish.Pre(totem, villagerIn, forced);
         MinecraftForge.EVENT_BUS.post(event);
         return event.getResult().equals(Event.Result.DENY);
     }
 
-    public static void fireVillagerCaptureEventPost(@Nonnull ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
+    public static void fireVillagerCaptureEventPost(@Nonnull ITotem totem, @Nonnull List<Villager> villagerIn, boolean forced) {
         MinecraftForge.EVENT_BUS.post(new VampirismVillageEvent.VillagerCaptureFinish.Post(totem, villagerIn, forced));
     }
 
-    public static VillagerEntity fireSpawnNewVillagerEvent(@Nonnull ITotem totem, @Nullable MobEntity oldEntity, @Nonnull VillagerEntity newEntity, boolean replaceOld, boolean converted) {
+    public static Villager fireSpawnNewVillagerEvent(@Nonnull ITotem totem, @Nullable Mob oldEntity, @Nonnull Villager newEntity, boolean replaceOld, boolean converted) {
         VampirismVillageEvent.SpawnNewVillager event = new VampirismVillageEvent.SpawnNewVillager(totem, oldEntity, newEntity, replaceOld, converted);
         MinecraftForge.EVENT_BUS.post(event);
         return event.getNewVillager();
@@ -56,7 +56,7 @@ public class VampirismEventFactory {
         MinecraftForge.EVENT_BUS.post(event);
     }
 
-    public static boolean fireMakeAggressive(@Nonnull ITotem totem, @Nonnull VillagerEntity entity) {
+    public static boolean fireMakeAggressive(@Nonnull ITotem totem, @Nonnull Villager entity) {
         VampirismVillageEvent.MakeAggressive event = new VampirismVillageEvent.MakeAggressive(totem, entity);
         MinecraftForge.EVENT_BUS.post(event);
         return !event.isCanceled();

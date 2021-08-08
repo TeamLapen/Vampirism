@@ -15,24 +15,24 @@ import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.IRequirementsStrategy;
-import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
-import net.minecraft.block.Blocks;
+import net.minecraft.advancements.RequirementsStrategy;
+import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.data.*;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.tags.ITag;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.tags.Tag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
@@ -44,6 +44,12 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.SingleItemRecipeBuilder;
 
 public class RecipesGenerator extends RecipeProvider {
     public RecipesGenerator(DataGenerator dataGenerator) {
@@ -57,66 +63,66 @@ public class RecipesGenerator extends RecipeProvider {
     }
 
     @Override
-    protected void buildShapelessRecipes(@Nonnull Consumer<IFinishedRecipe> consumer) {
-        IItemProvider hopper = Blocks.HOPPER;
-        IItemProvider cauldron = Blocks.CAULDRON;
-        IItemProvider black_dye = Items.BLACK_DYE;
-        IItemProvider stone_bricks = Blocks.STONE_BRICKS;
-        IItemProvider vampire_orchid = ModBlocks.vampire_orchid;
-        IItemProvider stone = Blocks.STONE;
-        IItemProvider castle_block_dark_brick = ModBlocks.castle_block_dark_brick;
-        IItemProvider castle_block_dark_stone = ModBlocks.castle_block_dark_stone;
-        IItemProvider castle_block_normal_brick = ModBlocks.castle_block_normal_brick;
-        IItemProvider castle_block_purple_brick = ModBlocks.castle_block_purple_brick;
-        IItemProvider vampire_book = ModItems.vampire_book;
-        IItemProvider vampire_fang = ModItems.vampire_fang;
-        IItemProvider book = Items.BOOK;
-        IItemProvider bread = Items.BREAD;
-        IItemProvider injection_empty = ModItems.injection_empty;
-        IItemProvider glass_bottle = Items.GLASS_BOTTLE;
-        IItemProvider garlic_beacon_core = ModItems.garlic_beacon_core;
-        IItemProvider garlic_beacon_core_improved = ModItems.garlic_beacon_core_improved;
-        IItemProvider garlic_beacon_normal = ModBlocks.garlic_beacon_normal;
-        IItemProvider bucket = Items.BUCKET;
-        IItemProvider gun_powder = Items.GUNPOWDER;
-        IItemProvider holy_water_bottle_normal = ModItems.holy_water_bottle_normal;
-        IItemProvider holy_water_bottle_enhanced = ModItems.holy_water_bottle_enhanced;
-        IItemProvider holy_water_bottle_ultimate = ModItems.holy_water_bottle_ultimate;
-        IItemProvider leather = Items.LEATHER;
-        IItemProvider feather = Items.FEATHER;
-        IItemProvider string = Items.STRING;
-        IItemProvider black_wool = Items.BLACK_WOOL;
-        IItemProvider blue_wool = Items.BLUE_WOOL;
-        IItemProvider white_wool = Items.WHITE_WOOL;
-        IItemProvider red_wool = Items.RED_WOOL;
-        IItemProvider crossbow_arrow_normal = ModItems.crossbow_arrow_normal;
-        IItemProvider blood_bottle = ModItems.blood_bottle;
-        IItemProvider pure_blood_0 = ModItems.pure_blood_0;
-        IItemProvider pure_blood_1 = ModItems.pure_blood_1;
-        IItemProvider pure_blood_2 = ModItems.pure_blood_2;
-        IItemProvider pure_blood_3 = ModItems.pure_blood_3;
-        IItemProvider pure_blood_4 = ModItems.pure_blood_4;
-        IItemProvider blood_infused_enhanced_iron_ingot = ModItems.blood_infused_enhanced_iron_ingot;
-        IItemProvider blood_infused_iron_ingot = ModItems.blood_infused_iron_ingot;
-        IItemProvider rotten_flesh = Items.ROTTEN_FLESH;
-        IItemProvider alchemical_fire = ModItems.item_alchemical_fire;
-        ITag<Item> planks = ItemTags.PLANKS;
-        ITag<Item> glass = Tags.Items.GLASS;
-        ITag<Item> glass_pane = Tags.Items.GLASS_PANES;
-        ITag<Item> logs = ItemTags.LOGS;
-        ITag<Item> diamond = Tags.Items.GEMS_DIAMOND;
-        ITag<Item> diamondBlock = Tags.Items.STORAGE_BLOCKS_DIAMOND;
-        ITag<Item> iron_ingot = Tags.Items.INGOTS_IRON;
-        ITag<Item> quartz_block = Tags.Items.STORAGE_BLOCKS_QUARTZ;
-        ITag<Item> coal_block = Tags.Items.STORAGE_BLOCKS_COAL;
-        ITag<Item> garlic = ModTags.Items.GARLIC;
-        ITag<Item> obsidian = Tags.Items.OBSIDIAN;
-        ITag<Item> wool = ItemTags.WOOL;
-        ITag<Item> stick = Tags.Items.RODS_WOODEN;
-        ITag<Item> iron_block = Tags.Items.STORAGE_BLOCKS_IRON;
-        ITag<Item> gold_ingot = Tags.Items.INGOTS_GOLD;
-        ITag<Item> pure_blood = ModTags.Items.PURE_BLOOD;
-        ITag<Item> holy_water = ModTags.Items.HOLY_WATER;
+    protected void buildShapelessRecipes(@Nonnull Consumer<FinishedRecipe> consumer) {
+        ItemLike hopper = Blocks.HOPPER;
+        ItemLike cauldron = Blocks.CAULDRON;
+        ItemLike black_dye = Items.BLACK_DYE;
+        ItemLike stone_bricks = Blocks.STONE_BRICKS;
+        ItemLike vampire_orchid = ModBlocks.vampire_orchid;
+        ItemLike stone = Blocks.STONE;
+        ItemLike castle_block_dark_brick = ModBlocks.castle_block_dark_brick;
+        ItemLike castle_block_dark_stone = ModBlocks.castle_block_dark_stone;
+        ItemLike castle_block_normal_brick = ModBlocks.castle_block_normal_brick;
+        ItemLike castle_block_purple_brick = ModBlocks.castle_block_purple_brick;
+        ItemLike vampire_book = ModItems.vampire_book;
+        ItemLike vampire_fang = ModItems.vampire_fang;
+        ItemLike book = Items.BOOK;
+        ItemLike bread = Items.BREAD;
+        ItemLike injection_empty = ModItems.injection_empty;
+        ItemLike glass_bottle = Items.GLASS_BOTTLE;
+        ItemLike garlic_beacon_core = ModItems.garlic_beacon_core;
+        ItemLike garlic_beacon_core_improved = ModItems.garlic_beacon_core_improved;
+        ItemLike garlic_beacon_normal = ModBlocks.garlic_beacon_normal;
+        ItemLike bucket = Items.BUCKET;
+        ItemLike gun_powder = Items.GUNPOWDER;
+        ItemLike holy_water_bottle_normal = ModItems.holy_water_bottle_normal;
+        ItemLike holy_water_bottle_enhanced = ModItems.holy_water_bottle_enhanced;
+        ItemLike holy_water_bottle_ultimate = ModItems.holy_water_bottle_ultimate;
+        ItemLike leather = Items.LEATHER;
+        ItemLike feather = Items.FEATHER;
+        ItemLike string = Items.STRING;
+        ItemLike black_wool = Items.BLACK_WOOL;
+        ItemLike blue_wool = Items.BLUE_WOOL;
+        ItemLike white_wool = Items.WHITE_WOOL;
+        ItemLike red_wool = Items.RED_WOOL;
+        ItemLike crossbow_arrow_normal = ModItems.crossbow_arrow_normal;
+        ItemLike blood_bottle = ModItems.blood_bottle;
+        ItemLike pure_blood_0 = ModItems.pure_blood_0;
+        ItemLike pure_blood_1 = ModItems.pure_blood_1;
+        ItemLike pure_blood_2 = ModItems.pure_blood_2;
+        ItemLike pure_blood_3 = ModItems.pure_blood_3;
+        ItemLike pure_blood_4 = ModItems.pure_blood_4;
+        ItemLike blood_infused_enhanced_iron_ingot = ModItems.blood_infused_enhanced_iron_ingot;
+        ItemLike blood_infused_iron_ingot = ModItems.blood_infused_iron_ingot;
+        ItemLike rotten_flesh = Items.ROTTEN_FLESH;
+        ItemLike alchemical_fire = ModItems.item_alchemical_fire;
+        Tag<Item> planks = ItemTags.PLANKS;
+        Tag<Item> glass = Tags.Items.GLASS;
+        Tag<Item> glass_pane = Tags.Items.GLASS_PANES;
+        Tag<Item> logs = ItemTags.LOGS;
+        Tag<Item> diamond = Tags.Items.GEMS_DIAMOND;
+        Tag<Item> diamondBlock = Tags.Items.STORAGE_BLOCKS_DIAMOND;
+        Tag<Item> iron_ingot = Tags.Items.INGOTS_IRON;
+        Tag<Item> quartz_block = Tags.Items.STORAGE_BLOCKS_QUARTZ;
+        Tag<Item> coal_block = Tags.Items.STORAGE_BLOCKS_COAL;
+        Tag<Item> garlic = ModTags.Items.GARLIC;
+        Tag<Item> obsidian = Tags.Items.OBSIDIAN;
+        Tag<Item> wool = ItemTags.WOOL;
+        Tag<Item> stick = Tags.Items.RODS_WOODEN;
+        Tag<Item> iron_block = Tags.Items.STORAGE_BLOCKS_IRON;
+        Tag<Item> gold_ingot = Tags.Items.INGOTS_GOLD;
+        Tag<Item> pure_blood = ModTags.Items.PURE_BLOOD;
+        Tag<Item> holy_water = ModTags.Items.HOLY_WATER;
 
         ShapedRecipeBuilder.shaped(ModBlocks.blood_grinder).define('Z', hopper).define('Y', planks).define('D', diamond).define('X', iron_ingot).pattern(" Z ").pattern("YDY").pattern("YXY").unlockedBy("has_hopper", has(hopper)).save(consumer, general("blood_grinder"));
         ShapedRecipeBuilder.shaped(ModBlocks.blood_sieve).define('X', iron_ingot).define('Q', quartz_block).define('Y', planks).define('Z', cauldron).pattern("XQX").pattern("YZY").pattern("YXY").unlockedBy("has_cauldron", has(cauldron)).save(consumer, general("blood_sieve"));
@@ -308,11 +314,11 @@ public class RecipesGenerator extends RecipeProvider {
     }
 
     private static class Shapeless extends ShapelessRecipeBuilder {
-        public Shapeless(IItemProvider itemProvider, int amount) {
+        public Shapeless(ItemLike itemProvider, int amount) {
             super(itemProvider, amount);
         }
 
-        public ShapelessRecipeBuilder addIngredient(ITag<Item> tag, int amount) {
+        public ShapelessRecipeBuilder addIngredient(Tag<Item> tag, int amount) {
             return this.requires(Ingredient.of(tag), amount);
         }
     }
@@ -326,9 +332,9 @@ public class RecipesGenerator extends RecipeProvider {
         }
 
         @Override
-        public void save(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
+        public void save(Consumer<FinishedRecipe> consumerIn, ResourceLocation id) {
             this.ensureValid(id);
-            this.advancement.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(IRequirementsStrategy.OR);
+            this.advancement.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
             consumerIn.accept(new Result(id, this.count, this.group == null ? "" : this.group, this.rows, this.key, this.advancement, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItemCategory().getRecipeFolderName() + "/" + id.getPath()), this.stack));
 
         }

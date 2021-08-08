@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.world.gen.util;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.gen.feature.template.AlwaysTrueTest;
-import net.minecraft.world.gen.feature.template.RuleEntry;
-import net.minecraft.world.gen.feature.template.RuleTest;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.levelgen.structure.templatesystem.PosAlwaysTrueTest;
+import net.minecraft.world.level.levelgen.structure.templatesystem.ProcessorRule;
+import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
  *
  * @see RuleEntry
  */
-public class RandomBlockState extends RuleEntry {
+public class RandomBlockState extends ProcessorRule {
     @SuppressWarnings("Convert2MethodRef")
-    public static final Codec<Pair<BlockState, Optional<CompoundNBT>>> PAIR_CODEC = RecordCodecBuilder.create((instance) -> {
+    public static final Codec<Pair<BlockState, Optional<CompoundTag>>> PAIR_CODEC = RecordCodecBuilder.create((instance) -> {
         return instance.group(BlockState.CODEC.fieldOf("state").forGetter(entry -> {
             return entry.getLeft();
-        }), CompoundNBT.CODEC.optionalFieldOf("output_nbt").forGetter(entry -> {
+        }), CompoundTag.CODEC.optionalFieldOf("output_nbt").forGetter(entry -> {
             return entry.getValue();
         })).apply(instance, ImmutablePair::new);
     });
@@ -46,18 +46,18 @@ public class RandomBlockState extends RuleEntry {
     });
     private static final Random RNG = new Random();
 
-    private final List<Pair<BlockState, Optional<CompoundNBT>>> states;
+    private final List<Pair<BlockState, Optional<CompoundTag>>> states;
 
     public RandomBlockState(RuleTest inputPredicate, RuleTest locationPredicate, BlockState defaultState, List<BlockState> outputStates) {
-        this(inputPredicate, locationPredicate, Pair.of(defaultState, Optional.empty()), outputStates.stream().map(state -> Pair.of(state, Optional.<CompoundNBT>empty())).collect(Collectors.toList()));
+        this(inputPredicate, locationPredicate, Pair.of(defaultState, Optional.empty()), outputStates.stream().map(state -> Pair.of(state, Optional.<CompoundTag>empty())).collect(Collectors.toList()));
     }
 
-    public RandomBlockState(RuleTest inputPredicate, RuleTest locationPredicate, Pair<BlockState, Optional<CompoundNBT>> defaultState, List<Pair<BlockState, Optional<CompoundNBT>>> states) {
-        super(inputPredicate, locationPredicate, AlwaysTrueTest.INSTANCE, defaultState.getLeft(), defaultState.getRight());
+    public RandomBlockState(RuleTest inputPredicate, RuleTest locationPredicate, Pair<BlockState, Optional<CompoundTag>> defaultState, List<Pair<BlockState, Optional<CompoundTag>>> states) {
+        super(inputPredicate, locationPredicate, PosAlwaysTrueTest.INSTANCE, defaultState.getLeft(), defaultState.getRight());
         this.states = states;
     }
 
-    public Pair<BlockState, Optional<CompoundNBT>> getOutput() {
+    public Pair<BlockState, Optional<CompoundTag>> getOutput() {
         if (!states.isEmpty()) {
             int type = RNG.nextInt(states.size());
             return states.get(type);

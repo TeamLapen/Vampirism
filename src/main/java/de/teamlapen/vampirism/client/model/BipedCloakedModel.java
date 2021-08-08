@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.client.model;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.LivingEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -13,17 +13,17 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class BipedCloakedModel<T extends LivingEntity> extends PlayerModel<T> {
-    protected ModelRenderer bipedCloak;
+    protected ModelPart bipedCloak;
 
     public BipedCloakedModel(float modelSize, boolean smallArms) {
         super(modelSize, smallArms);
-        bipedCloak = new ModelRenderer(this, 0, 0);
+        bipedCloak = new ModelPart(this, 0, 0);
         bipedCloak.setTexSize(64, 32);
         bipedCloak.addBox(-7.0F, 0.0F, 0.4F, 14, 20, 1);
         bipedCloak.setPos(0, 0, 2);
     }
 
-    public void renderCloak(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn) {
+    public void renderCloak(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn) {
         this.bipedCloak.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
     }
 

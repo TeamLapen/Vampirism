@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.world;
 
 import de.teamlapen.vampirism.api.EnumStrength;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.level.ChunkPos;
 
 import javax.annotation.Nonnull;
 

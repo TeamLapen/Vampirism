@@ -16,15 +16,17 @@ import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTier;
-import net.minecraft.util.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tiers;
+import net.minecraft.world.damagesource.DamageSource;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import net.minecraft.world.item.Item.Properties;
 
 /**
  * Does almost no damage, but can one hit kill vampire from behind when used by skilled hunters
@@ -35,8 +37,8 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
     public static boolean canKillInstant(LivingEntity target, LivingEntity attacker) {
         boolean instaKillFromBehind = false;
         boolean instaKillLowHealth = false;
-        if (attacker instanceof PlayerEntity && attacker.isAlive()) {
-            @Nullable IFactionPlayer factionPlayer = FactionPlayerHandler.get((PlayerEntity) attacker).getCurrentFactionPlayer().orElse(null);
+        if (attacker instanceof Player && attacker.isAlive()) {
+            @Nullable IFactionPlayer factionPlayer = FactionPlayerHandler.get((Player) attacker).getCurrentFactionPlayer().orElse(null);
             if (factionPlayer != null && factionPlayer.getFaction().equals(VReference.HUNTER_FACTION)) {
                 ISkillHandler skillHandler = factionPlayer.getSkillHandler();
                 if (skillHandler.isSkillEnabled(HunterSkills.stake2)) {
@@ -50,7 +52,7 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
             instaKillLowHealth = true;// make more out of this
         }
         if (instaKillFromBehind && !UtilLib.canReallySee(target, attacker, true)) {
-            return !(VampirismConfig.BALANCE.hsInstantKill2OnlyNPC.get() && target instanceof PlayerEntity) && target.getMaxHealth() < VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get();
+            return !(VampirismConfig.BALANCE.hsInstantKill2OnlyNPC.get() && target instanceof Player) && target.getMaxHealth() < VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get();
         } else if (instaKillLowHealth && target.getHealth() <= (VampirismConfig.BALANCE.hsInstantKill1MaxHealth.get() * target.getMaxHealth())) {
             return !VampirismConfig.BALANCE.hsInstantKill1FromBehind.get() || !UtilLib.canReallySee(target, attacker, true);
 
@@ -59,7 +61,7 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
     }
 
     public StakeItem() {
-        super(regName, ItemTier.WOOD, 1, -1, new Properties().tab(VampirismMod.creativeTab));
+        super(regName, Tiers.WOOD, 1, -1, new Properties().tab(VampirismMod.creativeTab));
     }
 
     @Nonnull
@@ -71,13 +73,13 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (!attacker.getCommandSenderWorld().isClientSide) {
-            if (target instanceof IVampireMob || (target instanceof PlayerEntity && Helper.isVampire(((PlayerEntity) target)))) {
+            if (target instanceof IVampireMob || (target instanceof Player && Helper.isVampire(((Player) target)))) {
                 if (canKillInstant(target, attacker)) {
-                    DamageSource dmg = attacker instanceof PlayerEntity ? DamageSource.playerAttack((PlayerEntity) attacker) : DamageSource.mobAttack(attacker);
+                    DamageSource dmg = attacker instanceof Player ? DamageSource.playerAttack((Player) attacker) : DamageSource.mobAttack(attacker);
                     dmg = dmg.bypassArmor();
                     target.hurt(dmg, 10000F);
-                    if (attacker instanceof ServerPlayerEntity) {
-                        ModAdvancements.TRIGGER_HUNTER_ACTION.trigger((ServerPlayerEntity) attacker, HunterActionTrigger.Action.STAKE);
+                    if (attacker instanceof ServerPlayer) {
+                        ModAdvancements.TRIGGER_HUNTER_ACTION.trigger((ServerPlayer) attacker, HunterActionTrigger.Action.STAKE);
                     }
                 }
 

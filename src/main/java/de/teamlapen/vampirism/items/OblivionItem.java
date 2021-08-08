@@ -9,20 +9,20 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.item.UseAction;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.DrinkHelper;
-import net.minecraft.util.Hand;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,16 +30,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class OblivionItem extends VampirismItem {
 
     public static void applyEffect(IFactionPlayer<?> factionPlayer) {
-        PlayerEntity player = factionPlayer.getRepresentingPlayer();
+        Player player = factionPlayer.getRepresentingPlayer();
         FactionPlayerHandler.getOpt(player).ifPresent(fph -> {
             ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
             if (((SkillHandler<?>) skillHandler).getRootNode().getChildren().stream().flatMap(a -> Arrays.stream(a.getElements())).noneMatch(skillHandler::isSkillEnabled))
                 return;
             boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
-            player.addEffect(new EffectInstance(ModEffects.oblivion, Integer.MAX_VALUE, test ? 100 : 4));
+            player.addEffect(new MobEffectInstance(ModEffects.oblivion, Integer.MAX_VALUE, test ? 100 : 4));
             if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst) {
                 HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, factionPlayer.getRepresentingPlayer(), false);
             }
@@ -52,17 +54,17 @@ public class OblivionItem extends VampirismItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslationTextComponent("text.vampirism.oblivion_potion.resets_skills").withStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslatableComponent("text.vampirism.oblivion_potion.resets_skills").withStyle(ChatFormatting.GRAY));
     }
 
     @Nonnull
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, @Nonnull World worldIn, LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(ItemStack stack, @Nonnull Level worldIn, LivingEntity entityLiving) {
         stack.shrink(1);
-        if (entityLiving instanceof PlayerEntity) {
-            FactionPlayerHandler.getOpt(((PlayerEntity) entityLiving)).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty()).ifPresent(OblivionItem::applyEffect);
+        if (entityLiving instanceof Player) {
+            FactionPlayerHandler.getOpt(((Player) entityLiving)).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty()).ifPresent(OblivionItem::applyEffect);
         }
         if (entityLiving instanceof MinionEntity) {
             ((MinionEntity<?>) entityLiving).getMinionData().ifPresent(d -> d.upgradeStat(-1, (MinionEntity<?>) entityLiving));
@@ -77,13 +79,13 @@ public class OblivionItem extends VampirismItem {
 
     @Nonnull
     @Override
-    public UseAction getUseAnimation(@Nonnull ItemStack stack) {
-        return UseAction.DRINK;
+    public UseAnim getUseAnimation(@Nonnull ItemStack stack) {
+        return UseAnim.DRINK;
     }
 
     @Nonnull
     @Override
-    public ActionResult<ItemStack> use(@Nonnull World worldIn, @Nonnull PlayerEntity playerIn, @Nonnull Hand handIn) {
-        return DrinkHelper.useDrink(worldIn, playerIn, handIn);
+    public InteractionResultHolder<ItemStack> use(@Nonnull Level worldIn, @Nonnull Player playerIn, @Nonnull InteractionHand handIn) {
+        return ItemUtils.useDrink(worldIn, playerIn, handIn);
     }
 }

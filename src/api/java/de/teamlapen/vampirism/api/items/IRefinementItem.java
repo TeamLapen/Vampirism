@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.items;
 
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public interface IRefinementItem {
 

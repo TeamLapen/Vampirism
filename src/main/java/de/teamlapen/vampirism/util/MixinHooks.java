@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.util;
 
 import com.google.common.collect.Lists;
-import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
-import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
+import net.minecraft.world.level.levelgen.feature.structures.StructurePoolElement;
+import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
 
 import java.util.List;
 
@@ -23,9 +23,9 @@ public class MixinHooks {
         onlyOneStructure.addAll(structures);
     }
 
-    public static boolean checkStructures(List<? super AbstractVillagePiece> pieces, JigsawPiece jigsawPiece) {
+    public static boolean checkStructures(List<? super PoolElementStructurePiece> pieces, StructurePoolElement jigsawPiece) {
         if (!onlyOneStructure.contains(jigsawPiece.toString())) return false;
-        return pieces.stream().anyMatch(structurePiece -> onlyOneStructure.stream().anyMatch(string -> ((AbstractVillagePiece) structurePiece).getElement().toString().equals(string)));
+        return pieces.stream().anyMatch(structurePiece -> onlyOneStructure.stream().anyMatch(string -> ((PoolElementStructurePiece) structurePiece).getElement().toString().equals(string)));
     }
 
 }

@@ -18,26 +18,25 @@ import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.util.SupporterManager;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.monster.PatrollerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.PatrollingMonster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
@@ -48,16 +47,23 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.Optional;
 
+import net.minecraft.world.entity.ai.goal.BreakDoorGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+
 /**
  * Advanced vampire. Is strong. Represents supporters
  */
 public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvancedVampire, IPlayerOverlay, IEntityActionUser {
-    private static final DataParameter<Integer> LEVEL = EntityDataManager.defineId(AdvancedVampireEntity.class, DataSerializers.INT);
-    private static final DataParameter<Integer> TYPE = EntityDataManager.defineId(AdvancedVampireEntity.class, DataSerializers.INT);
-    private static final DataParameter<String> NAME = EntityDataManager.defineId(AdvancedVampireEntity.class, DataSerializers.STRING);
-    private static final DataParameter<String> TEXTURE = EntityDataManager.defineId(AdvancedVampireEntity.class, DataSerializers.STRING);
+    private static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<String> NAME = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.STRING);
 
-    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+    public static AttributeSupplier.Builder getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE)
@@ -93,7 +99,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     private ICaptureAttributes villageAttributes;
     private boolean attack;
 
-    public AdvancedVampireEntity(EntityType<? extends AdvancedVampireEntity> type, World world) {
+    public AdvancedVampireEntity(EntityType<? extends AdvancedVampireEntity> type, Level world) {
         super(type, world, true);
         this.canSuckBloodFromPlayer = true;
         this.setSpawnRestriction(SpawnRestriction.SPECIAL);
@@ -106,7 +112,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT nbt) {
+    public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("level", getLevel());
         nbt.putInt("type", getEyeType());
@@ -193,7 +199,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
             getEntityData().set(LEVEL, level);
             this.updateEntityAttributes();
             if (level == 1) {
-                this.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 1000000, 0));
+                this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 1000000, 0));
             }
         }
     }
@@ -210,9 +216,9 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
     @Nonnull
     @Override
-    public ITextComponent getName() {
+    public Component getName() {
         String senderName = this.getEntityData().get(NAME);
-        return "none".equals(senderName) ? super.getName() : new StringTextComponent(senderName);
+        return "none".equals(senderName) ? super.getName() : new TextComponent(senderName);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -230,7 +236,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
     @Nullable
     @Override
-    public AxisAlignedBB getTargetVillageArea() {
+    public AABB getTargetVillageArea() {
         return villageAttributes == null ? null : villageAttributes.getVillageArea();
     }
 
@@ -262,14 +268,14 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     @Override
     public boolean hurt(DamageSource damageSource, float amount) {
         boolean flag = super.hurt(damageSource, amount);
-        if (flag && damageSource.getEntity() instanceof PlayerEntity && this.random.nextInt(4) == 0) {
-            this.addEffect(new EffectInstance(ModEffects.sunscreen, 150, 2));
+        if (flag && damageSource.getEntity() instanceof Player && this.random.nextInt(4) == 0) {
+            this.addEffect(new MobEffectInstance(ModEffects.sunscreen, 150, 2));
         }
         return flag;
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT tagCompund) {
+    public void readAdditionalSaveData(CompoundTag tagCompund) {
         super.readAdditionalSaveData(tagCompund);
         if (tagCompund.contains("level")) {
             setLevel(tagCompund.getInt("level"));
@@ -333,7 +339,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    protected int getExperienceReward(PlayerEntity player) {
+    protected int getExperienceReward(Player player) {
         return 10 * (1 + getLevel());
     }
 
@@ -345,17 +351,17 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         this.goalSelector.addGoal(3, new FleeSunVampireGoal<>(this, 0.9, false));
         this.goalSelector.addGoal(3, new FleeGarlicVampireGoal(this, 0.9, false));
         this.goalSelector.addGoal(4, new AttackMeleeNoSunGoal(this, 1.0, false));
-        this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.9, 25));
-        this.goalSelector.addGoal(9, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 13F));
-        this.goalSelector.addGoal(10, new LookAtGoal(this, HunterBaseEntity.class, 17F));
-        this.goalSelector.addGoal(11, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(8, new RandomStrollGoal(this, 0.9, 25));
+        this.goalSelector.addGoal(9, new LookAtClosestVisibleGoal(this, Player.class, 13F));
+        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, HunterBaseEntity.class, 17F));
+        this.goalSelector.addGoal(11, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new AttackVillageGoal<>(this));
         this.targetSelector.addGoal(2, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
-        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, Structure.VILLAGE)));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Player.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, PatrollingMonster.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, StructureFeature.VILLAGE)));
     }
 
     protected void updateEntityAttributes() {
@@ -364,9 +370,9 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         Objects.requireNonNull(this.getAttribute(Attributes.ATTACK_DAMAGE)).setBaseValue(BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE + BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE_PL * l);
     }
 
-    public static class IMob extends AdvancedVampireEntity implements net.minecraft.entity.monster.IMob {
+    public static class IMob extends AdvancedVampireEntity implements net.minecraft.world.entity.monster.Enemy {
 
-        public IMob(EntityType<? extends AdvancedVampireEntity> type, World world) {
+        public IMob(EntityType<? extends AdvancedVampireEntity> type, Level world) {
             super(type, world);
         }
 

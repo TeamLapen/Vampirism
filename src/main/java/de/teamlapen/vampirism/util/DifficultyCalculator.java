@@ -4,9 +4,9 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -28,12 +28,12 @@ public class DifficultyCalculator {
      */
     private static
     @Nullable
-    Difficulty calculateDifficulty(List<? extends PlayerEntity> playerList) {
+    Difficulty calculateDifficulty(List<? extends Player> playerList) {
         if (playerList == null || playerList.isEmpty()) return null;
         int min = Integer.MAX_VALUE;
         int max = 0;
         int sum = 0;
-        for (PlayerEntity p : playerList) {
+        for (Player p : playerList) {
             if (!p.isAlive()) continue;
             IFactionPlayerHandler handler = FactionPlayerHandler.get(p);
             if (handler.getCurrentLevel() == 0) {
@@ -58,7 +58,7 @@ public class DifficultyCalculator {
      * @param w
      * @return A difficulty level based on the world's player's faction levels
      */
-    public static Difficulty getWorldDifficulty(World w) {
+    public static Difficulty getWorldDifficulty(Level w) {
         return calculateDifficulty(w.players());
     }
 
@@ -67,9 +67,9 @@ public class DifficultyCalculator {
      *
      * @return A difficulty level based on the faction level of all players in the specified area
      */
-    public static Difficulty getLocalDifficulty(World w, BlockPos center, int radius) {
+    public static Difficulty getLocalDifficulty(Level w, BlockPos center, int radius) {
 
-        List<PlayerEntity> list = w.getEntitiesOfClass(PlayerEntity.class, UtilLib.createBB(center, radius, true));
+        List<Player> list = w.getEntitiesOfClass(Player.class, UtilLib.createBB(center, radius, true));
         return calculateDifficulty(list);
     }
 
@@ -97,7 +97,7 @@ public class DifficultyCalculator {
      */
     public static
     @Nonnull
-    Difficulty findDifficultyForPos(World world, BlockPos pos, int radius) {
+    Difficulty findDifficultyForPos(Level world, BlockPos pos, int radius) {
         Difficulty d = getLocalDifficulty(world, pos, radius);
         if (d == null) {
             d = getWorldDifficulty(world);

@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.mixin;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.MixinHooks;
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

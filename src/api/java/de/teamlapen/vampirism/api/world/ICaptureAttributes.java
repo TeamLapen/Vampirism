@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.api.world;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
 
 import javax.annotation.Nullable;
 
@@ -16,7 +16,7 @@ public interface ICaptureAttributes {
 
     BlockPos getPosition();
 
-    AxisAlignedBB getVillageArea();
+    AABB getVillageArea();
 
     default boolean shouldForceTargets() {
         return false;

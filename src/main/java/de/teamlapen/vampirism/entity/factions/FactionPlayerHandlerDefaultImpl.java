@@ -3,9 +3,9 @@ package de.teamlapen.vampirism.entity.factions;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.network.chat.Component;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -78,13 +78,13 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
 
     @Nullable
     @Override
-    public ITextComponent getLordTitle() {
+    public Component getLordTitle() {
         return null;
     }
 
     @Nonnull
     @Override
-    public PlayerEntity getPlayer() {
+    public Player getPlayer() {
         return null;
     }
 

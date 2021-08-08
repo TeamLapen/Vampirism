@@ -10,23 +10,23 @@ import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.Collection;
 
 
 public class LordCommand extends BasicCommand {
 
-    private static final SimpleCommandExceptionType NO_FACTION = new SimpleCommandExceptionType(new TranslationTextComponent("command.vampirism.base.lord.no_faction"));
-    private static final SimpleCommandExceptionType LEVEL_UP_FAILED = new SimpleCommandExceptionType(new TranslationTextComponent("command.vampirism.base.lord.level_failed"));
-    private static final SimpleCommandExceptionType LORD_FAILED = new SimpleCommandExceptionType(new TranslationTextComponent("command.vampirism.base.lord.failed"));
+    private static final SimpleCommandExceptionType NO_FACTION = new SimpleCommandExceptionType(new TranslatableComponent("command.vampirism.base.lord.no_faction"));
+    private static final SimpleCommandExceptionType LEVEL_UP_FAILED = new SimpleCommandExceptionType(new TranslatableComponent("command.vampirism.base.lord.level_failed"));
+    private static final SimpleCommandExceptionType LORD_FAILED = new SimpleCommandExceptionType(new TranslatableComponent("command.vampirism.base.lord.failed"));
 
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
 
         return Commands.literal("lord-level")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
@@ -37,8 +37,8 @@ public class LordCommand extends BasicCommand {
 
     }
 
-    private static int setLevel(CommandContext<CommandSource> context, int level, Collection<ServerPlayerEntity> players) throws CommandSyntaxException {
-        for (ServerPlayerEntity player : players) {
+    private static int setLevel(CommandContext<CommandSourceStack> context, int level, Collection<ServerPlayer> players) throws CommandSyntaxException {
+        for (ServerPlayer player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             IPlayableFaction<? extends IFactionPlayer<?>> faction = handler.getCurrentFaction();
             if (faction == null) {
@@ -53,7 +53,7 @@ public class LordCommand extends BasicCommand {
             level = Math.min(level, faction.getHighestLordLevel());
 
             if (handler.setLordLevel(level)) {
-                context.getSource().sendSuccess(new TranslationTextComponent("command.vampirism.base.lord.successful", player.getName(), faction.getName(), level), true);
+                context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.base.lord.successful", player.getName(), faction.getName(), level), true);
             } else {
                 throw LORD_FAILED.create();
             }

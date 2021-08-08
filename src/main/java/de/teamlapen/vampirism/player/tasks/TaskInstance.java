@@ -7,9 +7,9 @@ import de.teamlapen.vampirism.api.entity.player.task.ITaskRewardInstance;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.player.TaskManager;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -23,14 +23,14 @@ public class TaskInstance implements ITaskInstance {
      * @return {@code null} if the task does not exist
      */
     @Nullable
-    public static TaskInstance readNBT(@Nonnull CompoundNBT nbt) {
+    public static TaskInstance readNBT(@Nonnull CompoundTag nbt) {
         Task task = ModRegistries.TASKS.getValue(new ResourceLocation(nbt.getString("task")));
         if (task == null) return null;
         UUID id = nbt.getUUID("id");
         UUID insId = nbt.getUUID("insId");
         boolean accepted = nbt.getBoolean("accepted");
         long taskTimer = nbt.getLong("taskTimer");
-        CompoundNBT statsNBT = nbt.getCompound("stats");
+        CompoundTag statsNBT = nbt.getCompound("stats");
         Map<ResourceLocation, Integer> stats = new HashMap<>();
         statsNBT.getAllKeys().forEach(name -> {
             stats.put(new ResourceLocation(name), statsNBT.getInt(name));
@@ -41,7 +41,7 @@ public class TaskInstance implements ITaskInstance {
         return new TaskInstance(id, task, stats, accepted, taskTimer, insId, reward, taskDuration);
     }
 
-    public static TaskInstance decode(PacketBuffer buffer) {
+    public static TaskInstance decode(FriendlyByteBuf buffer) {
         UUID id = buffer.readUUID();
         Task task = ModRegistries.TASKS.getValue(buffer.readResourceLocation());
         UUID insId = buffer.readUUID();
@@ -103,7 +103,7 @@ public class TaskInstance implements ITaskInstance {
         this.completed = true;
     }
 
-    public void encode(PacketBuffer buffer) {
+    public void encode(FriendlyByteBuf buffer) {
         buffer.writeUUID(this.taskGiver);
         buffer.writeResourceLocation(this.task.getRegistryName());
         buffer.writeUUID(this.instanceId);
@@ -188,13 +188,13 @@ public class TaskInstance implements ITaskInstance {
         this.accepted = true;
     }
 
-    public CompoundNBT writeNBT(@Nonnull CompoundNBT nbt) {
+    public CompoundTag writeNBT(@Nonnull CompoundTag nbt) {
         nbt.putUUID("id", this.taskGiver);
         nbt.putString("task", this.task.getRegistryName().toString());
         nbt.putUUID("insId", this.instanceId);
         nbt.putBoolean("accepted", this.accepted);
         nbt.putLong("taskTimer", this.taskTimeStamp);
-        CompoundNBT stats = new CompoundNBT();
+        CompoundTag stats = new CompoundTag();
         this.stats.forEach((loc, amount) -> {
             stats.putInt(loc.toString(), amount);
         });

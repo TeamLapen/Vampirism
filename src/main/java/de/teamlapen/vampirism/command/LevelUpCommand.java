@@ -5,35 +5,35 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.Collection;
 
 public class LevelUpCommand extends BasicCommand {
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("levelup")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
                 .executes(context -> levelUp(context, Lists.newArrayList(context.getSource().getPlayerOrException()))).then(Commands.argument("player", EntityArgument.entities())
                         .executes(context -> levelUp(context, EntityArgument.getPlayers(context, "player"))));
     }
 
-    private static int levelUp(CommandContext<CommandSource> context, Collection<ServerPlayerEntity> players) {
-        for (ServerPlayerEntity player : players) {
+    private static int levelUp(CommandContext<CommandSourceStack> context, Collection<ServerPlayer> players) {
+        for (ServerPlayer player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             if (handler.getCurrentLevel() == 0) {
-                context.getSource().sendFailure(new TranslationTextComponent("command.vampirism.base.levelup.nofaction", players.size() > 1 ? player.getDisplayName() : "Player"));
+                context.getSource().sendFailure(new TranslatableComponent("command.vampirism.base.levelup.nofaction", players.size() > 1 ? player.getDisplayName() : "Player"));
             } else if (handler.getCurrentLevel() == handler.getCurrentFaction().getHighestReachableLevel()) {
-                context.getSource().sendSuccess(new TranslationTextComponent("command.vampirism.base.levelup.max", players.size() > 1 ? player.getDisplayName() : "Player"), true);
+                context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.base.levelup.max", players.size() > 1 ? player.getDisplayName() : "Player"), true);
             } else {
                 if (handler.setFactionAndLevel(handler.getCurrentFaction(), handler.getCurrentLevel() + 1)) {
-                    context.getSource().sendSuccess(new TranslationTextComponent("command.vampirism.base.levelup.newlevel", player.getName(), handler.getCurrentFaction().getName(), handler.getCurrentLevel()), true);
+                    context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.base.levelup.newlevel", player.getName(), handler.getCurrentFaction().getName(), handler.getCurrentLevel()), true);
                 } else {
-                    context.getSource().sendFailure(players.size() > 1 ? new TranslationTextComponent("command.vampirism.failed_to_execute.players", player.getDisplayName()) : new TranslationTextComponent("command.vampirism.failed_to_execute"));
+                    context.getSource().sendFailure(players.size() > 1 ? new TranslatableComponent("command.vampirism.failed_to_execute.players", player.getDisplayName()) : new TranslatableComponent("command.vampirism.failed_to_execute"));
                 }
             }
         }

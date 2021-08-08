@@ -5,9 +5,9 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskRewardInstance;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
@@ -18,11 +18,11 @@ import javax.annotation.Nonnull;
 public class LordLevelReward implements TaskReward, ITaskRewardInstance {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "lord_level_reward");
 
-    public static LordLevelReward decode(PacketBuffer buffer) {
+    public static LordLevelReward decode(FriendlyByteBuf buffer) {
         return new LordLevelReward(buffer.readVarInt());
     }
 
-    public static LordLevelReward readNbt(CompoundNBT nbt) {
+    public static LordLevelReward readNbt(CompoundTag nbt) {
         return new LordLevelReward(nbt.getInt("targetLevel"));
     }
     public final int targetLevel;
@@ -46,7 +46,7 @@ public class LordLevelReward implements TaskReward, ITaskRewardInstance {
     }
 
     @Override
-    public void encode(PacketBuffer buffer) {
+    public void encode(FriendlyByteBuf buffer) {
         buffer.writeVarInt(this.targetLevel);
     }
 
@@ -56,7 +56,7 @@ public class LordLevelReward implements TaskReward, ITaskRewardInstance {
     }
 
     @Override
-    public CompoundNBT writeNBT(@Nonnull CompoundNBT nbt) {
+    public CompoundTag writeNBT(@Nonnull CompoundTag nbt) {
         nbt.putInt("targetLevel", this.targetLevel);
         return nbt;
     }

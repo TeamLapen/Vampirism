@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.player.refinements;
 
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -21,7 +21,7 @@ public class Refinement extends ForgeRegistryEntry<IRefinement> implements IRefi
     private final UUID uuid;
     private final double baseValue;
     private boolean detrimental = false;
-    private IFormattableTextComponent description;
+    private MutableComponent description;
 
     public Refinement(Attribute attribute, UUID uuid, double baseValue, BiFunction<UUID, Double, AttributeModifier> modifier) {
         this.attribute = attribute;
@@ -50,10 +50,10 @@ public class Refinement extends ForgeRegistryEntry<IRefinement> implements IRefi
 
     @Nonnull
     @Override
-    public ITextComponent getDescription() {
+    public Component getDescription() {
         if (description == null) {
-            description = new TranslationTextComponent("refinement." + getRegistryName().getNamespace() + "." + getRegistryName().getPath() + ".desc");
-            if (detrimental) description.withStyle(TextFormatting.RED);
+            description = new TranslatableComponent("refinement." + getRegistryName().getNamespace() + "." + getRegistryName().getPath() + ".desc");
+            if (detrimental) description.withStyle(ChatFormatting.RED);
         }
         return description;
     }

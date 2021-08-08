@@ -2,55 +2,69 @@ package de.teamlapen.vampirism.blocks;
 
 import com.google.common.collect.ImmutableMap;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.stats.Stats;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-/**
- * Block coffin.
- */
+import net.minecraft.core.Direction;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
+
 public class CoffinBlock extends VampirismBlockContainer {
 
     public static final String name = "coffin";
     public static final EnumProperty<CoffinPart> PART = EnumProperty.create("part", CoffinPart.class);
     private static final VoxelShape shape = makeShape();
-    private static final Map<PlayerEntity.SleepResult, ITextComponent> sleepResults = ImmutableMap.of(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW, new TranslationTextComponent("text.vampirism.coffin.no_sleep"), PlayerEntity.SleepResult.TOO_FAR_AWAY, new TranslationTextComponent("text.vampirism.coffin.too_far_away"), PlayerEntity.SleepResult.OBSTRUCTED, new TranslationTextComponent("text.vampirism.coffin.obstructed"));
+    private static final Map<Player.BedSleepingProblem, Component> sleepResults = ImmutableMap.of(Player.BedSleepingProblem.NOT_POSSIBLE_NOW, new TranslatableComponent("text.vampirism.coffin.no_sleep"), Player.BedSleepingProblem.TOO_FAR_AWAY, new TranslatableComponent("text.vampirism.coffin.too_far_away"), Player.BedSleepingProblem.OBSTRUCTED, new TranslatableComponent("text.vampirism.coffin.obstructed"));
 
-    public static boolean isOccupied(IBlockReader world, BlockPos pos) {
+    public static boolean isOccupied(BlockGetter world, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
         return state.getBlock() instanceof CoffinBlock && state.getValue(BedBlock.OCCUPIED);
     }
 
 
-    public static boolean isHead(IBlockReader world, BlockPos pos) {
+    public static boolean isHead(BlockGetter world, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
         return state.getBlock() instanceof CoffinBlock && state.getValue(PART) == CoffinPart.HEAD;
     }
@@ -70,7 +84,7 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public Direction getBedDirection(BlockState state, IWorldReader world, BlockPos pos) {
+    public Direction getBedDirection(BlockState state, LevelReader world, BlockPos pos) {
         return state.getValue(HORIZONTAL_FACING);
     }
 
@@ -82,13 +96,13 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     @Nonnull
     @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
     @Nullable
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction enumfacing = context.getHorizontalDirection();
         BlockPos blockpos = context.getClickedPos();
         BlockPos blockpos1 = blockpos.relative(enumfacing);
@@ -96,18 +110,18 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isPathfindable(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, PathType type) {
+    public boolean isPathfindable(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, PathComputationType type) {
         return false;
     }
 
     @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return shape;
     }
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         Direction enumfacing = state.getValue(HORIZONTAL_FACING);
 
         if (state.getValue(PART) == CoffinPart.HEAD) {
@@ -124,17 +138,17 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isBed(BlockState state, IBlockReader world, BlockPos pos, Entity player) {
+    public boolean isBed(BlockState state, BlockGetter world, BlockPos pos, Entity player) {
         return true;
     }
 
     @Override
-    public TileEntity newBlockEntity(@Nonnull IBlockReader worldIn) {
+    public BlockEntity newBlockEntity(@Nonnull BlockGetter worldIn) {
         return new CoffinTileEntity();
     }
 
     @Override
-    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, @Nonnull PlayerEntity player) {
+    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, @Nonnull Player player) {
         CoffinPart part = state.getValue(PART);
         BlockPos blockpos = pos.relative(getDirectionToOther(part, state.getValue(HORIZONTAL_FACING)));
         BlockState blockstate = worldIn.getBlockState(blockpos);
@@ -153,7 +167,7 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
         super.setPlacedBy(worldIn, pos, state, entity, itemStack);
         if (!worldIn.isClientSide) {
             BlockPos blockpos = pos.relative(state.getValue(HORIZONTAL_FACING));
@@ -165,7 +179,7 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     @Nonnull
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (facing == getDirectionToOther(stateIn.getValue(PART), stateIn.getValue(HORIZONTAL_FACING))) {
             return facingState.getBlock() == this && facingState.getValue(PART) != stateIn.getValue(PART) ? stateIn.setValue(BedBlock.OCCUPIED, facingState.getValue(BedBlock.OCCUPIED)) : Blocks.AIR.defaultBlockState();
         } else {
@@ -174,39 +188,39 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 
         if (worldIn.isClientSide) {
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else {
             ItemStack heldItem = player.getItemInHand(hand);
             if (!heldItem.isEmpty()) {
                 DyeColor color = heldItem.getItem() instanceof DyeItem ? ((DyeItem) heldItem.getItem()).getDyeColor() : UtilLib.getColorForItem(heldItem.getItem());
                 if (color != null) {
-                    TileEntity tile = worldIn.getBlockEntity(pos);
-                    TileEntity other = state.getValue(PART) == CoffinPart.HEAD ? worldIn.getBlockEntity(pos.relative(state.getValue(HORIZONTAL_FACING).getOpposite())) : worldIn.getBlockEntity(pos.relative(state.getValue(HORIZONTAL_FACING)));
+                    BlockEntity tile = worldIn.getBlockEntity(pos);
+                    BlockEntity other = state.getValue(PART) == CoffinPart.HEAD ? worldIn.getBlockEntity(pos.relative(state.getValue(HORIZONTAL_FACING).getOpposite())) : worldIn.getBlockEntity(pos.relative(state.getValue(HORIZONTAL_FACING)));
                     if (!(tile instanceof CoffinTileEntity) || !(other instanceof CoffinTileEntity)) {
-                        return ActionResultType.SUCCESS;
+                        return InteractionResult.SUCCESS;
                     }
                     ((CoffinTileEntity) tile).changeColor(color);
                     ((CoffinTileEntity) other).changeColor(color);
                     if (!player.abilities.instabuild) {
                         heldItem.shrink(1);
                     }
-                    return ActionResultType.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
             }
             if (state.getValue(PART) != CoffinPart.HEAD) {
                 pos = pos.relative(state.getValue(HORIZONTAL_FACING));
                 state = worldIn.getBlockState(pos);
                 if (!state.is(this)) {
-                    return ActionResultType.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
             }
 
             if (VampirismPlayerAttributes.get(player).vampireLevel == 0) {
-                player.displayClientMessage(new TranslationTextComponent("text.vampirism.coffin.cant_use"), true);
-                return ActionResultType.SUCCESS;
+                player.displayClientMessage(new TranslatableComponent("text.vampirism.coffin.cant_use"), true);
+                return InteractionResult.SUCCESS;
             }
 
             if (!BedBlock.canSetSpawn(worldIn)) {
@@ -216,11 +230,11 @@ public class CoffinBlock extends VampirismBlockContainer {
                     worldIn.removeBlock(blockpos, false);
                 }
 
-                worldIn.explode(null, DamageSource.badRespawnPointExplosion(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
-                return ActionResultType.SUCCESS;
+                worldIn.explode(null, DamageSource.badRespawnPointExplosion(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.BlockInteraction.DESTROY);
+                return InteractionResult.SUCCESS;
             } else if (state.getValue(BedBlock.OCCUPIED)) {
-                player.displayClientMessage(new TranslationTextComponent("text.vampirism.coffin.occupied"), true);
-                return ActionResultType.SUCCESS;
+                player.displayClientMessage(new TranslatableComponent("text.vampirism.coffin.occupied"), true);
+                return InteractionResult.SUCCESS;
             } else {
                 final BlockPos finalPos = pos;
                 player.startSleepInBed(pos).ifLeft(sleepResult1 -> {
@@ -233,18 +247,23 @@ public class CoffinBlock extends VampirismBlockContainer {
                         worldIn.setBlock(finalPos, blockstate.setValue(BedBlock.OCCUPIED, Boolean.TRUE), 3);
                     }
                 });
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         }
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(HORIZONTAL_FACING, BedBlock.OCCUPIED, PART);
     }
 
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntity) {
+        return level.isClientSide() && state.getValue(PART) == CoffinPart.HEAD ? createTickerHelper(blockEntity, ModTiles.coffin, CoffinTileEntity::clientTickHead) : null ;
+    }
 
-    public enum CoffinPart implements IStringSerializable {
+    public enum CoffinPart implements StringRepresentable {
         HEAD("head"),
         FOOT("foot");
 

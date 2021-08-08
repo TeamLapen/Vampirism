@@ -12,10 +12,10 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.SelectMinionTaskPacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
@@ -29,7 +29,7 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
 
 
     public SelectMinionTaskScreen() {
-        super(Color.gray, new TranslationTextComponent("text.vampirism.minion.give_order"));
+        super(Color.gray, new TranslatableComponent("text.vampirism.minion.give_order"));
     }
 
     @Override
@@ -62,12 +62,12 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
     }
 
     @Override
-    protected KeyBinding getMenuKeyBinding() {
+    protected KeyMapping getMenuKeyBinding() {
         return ModKeys.getKeyBinding(ModKeys.KEY.MINION);
     }
 
     @Override
-    protected ITextComponent getName(Entry item) {
+    protected Component getName(Entry item) {
         return item.getText();
     }
 
@@ -81,10 +81,10 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
     protected void onGuiInit() {
         this.elements.clear();
         FactionPlayerHandler.getOpt(minecraft.player).ifPresent(fp -> elements.addAll(PlayerMinionController.getAvailableTasks(fp).stream().map(Entry::new).collect(Collectors.toList())));
-        this.elements.add(new Entry(new TranslationTextComponent("action.vampirism.cancel"), new ResourceLocation(REFERENCE.MODID, "textures/actions/cancel.png"), (GuiPieMenu::onClose)));
-        this.elements.add(new Entry(new TranslationTextComponent("text.vampirism.minion.call_single"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall_single.png"), (SelectMinionTaskScreen::callSingle)));
-        this.elements.add(new Entry(new TranslationTextComponent("text.vampirism.minion.call_all"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall.png"), (SelectMinionTaskScreen::callAll)));
-        this.elements.add(new Entry(new TranslationTextComponent("text.vampirism.minion.respawn"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/respawn.png"), (SelectMinionTaskScreen::callRespawn)));
+        this.elements.add(new Entry(new TranslatableComponent("action.vampirism.cancel"), new ResourceLocation(REFERENCE.MODID, "textures/actions/cancel.png"), (GuiPieMenu::onClose)));
+        this.elements.add(new Entry(new TranslatableComponent("text.vampirism.minion.call_single"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall_single.png"), (SelectMinionTaskScreen::callSingle)));
+        this.elements.add(new Entry(new TranslatableComponent("text.vampirism.minion.call_all"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall.png"), (SelectMinionTaskScreen::callAll)));
+        this.elements.add(new Entry(new TranslatableComponent("text.vampirism.minion.respawn"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/respawn.png"), (SelectMinionTaskScreen::callRespawn)));
     }
 
     private void callAll() {
@@ -107,7 +107,7 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
 
     public static class Entry {
 
-        private final ITextComponent text;
+        private final Component text;
         private final ResourceLocation loc;
         private final Consumer<SelectMinionTaskScreen> onSelected;
 
@@ -115,7 +115,7 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
             this(task.getName(), new ResourceLocation(task.getRegistryName().getNamespace(), "textures/minion_tasks/" + task.getRegistryName().getPath() + ".png"), (screen -> screen.sendTask(task)));
         }
 
-        public Entry(ITextComponent text, ResourceLocation icon, Consumer<SelectMinionTaskScreen> onSelected) {
+        public Entry(Component text, ResourceLocation icon, Consumer<SelectMinionTaskScreen> onSelected) {
             this.text = text;
             this.loc = icon;
             this.onSelected = onSelected;
@@ -125,7 +125,7 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
             return loc;
         }
 
-        public ITextComponent getText() {
+        public Component getText() {
             return text;
         }
 

@@ -9,17 +9,17 @@ import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.ICriterionInstance;
-import net.minecraft.advancements.IRequirementsStrategy;
-import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.data.ShapelessRecipeBuilder;
-import net.minecraft.item.Item;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.RequirementsStrategy;
+import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -29,18 +29,18 @@ import java.util.function.Consumer;
 @ParametersAreNonnullByDefault
 public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
 
-    public static ShapelessWeaponTableRecipeBuilder shapelessWeaponTable(IItemProvider result, int count) {
+    public static ShapelessWeaponTableRecipeBuilder shapelessWeaponTable(ItemLike result, int count) {
         return new ShapelessWeaponTableRecipeBuilder(result, count);
     }
 
-    public static ShapelessWeaponTableRecipeBuilder shapelessWeaponTable(IItemProvider result) {
+    public static ShapelessWeaponTableRecipeBuilder shapelessWeaponTable(ItemLike result) {
         return new ShapelessWeaponTableRecipeBuilder(result, 1);
     }
     private int lava = 1;
     private ISkill[] skills;
     private int level = 1;
 
-    public ShapelessWeaponTableRecipeBuilder(IItemProvider resultIn, int countIn) {
+    public ShapelessWeaponTableRecipeBuilder(ItemLike resultIn, int countIn) {
         super(resultIn, countIn);
     }
 
@@ -50,12 +50,12 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
     }
 
     @Override
-    public ShapelessWeaponTableRecipeBuilder requires(IItemProvider itemIn) {
+    public ShapelessWeaponTableRecipeBuilder requires(ItemLike itemIn) {
         return (ShapelessWeaponTableRecipeBuilder) super.requires(itemIn);
     }
 
     @Override
-    public ShapelessWeaponTableRecipeBuilder requires(IItemProvider itemIn, int quantity) {
+    public ShapelessWeaponTableRecipeBuilder requires(ItemLike itemIn, int quantity) {
         return (ShapelessWeaponTableRecipeBuilder) super.requires(itemIn, quantity);
     }
 
@@ -70,12 +70,12 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
     }
 
     @Override
-    public ShapelessWeaponTableRecipeBuilder requires(ITag<Item> tagIn) {
+    public ShapelessWeaponTableRecipeBuilder requires(Tag<Item> tagIn) {
         return (ShapelessWeaponTableRecipeBuilder) super.requires(tagIn);
     }
 
     @Override
-    public void save(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
+    public void save(Consumer<FinishedRecipe> consumerIn, ResourceLocation id) {
         id = new ResourceLocation(id.getNamespace(), "weapontable/" + id.getPath());
         this.advancement.addCriterion("has_skill", SkillUnlockedTrigger.builder(this.skills != null && this.skills.length >= 1 ? this.skills[0] : HunterSkills.weapon_table));
         this.ensureValid(id);
@@ -83,7 +83,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
                 .parent(new ResourceLocation("recipes/root"))
                 .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
                 .rewards(AdvancementRewards.Builder.recipe(id))
-                .requirements(IRequirementsStrategy.OR);
+                .requirements(RequirementsStrategy.OR);
         consumerIn.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, this.ingredients, this.advancement, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItemCategory().getRecipeFolderName() + "/" + id.getPath()), this.lava, this.skills != null ? this.skills : new ISkill[]{}, this.level));
     }
 
@@ -98,7 +98,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
     }
 
     @Override
-    public ShapelessWeaponTableRecipeBuilder unlockedBy(String name, ICriterionInstance criterionIn) {
+    public ShapelessWeaponTableRecipeBuilder unlockedBy(String name, CriterionTriggerInstance criterionIn) {
         return (ShapelessWeaponTableRecipeBuilder) super.unlockedBy(name, criterionIn);
     }
 
@@ -120,7 +120,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
         }
 
         @Override
-        public IRecipeSerializer<?> getType() {
+        public RecipeSerializer<?> getType() {
             return ModRecipes.shapeless_crafting_weapontable;
         }
 

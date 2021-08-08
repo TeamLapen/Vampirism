@@ -5,13 +5,14 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.blocks.SieveBlock;
 import de.teamlapen.vampirism.core.ModTiles;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -25,7 +26,9 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class SieveTileEntity extends TileEntity implements ITickableTileEntity, FluidTankWithListener.IFluidTankListener {
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+
+public class SieveTileEntity extends BlockEntity implements FluidTankWithListener.IFluidTankListener {
 
 
     private final LazyOptional<IFluidHandler> cap;
@@ -34,8 +37,8 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
     private int cooldownProcess = 0;
     private boolean active;
 
-    public SieveTileEntity() {
-        super(ModTiles.sieve);
+    public SieveTileEntity(BlockPos pos, BlockState state) {
+        super(ModTiles.sieve, pos, state);
         tank = new FilteringFluidTank(2 * FluidAttributes.BUCKET_VOLUME).setListener(this);
         tank.setDrainable(false);
         cap = LazyOptional.of(() -> tank);
@@ -50,13 +53,13 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(getBlockPos(), 1, getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(getBlockPos(), 1, getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT nbt = new CompoundNBT();
+    public CompoundTag getUpdateTag() {
+        CompoundTag nbt = new CompoundTag();
         nbt.putBoolean("active", isActive());
         return nbt;
     }
@@ -67,8 +70,8 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
-        super.load(state, tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         tank.readFromNBT(tag);
         cooldownProcess = tag.getInt("cooldown_process");
         cooldownPull = tag.getInt("cooldown_pull");
@@ -76,7 +79,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         boolean old = active;
         active = pkt.getTag().getBoolean("active");
         if (active != old && level != null)
@@ -90,7 +93,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
+    public CompoundTag save(CompoundTag tag) {
         tag = super.save(tag);
         tank.writeToNBT(tag);
         cooldownProcess = tag.getInt("cooldown_process");
@@ -98,31 +101,29 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
         return tag;
     }
 
-    @Override
-    public void tick() {
-        if (level == null) return;
+    public static void tick(Level level, BlockPos pos, BlockState state, SieveTileEntity blockEntity) {
         //Process content
-        if (--cooldownProcess < 0) {
-            cooldownProcess = 15;
-            if (tank.getFluidAmount() > 0) {
-                FluidUtil.getFluidHandler(this.level, this.worldPosition.below(), Direction.UP).ifPresent(handler -> {
-                    tank.setDrainable(true);
-                    FluidStack transferred = FluidUtil.tryFluidTransfer(handler, tank, 2 * VReference.FOOD_TO_FLUID_BLOOD, true);
-                    tank.setDrainable(false);
+        if (--blockEntity.cooldownProcess < 0) {
+            blockEntity.cooldownProcess = 15;
+            if (blockEntity.tank.getFluidAmount() > 0) {
+                FluidUtil.getFluidHandler(level, pos.below(), Direction.UP).ifPresent(handler -> {
+                    blockEntity.tank.setDrainable(true);
+                    FluidStack transferred = FluidUtil.tryFluidTransfer(handler, blockEntity.tank, 2 * VReference.FOOD_TO_FLUID_BLOOD, true);
+                    blockEntity.tank.setDrainable(false);
                     if (!transferred.isEmpty()) {
-                        cooldownProcess = 30;
-                        setActive(true);
+                        blockEntity.cooldownProcess = 30;
+                        blockEntity.setActive(true);
                     }
                 });
-            } else if (active) {
-                setActive(false);
+            } else if (blockEntity.active) {
+                blockEntity.setActive(false);
             }
         }
         //Pull new content. Cooldown is increased when liquid is filled into the tank (regardless of way)
-        if (--cooldownPull < 0) {
-            cooldownPull = 10;
-            FluidUtil.getFluidHandler(this.level, this.worldPosition.above(), Direction.DOWN).ifPresent(handler -> {
-                FluidStack transferred = FluidUtil.tryFluidTransfer(tank, handler, 2 * VReference.FOOD_TO_FLUID_BLOOD, true);
+        if (--blockEntity.cooldownPull < 0) {
+            blockEntity.cooldownPull = 10;
+            FluidUtil.getFluidHandler(level, pos.above(), Direction.DOWN).ifPresent(handler -> {
+                FluidStack transferred = FluidUtil.tryFluidTransfer(blockEntity.tank, handler, 2 * VReference.FOOD_TO_FLUID_BLOOD, true);
             });
         }
 

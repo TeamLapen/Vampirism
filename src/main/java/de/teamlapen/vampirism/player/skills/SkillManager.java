@@ -5,8 +5,8 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
 import de.teamlapen.vampirism.core.ModRegistries;
-import net.minecraft.command.CommandSource;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.TextComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -53,9 +53,9 @@ public class SkillManager implements ISkillManager {
      * @param faction
      * @param sender
      */
-    public void printSkills(IPlayableFaction faction, CommandSource sender) {
+    public void printSkills(IPlayableFaction faction, CommandSourceStack sender) {
         for (ISkill s : getSkillsForFaction(faction)) {
-            sender.sendSuccess(new StringTextComponent("ID: " + ModRegistries.SKILLS.getKey(s) + " Skill: ").append(s.getName()), true);
+            sender.sendSuccess(new TextComponent("ID: " + ModRegistries.SKILLS.getKey(s) + " Skill: ").append(s.getName()), true);
         }
     }
 

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableArrayTextComponentList;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget;
@@ -12,12 +12,12 @@ import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.CheckboxButton;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
@@ -27,20 +27,20 @@ import javax.annotation.Nullable;
 import java.awt.*;
 
 @OnlyIn(Dist.CLIENT)
-public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity> {
+public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
-    private static final ITextComponent NAME = new TranslationTextComponent("gui.vampirism.appearance");
+    private static final Component NAME = new TranslatableComponent("gui.vampirism.appearance");
 
     private float[] color;
 
     private int fangType;
     private int eyeType;
     private boolean glowingEyes;
-    private ScrollableListWidget<Pair<Integer, ITextComponent>> eyeList;
-    private ScrollableListWidget<Pair<Integer, ITextComponent>> fangList;
+    private ScrollableListWidget<Pair<Integer, Component>> eyeList;
+    private ScrollableListWidget<Pair<Integer, Component>> fangList;
     private ExtendedButton eyeButton;
     private ExtendedButton fangButton;
-    private CheckboxButton glowingEyesButton;
+    private Checkbox glowingEyesButton;
 
 
     public VampirePlayerAppearanceScreen(@Nullable Screen backScreen) {
@@ -73,15 +73,15 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
         this.eyeType = vampAtt.eyeType;
         this.glowingEyes = vampAtt.glowingEyes;
 
-        this.eyeList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100, 20, REFERENCE.EYE_TYPE_COUNT, new TranslationTextComponent("gui.vampirism.appearance.eye"), this::eye, this::hoverEye).scrollSpeed(2));
-        this.fangList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80, 20, REFERENCE.FANG_TYPE_COUNT, new TranslationTextComponent("gui.vampirism.appearance.fang"), this::fang, this::hoverFang));
-        this.eyeButton = this.addButton(new ExtendedButton(eyeList.x, eyeList.y - 20, eyeList.getWidth() + 1, 20, new StringTextComponent(""), (b) -> {
+        this.eyeList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100, 20, REFERENCE.EYE_TYPE_COUNT, new TranslatableComponent("gui.vampirism.appearance.eye"), this::eye, this::hoverEye).scrollSpeed(2));
+        this.fangList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80, 20, REFERENCE.FANG_TYPE_COUNT, new TranslatableComponent("gui.vampirism.appearance.fang"), this::fang, this::hoverFang));
+        this.eyeButton = this.addButton(new ExtendedButton(eyeList.x, eyeList.y - 20, eyeList.getWidth() + 1, 20, new TextComponent(""), (b) -> {
             this.setEyeListVisibility(!eyeList.visible);
         }));
-        this.fangButton = this.addButton(new ExtendedButton(fangList.x, fangList.y - 20, fangList.getWidth() + 1, 20, new StringTextComponent(""), (b) -> {
+        this.fangButton = this.addButton(new ExtendedButton(fangList.x, fangList.y - 20, fangList.getWidth() + 1, 20, new TextComponent(""), (b) -> {
             this.setFangListVisibility(!fangList.visible);
         }));
-        this.glowingEyesButton = this.addButton(new CheckboxButton(this.guiLeft + 20, this.guiTop + 70, 99, 20, new TranslationTextComponent("gui.vampirism.appearance.glowing_eye"), glowingEyes) {
+        this.glowingEyesButton = this.addButton(new Checkbox(this.guiLeft + 20, this.guiTop + 70, 99, 20, new TranslatableComponent("gui.vampirism.appearance.glowing_eye"), glowingEyes) {
             @Override
             public void onPress() {
                 super.onPress();
@@ -94,7 +94,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
     }
 
     @Override
-    protected void renderGuiBackground(MatrixStack mStack) {
+    protected void renderGuiBackground(PoseStack mStack) {
         GlStateManager._color4f(color[0], color[1], color[2], 1f);
         super.renderGuiBackground(mStack);
         GlStateManager._color4f(1, 1, 1, 1);

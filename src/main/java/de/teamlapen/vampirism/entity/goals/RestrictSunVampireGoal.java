@@ -3,13 +3,13 @@ package de.teamlapen.vampirism.entity.goals;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.pathfinding.GroundPathNavigator;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.resources.ResourceLocation;
 
 
-public class RestrictSunVampireGoal<T extends CreatureEntity & IVampire> extends Goal {
+public class RestrictSunVampireGoal<T extends PathfinderMob & IVampire> extends Goal {
     private final T vampire;
     private boolean cache = false;
 
@@ -28,10 +28,10 @@ public class RestrictSunVampireGoal<T extends CreatureEntity & IVampire> extends
     }
 
     public void start() {
-        ((GroundPathNavigator) this.vampire.getNavigation()).setAvoidSun(true);
+        ((GroundPathNavigation) this.vampire.getNavigation()).setAvoidSun(true);
     }
 
     public void stop() {
-        ((GroundPathNavigator) this.vampire.getNavigation()).setAvoidSun(false);
+        ((GroundPathNavigation) this.vampire.getNavigation()).setAvoidSun(false);
     }
 }

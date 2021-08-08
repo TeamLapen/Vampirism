@@ -16,11 +16,11 @@ import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.entity.CreatureAttribute;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 
 import javax.annotation.Nullable;
 
@@ -58,13 +58,13 @@ public class DamageHandler {
     private static void affectVampireGarlic(IVampire vampire, EnumStrength strength, float multiplier, boolean ambient) {
         if (strength == EnumStrength.NONE) return;
         LivingEntity entity = vampire.getRepresentingEntity();
-        entity.addEffect(new EffectInstance(ModEffects.garlic, (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
-        if (entity instanceof PlayerEntity && ((PlayerEntity) entity).abilities.instabuild) return;
-        entity.addEffect(new EffectInstance(Effects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
+        entity.addEffect(new MobEffectInstance(ModEffects.garlic, (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
+        if (entity instanceof Player && ((Player) entity).abilities.instabuild) return;
+        entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
         if (strength == EnumStrength.MEDIUM || strength == EnumStrength.STRONG) {
-            entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, (int) (multiplier * 20), 1, ambient, false));
+            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, (int) (multiplier * 20), 1, ambient, false));
             if (strength == EnumStrength.STRONG) {
-                entity.addEffect(new EffectInstance(Effects.BLINDNESS, (int) (multiplier / 2 * 20), 0, ambient, false));
+                entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, (int) (multiplier / 2 * 20), 0, ambient, false));
             }
         }
         if (vampire instanceof IVampirePlayer) {
@@ -115,7 +115,7 @@ public class DamageHandler {
     public static void affectEntityHolyWaterSplash(LivingEntity entity, EnumStrength strength, double distSq, boolean directHit, @Nullable LivingEntity source) {
         if (!entity.isAlive()) return;
         boolean vampire = Helper.isVampire(entity);
-        if (entity.isAffectedByPotions() && (vampire || CreatureAttribute.UNDEAD.equals(entity.getMobType()))) {
+        if (entity.isAffectedByPotions() && (vampire || MobType.UNDEAD.equals(entity.getMobType()))) {
             if (distSq < 16.0D) {
                 double affect = 1.0D - Math.sqrt(distSq) / 4.0D;
 
@@ -128,8 +128,8 @@ public class DamageHandler {
 
 
                 double amount = (affect * (VampirismConfig.BALANCE.holyWaterSplashDamage.get() * (strength == EnumStrength.WEAK ? 1 : strength == EnumStrength.MEDIUM ? VampirismConfig.BALANCE.holyWaterTierDamageInc.get() : (VampirismConfig.BALANCE.holyWaterTierDamageInc.get() * VampirismConfig.BALANCE.holyWaterTierDamageInc.get()))) + 0.5D);
-                if (entity instanceof PlayerEntity) {
-                    int l = VampirismPlayerAttributes.get((PlayerEntity) entity).vampireLevel;
+                if (entity instanceof Player) {
+                    int l = VampirismPlayerAttributes.get((Player) entity).vampireLevel;
                     amount = scaleDamageWithLevel(l, REFERENCE.HIGHEST_VAMPIRE_LEVEL, amount * 0.8, amount * 1.3);
                 } else if (entity instanceof VampireBaronEntity) {
                     int l = ((VampireBaronEntity) entity).getLevel();
@@ -138,8 +138,8 @@ public class DamageHandler {
                 entity.hurt(VReference.HOLY_WATER, (float) amount);
             }
         }
-        if (vampire && entity instanceof PlayerEntity) {
-            VampirePlayer.getOpt((PlayerEntity) entity).map(VampirePlayer::getActionHandler).ifPresent(actionHandler -> {
+        if (vampire && entity instanceof Player) {
+            VampirePlayer.getOpt((Player) entity).map(VampirePlayer::getActionHandler).ifPresent(actionHandler -> {
                 if (actionHandler.isActionActive(VampireActions.disguise_vampire)) {
                     actionHandler.toggleAction(VampireActions.disguise_vampire);
                 }
@@ -155,10 +155,10 @@ public class DamageHandler {
         }
         if (vampire) {
             if (strength.isStrongerThan(EnumStrength.WEAK)) {
-                entity.addEffect(new EffectInstance(Effects.CONFUSION, VampirismConfig.BALANCE.holyWaterNauseaDuration.get(), 2));
+                entity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, VampirismConfig.BALANCE.holyWaterNauseaDuration.get(), 2));
             }
             if (strength.isStrongerThan(EnumStrength.MEDIUM)) {
-                entity.addEffect(new EffectInstance(Effects.BLINDNESS, VampirismConfig.BALANCE.holyWaterBlindnessDuration.get(), 1));
+                entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, VampirismConfig.BALANCE.holyWaterBlindnessDuration.get(), 1));
             }
         }
     }

@@ -8,15 +8,16 @@ import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -26,7 +27,7 @@ import javax.annotation.Nullable;
 /**
  * TODO 1.17 refractor garlic diffusor
  */
-public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileEntity {
+public class GarlicBeaconTileEntity extends BlockEntity {
     private static final int FUEL_DURATION = 20 * 60 * 2;
     private int id;
     private EnumStrength strength = EnumStrength.MEDIUM;
@@ -36,10 +37,11 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
     private int fueled = 0;
     private int bootTimer;
     private int maxBootTimer;
+    private boolean initiateBootTimer = false;
 
 
-    public GarlicBeaconTileEntity() {
-        super(ModTiles.garlic_beacon);
+    public GarlicBeaconTileEntity(BlockPos pos, BlockState state) {
+        super(ModTiles.garlic_beacon, pos, state);
     }
 
     public float getBootProgress() {
@@ -64,8 +66,8 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
 
     @Nullable
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(getBlockPos(), 1, getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(getBlockPos(), 1, getUpdateTag());
     }
 
     public boolean isActive() {
@@ -73,8 +75,8 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     /**
@@ -85,8 +87,8 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         r = compound.getInt("radius");
         defaultStrength = EnumStrength.getFromStrenght(compound.getInt("strength"));
         bootTimer = compound.getInt("boot_timer");
@@ -95,17 +97,17 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         if (hasLevel()) {
-            CompoundNBT nbt = pkt.getTag();
-            handleUpdateTag(this.level.getBlockState(pkt.getPos()), nbt);
+            CompoundTag nbt = pkt.getTag();
+            handleUpdateTag(nbt);
             if (isActive()) {
                 register(); //Register in case we weren't active before. Shouldn't have an effect when already registered
             }
         }
     }
 
-    public void onTouched(PlayerEntity player) {
+    public void onTouched(Player player) {
         if (VampirismPlayerAttributes.get(player).vampireLevel > 0) {
             VampirePlayer.getOpt(player).ifPresent(vampirePlayer -> {
                 DamageHandler.affectVampireGarlicDirect(vampirePlayer, strength);
@@ -120,7 +122,7 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         compound.putInt("radius", r);
         compound.putInt("strength", defaultStrength.getStrength());
@@ -134,6 +136,10 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
     public void setNewBootDelay(int delayTicks) {
         this.bootTimer = delayTicks;
         this.maxBootTimer = delayTicks;
+    }
+
+    public void initiateBootTimer(){
+        this.initiateBootTimer = true;
     }
 
     public void setType(GarlicBeaconBlock.Type type) {
@@ -170,19 +176,31 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
 
     }
 
-    @Override
-    public void tick() {
-        if (bootTimer > 0) {
-            if (--bootTimer == 0) {
-                this.setChanged();
-                register();
+
+    public static void tick(Level level, BlockPos pos, BlockState state, GarlicBeaconTileEntity blockEntity) {
+        if(blockEntity.initiateBootTimer){
+            blockEntity.initiateBootTimer=false;
+            int bootTime = VampirismConfig.BALANCE.garlicDiffusorStartupTime.get() * 20;
+            if (level instanceof ServerLevel) {
+                if (((ServerLevel) level).players().size() <= 1) {
+                    bootTime >>= 2; // /4
+                }
             }
-        } else if (fueled > 0) {
-            if (fueled == 1) {
-                setFueledTime(0);
-                this.setChanged();
+            blockEntity.bootTimer = bootTime;
+            blockEntity.maxBootTimer = bootTime;
+
+        }
+        if (blockEntity.bootTimer > 0) {
+            if (--blockEntity.bootTimer == 0) {
+                blockEntity.setChanged();
+                blockEntity.register();
+            }
+        } else if (blockEntity.fueled > 0) {
+            if (blockEntity.fueled == 1) {
+                blockEntity.setFueledTime(0);
+                blockEntity.setChanged();
             } else {
-                fueled--;
+                blockEntity.fueled--;
             }
         }
     }

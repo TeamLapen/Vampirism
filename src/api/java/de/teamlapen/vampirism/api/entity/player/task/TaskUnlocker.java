@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 
 public interface TaskUnlocker {
 
-    ITextComponent getDescription();
+    Component getDescription();
 
     boolean isUnlocked(IFactionPlayer<?> playerEntity);
 }

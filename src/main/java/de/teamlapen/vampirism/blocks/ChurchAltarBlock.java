@@ -7,25 +7,27 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 /**
  * Placed in some churches
@@ -40,8 +42,8 @@ public class ChurchAltarBlock extends VampirismHorizontalBlock {
         VoxelShape a = Block.box(1, 0, 5, 15, 1, 12);
         VoxelShape b = Block.box(7, 1, 7, 9, 12, 11);
         VoxelShape c = Block.box(1, 9, 3, 15, 14, 13);
-        VoxelShape r = VoxelShapes.or(a, b);
-        return VoxelShapes.or(r, c);
+        VoxelShape r = Shapes.or(a, b);
+        return Shapes.or(r, c);
     }
 
 
@@ -53,7 +55,7 @@ public class ChurchAltarBlock extends VampirismHorizontalBlock {
 
     @Nonnull
     @Override
-    public VoxelShape getShape(BlockState blockState, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState blockState, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         Direction dir = blockState.getValue(FACING);
         if (dir == Direction.NORTH || dir == Direction.SOUTH) return SHAPEX;
         return SHAPEZ;
@@ -61,31 +63,31 @@ public class ChurchAltarBlock extends VampirismHorizontalBlock {
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext ctx) {
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite());
     }
 
 
     @Override
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (!player.isAlive()) return ActionResultType.PASS;
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!player.isAlive()) return InteractionResult.PASS;
         IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
         ItemStack heldItem = player.getItemInHand(hand);
         if (handler.isInFaction(VReference.VAMPIRE_FACTION)) {
             VampirismMod.proxy.displayRevertBackScreen();
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else if (!heldItem.isEmpty()) {
             if (ModItems.holy_salt_water.equals(heldItem.getItem())) {
-                if (world.isClientSide) return ActionResultType.SUCCESS;
+                if (world.isClientSide) return InteractionResult.SUCCESS;
                 boolean enhanced = handler.isInFaction(VReference.HUNTER_FACTION) && handler.getCurrentFactionPlayer().map(s -> s.getSkillHandler()).map(s -> s.isSkillEnabled(HunterSkills.holy_water_enhanced)).orElse(false);
                 ItemStack newStack = new ItemStack(enhanced ? ModItems.holy_water_bottle_enhanced : ModItems.holy_water_bottle_normal, heldItem.getCount());
                 player.setItemInHand(hand, newStack);
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
             } else if (ModItems.pure_salt.equals(heldItem.getItem())) {
-                if (world.isClientSide) return ActionResultType.SUCCESS;
+                if (world.isClientSide) return InteractionResult.SUCCESS;
                 player.setItemInHand(hand, new ItemStack(ModItems.holy_salt, heldItem.getCount()));
             }
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 }

@@ -2,13 +2,13 @@ package de.teamlapen.vampirism.client.model.blocks;
 
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemOverrideList;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -23,7 +23,7 @@ import java.util.Random;
  * Extends the basic weapon table model, by a variable lava fluid level
  */
 @OnlyIn(Dist.CLIENT)
-public class BakedWeaponTableModel implements IBakedModel {
+public class BakedWeaponTableModel implements BakedModel {
 
     public static final int FLUID_LEVELS = 5;
 
@@ -31,11 +31,11 @@ public class BakedWeaponTableModel implements IBakedModel {
      * Stores a fluid level -> fluid model array
      * Filled when the fluid json model is loaded (in {@link ClientEventHandler#onModelBakeEvent(ModelBakeEvent)} )}
      */
-    public static final IBakedModel[][] FLUID_MODELS = new IBakedModel[FLUID_LEVELS][4];
+    public static final BakedModel[][] FLUID_MODELS = new BakedModel[FLUID_LEVELS][4];
 
-    private final IBakedModel baseModel;
+    private final BakedModel baseModel;
 
-    public BakedWeaponTableModel(IBakedModel baseModel) {
+    public BakedWeaponTableModel(BakedModel baseModel) {
         this.baseModel = baseModel;
     }
 
@@ -47,7 +47,7 @@ public class BakedWeaponTableModel implements IBakedModel {
 
     @Nonnull
     @Override
-    public ItemOverrideList getOverrides() {
+    public ItemOverrides getOverrides() {
         return baseModel.getOverrides();
     }
 
@@ -66,7 +66,7 @@ public class BakedWeaponTableModel implements IBakedModel {
 
     @Nonnull
     @Override
-    public ItemCameraTransforms getTransforms() {
+    public ItemTransforms getTransforms() {
         return baseModel.getTransforms();
     }
 

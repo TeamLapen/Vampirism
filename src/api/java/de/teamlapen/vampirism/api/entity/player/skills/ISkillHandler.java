@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 
 
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Handles the players skills

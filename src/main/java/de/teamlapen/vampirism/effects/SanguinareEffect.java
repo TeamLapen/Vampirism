@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.effects;
 
 import com.google.common.base.Preconditions;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.BalanceMobProps;
@@ -9,15 +9,15 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.client.gui.DisplayEffectsScreen;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.EffectType;
+import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -33,7 +33,7 @@ public class SanguinareEffect extends VampirismEffect {
     public static void addRandom(LivingEntity entity, boolean player) {
         int avgDuration = 20 * (player ? VampirismConfig.BALANCE.vpSanguinareAverageDuration.get() : BalanceMobProps.mobProps.SANGUINARE_AVG_DURATION);
         int duration = (int) ((entity.getRandom().nextFloat() + 0.5F) * avgDuration);
-        EffectInstance effect = new SanguinareEffectInstance(duration);
+        MobEffectInstance effect = new SanguinareEffectInstance(duration);
         Preconditions.checkNotNull(effect);
         if (!VampirismConfig.BALANCE.canCancelSanguinare.get()) {
             effect.setCurativeItems(new ArrayList<>());
@@ -42,7 +42,7 @@ public class SanguinareEffect extends VampirismEffect {
 
     }
 
-    public SanguinareEffect(String name, EffectType effectType, int potionColor) {
+    public SanguinareEffect(String name, MobEffectCategory effectType, int potionColor) {
         super(name, effectType, potionColor);
         addAttributeModifier(Attributes.ATTACK_DAMAGE, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, AttributeModifier.Operation.ADDITION);
     }
@@ -57,11 +57,11 @@ public class SanguinareEffect extends VampirismEffect {
     @Override
     public void applyEffectTick(LivingEntity entity, int amplifier) {
         if (entity.level.isClientSide || !entity.isAlive()) return;
-        if (entity instanceof CreatureEntity) {
+        if (entity instanceof PathfinderMob) {
             ExtendedCreature.getSafe(entity).ifPresent(IExtendedCreatureVampirism::makeVampire);
         }
-        if (entity instanceof PlayerEntity) {
-            VampirePlayer.getOpt((PlayerEntity) entity).ifPresent(VampirePlayer::onSanguinareFinished);
+        if (entity instanceof Player) {
+            VampirePlayer.getOpt((Player) entity).ifPresent(VampirePlayer::onSanguinareFinished);
         }
     }
 
@@ -72,7 +72,7 @@ public class SanguinareEffect extends VampirismEffect {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void renderInventoryEffect(EffectInstance effect, DisplayEffectsScreen<?> gui, MatrixStack mStack, int x, int y, float z) {
+    public void renderInventoryEffect(MobEffectInstance effect, EffectRenderingInventoryScreen<?> gui, PoseStack mStack, int x, int y, float z) {
         String s = UtilLib.translate(effect.getEffect().getDescriptionId());
         gui.font
                 .drawShadow/*drawStringWithShadow*/
@@ -81,7 +81,7 @@ public class SanguinareEffect extends VampirismEffect {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public boolean shouldRenderInvText(EffectInstance effect) {
+    public boolean shouldRenderInvText(MobEffectInstance effect) {
         return false;
     }
 }

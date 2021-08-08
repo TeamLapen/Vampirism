@@ -1,16 +1,17 @@
 package de.teamlapen.lib.lib.tile;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.LockableTileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.NonNullList;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 import javax.annotation.Nonnull;
@@ -19,7 +20,7 @@ import javax.annotation.Nonnull;
 /**
  * Basic abstract class for TileEntitys which need a small inventory (with an gui)
  */
-public abstract class InventoryTileEntity extends LockableTileEntity implements INamedContainerProvider {
+public abstract class InventoryTileEntity extends BaseContainerBlockEntity implements MenuProvider {
 
     /**
      * Maximal squared distance from which the player can access the inventory
@@ -29,8 +30,8 @@ public abstract class InventoryTileEntity extends LockableTileEntity implements 
     protected InventoryContainer.SelectorInfo[] selectors;
 
 
-    public InventoryTileEntity(TileEntityType<?> tileEntityTypeIn, int size, InventoryContainer.SelectorInfo... selectorInfos) {
-        super(tileEntityTypeIn);
+    public InventoryTileEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state, int size, InventoryContainer.SelectorInfo... selectorInfos) {
+        super(tileEntityTypeIn, pos, state);
         this.inventorySlots = NonNullList.withSize(size, ItemStack.EMPTY);
         if (selectorInfos.length != size) {
             throw new IllegalArgumentException("Selector count must match inventory size");
@@ -65,27 +66,27 @@ public abstract class InventoryTileEntity extends LockableTileEntity implements 
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tagCompound) {
-        super.load(state, tagCompound);
+    public void load(CompoundTag tagCompound) {
+        super.load(tagCompound);
         inventorySlots.clear();
-        ItemStackHelper.loadAllItems(tagCompound, this.inventorySlots);
+        ContainerHelper.loadAllItems(tagCompound, this.inventorySlots);
 
     }
 
     @Override
     public ItemStack removeItem(int slot, int amt) {
-        return ItemStackHelper.removeItem(inventorySlots, slot, amt);
+        return ContainerHelper.removeItem(inventorySlots, slot, amt);
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int index) {
-        return ItemStackHelper.takeItem(inventorySlots, index);
+        return ContainerHelper.takeItem(inventorySlots, index);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
-        ItemStackHelper.saveAllItems(compound, inventorySlots);
+        ContainerHelper.saveAllItems(compound, inventorySlots);
         return compound;
     }
 
@@ -100,11 +101,11 @@ public abstract class InventoryTileEntity extends LockableTileEntity implements 
     }
 
     @Override
-    public void startOpen(PlayerEntity player) {
+    public void startOpen(Player player) {
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         if (!hasLevel()) return false;
         if (this.level.getBlockEntity(this.worldPosition) != this) {
             return false;
@@ -129,7 +130,7 @@ public abstract class InventoryTileEntity extends LockableTileEntity implements 
 
     private class SelectorInvWrapper extends InvWrapper {
 
-        SelectorInvWrapper(IInventory inv) {
+        SelectorInvWrapper(Container inv) {
             super(inv);
         }
 

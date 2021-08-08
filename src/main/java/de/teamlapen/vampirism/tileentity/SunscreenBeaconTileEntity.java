@@ -4,56 +4,50 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 import java.util.function.Predicate;
 
-public class SunscreenBeaconTileEntity extends TileEntity implements ITickableTileEntity {
+public class SunscreenBeaconTileEntity extends BlockEntity {
 
     private BlockPos oldPos;
-    private Predicate<PlayerEntity> selector;
+    private Predicate<Player> selector;
 
-    public SunscreenBeaconTileEntity() {
-        super(ModTiles.sunscreen_beacon);
+    public SunscreenBeaconTileEntity(BlockPos pos, BlockState state) {
+        super(ModTiles.sunscreen_beacon, pos, state);
     }
 
-    @Override
-    public void tick() {
-        if (level == null) return;
-        if (this.level.getGameTime() % 80L == 0L) {
-            this.updateBeacon();
-        }
-    }
 
-    private void updateBeacon() {
-
-        if (this.level != null && !this.level.isClientSide) {
+    public static void serverTick(Level level, BlockPos pos, BlockState state, SunscreenBeaconTileEntity blockEntity) {
+        if (level.getGameTime() % 80L == 0L) {
             //Position check is probably not necessary, but not sure
-            if (oldPos == null || selector == null || !oldPos.equals(this.worldPosition)) {
-                oldPos = this.worldPosition;
-                final BlockPos center = new BlockPos(this.worldPosition.getX(), 0, this.worldPosition.getZ());
+            if (blockEntity.oldPos == null || blockEntity.selector == null || !blockEntity.oldPos.equals(pos)) {
+                blockEntity.oldPos = pos;
+                final BlockPos center = new BlockPos(pos.getX(), 0, pos.getZ());
                 final int distSq = VampirismConfig.SERVER.sunscreenBeaconDistance.get() * VampirismConfig.SERVER.sunscreenBeaconDistance.get();
-                selector = input -> {
+                blockEntity.selector = input -> {
                     if (input == null) return false;
                     BlockPos player = new BlockPos(input.getX(), 0, input.getZ());
                     return player.distSqr(center) < distSq;
                 };
             }
 
-            List<? extends PlayerEntity> list = this.level.players();
+            List<? extends Player> list = level.players();
 
-            for (PlayerEntity player : list) {
-                if (player.isAlive() && selector.test(player)) {
+            for (Player player : list) {
+                if (player.isAlive() && blockEntity.selector.test(player)) {
                     if (VampirismPlayerAttributes.get(player).vampireLevel > 0) {
-                        player.addEffect(new EffectInstance(ModEffects.sunscreen, 160, 5, true, false));
+                        player.addEffect(new MobEffectInstance(ModEffects.sunscreen, 160, 5, true, false));
                     }
                 }
             }
         }
     }
+
 }

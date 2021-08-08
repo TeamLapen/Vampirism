@@ -2,20 +2,20 @@ package de.teamlapen.vampirism.fluids;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModItems;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.Item;
-import net.minecraft.item.Rarity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
 import net.minecraftforge.fluids.FluidAttributes;
 
 import javax.annotation.Nonnull;
@@ -38,7 +38,7 @@ public class ImpureBloodFluid extends VampirismFluid {
     }
 
     @Override
-    public float getHeight(@Nonnull FluidState fluidState, @Nonnull IBlockReader blockReader, @Nonnull BlockPos blockPos) {
+    public float getHeight(@Nonnull FluidState fluidState, @Nonnull BlockGetter blockReader, @Nonnull BlockPos blockPos) {
         return 0;
     }
 
@@ -49,12 +49,12 @@ public class ImpureBloodFluid extends VampirismFluid {
 
     @Nonnull
     @Override
-    public VoxelShape getShape(@Nonnull FluidState fluidState, @Nonnull IBlockReader blockReader, @Nonnull BlockPos blockPos) {
-        return VoxelShapes.block();
+    public VoxelShape getShape(@Nonnull FluidState fluidState, @Nonnull BlockGetter blockReader, @Nonnull BlockPos blockPos) {
+        return Shapes.block();
     }
 
     @Override
-    public int getTickDelay(@Nonnull IWorldReader worldReader) {
+    public int getTickDelay(@Nonnull LevelReader worldReader) {
         return 5;
     }
 
@@ -64,7 +64,7 @@ public class ImpureBloodFluid extends VampirismFluid {
     }
 
     @Override
-    protected boolean canBeReplacedWith(@Nonnull FluidState fluidState, @Nonnull IBlockReader blockReader, @Nonnull BlockPos blockPos, @Nonnull Fluid fluid, @Nonnull Direction direction) {
+    protected boolean canBeReplacedWith(@Nonnull FluidState fluidState, @Nonnull BlockGetter blockReader, @Nonnull BlockPos blockPos, @Nonnull Fluid fluid, @Nonnull Direction direction) {
         return false;
     }
 
@@ -87,7 +87,7 @@ public class ImpureBloodFluid extends VampirismFluid {
 
     @Nonnull
     @Override
-    protected Vector3d getFlow(@Nonnull IBlockReader blockReader, @Nonnull BlockPos blockPos, @Nonnull FluidState fluidState) {
-        return Vector3d.ZERO;
+    protected Vec3 getFlow(@Nonnull BlockGetter blockReader, @Nonnull BlockPos blockPos, @Nonnull FluidState fluidState) {
+        return Vec3.ZERO;
     }
 }

@@ -13,17 +13,17 @@ import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import de.teamlapen.vampirism.api.world.IVampirismWorld;
 import de.teamlapen.vampirism.api.world.IWorldGenManager;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 
 import javax.annotation.Nonnull;
 
@@ -158,14 +158,14 @@ public class VampirismAPI {
      * @param player
      * @return The respective {@link IFactionPlayerHandler}
      */
-    public static LazyOptional<IFactionPlayerHandler> getFactionPlayerHandler(PlayerEntity player) {
+    public static LazyOptional<IFactionPlayerHandler> getFactionPlayerHandler(Player player) {
         return player.getCapability(CAP_FACTION_HANDLER_PLAYER, null);
     }
 
     /**
      * Get the {@link IExtendedCreatureVampirism} instance for the given creature
      */
-    public static LazyOptional<IExtendedCreatureVampirism> getExtendedCreatureVampirism(CreatureEntity creature) {
+    public static LazyOptional<IExtendedCreatureVampirism> getExtendedCreatureVampirism(PathfinderMob creature) {
         return creature.getCapability(CAP_CREATURE, null);
     }
 
@@ -177,8 +177,8 @@ public class VampirismAPI {
      */
     @Deprecated
     @Nonnull
-    public static IGarlicChunkHandler getGarlicChunkHandler(RegistryKey<World> world) {
-        World w = DistExecutor.safeRunForDist(() -> () -> {
+    public static IGarlicChunkHandler getGarlicChunkHandler(ResourceKey<Level> world) {
+        Level w = DistExecutor.safeRunForDist(() -> () -> {
             MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
             if (server != null) {
                 return server.getLevel(world);
@@ -191,7 +191,7 @@ public class VampirismAPI {
         return dummyGarlicChunkHandler;
     }
 
-    public static LazyOptional<IVampirismWorld> getVampirismWorld(World w) {
+    public static LazyOptional<IVampirismWorld> getVampirismWorld(Level w) {
         return w.getCapability(CAP_WORLD);
     }
 

@@ -6,15 +6,15 @@ import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.UseAction;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -29,8 +29,8 @@ public class FeedingAdapterItem extends VampirismItem {
 
     @Nonnull
     @Override
-    public UseAction getUseAnimation(ItemStack stack) {
-        return UseAction.DRINK;
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.DRINK;
     }
 
     @Override
@@ -40,14 +40,14 @@ public class FeedingAdapterItem extends VampirismItem {
 
     @Override
     public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
-        if (!(player instanceof PlayerEntity) || !player.isAlive()) {
+        if (!(player instanceof Player) || !player.isAlive()) {
             player.releaseUsingItem();
             return;
         }
-        ItemStack bloodContainer = BloodHelper.getBloodContainerInInventory(((PlayerEntity) player).inventory, true, false);
+        ItemStack bloodContainer = BloodHelper.getBloodContainerInInventory(((Player) player).inventory, true, false);
         FluidStack fluidStack = BloodContainerBlock.getFluidFromItemStack(bloodContainer);
         int blood = fluidStack.isEmpty() || fluidStack.getFluid() != ModFluids.blood ? 0 : fluidStack.getAmount();
-        VampirePlayer vampire = VampirePlayer.get((PlayerEntity) player);
+        VampirePlayer vampire = VampirePlayer.get((Player) player);
         if (vampire.getLevel() == 0 || blood == 0 || !vampire.getBloodStats().needsBlood()) {
             player.releaseUsingItem();
             return;
@@ -68,18 +68,18 @@ public class FeedingAdapterItem extends VampirismItem {
 
     @Nonnull
     @Override
-    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, @Nonnull Hand handIn) {
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         return VampirePlayer.getOpt(playerIn).map(vampire -> {
-            if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
+            if (vampire.getLevel() == 0) return new InteractionResultHolder<>(InteractionResult.PASS, stack);
 
 
             if (vampire.getBloodStats().needsBlood() && !BloodHelper.getBloodContainerInInventory(playerIn.inventory, true, false).isEmpty()) {
                 playerIn.startUsingItem(handIn);
-                return new ActionResult<>(ActionResultType.SUCCESS, stack);
+                return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
             }
-            return new ActionResult<>(ActionResultType.PASS, stack);
-        }).orElse(new ActionResult<>(ActionResultType.PASS, stack));
+            return new InteractionResultHolder<>(InteractionResult.PASS, stack);
+        }).orElse(new InteractionResultHolder<>(InteractionResult.PASS, stack));
     }
 
 }

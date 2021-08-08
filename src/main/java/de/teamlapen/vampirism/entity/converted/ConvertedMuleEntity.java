@@ -3,44 +3,44 @@ package de.teamlapen.vampirism.entity.converted;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModAttributes;
-import net.minecraft.entity.CreatureAttribute;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.passive.horse.AbstractHorseEntity;
-import net.minecraft.entity.passive.horse.MuleEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.animal.horse.Mule;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 
-public class ConvertedMuleEntity extends MuleEntity implements CurableConvertedCreature<MuleEntity, ConvertedMuleEntity> {
+public class ConvertedMuleEntity extends Mule implements CurableConvertedCreature<Mule, ConvertedMuleEntity> {
 
-    private static final DataParameter<Boolean> CONVERTING = EntityDataManager.defineId(ConvertedMuleEntity.class, DataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedMuleEntity.class, EntityDataSerializers.BOOLEAN);
 
-    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return AbstractHorseEntity.createBaseHorseAttributes()
+    public static AttributeSupplier.Builder getAttributeBuilder() {
+        return AbstractHorse.createBaseHorseAttributes()
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG)
                 .add(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
-    private final Data<MuleEntity> data = new Data<>();
+    private final Data<Mule> data = new Data<>();
 
-    public ConvertedMuleEntity(EntityType<? extends MuleEntity> type, World worldIn) {
+    public ConvertedMuleEntity(EntityType<? extends Mule> type, Level worldIn) {
         super(type, worldIn);
     }
 
     @Override
-    public Data<MuleEntity> data() {
+    public Data<Mule> data() {
         return this.data;
     }
 
@@ -50,12 +50,12 @@ public class ConvertedMuleEntity extends MuleEntity implements CurableConvertedC
     }
 
     @Override
-    public ITextComponent getNameSuper() {
+    public Component getNameSuper() {
         return super.getName();
     }
 
     @Override
-    public ActionResultType mobInteractSuper(@Nonnull PlayerEntity player, @Nonnull Hand hand) {
+    public InteractionResult mobInteractSuper(@Nonnull Player player, @Nonnull InteractionHand hand) {
         return super.mobInteract(player, hand);
     }
 
@@ -65,7 +65,7 @@ public class ConvertedMuleEntity extends MuleEntity implements CurableConvertedC
     }
 
     @Override
-    public void addAdditionalSaveData(@Nonnull CompoundNBT compound) {
+    public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         this.addAdditionalSaveDataC(compound);
     }
@@ -83,20 +83,20 @@ public class ConvertedMuleEntity extends MuleEntity implements CurableConvertedC
     }
 
     @Override
-    public DataParameter<Boolean> getConvertingDataParam() {
+    public EntityDataAccessor<Boolean> getConvertingDataParam() {
         return CONVERTING;
     }
 
     @Nonnull
     @Override
-    public CreatureAttribute getMobType() {
+    public MobType getMobType() {
         return VReference.VAMPIRE_CREATURE_ATTRIBUTE;
     }
 
     @Nonnull
     @Override
-    public ITextComponent getName() {
-        return this.getNameC(() -> new TranslationTextComponent("entity.mule"));
+    public Component getName() {
+        return this.getNameC(() -> new TranslatableComponent("entity.mule"));
     }
 
     @Override
@@ -106,12 +106,12 @@ public class ConvertedMuleEntity extends MuleEntity implements CurableConvertedC
 
     @Nonnull
     @Override
-    public ActionResultType mobInteract(@Nonnull PlayerEntity player, @Nonnull Hand hand) {
+    public InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) {
         return mobInteractC(player, hand);
     }
 
     @Override
-    public void readAdditionalSaveData(@Nonnull CompoundNBT compound) {
+    public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         readAdditionalSaveDataC(compound);
     }

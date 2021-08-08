@@ -8,25 +8,24 @@ import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.villager.VillagerType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.npc.VillagerType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -34,20 +33,27 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MoveThroughVillageGoal;
+import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+
 public class HunterTaskMasterEntity extends HunterBaseEntity implements IDefaultTaskMasterEntity {
 
-    private static final DataParameter<String> BIOME_TYPE = EntityDataManager.defineId(HunterTaskMasterEntity.class, DataSerializers.STRING);
+    private static final EntityDataAccessor<String> BIOME_TYPE = SynchedEntityData.defineId(HunterTaskMasterEntity.class, EntityDataSerializers.STRING);
 
-    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+    public static AttributeSupplier.Builder getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE)
                 .add(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED);
     }
     @Nullable
-    private PlayerEntity interactor;
+    private Player interactor;
 
-    public HunterTaskMasterEntity(EntityType<? extends HunterBaseEntity> type, World world) {
+    public HunterTaskMasterEntity(EntityType<? extends HunterBaseEntity> type, Level world) {
         super(type, world, false);
     }
 
@@ -61,8 +67,8 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements IDefault
 
     @Nullable
     @Override
-    public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        ILivingEntityData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+        SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
         this.setBiomeType(VillagerType.byBiome(worldIn.getBiomeName(this.blockPosition())));
         return data;
     }
@@ -80,7 +86,7 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements IDefault
 
     @Nonnull
     @Override
-    public Optional<PlayerEntity> getForceLookTarget() {
+    public Optional<Player> getForceLookTarget() {
         return Optional.ofNullable(this.interactor);
     }
 
@@ -102,16 +108,16 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements IDefault
     }
 
     @Override
-    protected ActionResultType mobInteract(@Nonnull PlayerEntity playerEntity, @Nonnull Hand hand) {
+    protected InteractionResult mobInteract(@Nonnull Player playerEntity, @Nonnull InteractionHand hand) {
         if (this.level.isClientSide)
-            return Helper.isHunter(playerEntity) ? ActionResultType.SUCCESS : ActionResultType.PASS;
+            return Helper.isHunter(playerEntity) ? InteractionResult.SUCCESS : InteractionResult.PASS;
         if (Helper.isHunter(playerEntity) && interactor == null) {
             if (this.processInteraction(playerEntity, this)) {
                 this.getNavigation().stop();
                 this.interactor = playerEntity;
             }
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -121,10 +127,10 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements IDefault
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
         this.goalSelector.addGoal(2, new ForceLookEntityGoal<>(this));
         this.goalSelector.addGoal(5, new MoveThroughVillageGoal(this, 0.7F, false, 300, () -> false));
-        this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.7));
-        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 13F));
-        this.goalSelector.addGoal(8, new LookAtGoal(this, VampireBaseEntity.class, 17F));
-        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(6, new RandomStrollGoal(this, 0.7));
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 13F));
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, VampireBaseEntity.class, 17F));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
 

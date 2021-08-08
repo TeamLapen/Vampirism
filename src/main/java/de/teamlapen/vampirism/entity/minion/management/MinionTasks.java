@@ -12,8 +12,8 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.items.BloodBottleItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 

@@ -1,11 +1,11 @@
 package de.teamlapen.lib.lib.entity;
 
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.event.TickEvent;
 
@@ -15,7 +15,7 @@ import net.minecraftforge.event.TickEvent;
  */
 public interface IPlayerEventListener {
 
-    void onChangedDimension(RegistryKey<World> from, RegistryKey<World> to);
+    void onChangedDimension(ResourceKey<Level> from, ResourceKey<Level> to);
 
     void onDeath(DamageSource src);
 
@@ -37,7 +37,7 @@ public interface IPlayerEventListener {
 
     void onJoinWorld();
 
-    void onPlayerClone(PlayerEntity original, boolean wasDeath);
+    void onPlayerClone(Player original, boolean wasDeath);
 
     void onPlayerLoggedIn();
 

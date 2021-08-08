@@ -8,20 +8,20 @@ import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.UseAction;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -29,6 +29,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nonnull;
+
+import net.minecraft.world.item.Item.Properties;
 
 /**
  * Stores blood
@@ -56,13 +58,13 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
     }
 
     @Override
-    public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
-        TileEntity t = world.getBlockEntity(pos);
+    public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
+        BlockEntity t = world.getBlockEntity(pos);
         return t != null && t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).isPresent();
     }
 
     @Override
-    public void fillItemCategory(@Nonnull ItemGroup group, @Nonnull NonNullList<ItemStack> list) {
+    public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> list) {
         super.fillItemCategory(group, list);
         if (this.allowdedIn(group)) {
             ItemStack stack = new ItemStack(ModItems.blood_bottle);
@@ -79,7 +81,7 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
 
     @Nonnull
     @Override
-    public ItemStack finishUsingItem(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(@Nonnull ItemStack stack, @Nonnull Level worldIn, @Nonnull LivingEntity entityLiving) {
         if (entityLiving instanceof IVampire) {
             int blood = BloodHelper.getBlood(stack);
             int drink = Math.min(blood, MULTIPLIER);
@@ -100,32 +102,32 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
 
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
         return new BloodBottleFluidHandler(stack, capacity);
     }
 
     @Nonnull
     @Override
-    public UseAction getUseAnimation(ItemStack stack) {
-        return UseAction.DRINK;
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.DRINK;
     }
 
     @Override
     public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
         if (player instanceof IVampire) return;
-        if (!(player instanceof PlayerEntity) || !player.isAlive()) {
+        if (!(player instanceof Player) || !player.isAlive()) {
             player.releaseUsingItem();
             return;
         }
         int blood = BloodHelper.getBlood(stack);
-        VampirePlayer vampire = VampirePlayer.get((PlayerEntity) player);
+        VampirePlayer vampire = VampirePlayer.get((Player) player);
         if (vampire.getLevel() == 0 || blood == 0 || !vampire.getBloodStats().needsBlood()) {
             player.releaseUsingItem();
             return;
         }
 
         if (blood > 0 && count == 1) {
-            Hand activeHand = player.getUsedItemHand();
+            InteractionHand activeHand = player.getUsedItemHand();
             int drink = Math.min(blood, 3 * MULTIPLIER);
             if (BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> {
                 player.setItemInHand(activeHand, containerStack);
@@ -142,17 +144,17 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
 
     @Nonnull
     @Override
-    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, @Nonnull Hand handIn) {
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         return VampirePlayer.getOpt(playerIn).map(vampire -> {
-            if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
+            if (vampire.getLevel() == 0) return new InteractionResultHolder<>(InteractionResult.PASS, stack);
 
             if (vampire.getBloodStats().needsBlood() && stack.getCount() == 1) {
                 playerIn.startUsingItem(handIn);
-                return new ActionResult<>(ActionResultType.SUCCESS, stack);
+                return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
             }
-            return new ActionResult<>(ActionResultType.PASS, stack);
-        }).orElse(new ActionResult<>(ActionResultType.PASS, stack));
+            return new InteractionResultHolder<>(InteractionResult.PASS, stack);
+        }).orElse(new InteractionResultHolder<>(InteractionResult.PASS, stack));
     }
 
     @Override

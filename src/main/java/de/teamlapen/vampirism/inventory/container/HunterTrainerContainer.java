@@ -10,46 +10,48 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.HunterTrainerEntity;
 import de.teamlapen.vampirism.items.HunterIntelItem;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.IInventoryChangedListener;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerListener;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
+
+import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorInfo;
 
 /**
  * Container which handles hunter levelup at an hunter trainer
  */
-public class HunterTrainerContainer extends InventoryContainer implements IInventoryChangedListener {
+public class HunterTrainerContainer extends InventoryContainer implements ContainerListener {
     private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Items.IRON_INGOT, 27, 26), new SelectorInfo(Items.GOLD_INGOT, 57, 26), new SelectorInfo(ModTags.Items.HUNTER_INTEL, 86, 26)};
-    private final PlayerEntity player;
+    private final Player player;
     @Nullable
     private final HunterTrainerEntity entity;
     private boolean changed = false;
     private ItemStack missing = ItemStack.EMPTY;
 
     @Deprecated
-    public HunterTrainerContainer(int id, PlayerInventory playerInventory) {
+    public HunterTrainerContainer(int id, Inventory playerInventory) {
         this(id, playerInventory, null);
     }
 
-    public HunterTrainerContainer(int id, PlayerInventory playerInventory, @Nullable HunterTrainerEntity trainer) {
-        super(ModContainer.hunter_trainer, id, playerInventory, trainer == null ? IWorldPosCallable.NULL : IWorldPosCallable.create(trainer.level, trainer.blockPosition()), new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
-        ((Inventory) this.inventory).addListener(this);
+    public HunterTrainerContainer(int id, Inventory playerInventory, @Nullable HunterTrainerEntity trainer) {
+        super(ModContainer.hunter_trainer, id, playerInventory, trainer == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(trainer.level, trainer.blockPosition()), new SimpleContainer(SELECTOR_INFOS.length), SELECTOR_INFOS);
+        ((SimpleContainer) this.inventory).addListener(this);
         this.player = playerInventory.player;
         this.addPlayerSlots(playerInventory);
         this.entity = trainer;
     }
 
     @Override
-    public void containerChanged(IInventory iInventory) {
+    public void containerChanged(Container iInventory) {
         changed = true;
     }
 
@@ -93,13 +95,13 @@ public class HunterTrainerContainer extends InventoryContainer implements IInven
             FactionPlayerHandler.get(player).setFactionLevel(VReference.HUNTER_FACTION, old + 1);
             int[] req = HunterLevelingConf.instance().getItemRequirementsForTrainer(old + 1);
             InventoryHelper.removeItems(inventory, new int[]{req[0], req[1], 1});
-            player.addEffect(new EffectInstance(ModEffects.saturation, 400, 2));
+            player.addEffect(new MobEffectInstance(ModEffects.saturation, 400, 2));
             changed = true;
         }
     }
 
     @Override
-    public void removed(PlayerEntity playerIn) {
+    public void removed(Player playerIn) {
         super.removed(playerIn);
         if (!playerIn.getCommandSenderWorld().isClientSide) {
             clearContainer(playerIn, playerIn.getCommandSenderWorld(), inventory);
@@ -107,9 +109,9 @@ public class HunterTrainerContainer extends InventoryContainer implements IInven
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         if (entity == null) return false;
-        return new Vector3d(player.getX(), player.getY(), player.getZ()).distanceTo(new Vector3d(entity.getX(), entity.getY(), entity.getZ())) < 5;
+        return new Vec3(player.getX(), player.getY(), player.getZ()).distanceTo(new Vec3(entity.getX(), entity.getY(), entity.getZ())) < 5;
     }
 
 }

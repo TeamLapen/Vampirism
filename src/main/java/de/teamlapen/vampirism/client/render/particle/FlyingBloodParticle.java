@@ -2,12 +2,12 @@ package de.teamlapen.vampirism.client.render.particle;
 
 import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.IParticleFactory;
-import net.minecraft.client.particle.IParticleRenderType;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.SpriteTexturedParticle;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -19,13 +19,13 @@ import javax.annotation.Nullable;
  * @author maxanier
  */
 @OnlyIn(Dist.CLIENT)
-public class FlyingBloodParticle extends SpriteTexturedParticle {
+public class FlyingBloodParticle extends TextureSheetParticle {
     private final String TAG = "FlyingBloodParticle";
     private final double destX, destY, destZ;
     private final boolean direct;
 
 
-    public FlyingBloodParticle(ClientWorld world, double posX, double posY, double posZ, double destX, double destY, double destZ, int maxage, boolean direct, ResourceLocation particleId) {
+    public FlyingBloodParticle(ClientLevel world, double posX, double posY, double posZ, double destX, double destY, double destZ, int maxage, boolean direct, ResourceLocation particleId) {
         super(world, posX, posY, posZ);
         this.lifetime = maxage;
         this.destX = destX;
@@ -51,8 +51,8 @@ public class FlyingBloodParticle extends SpriteTexturedParticle {
     }
 
     @Override
-    public IParticleRenderType getRenderType() {
-        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
 
@@ -81,12 +81,12 @@ public class FlyingBloodParticle extends SpriteTexturedParticle {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static class Factory implements IParticleFactory<FlyingBloodParticleData> {
+    public static class Factory implements ParticleProvider<FlyingBloodParticleData> {
 
 
         @Nullable
         @Override
-        public Particle createParticle(FlyingBloodParticleData typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle createParticle(FlyingBloodParticleData typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             return new FlyingBloodParticle(worldIn, x, y, z, typeIn.getTargetX(), typeIn.getTargetY(), typeIn.getTargetZ(), typeIn.getMaxAge(), typeIn.isDirect(), typeIn.getTexturePos());
         }
     }

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nonnull;
 

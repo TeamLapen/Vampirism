@@ -7,16 +7,16 @@ import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.item.*;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.brewing.BrewingRecipe;
@@ -30,6 +30,18 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
+
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.StandingAndWallBlockItem;
+import net.minecraft.world.item.Tiers;
 
 /**
  * Handles all item registrations and reference.
@@ -211,7 +223,7 @@ public class ModItems {
 
     public static final VampirismItem garlic_finder = getNull();
 
-    public static final WallOrFloorItem item_candelabra = getNull();
+    public static final StandingAndWallBlockItem item_candelabra = getNull();
 
 
     static void registerCraftingRecipes() {
@@ -244,8 +256,8 @@ public class ModItems {
 
     static void registerItems(IForgeRegistry<Item> registry) {
         registry.register(new VampireFangItem());
-        registry.register(new VampirismItemBloodFood("human_heart", (new Food.Builder()).nutrition(20).saturationMod(1.5F).build(), new Food.Builder().nutrition(5).saturationMod(1f).build()));
-        registry.register(new VampirismItemBloodFood("weak_human_heart", (new Food.Builder()).nutrition(10).saturationMod(0.9F).build(), new Food.Builder().nutrition(3).saturationMod(1f).build()));
+        registry.register(new VampirismItemBloodFood("human_heart", (new FoodProperties.Builder()).nutrition(20).saturationMod(1.5F).build(), new FoodProperties.Builder().nutrition(5).saturationMod(1f).build()));
+        registry.register(new VampirismItemBloodFood("weak_human_heart", (new FoodProperties.Builder()).nutrition(10).saturationMod(0.9F).build(), new FoodProperties.Builder().nutrition(3).saturationMod(1f).build()));
         registry.register(new BloodBottleItem());
         registry.register(new TentItem(true));
         registry.register(new TentItem(false));
@@ -268,16 +280,16 @@ public class ModItems {
 
         registry.register(new PitchforkItem());
         SimpleCrossbowItem basic_crossbow = new SimpleCrossbowItem("basic_crossbow", 1, 20, 300);
-        basic_crossbow.setEnchantability(ItemTier.WOOD);
+        basic_crossbow.setEnchantability(Tiers.WOOD);
         registry.register(basic_crossbow);
         DoubleCrossbowItem basic_double_crossbow = new DoubleCrossbowItem("basic_double_crossbow", 1, 20, 300);
-        basic_double_crossbow.setEnchantability(ItemTier.WOOD);
+        basic_double_crossbow.setEnchantability(Tiers.WOOD);
         registry.register(basic_double_crossbow);
         SimpleCrossbowItem enhanced_crossbow = new SimpleCrossbowItem("enhanced_crossbow", 1.5F, 15, 350);
-        enhanced_crossbow.setEnchantability(ItemTier.IRON);
+        enhanced_crossbow.setEnchantability(Tiers.IRON);
         registry.register(enhanced_crossbow);
         DoubleCrossbowItem enhanced_double_crossbow = new DoubleCrossbowItem("enhanced_double_crossbow", 1.5F, 15, 350);
-        enhanced_double_crossbow.setEnchantability(ItemTier.IRON);
+        enhanced_double_crossbow.setEnchantability(Tiers.IRON);
         registry.register(enhanced_double_crossbow);
         registry.register(new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.VAMPIRE_KILLER));
         registry.register(new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.NORMAL));
@@ -286,17 +298,17 @@ public class ModItems {
         registry.register(new StakeItem());
         registry.register(new VampireBloodBottleItem());
         TechCrossbowItem basic_tech_crossbow = new TechCrossbowItem("basic_tech_crossbow", 1.6F, 6, 300);
-        basic_tech_crossbow.setEnchantability(ItemTier.DIAMOND);
+        basic_tech_crossbow.setEnchantability(Tiers.DIAMOND);
         registry.register(basic_tech_crossbow);
         TechCrossbowItem enhanced_tech_crossbow = new TechCrossbowItem("enhanced_tech_crossbow", 1.7F, 4, 450);
-        enhanced_tech_crossbow.setEnchantability(ItemTier.DIAMOND);
+        enhanced_tech_crossbow.setEnchantability(Tiers.DIAMOND);
         registry.register(enhanced_tech_crossbow);
         registry.register(new VampirismItem("tech_crossbow_ammo_package", new Item.Properties().tab(VampirismMod.creativeTab)) {
 
             @OnlyIn(Dist.CLIENT)
             @Override
-            public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-                tooltip.add(new TranslationTextComponent("item.vampirism." + regName + ".tooltip", new TranslationTextComponent(basic_tech_crossbow.getDescriptionId())).withStyle(TextFormatting.GRAY));
+            public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+                tooltip.add(new TranslatableComponent("item.vampirism." + regName + ".tooltip", new TranslatableComponent(basic_tech_crossbow.getDescriptionId())).withStyle(ChatFormatting.GRAY));
             }
 
         });
@@ -333,18 +345,18 @@ public class ModItems {
         registry.register(new VampirismItem("garlic_beacon_core_improved", creativeTabProps()));
         registry.register(new VampirismItem("purified_garlic", creativeTabProps()));
 
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.NORMAL));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.NORMAL));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.NORMAL));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.FEET, IItemWithTier.TIER.NORMAL));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.FEET, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.FEET, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ArmorOfSwiftnessItem(EquipmentSlot.HEAD, IItemWithTier.TIER.NORMAL));
+        registry.register(new ArmorOfSwiftnessItem(EquipmentSlot.CHEST, IItemWithTier.TIER.NORMAL));
+        registry.register(new ArmorOfSwiftnessItem(EquipmentSlot.LEGS, IItemWithTier.TIER.NORMAL));
+        registry.register(new ArmorOfSwiftnessItem(EquipmentSlot.FEET, IItemWithTier.TIER.NORMAL));
+        registry.register(new ArmorOfSwiftnessItem(EquipmentSlot.HEAD, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ArmorOfSwiftnessItem(EquipmentSlot.CHEST, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ArmorOfSwiftnessItem(EquipmentSlot.LEGS, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ArmorOfSwiftnessItem(EquipmentSlot.FEET, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ArmorOfSwiftnessItem(EquipmentSlot.HEAD, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ArmorOfSwiftnessItem(EquipmentSlot.CHEST, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ArmorOfSwiftnessItem(EquipmentSlot.LEGS, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ArmorOfSwiftnessItem(EquipmentSlot.FEET, IItemWithTier.TIER.ULTIMATE));
 
         registry.register(new HunterHatItem(0));
         registry.register(new HunterHatItem(1));
@@ -354,31 +366,31 @@ public class ModItems {
         registry.register(new HunterAxeItem(IItemWithTier.TIER.ULTIMATE));
 
 
-        registry.register(new HunterCoatItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.NORMAL));
-        registry.register(new HunterCoatItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.NORMAL));
-        registry.register(new HunterCoatItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.NORMAL));
-        registry.register(new HunterCoatItem(EquipmentSlotType.FEET, IItemWithTier.TIER.NORMAL));
-        registry.register(new HunterCoatItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.ENHANCED));
-        registry.register(new HunterCoatItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.ENHANCED));
-        registry.register(new HunterCoatItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.ENHANCED));
-        registry.register(new HunterCoatItem(EquipmentSlotType.FEET, IItemWithTier.TIER.ENHANCED));
-        registry.register(new HunterCoatItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new HunterCoatItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new HunterCoatItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new HunterCoatItem(EquipmentSlotType.FEET, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new HunterCoatItem(EquipmentSlot.HEAD, IItemWithTier.TIER.NORMAL));
+        registry.register(new HunterCoatItem(EquipmentSlot.CHEST, IItemWithTier.TIER.NORMAL));
+        registry.register(new HunterCoatItem(EquipmentSlot.LEGS, IItemWithTier.TIER.NORMAL));
+        registry.register(new HunterCoatItem(EquipmentSlot.FEET, IItemWithTier.TIER.NORMAL));
+        registry.register(new HunterCoatItem(EquipmentSlot.HEAD, IItemWithTier.TIER.ENHANCED));
+        registry.register(new HunterCoatItem(EquipmentSlot.CHEST, IItemWithTier.TIER.ENHANCED));
+        registry.register(new HunterCoatItem(EquipmentSlot.LEGS, IItemWithTier.TIER.ENHANCED));
+        registry.register(new HunterCoatItem(EquipmentSlot.FEET, IItemWithTier.TIER.ENHANCED));
+        registry.register(new HunterCoatItem(EquipmentSlot.HEAD, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new HunterCoatItem(EquipmentSlot.CHEST, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new HunterCoatItem(EquipmentSlot.LEGS, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new HunterCoatItem(EquipmentSlot.FEET, IItemWithTier.TIER.ULTIMATE));
 
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.NORMAL));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.NORMAL));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.NORMAL));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.FEET, IItemWithTier.TIER.NORMAL));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.FEET, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.FEET, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ObsidianArmorItem(EquipmentSlot.HEAD, IItemWithTier.TIER.NORMAL));
+        registry.register(new ObsidianArmorItem(EquipmentSlot.CHEST, IItemWithTier.TIER.NORMAL));
+        registry.register(new ObsidianArmorItem(EquipmentSlot.LEGS, IItemWithTier.TIER.NORMAL));
+        registry.register(new ObsidianArmorItem(EquipmentSlot.FEET, IItemWithTier.TIER.NORMAL));
+        registry.register(new ObsidianArmorItem(EquipmentSlot.HEAD, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ObsidianArmorItem(EquipmentSlot.CHEST, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ObsidianArmorItem(EquipmentSlot.LEGS, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ObsidianArmorItem(EquipmentSlot.FEET, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ObsidianArmorItem(EquipmentSlot.HEAD, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ObsidianArmorItem(EquipmentSlot.CHEST, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ObsidianArmorItem(EquipmentSlot.LEGS, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ObsidianArmorItem(EquipmentSlot.FEET, IItemWithTier.TIER.ULTIMATE));
 
         registry.register(new HeartSeekerItem(IItemWithTier.TIER.NORMAL));
         registry.register(new HeartStrikerItem(IItemWithTier.TIER.NORMAL));
@@ -391,21 +403,21 @@ public class ModItems {
         registry.register(new VampirismItem("blood_infused_enhanced_iron_ingot", creativeTabProps()));
         registry.register(new VampirismItem("soul_orb_vampire", creativeTabProps()));
 
-        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.REDBLACK));
-        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKBLUE));
-        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKRED));
-        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKWHITE));
-        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.WHITEBLACK));
+        registry.register(new ColoredVampireClothingItem(EquipmentSlot.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.REDBLACK));
+        registry.register(new ColoredVampireClothingItem(EquipmentSlot.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKBLUE));
+        registry.register(new ColoredVampireClothingItem(EquipmentSlot.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKRED));
+        registry.register(new ColoredVampireClothingItem(EquipmentSlot.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKWHITE));
+        registry.register(new ColoredVampireClothingItem(EquipmentSlot.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.WHITEBLACK));
 
-        registry.register(new SpawnEggItem(ModEntities.vampire, 0x8B15A3, 0xa735e3, new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "vampire_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.hunter, 0x2d05f2, 0x2600e0, new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "vampire_hunter_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.advanced_vampire, 0x8B15A3, 0x560a7e, new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "advanced_vampire_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.advanced_hunter, 0x2d05f2, 0x1a028c, new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "advanced_vampire_hunter_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.vampire_baron, 0x8B15A3, 0x15acda, new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "vampire_baron_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.hunter_trainer, 0x2d05f2, 0x1cdb49, new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "hunter_trainer_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.vampire, 0x8B15A3, 0xa735e3, new Item.Properties().tab(CreativeModeTab.TAB_MISC)).setRegistryName(REFERENCE.MODID, "vampire_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.hunter, 0x2d05f2, 0x2600e0, new Item.Properties().tab(CreativeModeTab.TAB_MISC)).setRegistryName(REFERENCE.MODID, "vampire_hunter_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.advanced_vampire, 0x8B15A3, 0x560a7e, new Item.Properties().tab(CreativeModeTab.TAB_MISC)).setRegistryName(REFERENCE.MODID, "advanced_vampire_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.advanced_hunter, 0x2d05f2, 0x1a028c, new Item.Properties().tab(CreativeModeTab.TAB_MISC)).setRegistryName(REFERENCE.MODID, "advanced_vampire_hunter_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.vampire_baron, 0x8B15A3, 0x15acda, new Item.Properties().tab(CreativeModeTab.TAB_MISC)).setRegistryName(REFERENCE.MODID, "vampire_baron_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.hunter_trainer, 0x2d05f2, 0x1cdb49, new Item.Properties().tab(CreativeModeTab.TAB_MISC)).setRegistryName(REFERENCE.MODID, "hunter_trainer_spawn_egg"));
 
-        registry.register(new BucketItem(ModFluids.blood, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "blood_bucket"));
-        registry.register(new BucketItem(ModFluids.impure_blood, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "impure_blood_bucket"));
+        registry.register(new BucketItem(ModFluids.blood, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(CreativeModeTab.TAB_MISC)).setRegistryName(REFERENCE.MODID, "blood_bucket"));
+        registry.register(new BucketItem(ModFluids.impure_blood, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(CreativeModeTab.TAB_MISC)).setRegistryName(REFERENCE.MODID, "impure_blood_bucket"));
 
         registry.register(new GarlicBreadItem());
         registry.register(new UmbrellaItem());
@@ -427,15 +439,15 @@ public class ModItems {
         registry.register(new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.RING).setRegistryName(REFERENCE.MODID, "ring"));
         registry.register(new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.OBI_BELT).setRegistryName(REFERENCE.MODID, "obi_belt"));
 
-        registry.register(new VampireClothingItem(EquipmentSlotType.HEAD, "vampire_clothing_crown"));
-        registry.register(new VampireClothingItem(EquipmentSlotType.LEGS, "vampire_clothing_legs"));
-        registry.register(new VampireClothingItem(EquipmentSlotType.FEET, "vampire_clothing_boots"));
-        registry.register(new VampireClothingItem(EquipmentSlotType.HEAD, "vampire_clothing_hat"));
+        registry.register(new VampireClothingItem(EquipmentSlot.HEAD, "vampire_clothing_crown"));
+        registry.register(new VampireClothingItem(EquipmentSlot.LEGS, "vampire_clothing_legs"));
+        registry.register(new VampireClothingItem(EquipmentSlot.FEET, "vampire_clothing_boots"));
+        registry.register(new VampireClothingItem(EquipmentSlot.HEAD, "vampire_clothing_hat"));
 
         registry.register(new VampirismItem("cure_apple", creativeTabProps().rarity(Rarity.RARE)));
         registry.register(new VampirismItem("garlic_finder", creativeTabProps().rarity(Rarity.RARE)));
 
-        registry.register(new WallOrFloorItem(ModBlocks.candelabra, ModBlocks.candelabra_wall, new Item.Properties().tab(VampirismMod.creativeTab)).setRegistryName(REFERENCE.MODID, "item_candelabra"));
+        registry.register(new StandingAndWallBlockItem(ModBlocks.candelabra, ModBlocks.candelabra_wall, new Item.Properties().tab(VampirismMod.creativeTab)).setRegistryName(REFERENCE.MODID, "item_candelabra"));
 
 
         if (VampirismMod.inDataGen) {

@@ -1,7 +1,7 @@
 package de.teamlapen.lib.lib.network;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -14,12 +14,12 @@ public interface ISyncable {
      * This method should load all included information. It might contain some or all syncable information.
      **/
     @OnlyIn(Dist.CLIENT)
-    void loadUpdateFromNBT(CompoundNBT nbt);
+    void loadUpdateFromNBT(CompoundTag nbt);
 
     /**
      * This method is called to get update informations which should be send to the client
      */
-    void writeFullUpdateToNBT(CompoundNBT nbt);
+    void writeFullUpdateToNBT(CompoundTag nbt);
 
 
     /**

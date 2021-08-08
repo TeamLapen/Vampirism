@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWithDummyWidget;
@@ -15,26 +15,33 @@ import de.teamlapen.vampirism.inventory.container.VampirismContainer;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.screen.inventory.InventoryScreen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.util.text.*;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.HoverEvent;
 
 import java.util.Collection;
 import java.util.Collections;
 
-public class VampirismScreen extends ContainerScreen<VampirismContainer> implements ExtendedScreen {
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+
+public class VampirismScreen extends AbstractContainerScreen<VampirismContainer> implements ExtendedScreen {
 
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/vampirism_menu.png");
     private static final ResourceLocation BACKGROUND_REFINEMENTS = new ResourceLocation(REFERENCE.MODID, "textures/gui/vampirism_menu_refinements.png");
@@ -47,7 +54,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
     private int oldMouseY;
     private ScrollableListWidget<ITaskInstance> list;
 
-    public VampirismScreen(VampirismContainer container, PlayerInventory playerInventory, ITextComponent titleIn) {
+    public VampirismScreen(VampirismContainer container, Inventory playerInventory, Component titleIn) {
         super(container, playerInventory, titleIn);
         this.imageWidth = display_width;
         this.imageHeight = display_height;
@@ -90,7 +97,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
         if (this.menu.areRefinementsAvailable()) {
@@ -104,7 +111,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
             }
         }
         if (this.list.isEmpty()) {
-            ITextComponent text = new TranslationTextComponent("gui.vampirism.vampirism_menu.no_tasks").withStyle(TextFormatting.WHITE);
+            Component text = new TranslatableComponent("gui.vampirism.vampirism_menu.no_tasks").withStyle(ChatFormatting.WHITE);
             int width = this.font.width(text);
             this.font.drawShadow(matrixStack, text, this.leftPos + 152 - (width / 2), this.topPos + 52, 0);
         }
@@ -126,21 +133,21 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
                 Minecraft.getInstance().setScreen(new SkillsScreen(this));
             }
         }, (button, matrixStack, mouseX, mouseY) -> {
-            this.renderTooltip(matrixStack, new TranslationTextComponent("gui.vampirism.vampirism_menu.skill_screen"), mouseX, mouseY);
-        }, StringTextComponent.EMPTY));
+            this.renderTooltip(matrixStack, new TranslatableComponent("gui.vampirism.vampirism_menu.skill_screen"), mouseX, mouseY);
+        }, TextComponent.EMPTY));
 
         this.addButton(new ImageButton(this.leftPos + 26, this.topPos + 90, 20, 20, 0, 205, 20, BACKGROUND, 256, 256, (context) -> {
             IPlayableFaction<?> factionNew = VampirismPlayerAttributes.get(this.minecraft.player).faction;
             Minecraft.getInstance().setScreen(new SelectActionScreen(factionNew.getColor(), true));
         }, (button, matrixStack, mouseX, mouseY) -> {
-            this.renderTooltip(matrixStack, new TranslationTextComponent("gui.vampirism.vampirism_menu.edit_actions"), mouseX, mouseY);
-        }, StringTextComponent.EMPTY));
+            this.renderTooltip(matrixStack, new TranslatableComponent("gui.vampirism.vampirism_menu.edit_actions"), mouseX, mouseY);
+        }, TextComponent.EMPTY));
 
         Button button = this.addButton(new ImageButton(this.leftPos + 47, this.topPos + 90, 20, 20, 20, 205, 20, BACKGROUND, 256, 256, (context) -> {
             Minecraft.getInstance().setScreen(new VampirePlayerAppearanceScreen(this));
         }, (button1, matrixStack, mouseX, mouseY) -> {
-            this.renderTooltip(matrixStack, new TranslationTextComponent("gui.vampirism.vampirism_menu.appearance_menu"), mouseX, mouseY);
-        }, StringTextComponent.EMPTY));
+            this.renderTooltip(matrixStack, new TranslatableComponent("gui.vampirism.vampirism_menu.appearance_menu"), mouseX, mouseY);
+        }, TextComponent.EMPTY));
         if (!Helper.isVampire(minecraft.player)) {
             button.active = false;
             button.visible = false;
@@ -149,7 +156,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
     }
 
     @Override
-    protected void renderBg(MatrixStack matrixStack, float v, int i, int i1) {
+    protected void renderBg(PoseStack matrixStack, float v, int i, int i1) {
         this.renderBackground(matrixStack);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bind(this.menu.areRefinementsAvailable() ? BACKGROUND_REFINEMENTS : BACKGROUND);
@@ -157,7 +164,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         InventoryScreen.renderEntityInInventory(this.leftPos + 31, this.topPos + 72, 30, (float) (this.leftPos + 10) - this.oldMouseX, (float) (this.topPos + 75 - 50) - this.oldMouseY, this.minecraft.player);
     }
 
-    protected void renderHoveredRefinementTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
+    protected void renderHoveredRefinementTooltip(PoseStack matrixStack, int mouseX, int mouseY) {
         if (this.hoveredSlot != null) {
             int index = this.hoveredSlot.index;
             NonNullList<ItemStack> list = this.menu.getRefinementStacks();
@@ -166,7 +173,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
                     this.renderTooltip(matrixStack, list.get(index), mouseX, mouseY);
                 } else {
                     if (!list.get(index).isEmpty() && this.menu.getSlot(index).mayPlace(this.minecraft.player.inventory.getCarried())) {
-                        this.renderTooltip(matrixStack, new TranslationTextComponent("gui.vampirism.vampirism_menu.destroy_item").withStyle(TextFormatting.RED), mouseX, mouseY);
+                        this.renderTooltip(matrixStack, new TranslatableComponent("gui.vampirism.vampirism_menu.destroy_item").withStyle(ChatFormatting.RED), mouseX, mouseY);
                     }
                 }
             }
@@ -180,7 +187,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         public TaskItem(ITaskInstance item, ScrollableListWithDummyWidget<ITaskInstance> list, boolean isDummy, VampirismScreen screen, IFactionPlayer<?> factionPlayer) {
             super(item, list, isDummy, screen, factionPlayer);
             if (!item.isUnique()) {
-                this.button = new ImageButton(0, 0, 8, 11, 0, 229, 11, TASKMASTER_GUI_TEXTURE, 256, 256, this::onClick, this::onTooltip, StringTextComponent.EMPTY);
+                this.button = new ImageButton(0, 0, 8, 11, 0, 229, 11, TASKMASTER_GUI_TEXTURE, 256, 256, this::onClick, this::onTooltip, TextComponent.EMPTY);
             }
         }
 
@@ -195,7 +202,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         }
 
         @Override
-        public void renderItem(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
+        public void renderItem(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
             super.renderItem(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, partialTicks, zLevel);
             if (this.button != null) {
                 this.button.x = x + listWidth - 13;
@@ -205,7 +212,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         }
 
         @Override
-        public void renderItemToolTip(MatrixStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
+        public void renderItemToolTip(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
             if (this.button != null && this.button.isHovered()) {
                 this.button.renderToolTip(matrixStack, mouseX, mouseY);
             } else {
@@ -216,26 +223,26 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         private float getDistance(int x1, int z1, int x2, int z2) {
             int i = x2 - x1;
             int j = z2 - z1;
-            return MathHelper.sqrt((float) (i * i + j * j));
+            return Mth.sqrt((float) (i * i + j * j));
         }
 
         private void onClick(Button button) {
-            PlayerEntity player = this.factionPlayer.getRepresentingPlayer();
-            ITextComponent position = menu.taskWrapper.get(this.item.getTaskBoard()).getLastSeenPos().map(pos -> {
-                int i = MathHelper.floor(getDistance(player.blockPosition().getX(), player.blockPosition().getZ(), pos.getX(), pos.getZ()));
-                IFormattableTextComponent itextcomponent = TextComponentUtils.wrapInSquareBrackets(new TranslationTextComponent("chat.coordinates", pos.getX(), "~", pos.getZ())).withStyle((p_241055_1_) -> {
-                    return p_241055_1_.withColor(TextFormatting.GREEN).withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tp @s " + pos.getX() + " ~ " + pos.getZ())).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslationTextComponent("chat.coordinates.tooltip")));
+            Player player = this.factionPlayer.getRepresentingPlayer();
+            Component position = menu.taskWrapper.get(this.item.getTaskBoard()).getLastSeenPos().map(pos -> {
+                int i = Mth.floor(getDistance(player.blockPosition().getX(), player.blockPosition().getZ(), pos.getX(), pos.getZ()));
+                MutableComponent itextcomponent = ComponentUtils.wrapInSquareBrackets(new TranslatableComponent("chat.coordinates", pos.getX(), "~", pos.getZ())).withStyle((p_241055_1_) -> {
+                    return p_241055_1_.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tp @s " + pos.getX() + " ~ " + pos.getZ())).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableComponent("chat.coordinates.tooltip")));
                 });
-                return itextcomponent.append(new TranslationTextComponent("gui.vampirism.vampirism_menu.distance", i));
-            }).orElseGet(() -> new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos.unknown").withStyle(TextFormatting.GOLD));
-            player.displayClientMessage(new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos").append(position), false);
+                return itextcomponent.append(new TranslatableComponent("gui.vampirism.vampirism_menu.distance", i));
+            }).orElseGet(() -> new TranslatableComponent("gui.vampirism.vampirism_menu.last_known_pos.unknown").withStyle(ChatFormatting.GOLD));
+            player.displayClientMessage(new TranslatableComponent("gui.vampirism.vampirism_menu.last_known_pos").append(position), false);
 
         }
 
-        private void onTooltip(Button button, MatrixStack matrixStack, int mouseX, int mouseY) {
-            ITextComponent position = menu.taskWrapper.get(this.item.getTaskBoard()).getLastSeenPos().map(pos -> new StringTextComponent("[" + pos.toShortString() + "]").withStyle(TextFormatting.GREEN)).orElseGet(() -> new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos.unknown").withStyle(TextFormatting.GOLD));
+        private void onTooltip(Button button, PoseStack matrixStack, int mouseX, int mouseY) {
+            Component position = menu.taskWrapper.get(this.item.getTaskBoard()).getLastSeenPos().map(pos -> new TextComponent("[" + pos.toShortString() + "]").withStyle(ChatFormatting.GREEN)).orElseGet(() -> new TranslatableComponent("gui.vampirism.vampirism_menu.last_known_pos.unknown").withStyle(ChatFormatting.GOLD));
 
-            VampirismScreen.this.renderWrappedToolTip(matrixStack, Collections.singletonList(new TranslationTextComponent("gui.vampirism.vampirism_menu.last_known_pos").append(position)), mouseX, mouseY, font);
+            VampirismScreen.this.renderWrappedToolTip(matrixStack, Collections.singletonList(new TranslatableComponent("gui.vampirism.vampirism_menu.last_known_pos").append(position)), mouseX, mouseY, font);
 
         }
     }

@@ -8,12 +8,12 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.VampirismSkill;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.BaseComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
@@ -77,20 +77,20 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("purified_garlic", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("stake1", false)
                 .setDescription(() -> {
-                    TextComponent desc = new TranslationTextComponent("skill.vampirism.stake1.desc", (int) (VampirismConfig.BALANCE.hsInstantKill1MaxHealth.get() * 100));
+                    BaseComponent desc = new TranslatableComponent("skill.vampirism.stake1.desc", (int) (VampirismConfig.BALANCE.hsInstantKill1MaxHealth.get() * 100));
                     if (VampirismConfig.BALANCE.hsInstantKill1FromBehind.get()) {
-                        desc.append(new StringTextComponent(" "));
-                        desc.append(new TranslationTextComponent("text.vampirism.from_behind"));
+                        desc.append(new TextComponent(" "));
+                        desc.append(new TranslatableComponent("text.vampirism.from_behind"));
                     }
                     return desc;
                 }));
         registry.register(new VampirismSkill.SimpleHunterSkill("stake2", false)
                 .setDescription(() -> {
-                    ITextComponent desc = null;
+                    Component desc = null;
                     if (VampirismConfig.BALANCE.hsInstantKill2OnlyNPC.get()) {
-                        desc = new TranslationTextComponent("skill.vampirism.stake2.desc_npc", VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get());
+                        desc = new TranslatableComponent("skill.vampirism.stake2.desc_npc", VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get());
                     } else {
-                        desc = new TranslationTextComponent("skill.vampirism.stake2.desc_all", VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get());
+                        desc = new TranslatableComponent("skill.vampirism.stake2.desc_all", VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get());
 
                     }
                     return desc;

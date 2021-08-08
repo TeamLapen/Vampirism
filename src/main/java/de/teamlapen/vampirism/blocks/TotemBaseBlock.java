@@ -1,18 +1,20 @@
 package de.teamlapen.vampirism.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class TotemBaseBlock extends VampirismBlock {
     private static final VoxelShape shape = makeShape();
@@ -30,7 +32,7 @@ public class TotemBaseBlock extends VampirismBlock {
 
         VoxelShape e = Block.box(5, 3, 5, 11, 16, 11);
 
-        return VoxelShapes.or(a, b, c, d1, d2, d3, d4, e);
+        return Shapes.or(a, b, c, d1, d2, d3, d4, e);
     }
 
     public TotemBaseBlock() {
@@ -39,17 +41,17 @@ public class TotemBaseBlock extends VampirismBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return shape;
     }
 
 
     @Override
-    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
+    public boolean removedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         BlockPos up = pos.above();
         BlockState upState = world.getBlockState(pos.above());
         if (upState.getBlock() instanceof TotemTopBlock) {
-            TileEntity upTE = world.getBlockEntity(pos.above());
+            BlockEntity upTE = world.getBlockEntity(pos.above());
             if (!upState.getBlock().removedByPlayer(upState, world, pos.above(), player, willHarvest, fluid)) {
                 return false;
             }

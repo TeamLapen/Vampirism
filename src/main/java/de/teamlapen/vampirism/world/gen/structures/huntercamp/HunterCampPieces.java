@@ -6,22 +6,22 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFeatures;
 import de.teamlapen.vampirism.tileentity.TentTileEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.gen.feature.structure.*;
-import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -29,6 +29,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Random;
+
+import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.StructurePieceType;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
 
 @ParametersAreNonnullByDefault
 public abstract class HunterCampPieces extends StructurePiece {
@@ -42,7 +48,7 @@ public abstract class HunterCampPieces extends StructurePiece {
     protected int y;
 
 
-    public HunterCampPieces(IStructurePieceType structurePieceType, int part, int x, int y, int z, Block baseBlock) {
+    public HunterCampPieces(StructurePieceType structurePieceType, int part, int x, int y, int z, Block baseBlock) {
         super(structurePieceType, part);
         this.baseBlock = baseBlock;
         this.x = x;
@@ -51,7 +57,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         this.setBoundingBox();
     }
 
-    public HunterCampPieces(IStructurePieceType structurePieceType, CompoundNBT nbt) {
+    public HunterCampPieces(StructurePieceType structurePieceType, CompoundTag nbt) {
         super(structurePieceType, nbt);
         this.baseBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(nbt.getString("baseBlock")));
         this.x = nbt.getInt("x");
@@ -60,8 +66,8 @@ public abstract class HunterCampPieces extends StructurePiece {
     }
 
     @Override
-    public boolean postProcess/*addComponentParts*/(ISeedReader worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
-        this.y = worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, x, z);
+    public boolean postProcess/*addComponentParts*/(WorldGenLevel worldIn, StructureFeatureManager structureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
+        this.y = worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z);
         this.setBoundingBox();
 
         //fail conditions
@@ -69,7 +75,7 @@ public abstract class HunterCampPieces extends StructurePiece {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundNBT tagCompound) {
+    protected void addAdditionalSaveData(CompoundTag tagCompound) {
         tagCompound.putInt("x", x);
         tagCompound.putInt("y", y);
         tagCompound.putInt("z", z);
@@ -78,10 +84,10 @@ public abstract class HunterCampPieces extends StructurePiece {
     }
 
     protected void setBoundingBox() {
-        this.boundingBox = new MutableBoundingBox(this.x - 1, this.y, this.z - 1, this.x + 1, this.y + 2, this.z + 1);
+        this.boundingBox = new BoundingBox(this.x - 1, this.y, this.z - 1, this.x + 1, this.y + 2, this.z + 1);
     }
 
-    protected boolean testPreconditions(ISeedReader worldIn, StructureManager manager, ChunkPos chunkPos) {
+    protected boolean testPreconditions(WorldGenLevel worldIn, StructureFeatureManager manager, ChunkPos chunkPos) {
         if (!VampirismConfig.COMMON.enableHunterTentGeneration.get()) return false;
         for (StructureStart<?> value : worldIn.getChunk(chunkPos.x, chunkPos.z).getAllStarts().values()) {
             if (value != StructureStart.INVALID_START && value.getFeature() != ModFeatures.hunter_camp) {
@@ -90,7 +96,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
         return this.y >= 63
                 && !worldIn.getBlockState(new BlockPos(x, y - 1, z)).getMaterial().isLiquid()
-                && !manager.getStructureAt(new BlockPos(x, y, z), false, Structure.VILLAGE).isValid();
+                && !manager.getStructureAt(new BlockPos(x, y, z), false, StructureFeature.VILLAGE).isValid();
     }
 
     public static class Fireplace extends HunterCampPieces {
@@ -102,7 +108,7 @@ public abstract class HunterCampPieces extends StructurePiece {
             this.setOrientation(Direction.Plane.HORIZONTAL.getRandomDirection(random));
         }
 
-        public Fireplace(@SuppressWarnings("unused") TemplateManager templateManager, CompoundNBT nbt) {
+        public Fireplace(@SuppressWarnings("unused") StructureManager templateManager, CompoundTag nbt) {
             super(ModFeatures.hunter_camp_fireplace, nbt);
             advanced = nbt.getBoolean("advanced");
             specialComponentAdd = nbt.getBoolean("specialComponentAdd");
@@ -131,7 +137,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        public boolean postProcess/*addComponentParts*/(ISeedReader worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
+        public boolean postProcess/*addComponentParts*/(WorldGenLevel worldIn, StructureFeatureManager structureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
             //preconditions
             if (!super.postProcess/*addComponentParts*/(worldIn, structureManager, chunkGenerator, random, structureBoundingBoxIn, chunkPos, blockPos)) {
                 return false;
@@ -145,7 +151,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        protected void addAdditionalSaveData(CompoundNBT tagCompound) {
+        protected void addAdditionalSaveData(CompoundTag tagCompound) {
             super.addAdditionalSaveData(tagCompound);
             tagCompound.putBoolean("advanced", this.advanced);
             tagCompound.putBoolean("specialComponentAdd", this.specialComponentAdd);
@@ -194,7 +200,7 @@ public abstract class HunterCampPieces extends StructurePiece {
             this.advanced = advanced;
         }
 
-        public Tent(@SuppressWarnings("unused") TemplateManager templateManager, CompoundNBT nbt) {
+        public Tent(@SuppressWarnings("unused") StructureManager templateManager, CompoundTag nbt) {
             super(ModFeatures.hunter_camp_tent, nbt);
             direction = Direction.from2DDataValue(nbt.getInt("direction"));
             mirror = nbt.getInt("mirror");
@@ -202,7 +208,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        public boolean postProcess/*addComponentParts*/(ISeedReader worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
+        public boolean postProcess/*addComponentParts*/(WorldGenLevel worldIn, StructureFeatureManager structureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
             //set helper variables
             if (mirror == 0 ? (mirror = random.nextInt(2) + 1) == 1 : mirror == 1) {
                 xDiff = 2;
@@ -244,7 +250,7 @@ public abstract class HunterCampPieces extends StructurePiece {
                 this.placeBlock(worldIn, ModBlocks.tent.defaultBlockState().setValue(TentBlock.FACING, dir).setValue(TentBlock.POSITION, c), xDiff, 0, 1, structureBoundingBoxIn);
             }
 
-            TileEntity tile = worldIn.getBlockEntity(new BlockPos(x, y, z));
+            BlockEntity tile = worldIn.getBlockEntity(new BlockPos(x, y, z));
             if (tile instanceof TentTileEntity) {
                 ((TentTileEntity) tile).setSpawn(true);
                 if (this.advanced) {
@@ -291,7 +297,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        protected void addAdditionalSaveData(CompoundNBT tagCompound) {
+        protected void addAdditionalSaveData(CompoundTag tagCompound) {
             tagCompound.putInt("direction", this.direction.get2DDataValue());
             tagCompound.putInt("mirror", this.mirror);
             tagCompound.putBoolean("advanced", this.advanced);
@@ -299,13 +305,13 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        protected boolean testPreconditions(ISeedReader worldIn, StructureManager manager, ChunkPos chunkPos) {
+        protected boolean testPreconditions(WorldGenLevel worldIn, StructureFeatureManager manager, ChunkPos chunkPos) {
             return super.testPreconditions(worldIn, manager, chunkPos)
                     && !worldIn.getBlockState(new BlockPos(xCenter, y - 1, z - 1)).getMaterial().isLiquid()
                     && !worldIn.getBlockState(new BlockPos(x, y - 1, z - 1)).getMaterial().isLiquid()
                     && !worldIn.getBlockState(new BlockPos(xCenter, y - 1, z)).getMaterial().isLiquid()
                     //distance to campfire block
-                    && (Math.abs(this.y - worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0), this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0))) < 2);
+                    && (Math.abs(this.y - worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0), this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0))) < 2);
         }
     }
 
@@ -320,24 +326,24 @@ public abstract class HunterCampPieces extends StructurePiece {
             this.advanced = advanced;
         }
 
-        public SpecialBlock(@SuppressWarnings("unused") TemplateManager templateManager, CompoundNBT compoundNBT) {
+        public SpecialBlock(@SuppressWarnings("unused") StructureManager templateManager, CompoundTag compoundNBT) {
             super(ModFeatures.hunter_camp_special, compoundNBT);
             this.direction = Direction.from2DDataValue(compoundNBT.getInt("dir"));
             this.advanced = compoundNBT.getBoolean("advanced");
         }
 
         @Override
-        public boolean postProcess/*addComponentParts*/(ISeedReader worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
+        public boolean postProcess/*addComponentParts*/(WorldGenLevel worldIn, StructureFeatureManager structureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
             //preconditions
             if (!super.postProcess/*addComponentParts*/(worldIn, structureManager, chunkGenerator, random, structureBoundingBoxIn, chunkPos, blockPos))
                 return false;
 
             //generation
             if (advanced) {
-                if (!worldIn.getBlockState(new BlockPos(this.x + 1, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + 1, this.z) - 1, z)).getMaterial().isReplaceable())
-                    this.placeBlock(worldIn, ModBlocks.weapon_table.defaultBlockState(), 2, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + 1, this.z) - y, 1, structureBoundingBoxIn);
-                if (!worldIn.getBlockState(new BlockPos(this.x - 1, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x - 1, this.z) - 1, z)).getMaterial().isReplaceable())
-                    this.placeBlock(worldIn, Blocks.CRAFTING_TABLE.defaultBlockState(), 0, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x - 1, this.z) - y, 1, structureBoundingBoxIn);
+                if (!worldIn.getBlockState(new BlockPos(this.x + 1, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x + 1, this.z) - 1, z)).getMaterial().isReplaceable())
+                    this.placeBlock(worldIn, ModBlocks.weapon_table.defaultBlockState(), 2, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x + 1, this.z) - y, 1, structureBoundingBoxIn);
+                if (!worldIn.getBlockState(new BlockPos(this.x - 1, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x - 1, this.z) - 1, z)).getMaterial().isReplaceable())
+                    this.placeBlock(worldIn, Blocks.CRAFTING_TABLE.defaultBlockState(), 0, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x - 1, this.z) - y, 1, structureBoundingBoxIn);
             } else {
                 this.placeBlock(worldIn, Blocks.CRAFTING_TABLE.defaultBlockState(), 1, 0, 1, structureBoundingBoxIn);
             }
@@ -345,7 +351,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        protected void addAdditionalSaveData(CompoundNBT tagCompound) {
+        protected void addAdditionalSaveData(CompoundTag tagCompound) {
             super.addAdditionalSaveData(tagCompound);
             tagCompound.putInt("dir", this.direction.get2DDataValue());
             tagCompound.putBoolean("advanced", this.advanced);
@@ -353,9 +359,9 @@ public abstract class HunterCampPieces extends StructurePiece {
 
 
         @Override
-        protected boolean testPreconditions(ISeedReader worldIn, StructureManager manager, ChunkPos chunkPos) {
+        protected boolean testPreconditions(WorldGenLevel worldIn, StructureFeatureManager manager, ChunkPos chunkPos) {
             return super.testPreconditions(worldIn, manager, chunkPos)
-                    && (Math.abs(this.y - worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0), this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0))) < 3);
+                    && (Math.abs(this.y - worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0), this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0))) < 3);
         }
     }
 }

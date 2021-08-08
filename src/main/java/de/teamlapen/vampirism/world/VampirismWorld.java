@@ -5,16 +5,16 @@ import com.google.common.collect.Maps;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.world.IVampirismWorld;
-import net.minecraft.command.CommandSource;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
@@ -37,19 +37,19 @@ public class VampirismWorld implements IVampirismWorld {
     /**
      * stores all BoundingBoxes of vampire controlled villages per dimension, mapped from origin block positions
      */
-    private static final Map<BlockPos, MutableBoundingBox> fogAreas = Maps.newHashMap();
-    private static final Map<BlockPos, MutableBoundingBox> tmpFogAreas = Maps.newHashMap();
+    private static final Map<BlockPos, BoundingBox> fogAreas = Maps.newHashMap();
+    private static final Map<BlockPos, BoundingBox> tmpFogAreas = Maps.newHashMap();
     @CapabilityInject(IVampirismWorld.class)
     public static Capability<IVampirismWorld> CAP = getNull();
 
-    public static VampirismWorld get(World world) {
+    public static VampirismWorld get(Level world) {
         return (VampirismWorld) world.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get VampirismWorld from World " + world));
     }
 
     /**
      * Return a LazyOptional, but print a warning message if not present.
      */
-    public static LazyOptional<VampirismWorld> getOpt(@Nonnull World world) {
+    public static LazyOptional<VampirismWorld> getOpt(@Nonnull Level world) {
         LazyOptional<VampirismWorld> opt = world.getCapability(CAP, null).cast();
         if (!opt.isPresent()) {
             LOGGER.warn("Cannot get world capability. This might break mod functionality.", new Throwable().fillInStackTrace());
@@ -61,14 +61,14 @@ public class VampirismWorld implements IVampirismWorld {
         CapabilityManager.INSTANCE.register(IVampirismWorld.class, new VampirismWorld.Storage(), VampirismWorldDefaultImpl::new);
     }
 
-    public static ICapabilityProvider createNewCapability(final World world) {
-        return new ICapabilitySerializable<CompoundNBT>() {
+    public static ICapabilityProvider createNewCapability(final Level world) {
+        return new ICapabilitySerializable<CompoundTag>() {
 
             final IVampirismWorld inst = new VampirismWorld(world);
             final LazyOptional<IVampirismWorld> opt = LazyOptional.of(() -> inst);
 
             @Override
-            public void deserializeNBT(CompoundNBT nbt) {
+            public void deserializeNBT(CompoundTag nbt) {
                 CAP.getStorage().readNBT(CAP, inst, null, nbt);
             }
 
@@ -80,8 +80,8 @@ public class VampirismWorld implements IVampirismWorld {
             }
 
             @Override
-            public CompoundNBT serializeNBT() {
-                return (CompoundNBT) CAP.getStorage().writeNBT(CAP, inst, null);
+            public CompoundTag serializeNBT() {
+                return (CompoundTag) CAP.getStorage().writeNBT(CAP, inst, null);
             }
         };
     }
@@ -92,12 +92,12 @@ public class VampirismWorld implements IVampirismWorld {
 
     // VampireFog
     @Nonnull
-    private final World world;
+    private final Level world;
     // Garlic Handler ------------
     private final HashMap<ChunkPos, EnumStrength> strengthHashMap = Maps.newHashMap();
     private final HashMap<Integer, Emitter> emitterHashMap = Maps.newHashMap();
 
-    public VampirismWorld(@Nonnull World world) {
+    public VampirismWorld(@Nonnull Level world) {
         this.world = world;
     }
 
@@ -119,12 +119,12 @@ public class VampirismWorld implements IVampirismWorld {
         return Stream.concat(fogAreas.entrySet().stream(), tmpFogAreas.entrySet().stream()).anyMatch(entry -> entry.getValue().isInside(blockPos));
     }
 
-    public void printDebug(CommandSource sender) {
+    public void printDebug(CommandSourceStack sender) {
         for (Emitter e : emitterHashMap.values()) {
-            sender.sendSuccess(new StringTextComponent("E: " + e.toString()), true);
+            sender.sendSuccess(new TextComponent("E: " + e.toString()), true);
         }
         for (Map.Entry<ChunkPos, EnumStrength> e : strengthHashMap.entrySet()) {
-            sender.sendSuccess(new StringTextComponent("S: " + e.toString()), true);
+            sender.sendSuccess(new TextComponent("S: " + e.toString()), true);
         }
     }
 
@@ -161,7 +161,7 @@ public class VampirismWorld implements IVampirismWorld {
      * @param totemPos position of the village totem
      * @param box      new bounding box of the village or null if the area should be removed
      */
-    public void updateArtificialFogBoundingBox(@Nonnull BlockPos totemPos, @Nullable AxisAlignedBB box) {
+    public void updateArtificialFogBoundingBox(@Nonnull BlockPos totemPos, @Nullable AABB box) {
         if (box == null) {
             fogAreas.remove(totemPos);
             updateTemporaryArtificialFog(totemPos, null);
@@ -170,7 +170,7 @@ public class VampirismWorld implements IVampirismWorld {
         }
     }
 
-    public void updateTemporaryArtificialFog(@Nonnull BlockPos totemPos, @Nullable AxisAlignedBB box) {
+    public void updateTemporaryArtificialFog(@Nonnull BlockPos totemPos, @Nullable AABB box) {
         if (box == null) {
             tmpFogAreas.remove(totemPos);
         } else {
@@ -181,7 +181,7 @@ public class VampirismWorld implements IVampirismWorld {
 
     //----
 
-    private void loadNBTData(CompoundNBT nbt) {
+    private void loadNBTData(CompoundTag nbt) {
     }
 
     private void rebuildStrengthMap() {
@@ -197,7 +197,7 @@ public class VampirismWorld implements IVampirismWorld {
         }
     }
 
-    private void saveNBTData(CompoundNBT nbt) {
+    private void saveNBTData(CompoundTag nbt) {
 
     }
 
@@ -222,13 +222,13 @@ public class VampirismWorld implements IVampirismWorld {
     private static class Storage implements Capability.IStorage<IVampirismWorld> {
 
         @Override
-        public void readNBT(Capability<IVampirismWorld> capability, IVampirismWorld instance, Direction side, INBT nbt) {
-            ((VampirismWorld) instance).loadNBTData((CompoundNBT) nbt);
+        public void readNBT(Capability<IVampirismWorld> capability, IVampirismWorld instance, Direction side, Tag nbt) {
+            ((VampirismWorld) instance).loadNBTData((CompoundTag) nbt);
         }
 
         @Override
-        public INBT writeNBT(Capability<IVampirismWorld> capability, IVampirismWorld instance, Direction side) {
-            CompoundNBT nbt = new CompoundNBT();
+        public Tag writeNBT(Capability<IVampirismWorld> capability, IVampirismWorld instance, Direction side) {
+            CompoundTag nbt = new CompoundTag();
             ((VampirismWorld) instance).saveNBTData(nbt);
             return nbt;
         }

@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.player.vampire;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.effects.VampireNightVisionEffectInstance;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 
 /**
  * Night Vision
@@ -26,7 +26,7 @@ public class NightVision implements IVampireVision {
 
     @Override
     public void onDeactivated(IVampirePlayer player) {
-        EffectInstance nightVision = player.getRepresentingPlayer().getEffect(Effects.NIGHT_VISION);
+        MobEffectInstance nightVision = player.getRepresentingPlayer().getEffect(MobEffects.NIGHT_VISION);
         if (nightVision instanceof VampireNightVisionEffectInstance) {
             player.getRepresentingPlayer().removeEffect(nightVision.getEffect());
         }
@@ -35,9 +35,9 @@ public class NightVision implements IVampireVision {
     @Override
     public void tick(IVampirePlayer player) {
         if (player.getRepresentingPlayer().tickCount % 50 == 8) {
-            EffectInstance effect = player.getRepresentingPlayer().getEffect(Effects.NIGHT_VISION);
+            MobEffectInstance effect = player.getRepresentingPlayer().getEffect(MobEffects.NIGHT_VISION);
             if (!(effect instanceof VampireNightVisionEffectInstance)) {
-                player.getRepresentingPlayer().removeEffectNoUpdate(Effects.NIGHT_VISION);
+                player.getRepresentingPlayer().removeEffectNoUpdate(MobEffects.NIGHT_VISION);
                 effect = null;
             }
             if (effect == null) {

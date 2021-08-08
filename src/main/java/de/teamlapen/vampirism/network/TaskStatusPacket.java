@@ -6,9 +6,9 @@ import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.player.tasks.TaskInstance;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -16,9 +16,12 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class TaskStatusPacket implements IMessage {
+public record TaskStatusPacket(Set<ITaskInstance> available,
+                               Set<UUID> completableTasks,
+                               Map<UUID, Map<ResourceLocation, Integer>> completedRequirements,
+                               int containerId, UUID taskBoardId) implements IMessage {
 
-    static void encode(@Nonnull TaskStatusPacket msg, @Nonnull PacketBuffer buf) {
+    static void encode(@Nonnull TaskStatusPacket msg, @Nonnull FriendlyByteBuf buf) {
         buf.writeUtf(msg.taskBoardId.toString());
         buf.writeVarInt(msg.containerId);
         buf.writeVarInt(msg.completableTasks.size());
@@ -36,7 +39,7 @@ public class TaskStatusPacket implements IMessage {
         }));
     }
 
-    static TaskStatusPacket decode(@Nonnull PacketBuffer buf) {
+    static TaskStatusPacket decode(@Nonnull FriendlyByteBuf buf) {
         UUID taskBoardId = UUID.fromString(buf.readUtf());
         int containerId = buf.readVarInt();
         int completableTaskSize = buf.readVarInt();
@@ -68,11 +71,6 @@ public class TaskStatusPacket implements IMessage {
         ctx.enqueueWork(() -> VampirismMod.proxy.handleTaskStatusPacket(msg));
         ctx.setPacketHandled(true);
     }
-    public final int containerId;
-    public final UUID taskBoardId;
-    public final Set<ITaskInstance> available;
-    public final Set<UUID> completableTasks;
-    public final Map<UUID, Map<ResourceLocation, Integer>> completedRequirements;
 
     /**
      * @param completedRequirements all requirements of the visible tasks that are already completed

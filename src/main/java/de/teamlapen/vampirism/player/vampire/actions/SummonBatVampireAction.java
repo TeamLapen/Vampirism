@@ -8,8 +8,8 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.BlindingBatEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.sounds.SoundSource;
 
 /**
  * Summon bat skill
@@ -22,7 +22,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
 
     @Override
     public boolean activate(IVampirePlayer player) {
-        PlayerEntity entityPlayer = player.getRepresentingPlayer();
+        Player entityPlayer = player.getRepresentingPlayer();
         boolean refined = player.getSkillHandler().isRefinementEquipped(ModRefinements.summon_bats);
         int amount = VampirismConfig.BALANCE.vaSummonBatsCount.get();
         if (amount > 1 && refined) {
@@ -36,7 +36,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
             e.copyPosition(player.getRepresentingPlayer());
             player.getRepresentingPlayer().getCommandSenderWorld().addFreshEntity(e);
         }
-        entityPlayer.getCommandSenderWorld().playSound(null, entityPlayer.getX(), entityPlayer.getY(), entityPlayer.getZ(), ModSounds.bat_swarm, SoundCategory.PLAYERS, 1.3F, entityPlayer.getCommandSenderWorld().random.nextFloat() * 0.2F + 1.3F);
+        entityPlayer.getCommandSenderWorld().playSound(null, entityPlayer.getX(), entityPlayer.getY(), entityPlayer.getZ(), ModSounds.bat_swarm, SoundSource.PLAYERS, 1.3F, entityPlayer.getCommandSenderWorld().random.nextFloat() * 0.2F + 1.3F);
         return true;
     }
 

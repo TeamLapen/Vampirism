@@ -1,15 +1,15 @@
 package de.teamlapen.vampirism.client.render.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.client.render.layers.PlayerBodyOverlayLayer;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
@@ -21,14 +21,14 @@ public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity
     private final Pair<ResourceLocation, Boolean>[] minionSpecificTextures;
 
 
-    public VampireMinionRenderer(EntityRendererManager renderManagerIn) {
+    public VampireMinionRenderer(EntityRenderDispatcher renderManagerIn) {
         super(renderManagerIn, new PlayerModel<>(0F, false), new PlayerModel<>(0f, true), 0.5F);
-        IResourceManager rm = Minecraft.getInstance().getResourceManager();
+        ResourceManager rm = Minecraft.getInstance().getResourceManager();
         textures = gatherTextures("textures/entity/vampire", true);
         minionSpecificTextures = gatherTextures("textures/entity/minion/vampire", false);
 
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
-        this.addLayer(new BipedArmorLayer<>(this, new BipedModel<>(0.5f), new BipedModel<>(1f)));
+        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(0.5f), new HumanoidModel<>(1f)));
         this.getModel().body.visible = this.getModel().jacket.visible = false;
         this.getModel().leftArm.visible = this.getModel().leftSleeve.visible = this.getModel().rightArm.visible = this.getModel().rightSleeve.visible = false;
         this.getModel().rightLeg.visible = this.getModel().rightPants.visible = this.getModel().leftLeg.visible = this.getModel().leftPants.visible = false;
@@ -52,7 +52,7 @@ public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity
     }
 
     @Override
-    protected void scale(VampireMinionEntity entityIn, MatrixStack matrixStackIn, float partialTickTime) {
+    protected void scale(VampireMinionEntity entityIn, PoseStack matrixStackIn, float partialTickTime) {
         float s = entityIn.getScale();
         //float off = (1 - s) * 1.95f;
         matrixStackIn.scale(s, s, s);

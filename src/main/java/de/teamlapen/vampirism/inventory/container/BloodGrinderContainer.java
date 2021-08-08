@@ -3,24 +3,26 @@ package de.teamlapen.vampirism.inventory.container;
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.core.ModContainer;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 
 import java.util.function.Predicate;
+
+import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorInfo;
 
 public class BloodGrinderContainer extends InventoryContainer {
     private static final Predicate<ItemStack> canProcess = stack -> BloodConversionRegistry.canBeConverted(stack.getItem());
     public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(canProcess, 80, 34)};
 
     @Deprecated
-    public BloodGrinderContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, new Inventory(1), IWorldPosCallable.NULL);
+    public BloodGrinderContainer(int id, Inventory playerInventory) {
+        this(id, playerInventory, new SimpleContainer(1), ContainerLevelAccess.NULL);
     }
 
-    public BloodGrinderContainer(int id, PlayerInventory playerInventory, IInventory inventory, IWorldPosCallable worldPosIn) {
+    public BloodGrinderContainer(int id, Inventory playerInventory, Container inventory, ContainerLevelAccess worldPosIn) {
         super(ModContainer.blood_grinder, id, playerInventory, worldPosIn, inventory, SELECTOR_INFOS);
         this.addPlayerSlots(playerInventory);
     }

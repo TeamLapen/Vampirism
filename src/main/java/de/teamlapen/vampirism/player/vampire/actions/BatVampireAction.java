@@ -9,19 +9,19 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.entity.EntitySize;
-import net.minecraft.entity.Pose;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.Util;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import java.util.UUID;
 
@@ -29,7 +29,7 @@ import java.util.UUID;
 public class BatVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     public final static float BAT_EYE_HEIGHT = 0.85F * 0.6f;
-    public static final EntitySize BAT_SIZE = EntitySize.fixed(0.8f, 0.6f);
+    public static final EntityDimensions BAT_SIZE = EntityDimensions.fixed(0.8f, 0.6f);
 
 
     private final UUID armorModifierUUID = UUID.fromString("4392fccb-4bfd-4290-b2e6-5cc91439053c");
@@ -43,18 +43,18 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public boolean activate(IVampirePlayer vampire) {
-        PlayerEntity player = vampire.getRepresentingPlayer();
+        Player player = vampire.getRepresentingPlayer();
         setModifier(player, true);
         updatePlayer((VampirePlayer) vampire, true);
-        if (player instanceof ServerPlayerEntity) {
-            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.BAT);
+        if (player instanceof ServerPlayer) {
+            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayer) player, VampireActionTrigger.Action.BAT);
         }
         return true;
     }
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.isGettingSundamage(vampire.getRepresentingEntity().level) && !ModItems.umbrella.equals(vampire.getRepresentingEntity().getMainHandItem().getItem()) && vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().level) == EnumStrength.NONE && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && !vampire.getRepresentingPlayer().isInWater() && (VampirismConfig.SERVER.batModeInEnd.get() || !(vampire.getRepresentingPlayer().getCommandSenderWorld().dimension() == World.END));
+        return !vampire.isGettingSundamage(vampire.getRepresentingEntity().level) && !ModItems.umbrella.equals(vampire.getRepresentingEntity().getMainHandItem().getItem()) && vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().level) == EnumStrength.NONE && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && !vampire.getRepresentingPlayer().isInWater() && (VampirismConfig.SERVER.batModeInEnd.get() || !(vampire.getRepresentingPlayer().getCommandSenderWorld().dimension() == Level.END));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public int getDuration(int level) {
-        return MathHelper.clamp(VampirismConfig.BALANCE.vaBatDuration.get(), 10, Integer.MAX_VALUE / 20 - 1) * 20;
+        return Mth.clamp(VampirismConfig.BALANCE.vaBatDuration.get(), 10, Integer.MAX_VALUE / 20 - 1) * 20;
     }
 
     @Override
@@ -81,10 +81,10 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public void onDeactivated(IVampirePlayer vampire) {
-        PlayerEntity player = vampire.getRepresentingPlayer();
+        Player player = vampire.getRepresentingPlayer();
         setModifier(player, false);
         if (!player.isOnGround()) {
-            player.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 20, 100, false, false));
+            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20, 100, false, false));
         }
         //player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 0, false, false));
         updatePlayer((VampirePlayer) vampire, false);
@@ -101,16 +101,16 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
         if (vampire.isGettingSundamage(vampire.getRepresentingEntity().level) && !vampire.isRemote()) {
-            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_day"), Util.NIL_UUID);
+            vampire.getRepresentingPlayer().sendMessage(new TranslatableComponent("text.vampirism.cant_fly_day"), Util.NIL_UUID);
             return true;
         } else if (ModItems.umbrella.equals(vampire.getRepresentingEntity().getMainHandItem().getItem()) && !vampire.isRemote()) {
-            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_umbrella"), Util.NIL_UUID);
+            vampire.getRepresentingPlayer().sendMessage(new TranslatableComponent("text.vampirism.cant_fly_umbrella"), Util.NIL_UUID);
             return true;
         } else if (vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().level) != EnumStrength.NONE && !vampire.isRemote()) {
-            vampire.getRepresentingEntity().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_garlic"), Util.NIL_UUID);
+            vampire.getRepresentingEntity().sendMessage(new TranslatableComponent("text.vampirism.cant_fly_garlic"), Util.NIL_UUID);
             return true;
-        } else if (!VampirismConfig.SERVER.batModeInEnd.get() && vampire.getRepresentingPlayer().getCommandSenderWorld().dimension() == World.END) {
-            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_end"), Util.NIL_UUID);
+        } else if (!VampirismConfig.SERVER.batModeInEnd.get() && vampire.getRepresentingPlayer().getCommandSenderWorld().dimension() == Level.END) {
+            vampire.getRepresentingPlayer().sendMessage(new TranslatableComponent("text.vampirism.cant_fly_end"), Util.NIL_UUID);
             return true;
         } else return vampire.getRepresentingPlayer().isInWater();
     }
@@ -118,19 +118,19 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     /**
      * Set's flightspeed capability
      */
-    private void setFlightSpeed(PlayerEntity player, float speed) {
+    private void setFlightSpeed(Player player, float speed) {
         player.abilities.flyingSpeed = speed;
     }
 
-    private void setModifier(PlayerEntity player, boolean enabled) {
+    private void setModifier(Player player, boolean enabled) {
         if (enabled) {
 
-            ModifiableAttributeInstance armorAttributeInst = player.getAttribute(Attributes.ARMOR);
+            AttributeInstance armorAttributeInst = player.getAttribute(Attributes.ARMOR);
 
             if (armorAttributeInst.getModifier(armorModifierUUID) == null) {
                 armorAttributeInst.addPermanentModifier(new AttributeModifier(armorModifierUUID, "Bat Armor Disabled", -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
-            ModifiableAttributeInstance armorToughnessAttributeInst = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
+            AttributeInstance armorToughnessAttributeInst = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
             if (armorToughnessAttributeInst.getModifier(armorToughnessModifierUUID) == null) {
                 armorToughnessAttributeInst.addPermanentModifier(new AttributeModifier(armorToughnessModifierUUID, "Bat Armor Disabled", -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
@@ -140,12 +140,12 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             setFlightSpeed(player, (float) 0.03);
         } else {
             // Health modifier
-            ModifiableAttributeInstance armorAttributeInst = player.getAttribute(Attributes.ARMOR);
+            AttributeInstance armorAttributeInst = player.getAttribute(Attributes.ARMOR);
             AttributeModifier m = armorAttributeInst.getModifier(armorModifierUUID);
             if (m != null) {
                 armorAttributeInst.removeModifier(m);
             }
-            ModifiableAttributeInstance armorToughnessAttributeInst = player.getAttribute(Attributes.ARMOR);
+            AttributeInstance armorToughnessAttributeInst = player.getAttribute(Attributes.ARMOR);
             AttributeModifier m2 = armorToughnessAttributeInst.getModifier(armorModifierUUID);
             if (m2 != null) {
                 armorToughnessAttributeInst.removeModifier(m2);
@@ -167,7 +167,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
      * @param bat
      */
     private void updatePlayer(VampirePlayer vampire, boolean bat) {
-        PlayerEntity player = vampire.getRepresentingPlayer();
+        Player player = vampire.getRepresentingPlayer();
         vampire.getSpecialAttributes().bat = bat;
         player.setForcedPose(bat ? Pose.STANDING : null);
         //Eye height is set in {@link ModPlayerEventHandler} on {@link EyeHeight} event

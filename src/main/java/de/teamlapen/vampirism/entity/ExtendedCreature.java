@@ -17,15 +17,15 @@ import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -36,7 +36,7 @@ import java.util.function.Function;
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 /**
- * Extended entity property which every {@link CreatureEntity} has
+ * Extended entity property which every {@link PathfinderMob} has
  */
 public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst, IExtendedCreatureVampirism {
 
@@ -53,11 +53,11 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
 
     public static void registerCapability() {
-        CapabilityManager.INSTANCE.register(IExtendedCreatureVampirism.class, new Storage(), ExtendedCreatureDefaultImpl::new);
+        CapabilityManager.INSTANCE.register(IExtendedCreatureVampirism.class);
     }
 
-    static <Q extends CreatureEntity> ICapabilityProvider createNewCapability(final Q creature) {
-        return new ICapabilitySerializable<CompoundNBT>() {
+    static <Q extends PathfinderMob> ICapabilityProvider createNewCapability(final Q creature) {
+        return new ICapabilitySerializable<CompoundTag>() {
 
             final Function<Q, IExtendedCreatureVampirism> constructor = VampirismAPI.entityRegistry().getCustomExtendedCreatureConstructor(creature);
             final IExtendedCreatureVampirism inst = constructor == null ? new ExtendedCreature(creature) : constructor.apply(creature);
@@ -65,8 +65,8 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
 
             @Override
-            public void deserializeNBT(CompoundNBT nbt) {
-                CAP.getStorage().readNBT(CAP, inst, null, nbt);
+            public void deserializeNBT(CompoundTag nbt) {
+                inst.loadData(nbt);
             }
 
             @Nonnull
@@ -76,13 +76,15 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             }
 
             @Override
-            public CompoundNBT serializeNBT() {
-                return (CompoundNBT) CAP.getStorage().writeNBT(CAP, inst, null);
+            public CompoundTag serializeNBT() {
+                CompoundTag tag = new CompoundTag();
+                inst.saveData(tag);
+                return tag;
             }
         };
     }
 
-    private final CreatureEntity entity;
+    private final PathfinderMob entity;
     private final boolean canBecomeVampire;
     private boolean poisonousBlood;
     /**
@@ -96,7 +98,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
      */
     private int blood;
 
-    public ExtendedCreature(CreatureEntity entity) {
+    public ExtendedCreature(PathfinderMob entity) {
         this.entity = entity;
         BiteableEntry entry = VampirismAPI.entityRegistry().getEntry(entity);
         if (entry != null && entry.blood > 0) {
@@ -153,7 +155,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     }
 
     @Override
-    public CreatureEntity getEntity() {
+    public PathfinderMob getEntity() {
         return entity;
     }
 
@@ -181,7 +183,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     }
 
     @Override
-    public void loadUpdateFromNBT(CompoundNBT nbt) {
+    public void loadUpdateFromNBT(CompoundTag nbt) {
         if (nbt.contains(KEY_BLOOD)) {
             setBlood(nbt.getInt(KEY_BLOOD));
         }
@@ -201,7 +203,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             blood = 0;
             IConvertedCreature c = VampirismAPI.entityRegistry().convert(entity);
             if (c != null) {
-                UtilLib.replaceEntity(entity, (CreatureEntity) c);
+                UtilLib.replaceEntity(entity, (PathfinderMob) c);
             }
             return c;
         }
@@ -241,8 +243,8 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         entity.setLastHurtByMob(biter.getRepresentingEntity());
 
         // If entity is a child only give 1/3 blood
-        if (entity instanceof AgeableEntity) {
-            if (((AgeableEntity) entity).getAge() < 0) {
+        if (entity instanceof AgeableMob) {
+            if (((AgeableMob) entity).getAge() < 0) {
                 amt = Math.round((float) amt / 3f);
             }
         }
@@ -270,8 +272,8 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     public void tick() {
         if (!entity.getCommandSenderWorld().isClientSide) {
             if (blood > 0 && blood < getMaxBlood() && entity.tickCount % 40 == 8) {
-                entity.addEffect(new EffectInstance(Effects.WEAKNESS, 41));
-                entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 41, 2));
+                entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 41));
+                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 41, 2));
                 if (entity.getRandom().nextInt(BalanceMobProps.mobProps.BLOOD_REGEN_CHANCE) == 0) {
                     setBlood(getBlood() + 1);
                 }
@@ -294,13 +296,14 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     }
 
     @Override
-    public void writeFullUpdateToNBT(CompoundNBT nbt) {
+    public void writeFullUpdateToNBT(CompoundTag nbt) {
         nbt.putInt(KEY_BLOOD, getBlood());
         nbt.putInt(KEY_MAX_BLOOD, getBlood());
         nbt.putBoolean(POISONOUS_BLOOD, hasPoisonousBlood());
     }
 
-    private void loadNBTData(CompoundNBT compound) {
+    @Override
+    public void loadData(CompoundTag compound) {
         if (compound.contains(KEY_MAX_BLOOD)) {
             setMaxBlood(compound.getInt(KEY_MAX_BLOOD));
         }
@@ -312,7 +315,8 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         }
     }
 
-    private void saveNBTData(CompoundNBT compound) {
+    @Override
+    public void saveData(CompoundTag compound) {
         compound.putInt(KEY_BLOOD, blood);
         compound.putInt(KEY_MAX_BLOOD, maxBlood);
         compound.putBoolean(POISONOUS_BLOOD, poisonousBlood);
@@ -322,23 +326,10 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         HelperLib.sync(this, getEntity(), false);
     }
 
-    private void sync(CompoundNBT data) {
+    private void sync(CompoundTag data) {
         HelperLib.sync(this, data, getEntity(), false);
 
     }
 
-    private static class Storage implements Capability.IStorage<IExtendedCreatureVampirism> {
-        @Override
-        public void readNBT(Capability<IExtendedCreatureVampirism> capability, IExtendedCreatureVampirism instance, Direction side, INBT nbt) {
-            ((ExtendedCreature) instance).loadNBTData((CompoundNBT) nbt);
-        }
-
-        @Override
-        public INBT writeNBT(Capability<IExtendedCreatureVampirism> capability, IExtendedCreatureVampirism instance, Direction side) {
-            CompoundNBT nbt = new CompoundNBT();
-            ((ExtendedCreature) instance).saveNBTData(nbt);
-            return nbt;
-        }
-    }
 
 }

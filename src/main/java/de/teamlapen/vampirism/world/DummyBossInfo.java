@@ -1,20 +1,23 @@
 package de.teamlapen.vampirism.world;
 
-import net.minecraft.client.gui.ClientBossInfo;
-import net.minecraft.network.play.server.SUpdateBossInfoPacket;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.BossInfo;
+import net.minecraft.client.gui.components.LerpingBossEvent;
+import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.BossEvent;
 
 import java.util.UUID;
 
-public class DummyBossInfo extends ClientBossInfo {
-    public DummyBossInfo(UUID uniqueIdIn, ITextComponent nameIn) {
-        super(new SUpdateBossInfoPacket(SUpdateBossInfoPacket.Operation.ADD, new DummyBossInfo2(uniqueIdIn, nameIn)));
+import net.minecraft.world.BossEvent.BossBarColor;
+import net.minecraft.world.BossEvent.BossBarOverlay;
+
+public class DummyBossInfo extends LerpingBossEvent {
+    public DummyBossInfo(UUID uniqueIdIn, Component nameIn) {
+        super(new ClientboundBossEventPacket(ClientboundBossEventPacket.Operation.ADD, new DummyBossInfo2(uniqueIdIn, nameIn)));
     }
 
-    public static class DummyBossInfo2 extends BossInfo {
-        public DummyBossInfo2(UUID uniqueIdIn, ITextComponent nameIn) {
-            super(uniqueIdIn, nameIn, Color.WHITE, Overlay.PROGRESS);
+    public static class DummyBossInfo2 extends BossEvent {
+        public DummyBossInfo2(UUID uniqueIdIn, Component nameIn) {
+            super(uniqueIdIn, nameIn, BossBarColor.WHITE, BossBarOverlay.PROGRESS);
         }
     }
 }

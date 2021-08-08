@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.api.entity.minion;
 
-import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.Util;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 /**
@@ -10,12 +10,12 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
  */
 @Deprecated
 public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends IMinionData> extends ForgeRegistryEntry<IMinionTask<?, ?>> implements IMinionTask<T, Q> { //TODO 1.17 remove
-    private ITextComponent name;
+    private Component name;
 
     @Override
-    public ITextComponent getName() {
+    public Component getName() {
         if (name == null) {
-            name = new TranslationTextComponent(Util.makeDescriptionId("minion_task", getRegistryName()));
+            name = new TranslatableComponent(Util.makeDescriptionId("minion_task", getRegistryName()));
         }
         return name;
     }

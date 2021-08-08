@@ -1,25 +1,25 @@
 package de.teamlapen.vampirism.world.gen.features;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.SectionPos;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.LightType;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.BlockStateFeatureConfig;
-import net.minecraft.world.gen.feature.LakesFeature;
-import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration;
+import net.minecraft.world.level.levelgen.feature.LakeFeature;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
 
 import java.util.Random;
 
-public class VampirismLakeFeature extends LakesFeature {
+public class VampirismLakeFeature extends LakeFeature {
     private static final BlockState AIR = Blocks.CAVE_AIR.defaultBlockState();
 
-    public VampirismLakeFeature(Codec<BlockStateFeatureConfig> codec) {
+    public VampirismLakeFeature(Codec<BlockStateConfiguration> codec) {
         super(codec);
     }
 
@@ -28,7 +28,7 @@ public class VampirismLakeFeature extends LakesFeature {
      * copied from {@link LakesFeature}
      */
     @Override
-    public boolean place(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, BlockStateFeatureConfig config) {
+    public boolean place(WorldGenLevel reader, ChunkGenerator generator, Random rand, BlockPos pos, BlockStateConfiguration config) {
         while (pos.getY() > 5 && reader.isEmptyBlock(pos)) {
             pos = pos.below();
         }
@@ -37,7 +37,7 @@ public class VampirismLakeFeature extends LakesFeature {
             return false;
         } else {
             pos = pos.below(4);
-            if (reader.startsForFeature(SectionPos.of(pos), Structure.VILLAGE).findAny().isPresent()) {
+            if (reader.startsForFeature(SectionPos.of(pos), StructureFeature.VILLAGE).findAny().isPresent()) {
                 return false;
             } else {
                 boolean[] aboolean = new boolean[2048];
@@ -99,7 +99,7 @@ public class VampirismLakeFeature extends LakesFeature {
                         for (int j4 = 4; j4 < 8; ++j4) {
                             if (aboolean[(i2 * 16 + j3) * 8 + j4]) {
                                 BlockPos blockpos = pos.offset(i2, j4 - 1, j3);
-                                if (isDirt(reader.getBlockState(blockpos).getBlock()) && reader.getBrightness(LightType.SKY, pos.offset(i2, j4, j3)) > 0) {
+                                if (isDirt(reader.getBlockState(blockpos).getBlock()) && reader.getBrightness(LightLayer.SKY, pos.offset(i2, j4, j3)) > 0) {
                                     Biome biome = reader.getBiome(blockpos);
                                     reader.setBlock(blockpos, biome.getGenerationSettings().getSurfaceBuilderConfig().getTopMaterial(), 2);
                                 }

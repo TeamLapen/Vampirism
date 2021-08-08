@@ -26,37 +26,45 @@ import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.util.VampireVillageData;
 import de.teamlapen.vampirism.world.MinionWorldData;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.monster.PatrollerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;import net.minecraft.world.entity.monster.PatrollingMonster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 
 import javax.annotation.Nullable;
+
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.BreakDoorGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MoveThroughVillageGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 
 /**
  * Basic vampire mob.
@@ -64,10 +72,10 @@ import javax.annotation.Nullable;
  */
 public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampire, IEntityActionUser {
 
-    private static final DataParameter<Integer> LEVEL = EntityDataManager.defineId(BasicVampireEntity.class, DataSerializers.INT);
-    private static final DataParameter<Integer> TYPE = EntityDataManager.defineId(BasicVampireEntity.class, DataSerializers.INT);
+    private static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(BasicVampireEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(BasicVampireEntity.class, EntityDataSerializers.INT);
 
-    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+    public static AttributeSupplier.Builder getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, 1)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE)
@@ -90,7 +98,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     private ICaptureAttributes villageAttributes;
     private boolean attack;
 
-    public BasicVampireEntity(EntityType<? extends BasicVampireEntity> type, World world) {
+    public BasicVampireEntity(EntityType<? extends BasicVampireEntity> type, Level world) {
         super(type, world, true);
         this.canSuckBloodFromPlayer = true;
         hasArms = true;
@@ -103,7 +111,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT nbt) {
+    public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("level", getLevel());
         nbt.putInt("type", getEntityTextureType());
@@ -132,11 +140,11 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         }
 
         if (this.tickCount % 9 == 3) {
-            if (VampirismConfig.BALANCE.vpFireResistanceReplace.get() && this.hasEffect(Effects.FIRE_RESISTANCE)) {
-                EffectInstance fireResistance = this.removeEffectNoUpdate(Effects.FIRE_RESISTANCE);
+            if (VampirismConfig.BALANCE.vpFireResistanceReplace.get() && this.hasEffect(MobEffects.FIRE_RESISTANCE)) {
+                MobEffectInstance fireResistance = this.removeEffectNoUpdate(MobEffects.FIRE_RESISTANCE);
                 assert fireResistance != null;
                 onEffectRemoved(fireResistance);
-                this.addEffect(new EffectInstance(ModEffects.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
+                this.addEffect(new MobEffectInstance(ModEffects.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
             }
         }
         if (entityActionHandler != null) {
@@ -156,7 +164,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
      *
      * @param lord
      */
-    public void convertToMinion(PlayerEntity lord) {
+    public void convertToMinion(Player lord) {
         FactionPlayerHandler.getOpt(lord).ifPresent(fph -> {
             if (fph.getMaxMinions() > 0) {
                 MinionWorldData.getData(lord.level).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
@@ -246,9 +254,9 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Nullable
     @Override
-    public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        if ((reason == SpawnReason.NATURAL || reason == SpawnReason.STRUCTURE) && this.getRandom().nextInt(50) == 0) {
-            this.setItemSlot(EquipmentSlotType.HEAD, VampireVillageData.createBanner());
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+        if ((reason == MobSpawnType.NATURAL || reason == MobSpawnType.STRUCTURE) && this.getRandom().nextInt(50) == 0) {
+            this.setItemSlot(EquipmentSlot.HEAD, VampireVillageData.createBanner());
         }
         return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
@@ -265,7 +273,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Nullable
     @Override
-    public AxisAlignedBB getTargetVillageArea() {
+    public AABB getTargetVillageArea() {
         return villageAttributes == null ? null : villageAttributes.getVillageArea();
     }
 
@@ -305,12 +313,12 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             getEntityData().set(LEVEL, level);
             this.updateEntityAttributes();
             if (level == 2) {
-                this.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 1000000, 1));
+                this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 1000000, 1));
             }
             if (level == 1) {
-                this.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.IRON_SWORD));
+                this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
             } else {
-                this.setItemSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
+                this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
             }
 
         }
@@ -332,8 +340,8 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void remove() {
-        super.remove();
+    public void remove(RemovalReason p_146834_) {
+        super.remove(p_146834_);
         if (advancedLeader != null) {
             advancedLeader.decreaseFollowerCount();
         }
@@ -346,7 +354,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT tagCompund) {
+    public void readAdditionalSaveData(CompoundTag tagCompund) {
         super.readAdditionalSaveData(tagCompund);
         if (tagCompund.contains("level")) {
             setLevel(tagCompund.getInt("level"));
@@ -393,7 +401,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     protected float calculateFireDamage(float amount) {
         float protectionMod = 1F;
-        EffectInstance protection = this.getEffect(ModEffects.fire_protection);
+        MobEffectInstance protection = this.getEffect(ModEffects.fire_protection);
         if (protection != null) {
             protectionMod = 1F / (2F + protection.getAmplifier());
         }
@@ -414,7 +422,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    protected int getExperienceReward(PlayerEntity player) {
+    protected int getExperienceReward(Player player) {
         return 6 + getLevel();
     }
 
@@ -424,7 +432,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         if (this.isAlive() && !player.isShiftKeyDown()) {
             if (!level.isClientSide) {
                 int vampireLevel = FactionPlayerHandler.getOpt(player).map(fph -> fph.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0);
@@ -433,10 +441,10 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                         if (fph.getMaxMinions() > 0) {
                             ItemStack heldItem = player.getItemInHand(hand);
                             boolean freeSlot = MinionWorldData.getData(player.level).map(data -> data.getOrCreateController(fph)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
-                            player.displayClientMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.available"), true);
+                            player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_vampire.minion.available"), true);
                             if (heldItem.getItem() == ModItems.vampire_minion_binding) {
                                 if (!freeSlot) {
-                                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.no_free_slot"), true);
+                                    player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_vampire.minion.no_free_slot"), true);
                                 } else {
                                     String key;
                                     switch (this.getRandom().nextInt(3)) {
@@ -450,20 +458,20 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                                             key = "text.vampirism.basic_vampire.minion.start_serving3";
                                             break;
                                     }
-                                    player.displayClientMessage(new TranslationTextComponent(key), false);
+                                    player.displayClientMessage(new TranslatableComponent(key), false);
                                     convertToMinion(player);
-                                    if (!player.abilities.instabuild) heldItem.shrink(1);
+                                    if (!player.getAbilities().instabuild) heldItem.shrink(1);
                                 }
                             } else if (freeSlot) {
-                                player.displayClientMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.require_binding", UtilLib.translate(ModItems.vampire_minion_binding.getDescriptionId())), true);
+                                player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_vampire.minion.require_binding", UtilLib.translate(ModItems.vampire_minion_binding.getDescriptionId())), true);
                             }
-                            return ActionResultType.SUCCESS;
+                            return InteractionResult.SUCCESS;
                         }
-                        return ActionResultType.PASS;
-                    }).orElse(ActionResultType.PASS);
+                        return InteractionResult.PASS;
+                    }).orElse(InteractionResult.PASS);
                 }
             }
-            return ActionResultType.PASS;
+            return InteractionResult.PASS;
         }
         return super.mobInteract(player, hand);
     }
@@ -472,7 +480,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(1, new BreakDoorGoal(this, (difficulty) -> difficulty == net.minecraft.world.Difficulty.HARD));//Only break doors on hard difficulty
-        this.tasks_avoidHunter = new AvoidEntityGoal<>(this, CreatureEntity.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION));
+        this.tasks_avoidHunter = new AvoidEntityGoal<>(this, PathfinderMob.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION));
         this.goalSelector.addGoal(2, this.tasks_avoidHunter);
         this.goalSelector.addGoal(2, new RestrictSunVampireGoal<>(this));
         this.goalSelector.addGoal(3, new FleeSunVampireGoal<>(this, 0.9, false));
@@ -481,17 +489,17 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.goalSelector.addGoal(6, new FollowAdvancedVampireGoal(this, 1.0));
         this.goalSelector.addGoal(7, new MoveToBiteableVampireGoal<>(this, 0.75));
         this.goalSelector.addGoal(8, new MoveThroughVillageGoal(this, 0.6, true, 600, () -> false));
-        this.goalSelector.addGoal(9, new RandomWalkingGoal(this, 0.7));
-        this.goalSelector.addGoal(10, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 20F, 0.6F));
-        this.goalSelector.addGoal(10, new LookAtGoal(this, HunterBaseEntity.class, 17F));
-        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(9, new RandomStrollGoal(this, 0.7));
+        this.goalSelector.addGoal(10, new LookAtClosestVisibleGoal(this, Player.class, 20F, 0.6F));
+        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, HunterBaseEntity.class, 17F));
+        this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(4, new AttackVillageGoal<>(this));
         this.targetSelector.addGoal(4, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
-        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
-        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, Structure.VILLAGE)));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Player.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
+        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollingMonster.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, StructureFeature.VILLAGE)));
         this.targetSelector.addGoal(8, new DefendLeaderGoal(this));
     }
 
@@ -501,9 +509,9 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE_PL * l);
     }
 
-    public static class IMob extends BasicVampireEntity implements net.minecraft.entity.monster.IMob {
+    public static class IMob extends BasicVampireEntity implements net.minecraft.world.entity.monster.Enemy {
 
-        public IMob(EntityType<? extends BasicVampireEntity> type, World world) {
+        public IMob(EntityType<? extends BasicVampireEntity> type, Level world) {
             super(type, world);
         }
 

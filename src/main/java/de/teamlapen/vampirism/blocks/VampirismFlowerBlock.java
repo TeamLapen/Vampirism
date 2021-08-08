@@ -1,14 +1,16 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.REFERENCE;
-import net.minecraft.block.FlowerBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.world.level.block.FlowerBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.util.StringRepresentable;
 
 import javax.annotation.Nonnull;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 /**
  * Vampirism's flowers. To add one add it to {@link TYPE}
@@ -23,14 +25,14 @@ public class VampirismFlowerBlock extends FlowerBlock {
     }
 
 
-    public enum TYPE implements IStringSerializable {
-        ORCHID("vampire_orchid", Effects.BLINDNESS, 7);
+    public enum TYPE implements StringRepresentable {
+        ORCHID("vampire_orchid", MobEffects.BLINDNESS, 7);
 
         private final String name;
-        private final Effect effect;
+        private final MobEffect effect;
         private final int duration;
 
-        TYPE(String name, Effect effect, int duration) {
+        TYPE(String name, MobEffect effect, int duration) {
             this.name = name;
             this.effect = effect;
             this.duration = duration;

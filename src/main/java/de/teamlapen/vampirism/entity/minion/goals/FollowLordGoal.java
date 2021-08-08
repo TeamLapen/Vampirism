@@ -4,8 +4,8 @@ import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.entity.goals.MoveToPositionGoal;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Vec3i;
 
 import java.util.Optional;
 
@@ -49,12 +49,12 @@ public class FollowLordGoal extends MoveToPositionGoal<MinionEntity<?>> {
     }
 
     @Override
-    protected Vector3d getLookPosition() {
+    protected Vec3 getLookPosition() {
         return lord.getPlayer().getEyePosition(1);
     }
 
     @Override
-    protected Vector3i getTargetPosition() {
+    protected Vec3i getTargetPosition() {
         return lord.getPlayer().blockPosition();
     }
 

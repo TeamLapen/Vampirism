@@ -3,20 +3,19 @@ package de.teamlapen.vampirism.player;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.mixin.MixinPlayerEntity;
 import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
 
 /**
  * Cache frequently accessed values from the player capabilities.
- * Injected into {@link PlayerEntity} via Mixin {@link MixinPlayerEntity}
+ * Injected into {@link Player} via Mixin {@link MixinPlayerEntity}
  * If you need 100% guaranteed correct values, use the capabilities instead. Otherwise prefer this for performance reason
  */
 public class VampirismPlayerAttributes {
-    public static VampirismPlayerAttributes get(PlayerEntity player) {
+    public static VampirismPlayerAttributes get(Player player) {
         return ((IVampirismPlayer) player).getVampAtts();
     }
 

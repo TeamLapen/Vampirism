@@ -7,15 +7,15 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModRegistries;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.AbstractCookingRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.registries.ForgeRegistryEntry;
@@ -61,12 +61,12 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return ModRecipes.alchemical_cauldron;
     }
 
     @Override
-    public boolean matches(IInventory inv, World worldIn) {
+    public boolean matches(Container inv, Level worldIn) {
         boolean match = this.ingredient.test(inv.getItem(1));
         AtomicBoolean fluidMatch = new AtomicBoolean(true);
         fluid.ifLeft((ingredient1 -> fluidMatch.set(ingredient1.test(inv.getItem(0)))));
@@ -91,22 +91,22 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
                 '}';
     }
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<AlchemicalCauldronRecipe> {
+    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<AlchemicalCauldronRecipe> {
         @Override
         public AlchemicalCauldronRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            String group = JSONUtils.getAsString(json, "group", "");
-            Ingredient ingredients = Ingredient.fromJson(JSONUtils.isArrayNode(json, "ingredient") ? JSONUtils.getAsJsonArray(json, "ingredient") : JSONUtils.getAsJsonObject(json, "ingredient"));
-            int level = JSONUtils.getAsInt(json, "level", 1);
-            ISkill[] skills = VampirismRecipeHelper.deserializeSkills(JSONUtils.getAsJsonArray(json, "skill", null));
-            ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(JSONUtils.getAsJsonObject(json, "result"), true);
+            String group = GsonHelper.getAsString(json, "group", "");
+            Ingredient ingredients = Ingredient.fromJson(GsonHelper.isArrayNode(json, "ingredient") ? GsonHelper.getAsJsonArray(json, "ingredient") : GsonHelper.getAsJsonObject(json, "ingredient"));
+            int level = GsonHelper.getAsInt(json, "level", 1);
+            ISkill[] skills = VampirismRecipeHelper.deserializeSkills(GsonHelper.getAsJsonArray(json, "skill", null));
+            ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
             Either<Ingredient, FluidStack> fluid = VampirismRecipeHelper.getFluidOrItem(json);
-            int cookTime = JSONUtils.getAsInt(json, "cookTime", 200);
-            float exp = JSONUtils.getAsFloat(json, "experience", 0.2F);
+            int cookTime = GsonHelper.getAsInt(json, "cookTime", 200);
+            float exp = GsonHelper.getAsFloat(json, "experience", 0.2F);
             return new AlchemicalCauldronRecipe(recipeId, group, ingredients, fluid, result, skills, level, cookTime, exp);
         }
 
         @Override
-        public AlchemicalCauldronRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+        public AlchemicalCauldronRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
             String group = buffer.readUtf(32767);
             ItemStack result = buffer.readItem();
             Ingredient ingredient = Ingredient.fromNetwork(buffer);
@@ -127,7 +127,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
         }
 
         @Override
-        public void toNetwork(PacketBuffer buffer, AlchemicalCauldronRecipe recipe) {
+        public void toNetwork(FriendlyByteBuf buffer, AlchemicalCauldronRecipe recipe) {
             buffer.writeUtf(recipe.group);
             buffer.writeItem(recipe.result);
             recipe.ingredient.toNetwork(buffer);

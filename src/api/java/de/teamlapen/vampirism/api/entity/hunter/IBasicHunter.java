@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.api.entity.hunter;
 
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.phys.AABB;
 
 /**
  * Interface for basic hunter mob
@@ -20,6 +20,6 @@ public interface IBasicHunter extends IHunterMob, IAdjustableLevel, IVillageCapt
 
     void makeNormalHunter();
 
-    void makeVillageHunter(AxisAlignedBB box);
+    void makeVillageHunter(AABB box);
 
 }

@@ -1,19 +1,19 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.REFERENCE;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 /**
  * Vampirism default block container with set creative tab, registry name and unloc name
  */
-public abstract class VampirismBlockContainer extends ContainerBlock {
+public abstract class VampirismBlockContainer extends BaseEntityBlock {
 
 
     public VampirismBlockContainer(String regName, Block.Properties properties) {
@@ -23,26 +23,26 @@ public abstract class VampirismBlockContainer extends ContainerBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.hasTileEntity() && (state.getBlock() != newState.getBlock() || !newState.hasTileEntity())) {
             this.clearContainer(state, worldIn, pos);
             super.onRemove(state, worldIn, pos, newState, isMoving);
         }
     }
 
-    protected void clearContainer(BlockState state, World worldIn, BlockPos pos) {
+    protected void clearContainer(BlockState state, Level worldIn, BlockPos pos) {
 
     }
 
     /**
      * drop all items from the tileentity's inventory if {@code instanceof} {@link IInventory}
      */
-    protected void dropInventoryTileEntityItems(World world, BlockPos pos) {
-        TileEntity tileEntity = world.getBlockEntity(pos);
-        if (!(tileEntity instanceof IInventory)) {
+    protected void dropInventoryTileEntityItems(Level world, BlockPos pos) {
+        BlockEntity tileEntity = world.getBlockEntity(pos);
+        if (!(tileEntity instanceof Container)) {
             return;
         }
-        IInventory inventory = (IInventory) tileEntity;
+        Container inventory = (Container) tileEntity;
 
         for (int i = 0; i < inventory.getContainerSize(); i++) {
             ItemStack item = inventory.getItem(i);
@@ -54,8 +54,8 @@ public abstract class VampirismBlockContainer extends ContainerBlock {
         }
     }
 
-    protected void dropItem(World world, BlockPos pos, ItemStack stack) {
-        net.minecraft.inventory.InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+    protected void dropItem(Level world, BlockPos pos, ItemStack stack) {
+        net.minecraft.world.Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
     }
 
 

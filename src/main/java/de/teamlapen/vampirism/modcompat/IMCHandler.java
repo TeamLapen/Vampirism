@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.modcompat;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

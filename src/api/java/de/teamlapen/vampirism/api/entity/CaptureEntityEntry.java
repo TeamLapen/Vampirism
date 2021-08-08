@@ -1,18 +1,18 @@
 package de.teamlapen.vampirism.api.entity;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.util.WeightedRandom;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.util.WeighedRandom;
 
-public class CaptureEntityEntry extends WeightedRandom.Item {
-    private final EntityType<? extends MobEntity> entity;
+public class CaptureEntityEntry extends WeighedRandom.WeighedRandomItem {
+    private final EntityType<? extends Mob> entity;
 
-    public CaptureEntityEntry(EntityType<? extends MobEntity> entity, int itemWeightIn) {
+    public CaptureEntityEntry(EntityType<? extends Mob> entity, int itemWeightIn) {
         super(itemWeightIn);
         this.entity = entity;
     }
 
-    public EntityType<? extends MobEntity> getEntity() {
+    public EntityType<? extends Mob> getEntity() {
         return entity;
     }
 }

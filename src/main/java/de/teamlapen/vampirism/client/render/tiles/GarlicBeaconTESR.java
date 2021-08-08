@@ -1,37 +1,39 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import com.google.common.collect.Streams;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.tileentity.GarlicBeaconTileEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderState;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.Mth;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 
 @OnlyIn(Dist.CLIENT)
 public class GarlicBeaconTESR extends VampirismTESR<GarlicBeaconTileEntity> {
-    public GarlicBeaconTESR(TileEntityRendererDispatcher dispatcher) {
-        super(dispatcher);
+    public GarlicBeaconTESR(BlockEntityRendererProvider.Context context) {
+
     }
 
     @Override
-    public void render(GarlicBeaconTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferInOld, int combinedLightIn, int combinedOverlayIn) {
+    public void render(GarlicBeaconTileEntity tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferInOld, int combinedLightIn, int combinedOverlayIn) {
         Entity e = Minecraft.getInstance().getCameraEntity();
         if (e != null && Streams.stream(e.getHandSlots()).map(ItemStack::getItem).anyMatch(i -> i == ModItems.garlic_finder) && tileEntityIn.isInRange(e.blockPosition())) {
             long totalWorldTime = tileEntityIn.getLevel() != null ? tileEntityIn.getLevel().getGameTime() : 0;
-            float scale = (float) MathHelper.clamp(Math.sqrt(tileEntityIn.getBlockPos().distSqr(e.blockPosition())) / 16, 1, 3);
-            IVertexBuilder bufferIn = bufferInOld.getBuffer(Accessor.CUTOUT_NODEPTH);
+            float scale = (float) Mth.clamp(Math.sqrt(tileEntityIn.getBlockPos().distSqr(e.blockPosition())) / 16, 1, 3);
+            VertexConsumer bufferIn = bufferInOld.getBuffer(Accessor.CUTOUT_NODEPTH);
 
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5D, 0.5D, 0.5D);
@@ -48,7 +50,7 @@ public class GarlicBeaconTESR extends VampirismTESR<GarlicBeaconTileEntity> {
 //        });
 
 
-            Minecraft.getInstance().getItemRenderer().renderModelLists(Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(ModItems.item_garlic), null, null), new ItemStack(ModItems.item_garlic), combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
+            Minecraft.getInstance().getItemRenderer().renderModelLists(Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(ModItems.item_garlic), null, null, 0), new ItemStack(ModItems.item_garlic), combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
             matrixStackIn.popPose();
             matrixStackIn.popPose();
         }
@@ -59,8 +61,8 @@ public class GarlicBeaconTESR extends VampirismTESR<GarlicBeaconTileEntity> {
         return true;
     }
 
-    private static class Accessor extends RenderState {
-        private static final RenderType CUTOUT_NODEPTH = RenderType.create("cutout_nodepth", DefaultVertexFormats.BLOCK, 7, 131072, true, false, RenderType.State.builder().setDepthTestState(NO_DEPTH_TEST).setTextureState(BLOCK_SHEET).setAlphaState(MIDWAY_ALPHA).setFogState(NO_FOG).createCompositeState(true));
+    private static class Accessor extends RenderStateShard {
+        private static final RenderType CUTOUT_NODEPTH = RenderType.create("cutout_nodepth", DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 131072, true, false, RenderType.CompositeState.builder().setDepthTestState(NO_DEPTH_TEST).setTextureState(BLOCK_SHEET).setShaderState(RenderStateShard.RENDERTYPE_CUTOUT_SHADER).createCompositeState(true));
 
         public Accessor(String nameIn, Runnable setupTaskIn, Runnable clearTaskIn) {
             super(nameIn, setupTaskIn, clearTaskIn);

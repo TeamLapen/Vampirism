@@ -7,35 +7,35 @@ import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.command.arguments.BiomeArgument;
 import de.teamlapen.vampirism.command.arguments.ModSuggestionProvider;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.DimensionArgument;
-import net.minecraft.command.arguments.EntitySummonArgument;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.ProjectileHelper;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.DimensionArgument;
+import net.minecraft.commands.arguments.EntitySummonArgument;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
 
 public class ConfigCommand extends BasicCommand {
 
-    private static final SimpleCommandExceptionType NO_SELECTED_ENTITY = new SimpleCommandExceptionType(new TranslationTextComponent("command.vampirism.base.config.bloodvalues.blacklist.no_entity"));
-    private static final SimpleCommandExceptionType NO_CONFIG_TYPE = new SimpleCommandExceptionType(new TranslationTextComponent("command.vampirism.base.config.no_config"));
-    private static final SimpleCommandExceptionType NO_BLOOD_VALUE_TYPE = new SimpleCommandExceptionType(new TranslationTextComponent("command.vampirism.base.config.bloodvalues.no_type"));
-    private static final SimpleCommandExceptionType NO_BLOOD_VALUE_BLACKLIST_TYPE = new SimpleCommandExceptionType(new TranslationTextComponent("command.vampirism.base.config.bloodvalues.blacklist.no_type"));
-    private static final SimpleCommandExceptionType NO_SUN_DAMAGE_TYPE = new SimpleCommandExceptionType(new TranslationTextComponent("command.vampirism.base.config.sun_damage.no_type"));
-    private static final SimpleCommandExceptionType NO_SUN_DAMAGE_BLACKLIST_TYPE = new SimpleCommandExceptionType(new TranslationTextComponent("command.vampirism.base.config.sun_damage.blacklist.no_type"));
+    private static final SimpleCommandExceptionType NO_SELECTED_ENTITY = new SimpleCommandExceptionType(new TranslatableComponent("command.vampirism.base.config.bloodvalues.blacklist.no_entity"));
+    private static final SimpleCommandExceptionType NO_CONFIG_TYPE = new SimpleCommandExceptionType(new TranslatableComponent("command.vampirism.base.config.no_config"));
+    private static final SimpleCommandExceptionType NO_BLOOD_VALUE_TYPE = new SimpleCommandExceptionType(new TranslatableComponent("command.vampirism.base.config.bloodvalues.no_type"));
+    private static final SimpleCommandExceptionType NO_BLOOD_VALUE_BLACKLIST_TYPE = new SimpleCommandExceptionType(new TranslatableComponent("command.vampirism.base.config.bloodvalues.blacklist.no_type"));
+    private static final SimpleCommandExceptionType NO_SUN_DAMAGE_TYPE = new SimpleCommandExceptionType(new TranslatableComponent("command.vampirism.base.config.sun_damage.no_type"));
+    private static final SimpleCommandExceptionType NO_SUN_DAMAGE_BLACKLIST_TYPE = new SimpleCommandExceptionType(new TranslatableComponent("command.vampirism.base.config.sun_damage.blacklist.no_type"));
 
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("config")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .executes(context -> {
@@ -76,16 +76,16 @@ public class ConfigCommand extends BasicCommand {
                                                 .executes(context -> enforceDimension(context.getSource().getPlayerOrException(), DimensionArgument.getDimension(context, "dimension")))))));
     }
 
-    private static int blacklistEntity(ServerPlayerEntity player) throws CommandSyntaxException {
-        Vector3d vec3d = player.getEyePosition(1.0F);
+    private static int blacklistEntity(ServerPlayer player) throws CommandSyntaxException {
+        Vec3 vec3d = player.getEyePosition(1.0F);
         double d0 = 50;
 
-        Vector3d vec3d1 = player.getViewVector(1.0F);
-        Vector3d vec3d2 = vec3d.add(vec3d1.x * d0, vec3d1.y * d0, vec3d1.z * d0);
-        AxisAlignedBB axisalignedbb = player.getBoundingBox().expandTowards(vec3d1.scale(d0)).inflate(1);
+        Vec3 vec3d1 = player.getViewVector(1.0F);
+        Vec3 vec3d2 = vec3d.add(vec3d1.x * d0, vec3d1.y * d0, vec3d1.z * d0);
+        AABB axisalignedbb = player.getBoundingBox().expandTowards(vec3d1.scale(d0)).inflate(1);
 
 
-        EntityRayTraceResult result = ProjectileHelper.getEntityHitResult(player.level, player, vec3d, vec3d2, axisalignedbb, (a) -> !a.isSpectator());
+        EntityHitResult result = ProjectileUtil.getEntityHitResult(player.level, player, vec3d, vec3d2, axisalignedbb, (a) -> !a.isSpectator());
         if (result == null) {
             throw NO_SELECTED_ENTITY.create();
         } else {
@@ -95,42 +95,42 @@ public class ConfigCommand extends BasicCommand {
         }
     }
 
-    private static int blacklistEntity(ServerPlayerEntity player, ResourceLocation entity) {
+    private static int blacklistEntity(ServerPlayer player, ResourceLocation entity) {
         return modifyList(player, entity, VampirismConfig.SERVER.blacklistedBloodEntity, "command.vampirism.base.config.entity.blacklisted", "command.vampirism.base.config.entity.not_blacklisted");
     }
 
-    private static int blacklistBiome(ServerPlayerEntity player) {
+    private static int blacklistBiome(ServerPlayer player) {
         return blacklistBiome(player, player.getCommandSenderWorld().getBiome(player.blockPosition()).getRegistryName());
     }
 
-    private static int blacklistBiome(ServerPlayerEntity player, ResourceLocation biome) {
+    private static int blacklistBiome(ServerPlayer player, ResourceLocation biome) {
         return modifyList(player, biome, VampirismConfig.SERVER.sundamageDisabledBiomes, "command.vampirism.base.config.biome.blacklisted", "command.vampirism.base.config.biome.not_blacklisted");
     }
 
-    private static int blacklistDimension(ServerPlayerEntity player) {
+    private static int blacklistDimension(ServerPlayer player) {
         return blacklistDimension(player, player.getLevel());
     }
 
-    private static int blacklistDimension(ServerPlayerEntity player, ServerWorld dimension) {
+    private static int blacklistDimension(ServerPlayer player, ServerLevel dimension) {
         return modifyList(player, dimension.dimension().location(), VampirismConfig.SERVER.sundamageDimensionsOverrideNegative, "command.vampirism.base.config.dimension.blacklisted", "command.vampirism.base.config.dimension.not_blacklisted");
     }
 
-    private static int enforceDimension(ServerPlayerEntity player) {
+    private static int enforceDimension(ServerPlayer player) {
         return enforceDimension(player, player.getLevel());
     }
 
-    private static int enforceDimension(ServerPlayerEntity player, ServerWorld dimension) {
+    private static int enforceDimension(ServerPlayer player, ServerLevel dimension) {
         return modifyList(player, dimension.dimension().location(), VampirismConfig.SERVER.sundamageDimensionsOverridePositive, "command.vampirism.base.config.dimension.enforced", "command.vampirism.base.config.dimension.not_enforced");
     }
 
-    private static int modifyList(ServerPlayerEntity player, ResourceLocation id, ForgeConfigSpec.ConfigValue<List<? extends String>> configList, String blacklist, String not_blacklist) {
+    private static int modifyList(ServerPlayer player, ResourceLocation id, ForgeConfigSpec.ConfigValue<List<? extends String>> configList, String blacklist, String not_blacklist) {
         List<? extends String> list = configList.get();
         if (!list.contains(id.toString())) {
             ((List<String>) list).add(id.toString());
-            player.displayClientMessage(new TranslationTextComponent(blacklist, id), false);
+            player.displayClientMessage(new TranslatableComponent(blacklist, id), false);
         } else {
             list.remove(id.toString());
-            player.displayClientMessage(new TranslationTextComponent(not_blacklist, id), false);
+            player.displayClientMessage(new TranslatableComponent(not_blacklist, id), false);
         }
         configList.set(list);
         return 0;

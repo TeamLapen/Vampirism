@@ -10,8 +10,8 @@ import com.google.gson.reflect.TypeToken;
 import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.lib.lib.util.ResourceLocationTypeAdapter;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.FolderName;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.LevelResource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -72,7 +72,7 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
     private final Supplier<Map<ResourceLocation, Integer>> getCalculatedValues;
     private final String name;
     private final String modId;
-    private final FolderName worldSubFolder;
+    private final LevelResource worldSubFolder;
     /**
      * File to save dynamically calculated values to
      */
@@ -85,7 +85,7 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
         this.getCalculatedValues = getCalculatedValuesIn;
         this.name = nameIn;
         this.modId = modIdIn;
-        this.worldSubFolder = new FolderName(modId);
+        this.worldSubFolder = new LevelResource(modId);
         LOADER.add(this);
     }
 

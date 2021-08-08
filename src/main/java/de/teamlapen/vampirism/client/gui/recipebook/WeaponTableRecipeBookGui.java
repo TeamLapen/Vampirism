@@ -7,24 +7,24 @@ import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
-import net.minecraft.client.gui.recipebook.RecipeBookGui;
-import net.minecraft.client.gui.recipebook.RecipeList;
-import net.minecraft.client.util.SearchTreeManager;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
+import net.minecraft.client.searchtree.SearchRegistry;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-public class WeaponTableRecipeBookGui extends RecipeBookGui {
+public class WeaponTableRecipeBookGui extends RecipeBookComponent {
 
     @Override
     public void updateCollections(boolean forceFirstPage) { //nearly copied from super method. Only added additional filter using faction player
-        List<RecipeList> recipeLists = this.book.getCollection(this.selectedTab.getCategory());
+        List<RecipeCollection> recipeLists = this.book.getCollection(this.selectedTab.getCategory());
         recipeLists.forEach((p_193944_1_) -> {
             p_193944_1_.canCraft(this.stackedContents, this.menu.getGridWidth(), this.menu.getGridHeight(), this.book);
         });
 
-        List<RecipeList> list1 = Lists.newArrayList(recipeLists);
+        List<RecipeCollection> list1 = Lists.newArrayList(recipeLists);
         FactionPlayerHandler.getOpt(this.minecraft.player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).ifPresent(player -> {
             list1.removeIf(recipeList -> {
                 if (recipeList.getRecipes().stream().anyMatch(recipe -> recipe.getType() != ModRecipes.WEAPONTABLE_CRAFTING_TYPE)) {
@@ -48,7 +48,7 @@ public class WeaponTableRecipeBookGui extends RecipeBookGui {
         list1.removeIf((p_193953_0_) -> !p_193953_0_.hasFitting());
         String s = this.searchBox.getValue();
         if (!s.isEmpty()) {
-            ObjectSet<RecipeList> objectset = new ObjectLinkedOpenHashSet<>(this.minecraft.getSearchTree(SearchTreeManager.RECIPE_COLLECTIONS).search(s.toLowerCase(Locale.ROOT)));
+            ObjectSet<RecipeCollection> objectset = new ObjectLinkedOpenHashSet<>(this.minecraft.getSearchTree(SearchRegistry.RECIPE_COLLECTIONS).search(s.toLowerCase(Locale.ROOT)));
             list1.removeIf((p_193947_1_) -> !objectset.contains(p_193947_1_));
         }
         if (this.book.isFiltering(this.menu)) {

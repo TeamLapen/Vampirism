@@ -10,26 +10,29 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.refinements.RefinementSet;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.WeightedRandom;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.WeighedRandom;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+
+import de.teamlapen.vampirism.api.items.IRefinementItem.AccessorySlotType;
+import net.minecraft.world.item.Item.Properties;
 
 public class VampireRefinementItem extends Item implements IRefinementItem {
 
@@ -39,7 +42,7 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
     public static ItemStack getRandomRefinementItem(IFaction<?> faction) {
         List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream().filter(set -> set.getFaction() == faction).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return ItemStack.EMPTY;
-        IRefinementSet s = WeightedRandom.getRandomItem(RANDOM, sets).getItem();
+        IRefinementSet s = WeighedRandom.getRandomItem(RANDOM, sets).getItem();
         AccessorySlotType t = s.getSlotType().orElseGet(() -> {
             switch (RANDOM.nextInt(3)) {
                 case 0:
@@ -60,7 +63,7 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
     public static IRefinementSet getRandomRefinementForItem(@Nullable IFaction<?> faction, VampireRefinementItem stack) {
         List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream().filter(set -> faction == null || set.getFaction() == faction).filter(set -> set.getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return null;
-        return WeightedRandom.getRandomItem(RANDOM, sets).getItem();
+        return WeighedRandom.getRandomItem(RANDOM, sets).getItem();
     }
 
     public static VampireRefinementItem getItemForType(AccessorySlotType type) {
@@ -81,12 +84,12 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
             for (IRefinement refinement : set.getRefinements()) {
-                tooltip.add(new StringTextComponent(" - ").append(refinement.getDescription()).withStyle(TextFormatting.GRAY));
+                tooltip.add(new TextComponent(" - ").append(refinement.getDescription()).withStyle(ChatFormatting.GRAY));
             }
         }
     }
@@ -99,7 +102,7 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
      */
     public boolean applyRefinementSet(ItemStack stack, IRefinementSet set) {
         if (set.getSlotType().map(t -> t == type).orElse(true)) {
-            CompoundNBT tag = stack.getOrCreateTag();
+            CompoundTag tag = stack.getOrCreateTag();
             tag.putString("refinement_set", set.getRegistryName().toString());
             return true;
         }
@@ -107,12 +110,12 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
     }
 
     @Override
-    public ITextComponent getName(@Nonnull ItemStack stack) {
+    public Component getName(@Nonnull ItemStack stack) {
         IRefinementSet set = getRefinementSet(stack);
         if (set == null) {
             return super.getName(stack);
         }
-        return new TranslationTextComponent(this.getDescriptionId()).append(" ").append(set.getName()).withStyle(set.getRarity().color);
+        return new TranslatableComponent(this.getDescriptionId()).append(" ").append(set.getName()).withStyle(set.getRarity().color);
     }
 
     @Nullable
@@ -133,11 +136,11 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
     }
 
     @Override
-    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         if (!worldIn.isClientSide()) {
             ItemStack stack = playerIn.getItemInHand(handIn);
             if (FactionPlayerHandler.getOpt(playerIn).map(v -> v).flatMap(FactionPlayerHandler::getCurrentFactionPlayer).map(ISkillPlayer::getSkillHandler).map(sh -> sh.equipRefinementItem(stack)).orElse(false)) {
-                return ActionResult.consume(ItemStack.EMPTY);
+                return InteractionResultHolder.consume(ItemStack.EMPTY);
             }
 
         }

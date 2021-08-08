@@ -8,12 +8,12 @@ import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
+public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
 
 
     public final static int MAX_NAME_LENGTH = 15;
@@ -35,7 +35,7 @@ public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
     }
 
     @Nonnull
-    public static MinionData fromNBT(CompoundNBT nbt) {
+    public static MinionData fromNBT(CompoundTag nbt) {
         ResourceLocation dataType = new ResourceLocation(nbt.getString("data_type"));
         Supplier<? extends MinionData> c = constructors.get(dataType);
         if (c == null) {
@@ -70,14 +70,14 @@ public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         inventory.read(nbt.getList("inv", 10));
         inventory.setAvailableSize(nbt.getInt("inv_size"));
         health = nbt.getFloat("health");
         name = nbt.getString("name");
         taskLocked = nbt.getBoolean("locked");
         if (nbt.contains("task", 10)) {
-            CompoundNBT task = nbt.getCompound("task");
+            CompoundTag task = nbt.getCompound("task");
             ResourceLocation id = new ResourceLocation(task.getString("id"));
             IMinionTask<?, MinionData> activeTask = (IMinionTask<?, MinionData>) ModRegistries.MINION_TASKS.getValue(id);
             if (activeTask != null) {
@@ -99,8 +99,8 @@ public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
     }
 
     @Override
-    public IFormattableTextComponent getFormattedName() {
-        return new StringTextComponent(name);
+    public MutableComponent getFormattedName() {
+        return new TextComponent(name);
     }
 
     @Override
@@ -156,21 +156,21 @@ public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
     }
 
     @Override
-    public final CompoundNBT serializeNBT() {
-        CompoundNBT tag = new CompoundNBT();
+    public final CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
         serializeNBT(tag);
         return tag;
     }
 
-    public void serializeNBT(CompoundNBT tag) {
+    public void serializeNBT(CompoundTag tag) {
         tag.putInt("inv_size", inventory.getAvailableSize());
-        tag.put("inv", inventory.write(new ListNBT()));
+        tag.put("inv", inventory.write(new ListTag()));
         tag.putFloat("health", health);
         tag.putString("name", name);
         tag.putString("data_type", getDataType().toString());
         tag.putBoolean("locked", taskLocked);
         if (activeTaskDesc != null) {
-            CompoundNBT task = new CompoundNBT();
+            CompoundTag task = new CompoundTag();
             task.putString("id", activeTaskDesc.getTask().getRegistryName().toString());
             activeTaskDesc.writeToNBT(task);
             tag.put("task", task);

@@ -1,30 +1,30 @@
 package de.teamlapen.vampirism.client.render.layers;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.entity.IDefaultTaskMasterEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.IEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.client.renderer.entity.model.VillagerModel;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.villager.VillagerType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.model.VillagerModel;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.npc.VillagerType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
 
 /**
  * Render biome specific middle layer and "profession" specific top layer
  */
-public class TaskMasterTypeLayer<T extends MobEntity & IDefaultTaskMasterEntity> extends LayerRenderer<T, VillagerModel<T>> {
+public class TaskMasterTypeLayer<T extends Mob & IDefaultTaskMasterEntity> extends RenderLayer<T, VillagerModel<T>> {
     private final ResourceLocation additionalOverlay;
 
-    public TaskMasterTypeLayer(IEntityRenderer<T, VillagerModel<T>> entityRendererIn, ResourceLocation additionalOverlay) {
+    public TaskMasterTypeLayer(RenderLayerParent<T, VillagerModel<T>> entityRendererIn, ResourceLocation additionalOverlay) {
         super(entityRendererIn);
         this.additionalOverlay = additionalOverlay;
     }
 
 
     @Override
-    public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, T entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (!entityIn.isInvisible()) {
             VillagerType type = entityIn.getBiomeType();
             VillagerModel<T> m = getParentModel();

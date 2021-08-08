@@ -8,14 +8,14 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.entity.AreaParticleCloudEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 
 
 public class TeleportVampireAction extends DefaultVampireAction {
@@ -27,27 +27,27 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
     @Override
     public boolean activate(IVampirePlayer vampire) {
-        PlayerEntity player = vampire.getRepresentingPlayer();
+        Player player = vampire.getRepresentingPlayer();
         int dist = VampirismConfig.BALANCE.vaTeleportMaxDistance.get();
         if (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.teleport_distance)) {
             dist *= VampirismConfig.BALANCE.vrTeleportDistanceMod.get();
         }
-        RayTraceResult target = UtilLib.getPlayerLookingSpot(player, dist);
+        HitResult target = UtilLib.getPlayerLookingSpot(player, dist);
         double ox = player.getX();
         double oy = player.getY();
         double oz = player.getZ();
-        if (target.getType() == RayTraceResult.Type.MISS) {
+        if (target.getType() == HitResult.Type.MISS) {
             player.playSound(SoundEvents.NOTE_BLOCK_BASS, 1, 1);
             return false;
         }
         BlockPos pos = null;
-        if (target.getType() == RayTraceResult.Type.BLOCK) {
-            if (player.getCommandSenderWorld().getBlockState(((BlockRayTraceResult) target).getBlockPos()).getMaterial().blocksMotion()) {
-                pos = ((BlockRayTraceResult) target).getBlockPos().above();
+        if (target.getType() == HitResult.Type.BLOCK) {
+            if (player.getCommandSenderWorld().getBlockState(((BlockHitResult) target).getBlockPos()).getMaterial().blocksMotion()) {
+                pos = ((BlockHitResult) target).getBlockPos().above();
             }
         } else {//TODO better solution / remove
-            if (player.getCommandSenderWorld().getBlockState(((EntityRayTraceResult) target).getEntity().blockPosition()).getMaterial().blocksMotion()) {
-                pos = ((EntityRayTraceResult) target).getEntity().blockPosition();
+            if (player.getCommandSenderWorld().getBlockState(((EntityHitResult) target).getEntity().blockPosition()).getMaterial().blocksMotion()) {
+                pos = ((EntityHitResult) target).getEntity().blockPosition();
             }
         }
 
@@ -64,8 +64,8 @@ public class TeleportVampireAction extends DefaultVampireAction {
             player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM, 1, 1);
             return false;
         }
-        if (player instanceof ServerPlayerEntity) {
-            ServerPlayerEntity playerMp = (ServerPlayerEntity) player;
+        if (player instanceof ServerPlayer) {
+            ServerPlayer playerMp = (ServerPlayer) player;
             playerMp.disconnect();
             playerMp.teleportTo(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
         }
@@ -76,8 +76,8 @@ public class TeleportVampireAction extends DefaultVampireAction {
         particleCloud.setDuration(5);
         particleCloud.setSpawnRate(15);
         player.getCommandSenderWorld().addFreshEntity(particleCloud);
-        player.getCommandSenderWorld().playLocalSound(ox, oy, oz, SoundEvents.ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
-        player.getCommandSenderWorld().playLocalSound(player.getX(), player.getY(), player.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1, 1, false);
+        player.getCommandSenderWorld().playLocalSound(ox, oy, oz, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1.0F, 1.0F, false);
+        player.getCommandSenderWorld().playLocalSound(player.getX(), player.getY(), player.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1, 1, false);
         return true;
     }
 

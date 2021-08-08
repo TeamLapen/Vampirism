@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.entity.villager;
 
 import com.google.common.collect.Maps;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.brain.sensor.VillagerHostilesSensor;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.sensing.VillagerHostilesSensor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

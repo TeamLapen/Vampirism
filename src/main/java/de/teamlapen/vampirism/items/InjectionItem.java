@@ -2,17 +2,19 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModBlocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
+
+import net.minecraft.world.item.Item.Properties;
 
 /**
  * Item with different injection types
@@ -30,16 +32,16 @@ public class InjectionItem extends VampirismItem {
 
 
     @Override
-    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (type == TYPE.SANGUINARE) {
-            playerIn.displayClientMessage(new StringTextComponent("Please use a ").append(new TranslationTextComponent(ModBlocks.med_chair.getDescriptionId())), true);
+            playerIn.displayClientMessage(new TextComponent("Please use a ").append(new TranslatableComponent(ModBlocks.med_chair.getDescriptionId())), true);
         }
-        return new ActionResult<>(ActionResultType.PASS, stack);
+        return new InteractionResultHolder<>(InteractionResult.PASS, stack);
     }
 
 
-    public enum TYPE implements IStringSerializable {
+    public enum TYPE implements StringRepresentable {
         EMPTY("empty"), GARLIC("garlic"), SANGUINARE("sanguinare"), ZOMBIE_BLOOD("zombie_blood");
 
         private final String name;

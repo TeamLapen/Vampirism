@@ -8,14 +8,13 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.hunter.AdvancedHunterEntity;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -24,7 +23,7 @@ import javax.annotation.Nonnull;
 /**
  * Tile entity which spawns hunters for tents
  */
-public class TentTileEntity extends TileEntity implements ITickableTileEntity {
+public class TentTileEntity extends BlockEntity {
 
 
     private final SimpleSpawnerLogic<BasicHunterEntity> spawnerLogicHunter;
@@ -32,8 +31,8 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
     private boolean spawn = false;
     private boolean advanced = false;
 
-    public TentTileEntity() {
-        super(ModTiles.tent);
+    public TentTileEntity(BlockPos pos, BlockState state) {
+        super(ModTiles.tent, pos, state);
         this.spawnerLogicHunter = new SimpleSpawnerLogic<>(ModEntities.hunter).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(600).setMaxSpawnDelay(1000).setMaxNearbyEntities(2).setDailyLimit(VampirismConfig.BALANCE.hunterTentMaxSpawn.get()).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.worldPosition));
         this.spawnerLogicAdvancedHunter = new SimpleSpawnerLogic<>(ModEntities.advanced_hunter).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(1200).setMaxSpawnDelay(2000).setMaxNearbyEntities(1).setDailyLimit(1).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.worldPosition));
     }
@@ -41,7 +40,7 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
     @Nonnull
     @OnlyIn(Dist.CLIENT)
     @Override
-    public AxisAlignedBB getRenderBoundingBox() {
+    public AABB getRenderBoundingBox() {
         return super.getRenderBoundingBox().inflate(1, 0, 1);
     }
 
@@ -50,8 +49,8 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT nbt) {
-        super.load(state, nbt);
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
         if (nbt.contains("spawner_logic_1")) {
             spawnerLogicHunter.readFromNbt(nbt.getCompound("spawner_logic_1"));
         }
@@ -66,10 +65,10 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
 
     @Nonnull
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
-        CompoundNBT nbt = super.save(compound);
-        CompoundNBT logic1 = new CompoundNBT();
-        CompoundNBT logic2 = new CompoundNBT();
+    public CompoundTag save(CompoundTag compound) {
+        CompoundTag nbt = super.save(compound);
+        CompoundTag logic1 = new CompoundTag();
+        CompoundTag logic2 = new CompoundTag();
         this.spawnerLogicHunter.writeToNbt(logic1);
         this.spawnerLogicAdvancedHunter.writeToNbt(logic2);
         nbt.put("spawner_logic_1", logic1);
@@ -83,44 +82,26 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
         this.advanced = advanced;
     }
 
-    @Override
-    public void setLevelAndPosition(World worldIn, BlockPos pos) {
-        super.setLevelAndPosition(worldIn, pos);
-        this.spawnerLogicHunter.setWorld(worldIn);
-        this.spawnerLogicAdvancedHunter.setWorld(worldIn);
-        this.spawnerLogicHunter.setBlockPos(this.worldPosition); //Internal position should be set here using the immutable version of the given block pos
-        this.spawnerLogicAdvancedHunter.setBlockPos(this.worldPosition);
-    }
 
     public void setSpawn(boolean spawn) {
         this.spawn = spawn;
     }
 
-    @Override
-    public void setPosition(BlockPos posIn) {
-        super.setPosition(posIn);
-        this.spawnerLogicHunter.setBlockPos(this.worldPosition); //Internal position should be set here using the immutable version of the given block pos
-        this.spawnerLogicAdvancedHunter.setBlockPos(this.worldPosition);
-    }
-
-    @Override
-    public void tick() {
-        if (level == null) return;
-
-        if (spawn) {
-            if (!this.level.isClientSide && this.level.getGameTime() % 64 == 0) {
-                if (UtilLib.isInsideStructure(this.level, this.worldPosition, Structure.VILLAGE)) {
-                    this.spawn = false; //Disable spawning inside villages
+    public static void serverTick(Level level, BlockPos pos, BlockState state, TentTileEntity blockEntity) {
+        if (blockEntity.spawn) {
+            if ( level.getGameTime() % 64 == 0) {
+                if (UtilLib.isInsideStructure(level, pos, StructureFeature.VILLAGE)) {
+                    blockEntity.spawn = false; //Disable spawning inside villages
                 }
             }
-            this.spawnerLogicHunter.updateSpawner();
-            if (advanced) {
-                this.spawnerLogicAdvancedHunter.updateSpawner();
+            blockEntity.spawnerLogicHunter.serverTick(level, pos);
+            if (blockEntity.advanced) {
+                blockEntity.spawnerLogicAdvancedHunter.serverTick(level, pos);
             }
         }
     }
 
     public boolean triggerEvent(int id, int type) {
-        return (this.spawnerLogicHunter.setDelayToMin(id) || this.spawnerLogicAdvancedHunter.setDelayToMin(id)) || super.triggerEvent(id, type);
+        return (this.spawnerLogicHunter.setDelayToMin(id, this.level) || this.spawnerLogicAdvancedHunter.setDelayToMin(id, this.level)) || super.triggerEvent(id, type);
     }
 }

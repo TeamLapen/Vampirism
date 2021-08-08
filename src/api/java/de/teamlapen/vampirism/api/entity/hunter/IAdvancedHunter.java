@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.api.entity.hunter;
 
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nullable;
 
@@ -17,6 +17,6 @@ public interface IAdvancedHunter extends IHunterMob, IAdjustableLevel, IVillageC
 
     boolean isLookingForHome();
 
-    void setCampArea(AxisAlignedBB box);
+    void setCampArea(AABB box);
 
 }

@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.Util;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -25,11 +25,11 @@ public class Task extends ForgeRegistryEntry<Task> {
     @Nullable
     private String translationKey;
     @Nullable
-    private ITextComponent translation;
+    private Component translation;
     @Nullable
     private String descKey;
     @Nullable
-    private ITextComponent desc;
+    private Component desc;
 
     /**
      * translation keys used for a task are
@@ -61,8 +61,8 @@ public class Task extends ForgeRegistryEntry<Task> {
     }
 
     @Nonnull
-    public ITextComponent getDescription() {
-        return this.desc != null ? this.desc : (this.desc = new TranslationTextComponent(this.getDescriptionKey()));
+    public Component getDescription() {
+        return this.desc != null ? this.desc : (this.desc = new TranslatableComponent(this.getDescriptionKey()));
     }
 
     @Nonnull
@@ -86,8 +86,8 @@ public class Task extends ForgeRegistryEntry<Task> {
     }
 
     @Nonnull
-    public ITextComponent getTranslation() {
-        return this.translation != null ? this.translation : (this.translation = new TranslationTextComponent(this.getTranslationKey()));
+    public Component getTranslation() {
+        return this.translation != null ? this.translation : (this.translation = new TranslatableComponent(this.getTranslationKey()));
     }
 
     @Nonnull

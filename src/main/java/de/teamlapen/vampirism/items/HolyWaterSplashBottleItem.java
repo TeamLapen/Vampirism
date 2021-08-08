@@ -3,20 +3,28 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.ThrowableItemEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+
+import de.teamlapen.vampirism.api.items.IItemWithTier.TIER;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.item.Item.Properties;
 
 /**
  * Splash version of the holy water bottle
@@ -33,16 +41,16 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
     }
 
     @Override
-    public void onImpact(ThrowableItemEntity entity, ItemStack stack, RayTraceResult result, boolean remote) {
+    public void onImpact(ThrowableItemEntity entity, ItemStack stack, HitResult result, boolean remote) {
         TIER tier = getVampirismTier();
         if (!remote) {
-            AxisAlignedBB axisalignedbb = entity.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
+            AABB axisalignedbb = entity.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
             List<LivingEntity> list1 = entity.getCommandSenderWorld().getEntitiesOfClass(LivingEntity.class, axisalignedbb);
             @Nullable Entity thrower = entity.getOwner();
 
             if (!list1.isEmpty()) {
                 for (LivingEntity entitylivingbase : list1) {
-                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.distanceToSqr(entitylivingbase), result.getType() == RayTraceResult.Type.ENTITY, thrower instanceof LivingEntity ? (LivingEntity) thrower : null);
+                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.distanceToSqr(entitylivingbase), result.getType() == HitResult.Type.ENTITY, thrower instanceof LivingEntity ? (LivingEntity) thrower : null);
                 }
             }
 
@@ -54,11 +62,11 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
 
     @Nonnull
     @Override
-    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
 
 
-        worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SPLASH_POTION_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+        worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SPLASH_POTION_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 
         if (!worldIn.isClientSide) {
             ThrowableItemEntity entityThrowable = new ThrowableItemEntity(worldIn, playerIn);
@@ -72,7 +80,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
         if (!playerIn.abilities.instabuild) {
             stack.shrink(1);
         }
-        return new ActionResult<>(ActionResultType.SUCCESS, stack);
+        return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
 
     }
 

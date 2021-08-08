@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModRefinements;
-import net.minecraft.potion.EffectInstance;
+import net.minecraft.world.effect.MobEffectInstance;
 
 /**
  * Adds sunscreen
@@ -16,7 +16,7 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
 
     @Override
     public boolean activate(IVampirePlayer vampire) {
-        addEffectInstance(vampire, new EffectInstance(ModEffects.sunscreen, getDuration(vampire), 3, false, false));
+        addEffectInstance(vampire, new MobEffectInstance(ModEffects.sunscreen, getDuration(vampire), 3, false, false));
         return true;
     }
 

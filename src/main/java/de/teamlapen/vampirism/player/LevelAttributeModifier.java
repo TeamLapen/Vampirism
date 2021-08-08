@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.player;
 
 import de.teamlapen.vampirism.core.ModAttributes;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -52,14 +52,14 @@ public class LevelAttributeModifier {
      * @param operation   The operation applied to the attribute
      * @param evenIntOnly If the modifier should be rounded to an even integer
      */
-    public static void applyModifier(PlayerEntity player, Attribute attribute, String name, int level, int lcap, double max, double type, AttributeModifier.Operation operation, boolean evenIntOnly) {
+    public static void applyModifier(Player player, Attribute attribute, String name, int level, int lcap, double max, double type, AttributeModifier.Operation operation, boolean evenIntOnly) {
         UUID mod = modifiers.get(attribute);
         if (mod == null) {
             LOGGER.warn("Cannot modify {}, no modifier is registered", attribute);
             return;
         }
         double m = calculateModifierValue(level, lcap, max, type);
-        ModifiableAttributeInstance instance = player.getAttribute(attribute);
+        AttributeInstance instance = player.getAttribute(attribute);
         rmMod(instance, mod);
         if (evenIntOnly) {
             m = Math.round(m / 2) * 2;
@@ -87,7 +87,7 @@ public class LevelAttributeModifier {
      * @param att  Attribute
      * @param uuid UUID of modifier to remove
      */
-    private static void rmMod(ModifiableAttributeInstance att, UUID uuid) {
+    private static void rmMod(AttributeInstance att, UUID uuid) {
         AttributeModifier m = att.getModifier(uuid);
         if (m != null) {
             att.removeModifier(m);

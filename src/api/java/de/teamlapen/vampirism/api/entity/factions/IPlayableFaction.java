@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
@@ -30,13 +30,13 @@ public interface IPlayableFaction<T extends IFactionPlayer> extends IFaction<T> 
      * @return A text component representing the title of the player at the given lord level. empty if level==0
      */
     @Nonnull
-    ITextComponent getLordTitle(int level, boolean female);
+    Component getLordTitle(int level, boolean female);
 
     /**
      * @param player
      * @return The "<? extends IFactionPlayer>" of this faction for the given player
      */
-    LazyOptional<T> getPlayerCapability(PlayerEntity player);
+    LazyOptional<T> getPlayerCapability(Player player);
 
     /**
      * @return If the level should be rendered

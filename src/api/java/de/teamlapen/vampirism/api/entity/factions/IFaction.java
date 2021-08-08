@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -16,14 +16,14 @@ public interface IFaction<T extends IFactionEntity> {
     /**
      * If not set returns white
      */
-    TextFormatting getChatColor();
+    ChatFormatting getChatColor();
 
     /**
      * Set the chat color
      *
      * @return The same instance
      */
-    IFaction<T> setChatColor(TextFormatting color);
+    IFaction<T> setChatColor(ChatFormatting color);
 
     /**
      * Used for some rendering, e.g. for displaying the level
@@ -41,12 +41,12 @@ public interface IFaction<T extends IFactionEntity> {
      */
     ResourceLocation getID();
 
-    ITextComponent getName();
+    Component getName();
 
     /**
      * Preferably a TextComponentTranslation
      */
-    ITextComponent getNamePlural();
+    Component getNamePlural();
 
     /**
      * Gets Village Totem related utility class
@@ -56,7 +56,7 @@ public interface IFaction<T extends IFactionEntity> {
     @Nonnull
     IVillageFactionData getVillageData();
 
-    boolean isEntityOfFaction(CreatureEntity creature);
+    boolean isEntityOfFaction(PathfinderMob creature);
 
     /**
      * @return Whether entities of this faction are hostile towards neutral entities

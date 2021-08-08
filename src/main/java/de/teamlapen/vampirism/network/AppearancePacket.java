@@ -3,14 +3,14 @@ package de.teamlapen.vampirism.network;
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class AppearancePacket implements IMessage {
 
-    static void encode(AppearancePacket msg, PacketBuffer buf) {
+    static void encode(AppearancePacket msg, FriendlyByteBuf buf) {
         buf.writeVarInt(msg.entityId);
         buf.writeUtf(msg.name);
         buf.writeVarInt(msg.data.length);
@@ -19,7 +19,7 @@ public class AppearancePacket implements IMessage {
         }
     }
 
-    static AppearancePacket decode(PacketBuffer buf) {
+    static AppearancePacket decode(FriendlyByteBuf buf) {
         int entityId = buf.readVarInt();
         String newName = buf.readUtf(MinionData.MAX_NAME_LENGTH);
         int[] data = new int[buf.readVarInt()];

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.data.recipebuilder;
 
 import com.google.gson.JsonObject;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public interface FinishedSkillNode {
     ResourceLocation getID();

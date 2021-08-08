@@ -6,8 +6,8 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.properties.Property;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.tileentity.SkullTileEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.entity.SkullBlockEntity;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
@@ -37,9 +37,9 @@ public class PlayerSkinHelper {
         if (input != null) {
             if (input.isComplete() && input.getProperties().containsKey("textures")) {
                 callback.accept(input);
-            } else if (SkullTileEntity.profileCache != null && SkullTileEntity.sessionService != null) {
+            } else if (SkullBlockEntity.profileCache != null && SkullBlockEntity.sessionService != null) {
                 THREAD_POOL.submit(() -> {
-                    GameProfile gameprofile = input.getId() == null ? SkullTileEntity.profileCache.get(input.getName()) : SkullTileEntity.profileCache.get(input.getId()); //This might create race conditions with other game profile updates. Maybe this has to be moved to the main thread
+                    GameProfile gameprofile = input.getId() == null ? SkullBlockEntity.profileCache.get(input.getName()) : SkullBlockEntity.profileCache.get(input.getId()); //This might create race conditions with other game profile updates. Maybe this has to be moved to the main thread
 
                     if (gameprofile == null) {
                         gameprofile = input;
@@ -47,7 +47,7 @@ public class PlayerSkinHelper {
                         Property property = (Property) Iterables.getFirst(gameprofile.getProperties().get("textures"), (Object) null);
 
                         if (property == null) {
-                            gameprofile = SkullTileEntity.sessionService.fillProfileProperties(gameprofile, true);
+                            gameprofile = SkullBlockEntity.sessionService.fillProfileProperties(gameprofile, true);
                         }
                     }
                     callback.accept(gameprofile);

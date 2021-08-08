@@ -2,13 +2,13 @@ package de.teamlapen.vampirism.client.model.blocks;
 
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.tileentity.AltarInspirationTileEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemOverrideList;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -34,12 +34,12 @@ public class BakedAltarInspirationModel implements IDynamicBakedModel {
      * Stores a fluid level -> fluid model array
      * Filled when the fluid json model is loaded (in {@link ClientEventHandler#onModelBakeEvent(ModelBakeEvent)} )}
      */
-    public static final IBakedModel[] FLUID_MODELS = new IBakedModel[FLUID_LEVELS];
+    public static final BakedModel[] FLUID_MODELS = new BakedModel[FLUID_LEVELS];
 
 
-    private final IBakedModel baseModel;
+    private final BakedModel baseModel;
 
-    public BakedAltarInspirationModel(IBakedModel baseModel) {
+    public BakedAltarInspirationModel(BakedModel baseModel) {
         this.baseModel = baseModel;
     }
 
@@ -49,12 +49,12 @@ public class BakedAltarInspirationModel implements IDynamicBakedModel {
     }
 
     @Override
-    public ItemOverrideList getOverrides() {
+    public ItemOverrides getOverrides() {
         return baseModel.getOverrides();
     }
 
     @Override
-    public ItemCameraTransforms getTransforms() {
+    public ItemTransforms getTransforms() {
         return baseModel.getTransforms();
     }
 

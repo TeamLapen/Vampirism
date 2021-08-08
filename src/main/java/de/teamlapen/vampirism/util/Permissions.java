@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.core.ModRegistries;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -24,7 +24,7 @@ public class Permissions {
         }
     }
 
-    public static boolean isPvpEnabled(PlayerEntity player) {
+    public static boolean isPvpEnabled(Player player) {
         if (!player.getCommandSenderWorld().isClientSide) {
             return ServerLifecycleHooks.getCurrentServer().isPvpAllowed();
         }

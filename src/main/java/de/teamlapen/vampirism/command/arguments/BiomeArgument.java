@@ -5,21 +5,21 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
-import net.minecraft.command.CommandSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class BiomeArgument implements ArgumentType<ResourceLocation> {
     public static final DynamicCommandExceptionType BIOME_UNKNOWN_TYPE = new DynamicCommandExceptionType((id) -> {
-        return new TranslationTextComponent("command.vampirism.biome.not_found", id);
+        return new TranslatableComponent("command.vampirism.biome.not_found", id);
     });
 
     public static BiomeArgument biome() {
         return new BiomeArgument();
     }
 
-    public static ResourceLocation getBiomeId(CommandContext<CommandSource> context, String name) throws CommandSyntaxException {
+    public static ResourceLocation getBiomeId(CommandContext<CommandSourceStack> context, String name) throws CommandSyntaxException {
         return checkIfEntityExists(context.getArgument(name, ResourceLocation.class));
     }
 

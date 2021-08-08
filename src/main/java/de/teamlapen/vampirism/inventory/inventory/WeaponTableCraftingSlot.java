@@ -7,13 +7,13 @@ import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.core.NonNullList;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -22,12 +22,12 @@ import java.util.Optional;
  * Result slot for the hunter weapon crafting table
  */
 public class WeaponTableCraftingSlot extends Slot {
-    private final PlayerEntity player;
-    private final IWorldPosCallable worldPos;
-    private final CraftingInventory craftMatrix;
+    private final Player player;
+    private final ContainerLevelAccess worldPos;
+    private final CraftingContainer craftMatrix;
     private int amountCrafted = 0;
 
-    public WeaponTableCraftingSlot(PlayerEntity player, CraftingInventory craftingInventory, IInventory inventoryIn, int index, int xPosition, int yPosition, IWorldPosCallable worldPosCallable) {
+    public WeaponTableCraftingSlot(Player player, CraftingContainer craftingInventory, Container inventoryIn, int index, int xPosition, int yPosition, ContainerLevelAccess worldPosCallable) {
         super(inventoryIn, index, xPosition, yPosition);
         this.player = player;
         this.craftMatrix = craftingInventory;
@@ -40,7 +40,7 @@ public class WeaponTableCraftingSlot extends Slot {
     }
 
     @Override
-    public ItemStack onTake(PlayerEntity playerIn, ItemStack stack) {
+    public ItemStack onTake(Player playerIn, ItemStack stack) {
         this.checkTakeAchievements(stack);
         final int lava = worldPos.evaluate(((world, blockPos) -> {
             if (world.getBlockState(blockPos).getBlock() instanceof WeaponTableBlock) {
@@ -108,7 +108,7 @@ public class WeaponTableCraftingSlot extends Slot {
         this.amountCrafted = 0;
     }
 
-    protected IWeaponTableRecipe findMatchingRecipe(PlayerEntity playerIn, IFactionPlayer<?> factionPlayer, int lava) {
+    protected IWeaponTableRecipe findMatchingRecipe(Player playerIn, IFactionPlayer<?> factionPlayer, int lava) {
         Optional<IWeaponTableRecipe> optional = playerIn.getCommandSenderWorld().getRecipeManager().getRecipeFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, this.craftMatrix, playerIn.getCommandSenderWorld());
         if (optional.isPresent()) {
             IWeaponTableRecipe recipe = optional.get();

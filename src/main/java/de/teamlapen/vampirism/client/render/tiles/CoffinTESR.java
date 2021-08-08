@@ -1,19 +1,20 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.client.model.CoffinModel;
 import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.DyeColor;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Vector3f;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
@@ -29,8 +30,7 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
     private final ResourceLocation[] textures = new ResourceLocation[DyeColor.values().length];
     private final Logger LOGGER = LogManager.getLogger();
 
-    public CoffinTESR(TileEntityRendererDispatcher dispatcher) {
-        super(dispatcher);
+    public CoffinTESR(BlockEntityRendererProvider.Context context) {
         this.model = new CoffinModel();
         for (DyeColor e : DyeColor.values()) {
             textures[e.getId()] = new ResourceLocation(REFERENCE.MODID, "textures/block/coffin/coffin_" + e.getSerializedName() + ".png");
@@ -38,7 +38,7 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
     }
 
     @Override
-    public void render(CoffinTileEntity tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
+    public void render(CoffinTileEntity tile, float partialTicks, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int i, int i1) {
         if (!tile.renderAsItem) {
             if (!isHeadSafe(tile.getLevel(), tile.getBlockPos())) return;
 
@@ -59,7 +59,7 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
         adjustRotatePivotViaState(tile, matrixStack);
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(180));
         matrixStack.translate(0, 0, -1);
-        IVertexBuilder vertexBuilder = iRenderTypeBuffer.getBuffer(RenderType.entitySolid(textures[color]));
+        VertexConsumer vertexBuilder = iRenderTypeBuffer.getBuffer(RenderType.entitySolid(textures[color]));
         this.model.renderToBuffer(matrixStack, vertexBuilder, i, i1, 1, 1, 1, 1);
         matrixStack.popPose();
         matrixStack.popPose();
@@ -78,7 +78,7 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
     /**
      * Checks if the coffin part at the given pos is the head of the coffin. Any exception is caught and false is returned
      */
-    private boolean isHeadSafe(World world, BlockPos pos) {
+    private boolean isHeadSafe(Level world, BlockPos pos) {
         try {
             return CoffinBlock.isHead(world, pos);
         } catch (IllegalArgumentException e) {

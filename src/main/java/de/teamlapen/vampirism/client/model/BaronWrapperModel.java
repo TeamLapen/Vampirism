@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.model;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
 
 
 /**
@@ -16,7 +16,7 @@ public class BaronWrapperModel extends EntityModel<VampireBaronEntity> {
     private final BaronessModel baroness = new BaronessModel();
     private boolean lady = false;
 
-    public ModelRenderer getBodyPart(VampireBaronEntity entityIn) {
+    public ModelPart getBodyPart(VampireBaronEntity entityIn) {
         return entityIn.isLady() ? baroness.body : baron.body;
     }
 
@@ -30,7 +30,7 @@ public class BaronWrapperModel extends EntityModel<VampireBaronEntity> {
     }
 
     @Override
-    public void renderToBuffer(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         EntityModel<VampireBaronEntity> model = lady ? baroness : baron;
         model.renderToBuffer(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }

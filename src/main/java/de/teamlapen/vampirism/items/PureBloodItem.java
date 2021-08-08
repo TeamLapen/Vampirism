@@ -7,20 +7,20 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.UseAction;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
@@ -28,6 +28,8 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class PureBloodItem extends VampirismItem {
 
@@ -63,16 +65,16 @@ public class PureBloodItem extends VampirismItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("item.vampirism.pure_blood.purity").append(new StringTextComponent(": " + (level + 1 + "/" + COUNT))).withStyle(TextFormatting.RED));
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+        tooltip.add(new TranslatableComponent("item.vampirism.pure_blood.purity").append(new TextComponent(": " + (level + 1 + "/" + COUNT))).withStyle(ChatFormatting.RED));
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {
-        if (entityLiving instanceof PlayerEntity) {
-            VampirePlayer.getOpt((PlayerEntity) entityLiving).ifPresent(v -> {
+    public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
+        if (entityLiving instanceof Player) {
+            VampirePlayer.getOpt((Player) entityLiving).ifPresent(v -> {
                 v.drinkBlood(50, 0.3f, false);
-                entityLiving.addEffect(new EffectInstance(ModEffects.saturation));
+                entityLiving.addEffect(new MobEffectInstance(ModEffects.saturation));
                 stack.shrink(1);
                 checkWingConditions(v);
             });
@@ -84,8 +86,8 @@ public class PureBloodItem extends VampirismItem {
         return this.level;
     }
 
-    public ITextComponent getCustomName() {
-        return new TranslationTextComponent(this.getOrCreateDescriptionId()).append(new StringTextComponent(" " + (level + 1)));
+    public Component getCustomName() {
+        return new TranslatableComponent(this.getOrCreateDescriptionId()).append(new TextComponent(" " + (level + 1)));
     }
 
     @Override
@@ -94,12 +96,12 @@ public class PureBloodItem extends VampirismItem {
     }
 
     @Override
-    public UseAction getUseAnimation(ItemStack stack) {
-        return UseAction.DRINK;
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.DRINK;
     }
 
     @Override
-    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         int playerLevel = VampirismAPI.getFactionPlayerHandler(playerIn).map(fph -> fph.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0);
         if (VampireLevelingConf.getInstance().isLevelValidForAltarInfusion(playerLevel)) {
             int pureLevel = VampireLevelingConf.getInstance().getAltarInfusionRequirements(playerLevel).pureBloodLevel;
@@ -111,9 +113,9 @@ public class PureBloodItem extends VampirismItem {
     }
 
     private void checkWingConditions(VampirePlayer p) {
-        net.minecraft.entity.player.PlayerEntity e = p.getRepresentingPlayer();
+        net.minecraft.world.entity.player.Player e = p.getRepresentingPlayer();
         if (!e.abilities.instabuild && !e.level.isClientSide()) {
-            if (e.getItemBySlot(net.minecraft.inventory.EquipmentSlotType.CHEST).getItem() instanceof VampireClothingItem) {
+            if (e.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST).getItem() instanceof VampireClothingItem) {
                 p.triggerWings();
             }
         }

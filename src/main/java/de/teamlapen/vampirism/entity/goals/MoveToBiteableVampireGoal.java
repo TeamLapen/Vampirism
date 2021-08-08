@@ -2,20 +2,22 @@ package de.teamlapen.vampirism.entity.goals;
 
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.EntityPredicates;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.EntitySelector;
 
 import java.util.EnumSet;
 import java.util.List;
 
-public class MoveToBiteableVampireGoal<T extends MobEntity & IVampireMob> extends Goal {
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
+
+public class MoveToBiteableVampireGoal<T extends Mob & IVampireMob> extends Goal {
 
 
     private final T vampire;
     private final double movementSpeed;
-    private CreatureEntity target;
+    private PathfinderMob target;
     private int timeout;
 
     /**
@@ -40,8 +42,8 @@ public class MoveToBiteableVampireGoal<T extends MobEntity & IVampireMob> extend
             return false;
         }
         if (!vampire.wantsBlood()) return false;
-        List<CreatureEntity> list = vampire.getCommandSenderWorld().getEntitiesOfClass(CreatureEntity.class, vampire.getBoundingBox().inflate(10, 3, 10), EntityPredicates.NO_SPECTATORS.and((entity) -> entity != vampire && entity.isAlive()));
-        for (CreatureEntity o : list) {
+        List<PathfinderMob> list = vampire.getCommandSenderWorld().getEntitiesOfClass(PathfinderMob.class, vampire.getBoundingBox().inflate(10, 3, 10), EntitySelector.NO_SPECTATORS.and((entity) -> entity != vampire && entity.isAlive()));
+        for (PathfinderMob o : list) {
             if (ExtendedCreature.getSafe(o).map(creature -> creature.canBeBitten(vampire) && !creature.getEntity().hasCustomName() && !creature.hasPoisonousBlood()).orElse(false)) {
                 this.target = o;
                 return true;

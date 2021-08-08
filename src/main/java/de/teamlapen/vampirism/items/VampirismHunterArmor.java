@@ -9,21 +9,21 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.Util;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -41,7 +41,7 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
 
     private final String translation_key;
 
-    public VampirismHunterArmor(String baseRegName, @Nullable String suffix, IArmorMaterial materialIn, EquipmentSlotType equipmentSlotIn, Item.Properties props) {
+    public VampirismHunterArmor(String baseRegName, @Nullable String suffix, ArmorMaterial materialIn, EquipmentSlot equipmentSlotIn, Item.Properties props) {
         super(materialIn, equipmentSlotIn, props);
         String regName = baseRegName + "_" + equipmentSlotIn.getName();
         if (suffix != null) regName += "_" + suffix;
@@ -51,14 +51,14 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        PlayerEntity player = VampirismMod.proxy.getClientPlayer();
+        Player player = VampirismMod.proxy.getClientPlayer();
         addFactionPoisonousToolTip(stack, worldIn, tooltip, flagIn, player);
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> map = HashMultimap.create(); //TODO 1.17 build in constructor
         if (slot == this.getSlot()) {
             map.put(Attributes.ARMOR, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor modifier", this.getDamageReduction(slot.getIndex(), stack), AttributeModifier.Operation.ADDITION));
@@ -76,11 +76,11 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
     }
 
     @Override
-    public void onArmorTick(ItemStack stack, World world, PlayerEntity player) {
+    public void onArmorTick(ItemStack stack, Level world, Player player) {
         if (player.tickCount % 16 == 8) {
             IFaction<?> f = VampirismPlayerAttributes.get(player).faction;
             if (f != null && !VReference.HUNTER_FACTION.equals(f)) {
-                player.addEffect(new EffectInstance(ModEffects.poison, 20, 1));
+                player.addEffect(new MobEffectInstance(ModEffects.poison, 20, 1));
             }
         }
     }
@@ -96,8 +96,8 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
         return translation_key;
     }
 
-    protected String getTextureLocation(String name, EquipmentSlotType slot, String type) {
-        return String.format(REFERENCE.MODID + ":textures/models/armor/%s_layer_%d%s.png", name, slot == EquipmentSlotType.LEGS ? 2 : 1, type == null ? "" : "_overlay");
+    protected String getTextureLocation(String name, EquipmentSlot slot, String type) {
+        return String.format(REFERENCE.MODID + ":textures/models/armor/%s_layer_%d%s.png", name, slot == EquipmentSlot.LEGS ? 2 : 1, type == null ? "" : "_overlay");
     }
 
     /**

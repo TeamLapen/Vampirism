@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.entity.goals;
 
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 
-public class FleeSunVampireGoal<T extends CreatureEntity & IVampire> extends FleeGoal {
+public class FleeSunVampireGoal<T extends PathfinderMob & IVampire> extends FleeGoal {
     private final T vampire;
 
 
@@ -17,7 +17,7 @@ public class FleeSunVampireGoal<T extends CreatureEntity & IVampire> extends Fle
 
 
     @Override
-    protected boolean isPositionAcceptable(World world, BlockPos pos) {
+    protected boolean isPositionAcceptable(Level world, BlockPos pos) {
         return !world.canSeeSkyFromBelowWater(pos);
     }
 

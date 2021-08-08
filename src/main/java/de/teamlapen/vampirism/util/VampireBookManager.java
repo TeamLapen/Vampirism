@@ -4,9 +4,9 @@ import com.google.common.io.ByteStreams;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,14 +25,14 @@ public class VampireBookManager {
     public static VampireBookManager getInstance() {
         return ourInstance;
     }
-    private final Map<String, CompoundNBT> booksById = new HashMap<>();
-    private CompoundNBT[] bookTags = null;
+    private final Map<String, CompoundTag> booksById = new HashMap<>();
+    private CompoundTag[] bookTags = null;
 
     private VampireBookManager() {
     }
 
-    public Optional<CompoundNBT> getBookData(String id) {
-        CompoundNBT nbt = booksById.get(id);
+    public Optional<CompoundTag> getBookData(String id) {
+        CompoundTag nbt = booksById.get(id);
         return Optional.ofNullable(nbt);
     }
 
@@ -46,8 +46,8 @@ public class VampireBookManager {
     }
 
     @Nonnull
-    public CompoundNBT getRandomBookData(Random rnd) {
-        return (bookTags == null || bookTags.length == 0) ? new CompoundNBT() : bookTags[rnd.nextInt(bookTags.length)];
+    public CompoundTag getRandomBookData(Random rnd) {
+        return (bookTags == null || bookTags.length == 0) ? new CompoundTag() : bookTags[rnd.nextInt(bookTags.length)];
     }
 
     public void init() {
@@ -78,7 +78,7 @@ public class VampireBookManager {
     }
 
     private void parseBooks(String data) throws CommandSyntaxException {
-        ArrayList<CompoundNBT> books = new ArrayList<>();
+        ArrayList<CompoundTag> books = new ArrayList<>();
         String[] lines = data.split("\n");
         for (String line : lines) {
             String id = null;
@@ -89,12 +89,12 @@ public class VampireBookManager {
                     line = line.substring(pos + 1);
                 }
             }
-            CompoundNBT nbt = JsonToNBT.parseTag(line);
+            CompoundTag nbt = TagParser.parseTag(line);
             books.add(nbt);
             if (id != null) {
                 booksById.put(id, nbt);
             }
         }
-        bookTags = books.toArray(new CompoundNBT[0]);
+        bookTags = books.toArray(new CompoundTag[0]);
     }
 }

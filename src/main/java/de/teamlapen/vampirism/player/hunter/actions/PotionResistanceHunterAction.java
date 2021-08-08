@@ -5,9 +5,9 @@ import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 
 public class PotionResistanceHunterAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
 
-    public static boolean shouldRemove(Effect effect) {
-        return effect == Effects.BLINDNESS || effect == Effects.CONFUSION || effect == Effects.HUNGER || effect == Effects.POISON || effect == ModEffects.freeze;
+    public static boolean shouldRemove(MobEffect effect) {
+        return effect == MobEffects.BLINDNESS || effect == MobEffects.CONFUSION || effect == MobEffects.HUNGER || effect == MobEffects.POISON || effect == ModEffects.freeze;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class PotionResistanceHunterAction extends DefaultHunterAction implements
     @Override
     public boolean onUpdate(IHunterPlayer player) {
         if (!(player.getRepresentingEntity().tickCount % 3 == 0)) {
-            Collection<EffectInstance> effects = player.getRepresentingEntity().getActiveEffects();
+            Collection<MobEffectInstance> effects = player.getRepresentingEntity().getActiveEffects();
             effects.stream().filter(instance -> shouldRemove(instance.getEffect())).collect(Collectors.toList()).forEach(s -> player.getRepresentingPlayer().removeEffect(s.getEffect()));
         }
         return false;

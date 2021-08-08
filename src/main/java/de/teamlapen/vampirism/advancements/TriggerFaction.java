@@ -5,20 +5,20 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import net.minecraft.advancements.criterion.AbstractCriterionTrigger;
-import net.minecraft.advancements.criterion.CriterionInstance;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.loot.ConditionArrayParser;
-import net.minecraft.loot.ConditionArraySerializer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.SerializationContext;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Instance> {
+public class TriggerFaction extends SimpleCriterionTrigger<TriggerFaction.Instance> {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "faction");
 
     private final static Logger LOGGER = LogManager.getLogger();
@@ -40,7 +40,7 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
     /**
      * Trigger this criterion
      */
-    public void trigger(ServerPlayerEntity playerMP, IPlayableFaction<?> faction, int level, int lordLevel) {
+    public void trigger(ServerPlayer playerMP, IPlayableFaction<?> faction, int level, int lordLevel) {
         this.trigger(playerMP, (instance -> {
             return instance.test(faction, level, lordLevel);
         }));
@@ -48,7 +48,7 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
 
     @Nonnull
     @Override
-    protected Instance createInstance(JsonObject json, @Nonnull EntityPredicate.AndPredicate entityPredicate, @Nonnull ConditionArrayParser conditionsParser) {
+    protected Instance createInstance(JsonObject json, @Nonnull EntityPredicate.Composite entityPredicate, @Nonnull DeserializationContext conditionsParser) {
         IPlayableFaction<?> faction = null;
         Type type = json.has("type") ? Type.valueOf(json.get("type").getAsString()) : Type.LEVEL;
         if (json.has("faction")) {
@@ -71,7 +71,7 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
         LEVEL, LORD
     }
 
-    static class Instance extends CriterionInstance {
+    static class Instance extends AbstractCriterionTriggerInstance {
 
         @Nonnull
         private final Type type;
@@ -80,7 +80,7 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
         private final int level;
 
         Instance(@Nonnull Type type, @Nullable IPlayableFaction<?> faction, int level) {
-            super(ID, EntityPredicate.AndPredicate.ANY); //TODO check what AndPredicate does
+            super(ID, EntityPredicate.Composite.ANY); //TODO check what AndPredicate does
             this.type = type;
             this.faction = faction;
             this.level = level;
@@ -88,7 +88,7 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
 
         @Nonnull
         @Override
-        public JsonObject serializeToJson(@Nonnull ConditionArraySerializer serializer) {
+        public JsonObject serializeToJson(@Nonnull SerializationContext serializer) {
             JsonObject json = super.serializeToJson(serializer);
             json.addProperty("type", type.name());
             json.addProperty("faction", faction == null ? "null" : faction.getID().toString());

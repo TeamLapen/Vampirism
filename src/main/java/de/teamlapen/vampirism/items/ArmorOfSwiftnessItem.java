@@ -3,28 +3,30 @@ package de.teamlapen.vampirism.items;
 import com.google.common.collect.Multimap;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.IDyeableArmorItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorMaterials;
+import net.minecraft.world.item.DyeableLeatherItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemWithTier, IDyeableArmorItem {
+import de.teamlapen.vampirism.api.items.IItemWithTier.TIER;
+
+public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemWithTier, DyeableLeatherItem {
 
     private final static String baseRegName = "armor_of_swiftness";
     private final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{3, 6, 8, 3};
@@ -33,20 +35,20 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
 
     private final TIER tier;
 
-    public ArmorOfSwiftnessItem(EquipmentSlotType equipmentSlotIn, TIER tier) {
-        super(baseRegName, tier.getSerializedName(), ArmorMaterial.LEATHER, equipmentSlotIn, new Item.Properties().tab(VampirismMod.creativeTab));
+    public ArmorOfSwiftnessItem(EquipmentSlot equipmentSlotIn, TIER tier) {
+        super(baseRegName, tier.getSerializedName(), ArmorMaterials.LEATHER, equipmentSlotIn, new Item.Properties().tab(VampirismMod.creativeTab));
         this.tier = tier;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
         if (type == null) {
             return getTextureLocationLeather(slot);
         }
@@ -61,7 +63,7 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot, ItemStack stack) {
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> multimap = super.getAttributeModifiers(equipmentSlot, stack);
 
         if (equipmentSlot == this.getSlot()) {
@@ -82,10 +84,10 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
     }
 
     @Override
-    public void onArmorTick(ItemStack itemStack, World world, PlayerEntity player) {
+    public void onArmorTick(ItemStack itemStack, Level world, Player player) {
         super.onArmorTick(itemStack, world, player);
         if (player.tickCount % 45 == 3) {
-            if (this.getSlot() == EquipmentSlotType.CHEST) {
+            if (this.getSlot() == EquipmentSlot.CHEST) {
                 boolean flag = true;
                 int boost = Integer.MAX_VALUE;
                 for (ItemStack stack : player.inventory.armor) {
@@ -100,7 +102,7 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
                     }
                 }
                 if (flag && boost > -1) {
-                    player.addEffect(new EffectInstance(Effects.JUMP, 50, boost, false, false));
+                    player.addEffect(new MobEffectInstance(MobEffects.JUMP, 50, boost, false, false));
                 }
             }
         }
@@ -148,8 +150,8 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
         }
     }
 
-    private String getTextureLocationLeather(EquipmentSlotType slot) {
-        return String.format("minecraft:textures/models/armor/leather_layer_%d.png", slot == EquipmentSlotType.LEGS ? 2 : 1);
+    private String getTextureLocationLeather(EquipmentSlot slot) {
+        return String.format("minecraft:textures/models/armor/leather_layer_%d.png", slot == EquipmentSlot.LEGS ? 2 : 1);
     }
 
 

@@ -21,37 +21,35 @@ import de.teamlapen.vampirism.inventory.container.MinionContainer;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.world.MinionWorldData;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.OpenDoorGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.UseAction;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.*;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -64,11 +62,22 @@ import java.util.UUID;
 import java.util.function.Predicate;
 
 
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
+
 public abstract class MinionEntity<T extends MinionData> extends VampirismEntity implements IPlayerOverlay, ISyncable, ForceLookEntityGoal.TaskOwner, de.teamlapen.vampirism.api.entity.minion.IMinionEntity, IEntityAdditionalSpawnData {
     /**
      * Store the uuid of the lord. Should not be null when joining the world
      */
-    protected static final DataParameter<Optional<UUID>> LORD_ID = EntityDataManager.defineId(MinionEntity.class, DataSerializers.OPTIONAL_UUID);
+    protected static final EntityDataAccessor<Optional<UUID>> LORD_ID = SynchedEntityData.defineId(MinionEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private final static Logger LOGGER = LogManager.getLogger();
     private final static NonNullList<ItemStack> EMPTY_LIST = NonNullList.create();
     private final static int CONVERT_DURATION = 20;
@@ -109,9 +118,9 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * Holds the interacting player while the MinionContainer is open
      */
     @Nullable
-    private PlayerEntity interactingPlayer;
+    private Player interactingPlayer;
 
-    protected MinionEntity(EntityType<? extends VampirismEntity> type, World world, @Nonnull Predicate<LivingEntity> attackPredicate) {
+    protected MinionEntity(EntityType<? extends VampirismEntity> type, Level world, @Nonnull Predicate<LivingEntity> attackPredicate) {
         super(type, world);
         this.softAttackPredicate = attackPredicate;
         this.hardAttackPredicate = livingEntity -> {
@@ -123,7 +132,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT nbt) {
+    public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         if (isValid()) {
             this.getLordID().ifPresent(id -> nbt.putUUID("lord", id));
@@ -148,7 +157,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
         if (!this.level.isClientSide && !this.isValid() && this.isAlive()) {
             LOGGER.warn("Minion without lord.");
-            this.remove();
+            this.discard();
         }
     }
 
@@ -173,14 +182,14 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     public void die(@Nonnull DamageSource cause) {
         super.die(cause);
         if (this.playerMinionController != null) {
-            this.getLordOpt().map(ILordPlayer::getPlayer).ifPresent(p -> p.displayClientMessage(new TranslationTextComponent("text.vampirism.minion.died", this.getDisplayName()), true));
+            this.getLordOpt().map(ILordPlayer::getPlayer).ifPresent(p -> p.displayClientMessage(new TranslatableComponent("text.vampirism.minion.died", this.getDisplayName()), true));
             this.playerMinionController.markDeadAndReleaseMinionSlot(minionId, token);
             this.playerMinionController = null;
         }
     }
 
     /**
-     * Copy of {@link MobEntity} but with modified DamageSource
+     * Copy of {@link net.minecraft.world.entity.Mob} but with modified DamageSource
      * Check if code still up-to-date
      * TODO 1.17
      */
@@ -201,19 +210,19 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         boolean flag = entityIn.hurt(new MinionDamageSource(this), f);
         if (flag) {
             if (f1 > 0.0F && entityIn instanceof LivingEntity) {
-                ((LivingEntity) entityIn).knockback(f1 * 0.5F, MathHelper.sin(this.yRot * ((float) Math.PI / 180F)), -MathHelper.cos(this.yRot * ((float) Math.PI / 180F)));
+                ((LivingEntity) entityIn).knockback(f1 * 0.5F, Mth.sin(this.getYRot() * ((float) Math.PI / 180F)), -Mth.cos(this.getYRot() * ((float) Math.PI / 180F)));
                 this.setDeltaMovement(this.getDeltaMovement().multiply(0.6D, 1.0D, 0.6D));
             }
             ItemStack itemstack = this.getMainHandItem();
 
-            if (entityIn instanceof PlayerEntity) {
-                PlayerEntity playerentity = (PlayerEntity) entityIn;
+            if (entityIn instanceof Player) {
+                Player playerentity = (Player) entityIn;
                 this.maybeDisableShield(playerentity, this.getMainHandItem(), playerentity.isUsingItem() ? playerentity.getUseItem() : ItemStack.EMPTY);
             }
             if (!this.level.isClientSide && !itemstack.isEmpty() && entityIn instanceof LivingEntity) {
                 itemstack.getItem().hurtEnemy(itemstack, (LivingEntity) entityIn, this);
                 if (itemstack.isEmpty()) {
-                    this.setItemInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+                    this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
                 }
             }
 
@@ -226,7 +235,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     @Nonnull
     @Override
-    public ItemStack eat(@Nonnull World world, @Nonnull ItemStack stack) {
+    public ItemStack eat(@Nonnull Level world, @Nonnull ItemStack stack) {
         if (stack.isEdible()) {
             float healAmount = stack.getItem().getFoodProperties().getNutrition() / 2f;
             this.heal(healAmount);
@@ -255,12 +264,12 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * @return Return player (lord) if they are currently interacting with this minion
      */
     @Nonnull
-    public Optional<PlayerEntity> getForceLookTarget() {
+    public Optional<Player> getForceLookTarget() {
         return Optional.ofNullable(interactingPlayer);
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -314,7 +323,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     @Nonnull
     @Override
-    public EntitySize getDimensions(@Nonnull Pose poseIn) {
+    public EntityDimensions getDimensions(@Nonnull Pose poseIn) {
         return super.getDimensions(poseIn).scale(getScale());
     }
 
@@ -330,7 +339,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void loadUpdateFromNBT(CompoundNBT nbt) {
+    public void loadUpdateFromNBT(CompoundTag nbt) {
         if (nbt.contains("data_type")) {
             MinionData data = MinionData.fromNBT(nbt);
             try {
@@ -362,7 +371,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     @Nonnull
     @Override
-    public ItemStack getItemBySlot(@Nonnull EquipmentSlotType slotIn) {
+    public ItemStack getItemBySlot(@Nonnull EquipmentSlot slotIn) {
         switch (slotIn.getType()) {
             case HAND:
                 return getInventory().map(IMinionInventory::getInventoryHands).map(i -> i.get(slotIn.getIndex())).orElse(ItemStack.EMPTY);
@@ -374,11 +383,11 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT nbt) {
+    public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         UUID id = nbt.hasUUID("lord") ? nbt.getUUID("lord") : null;
-        if (id != null && level instanceof ServerWorld) {
-            this.playerMinionController = MinionWorldData.getData((ServerWorld) this.level).getController(id);
+        if (id != null && level instanceof ServerLevel) {
+            this.playerMinionController = MinionWorldData.getData((ServerLevel) this.level).getController(id);
             if (this.playerMinionController == null) {
                 LOGGER.warn("Cannot get PlayerMinionController for {}", id);
             } else {
@@ -408,19 +417,19 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void readSpawnData(PacketBuffer additionalData) {
+    public void readSpawnData(FriendlyByteBuf additionalData) {
         convertCounter = additionalData.readVarInt();
     }
 
     @Override
     @Deprecated
     public void recallMinion() {
-        this.remove();
+        this.discard();
     }
 
     @Override
-    public void remove(boolean p_remove_1_) {
-        super.remove(p_remove_1_);
+    public void remove(RemovalReason p_146834_) {
+        super.remove(p_146834_);
         if (playerMinionController != null) {
             playerMinionController.checkInMinion(this.minionId, this.token);
             this.minionData = null;
@@ -429,7 +438,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void setItemSlot(@Nonnull EquipmentSlotType slotIn, @Nonnull ItemStack stack) {
+    public void setItemSlot(@Nonnull EquipmentSlot slotIn, @Nonnull ItemStack stack) {
         if (minionData == null) return;
         switch (slotIn.getType()) {
             case HAND:
@@ -441,7 +450,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void setCustomName(@Nullable ITextComponent name) {
+    public void setCustomName(@Nullable Component name) {
         //NOP
     }
 
@@ -456,7 +465,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     /**
      * Set/Reset currently interacting player
      */
-    public void setInteractingPlayer(@Nullable PlayerEntity player) {
+    public void setInteractingPlayer(@Nullable Player player) {
         this.interactingPlayer = player;
     }
 
@@ -474,7 +483,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void writeFullUpdateToNBT(CompoundNBT nbt) {
+    public void writeFullUpdateToNBT(CompoundTag nbt) {
         if (minionData == null && this.level.getEntity(this.getId()) != null) { //If tracking is started already while adding to world (and thereby before {@link Entity#onAddedToWorld}) trigger the checkout here (but only if actually added to world).
             this.checkoutMinionData();
         }
@@ -485,12 +494,12 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void writeSpawnData(PacketBuffer buffer) {
+    public void writeSpawnData(FriendlyByteBuf buffer) {
         buffer.writeVarInt(convertCounter);
     }
 
     protected boolean canConsume(ItemStack stack) {
-        if (!(stack.getUseAnimation() == UseAction.DRINK || stack.getUseAnimation() == UseAction.EAT)) return false;
+        if (!(stack.getUseAnimation() == UseAnim.DRINK || stack.getUseAnimation() == UseAnim.EAT)) return false;
         return !stack.isEmpty();
     }
 
@@ -499,8 +508,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         if (this.targetSelector.getRunningGoals().findAny().isPresent()) return;
         ItemStack stack = this.getInventory().map(i -> i.getItem(1)).orElse(ItemStack.EMPTY);
         if (!canConsume(stack)) return;
-        this.startUsingItem(Hand.OFF_HAND);
-        this.yRot = this.yHeadRot;
+        this.startUsingItem(InteractionHand.OFF_HAND);
+        this.setYRot(this.getYHeadRot());
     }
 
     @Override
@@ -512,7 +521,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     @Nullable
     protected ILordPlayer getLord() {
-        return this.getLordID().map(this.level::getPlayerByUUID).filter(PlayerEntity::isAlive).map(FactionPlayerHandler::get).orElse(null);
+        return this.getLordID().map(this.level::getPlayerByUUID).filter(Player::isAlive).map(FactionPlayerHandler::get).orElse(null);
     }
 
     protected Optional<UUID> getLordID() {
@@ -524,7 +533,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         if (this.minionData != null) this.minionData.getInventory().damageArmor(damageSource, damage, this);
     }
 
-    protected boolean isLord(PlayerEntity p) {
+    protected boolean isLord(Player p) {
         return this.getLordID().map(id -> id.equals(p.getUUID())).orElse(false);
     }
 
@@ -541,12 +550,12 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         if (isLord(player)) {
-            if (player instanceof ServerPlayerEntity) {
-                NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this), new TranslationTextComponent("text.vampirism.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(new StringTextComponent("Minion")))), buf -> buf.writeVarInt(this.getId()));
+            if (player instanceof ServerPlayer) {
+                NetworkHooks.openGui((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this), new TranslatableComponent("text.vampirism.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(new TextComponent("Minion")))), buf -> buf.writeVarInt(this.getId()));
             }
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
         return super.mobInteract(player, hand);
     }
@@ -554,15 +563,15 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new ForceLookEntityGoal<>(this));
         this.goalSelector.addGoal(2, new OpenDoorGoal(this, true));
 
         this.goalSelector.addGoal(4, new FollowLordGoal(this, 1.1));
 
         this.goalSelector.addGoal(9, new MoveToTaskCenterGoal(this));
-        this.goalSelector.addGoal(10, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 20F, 0.6F));
-        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(10, new LookAtClosestVisibleGoal(this, Player.class, 20F, 0.6F));
+        this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new DefendAreaGoal(this));
@@ -595,7 +604,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             this.onMinionDataReceived(data);
         } catch (ClassCastException e) {
             LOGGER.error("Failed to cast minion data. Maybe the correct data was not registered", e);
-            this.remove();
+            this.discard();
         }
     }
 }

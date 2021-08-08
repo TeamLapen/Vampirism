@@ -6,9 +6,9 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.entity.DarkBloodProjectileEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 
 public class DarkBloodProjectileAction extends DefaultVampireAction {
 
@@ -38,7 +38,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
 
     @Override
     protected boolean activate(IVampirePlayer player) {
-        PlayerEntity shooter = player.getRepresentingPlayer();
+        Player shooter = player.getRepresentingPlayer();
 
         float directDamage = VampirismConfig.BALANCE.vaDarkBloodProjectileDamage.get().floatValue();
         float indirectDamage = directDamage * 0.5f;
@@ -54,7 +54,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
 
         if (player.getSkillHandler().isRefinementEquipped(ModRefinements.dark_blood_projectile_aoe)) {
             for (int i = 0; i < 32; i++) {
-                Vector3d vec3d = getRotationVector(shooter.getViewXRot(1.0f), shooter.getViewYRot(1.0f) + i * 11.25f);
+                Vec3 vec3d = getRotationVector(shooter.getViewXRot(1.0f), shooter.getViewYRot(1.0f) + i * 11.25f);
                 DarkBloodProjectileEntity entity = createProjectile(shooter, shooter.position(), 0, vec3d, false, 0, 0, 0.95f);
                 entity.setMaxTicks(7);
                 entity.excludeShooter();
@@ -74,7 +74,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
         return true;
     }
 
-    private DarkBloodProjectileEntity createProjectile(PlayerEntity shooter, Vector3d position, double height, Vector3d direction, boolean goThrough, float directDamage, float indirectDamage, float speed) {
+    private DarkBloodProjectileEntity createProjectile(Player shooter, Vec3 position, double height, Vec3 direction, boolean goThrough, float directDamage, float indirectDamage, float speed) {
         DarkBloodProjectileEntity entity = new DarkBloodProjectileEntity(shooter.getCommandSenderWorld(), position.x + direction.x, position.y + height, position.z + direction.z, direction.x, direction.y, direction.z);
         entity.setMotionFactor(speed);
         entity.setOwner(shooter);
@@ -86,22 +86,22 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
         return entity;
     }
 
-    private Vector3d getRotationVector(float pitch, float yaw) {
+    private Vec3 getRotationVector(float pitch, float yaw) {
         float f = pitch * ((float) Math.PI / 180F);
         float f1 = -yaw * ((float) Math.PI / 180F);
-        float f2 = MathHelper.cos(f1);
-        float f3 = MathHelper.sin(f1);
-        float f4 = MathHelper.cos(f);
-        return new Vector3d(f3 * f4, 0, f2 * f4);
+        float f2 = Mth.cos(f1);
+        float f3 = Mth.sin(f1);
+        float f4 = Mth.cos(f);
+        return new Vec3(f3 * f4, 0, f2 * f4);
     }
 
-    private Vector3d getVectorForRotation(float pitch, float yaw) {
+    private Vec3 getVectorForRotation(float pitch, float yaw) {
         float f = pitch * ((float) Math.PI / 180F);
         float f1 = -yaw * ((float) Math.PI / 180F);
-        float f2 = MathHelper.cos(f1);
-        float f3 = MathHelper.sin(f1);
-        float f4 = MathHelper.cos(f);
-        float f5 = MathHelper.sin(f);
-        return new Vector3d(f3 * f4, -f5, f2 * f4);
+        float f2 = Mth.cos(f1);
+        float f3 = Mth.sin(f1);
+        float f4 = Mth.cos(f);
+        float f5 = Mth.sin(f);
+        return new Vec3(f3 * f4, -f5, f2 * f4);
     }
 }

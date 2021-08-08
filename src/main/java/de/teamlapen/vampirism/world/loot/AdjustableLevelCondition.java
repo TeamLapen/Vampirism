@@ -5,17 +5,19 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.core.ModLoot;
-import net.minecraft.entity.Entity;
-import net.minecraft.loot.ILootSerializer;
-import net.minecraft.loot.LootConditionType;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.util.JSONUtils;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.storage.loot.Serializer;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.util.GsonHelper;
 
 import javax.annotation.Nonnull;
 
-public class AdjustableLevelCondition implements ILootCondition {
-    public static IBuilder builder(int level, LootContext.EntityTarget target) {
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition.Builder;
+
+public class AdjustableLevelCondition implements LootItemCondition {
+    public static Builder builder(int level, LootContext.EntityTarget target) {
         return () -> new AdjustableLevelCondition(level, target);
     }
     private final int levelTest;
@@ -28,7 +30,7 @@ public class AdjustableLevelCondition implements ILootCondition {
 
     @Nonnull
     @Override
-    public LootConditionType getType() {
+    public LootItemConditionType getType() {
         return ModLoot.adjustable_level;
     }
 
@@ -44,13 +46,13 @@ public class AdjustableLevelCondition implements ILootCondition {
         return false;
     }
 
-    public static class Serializer implements ILootSerializer<AdjustableLevelCondition> {
+    public static class Serializer implements Serializer<AdjustableLevelCondition> {
 
 
         @Nonnull
         @Override
         public AdjustableLevelCondition deserialize(JsonObject json, @Nonnull JsonDeserializationContext context) {
-            return new AdjustableLevelCondition(json.has("level") ? JSONUtils.getAsInt(json, "level") : -1, JSONUtils.getAsObject(json, "entity", context, LootContext.EntityTarget.class));
+            return new AdjustableLevelCondition(json.has("level") ? GsonHelper.getAsInt(json, "level") : -1, GsonHelper.getAsObject(json, "entity", context, LootContext.EntityTarget.class));
         }
 
         @Override

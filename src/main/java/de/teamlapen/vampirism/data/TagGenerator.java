@@ -10,6 +10,11 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.data.tags.BlockTagsProvider;
+import net.minecraft.data.tags.EntityTypeTagsProvider;
+import net.minecraft.data.tags.FluidTagsProvider;
+import net.minecraft.data.tags.ItemTagsProvider;
+
 public class TagGenerator {
 
     public static void register(DataGenerator generator, ExistingFileHelper helper) {

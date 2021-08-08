@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.gui;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.GuiPieMenu;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
@@ -17,11 +17,11 @@ import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.ActionBindingPacket;
 import de.teamlapen.vampirism.network.InputEventPacket;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.settings.KeyConflictContext;
@@ -107,7 +107,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
     private IActionHandler actionHandler;
 
     public SelectActionScreen(Color backgroundColor, boolean edit) {
-        super(backgroundColor, new TranslationTextComponent("selectAction"));
+        super(backgroundColor, new TranslatableComponent("selectAction"));
         editActions = edit;
     }
 
@@ -188,14 +188,14 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
         if (editActions)
-            GuiUtils.drawHoveringText(stack, Lists.newArrayList(new TranslationTextComponent("gui.vampirism.action_select.action_binding"), ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).getTranslatedKeyMessage().plainCopy().withStyle(TextFormatting.AQUA), ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).getTranslatedKeyMessage().plainCopy().withStyle(TextFormatting.AQUA)), 0, ((int) (this.height * 0.8)), width, height, this.width / 4, this.font);
+            GuiUtils.drawHoveringText(stack, Lists.newArrayList(new TranslatableComponent("gui.vampirism.action_select.action_binding"), ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA), ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA)), 0, ((int) (this.height * 0.8)), width, height, this.width / 4, this.font);
     }
 
     @Override
-    protected void afterIconDraw(MatrixStack stack, IAction p, int x, int y) {
+    protected void afterIconDraw(PoseStack stack, IAction p, int x, int y) {
         if (p == fakeAction || editActions) return;
         // Draw usage indicator
 
@@ -238,12 +238,12 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
     }
 
     @Override
-    protected KeyBinding getMenuKeyBinding() {
+    protected KeyMapping getMenuKeyBinding() {
         return ModKeys.getKeyBinding(ModKeys.KEY.ACTION);
     }
 
     @Override
-    protected ITextComponent getName(IAction item) {
+    protected Component getName(IAction item) {
         return item.getName();
     }
 
@@ -262,7 +262,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
 
     }
 
-    private boolean checkBinding(Function<KeyBinding, Boolean> func) {
+    private boolean checkBinding(Function<KeyMapping, Boolean> func) {
         if (elements.get(getSelectedElement()) == fakeAction) {
             return true;
         }

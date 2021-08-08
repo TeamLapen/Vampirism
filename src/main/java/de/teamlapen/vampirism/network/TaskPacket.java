@@ -3,16 +3,19 @@ package de.teamlapen.vampirism.network;
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.player.TaskManager;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.*;
 import java.util.function.Supplier;
 
-public class TaskPacket implements IMessage {
+public record TaskPacket(int containerId,
+                         Map<UUID, TaskManager.TaskWrapper> taskWrappers,
+                         Map<UUID, Set<UUID>> completableTasks,
+                         Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) implements IMessage {
 
-    public static void encode(TaskPacket msg, PacketBuffer buffer) {
+    public static void encode(TaskPacket msg, FriendlyByteBuf buffer) {
         buffer.writeVarInt(msg.containerId);
         buffer.writeVarInt(msg.completableTasks.size());
         buffer.writeVarInt(msg.completedRequirements.size());
@@ -37,7 +40,7 @@ public class TaskPacket implements IMessage {
         msg.taskWrappers.forEach((id, taskWrapper) -> taskWrapper.encode(buffer));
     }
 
-    public static TaskPacket decode(PacketBuffer buffer) {
+    public static TaskPacket decode(FriendlyByteBuf buffer) {
         int containerId = buffer.readVarInt();
         int completableSize = buffer.readVarInt();
         int statSize = buffer.readVarInt();
@@ -82,16 +85,4 @@ public class TaskPacket implements IMessage {
         ctx.setPacketHandled(true);
     }
 
-    public final int containerId;
-    public final Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements;
-    public final Map<UUID, Set<UUID>> completableTasks;
-
-    public final Map<UUID, TaskManager.TaskWrapper> taskWrappers;
-
-    public TaskPacket(int containerId, Map<UUID, TaskManager.TaskWrapper> taskWrappers, Map<UUID, Set<UUID>> completableTasks, Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) {
-        this.containerId = containerId;
-        this.taskWrappers = taskWrappers;
-        this.completedRequirements = completedRequirements;
-        this.completableTasks = completableTasks;
-    }
 }

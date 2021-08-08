@@ -11,14 +11,14 @@ import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskActionPacket;
 import de.teamlapen.vampirism.player.TaskManager;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -29,6 +29,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorInfo;
+import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorSlot;
+
 public class VampirismContainer extends InventoryContainer implements TaskContainer {
 
     private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{
@@ -36,7 +39,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
             new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.RING, 58, 26),
             new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.OBI_BELT, 58, 44)};
     private final IFactionPlayer<?> factionPlayer;
-    private final TextFormatting factionColor;
+    private final ChatFormatting factionColor;
     private final NonNullList<ItemStack> refinementStacks = NonNullList.withSize(3, ItemStack.EMPTY);
     public Map<UUID, TaskManager.TaskWrapper> taskWrapper = new HashMap<>();
     public Map<UUID, Set<UUID>> completableTasks = new HashMap<>();
@@ -44,8 +47,8 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     private Runnable listener;
     private boolean refinementsAvailable = false;
 
-    public VampirismContainer(int id, @Nonnull PlayerInventory playerInventory) {
-        super(ModContainer.vampirism, id, playerInventory, IWorldPosCallable.NULL, new Inventory(3), RemovingSelectorSlot::new, SELECTOR_INFOS);
+    public VampirismContainer(int id, @Nonnull Inventory playerInventory) {
+        super(ModContainer.vampirism, id, playerInventory, ContainerLevelAccess.NULL, new SimpleContainer(3), RemovingSelectorSlot::new, SELECTOR_INFOS);
         this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction"));
         this.factionColor = factionPlayer.getFaction().getChatColor();
         this.refinementsAvailable = factionPlayer.getFaction() == VReference.VAMPIRE_FACTION;
@@ -85,7 +88,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     }
 
     @Override
-    public TextFormatting getFactionColor() {
+    public ChatFormatting getFactionColor() {
         return this.factionColor;
     }
 
@@ -168,7 +171,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
 
     private static class RemovingSelectorSlot extends SelectorSlot {
 
-        public RemovingSelectorSlot(IInventory inventoryIn, int index, SelectorInfo info, Consumer<IInventory> refreshInvFunc, Function<Integer, Boolean> activeFunc) {
+        public RemovingSelectorSlot(Container inventoryIn, int index, SelectorInfo info, Consumer<Container> refreshInvFunc, Function<Integer, Boolean> activeFunc) {
             super(inventoryIn, index, info, refreshInvFunc, activeFunc);
         }
 

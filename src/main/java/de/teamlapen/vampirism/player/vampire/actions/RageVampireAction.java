@@ -4,8 +4,8 @@ import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 
 public class RageVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
@@ -16,9 +16,9 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
     @Override
     public boolean activate(IVampirePlayer vampire) {
         int duration = getDuration(vampire);
-        addEffectInstance(vampire, new EffectInstance(Effects.MOVEMENT_SPEED, duration, 2, false, false));
-        addEffectInstance(vampire, new EffectInstance(Effects.DAMAGE_BOOST, duration, 0, false, false));
-        addEffectInstance(vampire, new EffectInstance(Effects.DIG_SPEED, duration, 0, false, false));
+        addEffectInstance(vampire, new MobEffectInstance(MobEffects.MOVEMENT_SPEED, duration, 2, false, false));
+        addEffectInstance(vampire, new MobEffectInstance(MobEffects.DAMAGE_BOOST, duration, 0, false, false));
+        addEffectInstance(vampire, new MobEffectInstance(MobEffects.DIG_SPEED, duration, 0, false, false));
 
         return true;
     }
@@ -50,9 +50,9 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
 
     @Override
     public void onDeactivated(IVampirePlayer vampire) {
-        removePotionEffect(vampire, Effects.MOVEMENT_SPEED);
-        removePotionEffect(vampire, Effects.DAMAGE_BOOST);
-        removePotionEffect(vampire, Effects.DIG_SPEED);
+        removePotionEffect(vampire, MobEffects.MOVEMENT_SPEED);
+        removePotionEffect(vampire, MobEffects.DAMAGE_BOOST);
+        removePotionEffect(vampire, MobEffects.DIG_SPEED);
     }
 
     @Override

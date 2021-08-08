@@ -2,7 +2,13 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
+import net.minecraft.world.level.material.Material;
+
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.SoundType;
 
 public class BloodySpruceLeavesBlock extends LeavesBlock {
 

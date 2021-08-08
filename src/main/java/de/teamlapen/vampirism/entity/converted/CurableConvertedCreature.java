@@ -13,33 +13,33 @@ import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.SoulOrbEntity;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.RestrictSunGoal;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.goal.RestrictSunGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public interface CurableConvertedCreature<T extends CreatureEntity, Z extends CreatureEntity & ICurableConvertedCreature<T>> extends ICurableConvertedCreature<T> {
+public interface CurableConvertedCreature<T extends PathfinderMob, Z extends PathfinderMob & ICurableConvertedCreature<T>> extends ICurableConvertedCreature<T> {
 
     class Data<T> {
         public boolean vulnerableToFire = true;
@@ -48,7 +48,7 @@ public interface CurableConvertedCreature<T extends CreatureEntity, Z extends Cr
         public boolean sundamageCache;
         public boolean dropSoul = false;
         @Nullable
-        public ITextComponent name;
+        public Component name;
         public int conversionTime;
         public UUID conversationStarter;
     }
@@ -59,7 +59,7 @@ public interface CurableConvertedCreature<T extends CreatureEntity, Z extends Cr
      * return in {@link CreatureEntity#hurt(DamageSource, float)}
      */
     default boolean hurtC(DamageSource damageSource, float amount) {
-        CreatureEntity entity = ((CreatureEntity) this);
+        PathfinderMob entity = ((PathfinderMob) this);
         if (data().vulnerableToFire) {
             if (DamageSource.IN_FIRE.equals(damageSource)) {
                 return entity.hurt(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amount));
@@ -73,28 +73,28 @@ public interface CurableConvertedCreature<T extends CreatureEntity, Z extends Cr
     /**
      * return in {@link CreatureEntity#mobInteract(PlayerEntity, Hand)}
      */
-    default ActionResultType mobInteractC(@Nonnull PlayerEntity player, @Nonnull Hand hand) {
+    default InteractionResult mobInteractC(@Nonnull Player player, @Nonnull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (stack.getItem() != ModItems.cure_apple){
             return mobInteractSuper(player, hand);
         }
-        return interactWithCureItem(player, stack, ((CreatureEntity) this));
+        return interactWithCureItem(player, stack, ((PathfinderMob) this));
     }
 
     @Override
     default void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
-        ((CreatureEntity) this).addEffect(new EffectInstance(Effects.REGENERATION, amt * 20));
+        ((PathfinderMob) this).addEffect(new MobEffectInstance(MobEffects.REGENERATION, amt * 20));
     }
 
     /**
      * return in {@link CreatureEntity#getName()}
      */
-    default ITextComponent getNameC(Supplier<ITextComponent> baseName) {
-        if (((CreatureEntity) this).hasCustomName()) {
+    default Component getNameC(Supplier<Component> baseName) {
+        if (((PathfinderMob) this).hasCustomName()) {
             return getNameSuper();
         }
         if (data().name == null) {
-            this.data().name = new TranslationTextComponent("entity.vampirism.vampire").append(baseName.get());
+            this.data().name = new TranslatableComponent("entity.vampirism.vampire").append(baseName.get());
         }
         return data().name;
     }
@@ -103,7 +103,7 @@ public interface CurableConvertedCreature<T extends CreatureEntity, Z extends Cr
      * call in {@link CreatureEntity#handleEntityEvent(byte)}
      */
     default void handleEntityEventC(byte id) {
-        if (!handleSound(id, ((CreatureEntity) this))) {
+        if (!handleSound(id, ((PathfinderMob) this))) {
             handleEntityEventSuper(id);
         }
     }
@@ -114,34 +114,34 @@ public interface CurableConvertedCreature<T extends CreatureEntity, Z extends Cr
 
     @Nonnull
     @Override
-    default EnumStrength isGettingGarlicDamage(IWorld iWorld, boolean forceRefresh) {
+    default EnumStrength isGettingGarlicDamage(LevelAccessor iWorld, boolean forceRefresh) {
         if (forceRefresh) {
-            data().garlicCache = Helper.getGarlicStrength(((CreatureEntity) this), iWorld);
+            data().garlicCache = Helper.getGarlicStrength(((PathfinderMob) this), iWorld);
         }
         return data().garlicCache;
     }
 
     @Override
-    default boolean isGettingSundamage(IWorld iWorld, boolean forceRefresh) {
+    default boolean isGettingSundamage(LevelAccessor iWorld, boolean forceRefresh) {
         if (!forceRefresh)
             return data().sundamageCache;
-        return (data().sundamageCache = Helper.gettingSundamge(((CreatureEntity) this), iWorld, ((CreatureEntity) this).level.getProfiler()));
+        return (data().sundamageCache = Helper.gettingSundamge(((PathfinderMob) this), iWorld, ((PathfinderMob) this).level.getProfiler()));
     }
 
     @Override
     default boolean isIgnoringSundamage() {
-        return ((CreatureEntity) this).hasEffect(ModEffects.sunscreen);
+        return ((PathfinderMob) this).hasEffect(ModEffects.sunscreen);
     }
 
     /**
      * call in {@link CreatureEntity#aiStep()}
      */
     default void aiStepC(EntityType<T> originalType) {
-        CreatureEntity entity = ((CreatureEntity) this);
+        PathfinderMob entity = ((PathfinderMob) this);
         if (!entity.level.isClientSide && entity.isAlive() && this.isConverting(entity)) {
             --data().conversionTime;
             if (data().conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(entity, originalType, (timer) -> data().conversionTime = timer)) {
-                this.cureEntity((ServerWorld) entity.level, entity, originalType);
+                this.cureEntity((ServerLevel) entity.level, entity, originalType);
             }
         }
         if (entity.tickCount % REFERENCE.REFRESH_GARLIC_TICKS == 1) {
@@ -161,7 +161,7 @@ public interface CurableConvertedCreature<T extends CreatureEntity, Z extends Cr
             if (entity.isAlive() && entity.isInWater()) {
                 entity.setAirSupply(300);
                 if (entity.tickCount % 16 == 4) {
-                    entity.addEffect(new EffectInstance(Effects.WEAKNESS, 80, 0));
+                    entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 80, 0));
                 }
             }
         }
@@ -173,8 +173,8 @@ public interface CurableConvertedCreature<T extends CreatureEntity, Z extends Cr
     default void dieC(DamageSource cause) {
         if (cause.getDirectEntity() instanceof CrossbowArrowEntity && Helper.isHunter(cause.getEntity())) {
             data().dropSoul = true;
-        } else if (cause.getDirectEntity() instanceof PlayerEntity && Helper.isHunter(cause.getDirectEntity())) {
-            ItemStack weapon = ((PlayerEntity) cause.getDirectEntity()).getMainHandItem();
+        } else if (cause.getDirectEntity() instanceof Player && Helper.isHunter(cause.getDirectEntity())) {
+            ItemStack weapon = ((Player) cause.getDirectEntity()).getMainHandItem();
             if (!weapon.isEmpty() && weapon.getItem() instanceof IVampireFinisher) {
                 data().dropSoul = true;
             }
@@ -186,24 +186,24 @@ public interface CurableConvertedCreature<T extends CreatureEntity, Z extends Cr
     /**
      * call in {@link CreatureEntity#readAdditionalSaveData(CompoundNBT)}
      */
-    default void readAdditionalSaveDataC(@Nonnull CompoundNBT compound) {
+    default void readAdditionalSaveDataC(@Nonnull CompoundTag compound) {
         if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1) {
-            this.startConverting(compound.hasUUID("ConversionPlayer") ? compound.getUUID("ConversionPlayer") : null, compound.getInt("ConversionTime"), ((CreatureEntity) this));
+            this.startConverting(compound.hasUUID("ConversionPlayer") ? compound.getUUID("ConversionPlayer") : null, compound.getInt("ConversionTime"), ((PathfinderMob) this));
         }
     }
 
     /**
      * call in {@link CreatureEntity#addAdditionalSaveData(CompoundNBT)} ()}
      */
-    default void addAdditionalSaveDataC(@Nonnull CompoundNBT compound) {
-        compound.putInt("ConversionTime", this.isConverting(((CreatureEntity) this)) ? data().conversionTime : -1);
+    default void addAdditionalSaveDataC(@Nonnull CompoundTag compound) {
+        compound.putInt("ConversionTime", this.isConverting(((PathfinderMob) this)) ? data().conversionTime : -1);
         if (data().conversationStarter != null) {
             compound.putUUID("ConversionPlayer", data().conversationStarter);
         }
     }
 
     @Override
-    default void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @Nonnull CreatureEntity entity) {
+    default void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @Nonnull PathfinderMob entity) {
         ICurableConvertedCreature.super.startConverting(conversionStarterIn, conversionTimeIn, entity);
         data().conversationStarter = conversionStarterIn;
         data().conversionTime = conversionTimeIn;
@@ -211,7 +211,7 @@ public interface CurableConvertedCreature<T extends CreatureEntity, Z extends Cr
 
     @Override
     default boolean useBlood(int amt, boolean allowPartial) {
-        ((CreatureEntity) this).addEffect(new EffectInstance(Effects.WEAKNESS, amt * 20));
+        ((PathfinderMob) this).addEffect(new MobEffectInstance(MobEffects.WEAKNESS, amt * 20));
         return true;
     }
 
@@ -234,7 +234,7 @@ public interface CurableConvertedCreature<T extends CreatureEntity, Z extends Cr
      * call in {@link CreatureEntity#tickDeath()}
      */
     default void tickDeathC() {
-        CreatureEntity entity = ((CreatureEntity) this);
+        PathfinderMob entity = ((PathfinderMob) this);
         if (entity.deathTime == 19) {
             if (!entity.level.isClientSide && (data().dropSoul && entity.level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))) {
                 entity.level.addFreshEntity(new SoulOrbEntity(entity.level, entity.getX(), entity.getY(), entity.getZ(), SoulOrbEntity.VARIANT.VAMPIRE));
@@ -246,18 +246,18 @@ public interface CurableConvertedCreature<T extends CreatureEntity, Z extends Cr
      * call in {@link CreatureEntity#registerGoals()}
      */
     default void registerGoalsC() {
-        CreatureEntity entity = ((CreatureEntity) this);
-        entity.goalSelector.addGoal(1, new AvoidEntityGoal<>(entity, CreatureEntity.class, 10, 1, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION)));
+        PathfinderMob entity = ((PathfinderMob) this);
+        entity.goalSelector.addGoal(1, new AvoidEntityGoal<>(entity, PathfinderMob.class, 10, 1, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION)));
         entity.goalSelector.addGoal(4, new RestrictSunGoal(entity));
 
         entity.targetSelector.addGoal(1, new HurtByTargetGoal(entity));
-        entity.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(entity, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
-        entity.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(entity, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, false, false, false, null)));
+        entity.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(entity, Player.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
+        entity.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(entity, PathfinderMob.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, false, false, false, null)));
     }
 
     @Override
     default LivingEntity getRepresentingEntity() {
-        return ((CreatureEntity) this);
+        return ((PathfinderMob) this);
     }
 
     /**
@@ -268,19 +268,19 @@ public interface CurableConvertedCreature<T extends CreatureEntity, Z extends Cr
     /**
      * implement as super call for {@link CreatureEntity#getName()}
      */
-    ITextComponent getNameSuper();
+    Component getNameSuper();
 
     /**
      * implement as super call for {@link CreatureEntity#mobInteract(PlayerEntity, Hand)}
      */
-    ActionResultType mobInteractSuper(@Nonnull PlayerEntity player, @Nonnull Hand hand);
+    InteractionResult mobInteractSuper(@Nonnull Player player, @Nonnull InteractionHand hand);
 
     /**
      * implement as super call for {@link CreatureEntity#hurt(DamageSource, float)}
      */
     boolean hurtSuper(DamageSource damageSource, float amount);
 
-    static <T extends CreatureEntity, Z extends CreatureEntity & ICurableConvertedCreature<T>> void createFrom(){
+    static <T extends PathfinderMob, Z extends PathfinderMob & ICurableConvertedCreature<T>> void createFrom(){
 
     }
 }

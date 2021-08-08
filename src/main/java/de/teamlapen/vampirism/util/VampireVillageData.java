@@ -8,18 +8,18 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.tileentity.BannerPattern;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -28,8 +28,8 @@ import java.util.List;
 public class VampireVillageData implements IVillageFactionData {
     public static ItemStack createBanner() {
         ItemStack itemStack = new ItemStack(Items.BLACK_BANNER);
-        CompoundNBT compoundNBT = itemStack.getOrCreateTagElement("BlockEntityTag");
-        ListNBT listNBT = new BannerPattern.Builder()
+        CompoundTag compoundNBT = itemStack.getOrCreateTagElement("BlockEntityTag");
+        ListTag listNBT = new BannerPattern.Builder()
                 .addPattern(BannerPattern.TRIANGLES_BOTTOM, DyeColor.RED)
                 .addPattern(BannerPattern.TRIANGLES_TOP, DyeColor.RED)
                 .addPattern(BannerPattern.BORDER, DyeColor.PURPLE)
@@ -38,8 +38,8 @@ public class VampireVillageData implements IVillageFactionData {
                 .addPattern(BannerPattern.CIRCLE_MIDDLE, DyeColor.PURPLE)
                 .toListTag();
         compoundNBT.put("Patterns", listNBT);
-        itemStack.hideTooltipPart(ItemStack.TooltipDisplayFlags.ADDITIONAL);
-        itemStack.setHoverName(new TranslationTextComponent("block.minecraft.ominous_banner").withStyle(TextFormatting.GOLD));
+        itemStack.hideTooltipPart(ItemStack.TooltipPart.ADDITIONAL);
+        itemStack.setHoverName(new TranslatableComponent("block.minecraft.ominous_banner").withStyle(ChatFormatting.GOLD));
         return itemStack;
     }
     private final ItemStack banner = createBanner();
@@ -65,7 +65,7 @@ public class VampireVillageData implements IVillageFactionData {
     }
 
     @Override
-    public Class<? extends MobEntity> getGuardSuperClass() {
+    public Class<? extends Mob> getGuardSuperClass() {
         return VampireBaseEntity.class;
     }
 

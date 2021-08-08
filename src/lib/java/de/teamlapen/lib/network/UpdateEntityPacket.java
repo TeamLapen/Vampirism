@@ -3,14 +3,14 @@ package de.teamlapen.lib.network;
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.network.ISyncable;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,8 +29,8 @@ public class UpdateEntityPacket implements IMessage {
     private final static Logger LOGGER = LogManager.getLogger();
 
 
-    static void encode(UpdateEntityPacket msg, PacketBuffer buf) {
-        CompoundNBT tag = new CompoundNBT();
+    static void encode(UpdateEntityPacket msg, FriendlyByteBuf buf) {
+        CompoundTag tag = new CompoundTag();
         tag.putInt("id", msg.id);
         if (msg.data != null) {
             tag.put("data", msg.data);
@@ -44,8 +44,8 @@ public class UpdateEntityPacket implements IMessage {
         buf.writeNbt(tag);
     }
 
-    static UpdateEntityPacket decode(PacketBuffer buf) {
-        CompoundNBT tag = buf.readNbt();
+    static UpdateEntityPacket decode(FriendlyByteBuf buf) {
+        CompoundTag tag = buf.readNbt();
         UpdateEntityPacket pkt = new UpdateEntityPacket();
         pkt.id = tag.getInt("id");
         if (tag.contains("data")) {
@@ -75,7 +75,7 @@ public class UpdateEntityPacket implements IMessage {
      * @return
      */
     public static UpdateEntityPacket create(ISyncable.ISyncableEntityCapabilityInst cap) {
-        CompoundNBT data = new CompoundNBT();
+        CompoundTag data = new CompoundTag();
         cap.writeFullUpdateToNBT(data);
         return create(cap, data);
     }
@@ -87,12 +87,12 @@ public class UpdateEntityPacket implements IMessage {
      * @param caps   Have to belong to the given entity
      * @return
      */
-    public static UpdateEntityPacket create(MobEntity entity, ISyncable.ISyncableEntityCapabilityInst... caps) {
+    public static UpdateEntityPacket create(Mob entity, ISyncable.ISyncableEntityCapabilityInst... caps) {
         if (!(entity instanceof ISyncable)) {
             throw new IllegalArgumentException("You cannot use this packet to sync this entity. The entity has to implement ISyncable");
         }
         UpdateEntityPacket packet = create(caps);
-        packet.data = new CompoundNBT();
+        packet.data = new CompoundTag();
         ((ISyncable) entity).writeFullUpdateToNBT(packet.data);
         return packet;
     }
@@ -106,9 +106,9 @@ public class UpdateEntityPacket implements IMessage {
     public static UpdateEntityPacket create(ISyncable.ISyncableEntityCapabilityInst... caps) {
         UpdateEntityPacket packet = new UpdateEntityPacket();
         packet.id = caps[0].getTheEntityID();
-        packet.caps = new CompoundNBT();
+        packet.caps = new CompoundTag();
         for (ISyncable.ISyncableEntityCapabilityInst cap : caps) {
-            CompoundNBT data = new CompoundNBT();
+            CompoundTag data = new CompoundTag();
             cap.writeFullUpdateToNBT(data);
             packet.caps.put(cap.getCapKey().toString(), data);
         }
@@ -122,10 +122,10 @@ public class UpdateEntityPacket implements IMessage {
      * @param data Should be loadable by the capability instance
      * @return
      */
-    public static UpdateEntityPacket create(ISyncable.ISyncableEntityCapabilityInst cap, CompoundNBT data) {
+    public static UpdateEntityPacket create(ISyncable.ISyncableEntityCapabilityInst cap, CompoundTag data) {
         UpdateEntityPacket packet = new UpdateEntityPacket();
         packet.id = cap.getTheEntityID();
-        packet.caps = new CompoundNBT();
+        packet.caps = new CompoundTag();
         packet.caps.put(cap.getCapKey().toString(), data);
         return packet;
     }
@@ -142,7 +142,7 @@ public class UpdateEntityPacket implements IMessage {
         }
         UpdateEntityPacket packet = new UpdateEntityPacket();
         packet.id = entity.getId();
-        packet.data = new CompoundNBT();
+        packet.data = new CompoundTag();
         ((ISyncable) entity).writeFullUpdateToNBT(packet.data);
         return packet;
     }
@@ -154,7 +154,7 @@ public class UpdateEntityPacket implements IMessage {
      * @param data   Should be loadable by the entity
      * @return
      */
-    public static <T extends Entity & ISyncable> UpdateEntityPacket create(T entity, CompoundNBT data) {
+    public static <T extends Entity & ISyncable> UpdateEntityPacket create(T entity, CompoundTag data) {
         UpdateEntityPacket packet = new UpdateEntityPacket();
         packet.id = entity.getId();
         packet.data = data;
@@ -170,9 +170,9 @@ public class UpdateEntityPacket implements IMessage {
     UpdateEntityPacket createJoinWorldPacket(Entity entity) {
         final List<ISyncable.ISyncableEntityCapabilityInst> capsToSync = new ArrayList<>();
         Collection<Capability> allCaps = null;
-        if (entity instanceof CreatureEntity) {
+        if (entity instanceof PathfinderMob) {
             allCaps = HelperRegistry.getSyncableEntityCaps().values();
-        } else if (entity instanceof PlayerEntity) {
+        } else if (entity instanceof Player) {
             allCaps = HelperRegistry.getSyncablePlayerCaps().values();
 
         }
@@ -183,7 +183,7 @@ public class UpdateEntityPacket implements IMessage {
         }
         if (capsToSync.size() > 0) {
             if (entity instanceof ISyncable) {
-                return UpdateEntityPacket.create((MobEntity) entity, capsToSync.toArray(new ISyncable.ISyncableEntityCapabilityInst[0]));
+                return UpdateEntityPacket.create((Mob) entity, capsToSync.toArray(new ISyncable.ISyncableEntityCapabilityInst[0]));
             } else {
                 return UpdateEntityPacket.create(capsToSync.toArray(new ISyncable.ISyncableEntityCapabilityInst[0]));
             }
@@ -196,8 +196,8 @@ public class UpdateEntityPacket implements IMessage {
     }
 
     private int id;
-    private CompoundNBT data;
-    private CompoundNBT caps;
+    private CompoundTag data;
+    private CompoundTag caps;
     private boolean playerItself = false;
 
     /**
@@ -207,11 +207,11 @@ public class UpdateEntityPacket implements IMessage {
 
     }
 
-    public CompoundNBT getCaps() {
+    public CompoundTag getCaps() {
         return caps;
     }
 
-    public CompoundNBT getData() {
+    public CompoundTag getData() {
         return data;
     }
 

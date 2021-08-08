@@ -1,25 +1,24 @@
 package de.teamlapen.vampirism.api.entity;
 
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
 
 import javax.annotation.Nullable;
 
 /**
- * Extends {@link CreatureEntity} home system with a way to set more accurate home positions
+ * Extends {@link net.minecraft.world.entity.PathfinderMob} home system with a way to set more accurate home positions
  * Implemented by VampirismEntity and thereby by most of Vampirism's.
  */
 public interface IEntityWithHome {
     @Nullable
-    AxisAlignedBB getHome();
+    AABB getHome();
 
     /**
      * Sets the entity's home to the given bounding box.
      *
      * @param home Can be null to unset the home
      */
-    void setHome(@Nullable AxisAlignedBB home);
+    void setHome(@Nullable AABB home);
 
     /**
      * @return The center of the entity's home box or (0/0/0) if none exists

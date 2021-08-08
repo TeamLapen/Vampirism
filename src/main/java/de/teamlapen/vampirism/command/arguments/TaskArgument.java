@@ -9,10 +9,10 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.core.ModRegistries;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class TaskArgument implements ArgumentType<Task> {
     public static final DynamicCommandExceptionType TASK_NOT_FOUND = new DynamicCommandExceptionType((particle) -> {
-        return new TranslationTextComponent("command.vampirism.argument.task.notfound", particle);
+        return new TranslatableComponent("command.vampirism.argument.task.notfound", particle);
     });
     private static final Collection<String> EXAMPLES = Collections.singletonList("modid:task");
 
@@ -28,7 +28,7 @@ public class TaskArgument implements ArgumentType<Task> {
         return new TaskArgument();
     }
 
-    public static Task getTask(CommandContext<CommandSource> context, String name) {
+    public static Task getTask(CommandContext<CommandSourceStack> context, String name) {
         return context.getArgument(name, Task.class);
     }
 
@@ -39,7 +39,7 @@ public class TaskArgument implements ArgumentType<Task> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return ISuggestionProvider.suggestResource(ModRegistries.TASKS.getKeys(), builder);
+        return SharedSuggestionProvider.suggestResource(ModRegistries.TASKS.getKeys(), builder);
     }
 
     @Override

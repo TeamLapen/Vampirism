@@ -5,22 +5,22 @@ import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import java.util.Random;
 
 
-public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityCrossbowArrow {
+public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbowArrow {
 
     /**
      * Create a entity arrow for a shooting entity (with offset)
@@ -30,8 +30,8 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
      * @param arrow        ItemStack of the represented arrow. Is copied.
      * @param centerOffset An offset from the center of the entity
      */
-    public static CrossbowArrowEntity createWithShooter(World world, LivingEntity shooter, double heightOffset, double centerOffset, boolean rightHanded, ItemStack arrow) {
-        double yaw = ((shooter.yRot - 90)) / 180 * Math.PI;
+    public static CrossbowArrowEntity createWithShooter(Level world, LivingEntity shooter, double heightOffset, double centerOffset, boolean rightHanded, ItemStack arrow) {
+        double yaw = ((shooter.getYRot() - 90)) / 180 * Math.PI;
         if (rightHanded) {
             yaw += Math.PI;
         }
@@ -47,7 +47,7 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
     ItemStack arrowStack = new ItemStack(ModItems.crossbow_arrow_normal);
     private boolean ignoreHurtTimer = false;
 
-    public CrossbowArrowEntity(EntityType<? extends CrossbowArrowEntity> type, World world) {
+    public CrossbowArrowEntity(EntityType<? extends CrossbowArrowEntity> type, Level world) {
         super(type, world);
     }
 
@@ -55,7 +55,7 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
     /**
      * @param arrow ItemStack of the represented arrow. Is copied.
      */
-    public CrossbowArrowEntity(World worldIn, double x, double y, double z, ItemStack arrow) {
+    public CrossbowArrowEntity(Level worldIn, double x, double y, double z, ItemStack arrow) {
         this(ModEntities.crossbow_arrow, worldIn);
         this.setPos(x, y, z);
         this.arrowStack = arrow.copy();
@@ -63,9 +63,9 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT compound) {
+    public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        compound.put("arrowStack", arrowStack.save(new CompoundNBT()));
+        compound.put("arrowStack", arrowStack.save(new CompoundTag()));
     }
 
     public CrossbowArrowItem.EnumArrowType getArrowType() {
@@ -73,7 +73,7 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -89,7 +89,7 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT compound) {
+    public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         arrowStack.deserializeNBT(compound.getCompound("arrowStack"));
     }
@@ -113,7 +113,7 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
     }
 
     @Override
-    protected void onHitBlock(BlockRayTraceResult blockRayTraceResult) { //onHitBlock
+    protected void onHitBlock(BlockHitResult blockRayTraceResult) { //onHitBlock
         Item item = arrowStack.getItem();
         if (item instanceof IVampirismCrossbowArrow) {
             ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, (blockRayTraceResult).getBlockPos(), this, getOwner());

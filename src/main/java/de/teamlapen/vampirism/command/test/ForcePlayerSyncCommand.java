@@ -4,13 +4,13 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.lib.network.UpdateEntityPacket;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.server.level.ServerPlayer;
 
 public class ForcePlayerSyncCommand extends BasicCommand {
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("forcePlayerSync")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ALL))
                 .executes(context -> {
@@ -18,7 +18,7 @@ public class ForcePlayerSyncCommand extends BasicCommand {
                 });
     }
 
-    private static int triggerSync(CommandSource commandSource, ServerPlayerEntity asPlayer) {
+    private static int triggerSync(CommandSourceStack commandSource, ServerPlayer asPlayer) {
         UpdateEntityPacket update = UpdateEntityPacket.createJoinWorldPacket(asPlayer);
         update.markAsPlayerItself();
         VampLib.dispatcher.sendTo(update, asPlayer);

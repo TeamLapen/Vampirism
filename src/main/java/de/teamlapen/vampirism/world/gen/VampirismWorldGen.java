@@ -13,15 +13,15 @@ import de.teamlapen.vampirism.util.MixinHooks;
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.util.RandomBlockState;
 import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.gen.feature.jigsaw.JigsawPattern;
-import net.minecraft.world.gen.feature.jigsaw.JigsawPatternRegistry;
-import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
-import net.minecraft.world.gen.feature.jigsaw.SingleJigsawPiece;
-import net.minecraft.world.gen.feature.structure.VillagesPools;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.world.level.levelgen.feature.structures.StructureTemplatePool;
+import net.minecraft.data.worldgen.Pools;
+import net.minecraft.world.level.levelgen.feature.structures.StructurePoolElement;
+import net.minecraft.world.level.levelgen.feature.structures.SinglePoolElement;
+import net.minecraft.data.worldgen.VillagePools;
 import net.minecraft.world.gen.feature.template.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +34,12 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import net.minecraft.data.worldgen.ProcessorLists;
+import net.minecraft.world.level.levelgen.structure.templatesystem.AlwaysTrueTest;
+import net.minecraft.world.level.levelgen.structure.templatesystem.RandomBlockMatchTest;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
+
 public class VampirismWorldGen {
     private static final Logger LOGGER = LogManager.getLogger();
     private final static float TOTEM_PRESET_PERCENTAGE = 0.6f;
@@ -44,9 +50,9 @@ public class VampirismWorldGen {
         VampirismWorldGen.setupSingleJigsawPieceGeneration();
 
         //init pools for modification
-        VillagesPools.bootstrap();
+        VillagePools.bootstrap();
 
-        Pair<Map<String, List<Pair<JigsawPiece, Integer>>>, Map<String, JigsawPattern>> structures = getStructures();
+        Pair<Map<String, List<Pair<StructurePoolElement, Integer>>>, Map<String, StructureTemplatePool>> structures = getStructures();
 
         VampirismWorldGen.replaceTemples(structures.getFirst());
 
@@ -57,35 +63,35 @@ public class VampirismWorldGen {
     }
 
     public static void addVillageStructures() {
-        Pair<Map<String, List<Pair<JigsawPiece, Integer>>>, Map<String, JigsawPattern>> structures = getStructures();
+        Pair<Map<String, List<Pair<StructurePoolElement, Integer>>>, Map<String, StructureTemplatePool>> structures = getStructures();
 
         addVillageStructures(structures.getFirst());
 
         VampirismWorldGen.saveChanges(structures.getFirst(), structures.getSecond());
     }
 
-    public static void addVillageStructures(Map<String, List<Pair<JigsawPiece, Integer>>> map) {
+    public static void addVillageStructures(Map<String, List<Pair<StructurePoolElement, Integer>>> map) {
         VampirismWorldGen.addHunterTrainerHouse(map);
         VampirismWorldGen.addTotem(map);
     }
 
     //
-    private static Pair<Map<String, List<Pair<JigsawPiece, Integer>>>, Map<String, JigsawPattern>> getStructures() {
-        Map<String, JigsawPattern> patterns = new HashMap<String, JigsawPattern>() {{
-            put("plains", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/plains/houses")).get());
-            put("desert", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/desert/houses")).get());
-            put("savanna", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/savanna/houses")).get());
-            put("taiga", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/taiga/houses")).get());
-            put("snowy", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/snowy/houses")).get());
-            put("plains_zombie", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/plains/zombie/houses")).get());
-            put("desert_zombie", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/desert/zombie/houses")).get());
-            put("savanna_zombie", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/savanna/zombie/houses")).get());
-            put("taiga_zombie", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/taiga/zombie/houses")).get());
-            put("snowy_zombie", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/snowy/zombie/houses")).get());
+    private static Pair<Map<String, List<Pair<StructurePoolElement, Integer>>>, Map<String, StructureTemplatePool>> getStructures() {
+        Map<String, StructureTemplatePool> patterns = new HashMap<String, StructureTemplatePool>() {{
+            put("plains", BuiltinRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/plains/houses")).get());
+            put("desert", BuiltinRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/desert/houses")).get());
+            put("savanna", BuiltinRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/savanna/houses")).get());
+            put("taiga", BuiltinRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/taiga/houses")).get());
+            put("snowy", BuiltinRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/snowy/houses")).get());
+            put("plains_zombie", BuiltinRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/plains/zombie/houses")).get());
+            put("desert_zombie", BuiltinRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/desert/zombie/houses")).get());
+            put("savanna_zombie", BuiltinRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/savanna/zombie/houses")).get());
+            put("taiga_zombie", BuiltinRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/taiga/zombie/houses")).get());
+            put("snowy_zombie", BuiltinRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/snowy/zombie/houses")).get());
         }};
 
         //biome string -> list of all JigsawPieces with weight
-        Map<String, List<Pair<JigsawPiece, Integer>>> buildings = Maps.newHashMapWithExpectedSize(patterns.size());
+        Map<String, List<Pair<StructurePoolElement, Integer>>> buildings = Maps.newHashMapWithExpectedSize(patterns.size());
         //fill buildings with modifiable lists from the JigsawPattern's
         patterns.forEach((biome, pattern) -> buildings.put(biome, Lists.newArrayList(pattern.rawTemplates)));
 
@@ -95,10 +101,10 @@ public class VampirismWorldGen {
     /**
      * replaces half of the temples with temples with church altar
      */
-    private static void replaceTemples(Map<String, List<Pair<JigsawPiece, Integer>>> buildings) {
+    private static void replaceTemples(Map<String, List<Pair<StructurePoolElement, Integer>>> buildings) {
         //biome string -> JigsawPattern of the biome
         //toString() of the replaced JigsawPiece -> modified JigsawPiece
-        Map<String, Map<String, JigsawPiece>> temples = new HashMap<String, Map<String, JigsawPiece>>() {{
+        Map<String, Map<String, StructurePoolElement>> temples = new HashMap<String, Map<String, StructurePoolElement>>() {{
             put("plains", ImmutableMap.of(
                     singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_3"), singleJigsawPiece("village/plains/houses/plains_temple_3", ProcessorLists.MOSSIFY_10_PERCENT),
                     singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_4"), singleJigsawPiece("village/plains/houses/plains_temple_4", ProcessorLists.MOSSIFY_10_PERCENT)));
@@ -127,7 +133,7 @@ public class VampirismWorldGen {
                     singleLegacyJigsawString("minecraft:village/snowy/houses/snowy_temple_1"), singleJigsawPiece("village/snowy/houses/snowy_temple_1", ProcessorLists.ZOMBIE_SNOWY)));
         }};
 
-        Map<String, List<Pair<JigsawPiece, Pair<JigsawPiece, Integer>>>> allPieces = Maps.newHashMapWithExpectedSize(temples.size());
+        Map<String, List<Pair<StructurePoolElement, Pair<StructurePoolElement, Integer>>>> allPieces = Maps.newHashMapWithExpectedSize(temples.size());
 
         //saves replaceable JigsawPieces with weight to map with Replace
         temples.forEach((biome, replacer) -> buildings.get(biome).removeIf(house -> {
@@ -160,12 +166,12 @@ public class VampirismWorldGen {
     /**
      * adds a hunter trainer house to each village
      */
-    private static void addHunterTrainerHouse(Map<String, List<Pair<JigsawPiece, Integer>>> buildings) {
+    private static void addHunterTrainerHouse(Map<String, List<Pair<StructurePoolElement, Integer>>> buildings) {
         //all structureProcessors are copied from PlainsVillagePools, DesertVillagePools, TaigaVillagePools, SavannaVillagePools, SnowyVillagePools
         Map<String, StructureProcessorList> processors = ImmutableMap.of("plains_zombie", ProcessorLists.ZOMBIE_PLAINS, "desert_zombie", ProcessorLists.ZOMBIE_DESERT, "snowy_zombie", ProcessorLists.ZOMBIE_SNOWY, "savanna_zombie", ProcessorLists.ZOMBIE_SAVANNA, "taiga_zombie", ProcessorLists.ZOMBIE_TAIGA);
 
         //hunter trainer JigsawPattern
-        JigsawPatternRegistry.register(new JigsawPattern(new ResourceLocation(REFERENCE.MODID, "village/entities/hunter_trainer"), new ResourceLocation("empty"), Lists.newArrayList(Pair.of(singleJigsawPieceFunction("village/entities/hunter_trainer"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
+        Pools.register(new StructureTemplatePool(new ResourceLocation(REFERENCE.MODID, "village/entities/hunter_trainer"), new ResourceLocation("empty"), Lists.newArrayList(Pair.of(singleJigsawPieceFunction("village/entities/hunter_trainer"), 1)), StructureTemplatePool.Projection.RIGID));
 
         buildings.forEach((name, list) -> {
             list.removeIf(pair -> pair.getFirst().toString().equals(singleJigsawString(REFERENCE.MODID + ":village/" + name.replace("_zombie", "") + "/houses/hunter_trainer")));
@@ -176,10 +182,10 @@ public class VampirismWorldGen {
     /**
      * adds totem to every village
      */
-    private static void addTotem(Map<String, List<Pair<JigsawPiece, Integer>>> buildings) {
-        StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, TOTEM_PRESET_PERCENTAGE), AlwaysTrueRuleTest.INSTANCE, ModBlocks.totem_top.defaultBlockState(), TotemTopBlock.getBlocks().stream().filter(totem -> totem != ModBlocks.totem_top && !totem.isCrafted()).map(Block::defaultBlockState).collect(Collectors.toList()))));
+    private static void addTotem(Map<String, List<Pair<StructurePoolElement, Integer>>> buildings) {
+        StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchTest(ModBlocks.totem_top, TOTEM_PRESET_PERCENTAGE), AlwaysTrueTest.INSTANCE, ModBlocks.totem_top.defaultBlockState(), TotemTopBlock.getBlocks().stream().filter(totem -> totem != ModBlocks.totem_top && !totem.isCrafted()).map(Block::defaultBlockState).collect(Collectors.toList()))));
         StructureProcessor totemTopBlock = new BiomeTopBlockProcessor(Blocks.BRICK_WALL.defaultBlockState());
-        JigsawPiece totem = singleJigsawPiece("village/totem", new StructureProcessorList(Lists.newArrayList(totemProcessor, totemTopBlock)));
+        StructurePoolElement totem = singleJigsawPiece("village/totem", new StructureProcessorList(Lists.newArrayList(totemProcessor, totemTopBlock)));
         buildings.values().forEach(list -> list.removeIf(pair -> pair.getFirst().toString().equals(singleJigsawString(REFERENCE.MODID + ":village/totem"))));
         buildings.values().forEach(list -> list.add(Pair.of(totem, VampirismConfig.BALANCE.viTotemWeight.get())));
     }
@@ -200,7 +206,7 @@ public class VampirismWorldGen {
     /**
      * writes the changes made to buildings back into immutablemaps in the pattern
      */
-    private static void saveChanges(Map<String, List<Pair<JigsawPiece, Integer>>> buildings, Map<String, JigsawPattern> patterns) {
+    private static void saveChanges(Map<String, List<Pair<StructurePoolElement, Integer>>> buildings, Map<String, StructureTemplatePool> patterns) {
         //write all Lists back to the specific JigsawPattern
         buildings.forEach((biome, list) -> patterns.get(biome).rawTemplates = ImmutableList.copyOf(list));
 
@@ -215,20 +221,20 @@ public class VampirismWorldGen {
         });
     }
 
-    private static SingleJigsawPiece singleJigsawPiece(@Nonnull String path) {
+    private static SinglePoolElement singleJigsawPiece(@Nonnull String path) {
         return singleJigsawPiece(path, new StructureProcessorList(Collections.emptyList()));
     }
 
-    private static SingleJigsawPiece singleJigsawPiece(@Nonnull String path, @Nonnull StructureProcessorList processors) {
-        return SingleJigsawPiece.single(REFERENCE.MODID + ":" + path, processors).apply(JigsawPattern.PlacementBehaviour.RIGID);
+    private static SinglePoolElement singleJigsawPiece(@Nonnull String path, @Nonnull StructureProcessorList processors) {
+        return SinglePoolElement.single(REFERENCE.MODID + ":" + path, processors).apply(StructureTemplatePool.Projection.RIGID);
     }
 
-    private static Function<JigsawPattern.PlacementBehaviour, SingleJigsawPiece> singleJigsawPieceFunction(@Nonnull String path) {
+    private static Function<StructureTemplatePool.Projection, SinglePoolElement> singleJigsawPieceFunction(@Nonnull String path) {
         return singleJigsawPieceFunction(path, new StructureProcessorList(Collections.emptyList()));
     }
 
-    private static Function<JigsawPattern.PlacementBehaviour, SingleJigsawPiece> singleJigsawPieceFunction(@Nonnull String path, @Nonnull StructureProcessorList processors) {
-        return SingleJigsawPiece.single(REFERENCE.MODID + ":" + path, processors);
+    private static Function<StructureTemplatePool.Projection, SinglePoolElement> singleJigsawPieceFunction(@Nonnull String path, @Nonnull StructureProcessorList processors) {
+        return SinglePoolElement.single(REFERENCE.MODID + ":" + path, processors);
     }
 
     private static String singleJigsawString(String resourceLocation) {

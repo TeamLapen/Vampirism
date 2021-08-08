@@ -1,27 +1,27 @@
 package de.teamlapen.vampirism.entity;
 
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.villager.VillagerType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.VillagerType;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 
 /**
  * Villager extended with the ability to attack and some other things
  */
-public class VampirismVillagerEntity extends VillagerEntity {
+public class VampirismVillagerEntity extends Villager {
 
-    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return VillagerEntity.createAttributes().add(Attributes.ATTACK_DAMAGE);
+    public static AttributeSupplier.Builder getAttributeBuilder() {
+        return Villager.createAttributes().add(Attributes.ATTACK_DAMAGE);
     }
     protected boolean peaceful = false;
     /**
@@ -29,11 +29,11 @@ public class VampirismVillagerEntity extends VillagerEntity {
      */
     private int randomTickDivider;
 
-    public VampirismVillagerEntity(EntityType<? extends VampirismVillagerEntity> type, World worldIn) {
+    public VampirismVillagerEntity(EntityType<? extends VampirismVillagerEntity> type, Level worldIn) {
         super(type, worldIn);
     }
 
-    public VampirismVillagerEntity(EntityType<? extends VampirismVillagerEntity> type, World worldIn, VillagerType villagerType) {
+    public VampirismVillagerEntity(EntityType<? extends VampirismVillagerEntity> type, Level worldIn, VillagerType villagerType) {
         super(type, worldIn, villagerType);
     }
 
@@ -44,7 +44,7 @@ public class VampirismVillagerEntity extends VillagerEntity {
     }
 
     @Override
-    public boolean checkSpawnRules(IWorld worldIn, SpawnReason spawnReasonIn) {
+    public boolean checkSpawnRules(LevelAccessor worldIn, MobSpawnType spawnReasonIn) {
         return (peaceful || worldIn.getDifficulty() != Difficulty.PEACEFUL) && super.checkSpawnRules(worldIn, spawnReasonIn);
     }
 
@@ -68,7 +68,7 @@ public class VampirismVillagerEntity extends VillagerEntity {
 
         if (flag) {
             if (i > 0) {
-                entity.push(-MathHelper.sin(this.yRot * (float) Math.PI / 180.0F) * (float) i * 0.5F, 0.1D, MathHelper.cos(this.yRot * (float) Math.PI / 180.0F) * (float) i * 0.5F);
+                entity.push(-Mth.sin(this.yRot * (float) Math.PI / 180.0F) * (float) i * 0.5F, 0.1D, Mth.cos(this.yRot * (float) Math.PI / 180.0F) * (float) i * 0.5F);
                 this.setDeltaMovement(this.getDeltaMovement().multiply(0.6D, 1D, 0.6D));
             }
 

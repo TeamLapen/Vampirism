@@ -1,14 +1,12 @@
 package de.teamlapen.vampirism.api.world;
 
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
 import java.util.Set;
 
 @SuppressWarnings("unused")
-@MethodsReturnNonnullByDefault
 public interface IWorldGenManager {
 
     /**
@@ -17,7 +15,7 @@ public interface IWorldGenManager {
      * @param biomeCategory
      * @return Whether the given feature should be generated in the given biome id and category
      */
-    boolean canStructureBeGeneratedInBiome(ResourceLocation featureRegistryName, ResourceLocation biomeRegistryKey, Biome.Category biomeCategory);
+    boolean canStructureBeGeneratedInBiome(ResourceLocation featureRegistryName, ResourceLocation biomeRegistryKey, Biome.BiomeCategory biomeCategory);
 
     /**
      * returns biome categories in which the named structure shouldn't be generated
@@ -25,7 +23,7 @@ public interface IWorldGenManager {
      * @param structure resourcelocation of the structure
      * @return set of biome categories to ignore
      */
-    Set<Biome.Category> getIgnoredBiomeCategories(ResourceLocation structure);
+    Set<Biome.BiomeCategory> getIgnoredBiomeCategories(ResourceLocation structure);
 
     /**
      * returns biomes in which the named structure shouldn't be generated
@@ -41,7 +39,7 @@ public interface IWorldGenManager {
      * @param structure  resourcelocation of the structure
      * @param categories categories
      */
-    void removeStructureFromBiomeCategories(ResourceLocation structure, List<Biome.Category> categories);
+    void removeStructureFromBiomeCategories(ResourceLocation structure, List<Biome.BiomeCategory> categories);
 
     /**
      * add a structure which should not be generated in the listed biomes

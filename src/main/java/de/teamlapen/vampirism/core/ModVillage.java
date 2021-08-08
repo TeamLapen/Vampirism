@@ -10,17 +10,17 @@ import de.teamlapen.vampirism.entity.villager.Trades;
 import de.teamlapen.vampirism.entity.villager.VampireVillagerHostilesSensor;
 import de.teamlapen.vampirism.world.FactionPointOfInterestType;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.ai.brain.schedule.Activity;
-import net.minecraft.entity.ai.brain.schedule.Schedule;
-import net.minecraft.entity.ai.brain.schedule.ScheduleBuilder;
-import net.minecraft.entity.ai.brain.sensor.SensorType;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
-import net.minecraft.entity.merchant.villager.VillagerTrades;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.village.PointOfInterestType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.schedule.Activity;
+import net.minecraft.world.entity.schedule.Schedule;
+import net.minecraft.world.entity.schedule.ScheduleBuilder;
+import net.minecraft.world.entity.ai.sensing.SensorType;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -63,16 +63,16 @@ public class ModVillage {
         VillagerTrades.TRADES.computeIfAbsent(vampire_expert, trades -> new Int2ObjectOpenHashMap<>()).putAll(getVampireTrades());
     }
 
-    static void registerVillagePointOfInterestType(IForgeRegistry<PointOfInterestType> registry) {
-        PointOfInterestType hunter_faction = new FactionPointOfInterestType("hunter_faction", getAllStates(ModBlocks.totem_top_vampirism_hunter, ModBlocks.totem_top_vampirism_hunter_crafted), 1, 1).setRegistryName(REFERENCE.MODID, "hunter_faction");
-        PointOfInterestType vampire_faction = new FactionPointOfInterestType("vampire_faction", getAllStates(ModBlocks.totem_top_vampirism_vampire, ModBlocks.totem_top_vampirism_vampire_crafted), 1, 1).setRegistryName(REFERENCE.MODID, "vampire_faction");
-        PointOfInterestType no_faction = new FactionPointOfInterestType("no_faction", getAllStates(ModBlocks.totem_top, ModBlocks.totem_top_crafted), 1, 1).setRegistryName(REFERENCE.MODID, "no_faction");
+    static void registerVillagePointOfInterestType(IForgeRegistry<PoiType> registry) {
+        PoiType hunter_faction = new FactionPointOfInterestType("hunter_faction", getAllStates(ModBlocks.totem_top_vampirism_hunter, ModBlocks.totem_top_vampirism_hunter_crafted), 1, 1).setRegistryName(REFERENCE.MODID, "hunter_faction");
+        PoiType vampire_faction = new FactionPointOfInterestType("vampire_faction", getAllStates(ModBlocks.totem_top_vampirism_vampire, ModBlocks.totem_top_vampirism_vampire_crafted), 1, 1).setRegistryName(REFERENCE.MODID, "vampire_faction");
+        PoiType no_faction = new FactionPointOfInterestType("no_faction", getAllStates(ModBlocks.totem_top, ModBlocks.totem_top_crafted), 1, 1).setRegistryName(REFERENCE.MODID, "no_faction");
         registry.register(hunter_faction);
         registry.register(vampire_faction);
         registry.register(no_faction);
-        PointOfInterestType.registerBlockStates(hunter_faction);
-        PointOfInterestType.registerBlockStates(vampire_faction);
-        PointOfInterestType.registerBlockStates(no_faction);
+        PoiType.registerBlockStates(hunter_faction);
+        PoiType.registerBlockStates(vampire_faction);
+        PoiType.registerBlockStates(no_faction);
     }
 
     static void registerSensor(IForgeRegistry<SensorType<?>> registry) {
@@ -87,19 +87,19 @@ public class ModVillage {
         return Arrays.stream(blocks).map(block -> block.getStateDefinition().any()).collect(ImmutableSet.toImmutableSet());
     }
 
-    private static Map<Integer, VillagerTrades.ITrade[]> getHunterTrades() {
+    private static Map<Integer, VillagerTrades.ItemListing[]> getHunterTrades() {
         return ImmutableMap.of(
-                1, new VillagerTrades.ITrade[]{
+                1, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForSouls(new Trades.Price(10, 20), ModItems.item_garlic, new Trades.Price(2, 5)),
                         new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.armor_of_swiftness_chest_normal, new Trades.Price(1, 1), 8, 1),
                         new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.armor_of_swiftness_legs_normal, new Trades.Price(1, 1), 7, 1),
                         new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.armor_of_swiftness_feet_normal, new Trades.Price(1, 1), 5, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.armor_of_swiftness_head_normal, new Trades.Price(1, 1), 6, 1)
                 },
-                2, new VillagerTrades.ITrade[]{
+                2, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForSouls(new Trades.Price(25, 45), Items.DIAMOND, new Trades.Price(1, 1), 2, 5),
                         new Trades.ItemsForSouls(new Trades.Price(10, 20), ModItems.crossbow_arrow_normal, new Trades.Price(5, 15)),
-                        new VillagerTrades.ItemsForEmeraldsTrade(ModItems.soul_orb_vampire, 10, 10, 4),
+                        new VillagerTrades.ItemsForEmeralds(ModItems.soul_orb_vampire, 10, 10, 4),
                         new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.hunter_coat_chest_normal, new Trades.Price(1, 1), 8, 1),
                         new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.hunter_coat_legs_normal, new Trades.Price(1, 1), 7, 1),
                         new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.hunter_coat_feet_normal, new Trades.Price(1, 1), 5, 1),
@@ -109,7 +109,7 @@ public class ModVillage {
                         new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.armor_of_swiftness_feet_enhanced, new Trades.Price(1, 1), 5, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.armor_of_swiftness_head_enhanced, new Trades.Price(1, 1), 6, 1)
                 },
-                3, new VillagerTrades.ITrade[]{
+                3, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForSouls(new Trades.Price(40, 64), ModItems.vampire_book, new Trades.Price(1, 1), 10, 1),
                         new Trades.ItemsForSouls(new Trades.Price(10, 20), ModItems.holy_water_bottle_enhanced, new Trades.Price(1, 3)),
                         new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.obsidian_armor_chest_normal, new Trades.Price(1, 1), 8, 1),
@@ -125,7 +125,7 @@ public class ModVillage {
                         new Trades.ItemsForSouls(new Trades.Price(15, 30), ModItems.armor_of_swiftness_feet_ultimate, new Trades.Price(1, 1), 5, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.armor_of_swiftness_head_ultimate, new Trades.Price(1, 1), 6, 1)
                 },
-                4, new VillagerTrades.ITrade[]{
+                4, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForSouls(new Trades.Price(20, 32), Items.DIAMOND, new Trades.Price(1, 2)),
                         new Trades.ItemsForSouls(new Trades.Price(15, 25), ModItems.holy_water_bottle_ultimate, new Trades.Price(1, 2)),
                         new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.obsidian_armor_chest_enhanced, new Trades.Price(1, 1), 8, 1),
@@ -137,7 +137,7 @@ public class ModVillage {
                         new Trades.ItemsForSouls(new Trades.Price(20, 35), ModItems.hunter_coat_feet_ultimate, new Trades.Price(1, 1), 5, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 35), ModItems.hunter_coat_head_ultimate, new Trades.Price(1, 1), 6, 1)
                 },
-                5, new VillagerTrades.ITrade[]{
+                5, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForSouls(new Trades.Price(30, 64), ModItems.obsidian_armor_chest_ultimate, new Trades.Price(1, 1), 10, 1),
                         new Trades.ItemsForSouls(new Trades.Price(25, 64), ModItems.obsidian_armor_legs_ultimate, new Trades.Price(1, 1), 9, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 40), ModItems.obsidian_armor_feet_ultimate, new Trades.Price(1, 1), 7, 1),
@@ -145,23 +145,23 @@ public class ModVillage {
                 });
     }
 
-    private static Map<Integer, VillagerTrades.ITrade[]> getVampireTrades() {
+    private static Map<Integer, VillagerTrades.ItemListing[]> getVampireTrades() {
         return ImmutableMap.of(
-                1, new VillagerTrades.ITrade[]{
+                1, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForHeart(new Trades.Price(10, 15), ModItems.pure_blood_0, new Trades.Price(1, 1)),
                         new Trades.BloodBottleForHeart(new Trades.Price(3, 12), new Trades.Price(1, 15), 9),
-                        new VillagerTrades.EmeraldForItemsTrade(ModBlocks.vampire_orchid, 4, 1, 3),
+                        new VillagerTrades.EmeraldForItems(ModBlocks.vampire_orchid, 4, 1, 3),
                 },
-                2, new VillagerTrades.ITrade[]{
+                2, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForHeart(new Trades.Price(25, 30), ModItems.pure_blood_1, new Trades.Price(1, 1), 10, 1),
                         new Trades.ItemsForHeart(new Trades.Price(1, 5), ModBlocks.coffin, new Trades.Price(1, 1), 2, 2),
                         new Trades.ItemsForHeart(new Trades.Price(10, 25), ModItems.blood_infused_iron_ingot, new Trades.Price(1, 3))
                 },
-                3, new VillagerTrades.ITrade[]{
+                3, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForHeart(new Trades.Price(30, 40), ModItems.pure_blood_2, new Trades.Price(1, 1), 10, 1),
                         new Trades.ItemsForHeart(new Trades.Price(15, 30), ModItems.blood_infused_enhanced_iron_ingot, new Trades.Price(1, 2))
                 },
-                4, new VillagerTrades.ITrade[]{
+                4, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForHeart(new Trades.Price(20, 30), ModItems.pure_blood_3, new Trades.Price(1, 1), 10, 1),
                         new Trades.ItemsForHeart(new Trades.Price(10, 30), new ItemStack[]{
                                 new ItemStack(ModItems.vampire_cloak_black_blue),
@@ -170,7 +170,7 @@ public class ModVillage {
                                 new ItemStack(ModItems.vampire_cloak_red_black),
                                 new ItemStack(ModItems.vampire_cloak_white_black)}, new Trades.Price(1, 1), 10, 2)
                 },
-                5, new VillagerTrades.ITrade[]{
+                5, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForHeart(new Trades.Price(30, 40), ModItems.pure_blood_4, new Trades.Price(1, 1), 10, 1),
                         new Trades.ItemsForHeart(new Trades.Price(10, 30), new ItemStack[]{
                                 new ItemStack(ModItems.vampire_cloak_black_blue),
@@ -178,8 +178,8 @@ public class ModVillage {
                                 new ItemStack(ModItems.vampire_cloak_black_white),
                                 new ItemStack(ModItems.vampire_cloak_red_black),
                                 new ItemStack(ModItems.vampire_cloak_white_black)}, new Trades.Price(1, 1), 10, 2),
-                        new VillagerTrades.ItemsForEmeraldsTrade(ModItems.heart_seeker_ultimate, 40, 1, 15),
-                        new VillagerTrades.ItemsForEmeraldsTrade(ModItems.heart_striker_ultimate, 40, 1, 15)
+                        new VillagerTrades.ItemsForEmeralds(ModItems.heart_seeker_ultimate, 40, 1, 15),
+                        new VillagerTrades.ItemsForEmeralds(ModItems.heart_striker_ultimate, 40, 1, 15)
 
                 });
     }

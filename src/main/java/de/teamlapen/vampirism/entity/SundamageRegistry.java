@@ -3,12 +3,12 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,15 +21,15 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 public class SundamageRegistry implements ISundamageRegistry {
     private static final Logger LOGGER = LogManager.getLogger(SundamageRegistry.class);
-    private final HashMap<RegistryKey<World>, Boolean> sundamageDims = new HashMap<>();
-    private final HashMap<RegistryKey<World>, Boolean> sundamageConfiguredDims = new HashMap<>();
+    private final HashMap<ResourceKey<Level>, Boolean> sundamageDims = new HashMap<>();
+    private final HashMap<ResourceKey<Level>, Boolean> sundamageConfiguredDims = new HashMap<>();
     private final Set<ResourceLocation> noSundamageBiomesIDs = new CopyOnWriteArraySet<>();
     private final Set<ResourceLocation> noSundamageConfiguredBiomesIDs = new CopyOnWriteArraySet<>();
 
     public SundamageRegistry() {
-        sundamageDims.put(World.OVERWORLD, true);
-        sundamageDims.put(World.NETHER, false);
-        sundamageDims.put(World.END, false);
+        sundamageDims.put(Level.OVERWORLD, true);
+        sundamageDims.put(Level.NETHER, false);
+        sundamageDims.put(Level.END, false);
     }
 
 
@@ -49,7 +49,7 @@ public class SundamageRegistry implements ISundamageRegistry {
     }
 
     @Override
-    public boolean getSundamageInDim(RegistryKey<World> dim) {
+    public boolean getSundamageInDim(ResourceKey<Level> dim) {
         Boolean r = sundamageConfiguredDims.get(dim);
         if (r == null) {
             r = sundamageDims.get(dim);
@@ -58,7 +58,7 @@ public class SundamageRegistry implements ISundamageRegistry {
     }
 
     @Override
-    public boolean isGettingSundamage(LivingEntity entity, IWorld world) {
+    public boolean isGettingSundamage(LivingEntity entity, LevelAccessor world) {
         return Helper.gettingSundamge(entity, world, null);
     }
 
@@ -68,13 +68,13 @@ public class SundamageRegistry implements ISundamageRegistry {
         List<? extends String> negative = VampirismConfig.SERVER.sundamageDimensionsOverrideNegative.get();
         for (String s : negative) {
             ResourceLocation id = new ResourceLocation(s); //Should be safe because config validates values?
-            RegistryKey<World> key = RegistryKey.create(Registry.DIMENSION_REGISTRY, id);
+            ResourceKey<Level> key = ResourceKey.create(Registry.DIMENSION_REGISTRY, id);
             sundamageConfiguredDims.put(key, false);
         }
         List<? extends String> positive = VampirismConfig.SERVER.sundamageDimensionsOverridePositive.get();
         for (String s : positive) {
             ResourceLocation id = new ResourceLocation(s); //Should be safe because config validates values?
-            RegistryKey<World> key = RegistryKey.create(Registry.DIMENSION_REGISTRY, id);
+            ResourceKey<Level> key = ResourceKey.create(Registry.DIMENSION_REGISTRY, id);
             sundamageConfiguredDims.put(key, true);
         }
 
@@ -94,12 +94,12 @@ public class SundamageRegistry implements ISundamageRegistry {
      * @param dimension
      * @param sundamage
      */
-    public void specifyConfiguredSundamageForDim(RegistryKey<World> dimension, boolean sundamage) {
+    public void specifyConfiguredSundamageForDim(ResourceKey<Level> dimension, boolean sundamage) {
         sundamageConfiguredDims.put(dimension, sundamage);
     }
 
     @Override
-    public void specifySundamageForDim(RegistryKey<World> dimension, boolean sundamage) {
+    public void specifySundamageForDim(ResourceKey<Level> dimension, boolean sundamage) {
         sundamageDims.put(dimension, sundamage);
     }
 

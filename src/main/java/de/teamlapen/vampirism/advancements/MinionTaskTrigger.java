@@ -4,17 +4,17 @@ import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.core.ModRegistries;
-import net.minecraft.advancements.criterion.AbstractCriterionTrigger;
-import net.minecraft.advancements.criterion.CriterionInstance;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.loot.ConditionArrayParser;
-import net.minecraft.loot.ConditionArraySerializer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.SerializationContext;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class MinionTaskTrigger extends AbstractCriterionTrigger<MinionTaskTrigger.Instance> {
+public class MinionTaskTrigger extends SimpleCriterionTrigger<MinionTaskTrigger.Instance> {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "minion_tasks");
 
     public static Instance tasks(IMinionTask<?, ?> task) {
@@ -27,13 +27,13 @@ public class MinionTaskTrigger extends AbstractCriterionTrigger<MinionTaskTrigge
         return ID;
     }
 
-    public void trigger(ServerPlayerEntity player, IMinionTask<?, ?> task) {
+    public void trigger(ServerPlayer player, IMinionTask<?, ?> task) {
         this.trigger(player, instance -> instance.test(task));
     }
 
     @Nonnull
     @Override
-    protected Instance createInstance(@Nonnull JsonObject json, @Nonnull EntityPredicate.AndPredicate entityPredicate, @Nonnull ConditionArrayParser conditionsParser) {
+    protected Instance createInstance(@Nonnull JsonObject json, @Nonnull EntityPredicate.Composite entityPredicate, @Nonnull DeserializationContext conditionsParser) {
         IMinionTask<?, ?> task = ModRegistries.MINION_TASKS.getValue(new ResourceLocation(json.get("action").getAsString()));
         if (task != null) {
             return new Instance(task);
@@ -42,18 +42,18 @@ public class MinionTaskTrigger extends AbstractCriterionTrigger<MinionTaskTrigge
         }
     }
 
-    static class Instance extends CriterionInstance {
+    static class Instance extends AbstractCriterionTriggerInstance {
         @Nonnull
         private final IMinionTask<?, ?> task;
 
         Instance(@Nonnull IMinionTask<?, ?> task) {
-            super(ID, EntityPredicate.AndPredicate.ANY);
+            super(ID, EntityPredicate.Composite.ANY);
             this.task = task;
         }
 
         @Nonnull
         @Override
-        public JsonObject serializeToJson(@Nonnull ConditionArraySerializer serializer) {
+        public JsonObject serializeToJson(@Nonnull SerializationContext serializer) {
             JsonObject json = super.serializeToJson(serializer);
             json.addProperty("action", task.getRegistryName().toString());
             return json;

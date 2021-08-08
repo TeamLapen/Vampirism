@@ -9,10 +9,10 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.core.ModRegistries;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class RefinementSetArgument implements ArgumentType<IRefinementSet> {
     public static final DynamicCommandExceptionType REFINEMENT_NOT_FOUND = new DynamicCommandExceptionType((particle) -> {
-        return new TranslationTextComponent("command.vampirism.argument.refinement_set.notfound", particle);
+        return new TranslatableComponent("command.vampirism.argument.refinement_set.notfound", particle);
     });
     private static final Collection<String> EXAMPLES = Arrays.asList("refinement_set", "modid:refinement_set");
 
@@ -28,7 +28,7 @@ public class RefinementSetArgument implements ArgumentType<IRefinementSet> {
         return new RefinementSetArgument();
     }
 
-    public static IRefinementSet getSet(CommandContext<CommandSource> context, String name) {
+    public static IRefinementSet getSet(CommandContext<CommandSourceStack> context, String name) {
         return context.getArgument(name, IRefinementSet.class);
     }
 
@@ -39,7 +39,7 @@ public class RefinementSetArgument implements ArgumentType<IRefinementSet> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return ISuggestionProvider.suggestResource(ModRegistries.REFINEMENT_SETS.getKeys(), builder);
+        return SharedSuggestionProvider.suggestResource(ModRegistries.REFINEMENT_SETS.getKeys(), builder);
     }
 
     @Override

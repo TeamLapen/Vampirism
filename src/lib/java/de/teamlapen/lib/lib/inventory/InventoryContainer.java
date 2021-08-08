@@ -1,17 +1,17 @@
 package de.teamlapen.lib.lib.inventory;
 
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
@@ -24,17 +24,17 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 
-public abstract class InventoryContainer extends Container {
+public abstract class InventoryContainer extends AbstractContainerMenu {
 
-    protected final IWorldPosCallable worldPos;
-    protected final IInventory inventory;
+    protected final ContainerLevelAccess worldPos;
+    protected final Container inventory;
     private final int size;
 
-    public InventoryContainer(ContainerType<? extends InventoryContainer> containerType, int id, PlayerInventory playerInventory, IWorldPosCallable worldPos, @Nonnull IInventory inventory, SelectorInfo... selectorInfos) {
+    public InventoryContainer(MenuType<? extends InventoryContainer> containerType, int id, Inventory playerInventory, ContainerLevelAccess worldPos, @Nonnull Container inventory, SelectorInfo... selectorInfos) {
         this(containerType, id, playerInventory, worldPos, inventory, SelectorSlot::new, selectorInfos);
     }
 
-    public InventoryContainer(ContainerType<? extends InventoryContainer> containerType, int id, PlayerInventory playerInventory, IWorldPosCallable worldPos, @Nonnull IInventory inventory, SelectorSlotFactory factory, SelectorInfo... selectorInfos) {
+    public InventoryContainer(MenuType<? extends InventoryContainer> containerType, int id, Inventory playerInventory, ContainerLevelAccess worldPos, @Nonnull Container inventory, SelectorSlotFactory factory, SelectorInfo... selectorInfos) {
         this(containerType, id, worldPos, inventory, selectorInfos.length);
 
         if (inventory.getContainerSize() < selectorInfos.length) {
@@ -49,7 +49,7 @@ public abstract class InventoryContainer extends Container {
 
     }
 
-    private InventoryContainer(ContainerType<? extends InventoryContainer> containerType, int id, IWorldPosCallable worldPos, IInventory inventory, int size) {
+    private InventoryContainer(MenuType<? extends InventoryContainer> containerType, int id, ContainerLevelAccess worldPos, Container inventory, int size) {
         super(containerType, id);
         this.worldPos = worldPos;
         this.inventory = inventory;
@@ -57,7 +57,7 @@ public abstract class InventoryContainer extends Container {
     }
 
     @Override
-    public ItemStack quickMoveStack(PlayerEntity playerEntity, int index) {
+    public ItemStack quickMoveStack(Player playerEntity, int index) {
         ItemStack result = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {
@@ -99,17 +99,17 @@ public abstract class InventoryContainer extends Container {
     }
 
     @Override
-    public void removed(PlayerEntity playerIn) {
+    public void removed(Player playerIn) {
         super.removed(playerIn);
         inventory.stopOpen(playerIn);
     }
 
     @Override
-    public boolean stillValid(PlayerEntity playerIn) {
+    public boolean stillValid(Player playerIn) {
         return true;
     }
 
-    protected void addPlayerSlots(PlayerInventory playerInventory, int baseX, int baseY) {
+    protected void addPlayerSlots(Inventory playerInventory, int baseX, int baseY) {
         int i;
         for (i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
@@ -121,7 +121,7 @@ public abstract class InventoryContainer extends Container {
         }
     }
 
-    protected void addPlayerSlots(PlayerInventory playerInventory) {
+    protected void addPlayerSlots(Inventory playerInventory) {
         this.addPlayerSlots(playerInventory, 8, 84);
     }
 
@@ -131,17 +131,17 @@ public abstract class InventoryContainer extends Container {
 
     @FunctionalInterface
     public interface SelectorSlotFactory {
-        SelectorSlot create(IInventory inventoryIn, int index, SelectorInfo info, Consumer<IInventory> refreshInvFunc, Function<Integer, Boolean> activeFunc);
+        SelectorSlot create(Container inventoryIn, int index, SelectorInfo info, Consumer<Container> refreshInvFunc, Function<Integer, Boolean> activeFunc);
     }
 
     public static class SelectorSlot extends Slot {
 
         private final SelectorInfo info;
         private final Function<Integer, Boolean> activeFunc;
-        private final Consumer<IInventory> refreshInvFunc;
+        private final Consumer<Container> refreshInvFunc;
         private InventoryContainer ourContainer;
 
-        public SelectorSlot(IInventory inventoryIn, int index, SelectorInfo info, Consumer<IInventory> refreshInvFunc, Function<Integer, Boolean> activeFunc) {
+        public SelectorSlot(Container inventoryIn, int index, SelectorInfo info, Consumer<Container> refreshInvFunc, Function<Integer, Boolean> activeFunc) {
             super(inventoryIn, index, info.xDisplay, info.yDisplay);
             this.info = info;
             this.activeFunc = activeFunc;
@@ -225,12 +225,12 @@ public abstract class InventoryContainer extends Container {
             this(itemStack -> lazyItemCollection.map(list -> list.contains(itemStack.getItem())).orElse(false), x, y, inverted, stackLimit, background);
         }
 
-        public SelectorInfo(ITag<Item> tag, int x, int y) {
+        public SelectorInfo(Tag<Item> tag, int x, int y) {
             this(tag, x, y, false, 64, null);
         }
 
 
-        public SelectorInfo(ITag<Item> tag, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
+        public SelectorInfo(Tag<Item> tag, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
             this(itemStack -> tag.contains(itemStack.getItem()) || tag.getValues().isEmpty(), x, y, inverted, stackLimit, background);
         }
 

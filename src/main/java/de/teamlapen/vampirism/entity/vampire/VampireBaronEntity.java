@@ -12,26 +12,24 @@ import de.teamlapen.vampirism.entity.goals.FleeGarlicVampireGoal;
 import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
@@ -40,22 +38,35 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nullable;
 import java.util.Random;
 
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+
 /**
  * Vampire that spawns in the vampire forest, has minions and drops pure blood
  */
 public class VampireBaronEntity extends VampireBaseEntity implements IVampireBaron {
     public static final int MAX_LEVEL = 4;
     private final static Logger LOGGER = LogManager.getLogger(VampireBaronEntity.class);
-    private static final DataParameter<Integer> LEVEL = EntityDataManager.defineId(VampireBaronEntity.class, DataSerializers.INT);
-    private static final DataParameter<Boolean> ENRAGED = EntityDataManager.defineId(VampireBaronEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> LADY = EntityDataManager.defineId(VampireBaronEntity.class, DataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(VampireBaronEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> ENRAGED = SynchedEntityData.defineId(VampireBaronEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> LADY = SynchedEntityData.defineId(VampireBaronEntity.class, EntityDataSerializers.BOOLEAN);
     private final static int ENRAGED_TRANSITION_TIME = 15;
 
-    public static boolean spawnPredicateBaron(EntityType<? extends VampireBaronEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
+    public static boolean spawnPredicateBaron(EntityType<? extends VampireBaronEntity> entityType, LevelAccessor world, MobSpawnType spawnReason, BlockPos blockPos, Random random) {
         return (ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || ModBiomes.vampire_forest_hills.getRegistryName().equals(Helper.getBiomeId(world, blockPos))) && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
     }
 
-    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+    public static AttributeSupplier.Builder getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_BARON_MAX_HEALTH)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE)
@@ -78,14 +89,14 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     private int followingEntities = 0;
     private int enragedTransitionTime = 0;
 
-    public VampireBaronEntity(EntityType<? extends VampireBaronEntity> type, World world) {
+    public VampireBaronEntity(EntityType<? extends VampireBaronEntity> type, Level world) {
         super(type, world, true);
         this.garlicResist = EnumStrength.MEDIUM;
         this.hasArms = true;
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT nbt) {
+    public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("level", getLevel());
         nbt.putBoolean("lady", isLady());
@@ -120,7 +131,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
                 }
             }
             if (getLevel() > 3 && this.random.nextInt(9) == 0) {
-                this.addEffect(new EffectInstance(Effects.INVISIBILITY, 60));
+                this.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 60));
             }
         }
         if (this.level.isClientSide()) {
@@ -134,8 +145,8 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public boolean checkSpawnRules(IWorld worldIn, SpawnReason spawnReasonIn) {
-        int i = MathHelper.floor(this.getBoundingBox().minY);
+    public boolean checkSpawnRules(LevelAccessor worldIn, MobSpawnType spawnReasonIn) {
+        int i = Mth.floor(this.getBoundingBox().minY);
         //Only spawn on the surface
         if (i < 60) return false;
 //        CastlePositionData data = CastlePositionData.get(world);
@@ -157,19 +168,19 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         if (flag && entity instanceof LivingEntity) {
             float tm = 1f;
             int mr = 1;
-            if (entity instanceof PlayerEntity) {
-                float pld = (this.getLevel() + 1) - VampirismPlayerAttributes.get((PlayerEntity) entity).vampireLevel / 3f;
+            if (entity instanceof Player) {
+                float pld = (this.getLevel() + 1) - VampirismPlayerAttributes.get((Player) entity).vampireLevel / 3f;
                 tm = pld + 1;
                 mr = pld < 1.5f ? 1 : (pld < 3 ? 2 : 3);
-                if (VampirismPlayerAttributes.get((PlayerEntity) entity).getHuntSpecial().fullHunterCoat != null) {
+                if (VampirismPlayerAttributes.get((Player) entity).getHuntSpecial().fullHunterCoat != null) {
                     tm *= 0.5F;
                 }
             }
             if (entity instanceof VampireBaronEntity) {
-                ((LivingEntity) entity).addEffect(new EffectInstance(Effects.DAMAGE_BOOST, 40, 5));
+                ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 40, 5));
             }
-            ((LivingEntity) entity).addEffect(new EffectInstance(Effects.WEAKNESS, (int) (200 * tm), random.nextInt(mr)));
-            ((LivingEntity) entity).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, (int) (100 * tm), random.nextInt(mr)));
+            ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.WEAKNESS, (int) (200 * tm), random.nextInt(mr)));
+            ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, (int) (100 * tm), random.nextInt(mr)));
             attackDecisionCounter = 0;
         }
         return flag;
@@ -177,7 +188,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 
     @Nullable
     @Override
-    public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
         this.getEntityData().set(LADY, this.getRandom().nextBoolean());
         return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
@@ -207,7 +218,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
             this.updateEntityAttributes(false);
             float hp = this.getHealth() / this.getMaxHealth();
             this.setHealth(this.getMaxHealth() * hp);
-            this.setCustomName(getTypeName().plainCopy().append(new TranslationTextComponent("entity.vampirism.vampire_baron.level", level + 1)));
+            this.setCustomName(getTypeName().plainCopy().append(new TranslatableComponent("entity.vampirism.vampire_baron.level", level + 1)));
         } else {
             this.setCustomName(null);
         }
@@ -271,7 +282,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public void killed(ServerWorld world, LivingEntity entity) {
+    public void killed(ServerLevel world, LivingEntity entity) {
         super.killed(world, entity);
         if (entity instanceof VampireBaronEntity) {
             this.setHealth(this.getMaxHealth());
@@ -279,9 +290,9 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT nbt) {
+    public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
-        setLevel(MathHelper.clamp(nbt.getInt("level"), 0, MAX_LEVEL));
+        setLevel(Mth.clamp(nbt.getInt("level"), 0, MAX_LEVEL));
         this.getEntityData().set(LADY, nbt.getBoolean("lady"));
     }
 
@@ -333,7 +344,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    protected int getExperienceReward(PlayerEntity player) {
+    protected int getExperienceReward(Player player) {
         return 20 + 5 * getLevel();
     }
 
@@ -343,13 +354,13 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         this.goalSelector.addGoal(4, new FleeGarlicVampireGoal(this, 0.9F, false));
         this.goalSelector.addGoal(5, new BaronAIAttackMelee(this, 1.0F));
         this.goalSelector.addGoal(6, new BaronAIAttackRanged(this, 60, 64, 6, 4));
-        this.goalSelector.addGoal(6, new AvoidEntityGoal<>(this, PlayerEntity.class, 6.0F, 0.6, 0.7F, input -> input != null && !isLowerLevel(input)));//Works only partially. Pathfinding somehow does not find escape routes
-        this.goalSelector.addGoal(7, new RandomWalkingGoal(this, 0.2));
-        this.goalSelector.addGoal(9, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 10.0F));
-        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(6, new AvoidEntityGoal<>(this, Player.class, 6.0F, 0.6, 0.7F, input -> input != null && !isLowerLevel(input)));//Works only partially. Pathfinding somehow does not find escape routes
+        this.goalSelector.addGoal(7, new RandomStrollGoal(this, 0.2));
+        this.goalSelector.addGoal(9, new LookAtClosestVisibleGoal(this, Player.class, 10.0F));
+        this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, input -> input != null && isLowerLevel(input)));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, input -> input != null && isLowerLevel(input)));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, VampireBaronEntity.class, true, false));
     }
 
@@ -369,8 +380,8 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     private boolean isLowerLevel(LivingEntity player) {
-        if (player instanceof PlayerEntity) {
-            int playerLevel = FactionPlayerHandler.getOpt((PlayerEntity) player).map(FactionPlayerHandler::getCurrentLevel).orElse(0);
+        if (player instanceof Player) {
+            int playerLevel = FactionPlayerHandler.getOpt((Player) player).map(FactionPlayerHandler::getCurrentLevel).orElse(0);
             return (playerLevel - 8) / 2F - VampireBaronEntity.this.getLevel() <= 0;
         }
         return false;
@@ -378,7 +389,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 
     private class BaronAIAttackMelee extends MeleeAttackGoal {
 
-        BaronAIAttackMelee(CreatureEntity creature, double speedIn) {
+        BaronAIAttackMelee(PathfinderMob creature, double speedIn) {
             super(creature, speedIn, false);
         }
 

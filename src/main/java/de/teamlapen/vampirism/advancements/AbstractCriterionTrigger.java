@@ -2,15 +2,17 @@ package de.teamlapen.vampirism.advancements;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import net.minecraft.advancements.ICriterionInstance;
-import net.minecraft.advancements.ICriterionTrigger;
-import net.minecraft.advancements.PlayerAdvancements;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.server.PlayerAdvancements;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+
+import net.minecraft.advancements.CriterionTrigger.Listener;
 
 /**
  * Implements some general function used in most criterion triggers.
@@ -21,7 +23,7 @@ import java.util.function.Function;
  * @param <T>
  */
 @Deprecated
-public abstract class AbstractCriterionTrigger<T extends ICriterionInstance> implements ICriterionTrigger<T> { //TODO 1.17 remove
+public abstract class AbstractCriterionTrigger<T extends CriterionTriggerInstance> implements CriterionTrigger<T> { //TODO 1.17 remove
 
     protected final Map<PlayerAdvancements, GenericListeners<T>> listenersForPlayers = Maps.newHashMap();
     private final ResourceLocation id;
@@ -65,7 +67,7 @@ public abstract class AbstractCriterionTrigger<T extends ICriterionInstance> imp
         this.listenersForPlayers.remove(playerAdvancementsIn);
     }
 
-    protected abstract static class GenericListeners<T extends ICriterionInstance> {
+    protected abstract static class GenericListeners<T extends CriterionTriggerInstance> {
         protected final PlayerAdvancements playerAdvancements;
         protected final Set<Listener<T>> playerListeners = Sets.newHashSet();
 
@@ -73,7 +75,7 @@ public abstract class AbstractCriterionTrigger<T extends ICriterionInstance> imp
             this.playerAdvancements = playerAdvancementsIn;
         }
 
-        public void add(ICriterionTrigger.Listener<T> listener) {
+        public void add(CriterionTrigger.Listener<T> listener) {
             this.playerListeners.add(listener);
         }
 
@@ -81,7 +83,7 @@ public abstract class AbstractCriterionTrigger<T extends ICriterionInstance> imp
             return this.playerListeners.isEmpty();
         }
 
-        public void remove(ICriterionTrigger.Listener<T> listener) {
+        public void remove(CriterionTrigger.Listener<T> listener) {
             this.playerListeners.remove(listener);
         }
     }

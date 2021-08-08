@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.network;
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.world.MultiBossInfo;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SUpdateBossInfoPacket;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.BossInfo;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.BossEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.awt.*;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public class UpdateMultiBossInfoPacket implements IMessage {
-    static void encode(UpdateMultiBossInfoPacket msg, PacketBuffer buf) {
+    static void encode(UpdateMultiBossInfoPacket msg, FriendlyByteBuf buf) {
         buf.writeUUID(msg.uniqueId);
         buf.writeEnum(msg.operation);
         switch (msg.operation) {
@@ -24,7 +24,7 @@ public class UpdateMultiBossInfoPacket implements IMessage {
                 buf.writeVarInt(msg.colors.size());
                 msg.colors.forEach(color -> buf.writeVarInt(color.getRGB()));
                 buf.writeEnum(msg.overlay);
-            case UPDATE_PCT:
+            case UPDATE_PROGRESS:
                 buf.writeVarInt(msg.entries.size());
                 for (Map.Entry<Color, Float> value : msg.entries.entrySet()) {
                     buf.writeVarInt(value.getKey().getRGB());
@@ -40,9 +40,9 @@ public class UpdateMultiBossInfoPacket implements IMessage {
         }
     }
 
-    static UpdateMultiBossInfoPacket decode(PacketBuffer buf) {
+    static UpdateMultiBossInfoPacket decode(FriendlyByteBuf buf) {
         UUID uuid = buf.readUUID();
-        SUpdateBossInfoPacket.Operation operation = buf.readEnum(SUpdateBossInfoPacket.Operation.class);
+        OperationType operation = buf.readEnum(OperationType.class);
         UpdateMultiBossInfoPacket packet = new UpdateMultiBossInfoPacket(operation, uuid);
         switch (operation) {
             case ADD:
@@ -53,8 +53,8 @@ public class UpdateMultiBossInfoPacket implements IMessage {
                     colors.add(new Color(buf.readVarInt(), true));
                 }
                 packet.colors = colors;
-                packet.overlay = buf.readEnum(BossInfo.Overlay.class);
-            case UPDATE_PCT:
+                packet.overlay = buf.readEnum(BossEvent.BossBarOverlay.class);
+            case UPDATE_PROGRESS:
                 Map<Color, Float> entries = new LinkedHashMap<>();
                 int size2 = buf.readVarInt();
                 for (int i = 0; i < size2; i++) {
@@ -68,7 +68,7 @@ public class UpdateMultiBossInfoPacket implements IMessage {
                 packet.name = buf.readComponent();
                 break;
             case UPDATE_STYLE:
-                packet.overlay = buf.readEnum(BossInfo.Overlay.class);
+                packet.overlay = buf.readEnum(BossEvent.BossBarOverlay.class);
                 break;
         }
         return packet;
@@ -80,13 +80,13 @@ public class UpdateMultiBossInfoPacket implements IMessage {
         ctx.setPacketHandled(true);
     }
     private final UUID uniqueId;
-    private final SUpdateBossInfoPacket.Operation operation;
+    private final OperationType operation;
     protected List<Color> colors;
     protected Map<Color, Float> entries;
-    private ITextComponent name;
-    private BossInfo.Overlay overlay;
+    private Component name;
+    private BossEvent.BossBarOverlay overlay;
 
-    public UpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation operation, MultiBossInfo data) {
+    public UpdateMultiBossInfoPacket(OperationType operation, MultiBossInfo data) {
         this.uniqueId = data.getUniqueId();
         this.operation = operation;
         this.name = data.getName();
@@ -95,7 +95,7 @@ public class UpdateMultiBossInfoPacket implements IMessage {
         this.overlay = data.getOverlay();
     }
 
-    private UpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation operation, UUID uuid) {
+    private UpdateMultiBossInfoPacket(OperationType operation, UUID uuid) {
         this.uniqueId = uuid;
         this.operation = operation;
         this.entries = new LinkedHashMap<>();
@@ -109,15 +109,15 @@ public class UpdateMultiBossInfoPacket implements IMessage {
         return entries;
     }
 
-    public ITextComponent getName() {
+    public Component getName() {
         return name;
     }
 
-    public SUpdateBossInfoPacket.Operation getOperation() {
+    public OperationType getOperation() {
         return operation;
     }
 
-    public BossInfo.Overlay getOverlay() {
+    public BossEvent.BossBarOverlay getOverlay() {
         return overlay;
     }
 
@@ -125,5 +125,12 @@ public class UpdateMultiBossInfoPacket implements IMessage {
         return uniqueId;
     }
 
-
+    public enum OperationType {
+        ADD,
+        REMOVE,
+        UPDATE_PROGRESS,
+        UPDATE_NAME,
+        UPDATE_STYLE,
+        UPDATE_PROPERTIES;
+    }
 }

@@ -6,9 +6,9 @@ import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRegistries;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -113,28 +113,28 @@ public class SkillNode {
 
     public static class Builder {
         public static Builder deserialize(JsonObject json, @SuppressWarnings("unused") JsonDeserializationContext context) {
-            if (json.has("remove") && JSONUtils.getAsBoolean(json, "remove")) return null;
-            ResourceLocation parent = json.has("parent") ? new ResourceLocation(JSONUtils.getAsString(json, "parent")) : null;
-            ResourceLocation merge = json.has("merge") ? new ResourceLocation(JSONUtils.getAsString(json, "merge")) : null;
-            JsonArray skills = JSONUtils.getAsJsonArray(json, "skills", new JsonArray());
+            if (json.has("remove") && GsonHelper.getAsBoolean(json, "remove")) return null;
+            ResourceLocation parent = json.has("parent") ? new ResourceLocation(GsonHelper.getAsString(json, "parent")) : null;
+            ResourceLocation merge = json.has("merge") ? new ResourceLocation(GsonHelper.getAsString(json, "merge")) : null;
+            JsonArray skills = GsonHelper.getAsJsonArray(json, "skills", new JsonArray());
             List<ISkill> skillList = new ArrayList<>();
             for (int i = 0; i < skills.size(); i++) {
-                ResourceLocation id = new ResourceLocation(JSONUtils.convertToString(skills.get(i), "skill"));
+                ResourceLocation id = new ResourceLocation(GsonHelper.convertToString(skills.get(i), "skill"));
                 ISkill s = ModRegistries.SKILLS.getValue(id);
                 if (s == null) {
                     throw new IllegalArgumentException("Skill " + id + " is not registered");
                 }
                 skillList.add(s);
             }
-            JsonArray locking = JSONUtils.getAsJsonArray(json, "locking", new JsonArray());
+            JsonArray locking = GsonHelper.getAsJsonArray(json, "locking", new JsonArray());
             List<ResourceLocation> lockingList = new ArrayList<>();
             for (int i = 0; i < locking.size(); i++) {
-                lockingList.add(new ResourceLocation(JSONUtils.convertToString(locking.get(i), "skill")));
+                lockingList.add(new ResourceLocation(GsonHelper.convertToString(locking.get(i), "skill")));
             }
             return new Builder(parent, merge, skillList, lockingList);
         }
 
-        public static Builder readFrom(PacketBuffer buf) {
+        public static Builder readFrom(FriendlyByteBuf buf) {
             ResourceLocation parent = buf.readBoolean() ? buf.readResourceLocation() : null;
             ResourceLocation merge = buf.readBoolean() ? buf.readResourceLocation() : null;
 
@@ -213,7 +213,7 @@ public class SkillNode {
             return "SkillNode.Builder{parent=" + parentId + ",merge=" + mergeId + "skills" + skills.toString() + "}";
         }
 
-        public void writeTo(PacketBuffer buf) {
+        public void writeTo(FriendlyByteBuf buf) {
             if (this.parentId == null) {
                 buf.writeBoolean(false);
             } else {

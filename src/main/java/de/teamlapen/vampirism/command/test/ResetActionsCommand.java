@@ -5,18 +5,18 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.List;
 import java.util.Optional;
 
 public class ResetActionsCommand extends BasicCommand {
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("resetActions")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .executes(context -> {
@@ -28,14 +28,14 @@ public class ResetActionsCommand extends BasicCommand {
                         }));
     }
 
-    private static int resetActions(CommandSource commandSource, List<ServerPlayerEntity> players) {
-        for (ServerPlayerEntity player : players) {
+    private static int resetActions(CommandSourceStack commandSource, List<ServerPlayer> players) {
+        for (ServerPlayer player : players) {
             if (!player.isAlive()) continue;
             FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty()).ifPresent(factionPlayer -> {
                 IActionHandler<?> handler = factionPlayer.getActionHandler();
                 if (handler != null) {
                     handler.resetTimers();
-                    commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.resetactions"), false);
+                    commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.resetactions"), false);
                 }
             });
         }

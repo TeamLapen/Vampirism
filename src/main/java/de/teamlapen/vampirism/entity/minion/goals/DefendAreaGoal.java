@@ -3,12 +3,12 @@ package de.teamlapen.vampirism.entity.minion.goals;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.DefendAreaTask;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
-import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.TargetGoal;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
 
 import java.util.EnumSet;
 
@@ -16,18 +16,18 @@ import java.util.EnumSet;
 public class DefendAreaGoal extends TargetGoal {
 
     private final MinionEntity<?> entity;
-    private final EntityPredicate predicate;
+    private final TargetingConditions predicate;
     /**
      * Cache bb as long as {@link DefendAreaGoal#center} is unmodified
      */
-    private AxisAlignedBB bb;
+    private AABB bb;
     private BlockPos center;
 
     public DefendAreaGoal(MinionEntity<?> entity) {
         super(entity, false);
         this.entity = entity;
         this.setFlags(EnumSet.of(Goal.Flag.TARGET));
-        this.predicate = new EntityPredicate().selector(e -> entity.getAttackPredicate(true).test(e)).ignoreInvisibilityTesting().range(60);
+        this.predicate = new TargetingConditions().selector(e -> entity.getAttackPredicate(true).test(e)).ignoreInvisibilityTesting().range(60);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class DefendAreaGoal extends TargetGoal {
         return entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.defend_area && ((DefendAreaTask.Desc) task).center != null).map(task -> {
                     BlockPos newCenter = ((DefendAreaTask.Desc) task).center;
                     if (bb == null || center == null || !center.equals(newCenter)) {
-                        this.bb = new AxisAlignedBB(newCenter).inflate(((DefendAreaTask.Desc) task).distance);
+                        this.bb = new AABB(newCenter).inflate(((DefendAreaTask.Desc) task).distance);
                         this.center = newCenter;
                     }
 

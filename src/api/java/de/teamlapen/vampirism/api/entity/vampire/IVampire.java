@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.level.LevelAccessor;
 
 import javax.annotation.Nonnull;
 
@@ -60,7 +60,7 @@ public interface IVampire extends IFactionEntity {
      * @return The strength of the garlic or {@link EnumStrength#NONE}
      */
     @Nonnull
-    default EnumStrength isGettingGarlicDamage(IWorld world) {
+    default EnumStrength isGettingGarlicDamage(LevelAccessor world) {
         return isGettingGarlicDamage(world, false);
     }
 
@@ -75,7 +75,7 @@ public interface IVampire extends IFactionEntity {
      * @return The strength of the garlic or {@link EnumStrength#NONE}
      */
     @Nonnull
-    EnumStrength isGettingGarlicDamage(IWorld iWorld, boolean forceRefresh);
+    EnumStrength isGettingGarlicDamage(LevelAccessor iWorld, boolean forceRefresh);
 
     /**
      * Checks if all requirements are met for the entity to be damaged by the sun, e.g. standing in the sun and not raining.
@@ -85,7 +85,7 @@ public interface IVampire extends IFactionEntity {
      *
      * @param forceRefresh Don't use cached value
      */
-    boolean isGettingSundamage(IWorld iWorld, boolean forceRefresh);
+    boolean isGettingSundamage(LevelAccessor iWorld, boolean forceRefresh);
 
     /**
      * Checks if all requirements are met for the entity to be damaged by the sun, e.g. standing in the sun and not raining.
@@ -93,7 +93,7 @@ public interface IVampire extends IFactionEntity {
      * <p>
      * For VampirePlayer instances for players with vampire level 0 this returns false
      */
-    default boolean isGettingSundamage(IWorld iWorld) {
+    default boolean isGettingSundamage(LevelAccessor iWorld) {
         return isGettingSundamage(iWorld, false);
     }
 

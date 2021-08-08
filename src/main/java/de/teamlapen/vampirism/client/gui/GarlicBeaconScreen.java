@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.ProgressBar;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.tileentity.GarlicBeaconTileEntity;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -23,7 +23,7 @@ public class GarlicBeaconScreen extends Screen {
     protected ProgressBar startupBar;
     protected ProgressBar fueledTimer;
 
-    public GarlicBeaconScreen(GarlicBeaconTileEntity tile, ITextComponent title) {
+    public GarlicBeaconScreen(GarlicBeaconTileEntity tile, Component title) {
         super(title);
         this.tile = tile;
     }
@@ -34,7 +34,7 @@ public class GarlicBeaconScreen extends Screen {
     }
 
     @Override
-    public void render(MatrixStack mStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(mStack);
 
         this.renderGuiBackground(mStack);
@@ -63,21 +63,21 @@ public class GarlicBeaconScreen extends Screen {
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
 
-        startupBar = this.addButton(new ProgressBar(this, this.guiLeft + (xSize - 170) / 2, this.guiTop + 30, 170, new TranslationTextComponent("gui.vampirism.garlic_beacon.startup")));
+        startupBar = this.addButton(new ProgressBar(this, this.guiLeft + (xSize - 170) / 2, this.guiTop + 30, 170, new TranslatableComponent("gui.vampirism.garlic_beacon.startup")));
         startupBar.setColor(0xD0D0FF);
         startupBar.setFGColor(0xFFFFFF);
 
-        fueledTimer = this.addButton(new ProgressBar(this, this.guiLeft + (xSize - 170) / 2, this.guiTop + 60, 170, new TranslationTextComponent("gui.vampirism.garlic_beacon.fueled")));
+        fueledTimer = this.addButton(new ProgressBar(this, this.guiLeft + (xSize - 170) / 2, this.guiTop + 60, 170, new TranslatableComponent("gui.vampirism.garlic_beacon.fueled")));
         fueledTimer.setColor(0xD0FFD0);
         fueledTimer.setFGColor(0xFFFFFF);
     }
 
-    protected void renderGuiBackground(MatrixStack mStack) {
+    protected void renderGuiBackground(PoseStack mStack) {
         this.minecraft.getTextureManager().bind(BACKGROUND);
         blit(mStack, this.guiLeft, this.guiTop, this.getBlitOffset(), 0, 0, this.xSize, this.ySize, 256, 256);
     }
 
-    private void drawTitle(MatrixStack mStack) {
+    private void drawTitle(PoseStack mStack) {
         this.font.drawShadow(mStack, title, this.guiLeft + 15, this.guiTop + 5, 0xFFFFFFFF);
     }
 }

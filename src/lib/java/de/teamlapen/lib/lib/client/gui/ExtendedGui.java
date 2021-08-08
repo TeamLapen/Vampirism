@@ -1,12 +1,11 @@
 package de.teamlapen.lib.lib.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.client.gui.GuiComponent;
+import com.mojang.math.Matrix4f;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -14,14 +13,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Adds additional methods to vanilla Gui
  */
 @OnlyIn(Dist.CLIENT)
-public class ExtendedGui extends AbstractGui {
+public class ExtendedGui extends GuiComponent {
 
     /**
      * Draws a rectangle with a horizontal gradient between the specified colors (ARGB format). Args : x1, y1, x2, y2,
      * topColor, bottomColor
      * Similar to fillGradient, but with gradient on the horizontal axis
      */
-    protected void fillGradient2(MatrixStack stack, int left, int top, int right, int bottom, int startColor, int endColor) {
+    protected void fillGradient2(PoseStack stack, int left, int top, int right, int bottom, int startColor, int endColor) {
         Matrix4f matrix = stack.last().pose();
         float f = (float) (startColor >> 24 & 255) / 255.0F;
         float f1 = (float) (startColor >> 16 & 255) / 255.0F;
@@ -31,23 +30,21 @@ public class ExtendedGui extends AbstractGui {
         float f5 = (float) (endColor >> 16 & 255) / 255.0F;
         float f6 = (float) (endColor >> 8 & 255) / 255.0F;
         float f7 = (float) (endColor & 255) / 255.0F;
-        GlStateManager._disableTexture();
-        GlStateManager._enableBlend();
-        GlStateManager._disableAlphaTest();
-        GlStateManager._blendFuncSeparate(770, 771, 1, 0);
-        GlStateManager._shadeModel(7425);
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder worldrenderer = tessellator.getBuilder();
-        worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldrenderer.vertex(matrix, right, top, this.getBlitOffset()).color(f1, f2, f3, f).endVertex();
-        worldrenderer.vertex(matrix, left, top, this.getBlitOffset()).color(f5, f6, f7, f4).endVertex();
-        worldrenderer.vertex(matrix, left, bottom, this.getBlitOffset()).color(f5, f6, f7, f4).endVertex();
-        worldrenderer.vertex(matrix, right, bottom, this.getBlitOffset()).color(f1, f2, f3, f).endVertex();
-        tessellator.end();
-        GlStateManager._shadeModel(7424);
-        GlStateManager._disableBlend();
-        GlStateManager._enableAlphaTest();
-        GlStateManager._enableTexture();
+        Tesselator tessellator = Tesselator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuilder();
+        RenderSystem.disableTexture();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder bufferbuilder = tesselator.getBuilder();
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        bufferBuilder.vertex(matrix, right, top, this.getBlitOffset()).color(f1, f2, f3, f).endVertex();
+        bufferBuilder.vertex(matrix, left, top, this.getBlitOffset()).color(f5, f6, f7, f4).endVertex();
+        bufferBuilder.vertex(matrix, left, bottom, this.getBlitOffset()).color(f5, f6, f7, f4).endVertex();
+        bufferBuilder.vertex(matrix, right, bottom, this.getBlitOffset()).color(f1, f2, f3, f).endVertex();        tesselator.end();
+        RenderSystem.disableBlend();
+        RenderSystem.enableTexture();
     }
 
 

@@ -2,14 +2,16 @@ package de.teamlapen.vampirism.entity.goals;
 
 import de.teamlapen.vampirism.entity.DarkBloodProjectileEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
-import net.minecraft.command.arguments.EntityAnchorArgument;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
+
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class AttackRangedDarkBloodGoal extends Goal {
 
@@ -61,7 +63,7 @@ public class AttackRangedDarkBloodGoal extends Goal {
                     this.entity.lookAt(target, 19.0F, 10.0F);
 
 
-                    this.entity.lookAt(EntityAnchorArgument.Type.EYES, target.getEyePosition(1.0F));
+                    this.entity.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition(1.0F));
                 } else {
                     --this.seeTime;
                 }
@@ -69,7 +71,7 @@ public class AttackRangedDarkBloodGoal extends Goal {
                 if (d0 <= (double) this.maxAttackDistance && this.seeTime >= 20) {
                     attack(target);
                     this.attackTime = attackCooldown;
-                    entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20));
+                    entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20));
 
 
                 } else {
@@ -84,7 +86,7 @@ public class AttackRangedDarkBloodGoal extends Goal {
      * Spawns the dark blood entity heading towards the target entity
      */
     protected void attack(LivingEntity target) {
-        Vector3d vec3d = target.position().add(0, target.getBbHeight() * 0.6f, 0).subtract(entity.getEyePosition(1f)).normalize();
+        Vec3 vec3d = target.position().add(0, target.getBbHeight() * 0.6f, 0).subtract(entity.getEyePosition(1f)).normalize();
 
         DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(entity.getCommandSenderWorld(), entity.getX() + vec3d.x * 0.3f, entity.getY() + entity.getEyeHeight() * 0.9f, entity.getZ() + vec3d.z * 0.3f, vec3d.x, vec3d.y, vec3d.z);
         projectile.setOwner(entity);

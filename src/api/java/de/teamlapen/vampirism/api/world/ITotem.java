@@ -1,18 +1,19 @@
 package de.teamlapen.vampirism.api.world;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public interface ITotem {
 
-    EntityType<? extends MobEntity> getCaptureEntityForFaction(IFaction<?> faction);
+    Optional<EntityType<? extends Mob>> getCaptureEntityForFaction(IFaction<?> faction);
 
     @Nullable
     IFaction getCapturingFaction();
@@ -20,15 +21,15 @@ public interface ITotem {
     @Nullable
     IFaction getControllingFaction();
 
-    default World getTileWorld() {
-        return ((TileEntity) this).getLevel();
+    default Level getTileWorld() {
+        return ((BlockEntity) this).getLevel();
     }
 
     @Nonnull
-    AxisAlignedBB getVillageArea();
+    AABB getVillageArea();
 
     @Nonnull
-    AxisAlignedBB getVillageAreaReduced();
+    AABB getVillageAreaReduced();
 
     default boolean isRaidTriggeredByBadOmen() { //TODO 1.17 remove default implementation
         return false;

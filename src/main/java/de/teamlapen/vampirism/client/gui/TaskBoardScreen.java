@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWithDummyWidget;
@@ -11,25 +11,25 @@ import de.teamlapen.vampirism.client.gui.widget.TaskItem;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Collection;
 
 @OnlyIn(Dist.CLIENT)
-public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> implements ExtendedScreen {
+public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardContainer> implements ExtendedScreen {
     private static final ResourceLocation TASKMASTER_GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/taskmaster.png");
     private final IFactionPlayer<?> factionPlayer;
 
     private ScrollableListWidget<ITaskInstance> list;
 
 
-    public TaskBoardScreen(TaskBoardContainer container, PlayerInventory playerInventory, ITextComponent containerName) {
+    public TaskBoardScreen(TaskBoardContainer container, Inventory playerInventory, Component containerName) {
         super(container, playerInventory, containerName);
         this.imageWidth = 176;
         this.imageHeight = 181;
@@ -58,7 +58,7 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> impleme
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.list.renderToolTip(matrixStack, mouseX, mouseY);
     }
@@ -74,7 +74,7 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> impleme
     }
 
     @Override
-    protected void renderBg(MatrixStack mStack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack mStack, float partialTicks, int mouseX, int mouseY) {
         this.renderBackground(mStack);
         GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bind(TASKMASTER_GUI_TEXTURE);
@@ -82,7 +82,7 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> impleme
     }
 
     @Override
-    protected void renderLabels(MatrixStack mStack, int mouseX, int mouseY) {
+    protected void renderLabels(PoseStack mStack, int mouseX, int mouseY) {
         this.font.draw(mStack, this.title, (float) (this.imageWidth / 2 - this.font.width(this.title) / 2), 5.0F, 4210752);
     }
 

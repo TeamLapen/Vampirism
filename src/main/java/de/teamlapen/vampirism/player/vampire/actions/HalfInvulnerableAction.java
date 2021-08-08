@@ -5,8 +5,8 @@ import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 
 /**
  * @author cheaterpaul
@@ -39,7 +39,7 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     @Override
     public void onDeactivated(IVampirePlayer player) {
         ((VampirePlayer) player).getSpecialAttributes().half_invulnerable = false;
-        removePotionEffect(player, Effects.MOVEMENT_SLOWDOWN);
+        removePotionEffect(player, MobEffects.MOVEMENT_SLOWDOWN);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     @Override
     protected boolean activate(IVampirePlayer vampire) {
         ((VampirePlayer) vampire).getSpecialAttributes().half_invulnerable = true;
-        addEffectInstance(vampire, new EffectInstance(Effects.MOVEMENT_SLOWDOWN, getDuration(vampire) - 1, 1, false, false));
+        addEffectInstance(vampire, new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, getDuration(vampire) - 1, 1, false, false));
         return true;
     }
 

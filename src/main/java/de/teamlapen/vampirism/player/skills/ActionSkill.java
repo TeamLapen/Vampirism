@@ -3,9 +3,9 @@ package de.teamlapen.vampirism.player.skills;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -42,7 +42,7 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
         if (customDescription) {
             this.setHasDefaultDescription();
         } else {
-            this.setDescription(() -> new TranslationTextComponent("text.vampirism.skill.unlocks_action"));
+            this.setDescription(() -> new TranslatableComponent("text.vampirism.skill.unlocks_action"));
 
         }
     }
@@ -58,7 +58,7 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
     }
 
     @Override
-    public ITextComponent getName() {
+    public Component getName() {
         return action.getName();
     }
 

@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.*;
 import de.teamlapen.vampirism.client.render.RenderHandler;
+import de.teamlapen.vampirism.client.render.VampirismBlockEntityWitoutLevelRenderer;
 import de.teamlapen.vampirism.client.render.layers.VampireEntityLayer;
 import de.teamlapen.vampirism.client.render.layers.VampirePlayerHeadLayer;
 import de.teamlapen.vampirism.client.render.layers.WingsLayer;
@@ -18,32 +19,32 @@ import de.teamlapen.vampirism.player.skills.ClientSkillTreeManager;
 import de.teamlapen.vampirism.player.skills.SkillTree;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.tileentity.GarlicBeaconTileEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.ReadBookScreen;
-import net.minecraft.client.gui.screen.SleepInMultiplayerScreen;
-import net.minecraft.client.particle.DiggingParticle;
+import net.minecraft.client.gui.screens.inventory.BookViewScreen;
+import net.minecraft.client.gui.screens.InBedChatScreen;
+import net.minecraft.client.particle.TerrainParticle;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.LivingRenderer;
-import net.minecraft.client.renderer.entity.PlayerRenderer;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.resources.IReloadableResourceManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -70,6 +71,7 @@ public class ClientProxy extends CommonProxy {
     private final ClientSkillTreeManager skillTreeManager = new ClientSkillTreeManager();
     private VampirismHUDOverlay overlay;
     private CustomBossInfoOverlay bossInfoOverlay;
+    private VampirismBlockEntityWitoutLevelRenderer itemStackBESR;
 
     public ClientProxy() {
         RenderHandler renderHandler = new RenderHandler(Minecraft.getInstance());
@@ -77,7 +79,7 @@ public class ClientProxy extends CommonProxy {
         //Minecraft.instance is null during runData.
         //noinspection ConstantConditions
         if (Minecraft.getInstance() != null)
-            ((IReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener(renderHandler); // Must be added before initial resource manager load
+            ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener(renderHandler); // Must be added before initial resource manager load
     }
 
     public void clearBossBarOverlay() {
@@ -85,7 +87,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void displayGarlicBeaconScreen(GarlicBeaconTileEntity tile, ITextComponent title) {
+    public void displayGarlicBeaconScreen(GarlicBeaconTileEntity tile, Component title) {
         Minecraft.getInstance().setScreen(new GarlicBeaconScreen(tile, title));
     }
 
@@ -101,15 +103,19 @@ public class ClientProxy extends CommonProxy {
 
     @Nullable
     @Override
-    public PlayerEntity getClientPlayer() {
+    public Player getClientPlayer() {
         return Minecraft.getInstance().player;
+    }
+
+    public VampirismBlockEntityWitoutLevelRenderer getItemStackBESR() {
+        return itemStackBESR;
     }
 
     @Nullable
     @Override
     public Entity getMouseOverEntity() {
-        RayTraceResult r = Minecraft.getInstance().hitResult;
-        if (r instanceof EntityRayTraceResult) return ((EntityRayTraceResult) r).getEntity();
+        HitResult r = Minecraft.getInstance().hitResult;
+        if (r instanceof EntityHitResult) return ((EntityHitResult) r).getEntity();
         return null;
     }
 
@@ -132,13 +138,13 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void handlePlayEventPacket(PlayEventPacket msg) {
-        if (msg.type == 1) {
-            spawnParticles(Minecraft.getInstance().level, msg.pos, Block.stateById(msg.stateId));
+        if (msg.type() == 1) {
+            spawnParticles(Minecraft.getInstance().level, msg.pos(), Block.stateById(msg.stateId()));
         }
     }
 
     @Override
-    public void handleRequestMinionSelect(RequestMinionSelectPacket.Action action, List<Pair<Integer, ITextComponent>> minions) {
+    public void handleRequestMinionSelect(RequestMinionSelectPacket.Action action, List<Pair<Integer, Component>> minions) {
         Minecraft.getInstance().setScreen(new SelectMinionScreen(action, minions));
     }
 
@@ -148,16 +154,16 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handleSleepClient(PlayerEntity player) {
+    public void handleSleepClient(Player player) {
         if (player.isSleeping()) {
             player.getSleepingPos().ifPresent(pos -> {
                 if (player.level.getBlockState(pos).getBlock() instanceof TentBlock) {
-                    if (Minecraft.getInstance().screen instanceof SleepInMultiplayerScreen && !(Minecraft.getInstance().screen instanceof SleepInMultiplayerModScreen)) {
+                    if (Minecraft.getInstance().screen instanceof InBedChatScreen && !(Minecraft.getInstance().screen instanceof SleepInMultiplayerModScreen)) {
                         Minecraft.getInstance().setScreen(new SleepInMultiplayerModScreen("text.vampirism.tent.stop_sleeping"));
                     }
                     TentBlock.setTentSleepPosition(player, pos, player.level.getBlockState(pos).getValue(POSITION), player.level.getBlockState(pos).getValue(FACING));
                 } else if (player.level.getBlockState(pos).getBlock() instanceof CoffinBlock) {
-                    if (Minecraft.getInstance().screen instanceof SleepInMultiplayerScreen && !(Minecraft.getInstance().screen instanceof SleepInMultiplayerModScreen)) {
+                    if (Minecraft.getInstance().screen instanceof InBedChatScreen && !(Minecraft.getInstance().screen instanceof SleepInMultiplayerModScreen)) {
                         Minecraft.getInstance().setScreen(new SleepInMultiplayerModScreen("text.vampirism.coffin.stop_sleeping"));
                     }
                 }
@@ -167,17 +173,17 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void handleTaskPacket(TaskPacket msg) {
-        Container container = Minecraft.getInstance().player.containerMenu;
-        if (msg.containerId == container.containerId && container instanceof VampirismContainer) {
-            ((VampirismContainer) container).init(msg.taskWrappers, msg.completableTasks, msg.completedRequirements);
+        AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
+        if (msg.containerId() == container.containerId && container instanceof VampirismContainer) {
+            ((VampirismContainer) container).init(msg.taskWrappers(), msg.completableTasks(), msg.completedRequirements());
         }
     }
 
     @Override
     public void handleTaskStatusPacket(TaskStatusPacket msg) {
-        Container container = Objects.requireNonNull(Minecraft.getInstance().player).containerMenu;
-        if (msg.containerId == container.containerId && container instanceof TaskBoardContainer) {
-            ((TaskBoardContainer) container).init(msg.available, msg.completableTasks, msg.completedRequirements, msg.taskBoardId);
+        AbstractContainerMenu container = Objects.requireNonNull(Minecraft.getInstance().player).containerMenu;
+        if (msg.containerId() == container.containerId && container instanceof TaskBoardContainer) {
+            ((TaskBoardContainer) container).init(msg.available(), msg.completableTasks(), msg.completedRequirements(), msg.taskBoardId());
         }
     }
 
@@ -188,7 +194,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void handleVampireBookPacket(OpenVampireBookPacket msg) {
-        Minecraft.getInstance().setScreen(new ReadBookScreen(new ReadBookScreen.WrittenBookInfo(msg.itemStack)));
+        Minecraft.getInstance().setScreen(new BookViewScreen(new BookViewScreen.WrittenBookAccess(msg.itemStack())));
     }
 
     @Override
@@ -196,7 +202,7 @@ public class ClientProxy extends CommonProxy {
         super.onInitStep(step, event);
         switch (step) {
             case CLIENT_SETUP:
-                ModEntitiesRender.registerEntityRenderer(((FMLClientSetupEvent) event).getMinecraftSupplier());
+                ModEntitiesRender.registerEntityRenderer();
                 ModKeys.register();
                 registerSubscriptions();
                 SelectActionScreen.loadActionOrder();
@@ -210,6 +216,7 @@ public class ClientProxy extends CommonProxy {
                 event.enqueueWork(ModScreens::registerScreensUnsafe);
                 skillTreeManager.init();
                 registerVampireEntityOverlays();
+                itemStackBESR = new VampirismBlockEntityWitoutLevelRenderer(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
                 break;
             default:
                 break;
@@ -229,7 +236,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void showDBNOScreen(PlayerEntity playerEntity, @Nullable ITextComponent deathMessage) {
+    public void showDBNOScreen(Player playerEntity, @Nullable Component deathMessage) {
         if (playerEntity == Minecraft.getInstance().player && !playerEntity.isDeadOrDying()) {
             Minecraft.getInstance().setScreen(new DBNOScreen(deathMessage));
         }
@@ -244,29 +251,28 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(new ScreenEventHandler());
     }
 
-    private void registerVampireEntityOverlay(EntityRendererManager manager, EntityType<? extends CreatureEntity> type, ResourceLocation loc) {
+    private void registerVampireEntityOverlay(EntityRenderDispatcher manager, EntityType<? extends PathfinderMob> type, ResourceLocation loc) {
         EntityRenderer<?> render = manager.renderers.get(type);
         if (render == null) {
             LOGGER.error("Did not find renderer for {}", type);
             return;
         }
-        if (!(render instanceof LivingRenderer)) {
+        if (!(render instanceof LivingEntityRenderer rendererLiving)) {
             LOGGER.error("Renderer ({}) for {} does not extend RenderLivingEntity", type, render);
             return;
         }
-        LivingRenderer rendererLiving = (LivingRenderer) render;
         rendererLiving.addLayer(new VampireEntityLayer(rendererLiving, loc, true));
     }
 
     private void registerVampireEntityOverlays() {
-        EntityRendererManager manager = Minecraft.getInstance().getEntityRenderDispatcher();
+        EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
         registerVampirePlayerHead(manager);
-        for (Map.Entry<EntityType<? extends CreatureEntity>, ResourceLocation> entry : VampirismAPI.entityRegistry().getConvertibleOverlay().entrySet()) {
+        for (Map.Entry<EntityType<? extends PathfinderMob>, ResourceLocation> entry : VampirismAPI.entityRegistry().getConvertibleOverlay().entrySet()) {
             registerVampireEntityOverlay(manager, entry.getKey(), entry.getValue());
         }
     }
 
-    private void registerVampirePlayerHead(EntityRendererManager manager) {
+    private void registerVampirePlayerHead(EntityRenderDispatcher manager) {
         for (PlayerRenderer renderPlayer : manager.getSkinMap().values()) {
             renderPlayer.addLayer(new VampirePlayerHeadLayer(renderPlayer));
         }
@@ -275,16 +281,16 @@ public class ClientProxy extends CommonProxy {
     /**
      * copied from {@link net.minecraft.client.particle.ParticleManager#addBlockDestroyEffects(net.minecraft.util.math.BlockPos, net.minecraft.block.BlockState)} but which much lesser particles
      */
-    private void spawnParticles(World world, BlockPos pos, BlockState state) {
-        if (!(world instanceof ClientWorld)) return;
+    private void spawnParticles(Level world, BlockPos pos, BlockState state) {
+        if (!(world instanceof ClientLevel)) return;
         VoxelShape voxelshape = state.getShape(world, pos);
         voxelshape.forAllBoxes((p_199284_3_, p_199284_5_, p_199284_7_, p_199284_9_, p_199284_11_, p_199284_13_) -> {
             double d1 = Math.min(1.0D, p_199284_9_ - p_199284_3_);
             double d2 = Math.min(1.0D, p_199284_11_ - p_199284_5_);
             double d3 = Math.min(1.0D, p_199284_13_ - p_199284_7_);
-            int i = Math.max(2, MathHelper.ceil(d1 / 0.25D));
-            int j = Math.max(2, MathHelper.ceil(d2 / 0.25D));
-            int k = Math.max(2, MathHelper.ceil(d3 / 0.25D));
+            int i = Math.max(2, Mth.ceil(d1 / 0.25D));
+            int j = Math.max(2, Mth.ceil(d2 / 0.25D));
+            int k = Math.max(2, Mth.ceil(d3 / 0.25D));
 
             for (int l = 0; l < i / 2; ++l) {
                 for (int i1 = 0; i1 < j / 2; ++i1) {
@@ -295,7 +301,7 @@ public class ClientProxy extends CommonProxy {
                         double d7 = d4 * d1 + p_199284_3_;
                         double d8 = d5 * d2 + p_199284_5_;
                         double d9 = d6 * d3 + p_199284_7_;
-                        Minecraft.getInstance().particleEngine.add((new DiggingParticle((ClientWorld) world, (double) pos.getX() + d7, (double) pos.getY() + d8, (double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state)).init(pos));
+                        Minecraft.getInstance().particleEngine.add((new TerrainParticle((ClientLevel) world, (double) pos.getX() + d7, (double) pos.getY() + d8, (double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state)).init(pos));
                     }
                 }
             }

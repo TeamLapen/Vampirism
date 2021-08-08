@@ -9,10 +9,10 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.core.ModRegistries;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class ActionArgument implements ArgumentType<IAction> {
     public static final DynamicCommandExceptionType ACTION_NOT_FOUND = new DynamicCommandExceptionType((particle) -> {
-        return new TranslationTextComponent("command.vampirism.argument.action.notfound", particle);
+        return new TranslatableComponent("command.vampirism.argument.action.notfound", particle);
     });
     private static final Collection<String> EXAMPLES = Arrays.asList("action", "modid:action");
 
@@ -28,7 +28,7 @@ public class ActionArgument implements ArgumentType<IAction> {
         return new ActionArgument();
     }
 
-    public static IAction getAction(CommandContext<CommandSource> context, String name) {
+    public static IAction getAction(CommandContext<CommandSourceStack> context, String name) {
         return context.getArgument(name, IAction.class);
     }
 
@@ -39,7 +39,7 @@ public class ActionArgument implements ArgumentType<IAction> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return ISuggestionProvider.suggestResource(ModRegistries.ACTIONS.getKeys(), builder);
+        return SharedSuggestionProvider.suggestResource(ModRegistries.ACTIONS.getKeys(), builder);
     }
 
     @Override

@@ -7,12 +7,12 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTags;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.AABB;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -62,7 +62,7 @@ public class BiteableEntryManager {
      * @return The created entry or null
      */
     @Nullable
-    public BiteableEntry calculate(@Nonnull CreatureEntity creature) {
+    public BiteableEntry calculate(@Nonnull PathfinderMob creature) {
         if (!VampirismConfig.SERVER.autoCalculateEntityBlood.get()) return null;
         EntityType<?> type = creature.getType();
         @Nullable
@@ -73,7 +73,7 @@ public class BiteableEntryManager {
             blacklist.add(id);
             return null;
         }
-        AxisAlignedBB bb = creature.getBoundingBox();
+        AABB bb = creature.getBoundingBox();
         double v = bb.maxX - bb.minX;
         v *= bb.maxY - bb.minY;
         v *= bb.maxZ - bb.minZ;
@@ -103,7 +103,7 @@ public class BiteableEntryManager {
      * @return {@code null} if resources aren't loaded or the creatures type is blacklisted.
      */
     public @Nullable
-    BiteableEntry get(CreatureEntity creature) {
+    BiteableEntry get(PathfinderMob creature) {
         if (!initialized) return null;
         EntityType<?> type = creature.getType();
         ResourceLocation id = EntityType.getKey(type);
@@ -159,11 +159,11 @@ public class BiteableEntryManager {
      * @param creature the entity to check
      * @returns weather the entity is blacklisted or not
      */
-    private boolean isEntityBlacklisted(CreatureEntity creature) {
-        if (!(creature instanceof AnimalEntity)) return true;
+    private boolean isEntityBlacklisted(PathfinderMob creature) {
+        if (!(creature instanceof Animal)) return true;
         if (creature instanceof IVampire) return true;
         EntityType<?> type = creature.getType();
-        if (type.getCategory() == EntityClassification.MONSTER || type.getCategory() == EntityClassification.WATER_CREATURE)
+        if (type.getCategory() == MobCategory.MONSTER || type.getCategory() == MobCategory.WATER_CREATURE)
             return true;
         if (ModTags.Entities.VAMPIRE.contains(type)) return true;
         //noinspection ConstantConditions

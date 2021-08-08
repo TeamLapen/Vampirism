@@ -2,16 +2,16 @@ package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.util.Mth;
 
 import javax.annotation.Nullable;
 
-public class SpecialConvertingHandler<T extends CreatureEntity, Z extends CreatureEntity & IConvertedCreature<T>> extends DefaultConvertingHandler<T> {
+public class SpecialConvertingHandler<T extends PathfinderMob, Z extends PathfinderMob & IConvertedCreature<T>> extends DefaultConvertingHandler<T> {
 
     private final EntityType<Z> convertedType;
 
@@ -25,14 +25,14 @@ public class SpecialConvertingHandler<T extends CreatureEntity, Z extends Creatu
     public IConvertedCreature<T> createFrom(T entity) {
         return Helper.createEntity(this.convertedType, entity.getCommandSenderWorld()).map(convertedCreature -> {
             copyImportantStuff(convertedCreature, entity);
-            convertedCreature.setUUID(MathHelper.createInsecureUUID(convertedCreature.getRandom()));
-            convertedCreature.addEffect(new EffectInstance(Effects.WEAKNESS, 200, 2));
+            convertedCreature.setUUID(Mth.createInsecureUUID(convertedCreature.getRandom()));
+            convertedCreature.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 2));
             return convertedCreature;
         }).orElse(null);
     }
 
     protected void copyImportantStuff(Z converted, T entity) {
-        CompoundNBT nbt = new CompoundNBT();
+        CompoundTag nbt = new CompoundTag();
         entity.saveWithoutId(nbt);
         converted.yBodyRot = entity.yBodyRot;
         converted.yHeadRot = entity.yHeadRot;

@@ -6,10 +6,10 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.IInstantAction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.particles.ParticleTypes;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.core.particles.ParticleTypes;
 
-public class HealEntityAction<T extends CreatureEntity & IEntityActionUser> extends VampireEntityAction<T> implements IInstantAction<T> {
+public class HealEntityAction<T extends PathfinderMob & IEntityActionUser> extends VampireEntityAction<T> implements IInstantAction<T> {
 
     public HealEntityAction(EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
@@ -28,7 +28,7 @@ public class HealEntityAction<T extends CreatureEntity & IEntityActionUser> exte
     }
 
     @Override
-    public int getWeight(CreatureEntity entity) {
+    public int getWeight(PathfinderMob entity) {
         double healthPercent = entity.getHealth() / entity.getMaxHealth();
         if (healthPercent < 0.1) {
             return 3;

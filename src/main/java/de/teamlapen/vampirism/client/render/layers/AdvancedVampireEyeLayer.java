@@ -1,16 +1,16 @@
 package de.teamlapen.vampirism.client.render.layers;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.IEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -18,13 +18,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Render the eyes over the advanced vampire custom face
  */
 @OnlyIn(Dist.CLIENT)
-public class AdvancedVampireEyeLayer extends LayerRenderer<AdvancedVampireEntity, BipedModel<AdvancedVampireEntity>> {
+public class AdvancedVampireEyeLayer extends RenderLayer<AdvancedVampireEntity, HumanoidModel<AdvancedVampireEntity>> {
 
-    private final IEntityRenderer<AdvancedVampireEntity, BipedModel<AdvancedVampireEntity>> renderer;
+    private final RenderLayerParent<AdvancedVampireEntity, HumanoidModel<AdvancedVampireEntity>> renderer;
 
     private final ResourceLocation[] overlays;
 
-    public AdvancedVampireEyeLayer(IEntityRenderer<AdvancedVampireEntity, BipedModel<AdvancedVampireEntity>> renderer) {
+    public AdvancedVampireEyeLayer(RenderLayerParent<AdvancedVampireEntity, HumanoidModel<AdvancedVampireEntity>> renderer) {
         super(renderer);
         this.renderer = renderer;
         overlays = new ResourceLocation[REFERENCE.EYE_TYPE_COUNT];
@@ -35,12 +35,12 @@ public class AdvancedVampireEyeLayer extends LayerRenderer<AdvancedVampireEntity
 
 
     @Override
-    public void render(MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int packetLightIn, AdvancedVampireEntity advancedVampireEntity, float v, float v1, float v2, float v3, float v4, float v5) {
+    public void render(PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int packetLightIn, AdvancedVampireEntity advancedVampireEntity, float v, float v1, float v2, float v3, float v4, float v5) {
         int type = advancedVampireEntity.getEyeType();
         if (type < 0 || type >= overlays.length) {
             type = 0;
         }
-        IVertexBuilder builder = iRenderTypeBuffer.getBuffer(RenderType.entityCutoutNoCull(overlays[type]));
+        VertexConsumer builder = iRenderTypeBuffer.getBuffer(RenderType.entityCutoutNoCull(overlays[type]));
         boolean showModel = this.getParentModel().head.visible;
         this.getParentModel().head.visible = true;
         this.getParentModel().getHead().render(matrixStack, builder, packetLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);

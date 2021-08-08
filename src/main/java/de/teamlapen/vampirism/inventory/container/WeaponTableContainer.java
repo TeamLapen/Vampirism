@@ -10,29 +10,29 @@ import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.inventory.inventory.WeaponTableCraftingSlot;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.client.util.RecipeBookCategories;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.IContainerListener;
-import net.minecraft.inventory.container.RecipeBookContainer;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.RecipeBookCategory;
-import net.minecraft.item.crafting.RecipeItemHelper;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SSetSlotPacket;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.client.RecipeBookCategories;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.ContainerListener;
+import net.minecraft.world.inventory.RecipeBookMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.inventory.RecipeBookType;
+import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.network.IContainerFactory;
+import net.minecraftforge.fmllegacy.network.IContainerFactory;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -41,16 +41,16 @@ import java.util.Optional;
 /**
  * Container to handle crafting in the hunter weapon crafting table
  */
-public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory> {
-    private final IWorldPosCallable worldPos;
+public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
+    private final ContainerLevelAccess worldPos;
     private final HunterPlayer hunterPlayer;
-    private final PlayerEntity player;
-    private final CraftingInventory craftMatrix = new CraftingInventory(this, 4, 4);
-    private final CraftResultInventory craftResult = new CraftResultInventory();
+    private final Player player;
+    private final CraftingContainer craftMatrix = new CraftingContainer(this, 4, 4);
+    private final ResultContainer craftResult = new ResultContainer();
     private boolean missingLava = false;
     private boolean prevMissingLava = false;
 
-    public WeaponTableContainer(int id, PlayerInventory playerInventory, IWorldPosCallable worldPosCallable) {
+    public WeaponTableContainer(int id, Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
         super(ModContainer.weapon_table, id);
         this.worldPos = worldPosCallable;
         this.hunterPlayer = HunterPlayer.get(playerInventory.player);
@@ -79,9 +79,9 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     @Override
     public void broadcastChanges() {
         super.broadcastChanges();
-        for (IContainerListener icontainerlistener : this.containerListeners) {
+        for (ContainerListener icontainerlistener : this.containerListeners) {
             if (this.prevMissingLava != this.missingLava) {
-                icontainerlistener.setContainerData(this, 0, missingLava ? 1 : 0);
+                icontainerlistener.dataChanged(this, 0, missingLava ? 1 : 0);
             }
 
         }
@@ -103,7 +103,7 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     }
 
     @Override
-    public void fillCraftSlotsStackedContents(@Nonnull RecipeItemHelper recipeItemHelper) {
+    public void fillCraftSlotsStackedContents(@Nonnull StackedContents recipeItemHelper) {
         craftMatrix.fillStackedContents(recipeItemHelper);
     }
 
@@ -118,8 +118,13 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     }
 
     @Override
-    public RecipeBookCategory getRecipeBookType() {
-        return RecipeBookCategory.CRAFTING;
+    public RecipeBookType getRecipeBookType() {
+        return RecipeBookType.CRAFTING;
+    }
+
+    @Override
+    public boolean shouldMoveToInventory(int p_150635_) {
+        return p_150635_ != getResultSlotIndex();
     }
 
     @Override
@@ -129,8 +134,8 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
 
     @SuppressWarnings("unchecked")
     @Override
-    public void handlePlacement(boolean shouldPlaceAll, @Nonnull IRecipe<?> recipe, @Nonnull ServerPlayerEntity serverPlayer) {
-        new WeaponTableRecipePlacer<>(this).recipeClicked(serverPlayer, (IRecipe<CraftingInventory>) recipe, shouldPlaceAll);
+    public void handlePlacement(boolean shouldPlaceAll, @Nonnull Recipe<?> recipe, @Nonnull ServerPlayer serverPlayer) {
+        new WeaponTableRecipePlacer<>(this).recipeClicked(serverPlayer, (Recipe<CraftingContainer>) recipe, shouldPlaceAll);
     }
 
     @Nonnull
@@ -149,7 +154,7 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     }
 
     @Nonnull
-    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemStackCopy = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
 
@@ -199,15 +204,15 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     }
 
     @Override
-    public boolean recipeMatches(IRecipe<? super CraftingInventory> recipeIn) {
+    public boolean recipeMatches(Recipe<? super CraftingContainer> recipeIn) {
         return recipeIn.matches(craftMatrix, this.player.level);
     }
 
     @Override
-    public void removed(PlayerEntity playerIn) {
+    public void removed(Player playerIn) {
         super.removed(playerIn);
         this.worldPos.execute((world, pos) -> {
-            this.clearContainer(playerIn, world, craftMatrix);
+            this.clearContainer(playerIn, craftMatrix);
             for (int i = 0; i < this.craftMatrix.getContainerSize(); ++i) {
                 ItemStack itemstack = this.craftMatrix.removeItemNoUpdate(i);
 
@@ -228,20 +233,20 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     }
 
     @Override
-    public void slotsChanged(IInventory inventoryIn) {
+    public void slotsChanged(Container inventoryIn) {
         this.worldPos.execute((world, pos) -> {
             slotChangedCraftingGrid(world, this.player, this.hunterPlayer, this.craftMatrix, this.craftResult);
         });
     }
 
     @Override
-    public boolean stillValid(@Nonnull PlayerEntity playerIn) {
+    public boolean stillValid(@Nonnull Player playerIn) {
         return stillValid(this.worldPos, playerIn, ModBlocks.weapon_table);
     }
 
-    private void slotChangedCraftingGrid(World worldIn, PlayerEntity playerIn, HunterPlayer hunter, CraftingInventory craftMatrixIn, CraftResultInventory craftResultIn) {
-        if (!worldIn.isClientSide && playerIn instanceof ServerPlayerEntity) {
-            ServerPlayerEntity entityplayermp = (ServerPlayerEntity) playerIn;
+    private void slotChangedCraftingGrid(Level worldIn, Player playerIn, HunterPlayer hunter, CraftingContainer craftMatrixIn, ResultContainer craftResultIn) {
+        if (!worldIn.isClientSide && playerIn instanceof ServerPlayer) {
+            ServerPlayer entityplayermp = (ServerPlayer) playerIn;
             Optional<IWeaponTableRecipe> optional = worldIn.getServer() == null ? Optional.empty() : worldIn.getServer().getRecipeManager().getRecipeFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, craftMatrixIn, worldIn);
             this.missingLava = false;
             craftResultIn.setItem(0, ItemStack.EMPTY);
@@ -257,16 +262,16 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
                     });
                 }
             }
-            entityplayermp.connection.send(new SSetSlotPacket(this.containerId, 0, craftResultIn.getItem(0)));
+            entityplayermp.connection.send(new ClientboundContainerSetSlotPacket(this.containerId, this.incrementStateId(), 0, craftResultIn.getItem(0)));
         }
     }
 
     public static class Factory implements IContainerFactory<WeaponTableContainer> {
 
         @Override
-        public WeaponTableContainer create(int windowId, PlayerInventory inv, PacketBuffer data) {
+        public WeaponTableContainer create(int windowId, Inventory inv, FriendlyByteBuf data) {
             BlockPos pos = data.readBlockPos();
-            return new WeaponTableContainer(windowId, inv, IWorldPosCallable.create(inv.player.level, pos));
+            return new WeaponTableContainer(windowId, inv, ContainerLevelAccess.create(inv.player.level, pos));
         }
     }
 }

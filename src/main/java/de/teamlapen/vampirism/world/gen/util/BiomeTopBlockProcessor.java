@@ -2,15 +2,15 @@ package de.teamlapen.vampirism.world.gen.util;
 
 import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.core.ModFeatures;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.gen.feature.template.IStructureProcessorType;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.StructureProcessor;
-import net.minecraft.world.gen.feature.template.Template;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,20 +31,20 @@ public class BiomeTopBlockProcessor extends StructureProcessor {
     }
 
     @Nullable
-    public Template.BlockInfo process(@Nonnull IWorldReader worldReaderIn, @Nonnull BlockPos pos, @Nonnull BlockPos pos1, @Nonnull Template.BlockInfo blockInfo, Template.BlockInfo blockInfo1, @Nonnull PlacementSettings placementSettings, @Nullable Template template) {
+    public StructureTemplate.StructureBlockInfo process(@Nonnull LevelReader worldReaderIn, @Nonnull BlockPos pos, @Nonnull BlockPos pos1, @Nonnull StructureTemplate.StructureBlockInfo blockInfo, StructureTemplate.StructureBlockInfo blockInfo1, @Nonnull StructurePlaceSettings placementSettings, @Nullable StructureTemplate template) {
         if (blockInfo1.state.equals(replaceBlock)) {
             BlockState topBlock = worldReaderIn.getBiome(blockInfo1.pos).getGenerationSettings().getSurfaceBuilderConfig().getTopMaterial();
             if (streetBlocks.containsKey(topBlock.getBlock())) {
                 topBlock = streetBlocks.get(topBlock.getBlock()).defaultBlockState();
             }
-            return new Template.BlockInfo(blockInfo1.pos, topBlock, null);
+            return new StructureTemplate.StructureBlockInfo(blockInfo1.pos, topBlock, null);
         }
         return blockInfo1;
     }
 
     @Nonnull
     @Override
-    protected IStructureProcessorType<?> getType() {
+    protected StructureProcessorType<?> getType() {
         return ModFeatures.biome_based;
     }
 

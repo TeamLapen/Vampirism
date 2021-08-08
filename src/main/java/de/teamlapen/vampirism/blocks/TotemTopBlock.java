@@ -4,28 +4,37 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Top of a two block multiblock structure.
@@ -34,7 +43,7 @@ import java.util.List;
  * <p>
  * Has both model renderer (with color/tint) and TESR (used for beam)
  */
-public class TotemTopBlock extends ContainerBlock {
+public class TotemTopBlock extends BaseEntityBlock {
     private static final List<TotemTopBlock> blocks = new ArrayList<>();
     private static final VoxelShape shape = makeShape();
 
@@ -45,7 +54,7 @@ public class TotemTopBlock extends ContainerBlock {
     private static VoxelShape makeShape() {
         VoxelShape a = Block.box(3, 0, 3, 13, 10, 13);
         VoxelShape b = Block.box(1, 1, 1, 15, 9, 15);
-        return VoxelShapes.or(a, b);
+        return Shapes.or(a, b);
     }
     public final ResourceLocation faction;
     private final boolean crafted;
@@ -61,14 +70,14 @@ public class TotemTopBlock extends ContainerBlock {
     }
 
     @Override
-    public boolean canEntityDestroy(BlockState state, IBlockReader world, BlockPos pos, Entity entity) {
+    public boolean canEntityDestroy(BlockState state, BlockGetter world, BlockPos pos, Entity entity) {
         return false;
     }
 
     @Nonnull
     @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
@@ -77,9 +86,9 @@ public class TotemTopBlock extends ContainerBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         if (worldIn.isClientSide) return;
-        TileEntity tile = worldIn.getBlockEntity(pos);
+        BlockEntity tile = worldIn.getBlockEntity(pos);
         if (tile instanceof TotemTileEntity) {
             ((TotemTileEntity) tile).updateTileStatus();
             worldIn.blockEvent(pos, this, 1, 0); //Notify client about render update
@@ -88,7 +97,7 @@ public class TotemTopBlock extends ContainerBlock {
 
     @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return shape;
     }
 
@@ -98,30 +107,30 @@ public class TotemTopBlock extends ContainerBlock {
 
     @Nullable
     @Override
-    public TileEntity newBlockEntity(@Nonnull IBlockReader worldIn) {
-        return ModTiles.totem.create();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return ModTiles.totem.create(pos, state);
     }
 
     @Override
-    public void onRemove(BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
         if (!(newState.getBlock() instanceof TotemTopBlock)) {
             worldIn.removeBlockEntity(pos);
         }
     }
 
     @Override
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (world.isClientSide) return ActionResultType.SUCCESS;
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (world.isClientSide) return InteractionResult.SUCCESS;
         TotemTileEntity t = getTile(world, pos);
         if (t != null && world.getBlockState(pos.below()).getBlock().equals(ModBlocks.totem_base)) {
             t.initiateCapture(player);
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
         return super.use(state, world, pos, player, hand, hit);
     }
 
     @Override
-    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
+    public boolean removedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         TotemTileEntity tile = getTile(world, pos);
         if (tile != null) {
             if (!tile.canPlayerRemoveBlock(player)) {
@@ -130,7 +139,7 @@ public class TotemTopBlock extends ContainerBlock {
         }
         if (super.removedByPlayer(state, world, pos, player, willHarvest, fluid)) {
             if (tile != null && tile.getControllingFaction() != null) {
-                tile.notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.village_abandoned"));
+                tile.notifyNearbyPlayers(new TranslatableComponent("text.vampirism.village.village_abandoned"));
             }
             return true;
         } else {
@@ -139,9 +148,15 @@ public class TotemTopBlock extends ContainerBlock {
     }
 
     @Nullable
-    private TotemTileEntity getTile(World world, BlockPos pos) {
-        TileEntity tile = world.getBlockEntity(pos);
+    private TotemTileEntity getTile(Level world, BlockPos pos) {
+        BlockEntity tile = world.getBlockEntity(pos);
         if (tile instanceof TotemTileEntity) return (TotemTileEntity) tile;
         return null;
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, ModTiles.totem, level.isClientSide() ? TotemTileEntity::clientTick : TotemTileEntity::serverTick);
     }
 }

@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 

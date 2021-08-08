@@ -1,9 +1,15 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.tileentity.TentTileEntity;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -11,7 +17,7 @@ import javax.annotation.Nullable;
 /**
  * Main block for the 2x2 block tent. Handles spawning
  */
-public class TentMainBlock extends TentBlock implements ITileEntityProvider {
+public class TentMainBlock extends TentBlock implements EntityBlock {
     private static final String name = "tent_main";
 
     public TentMainBlock() {
@@ -20,8 +26,21 @@ public class TentMainBlock extends TentBlock implements ITileEntityProvider {
 
     @Nullable
     @Override
-    public TileEntity newBlockEntity(@Nonnull IBlockReader worldIn) {
-        return new TentTileEntity();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new TentTileEntity(pos, state);
     }
 
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState p_153213_, BlockEntityType<T> p_153214_) {
+        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModTiles.tent, TentTileEntity::serverTick);
+    }
+
+    /**
+     * Need this to convince generics. Copy from BaseEntityBlock
+     */
+    @Nullable
+    private static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> p_152133_, BlockEntityType<E> p_152134_, BlockEntityTicker<? super E> p_152135_) {
+        return p_152134_ == p_152133_ ? (BlockEntityTicker<A>)p_152135_ : null;
+    }
 }

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
@@ -17,12 +17,12 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -47,7 +47,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
     }
 
     @Override
-    public void draw(IWeaponTableRecipe recipe, MatrixStack stack, double mouseX, double mouseY) {
+    public void draw(IWeaponTableRecipe recipe, PoseStack stack, double mouseX, double mouseY) {
 
         int x = 2;
         int y = 80;
@@ -59,14 +59,14 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
             RenderSystem.popMatrix();
         }
         if (recipe.getRequiredLevel() > 1) {
-            ITextComponent level = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
+            Component level = new TranslatableComponent("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
 
             minecraft.font.draw(stack, level, x, y, Color.gray.getRGB());
             y += minecraft.font.lineHeight + 2;
         }
         ISkill[] requiredSkills = recipe.getRequiredSkills();
         if (requiredSkills.length > 0) {
-            IFormattableTextComponent skillText = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.skill", " ");
+            MutableComponent skillText = new TranslatableComponent("gui.vampirism.hunter_weapon_table.skill", " ");
 
             for (ISkill skill : recipe.getRequiredSkills()) {
                 skillText.append(skill.getName()).append(" ");

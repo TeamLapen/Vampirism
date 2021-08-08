@@ -4,13 +4,15 @@ package de.teamlapen.vampirism.items;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import de.teamlapen.vampirism.VampirismMod;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.UUID;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class UmbrellaItem extends VampirismItem {
     private final static String regName = "umbrella";
@@ -21,9 +23,9 @@ public class UmbrellaItem extends VampirismItem {
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot, ItemStack stack) {
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
-        if (equipmentSlot == EquipmentSlotType.MAINHAND) {
+        if (equipmentSlot == EquipmentSlot.MAINHAND) {
             multimap.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(SPEED_MODIFIER, "Umbrella modifier", -0.35, AttributeModifier.Operation.MULTIPLY_BASE));
         }
         return multimap;

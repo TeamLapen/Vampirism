@@ -3,11 +3,13 @@ package de.teamlapen.vampirism.entity.goals;
 import de.teamlapen.vampirism.api.entity.IEntityLeader;
 import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
-import net.minecraft.command.arguments.EntityAnchorArgument;
-import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 import java.util.List;
+
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 /**
  * Makes the basic hunter follow a nearby advanced vampires
@@ -81,7 +83,7 @@ public class FollowAdvancedVampireGoal extends Goal {
         if (--this.delayCounter <= 0 && entity.getAdvancedLeader() != null) {
             this.delayCounter = 10;
             this.entity.getNavigation().moveTo(this.entity.getAdvancedLeader().getRepresentingEntity(), this.speed);
-            this.entity.lookAt(EntityAnchorArgument.Type.EYES, this.entity.getAdvancedLeader().getRepresentingEntity().position().add(0, this.entity.getAdvancedLeader().getRepresentingEntity().getEyeHeight(), 0));
+            this.entity.lookAt(EntityAnchorArgument.Anchor.EYES, this.entity.getAdvancedLeader().getRepresentingEntity().position().add(0, this.entity.getAdvancedLeader().getRepresentingEntity().getEyeHeight(), 0));
         }
     }
 }

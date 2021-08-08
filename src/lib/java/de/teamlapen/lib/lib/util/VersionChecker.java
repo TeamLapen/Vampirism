@@ -6,7 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import de.teamlapen.lib.VampLib;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.thread.EffectiveSide;
+import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.versions.mcp.MCPVersion;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

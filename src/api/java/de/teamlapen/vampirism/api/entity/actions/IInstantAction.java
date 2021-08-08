@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.api.entity.actions;
 
-import net.minecraft.entity.CreatureEntity;
+import net.minecraft.world.entity.PathfinderMob;
 
 /**
  * {@link IEntityAction} that executes immediately
  */
-public interface IInstantAction<T extends CreatureEntity & IEntityActionUser> extends IEntityAction {
+public interface IInstantAction<T extends PathfinderMob & IEntityActionUser> extends IEntityAction {
 
     /**
      * called to active the action

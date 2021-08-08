@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.items;
 
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 public class SimpleCrossbowItem extends VampirismItemCrossbow {
 
@@ -34,7 +34,7 @@ public class SimpleCrossbowItem extends VampirismItemCrossbow {
     }
 
     @Override
-    protected int getCooldown(PlayerEntity player, ItemStack stack) {
+    protected int getCooldown(Player player, ItemStack stack) {
         return coolDownTicks;
     }
 }

@@ -3,21 +3,22 @@ package de.teamlapen.vampirism.network;
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class TaskActionPacket implements IMessage {
+public record TaskActionPacket(UUID task, UUID entityId,
+                               TaskContainer.TaskAction action) implements IMessage {
 
-    static void encode(TaskActionPacket msg, PacketBuffer buf) {
+    static void encode(TaskActionPacket msg, FriendlyByteBuf buf) {
         buf.writeUUID(msg.task);
         buf.writeUUID(msg.entityId);
         buf.writeVarInt(msg.action.ordinal());
     }
 
-    static TaskActionPacket decode(PacketBuffer buf) {
+    static TaskActionPacket decode(FriendlyByteBuf buf) {
         return new TaskActionPacket(buf.readUUID(), buf.readUUID(), TaskContainer.TaskAction.values()[buf.readVarInt()]);
     }
 
@@ -26,13 +27,5 @@ public class TaskActionPacket implements IMessage {
         ctx.enqueueWork(() -> VampirismMod.proxy.handleTaskActionPacket(msg, ctx.getSender()));
         ctx.setPacketHandled(true);
     }
-    public final UUID task;
-    public final UUID entityId;
-    public final TaskContainer.TaskAction action;
 
-    public TaskActionPacket(UUID task, UUID entityId, TaskContainer.TaskAction action) {
-        this.task = task;
-        this.entityId = entityId;
-        this.action = action;
-    }
 }

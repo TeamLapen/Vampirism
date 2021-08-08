@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.modcompat.guide.recipes;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.maxanier.guideapi.api.impl.Book;
 import de.maxanier.guideapi.api.impl.abstraction.CategoryAbstract;
 import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
@@ -8,10 +8,10 @@ import de.maxanier.guideapi.api.util.GuiHelper;
 import de.maxanier.guideapi.api.util.IngredientCycler;
 import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.vampirism.inventory.recipes.ShapelessWeaponTableRecipe;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -23,7 +23,7 @@ public class ShapelessWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRe
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void draw(MatrixStack stack, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen baseScreen, FontRenderer fontRenderer, IngredientCycler ingredientCycler) {
+    public void draw(PoseStack stack, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen baseScreen, Font fontRenderer, IngredientCycler ingredientCycler) {
         super.draw(stack, book, categoryAbstract, entryAbstract, guiLeft, guiTop, mouseX, mouseY, baseScreen, fontRenderer, ingredientCycler);
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
@@ -44,7 +44,7 @@ public class ShapelessWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRe
     }
 
     @Override
-    protected IFormattableTextComponent getRecipeName() {
-        return new TranslationTextComponent("guideapi.text.crafting.shapeless");
+    protected MutableComponent getRecipeName() {
+        return new TranslatableComponent("guideapi.text.crafting.shapeless");
     }
 }

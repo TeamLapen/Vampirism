@@ -3,25 +3,27 @@ package de.teamlapen.vampirism.items;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import de.teamlapen.vampirism.REFERENCE;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.SwordItem;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.Util;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class VampirismItemWeapon extends SwordItem {
 
@@ -31,7 +33,7 @@ public class VampirismItemWeapon extends SwordItem {
     private String translation_key;
 
 
-    public VampirismItemWeapon(String regName, IItemTier material, int attackDamageIn, float attackSpeedIn, Properties builder) {
+    public VampirismItemWeapon(String regName, Tier material, int attackDamageIn, float attackSpeedIn, Properties builder) {
         super(material, attackDamageIn, attackSpeedIn, builder);
         this.attackDamage = attackDamageIn;
         this.attackSpeed = attackSpeedIn;
@@ -41,18 +43,18 @@ public class VampirismItemWeapon extends SwordItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (flagIn.isAdvanced()) {
-            tooltip.add(new StringTextComponent("ModDamage: " + getAttackDamage(stack)));
-            tooltip.add(new StringTextComponent("ModSpeed: " + getAttackSpeed(stack)));
+            tooltip.add(new TextComponent("ModDamage: " + getAttackDamage(stack)));
+            tooltip.add(new TextComponent("ModSpeed: " + getAttackSpeed(stack)));
         }
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot, ItemStack stack) {
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
-        if (equipmentSlot == EquipmentSlotType.MAINHAND) {
+        if (equipmentSlot == EquipmentSlot.MAINHAND) {
             multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", getAttackDamage(stack), AttributeModifier.Operation.ADDITION));
             multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", getAttackSpeed(stack), AttributeModifier.Operation.ADDITION));
         }

@@ -2,14 +2,16 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.model.armor.HunterHatModel;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorMaterials;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import net.minecraft.world.item.Item.Properties;
 
 /**
  * Simple headwear that look like a hunter head
@@ -19,20 +21,20 @@ public class HunterHatItem extends VampirismHunterArmor {
     private final int type;
 
     public HunterHatItem(int type) {
-        super(baseRegName, "" + type, ArmorMaterial.IRON, EquipmentSlotType.HEAD, new Properties().tab(VampirismMod.creativeTab));
+        super(baseRegName, "" + type, ArmorMaterials.IRON, EquipmentSlot.HEAD, new Properties().tab(VampirismMod.creativeTab));
         this.type = type;
     }
 
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public BipedModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, BipedModel _default) {
+    public HumanoidModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel _default) {
         return type == 0 ? HunterHatModel.hat0 : HunterHatModel.hat1;
     }
 
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
         return "vampirism:textures/entity/hunter_extra.png";
     }
 

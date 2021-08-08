@@ -5,10 +5,10 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.tileentity.BloodContainerTileEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -33,8 +33,8 @@ public class BloodHelper {
      * @param inventory
      * @return
      */
-    public static ItemStack getBloodHandlerInHotbar(PlayerInventory inventory) {
-        int hotbarSize = PlayerInventory.getSelectionSize();
+    public static ItemStack getBloodHandlerInHotbar(Inventory inventory) {
+        int hotbarSize = Inventory.getSelectionSize();
         for (int i = 0; i < hotbarSize; i++) {
             ItemStack stack = inventory.getItem(i);
             if (!stack.isEmpty() && FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.blood, 1000), IFluidHandler.FluidAction.SIMULATE) > 0).orElse(false))
@@ -53,8 +53,8 @@ public class BloodHelper {
     /**
      * Returns the first glass bottle stack on the players hotbar
      */
-    public static ItemStack getGlassBottleInHotbar(PlayerInventory inventory) {
-        int hotbarSize = PlayerInventory.getSelectionSize();
+    public static ItemStack getGlassBottleInHotbar(Inventory inventory) {
+        int hotbarSize = Inventory.getSelectionSize();
         for (int i = 0; i < hotbarSize; i++) {
             ItemStack itemStack = inventory.getItem(i);
             if (!itemStack.isEmpty() && itemStack.getItem().equals(Items.GLASS_BOTTLE)) {
@@ -113,10 +113,10 @@ public class BloodHelper {
      * @param amt Fluid amount in mB
      * @return Blood amount that could not be filled
      */
-    public static int fillBloodIntoInventory(PlayerEntity player, int amt) {
+    public static int fillBloodIntoInventory(Player player, int amt) {
         if (amt <= 0) return 0;
         ItemStack stack = ItemStack.EMPTY;
-        int hotbarSize = PlayerInventory.getSelectionSize();
+        int hotbarSize = Inventory.getSelectionSize();
         for (int i = 0; i < hotbarSize; i++) {
             ItemStack stack1 = player.inventory.getItem(i);
             if (!stack1.isEmpty() && fill(stack1, amt, IFluidHandler.FluidAction.SIMULATE) > 0) {
@@ -166,8 +166,8 @@ public class BloodHelper {
 
     }
 
-    public static boolean hasFeedingAdapterInHotbar(PlayerInventory inventory) {
-        int hotbarSize = PlayerInventory.getSelectionSize();
+    public static boolean hasFeedingAdapterInHotbar(Inventory inventory) {
+        int hotbarSize = Inventory.getSelectionSize();
         for (int i = 0; i < hotbarSize; i++) {
             ItemStack itemStack = inventory.getItem(i);
             if (!itemStack.isEmpty() && itemStack.getItem().equals(ModItems.feeding_adapter)) {
@@ -177,7 +177,7 @@ public class BloodHelper {
         return false;
     }
 
-    public static ItemStack getBloodContainerInInventory(PlayerInventory inventory, boolean allowFull, boolean allowEmpty) {
+    public static ItemStack getBloodContainerInInventory(Inventory inventory, boolean allowFull, boolean allowEmpty) {
         for (int i = 0; i < inventory.getContainerSize(); i++) {
             ItemStack stack = inventory.getItem(i);
             FluidStack content = BloodContainerBlock.getFluidFromItemStack(stack);

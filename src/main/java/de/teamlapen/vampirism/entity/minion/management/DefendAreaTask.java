@@ -3,10 +3,10 @@ package de.teamlapen.vampirism.entity.minion.management;
 
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.core.BlockPos;
 
 import javax.annotation.Nullable;
 
@@ -17,7 +17,7 @@ public class DefendAreaTask extends DefaultMinionTask<Desc, MinionData> {
 
 
     @Override
-    public Desc activateTask(@Nullable PlayerEntity lord, @Nullable IMinionEntity minion, MinionData inventory) {
+    public Desc activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, MinionData inventory) {
         this.triggerAdvancements(lord);
         BlockPos pos = minion != null ? minion.getRepresentingEntity().blockPosition() : (lord != null ? lord.blockPosition() : null);
         return pos == null ? null : new Desc(pos, 10);
@@ -30,8 +30,8 @@ public class DefendAreaTask extends DefaultMinionTask<Desc, MinionData> {
     }
 
     @Override
-    public Desc readFromNBT(CompoundNBT nbt) {
-        BlockPos pos = NBTUtil.readBlockPos(nbt.getCompound("center"));
+    public Desc readFromNBT(CompoundTag nbt) {
+        BlockPos pos = NbtUtils.readBlockPos(nbt.getCompound("center"));
         int dist = nbt.getInt("radius");
         return new Desc(pos, dist);
     }
@@ -52,8 +52,8 @@ public class DefendAreaTask extends DefaultMinionTask<Desc, MinionData> {
         }
 
         @Override
-        public void writeToNBT(CompoundNBT nbt) {
-            nbt.put("center", NBTUtil.writeBlockPos(center));
+        public void writeToNBT(CompoundTag nbt) {
+            nbt.put("center", NbtUtils.writeBlockPos(center));
             nbt.putInt("radius", distance);
         }
     }

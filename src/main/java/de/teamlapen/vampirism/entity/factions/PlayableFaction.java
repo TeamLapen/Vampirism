@@ -3,9 +3,9 @@ package de.teamlapen.vampirism.entity.factions;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.IVillageFactionData;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
@@ -22,10 +22,10 @@ public class PlayableFaction<T extends IFactionPlayer<?>> extends Faction<T> imp
     private final int highestLevel;
     private final int highestLordLevel;
     private final NonNullSupplier<Capability<T>> playerCapabilitySupplier;
-    private final BiFunction<Integer, Boolean, ITextComponent> lordTitleFunction;
+    private final BiFunction<Integer, Boolean, Component> lordTitleFunction;
     private boolean renderLevel = true;
 
-    PlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull BiFunction<Integer, Boolean, ITextComponent> lordTitleFunction, @Nonnull IVillageFactionData villageFactionData) {
+    PlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull BiFunction<Integer, Boolean, Component> lordTitleFunction, @Nonnull IVillageFactionData villageFactionData) {
         super(id, entityInterface, color, hostileTowardsNeutral, villageFactionData);
         this.highestLevel = highestLevel;
         this.playerCapabilitySupplier = playerCapabilitySupplier;
@@ -50,13 +50,13 @@ public class PlayableFaction<T extends IFactionPlayer<?>> extends Faction<T> imp
 
     @Nonnull
     @Override
-    public ITextComponent getLordTitle(int level, boolean female) {
+    public Component getLordTitle(int level, boolean female) {
         assert level <= highestLordLevel;
         return lordTitleFunction.apply(level, female);
     }
 
     @Override
-    public LazyOptional<T> getPlayerCapability(PlayerEntity player) {
+    public LazyOptional<T> getPlayerCapability(Player player) {
         return player.getCapability(playerCapabilitySupplier.get(), null);
     }
 

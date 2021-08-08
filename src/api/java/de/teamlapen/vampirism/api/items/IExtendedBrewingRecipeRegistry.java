@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.items;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.NonNullList;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.List;

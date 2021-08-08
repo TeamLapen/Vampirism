@@ -2,24 +2,24 @@ package de.teamlapen.vampirism.entity.goals;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.TargetGoal;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 
 import javax.annotation.Nullable;
 
 
-public class DefendVillageGoal<T extends CreatureEntity & IVillageCaptureEntity> extends TargetGoal {
+public class DefendVillageGoal<T extends PathfinderMob & IVillageCaptureEntity> extends TargetGoal {
 
     private final T creature;
-    protected final EntityPredicate entityPredicate;
+    protected final TargetingConditions entityPredicate;
     private final double distance = getFollowDistance() * 4;
 
     public DefendVillageGoal(T creature) {
         super(creature, false, false);
         this.creature = creature;
-        this.entityPredicate = new EntityPredicate() {
+        this.entityPredicate = new TargetingConditions() {
             @Override
             public boolean test(@Nullable LivingEntity attackEntity, LivingEntity targetEntity) {
                 if (creature.getCaptureInfo() != null && creature.getCaptureInfo().shouldForceTargets() && getFollowDistance() > 0) {

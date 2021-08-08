@@ -8,9 +8,9 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -39,15 +39,15 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      * Used to store convertible handlers after {@link FMLCommonSetupEvent}
      */
     @Nonnull
-    private final Map<EntityType<? extends CreatureEntity>, IConvertingHandler> convertibles = new ConcurrentHashMap<>();
+    private final Map<EntityType<? extends PathfinderMob>, IConvertingHandler> convertibles = new ConcurrentHashMap<>();
     @Nonnull
-    private final Map<EntityType<? extends CreatureEntity>, ResourceLocation> convertibleOverlay = new ConcurrentHashMap<>();
+    private final Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay = new ConcurrentHashMap<>();
     @Nonnull
     private final Map<ResourceLocation, Integer> bloodValues = Maps.newHashMap();
     /**
      * Stores custom extended creature constructors after {@link InterModEnqueueEvent}
      */
-    private final Map<Class<? extends CreatureEntity>, Function> extendedCreatureConstructors = new ConcurrentHashMap<>();
+    private final Map<Class<? extends PathfinderMob>, Function> extendedCreatureConstructors = new ConcurrentHashMap<>();
     private int bloodMultiplier = 100;
     private Function<IConvertingHandler.IDefaultHelper, IConvertingHandler> defaultConvertingHandlerCreator;
 
@@ -58,19 +58,19 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
 
     @Override
     @ThreadSafeAPI
-    public void addConvertible(EntityType<? extends CreatureEntity> type, ResourceLocation overlayLocation) {
+    public void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlayLocation) {
         addConvertible(type, overlayLocation, new DefaultConvertingHandler(null));
     }
 
     @Override
     @ThreadSafeAPI
-    public void addConvertible(EntityType<? extends CreatureEntity> type, ResourceLocation overlay_loc, IConvertingHandler.IDefaultHelper helper) {
+    public void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc, IConvertingHandler.IDefaultHelper helper) {
         addConvertible(type, overlay_loc, defaultConvertingHandlerCreator.apply(helper));
     }
 
     @Override
     @ThreadSafeAPI
-    public void addConvertible(EntityType<? extends CreatureEntity> type, ResourceLocation overlay_loc, @Nonnull IConvertingHandler handler) {
+    public void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc, @Nonnull IConvertingHandler handler) {
         if (finished) throw new IllegalStateException("Register convertibles during InterModEnqueueEvent");
         convertibles.put(type, handler);
 
@@ -81,7 +81,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
 
     @Override
     @ThreadSafeAPI
-    public <T extends CreatureEntity> void addCustomExtendedCreature(Class<? extends T> clazz, Function<T, IExtendedCreatureVampirism> constructor) {
+    public <T extends PathfinderMob> void addCustomExtendedCreature(Class<? extends T> clazz, Function<T, IExtendedCreatureVampirism> constructor) {
         if (finished) throw new IllegalStateException("Register extended creatures during InterModEnqueueEvent");
         extendedCreatureConstructors.put(clazz, constructor);
     }
@@ -93,7 +93,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         Set<ResourceLocation> blacklist = Sets.newHashSet();
         float bloodValueMultiplier = bloodMultiplier / 10F;
         final IConvertingHandler defaultHandler = defaultConvertingHandlerCreator.apply(null);
-        for (Map.Entry<EntityType<? extends CreatureEntity>, IConvertingHandler> entry : convertibles.entrySet()) {
+        for (Map.Entry<EntityType<? extends PathfinderMob>, IConvertingHandler> entry : convertibles.entrySet()) {
             ResourceLocation id = entry.getKey().getRegistryName();
             if (id == null) {
                 LOGGER.warn("Cannot register convertible {} since there is no EntityString for it", entry.getKey());
@@ -124,7 +124,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @Override
     @Nullable
     @SuppressWarnings("unchecked")
-    public IConvertedCreature convert(CreatureEntity entity) {
+    public IConvertedCreature convert(PathfinderMob entity) {
         BiteableEntry b = biteableEntryManager.get(entity);
         if (b != null && b.convertingHandler != null) {
             return b.convertingHandler.createFrom(entity);
@@ -149,20 +149,20 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @Nonnull
     @Override
     @OnlyIn(Dist.CLIENT)
-    public Map<EntityType<? extends CreatureEntity>, ResourceLocation> getConvertibleOverlay() {
+    public Map<EntityType<? extends PathfinderMob>, ResourceLocation> getConvertibleOverlay() {
         return convertibleOverlay;
     }
 
     @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends CreatureEntity> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(T entity) {
+    public <T extends PathfinderMob> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(T entity) {
         return extendedCreatureConstructors.get(entity.getClass());
     }
 
     @Nullable
     @Override
-    public BiteableEntry getEntry(CreatureEntity creature) {
+    public BiteableEntry getEntry(PathfinderMob creature) {
         return biteableEntryManager.get(creature);
     }
 

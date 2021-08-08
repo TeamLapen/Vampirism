@@ -5,11 +5,11 @@ import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.damagesource.DamageSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,16 +23,16 @@ import javax.annotation.Nonnull;
 public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IFactionPlayer<T>, ISyncable.ISyncableEntityCapabilityInst, IPlayerEventListener {
 
     private static final Logger LOGGER = LogManager.getLogger(VampirismPlayer.class);
-    protected final PlayerEntity player;
+    protected final Player player;
     /**
      * {@code @Nonnull} on server, otherwise {@code null}
      */
     private final TaskManager taskManager;
 
-    public VampirismPlayer(PlayerEntity player) {
+    public VampirismPlayer(Player player) {
         this.player = player;
-        if (player instanceof ServerPlayerEntity) {
-            this.taskManager = new TaskManager((ServerPlayerEntity) player, this, this.getFaction());
+        if (player instanceof ServerPlayer) {
+            this.taskManager = new TaskManager((ServerPlayer) player, this, this.getFaction());
         } else {
             this.taskManager = null;
         }
@@ -54,7 +54,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
     }
 
     @Override
-    public PlayerEntity getRepresentingPlayer() {
+    public Player getRepresentingPlayer() {
         return player;
     }
 
@@ -83,7 +83,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
         return player.getCommandSenderWorld().isClientSide;
     }
 
-    public void loadData(CompoundNBT nbt) {
+    public void loadData(CompoundTag nbt) {
         if (this.taskManager != null) {
             this.taskManager.readNBT(nbt);
         } else {
@@ -92,7 +92,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
     }
 
     @Override
-    public final void loadUpdateFromNBT(CompoundNBT nbt) {
+    public final void loadUpdateFromNBT(CompoundTag nbt) {
         loadUpdate(nbt);
     }
 
@@ -102,7 +102,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
     }
 
     @Override
-    public void onPlayerClone(PlayerEntity original, boolean wasDeath) {
+    public void onPlayerClone(Player original, boolean wasDeath) {
         copyFrom(original);
     }
 
@@ -113,7 +113,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
         }
     }
 
-    public void saveData(CompoundNBT nbt) {
+    public void saveData(CompoundTag nbt) {
         if (this.taskManager != null) {
             this.taskManager.writeNBT(nbt);
         } else {
@@ -131,7 +131,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
     }
 
     @Override
-    public final void writeFullUpdateToNBT(CompoundNBT nbt) {
+    public final void writeFullUpdateToNBT(CompoundTag nbt) {
         writeFullUpdate(nbt);
     }
 
@@ -141,14 +141,14 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
      * @param old
      * @return
      */
-    protected abstract VampirismPlayer<T> copyFromPlayer(PlayerEntity old);
+    protected abstract VampirismPlayer<T> copyFromPlayer(Player old);
 
     /**
      * Can be overridden to load data from updates in subclasses
      *
      * @param nbt
      */
-    protected void loadUpdate(CompoundNBT nbt) {
+    protected void loadUpdate(CompoundTag nbt) {
     }
 
     /**
@@ -157,7 +157,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
      * @param data
      * @param all  Whether all tracking players should receive this packet or only the representing player
      */
-    protected void sync(CompoundNBT data, boolean all) {
+    protected void sync(CompoundTag data, boolean all) {
         HelperLib.sync(this, data, player, all);
     }
 
@@ -166,10 +166,10 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
      *
      * @param nbt
      */
-    protected void writeFullUpdate(CompoundNBT nbt) {
+    protected void writeFullUpdate(CompoundTag nbt) {
     }
 
-    private void copyFrom(PlayerEntity old) {
+    private void copyFrom(Player old) {
         VampirismPlayer<T> p = copyFromPlayer(old);
     }
 }

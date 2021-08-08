@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.effects;
 
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.potion.EffectType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.effect.MobEffectCategory;
 
 public class FreezeEffect extends VampirismEffect {
     public FreezeEffect(String name) {
-        super(name, EffectType.HARMFUL, 0xFFFFFF);
+        super(name, MobEffectCategory.HARMFUL, 0xFFFFFF);
     }
 
     @Override

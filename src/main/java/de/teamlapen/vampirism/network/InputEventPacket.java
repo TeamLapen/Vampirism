@@ -24,23 +24,23 @@ import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.world.MinionWorldData;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -79,11 +79,11 @@ public class InputEventPacket implements IMessage {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String SPLIT = "&";
 
-    static void encode(InputEventPacket msg, PacketBuffer buf) {
+    static void encode(InputEventPacket msg, FriendlyByteBuf buf) {
         buf.writeUtf(msg.action + SPLIT + msg.param);
     }
 
-    static InputEventPacket decode(PacketBuffer buf) {
+    static InputEventPacket decode(FriendlyByteBuf buf) {
         String[] s = buf.readUtf(50).split(SPLIT);
         InputEventPacket msg = new InputEventPacket();
         msg.action = s[0];
@@ -98,7 +98,7 @@ public class InputEventPacket implements IMessage {
     public static void handle(final InputEventPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         Validate.notNull(msg.action);
-        ServerPlayerEntity player = ctx.getSender();
+        ServerPlayer player = ctx.getSender();
         Validate.notNull(player);
         ctx.enqueueWork(() -> {
             Optional<? extends IFactionPlayer> factionPlayerOpt = FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty());
@@ -127,16 +127,16 @@ public class InputEventPacket implements IMessage {
                             IAction.PERM r = actionHandler.toggleAction(action);
                             switch (r) {
                                 case NOT_UNLOCKED:
-                                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.action.not_unlocked"), true);
+                                    player.displayClientMessage(new TranslatableComponent("text.vampirism.action.not_unlocked"), true);
                                     break;
                                 case DISABLED:
-                                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.action.deactivated_by_serveradmin"), false);
+                                    player.displayClientMessage(new TranslatableComponent("text.vampirism.action.deactivated_by_serveradmin"), false);
                                     break;
                                 case COOLDOWN:
-                                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.action.cooldown_not_over"), true);
+                                    player.displayClientMessage(new TranslatableComponent("text.vampirism.action.cooldown_not_over"), true);
                                     break;
                                 case DISALLOWED:
-                                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.action.disallowed"), true);
+                                    player.displayClientMessage(new TranslatableComponent("text.vampirism.action.disallowed"), true);
                                 default://Everything alright
                             }
                         } else {
@@ -166,7 +166,7 @@ public class InputEventPacket implements IMessage {
                                 skillHandler.enableSkill(skill);
                                 if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
                                     //does this cause problems with addons?
-                                    CompoundNBT sync = new CompoundNBT();
+                                    CompoundTag sync = new CompoundTag();
                                     ((SkillHandler) skillHandler).writeUpdateForClient(sync);
                                     HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
                                 }
@@ -182,7 +182,7 @@ public class InputEventPacket implements IMessage {
 
                     break;
                 case RESETSKILL:
-                    InventoryHelper.removeItemFromInventory(player.inventory, new ItemStack(ModItems.oblivion_potion));
+                    InventoryHelper.removeItemFromInventory(player.getInventory(), new ItemStack(ModItems.oblivion_potion));
                     factionPlayerOpt.ifPresent(OblivionItem::applyEffect);
                     break;
                 case TRAINERLEVELUP:
@@ -192,7 +192,7 @@ public class InputEventPacket implements IMessage {
                     break;
                 case REVERTBACK:
                     FactionPlayerHandler.get(player).setFactionAndLevel(null, 0);
-                    player.displayClientMessage(new TranslationTextComponent("command.vampirism.base.level.successful", player.getName(), VReference.VAMPIRE_FACTION.getName(), 0), true);
+                    player.displayClientMessage(new TranslatableComponent("command.vampirism.base.level.successful", player.getName(), VReference.VAMPIRE_FACTION.getName(), 0), true);
                     LOGGER.debug("Player {} left faction", player);
                     if (!ServerLifecycleHooks.getCurrentServer().isHardcore()) {
                         player.hurt(DamageSource.MAGIC, 1000);
@@ -216,7 +216,7 @@ public class InputEventPacket implements IMessage {
                         }
                     } else if (!org.apache.commons.lang3.StringUtils.isBlank(name)) {
                         ItemStack stack = player.getMainHandItem();
-                        stack.setHoverName(new StringTextComponent(name).withStyle(TextFormatting.AQUA));
+                        stack.setHoverName(new TextComponent(name).withStyle(ChatFormatting.AQUA));
                     }
                     break;
                 case SELECT_CALL_MINION:
@@ -224,7 +224,7 @@ public class InputEventPacket implements IMessage {
                         PlayerMinionController controller = MinionWorldData.getData(ctx.getSender().server).getOrCreateController(fp);
                         Collection<Integer> ids = controller.getCallableMinions();
                         if (ids.size() > 0) {
-                            List<Pair<Integer, ITextComponent>> minions = new ArrayList<>(ids.size());
+                            List<Pair<Integer, Component>> minions = new ArrayList<>(ids.size());
                             ids.forEach(id -> controller.contactMinionData(id, data -> data.getFormattedName().copy()).ifPresent(n -> minions.add(Pair.of(id, n))));
                             VampirismMod.dispatcher.sendTo(new RequestMinionSelectPacket(RequestMinionSelectPacket.Action.CALL, minions), ctx.getSender());
                         } else {
@@ -249,17 +249,17 @@ public class InputEventPacket implements IMessage {
                 case OPEN_VAMPIRISM_MENU:
                     factionPlayerOpt.ifPresent(fPlayer -> {
                         if (player.isAlive()) {
-                            player.openMenu(new INamedContainerProvider() {
+                            player.openMenu(new MenuProvider() {
                                 @Nonnull
                                 @Override
-                                public Container createMenu(int i, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity playerEntity) {
+                                public AbstractContainerMenu createMenu(int i, @Nonnull Inventory playerInventory, @Nonnull Player playerEntity) {
                                     return new VampirismContainer(i, playerInventory);
                                 }
 
                                 @Nonnull
                                 @Override
-                                public ITextComponent getDisplayName() {
-                                    return new TranslationTextComponent("");
+                                public Component getDisplayName() {
+                                    return new TranslatableComponent("");
                                 }
                             });
                             fPlayer.getTaskManager().openVampirismMenu();

@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.fluids.BloodFluid;
 import de.teamlapen.vampirism.fluids.ImpureBloodFluid;
-import net.minecraft.fluid.Fluid;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 

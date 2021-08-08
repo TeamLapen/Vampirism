@@ -3,13 +3,13 @@ package de.teamlapen.vampirism.command.test;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import org.apache.logging.log4j.LogManager;
 
 public class MarkerCommand extends BasicCommand {
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("marker")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .executes(context -> {

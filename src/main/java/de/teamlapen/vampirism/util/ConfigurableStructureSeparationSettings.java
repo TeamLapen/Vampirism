@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.config.BalanceConfig;
-import net.minecraft.world.gen.settings.StructureSeparationSettings;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.logging.log4j.LogManager;
 
 
-public class ConfigurableStructureSeparationSettings extends StructureSeparationSettings {
+public class ConfigurableStructureSeparationSettings extends StructureFeatureConfiguration {
 
     private final ForgeConfigSpec.IntValue distanceConf;
     private final ForgeConfigSpec.IntValue separationConf;

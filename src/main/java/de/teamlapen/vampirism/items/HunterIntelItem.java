@@ -3,13 +3,13 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +17,8 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 /**
  * Item used in the hunter leveling process. Is create in an hunter table.
@@ -61,7 +63,7 @@ public class HunterIntelItem extends VampirismItem {
     }
 
     private final int level;
-    private ITextComponent tooltip;
+    private Component tooltip;
 
     public HunterIntelItem(int level) {
         super(name + "_" + level, new Properties().tab(VampirismMod.creativeTab));
@@ -71,15 +73,15 @@ public class HunterIntelItem extends VampirismItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltips, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltips, TooltipFlag flagIn) {
         if (this.tooltip == null) {
-            this.tooltip = new TranslationTextComponent("text.vampirism.for_up_to_level").append(new StringTextComponent(": " + (level + 5))).withStyle(TextFormatting.RED);
+            this.tooltip = new TranslatableComponent("text.vampirism.for_up_to_level").append(new TextComponent(": " + (level + 5))).withStyle(ChatFormatting.RED);
         }
         tooltips.add(this.tooltip);
     }
 
-    public ITextComponent getCustomName() {
-        return new TranslationTextComponent(this.getOrCreateDescriptionId()).append(new StringTextComponent(" ")).append(new TranslationTextComponent("text.vampirism.for_up_to_level").append(new StringTextComponent(" " + (level + 5))));
+    public Component getCustomName() {
+        return new TranslatableComponent(this.getOrCreateDescriptionId()).append(new TextComponent(" ")).append(new TranslatableComponent("text.vampirism.for_up_to_level").append(new TextComponent(" " + (level + 5))));
     }
 
     /**

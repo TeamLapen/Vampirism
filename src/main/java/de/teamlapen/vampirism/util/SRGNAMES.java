@@ -5,6 +5,6 @@ package de.teamlapen.vampirism.util;
  */
 public class SRGNAMES {
 
-    public static final String EffectInstance_potion = "potion";
+    public static final String EffectInstance_effect = "effect";
 
 }

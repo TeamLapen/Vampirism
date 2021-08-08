@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.api.entity.convertible;
 
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.EntityType;
 
 import javax.annotation.Nullable;
 
 /**
  * Handles conversion of entities
  */
-public interface IConvertingHandler<T extends CreatureEntity> {
+public interface IConvertingHandler<T extends PathfinderMob> {
 
     /**
      * @param entity Creature to be converted
@@ -22,13 +22,13 @@ public interface IConvertingHandler<T extends CreatureEntity> {
      */
     interface IDefaultHelper {
 
-        double getConvertedDMG(EntityType<? extends CreatureEntity> entity);
+        double getConvertedDMG(EntityType<? extends PathfinderMob> entity);
 
-        double getConvertedKnockbackResistance(EntityType<? extends CreatureEntity> entity);
+        double getConvertedKnockbackResistance(EntityType<? extends PathfinderMob> entity);
 
-        double getConvertedMaxHealth(EntityType<? extends CreatureEntity> entity);
+        double getConvertedMaxHealth(EntityType<? extends PathfinderMob> entity);
 
-        double getConvertedSpeed(EntityType<? extends CreatureEntity> entity);
+        double getConvertedSpeed(EntityType<? extends PathfinderMob> entity);
 
     }
 }

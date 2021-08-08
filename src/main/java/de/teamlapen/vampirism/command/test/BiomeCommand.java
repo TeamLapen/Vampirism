@@ -3,15 +3,15 @@ package de.teamlapen.vampirism.command.test;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TextComponent;
 
 public class BiomeCommand extends BasicCommand {
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("biome")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ALL))
                 .executes(context -> {
@@ -19,9 +19,9 @@ public class BiomeCommand extends BasicCommand {
                 });
     }
 
-    private static int biome(CommandSource commandSource, ServerPlayerEntity asPlayer) {
+    private static int biome(CommandSourceStack commandSource, ServerPlayer asPlayer) {
         ResourceLocation res = Helper.getBiomeId(asPlayer);
-        commandSource.sendSuccess(new StringTextComponent(res.toString()), true);
+        commandSource.sendSuccess(new TextComponent(res.toString()), true);
         return 0;
     }
 }

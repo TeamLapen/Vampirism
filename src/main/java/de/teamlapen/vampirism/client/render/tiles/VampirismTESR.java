@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.block.HorizontalBlock;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3f;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -16,12 +16,7 @@ import javax.annotation.Nullable;
  * TESR with a few util methods
  */
 @OnlyIn(Dist.CLIENT)
-abstract class VampirismTESR<T extends TileEntity> extends TileEntityRenderer<T> {
-
-
-    public VampirismTESR(TileEntityRendererDispatcher dispatcher) {
-        super(dispatcher);
-    }
+abstract class VampirismTESR<T extends BlockEntity> implements BlockEntityRenderer<T> {
 
     /**
      * Rotates the block to fit the enum facing.
@@ -29,11 +24,11 @@ abstract class VampirismTESR<T extends TileEntity> extends TileEntityRenderer<T>
      *
      * @param tile
      */
-    protected void adjustRotatePivotViaState(@Nullable TileEntity tile, MatrixStack matrixStack) {
+    protected void adjustRotatePivotViaState(@Nullable BlockEntity tile, PoseStack matrixStack) {
         if (tile == null) return;
         Direction dir = Direction.NORTH;
         if (tile.getLevel() != null)
-            dir = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(HorizontalBlock.FACING);
+            dir = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(HorizontalDirectionalBlock.FACING);
         matrixStack.mulPose(Vector3f.YP.rotationDegrees((dir.get2DDataValue() - 2) * -90));
     }
 }

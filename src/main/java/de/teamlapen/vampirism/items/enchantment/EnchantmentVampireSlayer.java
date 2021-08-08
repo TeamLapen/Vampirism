@@ -3,19 +3,21 @@ package de.teamlapen.vampirism.items.enchantment;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.items.PitchforkItem;
-import net.minecraft.enchantment.DamageEnchantment;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentType;
-import net.minecraft.entity.CreatureAttribute;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
+import net.minecraft.world.item.enchantment.DamageEnchantment;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.damagesource.DamageSource;
+
+import net.minecraft.world.item.enchantment.Enchantment.Rarity;
 
 public class EnchantmentVampireSlayer extends Enchantment {
     public EnchantmentVampireSlayer(Rarity rarityIn) {
-        super(rarityIn, EnchantmentType.WEAPON, new EquipmentSlotType[]{EquipmentSlotType.MAINHAND});
+        super(rarityIn, EnchantmentCategory.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
         this.setRegistryName(REFERENCE.MODID, "vampireslayer");
     }
 
@@ -36,7 +38,7 @@ public class EnchantmentVampireSlayer extends Enchantment {
     }
 
     @Override
-    public float getDamageBonus(int level, CreatureAttribute creatureType) {
+    public float getDamageBonus(int level, MobType creatureType) {
         return creatureType == VReference.VAMPIRE_CREATURE_ATTRIBUTE ? level * 2.5F : 0;
     }
 

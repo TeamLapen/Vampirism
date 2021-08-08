@@ -10,7 +10,7 @@ buildscript {
 
     
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.0.1'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1+'
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
@@ -25,6 +25,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'org.spongepowered.mixin'
+apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
 
 
 configurations {
@@ -34,7 +35,7 @@ configurations {
 
 group = "de.teamlapen.vampirism"
 archivesBaseName = "Vampirism"
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 ext.mod_version="Test"
 ext.type="test"
 

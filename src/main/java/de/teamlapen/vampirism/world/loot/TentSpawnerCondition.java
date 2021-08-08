@@ -5,39 +5,41 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import de.teamlapen.vampirism.core.ModLoot;
 import de.teamlapen.vampirism.tileentity.TentTileEntity;
-import net.minecraft.loot.ILootSerializer;
-import net.minecraft.loot.LootConditionType;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.storage.loot.Serializer;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nonnull;
 
-public class TentSpawnerCondition implements ILootCondition {
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition.Builder;
+
+public class TentSpawnerCondition implements LootItemCondition {
 
     private final static TentSpawnerCondition INSTANCE = new TentSpawnerCondition();
 
-    public static IBuilder builder() {
+    public static Builder builder() {
         return () -> INSTANCE;
     }
 
     @Nonnull
     @Override
-    public LootConditionType getType() {
+    public LootItemConditionType getType() {
         return ModLoot.is_tent_spawner;
     }
 
     @Override
     public boolean test(LootContext lootContext) {
-        TileEntity t = lootContext.getParamOrNull(LootParameters.BLOCK_ENTITY);
+        BlockEntity t = lootContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
         if (t instanceof TentTileEntity) {
             return ((TentTileEntity) t).isSpawner();
         }
         return false;
     }
 
-    public static class Serializer implements ILootSerializer<TentSpawnerCondition> {
+    public static class Serializer implements Serializer<TentSpawnerCondition> {
 
 
         @Nonnull

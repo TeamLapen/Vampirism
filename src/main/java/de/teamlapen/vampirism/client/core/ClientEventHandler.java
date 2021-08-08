@@ -16,19 +16,19 @@ import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.client.renderer.model.BlockModel;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.IUnbakedModel;
-import net.minecraft.client.renderer.model.ModelRotation;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Potion;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.resources.model.BlockModelRotation;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -61,17 +61,17 @@ public class ClientEventHandler {
         try {
             for (int x = 0; x < BakedBloodContainerModel.FLUID_LEVELS; x++) {
                 ResourceLocation loc = new ResourceLocation(REFERENCE.MODID, "block/blood_container/fluid_" + (x + 1));
-                IUnbakedModel model = event.getModelLoader().getModelOrMissing(loc);
-                BakedBloodContainerModel.BLOOD_FLUID_MODELS[x] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, loc);
+                UnbakedModel model = event.getModelLoader().getModelOrMissing(loc);
+                BakedBloodContainerModel.BLOOD_FLUID_MODELS[x] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), BlockModelRotation.X0_Y0, loc);
                 if (model instanceof BlockModel) {
                     ((BlockModel) model).textureMap.put("fluid", Either.left(ForgeHooksClient.getBlockMaterial(ModFluids.impure_blood.getAttributes().getStillTexture())));
-                    BakedBloodContainerModel.IMPURE_BLOOD_FLUID_MODELS[x] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, loc);
+                    BakedBloodContainerModel.IMPURE_BLOOD_FLUID_MODELS[x] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), BlockModelRotation.X0_Y0, loc);
                 } else {
                     LOGGER.error("Cannot apply impure blood texture to blood container model {}", model);
                     BakedBloodContainerModel.IMPURE_BLOOD_FLUID_MODELS[x] = BakedBloodContainerModel.BLOOD_FLUID_MODELS[x];
                 }
             }
-            Map<ResourceLocation, IBakedModel> registry = event.getModelRegistry();
+            Map<ResourceLocation, BakedModel> registry = event.getModelRegistry();
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ResourceLocation modelLoc : registry.keySet()) {
@@ -82,8 +82,8 @@ public class ClientEventHandler {
 
             // replace the registered tank block variants with TankModelFactories
 
-            IBakedModel registeredModel;
-            IBakedModel newModel;
+            BakedModel registeredModel;
+            BakedModel newModel;
             for (ResourceLocation loc : modelLocations) {
                 registeredModel = event.getModelRegistry().get(loc);
                 newModel = new BakedBloodContainerModel(registeredModel);
@@ -96,10 +96,10 @@ public class ClientEventHandler {
         try {
             for (int x = 0; x < BakedAltarInspirationModel.FLUID_LEVELS; x++) {
                 ResourceLocation loc = new ResourceLocation(REFERENCE.MODID, "block/altar_inspiration/blood" + (x + 1));
-                IUnbakedModel model = event.getModelLoader().getModelOrMissing(loc);
-                BakedAltarInspirationModel.FLUID_MODELS[x] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, loc);
+                UnbakedModel model = event.getModelLoader().getModelOrMissing(loc);
+                BakedAltarInspirationModel.FLUID_MODELS[x] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), BlockModelRotation.X0_Y0, loc);
             }
-            Map<ResourceLocation, IBakedModel> registry = event.getModelRegistry();
+            Map<ResourceLocation, BakedModel> registry = event.getModelRegistry();
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ResourceLocation modelLoc : registry.keySet()) {
@@ -110,8 +110,8 @@ public class ClientEventHandler {
 
             // replace the registered tank block variants with TankModelFactories
 
-            IBakedModel registeredModel;
-            IBakedModel newModel;
+            BakedModel registeredModel;
+            BakedModel newModel;
             for (ResourceLocation loc : modelLocations) {
                 registeredModel = event.getModelRegistry().get(loc);
                 newModel = new BakedAltarInspirationModel(registeredModel);
@@ -124,13 +124,13 @@ public class ClientEventHandler {
         try {
             for (int x = 0; x < BakedWeaponTableModel.FLUID_LEVELS; x++) {
                 ResourceLocation loc = new ResourceLocation(REFERENCE.MODID, "block/weapon_table/weapon_table_lava" + (x + 1));
-                IUnbakedModel model = event.getModelLoader().getModelOrMissing(loc);
-                BakedWeaponTableModel.FLUID_MODELS[x][0] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y180, loc);
-                BakedWeaponTableModel.FLUID_MODELS[x][1] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y270, loc);
-                BakedWeaponTableModel.FLUID_MODELS[x][2] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, loc);
-                BakedWeaponTableModel.FLUID_MODELS[x][3] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y90, loc);
+                UnbakedModel model = event.getModelLoader().getModelOrMissing(loc);
+                BakedWeaponTableModel.FLUID_MODELS[x][0] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), BlockModelRotation.X0_Y180, loc);
+                BakedWeaponTableModel.FLUID_MODELS[x][1] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), BlockModelRotation.X0_Y270, loc);
+                BakedWeaponTableModel.FLUID_MODELS[x][2] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), BlockModelRotation.X0_Y0, loc);
+                BakedWeaponTableModel.FLUID_MODELS[x][3] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), BlockModelRotation.X0_Y90, loc);
             }
-            Map<ResourceLocation, IBakedModel> registry = event.getModelRegistry();
+            Map<ResourceLocation, BakedModel> registry = event.getModelRegistry();
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ResourceLocation modelLoc : registry.keySet()) {
@@ -141,8 +141,8 @@ public class ClientEventHandler {
 
             // replace the registered tank block variants with TankModelFactories
 
-            IBakedModel registeredModel;
-            IBakedModel newModel;
+            BakedModel registeredModel;
+            BakedModel newModel;
             for (ResourceLocation loc : modelLocations) {
                 registeredModel = event.getModelRegistry().get(loc);
                 newModel = new BakedWeaponTableModel(registeredModel);
@@ -157,19 +157,19 @@ public class ClientEventHandler {
     @SubscribeEvent
     public void onFovOffsetUpdate(FOVUpdateEvent event) {
         if (VampirismConfig.CLIENT.disableFovChange.get() && Helper.isVampire(event.getEntity())) {
-            ModifiableAttributeInstance speed = event.getEntity().getAttribute(Attributes.MOVEMENT_SPEED);
+            AttributeInstance speed = event.getEntity().getAttribute(Attributes.MOVEMENT_SPEED);
             AttributeModifier vampirespeed = speed.getModifier(LevelAttributeModifier.getUUID(Attributes.MOVEMENT_SPEED));
             if (vampirespeed == null)
                 return;
             //removes speed buffs, add speed buffs without the vampire speed
-            event.setNewfov((float) (((double) (event.getFov()) * ((vampirespeed.getAmount() + 1) * (double) (event.getEntity().abilities.getWalkingSpeed()) + speed.getValue())) / ((vampirespeed.getAmount() + 1) * ((double) (event.getEntity().abilities.getWalkingSpeed()) + speed.getValue()))));
+            event.setNewfov((float) (((double) (event.getFov()) * ((vampirespeed.getAmount() + 1) * (double) (event.getEntity().getAbilities().getWalkingSpeed()) + speed.getValue())) / ((vampirespeed.getAmount() + 1) * ((double) (event.getEntity().getAbilities().getWalkingSpeed()) + speed.getValue()))));
         }
     }
 
     @SubscribeEvent
     public void onToolTip(ItemTooltipEvent event) {
-        if (VampirismPotion.isHunterPotion(event.getItemStack(), true).map(Potion::getEffects).map(effectInstances -> effectInstances.stream().map(EffectInstance::getEffect).anyMatch(Effect::isBeneficial)).orElse(false) && (event.getPlayer() == null || !Helper.isHunter(event.getPlayer()))) {
-            event.getToolTip().add(new TranslationTextComponent("text.vampirism.hunter_potion.deadly").withStyle(TextFormatting.DARK_RED));
+        if (VampirismPotion.isHunterPotion(event.getItemStack(), true).map(Potion::getEffects).map(effectInstances -> effectInstances.stream().map(MobEffectInstance::getEffect).anyMatch(MobEffect::isBeneficial)).orElse(false) && (event.getPlayer() == null || !Helper.isHunter(event.getPlayer()))) {
+            event.getToolTip().add(new TranslatableComponent("text.vampirism.hunter_potion.deadly").withStyle(ChatFormatting.DARK_RED));
         }
 
     }

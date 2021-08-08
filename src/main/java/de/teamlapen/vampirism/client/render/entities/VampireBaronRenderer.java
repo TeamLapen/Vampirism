@@ -6,9 +6,9 @@ import de.teamlapen.vampirism.client.model.BaronWrapperModel;
 import de.teamlapen.vampirism.client.render.layers.BaronAttireLayer;
 import de.teamlapen.vampirism.client.render.layers.WingsLayer;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -21,7 +21,7 @@ public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, BaronW
     private static final ResourceLocation textureLadyEnraged = new ResourceLocation(REFERENCE.MODID + ":textures/entity/baroness_enraged.png");
 
 
-    public VampireBaronRenderer(EntityRendererManager renderManagerIn) {
+    public VampireBaronRenderer(EntityRenderDispatcher renderManagerIn) {
         super(renderManagerIn, new BaronWrapperModel(), 0.5F);
         this.addLayer(new WingsLayer<>(this, Predicates.alwaysTrue(), (entity, model) -> model.getBodyPart(entity)));
         this.addLayer(new BaronAttireLayer(this, VampireBaronEntity::isLady));

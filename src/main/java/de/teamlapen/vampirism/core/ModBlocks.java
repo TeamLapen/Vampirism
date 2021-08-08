@@ -6,18 +6,18 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.client.core.ModBlocksRender;
-import de.teamlapen.vampirism.client.render.VampirismItemStackTESR;
 import de.teamlapen.vampirism.data.BlockStateGenerator;
 import de.teamlapen.vampirism.data.ItemModelGenerator;
 import de.teamlapen.vampirism.data.LootTablesGenerator;
+import de.teamlapen.vampirism.items.CoffinItem;
 import de.teamlapen.vampirism.util.BlockVoxelshapes;
-import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.Rarity;
-import net.minecraft.util.ResourceLocation;
+
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
@@ -26,6 +26,14 @@ import javax.annotation.Nonnull;
 import java.util.Set;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
+
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 /**
  * Handles all block registrations and reference.
@@ -118,7 +126,7 @@ public class ModBlocks {
         registry.register(itemBlock(castle_slab_dark_brick));
         registry.register(itemBlock(castle_slab_dark_stone));
         registry.register(itemBlock(castle_slab_purple_brick));
-        registry.register(itemBlock(coffin, new Item.Properties().tab(VampirismMod.creativeTab).setISTER(() -> VampirismItemStackTESR::new)));
+        registry.register(new CoffinItem(coffin));
         registry.register(itemBlock(cursed_earth));
         registry.register(itemBlock(fire_place));
         registry.register(itemBlock(garlic_beacon_improved));
@@ -207,10 +215,10 @@ public class ModBlocks {
         registry.register(prepareRegister(new CandelabraWallBlock()));
         registry.register(prepareRegister(new CandelabraBlock()));
         registry.register(prepareRegister(new CrossBlock()));
-        registry.register(prepareRegister(new VampirismHorizontalBlock("tombstone1", AbstractBlock.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb1).markDecorativeBlock()));
-        registry.register(prepareRegister(new VampirismHorizontalBlock("tombstone2", AbstractBlock.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb2).markDecorativeBlock()));
-        registry.register(prepareRegister(new VampirismHorizontalBlock("tombstone3", AbstractBlock.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb3).markDecorativeBlock()));
-        registry.register(prepareRegister(new VampirismHorizontalBlock("grave_cage", AbstractBlock.Properties.of(Material.METAL, MaterialColor.METAL).strength(6, 8).requiresCorrectToolForDrops().sound(SoundType.METAL), BlockVoxelshapes.grave_cage).markDecorativeBlock()));
+        registry.register(prepareRegister(new VampirismHorizontalBlock("tombstone1", BlockBehaviour.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb1).markDecorativeBlock()));
+        registry.register(prepareRegister(new VampirismHorizontalBlock("tombstone2", BlockBehaviour.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb2).markDecorativeBlock()));
+        registry.register(prepareRegister(new VampirismHorizontalBlock("tombstone3", BlockBehaviour.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb3).markDecorativeBlock()));
+        registry.register(prepareRegister(new VampirismHorizontalBlock("grave_cage", BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL).strength(6, 8).requiresCorrectToolForDrops().sound(SoundType.METAL), BlockVoxelshapes.grave_cage).markDecorativeBlock()));
 
 
         /**

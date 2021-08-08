@@ -19,30 +19,29 @@ import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.util.SupporterManager;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.monster.PatrollerEntity;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.GroundPathNavigator;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.PatrollingMonster;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
@@ -52,16 +51,24 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+
 /**
  * Advanced hunter. Is strong. Represents supporters
  */
 public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedHunter, IPlayerOverlay, IEntityActionUser {
-    private static final DataParameter<Integer> LEVEL = EntityDataManager.defineId(AdvancedHunterEntity.class, DataSerializers.INT);
-    private static final DataParameter<Integer> TYPE = EntityDataManager.defineId(AdvancedHunterEntity.class, DataSerializers.INT);
-    private static final DataParameter<String> NAME = EntityDataManager.defineId(AdvancedHunterEntity.class, DataSerializers.STRING);
-    private static final DataParameter<String> TEXTURE = EntityDataManager.defineId(AdvancedHunterEntity.class, DataSerializers.STRING);
+    private static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<String> NAME = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.STRING);
 
-    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+    public static AttributeSupplier.Builder getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.ADVANCED_HUNTER_MAX_HEALTH)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE)
@@ -92,10 +99,10 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Nullable
     private ICaptureAttributes villageAttributes;
 
-    public AdvancedHunterEntity(EntityType<? extends AdvancedHunterEntity> type, World world) {
+    public AdvancedHunterEntity(EntityType<? extends AdvancedHunterEntity> type, Level world) {
         super(type, world, true);
         saveHome = true;
-        ((GroundPathNavigator) this.getNavigation()).setCanOpenDoors(true);
+        ((GroundPathNavigation) this.getNavigation()).setCanOpenDoors(true);
 
 
         this.setDontDropEquipment();
@@ -107,7 +114,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT nbt) {
+    public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("level", getLevel());
         nbt.putInt("type", getHunterType());
@@ -152,7 +159,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     public boolean doHurtTarget(Entity entity) {
         boolean flag = super.doHurtTarget(entity);
         if (flag && this.getMainHandItem().isEmpty()) {
-            this.swing(Hand.MAIN_HAND);  //Swing stake if nothing else is held
+            this.swing(InteractionHand.MAIN_HAND);  //Swing stake if nothing else is held
         }
         return flag;
     }
@@ -193,7 +200,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
             getEntityData().set(LEVEL, level);
             this.updateEntityAttributes();
             if (level == 1) {
-                this.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 1000000, 1));
+                this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 1000000, 1));
             }
 
         }
@@ -206,9 +213,9 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
 
     @Nonnull
     @Override
-    public ITextComponent getName() {
+    public Component getName() {
         String senderName = this.getEntityData().get(NAME);
-        return "none".equals(senderName) ? super.getName() : new StringTextComponent(senderName);
+        return "none".equals(senderName) ? super.getName() : new TextComponent(senderName);
     }
 
     @Override
@@ -225,7 +232,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
 
     @Nullable
     @Override
-    public AxisAlignedBB getTargetVillageArea() {
+    public AABB getTargetVillageArea() {
         return villageAttributes == null ? null : villageAttributes.getVillageArea();
     }
 
@@ -252,7 +259,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT tagCompund) {
+    public void readAdditionalSaveData(CompoundTag tagCompund) {
         super.readAdditionalSaveData(tagCompund);
         if (tagCompund.contains("level")) {
             setLevel(tagCompund.getInt("level"));
@@ -279,7 +286,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public void setCampArea(AxisAlignedBB box) {
+    public void setCampArea(AABB box) {
         super.setHome(box);
         this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
     }
@@ -317,7 +324,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    protected int getExperienceReward(PlayerEntity player) {
+    protected int getExperienceReward(Player player) {
         return 10 * (1 + getLevel());
     }
 
@@ -327,8 +334,8 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    protected ActionResultType mobInteract(PlayerEntity player, Hand hand) { //processInteract
-        if (hand == Hand.MAIN_HAND && tryCureSanguinare(player)) return ActionResultType.SUCCESS;
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) { //processInteract
+        if (hand == InteractionHand.MAIN_HAND && tryCureSanguinare(player)) return InteractionResult.SUCCESS;
         return super.mobInteract(player, hand);
     }
 
@@ -339,18 +346,18 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0, false));
 
-        this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.7, 50));
-        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 13F));
-        this.goalSelector.addGoal(8, new LookAtGoal(this, VampireBaseEntity.class, 17F));
-        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(6, new RandomStrollGoal(this, 0.7, 50));
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 13F));
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, VampireBaseEntity.class, 17F));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new AttackVillageGoal<>(this));
         this.targetSelector.addGoal(2, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
-        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, ZombieEntity.class, true, true));
-        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, Structure.VILLAGE)));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, Zombie.class, true, true));
+        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollingMonster.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, StructureFeature.VILLAGE)));
     }
 
     protected void updateEntityAttributes() {
@@ -359,9 +366,9 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE + BalanceMobProps.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE_PL * l);
     }
 
-    public static class IMob extends AdvancedHunterEntity implements net.minecraft.entity.monster.IMob {
+    public static class IMob extends AdvancedHunterEntity implements net.minecraft.world.entity.monster.Enemy {
 
-        public IMob(EntityType<? extends AdvancedHunterEntity> type, World world) {
+        public IMob(EntityType<? extends AdvancedHunterEntity> type, Level world) {
             super(type, world);
         }
     }

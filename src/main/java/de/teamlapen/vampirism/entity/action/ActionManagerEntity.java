@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionManager;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.core.ModRegistries;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.commons.lang3.ArrayUtils;
 

@@ -1,27 +1,29 @@
 package de.teamlapen.vampirism.entity.goals;
 
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 
 import java.util.EnumSet;
 import java.util.Random;
+
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 /**
  * Basic Flee from anything ai
  */
 public abstract class FleeGoal extends Goal {
-    private final CreatureEntity theCreature;
+    private final PathfinderMob theCreature;
     private final double movementSpeed;
-    private final World world;
+    private final Level world;
     private final boolean restrictToHome;
     private double shelterX;
     private double shelterY;
     private double shelterZ;
 
-    public FleeGoal(CreatureEntity theCreature, double movementSpeed, boolean restrictToHome) {
+    public FleeGoal(PathfinderMob theCreature, double movementSpeed, boolean restrictToHome) {
         this.theCreature = theCreature;
         this.movementSpeed = movementSpeed;
         this.restrictToHome = restrictToHome;
@@ -32,7 +34,7 @@ public abstract class FleeGoal extends Goal {
     @Override
     public boolean canUse() {
         if (!shouldFlee()) return false;
-        Vector3d vec3 = this.findPossibleShelter();
+        Vec3 vec3 = this.findPossibleShelter();
 
         if (vec3 == null) {
             return false;
@@ -52,11 +54,11 @@ public abstract class FleeGoal extends Goal {
         this.theCreature.getNavigation().moveTo(this.shelterX, this.shelterY, this.shelterZ, this.movementSpeed);
     }
 
-    protected abstract boolean isPositionAcceptable(World world, BlockPos pos);
+    protected abstract boolean isPositionAcceptable(Level world, BlockPos pos);
 
     protected abstract boolean shouldFlee();
 
-    private Vector3d findPossibleShelter() {
+    private Vec3 findPossibleShelter() {
         Random random = this.theCreature.getRandom();
         BlockPos blockpos = new BlockPos(this.theCreature.getX(), this.theCreature.getBoundingBox().minY, this.theCreature.getZ());
 
@@ -68,7 +70,7 @@ public abstract class FleeGoal extends Goal {
 
                     if (!theCreature.isWithinRestriction(blockpos1)) continue;
                 }
-                return new Vector3d(blockpos1.getX(), blockpos1.getY(), blockpos1.getZ());
+                return new Vec3(blockpos1.getX(), blockpos1.getY(), blockpos1.getZ());
             }
         }
 

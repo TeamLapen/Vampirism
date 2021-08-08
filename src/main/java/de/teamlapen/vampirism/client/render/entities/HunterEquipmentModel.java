@@ -2,70 +2,70 @@ package de.teamlapen.vampirism.client.render.entities;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.world.entity.Mob;
 
-public class HunterEquipmentModel<T extends MobEntity> extends BipedModel<T> {
-    private final ModelRenderer hatTop;
-    private final ModelRenderer hatRim;
-    private final ModelRenderer axeShaft;
-    private final ModelRenderer axeBlade1;
-    private final ModelRenderer axeBlade2;
-    private final ModelRenderer stake;
-    private final ModelRenderer stakeRight;
-    private final ModelRenderer hatTop2;
-    private final ModelRenderer hatRim2;
-    private final ModelRenderer hatRim3;
+public class HunterEquipmentModel<T extends Mob> extends HumanoidModel<T> {
+    private final ModelPart hatTop;
+    private final ModelPart hatRim;
+    private final ModelPart axeShaft;
+    private final ModelPart axeBlade1;
+    private final ModelPart axeBlade2;
+    private final ModelPart stake;
+    private final ModelPart stakeRight;
+    private final ModelPart hatTop2;
+    private final ModelPart hatRim2;
+    private final ModelPart hatRim3;
 
     public HunterEquipmentModel() {
         super(0, 0, 64, 64);
-        hatTop2 = new ModelRenderer(this, 0, 31);
+        hatTop2 = new ModelPart(this, 0, 31);
         hatTop2.addBox(-4.5F, -12F, -4.5F, 9, 3, 9);
         hatTop2.setPos(super.head.x, super.head.y, super.head.z);
         hatTop2.mirror = true;
 
-        hatRim2 = new ModelRenderer(this, 0, 31);
+        hatRim2 = new ModelPart(this, 0, 31);
         hatRim2.addBox(-8F, -9F, -8F, 16, 1, 16);
         hatRim2.setPos(super.head.x, super.head.y, super.head.z);
         hatRim2.mirror = true;
 
-        hatRim3 = new ModelRenderer(this, 0, 37);
+        hatRim3 = new ModelPart(this, 0, 37);
         hatRim3.addBox(-5F, -6F, -5F, 10, 1, 10);
         hatRim3.setPos(super.head.x, super.head.y, super.head.z);
         hatRim3.mirror = true;
 
-        hatTop = new ModelRenderer(this, 0, 31);
+        hatTop = new ModelPart(this, 0, 31);
         hatTop.addBox(-4F, -14F, -4F, 8, 5, 8);
         hatTop.setPos(super.head.x, super.head.y, super.head.z);
         hatTop.mirror = true;
 
-        hatRim = new ModelRenderer(this, 0, 35);
+        hatRim = new ModelPart(this, 0, 35);
         hatRim.addBox(-6F, -9F, -6F, 12, 1, 12);
         hatRim.setPos(super.head.x, super.head.y, super.head.z);
         hatRim.mirror = true;
 
-        axeShaft = new ModelRenderer(this, 16, 48);
+        axeShaft = new ModelPart(this, 16, 48);
         axeShaft.addBox(-2F, 8F, -17F, 1, 1, 15);
         axeShaft.setPos(super.rightArm.x, super.rightArm.y, super.rightArm.z);
         axeShaft.mirror = true;
 
-        axeBlade1 = new ModelRenderer(this, 0, 53);
+        axeBlade1 = new ModelPart(this, 0, 53);
         axeBlade1.addBox(-2F, 4F, -16F, 1, 4, 7);
         axeBlade1.setPos(super.rightArm.x, super.rightArm.y, super.rightArm.z);
         axeBlade1.mirror = true;
 
-        axeBlade2 = new ModelRenderer(this, 0, 53);
+        axeBlade2 = new ModelPart(this, 0, 53);
         axeBlade2.addBox(-2F, 9F, -16F, 1, 4, 7);
         axeBlade2.setPos(super.rightArm.x, super.rightArm.y, super.rightArm.z);
         axeBlade2.mirror = true;
 
-        stake = new ModelRenderer(this, 16, 48);
+        stake = new ModelPart(this, 16, 48);
         stake.addBox(1F, 8F, -8F, 1, 1, 6);
         stake.setPos(super.leftArm.x, super.leftArm.y, super.leftArm.z);
         stake.mirror = true;
 
-        stakeRight = new ModelRenderer(this, 16, 48);
+        stakeRight = new ModelPart(this, 16, 48);
         stakeRight.addBox(-2F, 8F, -8, 1, 1, 6);
         stakeRight.setPos(super.rightArm.x, super.rightArm.y, super.rightArm.z);
         stakeRight.mirror = true;
@@ -105,12 +105,12 @@ public class HunterEquipmentModel<T extends MobEntity> extends BipedModel<T> {
     }
 
     @Override
-    protected Iterable<ModelRenderer> bodyParts() {
+    protected Iterable<ModelPart> bodyParts() {
         return Iterables.concat(super.bodyParts(), ImmutableList.of(this.axeBlade1, this.axeBlade2, this.axeShaft, this.stake, this.stakeRight));
     }
 
     @Override
-    protected Iterable<ModelRenderer> headParts() {
+    protected Iterable<ModelPart> headParts() {
         return Iterables.concat(super.headParts(), ImmutableList.of(this.hatRim, this.hatRim2, this.hatRim3, this.hatTop, this.hatTop2));
     }
 

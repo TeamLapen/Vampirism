@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
@@ -15,10 +15,10 @@ public interface ITaskRewardInstance {
      */
     void applyReward(IFactionPlayer<?> player);
 
-    void encode(PacketBuffer buffer);
+    void encode(FriendlyByteBuf buffer);
 
     ResourceLocation getId();
 
-    CompoundNBT writeNBT(@Nonnull CompoundNBT nbt);
+    CompoundTag writeNBT(@Nonnull CompoundTag nbt);
 
 }

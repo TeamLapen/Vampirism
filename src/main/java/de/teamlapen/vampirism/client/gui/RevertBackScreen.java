@@ -4,10 +4,10 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.ConfirmScreen;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.client.gui.screens.ConfirmScreen;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -17,7 +17,7 @@ public class RevertBackScreen extends ConfirmScreen {
 
     private static String getDescription() {
         String s = UtilLib.translate("gui.vampirism.revertback.desc");
-        World w = Minecraft.getInstance().level;
+        Level w = Minecraft.getInstance().level;
         if (w != null && w.getLevelData().isHardcore()) {
             s += " You won't die in hardcore mode.";
         }
@@ -30,6 +30,6 @@ public class RevertBackScreen extends ConfirmScreen {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.REVERTBACK, "0"));
             }
             Minecraft.getInstance().setScreen(null);
-        }, new TranslationTextComponent("gui.vampirism.revertback.head"), new StringTextComponent(getDescription()));
+        }, new TranslatableComponent("gui.vampirism.revertback.head"), new TextComponent(getDescription()));
     }
 }

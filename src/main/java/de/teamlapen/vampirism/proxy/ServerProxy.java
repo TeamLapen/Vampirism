@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.proxy;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
 
@@ -13,7 +13,7 @@ public class ServerProxy extends CommonProxy {
 
     @Nullable
     @Override
-    public PlayerEntity getClientPlayer() {
+    public Player getClientPlayer() {
         return null;
     }
 
@@ -24,7 +24,7 @@ public class ServerProxy extends CommonProxy {
     }
 
     @Override
-    public void handleSleepClient(PlayerEntity player) {
+    public void handleSleepClient(Player player) {
 
     }
 

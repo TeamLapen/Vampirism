@@ -7,13 +7,13 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.skills.SkillNode;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.EffectType;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.network.chat.TranslatableComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,7 +26,7 @@ public class OblivionEffect extends VampirismEffect {
 
     private static final Logger LOGGER = LogManager.getLogger(FactionPlayerHandler.class);
 
-    public OblivionEffect(String name, EffectType effectType, int potionColor) {
+    public OblivionEffect(String name, MobEffectCategory effectType, int potionColor) {
         super(name, effectType, potionColor);
     }
 
@@ -38,9 +38,9 @@ public class OblivionEffect extends VampirismEffect {
     @Override
     public void applyEffectTick(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
         if (!entityLivingBaseIn.getCommandSenderWorld().isClientSide) {
-            if (entityLivingBaseIn instanceof PlayerEntity) {
-                entityLivingBaseIn.addEffect(new EffectInstance(Effects.CONFUSION, getTickDuration(amplifier), 5, false, false, false, null));
-                FactionPlayerHandler.getOpt(((PlayerEntity) entityLivingBaseIn)).map(FactionPlayerHandler::getCurrentFactionPlayer).flatMap(factionPlayer -> factionPlayer).ifPresent(factionPlayer -> {
+            if (entityLivingBaseIn instanceof Player) {
+                entityLivingBaseIn.addEffect(new MobEffectInstance(MobEffects.CONFUSION, getTickDuration(amplifier), 5, false, false, false, null));
+                FactionPlayerHandler.getOpt(((Player) entityLivingBaseIn)).map(FactionPlayerHandler::getCurrentFactionPlayer).flatMap(factionPlayer -> factionPlayer).ifPresent(factionPlayer -> {
                     ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
                     Optional<SkillNode> nodeOPT = ((SkillHandler<?>) skillHandler).anyLastNode();
                     if (nodeOPT.isPresent()) {
@@ -49,7 +49,7 @@ public class OblivionEffect extends VampirismEffect {
                         }
                     } else {
                         entityLivingBaseIn.removeEffect(ModEffects.oblivion);
-                        ((PlayerEntity) entityLivingBaseIn).displayClientMessage(new TranslationTextComponent("text.vampirism.skill.skills_reset"), true);
+                        ((Player) entityLivingBaseIn).displayClientMessage(new TranslatableComponent("text.vampirism.skill.skills_reset"), true);
                         LOGGER.debug(LogUtil.FACTION, "Skills were reset for {}", entityLivingBaseIn.getName().getString());
                     }
                 });

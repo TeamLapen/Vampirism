@@ -2,19 +2,19 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 
 import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 /**
  * Default implementation for an action
  */
 public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegistryEntry<IAction> implements IAction {
-    private ITextComponent name;
+    private Component name;
 
-    public void addEffectInstance(T player, EffectInstance instance) {
+    public void addEffectInstance(T player, MobEffectInstance instance) {
         ((EffectInstanceWithSource) instance).setSource(this.getRegistryName());
         player.getRepresentingPlayer().addEffect(instance);
     }
@@ -40,8 +40,8 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
     }
 
     @Override
-    public ITextComponent getName() {
-        return name == null ? name = new TranslationTextComponent(getTranslationKey()) : name;
+    public Component getName() {
+        return name == null ? name = new TranslatableComponent(getTranslationKey()) : name;
     }
 
     @Deprecated
@@ -65,8 +65,8 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
         }
     }
 
-    public void removePotionEffect(T player, Effect effect) {
-        EffectInstance ins = player.getRepresentingPlayer().getEffect(effect);
+    public void removePotionEffect(T player, MobEffect effect) {
+        MobEffectInstance ins = player.getRepresentingPlayer().getEffect(effect);
         while (ins != null) {
             EffectInstanceWithSource insM = ((EffectInstanceWithSource) ins);
             if (insM.hasSource()) {

@@ -3,13 +3,13 @@ package de.teamlapen.vampirism.player.skills;
 import com.google.gson.*;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.SkillTreePacket;
-import net.minecraft.client.resources.JsonReloadListener;
-import net.minecraft.profiler.IProfiler;
-import net.minecraft.resources.IResourceManager;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,11 +18,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class SkillTreeManager extends JsonReloadListener {
+public class SkillTreeManager extends SimpleJsonResourceReloadListener {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Gson GSON = new GsonBuilder().registerTypeHierarchyAdapter(SkillNode.Builder.class, (JsonDeserializer<SkillNode.Builder>) (json, typeOfT, context) -> {
-        JsonObject asObject = JSONUtils.convertToJsonObject(json, "skillnode");
+        JsonObject asObject = GsonHelper.convertToJsonObject(json, "skillnode");
         return SkillNode.Builder.deserialize(asObject, context);
     }).create();
     private static SkillTreeManager instance;
@@ -45,7 +45,7 @@ public class SkillTreeManager extends JsonReloadListener {
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> resourceLocationJsonObjectMap, @Nonnull IResourceManager iResourceManager, @Nonnull IProfiler iProfiler) {
+    protected void apply(Map<ResourceLocation, JsonElement> resourceLocationJsonObjectMap, @Nonnull ResourceManager iResourceManager, @Nonnull ProfilerFiller iProfiler) {
         Map<ResourceLocation, SkillNode.Builder> parsed = new HashMap<>();
         resourceLocationJsonObjectMap.forEach((id, object) -> {
             try {

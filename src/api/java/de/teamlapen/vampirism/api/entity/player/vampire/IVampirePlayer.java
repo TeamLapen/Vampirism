@@ -6,8 +6,8 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.damagesource.DamageSource;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import de.teamlapen.vampirism.entity.ThrowableItemEntity;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.SpriteRenderer;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -11,8 +11,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Renders the vampirism throwable entity item
  */
 @OnlyIn(Dist.CLIENT)
-public class ThrowableItemRenderer extends SpriteRenderer<ThrowableItemEntity> {
-    public ThrowableItemRenderer(EntityRendererManager renderManagerIn, ItemRenderer itemRendererIn) {
+public class ThrowableItemRenderer extends ThrownItemRenderer<ThrowableItemEntity> {
+    public ThrowableItemRenderer(EntityRenderDispatcher renderManagerIn, ItemRenderer itemRendererIn) {
         super(renderManagerIn, itemRendererIn);
     }
 }

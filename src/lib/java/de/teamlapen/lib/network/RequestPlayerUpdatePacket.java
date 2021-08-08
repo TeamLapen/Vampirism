@@ -2,9 +2,9 @@ package de.teamlapen.lib.network;
 
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.network.ISyncable;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -13,11 +13,11 @@ import java.util.function.Supplier;
  */
 public class RequestPlayerUpdatePacket implements IMessage {
 
-    static void encode(RequestPlayerUpdatePacket msg, PacketBuffer buf) {
+    static void encode(RequestPlayerUpdatePacket msg, FriendlyByteBuf buf) {
 
     }
 
-    static RequestPlayerUpdatePacket decode(PacketBuffer buf) {
+    static RequestPlayerUpdatePacket decode(FriendlyByteBuf buf) {
         return new RequestPlayerUpdatePacket();
     }
 
@@ -25,7 +25,7 @@ public class RequestPlayerUpdatePacket implements IMessage {
     public static void handle(final RequestPlayerUpdatePacket pkt, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> { //Execute on main thread
-            ServerPlayerEntity player = ctx.getSender();
+            ServerPlayer player = ctx.getSender();
             if (player != null) {
                 UpdateEntityPacket update = UpdateEntityPacket.createJoinWorldPacket(player);
                 if (update != null) {

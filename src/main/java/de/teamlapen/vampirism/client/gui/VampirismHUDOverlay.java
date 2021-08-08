@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.client.gui.ExtendedGui;
@@ -28,27 +28,27 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.GameSettings;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.Options;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.world.GameType;
+import net.minecraft.client.gui.GuiComponent;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.HitResult;
+import com.mojang.math.Matrix4f;
+import net.minecraft.world.level.GameType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -79,7 +79,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     private int screenBottomColor = 0;
     private int screenBottomPercentage = 0;
     private boolean addTempPoison;
-    private EffectInstance addedTempPoison;
+    private MobEffectInstance addedTempPoison;
 
     public VampirismHUDOverlay(Minecraft mc) {
         this.mc = mc;
@@ -145,33 +145,33 @@ public class VampirismHUDOverlay extends ExtendedGui {
             return;
         }
 
-        RayTraceResult p = Minecraft.getInstance().hitResult;
+        HitResult p = Minecraft.getInstance().hitResult;
 
-        if (p != null && p.getType() == RayTraceResult.Type.ENTITY) {
+        if (p != null && p.getType() == HitResult.Type.ENTITY) {
             VampirismPlayerAttributes atts = VampirismPlayerAttributes.get(mc.player);
             if (atts.vampireLevel > 0 && !mc.player.isSpectator() && !atts.getVampSpecial().bat) {
-                Entity entity = ((EntityRayTraceResult) p).getEntity();
+                Entity entity = ((EntityHitResult) p).getEntity();
                 VampirePlayer.getOpt(mc.player).ifPresent(player -> {
                     LazyOptional<? extends IBiteableEntity> biteableOpt = LazyOptional.empty();
                     if (entity instanceof IBiteableEntity) {
                         biteableOpt = LazyOptional.of(() -> (IBiteableEntity) entity);
-                    } else if (entity instanceof CreatureEntity && entity.isAlive()) {
+                    } else if (entity instanceof PathfinderMob && entity.isAlive()) {
                         biteableOpt = ExtendedCreature.getSafe(entity);
-                    } else if (entity instanceof PlayerEntity) {
-                        biteableOpt = VampirePlayer.getOpt((PlayerEntity) entity);
+                    } else if (entity instanceof Player) {
+                        biteableOpt = VampirePlayer.getOpt((Player) entity);
                     }
                     biteableOpt.filter(iBiteableEntity -> iBiteableEntity.canBeBitten(player)).ifPresent(biteable -> {
                         int color = 0xFF0000;
                         if (entity instanceof IHunterMob || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false))
                             color = 0x099022;
-                        renderBloodFangs(event.getMatrixStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), MathHelper.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
+                        renderBloodFangs(event.getMatrixStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), Mth.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
                         event.setCanceled(true);
                     });
                 });
 
             }
             if (atts.hunterLevel > 0 && !mc.player.isSpectator() && mc.player.getMainHandItem().getItem() == ModItems.stake) {
-                Entity entity = ((EntityRayTraceResult) p).getEntity();
+                Entity entity = ((EntityHitResult) p).getEntity();
                 if (entity instanceof LivingEntity && entity instanceof IVampireMob) {
                     if (StakeItem.canKillInstant((LivingEntity) entity, mc.player)) {
                         if (((LivingEntity) entity).getHealth() > 0) {
@@ -181,11 +181,11 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     }
                 }
             }
-        } else if (p != null && p.getType() == RayTraceResult.Type.BLOCK) {
-            BlockState block = Minecraft.getInstance().level.getBlockState(((BlockRayTraceResult) p).getBlockPos());
+        } else if (p != null && p.getType() == HitResult.Type.BLOCK) {
+            BlockState block = Minecraft.getInstance().level.getBlockState(((BlockHitResult) p).getBlockPos());
             if (ModBlocks.blood_container.equals(block.getBlock())) {
                 if (VampirePlayer.getOpt(mc.player).map(VampirePlayer::wantsBlood).orElse(false)) {
-                    TileEntity tile = Minecraft.getInstance().level.getBlockEntity(((BlockRayTraceResult) p).getBlockPos());
+                    BlockEntity tile = Minecraft.getInstance().level.getBlockEntity(((BlockHitResult) p).getBlockPos());
                     if (tile != null) {
                         tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(handler -> {
                             if (FluidLib.getFluidAmount(handler, ModFluids.blood) > 0) {
@@ -198,7 +198,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             }
         }
         //Render blood feed progress
-        GameSettings gamesettings = this.mc.options;
+        Options gamesettings = this.mc.options;
         if (gamesettings.getCameraType().isFirstPerson() && this.mc.gameMode.getPlayerMode() != GameType.SPECTATOR) {
 
             float progress = VampirePlayer.getOpt(mc.player).map(VampirePlayer::getFeedProgress).orElse(0f);
@@ -228,7 +228,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE || mc.player == null || !mc.player.isAlive()) {
             return;
         }
-        MatrixStack stack = event.getMatrixStack();
+        PoseStack stack = event.getMatrixStack();
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDisable(GL11.GL_LIGHTING);
         IFactionPlayerHandler handler = FactionPlayerHandler.get(mc.player);
@@ -291,7 +291,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                                     blit(event.getMatrixStack(), x, top, 18, 0, 9, 9);
                                 }
                             }
-                            this.mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
+                            this.mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
                             GlStateManager._disableBlend();
                         }
                 );
@@ -303,7 +303,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     public void onRenderGameOverlay(RenderGameOverlayEvent.Pre event) {
         if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
         if ((screenPercentage > 0 || screenBottomPercentage > 0) && VampirismConfig.CLIENT.renderScreenOverlay.get()) {
-            MatrixStack stack = event.getMatrixStack();
+            PoseStack stack = event.getMatrixStack();
             stack.pushPose();
             int w = (this.mc.getWindow().getGuiScaledWidth());
             int h = (this.mc.getWindow().getGuiScaledHeight());
@@ -319,10 +319,10 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 RenderSystem.disableAlphaTest();
                 RenderSystem.blendFuncSeparate(770, 771, 1, 0);
                 RenderSystem.shadeModel(7425);
-                Tessellator tessellator = Tessellator.getInstance();
+                Tesselator tessellator = Tesselator.getInstance();
                 Matrix4f matrix = stack.last().pose();
                 BufferBuilder worldrenderer = tessellator.getBuilder();
-                worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+                worldrenderer.begin(7, DefaultVertexFormat.POSITION_COLOR);
                 worldrenderer.vertex(matrix, 0, h, this.getBlitOffset()).color(r, g, b, a).endVertex();
                 worldrenderer.vertex(matrix, w, h, this.getBlitOffset()).color(r, g, b, a).endVertex();
                 worldrenderer.vertex(matrix, w, 0, this.getBlitOffset()).color(r, g, b, a).endVertex();
@@ -378,7 +378,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             return;
         }
         if (addTempPoison) {
-            mc.player.activeEffects.remove(Effects.POISON);
+            mc.player.activeEffects.remove(MobEffects.POISON);
         }
 
 
@@ -389,13 +389,13 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTH) {
             return;
         }
-        addTempPoison = mc.player.hasEffect(ModEffects.poison) && !mc.player.activeEffects.containsKey(Effects.POISON);
+        addTempPoison = mc.player.hasEffect(ModEffects.poison) && !mc.player.activeEffects.containsKey(MobEffects.POISON);
 
         if (addTempPoison) { //Add temporary dummy potion effect to trick renderer
             if (addedTempPoison == null) {
-                addedTempPoison = new EffectInstance(Effects.POISON, 100);
+                addedTempPoison = new MobEffectInstance(MobEffects.POISON, 100);
             }
-            mc.player.activeEffects.put(Effects.POISON, addedTempPoison);
+            mc.player.activeEffects.put(MobEffects.POISON, addedTempPoison);
         }
 
     }
@@ -422,7 +422,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             screenColor = 0xfff00000;
             fullScreen = false;
         } else if ((screenPercentage = vampire.getTicksInSun() / 2) > 0) {
-            EffectInstance effect = mc.player.getEffect(ModEffects.sunscreen);
+            MobEffectInstance effect = mc.player.getEffect(ModEffects.sunscreen);
             if (effect == null || effect.getAmplifier() < 5) {
                 screenColor = 0xfffff755;
                 fullScreen = false;
@@ -452,7 +452,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
     }
 
-    private void renderBloodFangs(MatrixStack stack, int width, int height, float perc, int color) {
+    private void renderBloodFangs(PoseStack stack, int width, int height, float perc, int color) {
 
         float r = ((color & 0xFF0000) >> 16) / 256f;
         float g = ((color & 0xFF00) >> 8) / 256f;
@@ -471,10 +471,10 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     }
 
-    private void renderStakeInstantKill(MatrixStack mStack, int width, int height) {
+    private void renderStakeInstantKill(PoseStack mStack, int width, int height) {
         if (this.mc.options.getCameraType().isFirstPerson() && this.mc.gameMode.getPlayerMode() != GameType.SPECTATOR) {
             GlStateManager._blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR.value, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR.value, GlStateManager.SourceFactor.ONE.value, GlStateManager.DestFactor.ZERO.value);
-            this.mc.textureManager.bind(AbstractGui.GUI_ICONS_LOCATION);
+            this.mc.textureManager.bind(GuiComponent.GUI_ICONS_LOCATION);
             GlStateManager._color4f(158f / 256, 0, 0, 1);
             this.blit(mStack, (width - 15) / 2, (height - 15) / 2, 0, 0, 15, 15);
             int j = height / 2 - 7 + 16;

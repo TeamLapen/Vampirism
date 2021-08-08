@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.entity.effect;
 
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 
@@ -14,7 +14,7 @@ public interface EffectInstanceWithSource {
      * @return the hidden effect of the effect instance
      */
     @Nullable
-    EffectInstance getHiddenEffect();
+    MobEffectInstance getHiddenEffect();
 
     /**
      * @return the source of this effect instance

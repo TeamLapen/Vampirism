@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.api.entity.minion;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -30,7 +30,7 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
      * @return Either a new {@link IMinionTaskDesc} that holds potentially relevant information or null if it was not possible to activate the task (e.g. because the player has to be loaded)
      */
     @Nullable
-    T activateTask(@Nullable PlayerEntity lord, @Nullable IMinionEntity minion, Q data);
+    T activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, Q data);
 
     /**
      * Called before another task is activated
@@ -39,7 +39,7 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
      */
     void deactivateTask(T desc);
 
-    ITextComponent getName();
+    Component getName();
 
     /**
      * @param faction The faction of the lord
@@ -54,7 +54,7 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
      * Read the task description from NBT.
      * Counterpart to {@link IMinionTaskDesc#writeToNBT(CompoundNBT)}
      */
-    T readFromNBT(CompoundNBT nbt);
+    T readFromNBT(CompoundTag nbt);
 
     /**
      * Tick the task if the minion is loaded.
@@ -92,7 +92,7 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
         /**
          * Write data to NBT. Counterpart to {@link IMinionTask#readFromNBT(CompoundNBT)}
          */
-        default void writeToNBT(CompoundNBT nbt) {
+        default void writeToNBT(CompoundTag nbt) {
         }
 
 

@@ -12,27 +12,29 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.HunterIntelItem;
 import de.teamlapen.vampirism.items.PureBloodItem;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.IInventoryChangedListener;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.network.IContainerFactory;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerListener;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraftforge.fmllegacy.network.IContainerFactory;
+
+import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorInfo;
 
 /**
  * Container for the hunter table.
  * Handles inventory setup  and "crafting"
  */
-public class HunterTableContainer extends InventoryContainer implements IInventoryChangedListener {
+public class HunterTableContainer extends InventoryContainer implements ContainerListener {
     private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Items.BOOK, 15, 28), new SelectorInfo(ModItems.vampire_fang, 42, 28), new SelectorInfo(ModTags.Items.PURE_BLOOD, 69, 28), new SelectorInfo(ModItems.vampire_book, 96, 28)};
     private final SlotResult slotResult;
     private final int hunterLevel;
@@ -40,10 +42,10 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
     private ItemStack missing = ItemStack.EMPTY;
 
 
-    public HunterTableContainer(int id, PlayerInventory playerInventory, IWorldPosCallable worldPosCallable) {
-        super(ModContainer.hunter_table, id, playerInventory, worldPosCallable, new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
-        ((Inventory) inventory).addListener(this);
-        slotResult = new SlotResult(this, new CraftResultInventory() {
+    public HunterTableContainer(int id, Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
+        super(ModContainer.hunter_table, id, playerInventory, worldPosCallable, new SimpleContainer(SELECTOR_INFOS.length), SELECTOR_INFOS);
+        ((SimpleContainer) inventory).addListener(this);
+        slotResult = new SlotResult(this, new ResultContainer() {
             @Override
             public int getMaxStackSize() {
                 return 1;
@@ -55,7 +57,7 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
     }
 
     @Override
-    public void containerChanged(IInventory invBasic) {
+    public void containerChanged(Container invBasic) {
         slotsChanged(invBasic);
     }
 
@@ -71,15 +73,15 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
     }
 
     @Override
-    public void removed(PlayerEntity playerIn) {
+    public void removed(Player playerIn) {
         super.removed(playerIn);
         if (!playerIn.getCommandSenderWorld().isClientSide) {
-            clearContainer(playerIn, playerIn.level, inventory);
+            clearContainer(playerIn, inventory);
         }
     }
 
     @Override
-    public void slotsChanged(IInventory inventoryIn) {
+    public void slotsChanged(Container inventoryIn) {
         if (isLevelValid(true)) {
             int[] req = levelingConf.getItemRequirementsForTable(hunterLevel + 1);
             missing = checkItems(req[0], req[1], req[2], req[3]);
@@ -92,7 +94,7 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
     }
 
     @Override
-    public boolean stillValid(PlayerEntity playerIn) {
+    public boolean stillValid(Player playerIn) {
         return stillValid(worldPos, playerIn, ModBlocks.hunter_table);
     }
 
@@ -115,9 +117,9 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
     public static class Factory implements IContainerFactory<HunterTableContainer> {
 
         @Override
-        public HunterTableContainer create(int windowId, PlayerInventory inv, PacketBuffer data) {
+        public HunterTableContainer create(int windowId, Inventory inv, FriendlyByteBuf data) {
             BlockPos pos = data.readBlockPos();
-            return new HunterTableContainer(windowId, inv, IWorldPosCallable.create(inv.player.level, pos));
+            return new HunterTableContainer(windowId, inv, ContainerLevelAccess.create(inv.player.level, pos));
         }
     }
 
@@ -125,7 +127,7 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
 
         private final HunterTableContainer hunterTableContainer;
 
-        public SlotResult(HunterTableContainer container, IInventory inventory, int index, int xPosition, int yPosition) {
+        public SlotResult(HunterTableContainer container, Container inventory, int index, int xPosition, int yPosition) {
             super(inventory, index, xPosition, yPosition);
             this.hunterTableContainer = container;
         }
@@ -136,9 +138,8 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
         }
 
         @Override
-        public ItemStack onTake(PlayerEntity playerIn, ItemStack stack) {
+        public void onTake(Player playerIn, ItemStack stack) {
             hunterTableContainer.onPickupResult();
-            return stack;
         }
     }
 }

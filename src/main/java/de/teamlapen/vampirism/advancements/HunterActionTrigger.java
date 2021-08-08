@@ -2,13 +2,13 @@ package de.teamlapen.vampirism.advancements;
 
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.REFERENCE;
-import net.minecraft.advancements.criterion.AbstractCriterionTrigger;
-import net.minecraft.advancements.criterion.CriterionInstance;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.loot.ConditionArrayParser;
-import net.minecraft.loot.ConditionArraySerializer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.SerializationContext;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 /**
  * Collection of several hunter related triggers
  */
-public class HunterActionTrigger extends AbstractCriterionTrigger<HunterActionTrigger.Instance> {
+public class HunterActionTrigger extends SimpleCriterionTrigger<HunterActionTrigger.Instance> {
 
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "hunter_action");
     private final static Logger LOGGER = LogManager.getLogger();
@@ -32,7 +32,7 @@ public class HunterActionTrigger extends AbstractCriterionTrigger<HunterActionTr
         return ID;
     }
 
-    public void trigger(ServerPlayerEntity player, Action action) {
+    public void trigger(ServerPlayer player, Action action) {
         this.trigger(player, (instance) -> {
             return instance.test(action);
         });
@@ -40,7 +40,7 @@ public class HunterActionTrigger extends AbstractCriterionTrigger<HunterActionTr
 
     @Nonnull
     @Override
-    protected Instance createInstance(JsonObject json, @Nonnull EntityPredicate.AndPredicate entityPredicate, @Nonnull ConditionArrayParser conditionsParser) {
+    protected Instance createInstance(JsonObject json, @Nonnull EntityPredicate.Composite entityPredicate, @Nonnull DeserializationContext conditionsParser) {
         Action action = Action.NONE;
         if (json.has("action")) {
             String name = json.get("action").getAsString();
@@ -60,18 +60,18 @@ public class HunterActionTrigger extends AbstractCriterionTrigger<HunterActionTr
         STAKE, NONE
     }
 
-    static class Instance extends CriterionInstance {
+    static class Instance extends AbstractCriterionTriggerInstance {
         @Nonnull
         private final Action action;
 
         Instance(@Nonnull Action action) {
-            super(ID, EntityPredicate.AndPredicate.ANY);
+            super(ID, EntityPredicate.Composite.ANY);
             this.action = action;
         }
 
         @Nonnull
         @Override
-        public JsonObject serializeToJson(@Nonnull ConditionArraySerializer serializer) {
+        public JsonObject serializeToJson(@Nonnull SerializationContext serializer) {
             JsonObject json = super.serializeToJson(serializer);
             json.addProperty("action", action.name());
             return json;

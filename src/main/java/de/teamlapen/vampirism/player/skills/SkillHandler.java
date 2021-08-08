@@ -14,19 +14,21 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler.Result;
 
 /**
  * Handles skills for Vampirism's IFactionPlayers
@@ -161,8 +163,8 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
             skill.onEnable(player);
             enabledSkills.add(skill);
             dirty = true;
-            if (this.player.getRepresentingPlayer() instanceof ServerPlayerEntity) {
-                ModAdvancements.TRIGGER_SKILL_UNLOCKED.trigger((ServerPlayerEntity) player.getRepresentingPlayer(), skill);
+            if (this.player.getRepresentingPlayer() instanceof ServerPlayer) {
+                ModAdvancements.TRIGGER_SKILL_UNLOCKED.trigger((ServerPlayer) player.getRepresentingPlayer(), skill);
             }
         }
 
@@ -262,7 +264,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         return Arrays.stream(nodeIn.getLockingNodes()).map(id -> SkillTreeManager.getInstance().getSkillTree().getNodeFromId(id)).filter(Objects::nonNull).flatMap(node -> Arrays.stream(node.getElements())).anyMatch(this::isSkillEnabled);
     }
 
-    public void loadFromNbt(CompoundNBT nbt) {
+    public void loadFromNbt(CompoundTag nbt) {
         if (nbt.contains("skills")) {
             for (String id : nbt.getCompound("skills").getAllKeys()) {
                 ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(id));
@@ -276,10 +278,10 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         }
 
         if (nbt.contains("refinement_set")) {
-            CompoundNBT setsNBT = nbt.getCompound("refinement_set");
+            CompoundTag setsNBT = nbt.getCompound("refinement_set");
             for (String id : setsNBT.getAllKeys()) {
                 int i = Integer.parseInt(id);
-                CompoundNBT setNBT = setsNBT.getCompound(id);
+                CompoundTag setNBT = setsNBT.getCompound(id);
                 String setName = setNBT.getString("id");
                 int damage = setNBT.getInt("damage");
                 if ("none".equals(setName)) continue;
@@ -292,7 +294,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     }
 
-    public void readUpdateFromServer(CompoundNBT nbt) {
+    public void readUpdateFromServer(CompoundTag nbt) {
         if (nbt.contains("skills")) {
 
             //noinspection unchecked
@@ -318,10 +320,10 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         }
 
         if (nbt.contains("refinement_set")) {
-            CompoundNBT setsNBT = nbt.getCompound("refinement_set");
+            CompoundTag setsNBT = nbt.getCompound("refinement_set");
             for (String id : setsNBT.getAllKeys()) {
                 int i = Integer.parseInt(id);
-                CompoundNBT setNBT = setsNBT.getCompound(id);
+                CompoundTag setNBT = setsNBT.getCompound(id);
                 String setName = setNBT.getString("id");
                 int damage = setNBT.getInt("damage");
                 IRefinementSet set = null;
@@ -350,15 +352,15 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         enableRootSkill();
     }
 
-    public void saveToNbt(CompoundNBT nbt) {
-        CompoundNBT skills = new CompoundNBT();
+    public void saveToNbt(CompoundTag nbt) {
+        CompoundTag skills = new CompoundTag();
         for (ISkill skill : enabledSkills) {
             skills.putBoolean(skill.getRegistryName().toString(), true);
         }
         nbt.put("skills", skills);
-        CompoundNBT refinements = new CompoundNBT();
+        CompoundTag refinements = new CompoundTag();
         for (int i = 0; i < this.appliedRefinementSets.length; ++i) {
-            CompoundNBT setNbt = new CompoundNBT();
+            CompoundTag setNbt = new CompoundTag();
             IRefinementSet set = this.appliedRefinementSets[i];
             int damage = this.refinementSetDamage[i];
             setNbt.putString("id", set != null ? set.getRegistryName().toString() : "none");
@@ -369,15 +371,15 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     }
 
-    public void writeUpdateForClient(CompoundNBT nbt) {
-        CompoundNBT skills = new CompoundNBT();
+    public void writeUpdateForClient(CompoundTag nbt) {
+        CompoundTag skills = new CompoundTag();
         for (ISkill skill : enabledSkills) {
             skills.putBoolean(skill.getRegistryName().toString(), true);
         }
         nbt.put("skills", skills);
-        CompoundNBT refinements = new CompoundNBT();
+        CompoundTag refinements = new CompoundTag();
         for (int i = 0; i < this.appliedRefinementSets.length; ++i) {
-            CompoundNBT setNbt = new CompoundNBT();
+            CompoundTag setNbt = new CompoundTag();
             IRefinementSet set = this.appliedRefinementSets[i];
             int damage = this.refinementSetDamage[i];
             setNbt.putString("id", set != null ? set.getRegistryName().toString() : "none");
@@ -398,7 +400,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
                 if (!this.player.isRemote()) {
                     Attribute a = refinement.getAttribute();
                     if (a != null) {
-                        ModifiableAttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(a);
+                        AttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(a);
                         double value = refinement.getModifierValue();
                         AttributeModifier t = attributeInstance.getModifier(refinement.getUUID());
                         if (t != null) {
@@ -424,7 +426,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
                 if (!this.player.isRemote()) {
                     Attribute a = refinement.getAttribute();
                     if (a != null) {
-                        ModifiableAttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(a);
+                        AttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(a);
                         AttributeModifier modifier = this.refinementModifier.get(refinement);
                         double value = modifier.getAmount() - refinement.getModifierValue();
                         this.refinementModifier.remove(refinement);

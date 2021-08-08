@@ -2,36 +2,36 @@ package de.teamlapen.vampirism.inventory.container;
 
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModRecipes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.AbstractFurnaceContainer;
-import net.minecraft.inventory.container.FurnaceFuelSlot;
-import net.minecraft.inventory.container.FurnaceResultSlot;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.RecipeBookCategory;
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.IntArray;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.AbstractFurnaceMenu;
+import net.minecraft.world.inventory.FurnaceFuelSlot;
+import net.minecraft.world.inventory.FurnaceResultSlot;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.RecipeBookType;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.SimpleContainerData;
 
 
-public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {
+public class AlchemicalCauldronContainer extends AbstractFurnaceMenu {
 
     @Deprecated
-    public AlchemicalCauldronContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, new Inventory(4), new IntArray(4), IWorldPosCallable.NULL);
+    public AlchemicalCauldronContainer(int id, Inventory playerInventory) {
+        this(id, playerInventory, new SimpleContainer(4), new SimpleContainerData(4), ContainerLevelAccess.NULL);
     }
 
-    public AlchemicalCauldronContainer(int id, PlayerInventory playerInventory, IInventory inv, IIntArray data, IWorldPosCallable worldPos) {
-        super(ModContainer.alchemical_cauldron, ModRecipes.ALCHEMICAL_CAULDRON_TYPE, RecipeBookCategory.FURNACE, id, playerInventory, inv, data);
+    public AlchemicalCauldronContainer(int id, Inventory playerInventory, Container inv, ContainerData data, ContainerLevelAccess worldPos) {
+        super(ModContainer.alchemical_cauldron, ModRecipes.ALCHEMICAL_CAULDRON_TYPE, RecipeBookType.FURNACE, id, playerInventory, inv, data);
         setSlots(playerInventory);
     }
 
 
     @Override
-    public ItemStack quickMoveStack(PlayerEntity playerEntity, int index) {
+    public ItemStack quickMoveStack(Player playerEntity, int index) {
         ItemStack stackCopy = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {
@@ -78,7 +78,7 @@ public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {
         return stackCopy;
     }
 
-    private void setSlots(PlayerInventory playerInv) {
+    private void setSlots(Inventory playerInv) {
         this.slots.clear();
         this.lastSlots.clear();
         //Keep order

@@ -26,27 +26,27 @@ import de.teamlapen.vampirism.items.MinionUpgradeItem;
 import de.teamlapen.vampirism.items.VampirismItemBloodFood;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.monster.SkeletonEntity;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
@@ -68,14 +68,14 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
     }
 
-    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+    public static AttributeSupplier.Builder getAttributeBuilder() {
         return BasicVampireEntity.getAttributeBuilder();
     }
     private boolean sundamageCache;
     private EnumStrength garlicCache = EnumStrength.NONE;
 
-    public VampireMinionEntity(EntityType<? extends VampirismEntity> type, World world) {
-        super(type, world, VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true, true, true, false, null).or(e -> !(e instanceof IFactionEntity) && e instanceof IMob && !(e instanceof ZombieEntity) && !(e instanceof SkeletonEntity) && !(e instanceof CreeperEntity)));
+    public VampireMinionEntity(EntityType<? extends VampirismEntity> type, Level world) {
+        super(type, world, VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true, true, true, false, null).or(e -> !(e instanceof IFactionEntity) && e instanceof Enemy && !(e instanceof Zombie) && !(e instanceof Skeleton) && !(e instanceof Creeper)));
     }
 
     @Override
@@ -111,7 +111,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
     @Nonnull
     @Override
-    public EnumStrength isGettingGarlicDamage(IWorld iWorld, boolean forceRefresh) {
+    public EnumStrength isGettingGarlicDamage(LevelAccessor iWorld, boolean forceRefresh) {
         if (forceRefresh) {
             garlicCache = Helper.getGarlicStrength(this, iWorld);
         }
@@ -139,7 +139,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             if (isAlive() && isInWater()) {
                 setAirSupply(300);
                 if (tickCount % 16 == 4) {
-                    addEffect(new EffectInstance(Effects.WEAKNESS, 80, 0));
+                    addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 80, 0));
                 }
             }
         }
@@ -148,12 +148,12 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
     @Nonnull
     @Override
-    public ItemStack eat(@Nonnull World world, @Nonnull ItemStack stack) {
+    public ItemStack eat(@Nonnull Level world, @Nonnull ItemStack stack) {
         return stack;
     }
 
     @Override
-    public boolean isGettingSundamage(IWorld iWorld, boolean forceRefresh) {
+    public boolean isGettingSundamage(LevelAccessor iWorld, boolean forceRefresh) {
         if (!forceRefresh) return sundamageCache;
         return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.level.getProfiler()));
     }
@@ -211,20 +211,20 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     @Override
-    protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         if (!this.level.isClientSide() && isLord(player) && minionData != null) {
             ItemStack heldItem = player.getItemInHand(hand);
             if (heldItem.getItem() instanceof MinionUpgradeItem && ((MinionUpgradeItem) heldItem.getItem()).getFaction() == this.getFaction()) {
                 if (this.minionData.level + 1 >= ((MinionUpgradeItem) heldItem.getItem()).getMinLevel() && this.minionData.level + 1 <= ((MinionUpgradeItem) heldItem.getItem()).getMaxLevel()) {
                     this.minionData.level++;
                     if (!player.abilities.instabuild) heldItem.shrink(1);
-                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.vampire_minion.binding_upgrade"), false);
+                    player.displayClientMessage(new TranslatableComponent("text.vampirism.vampire_minion.binding_upgrade"), false);
                     HelperLib.sync(this);
                 } else {
-                    player.displayClientMessage(new TranslationTextComponent("text.vampirism.vampire_minion.binding_wrong"), false);
+                    player.displayClientMessage(new TranslatableComponent("text.vampirism.vampire_minion.binding_wrong"), false);
 
                 }
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         }
         return super.mobInteract(player, hand);
@@ -283,7 +283,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public void deserializeNBT(CompoundNBT nbt) {
+        public void deserializeNBT(CompoundTag nbt) {
             super.deserializeNBT(nbt);
             type = nbt.getInt("vampire_type");
             level = nbt.getInt("level");
@@ -296,7 +296,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public IFormattableTextComponent getFormattedName() {
+        public MutableComponent getFormattedName() {
             return super.getFormattedName().withStyle(VReference.VAMPIRE_FACTION.getChatColor());
         }
 
@@ -358,7 +358,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public void serializeNBT(CompoundNBT tag) {
+        public void serializeNBT(CompoundTag tag) {
             super.serializeNBT(tag);
             tag.putInt("vampire_type", type);
             tag.putInt("level", level);
