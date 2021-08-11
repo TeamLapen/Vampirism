@@ -118,7 +118,7 @@ public class BloodHelper {
         ItemStack stack = ItemStack.EMPTY;
         int hotbarSize = Inventory.getSelectionSize();
         for (int i = 0; i < hotbarSize; i++) {
-            ItemStack stack1 = player.inventory.getItem(i);
+            ItemStack stack1 = player.getInventory().getItem(i);
             if (!stack1.isEmpty() && fill(stack1, amt, IFluidHandler.FluidAction.SIMULATE) > 0) {
                 stack = stack1;
                 break;
@@ -135,7 +135,7 @@ public class BloodHelper {
             }
             LOGGER.warn("Could not execute bottle fill even though simulation was successful. Item: {} Amount: {}", stack, amt);
         }
-        ItemStack glass = getGlassBottleInHotbar(player.inventory);
+        ItemStack glass = getGlassBottleInHotbar(player.getInventory());
         if (!glass.isEmpty() && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
             ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle, 1);
             int filled = fill(bloodBottle, amt, IFluidHandler.FluidAction.EXECUTE);
@@ -144,15 +144,15 @@ public class BloodHelper {
             }
             glass.shrink(1);
             if (glass.isEmpty()) {
-                player.inventory.removeItem(glass);
+                player.getInventory().removeItem(glass);
             }
-            if (!player.inventory.add(bloodBottle)) {
+            if (!player.getInventory().add(bloodBottle)) {
                 player.drop(bloodBottle, false);
             }
             return fillBloodIntoInventory(player, amt - filled);
         }
-        if (hasFeedingAdapterInHotbar(player.inventory)) {
-            ItemStack container = getBloodContainerInInventory(player.inventory, false, true);
+        if (hasFeedingAdapterInHotbar(player.getInventory())) {
+            ItemStack container = getBloodContainerInInventory(player.getInventory(), false, true);
             if (!container.isEmpty()) {
                 FluidStack content = BloodContainerBlock.getFluidFromItemStack(container);
                 int filled = Math.min(amt, BloodContainerTileEntity.CAPACITY - content.getAmount());

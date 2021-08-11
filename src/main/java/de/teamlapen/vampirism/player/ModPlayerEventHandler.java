@@ -102,7 +102,7 @@ public class ModPlayerEventHandler {
                 for (int z = event.getPos().getZ() - 1; z <= event.getPos().getZ() + 1; ++z) {
                     for (double y = event.getPos().getY() - 1; y <= event.getPos().getY() + 1; ++y) {
                         BlockPos pos1 = new BlockPos(x, y, z);
-                        if (event.getWorld().getChunkSource().isEntityTickingChunk(new ChunkPos(pos1)) && event.getWorld().getBlockState(pos1).getBlock() == block) {
+                        if (((Level)event.getWorld()).isLoaded(pos1) && event.getWorld().getBlockState(pos1).getBlock() == block) {
                             BlockPos totemPos1 = TotemHelper.getTotemPosition(pos1);
                             if (totemPos1 != null && totemPos == null) {
                                 totemPos = totemPos1;
@@ -139,7 +139,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void eyeHeight(EntityEvent.Size event) {
-        if (event.getEntity() instanceof Player && ((Player) event.getEntity()).inventory != null /*make sure we are not in the player's contructor*/) {
+        if (event.getEntity() instanceof Player && ((Player) event.getEntity()).getInventory() != null /*make sure we are not in the player's contructor*/) {
             if (event.getEntity().isAlive() && event.getEntity().position().lengthSqr() != 0) { //Do not attempt to get capability while entity is being initialized
                 if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().bat) {
                     event.setNewSize(BatVampireAction.BAT_SIZE);
@@ -331,13 +331,13 @@ public class ModPlayerEventHandler {
         if (event.getWorld().getWorldBorder().isWithinBounds(event.getPos())) {
             ItemStack heldStack = event.getItemStack();
             if (!heldStack.isEmpty() && heldStack.getCount() == 1) {
-                boolean glasBottle = Items.GLASS_BOTTLE.equals(heldStack.getItem());
+                boolean glassBottle = Items.GLASS_BOTTLE.equals(heldStack.getItem());
                 boolean bloodBottle = ModItems.blood_bottle.equals(heldStack.getItem());
-                if (bloodBottle || (glasBottle && VampirismConfig.COMMON.autoConvertGlassBottles.get())) {
+                if (bloodBottle || (glassBottle && VampirismConfig.COMMON.autoConvertGlassBottles.get())) {
                     Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
                     BlockState state = event.getWorld().getBlockState(event.getPos());
                     boolean convert = false;
-                    if (glasBottle && state.hasTileEntity()) {
+                    if (glassBottle && state.hasBlockEntity()) {
                         BlockEntity entity = event.getWorld().getBlockEntity(event.getPos());
                         if (entity != null) {
                             convert = entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace()).map(fluidHandler -> {

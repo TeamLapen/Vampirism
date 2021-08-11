@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import net.minecraft.advancements.*;
-import net.minecraft.advancements.criterion.*;
 import net.minecraft.data.advancements.AdvancementProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.ItemStack;

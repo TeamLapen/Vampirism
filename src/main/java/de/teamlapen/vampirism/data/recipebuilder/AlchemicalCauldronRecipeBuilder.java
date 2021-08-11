@@ -6,7 +6,6 @@ import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.CriterionTriggerInstance;
@@ -28,7 +27,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Consumer;
 
 @ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class AlchemicalCauldronRecipeBuilder {
     public static AlchemicalCauldronRecipeBuilder cauldronRecipe(Item item) {
         return AlchemicalCauldronRecipeBuilder.cauldronRecipe(item, 1);

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.REFERENCE;
-import net.minecraft.block.*;
 import net.minecraft.world.level.material.Material;
 
 import net.minecraft.world.level.block.Block;

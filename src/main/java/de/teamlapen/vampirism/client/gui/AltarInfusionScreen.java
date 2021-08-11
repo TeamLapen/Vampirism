@@ -31,8 +31,8 @@ public class AltarInfusionScreen extends AbstractContainerScreen<AltarInfusionCo
 
     @Override
     protected void renderBg(@Nonnull PoseStack stack, float var1, int var2, int var3) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bind(altarGuiTextures);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, altarGuiTextures);
         this.blit(stack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 

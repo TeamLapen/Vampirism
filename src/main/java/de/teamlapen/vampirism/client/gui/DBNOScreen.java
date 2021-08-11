@@ -48,10 +48,10 @@ public class DBNOScreen extends Screen {
 
     public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.fillGradient(matrixStack, 0, 0, this.width, this.height, 1615855616, -1602211792);
-        RenderSystem.pushMatrix();
-        RenderSystem.scalef(2.0F, 2.0F, 2.0F);
+        matrixStack.pushPose();
+        matrixStack.scale(2.0F, 2.0F, 2.0F);
         drawCenteredString(matrixStack, this.font, this.title, this.width / 2 / 2, 30, 16777215);
-        RenderSystem.popMatrix();
+        matrixStack.popPose();
         if (this.causeOfDeath != null) {
             drawCenteredString(matrixStack, this.font, this.causeOfDeath, this.width / 2, 85, 16777215);
         }
@@ -81,12 +81,12 @@ public class DBNOScreen extends Screen {
 
     protected void init() {
         this.enableButtonsTimer = 0;
-        dieButton = this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 72, 200, 20, new TranslatableComponent("gui.vampirism.dbno.die"), (p_213021_1_) -> {
+        dieButton = this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 72, 200, 20, new TranslatableComponent("gui.vampirism.dbno.die"), (p_213021_1_) -> {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DIE, ""));
             this.minecraft.setScreen(null);
         }));
         dieButton.active = false;
-        resurrectButton = this.addButton(new CooldownButton(this.width / 2 - 100, this.height / 4 + 96, 200, 20, new TranslatableComponent("gui.vampirism.dbno.resurrect"), (p_213020_1_) -> {
+        resurrectButton = this.addRenderableWidget(new CooldownButton(this.width / 2 - 100, this.height / 4 + 96, 200, 20, new TranslatableComponent("gui.vampirism.dbno.resurrect"), (p_213020_1_) -> {
             if (this.minecraft.player != null)
                 VampirePlayer.getOpt(this.minecraft.player).ifPresent(VampirePlayer::tryResurrect);
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESURRECT, ""));

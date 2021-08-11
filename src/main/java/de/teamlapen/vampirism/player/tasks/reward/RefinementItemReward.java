@@ -59,10 +59,10 @@ public class RefinementItemReward extends ItemReward {
                 .filter(set -> this.rarity == null || set.getRarity().ordinal() >= this.rarity.ordinal())
                 .filter(set -> set.getSlotType().map(slot1 -> slot1 == slot).orElse(true))
                 .map(set -> ((RefinementSet) set).getWeightedRandom()).collect(Collectors.toList());
-        if (sets.isEmpty()) return new ItemStack(item);
-        IRefinementSet set = WeighedRandom.getRandomItem(RANDOM, sets).getItem();
         ItemStack stack = new ItemStack(item);
-        item.applyRefinementSet(stack, set);
+        if (!sets.isEmpty()){
+            WeighedRandom.getRandomItem(RANDOM, sets).map(WeightedRandomItem::getItem).ifPresent(set -> item.applyRefinementSet(stack, set));
+        }
         return stack;
     }
 }

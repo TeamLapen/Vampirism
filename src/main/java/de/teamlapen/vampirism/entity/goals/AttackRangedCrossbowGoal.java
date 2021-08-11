@@ -71,7 +71,7 @@ public class AttackRangedCrossbowGoal<T extends VampirismEntity & AttackRangedCr
 
         if (entitylivingbase != null) {
             double d0 = this.entity.distanceToSqr(entitylivingbase.getX(), entitylivingbase.getBoundingBox().minY, entitylivingbase.getZ());
-            boolean canSee = this.entity.getSensing().canSee(entitylivingbase);
+            boolean canSee = this.entity.getSensing().hasLineOfSight(entitylivingbase);
             boolean couldSee = this.seeTime > 0;
 
             if (canSee != couldSee) {
@@ -131,7 +131,7 @@ public class AttackRangedCrossbowGoal<T extends VampirismEntity & AttackRangedCr
         double sx = target.getX() - entityArrow.getX();
         double sy = target.getBoundingBox().minY + (double) (target.getBbHeight() / 3.0F) - entityArrow.getY();
         double sz = target.getZ() - entityArrow.getZ();
-        double dist = Mth.sqrt(sx * sx + sz * sz);
+        double dist = Math.sqrt(sx * sx + sz * sz);
         entityArrow.shoot(sx, sy + dist * 0.2, sz, 1.6F, (float) (13 - target.getCommandSenderWorld().getDifficulty().getId() * 4));
         this.entity.playSound(ModSounds.crossbow, 0.5F, 1);
         this.entity.getCommandSenderWorld().addFreshEntity(entityArrow);

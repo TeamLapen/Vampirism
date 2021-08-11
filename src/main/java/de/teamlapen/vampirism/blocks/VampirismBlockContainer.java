@@ -24,7 +24,7 @@ public abstract class VampirismBlockContainer extends BaseEntityBlock {
 
     @Override
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.hasTileEntity() && (state.getBlock() != newState.getBlock() || !newState.hasTileEntity())) {
+        if (state.hasBlockEntity() && (state.is(newState.getBlock()) || !newState.hasBlockEntity())) {
             this.clearContainer(state, worldIn, pos);
             super.onRemove(state, worldIn, pos, newState, isMoving);
         }

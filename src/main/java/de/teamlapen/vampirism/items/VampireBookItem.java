@@ -16,7 +16,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.util.*;
-import net.minecraft.util.text.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -127,8 +126,8 @@ public class VampireBookItem extends VampirismItem {
 
                     nbttagcompound.put("pages", nbttaglist);
                     if (player instanceof ServerPlayer && player.getMainHandItem() == stack) {
-                        Slot var10 = player.containerMenu.slots.get(player.inventory.selected);
-                        ((ServerPlayer) player).connection.send(new ClientboundContainerSetSlotPacket(0, var10.index, stack));
+                        Slot var10 = player.containerMenu.slots.get(player.getInventory().selected);
+                        ((ServerPlayer) player).connection.send(new ClientboundContainerSetSlotPacket(0, player.containerMenu.incrementStateId(), var10.index, stack));
                     }
                 }
             }

@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.inventory.container;
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
-import de.teamlapen.vampirism.client.gui.recipebook.WeaponTableRecipePlacer;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModRecipes;
@@ -11,6 +10,7 @@ import de.teamlapen.vampirism.inventory.inventory.WeaponTableCraftingSlot;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.RecipeBookCategories;
+import net.minecraft.recipebook.ServerPlaceRecipe;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.server.level.ServerPlayer;
@@ -135,7 +135,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
     @SuppressWarnings("unchecked")
     @Override
     public void handlePlacement(boolean shouldPlaceAll, @Nonnull Recipe<?> recipe, @Nonnull ServerPlayer serverPlayer) {
-        new WeaponTableRecipePlacer<>(this).recipeClicked(serverPlayer, (Recipe<CraftingContainer>) recipe, shouldPlaceAll);
+        new ServerPlaceRecipe<>(this).recipeClicked(serverPlayer, (Recipe<CraftingContainer>) recipe, shouldPlaceAll);
     }
 
     @Nonnull

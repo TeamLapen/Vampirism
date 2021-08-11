@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.vampirism.REFERENCE;
@@ -30,8 +31,8 @@ public class BloodGrinderScreen extends AbstractContainerScreen<BloodGrinderCont
 
     @Override
     protected void renderBg(@Nonnull PoseStack stack, float var1, int var2, int var3) {
-        GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bind(background);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, background);
         this.blit(stack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 }

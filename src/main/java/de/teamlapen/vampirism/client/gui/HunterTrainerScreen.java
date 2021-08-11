@@ -38,7 +38,7 @@ public class HunterTrainerScreen extends AbstractContainerScreen<HunterTrainerCo
     public void init() {
         super.init();
         Component name = new TranslatableComponent("text.vampirism.level_up");
-        this.addButton(this.buttonLevelup = new Button(this.leftPos + 120, this.topPos + 24, this.font.width(name) + 5, 20, name, (context) -> {
+        this.addRenderableWidget(this.buttonLevelup = new Button(this.leftPos + 120, this.topPos + 24, this.font.width(name) + 5, 20, name, (context) -> {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TRAINERLEVELUP, ""));
             Player player = Minecraft.getInstance().player;
             UtilLib.spawnParticles(player.getCommandSenderWorld(), ParticleTypes.ENCHANT, player.getX(), player.getY(), player.getZ(), 1, 1, 1, 100, 1);
@@ -57,18 +57,16 @@ public class HunterTrainerScreen extends AbstractContainerScreen<HunterTrainerCo
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    protected void containerTick() {
         if (menu.hasChanged() || this.minecraft.player.getRandom().nextInt(40) == 6) {
             buttonLevelup.active = menu.canLevelup();
         }
-
     }
 
     @Override
     protected void renderBg(PoseStack stack, float var1, int var2, int var3) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bind(altarGuiTextures);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, altarGuiTextures);
         this.blit(stack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 

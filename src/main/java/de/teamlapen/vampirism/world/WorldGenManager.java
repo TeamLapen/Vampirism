@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.api.world.IWorldGenManager;
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 
@@ -13,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@MethodsReturnNonnullByDefault
 public class WorldGenManager implements IWorldGenManager {
     /**
      * stores structures {@link ResourceLocation} -> set of {@link Biome}s in which the structure shouldn't be generated

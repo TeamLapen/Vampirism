@@ -46,7 +46,7 @@ public class AdjustableLevelCondition implements LootItemCondition {
         return false;
     }
 
-    public static class Serializer implements Serializer<AdjustableLevelCondition> {
+    public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<AdjustableLevelCondition> {
 
 
         @Nonnull

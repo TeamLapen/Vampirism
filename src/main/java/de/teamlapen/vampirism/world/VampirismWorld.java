@@ -17,8 +17,8 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.common.thread.EffectiveSide;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraftforge.fml.util.thread.EffectiveSide;
+import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -58,18 +58,18 @@ public class VampirismWorld implements IVampirismWorld {
     }
 
     public static void registerCapability() {
-        CapabilityManager.INSTANCE.register(IVampirismWorld.class, new VampirismWorld.Storage(), VampirismWorldDefaultImpl::new);
+        CapabilityManager.INSTANCE.register(IVampirismWorld.class);
     }
 
     public static ICapabilityProvider createNewCapability(final Level world) {
         return new ICapabilitySerializable<CompoundTag>() {
 
-            final IVampirismWorld inst = new VampirismWorld(world);
+            final VampirismWorld inst = new VampirismWorld(world);
             final LazyOptional<IVampirismWorld> opt = LazyOptional.of(() -> inst);
 
             @Override
             public void deserializeNBT(CompoundTag nbt) {
-                CAP.getStorage().readNBT(CAP, inst, null, nbt);
+                inst.loadNBTData(nbt);
             }
 
             @Nonnull
@@ -81,7 +81,9 @@ public class VampirismWorld implements IVampirismWorld {
 
             @Override
             public CompoundTag serializeNBT() {
-                return (CompoundTag) CAP.getStorage().writeNBT(CAP, inst, null);
+                CompoundTag tag = new CompoundTag();
+                inst.saveNBTData(tag);
+                return tag;
             }
         };
     }
@@ -216,21 +218,6 @@ public class VampirismWorld implements IVampirismWorld {
                     "pos=" + Arrays.toString(pos) +
                     ", strength=" + strength +
                     '}';
-        }
-    }
-
-    private static class Storage implements Capability.IStorage<IVampirismWorld> {
-
-        @Override
-        public void readNBT(Capability<IVampirismWorld> capability, IVampirismWorld instance, Direction side, Tag nbt) {
-            ((VampirismWorld) instance).loadNBTData((CompoundTag) nbt);
-        }
-
-        @Override
-        public Tag writeNBT(Capability<IVampirismWorld> capability, IVampirismWorld instance, Direction side) {
-            CompoundTag nbt = new CompoundTag();
-            ((VampirismWorld) instance).saveNBTData(nbt);
-            return nbt;
         }
     }
 }

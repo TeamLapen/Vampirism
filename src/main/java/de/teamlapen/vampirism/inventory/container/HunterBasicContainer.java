@@ -73,7 +73,7 @@ public class HunterBasicContainer extends InventoryContainer {
     public void removed(Player playerIn) {
         super.removed(playerIn);
         if (!playerIn.getCommandSenderWorld().isClientSide) {
-            this.clearContainer(playerIn, playerIn.getCommandSenderWorld(), inventory);
+            this.clearContainer(playerIn, inventory);
         }
     }
 

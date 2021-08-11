@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableArrayTextComponentList;
@@ -11,6 +12,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.LockIconButton;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +20,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fmlclient.gui.GuiUtils;
+import net.minecraftforge.fmlclient.gui.widget.ExtendedButton;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -58,26 +62,26 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     @Override
     protected void init() {
         super.init();
-        this.appearanceButton = this.addButton(new ImageButton(this.leftPos + 6, this.topPos + 21, 18, 18, 238, 0, 18, GUI_TEXTURE, this::onConfigurePressed));
-        this.lockActionButton = this.addButton(new LockIconButton(this.leftPos + 99, this.topPos + 19, this::toggleActionLock));
-        this.statButton = this.addButton(new ImageButton(this.leftPos + 6, this.topPos + 40, 18, 18, 220, 0, 18, GUI_TEXTURE, this::onStatsPressed));
+        this.appearanceButton = this.addRenderableWidget(new ImageButton(this.leftPos + 6, this.topPos + 21, 18, 18, 238, 0, 18, GUI_TEXTURE, this::onConfigurePressed));
+        this.lockActionButton = this.addRenderableWidget(new LockIconButton(this.leftPos + 99, this.topPos + 19, this::toggleActionLock));
+        this.statButton = this.addRenderableWidget(new ImageButton(this.leftPos + 6, this.topPos + 40, 18, 18, 220, 0, 18, GUI_TEXTURE, this::onStatsPressed));
         this.lockActionButton.setLocked(this.menu.isTaskLocked());
         Component[] taskNames = Arrays.stream(menu.getAvailableTasks()).map(IMinionTask::getName).toArray(Component[]::new);
 
-        this.taskList = this.addButton(new ScrollableArrayTextComponentList(this.leftPos + 120, this.topPos + 19 + 19, 86, Math.min(3 * 20, taskNames.length * 20), 20, () -> taskNames, this::selectTask).scrollSpeed(2D));
+        this.taskList = this.addRenderableWidget(new ScrollableArrayTextComponentList(this.leftPos + 120, this.topPos + 19 + 19, 86, Math.min(3 * 20, taskNames.length * 20), 20, () -> taskNames, this::selectTask).scrollSpeed(2D));
         this.taskList.visible = false;
-        this.taskButton = this.addButton(new ExtendedButton(this.leftPos + 119, this.topPos + 19, 88, 20, getActiveTaskName(), (button -> {
+        this.taskButton = this.addRenderableWidget(new ExtendedButton(this.leftPos + 119, this.topPos + 19, 88, 20, getActiveTaskName(), (button -> {
             this.taskList.visible = !this.taskList.visible;
         })));
     }
 
     @Override
     protected void renderBg(PoseStack mStack, float partialTicks, int mouseX, int mouseY) {
-        GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
-
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, GUI_TEXTURE);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        this.minecraft.getTextureManager().bind(GUI_TEXTURE);
         this.blit(mStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
         for (int k = extraSlots; k < 15; k++) {
             this.blit(mStack, i + 29 + 18 * (k / 3), j + 44 + 18 * (k % 3), 236, 80, 13, 13);

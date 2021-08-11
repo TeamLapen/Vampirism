@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.network;
 import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fmllegacy.network.NetworkRegistry;
 
 /**
  * Vampirism packet dispatcher

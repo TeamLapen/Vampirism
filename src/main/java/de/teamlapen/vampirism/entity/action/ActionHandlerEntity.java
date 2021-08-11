@@ -126,7 +126,7 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
             }
         }
         if (weightsum > 0) {
-            return WeighedRandom.getRandomItem(entity.getRandom(), entry, weightsum).getAction();
+            return WeighedRandom.getRandomItem(entity.getRandom(), entry, weightsum).map(EntityActionEntry::getAction).orElse(null);
         }
         return null;
     }

@@ -42,7 +42,7 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
     public static ItemStack getRandomRefinementItem(IFaction<?> faction) {
         List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream().filter(set -> set.getFaction() == faction).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return ItemStack.EMPTY;
-        IRefinementSet s = WeighedRandom.getRandomItem(RANDOM, sets).getItem();
+        IRefinementSet s = WeighedRandom.getRandomItem(RANDOM, sets).map(WeightedRandomItem::getItem).orElse(sets.get(0).getItem());
         AccessorySlotType t = s.getSlotType().orElseGet(() -> {
             switch (RANDOM.nextInt(3)) {
                 case 0:
@@ -63,7 +63,7 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
     public static IRefinementSet getRandomRefinementForItem(@Nullable IFaction<?> faction, VampireRefinementItem stack) {
         List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream().filter(set -> faction == null || set.getFaction() == faction).filter(set -> set.getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return null;
-        return WeighedRandom.getRandomItem(RANDOM, sets).getItem();
+        return WeighedRandom.getRandomItem(RANDOM, sets).map(WeightedRandomItem::getItem).orElse(null);
     }
 
     public static VampireRefinementItem getItemForType(AccessorySlotType type) {

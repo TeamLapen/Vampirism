@@ -82,22 +82,22 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         this.statButtons.clear();
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
-        this.addButton(new Button(this.guiLeft + this.xSize - 80 - 20, this.guiTop + 152, 80, 20, new TranslatableComponent("gui.done"), (context) -> {
+        this.addRenderableWidget(new Button(this.guiLeft + this.xSize - 80 - 20, this.guiTop + 152, 80, 20, new TranslatableComponent("gui.done"), (context) -> {
             this.removed();
         }));
         if (backScreen != null) {
-            this.addButton(new Button(this.guiLeft + 20, this.guiTop + 152, 80, 20, new TranslatableComponent("gui.back"), (context) -> {
+            this.addRenderableWidget(new Button(this.guiLeft + 20, this.guiTop + 152, 80, 20, new TranslatableComponent("gui.back"), (context) -> {
                 Minecraft.getInstance().setScreen(this.backScreen);
             }));
         }
         for (int i = 0; i < statCount; i++) {
             int finalI = i;
-            Button button = this.addButton(new Button(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, new TextComponent("+"), (b) -> VampirismMod.dispatcher.sendToServer(new UpgradeMinionStatPacket(entity.getId(), finalI))));
+            Button button = this.addRenderableWidget(new Button(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, new TextComponent("+"), (b) -> VampirismMod.dispatcher.sendToServer(new UpgradeMinionStatPacket(entity.getId(), finalI))));
             statButtons.add(button);
             button.visible = false;
         }
 
-        reset = this.addButton(new ImageButton(this.guiLeft + 225, this.guiTop + 8, 20, 20, 0, 0, 20, RESET, 20, 40, (context) -> {
+        reset = this.addRenderableWidget(new ImageButton(this.guiLeft + 225, this.guiTop + 8, 20, 20, 0, 0, 20, RESET, 20, 40, (context) -> {
             VampirismMod.dispatcher.sendToServer(new UpgradeMinionStatPacket(entity.getId(), -1));
             getOblivionPotion().ifPresent(stack -> stack.shrink(1));//server syncs after the screen is closed
         }, (button, matrixStack, mouseX, mouseY) -> {
@@ -108,7 +108,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
                 if (this.visible) {
                     this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
                     if (!this.active) {
-                        RenderSystem.color4f(0.65f, 0.65f, 0.65f, 1);
+                        RenderSystem.setShaderColor(0.65f, 0.65f, 0.65f, 1);
                     }
                     super.renderButton(matrixStack, mouseX, mouseY, partialTicks);
                 }
@@ -121,7 +121,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     protected abstract boolean isActive(T data, int i);
 
     protected void renderGuiBackground(PoseStack mStack) {
-        this.minecraft.getTextureManager().bind(BACKGROUND);
+        RenderSystem.setShaderTexture(0, BACKGROUND);
         blit(mStack, this.guiLeft, this.guiTop, this.getBlitOffset(), 0, 0, this.xSize, this.ySize, 256, 300);
     }
 
@@ -150,7 +150,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     }
 
     private Optional<ItemStack> getOblivionPotion() {
-        return Optional.ofNullable(entity.getMinionData().flatMap(data -> Optional.ofNullable(InventoryHelper.getFirst(data.getInventory(), ModItems.oblivion_potion))).orElse(InventoryHelper.getFirst(this.minecraft.player.inventory, ModItems.oblivion_potion)));
+        return Optional.ofNullable(entity.getMinionData().flatMap(data -> Optional.ofNullable(InventoryHelper.getFirst(data.getInventory(), ModItems.oblivion_potion))).orElse(InventoryHelper.getFirst(this.minecraft.player.getInventory(), ModItems.oblivion_potion)));
     }
 
 

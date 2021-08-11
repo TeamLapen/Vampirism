@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget;
@@ -70,14 +71,14 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardContainer>
     @Override
     protected void init() {
         super.init();
-        this.addButton(list = new ScrollableListWithDummyWidget<>(this.leftPos + 16, this.topPos + 16, 145, 149, 21, this::taskSupplier, (item, list1, isDummy) -> new TaskItem<>(item, list1, isDummy, this, this.factionPlayer)));
+        this.addRenderableWidget(list = new ScrollableListWithDummyWidget<>(this.leftPos + 16, this.topPos + 16, 145, 149, 21, this::taskSupplier, (item, list1, isDummy) -> new TaskItem<>(item, list1, isDummy, this, this.factionPlayer)));
     }
 
     @Override
     protected void renderBg(PoseStack mStack, float partialTicks, int mouseX, int mouseY) {
         this.renderBackground(mStack);
-        GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bind(TASKMASTER_GUI_TEXTURE);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, TASKMASTER_GUI_TEXTURE);
         blit(mStack, this.leftPos, this.topPos, this.getBlitOffset(), 0, 0, this.imageWidth, this.imageHeight, 256, 256);
     }
 

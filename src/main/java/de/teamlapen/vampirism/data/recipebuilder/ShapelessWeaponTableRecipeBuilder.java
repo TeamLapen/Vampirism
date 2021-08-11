@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.advancements.SkillUnlockedTrigger;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.CriterionTriggerInstance;
@@ -25,7 +24,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.function.Consumer;
 
-@MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
 

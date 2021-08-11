@@ -194,7 +194,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
             return Helper.createEntity(type, p.getCommandSenderWorld()).map(m -> {
                 if (faction == null || faction.isEntityOfFaction(m)) {
                     LOGGER.warn("Specified minion entity is of wrong faction. This: {} Minion: {}", faction, m.getFaction());
-                    m.remove();
+                    m.discard();
                     return null;
                 } else {
                     m.claimMinionSlot(id, this);

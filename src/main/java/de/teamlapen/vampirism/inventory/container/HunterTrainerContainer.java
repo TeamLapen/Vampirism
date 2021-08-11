@@ -104,7 +104,7 @@ public class HunterTrainerContainer extends InventoryContainer implements Contai
     public void removed(Player playerIn) {
         super.removed(playerIn);
         if (!playerIn.getCommandSenderWorld().isClientSide) {
-            clearContainer(playerIn, playerIn.getCommandSenderWorld(), inventory);
+            clearContainer(playerIn, inventory);
         }
     }
 

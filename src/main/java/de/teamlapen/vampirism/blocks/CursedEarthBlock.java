@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.HolyWaterBottleItem;
-import net.minecraft.block.*;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -64,11 +63,6 @@ public class CursedEarthBlock extends VampirismBlock implements BonemealableBloc
     @Override
     public ToolType getHarvestTool(BlockState p_getHarvestTool_1_) {
         return ToolType.SHOVEL;
-    }
-
-    @Override
-    public void onPlantGrow(BlockState state, LevelAccessor world, BlockPos pos, BlockPos source) {
-        world.setBlock(pos, ModBlocks.cursed_earth.defaultBlockState(), 2);
     }
 
     @Override

@@ -22,7 +22,6 @@ import net.minecraft.data.worldgen.Pools;
 import net.minecraft.world.level.levelgen.feature.structures.StructurePoolElement;
 import net.minecraft.world.level.levelgen.feature.structures.SinglePoolElement;
 import net.minecraft.data.worldgen.VillagePools;
-import net.minecraft.world.gen.feature.template.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

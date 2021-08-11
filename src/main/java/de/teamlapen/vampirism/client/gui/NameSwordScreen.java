@@ -7,9 +7,9 @@ import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import net.minecraft.client.Option;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.OptionButton;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.network.chat.Component;
@@ -50,7 +50,7 @@ public class NameSwordScreen extends Screen {
     @Override
     public void init() {
         super.init();
-        this.addButton(new OptionButton(this.width / 2 - 155, this.height / 6 + 96, 150, 20, Option.AMBIENT_OCCLUSION, this.yes, (context) -> {
+        this.addRenderableWidget(new Button(this.width / 2 - 155, this.height / 6 + 96, 150, 20,  this.yes, (context) -> {
             if (!StringUtils.isBlank(nameField.getValue())) {
                 NameSwordScreen.this.sword.setHoverName(new TextComponent(nameField.getValue()));
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, nameField.getValue()));
@@ -58,7 +58,7 @@ public class NameSwordScreen extends Screen {
             this.minecraft.setScreen(null);
             this.minecraft.setWindowActive(true);
         }));
-        this.addButton(new OptionButton(this.width / 2 - 155 + 160, this.height / 6 + 96, 150, 20, Option.AMBIENT_OCCLUSION, this.no, (context) -> {
+        this.addRenderableWidget(new Button(this.width / 2 - 155 + 160, this.height / 6 + 96, 150, 20, this.no, (context) -> {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, VampirismVampireSword.DO_NOT_NAME_STRING));
             this.minecraft.setScreen(null);
             this.minecraft.setWindowActive(true);
@@ -73,7 +73,7 @@ public class NameSwordScreen extends Screen {
         this.nameField.setBordered(true);
         this.nameField.setMaxLength(35);
         this.nameField.setValue(sword_names[new Random().nextInt(sword_names.length)]);
-        this.children.add(nameField);
+        this.addWidget(nameField);
         this.setInitialFocus(nameField);
     }
 
@@ -90,7 +90,6 @@ public class NameSwordScreen extends Screen {
 
 
         super.render(stack, mouseX, mouseY, partialTicks);
-        RenderSystem.disableLighting();
         RenderSystem.disableBlend();
     }
 

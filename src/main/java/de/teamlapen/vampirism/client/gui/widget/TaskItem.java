@@ -42,6 +42,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 /**
  * Element for {@link ScrollableListWithDummyWidget} that presents a {@link Task}
@@ -156,11 +157,39 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         //render background
         RenderSystem.enableDepthTest();
 
-        this.colorTask();
-        Minecraft.getInstance().textureManager.bind(TASKMASTER_GUI_TEXTURE);
+        TaskContainer container = this.screen.getTaskContainer();
+        if (container.isCompleted(this.item)) {
+            RenderSystem.setShaderColor(0.4f, 0.4f, 0.4f, 1);
+        } else {
+            boolean isUnique = this.item.isUnique();
+            boolean remainsTime = this.item.getTaskTimeStamp() - Minecraft.getInstance().level.getGameTime() > 0;
+            if (container.canCompleteTask(this.item)) {
+                if (isUnique) {
+                    RenderSystem.setShaderColor(1f, 0.855859375f, 0, 1);
+                } else {
+                    RenderSystem.setShaderColor(0, 0.9f, 0, 1);
+                }
+            } else if (container.isTaskNotAccepted(this.item)) {
+                if (isUnique) {
+                    RenderSystem.setShaderColor(0.64f, 0.57f, 0.5f, 1);
+                } else {
+                    RenderSystem.setShaderColor(0.55f, 0.55f, 0.55f, 1);
+                }
+            } else if (!isUnique && !remainsTime) {
+                RenderSystem.setShaderColor(1f, 85 / 255f, 85 / 255f, 1);
+            } else {
+                if (isUnique) {
+                    RenderSystem.setShaderColor(1f, 0.9f, 0.6f, 1f);
+                } else {
+                    RenderSystem.setShaderColor(0.85f, 1f, 0.85f, 1f);
+                }
+            }
+        }
+
+        RenderSystem.setShaderTexture(0, TASKMASTER_GUI_TEXTURE);
         GuiComponent.blit(matrixStack, x, y, this.screen.getBlitOffset(), 17, 187, 136, 21, 256, 256);
         GuiComponent.blit(matrixStack, x + 132, y, this.screen.getBlitOffset(), 17 + 133, 187, 136 - 133, 21, 256, 256);
-        RenderSystem.color4f(1, 1, 1, 1);
+        RenderSystem.setShaderColor(1,1,1,1);
 
         //render name
         Optional<FormattedCharSequence> text = Optional.ofNullable(this.screen.font.split(this.item.getTask().getTranslation(), 131).get(0));
@@ -207,40 +236,6 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
 
     private void clickButton(Button id) {
         this.screen.getTaskContainer().pressButton(this.item);
-    }
-
-    /**
-     * sets OpenGL colors based on task and completion
-     */
-    private void colorTask() {
-        TaskContainer container = TaskItem.this.screen.getTaskContainer();
-        if (container.isCompleted(this.item)) {
-            RenderSystem.color4f(0.4f, 0.4f, 0.4f, 1);
-        } else {
-            boolean isUnique = this.item.isUnique();
-            boolean remainsTime = this.item.getTaskTimeStamp() - Minecraft.getInstance().level.getGameTime() > 0;
-            if (container.canCompleteTask(this.item)) {
-                if (isUnique) {
-                    RenderSystem.color4f(1f, 0.855859375f, 0, 1);
-                } else {
-                    RenderSystem.color4f(0, 0.9f, 0, 1);
-                }
-            } else if (container.isTaskNotAccepted(this.item)) {
-                if (isUnique) {
-                    RenderSystem.color4f(0.64f, 0.57f, 0.5f, 1);
-                } else {
-                    RenderSystem.color4f(0.55f, 0.55f, 0.55f, 1);
-                }
-            } else if (!isUnique && !remainsTime) {
-                RenderSystem.color4f(1f, 85 / 255f, 85 / 255f, 1);
-            } else {
-                if (isUnique) {
-                    RenderSystem.color4f(1f, 0.9f, 0.6f, 1f);
-                } else {
-                    RenderSystem.color4f(0.85f, 1f, 0.85f, 1f);
-                }
-            }
-        }
     }
 
     private void generateTaskToolTip(ITaskInstance taskInfo, List<Component> toolTips) {
@@ -316,15 +311,14 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         tooltips.add((strikeThrough ? REQUIREMENT_STRIKE : REQUIREMENT));
         tooltips.add(title.withStyle(ChatFormatting.ITALIC));
         tooltips.add(new TextComponent("  ").append(text));
-        this.screen.renderWrappedToolTip(mStack, tooltips, x, y, this.screen.font);
+        this.screen.renderComponentTooltip(mStack, tooltips, x, y);
     }
 
     private void renderItemTooltip(PoseStack mStack, ItemStack stack, int x, int y, Component text, boolean strikeThrough, @Nullable String bonus) {
-        Font font = stack.getItem().getFontRenderer(stack);
         GuiUtils.preItemToolTip(stack);
         List<Component> tooltips = getTooltipFromItem2(stack, strikeThrough, bonus);
         tooltips.add(0, text);
-        this.screen.renderWrappedToolTip(mStack, tooltips, x, y, (font == null ? this.screen.font : font));
+        this.screen.renderComponentTooltip(mStack, tooltips, x, y);
         GuiUtils.postItemToolTip();
     }
 
@@ -374,8 +368,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         public void renderButton(@Nonnull PoseStack mStack, int mouseX, int mouseY, float p_renderButton_3_) {
             TaskContainer.TaskAction action = TaskItem.this.screen.getTaskContainer().buttonAction(TaskItem.this.item);
             RenderSystem.enableDepthTest();
-            Minecraft minecraft = Minecraft.getInstance();
-            minecraft.getTextureManager().bind(TASKMASTER_GUI_TEXTURE);
+            RenderSystem.setShaderTexture(0, TASKMASTER_GUI_TEXTURE);
             int j;
             switch (action) {
                 case ACCEPT:

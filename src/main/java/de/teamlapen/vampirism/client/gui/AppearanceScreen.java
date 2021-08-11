@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
@@ -50,6 +52,7 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
     public void render(PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(mStack);
 
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         this.renderGuiBackground(mStack);
 
         this.drawTitle(mStack);
@@ -68,18 +71,18 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
 
-        this.addButton(new Button(this.guiLeft + this.xSize - 80 - 10, this.guiTop + 152, 80, 20, new TranslatableComponent("gui.done"), (context) -> {
+        this.addRenderableWidget(new Button(this.guiLeft + this.xSize - 80 - 10, this.guiTop + 152, 80, 20, new TranslatableComponent("gui.done"), (context) -> {
             this.onClose();
         }));
         if (this.backScreen != null) {
-            this.addButton(new Button(this.guiLeft + 10, this.guiTop + 152, 80, 20, new TranslatableComponent("gui.back"), (context) -> {
+            this.addRenderableWidget(new Button(this.guiLeft + 10, this.guiTop + 152, 80, 20, new TranslatableComponent("gui.back"), (context) -> {
                 if (this.minecraft != null) this.minecraft.setScreen(this.backScreen);
             }));
         }
     }
 
     protected void renderGuiBackground(PoseStack mStack) {
-        this.minecraft.getTextureManager().bind(BACKGROUND);
+        RenderSystem.setShaderTexture(0, BACKGROUND);
         blit(mStack, this.guiLeft, this.guiTop, this.getBlitOffset(), 0, 0, this.xSize, this.ySize, 256, 300);
     }
 

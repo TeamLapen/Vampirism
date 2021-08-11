@@ -13,7 +13,6 @@ public class ModLoot {
 
     public static LootItemFunctionType add_book_nbt;
     public static LootItemFunctionType set_item_blood_charge;
-    public static LootItemFunctionType set_meta_from_level;
     public static LootItemFunctionType add_refinement_set;
 
     public static LootItemConditionType with_stake;
@@ -23,7 +22,6 @@ public class ModLoot {
     static void registerLootFunctionType() {
         add_book_nbt = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(REFERENCE.MODID, "add_book_nbt"), new LootItemFunctionType(new AddBookNbt.Serializer()));
         set_item_blood_charge = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(REFERENCE.MODID, "set_item_blood_charge"), new LootItemFunctionType(new SetItemBloodCharge.Serializer()));
-        set_meta_from_level = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(REFERENCE.MODID, "set_meta_from_level"), new LootItemFunctionType(new SetMetaBasedOnLevel.Serializer()));
         add_refinement_set = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(REFERENCE.MODID, "add_refinement_set"), new LootItemFunctionType(new RefinementSetFunction.Serializer()));
     }
 

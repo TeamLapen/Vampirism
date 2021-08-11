@@ -5,7 +5,6 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
-import net.minecraft.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Material;
@@ -143,8 +142,8 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public BlockEntity newBlockEntity(@Nonnull BlockGetter worldIn) {
-        return new CoffinTileEntity();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new CoffinTileEntity(pos, state);
     }
 
     @Override
@@ -204,7 +203,7 @@ public class CoffinBlock extends VampirismBlockContainer {
                     }
                     ((CoffinTileEntity) tile).changeColor(color);
                     ((CoffinTileEntity) other).changeColor(color);
-                    if (!player.abilities.instabuild) {
+                    if (!player.getAbilities().instabuild) {
                         heldItem.shrink(1);
                     }
                     return InteractionResult.SUCCESS;

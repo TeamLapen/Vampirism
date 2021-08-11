@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
@@ -80,8 +81,8 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableContai
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    protected void containerTick() {
+        super.containerTick();
         this.recipeBookGui.tick();
     }
 
@@ -96,13 +97,13 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableContai
         super.init();
         this.widthTooNarrow = this.width < 379;
         this.recipeBookGui.init(this.width, this.height, this.minecraft, this.widthTooNarrow, this.menu);
-        this.leftPos = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.imageWidth - 18);
-        this.children.add(this.recipeBookGui);
+        this.leftPos = this.recipeBookGui.updateScreenPosition(this.width, this.imageWidth - 18);
+        this.addRenderableOnly(this.recipeBookGui);
         this.setInitialFocus(this.recipeBookGui);
-        this.addButton(new ImageButton(this.leftPos + 5, this.height / 2 - 49, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (button) -> {
-            this.recipeBookGui.initVisuals(this.widthTooNarrow);
+        this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.height / 2 - 49, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (button) -> {
+            this.recipeBookGui.initVisuals();
             this.recipeBookGui.toggleVisibility();
-            this.leftPos = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.imageWidth - 18);
+            this.leftPos = this.recipeBookGui.updateScreenPosition(this.width, this.imageWidth - 18);
             ((ImageButton) button).setPosition(this.leftPos + 5, this.height / 2 - 49);
         }));
     }
@@ -114,18 +115,18 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableContai
 
     @Override
     protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, TABLE_GUI_TEXTURES);
         int i = this.leftPos;
         int j = (this.height - this.imageHeight) / 2;
-        this.minecraft.getTextureManager().bind(TABLE_GUI_TEXTURES);
         this.blit(stack, i, j, 0, 0, this.imageWidth, this.imageHeight);
         if (menu.hasLava()) {
-            this.minecraft.getTextureManager().bind(TABLE_GUI_TEXTURES_LAVA);
+            RenderSystem.setShaderTexture(0, TABLE_GUI_TEXTURES_LAVA);
             this.blit(stack, i, j, 0, 0, this.imageWidth, this.imageHeight);
         }
         if (menu.isMissingLava()) {
-            this.minecraft.getTextureManager().bind(TABLE_GUI_TEXTURES_MISSING_LAVA);
+            RenderSystem.setShaderTexture(0, TABLE_GUI_TEXTURES_MISSING_LAVA);
             this.blit(stack, i, j, 0, 0, this.imageWidth, this.imageHeight);
         }
     }

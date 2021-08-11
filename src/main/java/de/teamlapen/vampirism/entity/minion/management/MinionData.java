@@ -149,7 +149,7 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
     public void resetStats(MinionEntity<?> entity) {
         entity.getInventory().ifPresent(inv -> {
             if (!InventoryHelper.removeItemFromInventory(inv, new ItemStack(ModItems.oblivion_potion))) {
-                entity.getLordOpt().ifPresent(lord -> InventoryHelper.removeItemFromInventory(lord.getPlayer().inventory, new ItemStack(ModItems.oblivion_potion)));
+                entity.getLordOpt().ifPresent(lord -> InventoryHelper.removeItemFromInventory(lord.getPlayer().getInventory(), new ItemStack(ModItems.oblivion_potion)));
             }
         });
         HelperLib.sync(entity);

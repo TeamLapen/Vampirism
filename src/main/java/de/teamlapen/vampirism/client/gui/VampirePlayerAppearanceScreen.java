@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableArrayTextComponentList;
@@ -20,7 +21,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
+import net.minecraftforge.fmlclient.gui.widget.ExtendedButton;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -73,15 +74,15 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
         this.eyeType = vampAtt.eyeType;
         this.glowingEyes = vampAtt.glowingEyes;
 
-        this.eyeList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100, 20, REFERENCE.EYE_TYPE_COUNT, new TranslatableComponent("gui.vampirism.appearance.eye"), this::eye, this::hoverEye).scrollSpeed(2));
-        this.fangList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80, 20, REFERENCE.FANG_TYPE_COUNT, new TranslatableComponent("gui.vampirism.appearance.fang"), this::fang, this::hoverFang));
-        this.eyeButton = this.addButton(new ExtendedButton(eyeList.x, eyeList.y - 20, eyeList.getWidth() + 1, 20, new TextComponent(""), (b) -> {
+        this.eyeList = this.addRenderableWidget(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100, 20, REFERENCE.EYE_TYPE_COUNT, new TranslatableComponent("gui.vampirism.appearance.eye"), this::eye, this::hoverEye).scrollSpeed(2));
+        this.fangList = this.addRenderableWidget(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80, 20, REFERENCE.FANG_TYPE_COUNT, new TranslatableComponent("gui.vampirism.appearance.fang"), this::fang, this::hoverFang));
+        this.eyeButton = this.addRenderableWidget(new ExtendedButton(eyeList.x, eyeList.y - 20, eyeList.getWidth() + 1, 20, new TextComponent(""), (b) -> {
             this.setEyeListVisibility(!eyeList.visible);
         }));
-        this.fangButton = this.addButton(new ExtendedButton(fangList.x, fangList.y - 20, fangList.getWidth() + 1, 20, new TextComponent(""), (b) -> {
+        this.fangButton = this.addRenderableWidget(new ExtendedButton(fangList.x, fangList.y - 20, fangList.getWidth() + 1, 20, new TextComponent(""), (b) -> {
             this.setFangListVisibility(!fangList.visible);
         }));
-        this.glowingEyesButton = this.addButton(new Checkbox(this.guiLeft + 20, this.guiTop + 70, 99, 20, new TranslatableComponent("gui.vampirism.appearance.glowing_eye"), glowingEyes) {
+        this.glowingEyesButton = this.addRenderableWidget(new Checkbox(this.guiLeft + 20, this.guiTop + 70, 99, 20, new TranslatableComponent("gui.vampirism.appearance.glowing_eye"), glowingEyes) {
             @Override
             public void onPress() {
                 super.onPress();
@@ -95,9 +96,9 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
     @Override
     protected void renderGuiBackground(PoseStack mStack) {
-        GlStateManager._color4f(color[0], color[1], color[2], 1f);
+        RenderSystem.setShaderColor(color[0], color[1], color[2], 1f);
         super.renderGuiBackground(mStack);
-        GlStateManager._color4f(1, 1, 1, 1);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
     }
 
     private void eye(int eyeType) {

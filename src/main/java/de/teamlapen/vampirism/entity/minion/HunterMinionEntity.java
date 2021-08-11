@@ -200,7 +200,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             if (heldItem.getItem() instanceof MinionUpgradeItem && ((MinionUpgradeItem) heldItem.getItem()).getFaction() == this.getFaction()) {
                 if (this.minionData.level + 1 >= ((MinionUpgradeItem) heldItem.getItem()).getMinLevel() && this.minionData.level + 1 <= ((MinionUpgradeItem) heldItem.getItem()).getMaxLevel()) {
                     this.minionData.level++;
-                    if (!player.abilities.instabuild) heldItem.shrink(1);
+                    if (!player.getAbilities().instabuild) heldItem.shrink(1);
                     player.displayClientMessage(new TranslatableComponent("text.vampirism.hunter_minion.equipment_upgrade"), false);
                     HelperLib.sync(this);
                 } else {

@@ -49,7 +49,7 @@ public class SelectMinionScreen extends Screen {
 
         int w = 100;
         int maxH = 5;
-        this.list = this.addButton(new ScrollableArrayTextComponentList((this.width - w) / 2, (this.height - maxH * 20) / 2, w, Math.min(maxH * 20, 20 * minionNames.length), 20, () -> this.minionNames, SelectMinionScreen.this::onMinionSelected));
+        this.list = this.addRenderableWidget(new ScrollableArrayTextComponentList((this.width - w) / 2, (this.height - maxH * 20) / 2, w, Math.min(maxH * 20, 20 * minionNames.length), 20, () -> this.minionNames, SelectMinionScreen.this::onMinionSelected));
     }
 
     private void onMinionSelected(int id) {

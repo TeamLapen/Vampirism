@@ -32,8 +32,8 @@ public class AlchemicalCauldronScreen extends AbstractContainerScreen<Alchemical
 
     @Override
     protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.color4f(1, 1, 1, 1);
-        this.minecraft.getTextureManager().bind(BACKGROUND);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.setShaderTexture(0, BACKGROUND);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.blit(stack, i, j, 0, 0, this.imageWidth, this.imageHeight);
@@ -51,7 +51,7 @@ public class AlchemicalCauldronScreen extends AbstractContainerScreen<Alchemical
     protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
         Component name = new TranslatableComponent("tile.vampirism.alchemical_cauldron.display", minecraft.player.getDisplayName().copy().withStyle(ChatFormatting.DARK_BLUE), ModBlocks.alchemical_cauldron.getName());
         this.font.draw(stack, name, 5, 6, 0x404040);
-        this.font.draw(stack, this.inventory.getDisplayName(), (float) this.inventoryLabelX, (float) this.inventoryLabelY, 4210752);
+        this.font.draw(stack, this.playerInventoryTitle, (float) this.inventoryLabelX, (float) this.inventoryLabelY, 4210752);
     }
 
 }

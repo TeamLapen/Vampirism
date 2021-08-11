@@ -44,7 +44,7 @@ public class StakeCondition implements LootItemCondition {
         return false;
     }
 
-    public static class Serializer implements Serializer<StakeCondition> {
+    public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<StakeCondition> {
 
 
         @Nonnull

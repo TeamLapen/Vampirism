@@ -13,7 +13,7 @@ import net.minecraft.world.phys.AABB;
 
 public class AwarenessHunterAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
 
-    private final TargetingConditions vampirePredicate = new TargetingConditions().selector(VampirismAPI.factionRegistry().getPredicate(VReference.HUNTER_FACTION, true, true, false, false, VReference.VAMPIRE_FACTION));
+    private final TargetingConditions vampirePredicate = TargetingConditions.forNonCombat().selector(VampirismAPI.factionRegistry().getPredicate(VReference.HUNTER_FACTION, true, true, false, false, VReference.VAMPIRE_FACTION));
 
     public AwarenessHunterAction() {
         super();
@@ -75,7 +75,7 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
 
     private double nearbyVampire(IHunterPlayer player) {
         int r = VampirismConfig.BALANCE.haAwarenessRadius.get();
-        LivingEntity closestVampire = player.getRepresentingEntity().getCommandSenderWorld().getNearestLoadedEntity(LivingEntity.class, vampirePredicate, null, player.getRepresentingEntity().getX(), player.getRepresentingEntity().getY(), player.getRepresentingEntity().getZ(), new AABB(player.getRepresentingEntity().getX() - r, player.getRepresentingEntity().getY()
+        LivingEntity closestVampire = player.getRepresentingEntity().getCommandSenderWorld().getNearestEntity(LivingEntity.class, vampirePredicate, null, player.getRepresentingEntity().getX(), player.getRepresentingEntity().getY(), player.getRepresentingEntity().getZ(), new AABB(player.getRepresentingEntity().getX() - r, player.getRepresentingEntity().getY()
                 - r + 1, player.getRepresentingEntity().getZ()
                 - r, player.getRepresentingEntity().getX() + r, player.getRepresentingEntity().getY() + r + 1, player.getRepresentingEntity().getZ() + r));
         if (closestVampire != null) return closestVampire.distanceTo(player.getRepresentingEntity());

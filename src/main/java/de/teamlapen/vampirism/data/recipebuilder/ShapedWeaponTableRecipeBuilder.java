@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.advancements.SkillUnlockedTrigger;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.RequirementsStrategy;
@@ -27,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-@MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
 

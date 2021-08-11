@@ -19,6 +19,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -27,7 +28,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.util.text.*;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.HoverEvent;
 
@@ -40,6 +40,7 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 public class VampirismScreen extends AbstractContainerScreen<VampirismContainer> implements ExtendedScreen {
 
@@ -106,7 +107,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
                 Slot slot = this.menu.getSlot(i);
                 int x = slot.x + this.leftPos;
                 int y = slot.y + this.topPos;
-                this.itemRenderer.renderAndDecorateItem(this.minecraft.player, stack, x, y);
+                this.itemRenderer.renderAndDecorateItem( stack, x, y);
                 this.itemRenderer.renderGuiItemDecorations(this.font, stack, x, y, null);
             }
         }
@@ -126,9 +127,9 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
     @Override
     protected void init() {
         super.init();
-        this.addButton(list = new ScrollableListWithDummyWidget<>(this.leftPos + 83, this.topPos + 7, 145, 104, 21, this::refreshTasks, (item, list1, isDummy) -> new TaskItem(item, list1, isDummy, this, this.factionPlayer)));
+        this.addRenderableWidget(list = new ScrollableListWithDummyWidget<>(this.leftPos + 83, this.topPos + 7, 145, 104, 21, this::refreshTasks, (item, list1, isDummy) -> new TaskItem(item, list1, isDummy, this, this.factionPlayer)));
 
-        this.addButton(new ImageButton(this.leftPos + 5, this.topPos + 90, 20, 20, 40, 205, 20, BACKGROUND, 256, 256, context -> {
+        this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.topPos + 90, 20, 20, 40, 205, 20, BACKGROUND, 256, 256, context -> {
             if (this.minecraft.player.isAlive() && VampirismPlayerAttributes.get(this.minecraft.player).faction != null) {
                 Minecraft.getInstance().setScreen(new SkillsScreen(this));
             }
@@ -136,14 +137,14 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
             this.renderTooltip(matrixStack, new TranslatableComponent("gui.vampirism.vampirism_menu.skill_screen"), mouseX, mouseY);
         }, TextComponent.EMPTY));
 
-        this.addButton(new ImageButton(this.leftPos + 26, this.topPos + 90, 20, 20, 0, 205, 20, BACKGROUND, 256, 256, (context) -> {
+        this.addRenderableWidget(new ImageButton(this.leftPos + 26, this.topPos + 90, 20, 20, 0, 205, 20, BACKGROUND, 256, 256, (context) -> {
             IPlayableFaction<?> factionNew = VampirismPlayerAttributes.get(this.minecraft.player).faction;
             Minecraft.getInstance().setScreen(new SelectActionScreen(factionNew.getColor(), true));
         }, (button, matrixStack, mouseX, mouseY) -> {
             this.renderTooltip(matrixStack, new TranslatableComponent("gui.vampirism.vampirism_menu.edit_actions"), mouseX, mouseY);
         }, TextComponent.EMPTY));
 
-        Button button = this.addButton(new ImageButton(this.leftPos + 47, this.topPos + 90, 20, 20, 20, 205, 20, BACKGROUND, 256, 256, (context) -> {
+        Button button = this.addRenderableWidget(new ImageButton(this.leftPos + 47, this.topPos + 90, 20, 20, 20, 205, 20, BACKGROUND, 256, 256, (context) -> {
             Minecraft.getInstance().setScreen(new VampirePlayerAppearanceScreen(this));
         }, (button1, matrixStack, mouseX, mouseY) -> {
             this.renderTooltip(matrixStack, new TranslatableComponent("gui.vampirism.vampirism_menu.appearance_menu"), mouseX, mouseY);
@@ -158,8 +159,9 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
     @Override
     protected void renderBg(PoseStack matrixStack, float v, int i, int i1) {
         this.renderBackground(matrixStack);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bind(this.menu.areRefinementsAvailable() ? BACKGROUND_REFINEMENTS : BACKGROUND);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0,this.menu.areRefinementsAvailable() ? BACKGROUND_REFINEMENTS : BACKGROUND);
         this.blit(matrixStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
         InventoryScreen.renderEntityInInventory(this.leftPos + 31, this.topPos + 72, 30, (float) (this.leftPos + 10) - this.oldMouseX, (float) (this.topPos + 75 - 50) - this.oldMouseY, this.minecraft.player);
     }
@@ -169,10 +171,10 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
             int index = this.hoveredSlot.index;
             NonNullList<ItemStack> list = this.menu.getRefinementStacks();
             if (index < list.size() && index >= 0) {
-                if (this.minecraft.player.inventory.getCarried().isEmpty() && !list.get(index).isEmpty()) {
+                if (this.getMenu().getCarried().isEmpty() && !list.get(index).isEmpty()) {
                     this.renderTooltip(matrixStack, list.get(index), mouseX, mouseY);
                 } else {
-                    if (!list.get(index).isEmpty() && this.menu.getSlot(index).mayPlace(this.minecraft.player.inventory.getCarried())) {
+                    if (!list.get(index).isEmpty() && this.menu.getSlot(index).mayPlace(this.getMenu().getCarried())) {
                         this.renderTooltip(matrixStack, new TranslatableComponent("gui.vampirism.vampirism_menu.destroy_item").withStyle(ChatFormatting.RED), mouseX, mouseY);
                     }
                 }
@@ -241,8 +243,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
 
         private void onTooltip(Button button, PoseStack matrixStack, int mouseX, int mouseY) {
             Component position = menu.taskWrapper.get(this.item.getTaskBoard()).getLastSeenPos().map(pos -> new TextComponent("[" + pos.toShortString() + "]").withStyle(ChatFormatting.GREEN)).orElseGet(() -> new TranslatableComponent("gui.vampirism.vampirism_menu.last_known_pos.unknown").withStyle(ChatFormatting.GOLD));
-
-            VampirismScreen.this.renderWrappedToolTip(matrixStack, Collections.singletonList(new TranslatableComponent("gui.vampirism.vampirism_menu.last_known_pos").append(position)), mouseX, mouseY, font);
+            renderComponentToolTip(matrixStack, Collections.singletonList(new TranslatableComponent("gui.vampirism.vampirism_menu.last_known_pos").append(position)), mouseX, mouseY, font);
 
         }
     }

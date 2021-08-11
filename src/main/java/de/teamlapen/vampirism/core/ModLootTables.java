@@ -6,9 +6,9 @@ import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.RandomValueBounds;
 import net.minecraft.world.level.storage.loot.entries.LootTableReference;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
@@ -77,7 +77,7 @@ public class ModLootTables {
 
     private static LootPool getInjectPool(String entryName) {
         LootPoolEntryContainer.Builder<?> entryBuilder = LootTableReference.lootTableReference(INJECTION_TABLES.get(entryName)).setWeight(1);
-        return LootPool.lootPool().name("vampirism_inject_pool").bonusRolls(0, 1).setRolls(new RandomValueBounds(1)).add(entryBuilder).build();
+        return LootPool.lootPool().name("vampirism_inject_pool").bonusRolls(0, 1).setRolls(ConstantValue.exactly(1)).add(entryBuilder).build();
     }
 
     public static boolean checkAndResetInsertedAll() {

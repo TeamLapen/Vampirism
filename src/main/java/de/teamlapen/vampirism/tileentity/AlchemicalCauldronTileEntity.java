@@ -228,7 +228,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceBlockEntity {
                     }
                 }
 
-                if (cauldronRecipe != null && !blockEntity.isBurning() && blockEntity.canBurn(cauldronRecipe) && blockEntity.canPlayerCook(cauldronRecipe)) {
+                if (cauldronRecipe != null && !blockEntity.isBurning() && blockEntity.canBurn(cauldronRecipe, blockEntity.items, blockEntity.getMaxStackSize()) && blockEntity.canPlayerCook(cauldronRecipe)) {
                     blockEntity.dataAccess.set(0, blockEntity.getBurnDuration(itemstackFuel)); //Set burn time
                     blockEntity.dataAccess.set(1, blockEntity.dataAccess.get(0));
                     if (blockEntity.isBurning()) {
@@ -249,7 +249,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceBlockEntity {
                     blockEntity.dataAccess.set(2, blockEntity.dataAccess.get(2) + 1); //Increase cook time
                     if (blockEntity.dataAccess.get(2) == blockEntity.dataAccess.get(3)) { //If finished
                         blockEntity.dataAccess.set(2, 0);
-                        blockEntity.dataAccess.set(3, getTotalCookTime(level, cauldronRecipe, blockEntity));
+                        blockEntity.dataAccess.set(3, getTotalCookTime(level, ModRecipes.ALCHEMICAL_CAULDRON_TYPE, blockEntity));
                         blockEntity.finishCooking(cauldronRecipe);
                         dirty = true;
                     }

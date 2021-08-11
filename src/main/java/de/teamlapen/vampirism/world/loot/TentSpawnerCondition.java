@@ -39,7 +39,7 @@ public class TentSpawnerCondition implements LootItemCondition {
         return false;
     }
 
-    public static class Serializer implements Serializer<TentSpawnerCondition> {
+    public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<TentSpawnerCondition> {
 
 
         @Nonnull

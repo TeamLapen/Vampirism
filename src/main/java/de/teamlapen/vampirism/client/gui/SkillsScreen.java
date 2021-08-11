@@ -18,6 +18,9 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.skills.SkillNode;
+import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
@@ -38,10 +41,9 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import com.mojang.math.Matrix4f;
-import net.minecraft.util.text.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.gui.GuiUtils;
+import net.minecraftforge.fmlclient.gui.GuiUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
@@ -107,11 +109,11 @@ public class SkillsScreen extends Screen {
         int guiLeft = (this.width - display_width) / 2;
         int guiTop = (this.height - display_height) / 2;
         if (this.backScreen != null) {
-            this.addButton(new Button(guiLeft + 5, guiTop + 175, 80, 20, new TranslatableComponent("gui.back"), (context) -> {
+            this.addRenderableWidget(new Button(guiLeft + 5, guiTop + 175, 80, 20, new TranslatableComponent("gui.back"), (context) -> {
                 this.minecraft.setScreen(this.backScreen);
             }));
         }
-        this.addButton(new Button(guiLeft + 171, guiTop + 175, 80, 20, new TranslatableComponent("gui.done"), (context) -> {
+        this.addRenderableWidget(new Button(guiLeft + 171, guiTop + 175, 80, 20, new TranslatableComponent("gui.done"), (context) -> {
             this.minecraft.setScreen(null);
         }));
         FactionPlayerHandler.getOpt(minecraft.player).ifPresent(fph -> {
@@ -134,10 +136,10 @@ public class SkillsScreen extends Screen {
 
                 boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
 
-                resetSkills = this.addButton(new Button(guiLeft + 88, guiTop + 175, 80, 20, new TranslatableComponent("text.vampirism.skill.resetall"), (context) -> {
+                resetSkills = this.addRenderableWidget(new Button(guiLeft + 88, guiTop + 175, 80, 20, new TranslatableComponent("text.vampirism.skill.resetall"), (context) -> {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
-                    InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().inventory, new ItemStack(ModItems.oblivion_potion)); //server syncs after the screen is closed
-                    if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.oblivion_potion) <= 1) && !test) {
+                    InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().getInventory(), new ItemStack(ModItems.oblivion_potion)); //server syncs after the screen is closed
+                    if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.oblivion_potion) <= 1) && !test) {
                         context.active = false;
                     }
                 }, (button, stack, mouseX, mouseY) -> {
@@ -147,7 +149,7 @@ public class SkillsScreen extends Screen {
                         SkillsScreen.this.renderTooltip(stack, new TranslatableComponent("text.vampirism.skills.reset_req", ModItems.oblivion_potion.getDescription()), mouseX, mouseY);
                     }
                 }));
-                if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.oblivion_potion) <= 0) && !test) {
+                if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.oblivion_potion) <= 0) && !test) {
                     resetSkills.active = false;
                 }
             });
@@ -346,9 +348,9 @@ public class SkillsScreen extends Screen {
         stack.translate(i1, j1, -200);
         stack.scale(1 / this.zoomOut, 1 / this.zoomOut, 1);
         RenderSystem.enableTexture();
-        RenderSystem.disableLighting();
-        RenderSystem.enableRescaleNormal();
-        RenderSystem.enableColorMaterial();
+//        RenderSystem.disableLighting();
+//        RenderSystem.enableRescaleNormal();
+//        RenderSystem.enableColorMaterial();
         int k1 = offsetX + 288 >> 4;
         int l1 = offsetY + 288 >> 4;
         int i2 = (offsetX + display_width * 2) % 16;
@@ -358,9 +360,10 @@ public class SkillsScreen extends Screen {
         float f1 = 16.0F / this.zoomOut;
 
         //Render background block textures
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         for (int y = 0; (float) y * f - (float) j2 < 155.0F; ++y) {
             float f2 = 0.6F - (float) (l1 + y) / 25.0F * 0.3F;
-            RenderSystem.color4f(f2, f2, f2, 1.0F);
+            RenderSystem.setShaderColor(f2, f2, f2, 1.0F);
 
             for (int x = 0; (float) x * f1 - (float) i2 < 224.0F; ++x) {
                 random.setSeed(this.minecraft.getUser().getUuid().hashCode() + k1 + x + (l1 + y) * 16);
@@ -389,7 +392,7 @@ public class SkillsScreen extends Screen {
                     textureatlassprite = this.getTexture(block);
                 }
 
-                this.minecraft.getTextureManager().bind(TextureAtlas.LOCATION_BLOCKS);
+                RenderSystem.setShaderTexture(0,TextureAtlas.LOCATION_BLOCKS);
                 blit(stack, x * 16 - i2, y * 16 - j2, this.getBlitOffset(), 16, 16, textureatlassprite);
             }
         }
@@ -397,7 +400,7 @@ public class SkillsScreen extends Screen {
         //Draw lines/arrows
         RenderSystem.enableDepthTest();
         RenderSystem.depthFunc(515);
-        this.minecraft.getTextureManager().bind(BACKGROUND);
+        RenderSystem.setShaderTexture(0, BACKGROUND);
 
         for (SkillNode node : skillNodes) {
             if (node.getParent() != null) {
@@ -432,10 +435,10 @@ public class SkillsScreen extends Screen {
 
         float mMouseX = (float) (mouseX - i1) * this.zoomOut;
         float mMouseY = (float) (mouseY - j1) * this.zoomOut;
-        Lighting.turnBackOn(); //enableStandardGUIItemLighting
-        RenderSystem.disableLighting();
-        RenderSystem.enableRescaleNormal();
-        RenderSystem.enableColorMaterial();
+//        Lighting.turnBackOn();
+//        RenderSystem.disableLighting();
+//        RenderSystem.enableRescaleNormal();
+//        RenderSystem.enableColorMaterial();
 
         //Draw skills
         ISkill newSelected = null;//Not sure if mouse clicks can occur while this is running, so don't set #selected to null here but use a extra variable to be sure
@@ -462,35 +465,32 @@ public class SkillsScreen extends Screen {
 
                     if (skillHandler.isSkillEnabled(skill)) {
                         float f5 = 1F;
-                        RenderSystem.color4f(f5, f5, f5, 1.0F);
+                        RenderSystem.setShaderColor(f5, f5, f5, 1.0F);
                     } else if (skillHandler.canSkillBeEnabled(skill) == ISkillHandler.Result.OK) {
                         float f6 = 0.6F;
-                        RenderSystem.color4f(f6, f6, f6, 1.0F);
+                        RenderSystem.setShaderColor(f6, f6, f6, 1.0F);
                     } else if (skillHandler.isNodeEnabled(node)) {
                         float f8 = 0.2F;
-                        RenderSystem.color4f(f8, f8, f8, 1.0F);
+                        RenderSystem.setShaderColor(f8, f8, f8, 1.0F);
                     } else {
                         float f7 = 0.3F;
-                        RenderSystem.color4f(f7, f7, f7, 1.0F);
+                        RenderSystem.setShaderColor(f7, f7, f7, 1.0F);
                     }
 
-                    this.minecraft.getTextureManager().bind(BACKGROUND);
+                    RenderSystem.setShaderTexture(0, BACKGROUND);
 
                     RenderSystem.enableBlend();
                     this.blit(stack, x - 2, y - 2, node.getLockingNodes().length == 0 ? 0 : 26, 202, 26, 26);
                     RenderSystem.disableBlend();
 
-                    this.minecraft.getTextureManager().bind(getIconLoc(skill));
+                    RenderSystem.setShaderTexture(0, getIconLoc(skill));
 
-                    RenderSystem.disableLighting();
-                    //GlStateManager.enableCull();
+
                     RenderSystem.enableBlend();
                     UtilLib.drawTexturedModalRect(stack.last().pose(), this.getBlitOffset(), x + 3, y + 3, 0, 0, 16, 16, 16, 16);
-                    //GlStateManager.blendFunc(770, 771);
-                    RenderSystem.disableLighting();
 
 
-                    RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
                     if (mMouseX >= (float) x && mMouseX <= (float) (x + 22) && mMouseY >= (float) y && mMouseY <= (float) (y + 22)) {
                         newSelected = skill;
@@ -512,8 +512,8 @@ public class SkillsScreen extends Screen {
 
         //Draw "window" and buttons
         Color color = skillHandler.getPlayer().getFaction().getColor();
-        RenderSystem.color4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1.0F);
-        this.minecraft.getTextureManager().bind(BACKGROUND);
+        RenderSystem.setShaderColor(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1.0F);
+        RenderSystem.setShaderTexture(0, BACKGROUND);
         this.blit(stack, k, l, 0, 0, this.display_width, this.display_height);
         this.setBlitOffset(0);
         RenderSystem.depthFunc(515);
@@ -522,8 +522,8 @@ public class SkillsScreen extends Screen {
         super.render(stack, mouseX, mouseY, partialTicks);
 
         //Don't render skill tooltip when hovering over button
-        for (AbstractWidget button : this.buttons) {
-            if (button.isHovered()) {
+        for (GuiEventListener button : this.children()) {
+            if (button.isMouseOver(mouseX, mouseY)) {
                 newSelected = null;
                 newSelectedNode = null;
             }
@@ -576,8 +576,8 @@ public class SkillsScreen extends Screen {
 
 
         RenderSystem.enableDepthTest();
-        RenderSystem.enableLighting();
-        Lighting.turnOff();
+//        RenderSystem.enableLighting();
+//        Lighting.turnOff();
 
     }
 

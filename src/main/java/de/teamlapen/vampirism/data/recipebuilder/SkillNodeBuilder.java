@@ -5,14 +5,12 @@ import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Consumer;
 
 @ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class SkillNodeBuilder {
 
     public static SkillNodeBuilder skill(ResourceLocation parent, ISkill... skills) {

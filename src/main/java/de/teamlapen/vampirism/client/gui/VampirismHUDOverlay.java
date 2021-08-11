@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.client.gui.ExtendedGui;
@@ -32,9 +32,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Options;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -267,7 +264,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 VampirePlayer.getOpt(mc.player).map(VampirePlayer::getBloodStats).ifPresent(stats -> {
                             GlStateManager._enableBlend();
 
-                            this.mc.getTextureManager().bind(icons);
+                            RenderSystem.setShaderTexture(0, icons);
                             int left = this.mc.getWindow().getGuiScaledWidth() / 2 + 91;
                             int top = this.mc.getWindow().getGuiScaledHeight() - ForgeIngameGui.right_height;
                             ForgeIngameGui.right_height += 10;
@@ -291,7 +288,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                                     blit(event.getMatrixStack(), x, top, 18, 0, 9, 9);
                                 }
                             }
-                            this.mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
+                            RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
                             GlStateManager._disableBlend();
                         }
                 );
@@ -316,22 +313,20 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
                 RenderSystem.disableTexture();
                 RenderSystem.enableBlend();
-                RenderSystem.disableAlphaTest();
+                //RenderSystem.disableAlphaTest();
                 RenderSystem.blendFuncSeparate(770, 771, 1, 0);
-                RenderSystem.shadeModel(7425);
                 Tesselator tessellator = Tesselator.getInstance();
                 Matrix4f matrix = stack.last().pose();
                 BufferBuilder worldrenderer = tessellator.getBuilder();
-                worldrenderer.begin(7, DefaultVertexFormat.POSITION_COLOR);
+                worldrenderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
                 worldrenderer.vertex(matrix, 0, h, this.getBlitOffset()).color(r, g, b, a).endVertex();
                 worldrenderer.vertex(matrix, w, h, this.getBlitOffset()).color(r, g, b, a).endVertex();
                 worldrenderer.vertex(matrix, w, 0, this.getBlitOffset()).color(r, g, b, a).endVertex();
                 worldrenderer.vertex(matrix, 0, 0, this.getBlitOffset()).color(r, g, b, a).endVertex();
 
                 tessellator.end();
-                RenderSystem.shadeModel(7424);
                 RenderSystem.disableBlend();
-                RenderSystem.enableAlphaTest();
+                //RenderSystem.enableAlphaTest();
                 RenderSystem.enableTexture();
 
                 /*
@@ -426,7 +421,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             if (effect == null || effect.getAmplifier() < 5) {
                 screenColor = 0xfffff755;
                 fullScreen = false;
-                if (vampire.getRepresentingPlayer().abilities.instabuild || (effect != null && effect.getAmplifier() >= 3)) {
+                if (vampire.getRepresentingPlayer().getAbilities().instabuild || (effect != null && effect.getAmplifier() >= 3)) {
                     screenPercentage = Math.min(20, screenPercentage);
                 }
                 screenPercentage = Math.min(screenPercentage, VampirismConfig.BALANCE.vpMaxYellowBorderPercentage.get());
@@ -457,25 +452,25 @@ public class VampirismHUDOverlay extends ExtendedGui {
         float r = ((color & 0xFF0000) >> 16) / 256f;
         float g = ((color & 0xFF00) >> 8) / 256f;
         float b = (color & 0xFF) / 256f;
-        this.mc.getTextureManager().bind(icons);
+        RenderSystem.setShaderTexture(0, icons);
         int left = width / 2 - 8;
         int top = height / 2 - 4;
-        GL11.glEnable(GL11.GL_BLEND);
-        GlStateManager._color4f(1f, 1f, 1f, 0.7F);
+        RenderSystem.enableBlend();
+        RenderSystem.setShaderColor(1f, 1f, 1f, 0.7F);
         blit(stack, left, top, 27, 0, 16, 10);
-        GlStateManager._color4f(r, g, b, 0.8F);
+        RenderSystem.setShaderColor(r, g, b, 0.8F);
         int percHeight = (int) (10 * perc);
         blit(stack, left, top + (10 - percHeight), 27, 10 - percHeight, 16, percHeight);
-        GlStateManager._color4f(1F, 1F, 1F, 1F);
-        GL11.glDisable(GL11.GL_BLEND);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        RenderSystem.disableBlend();
 
     }
 
     private void renderStakeInstantKill(PoseStack mStack, int width, int height) {
         if (this.mc.options.getCameraType().isFirstPerson() && this.mc.gameMode.getPlayerMode() != GameType.SPECTATOR) {
-            GlStateManager._blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR.value, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR.value, GlStateManager.SourceFactor.ONE.value, GlStateManager.DestFactor.ZERO.value);
-            this.mc.textureManager.bind(GuiComponent.GUI_ICONS_LOCATION);
-            GlStateManager._color4f(158f / 256, 0, 0, 1);
+            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR.value, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR.value, GlStateManager.SourceFactor.ONE.value, GlStateManager.DestFactor.ZERO.value);
+            RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
+            RenderSystem.setShaderColor(158f / 256, 0, 0, 1);
             this.blit(mStack, (width - 15) / 2, (height - 15) / 2, 0, 0, 15, 15);
             int j = height / 2 - 7 + 16;
             int k = width / 2 - 8;

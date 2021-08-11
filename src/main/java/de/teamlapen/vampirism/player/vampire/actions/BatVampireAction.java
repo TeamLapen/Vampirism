@@ -119,7 +119,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
      * Set's flightspeed capability
      */
     private void setFlightSpeed(Player player, float speed) {
-        player.abilities.flyingSpeed = speed;
+        player.getAbilities().flyingSpeed = speed;
     }
 
     private void setModifier(Player player, boolean enabled) {
@@ -135,8 +135,8 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
                 armorToughnessAttributeInst.addPermanentModifier(new AttributeModifier(armorToughnessModifierUUID, "Bat Armor Disabled", -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
 
-            player.abilities.mayfly = true;
-            player.abilities.flying = true;
+            player.getAbilities().mayfly = true;
+            player.getAbilities().flying = true;
             setFlightSpeed(player, (float) 0.03);
         } else {
             // Health modifier
@@ -151,10 +151,10 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
                 armorToughnessAttributeInst.removeModifier(m2);
             }
 
-            if (!player.abilities.instabuild) {
-                player.abilities.mayfly = false;
+            if (!player.getAbilities().instabuild) {
+                player.getAbilities().mayfly = false;
             }
-            player.abilities.flying = false;
+            player.getAbilities().flying = false;
             setFlightSpeed(player, 0.05F);
         }
         player.onUpdateAbilities();
