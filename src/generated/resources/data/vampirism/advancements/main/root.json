@@ -4,7 +4,7 @@
       "item": "vampirism:vampire_fang"
     },
     "title": {
-      "translate": "itemGroup.vampirism"
+      "translate": "advancement.vampirism"
     },
     "description": {
       "translate": "advancement.vampirism.desc"

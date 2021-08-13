@@ -67,12 +67,12 @@ public class AdvancementGenerator extends AdvancementProvider {
                     .requirements(IRequirementsStrategy.AND)
                     .save(consumer, REFERENCE.MODID + ":hunter/technology");
             Advancement max_lord = Advancement.Builder.advancement()
-                    .display(ModItems.hunter_minion_upgrade_special, new TranslationTextComponent("advancement.vampirism.max_lord_hunter"), new TranslationTextComponent("advancement.vampirism.max_lord_hunter"), null, FrameType.CHALLENGE, true, true, true)
+                    .display(ModItems.hunter_minion_upgrade_special, new TranslationTextComponent("advancement.vampirism.max_lord_hunter"), new TranslationTextComponent("advancement.vampirism.max_lord_hunter.desc"), null, FrameType.CHALLENGE, true, true, true)
                     .parent(max_level)
                     .addCriterion("level", TriggerFaction.lord(VReference.HUNTER_FACTION, 5))
                     .save(consumer, REFERENCE.MODID + ":hunter/max_lord");
             Advancement cure_vampire = Advancement.Builder.advancement()
-                    .display(ModItems.cure_apple, new TranslationTextComponent("advancement.vampirism.cure_vampire_villager"), new TranslationTextComponent("advancement.vampirism.cure_vampire_villager"), null, FrameType.TASK, true, true, true)
+                    .display(ModItems.cure_apple, new TranslationTextComponent("advancement.vampirism.cure_vampire_villager"), new TranslationTextComponent("advancement.vampirism.cure_vampire_villager.desc"), null, FrameType.TASK, true, true, true)
                     .parent(become_hunter)
                     .addCriterion("cure", CuredVampireVillagerTrigger.Instance.any())
                     .save(consumer, REFERENCE.MODID + ":hunter/cure_vampire_villager");
@@ -85,7 +85,7 @@ public class AdvancementGenerator extends AdvancementProvider {
         @Override
         public void accept(Consumer<Advancement> consumer) {
             root = Advancement.Builder.advancement()
-                    .display(ModItems.vampire_fang, new TranslationTextComponent("itemGroup.vampirism"), new TranslationTextComponent("advancement.vampirism.desc"), new ResourceLocation(REFERENCE.MODID, "textures/block/castle_block_dark_brick.png"), FrameType.TASK, false, false, false)
+                    .display(ModItems.vampire_fang, new TranslationTextComponent("advancement.vampirism"), new TranslationTextComponent("advancement.vampirism.desc"), new ResourceLocation(REFERENCE.MODID, "textures/block/castle_block_dark_brick.png"), FrameType.TASK, false, false, false)
                     .addCriterion("main", InventoryChangeTrigger.Instance.hasItems(ModItems.vampire_fang))
                     .addCriterion("second", InventoryChangeTrigger.Instance.hasItems(ModItems.item_garlic))
                     .requirements(IRequirementsStrategy.OR)
@@ -157,14 +157,14 @@ public class AdvancementGenerator extends AdvancementProvider {
                     .rewards(AdvancementRewards.Builder.experience(100))
                     .save(consumer, REFERENCE.MODID + ":vampire/max_level");
             Advancement sniped = Advancement.Builder.advancement()
-                    .display(Items.ARROW, new TranslationTextComponent("advancement.vampirism.sniped"), new TranslationTextComponent("advancement.vampirism.sniped"), null, FrameType.TASK, true, true, true)
+                    .display(Items.ARROW, new TranslationTextComponent("advancement.vampirism.sniped"), new TranslationTextComponent("advancement.vampirism.sniped.desc"), null, FrameType.TASK, true, true, true)
                     .parent(bat)
                     .addCriterion("flower", VampireActionTrigger.builder(VampireActionTrigger.Action.SNIPED_IN_BAT))
                     .save(consumer, REFERENCE.MODID + ":vampire/sniped");
             CompoundNBT potion = new ItemStack(Items.POTION).serializeNBT();
             potion.putString("Potion", "minecraft:poison");
             Advancement yuck = Advancement.Builder.advancement()
-                    .display(new DisplayInfo(ItemStack.of(potion), new TranslationTextComponent("advancement.vampirism.yuck"), new TranslationTextComponent("advancement.vampirism.yuck"), null, FrameType.TASK, true, true, true))
+                    .display(new DisplayInfo(ItemStack.of(potion), new TranslationTextComponent("advancement.vampirism.yuck"), new TranslationTextComponent("advancement.vampirism.yuck.desc"), null, FrameType.TASK, true, true, true))
                     .parent(first_blood)
                     .addCriterion("flower", VampireActionTrigger.builder(VampireActionTrigger.Action.POISONOUS_BITE))
                     .save(consumer, REFERENCE.MODID + ":vampire/yuck");
@@ -174,7 +174,7 @@ public class AdvancementGenerator extends AdvancementProvider {
                     .addCriterion("kill", VampireActionTrigger.builder(VampireActionTrigger.Action.KILL_FROZEN_HUNTER))
                     .save(consumer, REFERENCE.MODID + ":vampire/freeze_kill");
             Advancement max_lord = Advancement.Builder.advancement()
-                    .display(ModItems.vampire_minion_upgrade_special, new TranslationTextComponent("advancement.vampirism.max_lord_vampire"), new TranslationTextComponent("advancement.vampirism.max_lord_vampire"), null, FrameType.CHALLENGE, true, true, true)
+                    .display(ModItems.vampire_minion_upgrade_special, new TranslationTextComponent("advancement.vampirism.max_lord_vampire"), new TranslationTextComponent("advancement.vampirism.max_lord_vampire.desc"), null, FrameType.CHALLENGE, true, true, true)
                     .parent(max_level)
                     .addCriterion("level", TriggerFaction.lord(VReference.VAMPIRE_FACTION, 5))
                     .save(consumer, REFERENCE.MODID + ":vampire/max_lord");
@@ -193,7 +193,7 @@ public class AdvancementGenerator extends AdvancementProvider {
         @Override
         public void accept(Consumer<Advancement> consumer) {
             Advancement become_lord = Advancement.Builder.advancement()
-                    .display(Items.PAPER, new TranslationTextComponent("advancement.vampirism.become_lord"), new TranslationTextComponent("advancement.vampirism.become_lord"), null, FrameType.TASK, true, true, true)
+                    .display(Items.PAPER, new TranslationTextComponent("advancement.vampirism.become_lord"), new TranslationTextComponent("advancement.vampirism.become_lord.desc"), null, FrameType.TASK, true, true, true)
                     .parent(root.get())
                     .addCriterion("level", TriggerFaction.lord(null, 1))
                     .save(consumer, REFERENCE.MODID + ":minion/become_lord");

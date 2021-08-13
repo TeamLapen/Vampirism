@@ -8,7 +8,7 @@
       "translate": "advancement.vampirism.cure_vampire_villager"
     },
     "description": {
-      "translate": "advancement.vampirism.cure_vampire_villager"
+      "translate": "advancement.vampirism.cure_vampire_villager.desc"
     },
     "frame": "task",
     "show_toast": true,

@@ -8,7 +8,7 @@
       "translate": "advancement.vampirism.become_lord"
     },
     "description": {
-      "translate": "advancement.vampirism.become_lord"
+      "translate": "advancement.vampirism.become_lord.desc"
     },
     "frame": "task",
     "show_toast": true,
