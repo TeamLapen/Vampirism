@@ -46,8 +46,8 @@ public class BlindingBatEntity extends Bat {
         }
     }
 
-    private final TargetingConditions nonVampirePredicatePlayer = new TargetingConditions().selector(VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true).and(EntitySelector.NO_CREATIVE_OR_SPECTATOR));
-    private final TargetingConditions nonVampirePredicate = new TargetingConditions().selector(e -> !Helper.isVampire(e));
+    private final TargetingConditions nonVampirePredicatePlayer = TargetingConditions.forCombat().selector(VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true).and(EntitySelector.NO_CREATIVE_OR_SPECTATOR));
+    private final TargetingConditions nonVampirePredicate = TargetingConditions.forCombat().selector(e -> !Helper.isVampire(e));
     private boolean restrictLiveSpan;
     private boolean targeting;
     private boolean targetingMob = false;
@@ -76,7 +76,7 @@ public class BlindingBatEntity extends Bat {
             this.hurt(DamageSource.MAGIC, 10F);
         }
         if (!this.level.isClientSide) {
-            List<LivingEntity> l = level.getEntitiesOfClass(targetingMob ? Monster.class : Player.class, this.getBoundingBox());
+            List<? extends LivingEntity> l = targetingMob ? level.getEntitiesOfClass(Monster.class, this.getBoundingBox()): level.getEntitiesOfClass( Player.class, this.getBoundingBox());
             boolean hit = false;
             for (LivingEntity e : l) {
                 if (e.isAlive() && !Helper.isVampire(e)) {
@@ -107,9 +107,9 @@ public class BlindingBatEntity extends Bat {
                     Vec3 mov = diff.scale(0.15 / dist);
                     this.setDeltaMovement(mov);
                     float f = (float) (Mth.atan2(mov.z, mov.x) * (double) (180F / (float) Math.PI)) - 90.0F;
-                    float f1 = Mth.wrapDegrees(f - this.yRot);
+                    float f1 = Mth.wrapDegrees(f - this.getYRot());
                     this.zza = 0.5F;
-                    this.yRot += f1;
+                    this.setYRot(this.getYRot()+f1);
                     t = true;
                 }
             }

@@ -8,7 +8,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
 
@@ -34,16 +33,7 @@ public class AltarTipBlock extends VampirismBlock {
         super(name, Properties.of(Material.METAL).strength(1f).noOcclusion());
     }
 
-    @Override
-    public int getHarvestLevel(BlockState p_getHarvestLevel_1_) {
-        return 1;
-    }
 
-    @Nullable
-    @Override
-    public ToolType getHarvestTool(BlockState p_getHarvestTool_1_) {
-        return ToolType.PICKAXE;
-    }
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {

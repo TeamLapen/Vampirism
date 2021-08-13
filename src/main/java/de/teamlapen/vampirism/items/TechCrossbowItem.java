@@ -130,13 +130,13 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     protected ItemStack findAmmo(Player player, ItemStack bowStack) {
         boolean arrow = reduceArrowCount(bowStack, player.getRandom());
         if (!arrow) {
-            for (int i = 0; i < player.inventory.getContainerSize(); ++i) {
-                ItemStack itemstack = player.inventory.getItem(i);
+            for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
+                ItemStack itemstack = player.getInventory().getItem(i);
 
                 if (!itemstack.isEmpty() && this.isArrowPackage(itemstack)) {
                     setArrowsLeft(bowStack, MAX_ARROW_COUNT);
-                    if (!player.abilities.instabuild) {
-                        player.inventory.removeItem(i, 1);
+                    if (!player.getAbilities().instabuild) {
+                        player.getInventory().removeItem(i, 1);
                     }
                     player.getCooldowns().addCooldown(bowStack.getItem(), getReloadCooldown(player, bowStack));
                 }

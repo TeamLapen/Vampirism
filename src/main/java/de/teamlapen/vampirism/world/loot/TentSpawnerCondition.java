@@ -4,8 +4,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import de.teamlapen.vampirism.core.ModLoot;
-import de.teamlapen.vampirism.tileentity.TentTileEntity;
-import net.minecraft.world.level.storage.loot.Serializer;
+import de.teamlapen.vampirism.blockentity.TentBlockEntity;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -13,8 +12,6 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nonnull;
-
-import net.minecraft.world.level.storage.loot.predicates.LootItemCondition.Builder;
 
 public class TentSpawnerCondition implements LootItemCondition {
 
@@ -33,8 +30,8 @@ public class TentSpawnerCondition implements LootItemCondition {
     @Override
     public boolean test(LootContext lootContext) {
         BlockEntity t = lootContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
-        if (t instanceof TentTileEntity) {
-            return ((TentTileEntity) t).isSpawner();
+        if (t instanceof TentBlockEntity) {
+            return ((TentBlockEntity) t).isSpawner();
         }
         return false;
     }

@@ -12,6 +12,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import net.minecraft.world.item.Item.Properties;
+import net.minecraftforge.client.IItemRenderProperties;
+
+import java.util.function.Consumer;
 
 /**
  * Simple headwear that look like a hunter head
@@ -28,8 +31,14 @@ public class HunterHatItem extends VampirismHunterArmor {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public HumanoidModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel _default) {
-        return type == 0 ? HunterHatModel.hat0 : HunterHatModel.hat1;
+    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+        consumer.accept(new IItemRenderProperties() {
+                            @Override
+                            public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
+                                return (A) (type == 0 ? HunterHatModel.getInstance0() : HunterHatModel.getInstance1());
+                            }
+                        }
+        );
     }
 
 

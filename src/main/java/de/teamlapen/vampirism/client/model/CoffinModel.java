@@ -3,6 +3,11 @@ package de.teamlapen.vampirism.client.model;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
@@ -13,6 +18,16 @@ import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
 public class CoffinModel extends Model {
+
+    private static final String LEFT_PLATE = "left_plate";
+    private static final String RIGHT_PLATE = "right_plate";
+    private static final String BACK_PLATE = "back_plate";
+    private static final String TOP_PLATE = "top_plate";
+    private static final String BOTTOM_PLATE = "bottom_plate";
+    private static final String LEFT_LID = "left_lid";
+    private static final String RIGHT_LID = "right_lid";
+    private static final String LEFT_HANDLE = "left_handle";
+    private static final String RIGHT_HANDLE = "right_handle";
 
     // fields
     private final ModelPart leftPlate;
@@ -27,65 +42,32 @@ public class CoffinModel extends Model {
 
     private final List<ModelPart> modelParts;
 
-    public CoffinModel() {
-        super(RenderType::entitySolid);
-        texWidth = 256;
-        texHeight = 128;
+    public static LayerDefinition createLayer() {
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition part = mesh.getRoot();
+        part.addOrReplaceChild(LEFT_PLATE, CubeListBuilder.create().texOffs(0, 64).mirror().addBox(-8,-12,0,1,12,32), PartPose.offset(0,23,-8));
+        part.addOrReplaceChild(RIGHT_PLATE, CubeListBuilder.create().texOffs(66, 64).mirror().addBox(7,-12,0,1,12,32), PartPose.offset(0,23,-8));
+        part.addOrReplaceChild(BACK_PLATE, CubeListBuilder.create().texOffs(0,0).mirror().addBox(-8,0,0,16,1,32), PartPose.offset(0,23,-8));
+        part.addOrReplaceChild(TOP_PLATE, CubeListBuilder.create().texOffs(0,0).mirror().addBox(-7,-12,31,14,12,1), PartPose.offset(0,23,-8));
+        part.addOrReplaceChild(BOTTOM_PLATE, CubeListBuilder.create().texOffs(0, 15).mirror().addBox(-7,-11,0,14,12,1), PartPose.offset(0, 22, -8));
+        part.addOrReplaceChild(LEFT_LID, CubeListBuilder.create().texOffs(0, 33).mirror().addBox(0,0,0,7,1,30), PartPose.offset(-7,11,-7) );
+        part.addOrReplaceChild(RIGHT_LID, CubeListBuilder.create().texOffs(74,33).mirror().addBox(-7,0,0,7,1,30), PartPose.offset(7,11,-7));
+        part.addOrReplaceChild(LEFT_HANDLE, CubeListBuilder.create().texOffs(64,0).mirror().addBox(5.5f,-0.5f,15f,1,1,4), PartPose.offset(-7,11,-7));
+        part.addOrReplaceChild(RIGHT_HANDLE, CubeListBuilder.create().texOffs(74,0 ).mirror().addBox(-6.5f, -0.5f,15,1,1,1), PartPose.offset(7,11,-7));
+        return LayerDefinition.create(mesh, 256, 128);
+    }
 
-        leftPlate = new ModelPart(this, 0, 64);
-        leftPlate.addBox(-8F, -12F, 0F, 1, 12, 32);
-        leftPlate.setPos(0F, 23F, -8F);
-        leftPlate.setTexSize(256, 128);
-        leftPlate.mirror = true;
-        setRotation(leftPlate, 0F, 0F, 0F);
-        rightPlate = new ModelPart(this, 66, 64);
-        rightPlate.addBox(7F, -12F, 0F, 1, 12, 32);
-        rightPlate.setPos(0F, 23F, -8F);
-        rightPlate.setTexSize(256, 128);
-        rightPlate.mirror = true;
-        setRotation(rightPlate, 0F, 0F, 0F);
-        backPlate = new ModelPart(this, 0, 0);
-        backPlate.addBox(-8F, 0F, 0F, 16, 1, 32);
-        backPlate.setPos(0F, 23F, -8F);
-        backPlate.setTexSize(256, 128);
-        backPlate.mirror = true;
-        setRotation(backPlate, 0F, 0F, 0F);
-        topPlate = new ModelPart(this, 0, 0);
-        topPlate.addBox(-7F, -12F, 31F, 14, 12, 1);
-        topPlate.setPos(0F, 23F, -8F);
-        topPlate.setTexSize(256, 128);
-        topPlate.mirror = true;
-        setRotation(topPlate, 0F, 0F, 0F);
-        bottomPlate = new ModelPart(this, 0, 15);
-        bottomPlate.addBox(-7F, -11F, 0F, 14, 12, 1);
-        bottomPlate.setPos(0F, 22F, -8F);
-        bottomPlate.setTexSize(256, 128);
-        bottomPlate.mirror = true;
-        setRotation(bottomPlate, 0F, 0F, 0F);
-        leftLid = new ModelPart(this, 0, 33);
-        leftLid.addBox(0F, 0F, 0F, 7, 1, 30);
-        leftLid.setPos(-7F, 11F, -7F);
-        leftLid.setTexSize(256, 128);
-        leftLid.mirror = true;
-        setRotation(leftLid, 0F, 0F, 0F);
-        rightLid = new ModelPart(this, 74, 33);
-        rightLid.addBox(-7F, 0F, 0F, 7, 1, 30);
-        rightLid.setPos(7F, 11F, -7F);
-        rightLid.setTexSize(256, 128);
-        rightLid.mirror = true;
-        setRotation(rightLid, 0F, 0F, 0F);
-        leftHandle = new ModelPart(this, 64, 0);
-        leftHandle.addBox(5.5F, -0.5F, 15F, 1, 1, 4);
-        leftHandle.setPos(-7F, 11F, -7F);
-        leftHandle.setTexSize(256, 128);
-        leftHandle.mirror = true;
-        setRotation(leftHandle, 0F, 0F, 0F);
-        rightHandle = new ModelPart(this, 74, 0);
-        rightHandle.addBox(-6.5F, -0.5F, 15F, 1, 1, 4);
-        rightHandle.setPos(7F, 11F, -7F);
-        rightHandle.setTexSize(256, 128);
-        rightHandle.mirror = true;
-        setRotation(rightHandle, 0F, 0F, 0F);
+    public CoffinModel(ModelPart part) {
+        super(RenderType::entitySolid);
+        this.leftPlate = part.getChild(LEFT_PLATE);
+        this.rightPlate = part.getChild(RIGHT_PLATE);
+        this.backPlate = part.getChild(BACK_PLATE);
+        this.topPlate = part.getChild(TOP_PLATE);
+        this.bottomPlate = part.getChild(BOTTOM_PLATE);
+        this.leftLid = part.getChild(LEFT_LID);
+        this.rightLid = part.getChild(RIGHT_LID);
+        this.leftHandle = part.getChild(LEFT_HANDLE);
+        this.rightHandle = part.getChild(RIGHT_HANDLE);
         modelParts = ImmutableList.of(this.leftPlate, this.rightPlate, this.backPlate, this.topPlate, this.bottomPlate, this.leftLid, this.rightLid, this.leftHandle, this.rightHandle);
     }
 
@@ -98,11 +80,5 @@ public class CoffinModel extends Model {
     public void rotateLid(float angle) {
         leftLid.zRot = leftHandle.zRot = -angle;
         rightLid.zRot = rightHandle.zRot = angle;
-    }
-
-    private void setRotation(ModelPart model, float x, float y, float z) {
-        model.xRot = x;
-        model.yRot = y;
-        model.zRot = z;
     }
 }

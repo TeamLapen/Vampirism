@@ -23,7 +23,7 @@ public abstract class AssemblerMixin {
     private AssemblerMixin() {
     }
 
-    @Redirect(method = "tryPlacingChildren(Lnet/minecraft/world/gen/feature/structure/AbstractVillagePiece;Lorg/apache/commons/lang3/mutable/MutableObject;IIZ)V", at = @At(value = "INVOKE", target = "Ljava/util/Iterator;next()Ljava/lang/Object;", ordinal = 1))
+    @Redirect(remap = false, method = "tryPlacingChildren(Lnet/minecraft/world/gen/feature/structure/AbstractVillagePiece;Lorg/apache/commons/lang3/mutable/MutableObject;IIZ)V", at = @At(value = "INVOKE", target = "Ljava/util/Iterator;next()Ljava/lang/Object;", ordinal = 1))
     private Object inject(Iterator<StructurePoolElement> iterator) {
         while (iterator.hasNext()) {
             StructurePoolElement piece = iterator.next();

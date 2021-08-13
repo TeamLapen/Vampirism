@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.tileentity;
+package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class PedestalTileEntity extends BlockEntity implements IItemHandler {
+public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
 
     private final Random rand = new Random();
     private final LazyOptional<IItemHandler> opt = LazyOptional.of(() -> this);
@@ -47,7 +47,7 @@ public class PedestalTileEntity extends BlockEntity implements IItemHandler {
     @Nonnull
     private ItemStack internalStack;
 
-    public PedestalTileEntity(BlockPos pos, BlockState state) {
+    public PedestalBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.blood_pedestal, pos, state);
         this.internalStack = ItemStack.EMPTY;
     }
@@ -173,7 +173,7 @@ public class PedestalTileEntity extends BlockEntity implements IItemHandler {
         return super.save(compound);
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, PedestalTileEntity blockEntity) {
+    public static void serverTick(Level level, BlockPos pos, BlockState state, PedestalBlockEntity blockEntity) {
             if (blockEntity.chargingTicks > 0) {
                 blockEntity.chargingTicks--;
                 if (blockEntity.chargingTicks == 0) {
@@ -206,7 +206,7 @@ public class PedestalTileEntity extends BlockEntity implements IItemHandler {
             }
     }
 
-    public static void clientTick(Level level, BlockPos pos, BlockState state, PedestalTileEntity blockEntity) {
+    public static void clientTick(Level level, BlockPos pos, BlockState state, PedestalBlockEntity blockEntity) {
         blockEntity.ticksExistedClient++;
         if (blockEntity.chargingTicks > 0 && blockEntity.ticksExistedClient % 8 == 0) {
             spawnChargedParticle(level, pos, blockEntity.rand);

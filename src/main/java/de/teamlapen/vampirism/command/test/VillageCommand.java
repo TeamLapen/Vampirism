@@ -4,8 +4,8 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.command.arguments.FactionArgument;
-import de.teamlapen.vampirism.tileentity.TotemHelper;
-import de.teamlapen.vampirism.tileentity.TotemTileEntity;
+import de.teamlapen.vampirism.blockentity.TotemHelper;
+import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,7 +30,7 @@ public class VillageCommand extends BasicCommand {
     }
 
     private static int abort(CommandSourceStack source) {
-        TotemHelper.getTotemNearPos(source.getLevel(), new BlockPos(source.getPosition()), true).ifPresent(TotemTileEntity::breakCapture);
+        TotemHelper.getTotemNearPos(source.getLevel(), new BlockPos(source.getPosition()), true).ifPresent(TotemBlockEntity::breakCapture);
         return 0;
     }
 }

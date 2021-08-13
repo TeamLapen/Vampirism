@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.tileentity.GarlicBeaconTileEntity;
+import de.teamlapen.vampirism.blockentity.GarlicDiffusorBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Material;
@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -27,7 +26,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -44,15 +42,12 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 
-public class GarlicBeaconBlock extends VampirismBlockContainer {
+public class GarlicDiffusorBlock extends VampirismBlockContainer {
 
-    public final static String regName = "garlic_beacon";
+    public final static String regName = "garlic_beacon"; //TODO 1.17 migrate to garlic_diffusor
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-    private final static AABB BOUNDING_BOX = new AABB(0.07, 0, 0.07, 0.93, 0.75, 0.93);
     private static final VoxelShape shape = makeShape();
 
     private static VoxelShape makeShape() {
@@ -63,7 +58,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
 
     private final Type type;
 
-    public GarlicBeaconBlock(Type type) {
+    public GarlicDiffusorBlock(Type type) {
         super(regName + "_" + type.getName(), Properties.of(Material.STONE).strength(3f).sound(SoundType.STONE).noOcclusion());
         this.type = type;
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
@@ -83,7 +78,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
 
     @Override
     public void attack(BlockState state, Level worldIn, BlockPos pos, Player playerIn) {
-        GarlicBeaconTileEntity tile = getTile(worldIn, pos);
+        GarlicDiffusorBlockEntity tile = getTile(worldIn, pos);
         if (tile != null) {
             tile.onTouched(playerIn);
         }
@@ -118,7 +113,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        GarlicBeaconTileEntity tile = new GarlicBeaconTileEntity(pos, state);
+        GarlicDiffusorBlockEntity tile = new GarlicDiffusorBlockEntity(pos, state);
         tile.setType(type);
         tile.initiateBootTimer();
         return tile;
@@ -127,8 +122,8 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     @Override
     public void playerDestroy(Level worldIn, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack) {
         super.playerDestroy(worldIn, player, pos, state, te, stack);
-        if (te instanceof GarlicBeaconTileEntity) {
-            ((GarlicBeaconTileEntity) te).onTouched(player);
+        if (te instanceof GarlicDiffusorBlockEntity) {
+            ((GarlicDiffusorBlockEntity) te).onTouched(player);
         }
     }
 
@@ -142,7 +137,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
         ItemStack heldItem = player.getItemInHand(hand);
         if (!heldItem.isEmpty() && ModItems.purified_garlic.equals(heldItem.getItem())) {
             if (!world.isClientSide) {
-                GarlicBeaconTileEntity t = getTile(world, pos);
+                GarlicDiffusorBlockEntity t = getTile(world, pos);
                 if (t != null) {
                     if (t.getFuelTime() > 0) {
                         player.sendMessage(new TranslatableComponent("block.vampirism.garlic_beacon.already_fueled"), Util.NIL_UUID);
@@ -157,7 +152,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
             return InteractionResult.SUCCESS;
         } else {
             if (world.isClientSide) {
-                GarlicBeaconTileEntity t = getTile(world, pos);
+                GarlicDiffusorBlockEntity t = getTile(world, pos);
                 if (t != null) {
                     VampirismMod.proxy.displayGarlicBeaconScreen(t, getName());
                 }
@@ -172,10 +167,10 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     }
 
     @Nullable
-    private GarlicBeaconTileEntity getTile(BlockGetter world, BlockPos pos) {
+    private GarlicDiffusorBlockEntity getTile(BlockGetter world, BlockPos pos) {
         BlockEntity t = world.getBlockEntity(pos);
-        if (t instanceof GarlicBeaconTileEntity) {
-            return (GarlicBeaconTileEntity) t;
+        if (t instanceof GarlicDiffusorBlockEntity) {
+            return (GarlicDiffusorBlockEntity) t;
         }
         return null;
     }
@@ -183,7 +178,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, ModTiles.garlic_beacon, GarlicBeaconTileEntity::tick);
+        return createTickerHelper(type, ModTiles.garlic_beacon, GarlicDiffusorBlockEntity::tick);
     }
 
     public enum Type implements StringRepresentable {

@@ -5,6 +5,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -14,16 +16,17 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class VampirePlayerHeadLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
+public class VampirePlayerHeadLayer<T extends Player, Q extends HumanoidModel<T>> extends RenderLayer<T, Q> {
 
     private final ResourceLocation[] eyeOverlays;
     private final ResourceLocation[] fangOverlays;
 
-    public VampirePlayerHeadLayer(RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> entityRendererIn) {
+    public VampirePlayerHeadLayer(RenderLayerParent<T,Q> entityRendererIn) {
         super(entityRendererIn);
         eyeOverlays = new ResourceLocation[REFERENCE.EYE_TYPE_COUNT];
         for (int i = 0; i < eyeOverlays.length; i++) {
@@ -36,7 +39,7 @@ public class VampirePlayerHeadLayer extends RenderLayer<AbstractClientPlayer, Pl
     }
 
     @Override
-    public void render(PoseStack stack, MultiBufferSource iRenderTypeBuffer, int i, AbstractClientPlayer player, float v, float v1, float v2, float v3, float v4, float v5) {
+    public void render(PoseStack stack, MultiBufferSource iRenderTypeBuffer, int i, T player, float v, float v1, float v2, float v3, float v4, float v5) {
         if (!VampirismConfig.CLIENT.renderVampireEyes.get() || !player.isAlive()) return;
         VampirismPlayerAttributes atts = VampirismPlayerAttributes.get(player);
         if (atts.vampireLevel > 0 && !atts.getVampSpecial().disguised && !player.isInvisible()) {

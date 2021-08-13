@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.tileentity.AlchemicalCauldronTileEntity;
+import de.teamlapen.vampirism.blockentity.AlchemicalCauldronBlockEntity;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -68,13 +68,13 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState p_153213_, BlockEntityType<T> p_153214_) {
-        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModTiles.alchemical_cauldron, AlchemicalCauldronTileEntity::serverTick);
+        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModTiles.alchemical_cauldron, AlchemicalCauldronBlockEntity::serverTick);
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new AlchemicalCauldronTileEntity(pos, state);
+        return new AlchemicalCauldronBlockEntity(pos, state);
     }
 
     @Override
@@ -86,8 +86,8 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     public void setPlacedBy(Level world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack stack) {
         super.setPlacedBy(world, blockPos, blockState, entity, stack);
         BlockEntity tile = world.getBlockEntity(blockPos);
-        if (entity instanceof Player && tile instanceof AlchemicalCauldronTileEntity) {
-            ((AlchemicalCauldronTileEntity) tile).setOwnerID((Player) entity);
+        if (entity instanceof Player && tile instanceof AlchemicalCauldronBlockEntity) {
+            ((AlchemicalCauldronBlockEntity) tile).setOwnerID((Player) entity);
         }
     }
 
@@ -99,7 +99,7 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     @Override
     protected void openContainer(Level world, BlockPos blockPos, Player playerEntity) {
         BlockEntity tile = world.getBlockEntity(blockPos);
-        if (tile instanceof AlchemicalCauldronTileEntity) {
+        if (tile instanceof AlchemicalCauldronBlockEntity) {
             playerEntity.openMenu((MenuProvider) tile);
             playerEntity.awardStat(ModStats.interact_alchemical_cauldron);
         }

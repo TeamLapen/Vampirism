@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.tileentity.BloodContainerTileEntity;
+import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -155,7 +155,7 @@ public class BloodHelper {
             ItemStack container = getBloodContainerInInventory(player.getInventory(), false, true);
             if (!container.isEmpty()) {
                 FluidStack content = BloodContainerBlock.getFluidFromItemStack(container);
-                int filled = Math.min(amt, BloodContainerTileEntity.CAPACITY - content.getAmount());
+                int filled = Math.min(amt, BloodContainerBlockEntity.CAPACITY - content.getAmount());
                 content.setAmount(content.getAmount() + filled);
                 BloodContainerBlock.writeFluidToItemStack(container, content);
                 return fillBloodIntoInventory(player, amt - filled);
@@ -181,7 +181,7 @@ public class BloodHelper {
         for (int i = 0; i < inventory.getContainerSize(); i++) {
             ItemStack stack = inventory.getItem(i);
             FluidStack content = BloodContainerBlock.getFluidFromItemStack(stack);
-            if (content.getRawFluid() == ModFluids.blood && (allowFull || content.getAmount() < BloodContainerTileEntity.CAPACITY) && (allowEmpty || content.getAmount() > 0)) {
+            if (content.getRawFluid() == ModFluids.blood && (allowFull || content.getAmount() < BloodContainerBlockEntity.CAPACITY) && (allowEmpty || content.getAmount() > 0)) {
                 return stack;
             }
         }

@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -15,7 +16,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Render the vampire overlay
  */
 @OnlyIn(Dist.CLIENT)
-public class VampireEntityLayer<T extends PathfinderMob, U extends EntityModel<T>> extends RenderLayer<T, U> {
+public class VampireEntityLayer<T extends LivingEntity, U extends EntityModel<T>> extends RenderLayer<T, U> {
 
     private final ResourceLocation overlay;
     private final boolean checkIfRender;

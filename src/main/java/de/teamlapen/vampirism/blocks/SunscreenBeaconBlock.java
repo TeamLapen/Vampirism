@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.tileentity.SunscreenBeaconTileEntity;
+import de.teamlapen.vampirism.blockentity.SunscreenBeaconBlockEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -33,7 +33,7 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide() ? null : createTickerHelper(type, ModTiles.sunscreen_beacon, SunscreenBeaconTileEntity::serverTick);
+        return level.isClientSide() ? null : createTickerHelper(type, ModTiles.sunscreen_beacon, SunscreenBeaconBlockEntity::serverTick);
     }
 
     @Override
@@ -67,6 +67,6 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new SunscreenBeaconTileEntity(pos, state);
+        return new SunscreenBeaconBlockEntity(pos, state);
     }
 }

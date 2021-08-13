@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "vampirism:vampire_fang"
+            "items": [
+              "vampirism:vampire_fang"
+            ]
           }
         ]
       }

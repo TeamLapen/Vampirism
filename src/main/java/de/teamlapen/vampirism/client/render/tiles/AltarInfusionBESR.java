@@ -3,12 +3,11 @@ package de.teamlapen.vampirism.client.render.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.tileentity.AltarInfusionTileEntity;
+import de.teamlapen.vampirism.blockentity.AltarInfusionBlockEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
@@ -23,21 +22,21 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Renders the beams for the altar of infusion
  */
 @OnlyIn(Dist.CLIENT)
-public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
+public class AltarInfusionBESR extends VampirismBESR<AltarInfusionBlockEntity> {
 
 
     private final ResourceLocation enderDragonCrystalBeamTextures = new ResourceLocation(REFERENCE.MODID, "textures/entity/infusion_beam.png");
     private final ResourceLocation beaconBeamTexture = new ResourceLocation("textures/entity/beacon_beam.png");
 
-    public AltarInfusionTESR(BlockEntityRendererProvider.Context context) {
+    public AltarInfusionBESR(BlockEntityRendererProvider.Context context) {
     }
 
 
     @Override
-    public void render(AltarInfusionTileEntity te, float partialTicks, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int combinedLight, int combinedOverlay) {
+    public void render(AltarInfusionBlockEntity te, float partialTicks, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int combinedLight, int combinedOverlay) {
         // Render the beams if the ritual is running
-        AltarInfusionTileEntity.PHASE phase = te.getCurrentPhase();
-        if (phase == AltarInfusionTileEntity.PHASE.BEAM1 || phase == AltarInfusionTileEntity.PHASE.BEAM2) {
+        AltarInfusionBlockEntity.PHASE phase = te.getCurrentPhase();
+        if (phase == AltarInfusionBlockEntity.PHASE.BEAM1 || phase == AltarInfusionBlockEntity.PHASE.BEAM2) {
             // Calculate center coordinates
             float cX = te.getBlockPos().getX() + 0.5f;
             float cY = te.getBlockPos().getY() + 3f;
@@ -49,7 +48,7 @@ public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
                 this.renderBeam(matrixStack, iRenderTypeBuffer, -(te.getRunningTick() + partialTicks), tip.getX() + 0.5f - cX, tip.getY() + 0.5f - cY, tip.getZ() + 0.5f - cZ, combinedLight, true);
             }
 
-            if (phase == AltarInfusionTileEntity.PHASE.BEAM2) {
+            if (phase == AltarInfusionBlockEntity.PHASE.BEAM2) {
                 Player p = te.getPlayer();
                 if (p != null) {
                     this.renderBeam(matrixStack, iRenderTypeBuffer, -(te.getRunningTick() + partialTicks), (float) p.getX() - cX, (float) p.getY() + 1.2f - cY, (float) p.getZ() - cZ, combinedLight, false);

@@ -2,10 +2,12 @@ package de.teamlapen.vampirism.client.render.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.client.core.ModEntitiesRender;
+import de.teamlapen.vampirism.client.model.HunterEquipmentModel;
 import de.teamlapen.vampirism.client.render.layers.HunterEquipmentLayer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.resources.ResourceLocation;
@@ -18,10 +20,10 @@ public class HunterTrainerRenderer extends HumanoidMobRenderer<Mob, PlayerModel<
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_trainer.png");
 
 
-    public HunterTrainerRenderer(EntityRenderDispatcher renderManagerIn, boolean renderEquipment) {
-        super(renderManagerIn, new PlayerModel<>(0, false), 0.5F);
+    public HunterTrainerRenderer(EntityRendererProvider.Context context, boolean renderEquipment) {
+        super(context, new PlayerModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED), false), 0.5F);
         if (renderEquipment)
-            this.addLayer(new HunterEquipmentLayer<>(this, h -> HunterEquipmentModel.StakeType.ONLY, entityModel -> 1));
+            this.addLayer(new HunterEquipmentLayer<>(this, context.getModelSet(), h -> HunterEquipmentModel.StakeType.ONLY, entityModel -> 1));
         //this.addLayer(new CloakLayer<>(this, textureCloak, Predicates.alwaysTrue()));
     }
 

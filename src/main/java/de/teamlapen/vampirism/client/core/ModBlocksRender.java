@@ -6,17 +6,16 @@ import de.teamlapen.vampirism.client.render.tiles.*;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.tileentity.AlchemicalCauldronTileEntity;
-import de.teamlapen.vampirism.tileentity.TotemTileEntity;
+import de.teamlapen.vampirism.blockentity.AlchemicalCauldronBlockEntity;
+import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.color.block.BlockColors;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fmlclient.registry.ClientRegistry;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 
 /**
  * Handles all block render registration including TileEntities
@@ -26,7 +25,6 @@ public class ModBlocksRender {
 
 
     public static void register() {
-        registerTileRenderer();
         registerRenderType();
     }
 
@@ -41,8 +39,8 @@ public class ModBlocksRender {
         colors.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 BlockEntity tile = (worldIn == null || pos == null) ? null : worldIn.getBlockEntity(pos);
-                if (tile instanceof AlchemicalCauldronTileEntity) {
-                    return ((AlchemicalCauldronTileEntity) tile).getLiquidColorClient();
+                if (tile instanceof AlchemicalCauldronBlockEntity) {
+                    return ((AlchemicalCauldronBlockEntity) tile).getLiquidColorClient();
                 }
             }
             return 0xFFFFFF;
@@ -50,8 +48,8 @@ public class ModBlocksRender {
         colors.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 BlockEntity tile = (worldIn == null || pos == null) ? null : worldIn.getBlockEntity(pos);
-                if (tile instanceof TotemTileEntity) {
-                    IFaction f = ((TotemTileEntity) tile).getControllingFaction();
+                if (tile instanceof TotemBlockEntity) {
+                    IFaction f = ((TotemBlockEntity) tile).getControllingFaction();
                     if (f != null) return f.getColor().getRGB();
                 }
             }
@@ -65,12 +63,12 @@ public class ModBlocksRender {
         }, ModBlocks.bloody_spruce_leaves);
     }
 
-    private static void registerTileRenderer() {
-        BlockEntityRenderers.register(ModTiles.coffin, CoffinTESR::new);
-        BlockEntityRenderers.register(ModTiles.altar_infusion, AltarInfusionTESR::new);
-        BlockEntityRenderers.register(ModTiles.blood_pedestal, PedestalTESR::new);
-        BlockEntityRenderers.register(ModTiles.totem, TotemTESR::new);
-        BlockEntityRenderers.register(ModTiles.garlic_beacon, GarlicBeaconTESR::new);
+    public static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(ModTiles.coffin, CoffinBESR::new);
+        event.registerBlockEntityRenderer(ModTiles.altar_infusion, AltarInfusionBESR::new);
+        event.registerBlockEntityRenderer(ModTiles.blood_pedestal, PedestalBESR::new);
+        event.registerBlockEntityRenderer(ModTiles.totem, TotemBESR::new);
+        event.registerBlockEntityRenderer(ModTiles.garlic_beacon, GarlicBeaconBESR::new);
     }
 
     private static void registerRenderType() {

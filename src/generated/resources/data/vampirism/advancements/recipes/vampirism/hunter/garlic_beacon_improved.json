@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "vampirism:garlic_beacon_normal"
+            "items": [
+              "vampirism:garlic_beacon_normal"
+            ]
           }
         ]
       }

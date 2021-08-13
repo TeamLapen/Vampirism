@@ -114,7 +114,7 @@ public class PureBloodItem extends VampirismItem {
 
     private void checkWingConditions(VampirePlayer p) {
         net.minecraft.world.entity.player.Player e = p.getRepresentingPlayer();
-        if (!e.abilities.instabuild && !e.level.isClientSide()) {
+        if (!e.getAbilities().instabuild && !e.level.isClientSide()) {
             if (e.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST).getItem() instanceof VampireClothingItem) {
                 p.triggerWings();
             }

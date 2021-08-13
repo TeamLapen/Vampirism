@@ -18,7 +18,7 @@ public class VampireBookCommand extends BasicCommand {
     }
 
     private static int vampireBook(ServerPlayer asPlayer) {
-        asPlayer.inventory.add(VampireBookManager.getInstance().getRandomBook(asPlayer.getRandom()));
+        asPlayer.getInventory().add(VampireBookManager.getInstance().getRandomBook(asPlayer.getRandom()));
         return 0;
     }
 }

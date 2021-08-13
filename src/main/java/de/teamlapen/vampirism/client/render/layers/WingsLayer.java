@@ -2,9 +2,11 @@ package de.teamlapen.vampirism.client.render.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.WingModel;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
@@ -20,7 +22,7 @@ import java.util.function.Predicate;
 
 public class WingsLayer<T extends LivingEntity, Q extends EntityModel<T>> extends RenderLayer<T, Q> {
 
-    private final WingModel<T> model = new WingModel<>();
+    private final WingModel<T> model;
     private final Predicate<T> predicateRender;
     private final BiFunction<T, Q, ModelPart> bodyPartFunction;
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/wings.png");
@@ -29,8 +31,9 @@ public class WingsLayer<T extends LivingEntity, Q extends EntityModel<T>> extend
      * @param predicateRender  Decides if the layer is rendered
      * @param bodyPartFunction Should return the main body part. The returned ModelRenderer is used to adjust the wing rotation
      */
-    public WingsLayer(RenderLayerParent<T, Q> entityRendererIn, Predicate<T> predicateRender, BiFunction<T, Q, ModelPart> bodyPartFunction) {
+    public WingsLayer(RenderLayerParent<T, Q> entityRendererIn, EntityModelSet modelSet, Predicate<T> predicateRender, BiFunction<T, Q, ModelPart> bodyPartFunction) {
         super(entityRendererIn);
+        this.model = new WingModel<>(modelSet.bakeLayer(ModEntitiesRender.WING));
         this.predicateRender = predicateRender;
         this.bodyPartFunction = bodyPartFunction;
     }

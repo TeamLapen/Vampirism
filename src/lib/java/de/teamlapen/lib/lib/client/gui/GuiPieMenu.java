@@ -1,6 +1,8 @@
 package de.teamlapen.lib.lib.client.gui;
 
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.LIBREFERENCE;
@@ -146,7 +148,13 @@ public abstract class GuiPieMenu<T> extends Screen {
 
             // Draw box and, if selected, highlight
             Color col = this.getColor(element);
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.enableBlend();
+//            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+//            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE);
+//            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.DST_COLOR, GlStateManager.DestFactor.SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+//            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+//            RenderSystem.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
+
             RenderSystem.setShaderColor(col.getRed(), col.getGreen(), col.getBlue(), 0.5F);
             RenderSystem.setShaderTexture(0, WIDGETS);
             blit(stack, x - 2, y - 2, 1, 1, 20, 20);
@@ -157,6 +165,7 @@ public abstract class GuiPieMenu<T> extends Screen {
                 selectedElement = i;
                 drawSelectedCenter(stack, cX, cY, rad);
             }
+
             // Draw Icon
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1f,1f,1f,1f);

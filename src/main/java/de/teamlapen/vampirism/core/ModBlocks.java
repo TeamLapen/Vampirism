@@ -67,9 +67,9 @@ public class ModBlocks {
     public static final CursedEarthBlock cursed_earth = getNull();
     public static final FirePlaceBlock fire_place = getNull();
     public static final GarlicBlock garlic = getNull();
-    public static final GarlicBeaconBlock garlic_beacon_improved = getNull();
-    public static final GarlicBeaconBlock garlic_beacon_normal = getNull();
-    public static final GarlicBeaconBlock garlic_beacon_weak = getNull();
+    public static final GarlicDiffusorBlock garlic_beacon_improved = getNull();
+    public static final GarlicDiffusorBlock garlic_beacon_normal = getNull();
+    public static final GarlicDiffusorBlock garlic_beacon_weak = getNull();
     public static final HunterTableBlock hunter_table = getNull();
     public static final MedChairBlock med_chair = getNull();
     public static final FlowerPotBlock potted_vampire_orchid = getNull();
@@ -186,9 +186,9 @@ public class ModBlocks {
         registry.register(prepareRegister(new CursedEarthBlock()));
         registry.register(prepareRegister(new FirePlaceBlock()));
         registry.register(prepareRegister(new GarlicBlock()));
-        registry.register(prepareRegister(new GarlicBeaconBlock(GarlicBeaconBlock.Type.IMPROVED)));
-        registry.register(prepareRegister(new GarlicBeaconBlock(GarlicBeaconBlock.Type.NORMAL)));
-        registry.register(prepareRegister(new GarlicBeaconBlock(GarlicBeaconBlock.Type.WEAK)));
+        registry.register(prepareRegister(new GarlicDiffusorBlock(GarlicDiffusorBlock.Type.IMPROVED)));
+        registry.register(prepareRegister(new GarlicDiffusorBlock(GarlicDiffusorBlock.Type.NORMAL)));
+        registry.register(prepareRegister(new GarlicDiffusorBlock(GarlicDiffusorBlock.Type.WEAK)));
         registry.register(prepareRegister(new HunterTableBlock()));
         registry.register(prepareRegister(new MedChairBlock()));
         registry.register(prepareRegister(new FlowerPotBlock(vampire_orchid, Block.Properties.of(Material.DECORATION).instabreak().noOcclusion()).setRegistryName(REFERENCE.MODID, "potted_vampire_orchid")));
@@ -230,6 +230,7 @@ public class ModBlocks {
          * - Register itemrender in {@link ItemModelGenerator#registerModels()}
          * - Register loot table in {@link LootTablesGenerator.ModBlockLootTables#addTables()}
          * - Add lang keys
+         * - Consider adding tool type in {@link de.teamlapen.vampirism.data.TagGenerator.ModBlockTagsProvider}
          * - Run genData (twice?)
          */
     }

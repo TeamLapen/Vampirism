@@ -106,7 +106,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
             if (handleInjections(player, world, stack)) {
                 stack.shrink(1);
                 if (stack.isEmpty()) {
-                    player.inventory.removeItem(stack);
+                    player.getInventory().removeItem(stack);
                 }
             }
         } else if (world.isClientSide) {

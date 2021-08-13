@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.tileentity;
+package de.teamlapen.vampirism.blockentity;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -85,7 +85,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.BiConsumer;
 
-import static de.teamlapen.vampirism.tileentity.TotemHelper.*;
+import static de.teamlapen.vampirism.blockentity.TotemHelper.*;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -95,7 +95,7 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.PathfinderMob;
 
 @ParametersAreNonnullByDefault
-public class TotemTileEntity extends BlockEntity implements ITotem {
+public class TotemBlockEntity extends BlockEntity implements ITotem {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Random RNG = new Random();
     private static final ResourceLocation nonFactionTotem = new ResourceLocation("none");
@@ -154,7 +154,7 @@ public class TotemTileEntity extends BlockEntity implements ITotem {
     private float[] baseColors = DyeColor.WHITE.getTextureDiffuseColors();
     private float[] progressColor = DyeColor.WHITE.getTextureDiffuseColors();
 
-    public TotemTileEntity(BlockPos pos, BlockState state) {
+    public TotemBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.totem, pos, state);
     }
 
@@ -527,7 +527,7 @@ public class TotemTileEntity extends BlockEntity implements ITotem {
         return this.beamRenderScale;
     }
 
-    public static void clientTick(Level level, BlockPos pos, BlockState state, TotemTileEntity blockEntity){
+    public static void clientTick(Level level, BlockPos pos, BlockState state, TotemBlockEntity blockEntity){
         if (level.getGameTime() % 10 == 7 && blockEntity.controllingFaction != null) {
             ModParticles.spawnParticlesClient(level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_4"), 20, blockEntity.controllingFaction.getColor().getRGB(), 0.2F),pos.getX(), pos.getY(), pos.getZ(), 3, 30, level.random);
         }
@@ -720,7 +720,7 @@ public class TotemTileEntity extends BlockEntity implements ITotem {
         }
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, TotemTileEntity blockEntity){
+    public static void serverTick(Level level, BlockPos pos, BlockState state, TotemBlockEntity blockEntity){
         if (blockEntity.isDisabled) {
             level.destroyBlock(pos, true);
             if (level.getBlockState(pos.below()).getBlock() instanceof TotemBaseBlock) {
@@ -1285,7 +1285,7 @@ public class TotemTileEntity extends BlockEntity implements ITotem {
         private final BlockPos pos;
         private final boolean shouldForceTargets;
 
-        private CaptureInfo(TotemTileEntity totem) {
+        private CaptureInfo(TotemBlockEntity totem) {
             this.defendingFaction = totem.controllingFaction;
             this.attackingFaction = totem.capturingFaction;
             this.villageArea = totem.getVillageAreaReduced();

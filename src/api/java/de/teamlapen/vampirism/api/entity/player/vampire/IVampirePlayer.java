@@ -38,11 +38,13 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     /**
      * @return The bite type which would be applied to the give entity
      */
+    @Nonnull
     BITE_TYPE determineBiteType(LivingEntity entity);
 
     /**
      * @return The players vampire skill handler
      */
+    @Nonnull
     IActionHandler<IVampirePlayer> getActionHandler();
 
     /**
@@ -56,8 +58,10 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     /**
      * @return The players blood stats (similar to food stats)
      */
+    @Nonnull
     IBloodStats getBloodStats();
 
+    @Nonnull
     @Override
     default IPlayableFaction<IVampirePlayer> getFaction() {
         return VReference.VAMPIRE_FACTION;

@@ -3,7 +3,8 @@
   "pools": [
     {
       "name": "main",
-      "rolls": 7,
+      "rolls": 7.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -16,7 +17,8 @@
           "functions": [
             {
               "function": "minecraft:set_damage",
-              "damage": 1.0
+              "damage": 1.0,
+              "add": false
             }
           ],
           "name": "vampirism:blood_bottle"
@@ -25,7 +27,8 @@
     },
     {
       "name": "book",
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -45,7 +48,8 @@
     },
     {
       "name": "equipment",
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -54,16 +58,18 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.6,
                 "max": 0.99
-              }
+              },
+              "add": false
             },
             {
               "function": "vampirism:set_item_blood_charge",
               "charge": {
+                "type": "minecraft:uniform",
                 "min": 500.0,
-                "max": 2000.0,
-                "type": "minecraft:uniform"
+                "max": 2000.0
               }
             }
           ],
@@ -76,16 +82,18 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.6,
                 "max": 0.99
-              }
+              },
+              "add": false
             },
             {
               "function": "vampirism:set_item_blood_charge",
               "charge": {
+                "type": "minecraft:uniform",
                 "min": 500.0,
-                "max": 2000.0,
-                "type": "minecraft:uniform"
+                "max": 2000.0
               }
             }
           ],
@@ -98,16 +106,18 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.6,
                 "max": 0.99
-              }
+              },
+              "add": false
             },
             {
               "function": "vampirism:set_item_blood_charge",
               "charge": {
+                "type": "minecraft:uniform",
                 "min": 500.0,
-                "max": 2000.0,
-                "type": "minecraft:uniform"
+                "max": 2000.0
               }
             }
           ],
@@ -120,16 +130,18 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.6,
                 "max": 0.99
-              }
+              },
+              "add": false
             },
             {
               "function": "vampirism:set_item_blood_charge",
               "charge": {
+                "type": "minecraft:uniform",
                 "min": 500.0,
-                "max": 2000.0,
-                "type": "minecraft:uniform"
+                "max": 2000.0
               }
             }
           ],
@@ -143,7 +155,8 @@
     },
     {
       "name": "refinement_item",
-      "rolls": 3,
+      "rolls": 3.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",

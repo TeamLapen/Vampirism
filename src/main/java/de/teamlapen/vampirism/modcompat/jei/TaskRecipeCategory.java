@@ -79,8 +79,8 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
     }
 
     @Override
-    public String getTitle() {
-        return UtilLib.translate("text.vampirism.task.reward");
+    public Component getTitle() {
+        return new TranslatableComponent("text.vampirism.task.reward");
     }
 
     @Override

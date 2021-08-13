@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "vampirism:blood_container"
+            "items": [
+              "vampirism:blood_container"
+            ]
           }
         ]
       }

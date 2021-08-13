@@ -21,8 +21,8 @@ import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.tileentity.TotemHelper;
-import de.teamlapen.vampirism.tileentity.TotemTileEntity;
+import de.teamlapen.vampirism.blockentity.TotemHelper;
+import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.Helper;
 import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
@@ -249,7 +249,7 @@ public class ModEntityEventHandler {
             }
 
             if (event.getEntity() instanceof Villager) {
-                Optional<TotemTileEntity> tile = TotemHelper.getTotemNearPos(((ServerLevel) event.getWorld()), event.getEntity().blockPosition(), true);
+                Optional<TotemBlockEntity> tile = TotemHelper.getTotemNearPos(((ServerLevel) event.getWorld()), event.getEntity().blockPosition(), true);
                 if (tile.filter(t -> VReference.HUNTER_FACTION.equals(t.getControllingFaction())).isPresent()) {
                     ExtendedCreature.getSafe(event.getEntity()).ifPresent(e -> e.setPoisonousBlood(true));
                 }

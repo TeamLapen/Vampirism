@@ -20,7 +20,7 @@ public class LookAtClosestVisibleGoal extends LookAtPlayerGoal {
     @Override
     public boolean canUse() {
         if (super.canUse()) {
-            if (this.lookAt != null && !this.lookAt.isInvisible() && !(this.lookAt instanceof Player && ((Player) this.lookAt).abilities.instabuild)) {
+            if (this.lookAt != null && !this.lookAt.isInvisible() && !(this.lookAt instanceof Player && ((Player) this.lookAt).getAbilities().instabuild)) {
                 return true;
             } else {
                 this.lookAt = null;

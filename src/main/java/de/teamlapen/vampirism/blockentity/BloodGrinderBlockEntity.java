@@ -1,13 +1,12 @@
-package de.teamlapen.vampirism.tileentity;
+package de.teamlapen.vampirism.blockentity;
 
-import de.teamlapen.lib.lib.tile.InventoryTileEntity;
+import de.teamlapen.lib.lib.blockentity.InventoryBlockEntity;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.inventory.container.BloodGrinderContainer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -37,7 +36,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BloodGrinderTileEntity extends InventoryTileEntity{
+public class BloodGrinderBlockEntity extends InventoryBlockEntity {
 
 
     private static List<ItemEntity> getCaptureItems(Level worldIn, BlockPos pos) {
@@ -52,7 +51,7 @@ public class BloodGrinderTileEntity extends InventoryTileEntity{
     private int cooldownPull = 0;
     private int cooldownProcess = 0;
 
-    public BloodGrinderTileEntity(BlockPos pos, BlockState state) {
+    public BloodGrinderBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.grinder, pos, state, 1, BloodGrinderContainer.SELECTOR_INFOS);
         this.itemHandler = createWrapper();
         this.itemHandlerOptional = LazyOptional.of(() -> itemHandler);
@@ -80,7 +79,7 @@ public class BloodGrinderTileEntity extends InventoryTileEntity{
         return super.save(compound);
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, BloodGrinderTileEntity blockEntity) {
+    public static void serverTick(Level level, BlockPos pos, BlockState state, BloodGrinderBlockEntity blockEntity) {
             --blockEntity.cooldownPull;
             if (blockEntity.cooldownPull <= 0) {
                 blockEntity.cooldownPull = 10;
@@ -110,7 +109,7 @@ public class BloodGrinderTileEntity extends InventoryTileEntity{
         return new TranslatableComponent("tile.vampirism.blood_grinder");
     }
 
-    private static boolean pullItems(BloodGrinderTileEntity blockEntity, Level level, BlockPos pos) {
+    private static boolean pullItems(BloodGrinderBlockEntity blockEntity, Level level, BlockPos pos) {
 
         boolean flag = de.teamlapen.lib.lib.inventory.InventoryHelper.tryGetItemHandler(level, pos.above(), Direction.DOWN).map(pair -> {
             IItemHandler handler = pair.getLeft();

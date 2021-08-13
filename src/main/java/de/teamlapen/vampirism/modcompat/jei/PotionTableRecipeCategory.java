@@ -16,6 +16,8 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
 
@@ -25,7 +27,7 @@ import java.awt.*;
 public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> {
 
     private static final ResourceLocation backgroundLocation = new ResourceLocation(REFERENCE.MODID, "textures/gui/potion_table.png");
-    private final String localizedName;
+    private final Component localizedName;
     private final IDrawable background;
     private final IDrawable icon;
     private final IDrawable slotDrawable;
@@ -35,7 +37,7 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
 
 
     PotionTableRecipeCategory(IGuiHelper guiHelper) {
-        this.localizedName = UtilLib.translate(ModBlocks.potion_table.getDescriptionId());
+        this.localizedName = new TranslatableComponent(ModBlocks.potion_table.getDescriptionId());
         this.icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.potion_table));
         this.background = guiHelper.drawableBuilder(backgroundLocation, 65, 6, 103, 73).addPadding(0, 33, 0, 25).build();
         this.slotDrawable = guiHelper.getSlotDrawable();
@@ -91,7 +93,7 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
     }
 
     @Override
-    public String getTitle() {
+    public Component getTitle() {
         return localizedName;
     }
 

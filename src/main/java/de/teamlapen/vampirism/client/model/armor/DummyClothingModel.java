@@ -1,5 +1,9 @@
 package de.teamlapen.vampirism.client.model.armor;
 
+import de.teamlapen.vampirism.client.core.ModEntitiesRender;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.ModelPart;
+
 /**
  * TODO
  * Placeholder
@@ -10,12 +14,12 @@ public class DummyClothingModel extends VampirismArmorModel {
 
     public static DummyClothingModel getArmorModel() {
         if (itemModel == null) {
-            itemModel = new DummyClothingModel();
+            itemModel = new DummyClothingModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModEntitiesRender.GENERIC_BIPED));
         }
         return itemModel;
     }
 
-    protected DummyClothingModel() {
-        super(64, 64);
+    protected DummyClothingModel(ModelPart part) {
+        super(part);
     }
 }

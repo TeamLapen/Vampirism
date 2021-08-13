@@ -86,6 +86,6 @@ public class OblivionItem extends VampirismItem {
     @Nonnull
     @Override
     public InteractionResultHolder<ItemStack> use(@Nonnull Level worldIn, @Nonnull Player playerIn, @Nonnull InteractionHand handIn) {
-        return ItemUtils.useDrink(worldIn, playerIn, handIn);
+        return ItemUtils.startUsingInstantly(worldIn, playerIn, handIn);
     }
 }

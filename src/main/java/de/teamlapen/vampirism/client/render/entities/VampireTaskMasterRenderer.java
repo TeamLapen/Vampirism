@@ -2,11 +2,13 @@ package de.teamlapen.vampirism.client.render.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.render.layers.TaskMasterTypeLayer;
 import de.teamlapen.vampirism.client.render.layers.VampireEntityLayer;
 import de.teamlapen.vampirism.entity.vampire.VampireTaskMasterEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.resources.ResourceLocation;
@@ -23,8 +25,8 @@ public class VampireTaskMasterRenderer extends MobRenderer<VampireTaskMasterEnti
     private final static ResourceLocation vampireOverlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/vanilla/villager_overlay.png");
     private final static ResourceLocation overlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_task_master_overlay.png");
 
-    public VampireTaskMasterRenderer(EntityRenderDispatcher renderManagerIn) {
-        super(renderManagerIn, new VillagerModel<>(0F), 0.5F);
+    public VampireTaskMasterRenderer(EntityRendererProvider.Context context) {
+        super(context, new VillagerModel<>(context.bakeLayer(ModEntitiesRender.TASK_MASTER)), 0.5F);
 //        this.addLayer(new HeldItemLayer<>(this));
         this.addLayer(new VampireEntityLayer<>(this, vampireOverlay, false));
         this.addLayer(new TaskMasterTypeLayer<>(this, overlay));

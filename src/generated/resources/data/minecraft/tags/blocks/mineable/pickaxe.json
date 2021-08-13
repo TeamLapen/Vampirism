@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "vampirism:altar_inspiration",
+    "vampirism:altar_pillar",
+    "vampirism:altar_tip",
+    "vampirism:blood_pedestal",
+    "vampirism:altar_infusion",
+    "vampirism:grave_cage",
+    "vampirism:tombstone1",
+    "vampirism:tombstone2",
+    "vampirism:tombstone3",
+    "#vampirism:castle_block",
+    "#vampirism:castle_slaps",
+    "#vampirism:castle_stairs"
+  ]
+}

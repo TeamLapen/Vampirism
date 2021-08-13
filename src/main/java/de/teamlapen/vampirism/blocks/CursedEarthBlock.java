@@ -18,7 +18,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -52,17 +51,6 @@ public class CursedEarthBlock extends VampirismBlock implements BonemealableBloc
     @Override
     public boolean isValidBonemealTarget(BlockGetter iBlockReader, BlockPos blockPos, BlockState iBlockState, boolean b) {
         return true;
-    }
-
-    @Override
-    public int getHarvestLevel(BlockState p_getHarvestLevel_1_) {
-        return 0;
-    }
-
-    @Nullable
-    @Override
-    public ToolType getHarvestTool(BlockState p_getHarvestTool_1_) {
-        return ToolType.SHOVEL;
     }
 
     @Override

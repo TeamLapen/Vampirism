@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.VillagerWithArmsModel;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
@@ -18,10 +20,10 @@ public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerWithAr
 
     private static final ResourceLocation texture = new ResourceLocation("textures/entity/villager/villager.png");
 
-    public HunterVillagerRenderer(EntityRenderDispatcher renderManagerIn, ReloadableResourceManager resourceManager) {
-        super(renderManagerIn, new VillagerWithArmsModel<>(0), 0.5f);
-        this.addLayer(new CustomHeadLayer<>(this));
-        this.addLayer(new VillagerProfessionLayer<>(this, resourceManager, "villager"));
+    public HunterVillagerRenderer(EntityRendererProvider.Context context) {
+        super(context, new VillagerWithArmsModel<>(context.bakeLayer(ModEntitiesRender.VILLAGER_WITH_ARMS)), 0.5f);
+        this.addLayer(new CustomHeadLayer<>(this, context.getModelSet()));
+        this.addLayer(new VillagerProfessionLayer<>(this, context.getResourceManager(), "villager"));
         this.addLayer(new ItemInHandLayer<>(this));
     }
 

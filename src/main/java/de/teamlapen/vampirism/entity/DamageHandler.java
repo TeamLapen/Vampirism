@@ -59,7 +59,7 @@ public class DamageHandler {
         if (strength == EnumStrength.NONE) return;
         LivingEntity entity = vampire.getRepresentingEntity();
         entity.addEffect(new MobEffectInstance(ModEffects.garlic, (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
-        if (entity instanceof Player && ((Player) entity).abilities.instabuild) return;
+        if (entity instanceof Player && ((Player) entity).getAbilities().instabuild) return;
         entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
         if (strength == EnumStrength.MEDIUM || strength == EnumStrength.STRONG) {
             entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, (int) (multiplier * 20), 1, ambient, false));

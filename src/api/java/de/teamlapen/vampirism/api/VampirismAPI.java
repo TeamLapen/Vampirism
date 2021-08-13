@@ -7,7 +7,9 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionManager;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionManager;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
 import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
@@ -69,6 +71,11 @@ public class VampirismAPI {
     @SuppressWarnings("FieldMayBeFinal")
     @CapabilityInject(IVampirismWorld.class)
     private static Capability<IVampirismWorld> CAP_WORLD = null;
+    @CapabilityInject(IVampirePlayer.class)
+    private static Capability<IVampirePlayer> CAP_VAMPIRE = null;
+    @CapabilityInject(IHunterPlayer.class)
+    private static Capability<IHunterPlayer> CAP_HUNTER = null;
+
     private static IFactionRegistry factionRegistry;
     private static ISundamageRegistry sundamageRegistry;
     private static IVampirismEntityRegistry entityRegistry;
@@ -160,6 +167,22 @@ public class VampirismAPI {
      */
     public static LazyOptional<IFactionPlayerHandler> getFactionPlayerHandler(Player player) {
         return player.getCapability(CAP_FACTION_HANDLER_PLAYER, null);
+    }
+
+    /**
+     * @param player
+     * @return The respective {@link IVampirePlayer}
+     */
+    public static LazyOptional<IVampirePlayer> getVampirePlayer(Player player) {
+        return player.getCapability(CAP_VAMPIRE, null);
+    }
+
+    /**
+     * @param player
+     * @return The respective {@link de.teamlapen.vampirism.api.entity.hunter.IHunter}
+     */
+    public static LazyOptional<IHunterPlayer> getHunterPlayer(Player player) {
+        return player.getCapability(CAP_HUNTER, null);
     }
 
     /**

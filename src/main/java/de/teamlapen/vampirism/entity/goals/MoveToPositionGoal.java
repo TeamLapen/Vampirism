@@ -89,7 +89,7 @@ public abstract class MoveToPositionGoal<T extends PathfinderMob> extends Goal {
                     for (int dX = 0; dX <= 4; ++dX) {
                         for (int dZ = 0; dZ <= 4; ++dZ) {
                             if ((dX < 1 || dZ < 1 || dX > 3 || dZ > 3) && this.canTeleportToBlock(new BlockPos(sX + dX, sY - 1, sZ + dZ))) {
-                                this.entity.moveTo(((float) (sX + dX) + 0.5F), sY, ((float) (sZ + dZ) + 0.5F), this.entity.yRot, this.entity.xRot);
+                                this.entity.moveTo(((float) (sX + dX) + 0.5F), sY, ((float) (sZ + dZ) + 0.5F), this.entity.getYRot(), this.entity.getXRot());
                                 this.navigator.stop();
                                 return;
                             }

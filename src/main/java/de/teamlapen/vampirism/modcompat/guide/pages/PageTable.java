@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.modcompat.guide.pages;
 
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.maxanier.guideapi.api.impl.Book;
 import de.maxanier.guideapi.api.impl.Page;
@@ -10,9 +10,6 @@ import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
 import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.lib.lib.util.UtilLib;
 import net.minecraft.client.gui.Font;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.math.Matrix4f;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.ChatFormatting;
@@ -78,7 +75,7 @@ public class PageTable extends Page {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         RenderSystem.lineWidth(2F);
         BufferBuilder builder = Tesselator.getInstance().getBuilder();
-        builder.begin(GL11.GL_LINES, DefaultVertexFormat.POSITION_COLOR);
+        builder.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR);
         builder.vertex(matrix, (float) x1, (float) y1, publicZLevel).color(0, 0, 0, 255).endVertex();
         builder.vertex(matrix, (float) x2, (float) y2, publicZLevel).color(0, 0, 0, 255).endVertex();
         Tesselator.getInstance().end();

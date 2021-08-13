@@ -51,7 +51,7 @@ public class AttackRangedDarkBloodGoal extends Goal {
             LivingEntity target = entity.getTarget();
             if (target != null) {
                 double d0 = this.entity.distanceToSqr(target.getX(), target.getBoundingBox().minY, target.getZ());
-                boolean canSee = this.entity.getSensing().canSee(target);
+                boolean canSee = this.entity.getSensing().hasLineOfSight(target);
                 boolean couldSee = this.seeTime > 0;
 
                 if (canSee != couldSee) {

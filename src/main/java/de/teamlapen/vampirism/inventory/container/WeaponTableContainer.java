@@ -227,6 +227,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void setData(int id, int data) {
+        super.setData(id,data);
         if (id == 0) {
             missingLava = data != 0;
         }
@@ -262,6 +263,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
                     });
                 }
             }
+            broadcastChanges();
             entityplayermp.connection.send(new ClientboundContainerSetSlotPacket(this.containerId, this.incrementStateId(), 0, craftResultIn.getItem(0)));
         }
     }

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.model.HumanoidModel;
@@ -23,8 +24,8 @@ public abstract class DualBipedRenderer<T extends Mob, M extends HumanoidModel<T
 
     private ResourceLocation currentTexture;
 
-    public DualBipedRenderer(EntityRenderDispatcher renderManagerIn, M modelBipedInA, M modelBipedInB, float shadowSize) {
-        super(renderManagerIn, modelBipedInA, shadowSize);
+    public DualBipedRenderer(EntityRendererProvider.Context context, M modelBipedInA, M modelBipedInB, float shadowSize) {
+        super(context, modelBipedInA, shadowSize);
         this.modelA = modelBipedInA;
         this.modelB = modelBipedInB;
     }

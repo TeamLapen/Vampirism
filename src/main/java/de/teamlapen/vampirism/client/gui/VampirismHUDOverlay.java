@@ -50,6 +50,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -136,9 +138,9 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent
-    public void onRenderCrosshair(RenderGameOverlayEvent.Pre event) {
+    public void onRenderCrosshair(RenderGameOverlayEvent.PreLayer event) {
 
-        if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS || mc.player == null || !mc.player.isAlive()) {
+        if (event.getOverlay() != ForgeIngameGui.CROSSHAIR_ELEMENT || mc.player == null || !mc.player.isAlive()) {
             return;
         }
 
@@ -204,7 +206,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 if (progress <= 1.0F) {
                     int x = this.mc.getWindow().getGuiScaledWidth() / 2 - 8;
                     int y = this.mc.getWindow().getGuiScaledHeight() / 2 - 7 + 16;
-                    this.mc.getTextureManager().bind(icons);
+                    RenderSystem.setShaderTexture(0, icons);
 
                     int l = (int) (progress * 14.0F) + 2;
 
@@ -216,45 +218,40 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
     }
 
-    /**
-     * Render Level
-     */
-    @SubscribeEvent
-    public void onRenderExperienceBar(RenderGameOverlayEvent.Post event) {
+    public void renderFactionLevel(ForgeIngameGui gui,PoseStack mStack, float partialTicks, int screenWidth, int screenHeight) {
+        if (!mc.player.isRidingJumpable() && !mc.options.hideGui)
+        {
+            gui.setupOverlayRenderState(true, false);
 
-        if (event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE || mc.player == null || !mc.player.isAlive()) {
-            return;
-        }
-        PoseStack stack = event.getMatrixStack();
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        IFactionPlayerHandler handler = FactionPlayerHandler.get(mc.player);
-        IPlayableFaction<?> faction = handler.getCurrentFaction();
-        if (mc.gameMode.hasExperience() && faction != null && faction.renderLevel()) {
-            // boolean flag1 = false;
-            int color = faction.getColor().getRGB();
-            int lord = handler.getLordLevel();
-            String text;
-            if (lord > 0) {
-                String title = handler.getLordTitle().getString();
-                text = title.substring(0, Math.min(3, title.length()));
-            } else {
-                text = "" + handler.getCurrentLevel();
+            IPlayableFaction<?> faction = VampirismPlayerAttributes.get(mc.player).faction;
+            if (mc.gameMode.hasExperience() && faction != null && faction.renderLevel()) {
+                IFactionPlayerHandler handler = FactionPlayerHandler.get(mc.player);
+                // boolean flag1 = false;
+                int color = faction.getColor().getRGB();
+                int lord = handler.getLordLevel();
+                String text;
+                if (lord > 0) {
+                    String title = handler.getLordTitle().getString();
+                    text = title.substring(0, Math.min(3, title.length()));
+                } else {
+                    text = "" + handler.getCurrentLevel();
+                }
+                int x = (screenWidth - mc.font.width(text)) / 2 + VampirismConfig.CLIENT.guiLevelOffsetX.get();
+                int y = screenHeight - VampirismConfig.CLIENT.guiLevelOffsetY.get();
+                mc.font.draw(mStack, text, x + 1, y, 0);
+                mc.font.draw(mStack, text, x - 1, y, 0);
+                mc.font.draw(mStack, text, x, y + 1, 0);
+                mc.font.draw(mStack, text, x, y - 1, 0);
+                mc.font.draw(mStack, text, x, y, color);
             }
-            int x = (this.mc.getWindow().getGuiScaledWidth() - mc.font.width(text)) / 2 + VampirismConfig.CLIENT.guiLevelOffsetX.get();
-            int y = this.mc.getWindow().getGuiScaledHeight() - VampirismConfig.CLIENT.guiLevelOffsetY.get();
-            mc.font.draw(stack, text, x + 1, y, 0);
-            mc.font.draw(stack, text, x - 1, y, 0);
-            mc.font.draw(stack, text, x, y + 1, 0);
-            mc.font.draw(stack, text, x, y - 1, 0);
-            mc.font.draw(stack, text, x, y, color);
         }
-    }
+    };
+
 
     @SubscribeEvent
-    public void onRenderFoodBar(RenderGameOverlayEvent.Pre event) {
-
-        if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD) {
+    public void onRenderFoodBar(RenderGameOverlayEvent.PreLayer event) {
+        //TODO consider replacing this with a custom layer and disabling food layer
+        if (event.getOverlay() != ForgeIngameGui.FOOD_LEVEL_ELEMENT) {
             return;
         }
         if (mc.player != null && Helper.isVampire(mc.player) && !IMCHandler.requestedToDisableBloodbar) {
@@ -266,8 +263,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
                             RenderSystem.setShaderTexture(0, icons);
                             int left = this.mc.getWindow().getGuiScaledWidth() / 2 + 91;
-                            int top = this.mc.getWindow().getGuiScaledHeight() - ForgeIngameGui.right_height;
-                            ForgeIngameGui.right_height += 10;
+                            int top = this.mc.getWindow().getGuiScaledHeight() - ((ForgeIngameGui)mc.gui).right_height;
+                            ((ForgeIngameGui)mc.gui).right_height += 10;
                             int blood = stats.getBloodLevel();
                             int maxBlood = stats.getMaxBlood();
                             int blood2 = blood - 20;
@@ -368,8 +365,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent
-    public void onRenderHealthBarPost(RenderGameOverlayEvent.Post event) {
-        if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTH) {
+    public void onRenderHealthBarPost(RenderGameOverlayEvent.PostLayer event) {
+        if (event.getOverlay() != ForgeIngameGui.PLAYER_HEALTH_ELEMENT) {
             return;
         }
         if (addTempPoison) {
@@ -380,8 +377,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent
-    public void onRenderHealthBarPre(RenderGameOverlayEvent.Pre event) {
-        if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTH) {
+    public void onRenderHealthBarPre(RenderGameOverlayEvent.PreLayer event) {
+        if (event.getOverlay() != ForgeIngameGui.PLAYER_HEALTH_ELEMENT) {
             return;
         }
         addTempPoison = mc.player.hasEffect(ModEffects.poison) && !mc.player.activeEffects.containsKey(MobEffects.POISON);

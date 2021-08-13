@@ -13,6 +13,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.NonNullSupplier;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,6 +30,7 @@ import java.util.function.Predicate;
 
 
 public class FactionRegistry implements IFactionRegistry {
+    private static final Logger LOGGER = LogManager.getLogger();
     private final Map<Integer, Predicate<LivingEntity>> predicateMap = new HashMap<>();
     private List<Faction> temp = new CopyOnWriteArrayList<>(); //Copy on write is costly, but we only expect very few elements anyway
     private Faction[] allFactions;

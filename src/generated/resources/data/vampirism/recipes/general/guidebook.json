@@ -4,7 +4,7 @@
     {
       "conditions": [
         {
-          "modid": "guideapi-vp",
+          "modid": "guideapi_vp",
           "type": "forge:mod_loaded"
         }
       ],
@@ -19,7 +19,7 @@
           }
         ],
         "result": {
-          "item": "guideapi-vp:vampirism-guidebook"
+          "item": "guideapi_vp:vampirism-guidebook"
         }
       }
     }

@@ -3,7 +3,8 @@
   "pools": [
     {
       "name": "general",
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -19,11 +20,13 @@
           "chance": 0.33,
           "looting_multiplier": 0.005
         }
-      ]
+      ],
+      "functions": []
     },
     {
       "name": "special",
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -39,11 +42,13 @@
           "chance": 0.25,
           "looting_multiplier": 0.05
         }
-      ]
+      ],
+      "functions": []
     },
     {
       "name": "refinement_item",
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -82,7 +87,8 @@
           "chance": 0.05,
           "looting_multiplier": 0.02
         }
-      ]
+      ],
+      "functions": []
     }
   ]
 }

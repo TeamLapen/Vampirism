@@ -2,8 +2,14 @@ package de.teamlapen.vampirism.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -13,17 +19,22 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class BipedCloakedModel<T extends LivingEntity> extends PlayerModel<T> {
+    private static final String CLOAK = "cloak";
     protected ModelPart bipedCloak;
 
-    public BipedCloakedModel(float modelSize, boolean smallArms) {
-        super(modelSize, smallArms);
-        bipedCloak = new ModelPart(this, 0, 0);
-        bipedCloak.setTexSize(64, 32);
-        bipedCloak.addBox(-7.0F, 0.0F, 0.4F, 14, 20, 1);
-        bipedCloak.setPos(0, 0, 2);
+    public static MeshDefinition createMesh(boolean smallArms) {
+        MeshDefinition var2 = PlayerModel.createMesh(CubeDeformation.NONE, smallArms);
+        PartDefinition var3 = var2.getRoot();
+        var3.addOrReplaceChild(CLOAK, CubeListBuilder.create().texOffs(0,0).addBox(-7,0,0.4f,14,20,1), PartPose.offset(0,0,2));
+        return var2;
     }
 
-    public void renderCloak(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn) {
+    public BipedCloakedModel(ModelPart part, boolean smallArms) {
+        super(part, smallArms);
+        bipedCloak = part.getChild(CLOAK);
+    }
+
+    public void renderCustomCloak(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn) {
         this.bipedCloak.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
     }
 

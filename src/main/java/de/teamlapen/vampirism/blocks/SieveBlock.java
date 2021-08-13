@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.tileentity.SieveTileEntity;
+import de.teamlapen.vampirism.blockentity.SieveBlockEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
@@ -20,8 +20,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
 
 import javax.annotation.Nullable;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class SieveBlock extends VampirismBlockContainer {
 
@@ -53,7 +51,7 @@ public class SieveBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new SieveTileEntity(pos, state);
+        return new SieveBlockEntity(pos, state);
     }
 
     @Override
@@ -69,6 +67,6 @@ public class SieveBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, ModTiles.sieve, SieveTileEntity::tick);
+        return createTickerHelper(type, ModTiles.sieve, SieveBlockEntity::tick);
     }
 }

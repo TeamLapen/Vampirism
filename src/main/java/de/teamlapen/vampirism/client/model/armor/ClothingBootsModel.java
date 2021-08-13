@@ -1,18 +1,38 @@
 package de.teamlapen.vampirism.client.model.armor;
 
 import com.google.common.collect.ImmutableList;
+import de.teamlapen.vampirism.client.core.ModEntitiesRender;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ClothingBootsModel extends VampirismArmorModel {
 
+    private static final String RIGHT_BOOT = "right_boot";
+    private static final String RIGHT_TOES = "right_toes";
+    private static final String LEFT_BOOT ="left_boot";
+    private static final String LEFT_TOES = "left_toes";
+
+    public static LayerDefinition createLayer() {
+        MeshDefinition mesh = VampirismArmorModel.createMesh();
+        PartDefinition part = mesh.getRoot();
+        CubeDeformation scale = new CubeDeformation(0.4f);
+        part.addOrReplaceChild(RIGHT_BOOT, CubeListBuilder.create().addBox(-2, 7, -2, 4, 5, 4, scale), PartPose.offset(1.9f, 12,0));
+        part.addOrReplaceChild(RIGHT_TOES, CubeListBuilder.create().texOffs(2,9).addBox(-2,10, -4, 4,2,2, scale), PartPose.offset(1.9f,12,0));
+        part.addOrReplaceChild(LEFT_BOOT, CubeListBuilder.create().texOffs(16,0).addBox(-2,7,-2,4,5,4, scale), PartPose.offset(-1.9f,12,0));
+        part.addOrReplaceChild(LEFT_TOES, CubeListBuilder.create().texOffs(18,9).addBox(-2,10,-4, 4,2,2, scale), PartPose.offset(-1.9f, 12,0));
+        return LayerDefinition.create(mesh, 32 , 16);
+    }
+
     private static ClothingBootsModel instance;
 
     public static ClothingBootsModel getInstance() {
         if (instance == null) {
-            instance = new ClothingBootsModel();
+            instance = new ClothingBootsModel( Minecraft.getInstance().getEntityModels().bakeLayer(ModEntitiesRender.CLOTHING_BOOTS));
         }
         return instance;
     }
@@ -22,20 +42,13 @@ public class ClothingBootsModel extends VampirismArmorModel {
     public ModelPart leftToes;
     public ModelPart rightToes;
 
-    public ClothingBootsModel() {
-        super(32, 16);
-        this.rightBoot = new ModelPart(this, 0, 0);
-        this.rightBoot.setPos(1.9F, 12.0F, 0.0F);
-        this.rightBoot.addBox(-2.0F, 7.0F, -2.0F, 4.0F, 5.0F, 4.0F, 0.4F, 0.4F, 0.4F);
-        this.rightToes = new ModelPart(this, 2, 9);
-        this.rightToes.setPos(1.9F, 12.0F, 0.0F);
-        this.rightToes.addBox(-2.0F, 10.0F, -4.0F, 4.0F, 2.0F, 2.0F, 0.4F, 0.4F, 0.4F);
-        this.leftBoot = new ModelPart(this, 16, 0);
-        this.leftBoot.setPos(-1.9F, 12.0F, 0.0F);
-        this.leftBoot.addBox(-2.0F, 7.0F, -2.0F, 4.0F, 5.0F, 4.0F, 0.4F, 0.4F, 0.4F);
-        this.leftToes = new ModelPart(this, 18, 9);
-        this.leftToes.setPos(-1.9F, 12.0F, 0.0F);
-        this.leftToes.addBox(-2.0F, 10.0F, -4.0F, 4.0F, 2.0F, 2.0F, 0.4F, 0.4F, 0.4F);
+
+    public ClothingBootsModel(ModelPart part) {
+        super(part);
+        this.rightBoot = part.getChild(RIGHT_BOOT);
+        this.rightToes = part.getChild(RIGHT_TOES);
+        this.leftBoot = part.getChild(LEFT_BOOT);
+        this.leftToes = part.getChild(LEFT_TOES);
     }
 
     @Override

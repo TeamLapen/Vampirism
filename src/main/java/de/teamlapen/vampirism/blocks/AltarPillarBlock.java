@@ -20,7 +20,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
 
@@ -57,16 +56,6 @@ public class AltarPillarBlock extends VampirismBlock {
 
     }
 
-    @Override
-    public int getHarvestLevel(BlockState p_getHarvestLevel_1_) {
-        return 0;
-    }
-
-    @Nullable
-    @Override
-    public ToolType getHarvestTool(BlockState p_getHarvestTool_1_) {
-        return ToolType.PICKAXE;
-    }
 
 
     @Override
@@ -79,7 +68,7 @@ public class AltarPillarBlock extends VampirismBlock {
         EnumPillarType type = state.getValue(TYPE_PROPERTY);
         ItemStack heldItem = playerIn.getItemInHand(hand);
         if (type != EnumPillarType.NONE && heldItem.isEmpty()) {
-            if (!playerIn.abilities.instabuild) {
+            if (!playerIn.getAbilities().instabuild) {
                 playerIn.setItemSlot(hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, new ItemStack(Item.byBlock(type.fillerBlock)));
             }
 
@@ -89,7 +78,7 @@ public class AltarPillarBlock extends VampirismBlock {
         if (type == EnumPillarType.NONE && !heldItem.isEmpty()) {
             for (EnumPillarType t : EnumPillarType.values()) {
                 if (heldItem.getItem().equals(t.fillerBlock.asItem())) {
-                    if (!playerIn.abilities.instabuild) {
+                    if (!playerIn.getAbilities().instabuild) {
                         heldItem.shrink(1);
                     }
 

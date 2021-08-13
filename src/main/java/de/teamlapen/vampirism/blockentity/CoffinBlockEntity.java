@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.tileentity;
+package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.core.ModSounds;
@@ -22,23 +22,23 @@ import javax.annotation.Nullable;
 /**
  * TileEntity for coffins. Handles coffin lid position and color
  */
-public class CoffinTileEntity extends BlockEntity {
+public class CoffinBlockEntity extends BlockEntity {
     public final boolean renderAsItem;
     public int lidPos;
     public DyeColor color = DyeColor.BLACK;
     private boolean lastTickOccupied;
 
-    public CoffinTileEntity(BlockPos pos, BlockState state) {
+    public CoffinBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.coffin, pos, state);
         this.renderAsItem = false;
     }
 
-    public CoffinTileEntity(boolean renderAsItem, BlockPos pos, BlockState state) {
+    public CoffinBlockEntity(boolean renderAsItem, BlockPos pos, BlockState state) {
         super(ModTiles.coffin, pos, state);
         this.renderAsItem = renderAsItem;
     }
 
-    public CoffinTileEntity(DyeColor color, BlockPos pos, BlockState state) {
+    public CoffinBlockEntity(DyeColor color, BlockPos pos, BlockState state) {
         this(pos, state);
         this.changeColor(color);
     }
@@ -92,7 +92,7 @@ public class CoffinTileEntity extends BlockEntity {
             level.sendBlockUpdated(getBlockPos(), level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
     }
 
-    public static void clientTickHead(Level level, BlockPos pos, BlockState state, CoffinTileEntity blockEntity) {
+    public static void clientTickHead(Level level, BlockPos pos, BlockState state, CoffinBlockEntity blockEntity) {
         boolean occupied = CoffinBlock.isOccupied(level, pos);
         if (blockEntity.lastTickOccupied != occupied) {
             level.playLocalSound(pos.getX(), (double) pos.getY() + 0.5D, pos.getZ(), ModSounds.coffin_lid, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F, true);

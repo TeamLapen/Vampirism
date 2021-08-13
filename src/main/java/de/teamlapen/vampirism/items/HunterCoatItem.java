@@ -33,7 +33,7 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
     @Nullable
     public static TIER isFullyEquipped(Player player) {
         int minLevel = 1000;
-        for (ItemStack stack : player.inventory.armor) {
+        for (ItemStack stack : player.getInventory().armor) {
             if (stack.isEmpty() || !(stack.getItem() instanceof HunterCoatItem)) {
                 return null;
             } else {

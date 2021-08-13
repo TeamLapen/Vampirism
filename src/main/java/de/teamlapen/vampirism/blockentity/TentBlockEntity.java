@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.tileentity;
+package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.lib.lib.util.SimpleSpawnerLogic;
 import de.teamlapen.lib.lib.util.UtilLib;
@@ -21,9 +21,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 
 /**
- * Tile entity which spawns hunters for tents
+ * spawns hunters for tents
  */
-public class TentTileEntity extends BlockEntity {
+public class TentBlockEntity extends BlockEntity {
 
 
     private final SimpleSpawnerLogic<BasicHunterEntity> spawnerLogicHunter;
@@ -31,7 +31,7 @@ public class TentTileEntity extends BlockEntity {
     private boolean spawn = false;
     private boolean advanced = false;
 
-    public TentTileEntity(BlockPos pos, BlockState state) {
+    public TentBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.tent, pos, state);
         this.spawnerLogicHunter = new SimpleSpawnerLogic<>(ModEntities.hunter).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(600).setMaxSpawnDelay(1000).setMaxNearbyEntities(2).setDailyLimit(VampirismConfig.BALANCE.hunterTentMaxSpawn.get()).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.worldPosition));
         this.spawnerLogicAdvancedHunter = new SimpleSpawnerLogic<>(ModEntities.advanced_hunter).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(1200).setMaxSpawnDelay(2000).setMaxNearbyEntities(1).setDailyLimit(1).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.worldPosition));
@@ -87,7 +87,7 @@ public class TentTileEntity extends BlockEntity {
         this.spawn = spawn;
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, TentTileEntity blockEntity) {
+    public static void serverTick(Level level, BlockPos pos, BlockState state, TentBlockEntity blockEntity) {
         if (blockEntity.spawn) {
             if ( level.getGameTime() % 64 == 0) {
                 if (UtilLib.isInsideStructure(level, pos, StructureFeature.VILLAGE)) {

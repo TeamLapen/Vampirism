@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.tileentity.AltarInspirationTileEntity;
+import de.teamlapen.vampirism.blockentity.AltarInspirationBlockEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -21,15 +21,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 /**
  * Altar of inspiration used for vampire levels 1-4
@@ -69,20 +66,10 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
         return RenderShape.MODEL;
     }
 
-    @Override
-    public int getHarvestLevel(BlockState state) {
-        return 1;
-    }
-
-    @Nullable
-    @Override
-    public ToolType getHarvestTool(BlockState state) {
-        return ToolType.PICKAXE;
-    }
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new AltarInspirationTileEntity(pos, state);
+        return new AltarInspirationBlockEntity(pos, state);
     }
 
     @Override
@@ -96,7 +83,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
         if (!stack.isEmpty()) {
             LazyOptional<IFluidHandlerItem> opt = FluidLib.getFluidItemCap(stack);
             if (opt.isPresent()) {
-                AltarInspirationTileEntity tileEntity = (AltarInspirationTileEntity) worldIn.getBlockEntity(pos);
+                AltarInspirationBlockEntity tileEntity = (AltarInspirationBlockEntity) worldIn.getBlockEntity(pos);
                 if (!player.isShiftKeyDown() && tileEntity != null) {
                     FluidUtil.interactWithFluidHandler(player, hand, worldIn, pos, hit.getDirection());
                 }
@@ -104,8 +91,8 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
             }
         } else {
             BlockEntity tileEntity = worldIn.getBlockEntity(pos);
-            if (tileEntity instanceof AltarInspirationTileEntity) {
-                ((AltarInspirationTileEntity) tileEntity).startRitual(player);
+            if (tileEntity instanceof AltarInspirationBlockEntity) {
+                ((AltarInspirationBlockEntity) tileEntity).startRitual(player);
             }
         }
 
@@ -115,6 +102,6 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide() ? null: createTickerHelper(type, ModTiles.altar_inspiration, AltarInspirationTileEntity::serverTick);
+        return level.isClientSide() ? null: createTickerHelper(type, ModTiles.altar_inspiration, AltarInspirationBlockEntity::serverTick);
     }
 }

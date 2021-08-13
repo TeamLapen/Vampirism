@@ -199,16 +199,16 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
         if (p == fakeAction || editActions) return;
         // Draw usage indicator
 
-        float active = actionHandler.getPercentageForAction(p);
-        if (active > 0) {
-
-            float h = active * 16;
-            this.fillGradient(stack, x, (int) (y + h), x + 16, y + 16, Color.YELLOW.getRGB() - 0x88000000, Color.YELLOW.getRGB());
-        } else if (active < 0) {
-
-            float h = (1F + (active)) * 16;
-            this.fillGradient(stack, x, (int) (y + h), x + 16, y + 16, Color.BLACK.getRGB() - 0x55000000, Color.BLACK.getRGB());
-        }
+//        float active = actionHandler.getPercentageForAction(p);
+//        if (active > 0) {
+//
+//            float h = active * 16;
+//            this.fillGradient(stack, x, (int) (y + h), x + 16, y + 16, Color.YELLOW.getRGB() - 0x88000000, Color.YELLOW.getRGB());
+//        } else if (active < 0) {
+//
+//            float h = (1F + (active)) * 16;
+//            this.fillGradient(stack, x, (int) (y + h), x + 16, y + 16, Color.BLACK.getRGB() - 0x55000000, Color.BLACK.getRGB());
+//        }
     }
 
     @Override

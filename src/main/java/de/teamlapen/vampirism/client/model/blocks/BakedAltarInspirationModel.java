@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.model.blocks;
 
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
-import de.teamlapen.vampirism.tileentity.AltarInspirationTileEntity;
+import de.teamlapen.vampirism.blockentity.AltarInspirationBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
@@ -62,7 +62,7 @@ public class BakedAltarInspirationModel implements IDynamicBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
         List<BakedQuad> quads = new LinkedList<>(baseModel.getQuads(state, side, rand));
-        Integer level = extraData.getData(AltarInspirationTileEntity.FLUID_LEVEL_PROP);
+        Integer level = extraData.getData(AltarInspirationBlockEntity.FLUID_LEVEL_PROP);
         if (level != null && level > 0 && level <= FLUID_LEVELS) {
             quads.addAll(FLUID_MODELS[level - 1].getQuads(state, side, rand));
         }

@@ -2,7 +2,9 @@ package de.teamlapen.vampirism.client.render.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.client.render.entities.HunterEquipmentModel;
+import de.teamlapen.vampirism.client.core.ModEntitiesRender;
+import de.teamlapen.vampirism.client.model.HunterEquipmentModel;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
@@ -20,7 +22,7 @@ import java.util.function.Function;
 @OnlyIn(Dist.CLIENT)
 public class HunterEquipmentLayer<T extends Mob, Q extends EntityModel<T>> extends RenderLayer<T, Q> {
 
-    private final HunterEquipmentModel<T> equipmentModel = new HunterEquipmentModel<>();
+    private final HunterEquipmentModel<T> equipmentModel;
     private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_extra.png");
     private final Function<T, HunterEquipmentModel.StakeType> predicateStake;
     private final Function<T, Integer> functionHat;
@@ -29,8 +31,9 @@ public class HunterEquipmentLayer<T extends Mob, Q extends EntityModel<T>> exten
      * @param predicateStake entity -> Type of equipment that should be rendered
      * @param functionHat    entity -> -2 to 4
      */
-    public HunterEquipmentLayer(RenderLayerParent<T, Q> entityRendererIn, Function<T, HunterEquipmentModel.StakeType> predicateStake, Function<T, Integer> functionHat) {
+    public HunterEquipmentLayer(RenderLayerParent<T, Q> entityRendererIn,  EntityModelSet modelSet,Function<T, HunterEquipmentModel.StakeType> predicateStake, Function<T, Integer> functionHat) {
         super(entityRendererIn);
+        equipmentModel = new HunterEquipmentModel<>(modelSet.bakeLayer(ModEntitiesRender.HUNTER_EQUIPMENT));
         this.predicateStake = predicateStake;
         this.functionHat = functionHat;
     }

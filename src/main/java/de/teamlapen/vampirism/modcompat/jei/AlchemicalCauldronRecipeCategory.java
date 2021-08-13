@@ -32,7 +32,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
 
 
     private static final ResourceLocation location = new ResourceLocation(REFERENCE.MODID, "textures/gui/alchemical_cauldron.png");
-    private final String localizedName;
+    private final Component localizedName;
     private final IDrawable background;
     private final IDrawable icon;
     private final IDrawableAnimated flame;
@@ -41,7 +41,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
 
 
     AlchemicalCauldronRecipeCategory(IGuiHelper guiHelper) {
-        this.localizedName = UtilLib.translate(ModBlocks.alchemical_cauldron.getDescriptionId());
+        this.localizedName = new TranslatableComponent(ModBlocks.alchemical_cauldron.getDescriptionId());
         this.icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.alchemical_cauldron));
         background = guiHelper.drawableBuilder(location, 38, 10, 120, 70).addPadding(0, 33, 0, 0).build();
 
@@ -97,7 +97,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
 
 
     @Override
-    public String getTitle() {
+    public Component getTitle() {
         return localizedName;
     }
 

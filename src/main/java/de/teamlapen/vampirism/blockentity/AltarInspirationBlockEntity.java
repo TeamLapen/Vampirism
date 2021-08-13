@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.tileentity;
+package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.lib.lib.util.FluidTankWithListener;
 import de.teamlapen.vampirism.api.VReference;
@@ -39,18 +39,16 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import javax.annotation.Nonnull;
 import java.util.Random;
 
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-
 /**
  * Handle blood storage and leveling
  */
-public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capability.TileFluidHandler implements FluidTankWithListener.IFluidTankListener {
+public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capability.TileFluidHandler implements FluidTankWithListener.IFluidTankListener {
     public static final int CAPACITY = 100 * VReference.FOOD_TO_FLUID_BLOOD;
     public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
 
     public static void setBloodValue(BlockGetter worldIn, Random randomIn, BlockPos blockPosIn) {
         BlockEntity tileEntity = worldIn.getBlockEntity(blockPosIn);
-        if (tileEntity instanceof AltarInspirationTileEntity) {
+        if (tileEntity instanceof AltarInspirationBlockEntity) {
             tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(fluidHandler -> fluidHandler.fill(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))), IFluidHandler.FluidAction.EXECUTE));
         }
     }
@@ -59,7 +57,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
     private Player ritualPlayer;
     private IModelData modelData;
 
-    public AltarInspirationTileEntity(BlockPos pos, BlockState state) {
+    public AltarInspirationBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.altar_inspiration, pos, state);
         this.tank = new InternalTank(CAPACITY).setListener(this);
     }
@@ -132,7 +130,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
         ritualTicksLeft = RITUAL_TIME;
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, AltarInspirationTileEntity blockEntity) {
+    public static void serverTick(Level level, BlockPos pos, BlockState state, AltarInspirationBlockEntity blockEntity) {
         if (blockEntity.ritualTicksLeft == 0 || blockEntity.ritualPlayer == null || !blockEntity.ritualPlayer.isAlive()) return;
 
             switch (blockEntity.ritualTicksLeft) {
@@ -164,7 +162,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
         FluidStack fluid = tank.getFluid();
         int l = 0;
         if (!fluid.isEmpty()) {
-            float i = (fluid.getAmount() / (float) AltarInspirationTileEntity.CAPACITY * 10);
+            float i = (fluid.getAmount() / (float) AltarInspirationBlockEntity.CAPACITY * 10);
             l = (i > 0 && i < 1) ? 1 : (int) i;
         }
         modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).build();

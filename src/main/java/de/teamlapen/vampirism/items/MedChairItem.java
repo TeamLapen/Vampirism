@@ -48,7 +48,7 @@ public class MedChairItem extends VampirismItem {
         BlockPos pos = replaceable ? ctx.getClickedPos() : ctx.getClickedPos().above();
 
         // Direction the player is facing
-        int direction = player == null ? 0 : Mth.floor((player.yRot * 4F) / 360F + 0.5D) & 3;
+        int direction = player == null ? 0 : Mth.floor((player.getYRot() * 4F) / 360F + 0.5D) & 3;
         Direction facing = Direction.from2DDataValue(direction);
         BlockPos otherPos = pos.relative(facing);
         Block otherBlock = world.getBlockState(otherPos).getBlock();

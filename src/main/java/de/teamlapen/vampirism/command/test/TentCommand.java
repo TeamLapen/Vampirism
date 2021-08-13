@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.command.test;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.tileentity.TentTileEntity;
+import de.teamlapen.vampirism.blockentity.TentBlockEntity;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,9 +27,9 @@ public class TentCommand extends BasicCommand {
         if (result.getType() == HitResult.Type.BLOCK) {
 
             BlockEntity tent = asPlayer.getCommandSenderWorld().getBlockEntity(((BlockHitResult) result).getBlockPos());
-            if (tent instanceof TentTileEntity) {
-                ((TentTileEntity) tent).setSpawn(true);
-                if (advanced) ((TentTileEntity) tent).setAdvanced(true);
+            if (tent instanceof TentBlockEntity) {
+                ((TentBlockEntity) tent).setSpawn(true);
+                if (advanced) ((TentBlockEntity) tent).setAdvanced(true);
                 commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.tent.success"), false);
             }
 

@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:string"
+            "items": [
+              "minecraft:string"
+            ]
           }
         ]
       }
@@ -21,7 +23,9 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:honeycomb"
+            "items": [
+              "minecraft:honeycomb"
+            ]
           }
         ]
       }
@@ -31,7 +35,9 @@
       "conditions": {
         "items": [
           {
-            "item": "vampirism:item_candelabra"
+            "items": [
+              "vampirism:item_candelabra"
+            ]
           }
         ]
       }

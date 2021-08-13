@@ -27,7 +27,7 @@ public class DefendAreaGoal extends TargetGoal {
         super(entity, false);
         this.entity = entity;
         this.setFlags(EnumSet.of(Goal.Flag.TARGET));
-        this.predicate = new TargetingConditions().selector(e -> entity.getAttackPredicate(true).test(e)).ignoreInvisibilityTesting().range(60);
+        this.predicate = TargetingConditions.forCombat().selector(e -> entity.getAttackPredicate(true).test(e)).ignoreInvisibilityTesting().range(60);
     }
 
     @Override

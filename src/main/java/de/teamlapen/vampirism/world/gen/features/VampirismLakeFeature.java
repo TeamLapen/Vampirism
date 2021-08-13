@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.world.gen.features;
 import com.mojang.serialization.Codec;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
@@ -25,10 +26,14 @@ public class VampirismLakeFeature extends LakeFeature {
 
     /**
      * What was modified? @Cheaterpaul
-     * copied from {@link LakesFeature}
+     * copied from {@link LakeFeature}
      */
     @Override
-    public boolean place(WorldGenLevel reader, ChunkGenerator generator, Random rand, BlockPos pos, BlockStateConfiguration config) {
+    public boolean place(FeaturePlaceContext<BlockStateConfiguration> p_159958_) {
+        WorldGenLevel reader = p_159958_.level();
+        Random rand = p_159958_.random();
+        BlockPos pos = p_159958_.origin();
+        BlockStateConfiguration config = p_159958_.config();
         while (pos.getY() > 5 && reader.isEmptyBlock(pos)) {
             pos = pos.below();
         }
@@ -99,7 +104,7 @@ public class VampirismLakeFeature extends LakeFeature {
                         for (int j4 = 4; j4 < 8; ++j4) {
                             if (aboolean[(i2 * 16 + j3) * 8 + j4]) {
                                 BlockPos blockpos = pos.offset(i2, j4 - 1, j3);
-                                if (isDirt(reader.getBlockState(blockpos).getBlock()) && reader.getBrightness(LightLayer.SKY, pos.offset(i2, j4, j3)) > 0) {
+                                if (isDirt(reader.getBlockState(blockpos)) && reader.getBrightness(LightLayer.SKY, pos.offset(i2, j4, j3)) > 0) {
                                     Biome biome = reader.getBiome(blockpos);
                                     reader.setBlock(blockpos, biome.getGenerationSettings().getSurfaceBuilderConfig().getTopMaterial(), 2);
                                 }

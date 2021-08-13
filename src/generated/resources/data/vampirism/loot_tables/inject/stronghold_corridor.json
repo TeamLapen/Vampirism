@@ -3,7 +3,8 @@
   "pools": [
     {
       "name": "main",
-      "rolls": 2,
+      "rolls": 2.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -28,7 +29,8 @@
     },
     {
       "name": "swiftness_armor",
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -37,9 +39,11 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.3,
                 "max": 0.9
-              }
+              },
+              "add": false
             }
           ],
           "name": "vampirism:armor_of_swiftness_head_ultimate"
@@ -51,9 +55,11 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.3,
                 "max": 0.9
-              }
+              },
+              "add": false
             }
           ],
           "name": "vampirism:armor_of_swiftness_chest_ultimate"
@@ -65,9 +71,11 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.3,
                 "max": 0.9
-              }
+              },
+              "add": false
             }
           ],
           "name": "vampirism:armor_of_swiftness_legs_ultimate"
@@ -79,9 +87,11 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.3,
                 "max": 0.9
-              }
+              },
+              "add": false
             }
           ],
           "name": "vampirism:armor_of_swiftness_feet_ultimate"
@@ -94,7 +104,8 @@
     },
     {
       "name": "obsidian_armor",
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -103,9 +114,11 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.3,
                 "max": 0.9
-              }
+              },
+              "add": false
             }
           ],
           "name": "vampirism:obsidian_armor_head_ultimate"
@@ -117,9 +130,11 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.3,
                 "max": 0.9
-              }
+              },
+              "add": false
             }
           ],
           "name": "vampirism:obsidian_armor_chest_ultimate"
@@ -131,9 +146,11 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.3,
                 "max": 0.9
-              }
+              },
+              "add": false
             }
           ],
           "name": "vampirism:obsidian_armor_legs_ultimate"
@@ -145,9 +162,11 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.3,
                 "max": 0.9
-              }
+              },
+              "add": false
             }
           ],
           "name": "vampirism:obsidian_armor_feet_ultimate"
@@ -160,7 +179,8 @@
     },
     {
       "name": "vampire_weapons",
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -169,9 +189,11 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.3,
                 "max": 0.9
-              }
+              },
+              "add": false
             }
           ],
           "name": "vampirism:heart_seeker_enhanced"
@@ -183,9 +205,11 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.3,
                 "max": 0.9
-              }
+              },
+              "add": false
             }
           ],
           "name": "vampirism:heart_striker_enhanced"
@@ -198,7 +222,8 @@
     },
     {
       "name": "refinement_item",
-      "rolls": 3,
+      "rolls": 3.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",

@@ -68,7 +68,7 @@ public class VampirismVillagerEntity extends Villager {
 
         if (flag) {
             if (i > 0) {
-                entity.push(-Mth.sin(this.yRot * (float) Math.PI / 180.0F) * (float) i * 0.5F, 0.1D, Mth.cos(this.yRot * (float) Math.PI / 180.0F) * (float) i * 0.5F);
+                entity.push(-Mth.sin(this.getYRot() * (float) Math.PI / 180.0F) * (float) i * 0.5F, 0.1D, Mth.cos(this.getYRot() * (float) Math.PI / 180.0F) * (float) i * 0.5F);
                 this.setDeltaMovement(this.getDeltaMovement().multiply(0.6D, 1D, 0.6D));
             }
 
@@ -105,7 +105,7 @@ public class VampirismVillagerEntity extends Villager {
         super.tick();
 
         if (!this.level.isClientSide && !peaceful && this.level.getDifficulty() == Difficulty.PEACEFUL) {
-            this.remove();
+            this.discard();
         }
     }
 

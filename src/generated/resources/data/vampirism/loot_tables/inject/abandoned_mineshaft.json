@@ -4,10 +4,11 @@
     {
       "name": "main",
       "rolls": {
+        "type": "minecraft:uniform",
         "min": 0.0,
-        "max": 4.0,
-        "type": "minecraft:uniform"
+        "max": 4.0
       },
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -25,7 +26,12 @@
           "functions": [
             {
               "function": "minecraft:set_damage",
-              "damage": 1.0
+              "damage": {
+                "type": "minecraft:uniform",
+                "min": 1.0,
+                "max": 1.0
+              },
+              "add": false
             }
           ],
           "name": "vampirism:blood_bottle"
@@ -48,7 +54,8 @@
     },
     {
       "name": "swiftness_armor",
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -57,9 +64,11 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.3,
                 "max": 0.9
-              }
+              },
+              "add": false
             }
           ],
           "name": "vampirism:armor_of_swiftness_head_ultimate"
@@ -71,9 +80,11 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.3,
                 "max": 0.9
-              }
+              },
+              "add": false
             }
           ],
           "name": "vampirism:armor_of_swiftness_chest_ultimate"
@@ -85,9 +96,11 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.3,
                 "max": 0.9
-              }
+              },
+              "add": false
             }
           ],
           "name": "vampirism:armor_of_swiftness_legs_ultimate"
@@ -99,9 +112,11 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.3,
                 "max": 0.9
-              }
+              },
+              "add": false
             }
           ],
           "name": "vampirism:armor_of_swiftness_feet_ultimate"
@@ -114,7 +129,8 @@
     },
     {
       "name": "hunter_weapons",
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -123,9 +139,11 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.3,
                 "max": 0.9
-              }
+              },
+              "add": false
             }
           ],
           "name": "vampirism:hunter_axe_ultimate"
@@ -138,7 +156,8 @@
     },
     {
       "name": "vampire_weapons",
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -147,9 +166,11 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.3,
                 "max": 0.9
-              }
+              },
+              "add": false
             }
           ],
           "name": "vampirism:heart_seeker_enhanced"
@@ -161,9 +182,11 @@
             {
               "function": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.3,
                 "max": 0.9
-              }
+              },
+              "add": false
             }
           ],
           "name": "vampirism:heart_striker_enhanced"
@@ -176,7 +199,8 @@
     },
     {
       "name": "holy_Water",
-      "rolls": 2,
+      "rolls": 2.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -202,7 +226,8 @@
     },
     {
       "name": "refinement_item",
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",

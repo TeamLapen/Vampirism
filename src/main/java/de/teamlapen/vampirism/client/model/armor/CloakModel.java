@@ -1,7 +1,14 @@
 package de.teamlapen.vampirism.client.model.armor;
 
 import com.google.common.collect.ImmutableList;
+import de.teamlapen.vampirism.client.core.ModEntitiesRender;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
@@ -10,13 +17,38 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class CloakModel extends VampirismArmorModel {
 
+    private static final String CLOAK_BACK = "cloak_back";
+    private static final String LEFT_LONG = "left_long";
+    private static final String RIGHT_MEDIUM = "right_medium";
+    private static final String LEFT_MEDIUM = "left_medium";
+    private static final String RIGHT_SHORT = "right_short";
+    private static final String LEFT_SHORT = "left_short";
+    private static final String RIGHT_LONG = "right_long";
+    private static final String SHOULDER_LEFT = "shoulder_left";
+    private static final String SHOULDER_RIGHT = "shoulder_right";
+
     private static CloakModel cloakItemModel;
 
     public static CloakModel getRotatedCloak() {
         if (cloakItemModel == null) {
-            cloakItemModel = new CloakModel();
+            cloakItemModel = new CloakModel( Minecraft.getInstance().getEntityModels().bakeLayer(ModEntitiesRender.CLOAK));
         }
         return cloakItemModel;
+    }
+
+    public static LayerDefinition createLayer() {
+        MeshDefinition mesh = VampirismArmorModel.createMesh();
+        PartDefinition part = mesh.getRoot();
+        part.addOrReplaceChild(CLOAK_BACK, CubeListBuilder.create().texOffs(0, 48).mirror().addBox(-4,0,2,8,15,1), PartPose.offsetAndRotation(0,0.2f,2,0.0872665F, 0F, 0F));
+        part.addOrReplaceChild(LEFT_LONG, CubeListBuilder.create().texOffs(18, 48).mirror().addBox(4,0,2,1,15,1), PartPose.offsetAndRotation(0,0.2f,2, 0.0872665F, 0F, 0F));
+        part.addOrReplaceChild(RIGHT_MEDIUM, CubeListBuilder.create().texOffs(22, 50).addBox(-5,0,1,1,13,1), PartPose.offsetAndRotation(0,0.2f,2f,0.0872665F, 0F, 0F));
+        part.addOrReplaceChild(LEFT_MEDIUM, CubeListBuilder.create().texOffs(22,50).mirror().addBox(4,0,1,1,13,1), PartPose.offsetAndRotation(0,0.2f,2,0.0872665F, 0F, 0F));
+        part.addOrReplaceChild(RIGHT_SHORT, CubeListBuilder.create().texOffs(26,52).addBox(-5,0,0,1,11,1), PartPose.offsetAndRotation(0,0.2f,2,0.0872665F, 0F, 0F));
+        part.addOrReplaceChild(LEFT_SHORT, CubeListBuilder.create().texOffs(26, 52).addBox(4,0,0,1,11,1),PartPose.offsetAndRotation(0,0.2f,2,0.0872665F, 0F, 0F));
+        part.addOrReplaceChild(RIGHT_LONG, CubeListBuilder.create().texOffs(18, 48).addBox(-5,0,2,1,15,1), PartPose.offsetAndRotation(0,0.2f,2f,0.0872665F, 0F, 0F));
+        part.addOrReplaceChild(SHOULDER_RIGHT, CubeListBuilder.create().texOffs(30, 60).addBox(-4,0,0,1,1,3), PartPose.offset(-5,0,0));
+        part.addOrReplaceChild(SHOULDER_LEFT, CubeListBuilder.create().texOffs(30, 60).mirror().addBox(3,0,0,1,1,3), PartPose.offset(-5,0,0));
+        return LayerDefinition.create(mesh, 64,64);
     }
 
     private final ModelPart cloakback;
@@ -29,49 +61,17 @@ public class CloakModel extends VampirismArmorModel {
     private final ModelPart shoulderright;
     private final ModelPart shoulderleft;
 
-    public CloakModel() {
-        super(64, 64);
-        cloakback = new ModelPart(this, 0, 48);
-        cloakback.addBox(-4F, 0F, 2F, 8, 15, 1);
-        cloakback.setPos(0F, 0.2F, 2F);
-        cloakback.mirror = true;
-        setRotation(cloakback, 0.0872665F, 0F, 0F);
-        leftlong = new ModelPart(this, 18, 48);
-        leftlong.addBox(4F, 0F, 2F, 1, 15, 1);
-        leftlong.setPos(0F, 0.2F, 2F);
-        leftlong.mirror = true;
-        setRotation(leftlong, 0.0872665F, 0F, 0F);
-        rightmedium = new ModelPart(this, 22, 50);
-        rightmedium.addBox(-5F, 0F, 1F, 1, 13, 1);
-        rightmedium.setPos(0F, 0.2F, 2F);
-        setRotation(rightmedium, 0.0872665F, 0F, 0F);
-        leftmedium = new ModelPart(this, 22, 50);
-        leftmedium.addBox(4F, 0F, 1F, 1, 13, 1);
-        leftmedium.setPos(0F, 0.2F, 2F);
-        leftmedium.mirror = true;
-        setRotation(leftmedium, 0.0872665F, 0F, 0F);
-        rightshort = new ModelPart(this, 26, 52);
-        rightshort.addBox(-5F, 0F, 0F, 1, 11, 1);
-        rightshort.setPos(0F, 0.2F, 2F);
-        setRotation(rightshort, 0.0872665F, 0F, 0F);
-        leftshort = new ModelPart(this, 26, 52);
-        leftshort.addBox(4F, 0F, 0F, 1, 11, 1);
-        leftshort.setPos(0F, 0.2F, 2F);
-        leftshort.mirror = true;
-        setRotation(leftshort, 0.0872665F, 0F, 0F);
-        rightlong = new ModelPart(this, 18, 48);
-        rightlong.addBox(-5F, 0F, 2F, 1, 15, 1);
-        rightlong.setPos(0F, 0.2F, 2F);
-        setRotation(rightlong, 0.0872665F, 0F, 0F);
-        shoulderright = new ModelPart(this, 30, 60);
-        shoulderright.addBox(-4F, 0F, 0F, 1, 1, 3);
-        shoulderright.setPos(-5F, 0F, 0F);
-        setRotation(shoulderright, 0F, 0F, 0F);
-        shoulderleft = new ModelPart(this, 30, 60);
-        shoulderleft.addBox(3F, 0F, 0F, 1, 1, 3);
-        shoulderleft.setPos(-5F, 0F, 0F);
-        shoulderleft.mirror = true;
-        setRotation(shoulderleft, 0F, 0F, 0F);
+    public CloakModel(ModelPart part) {
+        super(part);
+        cloakback = part.getChild(CLOAK_BACK);
+        leftlong = part.getChild(LEFT_LONG);
+        rightmedium = part.getChild(RIGHT_MEDIUM);
+        leftmedium = part.getChild(LEFT_MEDIUM);
+        rightshort = part.getChild(RIGHT_SHORT);
+        rightlong = part.getChild(RIGHT_LONG);
+        leftshort = part.getChild(LEFT_SHORT);
+        shoulderleft = part.getChild(SHOULDER_LEFT);
+        shoulderright = part.getChild(SHOULDER_RIGHT);
     }
 
     @Override
@@ -121,10 +121,5 @@ public class CloakModel extends VampirismArmorModel {
         return ImmutableList.of(cloakback, leftlong, rightmedium, leftmedium, rightshort, leftshort, rightlong, shoulderright, shoulderleft);
     }
 
-    private void setRotation(ModelPart model, float x, float y, float z) {
-        model.xRot = x;
-        model.yRot = y;
-        model.zRot = z;
-    }
 
 }

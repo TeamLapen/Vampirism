@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.tileentity;
+package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -14,17 +14,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class SunscreenBeaconTileEntity extends BlockEntity {
+public class SunscreenBeaconBlockEntity extends BlockEntity {
 
     private BlockPos oldPos;
     private Predicate<Player> selector;
 
-    public SunscreenBeaconTileEntity(BlockPos pos, BlockState state) {
+    public SunscreenBeaconBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.sunscreen_beacon, pos, state);
     }
 
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, SunscreenBeaconTileEntity blockEntity) {
+    public static void serverTick(Level level, BlockPos pos, BlockState state, SunscreenBeaconBlockEntity blockEntity) {
         if (level.getGameTime() % 80L == 0L) {
             //Position check is probably not necessary, but not sure
             if (blockEntity.oldPos == null || blockEntity.selector == null || !blockEntity.oldPos.equals(pos)) {

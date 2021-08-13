@@ -4,11 +4,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
+import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.CoffinModel;
-import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
+import de.teamlapen.vampirism.blockentity.CoffinBlockEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.resources.ResourceLocation;
@@ -24,21 +24,21 @@ import org.apache.logging.log4j.Logger;
  * Render the coffin with it's different colors and the lid opening animation
  */
 @OnlyIn(Dist.CLIENT)
-public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
+public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
     private final int maxLidPos = 61;
     private final CoffinModel model;
     private final ResourceLocation[] textures = new ResourceLocation[DyeColor.values().length];
     private final Logger LOGGER = LogManager.getLogger();
 
-    public CoffinTESR(BlockEntityRendererProvider.Context context) {
-        this.model = new CoffinModel();
+    public CoffinBESR(BlockEntityRendererProvider.Context context) {
+        this.model = new CoffinModel(context.bakeLayer(ModEntitiesRender.COFFIN));
         for (DyeColor e : DyeColor.values()) {
             textures[e.getId()] = new ResourceLocation(REFERENCE.MODID, "textures/block/coffin/coffin_" + e.getSerializedName() + ".png");
         }
     }
 
     @Override
-    public void render(CoffinTileEntity tile, float partialTicks, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int i, int i1) {
+    public void render(CoffinBlockEntity tile, float partialTicks, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int i, int i1) {
         if (!tile.renderAsItem) {
             if (!isHeadSafe(tile.getLevel(), tile.getBlockPos())) return;
 
@@ -82,9 +82,9 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
         try {
             return CoffinBlock.isHead(world, pos);
         } catch (IllegalArgumentException e) {
-            LOGGER.error("CoffinTESR", "Failed to check coffin head at %s caused by wrong blockstate. Block at that pos: %s", pos, world.getBlockState(pos));
+            LOGGER.error("Failed to check coffin head at {} caused by wrong blockstate. Block at that pos: {}", pos, world.getBlockState(pos));
         } catch (Exception e) {
-            LOGGER.error("CoffinTESR", e, "Failed to check coffin head at %s.", pos);
+            LOGGER.error(  "Failed to check coffin head.", e);
         }
         return false;
     }

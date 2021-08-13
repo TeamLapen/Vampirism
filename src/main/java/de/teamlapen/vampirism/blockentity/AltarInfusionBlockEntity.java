@@ -1,7 +1,7 @@
-package de.teamlapen.vampirism.tileentity;
+package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
-import de.teamlapen.lib.lib.tile.InventoryTileEntity;
+import de.teamlapen.lib.lib.blockentity.InventoryBlockEntity;
 import de.teamlapen.lib.lib.util.ValuedObject;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -31,7 +31,6 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.util.*;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -55,9 +54,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 
-public class AltarInfusionTileEntity extends InventoryTileEntity {
+public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
-    private final static Logger LOGGER = LogManager.getLogger(AltarInfusionTileEntity.class);
+    private final static Logger LOGGER = LogManager.getLogger(AltarInfusionBlockEntity.class);
     private static final int DURATION_TICK = 450;
     private final LazyOptional<IItemHandler> itemHandlerOptional = LazyOptional.of(this::createWrapper);
     /**
@@ -79,7 +78,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity {
      */
     private int targetLevel;
 
-    public AltarInfusionTileEntity(BlockPos pos, BlockState state) {
+    public AltarInfusionBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.altar_infusion, pos, state, 3, AltarInfusionContainer.SELECTOR_INFOS);
     }
 
@@ -235,7 +234,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity {
 
     /**
      * Starts the ritual.
-     * ONLY call if {@link AltarInfusionTileEntity#canActivate(PlayerEntity, boolean)} returned 1
+     * ONLY call if {@link AltarInfusionBlockEntity#canActivate(PlayerEntity, boolean)} returned 1
      */
     public void startRitual(Player player) {
         if (level == null) return;
@@ -315,7 +314,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity {
             player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 400, 2));
         }
     }
-    public static void tick(Level level, BlockPos pos, BlockState state, AltarInfusionTileEntity blockEntity){
+    public static void tick(Level level, BlockPos pos, BlockState state, AltarInfusionBlockEntity blockEntity){
         if (blockEntity.playerToLoadUUID != null) { //Restore loaded ritual
             if (!blockEntity.loadRitual(blockEntity.playerToLoadUUID)) return;
             blockEntity.playerToLoadUUID = null;
@@ -384,7 +383,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity {
 
     /**
      * Checks if the structure around the altar is at least the required one.
-     * Also determines which tips are used for that and stores them in {@link AltarInfusionTileEntity#tips }
+     * Also determines which tips are used for that and stores them in {@link AltarInfusionBlockEntity#tips }
      * Used at max the 8 most valued pillars
      *
      * @param required

@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.tileentity.TentTileEntity;
+import de.teamlapen.vampirism.blockentity.TentBlockEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.TooltipFlag;
@@ -24,8 +24,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import net.minecraft.world.item.Item.Properties;
 
 /**
  * Item used to place a tent
@@ -56,8 +54,8 @@ public class TentItem extends VampirismItem {
                 world.setBlock(new BlockPos(x3, y, z3), tent.defaultBlockState().setValue(TentBlock.FACING, dir.getOpposite()).setValue(TentBlock.POSITION, 3), 3);
                 if (spawner) {
                     BlockEntity tile = world.getBlockEntity(pos);
-                    if (tile instanceof TentTileEntity) {
-                        ((TentTileEntity) tile).setSpawn(true);
+                    if (tile instanceof TentBlockEntity) {
+                        ((TentBlockEntity) tile).setSpawn(true);
                     }
                 }
                 return true;
@@ -96,17 +94,17 @@ public class TentItem extends VampirismItem {
         ItemStack stack = ctx.getItemInHand();
         Player player = ctx.getPlayer();
 
-        Direction dir = player == null ? Direction.NORTH : Direction.fromYRot(ctx.getPlayer().yRot);
+        Direction dir = player == null ? Direction.NORTH : Direction.fromYRot(ctx.getPlayer().getYRot());
         boolean flag = placeAt(ctx.getLevel(), ctx.getClickedPos().above(), dir, false, false);
         if (flag) {
             BlockEntity tile = ctx.getLevel().getBlockEntity(ctx.getClickedPos().above());
-            if (tile instanceof TentTileEntity) {
+            if (tile instanceof TentBlockEntity) {
                 if (spawner) {
-                    ((TentTileEntity) tile).setSpawn(true);
+                    ((TentBlockEntity) tile).setSpawn(true);
                 }
             }
 
-            if (player == null || !player.abilities.instabuild) {
+            if (player == null || !player.getAbilities().instabuild) {
                 stack.shrink(1);
             }
         }

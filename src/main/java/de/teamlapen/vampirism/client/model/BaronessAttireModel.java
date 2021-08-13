@@ -6,6 +6,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.util.Mth;
@@ -15,6 +17,16 @@ import net.minecraft.util.Mth;
  * Created using Tabula 7.1.0
  */
 public class BaronessAttireModel extends EntityModel<VampireBaronEntity> {
+    private static final String VEIL = "veil";
+    private static final String DRESS_ARM_LEFT = "dress_arm_left";
+    private static final String DRESS_ARM_RIGHT = "dress_arm_right";
+    private static final String DRESS_CURTAIN = "dress_curtain";
+    private static final String HOOD = "hood";
+    private static final String HAT = "hat";
+    private static final String HAT2 = "hat2";
+    private static final String DRESS_TORSO = "dress_torso";
+    private static final String CLOAK = "cloak";
+
     public ModelPart dressTorso;
     public ModelPart dressArmBandRight;
     public ModelPart dressArmBandLeft;
@@ -28,44 +40,32 @@ public class BaronessAttireModel extends EntityModel<VampireBaronEntity> {
 
     private float enragedProgress = 0;
 
-    public BaronessAttireModel() {
-        this.texWidth = 128;
-        this.texHeight = 64;
-        this.veil = new ModelPart(this, 32, 28);
-        this.veil.setPos(0.0F, 0.0F, 0.0F);
-        this.veil.addBox(-4.5F, -8.5F, -4.5F, 9, 9, 9, 0.0F);
-        this.dressArmBandLeft = new ModelPart(this, 60, 46);
-        this.dressArmBandLeft.mirror = true;
-        this.dressArmBandLeft.setPos(4.0F, 2.0F, 0.0F);
-        this.dressArmBandLeft.addBox(0.0F, 2.0F, -2.0F, 3, 3, 4, 0.5F);
-        this.dressCurtain = new ModelPart(this, 64, 43);
-        this.dressCurtain.setPos(0.0F, 12.0F, 0.0F);
-        this.dressCurtain.addBox(-6.0F, 0.0F, -4.0F, 12, 11, 10, 0.0F);
-        this.hood = new ModelPart(this, 44, 0);
-        this.hood.setPos(0.0F, 0.0F, 0.0F);
-        this.hood.addBox(-4.5F, -8.5F, -4.0F, 9, 9, 9, 0.0F);
+    public static LayerDefinition createLayer() {
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition part = mesh.getRoot();
+        PartDefinition hat = part.addOrReplaceChild(HAT, CubeListBuilder.create().texOffs(68,36).addBox(-3,-8,-3,6,1,6), PartPose.ZERO);
+        PartDefinition hood = part.addOrReplaceChild(HOOD, CubeListBuilder.create().texOffs(44,0).addBox(-4.5f,-8.5f,-4f,9,9,9), PartPose.ZERO);
+        PartDefinition dressTorso = part.addOrReplaceChild(DRESS_TORSO, CubeListBuilder.create().texOffs(72,30).addBox(-4,0,-2,8,12,4, new CubeDeformation(0.4f)),PartPose.ZERO);
+        hat.addOrReplaceChild(VEIL, CubeListBuilder.create().texOffs(32,28).addBox(-4.5f, -8.5f, -4.5f, 9 , 9 ,9), PartPose.ZERO);
+        part.addOrReplaceChild(DRESS_ARM_LEFT, CubeListBuilder.create().texOffs(60, 46).addBox(0,2,-2,3,3,5, new CubeDeformation(0.5f)), PartPose.offset(4,2,0));
+        dressTorso.addOrReplaceChild(DRESS_CURTAIN, CubeListBuilder.create().texOffs(64,43).addBox(-6,0,-4,12,11,10), PartPose.offset(0,12,0) );
+        hat.addOrReplaceChild(HAT2, CubeListBuilder.create().texOffs(72,30).addBox(-2,-11,-2,4,2,4), PartPose.ZERO);
+        hood.addOrReplaceChild(CLOAK, CubeListBuilder.create().texOffs(0,0).addBox(-8.5f,-1,-2.5f,17,22,5), PartPose.rotation(0.3141592653589793F, 0.0F, 0.0F));
+        part.addOrReplaceChild(DRESS_ARM_RIGHT, CubeListBuilder.create().texOffs(60, 46).addBox(-3,2,-2,3,3,4, new CubeDeformation(0.5f)), PartPose.offset(-4,2,0));
+        return LayerDefinition.create(mesh, 128, 64);
+    }
 
-        this.hat2 = new ModelPart(this, 72, 30);
-        this.hat2.setPos(0.0F, 0.0F, 0.0F);
-        this.hat2.addBox(-2.0F, -11.0F, -2.0F, 4, 2, 4, 0.0F);
-        this.dressTorso = new ModelPart(this, 36, 46);
-        this.dressTorso.setPos(0.0F, 0.0F, 0.0F);
-        this.dressTorso.addBox(-4.0F, 0.0F, -2.0F, 8, 12, 4, 0.4F);
-        this.hat = new ModelPart(this, 68, 36);
-        this.hat.setPos(0.0F, 0.0F, 0.0F);
-        this.hat.addBox(-3.0F, -9.0F, -3.0F, 6, 1, 6, 0.0F);
+    public BaronessAttireModel(ModelPart part) {
+        dressTorso = part.getChild(DRESS_TORSO);
+        dressArmBandLeft = part.getChild(DRESS_ARM_LEFT);
+        dressArmBandRight = part.getChild(DRESS_ARM_RIGHT);
+        hat = part.getChild(HAT);
+        hood = part.getChild(HOOD);
+        dressCurtain = dressTorso.getChild(DRESS_CURTAIN);
+        hat2 = hat.getChild(HAT2);
+        veil = hat.getChild(VEIL);
+        cloak = hood.getChild(CLOAK);
 
-        this.cloak = new ModelPart(this, 0, 0);
-        this.cloak.setPos(0.0F, 0.0F, 0.0F);
-        this.cloak.addBox(-8.5F, -1.0F, -2.5F, 17, 22, 5, 0.0F);
-        this.setRotateAngle(cloak, 0.3141592653589793F, 0.0F, 0.0F);
-        this.dressArmBandRight = new ModelPart(this, 60, 46);
-        this.dressArmBandRight.setPos(-4.0F, 2.0F, 0.0F);
-        this.dressArmBandRight.addBox(-3.0F, 2.0F, -2.0F, 3, 3, 4, 0.5F);
-        this.hat.addChild(this.veil);
-        this.dressTorso.addChild(this.dressCurtain);
-        this.hat.addChild(this.hat2);
-        this.hood.addChild(this.cloak);
     }
 
     @Override

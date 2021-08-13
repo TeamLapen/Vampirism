@@ -1,15 +1,13 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.tileentity.TotemTileEntity;
+import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import com.mojang.math.Matrix4f;
@@ -20,18 +18,18 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
-public class TotemTESR extends VampirismTESR<TotemTileEntity> {
+public class TotemBESR extends VampirismBESR<TotemBlockEntity> {
 
 
     private static final ResourceLocation TEXTURE_BEACON_BEAM = new ResourceLocation(REFERENCE.MODID, "textures/entity/totem_beam.png");
     private final static int HEIGHT = 100;
 
-    public TotemTESR(BlockEntityRendererProvider.Context context) {
+    public TotemBESR(BlockEntityRendererProvider.Context context) {
 
     }
 
     @Override
-    public void render(TotemTileEntity te, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
+    public void render(TotemBlockEntity te, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
         float textureScale = te.shouldRenderBeam();
         if (textureScale > 0.0f) {
             long totalWorldTime = te.getLevel().getGameTime();
@@ -53,7 +51,7 @@ public class TotemTESR extends VampirismTESR<TotemTileEntity> {
     }
 
     @Override
-    public boolean shouldRenderOffScreen(TotemTileEntity te) {
+    public boolean shouldRenderOffScreen(TotemBlockEntity te) {
         return true;
     }
 

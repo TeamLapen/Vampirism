@@ -1,11 +1,14 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.teamlapen.vampirism.client.core.ModEntitiesRender;
+import de.teamlapen.vampirism.client.model.HunterEquipmentModel;
 import de.teamlapen.vampirism.client.render.layers.HunterEquipmentLayer;
 import de.teamlapen.vampirism.client.render.layers.PlayerBodyOverlayLayer;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
@@ -25,13 +28,13 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
     private final Pair<ResourceLocation, Boolean>[] minionSpecificTextures;
 
 
-    public HunterMinionRenderer(EntityRenderDispatcher renderManagerIn) {
-        super(renderManagerIn, new PlayerModel<>(0.5f, false), new PlayerModel<>(0.5f, true), 0.5F);
+    public HunterMinionRenderer(EntityRendererProvider.Context context) {
+        super(context, new PlayerModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED), false), new PlayerModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_SLIM), true), 0.5F);
         textures = gatherTextures("textures/entity/hunter", true);
         minionSpecificTextures = gatherTextures("textures/entity/minion/hunter", false);
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
-        this.addLayer(new HunterEquipmentLayer<>(this, minion -> minion.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty() ? minion.getItemBySlot(EquipmentSlot.OFFHAND).isEmpty() ? HunterEquipmentModel.StakeType.FULL : HunterEquipmentModel.StakeType.AXE_ONLY : HunterEquipmentModel.StakeType.NONE, HunterMinionEntity::getHatType));
-        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(0.5f), new HumanoidModel<>(1f)));
+        this.addLayer(new HunterEquipmentLayer<>(this, context.getModelSet(), minion -> minion.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty() ? minion.getItemBySlot(EquipmentSlot.OFFHAND).isEmpty() ? HunterEquipmentModel.StakeType.FULL : HunterEquipmentModel.StakeType.AXE_ONLY : HunterEquipmentModel.StakeType.NONE, HunterMinionEntity::getHatType));
+        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_ARMOR_INNER)), new HumanoidModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_ARMOR_OUTER))));
     }
 
     public int getHunterTextureCount() {

@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,9 +21,11 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.EffectRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 
 public class SanguinareEffect extends VampirismEffect {
@@ -70,18 +73,31 @@ public class SanguinareEffect extends VampirismEffect {
         return duration == 2;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void renderInventoryEffect(MobEffectInstance effect, EffectRenderingInventoryScreen<?> gui, PoseStack mStack, int x, int y, float z) {
-        String s = UtilLib.translate(effect.getEffect().getDescriptionId());
-        gui.font
-                .drawShadow/*drawStringWithShadow*/
-                (mStack, s, (float) (x + 10 + 18), (float) (y + 6), 16777215);
-    }
+
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public boolean shouldRenderInvText(MobEffectInstance effect) {
-        return false;
+    public void initializeClient(Consumer<EffectRenderer> consumer) {
+        consumer.accept(new EffectRenderer() {
+            @OnlyIn(Dist.CLIENT)
+            @Override
+            public void renderInventoryEffect(MobEffectInstance effect, EffectRenderingInventoryScreen<?> gui, PoseStack mStack, int x, int y, float z) {
+                String s = UtilLib.translate(effect.getEffect().getDescriptionId());
+                gui.font.drawShadow
+                        (mStack, s, (float) (x + 10 + 18), (float) (y + 6), 16777215);
+            }
+
+            @Override
+            public void renderHUDEffect(MobEffectInstance effect, GuiComponent gui, PoseStack mStack, int x, int y, float z, float alpha) {
+
+            }
+
+            @OnlyIn(Dist.CLIENT)
+            @Override
+            public boolean shouldRenderInvText(MobEffectInstance effect) {
+                return false;
+            }
+        });
     }
+
 }

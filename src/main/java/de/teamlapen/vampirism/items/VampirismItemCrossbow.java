@@ -128,8 +128,8 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
         } else if (this.isArrow(player.getItemInHand(InteractionHand.MAIN_HAND))) {
             return player.getItemInHand(InteractionHand.MAIN_HAND);
         } else {
-            for (int i = 0; i < player.inventory.getContainerSize(); ++i) {
-                ItemStack itemstack = player.inventory.getItem(i);
+            for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
+                ItemStack itemstack = player.getInventory().getItem(i);
 
                 if (this.isArrow(itemstack)) {
                     return itemstack;
@@ -197,7 +197,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return If successful
      */
     protected boolean shoot(Player player, float heightOffset, float centerOffset, Level world, ItemStack stack, InteractionHand hand) {
-        boolean creative = player.abilities.instabuild;
+        boolean creative = player.getAbilities().instabuild;
         boolean bowInfinite = isCrossbowInfinite(stack, player);
         int bowFrugal = isCrossbowFrugal(stack);
 
@@ -261,7 +261,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
                     itemstack.shrink(1);
 
                     if (itemstack.isEmpty()) {
-                        player.inventory.removeItem(itemstack);
+                        player.getInventory().removeItem(itemstack);
                     }
                 }
 

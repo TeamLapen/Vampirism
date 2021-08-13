@@ -42,6 +42,7 @@ public interface IFactionPlayer<T extends IFactionPlayer<?>> extends IFactionEnt
     /**
      * @return the faction this faction player belongs to
      */
+    @Nonnull
     IPlayableFaction<T> getFaction();
 
     /**

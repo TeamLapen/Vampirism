@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.tileentity.PotionTableTileEntity;
+import de.teamlapen.vampirism.blockentity.PotionTableBlockEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -26,9 +26,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nullable;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 public class PotionTableBlock extends VampirismBlockContainer {
     protected static final VoxelShape shape = makeShape();
@@ -54,7 +51,7 @@ public class PotionTableBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new PotionTableTileEntity(pos, state);
+        return new PotionTableBlockEntity(pos, state);
     }
 
 
@@ -67,8 +64,8 @@ public class PotionTableBlock extends VampirismBlockContainer {
     public void setPlacedBy(Level world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack stack) {
         super.setPlacedBy(world, blockPos, blockState, entity, stack);
         BlockEntity tile = world.getBlockEntity(blockPos);
-        if (entity instanceof Player && tile instanceof PotionTableTileEntity) {
-            ((PotionTableTileEntity) tile).setOwnerID((Player) entity);
+        if (entity instanceof Player && tile instanceof PotionTableBlockEntity) {
+            ((PotionTableBlockEntity) tile).setOwnerID((Player) entity);
         }
     }
 
@@ -76,9 +73,9 @@ public class PotionTableBlock extends VampirismBlockContainer {
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!worldIn.isClientSide && player instanceof ServerPlayer) {
             BlockEntity tile = worldIn.getBlockEntity(pos);
-            if (tile instanceof PotionTableTileEntity) {
-                if (((PotionTableTileEntity) tile).canOpen(player)) {
-                    NetworkHooks.openGui((ServerPlayer) player, (PotionTableTileEntity) tile, buffer -> buffer.writeBoolean(((PotionTableTileEntity) tile).isExtended()));
+            if (tile instanceof PotionTableBlockEntity) {
+                if (((PotionTableBlockEntity) tile).canOpen(player)) {
+                    NetworkHooks.openGui((ServerPlayer) player, (PotionTableBlockEntity) tile, buffer -> buffer.writeBoolean(((PotionTableBlockEntity) tile).isExtended()));
                     player.awardStat(ModStats.interact_alchemical_cauldron);
                 }
             }
@@ -90,9 +87,9 @@ public class PotionTableBlock extends VampirismBlockContainer {
     @Override
     protected void clearContainer(BlockState state, Level worldIn, BlockPos pos) {
         BlockEntity te = worldIn.getBlockEntity(pos);
-        if (te instanceof PotionTableTileEntity) {
+        if (te instanceof PotionTableBlockEntity) {
             for (int i = 0; i < 8; ++i) {
-                this.dropItem(worldIn, pos, ((PotionTableTileEntity) te).removeItemNoUpdate(i));
+                this.dropItem(worldIn, pos, ((PotionTableBlockEntity) te).removeItemNoUpdate(i));
             }
         }
     }
@@ -100,6 +97,6 @@ public class PotionTableBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, ModTiles.potion_table, PotionTableTileEntity::tick);
+        return createTickerHelper(type, ModTiles.potion_table, PotionTableBlockEntity::tick);
     }
 }

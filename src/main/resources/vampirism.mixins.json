@@ -9,6 +9,7 @@
     "DimensionStructureSettingsAccessor",
     "FlatGenerationSettingsAccessor",
     "LivingEntityAccessor",
+    "AbstractFurnaceBlockEntityAccessor",
     "MixinBellBlock",
     "MixinEffectInstance",
     "MixinEntity",

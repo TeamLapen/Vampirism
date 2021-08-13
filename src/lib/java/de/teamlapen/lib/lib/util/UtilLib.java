@@ -654,14 +654,18 @@ public class UtilLib {
             z2 = (z2 * 16) - 8;
 
             if (rotation == RotationAmount.NINETY)
-                rotatedShapes.add(Block.box(8 - z1, y1 * 16, 8 + x1, 8 - z2, y2 * 16, 8 + x2));
+                rotatedShapes.add(blockBox(8 - z1, y1 * 16, 8 + x1, 8 - z2, y2 * 16, 8 + x2));
             else if (rotation == RotationAmount.HUNDRED_EIGHTY)
-                rotatedShapes.add(Block.box(8 - x1, y1 * 16, 8 - z1, 8 - x2, y2 * 16, 8 - z2));
+                rotatedShapes.add(blockBox(8 - x1, y1 * 16, 8 - z1, 8 - x2, y2 * 16, 8 - z2));
             else if (rotation == RotationAmount.TWO_HUNDRED_SEVENTY)
-                rotatedShapes.add(Block.box(8 + z1, y1 * 16, 8 - x1, 8 + z2, y2 * 16, 8 - x2));
+                rotatedShapes.add(blockBox(8 + z1, y1 * 16, 8 - x1, 8 + z2, y2 * 16, 8 - x2));
         });
 
         return rotatedShapes.stream().reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElseGet(() -> Block.box(0, 0, 0, 16, 16, 16));
+    }
+
+    public static VoxelShape blockBox(double pX1, double pY1, double pZ1, double pX2, double pY2, double pZ2) {
+        return Block.box(Math.min(pX1, pX2), Math.min(pY1, pY2), Math.min(pZ1, pZ2), Math.max(pX1, pX2), Math.max(pY1, pY2), Math.max(pZ1, pZ2));
     }
 
     public static boolean isInsideStructure(Entity entity, StructureFeature<?> s) {

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.model.blocks;
 
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.tileentity.BloodContainerTileEntity;
+import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
@@ -57,7 +57,7 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
     public BakedBloodContainerModel(BakedModel baseModel, FluidStack stack) {
         this.baseModel = baseModel;
         this.impure = stack.getFluid().equals(ModFluids.impure_blood);
-        this.fluidLevel = Mth.clamp(stack.getAmount() / BloodContainerTileEntity.LEVEL_AMOUNT, 1, FLUID_LEVELS) - 1;
+        this.fluidLevel = Mth.clamp(stack.getAmount() / BloodContainerBlockEntity.LEVEL_AMOUNT, 1, FLUID_LEVELS) - 1;
         item = true;
     }
 
@@ -85,8 +85,8 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
         List<BakedQuad> quads = new LinkedList<>(baseModel.getQuads(state, side, rand));
 
         if (!item) {
-            Integer level = extraData.getData(BloodContainerTileEntity.FLUID_LEVEL_PROP);
-            Boolean impure = extraData.getData(BloodContainerTileEntity.FLUID_IMPURE);
+            Integer level = extraData.getData(BloodContainerBlockEntity.FLUID_LEVEL_PROP);
+            Boolean impure = extraData.getData(BloodContainerBlockEntity.FLUID_IMPURE);
             if (impure != null && level != null && level > 0 && level <= FLUID_LEVELS) {
                 quads.addAll((impure ? IMPURE_BLOOD_FLUID_MODELS[level - 1] : BLOOD_FLUID_MODELS[level - 1]).getQuads(state, side, rand));
             }
@@ -125,7 +125,7 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
         }
 
         @Override
-        public BakedModel resolve/*getModelWithOverrides*/(@Nonnull BakedModel originalModel, @Nonnull ItemStack stack, ClientLevel world, LivingEntity entity) {
+        public BakedModel resolve(@Nonnull BakedModel originalModel, @Nonnull ItemStack stack, ClientLevel world, LivingEntity entity, int p) {
             if (originalModel instanceof BakedBloodContainerModel) {
                 if (stack.hasTag() && stack.getTag().contains("fluid")) {
                     FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag().getCompound("fluid"));

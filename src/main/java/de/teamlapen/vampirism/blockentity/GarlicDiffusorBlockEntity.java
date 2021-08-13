@@ -1,8 +1,8 @@
-package de.teamlapen.vampirism.tileentity;
+package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.blocks.GarlicBeaconBlock;
+import de.teamlapen.vampirism.blocks.GarlicDiffusorBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.DamageHandler;
@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 /**
  * TODO 1.17 refractor garlic diffusor
  */
-public class GarlicBeaconTileEntity extends BlockEntity {
+public class GarlicDiffusorBlockEntity extends BlockEntity {
     private static final int FUEL_DURATION = 20 * 60 * 2;
     private int id;
     private EnumStrength strength = EnumStrength.MEDIUM;
@@ -40,7 +40,7 @@ public class GarlicBeaconTileEntity extends BlockEntity {
     private boolean initiateBootTimer = false;
 
 
-    public GarlicBeaconTileEntity(BlockPos pos, BlockState state) {
+    public GarlicDiffusorBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.garlic_beacon, pos, state);
     }
 
@@ -142,7 +142,7 @@ public class GarlicBeaconTileEntity extends BlockEntity {
         this.initiateBootTimer = true;
     }
 
-    public void setType(GarlicBeaconBlock.Type type) {
+    public void setType(GarlicDiffusorBlock.Type type) {
         switch (type) {
             case WEAK:
                 r = VampirismConfig.BALANCE.hsGarlicDiffusorWeakDist.get();
@@ -177,7 +177,7 @@ public class GarlicBeaconTileEntity extends BlockEntity {
     }
 
 
-    public static void tick(Level level, BlockPos pos, BlockState state, GarlicBeaconTileEntity blockEntity) {
+    public static void tick(Level level, BlockPos pos, BlockState state, GarlicDiffusorBlockEntity blockEntity) {
         if(blockEntity.initiateBootTimer){
             blockEntity.initiateBootTimer=false;
             int bootTime = VampirismConfig.BALANCE.garlicDiffusorStartupTime.get() * 20;

@@ -10,6 +10,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,14 +31,14 @@ public class MinionWorldData extends SavedData {
 
     @Nonnull
     public static MinionWorldData getData(final MinecraftServer server) {
-        return server.getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(() -> new MinionWorldData(server), ID);
+        return server.getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent((data)->MinionWorldData.load(server,data),() -> new MinionWorldData(server), ID);
     }
 
 
     @Nonnull
     public static Optional<MinionWorldData> getData(Level world) {
         if (world instanceof ServerLevel) {
-            return Optional.of(getData(((ServerLevel) world).getWorldServer()));
+            return Optional.of(getData(((ServerLevel) world).getServer()));
         }
         return Optional.empty();
     }
@@ -46,7 +47,7 @@ public class MinionWorldData extends SavedData {
     private final Object2ObjectOpenHashMap<UUID, PlayerMinionController> controllers = new Object2ObjectOpenHashMap<>();
 
     public MinionWorldData(MinecraftServer server) {
-        super(ID);
+        super();
         this.server = server;
     }
 
@@ -81,18 +82,17 @@ public class MinionWorldData extends SavedData {
         controllers.remove(lordID);
     }
 
-    @Override
-    public void load(CompoundTag nbt) {
-
-        controllers.clear();
+    public static MinionWorldData load(MinecraftServer server, CompoundTag nbt) {
+        MinionWorldData data = new MinionWorldData(server);
         ListTag all = nbt.getList("controllers", 10);
         for (Tag inbt : all) {
             CompoundTag tag = (CompoundTag) inbt;
             UUID id = tag.getUUID("uuid");
             PlayerMinionController c = new PlayerMinionController(server, id);
             c.deserializeNBT(tag);
-            controllers.put(id, c);
+            data.controllers.put(id, c);
         }
+        return data;
     }
 
     /**

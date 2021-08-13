@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Entity.class)
 public class MixinEntity {
 
-    @Inject(method = "isGlowing", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "isCurrentlyGlowing", at = @At("RETURN"), cancellable = true)
     private void handleIsGlowing(CallbackInfoReturnable<Boolean> cir) {
         if (MixinHooks.enforcingGlowing_bloodVision) {
             Entity p = VampirismMod.proxy.getClientPlayer();

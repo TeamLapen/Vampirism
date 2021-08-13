@@ -5,7 +5,8 @@ import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFeatures;
-import de.teamlapen.vampirism.tileentity.TentTileEntity;
+import de.teamlapen.vampirism.blockentity.TentBlockEntity;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -37,10 +39,10 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
 
 @ParametersAreNonnullByDefault
 public abstract class HunterCampPieces extends StructurePiece {
-    public static void init(int chunkX, int chunkZ, Biome biomeIn, Random rand, List<StructurePiece> componentsIn) {
+    public static void init(int chunkX, int chunkZ, Biome biomeIn, Random rand, StructurePieceAccessor pieceAccessor) {
         Fireplace hunterCamp = new Fireplace(rand, chunkX * 16 + rand.nextInt(16), 63, chunkZ * 16 + rand.nextInt(16), biomeIn.getGenerationSettings().getSurfaceBuilderConfig().getTopMaterial().getBlock());
-        componentsIn.add(hunterCamp);
-        hunterCamp.addChildren(hunterCamp, componentsIn, rand);
+        pieceAccessor.addPiece(hunterCamp);
+        hunterCamp.addChildren(hunterCamp, pieceAccessor, rand);
     }
     protected final int x, z;
     protected final Block baseBlock;
@@ -48,12 +50,11 @@ public abstract class HunterCampPieces extends StructurePiece {
 
 
     public HunterCampPieces(StructurePieceType structurePieceType, int part, int x, int y, int z, Block baseBlock) {
-        super(structurePieceType, part);
+        super(structurePieceType, part,  new BoundingBox(x - 1, y, z - 1, x + 1, y + 2, z + 1));
         this.baseBlock = baseBlock;
         this.x = x;
         this.y = y;
         this.z = z;
-        this.setBoundingBox();
     }
 
     public HunterCampPieces(StructurePieceType structurePieceType, CompoundTag nbt) {
@@ -67,23 +68,18 @@ public abstract class HunterCampPieces extends StructurePiece {
     @Override
     public boolean postProcess/*addComponentParts*/(WorldGenLevel worldIn, StructureFeatureManager structureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
         this.y = worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z);
-        this.setBoundingBox();
 
         //fail conditions
         return testPreconditions(worldIn, structureManager, chunkPos);
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag tagCompound) {
+    protected void addAdditionalSaveData(ServerLevel pLevel, CompoundTag tagCompound) {
         tagCompound.putInt("x", x);
         tagCompound.putInt("y", y);
         tagCompound.putInt("z", z);
         //noinspection ConstantConditions
         tagCompound.putString("baseBlock", this.baseBlock.getRegistryName().toString());
-    }
-
-    protected void setBoundingBox() {
-        this.boundingBox = new BoundingBox(this.x - 1, this.y, this.z - 1, this.x + 1, this.y + 2, this.z + 1);
     }
 
     protected boolean testPreconditions(WorldGenLevel worldIn, StructureFeatureManager manager, ChunkPos chunkPos) {
@@ -107,38 +103,38 @@ public abstract class HunterCampPieces extends StructurePiece {
             this.setOrientation(Direction.Plane.HORIZONTAL.getRandomDirection(random));
         }
 
-        public Fireplace(@SuppressWarnings("unused") StructureManager templateManager, CompoundTag nbt) {
+        public Fireplace(@SuppressWarnings("unused") ServerLevel world, CompoundTag nbt) {
             super(ModFeatures.hunter_camp_fireplace, nbt);
             advanced = nbt.getBoolean("advanced");
             specialComponentAdd = nbt.getBoolean("specialComponentAdd");
         }
 
         @Override
-        public void addChildren(StructurePiece componentIn, List<StructurePiece> listIn, Random rand) {
+        public void addChildren(StructurePiece componentInt, StructurePieceAccessor listIn, Random rand) {
             //adds 1-4 tent or crafting table elements to the structure (max 1 per direction && max 1 crafting table)
             @Nonnull List<Direction> directions = Lists.newArrayList(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
             if (rand.nextInt(3) == 0) {
                 this.advanced = true;
                 //advanced
-                listIn.add(getTentComponent(rand, directions, true));
-                listIn.add(getTentComponent(rand, directions, false));
+                listIn.addPiece(getTentComponent(rand, directions, true));
+                listIn.addPiece(getTentComponent(rand, directions, false));
                 int i = rand.nextInt(4);
                 if (i < 2)
-                    listIn.add(getComponent(rand, directions, true));
+                    listIn.addPiece(getComponent(rand, directions, true));
                 if (i < 1)
-                    listIn.add(getComponent(rand, directions, true));
+                    listIn.addPiece(getComponent(rand, directions, true));
             } else {
                 //normal
-                listIn.add(getTentComponent(rand, directions, false));
+                listIn.addPiece(getTentComponent(rand, directions, false));
                 if (rand.nextInt(2) == 0)
-                    listIn.add(getComponent(rand, directions, false));
+                    listIn.addPiece(getComponent(rand, directions, false));
             }
         }
 
         @Override
-        public boolean postProcess/*addComponentParts*/(WorldGenLevel worldIn, StructureFeatureManager structureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
+        public boolean postProcess(WorldGenLevel worldIn, StructureFeatureManager structureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
             //preconditions
-            if (!super.postProcess/*addComponentParts*/(worldIn, structureManager, chunkGenerator, random, structureBoundingBoxIn, chunkPos, blockPos)) {
+            if (!super.postProcess(worldIn, structureManager, chunkGenerator, random, structureBoundingBoxIn, chunkPos, blockPos)) {
                 return false;
             }
 
@@ -150,8 +146,8 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        protected void addAdditionalSaveData(CompoundTag tagCompound) {
-            super.addAdditionalSaveData(tagCompound);
+        protected void addAdditionalSaveData(ServerLevel pLevel, CompoundTag tagCompound) {
+            super.addAdditionalSaveData(pLevel, tagCompound);
             tagCompound.putBoolean("advanced", this.advanced);
             tagCompound.putBoolean("specialComponentAdd", this.specialComponentAdd);
         }
@@ -199,7 +195,7 @@ public abstract class HunterCampPieces extends StructurePiece {
             this.advanced = advanced;
         }
 
-        public Tent(@SuppressWarnings("unused") StructureManager templateManager, CompoundTag nbt) {
+        public Tent(@SuppressWarnings("unused") ServerLevel serverLevel, CompoundTag nbt) {
             super(ModFeatures.hunter_camp_tent, nbt);
             direction = Direction.from2DDataValue(nbt.getInt("direction"));
             mirror = nbt.getInt("mirror");
@@ -207,7 +203,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        public boolean postProcess/*addComponentParts*/(WorldGenLevel worldIn, StructureFeatureManager structureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
+        public boolean postProcess(WorldGenLevel worldIn, StructureFeatureManager structureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
             //set helper variables
             if (mirror == 0 ? (mirror = random.nextInt(2) + 1) == 1 : mirror == 1) {
                 xDiff = 2;
@@ -218,7 +214,7 @@ public abstract class HunterCampPieces extends StructurePiece {
             }
 
             //preconditions
-            if (!super.postProcess/*addComponentParts*/(worldIn, structureManager, chunkGenerator, random, structureBoundingBoxIn, chunkPos, blockPos))
+            if (!super.postProcess(worldIn, structureManager, chunkGenerator, random, structureBoundingBoxIn, chunkPos, blockPos))
                 return false;
 
             //helper variable for tent blockstates
@@ -250,10 +246,10 @@ public abstract class HunterCampPieces extends StructurePiece {
             }
 
             BlockEntity tile = worldIn.getBlockEntity(new BlockPos(x, y, z));
-            if (tile instanceof TentTileEntity) {
-                ((TentTileEntity) tile).setSpawn(true);
+            if (tile instanceof TentBlockEntity) {
+                ((TentBlockEntity) tile).setSpawn(true);
                 if (this.advanced) {
-                    ((TentTileEntity) tile).setAdvanced(true);
+                    ((TentBlockEntity) tile).setAdvanced(true);
                 }
             }
 
@@ -296,11 +292,11 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        protected void addAdditionalSaveData(CompoundTag tagCompound) {
+        protected void addAdditionalSaveData(ServerLevel level, CompoundTag tagCompound) {
             tagCompound.putInt("direction", this.direction.get2DDataValue());
             tagCompound.putInt("mirror", this.mirror);
             tagCompound.putBoolean("advanced", this.advanced);
-            super.addAdditionalSaveData(tagCompound);
+            super.addAdditionalSaveData(level, tagCompound);
         }
 
         @Override
@@ -325,16 +321,16 @@ public abstract class HunterCampPieces extends StructurePiece {
             this.advanced = advanced;
         }
 
-        public SpecialBlock(@SuppressWarnings("unused") StructureManager templateManager, CompoundTag compoundNBT) {
+        public SpecialBlock(@SuppressWarnings("unused") ServerLevel serverLevel, CompoundTag compoundNBT) {
             super(ModFeatures.hunter_camp_special, compoundNBT);
             this.direction = Direction.from2DDataValue(compoundNBT.getInt("dir"));
             this.advanced = compoundNBT.getBoolean("advanced");
         }
 
         @Override
-        public boolean postProcess/*addComponentParts*/(WorldGenLevel worldIn, StructureFeatureManager structureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
+        public boolean postProcess(WorldGenLevel worldIn, StructureFeatureManager structureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
             //preconditions
-            if (!super.postProcess/*addComponentParts*/(worldIn, structureManager, chunkGenerator, random, structureBoundingBoxIn, chunkPos, blockPos))
+            if (!super.postProcess(worldIn, structureManager, chunkGenerator, random, structureBoundingBoxIn, chunkPos, blockPos))
                 return false;
 
             //generation
@@ -350,8 +346,8 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        protected void addAdditionalSaveData(CompoundTag tagCompound) {
-            super.addAdditionalSaveData(tagCompound);
+        protected void addAdditionalSaveData(ServerLevel serverLevel, CompoundTag tagCompound) {
+            super.addAdditionalSaveData(serverLevel, tagCompound);
             tagCompound.putInt("dir", this.direction.get2DDataValue());
             tagCompound.putBoolean("advanced", this.advanced);
         }

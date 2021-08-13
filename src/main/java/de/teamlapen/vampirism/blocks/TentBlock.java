@@ -6,9 +6,12 @@ import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.client.model.armor.CloakModel;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.network.PlayEventPacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
@@ -39,11 +42,16 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.*;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IBlockRenderProperties;
+import net.minecraftforge.client.IItemRenderProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
@@ -210,14 +218,20 @@ public class TentBlock extends VampirismBlock {
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POSITION, 0).setValue(BedBlock.OCCUPIED, false));
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
-    public boolean addDestroyEffects(BlockState state, Level world, BlockPos pos, ParticleEngine manager) {
-        return true;
+    public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
+        consumer.accept(new IBlockRenderProperties() {
+            @Override
+            public boolean addDestroyEffects(BlockState state, Level Level, BlockPos pos, ParticleEngine manager) {
+                return true;
+            }});
     }
+
 
     @Override
     public boolean canSurvive(BlockState blockState, LevelReader worldReader, BlockPos blockPos) {
-        return worldReader.getBlockState(blockPos).isAir(worldReader, blockPos);
+        return worldReader.getBlockState(blockPos).isAir();
     }
 
     @Override
@@ -226,8 +240,8 @@ public class TentBlock extends VampirismBlock {
     }
 
     @Override
-    public void fallOn(Level worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
-        super.fallOn(worldIn, pos, entityIn, fallDistance * 0.7F);
+    public void fallOn(Level worldIn, BlockState state, BlockPos pos, Entity entityIn, float fallDistance) {
+        super.fallOn(worldIn, state, pos, entityIn, fallDistance * 0.7F);
     }
 
     @Override
@@ -257,7 +271,7 @@ public class TentBlock extends VampirismBlock {
         forWholeTent(pos, state, (di, pos1) -> {
             if (world.getBlockState(pos1).getBlock() instanceof TentBlock) {
                 world.setBlock(pos1, Blocks.AIR.defaultBlockState(), 3);
-                getBlock().wasExploded(world, pos1, explosion);
+                wasExploded(world, pos1, explosion);
             }
         });
     }

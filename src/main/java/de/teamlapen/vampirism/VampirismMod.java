@@ -12,6 +12,8 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
+import de.teamlapen.vampirism.client.core.ModBlocksRender;
+import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
@@ -43,6 +45,7 @@ import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import de.teamlapen.vampirism.world.WorldGenManager;
+import de.teamlapen.vampirism.world.biome.VampirismBiomeFeatures;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.data.DataGenerator;
@@ -51,6 +54,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
@@ -145,8 +149,13 @@ public class VampirismMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::gatherData);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::finalizeConfiguration);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+            //TODO 1.17 maybe cleanup
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventHandler::onModelBakeEvent);
             FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
+            FMLJavaModLoadingContext.get().getModEventBus().addListener(ModEntitiesRender::onRegisterRenderers);
+            FMLJavaModLoadingContext.get().getModEventBus().addListener(ModEntitiesRender::onRegisterLayers);
+            FMLJavaModLoadingContext.get().getModEventBus().addListener(ModEntitiesRender::onAddLayers);
+            FMLJavaModLoadingContext.get().getModEventBus().addListener(ModBlocksRender::registerBlockEntityRenderers);
         });
         VampirismConfig.init();
         MinecraftForge.EVENT_BUS.register(this);
@@ -216,7 +225,7 @@ public class VampirismMod {
     }
 
     private void checkEnv() {
-        String launchTarget = System.getenv().get("target");
+        String launchTarget = System.getProperty("vampirism_target");
         if (launchTarget != null && launchTarget.contains("dev")) {
             inDev = true;
         }

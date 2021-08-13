@@ -56,7 +56,7 @@ public class TotemBaseBlock extends VampirismBlock {
                 return false;
             }
             if (willHarvest) {
-                Block.dropResources(upState.getBlockState(), world, up, upTE);
+                Block.dropResources(upState, world, up, upTE);
             }
         }
         return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);

@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.proxy;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.player.skills.SkillTree;
-import de.teamlapen.vampirism.tileentity.GarlicBeaconTileEntity;
+import de.teamlapen.vampirism.blockentity.GarlicDiffusorBlockEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 public interface IProxy extends IInitListener {
 
-    default void displayGarlicBeaconScreen(GarlicBeaconTileEntity tile, Component title) {
+    default void displayGarlicBeaconScreen(GarlicDiffusorBlockEntity tile, Component title) {
     }
 
     default void displayNameSwordScreen(ItemStack stack) {

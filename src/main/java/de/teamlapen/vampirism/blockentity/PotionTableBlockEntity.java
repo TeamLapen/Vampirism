@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.tileentity;
+package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 
-public class PotionTableTileEntity extends BaseContainerBlockEntity implements WorldlyContainer, MenuProvider {
+public class PotionTableBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, MenuProvider {
 
     /*
      * 0: Fuel
@@ -66,9 +66,9 @@ public class PotionTableTileEntity extends BaseContainerBlockEntity implements W
         public int get(int index) {
             switch (index) {
                 case 0:
-                    return PotionTableTileEntity.this.brewTime;
+                    return PotionTableBlockEntity.this.brewTime;
                 case 1:
-                    return PotionTableTileEntity.this.fuel;
+                    return PotionTableBlockEntity.this.fuel;
                 default:
                     return 0;
             }
@@ -77,10 +77,10 @@ public class PotionTableTileEntity extends BaseContainerBlockEntity implements W
         public void set(int index, int value) {
             switch (index) {
                 case 0:
-                    PotionTableTileEntity.this.brewTime = value;
+                    PotionTableBlockEntity.this.brewTime = value;
                     break;
                 case 1:
-                    PotionTableTileEntity.this.fuel = value;
+                    PotionTableBlockEntity.this.fuel = value;
                     break;
             }
 
@@ -91,7 +91,7 @@ public class PotionTableTileEntity extends BaseContainerBlockEntity implements W
         }
     };
 
-    public PotionTableTileEntity(BlockPos pos, BlockState state) {
+    public PotionTableBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.potion_table, pos, state);
     }
 
@@ -279,7 +279,7 @@ public class PotionTableTileEntity extends BaseContainerBlockEntity implements W
         }
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, PotionTableTileEntity blockEntity) {
+    public static void tick(Level level, BlockPos pos, BlockState state, PotionTableBlockEntity blockEntity) {
         ItemStack itemstack = blockEntity.brewingItemStacks.get(0);
         if (blockEntity.fuel <= 0 && itemstack.getItem() == Items.BLAZE_POWDER) {
             blockEntity.fuel = 20;

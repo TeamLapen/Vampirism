@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.render.layers.PlayerBodyOverlayLayer;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
@@ -21,14 +23,14 @@ public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity
     private final Pair<ResourceLocation, Boolean>[] minionSpecificTextures;
 
 
-    public VampireMinionRenderer(EntityRenderDispatcher renderManagerIn) {
-        super(renderManagerIn, new PlayerModel<>(0F, false), new PlayerModel<>(0f, true), 0.5F);
+    public VampireMinionRenderer(EntityRendererProvider.Context context) {
+        super(context, new PlayerModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED), false), new PlayerModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_SLIM), true), 0.5F);
         ResourceManager rm = Minecraft.getInstance().getResourceManager();
         textures = gatherTextures("textures/entity/vampire", true);
         minionSpecificTextures = gatherTextures("textures/entity/minion/vampire", false);
 
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
-        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(0.5f), new HumanoidModel<>(1f)));
+        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_ARMOR_INNER)), new HumanoidModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_ARMOR_OUTER))));
         this.getModel().body.visible = this.getModel().jacket.visible = false;
         this.getModel().leftArm.visible = this.getModel().leftSleeve.visible = this.getModel().rightArm.visible = this.getModel().rightSleeve.visible = false;
         this.getModel().rightLeg.visible = this.getModel().rightPants.visible = this.getModel().leftLeg.visible = this.getModel().leftPants.visible = false;

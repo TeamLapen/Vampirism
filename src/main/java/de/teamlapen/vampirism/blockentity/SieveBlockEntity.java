@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.tileentity;
+package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.lib.lib.util.FluidTankWithListener;
 import de.teamlapen.vampirism.api.VReference;
@@ -26,9 +26,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-
-public class SieveTileEntity extends BlockEntity implements FluidTankWithListener.IFluidTankListener {
+public class SieveBlockEntity extends BlockEntity implements FluidTankWithListener.IFluidTankListener {
 
 
     private final LazyOptional<IFluidHandler> cap;
@@ -37,7 +35,7 @@ public class SieveTileEntity extends BlockEntity implements FluidTankWithListene
     private int cooldownProcess = 0;
     private boolean active;
 
-    public SieveTileEntity(BlockPos pos, BlockState state) {
+    public SieveBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.sieve, pos, state);
         tank = new FilteringFluidTank(2 * FluidAttributes.BUCKET_VOLUME).setListener(this);
         tank.setDrainable(false);
@@ -101,7 +99,7 @@ public class SieveTileEntity extends BlockEntity implements FluidTankWithListene
         return tag;
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, SieveTileEntity blockEntity) {
+    public static void tick(Level level, BlockPos pos, BlockState state, SieveBlockEntity blockEntity) {
         //Process content
         if (--blockEntity.cooldownProcess < 0) {
             blockEntity.cooldownProcess = 15;
@@ -149,7 +147,7 @@ public class SieveTileEntity extends BlockEntity implements FluidTankWithListene
                 return 0;
             FluidStack converted = BloodConversionRegistry.getBloodFromFluid(resource);
             int filled = super.fill(converted, action);
-            if (action.execute()) SieveTileEntity.this.cooldownPull = 10;
+            if (action.execute()) SieveBlockEntity.this.cooldownPull = 10;
             return (int) (filled / BloodConversionRegistry.getBloodValue(resource));
         }
     }

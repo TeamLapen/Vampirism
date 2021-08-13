@@ -3,6 +3,11 @@ package de.teamlapen.vampirism.client.model;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
@@ -12,35 +17,35 @@ import java.util.Collections;
 
 
 public class WingModel<T extends LivingEntity> extends AgeableListModel<T> {
+    private static final String WING_RIGHT = "wing_right";
+    private static final String WING_RIGHT2 = "wing_right2";
+    private static final String WING_LEFT = "wing_left";
+    private static final String WING_LEFT2 = "wing_left2";
+
     public ModelPart wingRight;
     public ModelPart wingLeft;
     public ModelPart wingRight2;
     public ModelPart wingLeft2;
 
-    public WingModel() {
-        this.texWidth = 128;
-        this.texHeight = 64;
-        this.wingRight = new ModelPart(this, 0, 46);
-        this.wingRight.setPos(0.2F, 2.5F, 2.0F);
-        this.wingRight.addBox(-18.0F, -6.0F, 0.0F, 18, 18, 0, 0.0F);
+    public static LayerDefinition createLayer() {
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition part = mesh.getRoot();
+        PartDefinition wingr = part.addOrReplaceChild(WING_RIGHT, CubeListBuilder.create().texOffs(0, 46).addBox(-18,-6,0,18,18,0), PartPose.offsetAndRotation(0.2f,2.5f,2,0.136659280431156F, 0.5462880558742251F, 0.27314402793711257F));
+        wingr.addOrReplaceChild(WING_RIGHT2, CubeListBuilder.create().texOffs(0, 28).addBox(-16,-4,0,16,18,0), PartPose.offsetAndRotation(-18,-2,0,0.0F, -0.8196066167365371F, 0.0F));
+        PartDefinition wingl = part.addOrReplaceChild(WING_LEFT, CubeListBuilder.create().texOffs(0, 46).mirror().addBox(0,-6,0,18,18,0), PartPose.offsetAndRotation(-0.2f,-2.5f,2,0.136659280431156F, -0.6373942428283291F, -0.27314402793711257F));
+        wingl.addOrReplaceChild(WING_LEFT2, CubeListBuilder.create().texOffs(0, 28).mirror().addBox(0,-4,0,16,18,0), PartPose.offsetAndRotation(18,-2,0,0,0.8196066167365371F,0));
 
-        this.setRotateAngle(wingRight, 0.136659280431156F, 0.5462880558742251F, 0.27314402793711257F);
-        this.wingLeft2 = new ModelPart(this, 0, 28);
-        this.wingLeft2.mirror = true;
-        this.wingLeft2.setPos(18.0F, -2.0F, 0.0F);
-        this.wingLeft2.addBox(0.0F, -4.0F, 0.0F, 16, 18, 0, 0.0F);
-        this.setRotateAngle(wingLeft2, 0.0F, 0.8196066167365371F, 0.0F);
-        this.wingLeft = new ModelPart(this, 0, 46);
-        this.wingLeft.mirror = true;
-        this.wingLeft.setPos(-0.2F, 2.5F, 2.0F);
-        this.wingLeft.addBox(0.0F, -6.0F, 0.0F, 18, 18, 0, 0.0F);
-        this.setRotateAngle(wingLeft, 0.136659280431156F, -0.6373942428283291F, -0.27314402793711257F);
-        this.wingRight2 = new ModelPart(this, 0, 28);
-        this.wingRight2.setPos(-18.0F, -2.0F, 0.0F);
-        this.wingRight2.addBox(-16.0F, -4.0F, 0.0F, 16, 18, 0, 0.0F);
-        this.setRotateAngle(wingRight2, 0.0F, -0.8196066167365371F, 0.0F);
-        this.wingRight.addChild(this.wingRight2);
-        this.wingLeft.addChild(this.wingLeft2);
+        return LayerDefinition.create(mesh, 128, 64);
+    }
+
+
+    public WingModel(ModelPart part) {
+        wingRight = part.getChild(WING_RIGHT);
+        wingRight2 = wingRight.getChild(WING_RIGHT2);
+        wingLeft = part.getChild(WING_LEFT);
+        wingLeft2 = wingLeft.getChild(WING_LEFT2);
+
+
     }
 
     public void copyRotationFromBody(ModelPart body) {

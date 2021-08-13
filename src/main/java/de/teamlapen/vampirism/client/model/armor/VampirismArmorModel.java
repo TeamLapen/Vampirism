@@ -3,6 +3,10 @@ package de.teamlapen.vampirism.client.model.armor;
 import com.google.common.collect.Iterables;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -11,8 +15,12 @@ import java.util.Collections;
 
 @OnlyIn(Dist.CLIENT)
 public class VampirismArmorModel extends HumanoidModel<LivingEntity> {
-    protected VampirismArmorModel(int textureWidthIn, int textureHeightIn) {
-        super(0, 0, textureWidthIn, textureHeightIn);
+    protected VampirismArmorModel(ModelPart part) {
+        super(part);
+    }
+
+    public static MeshDefinition createMesh() {
+        return HumanoidModel.createMesh(CubeDeformation.NONE, 0);
     }
 
     protected Iterable<ModelPart> getBodyModels() {

@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.effects;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.tileentity.TotemHelper;
+import de.teamlapen.vampirism.blockentity.TotemHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;

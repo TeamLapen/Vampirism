@@ -66,18 +66,18 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
         ItemStack stack = playerIn.getItemInHand(handIn);
 
 
-        worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SPLASH_POTION_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+        worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SPLASH_POTION_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (playerIn.getRandom().nextFloat() * 0.4F + 0.8F));
 
         if (!worldIn.isClientSide) {
             ThrowableItemEntity entityThrowable = new ThrowableItemEntity(worldIn, playerIn);
             ItemStack throwStack = stack.copy();
             throwStack.setCount(1);
             entityThrowable.setItem(throwStack);
-            entityThrowable.shootFromRotation(playerIn, playerIn.xRot, playerIn.yRot, -20.0F, 0.5F, 1.0F);
+            entityThrowable.shootFromRotation(playerIn, playerIn.getXRot(), playerIn.getYRot(), -20.0F, 0.5F, 1.0F);
             worldIn.addFreshEntity(entityThrowable);
         }
 
-        if (!playerIn.abilities.instabuild) {
+        if (!playerIn.getAbilities().instabuild) {
             stack.shrink(1);
         }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);

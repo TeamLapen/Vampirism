@@ -1,17 +1,15 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.tileentity.TentTileEntity;
+import de.teamlapen.vampirism.blockentity.TentBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -27,13 +25,13 @@ public class TentMainBlock extends TentBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new TentTileEntity(pos, state);
+        return new TentBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState p_153213_, BlockEntityType<T> p_153214_) {
-        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModTiles.tent, TentTileEntity::serverTick);
+        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModTiles.tent, TentBlockEntity::serverTick);
     }
 
     /**

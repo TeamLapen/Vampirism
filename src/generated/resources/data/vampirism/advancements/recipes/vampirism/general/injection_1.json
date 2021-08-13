@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "vampirism:injection_empty"
+            "items": [
+              "vampirism:injection_empty"
+            ]
           }
         ]
       }

@@ -6,6 +6,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -19,34 +21,29 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class VillagerWithArmsModel<T extends Mob> extends VillagerModel<T> implements ArmedModel {
+    private static final String RIGHT_ARM = "right_arm";
+    private static final String LEFT_ARM = "left_arm";
+
     private final ModelPart leftArm;
     private final ModelPart rightArm;
 
-    public VillagerWithArmsModel(float scale) {
-        this(scale, 0F, 64, 64);
+    public static LayerDefinition createLayer(float scale) {
+        MeshDefinition mesh = VillagerModel.createBodyModel();
+        PartDefinition root = mesh.getRoot();
+        CubeDeformation def = new CubeDeformation(scale);
+        root.addOrReplaceChild(RIGHT_ARM, CubeListBuilder.create().texOffs(44,22).addBox(-4F, -2F, -2F, 4, 8, 4, def).addBox(-4, 6, -2, 4, 3, 4,def ), PartPose.offset(0,2,0));
+        root.addOrReplaceChild(LEFT_ARM, CubeListBuilder.create().texOffs(44,22).mirror().addBox(0, -2, -2, 4, 8, 4, def).addBox(0, 6, -2, 4, 3, 4, def), PartPose.offset(-5,2,0));
+        return LayerDefinition.create(mesh, 64, 64);
+    }
+
+    public VillagerWithArmsModel(ModelPart part) {
+       super(part);
+       this.leftArm = part.getChild(LEFT_ARM);
+       this.rightArm = part.getChild(RIGHT_ARM);
 
     }
 
-    public VillagerWithArmsModel(float scale, float p_i1164_2_, int width, int height) {
-        super(scale, width, height);
-        this.arms.visible = false;
-        this.rightArm = (new ModelPart(this).setTexSize(width, height));
-        this.rightArm.texOffs(44, 22).addBox(-4F, -2F, -2F, 4, 8, 4, scale);
-        this.rightArm.setPos(0, 2 + p_i1164_2_, 0);
-        this.rightArm.addBox(-4, 6, -2, 4, 3, 4);
 
-        this.leftArm = new ModelPart(this).setTexSize(width, height);
-        this.leftArm.texOffs(44, 22).addBox(0, -2, -2, 4, 8, 4, scale);
-        this.leftArm.addBox(0, 6, -2, 4, 3, 4, scale);
-        this.leftArm.setPos(-5, 2 + p_i1164_2_, 0);
-        this.leftArm.mirror = true;
-
-    }
-
-    @Override
-    public Iterable<ModelPart> parts() {
-        return Iterables.concat(super.parts(), ImmutableList.of(leftArm, rightArm));
-    }
 
     @Override
     public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
@@ -65,7 +62,7 @@ public class VillagerWithArmsModel<T extends Mob> extends VillagerModel<T> imple
             f1 = f1 * f1;
             f1 = 1.0F - f1;
             float f2 = Mth.sin(f1 * (float) Math.PI);
-            float f3 = Mth.sin(this.attackTime * (float) Math.PI) * -(this.head.xRot - 0.7F) * 0.75F;
+            float f3 = Mth.sin(this.attackTime * (float) Math.PI) * -(this.getHead().xRot - 0.7F) * 0.75F;
             modelrenderer.xRot = (float) ((double) modelrenderer.xRot - ((double) f2 * 1.2D + (double) f3));
         }
     }

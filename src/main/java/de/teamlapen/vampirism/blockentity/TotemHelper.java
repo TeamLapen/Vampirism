@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.tileentity;
+package de.teamlapen.vampirism.blockentity;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -35,8 +34,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import java.util.Map.Entry;
 
 public class TotemHelper {
     public static final int MIN_HOMES = 4;
@@ -156,8 +153,8 @@ public class TotemHelper {
      */
     private static void handleTotemConflict(Set<PoiRecord> pois, ServerLevel world, BlockPos totem, BlockPos conflicting) {
 
-        TotemTileEntity totem1 = ((TotemTileEntity) world.getBlockEntity(totem));
-        TotemTileEntity totem2 = ((TotemTileEntity) world.getBlockEntity(conflicting));
+        TotemBlockEntity totem1 = ((TotemBlockEntity) world.getBlockEntity(totem));
+        TotemBlockEntity totem2 = ((TotemBlockEntity) world.getBlockEntity(conflicting));
 
         if (totem2 == null) {
             return;
@@ -278,15 +275,15 @@ public class TotemHelper {
     }
 
     @Nonnull
-    public static Optional<TotemTileEntity> getTotemNearPos(ServerLevel world, BlockPos posSource, boolean mustBeLoaded) {
+    public static Optional<TotemBlockEntity> getTotemNearPos(ServerLevel world, BlockPos posSource, boolean mustBeLoaded) {
         Optional<BlockPos> posOpt = getTotemPosNearPos(world, posSource);
         if (mustBeLoaded) {
             posOpt = posOpt.filter(world::isPositionEntityTicking);
         }
         return posOpt.map(pos -> {
             BlockEntity tile = world.getBlockEntity(pos);
-            if (tile instanceof TotemTileEntity) {
-                return ((TotemTileEntity) tile);
+            if (tile instanceof TotemBlockEntity) {
+                return ((TotemBlockEntity) tile);
             } else {
                 return null;
             }
@@ -307,11 +304,11 @@ public class TotemHelper {
             return new TranslatableComponent("command.vampirism.test.village.no_village");
         }
         BlockEntity te = player.getCommandSenderWorld().getBlockEntity(totemPositions.get(pointOfInterests.get(0).getPos()));
-        if (!(te instanceof TotemTileEntity)) {
+        if (!(te instanceof TotemBlockEntity)) {
             LOGGER.warn("TileEntity at {} is no TotemTileEntity", totemPositions.get(pointOfInterests.get(0).getPos()));
             return new TextComponent("");
         }
-        TotemTileEntity tile = (TotemTileEntity) te;
+        TotemBlockEntity tile = (TotemBlockEntity) te;
         tile.setForcedFaction(faction);
         return new TranslatableComponent("command.vampirism.test.village.success", faction == null ? "none" : faction.getName());
     }
@@ -436,7 +433,7 @@ public class TotemHelper {
 
     public static void ringBell(Level world, @Nonnull Player player) {
         if (!world.isClientSide) {
-            Optional<TotemTileEntity> tile = getTotemNearPos(((ServerLevel) world), player.blockPosition(), false);
+            Optional<TotemBlockEntity> tile = getTotemNearPos(((ServerLevel) world), player.blockPosition(), false);
             tile.ifPresent(s -> s.ringBell(player));
         }
     }

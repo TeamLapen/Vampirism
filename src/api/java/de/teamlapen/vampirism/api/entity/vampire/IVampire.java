@@ -39,6 +39,7 @@ public interface IVampire extends IFactionEntity {
      */
     void drinkBlood(int amt, float saturationMod, boolean useRemaining);
 
+    @Nonnull
     @Override
     default IFaction getFaction() {
         return VReference.VAMPIRE_FACTION;

@@ -21,7 +21,7 @@ public class DefendLordGoal extends TargetGoal {
         super(mobIn, false, false);
         this.setFlags(EnumSet.of(Goal.Flag.TARGET));
         this.entity = mobIn;
-        this.predicate = new TargetingConditions().selector(e -> entity.getAttackPredicate(false).test(e) && entity.getLordOpt().map(lp -> lp.getPlayer().distanceToSqr(e) < maxStartDistSQ).orElse(true)).ignoreInvisibilityTesting().range(60);
+        this.predicate = TargetingConditions.forCombat().selector(e -> entity.getAttackPredicate(false).test(e) && entity.getLordOpt().map(lp -> lp.getPlayer().distanceToSqr(e) < maxStartDistSQ).orElse(true)).ignoreInvisibilityTesting().range(60);
 
     }
 

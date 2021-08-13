@@ -20,7 +20,7 @@ public class AttackVillageGoal<T extends VampirismEntity & IVillageCaptureEntity
     public AttackVillageGoal(T creature) {
         super(creature, false, false);
         this.attacker = creature;
-        this.entityPredicate = new TargetingConditions() {
+        this.entityPredicate = new TargetingConditions(true) {
             @Override
             public boolean test(@Nullable LivingEntity attackEntity, @Nonnull LivingEntity targetEntity) {
                 if (attacker.getCaptureInfo() != null && attacker.getCaptureInfo().shouldForceTargets() && getFollowDistance() > 0) {
@@ -30,7 +30,7 @@ public class AttackVillageGoal<T extends VampirismEntity & IVillageCaptureEntity
                 }
                 return super.test(attackEntity, targetEntity);
             }
-        }.selector(VampirismAPI.factionRegistry().getPredicate(attacker.getFaction(), false)).allowUnseeable();
+        }.selector(VampirismAPI.factionRegistry().getPredicate(attacker.getFaction(), false)).ignoreInvisibilityTesting();
     }
 
     @Override

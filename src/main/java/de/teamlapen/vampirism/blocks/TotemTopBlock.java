@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.tileentity.TotemTileEntity;
+import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Material;
@@ -32,7 +32,6 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
@@ -88,8 +87,8 @@ public class TotemTopBlock extends BaseEntityBlock {
     public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         if (worldIn.isClientSide) return;
         BlockEntity tile = worldIn.getBlockEntity(pos);
-        if (tile instanceof TotemTileEntity) {
-            ((TotemTileEntity) tile).updateTileStatus();
+        if (tile instanceof TotemBlockEntity) {
+            ((TotemBlockEntity) tile).updateTileStatus();
             worldIn.blockEvent(pos, this, 1, 0); //Notify client about render update
         }
     }
@@ -120,7 +119,7 @@ public class TotemTopBlock extends BaseEntityBlock {
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (world.isClientSide) return InteractionResult.SUCCESS;
-        TotemTileEntity t = getTile(world, pos);
+        TotemBlockEntity t = getTile(world, pos);
         if (t != null && world.getBlockState(pos.below()).getBlock().equals(ModBlocks.totem_base)) {
             t.initiateCapture(player);
             return InteractionResult.SUCCESS;
@@ -130,7 +129,7 @@ public class TotemTopBlock extends BaseEntityBlock {
 
     @Override
     public boolean removedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
-        TotemTileEntity tile = getTile(world, pos);
+        TotemBlockEntity tile = getTile(world, pos);
         if (tile != null) {
             if (!tile.canPlayerRemoveBlock(player)) {
                 return false;
@@ -147,15 +146,15 @@ public class TotemTopBlock extends BaseEntityBlock {
     }
 
     @Nullable
-    private TotemTileEntity getTile(Level world, BlockPos pos) {
+    private TotemBlockEntity getTile(Level world, BlockPos pos) {
         BlockEntity tile = world.getBlockEntity(pos);
-        if (tile instanceof TotemTileEntity) return (TotemTileEntity) tile;
+        if (tile instanceof TotemBlockEntity) return (TotemBlockEntity) tile;
         return null;
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, ModTiles.totem, level.isClientSide() ? TotemTileEntity::clientTick : TotemTileEntity::serverTick);
+        return createTickerHelper(type, ModTiles.totem, level.isClientSide() ? TotemBlockEntity::clientTick : TotemBlockEntity::serverTick);
     }
 }

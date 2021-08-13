@@ -13,6 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -39,17 +40,14 @@ public class PlayerSkinHelper {
                 callback.accept(input);
             } else if (SkullBlockEntity.profileCache != null && SkullBlockEntity.sessionService != null) {
                 THREAD_POOL.submit(() -> {
-                    GameProfile gameprofile = input.getId() == null ? SkullBlockEntity.profileCache.get(input.getName()) : SkullBlockEntity.profileCache.get(input.getId()); //This might create race conditions with other game profile updates. Maybe this has to be moved to the main thread
+                    GameProfile gameprofile = (input.getId() == null ? SkullBlockEntity.profileCache.get(input.getName()) : SkullBlockEntity.profileCache.get(input.getId())).orElse(input); //This might create race conditions with other game profile updates. Maybe this has to be moved to the main thread
 
-                    if (gameprofile == null) {
-                        gameprofile = input;
-                    } else {
                         Property property = (Property) Iterables.getFirst(gameprofile.getProperties().get("textures"), (Object) null);
 
                         if (property == null) {
                             gameprofile = SkullBlockEntity.sessionService.fillProfileProperties(gameprofile, true);
                         }
-                    }
+
                     callback.accept(gameprofile);
                 });
             } else {

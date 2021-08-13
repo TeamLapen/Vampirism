@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 
 public class TrainingDummyVampireEntity extends BasicVampireEntity {
 
-    private final TargetingConditions PREDICATE = new TargetingConditions().allowInvulnerable().allowNonAttackable().allowUnseeable();
+    private final TargetingConditions PREDICATE = TargetingConditions.forNonCombat().ignoreLineOfSight();
     private int startTicks = 0;
     private float damageTaken = 0;
 
@@ -51,7 +51,7 @@ public class TrainingDummyVampireEntity extends BasicVampireEntity {
                 this.startTicks = this.tickCount;
             } else {
                 player.displayClientMessage(new TextComponent("Damage: " + damageTaken + " - DPS: " + (damageTaken / ((float) (this.tickCount - this.startTicks)) * 20f)), false);
-                this.remove();
+                this.discard();
             }
         }
         return InteractionResult.SUCCESS;

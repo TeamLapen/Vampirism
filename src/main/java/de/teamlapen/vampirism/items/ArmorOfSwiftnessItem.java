@@ -90,7 +90,7 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
             if (this.getSlot() == EquipmentSlot.CHEST) {
                 boolean flag = true;
                 int boost = Integer.MAX_VALUE;
-                for (ItemStack stack : player.inventory.armor) {
+                for (ItemStack stack : player.getInventory().armor) {
                     if (!stack.isEmpty() && stack.getItem() instanceof ArmorOfSwiftnessItem) {
                         int b = getJumpBoost(getVampirismTier());
                         if (b < boost) {

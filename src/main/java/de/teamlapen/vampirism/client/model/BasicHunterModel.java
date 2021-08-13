@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.client.model;
 
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.InteractionHand;
@@ -18,9 +20,18 @@ public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<
     private boolean targetingRight = false;
     private float xAngle = 0;
 
-    public BasicHunterModel( boolean smallArms) {
-        super(0.0F, smallArms);
+    public static LayerDefinition createBodyLayer() {
+            return LayerDefinition.create(BipedCloakedModel.createMesh(false), 64, 64);
     }
+
+    public static LayerDefinition createSlimBodyLayer() {
+        return LayerDefinition.create(BipedCloakedModel.createMesh(true), 64, 64);
+    }
+
+    public BasicHunterModel(ModelPart part, boolean smallArms) {
+        super(part, smallArms);
+    }
+
 
     @Override
     public void prepareMobModel(T entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime) {

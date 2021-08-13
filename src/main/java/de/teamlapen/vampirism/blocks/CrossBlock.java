@@ -34,7 +34,7 @@ public class CrossBlock extends VampirismHorizontalBlock {
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos.above()).isAir(worldIn, pos); //TODO 1.17
+        return worldIn.getBlockState(pos.above()).isAir();
     }
 
     @Override

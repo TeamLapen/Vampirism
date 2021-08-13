@@ -5,6 +5,8 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 
+import javax.annotation.Nonnull;
+
 /**
  * Interface for the hunter player data
  * Attached to all players as capability
@@ -16,6 +18,7 @@ public interface IHunterPlayer extends IFactionPlayer<IHunterPlayer>, IHunter {
      */
     void breakDisguise();
 
+    @Nonnull
     @Override
     default IPlayableFaction<IHunterPlayer> getFaction() {
         return VReference.HUNTER_FACTION;

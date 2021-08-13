@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.ProgressBar;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.tileentity.GarlicBeaconTileEntity;
+import de.teamlapen.vampirism.blockentity.GarlicDiffusorBlockEntity;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
@@ -18,13 +18,13 @@ public class GarlicBeaconScreen extends Screen {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/garlic_beacon.png");
     protected final int xSize = 220;
     protected final int ySize = 114;
-    private final GarlicBeaconTileEntity tile;
+    private final GarlicDiffusorBlockEntity tile;
     protected int guiLeft;
     protected int guiTop;
     protected ProgressBar startupBar;
     protected ProgressBar fueledTimer;
 
-    public GarlicBeaconScreen(GarlicBeaconTileEntity tile, Component title) {
+    public GarlicBeaconScreen(GarlicDiffusorBlockEntity tile, Component title) {
         super(title);
         this.tile = tile;
     }

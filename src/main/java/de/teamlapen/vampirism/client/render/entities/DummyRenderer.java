@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.resources.ResourceLocation;
 
@@ -13,8 +14,8 @@ import net.minecraft.resources.ResourceLocation;
 public class DummyRenderer<T extends Entity> extends EntityRenderer<T> {
     private final ResourceLocation TEX = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire.png");
 
-    public DummyRenderer(EntityRenderDispatcher renderManager) {
-        super(renderManager);
+    public DummyRenderer(EntityRendererProvider.Context context) {
+        super(context);
     }
 
     @Override

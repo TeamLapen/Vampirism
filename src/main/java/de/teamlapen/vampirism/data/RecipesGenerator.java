@@ -63,7 +63,7 @@ public class RecipesGenerator extends RecipeProvider {
     }
 
     @Override
-    protected void buildShapelessRecipes(@Nonnull Consumer<FinishedRecipe> consumer) {
+    protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
         ItemLike hopper = Blocks.HOPPER;
         ItemLike cauldron = Blocks.CAULDRON;
         ItemLike black_dye = Items.BLACK_DYE;
@@ -163,18 +163,18 @@ public class RecipesGenerator extends RecipeProvider {
         ShapelessRecipeBuilder.shapeless(ModItems.pure_blood_2).requires(ModItems.pure_blood_3).requires(ModItems.vampire_blood_bottle).unlockedBy("has_pure_blood", has(pure_blood_3)).save(consumer, hunter("pure_blood2"));
         ShapelessRecipeBuilder.shapeless(ModItems.pure_blood_3).requires(ModItems.pure_blood_4).requires(ModItems.vampire_blood_bottle).unlockedBy("has_pure_blood", has(pure_blood_4)).save(consumer, hunter("pure_blood3"));
 
-        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_dark_stone), ModBlocks.castle_block_dark_brick).unlocks("has_castle_stone", has(castle_block_dark_stone)).save(consumer, modId("stonecutting/castle_block_dark_brick_from_castle_block_dark_brick"));
-        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_dark_stone), ModBlocks.castle_stairs_dark_stone).unlocks("has_stone", has(castle_block_dark_stone)).save(consumer, modId("stonecutting/castle_stairs_dark_stone_from_castle_block_dark_stone"));
-        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_dark_brick), ModBlocks.castle_stairs_dark_stone).unlocks("has_stone", has(castle_block_dark_brick)).save(consumer, modId("stonecutting/castle_stairs_dark_stone_from_castle_block_dark_brick"));
-        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_dark_brick), ModBlocks.castle_stairs_dark_brick).unlocks("has_stone", has(castle_block_dark_brick)).save(consumer, modId("stonecutting/castle_stairs_dark_brick_from_castle_block_dark_brick"));
-        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_dark_stone), ModBlocks.castle_stairs_dark_brick).unlocks("has_stone", has(castle_block_dark_stone)).save(consumer, modId("stonecutting/castle_stairs_dark_brick_from_castle_block_dark_stone"));
-        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_purple_brick), ModBlocks.castle_stairs_purple_brick).unlocks("has_stone", has(castle_block_purple_brick)).save(consumer, modId("stonecutting/castle_stairs_purple_brick_from_castle_block_purple_brick"));
+        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_dark_stone), ModBlocks.castle_block_dark_brick).unlockedBy("has_castle_stone", has(castle_block_dark_stone)).save(consumer, modId("stonecutting/castle_block_dark_brick_from_castle_block_dark_brick"));
+        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_dark_stone), ModBlocks.castle_stairs_dark_stone).unlockedBy("has_stone", has(castle_block_dark_stone)).save(consumer, modId("stonecutting/castle_stairs_dark_stone_from_castle_block_dark_stone"));
+        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_dark_brick), ModBlocks.castle_stairs_dark_stone).unlockedBy("has_stone", has(castle_block_dark_brick)).save(consumer, modId("stonecutting/castle_stairs_dark_stone_from_castle_block_dark_brick"));
+        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_dark_brick), ModBlocks.castle_stairs_dark_brick).unlockedBy("has_stone", has(castle_block_dark_brick)).save(consumer, modId("stonecutting/castle_stairs_dark_brick_from_castle_block_dark_brick"));
+        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_dark_stone), ModBlocks.castle_stairs_dark_brick).unlockedBy("has_stone", has(castle_block_dark_stone)).save(consumer, modId("stonecutting/castle_stairs_dark_brick_from_castle_block_dark_stone"));
+        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_purple_brick), ModBlocks.castle_stairs_purple_brick).unlockedBy("has_stone", has(castle_block_purple_brick)).save(consumer, modId("stonecutting/castle_stairs_purple_brick_from_castle_block_purple_brick"));
 
-        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_dark_stone), ModBlocks.castle_slab_dark_stone, 2).unlocks("has_stone", has(castle_block_dark_stone)).save(consumer, modId("stonecutting/castle_slaps_dark_stone_from_castle_block_dark_stone"));
-        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_dark_stone), ModBlocks.castle_slab_dark_brick, 2).unlocks("has_stone", has(castle_block_dark_stone)).save(consumer, modId("stonecutting/castle_slaps_dark_brick_from_castle_block_dark_stone"));
-        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_dark_brick), ModBlocks.castle_slab_dark_brick, 2).unlocks("has_stone", has(castle_block_dark_brick)).save(consumer, modId("stonecutting/castle_slaps_dark_brick_from_castle_block_dark_brick"));
-        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_dark_brick), ModBlocks.castle_slab_dark_stone, 2).unlocks("has_stone", has(castle_block_dark_brick)).save(consumer, modId("stonecutting/castle_slaps_dark_stone_from_castle_block_dark_brick"));
-        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_purple_brick), ModBlocks.castle_slab_purple_brick, 2).unlocks("has_stone", has(castle_block_purple_brick)).save(consumer, modId("stonecutting/castle_slaps_purple_brick_from_castle_block_purple_brick"));
+        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_dark_stone), ModBlocks.castle_slab_dark_stone, 2).unlockedBy("has_stone", has(castle_block_dark_stone)).save(consumer, modId("stonecutting/castle_slaps_dark_stone_from_castle_block_dark_stone"));
+        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_dark_stone), ModBlocks.castle_slab_dark_brick, 2).unlockedBy("has_stone", has(castle_block_dark_stone)).save(consumer, modId("stonecutting/castle_slaps_dark_brick_from_castle_block_dark_stone"));
+        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_dark_brick), ModBlocks.castle_slab_dark_brick, 2).unlockedBy("has_stone", has(castle_block_dark_brick)).save(consumer, modId("stonecutting/castle_slaps_dark_brick_from_castle_block_dark_brick"));
+        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_dark_brick), ModBlocks.castle_slab_dark_stone, 2).unlockedBy("has_stone", has(castle_block_dark_brick)).save(consumer, modId("stonecutting/castle_slaps_dark_stone_from_castle_block_dark_brick"));
+        SingleItemRecipeBuilder.stonecutting(Ingredient.of(castle_block_purple_brick), ModBlocks.castle_slab_purple_brick, 2).unlockedBy("has_stone", has(castle_block_purple_brick)).save(consumer, modId("stonecutting/castle_slaps_purple_brick_from_castle_block_purple_brick"));
 
         AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.pure_salt, 4).withIngredient(garlic).withFluid(new FluidStack(Fluids.WATER, 1)).withSkills(HunterSkills.basic_alchemy).cookTime(1200).build(consumer, modId("pure_salt"));
         AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.item_alchemical_fire, 4).withIngredient(gun_powder).withFluid(holy_water_bottle_normal).build(consumer, modId("alchemical_fire_4"));
@@ -256,7 +256,7 @@ public class RecipesGenerator extends RecipeProvider {
         new IItemWIthTierRecipeBuilder(ModItems.heart_striker_enhanced, 1).pattern("XXX").pattern("XYX").define('X', blood_infused_enhanced_iron_ingot).define('Y', ModItems.heart_striker_enhanced).unlockedBy("has_heart_striker", has(ModItems.heart_striker_enhanced)).save(consumer, vampire("heart_striker_enhanced_repair"));
 
         //noinspection ConstantConditions
-        ConditionalRecipe.builder().addCondition(new ModLoadedCondition("guideapi-vp")).addRecipe((consumer1 -> ShapelessRecipeBuilder.shapeless(ForgeRegistries.ITEMS.getValue(new ResourceLocation("guideapi-vp", "vampirism-guidebook"))).requires(vampire_fang).requires(book).unlockedBy("has_fang", has(vampire_fang)).save(consumer1, modId("general/guidebook")))).build(consumer, modId("general/guidebook"));
+        ConditionalRecipe.builder().addCondition(new ModLoadedCondition("guideapi_vp")).addRecipe((consumer1 -> ShapelessRecipeBuilder.shapeless(ForgeRegistries.ITEMS.getValue(new ResourceLocation("guideapi_vp", "vampirism-guidebook"))).requires(vampire_fang).requires(book).unlockedBy("has_fang", has(vampire_fang)).save(consumer1, modId("general/guidebook")))).build(consumer, modId("general/guidebook"));
 
         ShapedRecipeBuilder.shaped(ModItems.cure_apple).pattern("YXY").pattern("YZY").pattern("YYY").define('Y', Items.GOLD_NUGGET).define('Z', Items.APPLE).define('X', ModItems.injection_zombie_blood).unlockedBy("has_apple", has(Items.APPLE)).unlockedBy("has_zombie_blood", has(ModItems.injection_zombie_blood)).save(consumer, general("cure_item"));
         ShapedRecipeBuilder.shaped(ModItems.vampire_clothing_legs).pattern("XXX").pattern("X X").pattern("XYX").define('X', Items.GRAY_WOOL).define('Y', Ingredient.of(ModItems.human_heart, ModItems.weak_human_heart)).unlockedBy("has_heart", has(ModItems.human_heart)).unlockedBy("has_wool", has(Items.GRAY_WOOL)).save(consumer, vampire("vampire_clothing_legs"));

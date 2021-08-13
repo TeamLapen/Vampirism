@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
+import de.teamlapen.vampirism.blockentity.CoffinBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Material;
@@ -143,7 +143,7 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new CoffinTileEntity(pos, state);
+        return new CoffinBlockEntity(pos, state);
     }
 
     @Override
@@ -198,11 +198,11 @@ public class CoffinBlock extends VampirismBlockContainer {
                 if (color != null) {
                     BlockEntity tile = worldIn.getBlockEntity(pos);
                     BlockEntity other = state.getValue(PART) == CoffinPart.HEAD ? worldIn.getBlockEntity(pos.relative(state.getValue(HORIZONTAL_FACING).getOpposite())) : worldIn.getBlockEntity(pos.relative(state.getValue(HORIZONTAL_FACING)));
-                    if (!(tile instanceof CoffinTileEntity) || !(other instanceof CoffinTileEntity)) {
+                    if (!(tile instanceof CoffinBlockEntity) || !(other instanceof CoffinBlockEntity)) {
                         return InteractionResult.SUCCESS;
                     }
-                    ((CoffinTileEntity) tile).changeColor(color);
-                    ((CoffinTileEntity) other).changeColor(color);
+                    ((CoffinBlockEntity) tile).changeColor(color);
+                    ((CoffinBlockEntity) other).changeColor(color);
                     if (!player.getAbilities().instabuild) {
                         heldItem.shrink(1);
                     }
@@ -259,7 +259,7 @@ public class CoffinBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntity) {
-        return level.isClientSide() && state.getValue(PART) == CoffinPart.HEAD ? createTickerHelper(blockEntity, ModTiles.coffin, CoffinTileEntity::clientTickHead) : null ;
+        return level.isClientSide() && state.getValue(PART) == CoffinPart.HEAD ? createTickerHelper(blockEntity, ModTiles.coffin, CoffinBlockEntity::clientTickHead) : null ;
     }
 
     public enum CoffinPart implements StringRepresentable {

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.model.armor.CloakModel;
+import de.teamlapen.vampirism.client.model.armor.HunterHatModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,8 +11,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.util.StringRepresentable;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IItemRenderProperties;
 
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 
 public class ColoredVampireClothingItem extends VampireClothingItem {
@@ -26,17 +29,23 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
         this.model = model;
     }
 
-    @Nullable
     @OnlyIn(Dist.CLIENT)
     @Override
-    public HumanoidModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel _default) {
-        switch (model) {
-            case CLOAK:
-                return CloakModel.getRotatedCloak();
-            default:
-                return CloakModel.getRotatedCloak();
-        }
+    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+        consumer.accept(new IItemRenderProperties() {
+                            @Override
+                            public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
+                                switch (model) {
+                                    case CLOAK:
+                                        return (A) CloakModel.getRotatedCloak();
+                                    default:
+                                        return (A) CloakModel.getRotatedCloak();
+                                }
+                            }
+                        }
+        );
     }
+
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {

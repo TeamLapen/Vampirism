@@ -5,10 +5,14 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
+import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.armor.*;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,8 +30,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Consumer;
 
 import net.minecraft.world.item.Item.Properties;
+import net.minecraftforge.client.IItemRenderProperties;
 
 public class VampireClothingItem extends ArmorItem implements IFactionExclusiveItem {
     private final String regName;
@@ -46,22 +52,28 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
         this.addFactionPoisonousToolTip(stack, worldIn, tooltip, flagIn, playerEntity);
     }
 
-    @Nullable
+
     @OnlyIn(Dist.CLIENT)
     @Override
-    public HumanoidModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel _default) {
-        switch (regName) {
-            case "vampire_clothing_crown":
-                return ClothingCrownModel.getInstance();
-            case "vampire_clothing_legs":
-                return ClothingPantsModel.getInstance();
-            case "vampire_clothing_boots":
-                return ClothingBootsModel.getInstance();
-            case "vampire_clothing_hat":
-                return VampireHatModel.getInstance();
-            default:
-                return DummyClothingModel.getArmorModel();
-        }
+    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+        consumer.accept(new IItemRenderProperties() {
+            @Override
+            public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
+                switch (regName) {
+                    case "vampire_clothing_crown":
+                        return (A) ClothingCrownModel.getInstance();
+                    case "vampire_clothing_legs":
+                        return (A) ClothingPantsModel.getInstance();
+                    case "vampire_clothing_boots":
+                        return (A) ClothingBootsModel.getInstance();
+                    case "vampire_clothing_hat":
+                        return (A) VampireHatModel.getInstance();
+                    default:
+                        return (A) DummyClothingModel.getArmorModel();
+                }
+            }
+
+        });
     }
 
     @Override

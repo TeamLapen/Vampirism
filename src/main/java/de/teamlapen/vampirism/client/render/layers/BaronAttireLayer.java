@@ -2,11 +2,13 @@ package de.teamlapen.vampirism.client.render.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.BaronAttireModel;
 import de.teamlapen.vampirism.client.model.BaronWrapperModel;
 import de.teamlapen.vampirism.client.model.BaronessAttireModel;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.model.EntityModel;
@@ -19,8 +21,8 @@ import java.util.function.Predicate;
  * Render attire for baron. Includes Male and female version
  */
 public class BaronAttireLayer extends RenderLayer<VampireBaronEntity, BaronWrapperModel> {
-    private final BaronessAttireModel baroness = new BaronessAttireModel();
-    private final BaronAttireModel baron = new BaronAttireModel();
+    private final BaronessAttireModel baroness ;
+    private final BaronAttireModel baron ;
     private final ResourceLocation textureBaroness = new ResourceLocation(REFERENCE.MODID, "textures/entity/baroness_attire.png");
     private final ResourceLocation textureBaron = new ResourceLocation(REFERENCE.MODID, "textures/entity/baron_attire.png");
     private final Predicate<VampireBaronEntity> predicateFemale;
@@ -28,8 +30,10 @@ public class BaronAttireLayer extends RenderLayer<VampireBaronEntity, BaronWrapp
     /**
      * @param predicateFemale used to choose between baron and baroness attire
      */
-    public BaronAttireLayer(RenderLayerParent<VampireBaronEntity, BaronWrapperModel> entityRendererIn, Predicate<VampireBaronEntity> predicateFemale) {
+    public BaronAttireLayer( RenderLayerParent<VampireBaronEntity, BaronWrapperModel> entityRendererIn, EntityRendererProvider.Context context,Predicate<VampireBaronEntity> predicateFemale) {
         super(entityRendererIn);
+        this.baroness = new BaronessAttireModel(context.bakeLayer(ModEntitiesRender.BARONESS_ATTIRE));
+        this.baron = new BaronAttireModel(context.bakeLayer(ModEntitiesRender.BARON_ATTIRE));
         this.predicateFemale = predicateFemale;
     }
 

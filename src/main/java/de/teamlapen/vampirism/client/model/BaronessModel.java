@@ -9,6 +9,8 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.HeadedModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.util.Mth;
@@ -18,6 +20,22 @@ import net.minecraft.util.Mth;
  * Created using Tabula 7.1.0
  */
 public class BaronessModel extends AgeableListModel<VampireBaronEntity> implements HeadedModel, ArmedModel {
+
+    private static final String BODY = "body";
+    private static final String HEAD_OVERLAY = "head_overlay";
+    private static final String LEG_RIGHT_OVERLAY = "leg_right_overlay";
+    private static final String LEG_LEFT_OVERLAY = "leg_left_overlay";
+    private static final String ARM_RIGHT_OVERLAY = "arm_right_overlay";
+    private static final String ARM_LEFT_OVERLAY = "arm_left_overlay";
+    private static final String BODY_OVERLAY = "body_overlay";
+    private static final String HEAD = "head";
+    private static final String ARM_RIGHT = "arm_right";
+    private static final String ARM_LEFT = "arm_left";
+    private static final String LEG_RIGHT = "leg_right";
+    private static final String LEG_LEFT  = "leg_left";
+    private static final String CLAWS_RIGHT = "claws_right";
+    private static final String CLAWS_LEFT = "claws_left";
+
     public ModelPart body;
     public ModelPart headOverlay;
     public ModelPart legRightOverlay;
@@ -36,58 +54,44 @@ public class BaronessModel extends AgeableListModel<VampireBaronEntity> implemen
     protected HumanoidModel.ArmPose leftArmPose = HumanoidModel.ArmPose.EMPTY;
     protected HumanoidModel.ArmPose rightArmPose = HumanoidModel.ArmPose.EMPTY;
 
-    public BaronessModel() {
-        this.texWidth = 64;
-        this.texHeight = 64;
-        this.legRightOverlay = new ModelPart(this, 0, 32);
-        this.legRightOverlay.setPos(-2.0F, 12.0F, 0.0F);
-        this.legRightOverlay.addBox(-2.0F, 0.0F, -2.0F, 4, 12, 4, 0.2F);
-        this.armLeftOverlay = new ModelPart(this, 48, 48);
-        this.armLeftOverlay.setPos(4.0F, 2.0F, 0.0F);
-        this.armLeftOverlay.addBox(0.0F, -2.0F, -2.0F, 3, 12, 4, 0.2F);
-        this.legLeft = new ModelPart(this, 16, 48);
-        this.legLeft.setPos(2.0F, 12.0F, 0.0F);
-        this.legLeft.addBox(-2.0F, 0.0F, -2.0F, 4, 12, 4, 0.0F);
-        this.headOverlay = new ModelPart(this, 32, 0);
-        this.headOverlay.setPos(0.0F, 0.0F, 0.0F);
-        this.headOverlay.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.5F);
-        this.clawsLeft = new ModelPart(this, 24, 0);
-        this.clawsLeft.setPos(0.0F, 0.0F, 0.0F);
-        this.clawsLeft.addBox(-4.0F, 0F, -2.0F, 3, 3, 4, 0.0F);
-        this.head = new ModelPart(this, 0, 0);
-        this.head.setPos(0.0F, 0.0F, 0.0F);
-        this.head.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.0F);
-        this.clawsRight = new ModelPart(this, 24, 0);
-        this.clawsRight.setPos(0.0F, 0.0F, 0.0F);
-        this.clawsRight.addBox(1.0F, -1F, -2.0F, 3, 3, 4, 0.0F);
-        this.legLeftOverlay = new ModelPart(this, 0, 48);
-        this.legLeftOverlay.setPos(2.0F, 12.0F, 0.0F);
-        this.legLeftOverlay.addBox(-2.0F, 0.0F, -2.0F, 4, 12, 4, 0.2F);
-        this.armRight = new ModelPart(this, 40, 16);
-        this.armRight.setPos(-4.0F, 2.0F, 0.0F);
-        this.armRight.addBox(-3.0F, -1.5F, -2.0F, 3, 12, 4, 0.0F);
-        this.armRightOverlay = new ModelPart(this, 40, 32);
-        this.armRightOverlay.setPos(-4.0F, 2.0F, 0.0F);
-        this.armRightOverlay.addBox(-3.0F, -2.0F, -2.0F, 3, 12, 4, 0.2F);
-        this.armLeft = new ModelPart(this, 32, 48);
-        this.armLeft.setPos(4.0F, 2.0F, 0.0F);
-        this.armLeft.addBox(0.0F, -1.5F, -2.0F, 3, 12, 4, 0.0F);
-        this.bodyOverlay = new ModelPart(this, 16, 32);
-        this.bodyOverlay.setPos(0.0F, 0.0F, 0.0F);
-        this.bodyOverlay.addBox(-4.0F, 0.0F, -2.0F, 8, 12, 4, 0.2F);
-        this.body = new ModelPart(this, 16, 16);
-        this.body.setPos(0.0F, 0.0F, 0.0F);
-        this.body.addBox(-4.0F, 0.0F, -2.0F, 8, 12, 4, 0.0F);
-        this.legRight = new ModelPart(this, 0, 16);
-        this.legRight.setPos(-2.0F, 12.0F, 0.0F);
-        this.legRight.addBox(-2.0F, 0.0F, -2.0F, 4, 12, 4, 0.0F);
-        this.body.addChild(this.legLeft);
-        this.armLeft.addChild(this.clawsLeft);
-        this.body.addChild(this.head);
-        this.armRight.addChild(this.clawsRight);
-        this.body.addChild(this.armRight);
-        this.body.addChild(this.armLeft);
-        this.body.addChild(this.legRight);
+    public static LayerDefinition createLayer() {
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition part = mesh.getRoot();
+        CubeDeformation DEFORM_OVERLAY = new CubeDeformation(0.2f);
+        PartDefinition body = part.addOrReplaceChild(BODY, CubeListBuilder.create().texOffs(16,16).addBox(-4,0,-2,8,12,4), PartPose.ZERO);
+
+        part.addOrReplaceChild(LEG_RIGHT_OVERLAY, CubeListBuilder.create().texOffs(0,32).addBox( -2,0,-2,4,12,4, DEFORM_OVERLAY), PartPose.offset(-2,12,0));
+        part.addOrReplaceChild(ARM_LEFT_OVERLAY , CubeListBuilder.create().texOffs(48,48).addBox(0,-2,-2,3,12,4, DEFORM_OVERLAY),PartPose.offset(4,2,0));
+        body.addOrReplaceChild(LEG_LEFT, CubeListBuilder.create().texOffs(16,48).addBox(-2,0,-2,4,12,4), PartPose.offset(2,12,0));
+        part.addOrReplaceChild(HEAD_OVERLAY, CubeListBuilder.create().texOffs(32,0).addBox(-4,-8,-4,8,8,8, new CubeDeformation(0.5f)),PartPose.ZERO);
+        PartDefinition armLeft = body.addOrReplaceChild(ARM_LEFT, CubeListBuilder.create().texOffs(32,48).addBox(0,-1.5f,-2,3,12,4), PartPose.offset(4,2,0));
+        armLeft.addOrReplaceChild(CLAWS_LEFT, CubeListBuilder.create().texOffs(24,0).addBox(-4,0,-2,3,3,4), PartPose.ZERO);
+        body.addOrReplaceChild(HEAD, CubeListBuilder.create().texOffs(0,0).addBox(-4,-8,-4,8,8,8), PartPose.ZERO);
+        PartDefinition armRight = body.addOrReplaceChild(ARM_RIGHT, CubeListBuilder.create().texOffs(40,16).addBox(-3,-1.5f,-2,3,12,4), PartPose.offset(-4,2,0));
+        armRight.addOrReplaceChild(CLAWS_RIGHT, CubeListBuilder.create().texOffs(24,0).addBox(1,-1,-2,3,3,4), PartPose.ZERO);
+        part.addOrReplaceChild(LEG_LEFT_OVERLAY, CubeListBuilder.create().texOffs(0,48).addBox(-2,0,-2,4,12,4, DEFORM_OVERLAY), PartPose.offset(2,12,0));
+        part.addOrReplaceChild(ARM_RIGHT_OVERLAY, CubeListBuilder.create().texOffs(40,32).addBox(-3,-2,-2,3,12,4, DEFORM_OVERLAY), PartPose.offset(-4,2,0));
+        part.addOrReplaceChild(BODY_OVERLAY, CubeListBuilder.create().texOffs(16,32).addBox(-4,0,-2,8,12,4, DEFORM_OVERLAY), PartPose.ZERO);
+        body.addOrReplaceChild(LEG_RIGHT, CubeListBuilder.create().texOffs(0,16).addBox(-2,0,-2,4,12,4), PartPose.offset(-2,12,0));
+        return LayerDefinition.create(mesh, 64, 64);
+    }
+    public BaronessModel(ModelPart part) {
+
+        this.body = part.getChild(BODY);
+        this.headOverlay = part.getChild(HEAD_OVERLAY);
+        this.legRightOverlay = part.getChild(LEG_RIGHT_OVERLAY);
+        this.legLeftOverlay = part.getChild(LEG_LEFT_OVERLAY);
+        this.armRightOverlay = part.getChild(ARM_RIGHT_OVERLAY);
+        this.armLeftOverlay = part.getChild(ARM_LEFT_OVERLAY);
+        this.bodyOverlay = part.getChild(BODY_OVERLAY);
+        this.head = body.getChild(HEAD);
+        this.armRight = body.getChild(ARM_RIGHT);
+        this.armLeft = body.getChild(ARM_LEFT);
+        this.legRight = body.getChild(LEG_RIGHT);
+        this.legLeft = body.getChild(LEG_LEFT);
+        this.clawsLeft = armLeft.getChild(CLAWS_LEFT);
+        this.clawsRight = armRight.getChild(CLAWS_RIGHT);
+
     }
 
     @Override

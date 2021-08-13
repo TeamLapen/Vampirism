@@ -32,7 +32,7 @@ public abstract class CommonProxy implements IProxy {
 
     @Override
     public void handleActionBindingPacket(ActionBindingPacket msg, Player playerEntity) {
-        FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.setBoundAction(msg.actionBindingId, msg.action, false, false));
+        FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.setBoundAction(msg.actionBindingId(), msg.action(), false, false));
     }
 
     @Override
@@ -51,15 +51,15 @@ public abstract class CommonProxy implements IProxy {
     @Override
     public void handleTaskActionPacket(TaskActionPacket msg, Player playerEntity) {
         FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> {
-            switch (msg.action) {
+            switch (msg.action()) {
                 case COMPLETE:
-                    factionPlayer.getTaskManager().completeTask(msg.entityId, msg.task);
+                    factionPlayer.getTaskManager().completeTask(msg.entityId(), msg.task());
                     break;
                 case ACCEPT:
-                    factionPlayer.getTaskManager().acceptTask(msg.entityId, msg.task);
+                    factionPlayer.getTaskManager().acceptTask(msg.entityId(), msg.task());
                     break;
                 default:
-                    factionPlayer.getTaskManager().abortTask(msg.entityId, msg.task, msg.action == TaskContainer.TaskAction.REMOVE);
+                    factionPlayer.getTaskManager().abortTask(msg.entityId(), msg.task(), msg.action() == TaskContainer.TaskAction.REMOVE);
                     break;
             }
         }));

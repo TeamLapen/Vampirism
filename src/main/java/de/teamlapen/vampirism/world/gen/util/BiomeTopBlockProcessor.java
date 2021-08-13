@@ -19,9 +19,9 @@ import java.util.Map;
 
 public class BiomeTopBlockProcessor extends StructureProcessor {
     public static final Codec<BiomeTopBlockProcessor> CODEC = BlockState.CODEC.fieldOf("replace_block").xmap(BiomeTopBlockProcessor::new, (entry) -> entry.replaceBlock).codec();
-    private static final Map<Block, Block> streetBlocks = new HashMap<Block, Block>() {{
+    private static final Map<Block, Block> streetBlocks = new HashMap<>() {{
         put(Blocks.SAND, Blocks.SMOOTH_SANDSTONE);
-        put(Blocks.GRASS_BLOCK, Blocks.GRASS_PATH);
+        put(Blocks.GRASS_BLOCK, Blocks.DIRT_PATH);
     }};
 
     private final BlockState replaceBlock;

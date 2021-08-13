@@ -59,8 +59,8 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
 
         VoxelShape e5 = Block.box(0, 1, 9, 1, 7, 16);
         VoxelShape e6 = Block.box(0, 1, 9, 7, 7, 10);
-        VoxelShape e7 = Block.box(7, 1, 16, 0, 7, 15);
-        VoxelShape e8 = Block.box(7, 1, 16, 6, 7, 9);
+        VoxelShape e7 = Block.box(0, 1, 15, 7, 7, 16);
+        VoxelShape e8 = Block.box(6, 1, 9, 7, 7, 16);
 
         VoxelShape f = Block.box(10, 0, 11, 15, 3, 14);
         VoxelShape g = Block.box(12, 3, 12, 13, 10, 13);

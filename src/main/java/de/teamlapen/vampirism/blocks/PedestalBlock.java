@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
-import de.teamlapen.vampirism.tileentity.PedestalTileEntity;
+import de.teamlapen.vampirism.blockentity.PedestalBlockEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -21,11 +21,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class PedestalBlock extends VampirismBlockContainer {
 
@@ -49,9 +46,9 @@ public class PedestalBlock extends VampirismBlockContainer {
         VoxelShape e = Block.box(5, 7, 5, 11, 8, 11);
         VoxelShape f = Block.box(3, 8, 3, 13, 9, 13);
         VoxelShape g1 = Block.box(4, 9, 4, 5, 11, 5);
-        VoxelShape g2 = Block.box(12, 9, 4, 11, 11, 5);
-        VoxelShape g3 = Block.box(4, 9, 12, 5, 11, 11);
-        VoxelShape g4 = Block.box(12, 9, 12, 11, 11, 11);
+        VoxelShape g2 = Block.box(11, 9, 4, 12, 11, 5);
+        VoxelShape g3 = Block.box(4, 9, 11, 5, 11, 12);
+        VoxelShape g4 = Block.box(11, 9, 11, 12, 11, 12);
 
         return Shapes.or(a, b, c, d, e, f, g1, g2, g3, g4);
     }
@@ -65,21 +62,11 @@ public class PedestalBlock extends VampirismBlockContainer {
         return RenderShape.MODEL;
     }
 
-    @Override
-    public int getHarvestLevel(BlockState p_getHarvestLevel_1_) {
-        return 2;
-    }
-
-    @Nullable
-    @Override
-    public ToolType getHarvestTool(BlockState p_getHarvestTool_1_) {
-        return ToolType.PICKAXE;
-    }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new PedestalTileEntity(pos, state);
+        return new PedestalBlockEntity(pos, state);
     }
 
     @Override
@@ -89,7 +76,7 @@ public class PedestalBlock extends VampirismBlockContainer {
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        PedestalTileEntity tile = getTileEntity(world, pos);
+        PedestalBlockEntity tile = getTileEntity(world, pos);
         if (tile == null) return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(hand);
         if (stack.isEmpty() && !tile.extractItem(0, 1, true).isEmpty()) {
@@ -114,17 +101,17 @@ public class PedestalBlock extends VampirismBlockContainer {
 
     @Override
     protected void clearContainer(BlockState state, Level worldIn, BlockPos pos) {
-        PedestalTileEntity tile = getTileEntity(worldIn, pos);
+        PedestalBlockEntity tile = getTileEntity(worldIn, pos);
         if (tile != null && tile.hasStack()) {
             dropItem(worldIn, pos, tile.removeStack());
         }
     }
 
     @Nullable
-    private PedestalTileEntity getTileEntity(BlockGetter world, BlockPos pos) {
+    private PedestalBlockEntity getTileEntity(BlockGetter world, BlockPos pos) {
         BlockEntity tile = world.getBlockEntity(pos);
-        if (tile instanceof PedestalTileEntity) {
-            return (PedestalTileEntity) tile;
+        if (tile instanceof PedestalBlockEntity) {
+            return (PedestalBlockEntity) tile;
         }
         return null;
     }
@@ -132,6 +119,6 @@ public class PedestalBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-            return createTickerHelper(type, ModTiles.blood_pedestal, level.isClientSide() ? PedestalTileEntity::clientTick : PedestalTileEntity::serverTick);
+            return createTickerHelper(type, ModTiles.blood_pedestal, level.isClientSide() ? PedestalBlockEntity::clientTick : PedestalBlockEntity::serverTick);
     }
 }

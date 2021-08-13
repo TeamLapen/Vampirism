@@ -40,7 +40,7 @@ public class WeaponTableCraftingSlot extends Slot {
     }
 
     @Override
-    public ItemStack onTake(Player playerIn, ItemStack stack) {
+    public void onTake(Player playerIn, ItemStack stack) {
         this.checkTakeAchievements(stack);
         final int lava = worldPos.evaluate(((world, blockPos) -> {
             if (world.getBlockState(blockPos).getBlock() instanceof WeaponTableBlock) {
@@ -75,7 +75,7 @@ public class WeaponTableCraftingSlot extends Slot {
                 } else if (ItemStack.isSame(itemstack, itemstack1) && ItemStack.tagMatches(itemstack, itemstack1)) {
                     itemstack1.grow(itemstack.getCount());
                     this.craftMatrix.setItem(i, itemstack1);
-                } else if (!this.player.inventory.add(itemstack1)) {
+                } else if (!this.player.getInventory().add(itemstack1)) {
                     this.player.drop(itemstack1, false);
                 }
             }
@@ -87,7 +87,6 @@ public class WeaponTableCraftingSlot extends Slot {
             }
         }));
         playerIn.awardStat(ModStats.weapon_table);
-        return stack;
     }
 
     @Override

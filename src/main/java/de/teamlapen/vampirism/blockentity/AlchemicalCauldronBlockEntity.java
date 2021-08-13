@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.tileentity;
+package de.teamlapen.vampirism.blockentity;
 
 import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.blocks.AlchemicalCauldronBlock;
@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.inventory.container.AlchemicalCauldronContainer;
 import de.teamlapen.vampirism.inventory.recipes.AlchemicalCauldronRecipe;
+import de.teamlapen.vampirism.mixin.AbstractFurnaceBlockEntityAccessor;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.core.BlockPos;
@@ -49,7 +50,7 @@ import java.util.UUID;
 /**
  * slots:  0: liquid, 1: ingredient, 2: result, 3: fuel
  */
-public class AlchemicalCauldronTileEntity extends AbstractFurnaceBlockEntity {
+public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     private static final Logger LOGGER = LogManager.getLogger();
 
     private static final int[] SLOTS_DOWN = new int[]{0, 1, 2};
@@ -65,7 +66,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceBlockEntity {
 
     private static boolean warnedRecipeType = false;
 
-    public AlchemicalCauldronTileEntity(BlockPos pos, BlockState state) {
+    public AlchemicalCauldronBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.alchemical_cauldron, pos, state, ModRecipes.ALCHEMICAL_CAULDRON_TYPE);
         this.items = NonNullList.withSize(4, ItemStack.EMPTY);
     }
@@ -207,7 +208,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceBlockEntity {
     /**
      * copy of AbstractFurnaceTileEntity#tick() with modification
      */
-    public static void serverTick(Level level, BlockPos pos, BlockState state, AlchemicalCauldronTileEntity blockEntity) {
+    public static void serverTick(Level level, BlockPos pos, BlockState state, AlchemicalCauldronBlockEntity blockEntity) {
         boolean wasBurning = blockEntity.isBurning();
         boolean dirty = false;
         if (wasBurning) {
@@ -228,7 +229,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceBlockEntity {
                     }
                 }
 
-                if (cauldronRecipe != null && !blockEntity.isBurning() && blockEntity.canBurn(cauldronRecipe, blockEntity.items, blockEntity.getMaxStackSize()) && blockEntity.canPlayerCook(cauldronRecipe)) {
+                if (cauldronRecipe != null && !blockEntity.isBurning() && ((AbstractFurnaceBlockEntityAccessor)blockEntity).canBurn_vampirism(cauldronRecipe, blockEntity.items, blockEntity.getMaxStackSize()) && blockEntity.canPlayerCook(cauldronRecipe)) {
                     blockEntity.dataAccess.set(0, blockEntity.getBurnDuration(itemstackFuel)); //Set burn time
                     blockEntity.dataAccess.set(1, blockEntity.dataAccess.get(0));
                     if (blockEntity.isBurning()) {
@@ -245,7 +246,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceBlockEntity {
                     }
                 }
 
-                if (cauldronRecipe != null && blockEntity.isBurning() && blockEntity.canBurn(cauldronRecipe, blockEntity.items, blockEntity.getMaxStackSize()) && blockEntity.canPlayerCook(cauldronRecipe)) {
+                if (cauldronRecipe != null && blockEntity.isBurning() && ((AbstractFurnaceBlockEntityAccessor)blockEntity).canBurn_vampirism(cauldronRecipe, blockEntity.items, blockEntity.getMaxStackSize()) && blockEntity.canPlayerCook(cauldronRecipe)) {
                     blockEntity.dataAccess.set(2, blockEntity.dataAccess.get(2) + 1); //Increase cook time
                     if (blockEntity.dataAccess.get(2) == blockEntity.dataAccess.get(3)) { //If finished
                         blockEntity.dataAccess.set(2, 0);
@@ -305,7 +306,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceBlockEntity {
      * @param recipe
      */
     private void finishCooking(AlchemicalCauldronRecipe recipe) {
-        if (recipe != null && this.canBurn(recipe, items, getMaxStackSize()) && canPlayerCook(recipe)) {
+        if (recipe != null && ((AbstractFurnaceBlockEntityAccessor)this).canBurn_vampirism(recipe, items, getMaxStackSize()) && canPlayerCook(recipe)) {
             ItemStack itemstackfluid = this.items.get(0);
             ItemStack itemstackingredient = this.items.get(1);
             ItemStack itemstack1result = recipe.getResultItem();

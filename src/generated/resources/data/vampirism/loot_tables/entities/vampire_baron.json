@@ -3,7 +3,8 @@
   "pools": [
     {
       "name": "pure_blood_0",
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -19,11 +20,13 @@
           "level": 0,
           "entity": "this"
         }
-      ]
+      ],
+      "functions": []
     },
     {
       "name": "pure_blood_1",
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -39,11 +42,13 @@
           "level": 1,
           "entity": "this"
         }
-      ]
+      ],
+      "functions": []
     },
     {
       "name": "pure_blood_2",
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -59,11 +64,13 @@
           "level": 2,
           "entity": "this"
         }
-      ]
+      ],
+      "functions": []
     },
     {
       "name": "pure_blood_3",
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -79,11 +86,13 @@
           "level": 3,
           "entity": "this"
         }
-      ]
+      ],
+      "functions": []
     },
     {
       "name": "pure_blood_4",
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -99,7 +108,8 @@
           "level": 4,
           "entity": "this"
         }
-      ]
+      ],
+      "functions": []
     }
   ]
 }

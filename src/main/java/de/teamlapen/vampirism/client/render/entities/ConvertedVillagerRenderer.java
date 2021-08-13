@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.render.layers.VampireEntityLayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.resources.ResourceLocation;
@@ -16,8 +17,8 @@ public class ConvertedVillagerRenderer extends VillagerRenderer {
 
     private final ResourceLocation overlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/vanilla/villager_overlay.png");
 
-    public ConvertedVillagerRenderer(EntityRenderDispatcher renderManagerIn) {
-        super(renderManagerIn, (ReloadableResourceManager) Minecraft.getInstance().getResourceManager());
+    public ConvertedVillagerRenderer(EntityRendererProvider.Context context) {
+        super(context);
         this.addLayer(new VampireEntityLayer<>(this, overlay, false));
     }
 }

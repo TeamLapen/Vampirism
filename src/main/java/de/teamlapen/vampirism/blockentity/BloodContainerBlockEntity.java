@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.tileentity;
+package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.lib.lib.util.FluidTankWithListener;
 import de.teamlapen.vampirism.api.VReference;
@@ -29,7 +29,7 @@ import java.util.Random;
  * Stores blood and other liquids in a {@link FluidTank}
  * Tank is synced if the block is marked for update
  */
-public class BloodContainerTileEntity extends net.minecraftforge.fluids.capability.TileFluidHandler implements FluidTankWithListener.IFluidTankListener {
+public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capability.TileFluidHandler implements FluidTankWithListener.IFluidTankListener {
 
     public static final int LEVEL_AMOUNT = BloodBottleItem.AMOUNT * VReference.FOOD_TO_FLUID_BLOOD;
     public static final int CAPACITY = LEVEL_AMOUNT * 14;
@@ -38,14 +38,14 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
 
     public static void setBloodValue(BlockGetter worldIn, Random randomIn, BlockPos blockPosIn) {
         BlockEntity tileEntity = worldIn.getBlockEntity(blockPosIn);
-        if (tileEntity instanceof BloodContainerTileEntity) {
-            ((BloodContainerTileEntity) tileEntity).setFluidStack(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))));
+        if (tileEntity instanceof BloodContainerBlockEntity) {
+            ((BloodContainerBlockEntity) tileEntity).setFluidStack(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))));
         }
     }
     private int lastSyncedAmount = Integer.MIN_VALUE;
     private IModelData modelData;
 
-    public BloodContainerTileEntity(BlockPos pos, BlockState state) {
+    public BloodContainerBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.blood_container, pos, state);
         this.tank = new FluidTankWithListener(CAPACITY, fluidStack -> ModFluids.blood.isSame(fluidStack.getFluid()) || ModFluids.impure_blood.isSame(fluidStack.getFluid())).setListener(this);
 
@@ -117,7 +117,7 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
         FluidStack fluid = tank.getFluid();
         int l = 0;
         if (!fluid.isEmpty()) {
-            float amount = fluid.getAmount() / (float) BloodContainerTileEntity.LEVEL_AMOUNT;
+            float amount = fluid.getAmount() / (float) BloodContainerBlockEntity.LEVEL_AMOUNT;
             l = (amount > 0 && amount < 1) ? 1 : (int) amount;
         }
         modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).withInitial(FLUID_IMPURE, fluid.getFluid().equals(ModFluids.impure_blood)).build();

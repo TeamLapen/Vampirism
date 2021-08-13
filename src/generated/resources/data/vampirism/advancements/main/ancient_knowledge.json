@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "vampirism:vampire_book"
+            "items": [
+              "vampirism:vampire_book"
+            ]
           }
         ]
       }

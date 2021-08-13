@@ -35,13 +35,13 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
 
     private final static ResourceLocation location = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table_clean.png");
     private static final ItemStack lavaStack = new ItemStack(Items.LAVA_BUCKET);
-    private final String localizedName;
+    private final Component localizedName;
     private final IDrawable background;
     private final IDrawable icon;
 
 
     WeaponTableRecipeCategory(IGuiHelper guiHelper) {
-        localizedName = UtilLib.translate(ModBlocks.weapon_table.getDescriptionId());
+        localizedName = new TranslatableComponent(ModBlocks.weapon_table.getDescriptionId());
         background = guiHelper.drawableBuilder(location, 32, 14, 134, 77).addPadding(0, 33, 0, 0).build();
         icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.weapon_table));
     }
@@ -53,10 +53,12 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
         int y = 80;
         Minecraft minecraft = Minecraft.getInstance();
         if (recipe.getRequiredLavaUnits() > 0) {
-            RenderSystem.pushMatrix();
-            RenderSystem.multMatrix(stack.last().pose());
+            stack.pushPose();
+            RenderSystem.backupProjectionMatrix();
+            RenderSystem.setProjectionMatrix(stack.last().pose());
             minecraft.getItemRenderer().renderGuiItem(lavaStack, 83, 13);
-            RenderSystem.popMatrix();
+            RenderSystem.restoreProjectionMatrix();
+            stack.popPose();
         }
         if (recipe.getRequiredLevel() > 1) {
             Component level = new TranslatableComponent("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
@@ -95,7 +97,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
 
     @Nonnull
     @Override
-    public String getTitle() {
+    public Component getTitle() {
         return localizedName;
     }
 

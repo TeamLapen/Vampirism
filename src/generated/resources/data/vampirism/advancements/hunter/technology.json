@@ -22,7 +22,9 @@
       "conditions": {
         "items": [
           {
-            "item": "vampirism:basic_tech_crossbow"
+            "items": [
+              "vampirism:basic_tech_crossbow"
+            ]
           }
         ]
       }
@@ -32,7 +34,9 @@
       "conditions": {
         "items": [
           {
-            "item": "vampirism:enhanced_tech_crossbow"
+            "items": [
+              "vampirism:enhanced_tech_crossbow"
+            ]
           }
         ]
       }

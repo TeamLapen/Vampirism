@@ -19,7 +19,7 @@ public class DefendVillageGoal<T extends PathfinderMob & IVillageCaptureEntity> 
     public DefendVillageGoal(T creature) {
         super(creature, false, false);
         this.creature = creature;
-        this.entityPredicate = new TargetingConditions() {
+        this.entityPredicate = new TargetingConditions(true) {
             @Override
             public boolean test(@Nullable LivingEntity attackEntity, LivingEntity targetEntity) {
                 if (creature.getCaptureInfo() != null && creature.getCaptureInfo().shouldForceTargets() && getFollowDistance() > 0) {
@@ -29,7 +29,7 @@ public class DefendVillageGoal<T extends PathfinderMob & IVillageCaptureEntity> 
                 }
                 return super.test(attackEntity, targetEntity);
             }
-        }.selector(VampirismAPI.factionRegistry().getPredicate(creature.getFaction(), false)).allowUnseeable();
+        }.selector(VampirismAPI.factionRegistry().getPredicate(creature.getFaction(), false)).ignoreInvisibilityTesting();
     }
 
     @Override

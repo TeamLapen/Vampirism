@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.tileentity.BloodContainerTileEntity;
+import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,8 +41,6 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 /**
  * Tileentity container that can store liquids.
@@ -97,7 +95,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
         super.fillItemCategory(group, items);
         ItemStack stack = new ItemStack(this, 1);
-        FluidStack fluid = new FluidStack(ModFluids.blood, BloodContainerTileEntity.CAPACITY);
+        FluidStack fluid = new FluidStack(ModFluids.blood, BloodContainerBlockEntity.CAPACITY);
         stack.addTagElement("fluid", fluid.writeToNBT(new CompoundTag()));
         items.add(stack);
     }
@@ -108,8 +106,8 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockGetter worldIn) {
-        return new BloodContainerTileEntity();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new BloodContainerBlockEntity(pos, state);
     }
 
     @Override
@@ -121,7 +119,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     public void playerDestroy(Level worldIn, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack heldStack) {
         ItemStack stack = new ItemStack(ModBlocks.blood_container, 1);
         if (te != null) {
-            FluidStack fluid = ((BloodContainerTileEntity) te).getFluid();
+            FluidStack fluid = ((BloodContainerBlockEntity) te).getFluid();
             if (!fluid.isEmpty() && fluid.getAmount() >= VReference.FOOD_TO_FLUID_BLOOD) {
                 writeFluidToItemStack(stack, fluid);
             }
@@ -135,8 +133,10 @@ public class BloodContainerBlock extends VampirismBlockContainer {
         FluidStack fluid = getFluidFromItemStack(stack);
         if (!stack.isEmpty()) {
             BlockEntity tile = (worldIn.getBlockEntity(pos));
-            if (tile instanceof BloodContainerTileEntity) {
-                ((BloodContainerTileEntity) tile).setFluidStack(fluid);
+            if (tile instanceof BloodContainerBlockEntity) {
+                ((BloodContainerBlockEntity) tile).setFluidStack(fluid);
+                tile.setChanged();
+
             }
         }
     }

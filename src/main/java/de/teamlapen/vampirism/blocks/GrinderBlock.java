@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.tileentity.BloodGrinderTileEntity;
+import de.teamlapen.vampirism.blockentity.BloodGrinderBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Material;
@@ -11,7 +11,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -31,7 +30,6 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class GrinderBlock extends VampirismBlockContainer {
@@ -121,7 +119,7 @@ public class GrinderBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new BloodGrinderTileEntity(pos, state);
+        return new BloodGrinderBlockEntity(pos, state);
     }
 
     @Override
@@ -132,7 +130,7 @@ public class GrinderBlock extends VampirismBlockContainer {
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (world.isClientSide) return InteractionResult.SUCCESS;
-        player.openMenu(world.getBlockEntity(pos) instanceof BloodGrinderTileEntity ? (BloodGrinderTileEntity) world.getBlockEntity(pos) : null);
+        player.openMenu(world.getBlockEntity(pos) instanceof BloodGrinderBlockEntity ? (BloodGrinderBlockEntity) world.getBlockEntity(pos) : null);
         return InteractionResult.SUCCESS;
     }
 
@@ -149,6 +147,6 @@ public class GrinderBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState p_153213_, BlockEntityType<T> p_153214_) {
-        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModTiles.grinder, BloodGrinderTileEntity::serverTick);
+        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModTiles.grinder, BloodGrinderBlockEntity::serverTick);
     }
 }

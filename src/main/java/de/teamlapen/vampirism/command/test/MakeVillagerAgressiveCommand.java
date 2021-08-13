@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.command.test;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.tileentity.TotemTileEntity;
+import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.world.entity.npc.Villager;
@@ -25,7 +25,7 @@ public class MakeVillagerAgressiveCommand extends BasicCommand {
         List<Villager> l = asPlayer.getCommandSenderWorld().getEntitiesOfClass(Villager.class, asPlayer.getBoundingBox().inflate(3, 2, 3));
         for (Villager v : l) {
             if (v instanceof IFactionEntity) continue;
-            TotemTileEntity.makeAgressive(v);
+            TotemBlockEntity.makeAgressive(v);
         }
         return 0;
     }

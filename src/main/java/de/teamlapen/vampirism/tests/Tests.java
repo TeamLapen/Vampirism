@@ -4,6 +4,7 @@ import com.google.common.base.Stopwatch;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.fluids.BloodHelper;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.entity.player.Player;
@@ -44,7 +45,7 @@ public class Tests {
 
     private final static Logger LOGGER = LogManager.getLogger(Tests.class);
 
-    public static void runTests(Level world, Player player) {
+    public static void runTests(Level world, ServerPlayer player) {
         sendMsg(player, "Starting tests");
         LOGGER.warn("Clearing area", new Object[]{});
         clearArea(world);

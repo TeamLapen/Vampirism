@@ -42,7 +42,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 public class VampirismWorldGen {
     private static final Logger LOGGER = LogManager.getLogger();
     private final static float TOTEM_PRESET_PERCENTAGE = 0.6f;
-    private final static int HUNTER_TRAINER_WEIGHT = 400;
+    private final static int HUNTER_TRAINER_WEIGHT = 150;
     public static boolean debug = false;
 
     public static void initVillageStructures() {

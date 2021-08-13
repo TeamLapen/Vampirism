@@ -18,7 +18,10 @@ import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.player.skills.ClientSkillTreeManager;
 import de.teamlapen.vampirism.player.skills.SkillTree;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.tileentity.GarlicBeaconTileEntity;
+import de.teamlapen.vampirism.blockentity.GarlicDiffusorBlockEntity;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
@@ -47,6 +50,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
@@ -87,7 +92,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void displayGarlicBeaconScreen(GarlicBeaconTileEntity tile, Component title) {
+    public void displayGarlicBeaconScreen(GarlicDiffusorBlockEntity tile, Component title) {
         Minecraft.getInstance().setScreen(new GarlicBeaconScreen(tile, title));
     }
 
@@ -202,12 +207,12 @@ public class ClientProxy extends CommonProxy {
         super.onInitStep(step, event);
         switch (step) {
             case CLIENT_SETUP:
-                ModEntitiesRender.registerEntityRenderer();
+                overlay = new VampirismHUDOverlay(Minecraft.getInstance());
                 ModKeys.register();
                 registerSubscriptions();
                 SelectActionScreen.loadActionOrder();
                 ModBlocksRender.register();
-                ((FMLClientSetupEvent) event).getMinecraftSupplier().get().getEntityRenderDispatcher().getSkinMap().forEach((k, r) -> r.addLayer(new WingsLayer<>(r, player -> VampirePlayer.getOpt(player).map(VampirePlayer::getWingCounter).filter(i -> i > 0).isPresent(), (e, m) -> m.body)));
+                OverlayRegistry.registerOverlayAbove(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT, "faction_level", overlay::renderFactionLevel);
                 break;
             case LOAD_COMPLETE:
                 ModBlocksRender.registerColors();
@@ -215,7 +220,6 @@ public class ClientProxy extends CommonProxy {
                 ModParticleFactories.registerFactories();
                 event.enqueueWork(ModScreens::registerScreensUnsafe);
                 skillTreeManager.init();
-                registerVampireEntityOverlays();
                 itemStackBESR = new VampirismBlockEntityWitoutLevelRenderer(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
                 break;
             default:
@@ -243,7 +247,6 @@ public class ClientProxy extends CommonProxy {
     }
 
     private void registerSubscriptions() {
-        overlay = new VampirismHUDOverlay(Minecraft.getInstance());
         this.bossInfoOverlay = new CustomBossInfoOverlay();
         MinecraftForge.EVENT_BUS.register(overlay);
         MinecraftForge.EVENT_BUS.register(this.bossInfoOverlay);
@@ -251,35 +254,10 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(new ScreenEventHandler());
     }
 
-    private void registerVampireEntityOverlay(EntityRenderDispatcher manager, EntityType<? extends PathfinderMob> type, ResourceLocation loc) {
-        EntityRenderer<?> render = manager.renderers.get(type);
-        if (render == null) {
-            LOGGER.error("Did not find renderer for {}", type);
-            return;
-        }
-        if (!(render instanceof LivingEntityRenderer rendererLiving)) {
-            LOGGER.error("Renderer ({}) for {} does not extend RenderLivingEntity", type, render);
-            return;
-        }
-        rendererLiving.addLayer(new VampireEntityLayer(rendererLiving, loc, true));
-    }
 
-    private void registerVampireEntityOverlays() {
-        EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
-        registerVampirePlayerHead(manager);
-        for (Map.Entry<EntityType<? extends PathfinderMob>, ResourceLocation> entry : VampirismAPI.entityRegistry().getConvertibleOverlay().entrySet()) {
-            registerVampireEntityOverlay(manager, entry.getKey(), entry.getValue());
-        }
-    }
-
-    private void registerVampirePlayerHead(EntityRenderDispatcher manager) {
-        for (PlayerRenderer renderPlayer : manager.getSkinMap().values()) {
-            renderPlayer.addLayer(new VampirePlayerHeadLayer(renderPlayer));
-        }
-    }
 
     /**
-     * copied from {@link net.minecraft.client.particle.ParticleManager#addBlockDestroyEffects(net.minecraft.util.math.BlockPos, net.minecraft.block.BlockState)} but which much lesser particles
+     * copied but which much lesser particles
      */
     private void spawnParticles(Level world, BlockPos pos, BlockState state) {
         if (!(world instanceof ClientLevel)) return;
@@ -301,7 +279,7 @@ public class ClientProxy extends CommonProxy {
                         double d7 = d4 * d1 + p_199284_3_;
                         double d8 = d5 * d2 + p_199284_5_;
                         double d9 = d6 * d3 + p_199284_7_;
-                        Minecraft.getInstance().particleEngine.add((new TerrainParticle((ClientLevel) world, (double) pos.getX() + d7, (double) pos.getY() + d8, (double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state)).init(pos));
+                        Minecraft.getInstance().particleEngine.add((new TerrainParticle((ClientLevel) world, (double) pos.getX() + d7, (double) pos.getY() + d8, (double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state)));
                     }
                 }
             }

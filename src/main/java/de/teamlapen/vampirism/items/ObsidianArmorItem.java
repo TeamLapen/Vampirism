@@ -28,7 +28,7 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
     private final static String baseRegName = "obsidian_armor";
 
     public static boolean isFullyEquipped(Player player) {
-        for (ItemStack stack : player.inventory.armor) {
+        for (ItemStack stack : player.getInventory().armor) {
             if (stack.isEmpty() || !(stack.getItem() instanceof ObsidianArmorItem)) {
                 return false;
             }

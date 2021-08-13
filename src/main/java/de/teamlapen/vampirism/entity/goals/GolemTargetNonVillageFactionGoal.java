@@ -5,8 +5,8 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.tileentity.TotemHelper;
-import de.teamlapen.vampirism.tileentity.TotemTileEntity;
+import de.teamlapen.vampirism.blockentity.TotemHelper;
+import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
@@ -34,8 +34,8 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
     public boolean canUse() {
         IFaction<?> faction = VReference.HUNTER_FACTION;
         if (VampirismConfig.BALANCE.golemAttackNonVillageFaction.get()) {
-            Optional<TotemTileEntity> tile = TotemHelper.getTotemNearPos(((ServerLevel) this.golem.level), this.golem.blockPosition(), true);
-            faction = tile.map(TotemTileEntity::getControllingFaction).orElse(((IPlayableFaction) VReference.HUNTER_FACTION));
+            Optional<TotemBlockEntity> tile = TotemHelper.getTotemNearPos(((ServerLevel) this.golem.level), this.golem.blockPosition(), true);
+            faction = tile.map(TotemBlockEntity::getControllingFaction).orElse(((IPlayableFaction) VReference.HUNTER_FACTION));
         }
 
         if (faction != this.faction) {

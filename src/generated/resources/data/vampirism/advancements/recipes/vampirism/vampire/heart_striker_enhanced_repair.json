@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "vampirism:heart_striker_enhanced"
+            "items": [
+              "vampirism:heart_striker_enhanced"
+            ]
           }
         ]
       }

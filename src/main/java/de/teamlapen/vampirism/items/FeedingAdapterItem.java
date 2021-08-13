@@ -44,7 +44,7 @@ public class FeedingAdapterItem extends VampirismItem {
             player.releaseUsingItem();
             return;
         }
-        ItemStack bloodContainer = BloodHelper.getBloodContainerInInventory(((Player) player).inventory, true, false);
+        ItemStack bloodContainer = BloodHelper.getBloodContainerInInventory(((Player) player).getInventory(), true, false);
         FluidStack fluidStack = BloodContainerBlock.getFluidFromItemStack(bloodContainer);
         int blood = fluidStack.isEmpty() || fluidStack.getFluid() != ModFluids.blood ? 0 : fluidStack.getAmount();
         VampirePlayer vampire = VampirePlayer.get((Player) player);
@@ -74,7 +74,7 @@ public class FeedingAdapterItem extends VampirismItem {
             if (vampire.getLevel() == 0) return new InteractionResultHolder<>(InteractionResult.PASS, stack);
 
 
-            if (vampire.getBloodStats().needsBlood() && !BloodHelper.getBloodContainerInInventory(playerIn.inventory, true, false).isEmpty()) {
+            if (vampire.getBloodStats().needsBlood() && !BloodHelper.getBloodContainerInInventory(playerIn.getInventory(), true, false).isEmpty()) {
                 playerIn.startUsingItem(handIn);
                 return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
             }

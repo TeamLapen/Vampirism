@@ -28,8 +28,8 @@ import de.teamlapen.vampirism.items.GarlicBreadItem;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.BatVampireAction;
-import de.teamlapen.vampirism.tileentity.TotemHelper;
-import de.teamlapen.vampirism.tileentity.TotemTileEntity;
+import de.teamlapen.vampirism.blockentity.TotemHelper;
+import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -53,7 +53,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -117,7 +116,7 @@ public class ModPlayerEventHandler {
         //also notify client about wrong destroyed neighbor blocks (bed)
         if (totemPos != null && event.getWorld().hasChunkAt(totemPos)) {
             BlockEntity totem = (event.getWorld().getBlockEntity(totemPos));
-            if (totem instanceof TotemTileEntity && ((TotemTileEntity) totem).getControllingFaction() != null && VampirismPlayerAttributes.get(event.getPlayer()).faction != ((TotemTileEntity) totem).getControllingFaction()) {
+            if (totem instanceof TotemBlockEntity && ((TotemBlockEntity) totem).getControllingFaction() != null && VampirismPlayerAttributes.get(event.getPlayer()).faction != ((TotemBlockEntity) totem).getControllingFaction()) {
                 event.setCanceled(true);
                 event.getPlayer().displayClientMessage(new TranslatableComponent("text.vampirism.village.totem_destroy.fail_totem_faction"), true);
                 if (!positions.isEmpty() && event.getPlayer() instanceof ServerPlayer) {

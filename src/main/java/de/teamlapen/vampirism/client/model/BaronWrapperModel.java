@@ -12,9 +12,14 @@ import net.minecraft.client.model.geom.ModelPart;
  * Wraps the male and female model into a single model class/instance as the {@link EntityRenderer} needs a single model
  */
 public class BaronWrapperModel extends EntityModel<VampireBaronEntity> {
-    private final BaronModel baron = new BaronModel();
-    private final BaronessModel baroness = new BaronessModel();
+    private final BaronModel baron;
+    private final BaronessModel baroness ;
     private boolean lady = false;
+
+    public BaronWrapperModel(BaronModel baron, BaronessModel baroness) {
+        this.baron = baron;
+        this.baroness = baroness;
+    }
 
     public ModelPart getBodyPart(VampireBaronEntity entityIn) {
         return entityIn.isLady() ? baroness.body : baron.body;

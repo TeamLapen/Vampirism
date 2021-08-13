@@ -6,6 +6,11 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.util.Mth;
@@ -15,20 +20,25 @@ import net.minecraft.util.Mth;
  * Created using Tabula 7.1.0
  */
 public class BaronAttireModel extends EntityModel<VampireBaronEntity> {
+
+    private static final String HOOD = "hood";
+    private static final String CLOAK = "cloak";
+
     public ModelPart hood;
     public ModelPart cloak;
     private float enragedProgress = 0;
 
-    public BaronAttireModel() {
-        this.texWidth = 128;
-        this.texHeight = 64;
-        this.hood = new ModelPart(this, 44, 0);
-        this.hood.setPos(0.0F, 0.0F, 0.0F);
-        this.hood.addBox(-4.5F, -8.5F, -4.0F, 9, 9, 9, 0.0F);
-        this.cloak = new ModelPart(this, 0, 0);
-        this.cloak.setPos(0.0F, 0.0F, 0.0F);
-        this.cloak.addBox(-8.5F, -0.5F, -2.5F, 17, 22, 5, 0.0F);
-        this.hood.addChild(this.cloak);
+    public static LayerDefinition createLayer() {
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition part = mesh.getRoot();
+        PartDefinition hood = part.addOrReplaceChild(HOOD, CubeListBuilder.create().texOffs(44,0).addBox(-4.5f, -8.5f, -4, 9,9,9), PartPose.ZERO);
+        hood.addOrReplaceChild(CLOAK, CubeListBuilder.create().texOffs(0,0).addBox(-8.5f,-0.5f,-2.5f,17,22,5), PartPose.ZERO);
+        return LayerDefinition.create( mesh, 128, 64);
+    }
+
+    public BaronAttireModel(ModelPart part) {
+        hood = part.getChild(HOOD);
+        cloak = hood.getChild(CLOAK);
     }
 
     @Override

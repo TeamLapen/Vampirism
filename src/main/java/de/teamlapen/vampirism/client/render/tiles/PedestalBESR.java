@@ -1,23 +1,21 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.tileentity.PedestalTileEntity;
+import de.teamlapen.vampirism.blockentity.PedestalBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import com.mojang.blaze3d.platform.Lighting;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.ItemStack;
 import com.mojang.math.Vector3f;
 
-public class PedestalTESR extends VampirismTESR<PedestalTileEntity> {
-    public PedestalTESR(BlockEntityRendererProvider.Context context) {
+public class PedestalBESR extends VampirismBESR<PedestalBlockEntity> {
+    public PedestalBESR(BlockEntityRendererProvider.Context context) {
 
     }
 
     @Override
-    public void render(PedestalTileEntity te, float partialTicks, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int i, int i1) {
+    public void render(PedestalBlockEntity te, float partialTicks, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int i, int i1) {
         ItemStack stack = te.getStackForRender();
         if (!stack.isEmpty()) {
             matrixStack.pushPose();

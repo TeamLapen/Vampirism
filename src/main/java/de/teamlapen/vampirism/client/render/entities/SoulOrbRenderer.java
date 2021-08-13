@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.render.entities;
 
 import de.teamlapen.vampirism.entity.SoulOrbEntity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -13,8 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class SoulOrbRenderer extends ThrownItemRenderer<SoulOrbEntity> {
 
-    public SoulOrbRenderer(EntityRenderDispatcher renderManager, ItemRenderer renderItem) {
-        super(renderManager, renderItem);
+    public SoulOrbRenderer(EntityRendererProvider.Context context) {
+        super(context);
     }
 
     @Override

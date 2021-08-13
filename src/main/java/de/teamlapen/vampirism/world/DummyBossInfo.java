@@ -12,7 +12,7 @@ import net.minecraft.world.BossEvent.BossBarOverlay;
 
 public class DummyBossInfo extends LerpingBossEvent {
     public DummyBossInfo(UUID uniqueIdIn, Component nameIn) {
-        super(new ClientboundBossEventPacket(ClientboundBossEventPacket.Operation.ADD, new DummyBossInfo2(uniqueIdIn, nameIn)));
+        super(uniqueIdIn,nameIn, 0,BossBarColor.WHITE, BossBarOverlay.PROGRESS, false, false, false);
     }
 
     public static class DummyBossInfo2 extends BossEvent {

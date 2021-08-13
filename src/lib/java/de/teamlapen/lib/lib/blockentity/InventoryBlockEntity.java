@@ -1,4 +1,4 @@
-package de.teamlapen.lib.lib.tile;
+package de.teamlapen.lib.lib.blockentity;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import net.minecraft.core.BlockPos;
@@ -18,9 +18,9 @@ import javax.annotation.Nonnull;
 
 
 /**
- * Basic abstract class for TileEntitys which need a small inventory (with an gui)
+ * Basic abstract class for BlockEntities which need a small inventory (with an gui)
  */
-public abstract class InventoryTileEntity extends BaseContainerBlockEntity implements MenuProvider {
+public abstract class InventoryBlockEntity extends BaseContainerBlockEntity implements MenuProvider {
 
     /**
      * Maximal squared distance from which the player can access the inventory
@@ -30,7 +30,7 @@ public abstract class InventoryTileEntity extends BaseContainerBlockEntity imple
     protected InventoryContainer.SelectorInfo[] selectors;
 
 
-    public InventoryTileEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state, int size, InventoryContainer.SelectorInfo... selectorInfos) {
+    public InventoryBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state, int size, InventoryContainer.SelectorInfo... selectorInfos) {
         super(tileEntityTypeIn, pos, state);
         this.inventorySlots = NonNullList.withSize(size, ItemStack.EMPTY);
         if (selectorInfos.length != size) {
