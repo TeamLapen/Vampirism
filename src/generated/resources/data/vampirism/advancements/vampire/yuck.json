@@ -8,7 +8,7 @@
       "translate": "advancement.vampirism.yuck"
     },
     "description": {
-      "translate": "advancement.vampirism.yuck"
+      "translate": "advancement.vampirism.yuck.desc"
     },
     "frame": "task",
     "show_toast": true,

@@ -8,7 +8,7 @@
       "translate": "advancement.vampirism.sniped"
     },
     "description": {
-      "translate": "advancement.vampirism.sniped"
+      "translate": "advancement.vampirism.sniped.desc"
     },
     "frame": "task",
     "show_toast": true,

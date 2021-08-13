@@ -8,7 +8,7 @@
       "translate": "advancement.vampirism.max_lord_vampire"
     },
     "description": {
-      "translate": "advancement.vampirism.max_lord_vampire"
+      "translate": "advancement.vampirism.max_lord_vampire.desc"
     },
     "frame": "challenge",
     "show_toast": true,
