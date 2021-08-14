@@ -9,19 +9,21 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class ScrollableArrayTextComponentList extends ScrollableListWidget<Pair<Integer, Component>> {
 
     private static Collection<Pair<Integer, Component>> getItems(Supplier<Component[]> baseValueSupplier) {
-        List<Component> list = Arrays.asList(baseValueSupplier.get());
-        return list.stream().map(item -> Pair.of(list.indexOf(item), item)).collect(Collectors.toList());
+        Collection<Pair<Integer, Component>> items = new ArrayList<>();
+        Component[] baseValues = baseValueSupplier.get();
+        for (int i = 0; i < baseValues.length; i++) {
+            items.add(Pair.of(i, baseValues[i]));
+        }
+        return items;
     }
 
     private static Supplier<Component[]> createTextArray(int amount, BaseComponent baseName) {
