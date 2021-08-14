@@ -36,7 +36,7 @@ public class OptifineHandler {
                 LOGGER.error("Could not retrieve shader check method from Optifine config", e);
             }
 
-        } catch (ClassNotFoundException ignored) {
+        } catch (ClassNotFoundException | NoClassDefFoundError ignored) {
 
         }
         didCheck = true;

@@ -11,6 +11,7 @@ public class WeaponTableRecipePlacer<C extends IInventory> extends ServerRecipeP
         super(recipeBookContainer);
     }
 
+    @Override
     protected void clearGrid() {
         for (int i = 0; i < this.menu.getGridWidth() * this.menu.getGridHeight() + 1; ++i) {
             if (i != this.menu.getResultSlotIndex() || !(this.menu instanceof WeaponTableContainer) && !(this.menu instanceof PlayerContainer)) {
