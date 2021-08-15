@@ -87,12 +87,9 @@ public interface CurableConvertedCreature<T extends CreatureEntity, Z extends Cr
     }
 
     /**
-     * return in {@link CreatureEntity#getName()}
+     * return in {@link CreatureEntity#getTypeName()} ()}
      */
     default ITextComponent getNameC(Supplier<ITextComponent> baseName) {
-        if (((CreatureEntity) this).hasCustomName()) {
-            return getNameSuper();
-        }
         if (data().name == null) {
             this.data().name = new TranslationTextComponent("entity.vampirism.vampire").append(baseName.get());
         }
@@ -264,11 +261,6 @@ public interface CurableConvertedCreature<T extends CreatureEntity, Z extends Cr
      * implement as super call for {@link CreatureEntity#handleEntityEvent(byte)}
      */
     void handleEntityEventSuper(byte id);
-
-    /**
-     * implement as super call for {@link CreatureEntity#getName()}
-     */
-    ITextComponent getNameSuper();
 
     /**
      * implement as super call for {@link CreatureEntity#mobInteract(PlayerEntity, Hand)}

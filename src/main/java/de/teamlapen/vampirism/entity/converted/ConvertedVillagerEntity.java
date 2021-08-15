@@ -46,11 +46,9 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.scoreboard.Team;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorld;
@@ -169,21 +167,10 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         return this;
     }
 
-    @Nonnull
     @Override
-    public ITextComponent getDisplayName() {
-        Team team = this.getTeam();
-        if (this.getCustomName() != null) {
-            return super.getDisplayName();
-        } else {
-            VillagerProfession villagerprofession = this.getVillagerData().getProfession();
-            IFormattableTextComponent itextcomponent1 = (new TranslationTextComponent(EntityType.VILLAGER.getDescriptionId() + '.' + (!"minecraft".equals(Helper.getIDSafe(villagerprofession).getNamespace()) ? Helper.getIDSafe(villagerprofession).getNamespace() + '.' : "") + Helper.getIDSafe(villagerprofession).getPath())).withStyle((style) -> style.withHoverEvent(this.createHoverEvent()).withInsertion(this.getStringUUID()));
-            if (team != null) {
-                itextcomponent1.withStyle(team.getColor());
-            }
-
-            return itextcomponent1;
-        }
+    protected ITextComponent getTypeName() {
+        net.minecraft.util.ResourceLocation profName = this.getVillagerData().getProfession().getRegistryName();
+        return new TranslationTextComponent(EntityType.VILLAGER.getDescriptionId() + '.' + (!"minecraft".equals(profName.getNamespace()) ? profName.getNamespace() + '.' : "") + profName.getPath());
     }
 
     @Override

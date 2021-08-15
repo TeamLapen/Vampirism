@@ -141,12 +141,8 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         return CONVERTING;
     }
 
-    @Nonnull
     @Override
-    public ITextComponent getName() {
-        if (hasCustomName()) {
-            return super.getName();
-        }
+    protected ITextComponent getTypeName() {
         if (name == null) {
             this.name = new TranslationTextComponent("entity.vampirism.vampire").append(" ").append((nil() ? super.getName() : entityCreature.getName()));
         }
