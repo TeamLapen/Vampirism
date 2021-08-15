@@ -88,12 +88,9 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     /**
-     * return in {@link PathfinderMob#getName()}
+     * return in {@link PathfinderMob#getTypeName()}
      */
     default Component getNameC(Supplier<Component> baseName) {
-        if (((PathfinderMob) this).hasCustomName()) {
-            return getNameSuper();
-        }
         if (data().name == null) {
             this.data().name = new TranslatableComponent("entity.vampirism.vampire").append(baseName.get());
         }
@@ -266,11 +263,6 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
      * implement as super call for {@link PathfinderMob#handleEntityEvent(byte)}
      */
     void handleEntityEventSuper(byte id);
-
-    /**
-     * implement as super call for {@link PathfinderMob#getName()}
-     */
-    Component getNameSuper();
 
     /**
      * implement as super call for {@link PathfinderMob#mobInteract(Player, InteractionHand)}

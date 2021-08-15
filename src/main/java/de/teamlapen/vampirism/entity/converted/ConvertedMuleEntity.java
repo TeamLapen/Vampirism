@@ -50,11 +50,6 @@ public class ConvertedMuleEntity extends Mule implements CurableConvertedCreatur
     }
 
     @Override
-    public Component getNameSuper() {
-        return super.getName();
-    }
-
-    @Override
     public InteractionResult mobInteractSuper(@Nonnull Player player, @Nonnull InteractionHand hand) {
         return super.mobInteract(player, hand);
     }
@@ -95,7 +90,7 @@ public class ConvertedMuleEntity extends Mule implements CurableConvertedCreatur
 
     @Nonnull
     @Override
-    public Component getName() {
+    protected Component getTypeName() {
         return this.getNameC(() -> new TranslatableComponent("entity.mule"));
     }
 

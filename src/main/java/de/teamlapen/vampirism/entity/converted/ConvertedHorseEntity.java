@@ -51,11 +51,6 @@ public class ConvertedHorseEntity extends Horse implements CurableConvertedCreat
     }
 
     @Override
-    public Component getNameSuper() {
-        return super.getName();
-    }
-
-    @Override
     public InteractionResult mobInteractSuper(@Nonnull Player player, @Nonnull InteractionHand hand) {
         return super.mobInteract(player, hand);
     }
@@ -96,7 +91,7 @@ public class ConvertedHorseEntity extends Horse implements CurableConvertedCreat
 
     @Nonnull
     @Override
-    public Component getName() {
+    protected Component getTypeName() {
         return this.getNameC(() -> new TranslatableComponent("entity.horse"));
     }
 

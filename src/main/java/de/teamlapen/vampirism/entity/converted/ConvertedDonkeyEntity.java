@@ -50,11 +50,6 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
     }
 
     @Override
-    public Component getNameSuper() {
-        return super.getName();
-    }
-
-    @Override
     public InteractionResult mobInteractSuper(@Nonnull Player player, @Nonnull InteractionHand hand) {
         return super.mobInteract(player, hand);
     }
@@ -93,9 +88,8 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
         return VReference.VAMPIRE_CREATURE_ATTRIBUTE;
     }
 
-    @Nonnull
     @Override
-    public Component getName() {
+    protected Component getTypeName() {
         return this.getNameC(() -> new TranslatableComponent("entity.donkey"));
     }
 

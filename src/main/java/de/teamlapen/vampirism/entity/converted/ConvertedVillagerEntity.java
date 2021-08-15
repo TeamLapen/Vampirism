@@ -23,11 +23,11 @@ import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -55,7 +55,6 @@ import net.minecraft.world.entity.schedule.Schedule;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.scores.Team;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -169,21 +168,10 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         return this;
     }
 
-    @Nonnull
     @Override
-    public Component getDisplayName() {
-        Team team = this.getTeam();
-        if (this.getCustomName() != null) {
-            return super.getDisplayName();
-        } else {
-            VillagerProfession villagerprofession = this.getVillagerData().getProfession();
-            MutableComponent itextcomponent1 = (new TranslatableComponent(EntityType.VILLAGER.getDescriptionId() + '.' + (!"minecraft".equals(Helper.getIDSafe(villagerprofession).getNamespace()) ? Helper.getIDSafe(villagerprofession).getNamespace() + '.' : "") + Helper.getIDSafe(villagerprofession).getPath())).withStyle((style) -> style.withHoverEvent(this.createHoverEvent()).withInsertion(this.getStringUUID()));
-            if (team != null) {
-                itextcomponent1.withStyle(team.getColor());
-            }
-
-            return itextcomponent1;
-        }
+    protected Component getTypeName() {
+        ResourceLocation profName = this.getVillagerData().getProfession().getRegistryName();
+        return new TranslatableComponent(EntityType.VILLAGER.getDescriptionId() + '.' + (!"minecraft".equals(profName.getNamespace()) ? profName.getNamespace() + '.' : "") + profName.getPath());
     }
 
     @Override
