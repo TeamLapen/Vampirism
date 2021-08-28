@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.entity.minion.goals.FollowLordGoal;
 import de.teamlapen.vampirism.entity.minion.goals.MoveToTaskCenterGoal;
 import de.teamlapen.vampirism.entity.minion.management.MinionDamageSource;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
+import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.inventory.container.MinionContainer;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
@@ -559,7 +560,12 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
         this.goalSelector.addGoal(9, new MoveToTaskCenterGoal(this));
         this.goalSelector.addGoal(10, new LookAtClosestVisibleGoal(this, Player.class, 20F, 0.6F));
-        this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(10, new RandomLookAroundGoal(this) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !MinionEntity.this.getCurrentTask().filter(t -> t.getTask()== MinionTasks.stay).isPresent();
+            }
+        });
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new DefendAreaGoal(this));

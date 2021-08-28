@@ -11,11 +11,14 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nonnull;
 
 /**
  * There are differently looking level 0 hunters.
@@ -71,4 +74,11 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
         //matrixStackIn.translate(0,off,0f);
     }
 
+    @Override
+    protected void renderNameTag(@Nonnull HunterMinionEntity pEntity, @Nonnull Component pDisplayName, PoseStack pMatrixStack, @Nonnull MultiBufferSource pBuffer, int pPackedLight) {
+        pMatrixStack.pushPose();
+        pMatrixStack.translate(0,0.4f,0);
+        super.renderNameTag(pEntity, pDisplayName, pMatrixStack, pBuffer, pPackedLight);
+        pMatrixStack.popPose();
+    }
 }
