@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
@@ -69,4 +70,11 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
         //matrixStackIn.translate(0,off,0f);
     }
 
+    @Override
+    protected void renderNameTag(HunterMinionEntity p_225629_1_, ITextComponent p_225629_2_, MatrixStack p_225629_3_, IRenderTypeBuffer p_225629_4_, int p_225629_5_) {
+        p_225629_3_.pushPose();
+        p_225629_3_.translate(0,0.4f,0);
+        super.renderNameTag(p_225629_1_, p_225629_2_, p_225629_3_, p_225629_4_, p_225629_5_);
+        p_225629_3_.popPose();
+    }
 }
