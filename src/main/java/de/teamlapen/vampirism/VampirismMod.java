@@ -196,10 +196,9 @@ public class VampirismMod {
 
     @SubscribeEvent
     public void onServerStarted(FMLServerStartedEvent event) {
-        if (!ModLootTables.checkAndResetInsertedAll()) {
-            LOGGER.warn("LootTables -------------------------------");
-            LOGGER.warn("LootTables Failed to inject all loottables");
-            LOGGER.warn("LootTables -------------------------------");
+        int missing = ModLootTables.checkAndResetInsertedAll();
+        if (missing > 0) {
+            LOGGER.warn("LootTables Failed to inject {} loottables", missing);
         }
     }
 
