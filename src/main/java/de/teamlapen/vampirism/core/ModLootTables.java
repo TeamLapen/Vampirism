@@ -80,9 +80,12 @@ public class ModLootTables {
         return LootPool.lootPool().name("vampirism_inject_pool").bonusRolls(0, 1).setRolls(ConstantValue.exactly(1)).add(entryBuilder).build();
     }
 
-    public static boolean checkAndResetInsertedAll() {
+    /**
+     * @return 0 if alright, or the count of not injected loottables
+     */
+    public static int checkAndResetInsertedAll() {
         int i = injected;
         injected = 0;
-        return i >= INJECTION_TABLES.size(); //Sponge loads the loot tables for all worlds at start. Which makes this test not work anyway.
+        return Math.max(0, INJECTION_TABLES.size()-i); //Sponge loads the loot tables for all worlds at start. Which makes this test not work anyway.
     }
 }
