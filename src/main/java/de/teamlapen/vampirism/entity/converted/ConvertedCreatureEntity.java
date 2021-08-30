@@ -147,7 +147,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     @Override
     protected Component getTypeName() {
         if (name == null) {
-            this.name = new TranslatableComponent("entity.vampirism.vampire").append(" ").append((nil() ? super.getName() : entityCreature.getName()));
+            this.name = new TranslatableComponent("entity.vampirism.vampire").append(" ").append((nil() ? super.getTypeName() : entityCreature.getName()));
         }
         return name;
     }
