@@ -184,7 +184,7 @@ public class VampirismMod {
 
     @SubscribeEvent
     public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
-        VampirismWorldGen.addVillageStructures();
+        VampirismWorldGen.addVillageStructures(event.getServer().registryAccess());
     }
 
     @SubscribeEvent
@@ -306,7 +306,7 @@ public class VampirismMod {
         if (inDev) {
             Tests.runBackgroundTests();
         }
-        VampirismWorldGen.initVillageStructures();
+        VampirismWorldGen.createJigsawPool();
     }
 
     private void setup(final FMLCommonSetupEvent event) {

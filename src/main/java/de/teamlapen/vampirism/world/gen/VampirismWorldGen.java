@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.world.gen;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
@@ -16,172 +15,157 @@ import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.WorldGenRegistries;
+import net.minecraft.util.registry.DynamicRegistries;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPattern;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPatternRegistry;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
 import net.minecraft.world.gen.feature.jigsaw.SingleJigsawPiece;
-import net.minecraft.world.gen.feature.structure.VillagesPools;
 import net.minecraft.world.gen.feature.template.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class VampirismWorldGen {
-    private static final Logger LOGGER = LogManager.getLogger();
-    private final static float TOTEM_PRESET_PERCENTAGE = 0.6f;
-    private final static int HUNTER_TRAINER_WEIGHT = 400;
     public static boolean debug = false;
 
-    public static void initVillageStructures() {
+    public static void createJigsawPool() {
         VampirismWorldGen.setupSingleJigsawPieceGeneration();
 
-        //init pools for modification
-        VillagesPools.bootstrap();
-
-        Pair<Map<String, List<Pair<JigsawPiece, Integer>>>, Map<String, JigsawPattern>> structures = getStructures();
-
-        VampirismWorldGen.replaceTemples(structures.getFirst());
-
-        addVillageStructures(structures.getFirst());
-
-        VampirismWorldGen.saveChanges(structures.getFirst(), structures.getSecond());
-
+        JigsawPatternRegistry.register(new JigsawPattern(new ResourceLocation(REFERENCE.MODID, "village/entities/hunter_trainer"), new ResourceLocation("empty"), Lists.newArrayList(Pair.of(singleJigsawPieceFunction("village/entities/hunter_trainer"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
     }
 
-    public static void addVillageStructures() {
-        Pair<Map<String, List<Pair<JigsawPiece, Integer>>>, Map<String, JigsawPattern>> structures = getStructures();
-
-        addVillageStructures(structures.getFirst());
-
-        VampirismWorldGen.saveChanges(structures.getFirst(), structures.getSecond());
+    public static void addVillageStructures(DynamicRegistries dynamicRegistries) {
+        VampirismWorldGen.addHunterTrainerHouse(dynamicRegistries, getDefaultPools());
+        VampirismWorldGen.addTotem(dynamicRegistries, getDefaultPools());
+        VampirismWorldGen.replaceTemples(dynamicRegistries, getTempleReplacements());
     }
 
-    public static void addVillageStructures(Map<String, List<Pair<JigsawPiece, Integer>>> map) {
-        VampirismWorldGen.addHunterTrainerHouse(map);
-        VampirismWorldGen.addTotem(map);
+    /**
+     * @return a map the maps {@link JigsawPattern}s that should be modified to the type village type of added objects
+     */
+    private static Map<ResourceLocation, BiomeType> getDefaultPools() {
+        return Collections.unmodifiableMap(new HashMap<ResourceLocation, BiomeType>() {{
+                put(new ResourceLocation("village/plains/houses"), BiomeType.PLAINS);
+                put(new ResourceLocation("village/desert/houses"), BiomeType.DESERT);
+                put(new ResourceLocation("village/savanna/houses"), BiomeType.SAVANNA);
+                put(new ResourceLocation("village/taiga/houses"), BiomeType.TAIGA);
+                put(new ResourceLocation("village/snowy/houses"), BiomeType.SNOWY);
+        }});
     }
 
-    //
-    private static Pair<Map<String, List<Pair<JigsawPiece, Integer>>>, Map<String, JigsawPattern>> getStructures() {
-        Map<String, JigsawPattern> patterns = new HashMap<String, JigsawPattern>() {{
-            put("plains", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/plains/houses")).get());
-            put("desert", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/desert/houses")).get());
-            put("savanna", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/savanna/houses")).get());
-            put("taiga", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/taiga/houses")).get());
-            put("snowy", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/snowy/houses")).get());
-            put("plains_zombie", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/plains/zombie/houses")).get());
-            put("desert_zombie", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/desert/zombie/houses")).get());
-            put("savanna_zombie", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/savanna/zombie/houses")).get());
-            put("taiga_zombie", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/taiga/zombie/houses")).get());
-            put("snowy_zombie", WorldGenRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/snowy/zombie/houses")).get());
+    /**
+     * @return a map that maps {@link JigsawPattern}s that should be modified to a map that maps temple {@link JigsawPiece}s to modified temple {@link JigsawPiece}s
+     */
+    private static Map<ResourceLocation, Map<String, JigsawPiece>> getTempleReplacements() {
+        return new HashMap<ResourceLocation, Map<String, JigsawPiece>>() {{
+            put(new ResourceLocation("village/plains/houses"), ImmutableMap.of(
+                    singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_3"), singleJigsawPiece("village/plains/houses/plains_temple_3", ProcessorLists.MOSSIFY_10_PERCENT),
+                    singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_4"), singleJigsawPiece("village/plains/houses/plains_temple_4", ProcessorLists.MOSSIFY_10_PERCENT)));
+            put(new ResourceLocation("village/desert/houses"), ImmutableMap.of(
+                    singleLegacyJigsawString("minecraft:village/desert/houses/desert_temple_1"), singleJigsawPiece("village/desert/houses/desert_temple_1"),
+                    singleLegacyJigsawString("minecraft:village/desert/houses/desert_temple_2"), singleJigsawPiece("village/desert/houses/desert_temple_2")));
+            put(new ResourceLocation("village/savanna/houses"), ImmutableMap.of(
+                    singleLegacyJigsawString("minecraft:village/savanna/houses/savanna_temple_1"), singleJigsawPiece("village/savanna/houses/savanna_temple_1"),
+                    singleLegacyJigsawString("minecraft:village/savanna/houses/savanna_temple_2"), singleJigsawPiece("village/savanna/houses/savanna_temple_2")));
+            put(new ResourceLocation("village/taiga/houses"), ImmutableMap.of(
+                    singleLegacyJigsawString("minecraft:village/taiga/houses/taiga_temple_1"), singleJigsawPiece("village/taiga/houses/taiga_temple_1", ProcessorLists.MOSSIFY_10_PERCENT)));
+            put(new ResourceLocation("village/snowy/houses"), ImmutableMap.of(
+                    singleLegacyJigsawString("minecraft:village/snowy/houses/snowy_temple_1"), singleJigsawPiece("village/snowy/houses/snowy_temple_1")));
+            put(new ResourceLocation("village/plains/zombie/houses"), ImmutableMap.of(
+                    singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_3"), singleJigsawPiece("village/plains/houses/plains_temple_3", ProcessorLists.ZOMBIE_PLAINS),
+                    singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_4"), singleJigsawPiece("village/plains/houses/plains_temple_4", ProcessorLists.ZOMBIE_PLAINS)));
+            put(new ResourceLocation("village/desert/zombie/houses"), ImmutableMap.of(
+                    singleLegacyJigsawString("minecraft:village/desert/houses/desert_temple_1"), singleJigsawPiece("village/desert/houses/desert_temple_1", ProcessorLists.ZOMBIE_DESERT),
+                    singleLegacyJigsawString("minecraft:village/desert/houses/desert_temple_2"), singleJigsawPiece("village/desert/houses/desert_temple_2", ProcessorLists.ZOMBIE_DESERT)));
+            put(new ResourceLocation("village/savanna/zombie/houses"), ImmutableMap.of(
+                    singleLegacyJigsawString("minecraft:village/savanna/houses/savanna_temple_1"), singleJigsawPiece("village/savanna/houses/savanna_temple_1", ProcessorLists.ZOMBIE_SAVANNA),
+                    singleLegacyJigsawString("minecraft:village/savanna/houses/savanna_temple_2"), singleJigsawPiece("village/savanna/houses/savanna_temple_2", ProcessorLists.ZOMBIE_SAVANNA)));
+            put(new ResourceLocation("village/taiga/zombie/houses"), ImmutableMap.of(
+                    singleLegacyJigsawString("minecraft:village/taiga/zombie/houses/taiga_temple_1"), singleJigsawPiece("village/taiga/houses/taiga_temple_1", ProcessorLists.ZOMBIE_TAIGA)));
+            put(new ResourceLocation("village/snowy/zombie/houses"), ImmutableMap.of(
+                    singleLegacyJigsawString("minecraft:village/snowy/houses/snowy_temple_1"), singleJigsawPiece("village/snowy/houses/snowy_temple_1", ProcessorLists.ZOMBIE_SNOWY)));
         }};
-
-        //biome string -> list of all JigsawPieces with weight
-        Map<String, List<Pair<JigsawPiece, Integer>>> buildings = Maps.newHashMapWithExpectedSize(patterns.size());
-        //fill buildings with modifiable lists from the JigsawPattern's
-        patterns.forEach((biome, pattern) -> buildings.put(biome, Lists.newArrayList(pattern.rawTemplates)));
-
-        return Pair.of(buildings, patterns);
     }
 
     /**
      * replaces half of the temples with temples with church altar
      */
-    private static void replaceTemples(Map<String, List<Pair<JigsawPiece, Integer>>> buildings) {
-        //biome string -> JigsawPattern of the biome
-        //toString() of the replaced JigsawPiece -> modified JigsawPiece
-        Map<String, Map<String, JigsawPiece>> temples = new HashMap<String, Map<String, JigsawPiece>>() {{
-            put("plains", ImmutableMap.of(
-                    singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_3"), singleJigsawPiece("village/plains/houses/plains_temple_3", ProcessorLists.MOSSIFY_10_PERCENT),
-                    singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_4"), singleJigsawPiece("village/plains/houses/plains_temple_4", ProcessorLists.MOSSIFY_10_PERCENT)));
-            put("desert", ImmutableMap.of(
-                    singleLegacyJigsawString("minecraft:village/desert/houses/desert_temple_1"), singleJigsawPiece("village/desert/houses/desert_temple_1"),
-                    singleLegacyJigsawString("minecraft:village/desert/houses/desert_temple_2"), singleJigsawPiece("village/desert/houses/desert_temple_2")));
-            put("savanna", ImmutableMap.of(
-                    singleLegacyJigsawString("minecraft:village/savanna/houses/savanna_temple_1"), singleJigsawPiece("village/savanna/houses/savanna_temple_1"),
-                    singleLegacyJigsawString("minecraft:village/savanna/houses/savanna_temple_2"), singleJigsawPiece("village/savanna/houses/savanna_temple_2")));
-            put("taiga", ImmutableMap.of(
-                    singleLegacyJigsawString("minecraft:village/taiga/houses/taiga_temple_1"), singleJigsawPiece("village/taiga/houses/taiga_temple_1", ProcessorLists.MOSSIFY_10_PERCENT)));
-            put("snowy", ImmutableMap.of(
-                    singleLegacyJigsawString("minecraft:village/snowy/houses/snowy_temple_1"), singleJigsawPiece("village/snowy/houses/snowy_temple_1")));
-            put("plains_zombie", ImmutableMap.of(
-                    singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_3"), singleJigsawPiece("village/plains/houses/plains_temple_3", ProcessorLists.ZOMBIE_PLAINS),
-                    singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_4"), singleJigsawPiece("village/plains/houses/plains_temple_4", ProcessorLists.ZOMBIE_PLAINS)));
-            put("desert_zombie", ImmutableMap.of(
-                    singleLegacyJigsawString("minecraft:village/desert/houses/desert_temple_1"), singleJigsawPiece("village/desert/houses/desert_temple_1", ProcessorLists.ZOMBIE_DESERT),
-                    singleLegacyJigsawString("minecraft:village/desert/houses/desert_temple_2"), singleJigsawPiece("village/desert/houses/desert_temple_2", ProcessorLists.ZOMBIE_DESERT)));
-            put("savanna_zombie", ImmutableMap.of(
-                    singleLegacyJigsawString("minecraft:village/savanna/houses/savanna_temple_1"), singleJigsawPiece("village/savanna/houses/savanna_temple_1", ProcessorLists.ZOMBIE_SAVANNA),
-                    singleLegacyJigsawString("minecraft:village/savanna/houses/savanna_temple_2"), singleJigsawPiece("village/savanna/houses/savanna_temple_2", ProcessorLists.ZOMBIE_SAVANNA)));
-            put("taiga_zombie", ImmutableMap.of(
-                    singleLegacyJigsawString("minecraft:village/taiga/zombie/houses/taiga_temple_1"), singleJigsawPiece("village/taiga/houses/taiga_temple_1", ProcessorLists.ZOMBIE_TAIGA)));
-            put("snowy_zombie", ImmutableMap.of(
-                    singleLegacyJigsawString("minecraft:village/snowy/houses/snowy_temple_1"), singleJigsawPiece("village/snowy/houses/snowy_temple_1", ProcessorLists.ZOMBIE_SNOWY)));
-        }};
-
-        Map<String, List<Pair<JigsawPiece, Pair<JigsawPiece, Integer>>>> allPieces = Maps.newHashMapWithExpectedSize(temples.size());
-
-        //saves replaceable JigsawPieces with weight to map with Replace
-        temples.forEach((biome, replacer) -> buildings.get(biome).removeIf(house -> {
-            if (replacer.containsKey(house.getFirst().toString())) {
-                allPieces.computeIfAbsent(biome, key -> Lists.newArrayList()).add(Pair.of(replacer.get(house.getFirst().toString()), house));
-                return true;
-            }
-            return false;
-        }));
-
-        if (allPieces.size() > temples.size()) {
-            LOGGER.error("Could not find all temples to replace");
-        }
-
-
-        //add old and new JigsawPieces with half weight to the JigsawPattern lists
-        temples.forEach((biome, replacer) -> replacer.values().forEach(piece -> {
-            if (allPieces.containsKey(biome)) {
-                allPieces.get(biome).forEach(pair -> {
-                    if (pair.getFirst() == piece) {
-                        int weight = Math.max((int) (pair.getSecond().getSecond() * 0.6), 1);
-                        buildings.get(biome).add(Pair.of(piece, weight));
-                        buildings.get(biome).add(Pair.of(pair.getSecond().getFirst(), weight));
-                    }
-                });
-            }
-        }));
+    private static void replaceTemples(DynamicRegistries dynamicRegistries, Map<ResourceLocation, Map<String, JigsawPiece>> patternReplacements) {
+        // return if temples should not be modified
+        if (!VampirismConfig.COMMON.villageReplaceTemples.get()) return;
+        // get jigsaw registry
+        dynamicRegistries.registry(Registry.TEMPLATE_POOL_REGISTRY).ifPresent(jigsawRegistry -> {
+            // for every desired pools
+            patternReplacements.forEach((pool, replacements) ->
+                    // get the pool if present
+                    jigsawRegistry.getOptional(pool).ifPresent(pattern -> {
+                        // for each replacement of the pool
+                        replacements.forEach((original, modified) -> {
+                            // remove & count the original pieces
+                            List<JigsawPiece> oldPieces = new ArrayList<>();
+                            pattern.templates.removeIf(piece -> {
+                                if (piece.toString().equals(original)) {
+                                    oldPieces.add(piece);
+                                    return true;
+                                }
+                                return false;
+                            });
+                            // add original and modified places back with less quantity
+                            for (int i = 0; i < oldPieces.size() * 0.6; i++) {
+                                pattern.templates.add(modified);
+                                pattern.templates.add(oldPieces.get(i));
+                            }
+                        });
+                    }));
+        });
     }
 
     /**
      * adds a hunter trainer house to each village
      */
-    private static void addHunterTrainerHouse(Map<String, List<Pair<JigsawPiece, Integer>>> buildings) {
-        //all structureProcessors are copied from PlainsVillagePools, DesertVillagePools, TaigaVillagePools, SavannaVillagePools, SnowyVillagePools
-        Map<String, StructureProcessorList> processors = ImmutableMap.of("plains_zombie", ProcessorLists.ZOMBIE_PLAINS, "desert_zombie", ProcessorLists.ZOMBIE_DESERT, "snowy_zombie", ProcessorLists.ZOMBIE_SNOWY, "savanna_zombie", ProcessorLists.ZOMBIE_SAVANNA, "taiga_zombie", ProcessorLists.ZOMBIE_TAIGA);
-
-        //hunter trainer JigsawPattern
-        JigsawPatternRegistry.register(new JigsawPattern(new ResourceLocation(REFERENCE.MODID, "village/entities/hunter_trainer"), new ResourceLocation("empty"), Lists.newArrayList(Pair.of(singleJigsawPieceFunction("village/entities/hunter_trainer"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
-
-        buildings.forEach((name, list) -> {
-            list.removeIf(pair -> pair.getFirst().toString().equals(singleJigsawString(REFERENCE.MODID + ":village/" + name.replace("_zombie", "") + "/houses/hunter_trainer")));
-            list.add(Pair.of(singleJigsawPiece("village/" + name.replace("_zombie", "") + "/houses/hunter_trainer", processors.getOrDefault(name, new StructureProcessorList(Collections.emptyList()))), HUNTER_TRAINER_WEIGHT));
+    private static void addHunterTrainerHouse(DynamicRegistries reg, Map<ResourceLocation, BiomeType> pools) {
+        // get jigsaw registry
+        reg.registry(Registry.TEMPLATE_POOL_REGISTRY).ifPresent(patternRegistry -> {
+            // for every desired pools
+            pools.forEach((pool, type) -> {
+                // get the pool if present
+                patternRegistry.getOptional(pool).ifPresent(pattern -> {
+                    // create trainer house piece with desired village type
+                    JigsawPiece piece = singleJigsawPiece(type.path + "/houses/hunter_trainer", new StructureProcessorList(Collections.emptyList()));
+                    // add hunter trainer house with weight
+                    for (int i = 0; i < VampirismConfig.COMMON.villageHunterTrainerWeight.get(); i++) {
+                        pattern.templates.add(piece);
+                    }
+                });
+            });
         });
     }
 
     /**
      * adds totem to every village
      */
-    private static void addTotem(Map<String, List<Pair<JigsawPiece, Integer>>> buildings) {
-        StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, TOTEM_PRESET_PERCENTAGE), AlwaysTrueRuleTest.INSTANCE, ModBlocks.totem_top.defaultBlockState(), TotemTopBlock.getBlocks().stream().filter(totem -> totem != ModBlocks.totem_top && !totem.isCrafted()).map(Block::defaultBlockState).collect(Collectors.toList()))));
+    private static void addTotem(DynamicRegistries reg, Map<ResourceLocation, BiomeType> pools) {
+        // create totem piece
+        StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, VampirismConfig.COMMON.villageTotemFactionChance.get().floatValue()), AlwaysTrueRuleTest.INSTANCE, ModBlocks.totem_top.defaultBlockState(), TotemTopBlock.getBlocks().stream().filter(totem -> totem != ModBlocks.totem_top && !totem.isCrafted()).map(Block::defaultBlockState).collect(Collectors.toList()))));
         StructureProcessor totemTopBlock = new BiomeTopBlockProcessor(Blocks.BRICK_WALL.defaultBlockState());
         JigsawPiece totem = singleJigsawPiece("village/totem", new StructureProcessorList(Lists.newArrayList(totemProcessor, totemTopBlock)));
-        buildings.values().forEach(list -> list.removeIf(pair -> pair.getFirst().toString().equals(singleJigsawString(REFERENCE.MODID + ":village/totem"))));
-        buildings.values().forEach(list -> list.add(Pair.of(totem, VampirismConfig.BALANCE.viTotemWeight.get())));
+
+        // get jigsaw registry
+        reg.registry(Registry.TEMPLATE_POOL_REGISTRY).ifPresent(patternRegistry -> {
+            // for every desired pools
+            pools.forEach((pool, type) -> {
+                // get the pool if present
+                patternRegistry.getOptional(pool).ifPresent(pattern -> {
+                    // add totem with weight
+                    for (int i = 0; i < VampirismConfig.COMMON.villageTotemWeight.get(); ++i) {
+                        pattern.templates.add(totem);
+                    }
+                });
+            });
+        });
     }
 
     /**
@@ -197,24 +181,6 @@ public class VampirismWorldGen {
                 singleJigsawString("vampirism:village/taiga/houses/hunter_trainer")));
     }
 
-    /**
-     * writes the changes made to buildings back into immutablemaps in the pattern
-     */
-    private static void saveChanges(Map<String, List<Pair<JigsawPiece, Integer>>> buildings, Map<String, JigsawPattern> patterns) {
-        //write all Lists back to the specific JigsawPattern
-        buildings.forEach((biome, list) -> patterns.get(biome).rawTemplates = ImmutableList.copyOf(list));
-
-        //sync all JigsawPattern JigsawPattern#rawTemplates (pairs piece with weight) with JigsawPattern#jigsawPieces (list of pieces * weights)
-        patterns.values().forEach(pattern -> {
-            pattern.templates.clear();
-            pattern.rawTemplates.forEach(pair -> {
-                for (int i = 0; i < pair.getSecond(); i++) {
-                    pattern.templates.add(pair.getFirst());
-                }
-            });
-        });
-    }
-
     private static SingleJigsawPiece singleJigsawPiece(@Nonnull String path) {
         return singleJigsawPiece(path, new StructureProcessorList(Collections.emptyList()));
     }
@@ -223,7 +189,7 @@ public class VampirismWorldGen {
         return SingleJigsawPiece.single(REFERENCE.MODID + ":" + path, processors).apply(JigsawPattern.PlacementBehaviour.RIGID);
     }
 
-    private static Function<JigsawPattern.PlacementBehaviour, SingleJigsawPiece> singleJigsawPieceFunction(@Nonnull String path) {
+    private static Function<JigsawPattern.PlacementBehaviour, SingleJigsawPiece> singleJigsawPieceFunction(@SuppressWarnings("SameParameterValue") @Nonnull String path) {
         return singleJigsawPieceFunction(path, new StructureProcessorList(Collections.emptyList()));
     }
 
@@ -237,6 +203,16 @@ public class VampirismWorldGen {
 
     private static String singleLegacyJigsawString(String resourceLocation) {
         return "LegacySingle[Left[" + resourceLocation + "]]";
+    }
+
+    private enum BiomeType {
+        PLAINS("village/plains"), TAIGA("village/taiga"), DESERT("village/desert"), SNOWY("village/snowy"), SAVANNA("village/savanna");
+
+        public final String path;
+
+        BiomeType(String path) {
+            this.path = path;
+        }
     }
 
 }
