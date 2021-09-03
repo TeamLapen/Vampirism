@@ -287,6 +287,10 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue villageModify;
         public final ForgeConfigSpec.BooleanValue useVanillaCampfire;
 
+        public final ForgeConfigSpec.IntValue villageTotemWeight;
+        public final ForgeConfigSpec.BooleanValue villageReplaceTemples;
+        public final ForgeConfigSpec.DoubleValue villageTotemFactionChance;
+        public final ForgeConfigSpec.IntValue villageHunterTrainerWeight;
 
         public final ForgeConfigSpec.IntValue villageDistance;
         public final ForgeConfigSpec.IntValue villageSeparation;
@@ -323,11 +327,18 @@ public class VampirismConfig {
             hunterTentDistance = builder.comment("Desired maximum distance in chunks between tents. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentDistance", 10, 2, 4096);
             hunterTentSeparation = builder.comment("Desired minimum distance in chunks between tents. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentSeparation", 4, 1, 4096);
             enableHunterTentGeneration = builder.comment("Control hunter camp generation. If disabled you should set hunterSpawnChance to 75.").define("enableHunterTentGeneration", true);
+            useVanillaCampfire = builder.comment("Use the vanilla campfire block instead of Vampirism's much cooler one").define("useVanillaCampfire", false);
+
+
+            builder.push("village");
             villageModify = builder.comment("Whether to modify the village world gen (size and frequency), based on world config").define("villageModify", true);
             villageDistance = builder.comment("Desired maximum distance between villages in chunks").defineInRange("villageDistance", 26, 1, 100);
             villageSeparation = builder.comment("Minimum distance between villages in chunks. Must be smaller than distance").defineInRange("villageSeparation", 6, 1, 100);
-            useVanillaCampfire = builder.comment("Use the vanilla campfire block instead of Vampirism's much cooler one").define("useVanillaCampfire", false);
-
+            villageTotemWeight = builder.comment("Weight of the Totem Building inside the Village").defineInRange("totemWeight", 20, 0, Integer.MAX_VALUE);
+            villageTotemFactionChance = builder.comment("Chance for a totem to have a faction after generation").defineInRange("villageTotemFactionChance", 0.6, 0, 1);
+            villageHunterTrainerWeight = builder.comment("Weight of the Hunter Trainer Building inside the Village").defineInRange("villageHunterTrainerWeight", 150, 0, Integer.MAX_VALUE);
+            villageReplaceTemples = builder.comment("Whether village Temples should be replaced with versions that contain church altars.").define("villageReplaceTemples", true);
+            builder.pop();
 
             builder.pop();
             builder.pop();
