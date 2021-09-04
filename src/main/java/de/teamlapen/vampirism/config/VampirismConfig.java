@@ -291,15 +291,17 @@ public class VampirismConfig {
 //        public final ForgeConfigSpec.IntValue vampireForestHillsWeight;
         public final ForgeConfigSpec.IntValue hunterTentDistance;
         public final ForgeConfigSpec.IntValue hunterTentSeparation;
+        public final ForgeConfigSpec.BooleanValue enableHunterTentGeneration;
+
+        //World village
         public final ForgeConfigSpec.BooleanValue villageModify;
         public final ForgeConfigSpec.IntValue villageTotemWeight;
         public final ForgeConfigSpec.BooleanValue villageReplaceTemples;
         public final ForgeConfigSpec.DoubleValue villageTotemFactionChance;
         public final ForgeConfigSpec.IntValue villageHunterTrainerWeight;
-
         public final ForgeConfigSpec.IntValue villageDistance;
         public final ForgeConfigSpec.IntValue villageSeparation;
-        public final ForgeConfigSpec.BooleanValue enableHunterTentGeneration;
+
 
 
 
@@ -338,7 +340,7 @@ public class VampirismConfig {
             hunterTentSeparation = builder.comment("Desired minimum distance in chunks between tents. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentSeparation", 4, 1, 4096);
             enableHunterTentGeneration = builder.comment("Control hunter camp generation. If disabled you should set hunterSpawnChance to 75.").define("enableHunterTentGeneration", true);
 
-            builder.push("village");
+            builder.comment("You might find some configuration values in the common section instead of here").push("village"); //TODO 1.17 remove comment when adding remaining village configs here
             villageTotemWeight = builder.comment("Weight of the Totem Building inside the Village").defineInRange("totemWeight", 20, 0, Integer.MAX_VALUE);
             villageTotemFactionChance = builder.comment("Chance for a totem to have a faction after generation").defineInRange("villageTotemFactionChance", 0.6, 0, 1);
             villageHunterTrainerWeight = builder.comment("Weight of the Hunter Trainer Building inside the Village").defineInRange("villageHunterTrainerWeight", 400, 0, Integer.MAX_VALUE);
