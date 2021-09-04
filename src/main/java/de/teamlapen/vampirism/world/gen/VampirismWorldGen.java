@@ -57,14 +57,16 @@ public class VampirismWorldGen {
                 Map.entry(new ResourceLocation("village/savanna/houses"), BiomeType.SAVANNA),
                 Map.entry(new ResourceLocation("village/taiga/houses"), BiomeType.TAIGA),
                 Map.entry(new ResourceLocation("village/snowy/houses"), BiomeType.SNOWY),
-                //TODO add new hunter trainer variants
-                Map.entry(new ResourceLocation("repurposed_structures", "village/badlands/houses"), BiomeType.PLAINS),
-                Map.entry(new ResourceLocation("repurposed_structures", "village/birch/houses"), BiomeType.PLAINS),
-                Map.entry(new ResourceLocation("repurposed_structures", "village/dark_forest/houses"), BiomeType.PLAINS),
-                Map.entry(new ResourceLocation("repurposed_structures", "village/jungle/houses"), BiomeType.PLAINS),
-                Map.entry(new ResourceLocation("repurposed_structures", "village/mountains/houses"), BiomeType.TAIGA),
-                Map.entry(new ResourceLocation("repurposed_structures", "village/oak/houses"), BiomeType.PLAINS),
-                Map.entry(new ResourceLocation("repurposed_structures", "village/swamp/houses"), BiomeType.PLAINS));
+                Map.entry(new ResourceLocation("repurposed_structures", "village/badlands/houses"), BiomeType.BADLANDS),
+                Map.entry(new ResourceLocation("repurposed_structures", "village/birch/houses"), BiomeType.BIRCH),
+                Map.entry(new ResourceLocation("repurposed_structures", "village/dark_forest/houses"), BiomeType.DARK_FOREST),
+                Map.entry(new ResourceLocation("repurposed_structures", "village/jungle/houses"), BiomeType.JUNGLE),
+                Map.entry(new ResourceLocation("repurposed_structures", "village/mountains/houses"), BiomeType.MOUNTAINS),
+                Map.entry(new ResourceLocation("repurposed_structures", "village/giant_taiga/houses"), BiomeType.GIANT_TAIGA),
+                Map.entry(new ResourceLocation("repurposed_structures", "village/oak/houses"), BiomeType.OAK),
+                Map.entry(new ResourceLocation("repurposed_structures", "village/swamp/houses"), BiomeType.SWAMP),
+                Map.entry(new ResourceLocation("repurposed_structures", "village/crimson/houses"), BiomeType.CRIMSON),
+                Map.entry(new ResourceLocation("repurposed_structures", "village/warped/houses"), BiomeType.WARPED));
     }
 
     /**
@@ -145,7 +147,7 @@ public class VampirismWorldGen {
                 // get the pool if present
                 patternRegistry.getOptional(pool).ifPresent(pattern -> {
                     // create trainer house piece with desired village type
-                    StructurePoolElement piece = singleJigsawPiece(type.path + "/houses/hunter_trainer", new StructureProcessorList(Collections.emptyList()));
+                    StructurePoolElement piece = singleJigsawPiece("village/" + type.path + "/houses/hunter_trainer", new StructureProcessorList(Collections.emptyList()));
                     // add hunter trainer house with weight
                     for (int i = 0; i < VampirismConfig.COMMON.villageHunterTrainerWeight.get(); i++) {
                         pattern.templates.add(piece);
@@ -183,13 +185,9 @@ public class VampirismWorldGen {
      * ensure single generation of following structures
      */
     private static void setupSingleJigsawPieceGeneration() {
-        MixinHooks.addSingleInstanceStructure(Lists.newArrayList(
-                singleJigsawString("vampirism:village/totem"),
-                singleJigsawString("vampirism:village/desert/houses/hunter_trainer"),
-                singleJigsawString("vampirism:village/plains/houses/hunter_trainer"),
-                singleJigsawString("vampirism:village/snowy/houses/hunter_trainer"),
-                singleJigsawString("vampirism:village/savanna/houses/hunter_trainer"),
-                singleJigsawString("vampirism:village/taiga/houses/hunter_trainer")));
+        List<String> list = Lists.newArrayList(singleJigsawString("vampirism:village/totem"));
+        list.addAll(Arrays.stream(BiomeType.values()).map(type -> singleJigsawString("vampirism:village/" + type.path + "houses/hunter_trainer")).collect(Collectors.toList()));
+        MixinHooks.addSingleInstanceStructure(list);
     }
 
     private static SinglePoolElement singleJigsawPiece(@Nonnull String path) {
@@ -217,7 +215,21 @@ public class VampirismWorldGen {
     }
 
     private enum BiomeType {
-        PLAINS("village/plains"), TAIGA("village/taiga"), DESERT("village/desert"), SNOWY("village/snowy"), SAVANNA("village/savanna");
+        PLAINS("plains"),
+        TAIGA("taiga"),
+        DESERT("desert"),
+        SNOWY("snowy"),
+        SAVANNA("savanna"),
+        BADLANDS("badlands"),
+        BIRCH("birch"),
+        DARK_FOREST("dark_forest"),
+        CRIMSON("crimson"),
+        GIANT_TAIGA("giant_taiga"),
+        JUNGLE("jungle"),
+        MOUNTAINS("mountains"),
+        OAK("oak"),
+        SWAMP("swamp"),
+        WARPED("warped");
 
         public final String path;
 
