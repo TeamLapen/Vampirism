@@ -284,17 +284,18 @@ public class VampirismConfig {
         //        public final ForgeConfigSpec.IntValue vampireForestHillsWeight;
         public final ForgeConfigSpec.IntValue hunterTentDistance;
         public final ForgeConfigSpec.IntValue hunterTentSeparation;
-        public final ForgeConfigSpec.BooleanValue villageModify;
+        public final ForgeConfigSpec.BooleanValue enableHunterTentGeneration;
         public final ForgeConfigSpec.BooleanValue useVanillaCampfire;
 
+        //World village
+        public final ForgeConfigSpec.BooleanValue villageModify;
         public final ForgeConfigSpec.IntValue villageTotemWeight;
         public final ForgeConfigSpec.BooleanValue villageReplaceTemples;
         public final ForgeConfigSpec.DoubleValue villageTotemFactionChance;
         public final ForgeConfigSpec.IntValue villageHunterTrainerWeight;
-
         public final ForgeConfigSpec.IntValue villageDistance;
         public final ForgeConfigSpec.IntValue villageSeparation;
-        public final ForgeConfigSpec.BooleanValue enableHunterTentGeneration;
+
 
 
         Common(ForgeConfigSpec.Builder builder) {
