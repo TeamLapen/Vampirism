@@ -51,12 +51,20 @@ public class VampirismWorldGen {
      * @return a map the maps {@link StructurePoolElement}s that should be modified to the type village type of added objects
      */
     private static Map<ResourceLocation, BiomeType> getDefaultPools() {
-        return Map.of(
-                new ResourceLocation("village/plains/houses"), BiomeType.PLAINS,
-                new ResourceLocation("village/desert/houses"), BiomeType.DESERT,
-                new ResourceLocation("village/savanna/houses"), BiomeType.SAVANNA,
-                new ResourceLocation("village/taiga/houses"), BiomeType.TAIGA,
-                new ResourceLocation("village/snowy/houses"), BiomeType.SNOWY);
+        return Map.ofEntries(
+                Map.entry(new ResourceLocation("village/plains/houses"), BiomeType.PLAINS),
+                Map.entry(new ResourceLocation("village/desert/houses"), BiomeType.DESERT),
+                Map.entry(new ResourceLocation("village/savanna/houses"), BiomeType.SAVANNA),
+                Map.entry(new ResourceLocation("village/taiga/houses"), BiomeType.TAIGA),
+                Map.entry(new ResourceLocation("village/snowy/houses"), BiomeType.SNOWY),
+                //TODO add new hunter trainer variants
+                Map.entry(new ResourceLocation("repurposed_structures", "village/badlands/houses"), BiomeType.PLAINS),
+                Map.entry(new ResourceLocation("repurposed_structures", "village/birch/houses"), BiomeType.PLAINS),
+                Map.entry(new ResourceLocation("repurposed_structures", "village/dark_forest/houses"), BiomeType.PLAINS),
+                Map.entry(new ResourceLocation("repurposed_structures", "village/jungle/houses"), BiomeType.PLAINS),
+                Map.entry(new ResourceLocation("repurposed_structures", "village/mountains/houses"), BiomeType.TAIGA),
+                Map.entry(new ResourceLocation("repurposed_structures", "village/oak/houses"), BiomeType.PLAINS),
+                Map.entry(new ResourceLocation("repurposed_structures", "village/swamp/houses"), BiomeType.PLAINS));
     }
 
     /**
