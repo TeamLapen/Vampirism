@@ -48,11 +48,19 @@ public class VampirismWorldGen {
      */
     private static Map<ResourceLocation, BiomeType> getDefaultPools() {
         return Collections.unmodifiableMap(new HashMap<ResourceLocation, BiomeType>() {{
-                put(new ResourceLocation("village/plains/houses"), BiomeType.PLAINS);
-                put(new ResourceLocation("village/desert/houses"), BiomeType.DESERT);
-                put(new ResourceLocation("village/savanna/houses"), BiomeType.SAVANNA);
-                put(new ResourceLocation("village/taiga/houses"), BiomeType.TAIGA);
-                put(new ResourceLocation("village/snowy/houses"), BiomeType.SNOWY);
+            put(new ResourceLocation("village/plains/houses"), BiomeType.PLAINS);
+            put(new ResourceLocation("village/desert/houses"), BiomeType.DESERT);
+            put(new ResourceLocation("village/savanna/houses"), BiomeType.SAVANNA);
+            put(new ResourceLocation("village/taiga/houses"), BiomeType.TAIGA);
+            put(new ResourceLocation("village/snowy/houses"), BiomeType.SNOWY);
+            //TODO add new hunter trainer variants
+            put(new ResourceLocation("repurposed_structures", "village/badlands/houses"), BiomeType.PLAINS);
+            put(new ResourceLocation("repurposed_structures", "village/birch/houses"), BiomeType.PLAINS);
+            put(new ResourceLocation("repurposed_structures", "village/dark_forest/houses"), BiomeType.PLAINS);
+            put(new ResourceLocation("repurposed_structures", "village/jungle/houses"), BiomeType.PLAINS);
+            put(new ResourceLocation("repurposed_structures", "village/mountains/houses"), BiomeType.TAIGA);
+            put(new ResourceLocation("repurposed_structures", "village/oak/houses"), BiomeType.PLAINS);
+            put(new ResourceLocation("repurposed_structures", "village/swamp/houses"), BiomeType.PLAINS);
         }});
     }
 
