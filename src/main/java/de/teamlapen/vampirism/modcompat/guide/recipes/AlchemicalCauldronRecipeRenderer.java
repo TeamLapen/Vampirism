@@ -13,7 +13,6 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.inventory.recipes.AlchemicalCauldronRecipe;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -37,8 +36,8 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
     public void draw(MatrixStack stack, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen baseScreen, FontRenderer fontRenderer, IngredientCycler ingredientCycler) {
 
         CRAFTING_GRID.draw(stack, guiLeft + 60, guiTop + 42);
-        AbstractGui.drawCenteredString(stack, fontRenderer, UtilLib.translate(ModBlocks.alchemical_cauldron.getDescriptionId()), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
-        AbstractGui.drawCenteredString(stack, fontRenderer, "§o" + UtilLib.translate("guideapi.text.crafting.shaped") + "§r", guiLeft + baseScreen.xSize / 2, guiTop + 14 + fontRenderer.lineHeight, 0);
+        baseScreen.drawCenteredStringWithoutShadow(stack, fontRenderer, UtilLib.translate(ModBlocks.alchemical_cauldron.getDescriptionId()), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
+        baseScreen.drawCenteredStringWithoutShadow(stack, fontRenderer, "§o" + UtilLib.translate("guideapi.text.crafting.shaped") + "§r", guiLeft + baseScreen.xSize / 2, guiTop + 14 + fontRenderer.lineHeight, 0);
 
         int outputX = guiLeft + 150;
         int outputY = guiTop + 72;
