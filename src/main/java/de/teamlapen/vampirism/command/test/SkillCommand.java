@@ -14,10 +14,6 @@ import net.minecraft.network.chat.TranslatableComponent;
 
 public class SkillCommand extends BasicCommand {
 
-    public static ArgumentBuilder<CommandSourceStack, ?> registerTest() {
-        return create(Commands.literal("skill"));
-    }
-
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return create(Commands.literal("skills"));
     }
@@ -25,17 +21,11 @@ public class SkillCommand extends BasicCommand {
     private static ArgumentBuilder<CommandSourceStack, ?> create(ArgumentBuilder<CommandSourceStack, ?> builder) {
         return builder.requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .then(Commands.argument("type", SkillArgument.skills())
-                        .executes(context -> {
-                            return skill(context.getSource(), context.getSource().getPlayerOrException(), SkillArgument.getSkill(context, "type"), false);
-                        })
+                        .executes(context -> skill(context.getSource(), context.getSource().getPlayerOrException(), SkillArgument.getSkill(context, "type"), false))
                         .then(Commands.literal("force")
-                                .executes(context -> {
-                                    return skill(context.getSource(), context.getSource().getPlayerOrException(), SkillArgument.getSkill(context, "type"), true);
-                                })))
+                                .executes(context -> skill(context.getSource(), context.getSource().getPlayerOrException(), SkillArgument.getSkill(context, "type"), true))))
                 .then(Commands.literal("disableall")
-                        .executes(context -> {
-                            return disableall(context.getSource(), context.getSource().getPlayerOrException());
-                        }));
+                        .executes(context -> disableall(context.getSource(), context.getSource().getPlayerOrException())));
     }
 
     private static int disableall(CommandSourceStack commandSource, ServerPlayer asPlayer) {

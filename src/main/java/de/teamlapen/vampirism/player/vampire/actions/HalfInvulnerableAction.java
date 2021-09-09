@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.player.vampire.actions;
 
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -8,9 +9,6 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 
-/**
- * @author cheaterpaul
- */
 public class HalfInvulnerableAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     public HalfInvulnerableAction() {
@@ -18,12 +16,12 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     }
 
     @Override
-    public int getCooldown() {
+    public int getCooldown(IFactionPlayer<?> player) {
         return 20 * (VampirismConfig.BALANCE.vaHalfInvulnerableCooldown.get());
     }
 
     @Override
-    public int getDuration(int level) {
+    public int getDuration(IVampirePlayer player) {
         return 20 * (VampirismConfig.BALANCE.vaHalfInvulnerableDuration.get());
     }
 

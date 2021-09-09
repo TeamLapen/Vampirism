@@ -125,11 +125,11 @@ public class GuideBook implements IGuideBook {
 
         List<IPage> troublePages = new ArrayList<>();
         troublePages.addAll(PageHelper.pagesForLongText(translateComponent(base + "trouble.text")));
-        helper.addLinks(troublePages, new GuideHelper.URLLink(translateComponent(base + "trouble"), URI.create("https://github.com/TeamLapen/Vampirism/wiki/Troubleshooting")));
+        helper.addLinks(troublePages, new PageHolderWithLinks.URLLink(translateComponent(base + "trouble"), URI.create("https://github.com/TeamLapen/Vampirism/wiki/Troubleshooting")));
         entries.put(new ResourceLocation(base + "trouble"), new EntryText(troublePages, translateComponent(base + "trouble")));
 
         List<IPage> devPages = new ArrayList<>();
-        PageHolderWithLinks.URLLink helpLink = new GuideHelper.URLLink(new TextComponent("How to help"), URI.create("https://github.com/TeamLapen/Vampirism/wiki#how-you-can-help"));
+        PageHolderWithLinks.URLLink helpLink = new PageHolderWithLinks.URLLink(new TextComponent("How to help"), URI.create("https://github.com/TeamLapen/Vampirism/wiki#how-you-can-help"));
         devPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "dev.text")), helpLink));
         entries.put(new ResourceLocation(base + "dev"), new EntryText(devPages, translateComponent(base + "dev")));
 
@@ -251,7 +251,7 @@ public class GuideBook implements IGuideBook {
         entries.put(new ResourceLocation(base + "lord"), new EntryText(lordPages, new TranslatableComponent(base + "lord")));
 
 
-        List<IPage> vampirismMenu = new ArrayList<>(PageHelper.pagesForLongText(translateComponent("guide.vampirism.overview.vampirism_menu.text", translateComponent(ModKeys.getKeyBinding(ModKeys.KEY.SKILL).saveString())).append(translateComponent("guide.vampirism.overview.vampirism_menu.text_vampire", translateComponent("guide.vampirism.items.accessories"))))); //Lang key shared with vampires
+        List<IPage> vampirismMenu = new ArrayList<>(PageHelper.pagesForLongText(translateComponent("guide.vampirism.overview.vampirism_menu.text", translateComponent(ModKeys.getKeyBinding(ModKeys.KEY.VAMPIRISM_MENU).saveString())).append(translateComponent("guide.vampirism.overview.vampirism_menu.text_vampire", translateComponent("guide.vampirism.items.accessories"))))); //Lang key shared with vampires
         entries.put(new ResourceLocation(base + "vampirism_menu"), new EntryText(vampirismMenu, translateComponent("guide.vampirism.overview.vampirism_menu")));
 
 
@@ -347,7 +347,7 @@ public class GuideBook implements IGuideBook {
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent("guide.vampirism.common.minion_control", translate(ModKeys.getKeyBinding(ModKeys.KEY.MINION).saveString()), translate("text.vampirism.minion.call_single"), translate("text.vampirism.minion.respawn")))));
         entries.put(new ResourceLocation(base + "lord"), new EntryText(lordPages, new TranslatableComponent(base + "lord")));
 
-        List<IPage> vampirismMenu = new ArrayList<>(PageHelper.pagesForLongText(translateComponent("guide.vampirism.overview.vampirism_menu.text", translate(ModKeys.getKeyBinding(ModKeys.KEY.SKILL).saveString())))); //Lang key shared with vampires
+        List<IPage> vampirismMenu = new ArrayList<>(PageHelper.pagesForLongText(translateComponent("guide.vampirism.overview.vampirism_menu.text", translate(ModKeys.getKeyBinding(ModKeys.KEY.VAMPIRISM_MENU).saveString())))); //Lang key shared with vampires
         entries.put(new ResourceLocation(base + "vampirism_menu"), new EntryText(vampirismMenu, translateComponent("guide.vampirism.overview.vampirism_menu")));
 
         List<IPage> unHunterPages = new ArrayList<>();
@@ -460,7 +460,7 @@ public class GuideBook implements IGuideBook {
         helper.info(ModItems.injection_empty, ModItems.injection_garlic, ModItems.injection_sanguinare).recipes("general/injection_0", "general/injection_1", "general/injection_2").build(entries);
         helper.info(ModItems.hunter_intel_0).setLinks(new ResourceLocation("guide.vampirism.blocks.hunter_table")).setFormats(loc(ModBlocks.hunter_table)).build(entries);
         helper.info(ModItems.item_garlic).build(entries);
-        helper.info(ModItems.purified_garlic).setFormats(loc(ModBlocks.garlic_beacon_normal)).setLinks(new ResourceLocation("guide.vampirism.blocks.garlic_beacon_normal")).recipes("alchemical_cauldron/purified_garlic").build(entries);
+        helper.info(ModItems.purified_garlic).setFormats(loc(ModBlocks.garlic_diffusor_normal)).setLinks(new ResourceLocation("guide.vampirism.blocks.garlic_beacon_normal")).recipes("alchemical_cauldron/purified_garlic").build(entries);
         helper.info(ModItems.pitchfork).recipes("weapontable/pitchfork").build(entries);
         helper.info(ModItems.stake).setFormats(((int) (VampirismConfig.BALANCE.hsInstantKill1MaxHealth.get() * 100)) + "%").recipes("hunter/stake").build(entries);
         helper.info(ModItems.basic_crossbow, ModItems.enhanced_crossbow, ModItems.basic_double_crossbow, ModItems.enhanced_double_crossbow, ModItems.basic_tech_crossbow, ModItems.enhanced_tech_crossbow).setFormats(loc(ModItems.crossbow_arrow_normal), loc(ModItems.tech_crossbow_ammo_package)).setLinks(new ResourceLocation("guide.vampirism.items.crossbow_arrow_normal")).recipes("weapontable/basic_crossbow", "weapontable/enhanced_crossbow", "weapontable/basic_double_crossbow", "weapontable/enhanced_double_crossbow", "weapontable/basic_tech_crossbow", "weapontable/enhanced_tech_crossbow", "weapontable/tech_crossbow_ammo_package").useCustomEntryName().setKeyName("crossbows").build(entries);
@@ -495,7 +495,7 @@ public class GuideBook implements IGuideBook {
         helper.info(ModBlocks.alchemical_cauldron).recipes("hunter/alchemical_cauldron").build(entries);
         int cn = VampirismConfig.BALANCE.hsGarlicDiffusorNormalDist.get() * 2 + 1;
         int ce = VampirismConfig.BALANCE.hsGarlicDiffusorEnhancedDist.get() * 2 + 1;
-        helper.info(ModBlocks.garlic_beacon_normal, ModBlocks.garlic_beacon_weak, ModBlocks.garlic_beacon_weak).setFormats(cn, cn, ce, ce, loc(ModItems.purified_garlic)).setLinks(new ResourceLocation("guide.vampirism.items.item_garlic"), new ResourceLocation("guide.vampirism.items.purified_garlic"), new ResourceLocation("guide.vampirism.items.holy_water_bottle")).recipes("hunter/garlic_beacon_normal", "hunter/garlic_beacon_improved", "alchemical_cauldron/garlic_beacon_core", "alchemical_cauldron/garlic_beacon_core_improved").build(entries);
+        helper.info(ModBlocks.garlic_diffusor_normal, ModBlocks.garlic_diffusor_weak, ModBlocks.garlic_diffusor_weak).setFormats(cn, cn, ce, ce, loc(ModItems.purified_garlic)).setLinks(new ResourceLocation("guide.vampirism.items.item_garlic"), new ResourceLocation("guide.vampirism.items.purified_garlic"), new ResourceLocation("guide.vampirism.items.holy_water_bottle")).recipes("hunter/garlic_beacon_normal", "hunter/garlic_beacon_improved", "alchemical_cauldron/garlic_beacon_core", "alchemical_cauldron/garlic_beacon_core_improved").build(entries);
         helper.info(ModBlocks.blood_pedestal).recipes("vampire/blood_pedestal").build(entries);
         helper.info(ModBlocks.blood_grinder).recipes("general/blood_grinder").setFormats(loc(ModItems.human_heart), loc(Items.BEEF), loc(ModBlocks.blood_sieve)).build(entries);
         helper.info(ModBlocks.blood_sieve).recipes("general/blood_sieve").setFormats(translateComponent(ModFluids.impure_blood.getAttributes().getTranslationKey()), loc(ModBlocks.blood_grinder)).setLinks(new ResourceLocation("guide.vampirism.blocks.blood_grinder")).build(entries);
@@ -530,7 +530,7 @@ public class GuideBook implements IGuideBook {
         //Vampirism 1.8
         List<IPage> v1_8 = new ArrayList<>(PageHelper.pagesForLongText(translateComponent(base1_8 + "overview.text")));
         //vampirism menu
-        List<IPage> vampirism_menu = PageHelper.pagesForLongText(translateComponent(base1_8 + "vampirism_menu.text", ModKeys.getKeyBinding(ModKeys.KEY.SKILL).getTranslatedKeyMessage()));
+        List<IPage> vampirism_menu = PageHelper.pagesForLongText(translateComponent(base1_8 + "vampirism_menu.text", ModKeys.getKeyBinding(ModKeys.KEY.VAMPIRISM_MENU).getTranslatedKeyMessage()));
         vampirism_menu.add(new PageTextImage(translateComponent(base1_8 + "vampirism_menu.image"), new ResourceLocation(IMAGE_BASE + "vampirism_menu.png"), false));
         v1_8.addAll(vampirism_menu);
         //vampire accessories

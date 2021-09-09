@@ -94,9 +94,9 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModBlocks.blood_sieve);
             add(ModBlocks.church_altar);
             add(ModBlocks.cursed_earth);
-            add(ModBlocks.garlic_beacon_weak);
-            add(ModBlocks.garlic_beacon_normal);
-            add(ModBlocks.garlic_beacon_improved);
+            add(ModBlocks.garlic_diffusor_weak);
+            add(ModBlocks.garlic_diffusor_normal);
+            add(ModBlocks.garlic_diffusor_improved);
             add(ModBlocks.hunter_table);
             add(ModBlocks.sunscreen_beacon);
             add(ModBlocks.totem_top);

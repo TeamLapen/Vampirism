@@ -38,7 +38,7 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
             if (Minecraft.getInstance().player.isAlive()) {
                 IPlayableFaction<?> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
                 if (faction != null) {
-                    Minecraft.getInstance().setScreen(new SelectActionScreen(faction.getColor(), false));
+                    Minecraft.getInstance().setScreen(new ActionSelectScreen(faction.getColor(), false));
                 }
             }
         }

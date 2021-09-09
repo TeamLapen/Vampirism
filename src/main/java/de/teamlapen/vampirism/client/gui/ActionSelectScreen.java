@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  * Gui which is used to select vampire actions
  */
 @OnlyIn(Dist.CLIENT)
-public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename to ActionSelectScreen
+public class ActionSelectScreen extends GuiPieMenu<IAction> {
     public final static List<IAction> ACTIONORDER = Lists.newArrayList();
     /**
      * Fake skill which represents the cancel button
@@ -51,7 +51,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
         }
 
         @Override
-        public int getCooldown() {
+        public int getCooldown(IFactionPlayer<?> player) {
             return 0;
         }
 
@@ -106,7 +106,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> { //TODO 1.17 rename
     private final boolean editActions;
     private IActionHandler actionHandler;
 
-    public SelectActionScreen(Color backgroundColor, boolean edit) {
+    public ActionSelectScreen(Color backgroundColor, boolean edit) {
         super(backgroundColor, new TranslatableComponent("selectAction"));
         editActions = edit;
     }

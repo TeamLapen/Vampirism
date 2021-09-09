@@ -31,8 +31,6 @@ public interface ITotem {
     @Nonnull
     AABB getVillageAreaReduced();
 
-    default boolean isRaidTriggeredByBadOmen() { //TODO 1.17 remove default implementation
-        return false;
-    }
+    boolean isRaidTriggeredByBadOmen();
 
 }

@@ -264,9 +264,9 @@ public class LootTablesGenerator extends LootTableProvider {
                     .withPool(LootPool.lootPool()
                             .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.garlic).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(GarlicBlock.AGE, 7)))
                             .add(LootItem.lootTableItem(ModItems.item_garlic).apply(ApplyBonusCount.addBonusBinomialDistributionCount(Enchantments.BLOCK_FORTUNE, 0.5714286F, 3))))));
-            this.dropSelf(ModBlocks.garlic_beacon_weak);
-            this.dropSelf(ModBlocks.garlic_beacon_normal);
-            this.dropSelf(ModBlocks.garlic_beacon_improved);
+            this.dropSelf(ModBlocks.garlic_diffusor_weak);
+            this.dropSelf(ModBlocks.garlic_diffusor_normal);
+            this.dropSelf(ModBlocks.garlic_diffusor_improved);
             this.dropSelf(ModBlocks.hunter_table);
             this.add(ModBlocks.med_chair, block -> createSinglePropConditionTable(block, MedChairBlock.PART, MedChairBlock.EnumPart.TOP));
             this.dropSelf(ModBlocks.sunscreen_beacon);

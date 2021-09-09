@@ -10,14 +10,9 @@ import javax.annotation.Nonnull;
  */
 public interface IGarlicChunkHandler {
 
-    /**
-     * TODO 1.17 remove
-     */
-    @Deprecated
-    void clear();
 
     /**
-     * TODO 1.17 rename
+     * TODO 1.17 rename ?
      *
      * @return The garlic strength at the given position
      */

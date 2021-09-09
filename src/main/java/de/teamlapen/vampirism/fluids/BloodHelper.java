@@ -27,23 +27,6 @@ public class BloodHelper {
     private static final Logger LOGGER = LogManager.getLogger(BloodHelper.class);
 
     /**
-     * TODO 1.17 delete
-     * Returns the first stack on the players hotbar that can store blood
-     *
-     * @param inventory
-     * @return
-     */
-    public static ItemStack getBloodHandlerInHotbar(Inventory inventory) {
-        int hotbarSize = Inventory.getSelectionSize();
-        for (int i = 0; i < hotbarSize; i++) {
-            ItemStack stack = inventory.getItem(i);
-            if (!stack.isEmpty() && FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.blood, 1000), IFluidHandler.FluidAction.SIMULATE) > 0).orElse(false))
-                return stack;
-        }
-        return ItemStack.EMPTY;
-    }
-
-    /**
      * Checks if the given stack can store blood
      */
     public static boolean canStoreBlood(@Nonnull ItemStack stack) {

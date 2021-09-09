@@ -36,32 +36,6 @@ import javax.annotation.Nonnull;
 public class VampirismAPI {
 
 
-    /**
-     * TODO 1.17 remove
-     */
-    @Deprecated
-    private static final IGarlicChunkHandler dummyGarlicChunkHandler = new IGarlicChunkHandler() {
-        @Override
-        public void clear() {
-
-        }
-
-        @Nonnull
-        @Override
-        public EnumStrength getStrengthAtChunk(ChunkPos pos) {
-            return EnumStrength.NONE;
-        }
-
-        @Override
-        public int registerGarlicBlock(EnumStrength strength, ChunkPos... pos) {
-            return 0;
-        }
-
-        @Override
-        public void removeGarlicBlock(int id) {
-
-        }
-    };
     @SuppressWarnings("FieldMayBeFinal")
     @CapabilityInject(IExtendedCreatureVampirism.class)
     private static Capability<IExtendedCreatureVampirism> CAP_CREATURE = null;
@@ -190,28 +164,6 @@ public class VampirismAPI {
      */
     public static LazyOptional<IExtendedCreatureVampirism> getExtendedCreatureVampirism(PathfinderMob creature) {
         return creature.getCapability(CAP_CREATURE, null);
-    }
-
-    /**
-     * Use getVampirismWorld instead
-     * TODO 1.17 remove
-     *
-     * @return The {@link IGarlicChunkHandler} for the given world
-     */
-    @Deprecated
-    @Nonnull
-    public static IGarlicChunkHandler getGarlicChunkHandler(ResourceKey<Level> world) {
-        Level w = DistExecutor.safeRunForDist(() -> () -> {
-            MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-            if (server != null) {
-                return server.getLevel(world);
-            }
-            return ClientHelper.getAndCheckWorld(world);
-        }, () -> () -> ServerLifecycleHooks.getCurrentServer().getLevel(world));
-        if (w != null) {
-            return w.getCapability(CAP_WORLD).map(iw -> (IGarlicChunkHandler) iw).orElse(dummyGarlicChunkHandler);
-        }
-        return dummyGarlicChunkHandler;
     }
 
     public static LazyOptional<IVampirismWorld> getVampirismWorld(Level w) {

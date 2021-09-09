@@ -25,13 +25,12 @@ public class HunterEquipmentLayer<T extends Mob, Q extends EntityModel<T>> exten
     private final HunterEquipmentModel<T> equipmentModel;
     private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_extra.png");
     private final Function<T, HunterEquipmentModel.StakeType> predicateStake;
-    private final Function<T, Integer> functionHat;
+    private final Function<T, HunterEquipmentModel.HatType> functionHat;
 
     /**
      * @param predicateStake entity -> Type of equipment that should be rendered
-     * @param functionHat    entity -> -2 to 4
      */
-    public HunterEquipmentLayer(RenderLayerParent<T, Q> entityRendererIn,  EntityModelSet modelSet,Function<T, HunterEquipmentModel.StakeType> predicateStake, Function<T, Integer> functionHat) {
+    public HunterEquipmentLayer(RenderLayerParent<T, Q> entityRendererIn,  EntityModelSet modelSet,Function<T, HunterEquipmentModel.StakeType> predicateStake, Function<T, HunterEquipmentModel.HatType> functionHat) {
         super(entityRendererIn);
         equipmentModel = new HunterEquipmentModel<>(modelSet.bakeLayer(ModEntitiesRender.HUNTER_EQUIPMENT));
         this.predicateStake = predicateStake;

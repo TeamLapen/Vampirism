@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Interface for player's faction's action handler
  */
-public interface IActionHandler<T extends IActionPlayer> {
+public interface IActionHandler<T> {
 
     /**
      * Deactivate any active action and start cooldown timer

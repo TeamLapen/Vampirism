@@ -44,65 +44,15 @@ public class TotemHelper {
 
 
     /**
-     * saves the position of a {@link PointOfInterest} to the related village totem position
+     * saves the position of a {@link PoiRecord} to the related village totem position
      */
     private static final Map<ResourceKey<Level>, Map<BlockPos, BlockPos>> totemPositions = Maps.newHashMap();
 
     /**
-     * saves the {@link PointOfInterest}s for every village totem
+     * saves the {@link PoiRecord}s for every village totem
      */
     private static final Map<ResourceKey<Level>, Map<BlockPos, Set<PoiRecord>>> poiSets = Maps.newHashMap();
 
-    /**
-     * TODO 1.17 remove
-     * use {@link VampirismWorld} directly
-     * adds a vampire village
-     *
-     * @param dimension dimension of the village totem
-     * @param pos       position of the village totem
-     * @param box       bounding box of the village
-     */
-    @Deprecated
-    public static void addVampireVillage(ResourceKey<Level> dimension, BlockPos pos, AABB box) {
-        Level w = VampLib.proxy.getWorldFromKey(dimension);
-        if (w != null) {
-            VampirismWorld.getOpt(w).ifPresent(vw -> vw.updateArtificialFogBoundingBox(pos, box));
-        }
-    }
-
-    /**
-     * TODO 1.17 remove
-     * use {@link VampirismWorld} directly
-     * removes a vampire village
-     *
-     * @param dimension dimension of the village totem
-     * @param pos       position of the village totem
-     */
-    @Deprecated
-    public static void removeVampireVillage(ResourceKey<Level> dimension, BlockPos pos) {
-        Level w = VampLib.proxy.getWorldFromKey(dimension);
-        if (w != null) {
-            VampirismWorld.getOpt(w).ifPresent(vw -> vw.updateArtificialFogBoundingBox(pos, null));
-        }
-    }
-
-    /**
-     * TODO 1.17 remove
-     * Use {@link VampirismWorld#isInsideArtificialVampireFogArea(BlockPos)}
-     * checks if the position is in a vampire village
-     *
-     * @param dimension dimension of the pos
-     * @param blockPos  pos to check
-     * @return true if in a vampire controlled village otherwise false
-     */
-    @Deprecated
-    public static boolean isInsideVampireAreaCached(ResourceKey<Level> dimension, BlockPos blockPos) {
-        Level w = VampLib.proxy.getWorldFromKey(dimension);
-        if (w != null) {
-            return VampirismWorld.getOpt(w).map(vw -> vw.isInsideArtificialVampireFogArea(blockPos)).orElse(false);
-        }
-        return false;
-    }
 
     /**
      * add a totem
@@ -110,7 +60,7 @@ public class TotemHelper {
      * @param world    world of the totem
      * @param pois     points that may belong to the totem
      * @param totemPos position of the totem
-     * @return false if no {@link PointOfInterest} belongs to the totem
+     * @return false if no {@link PoiRecord} belongs to the totem
      */
     public static boolean addTotem(ServerLevel world, Set<PoiRecord> pois, BlockPos totemPos) {
         BlockPos conflict = null;
@@ -144,9 +94,9 @@ public class TotemHelper {
     }
 
     /**
-     * removes {@link PointOfInterest} from the given set if another totem has more right to control them
+     * removes {@link PoiRecord} from the given set if another totem has more right to control them
      *
-     * @param pois        {@link PointOfInterest} collection which is disputed
+     * @param pois        {@link PoiRecord} collection which is disputed
      * @param world       world of the totem
      * @param totem       position of the totem
      * @param conflicting position of the conflicting totem
@@ -188,7 +138,7 @@ public class TotemHelper {
     /**
      * removes the poi references to the totem
      *
-     * @param pois        the related {@link PointOfInterest}s
+     * @param pois        the related {@link PoiRecord}s
      * @param pos         the position of the totem
      * @param removeTotem if the totem poi should be removed too
      */
@@ -200,30 +150,15 @@ public class TotemHelper {
         }
     }
 
-    /**
-     * @see #removeTotem(RegistryKey, Collection, BlockPos, boolean)
-     */
-    @Deprecated
-    public static void removeTotem(Collection<PoiRecord> pois, BlockPos pos, boolean removeTotem) { //TODO 1.17 remove
-        removeTotem(Level.OVERWORLD, pois, pos, removeTotem);
-    }
 
     /**
-     * @see #removeTotem(RegistryKey, Collection, BlockPos, boolean)
-     */
-    @Deprecated
-    public static void removeTotem(Collection<PoiRecord> pois, BlockPos pos) { //TODO 1.17 remove
-        removeTotem(pois, pos, true);
-    }
-
-    /**
-     * gets a totem position of a {@link PointOfInterest} if it exists
+     * gets a totem position of a {@link PoiRecord} if it exists
      *
-     * @param pois collection of {@link PointOfInterest} to search for a totem position
+     * @param pois collection of {@link PoiRecord} to search for a totem position
      * @return the registered totem position or {@code null} if no totem exists
      */
     @Nonnull
-    public static Optional<BlockPos> getTotemPosition(ResourceKey<Level> dimension, Collection<PoiRecord> pois) { //TODO 1.17 change RegistryKey<World> dimension -> World world
+    public static Optional<BlockPos> getTotemPosition(ResourceKey<Level> dimension, Collection<PoiRecord> pois) { //TODO 1.17 change RegistryKey<World> dimension -> World world Max:  Yes, we always have the world object, but do we need it in here?
         Map<BlockPos, BlockPos> totemPositions = TotemHelper.totemPositions.computeIfAbsent(dimension, key -> new HashMap<>());
         for (PoiRecord pointOfInterest : pois) {
             if (totemPositions.containsKey(pointOfInterest.getPos())) {
@@ -234,35 +169,17 @@ public class TotemHelper {
     }
 
     /**
-     * @see #getTotemPosition(RegistryKey, Collection)
-     */
-    @Deprecated
-    @Nonnull
-    public static Optional<BlockPos> getTotemPosition(Collection<PoiRecord> pois) { //TODO 1.17 remove
-        return getTotemPosition(Level.OVERWORLD, pois);
-    }
-
-    /**
-     * gets the saved totem position for a related {@link PointOfInterest}
+     * gets the saved totem position for a related {@link PoiRecord}
      *
-     * @param pos position of the {@link PointOfInterest}
-     * @return the blockpos of the totem or {@code null} if there is no registered totem position for the {@link PointOfInterest}
+     * @param pos position of the {@link PoiRecord}
+     * @return the blockpos of the totem or {@code null} if there is no registered totem position for the {@link PoiRecord}
      */
     @Nullable
-    public static BlockPos getTotemPosition(ResourceKey<Level> world, BlockPos pos) { //TODO 1.17 change RegistryKey<World> dimension -> World world
+    public static BlockPos getTotemPosition(ResourceKey<Level> world, BlockPos pos) { //TODO 1.17 change RegistryKey<World> dimension -> World world. Max:  Yes, we always have the world object, but do we need it in here?
         if (totemPositions.containsKey(world)) {
             return totemPositions.get(world).get(pos);
         }
         return null;
-    }
-
-    /**
-     * @see #getTotemPosition(RegistryKey, BlockPos)
-     */
-    @Deprecated
-    @Nullable
-    public static BlockPos getTotemPosition(BlockPos pos) { //TODO 1.17 remove
-        return getTotemPosition(Level.OVERWORLD, pos);
     }
 
     @Nonnull

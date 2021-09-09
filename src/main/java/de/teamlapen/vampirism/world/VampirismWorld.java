@@ -104,7 +104,7 @@ public class VampirismWorld implements IVampirismWorld {
     }
 
     @Override
-    public void clear() {
+    public void clearCaches() {
         strengthHashMap.clear();
         emitterHashMap.clear();
     }

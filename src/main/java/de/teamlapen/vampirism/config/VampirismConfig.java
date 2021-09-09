@@ -180,11 +180,6 @@ public class VampirismConfig {
             sundamageDisabledBiomes = builder.comment("Additional biomes the player should not get sundamage in. Use biome ids e.g. [\"minecraft:mesa\", \"minecraft:plains\"]").defineList("sundamageDisabledBiomes", Collections.emptyList(), string -> string instanceof String && UtilLib.isValidResourceLocation(((String) string)));
             builder.pop();
 
-            builder.push("village");
-            builder.comment("Unused. Moved to COMMON config.").defineInRange("villageDistance", 26, 1, 100);//TODO 1.17
-            builder.comment("Unused. Moved to COMMON config").defineInRange("villageSeparation", 6, 1, 100);//TODO 1.17
-            builder.pop();
-
             builder.push("entities");
             blacklistedBloodEntity = builder.comment("Blacklist entities from predefined or auto calculated blood values").defineList("blacklistedBloodEntity", Collections.emptyList(), string -> string instanceof String && UtilLib.isValidResourceLocation(((String) string)));
             builder.pop();
@@ -197,7 +192,6 @@ public class VampirismConfig {
             builder.push("disable");
             disableFangInfection = builder.comment("Disable vampire fangs being usable to infect yourself").define("disableFangInfection", false);
             disableMobBiteInfection = builder.comment("Prevent vampire mobs from infecting players when attacking").define("disableMobBiteInfection", false);
-            builder.comment("Unused. Moved to COMMON config").define("disableHunterTentGen", false); //TODO 1.17
             builder.pop();
 
             builder.push("internal");
@@ -272,7 +266,6 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue versionCheck;
         public final ForgeConfigSpec.BooleanValue collectStats;
         public final ForgeConfigSpec.ConfigValue<String> integrationsNotifier;
-        public final ForgeConfigSpec.BooleanValue useVanillaCampfire; //TODO 1.17 move to Server config
         public final ForgeConfigSpec.BooleanValue optifineBloodvisionWarning;
 
         //Common server
@@ -293,6 +286,8 @@ public class VampirismConfig {
         public final ForgeConfigSpec.IntValue hunterTentDistance;
         public final ForgeConfigSpec.IntValue hunterTentSeparation;
         public final ForgeConfigSpec.BooleanValue villageModify;
+        public final ForgeConfigSpec.BooleanValue useVanillaCampfire;
+
 
         public final ForgeConfigSpec.IntValue villageDistance;
         public final ForgeConfigSpec.IntValue villageSeparation;
@@ -306,18 +301,15 @@ public class VampirismConfig {
                     .push("common");
             versionCheck = builder.comment("Check for new versions of Vampirism on startup").define("versionCheck", true);
             collectStats = builder.comment("Send mod version, MC version and mod count to mod author").define("collectStats", true);
-            useVanillaCampfire = builder.comment("Use the vanilla campfire block instead of Vampirism's much cooler one").define("useVanillaCampfire", false);
 
-            villageModify = builder.comment("Whether to modify the village world gen (size and frequency), based on world config").define("villageModify", true); //TODO 1.17 move to world
-            villageDistance = builder.comment("Desired maximum distance between villages in chunks").defineInRange("villageDistance", 26, 1, 100);  //TODO 1.17 move to world
-            villageSeparation = builder.comment("Minimum distance between villages in chunks. Must be smaller than distance").defineInRange("villageSeparation", 6, 1, 100);  //TODO 1.17 move to world
-
-            //builder.push("internal"); //TODO 1.17
+            builder.push("internal");
             integrationsNotifier = builder.comment("INTERNAL - Set to 'never' if you don't want to be notified about integration mods").define("integrationsNotifier", "");
             optifineBloodvisionWarning = builder.comment("INTERNAL").define("optifineBloodvisionWarning", false);
-            //builder.pop(); //TODO 1.17
             builder.pop();
-            builder.comment("Affects all worlds. This is only considered on server (or in singleplayer), but Forge requires us to put it here").push("common-server");
+
+            builder.pop();
+            builder.comment("Affects all worlds. This is only considered on server (or in singleplayer), but Forge requires us to put it here")
+                    .push("common-server");
             autoConvertGlassBottles = builder.comment("Whether glass bottles should be automatically be converted to blood bottles when needed").define("autoConvertGlassBottles", true);
             umbrella = builder.comment("If enabled adds a craftable umbrella that can be used to slowly walk though sunlight without taking damage").define("umbrella", false);
             enforceTentGeneration = builder.comment("Enforce tent generation in any overworld world, even if they were not included in modded or datapack world-types on purpose. Does not affect Server#disableTentGeneration or disable tent generation itself.").define("enforceOverworldTentGeneration", true);
@@ -334,6 +326,11 @@ public class VampirismConfig {
             hunterTentDistance = builder.comment("Desired maximum distance in chunks between tents. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentDistance", 10, 2, 4096);
             hunterTentSeparation = builder.comment("Desired minimum distance in chunks between tents. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentSeparation", 4, 1, 4096);
             enableHunterTentGeneration = builder.comment("Control hunter camp generation. If disabled you should set hunterSpawnChance to 75.").define("enableHunterTentGeneration", true);
+            villageModify = builder.comment("Whether to modify the village world gen (size and frequency), based on world config").define("villageModify", true);
+            villageDistance = builder.comment("Desired maximum distance between villages in chunks").defineInRange("villageDistance", 26, 1, 100);
+            villageSeparation = builder.comment("Minimum distance between villages in chunks. Must be smaller than distance").defineInRange("villageSeparation", 6, 1, 100);
+            useVanillaCampfire = builder.comment("Use the vanilla campfire block instead of Vampirism's much cooler one").define("useVanillaCampfire", false);
+
 
             builder.pop();
             builder.pop();

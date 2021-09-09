@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.player.hunter.actions;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -25,12 +26,12 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
     }
 
     @Override
-    public int getCooldown() {
+    public int getCooldown(IFactionPlayer<?> player) {
         return VampirismConfig.BALANCE.haAwarenessCooldown.get();
     }
 
     @Override
-    public int getDuration(int level) {
+    public int getDuration(IHunterPlayer player) {
         return VampirismConfig.BALANCE.haAwarenessDuration.get();
     }
 

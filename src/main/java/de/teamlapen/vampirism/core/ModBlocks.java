@@ -67,9 +67,9 @@ public class ModBlocks {
     public static final CursedEarthBlock cursed_earth = getNull();
     public static final FirePlaceBlock fire_place = getNull();
     public static final GarlicBlock garlic = getNull();
-    public static final GarlicDiffusorBlock garlic_beacon_improved = getNull();
-    public static final GarlicDiffusorBlock garlic_beacon_normal = getNull();
-    public static final GarlicDiffusorBlock garlic_beacon_weak = getNull();
+    public static final GarlicDiffusorBlock garlic_diffusor_improved = getNull();
+    public static final GarlicDiffusorBlock garlic_diffusor_normal = getNull();
+    public static final GarlicDiffusorBlock garlic_diffusor_weak = getNull();
     public static final HunterTableBlock hunter_table = getNull();
     public static final MedChairBlock med_chair = getNull();
     public static final FlowerPotBlock potted_vampire_orchid = getNull();
@@ -129,9 +129,9 @@ public class ModBlocks {
         registry.register(new CoffinItem(coffin));
         registry.register(itemBlock(cursed_earth));
         registry.register(itemBlock(fire_place));
-        registry.register(itemBlock(garlic_beacon_improved));
-        registry.register(itemBlock(garlic_beacon_normal));
-        registry.register(itemBlock(garlic_beacon_weak));
+        registry.register(itemBlock(garlic_diffusor_improved));
+        registry.register(itemBlock(garlic_diffusor_normal));
+        registry.register(itemBlock(garlic_diffusor_weak));
         registry.register(itemBlock(hunter_table));
         registry.register(itemBlock(sunscreen_beacon, new Item.Properties().tab(VampirismMod.creativeTab).rarity(Rarity.EPIC)));
         registry.register(itemBlock(totem_base));
@@ -258,6 +258,12 @@ public class ModBlocks {
         event.getAllMappings().forEach(missingMapping -> {
             if ("vampirism:blood_potion_table".equals(missingMapping.key.toString())) {
                 missingMapping.remap(ModBlocks.potion_table);
+            } else if("vampirism:garlic_beacon_normal".equals(missingMapping.key.toString())){
+                missingMapping.remap(ModBlocks.garlic_diffusor_normal);
+            } else if("vampirism:garlic_beacon_weak".equals(missingMapping.key.toString())){
+                missingMapping.remap(ModBlocks.garlic_diffusor_weak);
+            } else if("vampirism:garlic_beacon_improved".equals(missingMapping.key.toString())){
+                missingMapping.remap(ModBlocks.garlic_diffusor_improved);
             }
         });
     }

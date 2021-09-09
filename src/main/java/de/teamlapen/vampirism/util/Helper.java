@@ -7,9 +7,9 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
@@ -132,26 +132,6 @@ public class Helper {
         }
     }
 
-    /**
-     * Use IWorld version
-     * TODO 1.17 remove
-     */
-    @Deprecated
-    @Nonnull
-    public static EnumStrength getGarlicStrength(Entity e, ResourceKey<Level> world) {
-        return getGarlicStrengthAt(world, e.blockPosition());
-    }
-
-    /**
-     * Use IWorld version
-     * TODO 1.17 remove
-     */
-    @Deprecated
-    @Nonnull
-    public static EnumStrength getGarlicStrengthAt(ResourceKey<Level> world, BlockPos pos) {
-        return VampirismAPI.getGarlicChunkHandler(world).getStrengthAtChunk(new ChunkPos(pos));
-    }
-
 
     @Nonnull
     public static EnumStrength getGarlicStrength(Entity e, LevelAccessor world) {
@@ -255,7 +235,7 @@ public class Helper {
         if (usingFaction != null && !playerHandler.isInFaction(usingFaction)) return false;
         if (playerHandler.getCurrentLevel() < reqLevel) return false;
         if (requiredSkill == null) return true;
-        return playerHandler.getCurrentFactionPlayer().map(ISkillPlayer::getSkillHandler).map(s -> s.isSkillEnabled(requiredSkill)).orElse(false);
+        return playerHandler.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(s -> s.isSkillEnabled(requiredSkill)).orElse(false);
     }
 
     public static int getExperiencePoints(LivingEntity entity, Player player) {

@@ -40,7 +40,6 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 public class VampirismScreen extends AbstractContainerScreen<VampirismContainer> implements ExtendedScreen {
 
@@ -77,7 +76,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (ModKeys.getKeyBinding(ModKeys.KEY.SKILL).matches(keyCode, scanCode)) {
+        if (ModKeys.getKeyBinding(ModKeys.KEY.VAMPIRISM_MENU).matches(keyCode, scanCode)) {
             this.onClose();
             return true;
         }
@@ -139,7 +138,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
 
         this.addRenderableWidget(new ImageButton(this.leftPos + 26, this.topPos + 90, 20, 20, 0, 205, 20, BACKGROUND, 256, 256, (context) -> {
             IPlayableFaction<?> factionNew = VampirismPlayerAttributes.get(this.minecraft.player).faction;
-            Minecraft.getInstance().setScreen(new SelectActionScreen(factionNew.getColor(), true));
+            Minecraft.getInstance().setScreen(new ActionSelectScreen(factionNew.getColor(), true));
         }, (button, matrixStack, mouseX, mouseY) -> {
             this.renderTooltip(matrixStack, new TranslatableComponent("gui.vampirism.vampirism_menu.edit_actions"), mouseX, mouseY);
         }, TextComponent.EMPTY));

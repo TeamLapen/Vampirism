@@ -37,7 +37,7 @@ public class ModTiles {
         registry.register(create("altar_inspiration", AltarInspirationBlockEntity::new, ModBlocks.altar_inspiration));
         registry.register(create("sunscreen_beacon", SunscreenBeaconBlockEntity::new, ModBlocks.sunscreen_beacon));
         registry.register(create("alchemical_cauldron", AlchemicalCauldronBlockEntity::new, ModBlocks.alchemical_cauldron));
-        registry.register(create("garlic_beacon", GarlicDiffusorBlockEntity::new, ModBlocks.garlic_beacon_normal, ModBlocks.garlic_beacon_improved, ModBlocks.garlic_beacon_weak));
+        registry.register(create("garlic_beacon", GarlicDiffusorBlockEntity::new, ModBlocks.garlic_diffusor_normal, ModBlocks.garlic_diffusor_improved, ModBlocks.garlic_diffusor_weak));
         registry.register(create("blood_pedestal", PedestalBlockEntity::new, ModBlocks.blood_pedestal));
         registry.register(create("grinder", BloodGrinderBlockEntity::new, ModBlocks.blood_grinder));
         registry.register(create("sieve", SieveBlockEntity::new, ModBlocks.blood_sieve));

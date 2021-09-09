@@ -98,7 +98,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     public void setHatType(int type) {
-        assert type >= -2;
+        assert type >= -1;
         this.getMinionData().ifPresent(d -> d.hat = type);
     }
 
@@ -119,7 +119,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     public int getHatType() {
-        return this.getItemBySlot(EquipmentSlot.HEAD).isEmpty() ? this.getMinionData().map(d -> d.hat).orElse(0) : -2;
+        return this.getItemBySlot(EquipmentSlot.HEAD).isEmpty() ? this.getMinionData().map(d -> d.hat).orElse(0) : -1;
     }
 
     @Override

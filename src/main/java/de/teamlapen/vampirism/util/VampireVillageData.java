@@ -5,9 +5,11 @@ import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
 import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
 import de.teamlapen.vampirism.api.entity.factions.IVillageFactionData;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -23,6 +25,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class VampireVillageData implements IVillageFactionData {
@@ -44,6 +47,12 @@ public class VampireVillageData implements IVillageFactionData {
     }
     private final ItemStack banner = createBanner();
     private List<CaptureEntityEntry> captureEntityEntries;
+
+    @Nullable
+    @Override
+    public MobEffect getBadOmenEffect() {
+        return ModEffects.bad_omen_vampire;
+    }
 
     @Nonnull
     @Override

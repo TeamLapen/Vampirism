@@ -31,7 +31,7 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
 import de.teamlapen.vampirism.player.IVampirismPlayer;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
-import de.teamlapen.vampirism.player.VampirismPlayer;
+import de.teamlapen.vampirism.player.FactionBasePlayer;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
@@ -54,14 +54,12 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
@@ -87,7 +85,6 @@ import java.util.function.Predicate;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer.BITE_TYPE;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -103,7 +100,7 @@ import net.minecraft.world.entity.Pose;
 /**
  * Main class for Vampire Players.
  */
-public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IVampirePlayer {
+public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements IVampirePlayer {
 
     public final static UUID NATURAL_ARMOR_UUID = UUID.fromString("17dcf6d2-30ac-4730-b16a-528353d0abe5");
     private static final Logger LOGGER = LogManager.getLogger(VampirePlayer.class);
@@ -1128,7 +1125,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
-    protected VampirismPlayer copyFromPlayer(Player old) {
+    protected FactionBasePlayer copyFromPlayer(Player old) {
         VampirePlayer oldVampire = get(old);
         CompoundTag nbt = new CompoundTag();
         oldVampire.saveData(nbt);
@@ -1211,7 +1208,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private void applyEntityAttributes() {
         player.getAttribute(ModAttributes.sundamage).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
         player.getAttribute(ModAttributes.blood_exhaustion).setBaseValue(VampirismConfig.BALANCE.vpExhaustionMaxMod.get());
-        player.getAttribute(ModAttributes.bite_damage).setBaseValue(0);
     }
 
     /**

@@ -47,16 +47,15 @@ public class FactionEvent extends Event {
      * Posted when a player is about to change their faction or level. Only server side
      * If canceled the level/faction change is canceled.
      * But the player is not notified, so you should probably consider doing so.
-     * TODO 1.17 rename CheckFactionLevelChange
      */
     @Cancelable
-    public static class ChangeLevelOrFaction extends FactionEvent {
+    public static class FactionLevelChangePre extends FactionEvent {
         private final int currentLevel;
         private final int newLevel;
         @Nullable
         private final IPlayableFaction newFaction;
 
-        public ChangeLevelOrFaction(@Nonnull IFactionPlayerHandler player, @Nullable IPlayableFaction currentFaction, int currentLevel, @Nullable IPlayableFaction newFaction, int newLevel) {
+        public FactionLevelChangePre(@Nonnull IFactionPlayerHandler player, @Nullable IPlayableFaction currentFaction, int currentLevel, @Nullable IPlayableFaction newFaction, int newLevel) {
             super(player, currentFaction);
             this.currentLevel = currentLevel;
             this.newLevel = newLevel;

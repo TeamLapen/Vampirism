@@ -82,7 +82,7 @@ public class RecipesGenerator extends RecipeProvider {
         ItemLike glass_bottle = Items.GLASS_BOTTLE;
         ItemLike garlic_beacon_core = ModItems.garlic_beacon_core;
         ItemLike garlic_beacon_core_improved = ModItems.garlic_beacon_core_improved;
-        ItemLike garlic_beacon_normal = ModBlocks.garlic_beacon_normal;
+        ItemLike garlic_beacon_normal = ModBlocks.garlic_diffusor_normal;
         ItemLike bucket = Items.BUCKET;
         ItemLike gun_powder = Items.GUNPOWDER;
         ItemLike holy_water_bottle_normal = ModItems.holy_water_bottle_normal;
@@ -150,10 +150,10 @@ public class RecipesGenerator extends RecipeProvider {
 
         ShapedRecipeBuilder.shaped(ModBlocks.alchemical_cauldron).pattern("XZX").pattern("XXX").pattern("Y Y").define('X', iron_ingot).define('Y', stone_bricks).define('Z', garlic).unlockedBy("has_iron", has(iron_ingot)).save(consumer, hunter("alchemical_cauldron"));
         ShapedRecipeBuilder.shaped(ModBlocks.potion_table).pattern("XXX").pattern("Y Y").pattern("ZZZ").define('X', glass_bottle).define('Y', planks).define('Z', iron_ingot).unlockedBy("has_glass_bottle", has(glass_bottle)).save(consumer, hunter("potion_table"));
-        ShapedRecipeBuilder.shaped(ModBlocks.garlic_beacon_normal).pattern("XYX").pattern("YZY").pattern("OOO").define('X', planks).define('Y', diamond).define('O', obsidian).define('Z', garlic_beacon_core).unlockedBy("has_diamond", has(diamond)).save(consumer, hunter("garlic_beacon_normal"));
+        ShapedRecipeBuilder.shaped(ModBlocks.garlic_diffusor_normal).pattern("XYX").pattern("YZY").pattern("OOO").define('X', planks).define('Y', diamond).define('O', obsidian).define('Z', garlic_beacon_core).unlockedBy("has_diamond", has(diamond)).save(consumer, hunter("garlic_beacon_normal"));
         ShapedRecipeBuilder.shaped(ModBlocks.hunter_table).pattern("XYW").pattern("ZZZ").pattern("Z Z").define('X', vampire_fang).define('Y', book).define('Z', planks).define('W', garlic).unlockedBy("has_fang", has(vampire_fang)).save(consumer, hunter("hunter_table"));
         ShapedRecipeBuilder.shaped(ModItems.item_med_chair).pattern("XYX").pattern("XXX").pattern("XZX").define('X', iron_ingot).define('Y', wool).define('Z', glass_bottle).unlockedBy("has_iron_ingot", has(iron_ingot)).save(consumer, hunter("item_med_chair"));
-        ShapedRecipeBuilder.shaped(ModBlocks.garlic_beacon_improved).pattern("XYX").pattern("YZY").pattern("OOO").define('X', planks).define('Y', diamond).define('Z', garlic_beacon_core_improved).define('O', obsidian).unlockedBy("has_garlic_beacon", has(garlic_beacon_normal)).save(consumer, hunter("garlic_beacon_improved"));
+        ShapedRecipeBuilder.shaped(ModBlocks.garlic_diffusor_improved).pattern("XYX").pattern("YZY").pattern("OOO").define('X', planks).define('Y', diamond).define('Z', garlic_beacon_core_improved).define('O', obsidian).unlockedBy("has_garlic_beacon", has(garlic_beacon_normal)).save(consumer, hunter("garlic_beacon_improved"));
         ShapedRecipeBuilder.shaped(ModItems.stake).pattern("X").pattern("Y").pattern("X").define('X', stick).define('Y', planks).unlockedBy("has_sticks", has(stick)).save(consumer, hunter("stake"));
         ShapedRecipeBuilder.shaped(ModBlocks.weapon_table).pattern("X  ").pattern("YYY").pattern(" Z ").define('X', bucket).define('Y', iron_ingot).define('Z', iron_block).unlockedBy("has_iron_ingot", has(iron_ingot)).save(consumer, hunter("weapon_table"));
         ShapedRecipeBuilder.shaped(ModItems.crossbow_arrow_normal, 6).pattern("X").pattern("Y").define('X', iron_ingot).define('Y', stick).unlockedBy("has_iron_ingot", has(iron_ingot)).save(consumer, hunter("crossbow_arrow_normal"));

@@ -80,18 +80,6 @@ public class TaskManager implements ITaskManager {
         this.taskWrapperMap.get(taskBoardId).removeTask(taskInstance, remove);
     }
 
-    @Deprecated
-    @Override
-    public void abortTask(UUID taskBoardId, @Nonnull ITaskInstance taskInstance, boolean remove) {
-        TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(taskInstance.isUnique() ? UNIQUE_TASKS : taskBoardId, TaskWrapper::new);
-        wrapper.removeTask(taskInstance, remove);
-    }
-
-    @Deprecated
-    @Override
-    public void abortTask(UUID taskBoardId, @Nonnull Task task) {
-        this.taskWrapperMap.get(task.isUnique() ? UNIQUE_TASKS : taskBoardId).getTaskInstances().stream().filter(ins -> ins.getTask() == task).forEach(ins -> abortTask(taskBoardId, ins, false));
-    }
 
     @Override
     public void acceptTask(UUID taskBoardId, @Nonnull UUID taskInstance) {

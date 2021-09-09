@@ -28,7 +28,6 @@ public class ModCommands {
             dispatcher.register(
                     LiteralArgumentBuilder.<CommandSourceStack>literal(s)
                             .then(BindActionCommand.register())
-                            .then(VersionCheckCommand.registerChangelog())//TODO 1.17 remove
                             .then(VersionCheckCommand.register())
                             .then(CurrentDimensionCommand.register())
                             .then(EyeCommand.register())
@@ -50,7 +49,6 @@ public class ModCommands {
                     LiteralArgumentBuilder.<CommandSourceStack>literal(s)
                             .then(InfoEntitiesCommand.register())
                             .then(MarkerCommand.register())
-                            .then(SkillCommand.registerTest())//TODO 1.17 remove
                             .then(EntityCommand.register())
                             .then(InfoEntityCommand.register())
                             .then(BiomeCommand.register())

@@ -191,7 +191,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     /**
      * Copy of {@link net.minecraft.world.entity.Mob} but with modified DamageSource
      * Check if code still up-to-date
-     * TODO 1.17
+     * TODO 1.18
      */
     @Override
     public boolean doHurtTarget(Entity entityIn) {

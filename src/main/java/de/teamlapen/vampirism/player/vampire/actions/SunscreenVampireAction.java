@@ -9,9 +9,6 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModRefinements;
 import net.minecraft.world.effect.MobEffectInstance;
 
-/**
- * Adds sunscreen
- */
 public class SunscreenVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     @Override
@@ -21,17 +18,12 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
     }
 
     @Override
-    public int getCooldown() {
+    public int getCooldown(IFactionPlayer<?> player) {
         return VampirismConfig.BALANCE.vaSunscreenCooldown.get() * 20;
     }
 
     @Override
-    public int getDuration(int level) {
-        return 20 * (VampirismConfig.BALANCE.vaSunscreenDuration.get());
-    }
-
-    @Override
-    public int getDuration(IFactionPlayer player) {
+    public int getDuration(IVampirePlayer player) {
         int duration = 20 * (VampirismConfig.BALANCE.vaSunscreenDuration.get());
         if (player.getSkillHandler().isRefinementEquipped(ModRefinements.sun_screen)) {
             duration *= VampirismConfig.BALANCE.vrSunscreenDurationMod.get();

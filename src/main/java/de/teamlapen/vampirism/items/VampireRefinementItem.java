@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.util.WeightedRandomItem;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
@@ -30,9 +30,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-
-import de.teamlapen.vampirism.api.items.IRefinementItem.AccessorySlotType;
-import net.minecraft.world.item.Item.Properties;
 
 public class VampireRefinementItem extends Item implements IRefinementItem {
 
@@ -139,7 +136,7 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         if (!worldIn.isClientSide()) {
             ItemStack stack = playerIn.getItemInHand(handIn);
-            if (FactionPlayerHandler.getOpt(playerIn).map(v -> v).flatMap(FactionPlayerHandler::getCurrentFactionPlayer).map(ISkillPlayer::getSkillHandler).map(sh -> sh.equipRefinementItem(stack)).orElse(false)) {
+            if (FactionPlayerHandler.getOpt(playerIn).map(v -> v).flatMap(FactionPlayerHandler::getCurrentFactionPlayer).map(IFactionPlayer::getSkillHandler).map(sh -> sh.equipRefinementItem(stack)).orElse(false)) {
                 return InteractionResultHolder.consume(ItemStack.EMPTY);
             }
 

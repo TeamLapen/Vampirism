@@ -21,17 +21,10 @@ public class ModAttributes {
      * Registered for EntityPlayer
      */
     public static final RangedAttribute blood_exhaustion = getNull();
-    /**
-     * Allows modifying bite damage.
-     * Registered for EntityPlayer
-     * TODO 1.17 remove
-     */
-    public static final RangedAttribute bite_damage = getNull();
 
     static void registerAttributes(IForgeRegistry<Attribute> registry) {
         registry.register(new RangedAttribute("vampirism.sundamage", 0.0D, 0.0D, 1000D).setRegistryName(REFERENCE.MODID, "sundamage"));
         registry.register(new RangedAttribute("vampirism.blood_exhaustion", 1.0, 0.0, 10).setSyncable(true)/*shouldWatch*/.setRegistryName(REFERENCE.MODID, "blood_exhaustion"));
-        registry.register(new RangedAttribute("vampirism.bite_damage", 0.0, 0.0, 100).setRegistryName(REFERENCE.MODID, "bite_damage"));
     }
 
 }

@@ -20,16 +20,16 @@ import javax.annotation.Nonnull;
  * Implements basic methods for level or minion handling
  * TODO 1.17 refactor to FactionBasePlayer
  */
-public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IFactionPlayer<T>, ISyncable.ISyncableEntityCapabilityInst, IPlayerEventListener {
+public abstract class FactionBasePlayer<T extends IFactionPlayer<?>> implements IFactionPlayer<T>, ISyncable.ISyncableEntityCapabilityInst, IPlayerEventListener {
 
-    private static final Logger LOGGER = LogManager.getLogger(VampirismPlayer.class);
+    private static final Logger LOGGER = LogManager.getLogger(FactionBasePlayer.class);
     protected final Player player;
     /**
      * {@code @Nonnull} on server, otherwise {@code null}
      */
     private final TaskManager taskManager;
 
-    public VampirismPlayer(Player player) {
+    public FactionBasePlayer(Player player) {
         this.player = player;
         if (player instanceof ServerPlayer) {
             this.taskManager = new TaskManager((ServerPlayer) player, this, this.getFaction());
@@ -46,7 +46,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
 
     /**
      * Only use this if you are dealing with minions.
-     * Otherwise use {@link VampirismPlayer#getRepresentingPlayer()}
+     * Otherwise use {@link FactionBasePlayer#getRepresentingPlayer()}
      */
     @Override
     public LivingEntity getRepresentingEntity() {
@@ -136,12 +136,12 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
     }
 
     /**
-     * Copy all relevant values from the given player and return a instance of the old players VampirismPlayer, so {@link VampirismPlayer} can copy it's values as well
+     * Copy all relevant values from the given player and return a instance of the old players VampirismPlayer, so {@link FactionBasePlayer} can copy it's values as well
      *
      * @param old
      * @return
      */
-    protected abstract VampirismPlayer<T> copyFromPlayer(Player old);
+    protected abstract FactionBasePlayer<T> copyFromPlayer(Player old);
 
     /**
      * Can be overridden to load data from updates in subclasses
@@ -170,6 +170,6 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
     }
 
     private void copyFrom(Player old) {
-        VampirismPlayer<T> p = copyFromPlayer(old);
+        FactionBasePlayer<T> p = copyFromPlayer(old);
     }
 }

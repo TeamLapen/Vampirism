@@ -35,9 +35,9 @@ public class BlockStateGenerator extends BlockStateProvider {
         ModelFile bloody_spruce_log = models().cubeColumn("bloody_spruce_log", modLoc("block/bloody_spruce_log"), modLoc("block/bloody_spruce_log_top"));
 
         //default blocks
-        horizontalBlock(ModBlocks.garlic_beacon_normal, models().withExistingParent("garlic_beacon_normal", modLoc("block/garlic_beacon")));
-        horizontalBlock(ModBlocks.garlic_beacon_weak, models().withExistingParent("garlic_beacon_weak", modLoc("block/garlic_beacon")));
-        horizontalBlock(ModBlocks.garlic_beacon_improved, models().withExistingParent("garlic_beacon_improved", modLoc("block/garlic_beacon")));
+        horizontalBlock(ModBlocks.garlic_diffusor_normal, models().withExistingParent("garlic_beacon_normal", modLoc("block/garlic_beacon")));
+        horizontalBlock(ModBlocks.garlic_diffusor_weak, models().withExistingParent("garlic_beacon_weak", modLoc("block/garlic_beacon")));
+        horizontalBlock(ModBlocks.garlic_diffusor_improved, models().withExistingParent("garlic_beacon_improved", modLoc("block/garlic_beacon")));
         horizontalBlock(ModBlocks.church_altar, models().getExistingFile(modLoc("block/church_altar")));
         horizontalBlock(ModBlocks.blood_grinder, models().getExistingFile(modLoc("block/blood_grinder")));
 

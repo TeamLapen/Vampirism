@@ -64,20 +64,14 @@ public interface IVillageFactionData {
         }
     };
 
-    /**
-     * TODO 1.17 remove default for methods here (as they are implemented in the default instance)
-     *
+    /***
      * @return A faction specific bad omen effect
      */
     @Nullable
-    default MobEffect getBadOmenEffect() {
-        return null;
-    }
+    MobEffect getBadOmenEffect();
 
     @Nonnull
-    default ItemStack getBanner() { //TODO 1.17 remove default implementation
-        return new ItemStack(Items.WHITE_BANNER);
-    }
+    ItemStack getBanner();
 
     List<CaptureEntityEntry> getCaptureEntries();
 
@@ -93,8 +87,6 @@ public interface IVillageFactionData {
      */
     Pair<Block, Block> getTotemTopBlock();
 
-    default boolean isBanner(@Nonnull ItemStack stack) {//TODO 1.17 remove default implementation
-        return false;
-    }
+    boolean isBanner(@Nonnull ItemStack stack);
 
 }

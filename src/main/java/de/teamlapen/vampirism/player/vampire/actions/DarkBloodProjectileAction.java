@@ -18,11 +18,6 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
     }
 
     @Override
-    public int getCooldown() {
-        return VampirismConfig.BALANCE.vaDarkBloodProjectileCooldown.get() * 20;
-    }
-
-    @Override
     public int getCooldown(IFactionPlayer player) {
         int cooldown = VampirismConfig.BALANCE.vaDarkBloodProjectileCooldown.get() * 20;
         if (player.getSkillHandler().isRefinementEquipped(ModRefinements.dark_blood_projectile_aoe)) {

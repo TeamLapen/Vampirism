@@ -250,7 +250,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     @SubscribeEvent
     public void onRenderFoodBar(RenderGameOverlayEvent.PreLayer event) {
-        //TODO consider replacing this with a custom layer and disabling food layer
+        //TODO 1.17 consider replacing this with a custom layer and disabling food layer
         if (event.getOverlay() != ForgeIngameGui.FOOD_LEVEL_ELEMENT) {
             return;
         }

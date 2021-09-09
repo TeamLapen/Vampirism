@@ -201,8 +201,6 @@ public class ModEntities {
     static void onModifyEntityTypeAttributes(EntityAttributeModificationEvent event) {
         event.add(EntityType.PLAYER, ModAttributes.sundamage);
         event.add(EntityType.PLAYER, ModAttributes.blood_exhaustion);
-        event.add(EntityType.PLAYER, ModAttributes.bite_damage);
-
     }
 
     private static <T extends Entity> EntityType<T> prepareEntityType(String id, EntityType.Builder<T> builder, boolean spawnable) {

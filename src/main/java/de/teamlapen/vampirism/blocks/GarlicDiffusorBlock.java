@@ -46,7 +46,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class GarlicDiffusorBlock extends VampirismBlockContainer {
 
-    public final static String regName = "garlic_beacon"; //TODO 1.17 migrate to garlic_diffusor
+    public final static String regName = "garlic_diffusor";
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     private static final VoxelShape shape = makeShape();
 

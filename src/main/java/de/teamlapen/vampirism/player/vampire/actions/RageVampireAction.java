@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.player.vampire.actions;
 
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -29,13 +30,13 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
     }
 
     @Override
-    public int getCooldown() {
+    public int getCooldown(IFactionPlayer<?> player) {
         return VampirismConfig.BALANCE.vaRageCooldown.get() * 20;
     }
 
     @Override
-    public int getDuration(int level) {
-        return 20 * (VampirismConfig.BALANCE.vaRageMinDuration.get() + VampirismConfig.BALANCE.vaRageDurationIncrease.get() * level);
+    public int getDuration(IVampirePlayer player) {
+        return 20 * (VampirismConfig.BALANCE.vaRageMinDuration.get() + VampirismConfig.BALANCE.vaRageDurationIncrease.get() * player.getLevel());
     }
 
     @Override

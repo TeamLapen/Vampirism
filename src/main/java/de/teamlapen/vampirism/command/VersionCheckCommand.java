@@ -18,11 +18,6 @@ import java.util.List;
 
 public class VersionCheckCommand extends BasicCommand {
 
-    public static ArgumentBuilder<CommandSourceStack, ?> registerChangelog() {
-        return setup(Commands.literal("changelog"));
-
-    }
-
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return setup(Commands.literal("checkForUpdate"));
     }
@@ -47,7 +42,7 @@ public class VersionCheckCommand extends BasicCommand {
         String homepage = VampirismMod.instance.getVersionInfo().getHomePage();
 
         Component download = new TranslatableComponent("text.vampirism.update_message.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, newVersion.getUrl() == null ? homepage : newVersion.getUrl())).setUnderlined(true).applyFormat(ChatFormatting.BLUE));
-        Component changelog = new TranslatableComponent("text.vampirism.update_message.changelog").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vampirism changelog")).setUnderlined(true));
+        Component changelog = new TranslatableComponent("text.vampirism.update_message.changelog").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vampirism checkForUpdate")).setUnderlined(true));
         Component modpage = new TranslatableComponent("text.vampirism.update_message.modpage").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, homepage)).setUnderlined(true).applyFormat(ChatFormatting.BLUE));
         context.getSource().sendSuccess(new TextComponent("").append(download).append(new TextComponent(" ")).append(changelog).append(new TextComponent(" ")).append(modpage), false);
         return 1;

@@ -15,12 +15,6 @@ public interface ITaskManager {
      */
     void abortTask(UUID taskBoardId, @Nonnull UUID taskInstance, boolean remove);
 
-    @Deprecated
-    void abortTask(UUID taskBoardId, @Nonnull ITaskInstance taskInstance, boolean remove); //TODO 1.17 remove
-
-    @Deprecated
-    void abortTask(UUID taskBoardId, @Nonnull Task task); //TODO 1.17 remove
-
     /**
      * accepts the taskInstance, so that the TaskManger knows that the player is working on the Task at the taskInstance board
      *

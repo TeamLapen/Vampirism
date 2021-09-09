@@ -5,33 +5,12 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 /**
  * Action with a duration which is updated every tick
  */
-public interface ILastingAction<T extends IActionPlayer> extends IAction {
-    /**
-     * TODO 1.17 remove
-     *
-     * @return Whether the cooldown should be reduced (by the remaining time) if the action is deactivated prematurely. Not reasonable if duration is (much) longer than cooldown.
-     */
-    @Deprecated
-    default boolean allowReducedCooldown() {
-        return getDuration(0) <= getCooldown();
-    }
-
-    /**
-     * TODO 1.17 remove
-     * Use IFactionPlayer sensitive version
-     *
-     * @param level Player's faction level
-     * @return Skill duration in ticks
-     */
-    @Deprecated
-    int getDuration(int level);
+public interface ILastingAction<T> extends IAction {
 
     /**
      * @return Skill duration in ticks
      */
-    default int getDuration(IFactionPlayer player) {
-        return getDuration(player.getLevel());
-    }
+    int getDuration(T player);
 
     /**
      * Called on the server after the action was activated on server side.
@@ -48,7 +27,7 @@ public interface ILastingAction<T extends IActionPlayer> extends IAction {
     /**
      * Called when the action is activated after a world reload.
      * Called SERVER SIDE ONLY.
-     * For client side check {@link ILastingAction#onActivatedClient(IActionPlayer)}
+     * For client side check {@link ILastingAction#onActivatedClient(IFactionPlayer<IFactionPlayer<?>>)}
      */
     void onReActivated(T player);
 

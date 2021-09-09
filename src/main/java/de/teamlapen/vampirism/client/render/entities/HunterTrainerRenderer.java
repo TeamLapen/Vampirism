@@ -23,7 +23,7 @@ public class HunterTrainerRenderer extends HumanoidMobRenderer<Mob, PlayerModel<
     public HunterTrainerRenderer(EntityRendererProvider.Context context, boolean renderEquipment) {
         super(context, new PlayerModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED), false), 0.5F);
         if (renderEquipment)
-            this.addLayer(new HunterEquipmentLayer<>(this, context.getModelSet(), h -> HunterEquipmentModel.StakeType.ONLY, entityModel -> 1));
+            this.addLayer(new HunterEquipmentLayer<>(this, context.getModelSet(), h -> HunterEquipmentModel.StakeType.ONLY, entityModel -> HunterEquipmentModel.HatType.HAT2));
         //this.addLayer(new CloakLayer<>(this, textureCloak, Predicates.alwaysTrue()));
     }
 

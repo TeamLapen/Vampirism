@@ -30,7 +30,7 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
         super(context, new VillagerModel<>(context.bakeLayer(ModEntitiesRender.TASK_MASTER)), 0.5F);
 //        this.addLayer(new HeldItemLayer<>(this));
         this.addLayer(new TaskMasterTypeLayer<>(this, overlay));
-        this.addLayer(new HunterEquipmentLayer<>(this, context.getModelSet(), h -> HunterEquipmentModel.StakeType.NONE, h -> 1));
+        this.addLayer(new HunterEquipmentLayer<>(this, context.getModelSet(), h -> HunterEquipmentModel.StakeType.NONE, h -> HunterEquipmentModel.HatType.HAT2));
     }
 
     @Override

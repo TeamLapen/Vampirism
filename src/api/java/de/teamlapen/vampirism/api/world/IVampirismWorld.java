@@ -6,10 +6,9 @@ import net.minecraft.core.BlockPos;
 public interface IVampirismWorld extends IGarlicChunkHandler {
 
     /**
-     * TODO 1.17 rename clearCaches
      * Clear any caches upon world unload.
      */
-    void clear();
+    void clearCaches();
 
     /**
      * checks if the position is in a vampire village

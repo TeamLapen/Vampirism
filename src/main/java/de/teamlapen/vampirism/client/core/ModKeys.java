@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.client.gui.SelectActionScreen;
+import de.teamlapen.vampirism.client.gui.ActionSelectScreen;
 import de.teamlapen.vampirism.client.gui.SelectMinionTaskScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
@@ -51,7 +51,7 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
     private static final String SUCK_BLOOD = "keys.vampirism.suck";
     //    private static final String AUTO_BLOOD = "keys.vampirism.auto";
     private static final String TOGGLE_ACTIONS = "keys.vampirism.action";
-    private static final String SELECT_SKILLS = "keys.vampirism.select_skills";
+    private static final String OPEN_VAMPIRISM_MENU = "keys.vampirism.select_skills";
     private static final String SWITCH_VISION = "keys.vampirism.vision";
     private static final String ACTIVATE_ACTION1 = "keys.vampirism.action1";
     private static final String ACTIVATE_ACTION2 = "keys.vampirism.action2";
@@ -61,10 +61,7 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
 
     private static final KeyMapping SUCK = new KeyMapping(SUCK_BLOOD, KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
     private static final KeyMapping ACTION = new KeyMapping(TOGGLE_ACTIONS, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);//Middle Mouse -98
-    /**
-     * TODO 1.17 refractor to be VAMPIRISM_MENU. Same for other related constants
-     */
-    private static final KeyMapping SKILL = new KeyMapping(SELECT_SKILLS, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_P, CATEGORY);
+    private static final KeyMapping VAMPIRISM_MENU = new KeyMapping(OPEN_VAMPIRISM_MENU, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_P, CATEGORY);
     private static final KeyMapping VISION = new KeyMapping(SWITCH_VISION, KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_N, CATEGORY);
     private static final KeyMapping ACTION1 = new KeyMapping(ACTIVATE_ACTION1, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_1, CATEGORY);
     private static final KeyMapping ACTION2 = new KeyMapping(ACTIVATE_ACTION2, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_2, CATEGORY);
@@ -79,8 +76,8 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
                 return SUCK;
             case ACTION:
                 return ACTION;
-            case SKILL:
-                return SKILL;
+            case VAMPIRISM_MENU:
+                return VAMPIRISM_MENU;
             case VISION:
                 return VISION;
             case ACTION1:
@@ -101,7 +98,7 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
         MinecraftForge.EVENT_BUS.register(new ModKeys());
         ClientRegistry.registerKeyBinding(ACTION);
         ClientRegistry.registerKeyBinding(SUCK);
-        ClientRegistry.registerKeyBinding(SKILL);
+        ClientRegistry.registerKeyBinding(VAMPIRISM_MENU);
         ClientRegistry.registerKeyBinding(VISION);
         ClientRegistry.registerKeyBinding(ACTION1);
         ClientRegistry.registerKeyBinding(ACTION2);
@@ -141,10 +138,10 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
             if (Minecraft.getInstance().player.isAlive()) {
                 IPlayableFaction<?> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
                 if (faction != null) {
-                    Minecraft.getInstance().setScreen(new SelectActionScreen(faction.getColor(), false));
+                    Minecraft.getInstance().setScreen(new ActionSelectScreen(faction.getColor(), false));
                 }
             }
-        } else if (keyPressed == KEY.SKILL) {
+        } else if (keyPressed == KEY.VAMPIRISM_MENU) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.OPEN_VAMPIRISM_MENU, ""));
         } else if (keyPressed == KEY.VISION) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.VAMPIRE_VISION_TOGGLE, ""));
@@ -197,8 +194,8 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
             return KEY.SUCK;
         } else if (ACTION.isDown()) {
             return KEY.ACTION;
-        } else if (SKILL.isDown()) {
-            return KEY.SKILL;
+        } else if (VAMPIRISM_MENU.isDown()) {
+            return KEY.VAMPIRISM_MENU;
         } else if (VISION.isDown()) {
             return KEY.VISION;
         } else if (ACTION1.isDown()) {
@@ -230,6 +227,6 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
     }
 
     public enum KEY {
-        SUCK, UNKNOWN, ACTION, SKILL, VISION, ACTION1, ACTION2, ACTION3, MINION
+        SUCK, UNKNOWN, ACTION, VAMPIRISM_MENU, VISION, ACTION1, ACTION2, ACTION3, MINION
     }
 }

@@ -45,14 +45,10 @@ public class SummonBatVampireAction extends DefaultVampireAction {
         return player.getActionHandler().isActionActive(VampireActions.bat) || player.getSkillHandler().isRefinementEquipped(ModRefinements.summon_bats);
     }
 
-    @Override
-    public int getCooldown() {
-        return VampirismConfig.BALANCE.vaSummonBatsCooldown.get() * 20;
-    }
 
     @Override
-    public int getCooldown(IFactionPlayer player) {
-        return (int) ((player.getSkillHandler().isRefinementEquipped(ModRefinements.summon_bats) ? 0.7 : 1) * getCooldown());
+    public int getCooldown(IFactionPlayer<?> player) {
+        return (int) ((player.getSkillHandler().isRefinementEquipped(ModRefinements.summon_bats) ? 0.7 : 1) * VampirismConfig.BALANCE.vaSummonBatsCooldown.get() * 20);
     }
 
     @Override

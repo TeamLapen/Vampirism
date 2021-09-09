@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.player.vampire.actions;
 
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -26,7 +27,7 @@ public class RegenVampireAction extends DefaultVampireAction {
     }
 
     @Override
-    public int getCooldown() {
+    public int getCooldown(IFactionPlayer<?> player) {
         return VampirismConfig.BALANCE.vaRegenerationCooldown.get() * 20;
     }
 

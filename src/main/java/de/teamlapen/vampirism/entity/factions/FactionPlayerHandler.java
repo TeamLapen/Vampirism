@@ -146,27 +146,13 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         notifyFaction(oldP.currentFaction, oldP.currentLevel);
     }
 
+    /**
+     * @param id ATM 1-3
+     * @return action if bound
+     */
     @Nullable
     public IAction getBoundAction(int id) {
         return this.boundActions.get(id);
-    }
-
-    /**
-     * @see #getBoundAction(int)
-     */
-    @Deprecated
-    @Nullable
-    public IAction getBoundAction1() { //TODO 1.17 remove
-        return getBoundAction(1);
-    }
-
-    /**
-     * @see #getBoundAction(int)
-     */
-    @Deprecated
-    @Nullable
-    public IAction getBoundAction2() { //TODO 1.17 remove
-        return getBoundAction(2);
     }
 
     @Override
@@ -319,22 +305,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (sync) {
             this.sync(false);
         }
-    }
-
-    /**
-     * @see #setBoundAction(int, IAction, boolean, boolean)
-     */
-    @Deprecated
-    public void setBoundAction1(@Nullable IAction boundAction1, boolean sync) { //TODO 1.17 remove
-        this.setBoundAction(1, boundAction1, sync, true);
-    }
-
-    /**
-     * @see #setBoundAction(int, IAction, boolean, boolean)
-     */
-    @Deprecated
-    public void setBoundAction2(@Nullable IAction boundAction2, boolean sync) { //TODO 1.17 remove
-        this.setBoundAction(2, boundAction2, sync, true);
     }
 
     @Override

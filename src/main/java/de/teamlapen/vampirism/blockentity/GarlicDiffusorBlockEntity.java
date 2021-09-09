@@ -24,9 +24,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 
 
-/**
- * TODO 1.17 refractor garlic diffusor
- */
 public class GarlicDiffusorBlockEntity extends BlockEntity {
     private static final int FUEL_DURATION = 20 * 60 * 2;
     private int id;

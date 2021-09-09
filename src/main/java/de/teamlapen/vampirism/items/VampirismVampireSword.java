@@ -303,13 +303,10 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     /**
-     * //TODO 1.17 make abstract
      *
      * @return The amount of charge consumed per hit
      */
-    protected float getChargeUsage() {
-        return 0;
-    }
+    protected abstract float getChargeUsage();
 
     /**
      * Gets the charged value from the tag compound

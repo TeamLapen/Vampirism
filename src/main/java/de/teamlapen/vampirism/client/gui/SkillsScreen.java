@@ -18,7 +18,6 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.skills.SkillNode;
-import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.level.block.Block;
@@ -27,10 +26,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.MultiBufferSource;
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.Tesselator;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -167,7 +164,7 @@ public class SkillsScreen extends Screen {
 
     @Override
     public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-        if (p_keyPressed_1_ == 256 || ModKeys.getKeyBinding(ModKeys.KEY.SKILL).getKey().getValue() == p_keyPressed_1_) {
+        if (p_keyPressed_1_ == 256 || ModKeys.getKeyBinding(ModKeys.KEY.VAMPIRISM_MENU).getKey().getValue() == p_keyPressed_1_) {
             this.minecraft.setScreen(null);
             this.minecraft.setWindowActive(true);
             return true;

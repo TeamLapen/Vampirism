@@ -73,9 +73,9 @@ public class ModBlocksRender {
 
     private static void registerRenderType() {
         RenderType cutout = RenderType.cutout();
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_beacon_weak, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_beacon_improved, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_beacon_normal, cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_diffusor_weak, cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_diffusor_improved, cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_diffusor_normal, cutout);
         ItemBlockRenderTypes.setRenderLayer(ModFluids.impure_blood, RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModFluids.blood, RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.alchemical_cauldron, cutout);

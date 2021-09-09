@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
 /**
  * Handles the players skills
  */
-public interface ISkillHandler<T extends ISkillPlayer<?>> {
+public interface ISkillHandler<T> {
 
     /**
      * @param skill

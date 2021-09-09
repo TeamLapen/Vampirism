@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.player.vampire.actions;
 
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -19,12 +20,12 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
     }
 
     @Override
-    public int getCooldown() {
+    public int getCooldown(IFactionPlayer<?> player) {
         return VampirismConfig.BALANCE.vaInvisibilityCooldown.get() * 20;
     }
 
     @Override
-    public int getDuration(int level) {
+    public int getDuration(IVampirePlayer player) {
         return VampirismConfig.BALANCE.vaInvisibilityDuration.get() * 20;
     }
 

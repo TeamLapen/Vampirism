@@ -130,7 +130,7 @@ public class GeneralEventHandler {
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
         if (event.getWorld() instanceof Level) {
-            VampirismWorld.getOpt((Level) event.getWorld()).ifPresent(VampirismWorld::clear);
+            VampirismWorld.getOpt((Level) event.getWorld()).ifPresent(VampirismWorld::clearCaches);
         }
     }
 }

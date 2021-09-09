@@ -16,7 +16,7 @@ import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.items.ObsidianArmorItem;
 import de.teamlapen.vampirism.player.IVampirismPlayer;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
-import de.teamlapen.vampirism.player.VampirismPlayer;
+import de.teamlapen.vampirism.player.FactionBasePlayer;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
@@ -29,7 +29,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
@@ -49,7 +48,7 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 /**
  * Main class for hunter players
  */
-public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHunterPlayer {
+public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IHunterPlayer {
 
     private static final Logger LOGGER = LogManager.getLogger(HunterPlayer.class);
 
@@ -299,7 +298,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     }
 
     @Override
-    protected VampirismPlayer copyFromPlayer(Player old) {
+    protected FactionBasePlayer copyFromPlayer(Player old) {
         HunterPlayer oldHunter = get(old);
         CompoundTag nbt = new CompoundTag();
         oldHunter.saveData(nbt);

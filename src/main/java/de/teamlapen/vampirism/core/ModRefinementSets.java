@@ -12,7 +12,7 @@ import net.minecraftforge.registries.ObjectHolder;
 @ObjectHolder(REFERENCE.MODID)
 public class ModRefinementSets {
 
-    public static void registerRefinementSets(IForgeRegistry<IRefinementSet> registry) {//TODO think of cool registry names
+    public static void registerRefinementSets(IForgeRegistry<IRefinementSet> registry) {
         // Common refinement set
         {
             // attribute modifier

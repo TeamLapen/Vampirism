@@ -68,21 +68,4 @@ public class GuideHelper {
         }
         return new PageItemStack(FormattedText.composite(text), ingredient);
     }
-
-    /**
-     * TODO 1.17 remove
-     */
-    public static class URLLink extends PageHolderWithLinks.URLLink {
-        private final Component name;
-
-        public URLLink(Component name, URI link) {
-            super("dummy", link);
-            this.name = name;
-        }
-
-        @Override
-        public Component getDisplayName() {
-            return name;
-        }
-    }
 }

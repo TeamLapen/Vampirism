@@ -71,10 +71,10 @@ public class HunterEquipmentModel<T extends Mob> extends HumanoidModel<T> {
     }
 
     //TODO 1.17 maybe migrate hat type to enum or similar
-    public void setHat(int hatType) {
-        hatRim.visible = hatTop.visible = hatType <= 0 && hatType > -2;
-        hatTop2.visible = hatRim2.visible = hatType == 1;
-        hatRim3.visible = hatType >= 2;
+    public void setHat(HatType hatType) {
+        hatTop.visible = hatRim.visible =  hatType ==HatType.HAT1;
+        hatTop2.visible = hatRim2.visible = hatType == HatType.HAT2;
+        hatRim3.visible = hatType == HatType.RIM_ONLY;
 
     }
 
@@ -114,5 +114,18 @@ public class HunterEquipmentModel<T extends Mob> extends HumanoidModel<T> {
 
     public enum StakeType {
         NONE, ONLY, FULL, AXE_ONLY
+    }
+
+    public enum HatType {
+        NONE, RIM_ONLY /*>=2*/, HAT1 /*-1/0*/, HAT2 /*1*/;
+
+        public static HatType from(int id){
+            return switch (id) {
+                case 0 -> HAT1;
+                case 1 -> HAT2;
+                case 2 -> RIM_ONLY;
+                default -> NONE;
+            };
+        }
     }
 }

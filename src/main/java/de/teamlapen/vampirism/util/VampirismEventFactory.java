@@ -47,7 +47,7 @@ public class VampirismEventFactory {
     }
 
     public static boolean fireChangeLevelOrFactionEvent(@Nonnull IFactionPlayerHandler player, @Nullable IPlayableFaction currentFaction, int currentLevel, @Nullable IPlayableFaction newFaction, int newLevel) {
-        FactionEvent.ChangeLevelOrFaction event = new FactionEvent.ChangeLevelOrFaction(player, currentFaction, currentLevel, newFaction, newLevel);
+        FactionEvent.FactionLevelChangePre event = new FactionEvent.FactionLevelChangePre(player, currentFaction, currentLevel, newFaction, newLevel);
         return MinecraftForge.EVENT_BUS.post(event);
     }
 
