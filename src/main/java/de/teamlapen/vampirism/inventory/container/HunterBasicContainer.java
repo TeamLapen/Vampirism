@@ -17,6 +17,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.network.chat.TranslatableComponent;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorInfo;
@@ -70,7 +71,7 @@ public class HunterBasicContainer extends InventoryContainer {
     }
 
     @Override
-    public void removed(Player playerIn) {
+    public void removed(@Nonnull Player playerIn) {
         super.removed(playerIn);
         if (!playerIn.getCommandSenderWorld().isClientSide) {
             this.clearContainer(playerIn, inventory);
@@ -78,7 +79,7 @@ public class HunterBasicContainer extends InventoryContainer {
     }
 
     @Override
-    public boolean stillValid(Player playerIn) {
+    public boolean stillValid(@Nonnull Player playerIn) {
         if (entity == null) return false;
         return new Vec3(playerIn.getX(), playerIn.getY(), playerIn.getZ()).distanceTo(new Vec3(entity.getX(), entity.getY(), entity.getZ())) < 5;
     }

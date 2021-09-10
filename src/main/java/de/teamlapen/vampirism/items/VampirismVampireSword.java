@@ -76,7 +76,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         this.addFactionLevelToolTip(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
         float charged = getCharged(stack);
@@ -132,7 +132,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(@Nonnull ItemStack stack) {
         return 40;
     }
 
@@ -142,8 +142,9 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         return VReference.VAMPIRE_FACTION;
     }
 
+    @Nonnull
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(@Nonnull ItemStack stack, @Nonnull Level worldIn, @Nonnull LivingEntity entityLiving) {
         if (!(entityLiving instanceof Player)) return stack;
         VReference.VAMPIRE_FACTION.getPlayerCapability((Player) entityLiving).ifPresent(vampire -> {
             int amount = (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.blood_charge_speed) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get() : 2);
@@ -158,7 +159,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     @Override
-    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+    public boolean hurtEnemy(@Nonnull ItemStack stack, @Nonnull LivingEntity target, @Nonnull LivingEntity attacker) {
         //Vampire Finisher skill
         if (attacker instanceof Player && !Helper.isVampire(target)) {
             double relTh = VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() * VampirePlayer.getOpt((Player) attacker).map(VampirePlayer::getSkillHandler).map(h -> h.isSkillEnabled(VampireSkills.sword_finisher) ? (h.isRefinementEquipped(ModRefinements.sword_finisher) ? VampirismConfig.BALANCE.vrSwordFinisherThresholdMod.get() : 1d) : 0d).orElse(0d);
@@ -200,7 +201,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+    public void inventoryTick(@Nonnull ItemStack stack, Level worldIn, @Nonnull Entity entityIn, int itemSlot, boolean isSelected) {
         //Try to minimize execution time, but tricky since off hand selection is not directly available, but it can only be off hand if itemSlot 0
         if (worldIn.isClientSide && (isSelected || itemSlot == 0)) {
             float charged = getCharged(stack);
@@ -273,8 +274,9 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         return false;
     }
 
+    @Nonnull
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@Nonnull Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         return VampirePlayer.getOpt(playerIn).map(vampire -> {
             if (vampire.getLevel() == 0) return new InteractionResultHolder<>(InteractionResult.PASS, stack);

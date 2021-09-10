@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class StatRequirement implements TaskRequirement.Requirement<ResourceLocation> {
 
     @Nonnull

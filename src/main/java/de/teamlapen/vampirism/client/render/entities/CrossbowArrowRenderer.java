@@ -2,11 +2,12 @@ package de.teamlapen.vampirism.client.render.entities;
 
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import net.minecraft.client.renderer.entity.ArrowRenderer;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
 public class CrossbowArrowRenderer extends ArrowRenderer<CrossbowArrowEntity> {
@@ -17,8 +18,9 @@ public class CrossbowArrowRenderer extends ArrowRenderer<CrossbowArrowEntity> {
         super(context);
     }
 
+    @Nonnull
     @Override
-    public ResourceLocation getTextureLocation(CrossbowArrowEntity entity) {
+    public ResourceLocation getTextureLocation(@Nonnull CrossbowArrowEntity entity) {
         return RES_ARROW;
     }
 }

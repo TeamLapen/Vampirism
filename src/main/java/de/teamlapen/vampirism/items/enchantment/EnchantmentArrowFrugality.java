@@ -10,6 +10,8 @@ import net.minecraft.world.item.ItemStack;
 
 import net.minecraft.world.item.enchantment.Enchantment.Rarity;
 
+import javax.annotation.Nonnull;
+
 /**
  * Makes tech crossbows use less arrows
  */
@@ -41,10 +43,11 @@ public class EnchantmentArrowFrugality extends Enchantment {
     }
 
     @Override
-    protected boolean checkCompatibility(Enchantment ench) {
+    protected boolean checkCompatibility(@Nonnull Enchantment ench) {
         return super.checkCompatibility(ench) && ench != Enchantments.INFINITY_ARROWS;
     }
 
+    @Nonnull
     @Override
     protected String getOrCreateDescriptionId() {
         return "enchantment.vampirism.arrow_frugality";

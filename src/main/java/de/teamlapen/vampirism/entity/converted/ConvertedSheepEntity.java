@@ -45,7 +45,7 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<Sheep> impleme
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putBoolean("Sheared", this.getSheared());
     }
@@ -73,8 +73,9 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<Sheep> impleme
         return !getSheared() && !isBaby();
     }
 
+    @Nonnull
     @Override
-    public List<ItemStack> onSheared(@Nullable Player player, ItemStack item, Level world, BlockPos pos, int fortune) {
+    public List<ItemStack> onSheared(@Nullable Player player, @Nonnull ItemStack item, Level world, BlockPos pos, int fortune) {
         java.util.List<ItemStack> ret = new java.util.ArrayList<>();
         if (!world.isClientSide()) {
             this.setSheared(true);
@@ -89,7 +90,7 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<Sheep> impleme
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt) {
+    public void readAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         this.setSheared(nbt.getBoolean("Sheared"));
     }

@@ -14,6 +14,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
+import javax.annotation.Nonnull;
+
 /**
  * Only spawns particles, similar to {@link net.minecraft.world.entity.AreaEffectCloud}
  */
@@ -38,6 +40,7 @@ public class BasicAreaParticleCloud extends Entity {
         this.setRadius(3);
     }
 
+    @Nonnull
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -101,7 +104,7 @@ public class BasicAreaParticleCloud extends Entity {
     }
 
     @Override
-    public boolean save(CompoundTag compound) {
+    public boolean save(@Nonnull CompoundTag compound) {
         return false;
     }
 
@@ -110,7 +113,7 @@ public class BasicAreaParticleCloud extends Entity {
     }
 
     @Override
-    public boolean saveAsPassenger(CompoundTag compound) {
+    public boolean saveAsPassenger(@Nonnull CompoundTag compound) {
         return false;
     }
 
@@ -172,7 +175,7 @@ public class BasicAreaParticleCloud extends Entity {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag compound) {
+    protected void addAdditionalSaveData(@Nonnull CompoundTag compound) {
 
     }
 
@@ -187,7 +190,7 @@ public class BasicAreaParticleCloud extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag compound) {
+    protected void readAdditionalSaveData(@Nonnull CompoundTag compound) {
 
     }
 }

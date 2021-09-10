@@ -6,7 +6,7 @@ import java.util.Comparator;
 
 public class ValuedObject<T> {
     public static <Q> Comparator<ValuedObject<Q>> getComparator() {
-        return (qValuedObject, t1) -> qValuedObject.value - t1.value;
+        return Comparator.comparingInt(qValuedObject -> qValuedObject.value);
     }
 
     public static <Q> Comparator<ValuedObject<Q>> getInvertedComparator() {

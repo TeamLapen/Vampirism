@@ -7,6 +7,8 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 
+import javax.annotation.Nonnull;
+
 
 /**
  * Wraps the male and female model into a single model class/instance as the {@link EntityRenderer} needs a single model
@@ -35,7 +37,7 @@ public class BaronWrapperModel extends EntityModel<VampireBaronEntity> {
     }
 
     @Override
-    public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(@Nonnull PoseStack matrixStackIn, @Nonnull VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         EntityModel<VampireBaronEntity> model = lady ? baroness : baron;
         model.renderToBuffer(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }

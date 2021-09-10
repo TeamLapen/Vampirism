@@ -26,7 +26,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.core.Direction;
 import net.minecraft.world.damagesource.EntityDamageSource;
@@ -70,11 +69,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             LOGGER.warn("Cannot get Faction player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
         }
         return opt;
-    }
-
-
-    public static void registerCapability() {
-        CapabilityManager.INSTANCE.register(IFactionPlayerHandler.class);
     }
 
     public static ICapabilityProvider createNewCapability(final Player player) {
@@ -308,7 +302,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public boolean setFactionAndLevel(@Nullable IPlayableFaction<? extends IFactionPlayer<?>> faction, int level) {
+    public boolean setFactionAndLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level) {
         IPlayableFaction<? extends IFactionPlayer<?>> old = currentFaction;
         int oldLevel = currentLevel;
         int newLordLevel = this.currentLordLevel;

@@ -5,6 +5,8 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +27,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 
 /**
  * Item's implementing this can only be used by players that match the requirements.
- * Currently only affects {@link PlayerEntity#attackTargetEntityWithCurrentItem(Entity)} and {@link PlayerEntity#setActiveHand(Hand)}
+ * Currently only affects {@link Player#attack(Entity)} and {@link Player#startUsingItem(InteractionHand)}
  */
 public interface IFactionLevelItem<T extends IFactionPlayer> { //TODO 1.17 extend IFactionExclusiveItem and modify
 

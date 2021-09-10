@@ -13,6 +13,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class CastleSlabBlock extends SlabBlock {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter player, List<Component> tooltip, TooltipFlag advanced) {
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable BlockGetter player, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag advanced) {
         super.appendHoverText(stack, player, tooltip, advanced);
         tooltip.add(new TranslatableComponent("block.vampirism.castle_block" + (variant == CastleBricksBlock.EnumVariant.DARK_STONE ? ".no_spawn" : ".vampire_spawn")).withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY));
 

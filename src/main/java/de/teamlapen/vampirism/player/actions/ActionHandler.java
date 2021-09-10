@@ -201,7 +201,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
                 ResourceLocation id = new ResourceLocation(key);
                 ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(id);
                 if (action == null) {
-                    LOGGER.error("Action %s is not available client side", key);
+                    LOGGER.error("Action {} is not available client side", key);
                 } else {
                     action.onActivatedClient(player);
                     activeTimers.put(id, active.getInt(key));

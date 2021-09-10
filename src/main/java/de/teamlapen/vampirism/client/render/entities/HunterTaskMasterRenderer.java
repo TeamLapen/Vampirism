@@ -33,13 +33,14 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
         this.addLayer(new HunterEquipmentLayer<>(this, context.getModelSet(), h -> HunterEquipmentModel.StakeType.NONE, h -> HunterEquipmentModel.HatType.HAT2));
     }
 
+    @Nonnull
     @Override
     public ResourceLocation getTextureLocation(@Nonnull HunterTaskMasterEntity entity) {
         return texture;
     }
 
     @Override
-    protected void renderNameTag(HunterTaskMasterEntity entityIn, Component displayNameIn, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+    protected void renderNameTag(@Nonnull HunterTaskMasterEntity entityIn, @Nonnull Component displayNameIn, @Nonnull PoseStack matrixStackIn, @Nonnull MultiBufferSource bufferIn, int packedLightIn) {
         double dist = this.entityRenderDispatcher.distanceToSqr(entityIn);
         if (dist <= 128) {
             super.renderNameTag(entityIn, displayNameIn, matrixStackIn, bufferIn, packedLightIn);

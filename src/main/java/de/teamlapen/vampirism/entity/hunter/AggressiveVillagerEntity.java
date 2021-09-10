@@ -140,13 +140,14 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
         UtilLib.replaceEntity(this, villager);
     }
 
+    @Nonnull
     @Override
     protected Component getTypeName() {
         return this.getType().getDescription(); //Don't use profession as part of the translation key
     }
 
     @Override
-    protected void registerBrainGoals(Brain<Villager> brainIn) {
+    protected void registerBrainGoals(@Nonnull Brain<Villager> brainIn) {
     }
 
     @Override
@@ -158,7 +159,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
         this.targetSelector.addGoal(3, new DefendVillageGoal<>(this));
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<PathfinderMob>(this, PathfinderMob.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
 
             @Override
             protected double getFollowDistance() {

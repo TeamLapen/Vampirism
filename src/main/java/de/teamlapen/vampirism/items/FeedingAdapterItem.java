@@ -29,12 +29,12 @@ public class FeedingAdapterItem extends VampirismItem {
 
     @Nonnull
     @Override
-    public UseAnim getUseAnimation(ItemStack stack) {
+    public UseAnim getUseAnimation(@Nonnull ItemStack stack) {
         return UseAnim.DRINK;
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(@Nonnull ItemStack stack) {
         return 15;
     }
 
@@ -68,7 +68,7 @@ public class FeedingAdapterItem extends VampirismItem {
 
     @Nonnull
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@Nonnull Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         return VampirePlayer.getOpt(playerIn).map(vampire -> {
             if (vampire.getLevel() == 0) return new InteractionResultHolder<>(InteractionResult.PASS, stack);

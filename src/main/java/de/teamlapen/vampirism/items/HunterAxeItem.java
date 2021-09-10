@@ -41,14 +41,14 @@ public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTie
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
         tooltip.add(new TranslatableComponent("text.vampirism.deals_more_damage_to", Math.round((getVampireMult() - 1) * 100), VReference.VAMPIRE_FACTION.getNamePlural()).withStyle(ChatFormatting.GRAY));
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+    public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
         if (this.allowdedIn(group)) {
             items.add(getEnchantedStack());
         }
@@ -86,41 +86,32 @@ public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTie
     }
 
     @Override
-    public boolean isFoil(ItemStack stack) {
+    public boolean isFoil(@Nonnull ItemStack stack) {
         return false;
     }
 
     private int getKnockback() {
-        switch (tier) {
-            case ULTIMATE:
-                return 4;
-            case ENHANCED:
-                return 3;
-            default:
-                return 2;
-        }
+        return switch (tier) {
+            case ULTIMATE -> 4;
+            case ENHANCED -> 3;
+            default -> 2;
+        };
     }
 
     private int getMinLevel() {
-        switch (tier) {
-            case ULTIMATE:
-                return 8;
-            case ENHANCED:
-                return 6;
-            default:
-                return 4;
-        }
+        return switch (tier) {
+            case ULTIMATE -> 8;
+            case ENHANCED -> 6;
+            default -> 4;
+        };
     }
 
     private float getVampireMult() {
-        switch (tier) {
-            case ULTIMATE:
-                return 1.5F;
-            case ENHANCED:
-                return 1.3F;
-            default:
-                return 1.2F;
-        }
+        return switch (tier) {
+            case ULTIMATE -> 1.5F;
+            case ENHANCED -> 1.3F;
+            default -> 1.2F;
+        };
     }
 
 

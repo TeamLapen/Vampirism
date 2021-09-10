@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 /**
  * should only be used with {@link RandomStructureProcessor}
  * <p>
- * returns a random blockstate with nbt data for the given {@link #inputPredicate} and {@link #locationPredicate}
+ * returns a random blockstate with nbt data for the given {@link #inputPredicate} and {@link #locPredicate}
  *
- * @see RuleEntry
+ * @see ProcessorRule
  */
 public class RandomBlockState extends ProcessorRule {
     @SuppressWarnings("Convert2MethodRef")

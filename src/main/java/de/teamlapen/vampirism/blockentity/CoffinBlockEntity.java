@@ -66,7 +66,7 @@ public class CoffinBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag compound) {
+    public void load(@Nonnull CompoundTag compound) {
         super.load(compound);
         this.color = compound.contains("color") ? DyeColor.byId(compound.getInt("color")) : DyeColor.BLACK;
 
@@ -78,8 +78,9 @@ public class CoffinBlockEntity extends BlockEntity {
         if (hasLevel()) load(packet.getTag());
     }
 
+    @Nonnull
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public CompoundTag save(@Nonnull CompoundTag compound) {
         CompoundTag nbt = super.save(compound);
         nbt.putInt("color", color.getId());
         return nbt;

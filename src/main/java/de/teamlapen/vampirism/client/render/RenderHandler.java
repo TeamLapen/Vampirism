@@ -3,12 +3,9 @@ package de.teamlapen.vampirism.client.render;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.client.render.layers.VampireEntityLayer;
-import de.teamlapen.vampirism.client.render.layers.VampirePlayerHeadLayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
@@ -18,7 +15,6 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.MixinHooks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.OutlineBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -27,8 +23,6 @@ import net.minecraft.client.model.PlayerModel;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import net.minecraft.client.renderer.PostPass;
 import net.minecraft.client.renderer.PostChain;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.Entity;
@@ -53,8 +47,6 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Map;
-import java.util.function.Predicate;
 
 /**
  * Handle most general rendering related stuff
@@ -325,7 +317,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @Override
-    public void onResourceManagerReload(ResourceManager resourceManager) {
+    public void onResourceManagerReload(@Nonnull ResourceManager resourceManager) {
         this.reMakeBloodVisionShader();
     }
 

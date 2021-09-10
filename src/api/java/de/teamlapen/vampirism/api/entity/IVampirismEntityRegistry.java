@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Registration of blood values and converting handler for {@link CreatureEntity}'s
+ * Registration of blood values and converting handler for {@link PathfinderMob}'s
  * Adding entries is only possible during init.
  */
 public interface IVampirismEntityRegistry {

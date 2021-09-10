@@ -68,6 +68,7 @@ public enum VampirismArmorMaterials implements ArmorMaterial {
         return this.soundEvent;
     }
 
+    @Nonnull
     public Ingredient getRepairIngredient() {
         return this.repairMaterial.get();
     }

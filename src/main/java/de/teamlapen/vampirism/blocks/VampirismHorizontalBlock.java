@@ -17,6 +17,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -25,7 +26,7 @@ import javax.annotation.Nullable;
  * If your subclass adds additional states:
  * - Add FACING to the defaultState in the constructor
  * this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
- * - Add FACING to {@link Block#fillStateContainer(StateContainer.Builder)}
+ * - Add FACING to {@link Block#createBlockStateDefinition(StateDefinition.Builder)}
  */
 public class VampirismHorizontalBlock extends VampirismBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -51,19 +52,15 @@ public class VampirismHorizontalBlock extends VampirismBlock {
         this(regName, properties, Shapes.block());
     }
 
+    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        switch (state.getValue(FACING)) {
-            case NORTH:
-                return NORTH;
-            case EAST:
-                return EAST;
-            case SOUTH:
-                return SOUTH;
-            case WEST:
-                return WEST;
-        }
-        return NORTH;
+    public VoxelShape getShape(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+        return switch (state.getValue(FACING)) {
+            case EAST -> EAST;
+            case SOUTH -> SOUTH;
+            case WEST -> WEST;
+            default -> NORTH;
+        };
     }
 
     @Nullable
@@ -72,11 +69,13 @@ public class VampirismHorizontalBlock extends VampirismBlock {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
     }
 
+    @Nonnull
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
+    @Nonnull
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));

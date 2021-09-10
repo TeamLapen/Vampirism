@@ -2,12 +2,10 @@ package de.teamlapen.vampirism.blockentity;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.world.FactionPointOfInterestType;
-import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerPlayer;
@@ -112,7 +110,6 @@ public class TotemHelper {
 
         boolean ignoreOtherTotem = totem1.getControllingFaction() == totem2.getControllingFaction();
 
-        //noinspection ConstantConditions
         //both keep their pois
 
         if (totem1.getCapturingFaction() != null || totem2.getCapturingFaction() != null) { //both keep their pois
@@ -221,21 +218,20 @@ public class TotemHelper {
             return new TranslatableComponent("command.vampirism.test.village.no_village");
         }
         BlockEntity te = player.getCommandSenderWorld().getBlockEntity(totemPositions.get(pointOfInterests.get(0).getPos()));
-        if (!(te instanceof TotemBlockEntity)) {
+        if (!(te instanceof TotemBlockEntity tile)) {
             LOGGER.warn("TileEntity at {} is no TotemTileEntity", totemPositions.get(pointOfInterests.get(0).getPos()));
             return new TextComponent("");
         }
-        TotemBlockEntity tile = (TotemBlockEntity) te;
         tile.setForcedFaction(faction);
         return new TranslatableComponent("command.vampirism.test.village.success", faction == null ? "none" : faction.getName());
     }
 
     /**
-     * gets all {@link PointOfInterest} points for a village totem to consider them as part of the village
+     * gets all {@link PoiRecord} points for a village totem to consider them as part of the village
      *
      * @param world world in which to search
      * @param pos   position of the village totem to start searching
-     * @return a set of all related {@link PointOfInterest} points
+     * @return a set of all related {@link PoiRecord} points
      */
     public static Set<PoiRecord> getVillagePointsOfInterest(ServerLevel world, BlockPos pos) {
         PoiManager manager = world.getPoiManager();
@@ -257,7 +253,7 @@ public class TotemHelper {
     }
 
     /**
-     * use {@link #isVillage(Set, ServerWorld, BlockPos, boolean)}
+     * use {@link #isVillage(Set, ServerLevel, BlockPos, boolean)}
      * <p>
      * <p>
      * flag & 1 != 0 :
@@ -273,7 +269,7 @@ public class TotemHelper {
      * - enough villager
      * <p>
      *
-     * @param stats          the output of {@link #getVillageStats(Set, World)}
+     * @param stats          the output of {@link #getVillageStats(Set, Level)}
      * @param hasInteraction if the village is influenced by a faction
      * @return flag which requirements are met
      */
@@ -292,7 +288,7 @@ public class TotemHelper {
     }
 
     /**
-     * checks if the given  {@link PointOfInterest} Set can be interpreted as village
+     * checks if the given  {@link PoiRecord} Set can be interpreted as village
      * <p>
      * <p>
      * flag & 1 != 0 :
@@ -308,7 +304,7 @@ public class TotemHelper {
      * - enough villager
      * <p>
      *
-     * @param pointOfInterests the output of {@link #getVillageStats(Set, World)}
+     * @param pointOfInterests the output of {@link #getVillageStats(Set, Level)}
      * @param world            the world of the point of interests
      * @param hasInteraction   if the village is influenced by a faction
      * @return flag which requirements are met
@@ -321,16 +317,16 @@ public class TotemHelper {
     }
 
     /**
-     * searches the given {@link PointOfInterest} set for village qualifying data
+     * searches the given {@link PoiRecord} set for village qualifying data
      *
-     * @param pointOfInterests a {@link PointOfInterest} set to check for a village
+     * @param pointOfInterests a {@link PoiRecord} set to check for a village
      * @param world            world of the point of interests
      * @return map containing village related data
      */
     public static Map<Integer, Integer> getVillageStats(Set<PoiRecord> pointOfInterests, Level world) {
         Map<PoiType, Long> poiTCounts = pointOfInterests.stream().map(PoiRecord::getPoiType).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         AABB area = getAABBAroundPOIs(pointOfInterests);
-        return new HashMap<Integer, Integer>() {{
+        return new HashMap<>() {{
             put(1, poiTCounts.getOrDefault(PoiType.HOME, 0L).intValue());
             put(2, ((int) poiTCounts.entrySet().stream().filter(entry -> entry.getKey() != PoiType.HOME).mapToLong(Entry::getValue).sum()));
             put(4, area == null ? 0 : world.getEntitiesOfClass(Villager.class, area).size());
@@ -339,7 +335,7 @@ public class TotemHelper {
 
 
     /**
-     * creates a bounding box for the given {@link PointOfInterest}s
+     * creates a bounding box for the given {@link PoiRecord}s
      *
      * @throws NoSuchElementException if poi is empty
      */

@@ -9,8 +9,11 @@ import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.world.IVampirismWorld;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.client.core.ModBlocksRender;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
@@ -45,7 +48,6 @@ import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import de.teamlapen.vampirism.world.WorldGenManager;
-import de.teamlapen.vampirism.world.biome.VampirismBiomeFeatures;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.data.DataGenerator;
@@ -54,9 +56,9 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.ChatFormatting;
-import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -75,6 +77,7 @@ import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Optional;
 
@@ -87,6 +90,7 @@ public class VampirismMod {
     public static final AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
     public static final CreativeModeTab creativeTab = new CreativeModeTab(REFERENCE.MODID) {
 
+        @Nonnull
         @Override
         public ItemStack makeIcon() {
 
@@ -116,6 +120,7 @@ public class VampirismMod {
      * type. Use the instance in {@link VReference} instead of this one. This is
      * only here to init it as early as possible
      */
+    @SuppressWarnings("InstantiationOfUtilityClass")
     private static final MobType VAMPIRE_CREATURE_ATTRIBUTE = new MobType();
 
     public static VampirismMod instance;
@@ -147,6 +152,7 @@ public class VampirismMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::loadComplete);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::gatherData);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerCapabilities);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::finalizeConfiguration);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
             //TODO 1.17 maybe cleanup
@@ -235,14 +241,20 @@ public class VampirismMod {
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
-
         HelperRegistry.registerPlayerEventReceivingCapability(VampirePlayer.CAP, VampirePlayer.class);
         HelperRegistry.registerPlayerEventReceivingCapability(HunterPlayer.CAP, HunterPlayer.class);
         HelperRegistry.registerSyncableEntityCapability(ExtendedCreature.CAP, REFERENCE.EXTENDED_CREATURE_KEY, ExtendedCreature.class);
         HelperRegistry.registerSyncablePlayerCapability(VampirePlayer.CAP, REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.class);
         HelperRegistry.registerSyncablePlayerCapability(HunterPlayer.CAP, REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.class);
         HelperRegistry.registerSyncablePlayerCapability(FactionPlayerHandler.CAP, REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.class);
+    }
 
+    private void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.register(IExtendedCreatureVampirism.class);
+        event.register(IFactionPlayerHandler.class);
+        event.register(IHunterPlayer.class);
+        event.register(IVampirePlayer.class);
+        event.register(IVampirismWorld.class);
     }
 
     private void finalizeConfiguration(RegistryEvent<Block> event) {
@@ -321,11 +333,6 @@ public class VampirismMod {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        HunterPlayer.registerCapability();
-        VampirePlayer.registerCapability();
-        FactionPlayerHandler.registerCapability();
-        ExtendedCreature.registerCapability();
-        VampirismWorld.registerCapability();
         modCompatLoader.onInitStep(IInitListener.Step.COMMON_SETUP, event);
 
         dispatcher.registerPackets();

@@ -20,6 +20,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
+
 /**
  * Render the coffin with it's different colors and the lid opening animation
  */
@@ -38,7 +40,7 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
     }
 
     @Override
-    public void render(CoffinBlockEntity tile, float partialTicks, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int i, int i1) {
+    public void render(CoffinBlockEntity tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
         if (!tile.renderAsItem) {
             if (!isHeadSafe(tile.getLevel(), tile.getBlockPos())) return;
 

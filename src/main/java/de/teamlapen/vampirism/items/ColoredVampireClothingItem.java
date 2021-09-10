@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.model.armor.CloakModel;
-import de.teamlapen.vampirism.client.model.armor.HunterHatModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,7 +12,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IItemRenderProperties;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 
@@ -33,14 +32,13 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
     @Override
     public void initializeClient(Consumer<IItemRenderProperties> consumer) {
         consumer.accept(new IItemRenderProperties() {
+                            @SuppressWarnings({"DuplicateBranchesInSwitch", "SwitchStatementWithTooFewBranches", "UnnecessaryDefault"})
                             @Override
                             public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
-                                switch (model) {
-                                    case CLOAK:
-                                        return (A) CloakModel.getRotatedCloak();
-                                    default:
-                                        return (A) CloakModel.getRotatedCloak();
-                                }
+                                return switch (model) {
+                                    case CLOAK -> (A) CloakModel.getRotatedCloak();
+                                    default -> (A) CloakModel.getRotatedCloak();
+                                };
                             }
                         }
         );
@@ -72,6 +70,7 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
             return getSerializedName();
         }
 
+        @Nonnull
         @Override
         public String getSerializedName() {
             return this.name;

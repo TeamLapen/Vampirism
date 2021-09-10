@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.resources.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
 
@@ -39,7 +40,7 @@ public class BaronAttireLayer extends RenderLayer<VampireBaronEntity, BaronWrapp
 
 
     @Override
-    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(@Nonnull PoseStack matrixStackIn, @Nonnull MultiBufferSource bufferIn, int packedLightIn, VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (!entityIn.isInvisible()) {
             boolean female = predicateFemale.test(entityIn);
             EntityModel<VampireBaronEntity> model = female ? baroness : baron;

@@ -40,7 +40,7 @@ public class ThrowableItemEntity extends ThrowableProjectile implements ItemSupp
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         ItemStack stack = getItem();
         if (!stack.isEmpty()) {
@@ -48,6 +48,7 @@ public class ThrowableItemEntity extends ThrowableProjectile implements ItemSupp
         }
     }
 
+    @Nonnull
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -75,7 +76,7 @@ public class ThrowableItemEntity extends ThrowableProjectile implements ItemSupp
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         ItemStack stack = ItemStack.of(compound.getCompound("thrownItem"));
         if (stack.isEmpty()) {
@@ -95,7 +96,7 @@ public class ThrowableItemEntity extends ThrowableProjectile implements ItemSupp
     }
 
     @Override
-    protected void onHit(HitResult result) {
+    protected void onHit(@Nonnull HitResult result) {
         ItemStack stack = getItem();
         if (!stack.isEmpty()) {
             Item item = stack.getItem();

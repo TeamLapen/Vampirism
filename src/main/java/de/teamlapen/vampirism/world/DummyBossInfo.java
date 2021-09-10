@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.world;
 
 import net.minecraft.client.gui.components.LerpingBossEvent;
-import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.BossEvent;
 

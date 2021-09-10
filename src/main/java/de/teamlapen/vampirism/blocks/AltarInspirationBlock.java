@@ -62,23 +62,25 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
 
     @Nonnull
     @Override
-    public RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(@Nonnull BlockState state) {
         return RenderShape.MODEL;
     }
 
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
         return new AltarInspirationBlockEntity(pos, state);
     }
 
+    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
         return altarShape;
     }
 
+    @Nonnull
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult use(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(hand);
         if (!stack.isEmpty()) {
             LazyOptional<IFluidHandlerItem> opt = FluidLib.getFluidItemCap(stack);
@@ -101,7 +103,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
         return level.isClientSide() ? null: createTickerHelper(type, ModTiles.altar_inspiration, AltarInspirationBlockEntity::serverTick);
     }
 }

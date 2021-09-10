@@ -16,7 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Handles VP's blood stats. Very similar to {@link FoodStats}
+ * Handles VP's blood stats. Very similar to {@link FoodData}
  */
 public class BloodStats implements IBloodStats {
     private final static Logger LOGGER = LogManager.getLogger(BloodStats.class);
@@ -39,7 +39,7 @@ public class BloodStats implements IBloodStats {
     }
 
     void setBloodLevel(int amt) {
-        bloodLevel = amt < 0 ? 0 : (amt > maxBlood ? maxBlood : amt);
+        bloodLevel = amt < 0 ? 0 : (Math.min(amt, maxBlood));
         changed = true;
     }
 
@@ -133,7 +133,7 @@ public class BloodStats implements IBloodStats {
     }
 
     /**
-     * Reads nbt written by either {@link #writeNBTBlood(CompoundNBT)} or {@link #writeNBT(CompoundNBT)}
+     * Reads nbt written by either {@link #writeNBTBlood(CompoundTag)} or {@link #writeNBT(CompoundTag)}
      *
      * @param nbt
      */

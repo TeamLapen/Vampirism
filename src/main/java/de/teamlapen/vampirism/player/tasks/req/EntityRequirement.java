@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class EntityRequirement implements TaskRequirement.Requirement<EntityType<?>> {
     @Nonnull
     private final EntityType<?> entityType;

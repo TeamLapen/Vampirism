@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.util.ThreadSafeLibAPI;
 import io.netty.util.internal.ConcurrentSet;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import org.apache.logging.log4j.LogManager;

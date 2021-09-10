@@ -105,17 +105,11 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         ItemStack[] items = new ItemStack[this.appliedRefinementSets.length];
         for (int i = 0; i < this.appliedRefinementSets.length; i++) {
             if (this.appliedRefinementSets[i] != null) {
-                VampireRefinementItem item;
-                switch (i) {
-                    case 0:
-                        item = ModItems.amulet;
-                        break;
-                    case 1:
-                        item = ModItems.ring;
-                        break;
-                    default:
-                        item = ModItems.obi_belt;
-                }
+                VampireRefinementItem item = switch (i) {
+                    case 0 -> ModItems.amulet;
+                    case 1 -> ModItems.ring;
+                    default -> ModItems.obi_belt;
+                };
                 items[i] = new ItemStack(item);
                 item.applyRefinementSet(items[i], this.appliedRefinementSets[i]);
                 items[i].setDamageValue(this.refinementSetDamage[i]);
@@ -172,8 +166,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     @Override
     public boolean equipRefinementItem(ItemStack stack) {
-        if (stack.getItem() instanceof IRefinementItem) {
-            IRefinementItem refinementItem = ((IRefinementItem) stack.getItem());
+        if (stack.getItem() instanceof IRefinementItem refinementItem) {
             @Nullable IRefinementSet newSet = refinementItem.getRefinementSet(stack);
             IRefinementItem.AccessorySlotType setSlot = refinementItem.getSlotType();
 

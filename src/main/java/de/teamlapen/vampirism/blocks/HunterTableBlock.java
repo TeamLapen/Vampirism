@@ -24,6 +24,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.core.Direction;
@@ -71,19 +72,15 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(VARIANT, TABLE_VARIANT.SIMPLE));
     }
 
+    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        switch (state.getValue(FACING)) {
-            case NORTH:
-                return NORTH;
-            case EAST:
-                return EAST;
-            case SOUTH:
-                return SOUTH;
-            case WEST:
-                return WEST;
-        }
-        return NORTH;
+    public VoxelShape getShape(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+        return switch (state.getValue(FACING)) {
+            case EAST -> EAST;
+            case SOUTH -> SOUTH;
+            case WEST -> WEST;
+            default -> NORTH;
+        };
     }
 
     @Nullable
@@ -94,7 +91,7 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(@Nonnull BlockState state, @Nonnull Level worldIn, BlockPos pos, @Nonnull Block blockIn, BlockPos fromPos, boolean isMoving) {
         if (fromPos.getY() != pos.getY()) return;
         TABLE_VARIANT newVariant = determineTier(worldIn, pos, state.getValue(FACING));
         if (newVariant != state.getValue(VARIANT)) {
@@ -102,8 +99,9 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
         }
     }
 
+    @Nonnull
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult use(@Nonnull BlockState state, Level worldIn, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
         if (!worldIn.isClientSide) {
             if (player instanceof ServerPlayer) {
                 NetworkHooks.openGui((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> new HunterTableContainer(id, playerInventory, ContainerLevelAccess.create(playerIn.level, pos)), new TranslatableComponent("container.crafting")), pos);
@@ -140,6 +138,7 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
             this.tier = tier;
         }
 
+        @Nonnull
         @Override
         public String getSerializedName() {
             return name;

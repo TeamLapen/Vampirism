@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.resources.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
 
@@ -26,7 +27,7 @@ public class CloakLayer<T extends Mob, Q extends BipedCloakedModel<T>> extends R
     }
 
     @Override
-    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(@Nonnull PoseStack matrixStackIn, @Nonnull MultiBufferSource bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (!entitylivingbaseIn.isInvisible() && renderPredicate.test(entitylivingbaseIn)) {
             matrixStackIn.pushPose();
             VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.entitySolid(textureCloak));

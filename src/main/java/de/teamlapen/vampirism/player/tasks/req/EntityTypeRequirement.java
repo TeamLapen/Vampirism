@@ -11,6 +11,7 @@ import javax.annotation.Nonnull;
 /**
  * the entity tag needs a translation key with format {@code tasks.vampirism.<tagid>}
  */
+@SuppressWarnings("ClassCanBeRecord")
 public class EntityTypeRequirement implements TaskRequirement.Requirement<Tag<EntityType<?>>> {
     @Nonnull
     private final Tag<EntityType<?>> entityType;

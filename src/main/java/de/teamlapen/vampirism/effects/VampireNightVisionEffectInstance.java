@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 /**
@@ -18,7 +19,7 @@ public class VampireNightVisionEffectInstance extends MobEffectInstance {
     }
 
     @Override
-    public void applyEffect(LivingEntity entityIn) {
+    public void applyEffect(@Nonnull LivingEntity entityIn) {
     }
 
     @Override
@@ -26,6 +27,7 @@ public class VampireNightVisionEffectInstance extends MobEffectInstance {
         return p_equals_1_ == this;
     }
 
+    @Nonnull
     @Override
     public String getDescriptionId() {
         return "effect.vampirism.nightVision";
@@ -36,18 +38,19 @@ public class VampireNightVisionEffectInstance extends MobEffectInstance {
         return true;
     }
 
+    @Nonnull
     @Override
-    public CompoundTag save(CompoundTag nbt) {
+    public CompoundTag save(@Nonnull CompoundTag nbt) {
         return nbt;
     }
 
     @Override
-    public boolean tick(LivingEntity entityIn, Runnable p_76455_2_) {
+    public boolean tick(@Nonnull LivingEntity entityIn, @Nonnull Runnable p_76455_2_) {
         return true;
     }
 
     @Override
-    public boolean update(MobEffectInstance other) {
+    public boolean update(@Nonnull MobEffectInstance other) {
         //Don't change anything
         return false;
     }

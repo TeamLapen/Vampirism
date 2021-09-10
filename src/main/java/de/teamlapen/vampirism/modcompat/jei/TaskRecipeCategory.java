@@ -24,6 +24,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Collection;
 import java.util.List;
@@ -39,7 +40,7 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
     }
 
     @Override
-    public void draw(Task task, PoseStack stack, double mouseX, double mouseY) {
+    public void draw(Task task, @Nonnull PoseStack stack, double mouseX, double mouseY) {
         Minecraft minecraft = Minecraft.getInstance();
         int x = 4;
         int y = 40;
@@ -63,33 +64,38 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
 
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return background;
     }
 
+    @Nonnull
     @Override
     public IDrawable getIcon() {
         return icon;
     }
 
+    @Nonnull
     @Override
     public Class<? extends Task> getRecipeClass() {
         return Task.class;
     }
 
+    @Nonnull
     @Override
     public Component getTitle() {
         return new TranslatableComponent("text.vampirism.task.reward");
     }
 
+    @Nonnull
     @Override
     public ResourceLocation getUid() {
         return VampirismJEIPlugin.TASK_RECIPE_UID;
     }
 
     @Override
-    public void setIngredients(Task recipe, IIngredients ingredients) {
+    public void setIngredients(Task recipe, @Nonnull IIngredients ingredients) {
         TaskReward reward = recipe.getReward();
         if (reward instanceof ItemReward) {
             ingredients.setOutputs(VanillaTypes.ITEM, ((ItemReward) reward).getAllPossibleRewards());
@@ -97,7 +103,7 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, Task recipe, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, @Nonnull Task recipe, IIngredients ingredients) {
         int craftOutputSlot = 0;
         IGuiItemStackGroup guiItemStackGroup = recipeLayout.getItemStacks();
         guiItemStackGroup.init(craftOutputSlot, false, 75, 14);

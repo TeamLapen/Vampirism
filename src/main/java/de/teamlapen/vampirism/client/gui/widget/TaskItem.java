@@ -18,7 +18,6 @@ import de.teamlapen.vampirism.player.tasks.reward.ItemRewardInstance;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
@@ -112,19 +111,16 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         for (int i = 0; i < requirements.size(); i++) {
             TaskRequirement.Requirement<?> requirement = requirements.get(i);
             switch (requirement.getType()) {
-                case ITEMS:
+                case ITEMS -> {
                     ItemStack stack = ((ItemRequirement) requirement).getItemStack();
                     this.screen.getItemRenderer().renderAndDecorateItem(stack, x + 3 + 3 + i * 20, y + 2);
                     this.screen.getItemRenderer().renderGuiItemDecorations(this.screen.font, stack, x + 3 + 3 + i * 20, y + 2, "" + Math.min(stack.getCount(), stack.getMaxStackSize()));
-                    break;
-                case ENTITY:
-                case ENTITY_TAG:
+                }
+                case ENTITY, ENTITY_TAG -> {
                     this.screen.getItemRenderer().renderAndDecorateItem(SKULL_ITEM, x + 3 + 3 + i * 20, y + 2);
                     this.screen.getItemRenderer().renderGuiItemDecorations(this.screen.font, SKULL_ITEM, x + 3 + 3 + i * 20, y + 2, "" + requirement.getAmount(factionPlayer));
-                    break;
-                default:
-                    this.screen.getItemRenderer().renderAndDecorateItem(PAPER, x + 3 + 3 + i * 20, y + 2);
-                    break;
+                }
+                default -> this.screen.getItemRenderer().renderAndDecorateItem(PAPER, x + 3 + 3 + i * 20, y + 2);
             }
         }
         //render task button
@@ -262,24 +258,15 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
                 for (TaskRequirement.Requirement<?> requirement : requirements) {
                     MutableComponent desc;
                     int completedAmount = this.screen.getTaskContainer().getRequirementStatus(taskInfo, requirement);
-                    switch (type) {
-                        case ITEMS:
-                            desc = ((Item) requirement.getStat(this.factionPlayer)).getDescription().plainCopy().append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
-                            break;
-                        case STATS:
-                            desc = new TranslatableComponent("stat." + requirement.getStat(this.factionPlayer).toString().replace(':', '.')).append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
-                            break;
-                        case ENTITY:
-                            desc = (((EntityType<?>) requirement.getStat(this.factionPlayer)).getDescription().plainCopy().append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer)));
-                            break;
-                        case ENTITY_TAG:
-                            //noinspection unchecked
-                            desc = new TranslatableComponent("tasks.vampirism." + ((Tag.Named<EntityType<?>>) requirement.getStat(this.factionPlayer)).getName()).append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
-                            break;
-                        default:
-                            desc = new TranslatableComponent(task.getTranslationKey() + ".req." + requirement.getId().toString().replace(':', '.'));
-                            break;
-                    }
+                    desc = switch (type) {
+                        case ITEMS -> ((Item) requirement.getStat(this.factionPlayer)).getDescription().plainCopy().append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
+                        case STATS -> new TranslatableComponent("stat." + requirement.getStat(this.factionPlayer).toString().replace(':', '.')).append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
+                        case ENTITY -> (((EntityType<?>) requirement.getStat(this.factionPlayer)).getDescription().plainCopy().append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer)));
+                        case ENTITY_TAG ->
+                                //noinspection unchecked
+                                new TranslatableComponent("tasks.vampirism." + ((Tag.Named<EntityType<?>>) requirement.getStat(this.factionPlayer)).getName()).append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
+                        default -> new TranslatableComponent(task.getTranslationKey() + ".req." + requirement.getId().toString().replace(':', '.'));
+                    };
                     if (completed || this.screen.getTaskContainer().isRequirementCompleted(taskInfo, requirement)) {
                         desc.withStyle(ChatFormatting.STRIKETHROUGH);
                     }
@@ -333,21 +320,13 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         boolean completed = this.screen.getTaskContainer().isRequirementCompleted(this.item, requirement);
         int completedAmount = this.screen.getTaskContainer().getRequirementStatus(this.item, requirement);
         switch (requirement.getType()) {
-            case ITEMS:
-                this.renderItemTooltip(mStack, ((ItemRequirement) requirement).getItemStack(), x, y, (completed ? REQUIREMENT_STRIKE : REQUIREMENT), completed, notAccepted ? null : (completedAmount + "/"));
-                break;
-            case ENTITY:
-                this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.ENTITY, x, y, ((EntityType<?>) requirement.getStat(this.factionPlayer)).getDescription().plainCopy().append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
-                break;
-            case ENTITY_TAG:
-                //noinspection unchecked
-                this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.ENTITY_TAG, x, y, new TranslatableComponent("tasks.vampirism." + ((Tag.Named<EntityType<?>>) requirement.getStat(this.factionPlayer)).getName()).append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
-                break;
-            case STATS:
-                this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.STATS, x, y, new TranslatableComponent("stat." + requirement.getStat(this.factionPlayer).toString().replace(':', '.')).append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
-                break;
-            default:
-                this.renderDefaultRequirementToolTip(mStack, task, requirement, x, y, completed);
+            case ITEMS -> this.renderItemTooltip(mStack, ((ItemRequirement) requirement).getItemStack(), x, y, (completed ? REQUIREMENT_STRIKE : REQUIREMENT), completed, notAccepted ? null : (completedAmount + "/"));
+            case ENTITY -> this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.ENTITY, x, y, ((EntityType<?>) requirement.getStat(this.factionPlayer)).getDescription().plainCopy().append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
+            case ENTITY_TAG ->
+                    //noinspection unchecked
+                    this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.ENTITY_TAG, x, y, new TranslatableComponent("tasks.vampirism." + ((Tag.Named<EntityType<?>>) requirement.getStat(this.factionPlayer)).getName()).append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
+            case STATS -> this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.STATS, x, y, new TranslatableComponent("stat." + requirement.getStat(this.factionPlayer).toString().replace(':', '.')).append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
+            default -> this.renderDefaultRequirementToolTip(mStack, task, requirement, x, y, completed);
         }
     }
 
@@ -369,18 +348,11 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
             TaskContainer.TaskAction action = TaskItem.this.screen.getTaskContainer().buttonAction(TaskItem.this.item);
             RenderSystem.enableDepthTest();
             RenderSystem.setShaderTexture(0, TASKMASTER_GUI_TEXTURE);
-            int j;
-            switch (action) {
-                case ACCEPT:
-                    j = 190;
-                    break;
-                case COMPLETE:
-                    j = 176;
-                    break;
-                default:
-                    j = 204;
-
-            }
+            int j = switch (action) {
+                case ACCEPT -> 190;
+                case COMPLETE -> 176;
+                default -> 204;
+            };
 
             blit(mStack, this.x, this.y, (float) j, (float) (this.isHovered ? 13 : 0), this.width, this.height, 256, 256);
             RenderSystem.disableDepthTest();

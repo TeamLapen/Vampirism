@@ -10,6 +10,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
+import javax.annotation.Nonnull;
+
 /**
  * Vampirism default block container with set creative tab, registry name and unloc name
  */
@@ -23,7 +25,7 @@ public abstract class VampirismBlockContainer extends BaseEntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
         if (state.hasBlockEntity() && (state.is(newState.getBlock()) || !newState.hasBlockEntity())) {
             this.clearContainer(state, worldIn, pos);
             super.onRemove(state, worldIn, pos, newState, isMoving);
@@ -35,14 +37,13 @@ public abstract class VampirismBlockContainer extends BaseEntityBlock {
     }
 
     /**
-     * drop all items from the tileentity's inventory if {@code instanceof} {@link IInventory}
+     * drop all items from the tileentity's inventory if {@code instanceof} {@link Container}
      */
     protected void dropInventoryTileEntityItems(Level world, BlockPos pos) {
         BlockEntity tileEntity = world.getBlockEntity(pos);
-        if (!(tileEntity instanceof Container)) {
+        if (!(tileEntity instanceof Container inventory)) {
             return;
         }
-        Container inventory = (Container) tileEntity;
 
         for (int i = 0; i < inventory.getContainerSize(); i++) {
             ItemStack item = inventory.getItem(i);

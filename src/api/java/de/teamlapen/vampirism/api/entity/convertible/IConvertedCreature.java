@@ -6,7 +6,7 @@ import net.minecraft.world.entity.PathfinderMob;
 /**
  * Interface for entities that were bitten an then converted to a vampire.
  * When converted the old creature is removed and a new {@link IConvertedCreature} is spawned
- * Must only be implemented on subclasses of {@link CreatureEntity}
+ * Must only be implemented on subclasses of {@link PathfinderMob}
  */
 public interface IConvertedCreature<T extends PathfinderMob> extends IVampireMob {
 

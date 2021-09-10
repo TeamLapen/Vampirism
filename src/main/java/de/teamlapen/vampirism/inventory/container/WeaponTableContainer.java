@@ -92,7 +92,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
      * Called to determine if the current slot is valid for the stack merging (double-click) code. The stack passed in
      * is null for the initial slot that was double-clicked.
      */
-    public boolean canTakeItemForPickAll(ItemStack stack, Slot slotIn) {
+    public boolean canTakeItemForPickAll(@Nonnull ItemStack stack, Slot slotIn) {
         return slotIn.container != this.craftResult && super.canTakeItemForPickAll(stack, slotIn);
     }
 
@@ -117,6 +117,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
         return craftMatrix.getWidth();
     }
 
+    @Nonnull
     @Override
     public RecipeBookType getRecipeBookType() {
         return RecipeBookType.CRAFTING;
@@ -154,7 +155,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
     }
 
     @Nonnull
-    public ItemStack quickMoveStack(Player playerIn, int index) {
+    public ItemStack quickMoveStack(@Nonnull Player playerIn, int index) {
         ItemStack itemStackCopy = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
 
@@ -209,7 +210,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
     }
 
     @Override
-    public void removed(Player playerIn) {
+    public void removed(@Nonnull Player playerIn) {
         super.removed(playerIn);
         this.worldPos.execute((world, pos) -> {
             this.clearContainer(playerIn, craftMatrix);
@@ -234,7 +235,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
     }
 
     @Override
-    public void slotsChanged(Container inventoryIn) {
+    public void slotsChanged(@Nonnull Container inventoryIn) {
         this.worldPos.execute((world, pos) -> {
             slotChangedCraftingGrid(world, this.player, this.hunterPlayer, this.craftMatrix, this.craftResult);
         });
@@ -246,8 +247,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
     }
 
     private void slotChangedCraftingGrid(Level worldIn, Player playerIn, HunterPlayer hunter, CraftingContainer craftMatrixIn, ResultContainer craftResultIn) {
-        if (!worldIn.isClientSide && playerIn instanceof ServerPlayer) {
-            ServerPlayer entityplayermp = (ServerPlayer) playerIn;
+        if (!worldIn.isClientSide && playerIn instanceof ServerPlayer entityplayermp) {
             Optional<IWeaponTableRecipe> optional = worldIn.getServer() == null ? Optional.empty() : worldIn.getServer().getRecipeManager().getRecipeFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, craftMatrixIn, worldIn);
             this.missingLava = false;
             craftResultIn.setItem(0, ItemStack.EMPTY);

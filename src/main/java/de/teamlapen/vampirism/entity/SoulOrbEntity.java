@@ -59,6 +59,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
         super(type, worldIn);
     }
 
+    @Nonnull
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -73,6 +74,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
     }
 
 
+    @Nonnull
     @Override
     public ItemStack getItem() {
         return getSoulItemStack();
@@ -87,7 +89,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurt(@Nonnull DamageSource source, float amount) {
         return false;
     }
 
@@ -105,7 +107,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
     }
 
     @Override
-    public void playerTouch(Player entityIn) {
+    public void playerTouch(@Nonnull Player entityIn) {
         if (!this.level.isClientSide) {
             if (delayBeforePickup == 0) {
                 if (Helper.isHunter(entityIn)) {
@@ -192,6 +194,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
         this.getEntityData().define(TYPE_PARAMETER, VARIANT.NONE.name());
     }
 
+    @Nonnull
     @Override
     protected MovementEmission getMovementEmission() {
         return MovementEmission.NONE;
@@ -206,6 +209,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
     }
 
     private ItemStack createSoulItemStack() {
+        //noinspection IfStatementWithIdenticalBranches
         if (getVariant() == VARIANT.VAMPIRE) {
             return new ItemStack(ModItems.soul_orb_vampire);
         }

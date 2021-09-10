@@ -46,6 +46,7 @@ public class GarlicItem extends VampirismItem implements IPlantable, IFactionExc
     }
 
 
+    @Nonnull
     @Override
     public InteractionResult useOn(UseOnContext ctx) {
         ItemStack stack = ctx.getItemInHand();

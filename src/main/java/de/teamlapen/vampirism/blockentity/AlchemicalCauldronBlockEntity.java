@@ -73,7 +73,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
 
 
     @Override
-    public boolean canOpen(Player player) {
+    public boolean canOpen(@Nonnull Player player) {
         if (super.canOpen(player)) {
             if (HunterPlayer.getOpt(player).map(HunterPlayer::getSkillHandler).map(h -> h.isSkillEnabled(HunterSkills.basic_alchemy)).orElse(false)) {
                 if (ownerID == null) {
@@ -116,7 +116,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
 
     @Nonnull
     @Override
-    public int[] getSlotsForFace(Direction side) {
+    public int[] getSlotsForFace(@Nonnull Direction side) {
         if (side == Direction.DOWN)
             return SLOTS_DOWN;
         else
@@ -163,8 +163,9 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
         }
     }
 
+    @Nonnull
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public CompoundTag save(@Nonnull CompoundTag compound) {
         if (ownerID != null) {
             compound.putUUID("owner", ownerID);
         }
@@ -190,7 +191,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     @Override
-    public void setItem(int index, ItemStack stack) {
+    public void setItem(int index, @Nonnull ItemStack stack) {
         super.setItem(index, stack);
         ItemStack itemstack = this.items.get(index);
         boolean flag = !stack.isEmpty() && stack.sameItem(itemstack) && ItemStack.tagMatches(stack, itemstack);
@@ -274,10 +275,11 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
 
     @Nonnull
     @Override
-    protected AbstractContainerMenu createMenu(int id, Inventory player) {
+    protected AbstractContainerMenu createMenu(int id, @Nonnull Inventory player) {
         return new AlchemicalCauldronContainer(id, player, this, this.dataAccess, level == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(level, worldPosition));
     }
 
+    @Nonnull
     @Override
     protected Component getDefaultName() {
         return new TranslatableComponent("tile.vampirism.alchemical_cauldron");

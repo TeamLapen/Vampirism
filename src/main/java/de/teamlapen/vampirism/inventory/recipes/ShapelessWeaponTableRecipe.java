@@ -51,6 +51,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
         this.isSimple = ingredients.stream().allMatch(Ingredient::isSimple);
     }
 
+    @Nonnull
     @Override
     public ItemStack assemble(CraftingContainer inv) {
         return this.recipeOutput.copy();
@@ -61,21 +62,25 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
         return width * height >= this.recipeItems.size();
     }
 
+    @Nonnull
     @Override
     public String getGroup() {
         return group;
     }
 
+    @Nonnull
     @Override
     public ResourceLocation getId() {
         return id;
     }
 
+    @Nonnull
     @Override
     public NonNullList<Ingredient> getIngredients() {
         return recipeItems;
     }
 
+    @Nonnull
     @Override
     public ItemStack getResultItem() {
         return recipeOutput;
@@ -95,11 +100,13 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
         return requiredSkills;
     }
 
+    @Nonnull
     @Override
     public RecipeSerializer<?> getSerializer() {
         return ModRecipes.shapeless_crafting_weapontable;
     }
 
+    @Nonnull
     @Override
     public RecipeType<? extends Recipe> getType() {
         return ModRecipes.WEAPONTABLE_CRAFTING_TYPE;
@@ -129,6 +136,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
     }
 
     public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapelessWeaponTableRecipe> {
+        @Nonnull
         @Override
         public ShapelessWeaponTableRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
             String group = GsonHelper.getAsString(json, "group", "");

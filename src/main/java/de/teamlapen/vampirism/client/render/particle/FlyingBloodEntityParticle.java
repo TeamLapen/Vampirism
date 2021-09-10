@@ -15,6 +15,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -53,6 +54,7 @@ public class FlyingBloodEntityParticle extends TextureSheetParticle {
         //this.tick();
     }
 
+    @Nonnull
     @Override
     public ParticleRenderType getRenderType() {
         return ParticleRenderType.PARTICLE_SHEET_OPAQUE;

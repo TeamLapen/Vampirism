@@ -74,10 +74,6 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
         return opt;
     }
 
-    public static void registerCapability() {
-        CapabilityManager.INSTANCE.register(IHunterPlayer.class);
-    }
-
     public static ICapabilityProvider createNewCapability(final Player player) {
         return new ICapabilitySerializable<CompoundTag>() {
 

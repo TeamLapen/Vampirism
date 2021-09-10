@@ -33,35 +33,21 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
     }.getType(), new ResourceLocationTypeAdapter()).create();
 
     private static void writeBloodValues(Writer w, Map<ResourceLocation, Integer> values, String comment) throws IOException, JsonIOException {
-        BufferedWriter bw = null;
-        try {
-            bw = new BufferedWriter(w);
+        try (BufferedWriter bw = new BufferedWriter(w)) {
             bw.write('#');
             bw.write(comment);
             bw.newLine();
             bw.write(GSON.toJson(values));
             bw.flush();
-        } finally {
-            if (bw != null) {
-                bw.close();
-            }
-            w.close();
         }
     }
 
     private static Optional<Map<ResourceLocation, Integer>> loadBloodValues(Reader r) throws IOException, JsonSyntaxException {
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(r);
+        try (BufferedReader br = new BufferedReader(r)) {
             br.readLine();
             Type s = new TypeToken<Map<ResourceLocation, Integer>>() {
             }.getType();
             return Optional.ofNullable(GSON.fromJson(br, s));
-        } finally {
-            if (br != null) {
-                br.close();
-            }
-            r.close();
         }
     }
 

@@ -66,7 +66,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     protected boolean canSuckBloodFromPlayer = false;
     protected boolean vulnerableToFire = true;
     /**
-     * Rules to consider for {@link #canSpawn(IWorld, SpawnReason)}
+     * Rules to consider for {@link #checkSpawnRules(LevelAccessor, MobSpawnType)}
      */
     private SpawnRestriction spawnRestriction = SpawnRestriction.NORMAL;
     private boolean sundamageCache;
@@ -115,7 +115,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public boolean checkSpawnRules(LevelAccessor worldIn, MobSpawnType spawnReasonIn) {
+    public boolean checkSpawnRules(@Nonnull LevelAccessor worldIn, @Nonnull MobSpawnType spawnReasonIn) {
         if (spawnRestriction.level >= SpawnRestriction.SIMPLE.level) {
             if (isGettingSundamage(worldIn, true) || isGettingGarlicDamage(worldIn, true) != EnumStrength.NONE)
                 return false;
@@ -142,7 +142,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public void die(DamageSource cause) {
+    public void die(@Nonnull DamageSource cause) {
         super.die(cause);
         if (cause.getDirectEntity() instanceof CrossbowArrowEntity && Helper.isHunter(cause.getEntity())) {
             dropSoul = true;
@@ -162,7 +162,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public boolean doHurtTarget(Entity entity) {
+    public boolean doHurtTarget(@Nonnull Entity entity) {
         if (canSuckBloodFromPlayer && !level.isClientSide && wantsBlood() && entity instanceof Player && !Helper.isHunter(entity) && !UtilLib.canReallySee((LivingEntity) entity, this, true)) {
             int amt = VampirePlayer.getOpt((Player) entity).map(v -> v.onBite(this)).orElse(0);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
@@ -209,13 +209,14 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
         return garlicCache;
     }
 
+    @Nonnull
     @Override
     public MobType getMobType() {
         return VReference.VAMPIRE_CREATURE_ATTRIBUTE;
     }
 
     @Override
-    public boolean hurt(DamageSource damageSource, float amount) {
+    public boolean hurt(@Nonnull DamageSource damageSource, float amount) {
         if (vulnerableToFire) {
             if (DamageSource.IN_FIRE.equals(damageSource)) {
                 return this.hurt(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amount));
@@ -238,7 +239,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     /**
-     * Select rules to consider for {@link #canSpawn(IWorld, SpawnReason)}
+     * Select rules to consider for {@link #checkSpawnRules(LevelAccessor, MobSpawnType)}
      */
     public void setSpawnRestriction(SpawnRestriction r) {
         this.spawnRestriction = r;

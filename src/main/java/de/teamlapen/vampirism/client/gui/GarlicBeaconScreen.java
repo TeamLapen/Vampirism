@@ -12,6 +12,8 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
 public class GarlicBeaconScreen extends Screen {
 
@@ -35,7 +37,7 @@ public class GarlicBeaconScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(mStack);
 
         this.renderGuiBackground(mStack);

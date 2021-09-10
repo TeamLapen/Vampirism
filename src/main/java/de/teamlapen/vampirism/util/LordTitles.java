@@ -55,19 +55,14 @@ public class LordTitles {
     }
 
     public static Component getHunterTitle(int level, boolean female) {
-        switch (level) {
-            case 1:
-                return HUNTER_1;
-            case 2:
-                return HUNTER_2;
-            case 3:
-                return HUNTER_3;
-            case 4:
-                return HUNTER_4;
-            case 5:
-                return HUNTER_5;
-        }
-        return EMPTY;
+        return switch (level) {
+            case 1 -> HUNTER_1;
+            case 2 -> HUNTER_2;
+            case 3 -> HUNTER_3;
+            case 4 -> HUNTER_4;
+            case 5 -> HUNTER_5;
+            default -> EMPTY;
+        };
     }
 
 

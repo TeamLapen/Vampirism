@@ -26,6 +26,6 @@ public class SimpleMinionTask extends DefaultMinionTask<IMinionTask.NoDesc<Minio
 
     @Override
     public NoDesc<MinionData> readFromNBT(CompoundTag nbt) {
-        return new NoDesc<MinionData>(this);
+        return new NoDesc<>(this);
     }
 }

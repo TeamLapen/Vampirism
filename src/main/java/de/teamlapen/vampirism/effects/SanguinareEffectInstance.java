@@ -6,19 +6,21 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.effect.MobEffectInstance;
 
+import javax.annotation.Nonnull;
+
 public class SanguinareEffectInstance extends MobEffectInstance {
     public SanguinareEffectInstance(int effectDuration) {
         super(ModEffects.sanguinare, effectDuration, 0, false, true);
     }
 
     @Override
-    public boolean update(MobEffectInstance other) {
+    public boolean update(@Nonnull MobEffectInstance other) {
         //Sanguinare cannot be combined
         return false;
     }
 
     @Override
-    public boolean tick(LivingEntity entityIn, Runnable runnable) {
+    public boolean tick(@Nonnull LivingEntity entityIn, @Nonnull Runnable runnable) {
         if (this.getDuration() % 10 == 0 && entityIn instanceof Player) {
             if (!Helper.canBecomeVampire((Player) entityIn)) {
                 return false;

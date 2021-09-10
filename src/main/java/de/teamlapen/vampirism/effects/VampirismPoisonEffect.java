@@ -4,6 +4,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.damagesource.DamageSource;
 
+import javax.annotation.Nonnull;
+
 
 public class VampirismPoisonEffect extends VampirismEffect {
 
@@ -14,7 +16,7 @@ public class VampirismPoisonEffect extends VampirismEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entityLivingBaseIn, int amplifier) {
+    public void applyEffectTick(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
         if (entityLivingBaseIn.getHealth() > 1f || amplifier >= DEADLY_AMPLIFIER) {
             entityLivingBaseIn.hurt(DamageSource.MAGIC, amplifier + 1);
         }

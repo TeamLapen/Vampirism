@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.client.render.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.Direction;
 import com.mojang.math.Vector3f;
@@ -20,7 +19,7 @@ abstract class VampirismBESR<T extends BlockEntity> implements BlockEntityRender
 
     /**
      * Rotates the block to fit the enum facing.
-     * ONLY CALL THIS IF THE BLOCK HAS A {@link HorizontalBlock#HORIZONTAL_FACING} PROPERTY
+     * ONLY CALL THIS IF THE BLOCK HAS A {@link HorizontalDirectionalBlock#FACING} PROPERTY
      *
      * @param tile
      */

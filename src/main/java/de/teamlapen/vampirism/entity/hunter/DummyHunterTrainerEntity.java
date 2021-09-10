@@ -23,6 +23,8 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 
+import javax.annotation.Nonnull;
+
 /**
  * Hunter Trainer which allows Hunter players to level up
  */
@@ -54,8 +56,9 @@ public class DummyHunterTrainerEntity extends VampirismEntity implements ICaptur
         this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
     }
 
+    @Nonnull
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+    protected InteractionResult mobInteract(Player player, @Nonnull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 

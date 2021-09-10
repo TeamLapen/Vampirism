@@ -38,7 +38,7 @@ public class HolyWaterBottleItem extends VampirismItem implements IItemWithTier,
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
     }
@@ -61,15 +61,11 @@ public class HolyWaterBottleItem extends VampirismItem implements IItemWithTier,
      * @return
      */
     public EnumStrength getStrength(TIER tier) {
-        switch (tier) {
-            case NORMAL:
-                return EnumStrength.WEAK;
-            case ENHANCED:
-                return EnumStrength.MEDIUM;
-            case ULTIMATE:
-                return EnumStrength.STRONG;
-        }
-        return EnumStrength.NONE;
+        return switch (tier) {
+            case NORMAL -> EnumStrength.WEAK;
+            case ENHANCED -> EnumStrength.MEDIUM;
+            case ULTIMATE -> EnumStrength.STRONG;
+        };
     }
 
     @Override

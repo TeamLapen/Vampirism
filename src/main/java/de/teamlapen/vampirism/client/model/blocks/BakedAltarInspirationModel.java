@@ -43,16 +43,19 @@ public class BakedAltarInspirationModel implements IDynamicBakedModel {
         this.baseModel = baseModel;
     }
 
+    @Nonnull
     @Override
     public TextureAtlasSprite getParticleIcon() {
         return baseModel.getParticleIcon();
     }
 
+    @Nonnull
     @Override
     public ItemOverrides getOverrides() {
         return baseModel.getOverrides();
     }
 
+    @Nonnull
     @Override
     public ItemTransforms getTransforms() {
         return baseModel.getTransforms();

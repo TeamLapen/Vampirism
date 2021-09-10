@@ -139,7 +139,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     }
 
     @Override
-    public void load(CompoundTag compound) {
+    public void load(@Nonnull CompoundTag compound) {
         super.load(compound);
         if (compound.contains("item")) {
             this.internalStack = ItemStack.of(compound.getCompound("item"));
@@ -164,7 +164,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
 
     @Nonnull
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public CompoundTag save(@Nonnull CompoundTag compound) {
         if (hasStack()) {
             compound.put("item", this.internalStack.serializeNBT());
         }

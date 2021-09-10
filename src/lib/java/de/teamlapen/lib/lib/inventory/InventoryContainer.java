@@ -56,8 +56,9 @@ public abstract class InventoryContainer extends AbstractContainerMenu {
         this.size = size;
     }
 
+    @Nonnull
     @Override
-    public ItemStack quickMoveStack(Player playerEntity, int index) {
+    public ItemStack quickMoveStack(@Nonnull Player playerEntity, int index) {
         ItemStack result = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {
@@ -99,13 +100,13 @@ public abstract class InventoryContainer extends AbstractContainerMenu {
     }
 
     @Override
-    public void removed(Player playerIn) {
+    public void removed(@Nonnull Player playerIn) {
         super.removed(playerIn);
         inventory.stopOpen(playerIn);
     }
 
     @Override
-    public boolean stillValid(Player playerIn) {
+    public boolean stillValid(@Nonnull Player playerIn) {
         return true;
     }
 
@@ -157,7 +158,7 @@ public abstract class InventoryContainer extends AbstractContainerMenu {
         }
 
         @Override
-        public int getMaxStackSize(ItemStack stack) {
+        public int getMaxStackSize(@Nonnull ItemStack stack) {
             return info.stackLimit;
         }
 
@@ -179,12 +180,12 @@ public abstract class InventoryContainer extends AbstractContainerMenu {
         }
 
         @Override
-        public boolean mayPlace(ItemStack stack) {
+        public boolean mayPlace(@Nonnull ItemStack stack) {
             return info.validate(stack);
         }
 
         @Override
-        public void onQuickCraft(ItemStack oldStackIn, ItemStack newStackIn) {
+        public void onQuickCraft(@Nonnull ItemStack oldStackIn, @Nonnull ItemStack newStackIn) {
             super.onQuickCraft(oldStackIn, newStackIn);
             this.refreshInvFunc.accept(this.container);
         }

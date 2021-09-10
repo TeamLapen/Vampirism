@@ -76,7 +76,7 @@ public class VampirismWorldGen {
 
     //
     private static Pair<Map<String, List<Pair<StructurePoolElement, Integer>>>, Map<String, StructureTemplatePool>> getStructures() {
-        Map<String, StructureTemplatePool> patterns = new HashMap<String, StructureTemplatePool>() {{
+        Map<String, StructureTemplatePool> patterns = new HashMap<>() {{
             put("plains", BuiltinRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/plains/houses")).get());
             put("desert", BuiltinRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/desert/houses")).get());
             put("savanna", BuiltinRegistries.TEMPLATE_POOL.getOptional(new ResourceLocation("village/savanna/houses")).get());
@@ -103,7 +103,7 @@ public class VampirismWorldGen {
     private static void replaceTemples(Map<String, List<Pair<StructurePoolElement, Integer>>> buildings) {
         //biome string -> JigsawPattern of the biome
         //toString() of the replaced JigsawPiece -> modified JigsawPiece
-        Map<String, Map<String, StructurePoolElement>> temples = new HashMap<String, Map<String, StructurePoolElement>>() {{
+        Map<String, Map<String, StructurePoolElement>> temples = new HashMap<>() {{
             put("plains", ImmutableMap.of(
                     singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_3"), singleJigsawPiece("village/plains/houses/plains_temple_3", ProcessorLists.MOSSIFY_10_PERCENT),
                     singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_4"), singleJigsawPiece("village/plains/houses/plains_temple_4", ProcessorLists.MOSSIFY_10_PERCENT)));

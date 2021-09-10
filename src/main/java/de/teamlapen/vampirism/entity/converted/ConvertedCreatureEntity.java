@@ -78,7 +78,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         writeOldEntityToNBT(nbt);
         nbt.putBoolean("converter_canDespawn", canDespawn);
@@ -179,7 +179,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt) {
+    public void readAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         if (nbt.contains("entity_old")) {
             setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), level).orElse(null));
@@ -245,7 +245,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, PathfinderMob entity) {
+    public void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @Nonnull PathfinderMob entity) {
         ICurableConvertedCreature.super.startConverting(conversionStarterIn, conversionTimeIn, entity);
         this.conversationStarter = conversionStarterIn;
         this.conversionTime = conversionTimeIn;
@@ -338,7 +338,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(1, new AvoidEntityGoal<PathfinderMob>(this, PathfinderMob.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION)));
+        this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, PathfinderMob.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION)));
         //this.tasks.addTask(3, new FleeSunVampireGoal(this, 1F));
         this.goalSelector.addGoal(4, new RestrictSunGoal(this));
         this.goalSelector.addGoal(5, new AttackMeleeNoSunGoal(this, 0.9D, false));
@@ -349,8 +349,8 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         this.goalSelector.addGoal(15, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<Player>(this, Player.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<PathfinderMob>(this, PathfinderMob.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
     }
 
     @SuppressWarnings({"unchecked", "ConstantConditions"})

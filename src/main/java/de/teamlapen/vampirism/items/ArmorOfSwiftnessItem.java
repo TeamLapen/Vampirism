@@ -21,6 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
     }
@@ -52,14 +53,11 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
         if (type == null) {
             return getTextureLocationLeather(slot);
         }
-        switch (getVampirismTier()) {
-            case ENHANCED:
-                return getTextureLocation("swiftness_enhanced", slot, type);
-            case ULTIMATE:
-                return getTextureLocation("swiftness_ultimate", slot, type);
-            default:
-                return getTextureLocation("swiftness", slot, type);
-        }
+        return switch (getVampirismTier()) {
+            case ENHANCED -> getTextureLocation("swiftness_enhanced", slot, type);
+            case ULTIMATE -> getTextureLocation("swiftness_ultimate", slot, type);
+            default -> getTextureLocation("swiftness", slot, type);
+        };
     }
 
     @Override
@@ -110,14 +108,11 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
 
     @Override
     protected int getDamageReduction(int slot, ItemStack stack) {
-        switch (tier) {
-            case ULTIMATE:
-                return DAMAGE_REDUCTION_ULTIMATE[slot];
-            case ENHANCED:
-                return DAMAGE_REDUCTION_ENHANCED[slot];
-            default:
-                return DAMAGE_REDUCTION_NORMAL[slot];
-        }
+        return switch (tier) {
+            case ULTIMATE -> DAMAGE_REDUCTION_ULTIMATE[slot];
+            case ENHANCED -> DAMAGE_REDUCTION_ENHANCED[slot];
+            default -> DAMAGE_REDUCTION_NORMAL[slot];
+        };
     }
 
     /**
@@ -126,28 +121,22 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
      * @return -1 if none
      */
     private int getJumpBoost(TIER tier) {
-        switch (tier) {
-            case ULTIMATE:
-                return 1;
-            case ENHANCED:
-                return 0;
-            default:
-                return -1;
-        }
+        return switch (tier) {
+            case ULTIMATE -> 1;
+            case ENHANCED -> 0;
+            default -> -1;
+        };
     }
 
     /**
      * Applied per piece
      */
     private double getSpeedBoost(TIER tier) {
-        switch (tier) {
-            case ULTIMATE:
-                return 0.1;
-            case ENHANCED:
-                return 0.075;
-            default:
-                return 0.035;
-        }
+        return switch (tier) {
+            case ULTIMATE -> 0.1;
+            case ENHANCED -> 0.075;
+            default -> 0.035;
+        };
     }
 
     private String getTextureLocationLeather(EquipmentSlot slot) {

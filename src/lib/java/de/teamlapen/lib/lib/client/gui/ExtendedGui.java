@@ -2,7 +2,6 @@ package de.teamlapen.lib.lib.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.GuiComponent;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.renderer.GameRenderer;

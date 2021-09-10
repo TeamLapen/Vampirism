@@ -182,7 +182,7 @@ public abstract class VampirismVillageEvent extends Event {
         }
 
         /**
-         * @return all {@link VillagerEntity} that are in the village boundingBox
+         * @return all {@link Villager} that are in the village boundingBox
          */
         @Nonnull
         public List<Villager> getVillager() {

@@ -780,7 +780,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     }
 
     /**
-     * updates the tile status and determines the related {@link PointOfInterest}s
+     * updates the tile status and determines the related {@link PoiRecord}s
      * <p>
      * this includes checking if the totem is placed in a village, the totem is complete, if there is another totem and forces a faction
      */
@@ -999,17 +999,12 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     private void handleBossBar(float defenderMaxHealth, float defenderHealth, float attackerMaxHealth, float attackerHealth) {
         float neutralPerc;
         switch (this.phase) {
-            case PHASE_1_NEUTRAL:
-            case PHASE_1_OPPOSITE:
-                neutralPerc = this.captureTimer / (float) VampirismConfig.BALANCE.viPhase1Duration.get();
-                break;
-            case PHASE_2:
+            case PHASE_1_NEUTRAL, PHASE_1_OPPOSITE -> neutralPerc = this.captureTimer / (float) VampirismConfig.BALANCE.viPhase1Duration.get();
+            case PHASE_2 -> {
                 neutralPerc = 1f;
                 this.captureInfo.setName(new TranslatableComponent("text.vampirism.village.bossinfo.remaining"));
-                break;
-            default:
-                neutralPerc = 0;
-                break;
+            }
+            default -> neutralPerc = 0;
         }
         float max = defenderHealth + attackerHealth;
         this.captureInfo.setPercentage(neutralPerc * attackerHealth / max, 1 - neutralPerc, neutralPerc * defenderHealth / max);

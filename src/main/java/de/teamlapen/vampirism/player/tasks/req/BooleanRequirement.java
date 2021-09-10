@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nonnull;
 import java.util.function.Function;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class BooleanRequirement implements TaskRequirement.Requirement<Boolean> {
 
     @Nonnull

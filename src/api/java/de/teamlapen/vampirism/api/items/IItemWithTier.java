@@ -7,6 +7,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -46,6 +47,7 @@ public interface IItemWithTier {
             return this.getSerializedName();
         }
 
+        @Nonnull
         @Override
         public String getSerializedName() {
             return name;

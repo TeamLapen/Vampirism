@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 /**
@@ -38,7 +39,7 @@ public class HunterEquipmentLayer<T extends Mob, Q extends EntityModel<T>> exten
     }
 
     @Override
-    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(@Nonnull PoseStack matrixStackIn, @Nonnull MultiBufferSource bufferIn, int packedLightIn, T entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (!entityIn.isInvisible()) {
             equipmentModel.setHat(functionHat.apply(entityIn));
             equipmentModel.setWeapons(predicateStake.apply(entityIn));

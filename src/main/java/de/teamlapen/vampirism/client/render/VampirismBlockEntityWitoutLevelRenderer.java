@@ -14,6 +14,8 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public class VampirismBlockEntityWitoutLevelRenderer extends BlockEntityWithoutLevelRenderer {
 
 
@@ -27,7 +29,7 @@ public class VampirismBlockEntityWitoutLevelRenderer extends BlockEntityWithoutL
 
 
     @Override
-    public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLightIn, int combinedOverlayIn) {
+    public void renderByItem(ItemStack itemStack, @Nonnull ItemTransforms.TransformType transformType, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLightIn, int combinedOverlayIn) {
         Item item = itemStack.getItem();
         if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof CoffinBlock) {
             if (coffin == null) {

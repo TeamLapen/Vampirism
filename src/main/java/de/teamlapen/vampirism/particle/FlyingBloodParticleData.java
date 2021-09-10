@@ -13,6 +13,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nonnull;
+
 public class FlyingBloodParticleData implements ParticleOptions {
 
     /**
@@ -28,12 +30,14 @@ public class FlyingBloodParticleData implements ParticleOptions {
                     Codec.STRING.fieldOf("t").forGetter((p_239804_0_) -> p_239804_0_.texture.toString()))
             .apply(p_239803_0_, (a, d, x, y, z, t) -> new FlyingBloodParticleData(ModParticles.flying_blood, a, d, x, y, z, new ResourceLocation(t))));
 
-    public static final ParticleOptions.Deserializer<FlyingBloodParticleData> DESERIALIZER = new ParticleOptions.Deserializer<FlyingBloodParticleData>() {
-        public FlyingBloodParticleData fromCommand(ParticleType<FlyingBloodParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
+    public static final ParticleOptions.Deserializer<FlyingBloodParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
+        @Nonnull
+        public FlyingBloodParticleData fromCommand(@Nonnull ParticleType<FlyingBloodParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
             return new FlyingBloodParticleData(particleTypeIn, reader.readInt(), reader.readBoolean(), reader.readDouble(), reader.readDouble(), reader.readDouble(), ResourceLocation.read(reader));
         }
 
-        public FlyingBloodParticleData fromNetwork(ParticleType<FlyingBloodParticleData> particleTypeIn, FriendlyByteBuf buffer) {
+        @Nonnull
+        public FlyingBloodParticleData fromNetwork(@Nonnull ParticleType<FlyingBloodParticleData> particleTypeIn, FriendlyByteBuf buffer) {
             return new FlyingBloodParticleData(particleTypeIn, buffer.readVarInt(), buffer.readBoolean(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readResourceLocation());
         }
     };
@@ -91,6 +95,7 @@ public class FlyingBloodParticleData implements ParticleOptions {
         return texture;
     }
 
+    @Nonnull
     @Override
     public ParticleType<?> getType() {
         return particleType;
@@ -101,6 +106,7 @@ public class FlyingBloodParticleData implements ParticleOptions {
         return direct;
     }
 
+    @Nonnull
     @Override
     public String writeToString() {
         return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + maxAge + " " + texture;

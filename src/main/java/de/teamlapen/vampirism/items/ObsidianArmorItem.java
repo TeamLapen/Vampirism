@@ -17,6 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -50,21 +51,18 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
     }
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        switch (getVampirismTier()) {
-            case ENHANCED:
-                return getTextureLocation("obsidian_armor_of_hell_enhanced", slot, type);
-            case ULTIMATE:
-                return getTextureLocation("obsidian_armor_of_hell_ultimate", slot, type);
-            default:
-                return getTextureLocation("obsidian_armor_of_hell", slot, type);
-        }
+        return switch (getVampirismTier()) {
+            case ENHANCED -> getTextureLocation("obsidian_armor_of_hell_enhanced", slot, type);
+            case ULTIMATE -> getTextureLocation("obsidian_armor_of_hell_ultimate", slot, type);
+            default -> getTextureLocation("obsidian_armor_of_hell", slot, type);
+        };
 
     }
 
@@ -90,14 +88,11 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
     @Override
     protected int getDamageReduction(int slot, ItemStack stack) {
         TIER tier = getVampirismTier();
-        switch (tier) {
-            case ULTIMATE:
-                return DAMAGE_REDUCTION_ULTIMATE[slot];
-            case ENHANCED:
-                return DAMAGE_REDUCTION_ENHANCED[slot];
-            default:
-                return DAMAGE_REDUCTION_NORMAL[slot];
-        }
+        return switch (tier) {
+            case ULTIMATE -> DAMAGE_REDUCTION_ULTIMATE[slot];
+            case ENHANCED -> DAMAGE_REDUCTION_ENHANCED[slot];
+            default -> DAMAGE_REDUCTION_NORMAL[slot];
+        };
     }
 
     private float getSpeedReduction(int slot) {

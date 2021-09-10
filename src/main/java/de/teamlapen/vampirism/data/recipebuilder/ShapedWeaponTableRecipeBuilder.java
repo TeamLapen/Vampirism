@@ -50,26 +50,31 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         this.extraNbt = extraNbt;
     }
 
+    @Nonnull
     @Override
     public ShapedWeaponTableRecipeBuilder define(Character symbol, ItemLike itemIn) {
         return (ShapedWeaponTableRecipeBuilder) super.define(symbol, itemIn);
     }
 
+    @Nonnull
     @Override
     public ShapedWeaponTableRecipeBuilder define(Character symbol, Ingredient ingredientIn) {
         return (ShapedWeaponTableRecipeBuilder) super.define(symbol, ingredientIn);
     }
 
+    @Nonnull
     @Override
     public ShapedWeaponTableRecipeBuilder define(Character symbol, Tag<Item> tagIn) {
         return (ShapedWeaponTableRecipeBuilder) super.define(symbol, tagIn);
     }
 
+    @Nonnull
     @Override
-    public ShapedWeaponTableRecipeBuilder group(String groupIn) {
+    public ShapedWeaponTableRecipeBuilder group(@Nullable String groupIn) {
         return (ShapedWeaponTableRecipeBuilder) super.group(groupIn);
     }
 
+    @Nonnull
     @Override
     public ShapedWeaponTableRecipeBuilder pattern(String patternIn) {
         return (ShapedWeaponTableRecipeBuilder) super.pattern(patternIn);
@@ -98,6 +103,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         consumer.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, this.rows, this.key, this.advancement, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItemCategory().getRecipeFolderName() + "/" + id.getPath()), this.lava, this.skills != null ? this.skills : new ISkill[]{}, this.level, this.extraNbt));
     }
 
+    @Nonnull
     @Override
     public ShapedWeaponTableRecipeBuilder unlockedBy(String name, CriterionTriggerInstance criterionIn) {
         return (ShapedWeaponTableRecipeBuilder) super.unlockedBy(name, criterionIn);
@@ -108,7 +114,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         return this;
     }
 
-    private class Result extends ShapedRecipeBuilder.Result {
+    private static class Result extends ShapedRecipeBuilder.Result {
         private final int lava;
         private final ISkill[] skills;
         private final int level;

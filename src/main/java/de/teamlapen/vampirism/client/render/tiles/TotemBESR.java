@@ -51,7 +51,7 @@ public class TotemBESR extends VampirismBESR<TotemBlockEntity> {
     }
 
     @Override
-    public boolean shouldRenderOffScreen(TotemBlockEntity te) {
+    public boolean shouldRenderOffScreen(@Nonnull TotemBlockEntity te) {
         return true;
     }
 

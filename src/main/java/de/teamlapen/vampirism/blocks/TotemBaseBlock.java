@@ -16,6 +16,8 @@ import net.minecraft.world.level.Level;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
+import javax.annotation.Nonnull;
+
 public class TotemBaseBlock extends VampirismBlock {
     private static final VoxelShape shape = makeShape();
     private final static String regName = "totem_base";
@@ -40,8 +42,9 @@ public class TotemBaseBlock extends VampirismBlock {
 
     }
 
+    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
         return shape;
     }
 

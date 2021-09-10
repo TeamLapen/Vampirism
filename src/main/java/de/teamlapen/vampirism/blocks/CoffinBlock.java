@@ -89,13 +89,13 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     @Nonnull
     @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
+    public PushReaction getPistonPushReaction(@Nonnull BlockState state) {
         return PushReaction.DESTROY;
     }
 
     @Nonnull
     @Override
-    public RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(@Nonnull BlockState state) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
@@ -109,18 +109,18 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isPathfindable(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, PathComputationType type) {
+    public boolean isPathfindable(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull PathComputationType type) {
         return false;
     }
 
     @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
         return shape;
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
         Direction enumfacing = state.getValue(HORIZONTAL_FACING);
 
         if (state.getValue(PART) == CoffinPart.HEAD) {
@@ -142,7 +142,7 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
         return new CoffinBlockEntity(pos, state);
     }
 
@@ -166,7 +166,7 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
+    public void setPlacedBy(@Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable LivingEntity entity, @Nonnull ItemStack itemStack) {
         super.setPlacedBy(worldIn, pos, state, entity, itemStack);
         if (!worldIn.isClientSide) {
             BlockPos blockpos = pos.relative(state.getValue(HORIZONTAL_FACING));
@@ -178,7 +178,7 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     @Nonnull
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState stateIn, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor worldIn, @Nonnull BlockPos currentPos, @Nonnull BlockPos facingPos) {
         if (facing == getDirectionToOther(stateIn.getValue(PART), stateIn.getValue(HORIZONTAL_FACING))) {
             return facingState.getBlock() == this && facingState.getValue(PART) != stateIn.getValue(PART) ? stateIn.setValue(BedBlock.OCCUPIED, facingState.getValue(BedBlock.OCCUPIED)) : Blocks.AIR.defaultBlockState();
         } else {
@@ -186,8 +186,9 @@ public class CoffinBlock extends VampirismBlockContainer {
         }
     }
 
+    @Nonnull
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult use(@Nonnull BlockState state, Level worldIn, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
 
         if (worldIn.isClientSide) {
             return InteractionResult.SUCCESS;
@@ -258,7 +259,7 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntity) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> blockEntity) {
         return level.isClientSide() && state.getValue(PART) == CoffinPart.HEAD ? createTickerHelper(blockEntity, ModTiles.coffin, CoffinBlockEntity::clientTickHead) : null ;
     }
 

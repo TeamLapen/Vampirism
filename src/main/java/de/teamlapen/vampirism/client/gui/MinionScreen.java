@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableArrayTextComponentList;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget;
 import de.teamlapen.vampirism.REFERENCE;
@@ -23,6 +22,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fmlclient.gui.GuiUtils;
 import net.minecraftforge.fmlclient.gui.widget.ExtendedButton;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
@@ -52,7 +52,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     }
 
     @Override
-    public void render(PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(mStack);
         super.render(mStack, mouseX, mouseY, partialTicks);
         this.renderTooltip(mStack, mouseX, mouseY);
@@ -76,7 +76,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     }
 
     @Override
-    protected void renderBg(PoseStack mStack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(@Nonnull PoseStack mStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, GUI_TEXTURE);
@@ -90,14 +90,14 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     }
 
     @Override
-    protected void renderLabels(PoseStack mStack, int mouseX, int mouseY) {
+    protected void renderLabels(@Nonnull PoseStack mStack, int mouseX, int mouseY) {
         this.font.draw(mStack, title, 5, 6.0F, 0x404040);
         this.font.draw(mStack, new TranslatableComponent("gui.vampirism.minion.active_task"), 120, 10.0F, 0x404040);
 
     }
 
     @Override
-    protected void renderTooltip(PoseStack mStack, int mouseX, int mouseY) {
+    protected void renderTooltip(@Nonnull PoseStack mStack, int mouseX, int mouseY) {
         if (this.lockActionButton.isMouseOver(mouseX, mouseY)) {
             drawButtonTip(mStack, new TranslatableComponent("gui.vampirism.minion.lock_action"), mouseX, mouseY);
         } else if (this.appearanceButton.isMouseOver(mouseX, mouseY)) {

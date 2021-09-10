@@ -12,22 +12,14 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
 import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
-import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import de.teamlapen.vampirism.api.world.IVampirismWorld;
 import de.teamlapen.vampirism.api.world.IWorldGenManager;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
-
-import javax.annotation.Nonnull;
 
 /**
  * Class for core api methods

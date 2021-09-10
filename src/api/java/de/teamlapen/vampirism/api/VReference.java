@@ -37,11 +37,11 @@ public class VReference {
     public static final EnchantmentCategory CROSSBOW_ENCHANTMENT = EnchantmentCategory.create("VAMPIRISM_CROSSBOW", input -> input instanceof IVampirismCrossbow);
     public static Fluid blood_fluid;
     /**
-     * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link EntityClassification#MONSTER}
+     * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link MobCategory#MONSTER}
      */
     public static MobCategory HUNTER_CREATURE_TYPE;
     /**
-     * Vampire creatures are of this creature type. But when they are counted for spawning they belong to {@link EntityClassification#MONSTER}
+     * Vampire creatures are of this creature type. But when they are counted for spawning they belong to {@link MobCategory#MONSTER}
      */
     public static MobCategory VAMPIRE_CREATURE_TYPE;
     /**

@@ -23,7 +23,6 @@ import de.teamlapen.vampirism.entity.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
-import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.util.VampireVillageData;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.world.entity.PathfinderMob;
@@ -54,6 +53,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
@@ -111,7 +111,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("level", getLevel());
         nbt.putInt("type", getEntityTextureType());
@@ -233,7 +233,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void die(DamageSource cause) {
+    public void die(@Nonnull DamageSource cause) {
         if (this.villageAttributes == null) {
             BadOmenEffect.handlePotentialBannerKill(cause.getEntity(), this);
         }
@@ -254,7 +254,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+    public SpawnGroupData finalizeSpawn(@Nonnull ServerLevelAccessor worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
         if ((reason == MobSpawnType.NATURAL || reason == MobSpawnType.STRUCTURE) && this.getRandom().nextInt(50) == 0) {
             this.setItemSlot(EquipmentSlot.HEAD, VampireVillageData.createBanner());
         }
@@ -325,7 +325,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public boolean hurt(DamageSource damageSource, float amount) {
+    public boolean hurt(@Nonnull DamageSource damageSource, float amount) {
         boolean flag = super.hurt(damageSource, amount);
         if (flag) angryTimer += ANGRY_TICKS_PER_ATTACK;
         return flag;
@@ -340,7 +340,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void remove(RemovalReason p_146834_) {
+    public void remove(@Nonnull RemovalReason p_146834_) {
         super.remove(p_146834_);
         if (advancedLeader != null) {
             advancedLeader.decreaseFollowerCount();
@@ -354,7 +354,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tagCompund) {
+    public void readAdditionalSaveData(@Nonnull CompoundTag tagCompund) {
         super.readAdditionalSaveData(tagCompund);
         if (tagCompund.contains("level")) {
             setLevel(tagCompund.getInt("level"));
@@ -386,16 +386,12 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Override
     public int suggestLevel(Difficulty d) {
-        switch (this.random.nextInt(5)) {
-            case 0:
-                return (int) (d.minPercLevel / 100F * MAX_LEVEL);
-            case 1:
-                return (int) (d.avgPercLevel / 100F * MAX_LEVEL);
-            case 2:
-                return (int) (d.maxPercLevel / 100F * MAX_LEVEL);
-            default:
-                return this.random.nextInt(MAX_LEVEL + 1);
-        }
+        return switch (this.random.nextInt(5)) {
+            case 0 -> (int) (d.minPercLevel / 100F * MAX_LEVEL);
+            case 1 -> (int) (d.avgPercLevel / 100F * MAX_LEVEL);
+            case 2 -> (int) (d.maxPercLevel / 100F * MAX_LEVEL);
+            default -> this.random.nextInt(MAX_LEVEL + 1);
+        };
     }
 
     @Override
@@ -422,7 +418,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    protected int getExperienceReward(Player player) {
+    protected int getExperienceReward(@Nonnull Player player) {
         return 6 + getLevel();
     }
 
@@ -431,8 +427,9 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         return iMob ? ModEntities.vampire_imob : ModEntities.vampire;
     }
 
+    @Nonnull
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+    protected InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) {
         if (this.isAlive() && !player.isShiftKeyDown()) {
             if (!level.isClientSide) {
                 int vampireLevel = FactionPlayerHandler.getOpt(player).map(fph -> fph.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0);
@@ -446,18 +443,11 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                                 if (!freeSlot) {
                                     player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_vampire.minion.no_free_slot"), true);
                                 } else {
-                                    String key;
-                                    switch (this.getRandom().nextInt(3)) {
-                                        case 0:
-                                            key = "text.vampirism.basic_vampire.minion.start_serving1";
-                                            break;
-                                        case 1:
-                                            key = "text.vampirism.basic_vampire.minion.start_serving2";
-                                            break;
-                                        default:
-                                            key = "text.vampirism.basic_vampire.minion.start_serving3";
-                                            break;
-                                    }
+                                    String key = switch (this.getRandom().nextInt(3)) {
+                                        case 0 -> "text.vampirism.basic_vampire.minion.start_serving1";
+                                        case 1 -> "text.vampirism.basic_vampire.minion.start_serving2";
+                                        default -> "text.vampirism.basic_vampire.minion.start_serving3";
+                                    };
                                     player.displayClientMessage(new TranslatableComponent(key), false);
                                     convertToMinion(player);
                                     if (!player.getAbilities().instabuild) heldItem.shrink(1);

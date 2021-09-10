@@ -15,6 +15,8 @@ import net.minecraft.world.damagesource.DamageSource;
 
 import net.minecraft.world.item.enchantment.Enchantment.Rarity;
 
+import javax.annotation.Nonnull;
+
 public class EnchantmentVampireSlayer extends Enchantment {
     public EnchantmentVampireSlayer(Rarity rarityIn) {
         super(rarityIn, EnchantmentCategory.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
@@ -22,12 +24,12 @@ public class EnchantmentVampireSlayer extends Enchantment {
     }
 
     @Override
-    public boolean checkCompatibility(Enchantment ench) {
+    public boolean checkCompatibility(@Nonnull Enchantment ench) {
         return super.checkCompatibility(ench) && !(ench instanceof DamageEnchantment);
     }
 
     @Override
-    public void doPostAttack(LivingEntity user, Entity target, int level) {
+    public void doPostAttack(@Nonnull LivingEntity user, @Nonnull Entity target, int level) {
         super.doPostAttack(user, target, level);
         //Cannot damage players until https://github.com/MinecraftForge/MinecraftForge/pull/4052
     }
@@ -38,12 +40,12 @@ public class EnchantmentVampireSlayer extends Enchantment {
     }
 
     @Override
-    public float getDamageBonus(int level, MobType creatureType) {
+    public float getDamageBonus(int level, @Nonnull MobType creatureType) {
         return creatureType == VReference.VAMPIRE_CREATURE_ATTRIBUTE ? level * 2.5F : 0;
     }
 
     @Override
-    public int getDamageProtection(int level, DamageSource source) {
+    public int getDamageProtection(int level, @Nonnull DamageSource source) {
         return super.getDamageProtection(level, source);
     }
 
@@ -62,6 +64,7 @@ public class EnchantmentVampireSlayer extends Enchantment {
         return 3 + (enchantmentLevel - 1) * 10;
     }
 
+    @Nonnull
     @Override
     protected String getOrCreateDescriptionId() {
         return "enchantment.vampirism.vampire_slayer";

@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.client.model;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.VillagerModel;
@@ -15,6 +13,8 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nonnull;
 
 /**
  * Villager Model with usable arms
@@ -46,7 +46,7 @@ public class VillagerWithArmsModel<T extends Mob> extends VillagerModel<T> imple
 
 
     @Override
-    public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(@Nonnull T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
         this.leftArm.setPos(4, 3, -1);
         this.rightArm.setPos(-4, 3, -1);
@@ -68,7 +68,7 @@ public class VillagerWithArmsModel<T extends Mob> extends VillagerModel<T> imple
     }
 
     @Override
-    public void translateToHand(HumanoidArm handSide, PoseStack matrixStack) {
+    public void translateToHand(@Nonnull HumanoidArm handSide, @Nonnull PoseStack matrixStack) {
         float f = handSide == HumanoidArm.RIGHT ? 1.0F : -1.0F;
         ModelPart arm = getArmForSide(handSide);
         arm.x += f;

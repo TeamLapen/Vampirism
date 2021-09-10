@@ -112,6 +112,7 @@ public class TagGenerator {
             super(generatorIn, REFERENCE.MODID, helper);
         }
 
+        @Nonnull
         @Override
         public String getName() {
             return REFERENCE.MODID + " " + super.getName();

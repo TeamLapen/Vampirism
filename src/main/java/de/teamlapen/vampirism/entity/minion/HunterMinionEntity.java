@@ -193,8 +193,9 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         this.updateAttributes();
     }
 
+    @Nonnull
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+    protected InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) {
         if (!this.level.isClientSide() && isLord(player) && minionData != null) {
             ItemStack heldItem = player.getItemInHand(hand);
             if (heldItem.getItem() instanceof MinionUpgradeItem && ((MinionUpgradeItem) heldItem.getItem()).getFaction() == this.getFaction()) {
@@ -392,30 +393,34 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             }
             assert entity instanceof HunterMinionEntity;
             switch (statId) {
-                case 0:
+                case 0 -> {
                     if (inventoryLevel >= MAX_LEVEL_INVENTORY) return false;
                     inventoryLevel++;
                     this.getInventory().setAvailableSize(getInventorySize());
                     return true;
-                case 1:
+                }
+                case 1 -> {
                     if (healthLevel >= MAX_LEVEL_HEALTH) return false;
                     healthLevel++;
                     ((HunterMinionEntity) entity).updateAttributes();
                     entity.setHealth(entity.getMaxHealth());
                     return true;
-                case 2:
+                }
+                case 2 -> {
                     if (strengthLevel >= MAX_LEVEL_STRENGTH) return false;
                     strengthLevel++;
                     ((HunterMinionEntity) entity).updateAttributes();
                     return true;
-                case 3:
+                }
+                case 3 -> {
                     if (resourceEfficiencyLevel >= MAX_LEVEL_RESOURCES) return false;
                     resourceEfficiencyLevel++;
                     return true;
-
-                default:
+                }
+                default -> {
                     LOGGER.warn("Cannot upgrade minion stat {} as it does not exist", statId);
                     return false;
+                }
             }
         }
 

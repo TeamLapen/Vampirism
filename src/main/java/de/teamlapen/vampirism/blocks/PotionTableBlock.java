@@ -25,6 +25,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class PotionTableBlock extends VampirismBlockContainer {
@@ -43,25 +44,27 @@ public class PotionTableBlock extends VampirismBlockContainer {
         super(regName, Properties.of(Material.METAL).strength(1f).noOcclusion());
     }
 
+    @Nonnull
     @Override
-    public RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(@Nonnull BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
         return new PotionTableBlockEntity(pos, state);
     }
 
 
+    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
         return shape;
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack stack) {
+    public void setPlacedBy(@Nonnull Level world, @Nonnull BlockPos blockPos, @Nonnull BlockState blockState, LivingEntity entity, @Nonnull ItemStack stack) {
         super.setPlacedBy(world, blockPos, blockState, entity, stack);
         BlockEntity tile = world.getBlockEntity(blockPos);
         if (entity instanceof Player && tile instanceof PotionTableBlockEntity) {
@@ -69,8 +72,9 @@ public class PotionTableBlock extends VampirismBlockContainer {
         }
     }
 
+    @Nonnull
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public InteractionResult use(@Nonnull BlockState state, Level worldIn, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand handIn, @Nonnull BlockHitResult hit) {
         if (!worldIn.isClientSide && player instanceof ServerPlayer) {
             BlockEntity tile = worldIn.getBlockEntity(pos);
             if (tile instanceof PotionTableBlockEntity) {
@@ -96,7 +100,7 @@ public class PotionTableBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
         return createTickerHelper(type, ModTiles.potion_table, PotionTableBlockEntity::tick);
     }
 }

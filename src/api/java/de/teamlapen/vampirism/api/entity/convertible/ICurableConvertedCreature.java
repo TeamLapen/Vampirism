@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.convertible;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.EntityType;
@@ -24,11 +25,12 @@ import java.util.UUID;
  * to implement this feature there are some requirements:<p>
  * - override {@link #startConverting} to save the conversion started and conversion time <p>
  * - create a {@link EntityDataAccessor<Boolean> } the is returned by {@link #getConvertingDataParam()}<p>
- * - call {@link #registerConvertingData(CreatureEntity)} in {@link MobEntity#registerData()}<p>
- * - call {@link #interactWithCureItem(PlayerEntity, ItemStack, CreatureEntity)} in {@link MobEntity#getEntityInteractionResult(PlayerEntity, Hand)} if the cure item is in the players hand<p>
- * - call {@link #handleSound(byte, CreatureEntity)} in {@link MobEntity#handleStatusUpdate(byte)}<p>
- * - check in {@link MobEntity#livingTick()} if the conversion timer has ended. If so call {@link #cureEntity(ServerWorld, CreatureEntity, EntityType)}<p>
+ * - call {@link #registerConvertingData(PathfinderMob)} in {@link net.minecraft.world.entity.Mob#registerData()}<p>
+ * - call {@link #interactWithCureItem(Player, ItemStack, PathfinderMob)} in {@link net.minecraft.world.entity.Mob#mobInteract(Player, InteractionHand)} if the cure item is in the players hand<p>
+ * - call {@link #handleSound(byte, PathfinderMob)} in {@link net.minecraft.world.entity.Mob#handleEntityEvent(byte)}<p>
+ * - check in {@link net.minecraft.world.entity.Mob#aiStep()} if the conversion timer has ended. If so call {@link #cureEntity(ServerLevel, PathfinderMob, EntityType)} <p>
  */
+@SuppressWarnings("JavadocReference")
 public interface ICurableConvertedCreature<T extends PathfinderMob> extends IConvertedCreature<T> {
 
     /**
@@ -78,7 +80,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
     EntityDataAccessor<Boolean> getConvertingDataParam();
 
     /**
-     * call in {@link Entity#handleStatusUpdate(byte)}
+     * call in {@link Entity#handleEntityEvent(byte)}
      *
      * @param id     the status id
      * @param entity the entity that extends this interface
@@ -95,7 +97,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
     }
 
     /**
-     * call in {@link MobEntity#getEntityInteractionResult(PlayerEntity, Hand)}
+     * call in {@link net.minecraft.world.entity.Mob#mobInteract(Player, InteractionHand)}
      *
      * @param player the interacting player
      * @param stack  the itemstack in the players hand
@@ -131,7 +133,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
     }
 
     /**
-     * called in {@link #interactWithCureItem(PlayerEntity, ItemStack, CreatureEntity)} override to save values to attributes
+     * called in {@link #interactWithCureItem(Player, ItemStack, PathfinderMob)} override to save values to attributes
      *
      * @param conversionStarterIn uuid of the player that started the curing process
      * @param conversionTimeIn    ticks the conversion should takes

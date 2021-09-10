@@ -41,8 +41,9 @@ public class MinionDamageSource extends EntityDamageSource {
         return this.playerEntity;
     }
 
+    @Nonnull
     @Override
-    public Component getLocalizedDeathMessage(LivingEntity entityLivingBaseIn) {
+    public Component getLocalizedDeathMessage(@Nonnull LivingEntity entityLivingBaseIn) {
         Component minionName = this.entity.getDisplayName();
         ItemStack itemstack = minionEntity.getMainHandItem();
         String s = "death.attack." + this.msgId;

@@ -81,9 +81,7 @@ public class BloodValueLoader extends SimplePreparableReloadListener<Collection<
      */
     protected <T> Map<ResourceLocation, Integer> loadBloodValuesFromReader(Reader r, String modId) throws IOException {
         Map<ResourceLocation, Integer> bloodValues = Maps.newConcurrentMap();
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(r);
+        try (BufferedReader br = new BufferedReader(r)) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.startsWith("#")) continue;
@@ -118,11 +116,6 @@ public class BloodValueLoader extends SimplePreparableReloadListener<Collection<
             throw e;
         } catch (Exception e) {
             LOGGER.error("Failed to load blood values from reader " + modId, e);
-        } finally {
-            if (br != null) {
-                br.close();
-            }
-            r.close();
         }
         return bloodValues;
 

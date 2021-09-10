@@ -2,7 +2,6 @@ package de.teamlapen.lib.lib.client.render;
 
 import de.teamlapen.lib.lib.entity.BasicAreaParticleCloud;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -17,6 +16,7 @@ public class RenderAreaParticleCloud extends EntityRenderer<BasicAreaParticleClo
         super(context);
     }
 
+    @Nonnull
     @Override
     public ResourceLocation getTextureLocation(@Nonnull BasicAreaParticleCloud entity) {
         return null;

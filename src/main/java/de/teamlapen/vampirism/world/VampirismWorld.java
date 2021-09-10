@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.world.IVampirismWorld;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
@@ -55,10 +54,6 @@ public class VampirismWorld implements IVampirismWorld {
             LOGGER.warn("Cannot get world capability. This might break mod functionality.", new Throwable().fillInStackTrace());
         }
         return opt;
-    }
-
-    public static void registerCapability() {
-        CapabilityManager.INSTANCE.register(IVampirismWorld.class);
     }
 
     public static ICapabilityProvider createNewCapability(final Level world) {
@@ -203,14 +198,7 @@ public class VampirismWorld implements IVampirismWorld {
 
     }
 
-    private static class Emitter {
-        final EnumStrength strength;
-        final ChunkPos[] pos;
-
-        private Emitter(EnumStrength strength, ChunkPos[] pos) {
-            this.strength = strength;
-            this.pos = pos;
-        }
+    private record Emitter(EnumStrength strength, ChunkPos[] pos) {
 
         @Override
         public String toString() {

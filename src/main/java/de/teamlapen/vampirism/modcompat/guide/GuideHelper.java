@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.modcompat.guide;
 
-import de.maxanier.guideapi.page.PageHolderWithLinks;
 import de.maxanier.guideapi.page.PageItemStack;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -8,14 +7,12 @@ import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 

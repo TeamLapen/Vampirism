@@ -55,6 +55,7 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
         return new ClientboundBlockEntityDataPacket(getBlockPos(), 1, getUpdateTag());
     }
 
+    @Nonnull
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag nbt = new CompoundTag();
@@ -68,7 +69,7 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
     }
 
     @Override
-    public void load(CompoundTag tag) {
+    public void load(@Nonnull CompoundTag tag) {
         super.load(tag);
         tank.readFromNBT(tag);
         cooldownProcess = tag.getInt("cooldown_process");
@@ -90,8 +91,9 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
         this.setActive(true);
     }
 
+    @Nonnull
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public CompoundTag save(@Nonnull CompoundTag tag) {
         tag = super.save(tag);
         tank.writeToNBT(tag);
         cooldownProcess = tag.getInt("cooldown_process");

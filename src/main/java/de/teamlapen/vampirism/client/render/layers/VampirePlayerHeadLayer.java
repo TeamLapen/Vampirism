@@ -5,20 +5,19 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
 public class VampirePlayerHeadLayer<T extends Player, Q extends HumanoidModel<T>> extends RenderLayer<T, Q> {
@@ -39,7 +38,7 @@ public class VampirePlayerHeadLayer<T extends Player, Q extends HumanoidModel<T>
     }
 
     @Override
-    public void render(PoseStack stack, MultiBufferSource iRenderTypeBuffer, int i, T player, float v, float v1, float v2, float v3, float v4, float v5) {
+    public void render(@Nonnull PoseStack stack, @Nonnull MultiBufferSource iRenderTypeBuffer, int i, @Nonnull T player, float v, float v1, float v2, float v3, float v4, float v5) {
         if (!VampirismConfig.CLIENT.renderVampireEyes.get() || !player.isAlive()) return;
         VampirismPlayerAttributes atts = VampirismPlayerAttributes.get(player);
         if (atts.vampireLevel > 0 && !atts.getVampSpecial().disguised && !player.isInvisible()) {

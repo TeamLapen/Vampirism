@@ -88,8 +88,6 @@ public class RegistryManager implements IInitListener {
                 }
                 ModRecipes.registerDefaultLiquidColors();
                 break;
-            case PROCESS_IMC:
-                break;
             default:
                 break;
         }

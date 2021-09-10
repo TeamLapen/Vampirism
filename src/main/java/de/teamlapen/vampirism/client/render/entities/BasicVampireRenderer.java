@@ -12,6 +12,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
 public class BasicVampireRenderer extends HumanoidMobRenderer<BasicVampireEntity, HumanoidModel<BasicVampireEntity>> {
 
@@ -22,6 +24,7 @@ public class BasicVampireRenderer extends HumanoidMobRenderer<BasicVampireEntity
         textures = Minecraft.getInstance().getResourceManager().listResources("textures/entity/vampire", s -> s.endsWith(".png")).stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())).toArray(ResourceLocation[]::new);
     }
 
+    @Nonnull
     @Override
     public ResourceLocation getTextureLocation(BasicVampireEntity entity) {
         return getVampireTexture(entity.getEntityTextureType());

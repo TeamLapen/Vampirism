@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nullable;
 
 /**
- * mixin interface that will be implemented in {@link EffectInstance}
+ * mixin interface that will be implemented in {@link MobEffectInstance}
  */
 public interface EffectInstanceWithSource {
 

@@ -44,9 +44,9 @@ import net.minecraftforge.fmlclient.gui.GuiUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.Color;
-import java.util.List;
 import java.util.*;
 
 import net.minecraft.ChatFormatting;
@@ -201,7 +201,7 @@ public class SkillsScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         if (!display) {
             super.render(stack, mouseX, mouseY, partialTicks);
             return;

@@ -40,7 +40,7 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
     }
 
     @Override
-    public boolean canPlaceItem(int slot, ItemStack stack) {
+    public boolean canPlaceItem(int slot, @Nonnull ItemStack stack) {
         if (slot < 0 || slot >= selectors.length) return false;
         return selectors[slot].validate(stack);
     }
@@ -55,6 +55,7 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
         return inventorySlots.size();
     }
 
+    @Nonnull
     @Override
     public ItemStack getItem(int index) {
         return inventorySlots.get(index);
@@ -66,32 +67,35 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
     }
 
     @Override
-    public void load(CompoundTag tagCompound) {
+    public void load(@Nonnull CompoundTag tagCompound) {
         super.load(tagCompound);
         inventorySlots.clear();
         ContainerHelper.loadAllItems(tagCompound, this.inventorySlots);
 
     }
 
+    @Nonnull
     @Override
     public ItemStack removeItem(int slot, int amt) {
         return ContainerHelper.removeItem(inventorySlots, slot, amt);
     }
 
+    @Nonnull
     @Override
     public ItemStack removeItemNoUpdate(int index) {
         return ContainerHelper.takeItem(inventorySlots, index);
     }
 
+    @Nonnull
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public CompoundTag save(@Nonnull CompoundTag compound) {
         super.save(compound);
         ContainerHelper.saveAllItems(compound, inventorySlots);
         return compound;
     }
 
     @Override
-    public void setItem(int slot, ItemStack stack) {
+    public void setItem(int slot, @Nonnull ItemStack stack) {
         inventorySlots.set(slot, stack);
         if (stack.getCount() > getMaxStackSize()) {
             stack.setCount(getMaxStackSize());
@@ -101,11 +105,11 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
     }
 
     @Override
-    public void startOpen(Player player) {
+    public void startOpen(@Nonnull Player player) {
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(@Nonnull Player player) {
         if (!hasLevel()) return false;
         if (this.level.getBlockEntity(this.worldPosition) != this) {
             return false;

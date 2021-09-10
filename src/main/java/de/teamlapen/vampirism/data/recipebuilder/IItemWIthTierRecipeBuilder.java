@@ -13,6 +13,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.resources.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Map;
@@ -32,11 +33,12 @@ public class IItemWIthTierRecipeBuilder extends ShapedRecipeBuilder {
 
     }
 
-    private class Result extends ShapedRecipeBuilder.Result {
+    private static class Result extends ShapedRecipeBuilder.Result {
         public Result(ResourceLocation idIn, Item resultIn, int countIn, String groupIn, List<String> patternIn, Map<Character, Ingredient> keyIn, Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn) {
             super(idIn, resultIn, countIn, groupIn, patternIn, keyIn, advancementBuilderIn, advancementIdIn);
         }
 
+        @Nonnull
         @Override
         public RecipeSerializer<?> getType() {
             return ModRecipes.repair_iitemwithtier;

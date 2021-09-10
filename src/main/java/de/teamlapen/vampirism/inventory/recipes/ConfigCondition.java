@@ -35,14 +35,11 @@ public class ConfigCondition implements ICondition {
     }
 
     private Supplier<Boolean> getTester(String option) {
-        switch (option) {
-            case "auto_convert":
-                return VampirismConfig.COMMON.autoConvertGlassBottles::get;
-            case "umbrella":
-                return VampirismConfig.COMMON.umbrella::get;
-            default:
-                throw new JsonSyntaxException("Unknown config option: " + option);
-        }
+        return switch (option) {
+            case "auto_convert" -> VampirismConfig.COMMON.autoConvertGlassBottles::get;
+            case "umbrella" -> VampirismConfig.COMMON.umbrella::get;
+            default -> throw new JsonSyntaxException("Unknown config option: " + option);
+        };
     }
 
     public static class Serializer implements IConditionSerializer<ConfigCondition> {

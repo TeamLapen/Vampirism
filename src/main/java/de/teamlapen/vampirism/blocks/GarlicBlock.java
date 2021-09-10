@@ -56,7 +56,7 @@ public class GarlicBlock extends CropBlock {
     }
 
     @Override
-    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+    public void entityInside(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Entity entity) {
         if (state.getValue(AGE) > 5 && Helper.isVampire(entity)) {
             DamageHandler.affectVampireGarlicDirect(entity instanceof Player ? VReference.VAMPIRE_FACTION.getPlayerCapability((Player) entity).orElseThrow(() -> new IllegalStateException("Capability cannot be null")) : (IVampire) entity, EnumStrength.WEAK);
         }
@@ -64,7 +64,7 @@ public class GarlicBlock extends CropBlock {
 
     @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
         return shape[state.getValue(this.getAgeProperty())];
     }
 

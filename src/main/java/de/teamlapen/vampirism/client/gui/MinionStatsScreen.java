@@ -19,6 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
 
 
     @Override
-    public void render(PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(mStack);
         this.renderGuiBackground(mStack);
         this.drawTitle(mStack);
@@ -104,7 +105,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
             MinionStatsScreen.this.renderTooltip(matrixStack, button.getMessage(), mouseX, mouseY);
         }, new TranslatableComponent("text.vampirism.minion_screen.reset_stats", ModItems.oblivion_potion.getDescription())) {
             @Override
-            public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+            public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
                 if (this.visible) {
                     this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
                     if (!this.active) {

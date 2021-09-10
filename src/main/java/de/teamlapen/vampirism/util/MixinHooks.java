@@ -11,7 +11,7 @@ public class MixinHooks {
     /**
      * JigsawPieces in this list only will be generated once per village
      * <p>
-     * holds {@link net.minecraft.world.gen.feature.jigsaw.JigsawPiece#toString()}'s
+     * holds {@link StructurePoolElement#toString()}'s
      */
     private static final List<String> onlyOneStructure = Lists.newArrayList();
     /**

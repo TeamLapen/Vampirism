@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -35,7 +36,7 @@ public class SkillNodeGenerator implements DataProvider {
     }
 
     @Override
-    public void run(HashCache cache) {
+    public void run(@Nonnull HashCache cache) {
         Path path = this.generator.getOutputFolder();
         Set<ResourceLocation> set = Sets.newHashSet();
         this.registerSkillNodes((node) -> {
@@ -47,6 +48,7 @@ public class SkillNodeGenerator implements DataProvider {
         });
     }
 
+    @Nonnull
     @Override
     public String getName() {
         return "Vampirism skillnode generator";

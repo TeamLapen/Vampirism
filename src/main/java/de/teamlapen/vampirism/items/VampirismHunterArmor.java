@@ -51,7 +51,7 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         Player player = VampirismMod.proxy.getClientPlayer();
         addFactionPoisonousToolTip(stack, worldIn, tooltip, flagIn, player);
@@ -91,6 +91,7 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
      */
     protected abstract int getDamageReduction(int slot, ItemStack stack);
 
+    @Nonnull
     @Override
     protected String getOrCreateDescriptionId() {
         return translation_key;

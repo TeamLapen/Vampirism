@@ -114,7 +114,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("level", getLevel());
         nbt.putInt("type", getHunterType());
@@ -156,7 +156,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public boolean doHurtTarget(Entity entity) {
+    public boolean doHurtTarget(@Nonnull Entity entity) {
         boolean flag = super.doHurtTarget(entity);
         if (flag && this.getMainHandItem().isEmpty()) {
             this.swing(InteractionHand.MAIN_HAND);  //Swing stake if nothing else is held
@@ -259,7 +259,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tagCompund) {
+    public void readAdditionalSaveData(@Nonnull CompoundTag tagCompund) {
         super.readAdditionalSaveData(tagCompund);
         if (tagCompund.contains("level")) {
             setLevel(tagCompund.getInt("level"));
@@ -316,15 +316,15 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         super.defineSynchedData();
         SupporterManager.Supporter supporter = SupporterManager.getInstance().getRandomHunter(random);
         this.getEntityData().define(LEVEL, -1);
-        this.getEntityData().define(TYPE, supporter.typeId);
-        this.getEntityData().define(NAME, supporter.senderName == null ? "none" : supporter.senderName);
-        this.getEntityData().define(TEXTURE, supporter.textureName == null ? "none" : supporter.textureName);
-        this.lootBookId = supporter.bookID;
+        this.getEntityData().define(TYPE, supporter.typeId());
+        this.getEntityData().define(NAME, supporter.senderName() == null ? "none" : supporter.senderName());
+        this.getEntityData().define(TEXTURE, supporter.textureName() == null ? "none" : supporter.textureName());
+        this.lootBookId = supporter.bookID();
 
     }
 
     @Override
-    protected int getExperienceReward(Player player) {
+    protected int getExperienceReward(@Nonnull Player player) {
         return 10 * (1 + getLevel());
     }
 
@@ -333,8 +333,9 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         return iMob ? ModEntities.advanced_hunter_imob : ModEntities.advanced_hunter;
     }
 
+    @Nonnull
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) { //processInteract
+    protected InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) { //processInteract
         if (hand == InteractionHand.MAIN_HAND && tryCureSanguinare(player)) return InteractionResult.SUCCESS;
         return super.mobInteract(player, hand);
     }

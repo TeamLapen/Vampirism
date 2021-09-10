@@ -5,10 +5,11 @@ import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.resources.ResourceLocation;
+
+import javax.annotation.Nonnull;
 
 
 public class DummyRenderer<T extends Entity> extends EntityRenderer<T> {
@@ -18,18 +19,19 @@ public class DummyRenderer<T extends Entity> extends EntityRenderer<T> {
         super(context);
     }
 
+    @Nonnull
     @Override
-    public ResourceLocation getTextureLocation(T entity) {
+    public ResourceLocation getTextureLocation(@Nonnull T entity) {
         return TEX; //Dummy anyway
     }
 
     @Override
-    public void render(T entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+    public void render(@Nonnull T entityIn, float entityYaw, float partialTicks, @Nonnull PoseStack matrixStackIn, @Nonnull MultiBufferSource bufferIn, int packedLightIn) {
 
     }
 
     @Override
-    public boolean shouldRender(T livingEntityIn, Frustum camera, double camX, double camY, double camZ) {
+    public boolean shouldRender(@Nonnull T livingEntityIn, @Nonnull Frustum camera, double camX, double camY, double camZ) {
         return false;
     }
 }

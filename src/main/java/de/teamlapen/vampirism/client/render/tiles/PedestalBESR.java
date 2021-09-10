@@ -9,13 +9,15 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.ItemStack;
 import com.mojang.math.Vector3f;
 
+import javax.annotation.Nonnull;
+
 public class PedestalBESR extends VampirismBESR<PedestalBlockEntity> {
     public PedestalBESR(BlockEntityRendererProvider.Context context) {
 
     }
 
     @Override
-    public void render(PedestalBlockEntity te, float partialTicks, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int i, int i1) {
+    public void render(PedestalBlockEntity te, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
         ItemStack stack = te.getStackForRender();
         if (!stack.isEmpty()) {
             matrixStack.pushPose();

@@ -17,6 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -38,12 +39,13 @@ public class AlchemicalFireItem extends VampirismItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add(new TranslatableComponent("item.vampirism.item_alchemical_fire.desc1").withStyle(ChatFormatting.GRAY));
         tooltip.add(new TranslatableComponent("item.vampirism.item_alchemical_fire.desc2").withStyle(ChatFormatting.GRAY));
     }
 
+    @Nonnull
     @Override
     public InteractionResult useOn(UseOnContext ctx) {
         BlockPos pos = ctx.getClickedPos().relative(ctx.getClickedFace());

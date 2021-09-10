@@ -17,10 +17,12 @@ public interface IWeaponTableRecipe extends Recipe<CraftingContainer> {
     /**
      * Returns an Item that is the result of this recipe
      */
-    default ItemStack assemble(CraftingContainer inv) {
+    @Nonnull
+    default ItemStack assemble(@Nonnull CraftingContainer inv) {
         return getResultItem().copy();
     }
 
+    @Nonnull
     default NonNullList<Ingredient> getIngredients() {
         return NonNullList.create();
     }

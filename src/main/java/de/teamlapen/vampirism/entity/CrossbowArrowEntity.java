@@ -63,7 +63,7 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.put("arrowStack", arrowStack.save(new CompoundTag()));
     }
@@ -72,6 +72,7 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
         return arrowStack.getItem() instanceof CrossbowArrowItem ? ((CrossbowArrowItem) arrowStack.getItem()).getType() : CrossbowArrowItem.EnumArrowType.NORMAL;
     }
 
+    @Nonnull
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -89,13 +90,13 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         arrowStack.deserializeNBT(compound.getCompound("arrowStack"));
     }
 
     @Override
-    protected void doPostHurtEffects(LivingEntity living) {
+    protected void doPostHurtEffects(@Nonnull LivingEntity living) {
         super.doPostHurtEffects(living);
         Item item = arrowStack.getItem();
         if (item instanceof IVampirismCrossbowArrow) {
@@ -113,7 +114,7 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
     }
 
     @Override
-    protected void onHitBlock(BlockHitResult blockRayTraceResult) { //onHitBlock
+    protected void onHitBlock(@Nonnull BlockHitResult blockRayTraceResult) { //onHitBlock
         Item item = arrowStack.getItem();
         if (item instanceof IVampirismCrossbowArrow) {
             ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, (blockRayTraceResult).getBlockPos(), this, getOwner());

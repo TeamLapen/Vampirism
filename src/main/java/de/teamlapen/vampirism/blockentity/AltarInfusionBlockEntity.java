@@ -202,7 +202,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public void load(CompoundTag tagCompound) {
+    public void load(@Nonnull CompoundTag tagCompound) {
         super.load(tagCompound);
         int tick = tagCompound.getInt("tick");
         //This is used on both client and server side and has to be prepared for the world not being available yet
@@ -222,8 +222,9 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         if (this.hasLevel()) this.load(pkt.getTag());
     }
 
+    @Nonnull
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public CompoundTag save(@Nonnull CompoundTag compound) {
         CompoundTag nbt = super.save(compound);
         nbt.putInt("tick", runningTick);
         if (player != null) {
@@ -234,7 +235,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
     /**
      * Starts the ritual.
-     * ONLY call if {@link AltarInfusionBlockEntity#canActivate(PlayerEntity, boolean)} returned 1
+     * ONLY call if {@link AltarInfusionBlockEntity#canActivate(Player, boolean)} returned 1
      */
     public void startRitual(Player player) {
         if (level == null) return;
@@ -333,11 +334,13 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         }
     }
 
+    @Nonnull
     @Override
-    protected AbstractContainerMenu createMenu(int id, Inventory player) {
+    protected AbstractContainerMenu createMenu(int id, @Nonnull Inventory player) {
         return new AltarInfusionContainer(id, player, this, level == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(level, worldPosition));
     }
 
+    @Nonnull
     @Override
     protected Component getDefaultName() {
         return new TranslatableComponent("tile.vampirism.altar_infusion");
@@ -351,7 +354,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     private boolean checkItemRequirements(Player player, boolean messagePlayer) {
         int newLevel = targetLevel;
         VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(newLevel);
-        ItemStack missing = InventoryHelper.checkItems(this, new Item[]{PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel), ModItems.human_heart, ModItems.vampire_book}, new int[]{requirements.blood, requirements.heart, requirements.vampireBook}, (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem && required instanceof PureBloodItem && ((PureBloodItem) supplied).getLevel() >= ((PureBloodItem) required).getLevel()));
+        ItemStack missing = InventoryHelper.checkItems(this, new Item[]{PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel()), ModItems.human_heart, ModItems.vampire_book}, new int[]{requirements.blood(), requirements.heart(), requirements.vampireBook()}, (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem && required instanceof PureBloodItem && ((PureBloodItem) supplied).getLevel() >= ((PureBloodItem) required).getLevel()));
         if (!missing.isEmpty()) {
             if (messagePlayer) {
                 Component item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : new TranslatableComponent(missing.getDescriptionId());
@@ -435,7 +438,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      */
     private void consumeItems() {
         VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(targetLevel);
-        InventoryHelper.removeItems(this, new int[]{requirements.blood, requirements.heart, requirements.vampireBook});
+        InventoryHelper.removeItems(this, new int[]{requirements.blood(), requirements.heart(), requirements.vampireBook()});
     }
 
     /**

@@ -10,6 +10,8 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 /**
  * This recipe copies the {@link net.minecraft.nbt.CompoundTag} from the first found {@link IItemWithTier} and inserts it into the manufacturing result with damage = 0
  *
@@ -21,8 +23,9 @@ public class ShapedItemWithTierRepair extends ShapedRecipe {
         super(shaped.getId(), shaped.getGroup(), shaped.getRecipeWidth(), shaped.getRecipeHeight(), shaped.getIngredients(), shaped.getResultItem());
     }
 
+    @Nonnull
     @Override
-    public ItemStack assemble(CraftingContainer inv) {
+    public ItemStack assemble(@Nonnull CraftingContainer inv) {
         ItemStack stack = null;
         search:
         for (int i = 0; i <= inv.getWidth(); ++i) {
@@ -41,24 +44,26 @@ public class ShapedItemWithTierRepair extends ShapedRecipe {
         return result;
     }
 
+    @Nonnull
     @Override
     public RecipeSerializer<?> getSerializer() {
         return ModRecipes.repair_iitemwithtier;
     }
 
     public static class Serializer extends ShapedRecipe.Serializer {
+        @Nonnull
         @Override
-        public ShapedRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+        public ShapedRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
             return new ShapedItemWithTierRepair(super.fromJson(recipeId, json));
         }
 
         @Override
-        public ShapedRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+        public ShapedRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull FriendlyByteBuf buffer) {
             return new ShapedItemWithTierRepair(super.fromNetwork(recipeId, buffer));
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buffer, ShapedRecipe recipe) {
+        public void toNetwork(@Nonnull FriendlyByteBuf buffer, @Nonnull ShapedRecipe recipe) {
             super.toNetwork(buffer, recipe);
         }
     }

@@ -26,6 +26,8 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.npc.Npc;
 
+import javax.annotation.Nonnull;
+
 /**
  * Base class for all vampire hunter
  */
@@ -56,7 +58,7 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
     }
 
     @Override
-    public void die(DamageSource cause) {
+    public void die(@Nonnull DamageSource cause) {
         super.die(cause);
         if (cause.getEntity() instanceof ServerPlayer && Helper.isVampire(((Player) cause.getEntity())) && this.getEffect(ModEffects.freeze) != null) {
             ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayer) cause.getEntity()), VampireActionTrigger.Action.KILL_FROZEN_HUNTER);

@@ -73,7 +73,7 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+    public SpawnGroupData finalizeSpawn(@Nonnull ServerLevelAccessor worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
         SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
         this.setBiomeType(VillagerType.byBiome(worldIn.getBiomeName(this.blockPosition())));
         return data;
@@ -113,6 +113,7 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
         this.entityData.define(BIOME_TYPE, Registry.VILLAGER_TYPE.getDefaultKey().toString());
     }
 
+    @Nonnull
     @Override
     protected InteractionResult mobInteract(@Nonnull Player playerEntity, @Nonnull InteractionHand hand) {
         if (this.level.isClientSide)

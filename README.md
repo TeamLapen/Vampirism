@@ -83,13 +83,13 @@ vampirism_version=1.7.12
 
 #### Rerun Gradle setup commands
 
-Please run the commands that you used to setup your development environment again. E.g. `gradlew`
+Please run the commands that you used to set up your development environment again. E.g. `gradlew`
 or `gradlew build --refresh-dependencies`
 Refresh/Restart your IDE afterwards.
 
 #### Run Vampirism in a deobfuscated environment
 
-Vampirism uses **mixins**. To be able to apply them in a deobfuscated environement using a different set of mappings (
+Vampirism uses **mixins**. To be able to apply them in a deobfuscated environment using a different set of mappings (
 from the one Vampirism uses) you have to enable remapping the refmap:
 Add
 
@@ -131,13 +131,13 @@ Provides abstract classes/default implementations/interfaces to simplify things 
 
 ## Setting up the development environment
 If you would like to compile your own versions or even contribute to Vampirism's development you need to setup a dev environment.
-The following example instructions will setup IntelliJ (Free community edition or Non-Free Ultimate edition). If you already have a setup or want to use another IDE, jump [here](#setting-up-vampirism-in-another-environment).
+The following example instructions will setup IntelliJ (Free community edition or Non-Free Ultimate edition). If you already have a setup or want to use another IDE, jump [here](#eclipse-or-other-ides).
 
 #### IntelliJ
 1. Make sure you have the Java **JDK** (minimum Java 8) as well as the IntelliJ IDE installed.
 2. If you want to contribute to the development (via pull requests), fork Vampirism on Github.
 3. (Optionally) Install Git, so you can clone the repository and push changes.
-4. Clone (`git clone https://github.com/TeamLapen/Vampirism`) or [download](https://github.com/TeamLapen/Vampirism/archive/master.zip) Vampirism to a new "Vampirism" folder.
+4. Clone (`git clone https://github.com/TeamLapen/Vampirism`) or [download](https://github.com/TeamLapen/Vampirism/archive/refs/heads/1.16.zip) Vampirism to a new "Vampirism" folder.
 5. In IntelliJ use `New...` -> `New from Version Control` -> Fill out repo, directory and name
 6. After cloning is done IntelliJ offers you to import a unlinked Gradle Project. Click this.
 7. Refresh the gradle project  

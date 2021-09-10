@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
@@ -31,6 +32,7 @@ public class GenericParticle extends TextureSheetParticle {
         this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(new ResourceLocation(texture.getNamespace(), "particle/" + texture.getPath())));
     }
 
+    @Nonnull
     @Override
     public ParticleRenderType getRenderType() {
         return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
@@ -40,7 +42,7 @@ public class GenericParticle extends TextureSheetParticle {
     public static class Factory implements ParticleProvider<GenericParticleData> {
         @Nullable
         @Override
-        public Particle createParticle(GenericParticleData typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle createParticle(GenericParticleData typeIn, @Nonnull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             return new GenericParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.getTexturePos(), typeIn.getMaxAge(), typeIn.getColor(), typeIn.getSpeed());
         }
     }

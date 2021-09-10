@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class ItemRequirement implements TaskRequirement.Requirement<Item> {
 
     @Nonnull

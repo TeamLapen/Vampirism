@@ -64,8 +64,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
             player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM, 1, 1);
             return false;
         }
-        if (player instanceof ServerPlayer) {
-            ServerPlayer playerMp = (ServerPlayer) player;
+        if (player instanceof ServerPlayer playerMp) {
             playerMp.disconnect();
             playerMp.teleportTo(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
         }

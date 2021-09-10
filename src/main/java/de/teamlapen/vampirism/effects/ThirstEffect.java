@@ -7,6 +7,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.effect.MobEffectCategory;
 
+import javax.annotation.Nonnull;
+
 
 public class ThirstEffect extends VampirismEffect {
     public ThirstEffect(String name, MobEffectCategory effectType, int potionColor) {
@@ -15,7 +17,7 @@ public class ThirstEffect extends VampirismEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public void applyEffectTick(@Nonnull LivingEntity entity, int amplifier) {
         if (entity instanceof Player && entity.isAlive()) {
             VampirePlayer.getOpt((Player) entity).ifPresent(v -> v.addExhaustion(0.005F * (amplifier + 1)));
         }

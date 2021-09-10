@@ -4,7 +4,6 @@ import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.world.MultiBossInfo;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.BossEvent;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;

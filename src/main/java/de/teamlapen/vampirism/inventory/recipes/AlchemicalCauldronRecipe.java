@@ -60,13 +60,14 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
         return skills;
     }
 
+    @Nonnull
     @Override
     public RecipeSerializer<?> getSerializer() {
         return ModRecipes.alchemical_cauldron;
     }
 
     @Override
-    public boolean matches(Container inv, Level worldIn) {
+    public boolean matches(Container inv, @Nonnull Level worldIn) {
         boolean match = this.ingredient.test(inv.getItem(1));
         AtomicBoolean fluidMatch = new AtomicBoolean(true);
         fluid.ifLeft((ingredient1 -> fluidMatch.set(ingredient1.test(inv.getItem(0)))));
@@ -92,8 +93,9 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
     }
 
     public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<AlchemicalCauldronRecipe> {
+        @Nonnull
         @Override
-        public AlchemicalCauldronRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+        public AlchemicalCauldronRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
             String group = GsonHelper.getAsString(json, "group", "");
             Ingredient ingredients = Ingredient.fromJson(GsonHelper.isArrayNode(json, "ingredient") ? GsonHelper.getAsJsonArray(json, "ingredient") : GsonHelper.getAsJsonObject(json, "ingredient"));
             int level = GsonHelper.getAsInt(json, "level", 1);
@@ -106,7 +108,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
         }
 
         @Override
-        public AlchemicalCauldronRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+        public AlchemicalCauldronRecipe fromNetwork(@Nonnull ResourceLocation recipeId, FriendlyByteBuf buffer) {
             String group = buffer.readUtf(32767);
             ItemStack result = buffer.readItem();
             Ingredient ingredient = Ingredient.fromNetwork(buffer);

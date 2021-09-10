@@ -11,6 +11,8 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 /**
  * Model for Basic Vampire Hunter
  */
@@ -52,7 +54,7 @@ public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<
     }
 
     @Override
-    public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(@Nonnull T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
         if (targetingRight) {
             this.rightArm.yRot = -0.1F + this.head.yRot;

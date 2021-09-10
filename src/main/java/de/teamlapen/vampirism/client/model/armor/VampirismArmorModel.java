@@ -4,13 +4,12 @@ import com.google.common.collect.Iterables;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 
 @OnlyIn(Dist.CLIENT)
@@ -27,6 +26,7 @@ public class VampirismArmorModel extends HumanoidModel<LivingEntity> {
         return Collections.emptyList();
     }
 
+    @Nonnull
     @Override
     protected final Iterable<ModelPart> bodyParts() {
         Iterable<ModelPart> b = getBodyModels();
@@ -42,6 +42,7 @@ public class VampirismArmorModel extends HumanoidModel<LivingEntity> {
         return Collections.emptyList();
     }
 
+    @Nonnull
     @Override
     protected final Iterable<ModelPart> headParts() {
         Iterable<ModelPart> l = getHeadModels();

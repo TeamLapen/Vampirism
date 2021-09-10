@@ -18,6 +18,8 @@ import net.minecraft.world.level.Level;
 
 import net.minecraft.world.item.Item.Properties;
 
+import javax.annotation.Nonnull;
+
 /**
  * Item which places the two med chair blocks
  */
@@ -29,6 +31,7 @@ public class MedChairItem extends VampirismItem {
     }
 
 
+    @Nonnull
     @Override
     public InteractionResult useOn(UseOnContext ctx) {
         if (ctx.getClickedFace() != Direction.UP) {

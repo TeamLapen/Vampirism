@@ -30,6 +30,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,8 +54,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     private static final int[] OUTPUT_SLOTS = new int[]{3, 4, 5, 0};
     private static final int[] OUTPUT_SLOTS_EXTENDED = new int[]{3, 4, 5, 6, 7, 0};
     private final BrewingCapabilities config = new BrewingCapabilities();
-    net.minecraftforge.common.util.LazyOptional<? extends net.minecraftforge.items.IItemHandler>[] handlers =
-            net.minecraftforge.items.wrapper.SidedInvWrapper.create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
+    private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
     @Nullable
     private UUID ownerID;
     @Nullable
@@ -64,24 +66,17 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     private int fuel;
     protected final ContainerData syncedProperties = new ContainerData() {
         public int get(int index) {
-            switch (index) {
-                case 0:
-                    return PotionTableBlockEntity.this.brewTime;
-                case 1:
-                    return PotionTableBlockEntity.this.fuel;
-                default:
-                    return 0;
-            }
+            return switch (index) {
+                case 0 -> PotionTableBlockEntity.this.brewTime;
+                case 1 -> PotionTableBlockEntity.this.fuel;
+                default -> 0;
+            };
         }
 
         public void set(int index, int value) {
             switch (index) {
-                case 0:
-                    PotionTableBlockEntity.this.brewTime = value;
-                    break;
-                case 1:
-                    PotionTableBlockEntity.this.fuel = value;
-                    break;
+                case 0 -> PotionTableBlockEntity.this.brewTime = value;
+                case 1 -> PotionTableBlockEntity.this.fuel = value;
             }
 
         }
@@ -96,7 +91,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     }
 
     @Override
-    public boolean canOpen(Player player) {
+    public boolean canOpen(@Nonnull Player player) {
         if (super.canOpen(player)) {
             return HunterPlayer.getOpt(player).map(hp -> {
                 if (hp.getLevel() > 0) {
@@ -122,7 +117,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     }
 
     @Override
-    public boolean canPlaceItem(int index, ItemStack stack) {
+    public boolean canPlaceItem(int index, @Nonnull ItemStack stack) {
         if (index == 2) {
             return net.minecraftforge.common.brewing.BrewingRecipeRegistry.isValidIngredient(stack);
         } else {
@@ -136,12 +131,12 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     }
 
     @Override
-    public boolean canPlaceItemThroughFace(int index, ItemStack itemStackIn, @Nullable Direction direction) {
+    public boolean canPlaceItemThroughFace(int index, @Nonnull ItemStack itemStackIn, @Nullable Direction direction) {
         return this.canPlaceItem(index, itemStackIn);
     }
 
     @Override
-    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
+    public boolean canTakeItemThroughFace(int index, @Nonnull ItemStack stack, @Nonnull Direction direction) {
         if (index == 1 || index == 2) {
             return stack.getItem() == Items.GLASS_BOTTLE;
         } else {
@@ -154,8 +149,9 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
         this.brewingItemStacks.clear();
     }
 
+    @Nonnull
     @Override
-    public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
+    public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(@Nonnull net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
         if (!this.remove && facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             if (facing == Direction.UP)
                 return handlers[0].cast();
@@ -183,8 +179,9 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
         return this.brewingItemStacks.size();
     }
 
+    @Nonnull
     @Override
-    public int[] getSlotsForFace(Direction side) {
+    public int[] getSlotsForFace(@Nonnull Direction side) {
         if (side == Direction.UP) {
             return SLOTS_FOR_UP;
         } else {
@@ -192,6 +189,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
         }
     }
 
+    @Nonnull
     @Override
     public ItemStack getItem(int index) {
         return index >= 0 && index < this.brewingItemStacks.size() ? this.brewingItemStacks.get(index) : ItemStack.EMPTY;
@@ -213,7 +211,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     }
 
     @Override
-    public void load(CompoundTag compound) {
+    public void load(@Nonnull CompoundTag compound) {
         super.load(compound);
         this.brewingItemStacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(compound, this.brewingItemStacks);
@@ -224,18 +222,21 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
         this.ownerName = compound.contains("owner_name") ? Component.Serializer.fromJsonLenient(compound.getString("owner_name")) : null;
     }
 
+    @Nonnull
     @Override
     public ItemStack removeItem(int index, int count) {
         return ContainerHelper.removeItem(this.brewingItemStacks, index, count);
     }
 
+    @Nonnull
     @Override
     public ItemStack removeItemNoUpdate(int index) {
         return ContainerHelper.takeItem(this.brewingItemStacks, index);
     }
 
+    @Nonnull
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public CompoundTag save(@Nonnull CompoundTag compound) {
         super.save(compound);
         compound.putShort("BrewTime", (short) this.brewTime);
         ContainerHelper.saveAllItems(compound, this.brewingItemStacks);
@@ -249,7 +250,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     }
 
     @Override
-    public void setItem(int index, ItemStack stack) {
+    public void setItem(int index, @Nonnull ItemStack stack) {
         if (index >= 0 && index < this.brewingItemStacks.size()) {
             this.brewingItemStacks.set(index, stack);
         }
@@ -265,12 +266,13 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     @Override
     public void setRemoved() {
         super.setRemoved();
-        for (int x = 0; x < handlers.length; x++)
-            handlers[x].invalidate();
+        for (LazyOptional<? extends IItemHandler> handler : handlers) {
+            handler.invalidate();
+        }
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(@Nonnull Player player) {
         if (!hasLevel()) return false;
         if (this.level.getBlockEntity(this.worldPosition) != this) {
             return false;
@@ -314,11 +316,13 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
 
     }
 
+    @Nonnull
     @Override
-    protected AbstractContainerMenu createMenu(int id, Inventory player) {
+    protected AbstractContainerMenu createMenu(int id, @Nonnull Inventory player) {
         return new PotionTableContainer(id, player, ContainerLevelAccess.create(this.level, this.getBlockPos()), this, this.config.multiTaskBrewing, syncedProperties);
     }
 
+    @Nonnull
     @Override
     protected Component getDefaultName() {
         return new TranslatableComponent("container.brewing");

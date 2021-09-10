@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.inventory.container;
 
-import com.google.common.base.Predicates;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.vampirism.VampirismMod;
@@ -12,16 +11,16 @@ import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.SelectMinionTaskPacket;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fmllegacy.network.IContainerFactory;
@@ -32,8 +31,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.Predicate;
-
-import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorInfo;
 
 public class MinionContainer extends InventoryContainer {
     private final static Logger LOGGER = LogManager.getLogger();
@@ -56,7 +53,7 @@ public class MinionContainer extends InventoryContainer {
 
         assert extraSlots == 9 || extraSlots == 12 || extraSlots == 15 : "Minion inventory has unexpected size";
         for (int i = 0; i < extraSlots; i++) {
-            slots[6 + i] = new SelectorInfo(Predicates.alwaysTrue(), 27 + 18 * (i / 3), 42 + 18 * (i % 3));
+            slots[6 + i] = new SelectorInfo(itemStack -> true, 27 + 18 * (i / 3), 42 + 18 * (i % 3));
         }
 
         return slots;
@@ -86,7 +83,7 @@ public class MinionContainer extends InventoryContainer {
     }
 
     @Override
-    public void removed(Player playerIn) {
+    public void removed(@Nonnull Player playerIn) {
         super.removed(playerIn);
         if (this.minionEntity.level.isClientSide()) {
             sendChanges();
@@ -121,7 +118,7 @@ public class MinionContainer extends InventoryContainer {
     }
 
     @Override
-    public boolean stillValid(Player playerIn) {
+    public boolean stillValid(@Nonnull Player playerIn) {
         return minionEntity.isAlive();
     }
 

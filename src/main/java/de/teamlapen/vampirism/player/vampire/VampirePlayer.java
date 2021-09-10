@@ -140,10 +140,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         return opt;
     }
 
-    public static void registerCapability() {
-        CapabilityManager.INSTANCE.register(IVampirePlayer.class);
-    }
-
     public static ICapabilityProvider createNewCapability(final Player player) {
         return new ICapabilitySerializable<CompoundTag>() {
 
@@ -288,23 +284,27 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (e instanceof LivingEntity) {
             if (e.distanceTo(player) <= player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1) {
                 feed_victim_bite_type = determineBiteType((LivingEntity) e);
-                if (feed_victim_bite_type == BITE_TYPE.NONE) {
-                } else if (feed_victim_bite_type == BITE_TYPE.HUNTER_CREATURE) {
-                    player.addEffect(new MobEffectInstance(ModEffects.poison, 60));
-                    if (player instanceof ServerPlayer) {
-                        ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayer) player, VampireActionTrigger.Action.POISONOUS_BITE);
-                    }
-                } else {
-                    if (feed_victim == -1) feedBiteTickCounter = 0;
+                switch (feed_victim_bite_type){
+                    case HUNTER_CREATURE:
+                        player.addEffect(new MobEffectInstance(ModEffects.poison, 60));
+                        if (player instanceof ServerPlayer) {
+                            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayer) player, VampireActionTrigger.Action.POISONOUS_BITE);
+                        }
+                        break;
+                    case NONE:
+                        break;
+                    default:
+                        if (feed_victim == -1) feedBiteTickCounter = 0;
 
-                    feed_victim = e.getId();
+                        feed_victim = e.getId();
 
-                    ((LivingEntity) e).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 7, false, false));
-                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 25, 4, false, false));
+                        ((LivingEntity) e).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 7, false, false));
+                        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 25, 4, false, false));
 
-                    CompoundTag nbt = new CompoundTag();
-                    nbt.putInt(KEY_FEED_VICTIM_ID, feed_victim);
-                    sync(nbt, true);
+                        CompoundTag nbt = new CompoundTag();
+                        nbt.putInt(KEY_FEED_VICTIM_ID, feed_victim);
+                        sync(nbt, true);
+                        break;
                 }
             } else {
                 LOGGER.warn("Entity sent by client is not in reach " + entityId);
@@ -334,6 +334,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         return true;
     }
 
+    @Nonnull
     public BITE_TYPE determineBiteType(LivingEntity entity) {
         if (entity instanceof IBiteableEntity) {
             if (((IBiteableEntity) entity).canBeBitten(this)) return BITE_TYPE.SUCK_BLOOD;
@@ -388,6 +389,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
     }
 
+    @Nonnull
     @Override
     public IActionHandler<IVampirePlayer> getActionHandler() {
         return actionHandler;
@@ -417,6 +419,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         return VampirismConfig.BALANCE.vpPlayerBloodSaturation.get().floatValue();
     }
 
+    @Nonnull
     @Override
     public IBloodStats getBloodStats() {
         return bloodStats;

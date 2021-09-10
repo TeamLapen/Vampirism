@@ -19,6 +19,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.BlockGetter;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -32,12 +33,12 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
         return level.isClientSide() ? null : createTickerHelper(type, ModTiles.sunscreen_beacon, SunscreenBeaconBlockEntity::serverTick);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced) {
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable BlockGetter world, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag advanced) {
         super.appendHoverText(stack, world, tooltip, advanced);
         tooltip.add(new TranslatableComponent(getDescriptionId() + ".tooltip1").withStyle(ChatFormatting.GRAY));
         if (world != null)
@@ -50,7 +51,7 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public float getDestroyProgress(BlockState state, Player player, BlockGetter worldIn, BlockPos pos) {
+    public float getDestroyProgress(@Nonnull BlockState state, @Nonnull Player player, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos) {
         return VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : -1;
     }
 
@@ -59,14 +60,15 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
         return VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : 3600000;
     }
 
+    @Nonnull
     @Override
-    public RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(@Nonnull BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
         return new SunscreenBeaconBlockEntity(pos, state);
     }
 }

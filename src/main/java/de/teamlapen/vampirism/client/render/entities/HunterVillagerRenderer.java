@@ -3,17 +3,17 @@ package de.teamlapen.vampirism.client.render.entities;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.VillagerWithArmsModel;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.VillagerProfessionLayer;
 import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
 public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerWithArmsModel<Villager>> {
@@ -27,8 +27,9 @@ public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerWithAr
         this.addLayer(new ItemInHandLayer<>(this));
     }
 
+    @Nonnull
     @Override
-    public ResourceLocation getTextureLocation(Villager villagerEntity) {
+    public ResourceLocation getTextureLocation(@Nonnull Villager villagerEntity) {
         return texture;
     }
 
@@ -36,7 +37,7 @@ public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerWithAr
      * Copied from VillagerRenderer
      */
     @Override
-    protected void scale(Villager entity, PoseStack matrixStack, float partialTickTime) {
+    protected void scale(Villager entity, @Nonnull PoseStack matrixStack, float partialTickTime) {
         float s = 0.9375F;
         if (entity.isBaby()) {
             s = (float) ((double) s * 0.5D);

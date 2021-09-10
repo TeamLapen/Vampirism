@@ -63,7 +63,7 @@ public class RecipesGenerator extends RecipeProvider {
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
+    protected void buildCraftingRecipes(@Nonnull Consumer<FinishedRecipe> consumer) {
         ItemLike hopper = Blocks.HOPPER;
         ItemLike cauldron = Blocks.CAULDRON;
         ItemLike black_dye = Items.BLACK_DYE;
@@ -332,14 +332,14 @@ public class RecipesGenerator extends RecipeProvider {
         }
 
         @Override
-        public void save(Consumer<FinishedRecipe> consumerIn, ResourceLocation id) {
+        public void save(Consumer<FinishedRecipe> consumerIn, @Nonnull ResourceLocation id) {
             this.ensureValid(id);
             this.advancement.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
             consumerIn.accept(new Result(id, this.count, this.group == null ? "" : this.group, this.rows, this.key, this.advancement, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItemCategory().getRecipeFolderName() + "/" + id.getPath()), this.stack));
 
         }
 
-        private class Result extends ShapedRecipeBuilder.Result {
+        private static class Result extends ShapedRecipeBuilder.Result {
             private final ItemStack stack;
 
             public Result(ResourceLocation idIn, int countIn, String groupIn, List<String> patternIn, Map<Character, Ingredient> keyIn, Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn, ItemStack stack) {
@@ -348,7 +348,7 @@ public class RecipesGenerator extends RecipeProvider {
             }
 
             @Override
-            public void serializeRecipeData(JsonObject json) {
+            public void serializeRecipeData(@Nonnull JsonObject json) {
                 super.serializeRecipeData(json);
                 JsonObject result = json.get("result").getAsJsonObject();
                 result.entrySet().clear();

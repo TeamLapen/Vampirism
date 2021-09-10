@@ -27,8 +27,9 @@ public class GarlicBreadItem extends VampirismItem implements IFactionExclusiveI
     }
 
 
+    @Nonnull
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(@Nonnull ItemStack stack, Level worldIn, @Nonnull LivingEntity entityLiving) {
         if (!worldIn.isClientSide) {
             entityLiving.curePotionEffects(stack);
         }

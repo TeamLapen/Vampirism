@@ -29,6 +29,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
@@ -58,7 +59,7 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void animateTick(BlockState state, Level world, BlockPos pos, Random rng) {
+    public void animateTick(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Random rng) {
         super.animateTick(state, world, pos, rng);
         if (state.getValue(LIQUID) == 2) {
             world.playLocalSound(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, ModSounds.boiling, SoundSource.BLOCKS, 0.05F, 1, false);
@@ -67,23 +68,24 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState p_153213_, BlockEntityType<T> p_153214_) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, @Nonnull BlockState p_153213_, @Nonnull BlockEntityType<T> p_153214_) {
         return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModTiles.alchemical_cauldron, AlchemicalCauldronBlockEntity::serverTick);
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
         return new AlchemicalCauldronBlockEntity(pos, state);
     }
 
+    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
         return cauldronShape;
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack stack) {
+    public void setPlacedBy(@Nonnull Level world, @Nonnull BlockPos blockPos, @Nonnull BlockState blockState, @Nonnull LivingEntity entity, @Nonnull ItemStack stack) {
         super.setPlacedBy(world, blockPos, blockState, entity, stack);
         BlockEntity tile = world.getBlockEntity(blockPos);
         if (entity instanceof Player && tile instanceof AlchemicalCauldronBlockEntity) {
@@ -97,7 +99,7 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     }
 
     @Override
-    protected void openContainer(Level world, BlockPos blockPos, Player playerEntity) {
+    protected void openContainer(Level world, @Nonnull BlockPos blockPos, @Nonnull Player playerEntity) {
         BlockEntity tile = world.getBlockEntity(blockPos);
         if (tile instanceof AlchemicalCauldronBlockEntity) {
             playerEntity.openMenu((MenuProvider) tile);

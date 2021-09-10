@@ -14,6 +14,8 @@ import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
 public class CloakModel extends VampirismArmorModel {
 
@@ -75,7 +77,7 @@ public class CloakModel extends VampirismArmorModel {
     }
 
     @Override
-    public void setupAnim(LivingEntity entity, float f, float f1, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(@Nonnull LivingEntity entity, float f, float f1, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(entity, f, f1, ageInTicks, netHeadYaw, headPitch);
         //Isn't use afaik
 

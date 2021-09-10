@@ -26,6 +26,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -65,12 +66,13 @@ public class PureBloodItem extends VampirismItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         tooltip.add(new TranslatableComponent("item.vampirism.pure_blood.purity").append(new TextComponent(": " + (level + 1 + "/" + COUNT))).withStyle(ChatFormatting.RED));
     }
 
+    @Nonnull
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(@Nonnull ItemStack stack, @Nonnull Level worldIn, @Nonnull LivingEntity entityLiving) {
         if (entityLiving instanceof Player) {
             VampirePlayer.getOpt((Player) entityLiving).ifPresent(v -> {
                 v.drinkBlood(50, 0.3f, false);
@@ -91,20 +93,22 @@ public class PureBloodItem extends VampirismItem {
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(@Nonnull ItemStack stack) {
         return 30;
     }
 
+    @Nonnull
     @Override
-    public UseAnim getUseAnimation(ItemStack stack) {
+    public UseAnim getUseAnimation(@Nonnull ItemStack stack) {
         return UseAnim.DRINK;
     }
 
+    @Nonnull
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@Nonnull Level worldIn, @Nonnull Player playerIn, @Nonnull InteractionHand handIn) {
         int playerLevel = VampirismAPI.getFactionPlayerHandler(playerIn).map(fph -> fph.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0);
         if (VampireLevelingConf.getInstance().isLevelValidForAltarInfusion(playerLevel)) {
-            int pureLevel = VampireLevelingConf.getInstance().getAltarInfusionRequirements(playerLevel).pureBloodLevel;
+            int pureLevel = VampireLevelingConf.getInstance().getAltarInfusionRequirements(playerLevel).pureBloodLevel();
             if (getLevel() < pureLevel) {
                 playerIn.startUsingItem(handIn);
             }

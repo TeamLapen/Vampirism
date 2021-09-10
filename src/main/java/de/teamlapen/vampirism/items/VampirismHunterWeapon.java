@@ -37,7 +37,7 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         if (getUsingFaction(stack) != null || getMinLevel(stack) > 0 || getRequiredSkill(stack) != null) {
             Player player = VampirismMod.proxy.getClientPlayer();
             addFactionLevelToolTip(stack, worldIn, tooltip, flagIn, player);

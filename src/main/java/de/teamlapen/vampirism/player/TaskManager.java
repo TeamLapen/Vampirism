@@ -386,29 +386,30 @@ public class TaskManager implements ITaskManager {
         int neededStat = 0;
         int actualStat = 0;
         switch (requirement.getType()) {
-            case STATS:
+            case STATS -> {
                 actualStat = this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) requirement.getStat(this.factionPlayer)));
                 neededStat = stats.get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
-                break;
-            case ENTITY:
+            }
+            case ENTITY -> {
                 actualStat = this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat(this.factionPlayer)));
                 neededStat = stats.get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
-                break;
-            case ENTITY_TAG:
+            }
+            case ENTITY_TAG -> {
                 //noinspection unchecked
                 for (EntityType<?> type : ((Tag.Named<EntityType<?>>) requirement.getStat(this.factionPlayer)).getValues()) {
                     actualStat += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
                 }
                 neededStat = stats.get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
-                break;
-            case ITEMS:
+            }
+            case ITEMS -> {
                 ItemStack stack = ((ItemRequirement) requirement).getItemStack();
                 neededStat = stack.getCount();
                 actualStat = this.player.getInventory().countItem(stack.getItem());
-                break;
-            case BOOLEAN:
+            }
+            case BOOLEAN -> {
                 if (!(Boolean) requirement.getStat(this.factionPlayer)) return 0;
                 return 1;
+            }
         }
         return Math.min(requirement.getAmount(this.factionPlayer) - (neededStat - actualStat), requirement.getAmount(this.factionPlayer));
     }

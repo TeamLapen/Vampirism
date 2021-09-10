@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 
@@ -21,7 +22,7 @@ public class DefendVillageGoal<T extends PathfinderMob & IVillageCaptureEntity> 
         this.creature = creature;
         this.entityPredicate = new TargetingConditions(true) {
             @Override
-            public boolean test(@Nullable LivingEntity attackEntity, LivingEntity targetEntity) {
+            public boolean test(@Nullable LivingEntity attackEntity, @Nonnull LivingEntity targetEntity) {
                 if (creature.getCaptureInfo() != null && creature.getCaptureInfo().shouldForceTargets() && getFollowDistance() > 0) {
                     range(-1.0D);
                 } else if (getFollowDistance() < 0) {

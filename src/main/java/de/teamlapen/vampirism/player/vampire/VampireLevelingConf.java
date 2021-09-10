@@ -78,15 +78,7 @@ public class VampireLevelingConf {
         return targetLevel >= INSPIRATION_MIN_LEVEL && targetLevel <= INSPIRATION_MAX_LEVEL;
     }
 
-    public static class AltarInfusionRequirements {
-        public final int blood, heart, vampireBook, pureBloodLevel;
-
-        AltarInfusionRequirements(int pureBloodLevel, int blood, int heart, int vampireBook) {
-            this.blood = blood;
-            this.heart = heart;
-            this.vampireBook = vampireBook;
-            this.pureBloodLevel = pureBloodLevel;
-        }
+    public record AltarInfusionRequirements(int pureBloodLevel, int blood, int heart, int vampireBook) {
 
     }
 

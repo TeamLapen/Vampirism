@@ -66,7 +66,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putBoolean("createHome", this.shouldCreateHome);
     }
@@ -80,7 +80,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurt(@Nonnull DamageSource source, float amount) {
         return super.hurt(source, amount);
     }
 
@@ -94,7 +94,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt) {
+    public void readAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         if (nbt.contains("createHome") && (this.shouldCreateHome = nbt.getBoolean("createHome"))) {
             if (this.getRestrictCenter().equals(BlockPos.ZERO)) {
@@ -119,8 +119,9 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
         return true;
     }
 
+    @Nonnull
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+    protected InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) {
         if (tryCureSanguinare(player)) return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(hand);
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
@@ -166,8 +167,8 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
 
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<Player>(this, Player.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<PathfinderMob>(this, PathfinderMob.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
     }
 
 

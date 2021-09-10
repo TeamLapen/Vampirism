@@ -150,16 +150,8 @@ public class SupporterManager {
 
     }
 
-    public static class Supporter {
-        @Nullable
-        public final String textureName;
-        @Nullable
-        public final String senderName;
-        public final int typeId;
-        @Nullable
-        public final String bookID;
-
-        private Supporter(@Nullable String senderName, @Nullable String textureName, int typeId, @Nullable String bookID) {
+    public record Supporter(@Nullable String senderName, @Nullable String textureName, int typeId, @Nullable String bookID) {
+        public Supporter(@Nullable String senderName, @Nullable String textureName, int typeId, @Nullable String bookID) {
             this.typeId = typeId;
             if (senderName != null && senderName.equals("null")) {
                 this.senderName = null;
@@ -168,11 +160,6 @@ public class SupporterManager {
             }
             this.textureName = textureName;
             this.bookID = bookID;
-        }
-
-        @Override
-        public String toString() {
-            return "[" + textureName + " as '" + senderName + "' (" + typeId + ")]";
         }
     }
 }

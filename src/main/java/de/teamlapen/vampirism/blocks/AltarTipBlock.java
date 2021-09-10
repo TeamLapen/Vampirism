@@ -9,9 +9,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+import javax.annotation.Nonnull;
 
 /**
  * Part of the Altar of Infusion structure
@@ -35,8 +35,9 @@ public class AltarTipBlock extends VampirismBlock {
 
 
 
+    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
         return tipShape;
     }
 

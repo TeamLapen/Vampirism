@@ -39,6 +39,7 @@ import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -80,7 +81,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         if (stack.hasTag() && stack.getTag().contains("fluid")) {
             CompoundTag nbt = stack.getTag().getCompound("fluid");
             FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
@@ -92,7 +93,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+    public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
         super.fillItemCategory(group, items);
         ItemStack stack = new ItemStack(this, 1);
         FluidStack fluid = new FluidStack(ModFluids.blood, BloodContainerBlockEntity.CAPACITY);
@@ -100,23 +101,25 @@ public class BloodContainerBlock extends VampirismBlockContainer {
         items.add(stack);
     }
 
+    @Nonnull
     @Override
-    public RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(@Nonnull BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
         return new BloodContainerBlockEntity(pos, state);
     }
 
+    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
         return containerShape;
     }
 
     @Override
-    public void playerDestroy(Level worldIn, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack heldStack) {
+    public void playerDestroy(@Nonnull Level worldIn, @Nonnull Player player, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable BlockEntity te, @Nonnull ItemStack heldStack) {
         ItemStack stack = new ItemStack(ModBlocks.blood_container, 1);
         if (te != null) {
             FluidStack fluid = ((BloodContainerBlockEntity) te).getFluid();
@@ -128,7 +131,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(@Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull BlockState state, LivingEntity placer, @Nonnull ItemStack stack) {
         super.setPlacedBy(worldIn, pos, state, placer, stack);
         FluidStack fluid = getFluidFromItemStack(stack);
         if (!stack.isEmpty()) {
@@ -141,8 +144,9 @@ public class BloodContainerBlock extends VampirismBlockContainer {
         }
     }
 
+    @Nonnull
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult use(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Player playerIn, @Nonnull InteractionHand hand, BlockHitResult hit) {
         if (!FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, hit.getDirection()) && playerIn.getItemInHand(hand).getItem().equals(Items.GLASS_BOTTLE) && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
             FluidUtil.getFluidHandler(worldIn, pos, hit.getDirection()).ifPresent((fluidHandler -> {
                 if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.blood)) {

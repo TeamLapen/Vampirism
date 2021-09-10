@@ -14,12 +14,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.IPlantable;
 
-import javax.annotation.Nullable;
 import java.util.Random;
 
 import net.minecraft.world.level.block.Blocks;
@@ -28,6 +26,8 @@ import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
+
+import javax.annotation.Nonnull;
 
 public class CursedEarthBlock extends VampirismBlock implements BonemealableBlock {
 
@@ -39,22 +39,22 @@ public class CursedEarthBlock extends VampirismBlock implements BonemealableBloc
     }
 
     @Override
-    public boolean isBonemealSuccess(Level worldIn, Random rand, BlockPos pos, BlockState state) {
+    public boolean isBonemealSuccess(@Nonnull Level worldIn, @Nonnull Random rand, @Nonnull BlockPos pos, @Nonnull BlockState state) {
         return true;
     }
 
     @Override
-    public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, Direction direction, IPlantable plantable) {
+    public boolean canSustainPlant(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull Direction direction, @Nonnull IPlantable plantable) {
         return plantable instanceof BushBlock || plantable.getPlantType(world, pos).equals(VReference.VAMPIRE_PLANT_TYPE);
     }
 
     @Override
-    public boolean isValidBonemealTarget(BlockGetter iBlockReader, BlockPos blockPos, BlockState iBlockState, boolean b) {
+    public boolean isValidBonemealTarget(@Nonnull BlockGetter iBlockReader, @Nonnull BlockPos blockPos, @Nonnull BlockState iBlockState, boolean b) {
         return true;
     }
 
     @Override
-    public void performBonemeal(ServerLevel worldIn, Random rand, BlockPos pos, BlockState state) {
+    public void performBonemeal(@Nonnull ServerLevel worldIn, @Nonnull Random rand, BlockPos pos, @Nonnull BlockState state) {
         BlockPos blockpos = pos.above();
 
         for (int i = 0; i < 128; ++i) {
@@ -94,8 +94,9 @@ public class CursedEarthBlock extends VampirismBlock implements BonemealableBloc
         }
     }
 
+    @Nonnull
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public InteractionResult use(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, Player player, @Nonnull InteractionHand handIn, @Nonnull BlockHitResult hit) {
         ItemStack heldItemStack = player.getItemInHand(handIn);
         Item heldItem = heldItemStack.getItem();
         if (heldItem instanceof HolyWaterBottleItem) {

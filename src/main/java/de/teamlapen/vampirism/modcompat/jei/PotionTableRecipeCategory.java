@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
@@ -21,6 +20,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 
@@ -49,7 +49,7 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
     }
 
     @Override
-    public void draw(JEIPotionMix recipe, PoseStack stack, double mouseX, double mouseY) {
+    public void draw(JEIPotionMix recipe, @Nonnull PoseStack stack, double mouseX, double mouseY) {
         this.blazeHeat.draw(stack, 1, 35);
         this.bubbles.draw(stack, 3, 4);
         this.arrow.draw(stack, 80, 10);
@@ -77,26 +77,31 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
         }
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return background;
     }
 
+    @Nonnull
     @Override
     public IDrawable getIcon() {
         return icon;
     }
 
+    @Nonnull
     @Override
     public Class<? extends JEIPotionMix> getRecipeClass() {
         return JEIPotionMix.class;
     }
 
+    @Nonnull
     @Override
     public Component getTitle() {
         return localizedName;
     }
 
+    @Nonnull
     @Override
     public ResourceLocation getUid() {
         return VampirismJEIPlugin.POTION_RECIPE_UID;
@@ -110,7 +115,7 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, JEIPotionMix extendedPotionMix, IIngredients iIngredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, @Nonnull JEIPotionMix extendedPotionMix, @Nonnull IIngredients iIngredients) {
         IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
         itemStacks.init(0, true, 38, 52);
         itemStacks.init(1, true, 60, 52);

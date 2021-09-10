@@ -27,7 +27,7 @@ public interface ILastingAction<T> extends IAction {
     /**
      * Called when the action is activated after a world reload.
      * Called SERVER SIDE ONLY.
-     * For client side check {@link ILastingAction#onActivatedClient(IFactionPlayer<IFactionPlayer<?>>)}
+     * For client side check {@link ILastingAction#onActivatedClient(Object)}
      */
     void onReActivated(T player);
 

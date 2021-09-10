@@ -112,7 +112,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("level", getLevel());
         nbt.putInt("type", getEyeType());
@@ -266,7 +266,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public boolean hurt(DamageSource damageSource, float amount) {
+    public boolean hurt(@Nonnull DamageSource damageSource, float amount) {
         boolean flag = super.hurt(damageSource, amount);
         if (flag && damageSource.getEntity() instanceof Player && this.random.nextInt(4) == 0) {
             this.addEffect(new MobEffectInstance(ModEffects.sunscreen, 150, 2));
@@ -275,7 +275,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tagCompund) {
+    public void readAdditionalSaveData(@Nonnull CompoundTag tagCompund) {
         super.readAdditionalSaveData(tagCompund);
         if (tagCompund.contains("level")) {
             setLevel(tagCompund.getInt("level"));
@@ -325,11 +325,11 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     protected void defineSynchedData() {
         super.defineSynchedData();
         SupporterManager.Supporter supporter = SupporterManager.getInstance().getRandomVampire(random);
-        lootBookId = supporter.bookID;
+        lootBookId = supporter.bookID();
         this.getEntityData().define(LEVEL, -1);
-        this.getEntityData().define(TYPE, supporter.typeId);
-        this.getEntityData().define(NAME, supporter.senderName == null ? "none" : supporter.senderName);
-        this.getEntityData().define(TEXTURE, supporter.textureName == null ? "none" : supporter.textureName);
+        this.getEntityData().define(TYPE, supporter.typeId());
+        this.getEntityData().define(NAME, supporter.senderName() == null ? "none" : supporter.senderName());
+        this.getEntityData().define(TEXTURE, supporter.textureName() == null ? "none" : supporter.textureName());
 
     }
 
@@ -339,7 +339,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    protected int getExperienceReward(Player player) {
+    protected int getExperienceReward(@Nonnull Player player) {
         return 10 * (1 + getLevel());
     }
 

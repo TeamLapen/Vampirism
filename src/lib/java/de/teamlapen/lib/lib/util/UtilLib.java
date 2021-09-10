@@ -1,44 +1,51 @@
 package de.teamlapen.lib.lib.util;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.*;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import com.mojang.math.Matrix4f;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.world.entity.ai.goal.GoalSelector;
-import net.minecraft.world.entity.ai.goal.WrappedGoal;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.Mth;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.util.*;
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
-import com.mojang.math.Matrix4f;
-import net.minecraft.world.phys.Vec2;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.NaturalSpawner;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.living.LivingConversionEvent;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.fmllegacy.ForgeI18n;
 import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
@@ -47,27 +54,9 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import net.minecraft.Util;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.SpawnPlacements;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.HitResult;
 
 /**
  * General Utility Class
@@ -125,7 +114,7 @@ public class UtilLib {
         float pitchAdjustedCosYaw = cosYaw * cosPitch;
         double distance = 500D;
         if (restriction == 0 && player instanceof ServerPlayer) {
-            distance = player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() - 0.5f;
+            distance = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue() - 0.5f;
         } else if (restriction > 0) {
             distance = restriction;
         }
@@ -221,7 +210,7 @@ public class UtilLib {
     }
 
     /**
-     * Call {@link MobEntity#onInitialSpawn(net.minecraft.world.IServerWorld, DifficultyInstance, SpawnReason, ILivingEntityData, CompoundNBT)} if applicable
+     * Call {@link Mob#finalizeSpawn(ServerLevelAccessor, DifficultyInstance, MobSpawnType, SpawnGroupData, CompoundTag)} if applicable
      */
     private static void onInitialSpawn(ServerLevel world, Entity e, MobSpawnType reason) {
         if (e instanceof Mob) {
@@ -412,9 +401,9 @@ public class UtilLib {
      * @param message
      */
     public static void sendMessageToAllExcept(Player player, Component message) {
-        for (Object o : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
+        for (Player o : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
             if (!o.equals(player)) {
-                ((Player) o).sendMessage(message, Util.NIL_UUID);
+                o.sendMessage(message, Util.NIL_UUID);
             }
         }
     }
@@ -464,7 +453,7 @@ public class UtilLib {
 
     /**
      * Stores the given pos with in the tagcompound using base.
-     * Can be retrieved again with {@link UtilLib#readPos(CompoundNBT, String)}
+     * Can be retrieved again with {@link UtilLib#readPos(CompoundTag, String)}
      *
      * @param nbt
      * @param base
@@ -477,7 +466,7 @@ public class UtilLib {
     }
 
     /**
-     * Reads a position written by {@link UtilLib#write(CompoundNBT, String, BlockPos)}.
+     * Reads a position written by {@link UtilLib#write(CompoundTag, String, BlockPos)}.
      *
      * @param nbt
      * @param base
@@ -508,7 +497,7 @@ public class UtilLib {
      * @param clazz
      * @return
      */
-    public static Predicate getPredicateForClass(final Class clazz) {
+    public static <T> Predicate<T> getPredicateForClass(final Class<T> clazz) {
         return clazz::isInstance;
     }
 
@@ -532,7 +521,7 @@ public class UtilLib {
     }
 
     private static ChunkPos isBiomeAt(ServerLevel world, int x, int z, List<Biome> biomes) {
-        BlockPos pos = (world.getChunkSource()).getGenerator().getBiomeSource().findBiomeHorizontal(x, world.getSeaLevel(), z, 32, b -> biomes.contains(b), new Random());//findBiomePosition
+        BlockPos pos = (world.getChunkSource()).getGenerator().getBiomeSource().findBiomeHorizontal(x, world.getSeaLevel(), z, 32, biomes::contains, new Random());//findBiomePosition
         if (pos != null) {
             return new ChunkPos(pos.getX() >> 4, pos.getZ() >> 4);
         }
@@ -615,15 +604,15 @@ public class UtilLib {
     }
 
     private static String replaceDeprecatedFormatter(String text) {
-        StringBuffer sb = null;
+        StringBuilder sb = null;
         Matcher m = oldFormatPattern.matcher(text);
         int i = 0;
         while (m.find()) {
-            String t = m.group();
+            String t;
             t = "{" + i++ + "}";
 
             if (sb == null) {
-                sb = new StringBuffer(text.length());
+                sb = new StringBuilder(text.length());
             }
             m.appendReplacement(sb, t);
         }
@@ -645,7 +634,7 @@ public class UtilLib {
      * @return
      */
     public static VoxelShape rotateShape(VoxelShape shape, RotationAmount rotation) {
-        Set<VoxelShape> rotatedShapes = new HashSet<VoxelShape>();
+        Set<VoxelShape> rotatedShapes = new HashSet<>();
 
         shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
             x1 = (x1 * 16) - 8;
@@ -790,6 +779,7 @@ public class UtilLib {
      * Creates a LinkedHashSet from the given elements.
      * It isn't a {@link SortedSet} but should keep the order anyway
      */
+    @SafeVarargs
     public static <T> Set<T> newSortedSet(T... elements) {
         Set<T> s = new LinkedHashSet<>();
         Collections.addAll(s, elements);

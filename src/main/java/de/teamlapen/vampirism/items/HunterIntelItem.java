@@ -15,6 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -73,7 +74,7 @@ public class HunterIntelItem extends VampirismItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltips, TooltipFlag flagIn) {
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltips, @Nonnull TooltipFlag flagIn) {
         if (this.tooltip == null) {
             this.tooltip = new TranslatableComponent("text.vampirism.for_up_to_level").append(new TextComponent(": " + (level + 5))).withStyle(ChatFormatting.RED);
         }
@@ -92,7 +93,7 @@ public class HunterIntelItem extends VampirismItem {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public boolean isFoil(ItemStack stack) {
+    public boolean isFoil(@Nonnull ItemStack stack) {
         return true;
     }
 }

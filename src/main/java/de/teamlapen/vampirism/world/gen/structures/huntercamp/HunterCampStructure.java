@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.world.gen.structures.huntercamp;
 import com.mojang.serialization.Codec;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;

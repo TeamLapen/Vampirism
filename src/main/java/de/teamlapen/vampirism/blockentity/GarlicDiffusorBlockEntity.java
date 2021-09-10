@@ -21,6 +21,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 
@@ -71,6 +72,7 @@ public class GarlicDiffusorBlockEntity extends BlockEntity {
         return bootTimer == 0;
     }
 
+    @Nonnull
     @Override
     public CompoundTag getUpdateTag() {
         return this.save(new CompoundTag());
@@ -84,7 +86,7 @@ public class GarlicDiffusorBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag compound) {
+    public void load(@Nonnull CompoundTag compound) {
         super.load(compound);
         r = compound.getInt("radius");
         defaultStrength = EnumStrength.getFromStrenght(compound.getInt("strength"));
@@ -118,8 +120,9 @@ public class GarlicDiffusorBlockEntity extends BlockEntity {
         this.setChanged();
     }
 
+    @Nonnull
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public CompoundTag save(@Nonnull CompoundTag compound) {
         super.save(compound);
         compound.putInt("radius", r);
         compound.putInt("strength", defaultStrength.getStrength());
@@ -141,18 +144,18 @@ public class GarlicDiffusorBlockEntity extends BlockEntity {
 
     public void setType(GarlicDiffusorBlock.Type type) {
         switch (type) {
-            case WEAK:
+            case WEAK -> {
                 r = VampirismConfig.BALANCE.hsGarlicDiffusorWeakDist.get();
                 defaultStrength = EnumStrength.WEAK;
-                break;
-            case NORMAL:
+            }
+            case NORMAL -> {
                 r = VampirismConfig.BALANCE.hsGarlicDiffusorNormalDist.get();
                 defaultStrength = EnumStrength.MEDIUM;
-                break;
-            case IMPROVED:
+            }
+            case IMPROVED -> {
                 defaultStrength = EnumStrength.MEDIUM;
                 r = VampirismConfig.BALANCE.hsGarlicDiffusorEnhancedDist.get();
-                break;
+            }
         }
         strength = defaultStrength;
     }

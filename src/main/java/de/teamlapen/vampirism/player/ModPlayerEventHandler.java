@@ -119,15 +119,14 @@ public class ModPlayerEventHandler {
             if (totem instanceof TotemBlockEntity && ((TotemBlockEntity) totem).getControllingFaction() != null && VampirismPlayerAttributes.get(event.getPlayer()).faction != ((TotemBlockEntity) totem).getControllingFaction()) {
                 event.setCanceled(true);
                 event.getPlayer().displayClientMessage(new TranslatableComponent("text.vampirism.village.totem_destroy.fail_totem_faction"), true);
-                if (!positions.isEmpty() && event.getPlayer() instanceof ServerPlayer) {
-                    ServerPlayer playerMP = (ServerPlayer) event.getPlayer();
+                if (!positions.isEmpty() && event.getPlayer() instanceof ServerPlayer player) {
                     positions.forEach(pos -> {
-                        playerMP.connection.send(new ClientboundBlockUpdatePacket(event.getWorld(), pos));
+                        player.connection.send(new ClientboundBlockUpdatePacket(event.getWorld(), pos));
                         BlockEntity tileentity = event.getWorld().getBlockEntity(pos);
                         if (tileentity != null) {
                             Packet<?> pkt = tileentity.getUpdatePacket();
                             if (pkt != null) {
-                                playerMP.connection.send(pkt);
+                                player.connection.send(pkt);
                             }
                         }
                     });
@@ -232,8 +231,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onItemUse(LivingEntityUseItemEvent.Start event) {
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
+        if (event.getEntity() instanceof Player player) {
             if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isCannotInteract()) {
                 event.setCanceled(true);
             }
@@ -449,9 +447,8 @@ public class ModPlayerEventHandler {
     private boolean checkItemUsePerm(ItemStack stack, Player player) {
 
         boolean message = !player.getCommandSenderWorld().isClientSide;
-        if (!stack.isEmpty() && stack.getItem() instanceof IFactionLevelItem) {
+        if (!stack.isEmpty() && stack.getItem() instanceof IFactionLevelItem item) {
             if (!player.isAlive()) return false;
-            IFactionLevelItem item = (IFactionLevelItem) stack.getItem();
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             IPlayableFaction usingFaction = item.getUsingFaction(stack);
             ISkill requiredSkill = item.getRequiredSkill(stack);

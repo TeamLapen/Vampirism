@@ -3,7 +3,6 @@ package de.teamlapen.lib.lib.client.gui.widget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.LIBREFERENCE;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -20,8 +19,8 @@ import java.util.function.Supplier;
 
 /**
  * This Widget does everything by itself except:
- * - {@link #mouseDragged(double, double, int, double, double)} must be called in {@link net.minecraft.client.gui.screen.Screen#mouseDragged(double, double, int, double, double)}
- * - {@link #renderToolTip(MatrixStack, int, int)} must be called in {@link net.minecraft.client.gui.screen.Screen#render(MatrixStack, int, int, float)}
+ * - {@link #mouseDragged(double, double, int, double, double)} must be called in {@link net.minecraft.client.gui.screens.Screen#mouseDragged(double, double, int, double, double)}
+ * - {@link #renderToolTip(PoseStack, int, int)} must be called in {@link net.minecraft.client.gui.screens.Screen#render(PoseStack, int, int, float)}
  */
 public class ScrollableListWidget<T> extends ExtendedButton {
 
@@ -136,7 +135,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (!this.visible) return;
 
         matrixStack.pushPose();
@@ -174,7 +173,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
     }
 
     @Override
-    public void renderToolTip(PoseStack matrixStack, int mouseX, int mouseY) {
+    public void renderToolTip(@Nonnull PoseStack matrixStack, int mouseX, int mouseY) {
         if (mouseX > this.x && mouseX < this.x + this.width && mouseY > this.y && mouseY < this.y + this.height + 1) {
 
             int itemHeight = this.itemHeight; // only 1 pixel between items
@@ -292,7 +291,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
         }
 
         /**
-         * checks whether the mouse is over the element or not and calls {@link #renderToolTip(MatrixStack, int, int, int, int, int, int, int, float)} appropriately
+         * checks whether the mouse is over the element or not and calls {@link #renderToolTip(PoseStack, int, int, int, int, int, int, int, float)} appropriately
          *
          * @param x          x start position of the list item
          * @param y          y start position of the list item

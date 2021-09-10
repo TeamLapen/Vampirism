@@ -51,7 +51,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.Util;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.DifficultyInstance;
@@ -140,7 +139,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("level", getLevel());
         nbt.putBoolean("crossbow", isCrossbowInMainhand());
@@ -262,7 +261,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public void die(DamageSource cause) {
+    public void die(@Nonnull DamageSource cause) {
         if (this.villageAttributes == null) {
             BadOmenEffect.handlePotentialBannerKill(cause.getEntity(), this);
         }
@@ -281,7 +280,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public boolean doHurtTarget(Entity entity) {
+    public boolean doHurtTarget(@Nonnull Entity entity) {
         boolean flag = super.doHurtTarget(entity);
         if (flag && this.getMainHandItem().isEmpty()) {
             this.swing(InteractionHand.MAIN_HAND);  //Swing stake if nothing else is held
@@ -291,7 +290,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+    public SpawnGroupData finalizeSpawn(@Nonnull ServerLevelAccessor worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
         if (!(reason == MobSpawnType.SPAWN_EGG || reason == MobSpawnType.BUCKET || reason == MobSpawnType.CONVERSION || reason == MobSpawnType.COMMAND) && this.getRandom().nextInt(50) == 0) {
             this.setItemSlot(EquipmentSlot.HEAD, HunterVillageData.createBanner());
         }
@@ -397,7 +396,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tagCompund) {
+    public void readAdditionalSaveData(@Nonnull CompoundTag tagCompund) {
         super.readAdditionalSaveData(tagCompund);
         if (tagCompund.contains("level")) {
             setLevel(tagCompund.getInt("level"));
@@ -447,16 +446,12 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     @Override
     public int suggestLevel(Difficulty d) {
-        switch (this.random.nextInt(6)) {
-            case 0:
-                return (int) (d.minPercLevel / 100F * MAX_LEVEL);
-            case 1:
-                return (int) (d.avgPercLevel / 100F * MAX_LEVEL);
-            case 2:
-                return (int) (d.maxPercLevel / 100F * MAX_LEVEL);
-            default:
-                return this.random.nextInt(MAX_LEVEL + 1);
-        }
+        return switch (this.random.nextInt(6)) {
+            case 0 -> (int) (d.minPercLevel / 100F * MAX_LEVEL);
+            case 1 -> (int) (d.avgPercLevel / 100F * MAX_LEVEL);
+            case 2 -> (int) (d.maxPercLevel / 100F * MAX_LEVEL);
+            default -> this.random.nextInt(MAX_LEVEL + 1);
+        };
 
     }
 
@@ -470,7 +465,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    protected int getExperienceReward(Player player) {
+    protected int getExperienceReward(@Nonnull Player player) {
         return 6 + getLevel();
     }
 
@@ -480,8 +475,9 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         return iMob ? ModEntities.hunter_imob : ModEntities.hunter;
     }
 
+    @Nonnull
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) { //processInteract
+    protected InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) { //processInteract
         if (hand == InteractionHand.MAIN_HAND && tryCureSanguinare(player)) return InteractionResult.SUCCESS;
         int hunterLevel = VampirismPlayerAttributes.get(player).hunterLevel;
         if (this.isAlive() && !player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {

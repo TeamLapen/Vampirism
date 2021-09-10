@@ -23,6 +23,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.EffectRenderer;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -58,7 +59,7 @@ public class SanguinareEffect extends VampirismEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public void applyEffectTick(@Nonnull LivingEntity entity, int amplifier) {
         if (entity.level.isClientSide || !entity.isAlive()) return;
         if (entity instanceof PathfinderMob) {
             ExtendedCreature.getSafe(entity).ifPresent(IExtendedCreatureVampirism::makeVampire);

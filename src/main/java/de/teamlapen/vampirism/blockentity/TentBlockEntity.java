@@ -49,7 +49,7 @@ public class TentBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag nbt) {
+    public void load(@Nonnull CompoundTag nbt) {
         super.load(nbt);
         if (nbt.contains("spawner_logic_1")) {
             spawnerLogicHunter.readFromNbt(nbt.getCompound("spawner_logic_1"));
@@ -65,7 +65,7 @@ public class TentBlockEntity extends BlockEntity {
 
     @Nonnull
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public CompoundTag save(@Nonnull CompoundTag compound) {
         CompoundTag nbt = super.save(compound);
         CompoundTag logic1 = new CompoundTag();
         CompoundTag logic2 = new CompoundTag();

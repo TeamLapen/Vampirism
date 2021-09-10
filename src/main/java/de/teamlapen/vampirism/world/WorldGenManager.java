@@ -19,7 +19,7 @@ public class WorldGenManager implements IWorldGenManager {
     private @Nonnull
     final Map<ResourceLocation, Set<ResourceLocation>> ignoreStructureBiome = Maps.newHashMap();
     /**
-     * stores structures {@link ResourceLocation} -> set of {@link Biome.Category}s in which the structure shouldn't be generated
+     * stores structures {@link ResourceLocation} -> set of {@link Biome.BiomeCategory}s in which the structure shouldn't be generated
      */
     private @Nonnull
     final Map<ResourceLocation, Set<Biome.BiomeCategory>> ignoreStructureBiomeCategory = Maps.newHashMap();

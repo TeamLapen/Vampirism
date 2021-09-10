@@ -195,7 +195,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(@Nonnull Player player) {
         return true;
     }
 

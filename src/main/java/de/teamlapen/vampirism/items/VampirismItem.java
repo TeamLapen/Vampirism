@@ -6,6 +6,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
 
+import javax.annotation.Nonnull;
+
 /**
  * Base class for most of Vampirism's tileInventory
  */
@@ -24,6 +26,7 @@ public class VampirismItem extends Item {
         setRegistryName(REFERENCE.MODID, regName);
     }
 
+    @Nonnull
     @Override
     protected String getOrCreateDescriptionId() {
         if (this.translation_key == null) {

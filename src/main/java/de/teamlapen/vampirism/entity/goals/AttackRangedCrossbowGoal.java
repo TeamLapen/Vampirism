@@ -7,7 +7,6 @@ import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.util.Mth;
 
 import javax.annotation.Nonnull;
 import java.util.EnumSet;

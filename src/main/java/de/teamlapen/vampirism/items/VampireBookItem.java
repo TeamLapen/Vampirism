@@ -20,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
@@ -55,7 +56,7 @@ public class VampireBookItem extends VampirismItem {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         if (stack.hasTag()) {
             CompoundTag compoundnbt = stack.getTag();
             String s = compoundnbt.getString("author");
@@ -69,12 +70,13 @@ public class VampireBookItem extends VampirismItem {
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+    public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
         if (allowdedIn(group)) {
             items.add(VampireBookManager.getInstance().getRandomBook(new Random()));
         }
     }
 
+    @Nonnull
     @Override
     public Component getName(ItemStack stack) {
         if (stack.hasTag()) {
@@ -88,12 +90,13 @@ public class VampireBookItem extends VampirismItem {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public boolean isFoil(ItemStack stack) {
+    public boolean isFoil(@Nonnull ItemStack stack) {
         return true;
     }
 
+    @Nonnull
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (!worldIn.isClientSide && playerIn instanceof ServerPlayer) {
             this.resolveContents(stack, playerIn);
@@ -113,7 +116,7 @@ public class VampireBookItem extends VampirismItem {
                     for (int slot = 0; slot < nbttaglist.size(); ++slot) {
                         String s = nbttaglist.getString(slot);
 
-                        Object lvt_7_1_;
+                        Component lvt_7_1_;
                         try {
                             Component var11 = Component.Serializer.fromJsonLenient(s);
                             lvt_7_1_ = ComponentUtils.updateForEntity(null, var11, player, 0);
@@ -121,7 +124,7 @@ public class VampireBookItem extends VampirismItem {
                             lvt_7_1_ = new TextComponent(s);
                         }
 
-                        nbttaglist.set(slot, StringTag.valueOf(Component.Serializer.toJson((Component) lvt_7_1_)));
+                        nbttaglist.set(slot, StringTag.valueOf(Component.Serializer.toJson(lvt_7_1_)));
                     }
 
                     nbttagcompound.put("pages", nbttaglist);

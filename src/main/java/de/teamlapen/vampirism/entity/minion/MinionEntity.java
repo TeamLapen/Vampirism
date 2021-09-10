@@ -132,7 +132,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         if (isValid()) {
             this.getLordID().ifPresent(id -> nbt.putUUID("lord", id));
@@ -194,7 +194,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * TODO 1.18
      */
     @Override
-    public boolean doHurtTarget(Entity entityIn) {
+    public boolean doHurtTarget(@Nonnull Entity entityIn) {
         float f = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
         float f1 = (float) this.getAttributeValue(Attributes.ATTACK_KNOCKBACK);
         if (entityIn instanceof LivingEntity) {
@@ -215,9 +215,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             }
             ItemStack itemstack = this.getMainHandItem();
 
-            if (entityIn instanceof Player) {
-                Player playerentity = (Player) entityIn;
-                this.maybeDisableShield(playerentity, this.getMainHandItem(), playerentity.isUsingItem() ? playerentity.getUseItem() : ItemStack.EMPTY);
+            if (entityIn instanceof Player player) {
+                this.maybeDisableShield(player, this.getMainHandItem(), player.isUsingItem() ? player.getUseItem() : ItemStack.EMPTY);
             }
             if (!this.level.isClientSide && !itemstack.isEmpty() && entityIn instanceof LivingEntity) {
                 itemstack.getItem().hurtEnemy(itemstack, (LivingEntity) entityIn, this);
@@ -268,6 +267,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return Optional.ofNullable(interactingPlayer);
     }
 
+    @Nonnull
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -372,18 +372,15 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     @Nonnull
     @Override
     public ItemStack getItemBySlot(@Nonnull EquipmentSlot slotIn) {
-        switch (slotIn.getType()) {
-            case HAND:
-                return getInventory().map(IMinionInventory::getInventoryHands).map(i -> i.get(slotIn.getIndex())).orElse(ItemStack.EMPTY);
-            case ARMOR:
-                return getInventory().map(IMinionInventory::getInventoryArmor).map(i -> i.get(slotIn.getIndex())).orElse(ItemStack.EMPTY);
-            default:
-                return ItemStack.EMPTY;
-        }
+        return switch (slotIn.getType()) {
+            case HAND -> getInventory().map(IMinionInventory::getInventoryHands).map(i -> i.get(slotIn.getIndex())).orElse(ItemStack.EMPTY);
+            case ARMOR -> getInventory().map(IMinionInventory::getInventoryArmor).map(i -> i.get(slotIn.getIndex())).orElse(ItemStack.EMPTY);
+            default -> ItemStack.EMPTY;
+        };
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt) {
+    public void readAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         UUID id = nbt.hasUUID("lord") ? nbt.getUUID("lord") : null;
         if (id != null && level instanceof ServerLevel) {
@@ -428,7 +425,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void remove(RemovalReason p_146834_) {
+    public void remove(@Nonnull RemovalReason p_146834_) {
         super.remove(p_146834_);
         if (playerMinionController != null) {
             playerMinionController.checkInMinion(this.minionId, this.token);
@@ -441,11 +438,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     public void setItemSlot(@Nonnull EquipmentSlot slotIn, @Nonnull ItemStack stack) {
         if (minionData == null) return;
         switch (slotIn.getType()) {
-            case HAND:
-                getInventory().map(IMinionInventory::getInventoryHands).ifPresent(i -> i.set(slotIn.getIndex(), stack));
-                break;
-            case ARMOR:
-                getInventory().map(IMinionInventory::getInventoryArmor).ifPresent(i -> i.set(slotIn.getIndex(), stack));
+            case HAND -> getInventory().map(IMinionInventory::getInventoryHands).ifPresent(i -> i.set(slotIn.getIndex(), stack));
+            case ARMOR -> getInventory().map(IMinionInventory::getInventoryArmor).ifPresent(i -> i.set(slotIn.getIndex(), stack));
         }
     }
 
@@ -529,7 +523,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    protected void hurtArmor(DamageSource damageSource, float damage) {
+    protected void hurtArmor(@Nonnull DamageSource damageSource, float damage) {
         if (this.minionData != null) this.minionData.getInventory().damageArmor(damageSource, damage, this);
     }
 
@@ -549,8 +543,9 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     protected void onMinionDataReceived(@Nonnull T data) {
     }
 
+    @Nonnull
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+    protected InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) {
         if (isLord(player)) {
             if (player instanceof ServerPlayer) {
                 NetworkHooks.openGui((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this), new TranslatableComponent("text.vampirism.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(new TextComponent("Minion")))), buf -> buf.writeVarInt(this.getId()));
@@ -583,7 +578,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * Checkout the minion data from the playerMinionController (if available).
      * Call as early as possible but only if being added to world
      * Can be called from different locations. Only executes if not checkout already.
-     * Happens either in {@link Entity#onAddedToWorld()} or if tracking starts before during {@link MinionEntity#writeFullUpdateToNBT(CompoundNBT)}
+     * Happens either in {@link Entity#onAddedToWorld()} or if tracking starts before during {@link MinionEntity#writeFullUpdateToNBT(CompoundTag)}
      */
     private void checkoutMinionData() {
         if (playerMinionController != null && minionData == null) {

@@ -28,7 +28,7 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
 
     /**
      * Vampires receive increased damage from fire.
-     * This method will be used to convert {@link net.minecraft.util.DamageSource#IN_FIRE} and {@link net.minecraft.util.DamageSource#ON_FIRE} to {@link de.teamlapen.vampirism.api.VReference#VAMPIRE_IN_FIRE} or respectivly {@link de.teamlapen.vampirism.api.VReference#VAMPIRE_ON_FIRE}
+     * This method will be used to convert {@link net.minecraft.world.damagesource.DamageSource#IN_FIRE} and {@link net.minecraft.world.damagesource.DamageSource#ON_FIRE} to {@link de.teamlapen.vampirism.api.VReference#VAMPIRE_IN_FIRE} or respectivly {@link de.teamlapen.vampirism.api.VReference#VAMPIRE_ON_FIRE}
      *
      * @param amount the unmodified fire damage amount
      * @return The modified amount

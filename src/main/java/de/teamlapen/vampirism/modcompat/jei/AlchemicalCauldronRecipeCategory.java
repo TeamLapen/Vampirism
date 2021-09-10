@@ -23,6 +23,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     }
 
     @Override
-    public void draw(AlchemicalCauldronRecipe recipe, PoseStack stack, double mouseX, double mouseY) {
+    public void draw(AlchemicalCauldronRecipe recipe, @Nonnull PoseStack stack, double mouseX, double mouseY) {
         flame.draw(stack, 19, 27);
         arrow.draw(stack, 41, 25);
         bubbles.draw(stack, 104, 19);
@@ -80,27 +81,32 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     }
 
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return background;
     }
 
+    @Nonnull
     @Override
     public IDrawable getIcon() {
         return icon;
     }
 
+    @Nonnull
     @Override
     public Class<? extends AlchemicalCauldronRecipe> getRecipeClass() {
         return AlchemicalCauldronRecipe.class;
     }
 
 
+    @Nonnull
     @Override
     public Component getTitle() {
         return localizedName;
     }
 
+    @Nonnull
     @Override
     public ResourceLocation getUid() {
         return VampirismJEIPlugin.ALCHEMICAL_CAULDRON_RECIPE_UID;
@@ -119,7 +125,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, AlchemicalCauldronRecipe recipeWrapper, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, @Nonnull AlchemicalCauldronRecipe recipeWrapper, @Nonnull IIngredients ingredients) {
         IGuiItemStackGroup guiItemStackGroup = recipeLayout.getItemStacks();
         guiItemStackGroup.init(0, false, 77, 23);
         guiItemStackGroup.init(1, true, 5, 6);

@@ -19,6 +19,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class SieveBlock extends VampirismBlockContainer {
@@ -43,19 +44,21 @@ public class SieveBlock extends VampirismBlockContainer {
         this.registerDefaultState(this.getStateDefinition().any().setValue(PROPERTY_ACTIVE, false));
     }
 
+    @Nonnull
     @Override
-    public RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(@Nonnull BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
         return new SieveBlockEntity(pos, state);
     }
 
+    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
         return sieveShape;
     }
 
@@ -66,7 +69,7 @@ public class SieveBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
         return createTickerHelper(type, ModTiles.sieve, SieveBlockEntity::tick);
     }
 }

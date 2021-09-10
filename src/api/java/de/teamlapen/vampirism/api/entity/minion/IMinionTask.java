@@ -52,7 +52,7 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
 
     /**
      * Read the task description from NBT.
-     * Counterpart to {@link IMinionTaskDesc#writeToNBT(CompoundNBT)}
+     * Counterpart to {@link IMinionTaskDesc#writeToNBT(CompoundTag)}
      */
     T readFromNBT(CompoundTag nbt);
 
@@ -90,7 +90,7 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
         IMinionTask<?, Q> getTask();
 
         /**
-         * Write data to NBT. Counterpart to {@link IMinionTask#readFromNBT(CompoundNBT)}
+         * Write data to NBT. Counterpart to {@link IMinionTask#readFromNBT(CompoundTag)}
          */
         default void writeToNBT(CompoundTag nbt) {
         }

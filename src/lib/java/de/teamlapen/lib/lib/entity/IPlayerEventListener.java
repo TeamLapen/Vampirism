@@ -44,12 +44,12 @@ public interface IPlayerEventListener {
     void onPlayerLoggedOut();
 
     /**
-     * Called during EntityLiving Update. Somewhere in the middle of {@link PlayerEntity}'s onUpdate
+     * Called during EntityLiving Update. Somewhere in the middle of {@link Player}'s onUpdate
      */
     void onUpdate();
 
     /**
-     * Called at the beginning and at the end of {@link PlayerEntity}'s onUpdate. {@link IPlayerEventListener#onUpdate()} is called in between.
+     * Called at the beginning and at the end of {@link Player}'s onUpdate. {@link IPlayerEventListener#onUpdate()} is called in between.
      * Should only be used for stuff that requires to run at the beginning or end
      *
      * @param phase

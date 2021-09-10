@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 public class ItemStackUtil {
 
     /**
-     * Can be used in {@link IInventory#decrStackSize(int, int)}
+     * Can be used in {@link Container#removeItem(int, int)}
      */
     public static @Nonnull
     ItemStack decrIInventoryStackSize(Container inv, int slot, int amt) {

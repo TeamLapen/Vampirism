@@ -15,6 +15,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
 public class HunterTrainerRenderer extends HumanoidMobRenderer<Mob, PlayerModel<Mob>> {
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_trainer.png");
@@ -28,13 +30,14 @@ public class HunterTrainerRenderer extends HumanoidMobRenderer<Mob, PlayerModel<
     }
 
 
+    @Nonnull
     @Override
-    public ResourceLocation getTextureLocation(Mob entity) {
+    public ResourceLocation getTextureLocation(@Nonnull Mob entity) {
         return texture;
     }
 
     @Override
-    protected void renderNameTag(Mob entityIn, Component displayNameIn, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+    protected void renderNameTag(@Nonnull Mob entityIn, @Nonnull Component displayNameIn, @Nonnull PoseStack matrixStackIn, @Nonnull MultiBufferSource bufferIn, int packedLightIn) {
         double dist = this.entityRenderDispatcher.distanceToSqr(entityIn);
         if (dist <= 128) {
             super.renderNameTag(entityIn, displayNameIn, matrixStackIn, bufferIn, packedLightIn);

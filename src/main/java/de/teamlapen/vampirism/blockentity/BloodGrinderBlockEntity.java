@@ -57,6 +57,7 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
         this.itemHandlerOptional = LazyOptional.of(() -> itemHandler);
     }
 
+    @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if ((side != Direction.DOWN) && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
@@ -66,14 +67,15 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public void load(CompoundTag tagCompound) {
+    public void load(@Nonnull CompoundTag tagCompound) {
         super.load(tagCompound);
         cooldownPull = tagCompound.getInt("cooldown_pull");
         cooldownProcess = tagCompound.getInt("cooldown_process");
     }
 
+    @Nonnull
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public CompoundTag save(@Nonnull CompoundTag compound) {
         compound.putInt("cooldown_pull", cooldownPull);
         compound.putInt("cooldown_process", cooldownProcess);
         return super.save(compound);
@@ -100,10 +102,11 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
 
     @Nonnull
     @Override
-    protected AbstractContainerMenu createMenu(int id, Inventory player) {
+    protected AbstractContainerMenu createMenu(int id, @Nonnull Inventory player) {
         return new BloodGrinderContainer(id, player, this, ContainerLevelAccess.create(player.player.getCommandSenderWorld(), this.getBlockPos()));
     }
 
+    @Nonnull
     @Override
     protected Component getDefaultName() {
         return new TranslatableComponent("tile.vampirism.blood_grinder");

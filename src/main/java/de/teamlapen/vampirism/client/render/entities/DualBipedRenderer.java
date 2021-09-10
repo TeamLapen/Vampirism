@@ -6,12 +6,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.IntFunction;
@@ -30,13 +30,14 @@ public abstract class DualBipedRenderer<T extends Mob, M extends HumanoidModel<T
         this.modelB = modelBipedInB;
     }
 
+    @Nonnull
     @Override
-    public ResourceLocation getTextureLocation(T entity) {
+    public ResourceLocation getTextureLocation(@Nonnull T entity) {
         return currentTexture != null ? currentTexture : super.getTextureLocation(entity);
     }
 
     @Override
-    public final void render(T entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+    public final void render(@Nonnull T entityIn, float entityYaw, float partialTicks, @Nonnull PoseStack matrixStackIn, @Nonnull MultiBufferSource bufferIn, int packedLightIn) {
         Pair<ResourceLocation, Boolean> b = determineTextureAndModel(entityIn);
         this.currentTexture = b.getLeft();
         this.model = b.getRight() ? modelB : modelA;

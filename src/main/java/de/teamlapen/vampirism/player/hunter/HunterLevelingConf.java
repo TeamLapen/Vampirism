@@ -41,30 +41,19 @@ public class HunterLevelingConf {
         if (!isLevelValidForTable(targetLevel)) {
             throw new IllegalArgumentException("Cannot use the table with the given target level " + targetLevel);
         }
-        switch (targetLevel) {
+        return switch (targetLevel) {
             //fangs,blood,blood_meta,vampire book
-            case 5:
-                return new int[]{10, 0, 0, 1};
-            case 6:
-                return new int[]{0, 1, 0, 1};
-            case 7:
-                return new int[]{10, 1, 0, 1};
-            case 8:
-                return new int[]{0, 1, 1, 1};
-            case 9:
-                return new int[]{15, 1, 1, 1};
-            case 10:
-            case 11:
-                return new int[]{20, 1, 2, 1};
-            case 12:
-                return new int[]{20, 1, 3, 1};
-            case 13:
-                return new int[]{25, 2, 3, 1};
-            case 14:
-                return new int[]{25, 2, 4, 1};
-            default:
-                return null;//Should never be reached
-        }
+            case 5 -> new int[]{10, 0, 0, 1};
+            case 6 -> new int[]{0, 1, 0, 1};
+            case 7 -> new int[]{10, 1, 0, 1};
+            case 8 -> new int[]{0, 1, 1, 1};
+            case 9 -> new int[]{15, 1, 1, 1};
+            case 10, 11 -> new int[]{20, 1, 2, 1};
+            case 12 -> new int[]{20, 1, 3, 1};
+            case 13 -> new int[]{25, 2, 3, 1};
+            case 14 -> new int[]{25, 2, 4, 1};
+            default -> null;//Should never be reached
+        };
     }
 
     public int[] getItemRequirementsForTrainer(int targetLevel) {
@@ -113,16 +102,12 @@ public class HunterLevelingConf {
         if (!isLevelValidForBasicHunter(targetLevel)) {
             throw new IllegalArgumentException("Cannot use the table with the given target level " + targetLevel);
         }
-        switch (targetLevel) {
-            case 2:
-                return 1;
-            case 3:
-                return 5;
-            case 4:
-                return 12;
-            default:
-                return 100000;
-        }
+        return switch (targetLevel) {
+            case 2 -> 1;
+            case 3 -> 5;
+            case 4 -> 12;
+            default -> 100000;
+        };
     }
 
     /**

@@ -16,6 +16,8 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.SimpleContainerData;
 
+import javax.annotation.Nonnull;
+
 
 public class AlchemicalCauldronContainer extends AbstractFurnaceMenu {
 
@@ -30,8 +32,9 @@ public class AlchemicalCauldronContainer extends AbstractFurnaceMenu {
     }
 
 
+    @Nonnull
     @Override
-    public ItemStack quickMoveStack(Player playerEntity, int index) {
+    public ItemStack quickMoveStack(@Nonnull Player playerEntity, int index) {
         ItemStack stackCopy = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {

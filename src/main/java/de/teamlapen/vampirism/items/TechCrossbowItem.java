@@ -93,7 +93,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         int arrows = getArrowsLeft(stack);
         if (arrows == -1) {
@@ -107,7 +107,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+    public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
         if (this.allowdedIn(group)) {
             items.add(setArrowsLeft(new ItemStack(this), 0));
             items.add(setArrowsLeft(new ItemStack(this), MAX_ARROW_COUNT));
@@ -115,7 +115,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     }
 
     @Override
-    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
+    public boolean isValidRepairItem(@Nonnull ItemStack toRepair, ItemStack repair) {
         return Tags.Items.INGOTS_IRON.contains(repair.getItem());
     }
 

@@ -75,7 +75,7 @@ public class ItemModelGenerator extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        Set<Block> blocks = new HashSet<Block>() {{
+        Set<Block> blocks = new HashSet<>() {{
             add(ModBlocks.altar_tip);
             add(ModBlocks.castle_block_dark_brick);
             add(ModBlocks.castle_block_dark_brick_bloody);
@@ -111,7 +111,7 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModBlocks.tombstone3);
             add(ModBlocks.grave_cage);
         }};
-        Set<Item> items = new HashSet<Item>() {{
+        Set<Item> items = new HashSet<>() {{
             add(ModItems.hunter_coat_chest_normal);
             add(ModItems.hunter_coat_chest_enhanced);
             add(ModItems.hunter_coat_chest_ultimate);
@@ -180,7 +180,7 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModItems.vampire_clothing_crown);
             add(ModItems.garlic_finder);
         }};
-        Map<Item, ResourceLocation> itemsWithTexture = new HashMap<Item, ResourceLocation>() {{
+        Map<Item, ResourceLocation> itemsWithTexture = new HashMap<>() {{
             put(ModItems.holy_water_bottle_normal, modLoc("item/holy_water_normal"));
             put(ModItems.holy_water_bottle_enhanced, modLoc("item/holy_water_enhanced"));
             put(ModItems.holy_water_bottle_ultimate, modLoc("item/holy_water_ultimate"));

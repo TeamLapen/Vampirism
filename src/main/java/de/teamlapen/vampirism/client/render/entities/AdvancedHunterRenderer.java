@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.render.entities;
 
-import com.google.common.base.Predicates;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
@@ -14,10 +13,12 @@ import de.teamlapen.vampirism.entity.hunter.AdvancedHunterEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nonnull;
 
 /**
  * Renderer for the advanced hunter.
@@ -32,7 +33,7 @@ public class AdvancedHunterRenderer extends HumanoidMobRenderer<AdvancedHunterEn
     public AdvancedHunterRenderer(EntityRendererProvider.Context context) {
         super(context, new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER), false), 0.5F);
         this.addLayer(new HunterEquipmentLayer<>(this, context.getModelSet(), h -> HunterEquipmentModel.StakeType.FULL, e-> HunterEquipmentModel.HatType.from(e.getHunterType())));
-        this.addLayer(new CloakLayer<>(this, textureCloak, Predicates.alwaysTrue()));
+        this.addLayer(new CloakLayer<>(this, textureCloak, advancedHunterEntity -> true));
         if (VampirismConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {
             this.addLayer(new PlayerFaceOverlayLayer<>(this));
             this.getModel().head.visible = false;
@@ -40,13 +41,14 @@ public class AdvancedHunterRenderer extends HumanoidMobRenderer<AdvancedHunterEn
         }
     }
 
+    @Nonnull
     @Override
-    public ResourceLocation getTextureLocation(AdvancedHunterEntity entity) {
+    public ResourceLocation getTextureLocation(@Nonnull AdvancedHunterEntity entity) {
         return texture;
     }
 
     @Override
-    protected void renderNameTag(AdvancedHunterEntity entityIn, Component displayNameIn, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+    protected void renderNameTag(@Nonnull AdvancedHunterEntity entityIn, @Nonnull Component displayNameIn, @Nonnull PoseStack matrixStackIn, @Nonnull MultiBufferSource bufferIn, int packedLightIn) {
         double dist = this.entityRenderDispatcher.distanceToSqr(entityIn);
         if (dist <= 256) {
             super.renderNameTag(entityIn, displayNameIn, matrixStackIn, bufferIn, packedLightIn);

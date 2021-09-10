@@ -41,6 +41,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 
+import javax.annotation.Nonnull;
+
 public class VampirismScreen extends AbstractContainerScreen<VampirismContainer> implements ExtendedScreen {
 
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/vampirism_menu.png");
@@ -97,7 +99,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
         if (this.menu.areRefinementsAvailable()) {
@@ -156,7 +158,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
     }
 
     @Override
-    protected void renderBg(PoseStack matrixStack, float v, int i, int i1) {
+    protected void renderBg(@Nonnull PoseStack matrixStack, float v, int i, int i1) {
         this.renderBackground(matrixStack);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

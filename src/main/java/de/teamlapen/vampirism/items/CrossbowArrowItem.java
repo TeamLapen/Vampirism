@@ -26,6 +26,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack itemStack, @Nullable Level world, List<Component> textComponents, TooltipFlag tooltipFlag) {
+    public void appendHoverText(@Nonnull ItemStack itemStack, @Nullable Level world, @Nonnull List<Component> textComponents, @Nonnull TooltipFlag tooltipFlag) {
         if (type != EnumArrowType.NORMAL) {
             textComponents.add(new TranslatableComponent(type == EnumArrowType.VAMPIRE_KILLER ? "item.vampirism.crossbow_arrow_vampire_killer.tooltip" : "item.vampirism.crossbow_arrow_spitfire.tooltip").withStyle(ChatFormatting.GRAY));
         }
@@ -144,6 +145,7 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
             return this.getSerializedName();
         }
 
+        @Nonnull
         @Override
         public String getSerializedName() {
             return name;

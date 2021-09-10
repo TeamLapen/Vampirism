@@ -18,7 +18,7 @@ public class REFERENCE {
     public static final int HIGHEST_HUNTER_LORD = 5;
     public static final String FORGE_VERSION = "@FVERSION@";
     public static final String VERSION_UPDATE_FILE = "https://maxanier.de/projects/vampirism/versions.json";
-    public static final String SUPPORTER_FILE = "http://maxanier.de/projects/vampirism/supporters.json";
+    public static final String SUPPORTER_FILE = "https://maxanier.de/projects/vampirism/supporters.json";
     public static final String CURSEFORGE_LINK = "https://minecraft.curseforge.com/projects/vampirism-become-a-vampire";
     public static final String INTEGRATIONS_MODID = "vampirism_integrations";
     public static final String INTEGRATIONS_LINK = "https://minecraft.curseforge.com/projects/vampirism-integrations";

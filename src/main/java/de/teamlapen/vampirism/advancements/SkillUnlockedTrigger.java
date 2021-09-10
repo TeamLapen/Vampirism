@@ -27,6 +27,7 @@ public class SkillUnlockedTrigger extends SimpleCriterionTrigger<SkillUnlockedTr
         return new Instance(id);
     }
 
+    @Nonnull
     @Override
     public ResourceLocation getId() {
         return ID;
@@ -38,6 +39,7 @@ public class SkillUnlockedTrigger extends SimpleCriterionTrigger<SkillUnlockedTr
         }));
     }
 
+    @Nonnull
     @Override
     protected Instance createInstance(JsonObject json, EntityPredicate.Composite entityPredicate, DeserializationContext conditionsParser) {
         return new Instance(new ResourceLocation(GsonHelper.getAsString(json, "skill")));
@@ -57,6 +59,7 @@ public class SkillUnlockedTrigger extends SimpleCriterionTrigger<SkillUnlockedTr
             this.skillId = skillId;
         }
 
+        @Nonnull
         @Override
         public JsonObject serializeToJson(SerializationContext serializer) {
             JsonObject jsonObject = super.serializeToJson(serializer);

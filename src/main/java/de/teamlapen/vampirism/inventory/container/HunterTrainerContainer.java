@@ -22,6 +22,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.phys.Vec3;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorInfo;
@@ -51,7 +52,7 @@ public class HunterTrainerContainer extends InventoryContainer implements Contai
     }
 
     @Override
-    public void containerChanged(Container iInventory) {
+    public void containerChanged(@Nonnull Container iInventory) {
         changed = true;
     }
 
@@ -101,7 +102,7 @@ public class HunterTrainerContainer extends InventoryContainer implements Contai
     }
 
     @Override
-    public void removed(Player playerIn) {
+    public void removed(@Nonnull Player playerIn) {
         super.removed(playerIn);
         if (!playerIn.getCommandSenderWorld().isClientSide) {
             clearContainer(playerIn, inventory);
@@ -109,7 +110,7 @@ public class HunterTrainerContainer extends InventoryContainer implements Contai
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(@Nonnull Player player) {
         if (entity == null) return false;
         return new Vec3(player.getX(), player.getY(), player.getZ()).distanceTo(new Vec3(entity.getX(), entity.getY(), entity.getZ())) < 5;
     }

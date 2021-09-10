@@ -21,7 +21,6 @@ import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.core.Direction;
@@ -49,11 +48,6 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
     public static LazyOptional<IExtendedCreatureVampirism> getSafe(Entity mob) {
         return mob.getCapability(CAP);
-    }
-
-
-    public static void registerCapability() {
-        CapabilityManager.INSTANCE.register(IExtendedCreatureVampirism.class);
     }
 
     static <Q extends PathfinderMob> ICapabilityProvider createNewCapability(final Q creature) {

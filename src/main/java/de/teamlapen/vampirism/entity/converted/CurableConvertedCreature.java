@@ -56,7 +56,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     Data<T> data();
 
     /**
-     * return in {@link CreatureEntity#hurt(DamageSource, float)}
+     * return in {@link PathfinderMob#hurt(DamageSource, float)}
      */
     default boolean hurtC(DamageSource damageSource, float amount) {
         PathfinderMob entity = ((PathfinderMob) this);
@@ -71,8 +71,9 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     /**
-     * return in {@link CreatureEntity#mobInteract(PlayerEntity, Hand)}
+     * return in {@link PathfinderMob#mobInteract(Player, InteractionHand)}
      */
+    @SuppressWarnings("JavadocReference")
     default InteractionResult mobInteractC(@Nonnull Player player, @Nonnull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (stack.getItem() != ModItems.cure_apple){
@@ -87,7 +88,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     /**
-     * return in {@link CreatureEntity#getName()}
+     * return in {@link PathfinderMob#getName()}
      */
     default Component getNameC(Supplier<Component> baseName) {
         if (((PathfinderMob) this).hasCustomName()) {
@@ -100,7 +101,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     /**
-     * call in {@link CreatureEntity#handleEntityEvent(byte)}
+     * call in {@link PathfinderMob#handleEntityEvent(byte)}
      */
     default void handleEntityEventC(byte id) {
         if (!handleSound(id, ((PathfinderMob) this))) {
@@ -134,7 +135,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     /**
-     * call in {@link CreatureEntity#aiStep()}
+     * call in {@link PathfinderMob#aiStep()}
      */
     default void aiStepC(EntityType<T> originalType) {
         PathfinderMob entity = ((PathfinderMob) this);
@@ -168,7 +169,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     /**
-     * call in {@link CreatureEntity#die(DamageSource)}
+     * call in {@link PathfinderMob#die(DamageSource)}
      */
     default void dieC(DamageSource cause) {
         if (cause.getDirectEntity() instanceof CrossbowArrowEntity && Helper.isHunter(cause.getEntity())) {
@@ -184,8 +185,9 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     /**
-     * call in {@link CreatureEntity#readAdditionalSaveData(CompoundNBT)}
+     * call in {@link PathfinderMob#readAdditionalSaveData(CompoundTag)}
      */
+    @SuppressWarnings("JavadocReference")
     default void readAdditionalSaveDataC(@Nonnull CompoundTag compound) {
         if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1) {
             this.startConverting(compound.hasUUID("ConversionPlayer") ? compound.getUUID("ConversionPlayer") : null, compound.getInt("ConversionTime"), ((PathfinderMob) this));
@@ -193,8 +195,9 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     /**
-     * call in {@link CreatureEntity#addAdditionalSaveData(CompoundNBT)} ()}
+     * call in {@link PathfinderMob#addAdditionalSaveData(CompoundTag)}}
      */
+    @SuppressWarnings("JavadocReference")
     default void addAdditionalSaveDataC(@Nonnull CompoundTag compound) {
         compound.putInt("ConversionTime", this.isConverting(((PathfinderMob) this)) ? data().conversionTime : -1);
         if (data().conversationStarter != null) {
@@ -231,8 +234,9 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     /**
-     * call in {@link CreatureEntity#tickDeath()}
+     * call in {@link PathfinderMob#tickDeath()}
      */
+    @SuppressWarnings("JavadocReference")
     default void tickDeathC() {
         PathfinderMob entity = ((PathfinderMob) this);
         if (entity.deathTime == 19) {
@@ -243,8 +247,9 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     /**
-     * call in {@link CreatureEntity#registerGoals()}
+     * call in {@link PathfinderMob#registerGoals()}
      */
+    @SuppressWarnings("JavadocReference")
     default void registerGoalsC() {
         PathfinderMob entity = ((PathfinderMob) this);
         entity.goalSelector.addGoal(1, new AvoidEntityGoal<>(entity, PathfinderMob.class, 10, 1, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION)));
@@ -261,22 +266,23 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     /**
-     * implement as super call for {@link CreatureEntity#handleEntityEvent(byte)}
+     * implement as super call for {@link PathfinderMob#handleEntityEvent(byte)}
      */
     void handleEntityEventSuper(byte id);
 
     /**
-     * implement as super call for {@link CreatureEntity#getName()}
+     * implement as super call for {@link PathfinderMob#getName()}
      */
     Component getNameSuper();
 
     /**
-     * implement as super call for {@link CreatureEntity#mobInteract(PlayerEntity, Hand)}
+     * implement as super call for {@link PathfinderMob#mobInteract(Player, InteractionHand)}
      */
+    @SuppressWarnings("JavadocReference")
     InteractionResult mobInteractSuper(@Nonnull Player player, @Nonnull InteractionHand hand);
 
     /**
-     * implement as super call for {@link CreatureEntity#hurt(DamageSource, float)}
+     * implement as super call for {@link PathfinderMob#hurt(DamageSource, float)}
      */
     boolean hurtSuper(DamageSource damageSource, float amount);
 

@@ -119,8 +119,7 @@ public class GeneralEventHandler {
 
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event) {
-        if (event.getWorld() instanceof ServerLevel) {
-            ServerLevel w = (ServerLevel) event.getWorld();
+        if (event.getWorld() instanceof ServerLevel w) {
             ServerChunkCache p = w.getChunkSource();
             ModFeatures.checkWorldStructureSeparation(w.dimension(), p.getGenerator() instanceof FlatLevelSource, p.getGenerator().getSettings());
 

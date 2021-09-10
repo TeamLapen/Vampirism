@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.inventory.container.BloodGrinderContainer;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;

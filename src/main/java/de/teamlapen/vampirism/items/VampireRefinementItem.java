@@ -41,13 +41,11 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
         if (sets.isEmpty()) return ItemStack.EMPTY;
         IRefinementSet s = WeighedRandom.getRandomItem(RANDOM, sets).map(WeightedRandomItem::getItem).orElse(sets.get(0).getItem());
         AccessorySlotType t = s.getSlotType().orElseGet(() -> {
-            switch (RANDOM.nextInt(3)) {
-                case 0:
-                    return AccessorySlotType.OBI_BELT;
-                case 1:
-                    return AccessorySlotType.RING;
-            }
-            return AccessorySlotType.AMULET;
+            return switch (RANDOM.nextInt(3)) {
+                case 0 -> AccessorySlotType.OBI_BELT;
+                case 1 -> AccessorySlotType.RING;
+                default -> AccessorySlotType.AMULET;
+            };
         });
         VampireRefinementItem i = getItemForType(t);
         ItemStack stack = new ItemStack(i);
@@ -64,14 +62,11 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
     }
 
     public static VampireRefinementItem getItemForType(AccessorySlotType type) {
-        switch (type) {
-            case AMULET:
-                return ModItems.amulet;
-            case RING:
-                return ModItems.ring;
-            default:
-                return ModItems.obi_belt;
-        }
+        return switch (type) {
+            case AMULET -> ModItems.amulet;
+            case RING -> ModItems.ring;
+            default -> ModItems.obi_belt;
+        };
     }
     private final AccessorySlotType type;
 
@@ -81,7 +76,7 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
@@ -106,6 +101,7 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
         return false;
     }
 
+    @Nonnull
     @Override
     public Component getName(@Nonnull ItemStack stack) {
         IRefinementSet set = getRefinementSet(stack);
@@ -132,8 +128,9 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
         return false;
     }
 
+    @Nonnull
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(Level worldIn, @Nonnull Player playerIn, @Nonnull InteractionHand handIn) {
         if (!worldIn.isClientSide()) {
             ItemStack stack = playerIn.getItemInHand(handIn);
             if (FactionPlayerHandler.getOpt(playerIn).map(v -> v).flatMap(FactionPlayerHandler::getCurrentFactionPlayer).map(IFactionPlayer::getSkillHandler).map(sh -> sh.equipRefinementItem(stack)).orElse(false)) {

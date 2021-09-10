@@ -34,17 +34,11 @@ public class DummyBittenAnimalEntity extends Mob {
         if (this.tickCount > 4 && !this.getCommandSenderWorld().isClientSide) {
             PathfinderMob entity;
             int rand = this.random.nextInt(3);
-            switch (rand) {
-                case 0:
-                    entity = EntityType.PIG.create(level);
-                    break;
-                case 1:
-                    entity = EntityType.SHEEP.create(level);
-                    break;
-                default:
-                    entity = EntityType.COW.create(level);
-                    break;
-            }
+            entity = switch (rand) {
+                case 0 -> EntityType.PIG.create(level);
+                case 1 -> EntityType.SHEEP.create(level);
+                default -> EntityType.COW.create(level);
+            };
             if (entity == null) return;
             entity.copyPosition(this);
             ExtendedCreature.getSafe(entity).ifPresent(e -> {

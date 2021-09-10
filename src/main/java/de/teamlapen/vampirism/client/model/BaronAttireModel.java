@@ -15,6 +15,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.util.Mth;
 
+import javax.annotation.Nonnull;
+
 /**
  * Attire designed for the male vampire baron - RebelT
  * Created using Tabula 7.1.0
@@ -47,7 +49,7 @@ public class BaronAttireModel extends EntityModel<VampireBaronEntity> {
     }
 
     @Override
-    public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(@Nonnull PoseStack matrixStackIn, @Nonnull VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         hood.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
         matrixStackIn.pushPose();
         matrixStackIn.scale(1 - 0.4f * enragedProgress, 1 - 0.7f * enragedProgress, 1 - 0.4f * enragedProgress);
@@ -56,7 +58,7 @@ public class BaronAttireModel extends EntityModel<VampireBaronEntity> {
     }
 
     @Override
-    public void setupAnim(VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(@Nonnull VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         float bodyRotateAngleY = 0;
         if (this.attackTime > 0.0F) {
             HumanoidArm handside = this.getSwingingSide(entityIn);

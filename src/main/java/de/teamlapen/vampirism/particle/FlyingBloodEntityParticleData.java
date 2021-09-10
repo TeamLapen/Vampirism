@@ -12,6 +12,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nonnull;
+
 public class FlyingBloodEntityParticleData implements ParticleOptions {
 
     /**
@@ -23,12 +25,14 @@ public class FlyingBloodEntityParticleData implements ParticleOptions {
                     Codec.BOOL.fieldOf("d").forGetter((p_239806_0_) -> p_239806_0_.direct))
             .apply(p_239803_0_, (e, d) -> new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, e, d)));
 
-    public static final ParticleOptions.Deserializer<FlyingBloodEntityParticleData> DESERIALIZER = new ParticleOptions.Deserializer<FlyingBloodEntityParticleData>() {
-        public FlyingBloodEntityParticleData fromCommand(ParticleType<FlyingBloodEntityParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
+    public static final ParticleOptions.Deserializer<FlyingBloodEntityParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
+        @Nonnull
+        public FlyingBloodEntityParticleData fromCommand(@Nonnull ParticleType<FlyingBloodEntityParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
             return new FlyingBloodEntityParticleData(particleTypeIn, reader.readInt(), reader.readBoolean());
         }
 
-        public FlyingBloodEntityParticleData fromNetwork(ParticleType<FlyingBloodEntityParticleData> particleTypeIn, FriendlyByteBuf buffer) {
+        @Nonnull
+        public FlyingBloodEntityParticleData fromNetwork(@Nonnull ParticleType<FlyingBloodEntityParticleData> particleTypeIn, FriendlyByteBuf buffer) {
             return new FlyingBloodEntityParticleData(particleTypeIn, buffer.readVarInt(), buffer.readBoolean());
         }
     };
@@ -58,11 +62,13 @@ public class FlyingBloodEntityParticleData implements ParticleOptions {
         buffer.writeBoolean(direct);
     }
 
+    @Nonnull
     @Override
     public ParticleType<?> getType() {
         return particleType;
     }
 
+    @Nonnull
     @Override
     public String writeToString() {
         return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + entity + "" + direct;

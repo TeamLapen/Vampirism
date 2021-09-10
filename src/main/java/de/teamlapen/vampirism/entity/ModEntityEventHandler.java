@@ -179,8 +179,7 @@ public class ModEntityEventHandler {
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (!event.getWorld().isClientSide()) {
-            if (event.getEntity() instanceof IAdjustableLevel) {
-                IAdjustableLevel entity = (IAdjustableLevel) event.getEntity();
+            if (event.getEntity() instanceof IAdjustableLevel entity) {
                 if (entity.getLevel() == -1) {
                     Difficulty d = DifficultyCalculator.findDifficultyForPos(event.getWorld(), event.getEntity().blockPosition(), 30);
                     int l = entity.suggestLevel(d);
@@ -221,7 +220,7 @@ public class ModEntityEventHandler {
 
             if (VampirismConfig.BALANCE.skeletonIgnoreVampire.get()) {
                 if (event.getEntity() instanceof Skeleton) {
-                    makeVampireFriendly("skeleton", (Skeleton) event.getEntity(), NearestAttackableTargetGoal.class, Player.class, 2, (entity, predicate) -> new NearestAttackableTargetGoal<Player>(entity, Player.class, 10, true, false, predicate), type -> type == EntityType.SKELETON);
+                    makeVampireFriendly("skeleton", (Skeleton) event.getEntity(), NearestAttackableTargetGoal.class, Player.class, 2, (entity, predicate) -> new NearestAttackableTargetGoal<>(entity, Player.class, 10, true, false, predicate), type -> type == EntityType.SKELETON);
                 }
             }
 
@@ -271,8 +270,7 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onEntityVisibilityCheck(LivingEvent.LivingVisibilityEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
+        if (event.getEntity() instanceof Player player) {
             if (VampirismPlayerAttributes.get(player).getHuntSpecial().isDisguised()) {
                 event.modifyVisibility((VampirismPlayerAttributes.get((Player) event.getEntity()).getHuntSpecial().fullHunterCoat != null ? 0.5 : 1) * VampirismConfig.BALANCE.haDisguiseVisibilityMod.get());
             }

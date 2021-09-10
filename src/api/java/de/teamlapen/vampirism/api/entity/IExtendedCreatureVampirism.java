@@ -7,7 +7,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import javax.annotation.Nullable;
 
 /**
- * Interface for Vampirism's capability every {@link CreatureEntity} has attached
+ * Interface for Vampirism's capability every {@link PathfinderMob} has attached
  */
 public interface IExtendedCreatureVampirism extends IBiteableEntity {
     /**

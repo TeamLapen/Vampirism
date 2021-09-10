@@ -81,7 +81,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     }
 
     @Override
-    public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
+    public void registerVanillaCategoryExtensions(@Nonnull IVanillaCategoryExtensionRegistration registration) {
 
     }
 

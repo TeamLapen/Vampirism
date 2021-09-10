@@ -52,15 +52,9 @@ public abstract class CommonProxy implements IProxy {
     public void handleTaskActionPacket(TaskActionPacket msg, Player playerEntity) {
         FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> {
             switch (msg.action()) {
-                case COMPLETE:
-                    factionPlayer.getTaskManager().completeTask(msg.entityId(), msg.task());
-                    break;
-                case ACCEPT:
-                    factionPlayer.getTaskManager().acceptTask(msg.entityId(), msg.task());
-                    break;
-                default:
-                    factionPlayer.getTaskManager().abortTask(msg.entityId(), msg.task(), msg.action() == TaskContainer.TaskAction.REMOVE);
-                    break;
+                case COMPLETE -> factionPlayer.getTaskManager().completeTask(msg.entityId(), msg.task());
+                case ACCEPT -> factionPlayer.getTaskManager().acceptTask(msg.entityId(), msg.task());
+                default -> factionPlayer.getTaskManager().abortTask(msg.entityId(), msg.task(), msg.action() == TaskContainer.TaskAction.REMOVE);
             }
         }));
     }

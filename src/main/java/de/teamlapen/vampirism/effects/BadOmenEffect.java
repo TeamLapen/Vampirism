@@ -32,8 +32,7 @@ public abstract class BadOmenEffect extends MobEffect {
      * @param victim   The killed faction entity
      */
     public static void handlePotentialBannerKill(@Nullable Entity offender, IFactionEntity victim) {
-        if (offender instanceof Player) {
-            Player player = (Player) offender;
+        if (offender instanceof Player player) {
             IFaction<?> faction = victim.getFaction();
             if (faction.getVillageData().isBanner(victim.getRepresentingEntity().getItemBySlot(EquipmentSlot.HEAD))) {
                 IFaction<?> playerFaction = VampirismPlayerAttributes.get(player).faction;
@@ -60,8 +59,7 @@ public abstract class BadOmenEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
-        if (entityLivingBaseIn instanceof ServerPlayer && !entityLivingBaseIn.isSpectator()) {
-            ServerPlayer playerEntity = ((ServerPlayer) entityLivingBaseIn);
+        if (entityLivingBaseIn instanceof ServerPlayer playerEntity && !entityLivingBaseIn.isSpectator()) {
             ServerLevel serverWorld = playerEntity.getLevel();
             if (serverWorld.getDifficulty() == Difficulty.PEACEFUL) {
                 return;

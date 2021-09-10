@@ -52,7 +52,6 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nullable;
 import java.awt.Color;
 import java.net.URI;
-import java.util.List;
 import java.util.*;
 import java.util.regex.Matcher;
 

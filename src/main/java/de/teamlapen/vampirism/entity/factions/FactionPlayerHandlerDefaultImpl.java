@@ -104,7 +104,7 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
     }
 
     @Override
-    public boolean setFactionAndLevel(IPlayableFaction<? extends IFactionPlayer<?>> faction, int level) {
+    public boolean setFactionAndLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level) {
         return false;
     }
 

@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import com.google.common.collect.Streams;
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -12,8 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -21,6 +17,8 @@ import net.minecraft.util.Mth;
 import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nonnull;
 
 
 @OnlyIn(Dist.CLIENT)
@@ -30,7 +28,7 @@ public class GarlicBeaconBESR extends VampirismBESR<GarlicDiffusorBlockEntity> {
     }
 
     @Override
-    public void render(GarlicDiffusorBlockEntity tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void render(@Nonnull GarlicDiffusorBlockEntity tileEntityIn, float partialTicks, @Nonnull PoseStack matrixStackIn, @Nonnull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         Entity e = Minecraft.getInstance().getCameraEntity();
         if (e != null && Streams.stream(e.getHandSlots()).map(ItemStack::getItem).anyMatch(i -> i == ModItems.garlic_finder) && tileEntityIn.isInRange(e.blockPosition())) {
             long totalWorldTime = tileEntityIn.getLevel() != null ? tileEntityIn.getLevel().getGameTime() : 0;
@@ -59,7 +57,7 @@ public class GarlicBeaconBESR extends VampirismBESR<GarlicDiffusorBlockEntity> {
     }
 
     @Override
-    public boolean shouldRenderOffScreen(GarlicDiffusorBlockEntity te) {
+    public boolean shouldRenderOffScreen(@Nonnull GarlicDiffusorBlockEntity te) {
         return true;
     }
 

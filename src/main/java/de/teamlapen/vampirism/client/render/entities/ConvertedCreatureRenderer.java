@@ -4,12 +4,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.entity.converted.ConvertedCreatureEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nonnull;
 
 /**
  * Renders a converted creature, by rendering it's old creature
@@ -23,13 +24,14 @@ public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureE
     }
 
 
+    @Nonnull
     @Override
-    public ResourceLocation getTextureLocation(ConvertedCreatureEntity entity) {
+    public ResourceLocation getTextureLocation(@Nonnull ConvertedCreatureEntity entity) {
         return null;
     }
 
     @Override
-    public void render(ConvertedCreatureEntity entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource renderTypeBuffer, int packedLightIn) {
+    public void render(ConvertedCreatureEntity entity, float entityYaw, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource renderTypeBuffer, int packedLightIn) {
         PathfinderMob creature = entity.getOldCreature();
         if (creature != null) {
 //            creature.removed = false;

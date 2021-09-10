@@ -2,12 +2,13 @@ package de.teamlapen.vampirism.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import de.teamlapen.vampirism.client.model.armor.VampirismArmorModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.Mob;
+
+import javax.annotation.Nonnull;
 
 public class HunterEquipmentModel<T extends Mob> extends HumanoidModel<T> {
 
@@ -86,7 +87,7 @@ public class HunterEquipmentModel<T extends Mob> extends HumanoidModel<T> {
     }
 
     @Override
-    public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(@Nonnull T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
         hatRim.copyFrom(this.head);
         hatTop.copyFrom(this.head);
@@ -101,11 +102,13 @@ public class HunterEquipmentModel<T extends Mob> extends HumanoidModel<T> {
         stakeRight.copyFrom(this.rightArm);
     }
 
+    @Nonnull
     @Override
     protected Iterable<ModelPart> bodyParts() {
         return Iterables.concat(super.bodyParts(), ImmutableList.of(this.axeBlade1, this.axeBlade2, this.axeShaft, this.stake, this.stakeRight));
     }
 
+    @Nonnull
     @Override
     protected Iterable<ModelPart> headParts() {
         return Iterables.concat(super.headParts(), ImmutableList.of(this.hatRim, this.hatRim2, this.hatRim3, this.hatTop, this.hatTop2));

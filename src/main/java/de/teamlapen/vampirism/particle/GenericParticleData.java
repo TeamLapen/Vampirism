@@ -13,6 +13,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nonnull;
+
 public class GenericParticleData implements ParticleOptions {
 
     /**
@@ -27,12 +29,14 @@ public class GenericParticleData implements ParticleOptions {
             .apply(p_239803_0_, (t, a, c, s) -> new GenericParticleData(ModParticles.generic, new ResourceLocation(t), a, c, s)));
 
 
-    public static final ParticleOptions.Deserializer<GenericParticleData> DESERIALIZER = new ParticleOptions.Deserializer<GenericParticleData>() {
-        public GenericParticleData fromCommand(ParticleType<GenericParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
+    public static final ParticleOptions.Deserializer<GenericParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
+        @Nonnull
+        public GenericParticleData fromCommand(@Nonnull ParticleType<GenericParticleData> particleTypeIn, @Nonnull StringReader reader) throws CommandSyntaxException {
             return new GenericParticleData(particleTypeIn, ResourceLocation.read(reader), reader.readInt(), reader.readInt());
         }
 
-        public GenericParticleData fromNetwork(ParticleType<GenericParticleData> particleTypeIn, FriendlyByteBuf buffer) {
+        @Nonnull
+        public GenericParticleData fromNetwork(@Nonnull ParticleType<GenericParticleData> particleTypeIn, FriendlyByteBuf buffer) {
             return new GenericParticleData(particleTypeIn, buffer.readResourceLocation(), buffer.readVarInt(), buffer.readVarInt(), buffer.readFloat());
         }
     };
@@ -82,11 +86,13 @@ public class GenericParticleData implements ParticleOptions {
         return texture;
     }
 
+    @Nonnull
     @Override
     public ParticleType<?> getType() {
         return particleType;
     }
 
+    @Nonnull
     @Override
     public String writeToString() {
         return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + texture + " " + maxAge + " " + color;

@@ -15,6 +15,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.fmlclient.gui.GuiUtils;
 
+import javax.annotation.Nonnull;
+
 public class ProgressBar extends AbstractWidget {
 
     private static final ResourceLocation WIDGETS = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/widgets.png");
@@ -28,7 +30,7 @@ public class ProgressBar extends AbstractWidget {
     }
 
     @Override
-    public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
         Font fontrenderer = minecraft.font;
         int i = this.getYImage(this.isHovered());
@@ -50,7 +52,7 @@ public class ProgressBar extends AbstractWidget {
     }
 
     @Override
-    public void renderToolTip(PoseStack matrixStack, int mouseX, int mouseY) {
+    public void renderToolTip(@Nonnull PoseStack matrixStack, int mouseX, int mouseY) {
         if (this.active)
             screen.renderTooltip(matrixStack, new TextComponent("" + ((int) (progress * 100f)) + "%"), mouseX, mouseY);
 
@@ -65,7 +67,7 @@ public class ProgressBar extends AbstractWidget {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput p_169152_) {
+    public void updateNarration(@Nonnull NarrationElementOutput p_169152_) {
 
     }
 }

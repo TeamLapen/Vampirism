@@ -8,10 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
-import net.minecraft.world.level.levelgen.structure.templatesystem.RuleProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.levelgen.structure.templatesystem.*;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -22,7 +19,7 @@ import java.util.Optional;
 import java.util.Random;
 
 /**
- * works the same as a {@link RuleStructureProcessor} but for {@link RandomBlockState} instead of {@link net.minecraft.world.gen.feature.template.RuleEntry}
+ * works the same as a {@link RuleProcessor} but for {@link RandomBlockState} instead of {@link ProcessorRule}
  */
 public class RandomStructureProcessor extends RuleProcessor {
     public static final Codec<RandomStructureProcessor> CODEC = RandomBlockState.CODEC.listOf().fieldOf("rules").xmap(RandomStructureProcessor::new, rule -> rule.rules).codec();

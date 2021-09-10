@@ -47,7 +47,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
     }
 
     @Override
-    public void draw(IWeaponTableRecipe recipe, PoseStack stack, double mouseX, double mouseY) {
+    public void draw(IWeaponTableRecipe recipe, @Nonnull PoseStack stack, double mouseX, double mouseY) {
 
         int x = 2;
         int y = 80;
@@ -85,11 +85,13 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
         return background;
     }
 
+    @Nonnull
     @Override
     public IDrawable getIcon() {
         return icon;
     }
 
+    @Nonnull
     @Override
     public Class<? extends IWeaponTableRecipe> getRecipeClass() {
         return IWeaponTableRecipe.class;
@@ -114,7 +116,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
     }
 
     @Override
-    public void setRecipe(IRecipeLayout iRecipeLayout, IWeaponTableRecipe recipe, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout iRecipeLayout, @Nonnull IWeaponTableRecipe recipe, @Nonnull IIngredients ingredients) {
         int craftOutputSlot = 0;
         IGuiItemStackGroup guiItemStackGroup = iRecipeLayout.getItemStacks();
         guiItemStackGroup.init(craftOutputSlot, false, 111, 31);
@@ -127,8 +129,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
         List<List<ItemStack>> inputs = ingredients.getInputs(VanillaTypes.ITEM);
         List<List<ItemStack>> outputs = ingredients.getOutputs(VanillaTypes.ITEM);
 
-        if (recipe instanceof ShapedWeaponTableRecipe) {
-            ShapedWeaponTableRecipe wrapper = (ShapedWeaponTableRecipe) recipe;
+        if (recipe instanceof ShapedWeaponTableRecipe wrapper) {
             setInputs(guiItemStackGroup, inputs, wrapper.getWidth(), wrapper.getHeight());
 
         } else if (recipe instanceof ShapelessWeaponTableRecipe) {

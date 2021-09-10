@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.network.InputEventPacket;
-import net.minecraft.client.Option;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -19,6 +18,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -78,7 +78,7 @@ public class NameSwordScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
         drawCenteredString(stack, this.font, this.text1, this.width / 2, 70, 16777215);
         int i = 90;
@@ -94,7 +94,7 @@ public class NameSwordScreen extends Screen {
     }
 
     @Override
-    public void resize(Minecraft p_resize_1_, int p_resize_2_, int p_resize_3_) {
+    public void resize(@Nonnull Minecraft p_resize_1_, int p_resize_2_, int p_resize_3_) {
         String text = nameField.getValue();
         super.resize(p_resize_1_, p_resize_2_, p_resize_3_); //Text gets deleted as this calls init again
         nameField.setValue(text);

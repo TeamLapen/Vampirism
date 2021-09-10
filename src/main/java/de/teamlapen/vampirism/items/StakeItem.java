@@ -71,7 +71,7 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
     }
 
     @Override
-    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+    public boolean hurtEnemy(@Nonnull ItemStack stack, @Nonnull LivingEntity target, LivingEntity attacker) {
         if (!attacker.getCommandSenderWorld().isClientSide) {
             if (target instanceof IVampireMob || (target instanceof Player && Helper.isVampire(((Player) target)))) {
                 if (canKillInstant(target, attacker)) {

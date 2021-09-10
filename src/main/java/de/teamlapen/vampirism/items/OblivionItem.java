@@ -54,14 +54,14 @@ public class OblivionItem extends VampirismItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add(new TranslatableComponent("text.vampirism.oblivion_potion.resets_skills").withStyle(ChatFormatting.GRAY));
     }
 
     @Nonnull
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, @Nonnull Level worldIn, LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(ItemStack stack, @Nonnull Level worldIn, @Nonnull LivingEntity entityLiving) {
         stack.shrink(1);
         if (entityLiving instanceof Player) {
             FactionPlayerHandler.getOpt(((Player) entityLiving)).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty()).ifPresent(OblivionItem::applyEffect);

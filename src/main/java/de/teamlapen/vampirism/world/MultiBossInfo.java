@@ -87,15 +87,9 @@ public class MultiBossInfo {
 
     public void updateFromPackage(UpdateMultiBossInfoPacket packet) {
         switch (packet.getOperation()) {
-            case UPDATE_NAME:
-                this.name = packet.getName();
-                break;
-            case UPDATE_PROGRESS:
-                this.entries = packet.getEntries();
-                break;
-            case UPDATE_STYLE:
-                this.overlay = packet.getOverlay();
-                break;
+            case UPDATE_NAME -> this.name = packet.getName();
+            case UPDATE_PROGRESS -> this.entries = packet.getEntries();
+            case UPDATE_STYLE -> this.overlay = packet.getOverlay();
         }
     }
 }

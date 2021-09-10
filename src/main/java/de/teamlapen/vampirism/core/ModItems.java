@@ -306,7 +306,7 @@ public class ModItems {
 
             @OnlyIn(Dist.CLIENT)
             @Override
-            public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+            public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
                 tooltip.add(new TranslatableComponent("item.vampirism." + regName + ".tooltip", new TranslatableComponent(basic_tech_crossbow.getDescriptionId())).withStyle(ChatFormatting.GRAY));
             }
 
@@ -324,7 +324,7 @@ public class ModItems {
         registry.register(new VampirismItem("holy_salt", creativeTabProps()) {
 
             @Override
-            public boolean isFoil(ItemStack stack) {
+            public boolean isFoil(@Nonnull ItemStack stack) {
 
                 return true;
             }
@@ -334,7 +334,7 @@ public class ModItems {
         registry.register(new VampirismItem("holy_salt_water", new Item.Properties().stacksTo(1)) {
 
             @Override
-            public boolean isFoil(ItemStack stack) {
+            public boolean isFoil(@Nonnull ItemStack stack) {
 
                 return true;
             }
@@ -461,16 +461,9 @@ public class ModItems {
     public static void fixMappings(RegistryEvent.MissingMappings<Item> event) {
         event.getAllMappings().forEach(missingMapping -> {
             switch (missingMapping.key.toString()) {
-                case "vampirism:blood_potion":
-                case "vampirism:blood_potion_table":
-                    missingMapping.ignore();
-                    break;
-                case "vampirism:vampire_clothing_head":
-                    missingMapping.remap(vampire_clothing_crown);
-                    break;
-                case "vampirism:vampire_clothing_feet":
-                    missingMapping.remap(vampire_clothing_boots);
-                    break;
+                case "vampirism:blood_potion", "vampirism:blood_potion_table" -> missingMapping.ignore();
+                case "vampirism:vampire_clothing_head" -> missingMapping.remap(vampire_clothing_crown);
+                case "vampirism:vampire_clothing_feet" -> missingMapping.remap(vampire_clothing_boots);
             }
         });
     }

@@ -22,6 +22,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putFloat("direct_damage", directDamage);
         compound.putFloat("indirect_damage", indirectDamage);
@@ -82,8 +83,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
             if ((excludeShooter && e == shootingEntity) || e == excludeEntity) {
                 continue;
             }
-            if (e instanceof LivingEntity && e.distanceToSqr(this) < distanceSq) {
-                LivingEntity entity = (LivingEntity) e;
+            if (e instanceof LivingEntity entity && e.distanceToSqr(this) < distanceSq) {
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1));
                 entity.hurt(DamageSource.indirectMagic(this, getOwner()), indirectDamage);
             }
@@ -102,6 +102,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
         this.excludeShooter = true;
     }
 
+    @Nonnull
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -113,7 +114,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurt(@Nonnull DamageSource source, float amount) {
         return false;
     }
 
@@ -143,7 +144,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.directDamage = compound.getFloat("direct_damage");
         this.indirectDamage = compound.getFloat("indirect_damage");
@@ -186,13 +187,14 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
         this.motionFactor = factor;
     }
 
+    @Nonnull
     @Override
     protected ParticleOptions getTrailParticle() {
         return ParticleTypes.UNDERWATER;
     }
 
     @Override
-    protected void onHit(HitResult result) {
+    protected void onHit(@Nonnull HitResult result) {
         if (!this.level.isClientSide) {
             if (initialNoClip && this.tickCount > 20) {
                 if (result.getType() == HitResult.Type.BLOCK) {

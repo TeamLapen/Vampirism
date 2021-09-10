@@ -31,6 +31,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.*;
 import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Random;
@@ -94,7 +95,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         if (saveHome && home != null) {
             int[] h = {(int) home.minX, (int) home.minY, (int) home.minZ, (int) home.maxX, (int) home.maxY, (int) home.maxZ};
@@ -120,7 +121,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public boolean checkSpawnRules(LevelAccessor worldIn, MobSpawnType spawnReasonIn) {
+    public boolean checkSpawnRules(@Nonnull LevelAccessor worldIn, @Nonnull MobSpawnType spawnReasonIn) {
         return (peaceful || worldIn.getDifficulty() != Difficulty.PEACEFUL) && super.checkSpawnRules(worldIn, spawnReasonIn);
     }
 
@@ -143,12 +144,12 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public boolean isWithinRestriction(BlockPos pos) {
+    public boolean isWithinRestriction(@Nonnull BlockPos pos) {
         return this.isWithinHomeDistance(pos);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt) {
+    public void readAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         if (nbt.contains("home")) {
             saveHome = true;
@@ -161,7 +162,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public void restrictTo(BlockPos pos, int distance) {
+    public void restrictTo(@Nonnull BlockPos pos, int distance) {
         this.setHomeArea(pos, distance);
     }
 
@@ -228,6 +229,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
         return SoundEvents.HOSTILE_DEATH;
     }
 
+    @Nonnull
     @Override
     protected SoundEvent getFallDamageSound(int heightIn) {
         return heightIn > 4 ? SoundEvents.HOSTILE_BIG_FALL : SoundEvents.HOSTILE_SMALL_FALL;
@@ -245,11 +247,13 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
         return this.getType();
     }
 
+    @Nonnull
     @Override
     protected SoundEvent getSwimSound() {
         return SoundEvents.HOSTILE_SWIM;
     }
 
+    @Nonnull
     @Override
     protected SoundEvent getSwimSplashSound() {
         return SoundEvents.HOSTILE_SPLASH;
@@ -272,7 +276,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     /**
-     * Called every 70 to 120 ticks during {@link CreatureEntity#updateAITasks()}
+     * Called every 70 to 120 ticks during {@link Mob#customServerAiStep()}
      */
     protected void onRandomTick() {
 

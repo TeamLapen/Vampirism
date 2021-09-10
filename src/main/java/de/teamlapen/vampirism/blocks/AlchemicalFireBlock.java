@@ -30,6 +30,8 @@ import java.util.Random;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
+import javax.annotation.Nonnull;
+
 /**
  * Alchemist's fire which does not spread
  */
@@ -45,7 +47,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+    public void animateTick(@Nonnull BlockState stateIn, @Nonnull Level worldIn, @Nonnull BlockPos pos, Random rand) {
         if (rand.nextInt(24) == 0) {
             worldIn.playLocalSound((float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS, 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
         }
@@ -60,8 +62,9 @@ public class AlchemicalFireBlock extends VampirismBlock {
         }
     }
 
+    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
         return Shapes.empty();
     }
 
@@ -71,12 +74,12 @@ public class AlchemicalFireBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
+    public boolean canSurvive(@Nonnull BlockState state, LevelReader worldIn, BlockPos pos) {
         return worldIn.getBlockState(pos.below()).isFaceSturdy(worldIn, pos.below(), Direction.UP);
     }
 
     @Override
-    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
+    public void entityInside(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, Entity entityIn) {
         if (!entityIn.fireImmune()) {
             entityIn.setRemainingFireTicks(entityIn.getRemainingFireTicks() + 1);
             if (entityIn.getRemainingFireTicks() == 0) {
@@ -90,7 +93,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
         if (!canSurvive(state, worldIn, pos)) {
             worldIn.removeBlock(pos, isMoving);
         }
@@ -108,7 +111,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
+    public void tick(@Nonnull BlockState state, @Nonnull ServerLevel worldIn, @Nonnull BlockPos pos, @Nonnull Random random) {
         if (!this.canSurvive(state, worldIn, pos)) {
             worldIn.removeBlock(pos, this.hasCollision);
         }

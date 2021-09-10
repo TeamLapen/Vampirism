@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
@@ -24,22 +25,25 @@ public class ModParticles {
     public static final ParticleType<GenericParticleData> generic = getNull();
 
     static void registerParticles(IForgeRegistry<ParticleType<?>> registry) {
-        registry.register(new ParticleType<FlyingBloodParticleData>(false, FlyingBloodParticleData.DESERIALIZER) {
+        registry.register(new ParticleType<>(false, FlyingBloodParticleData.DESERIALIZER) {
 
+            @Nonnull
             @Override
             public Codec<FlyingBloodParticleData> codec() {
                 return FlyingBloodParticleData.CODEC;
             }
         }.setRegistryName(new ResourceLocation(REFERENCE.MODID, "flying_blood")));
-        registry.register(new ParticleType<FlyingBloodEntityParticleData>(false, FlyingBloodEntityParticleData.DESERIALIZER) {
+        registry.register(new ParticleType<>(false, FlyingBloodEntityParticleData.DESERIALIZER) {
 
+            @Nonnull
             @Override
             public Codec<FlyingBloodEntityParticleData> codec() {
                 return FlyingBloodEntityParticleData.CODEC;
             }
         }.setRegistryName(new ResourceLocation(REFERENCE.MODID, "flying_blood_entity")));
-        registry.register(new ParticleType<GenericParticleData>(false, GenericParticleData.DESERIALIZER) {
+        registry.register(new ParticleType<>(false, GenericParticleData.DESERIALIZER) {
 
+            @Nonnull
             @Override
             public Codec<GenericParticleData> codec() {
                 return GenericParticleData.CODEC;

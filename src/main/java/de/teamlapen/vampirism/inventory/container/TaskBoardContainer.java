@@ -95,18 +95,14 @@ public class TaskBoardContainer extends AbstractContainerMenu implements TaskCon
     public void pressButton(@Nonnull ITaskInstance taskInfo) {
         TaskAction action = buttonAction(taskInfo);
         switch (action) {
-            case COMPLETE:
+            case COMPLETE -> {
                 taskInfo.complete();
                 this.completableTasks.remove(taskInfo.getId());
                 this.taskInstances.remove(taskInfo);
                 VampLib.proxy.createMasterSoundReference(ModSounds.task_complete, 1, 1).startPlaying();
-                break;
-            case ACCEPT:
-                taskInfo.startTask(Minecraft.getInstance().level.getGameTime() + taskInfo.getTaskDuration());
-                break;
-            default:
-                taskInfo.aboardTask();
-                break;
+            }
+            case ACCEPT -> taskInfo.startTask(Minecraft.getInstance().level.getGameTime() + taskInfo.getTaskDuration());
+            default -> taskInfo.aboardTask();
         }
         VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), action));
         if (this.listener != null) {

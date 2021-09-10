@@ -196,8 +196,7 @@ public class VersionChecker implements Runnable {
         URL currentUrl = url;
         for (int redirects = 0; redirects < MAX_HTTP_REDIRECTS; redirects++) {
             URLConnection c = currentUrl.openConnection();
-            if (c instanceof HttpURLConnection) {
-                HttpURLConnection huc = (HttpURLConnection) c;
+            if (c instanceof HttpURLConnection huc) {
                 huc.setInstanceFollowRedirects(false);
                 int responseCode = huc.getResponseCode();
                 if (responseCode >= 300 && responseCode <= 399) {
@@ -418,9 +417,7 @@ public class VersionChecker implements Runnable {
              * @return
              */
             public int compare(TYPE type) {
-                if (type.ORDER < this.ORDER) return -1;
-                if (type.ORDER > this.ORDER) return 1;
-                return 0;
+                return Integer.compare(type.ORDER, this.ORDER);
             }
         }
 

@@ -15,6 +15,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
@@ -32,7 +33,7 @@ public class CastleBricksBlock extends VampirismBlock {
     }
 
     @Override
-    public void animateTick(BlockState state, Level world, BlockPos pos, Random rand) {
+    public void animateTick(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Random rand) {
         if (!CastleStairsBlock.isStairs(state) && variant == EnumVariant.DARK_BRICK_BLOODY) {
             if (rand.nextInt(180) == 0) {
                 world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), ModSounds.ambient_castle, SoundSource.AMBIENT, 0.8F, 1.0F, false);
@@ -42,7 +43,7 @@ public class CastleBricksBlock extends VampirismBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced) {
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable BlockGetter world, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag advanced) {
         super.appendHoverText(stack, world, tooltip, advanced);
         tooltip.add(new TranslatableComponent("block.vampirism.castle_block" + (variant == EnumVariant.DARK_STONE ? ".no_spawn" : ".vampire_spawn")).withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY));
     }
@@ -69,6 +70,7 @@ public class CastleBricksBlock extends VampirismBlock {
             return this.getSerializedName();
         }
 
+        @Nonnull
         @Override
         public String getSerializedName() {
             return this.name;

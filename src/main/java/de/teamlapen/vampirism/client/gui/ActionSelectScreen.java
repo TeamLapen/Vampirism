@@ -188,7 +188,7 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
     }
 
     @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
         if (editActions)
             GuiUtils.drawHoveringText(stack, Lists.newArrayList(new TranslatableComponent("gui.vampirism.action_select.action_binding"), ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA), ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA)), 0, ((int) (this.height * 0.8)), width, height, this.width / 4, this.font);
@@ -196,7 +196,8 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
 
     @Override
     protected void afterIconDraw(PoseStack stack, IAction p, int x, int y) {
-        if (p == fakeAction || editActions) return;
+        if (p == fakeAction || editActions) //noinspection UnnecessaryReturnStatement
+            return;
         // Draw usage indicator
 
 //        float active = actionHandler.getPercentageForAction(p);

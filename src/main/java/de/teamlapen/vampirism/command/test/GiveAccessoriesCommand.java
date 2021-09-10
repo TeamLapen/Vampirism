@@ -34,18 +34,11 @@ public class GiveAccessoriesCommand extends BasicCommand {
     }
 
     private static int give(CommandContext<CommandSourceStack> context, ServerPlayer asPlayer, int number, IRefinementSet set) {
-        VampireRefinementItem i;
-        switch (number) {
-            case 1:
-                i = ModItems.amulet;
-                break;
-            case 2:
-                i = ModItems.ring;
-                break;
-            default:
-                i = ModItems.obi_belt;
-                break;
-        }
+        VampireRefinementItem i = switch (number) {
+            case 1 -> ModItems.amulet;
+            case 2 -> ModItems.ring;
+            default -> ModItems.obi_belt;
+        };
         ItemStack s = new ItemStack(i);
         if (i.applyRefinementSet(s, set)) {
             asPlayer.addItem(s);

@@ -20,6 +20,8 @@ import net.minecraft.tags.Tag;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.resources.ResourceLocation;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.function.Consumer;
@@ -42,31 +44,37 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
         super(resultIn, countIn);
     }
 
+    @Nonnull
     @Override
-    public ShapelessWeaponTableRecipeBuilder group(String groupIn) {
+    public ShapelessWeaponTableRecipeBuilder group(@Nullable String groupIn) {
         return (ShapelessWeaponTableRecipeBuilder) super.group(groupIn);
     }
 
+    @Nonnull
     @Override
     public ShapelessWeaponTableRecipeBuilder requires(ItemLike itemIn) {
         return (ShapelessWeaponTableRecipeBuilder) super.requires(itemIn);
     }
 
+    @Nonnull
     @Override
     public ShapelessWeaponTableRecipeBuilder requires(ItemLike itemIn, int quantity) {
         return (ShapelessWeaponTableRecipeBuilder) super.requires(itemIn, quantity);
     }
 
+    @Nonnull
     @Override
     public ShapelessWeaponTableRecipeBuilder requires(Ingredient ingredientIn) {
         return (ShapelessWeaponTableRecipeBuilder) super.requires(ingredientIn);
     }
 
+    @Nonnull
     @Override
     public ShapelessWeaponTableRecipeBuilder requires(Ingredient ingredientIn, int quantity) {
         return (ShapelessWeaponTableRecipeBuilder) super.requires(ingredientIn, quantity);
     }
 
+    @Nonnull
     @Override
     public ShapelessWeaponTableRecipeBuilder requires(Tag<Item> tagIn) {
         return (ShapelessWeaponTableRecipeBuilder) super.requires(tagIn);
@@ -95,6 +103,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
         return this;
     }
 
+    @Nonnull
     @Override
     public ShapelessWeaponTableRecipeBuilder unlockedBy(String name, CriterionTriggerInstance criterionIn) {
         return (ShapelessWeaponTableRecipeBuilder) super.unlockedBy(name, criterionIn);
@@ -105,7 +114,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
         return this;
     }
 
-    private class Result extends ShapelessRecipeBuilder.Result {
+    private static class Result extends ShapelessRecipeBuilder.Result {
         private final int lava;
         private final ISkill[] skills;
         private final int level;
@@ -117,6 +126,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
             this.level = levelIn;
         }
 
+        @Nonnull
         @Override
         public RecipeSerializer<?> getType() {
             return ModRecipes.shapeless_crafting_weapontable;

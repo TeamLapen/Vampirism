@@ -35,6 +35,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
@@ -96,7 +97,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("level", getLevel());
         nbt.putBoolean("lady", isLady());
@@ -145,7 +146,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public boolean checkSpawnRules(LevelAccessor worldIn, MobSpawnType spawnReasonIn) {
+    public boolean checkSpawnRules(@Nonnull LevelAccessor worldIn, @Nonnull MobSpawnType spawnReasonIn) {
         int i = Mth.floor(this.getBoundingBox().minY);
         //Only spawn on the surface
         if (i < 60) return false;
@@ -163,7 +164,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public boolean doHurtTarget(Entity entity) {
+    public boolean doHurtTarget(@Nonnull Entity entity) {
         boolean flag = super.doHurtTarget(entity);
         if (flag && entity instanceof LivingEntity) {
             float tm = 1f;
@@ -188,7 +189,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+    public SpawnGroupData finalizeSpawn(@Nonnull ServerLevelAccessor worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
         this.getEntityData().set(LADY, this.getRandom().nextBoolean());
         return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
@@ -264,7 +265,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public boolean hurt(DamageSource damageSource, float amount) {
+    public boolean hurt(@Nonnull DamageSource damageSource, float amount) {
         attackDecisionCounter++;
         return super.hurt(damageSource, amount);
     }
@@ -282,7 +283,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public void killed(ServerLevel world, LivingEntity entity) {
+    public void killed(@Nonnull ServerLevel world, @Nonnull LivingEntity entity) {
         super.killed(world, entity);
         if (entity instanceof VampireBaronEntity) {
             this.setHealth(this.getMaxHealth());
@@ -290,7 +291,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt) {
+    public void readAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         setLevel(Mth.clamp(nbt.getInt("level"), 0, MAX_LEVEL));
         this.getEntityData().set(LADY, nbt.getBoolean("lady"));
@@ -313,21 +314,14 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         int max = Math.round(((d.maxPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
         int min = Math.round(((d.minPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * (MAX_LEVEL));
 
-        switch (random.nextInt(7)) {
-            case 0:
-                return min;
-            case 1:
-                return max + 1;
-            case 2:
-                return avg;
-            case 3:
-                return avg + 1;
-            case 4:
-            case 5:
-                return random.nextInt(MAX_LEVEL + 1);
-            default:
-                return random.nextInt(max + 2 - min) + min;
-        }
+        return switch (random.nextInt(7)) {
+            case 0 -> min;
+            case 1 -> max + 1;
+            case 2 -> avg;
+            case 3 -> avg + 1;
+            case 4, 5 -> random.nextInt(MAX_LEVEL + 1);
+            default -> random.nextInt(max + 2 - min) + min;
+        };
     }
 
     @Override
@@ -344,7 +338,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    protected int getExperienceReward(Player player) {
+    protected int getExperienceReward(@Nonnull Player player) {
         return 20 + 5 * getLevel();
     }
 
@@ -360,7 +354,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, input -> input != null && isLowerLevel(input)));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isLowerLevel));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, VampireBaronEntity.class, true, false));
     }
 

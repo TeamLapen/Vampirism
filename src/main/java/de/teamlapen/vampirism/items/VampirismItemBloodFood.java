@@ -16,6 +16,8 @@ import net.minecraft.world.level.Level;
 
 import net.minecraft.world.item.Item.Properties;
 
+import javax.annotation.Nonnull;
+
 public class VampirismItemBloodFood extends VampirismItem {
 
     private final FoodProperties vampireFood;
@@ -25,11 +27,11 @@ public class VampirismItemBloodFood extends VampirismItem {
         this.vampireFood = vampireFood;
     }
 
+    @Nonnull
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
-        if (entityLiving instanceof Player) {
+    public ItemStack finishUsingItem(@Nonnull ItemStack stack, @Nonnull Level worldIn, @Nonnull LivingEntity entityLiving) {
+        if (entityLiving instanceof Player player) {
             assert stack.getItem().getFoodProperties() != null;//Don't shrink stack before retrieving food
-            Player player = (Player) entityLiving;
             VampirePlayer.getOpt(player).ifPresent(v -> v.drinkBlood(vampireFood.getNutrition(), vampireFood.getSaturationModifier()));
         }
         if (entityLiving instanceof IVampire) {

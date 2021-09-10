@@ -14,6 +14,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 /**
  * Render the eyes over the advanced vampire custom face
  */
@@ -35,7 +37,7 @@ public class AdvancedVampireEyeLayer extends RenderLayer<AdvancedVampireEntity, 
 
 
     @Override
-    public void render(PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int packetLightIn, AdvancedVampireEntity advancedVampireEntity, float v, float v1, float v2, float v3, float v4, float v5) {
+    public void render(@Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource iRenderTypeBuffer, int packetLightIn, AdvancedVampireEntity advancedVampireEntity, float v, float v1, float v2, float v3, float v4, float v5) {
         int type = advancedVampireEntity.getEyeType();
         if (type < 0 || type >= overlays.length) {
             type = 0;

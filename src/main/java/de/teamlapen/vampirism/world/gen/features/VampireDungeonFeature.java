@@ -14,8 +14,6 @@ import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.MonsterRoomFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
@@ -40,9 +38,10 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
      * <p>
      * - changed {@link Blocks#MOSSY_COBBLESTONE} to {@link ModBlocks#castle_block_dark_brick} and {@link ModBlocks#castle_block_dark_brick_bloody}
      * - changed {@link Blocks#COBBLESTONE} to {@link Blocks#SPRUCE_PLANKS}
-     * - changed {@link LootTables#CHESTS_SIMPLE_DUNGEON} to {@link ModLootTables#chest_vampire_dungeon}
-     * - changed {@link DungeonsFeature#getRandomDungeonMob(Random)} to {@link ModEntities#vampire}
+     * - changed {@link net.minecraft.world.level.storage.loot.BuiltInLootTables#SIMPLE_DUNGEON} to {@link ModLootTables#chest_vampire_dungeon}
+     * - changed {@link MonsterRoomFeature#randomEntityId(Random)} to {@link ModEntities#vampire}
      */
+    @SuppressWarnings("JavadocReference")
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
         int j = context.random().nextInt(2) + 2;
