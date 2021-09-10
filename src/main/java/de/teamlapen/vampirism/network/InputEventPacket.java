@@ -273,7 +273,7 @@ public class InputEventPacket implements IMessage {
                     VampirePlayer.getOpt(player).ifPresent(VampirePlayer::tryResurrect);
                     break;
                 case DIE:
-                    player.hurt(DamageSource.GENERIC, 10000);
+                    VampirePlayer.getOpt(player).ifPresent(VampirePlayer::giveUpDBNO);
                     break;
             }
             ctx.setPacketHandled(true);
