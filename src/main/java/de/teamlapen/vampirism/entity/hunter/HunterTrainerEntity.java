@@ -57,7 +57,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
         saveHome = true;
         hasArms = true;
         ((GroundPathNavigation) this.getNavigation()).setCanOpenDoors(true);
-
+        this.peaceful = true;
         this.setDontDropEquipment();
     }
 

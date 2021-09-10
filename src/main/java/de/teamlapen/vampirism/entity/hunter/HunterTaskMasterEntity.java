@@ -51,6 +51,7 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements IDefault
 
     public HunterTaskMasterEntity(EntityType<? extends HunterBaseEntity> type, Level world) {
         super(type, world, false);
+        this.peaceful = true;
     }
 
     @Override
