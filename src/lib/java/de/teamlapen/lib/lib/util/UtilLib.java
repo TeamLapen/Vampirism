@@ -244,14 +244,16 @@ public class UtilLib {
         BlockPos backupPos = null; //
         while (!flag && i++ < maxTry) {
             BlockPos c = getRandomPosInBox(world, box); //TODO select a better location (more viable)
-            if (world.isAreaLoaded(c, 5) && NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(e.getType()), world, c, e.getType())) {//I see no other way
-                e.setPos(c.getX(), c.getY() + 0.2, c.getZ());
-                if (!(e instanceof Mob) || (((Mob) e).checkSpawnRules(world, reason) && ((Mob) e).checkSpawnObstruction(e.getCommandSenderWorld()))) {
-                    backupPos = c; //Store the location in case we do not find a better one
-                    for (LivingEntity p : avoidedEntities) {
+            if (world.noCollision(new AABB(c))) {
+                if (world.isAreaLoaded(c, 5) && NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(e.getType()), world, c, e.getType())) {//I see no other way
+                    e.setPos(c.getX(), c.getY() + 0.2, c.getZ());
+                    if (SpawnPlacements.checkSpawnRules(e.getType(), world, reason, c, world.getRandom())  && !(e instanceof Mob) || (((Mob) e).checkSpawnRules(world, reason) && ((Mob) e).checkSpawnObstruction(e.getCommandSenderWorld()))) {
+                        backupPos = c; //Store the location in case we do not find a better one
+                        for (LivingEntity p : avoidedEntities) {
 
-                        if (!(p.distanceToSqr(e) < 500 && p.hasLineOfSight(e))) {
-                            flag = true;
+                            if (!(p.distanceToSqr(e) < 500 && p.hasLineOfSight(e))) {
+                                flag = true;
+                            }
                         }
                     }
                 }
