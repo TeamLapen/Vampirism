@@ -1047,6 +1047,18 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
     }
 
+    public void giveUpDBNO(){
+        if (this.isDBNO()) {
+            //Reset dbno state before killing the player in case something is canceling the death event
+            this.setDBNOTimer(-1);
+            this.dbnoMessage = null;
+            this.player.setForcedPose(null);
+            this.player.refreshDimensions();
+            this.sync(true);
+            this.player.hurt(DamageSource.GENERIC, 10000);
+        }
+    }
+
     @Override
     public void unUnlockVision(@Nonnull IVampireVision vision) {
         if (vision.equals(activatedVision)) {
