@@ -274,6 +274,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
                 entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 41, 2));
                 if (entity.getRandom().nextInt(BalanceMobProps.mobProps.BLOOD_REGEN_CHANCE) == 0) {
                     setBlood(getBlood() + 1);
+                    sync();
                 }
             }
         }
