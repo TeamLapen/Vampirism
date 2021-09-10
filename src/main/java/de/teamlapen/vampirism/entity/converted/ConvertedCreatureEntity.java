@@ -385,6 +385,11 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
     }
 
+    @Override
+    public boolean canBeLeashed(@Nonnull Player player) {
+        return true;
+    }
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static class IMob extends ConvertedCreatureEntity implements net.minecraft.world.entity.monster.Enemy {
 

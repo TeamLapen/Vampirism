@@ -359,4 +359,9 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
             }
         }
     }
+
+    @Override
+    public boolean canBeLeashed(@Nonnull Player player) {
+        return false;
+    }
 }
