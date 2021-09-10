@@ -54,6 +54,7 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
 
     public VampireTaskMasterEntity(EntityType<? extends VampireBaseEntity> type, World world) {
         super(type, world, false);
+        this.peaceful = true;
     }
 
     @Override

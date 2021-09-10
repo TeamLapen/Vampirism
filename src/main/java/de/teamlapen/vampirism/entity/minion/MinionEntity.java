@@ -121,6 +121,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             return !flag1 && !flag2;
         };
         setDontDropEquipment();
+        this.peaceful=true;
     }
 
     @Override

@@ -30,6 +30,7 @@ public class DummyHunterTrainerEntity extends VampirismEntity implements ICaptur
         ((GroundPathNavigator) this.getNavigation()).setCanOpenDoors(true);
 
         this.setDontDropEquipment();
+        this.peaceful = true;
     }
 
     @Override
