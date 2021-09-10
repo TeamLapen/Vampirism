@@ -384,6 +384,11 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
 
     }
 
+    @Override
+    public boolean canBeLeashed(PlayerEntity player) {
+        return true;
+    }
+
     public static class IMob extends ConvertedCreatureEntity implements net.minecraft.entity.monster.IMob {
 
         public IMob(EntityType<? extends ConvertedCreatureEntity> type, World world) {

@@ -351,4 +351,9 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
             }
         }
     }
+
+    @Override
+    public boolean canBeLeashed(PlayerEntity player) {
+        return false;
+    }
 }
