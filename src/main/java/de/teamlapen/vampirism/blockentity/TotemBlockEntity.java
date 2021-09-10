@@ -961,6 +961,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     }
 
     private void makeAgressive() {
+        if (VampirismConfig.SERVER.disableVillageGuards.get()) return;
         //noinspection ConstantConditions
         if (!this.level.isClientSide) {
             List<Villager> villagerEntities = this.level.getEntitiesOfClass(Villager.class, this.getVillageArea());

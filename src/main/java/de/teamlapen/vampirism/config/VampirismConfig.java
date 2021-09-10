@@ -147,6 +147,7 @@ public class VampirismConfig {
 
         public final ForgeConfigSpec.BooleanValue disableFangInfection;
         public final ForgeConfigSpec.BooleanValue disableMobBiteInfection;
+        public final ForgeConfigSpec.BooleanValue disableVillageGuards;
 
         public final ForgeConfigSpec.BooleanValue oldVampireBiomeGen;
 
@@ -191,6 +192,7 @@ public class VampirismConfig {
             builder.push("disable");
             disableFangInfection = builder.comment("Disable vampire fangs being usable to infect yourself").define("disableFangInfection", false);
             disableMobBiteInfection = builder.comment("Prevent vampire mobs from infecting players when attacking").define("disableMobBiteInfection", false);
+            disableVillageGuards = builder.comment("Prevent villagers in hunter controlled villages to turn into guard villager when the village is attacked").define("disableVillageGuards", false);
             builder.pop();
 
             builder.push("internal");
