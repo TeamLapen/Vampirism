@@ -242,9 +242,10 @@ public class UtilLib {
         BlockPos backupPos = null; //
         while (!flag && i++ < maxTry) {
             BlockPos c = getRandomPosInBox(world, box); //TODO select a better location (more viable)
+            if (world.noCollision(new AxisAlignedBB(c)))
             if (world.isAreaLoaded(c, 5) && WorldEntitySpawner.isSpawnPositionOk(EntitySpawnPlacementRegistry.getPlacementType(e.getType()), world, c, e.getType())) {//i see no other way
                 e.setPos(c.getX(), c.getY() + 0.2, c.getZ());
-                if (!(e instanceof MobEntity) || (((MobEntity) e).checkSpawnRules(world, reason) && ((MobEntity) e).checkSpawnObstruction(e.getCommandSenderWorld()))) {
+                if (EntitySpawnPlacementRegistry.checkSpawnRules(e.getType(), world, reason, c, world.getRandom()) && (!(e instanceof MobEntity) || ((MobEntity) e).checkSpawnObstruction(e.getCommandSenderWorld()))) {
                     backupPos = c; //Store the location in case we do not find a better one
                     for (LivingEntity p : avoidedEntities) {
 
