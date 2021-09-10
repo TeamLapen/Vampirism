@@ -950,6 +950,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     private void makeAgressive() {
+        if (VampirismConfig.SERVER.disableVillageGuards.get()) return;
         //noinspection ConstantConditions
         if (!this.level.isClientSide) {
             List<VillagerEntity> villagerEntities = this.level.getEntitiesOfClass(VillagerEntity.class, this.getVillageArea());
