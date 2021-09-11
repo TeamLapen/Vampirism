@@ -1,78 +1,26 @@
 package de.teamlapen.vampirism.data;
 
+import de.teamlapen.lib.lib.data.BaseItemModelGenerator;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.world.item.Item;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.model.generators.ItemModelBuilder;
-import net.minecraftforge.client.model.generators.ItemModelProvider;
-import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class ItemModelGenerator extends ItemModelProvider {
+public class ItemModelGenerator extends BaseItemModelGenerator {
     public ItemModelGenerator(DataGenerator generator, ExistingFileHelper existingFileHelper) {
         super(generator, REFERENCE.MODID, existingFileHelper);
     }
 
     @SuppressWarnings("ConstantConditions")
-    public ItemModelBuilder block(Block name) {
-        try {
-            return super.withExistingParent(name.getRegistryName().getPath(), REFERENCE.MODID + ":block/" + name.getRegistryName().getPath());
-        } catch (IllegalStateException e) {
-            return getBuilder(name.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile(REFERENCE.MODID + ":block/" + name.getRegistryName().getPath()));
-        }
-    }
-
-    @Nonnull
-    @Override
-    public String getName() {
-        return "Vampirism Item Models";
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    public ItemModelBuilder item(Item item, ResourceLocation... texture) {
-        if (texture != null && texture.length == 0) {
-            return withExistingParent(item, mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":item/" + item.getRegistryName().getPath());
-        }
-        return item(item.getRegistryName().getPath(), texture);
-    }
-
-    public ItemModelBuilder item(String item, ResourceLocation... texture) {
-        ItemModelBuilder model = withExistingParent(item, mcLoc("item/generated"));
-        if (texture != null) {
-            for (int i = 0; i < texture.length; i++) {
-                model.texture("layer" + i, texture[i]);
-            }
-        }
-        return model;
-    }
-
-    @Nonnull
-    public ItemModelBuilder withExistingParent(Item name, Item parent) {
-        return this.withExistingParent(name, parent.getRegistryName());
-    }
-
-    @SuppressWarnings({"UnusedReturnValue", "ConstantConditions"})
-    @Nonnull
-    public ItemModelBuilder withExistingParent(Block name, ResourceLocation parent) {
-        return super.withExistingParent(name.getRegistryName().getPath(), parent);
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    @Nonnull
-    public ItemModelBuilder withExistingParent(Item name, ResourceLocation parent) {
-        return super.withExistingParent(name.getRegistryName().getPath(), parent);
-    }
-
     @Override
     protected void registerModels() {
         Set<Block> blocks = new HashSet<>() {{
@@ -94,9 +42,6 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModBlocks.blood_sieve);
             add(ModBlocks.church_altar);
             add(ModBlocks.cursed_earth);
-            add(ModBlocks.garlic_diffusor_weak);
-            add(ModBlocks.garlic_diffusor_normal);
-            add(ModBlocks.garlic_diffusor_improved);
             add(ModBlocks.hunter_table);
             add(ModBlocks.sunscreen_beacon);
             add(ModBlocks.totem_top);
@@ -202,10 +147,15 @@ public class ItemModelGenerator extends ItemModelProvider {
         items.forEach(this::item);
         itemsWithTexture.forEach(this::item);
 
+        block(ModBlocks.garlic_diffusor_weak, "garlic_beacon_weak");
+        block(ModBlocks.garlic_diffusor_normal, "garlic_beacon_normal");
+        block(ModBlocks.garlic_diffusor_improved, "garlic_beacon_improved");
+
         withExistingParent(ModBlocks.bloody_spruce_leaves, mcLoc("block/oak_leaves"));
         withExistingParent(ModBlocks.vampire_spruce_leaves, mcLoc("block/oak_leaves"));
 
-        withExistingParent(ModBlocks.bloody_spruce_sapling, mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/" + ModBlocks.bloody_spruce_sapling.getRegistryName().getPath());
+        withExistingParent(ModBlocks.bloody_spruce_sapling, mcLoc("item/generated")).texture("layer0", this.modid + ":block/" + ModBlocks.bloody_spruce_sapling.getRegistryName().getPath());
+        withExistingParent(ModBlocks.vampire_spruce_sapling, mcLoc("item/generated")).texture("layer0", this.modid + ":block/" + ModBlocks.vampire_spruce_sapling.getRegistryName().getPath());
 
         withExistingParent(ModBlocks.alchemical_fire, modLoc("block/fire_side"));
         withExistingParent(ModBlocks.altar_inspiration, modLoc("block/altar_inspiration/altar_inspiration"));

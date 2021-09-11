@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vampirism:garlic_beacon_improved"
+          "name": "vampirism:garlic_diffusor_normal"
         }
       ],
       "conditions": [
