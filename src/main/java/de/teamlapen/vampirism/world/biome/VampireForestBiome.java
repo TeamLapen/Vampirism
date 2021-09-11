@@ -3,16 +3,11 @@ package de.teamlapen.vampirism.world.biome;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
+import net.minecraft.data.worldgen.BiomeDefaultFeatures;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilderBaseConfiguration;
-
-import net.minecraft.data.worldgen.BiomeDefaultFeatures;
-import net.minecraft.world.level.biome.AmbientMoodSettings;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.BiomeGenerationSettings;
-import net.minecraft.world.level.biome.BiomeSpecialEffects;
-import net.minecraft.world.level.biome.MobSpawnSettings;
 
 public class VampireForestBiome {
 
@@ -22,16 +17,16 @@ public class VampireForestBiome {
 
     public static Biome.BiomeBuilder createBiomeBuilder(float depth, float scale, MobSpawnSettings.Builder spawnBuilder, BiomeSpecialEffects.Builder ambienceBuilder) {
         BiomeGenerationSettings.Builder builder = new BiomeGenerationSettings.Builder().surfaceBuilder(SurfaceBuilder.DEFAULT.configured(new SurfaceBuilderBaseConfiguration(ModBlocks.cursed_earth.defaultBlockState(), ModBlocks.cursed_earth.defaultBlockState(), ModBlocks.cursed_earth.defaultBlockState())));
-        BiomeDefaultFeatures.addDefaultCarvers(builder); //carver
+        BiomeDefaultFeatures.addDefaultCarvers(builder);
         VampirismBiomeFeatures.addModdedWaterLake(builder);
 
         VampirismBiomeFeatures.addVampireFlower(builder);
         BiomeDefaultFeatures.addForestGrass(builder);
         BiomeDefaultFeatures.addDesertVegetation(builder);
 
-        BiomeDefaultFeatures.addDefaultUndergroundVariety(builder); //stone variants
-        BiomeDefaultFeatures.addDefaultOres(builder); //ore
-        BiomeDefaultFeatures.addDefaultSoftDisks(builder); //disks
+        BiomeDefaultFeatures.addDefaultUndergroundVariety(builder);
+        BiomeDefaultFeatures.addDefaultOres(builder);
+        BiomeDefaultFeatures.addDefaultSoftDisks(builder);
 
         VampirismBiomeFeatures.addVampireTrees(builder);
 

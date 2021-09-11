@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "vampirism:bloody_spruce_sapling"
+    "vampirism:bloody_spruce_sapling",
+    "vampirism:vampire_spruce_sapling"
   ]
 }

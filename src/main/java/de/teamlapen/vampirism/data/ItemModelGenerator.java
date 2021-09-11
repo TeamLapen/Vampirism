@@ -6,8 +6,8 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import java.util.HashMap;
@@ -154,8 +154,8 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
         withExistingParent(ModBlocks.bloody_spruce_leaves, mcLoc("block/oak_leaves"));
         withExistingParent(ModBlocks.vampire_spruce_leaves, mcLoc("block/oak_leaves"));
 
-        withExistingParent(ModBlocks.bloody_spruce_sapling, mcLoc("item/generated")).texture("layer0", this.modid + ":block/" + ModBlocks.bloody_spruce_sapling.getRegistryName().getPath());
-        withExistingParent(ModBlocks.vampire_spruce_sapling, mcLoc("item/generated")).texture("layer0", this.modid + ":block/" + ModBlocks.vampire_spruce_sapling.getRegistryName().getPath());
+        withExistingParent(ModBlocks.bloody_spruce_sapling, mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/" + ModBlocks.bloody_spruce_sapling.getRegistryName().getPath());
+        withExistingParent(ModBlocks.vampire_spruce_sapling, mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/" + ModBlocks.vampire_spruce_sapling.getRegistryName().getPath());
 
         withExistingParent(ModBlocks.alchemical_fire, modLoc("block/fire_side"));
         withExistingParent(ModBlocks.altar_inspiration, modLoc("block/altar_inspiration/altar_inspiration"));

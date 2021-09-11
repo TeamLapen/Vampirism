@@ -11,13 +11,14 @@ import de.teamlapen.vampirism.data.ItemModelGenerator;
 import de.teamlapen.vampirism.data.LootTablesGenerator;
 import de.teamlapen.vampirism.items.CoffinItem;
 import de.teamlapen.vampirism.util.BlockVoxelshapes;
-
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
@@ -26,14 +27,6 @@ import javax.annotation.Nonnull;
 import java.util.Set;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
-
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FireBlock;
-import net.minecraft.world.level.block.FlowerPotBlock;
-import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 
 /**
  * Handles all block registrations and reference.
@@ -90,6 +83,7 @@ public class ModBlocks {
     public static final BloodySpruceLeavesBlock vampire_spruce_leaves = getNull();
     public static final BloodySpruceLeavesBlock bloody_spruce_leaves = getNull();
     public static final BloodySpruceSaplingBlock bloody_spruce_sapling = getNull();
+    public static final VampireSpruceSaplingBlock vampire_spruce_sapling = getNull();
     public static final VampirismBlock chandelier = getNull();
     public static final VampirismBlock candelabra = getNull();
     public static final VampirismBlock candelabra_wall = getNull();
@@ -146,6 +140,7 @@ public class ModBlocks {
         registry.register(itemBlock(vampire_spruce_leaves));
         registry.register(itemBlock(bloody_spruce_leaves));
         registry.register(itemBlock(bloody_spruce_sapling));
+        registry.register(itemBlock(vampire_spruce_sapling));
         registry.register(itemBlock(chandelier));
         registry.register(itemBlock(cross));
         registry.register(itemBlock(tombstone1));
@@ -210,7 +205,8 @@ public class ModBlocks {
         registry.register(prepareRegister(log));
         registry.register(prepareRegister(new BloodySpruceLeavesBlock("vampire_spruce_leaves")));
         registry.register(prepareRegister(new BloodySpruceLeavesBlock("bloody_spruce_leaves")));
-        registry.register(prepareRegister(new BloodySpruceSaplingBlock()));
+        registry.register(prepareRegister(new VampireSpruceSaplingBlock().setRegistryName(REFERENCE.MODID, "vampire_spruce_sapling")));
+        registry.register(prepareRegister(new BloodySpruceSaplingBlock().setRegistryName(REFERENCE.MODID, "bloody_spruce_sapling")));
         registry.register(prepareRegister(new ChandelierBlock()));
         registry.register(prepareRegister(new CandelabraWallBlock()));
         registry.register(prepareRegister(new CandelabraBlock()));

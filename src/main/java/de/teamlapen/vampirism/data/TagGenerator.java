@@ -2,18 +2,17 @@ package de.teamlapen.vampirism.data;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.*;
-import net.minecraft.data.*;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.tags.BlockTagsProvider;
+import net.minecraft.data.tags.EntityTypeTagsProvider;
+import net.minecraft.data.tags.FluidTagsProvider;
+import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import javax.annotation.Nonnull;
-
-import net.minecraft.data.tags.BlockTagsProvider;
-import net.minecraft.data.tags.EntityTypeTagsProvider;
-import net.minecraft.data.tags.FluidTagsProvider;
-import net.minecraft.data.tags.ItemTagsProvider;
 
 public class TagGenerator {
 
@@ -48,7 +47,7 @@ public class TagGenerator {
             tag(BlockTags.FLOWER_POTS).add(ModBlocks.potted_vampire_orchid);
             tag(BlockTags.SPRUCE_LOGS).add(ModBlocks.bloody_spruce_log);
             tag(BlockTags.LEAVES).add(ModBlocks.vampire_spruce_leaves, ModBlocks.bloody_spruce_leaves);
-            tag(BlockTags.SAPLINGS).add(ModBlocks.bloody_spruce_sapling);
+            tag(BlockTags.SAPLINGS).add(ModBlocks.bloody_spruce_sapling, ModBlocks.vampire_spruce_sapling);
 
             //Tool types
             tag(BlockTags.MINEABLE_WITH_SHOVEL).add(ModBlocks.cursed_earth);
@@ -89,7 +88,7 @@ public class TagGenerator {
             tag(ItemTags.SLABS).addTag(ModTags.Items.CASTLE_SLAPS);
             tag(ItemTags.SPRUCE_LOGS).add(ModBlocks.bloody_spruce_log.asItem());
             tag(ItemTags.LEAVES).add(ModBlocks.vampire_spruce_leaves.asItem(), ModBlocks.bloody_spruce_leaves.asItem());
-            tag(ItemTags.SAPLINGS).add(ModBlocks.bloody_spruce_sapling.asItem());
+            tag(ItemTags.SAPLINGS).add(ModBlocks.bloody_spruce_sapling.asItem(), ModBlocks.vampire_spruce_sapling.asItem());
         }
     }
 

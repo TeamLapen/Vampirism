@@ -1,17 +1,17 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.blockentity.AlchemicalCauldronBlockEntity;
+import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.client.render.tiles.*;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.blockentity.AlchemicalCauldronBlockEntity;
-import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -108,6 +108,7 @@ public class ModBlocksRender {
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.bloody_spruce_leaves, RenderType.cutoutMipped());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.vampire_spruce_leaves, RenderType.cutoutMipped());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.bloody_spruce_sapling, cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.vampire_spruce_sapling, cutout);
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.chandelier, cutout);
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.candelabra, cutout);
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.candelabra_wall, cutout);

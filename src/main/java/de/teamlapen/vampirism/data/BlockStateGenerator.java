@@ -3,9 +3,9 @@ package de.teamlapen.vampirism.data;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.core.ModBlocks;
+import net.minecraft.core.Direction;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.core.Direction;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -32,6 +32,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         models().withExistingParent("fire_floor0", modLoc("block/fire_floor")).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
         models().withExistingParent("fire_floor1", modLoc("block/fire_floor")).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
         ModelFile bloody_spruce_sapling = models().cross("bloody_spruce_sapling", modLoc("block/bloody_spruce_sapling"));
+        ModelFile vampire_spruce_sapling = models().cross("vampire_spruce_sapling", modLoc("block/vampire_spruce_sapling"));
         ModelFile bloody_spruce_log = models().cubeColumn("bloody_spruce_log", modLoc("block/bloody_spruce_log"), modLoc("block/bloody_spruce_log_top"));
 
         //default blocks
@@ -68,6 +69,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         simpleBlock(ModBlocks.vampire_spruce_leaves, models().getExistingFile(mcLoc("block/oak_leaves")));
         simpleBlock(ModBlocks.bloody_spruce_leaves, models().getExistingFile(mcLoc("block/oak_leaves")));
         simpleBlock(ModBlocks.bloody_spruce_sapling, bloody_spruce_sapling);
+        simpleBlock(ModBlocks.vampire_spruce_sapling, vampire_spruce_sapling);
 
 
         stairsBlock(ModBlocks.castle_stairs_dark_stone, modLoc("block/castle_block_dark_stone"));

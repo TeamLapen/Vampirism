@@ -9,11 +9,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class BloodySpruceTree extends AbstractTreeGrower {
+public class VampireSpruceTree extends AbstractTreeGrower {
 
     @Nullable
     @Override
     protected ConfiguredFeature<TreeConfiguration, ?> getConfiguredFeature(@Nonnull Random randomIn, boolean largeHive) {
-        return VampirismBiomeFeatures.vampire_tree_red;
+        return VampirismBiomeFeatures.vampire_tree;
     }
 }
