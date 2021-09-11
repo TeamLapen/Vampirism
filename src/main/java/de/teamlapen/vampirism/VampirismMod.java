@@ -46,16 +46,15 @@ import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.proxy.ServerProxy;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
-import de.teamlapen.vampirism.world.VampirismWorld;
 import de.teamlapen.vampirism.world.WorldGenManager;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.ChatFormatting;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.ChatFormatting;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
@@ -241,6 +240,7 @@ public class VampirismMod {
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
+        onInitStep(IInitListener.Step.ENQUEUE_IMC, event);
         HelperRegistry.registerPlayerEventReceivingCapability(VampirePlayer.CAP, VampirePlayer.class);
         HelperRegistry.registerPlayerEventReceivingCapability(HunterPlayer.CAP, HunterPlayer.class);
         HelperRegistry.registerSyncableEntityCapability(ExtendedCreature.CAP, REFERENCE.EXTENDED_CREATURE_KEY, ExtendedCreature.class);
@@ -286,9 +286,7 @@ public class VampirismMod {
     }
 
     private void loadComplete(final FMLLoadCompleteEvent event) {
-        registryManager.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
-        proxy.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
-        modCompatLoader.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
+        onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
     }
 
     /**
@@ -324,7 +322,7 @@ public class VampirismMod {
 
     private void processIMC(final InterModProcessEvent event) {
         finishAPI();
-        registryManager.onInitStep(IInitListener.Step.PROCESS_IMC, event);
+        onInitStep(IInitListener.Step.PROCESS_IMC, event);
         IMCHandler.handleInterModMessage(event);
         if (inDev) {
             Tests.runBackgroundTests();
@@ -333,10 +331,8 @@ public class VampirismMod {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        modCompatLoader.onInitStep(IInitListener.Step.COMMON_SETUP, event);
-
         dispatcher.registerPackets();
-        registryManager.onInitStep(IInitListener.Step.COMMON_SETUP, event);
+        onInitStep(IInitListener.Step.COMMON_SETUP, event);
         proxy.onInitStep(IInitListener.Step.COMMON_SETUP, event);
 
         if (!VampirismConfig.COMMON.versionCheck.get()) {
@@ -361,9 +357,13 @@ public class VampirismMod {
     }
 
     private void setupClient(FMLClientSetupEvent event) {
-        registryManager.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
-        proxy.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
-        modCompatLoader.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
+        onInitStep(IInitListener.Step.CLIENT_SETUP, event);
+    }
+
+    private void onInitStep(IInitListener.Step step, ParallelDispatchEvent event){
+        registryManager.onInitStep(step, event);
+        proxy.onInitStep(step, event);
+        modCompatLoader.onInitStep(step, event);
     }
 
 }
