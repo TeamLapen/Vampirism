@@ -6,6 +6,7 @@ import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.api.entity.minion.IMinionInventory;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
+import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
@@ -440,6 +441,10 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             case ARMOR:
                 getInventory().map(IMinionInventory::getInventoryArmor).ifPresent(i -> i.set(slotIn.getIndex(), stack));
         }
+    }
+
+    public Predicate<ItemStack> getEquipmentPredicate(EquipmentSlotType slotType) {
+        return itemStack -> !(itemStack.getItem() instanceof IFactionExclusiveItem) || ((IFactionExclusiveItem) itemStack.getItem()).getExclusiveFaction().equals(getFaction());
     }
 
     @Override
