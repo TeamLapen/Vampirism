@@ -84,7 +84,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
         this.addRenderableWidget(new Button(this.guiLeft + this.xSize - 80 - 20, this.guiTop + 152, 80, 20, new TranslatableComponent("gui.done"), (context) -> {
-            this.removed();
+            this.onClose();
         }));
         if (backScreen != null) {
             this.addRenderableWidget(new Button(this.guiLeft + 20, this.guiTop + 152, 80, 20, new TranslatableComponent("gui.back"), (context) -> {
