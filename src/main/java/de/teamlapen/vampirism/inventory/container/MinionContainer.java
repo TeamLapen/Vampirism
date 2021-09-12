@@ -5,7 +5,6 @@ import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.minion.IMinionInventory;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
-import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
@@ -19,7 +18,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -30,7 +28,6 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 public class MinionContainer extends InventoryContainer {
     private final static Logger LOGGER = LogManager.getLogger();
@@ -42,14 +39,13 @@ public class MinionContainer extends InventoryContainer {
     }
 
     private static SelectorInfo[] createSelectors(MinionEntity<?> minionEntity, int extraSlots) {
-        Predicate<ItemStack> factionPredicate = itemStack -> !(itemStack.getItem() instanceof IFactionExclusiveItem) || minionEntity.getFaction().equals(((IFactionExclusiveItem) itemStack.getItem()).getExclusiveFaction(itemStack));
         SelectorInfo[] slots = new SelectorInfo[6 + extraSlots];
-        slots[0] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlot.MAINHAND, minionEntity)), 7, 60, false, 1, null);
-        slots[1] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlot.OFFHAND, minionEntity) || stack.getUseAnimation() == UseAnim.DRINK || stack.getUseAnimation() == UseAnim.EAT), 7, 78, false, 5, null);
-        slots[2] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlot.FEET, minionEntity)), 81, 22, false, 1, Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS));
-        slots[3] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlot.LEGS, minionEntity)), 63, 22, false, 1, Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS));
-        slots[4] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlot.CHEST, minionEntity)), 45, 22, false, 1, Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE));
-        slots[5] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlot.HEAD, minionEntity)), 27, 22, false, 1, Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_HELMET));
+        slots[0] = new SelectorInfo(minionEntity.getEquipmentPredicate(EquipmentSlot.MAINHAND).and(stack -> stack.canEquip(EquipmentSlot.MAINHAND, minionEntity)), 7, 60, false, 1, null);
+        slots[1] = new SelectorInfo(minionEntity.getEquipmentPredicate(EquipmentSlot.OFFHAND).and(stack -> stack.canEquip(EquipmentSlot.OFFHAND, minionEntity) || stack.getUseAnimation() == UseAnim.DRINK || stack.getUseAnimation() == UseAnim.EAT), 7, 78, false, 5, null);
+        slots[2] = new SelectorInfo(minionEntity.getEquipmentPredicate(EquipmentSlot.FEET).and(stack -> stack.canEquip(EquipmentSlot.FEET, minionEntity)), 81, 22, false, 1, Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS));
+        slots[3] = new SelectorInfo(minionEntity.getEquipmentPredicate(EquipmentSlot.LEGS).and(stack -> stack.canEquip(EquipmentSlot.LEGS, minionEntity)), 63, 22, false, 1, Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS));
+        slots[4] = new SelectorInfo(minionEntity.getEquipmentPredicate(EquipmentSlot.CHEST).and(stack -> stack.canEquip(EquipmentSlot.CHEST, minionEntity)), 45, 22, false, 1, Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE));
+        slots[5] = new SelectorInfo(minionEntity.getEquipmentPredicate(EquipmentSlot.HEAD).and(stack -> stack.canEquip(EquipmentSlot.HEAD, minionEntity)), 27, 22, false, 1, Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_HELMET));
 
         assert extraSlots == 9 || extraSlots == 12 || extraSlots == 15 : "Minion inventory has unexpected size";
         for (int i = 0; i < extraSlots; i++) {
