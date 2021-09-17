@@ -107,7 +107,13 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
 
     public void startRitual(PlayerEntity p) {
         if (ritualTicksLeft > 0 || !p.isAlive()) return;
-        int targetLevel = VampirismPlayerAttributes.get(p).vampireLevel + 1;
+        VampirismPlayerAttributes attributes = VampirismPlayerAttributes.get(p);
+        if (attributes.getVampSpecial().inspirationRitualRunning) {
+            if (p.level.isClientSide)
+                p.displayClientMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_other"), true);
+            return;
+        }
+        int targetLevel = attributes.vampireLevel + 1;
         VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
         if (!levelingConf.isLevelValidForAltarInspiration(targetLevel)) {
             if (p.level.isClientSide)
@@ -115,7 +121,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
             return;
         }
         int neededBlood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
-        if (tank.getFluidAmount() + 99 < neededBlood) {//Since the container can only be filled in 100th steps
+        if (this.tank.getFluidAmount() + 99 < neededBlood) {//Since the container can only be filled in 100th steps
             if (p.level.isClientSide)
                 p.displayClientMessage(new TranslationTextComponent("text.vampirism.not_enough_blood"), true);
             return;
@@ -123,10 +129,11 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
         if (!p.level.isClientSide) {
             ModParticles.spawnParticlesServer(p.level, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, p.getId(), false), this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 1, this.worldPosition.getZ() + 0.5, 40, 0.1F, 0.1f, 0.1f, 0);
         } else {
-            ((InternalTank) tank).doDrain(neededBlood, IFluidHandler.FluidAction.EXECUTE);
+            ((InternalTank) this.tank).doDrain(neededBlood, IFluidHandler.FluidAction.EXECUTE);
         }
-        ritualPlayer = p;
-        ritualTicksLeft = RITUAL_TIME;
+        attributes.getVampSpecial().inspirationRitualRunning = true;
+        this.ritualPlayer = p;
+        this.ritualTicksLeft = RITUAL_TIME;
     }
 
     @Override
@@ -145,12 +152,16 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
                 case 1:
                     int targetLevel = VampirePlayer.get(ritualPlayer).getLevel() + 1;
                     VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
+                    if (!levelingConf.isLevelValidForAltarInspiration(targetLevel)) return; //no level available
                     int blood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
                     ((InternalTank) tank).doDrain(blood, IFluidHandler.FluidAction.EXECUTE);
 
                     ritualPlayer.addEffect(new EffectInstance(Effects.REGENERATION, targetLevel * 10 * 20));
                     FactionPlayerHandler.get(ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, targetLevel);
-                    VampirePlayer.get(ritualPlayer).drinkBlood(Integer.MAX_VALUE, 0, false);
+                    VampirePlayer player = VampirePlayer.get(ritualPlayer);
+                    player.drinkBlood(Integer.MAX_VALUE, 0, false);
+                    player.getSpecialAttributes().inspirationRitualRunning = false;
+                    this.setChanged();
                     break;
                 default:
                     break;

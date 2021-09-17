@@ -19,6 +19,7 @@ public class VampirePlayerSpecialAttributes {
     public int fangType;
     public boolean glowingEyes;
     public boolean isDBNO;
+    public boolean inspirationRitualRunning;
 
     /**
      * This cancels the render player event.

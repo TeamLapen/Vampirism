@@ -52,14 +52,14 @@ public class VampireLevelingConf {
     }
 
     public @Nonnull
-    AltarInfusionRequirements getAltarInfusionRequirements(int targetLevel) {
+    AltarInfusionRequirements getAltarInfusionRequirements(int targetLevel) { //TODO 1.17 return Optional.of()
         if (!altarInfusionRequirementsHashMap.containsKey(targetLevel)) {
             throw new IllegalArgumentException("Level " + targetLevel + " cannot be reached with an altar of infusion");
         }
         return altarInfusionRequirementsHashMap.get(targetLevel);
     }
 
-    public int getRequiredBloodForAltarInspiration(int targetLevel) {
+    public int getRequiredBloodForAltarInspiration(int targetLevel) { //TODO 1.17 return Optional.of()
         if (!isLevelValidForAltarInspiration(targetLevel)) return -1;
         return 40 + (targetLevel - INSPIRATION_MIN_LEVEL) * 30;
     }
