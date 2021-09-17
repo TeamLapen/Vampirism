@@ -3,16 +3,15 @@ package de.teamlapen.vampirism.entity.factions;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IVillageFactionData;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.PathfinderMob;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 
 /**
  * Represents a entity faction (e.g. Vampires)
@@ -21,7 +20,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private static int nextId = 0;
     protected final ResourceLocation id;
     private final Class<T> entityInterface;
-    private final Color color;
+    private final int color;
     private final boolean hostileTowardsNeutral;
     /**
      * Id used for hashing
@@ -35,7 +34,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private String translationKeyPlural;
     private ChatFormatting chatColor;
 
-    Faction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, @Nonnull IVillageFactionData villageFactionData) {
+    Faction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, @Nonnull IVillageFactionData villageFactionData) {
         this.id = id;
         this.entityInterface = entityInterface;
         this.color = color;
@@ -60,7 +59,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     }
 
     @Override
-    public Color getColor() {
+    public int getColor() {
         return color;
     }
 

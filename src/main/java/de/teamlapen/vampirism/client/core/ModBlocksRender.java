@@ -50,7 +50,7 @@ public class ModBlocksRender {
                 BlockEntity tile = (worldIn == null || pos == null) ? null : worldIn.getBlockEntity(pos);
                 if (tile instanceof TotemBlockEntity) {
                     IFaction f = ((TotemBlockEntity) tile).getControllingFaction();
-                    if (f != null) return f.getColor().getRGB();
+                    if (f != null) return f.getColor();
                 }
             }
             return 0xFFFFFF;

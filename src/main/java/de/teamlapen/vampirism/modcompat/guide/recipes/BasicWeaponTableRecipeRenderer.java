@@ -9,27 +9,21 @@ import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
 import de.maxanier.guideapi.api.util.GuiHelper;
 import de.maxanier.guideapi.api.util.IngredientCycler;
 import de.maxanier.guideapi.gui.BaseScreen;
+import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModBlocks;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-
-
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extends IRecipeRenderer.RecipeRendererBase<T> {
 
@@ -66,7 +60,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
         int y = guiTop + 120;
         if (recipe.getRequiredLevel() > 1) {
             Component level = new TranslatableComponent("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
-            fontRenderer.draw(stack, level, guiLeft + 40, y, Color.gray.getRGB());
+            fontRenderer.draw(stack, level, guiLeft + 40, y, Color.GRAY.getRGB());
             y += fontRenderer.lineHeight + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {
@@ -77,7 +71,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
                 skills.add(skill.getName().copy().withStyle(ChatFormatting.ITALIC));
                 skills.add(newLine);
             }
-            fontRenderer.drawWordWrap(FormattedText.composite(skills), guiLeft + 40, y, 110, Color.gray.getRGB());
+            fontRenderer.drawWordWrap(FormattedText.composite(skills), guiLeft + 40, y, 110, Color.GRAY.getRGB());
         }
     }
 

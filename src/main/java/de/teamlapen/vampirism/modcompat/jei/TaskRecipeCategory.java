@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.modcompat.jei;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
@@ -17,15 +18,14 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,11 +44,11 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
         Minecraft minecraft = Minecraft.getInstance();
         int x = 4;
         int y = 40;
-        minecraft.font.draw(stack, task.getTranslation(), 1, 1, Color.gray.getRGB());
+        minecraft.font.draw(stack, task.getTranslation(), 1, 1, Color.GRAY.getRGB());
         IPlayableFaction<?> f = task.getFaction();
         Component taskmasterComponent = f == null || f.getVillageData().getTaskMasterEntity() == null ? new TranslatableComponent("text.vampirism.faction_representative") : new TranslatableComponent(f.getVillageData().getTaskMasterEntity().getDescriptionId());
         Component text = new TranslatableComponent("text.vampirism.task.reward_obtain", taskmasterComponent);
-        y += UtilLib.renderMultiLine(minecraft.font, stack, text, 160, x, y, Color.gray.getRGB());
+        y += UtilLib.renderMultiLine(minecraft.font, stack, text, 160, x, y, Color.GRAY.getRGB());
 
         MutableComponent prerequisites = new TranslatableComponent("text.vampirism.task.prerequisites").append(":\n");
         TaskUnlocker[] unlockers = task.getUnlocker();
@@ -60,7 +60,7 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
         } else {
             prerequisites.append(new TranslatableComponent("text.vampirism.task.prerequisites.none"));
         }
-        y += UtilLib.renderMultiLine(minecraft.font, stack, prerequisites, 160, x, y, Color.gray.getRGB());
+        y += UtilLib.renderMultiLine(minecraft.font, stack, prerequisites, 160, x, y, Color.GRAY.getRGB());
 
     }
 

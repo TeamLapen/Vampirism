@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.blockentity;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.*;
@@ -33,42 +34,43 @@ import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.ServerMultiBossInfo;
 import de.teamlapen.vampirism.world.VampirismWorld;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BushBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.util.WeighedRandom;
+import net.minecraft.world.BossEvent;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.village.poi.PoiManager;
+import net.minecraft.world.entity.ai.village.poi.PoiRecord;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.WeighedRandom;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.entity.ai.village.poi.PoiRecord;
-import net.minecraft.world.entity.ai.village.poi.PoiManager;
-import net.minecraft.world.entity.ai.village.poi.PoiType;
-import net.minecraft.world.BossEvent;
-import net.minecraft.world.Difficulty;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -80,19 +82,10 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.awt.*;
-import java.util.List;
 import java.util.*;
 import java.util.function.BiConsumer;
 
 import static de.teamlapen.vampirism.blockentity.TotemHelper.*;
-
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.PathfinderMob;
 
 @ParametersAreNonnullByDefault
 public class TotemBlockEntity extends BlockEntity implements ITotem {
@@ -529,7 +522,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     public static void clientTick(Level level, BlockPos pos, BlockState state, TotemBlockEntity blockEntity){
         if (level.getGameTime() % 10 == 7 && blockEntity.controllingFaction != null) {
-            ModParticles.spawnParticlesClient(level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_4"), 20, blockEntity.controllingFaction.getColor().getRGB(), 0.2F),pos.getX(), pos.getY(), pos.getZ(), 3, 30, level.random);
+            ModParticles.spawnParticlesClient(level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_4"), 20, blockEntity.controllingFaction.getColor(), 0.2F),pos.getX(), pos.getY(), pos.getZ(), 3, 30, level.random);
         }
     }
 
@@ -1012,16 +1005,16 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     private void setCapturingFaction(@Nullable IFaction<?> faction) {
         this.capturingFaction = faction;
-        this.progressColor = faction != null ? faction.getColor().getColorComponents(null) : DyeColor.WHITE.getTextureDiffuseColors();
+        this.progressColor = faction != null ? new Color(faction.getColor()).getRGBColorComponents() : DyeColor.WHITE.getTextureDiffuseColors();
         if (faction != null) {
-            this.captureInfo.setColors(faction.getColor(), Color.WHITE, this.controllingFaction == null ? Color.WHITE : this.controllingFaction.getColor());
+            this.captureInfo.setColors(new Color(faction.getColor()), Color.WHITE, this.controllingFaction == null ? Color.WHITE : new Color(this.controllingFaction.getColor()));
             this.captureInfo.setName(new TranslatableComponent("text.vampirism.village.bossinfo.raid", faction.getName().plainCopy().withStyle(faction.getChatColor())));
         }
     }
 
     private void setControllingFaction(@Nullable IFaction<?> faction) {
         this.controllingFaction = faction;
-        this.baseColors = faction != null ? faction.getColor().getColorComponents(null) : DyeColor.WHITE.getTextureDiffuseColors();
+        this.baseColors = faction != null ? new Color(faction.getColor()).getRGBColorComponents() : DyeColor.WHITE.getTextureDiffuseColors();
         if (this.level != null) {
             BlockState oldBlockState = this.getBlockState();
             Block b = oldBlockState.getBlock();

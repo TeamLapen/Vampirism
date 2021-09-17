@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.lib.network.IMessage;
+import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.world.MultiBossInfo;
 import net.minecraft.network.FriendlyByteBuf;
@@ -8,8 +9,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.BossEvent;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
-import java.awt.*;
-import java.util.List;
 import java.util.*;
 import java.util.function.Supplier;
 

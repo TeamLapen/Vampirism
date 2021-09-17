@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.mixin.client.BossOverlayGuiAccessor;
 import de.teamlapen.vampirism.network.UpdateMultiBossInfoPacket;
 import de.teamlapen.vampirism.world.DummyBossInfo;
@@ -9,13 +10,12 @@ import de.teamlapen.vampirism.world.MultiBossInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.BossEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

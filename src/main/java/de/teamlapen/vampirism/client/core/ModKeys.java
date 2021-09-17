@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.client.core;
 
+import com.mojang.blaze3d.platform.InputConstants;
+import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -11,15 +13,14 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.KeyMapping;
-import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
@@ -138,7 +139,7 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
             if (Minecraft.getInstance().player.isAlive()) {
                 IPlayableFaction<?> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
                 if (faction != null) {
-                    Minecraft.getInstance().setScreen(new ActionSelectScreen(faction.getColor(), false));
+                    Minecraft.getInstance().setScreen(new ActionSelectScreen(new Color(faction.getColor()), false));
                 }
             }
         } else if (keyPressed == KEY.VAMPIRISM_MENU) {

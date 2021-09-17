@@ -1,8 +1,9 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
@@ -17,15 +18,14 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
 import java.util.List;
 
 /**
@@ -63,7 +63,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
         if (recipe.getRequiredLevel() > 1) {
             Component level = new TranslatableComponent("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
 
-            minecraft.font.draw(stack, level, x, y, Color.gray.getRGB());
+            minecraft.font.draw(stack, level, x, y, Color.GRAY.getRGB());
             y += minecraft.font.lineHeight + 2;
         }
         ISkill[] requiredSkills = recipe.getRequiredSkills();
@@ -74,7 +74,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
                 skillText.append(skill.getName()).append(" ");
 
             }
-            y += UtilLib.renderMultiLine(minecraft.font, stack, skillText, 132, x, y, Color.gray.getRGB());
+            y += UtilLib.renderMultiLine(minecraft.font, stack, skillText, 132, x, y, Color.GRAY.getRGB());
 
         }
     }

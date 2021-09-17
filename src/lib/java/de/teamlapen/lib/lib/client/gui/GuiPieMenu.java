@@ -1,24 +1,24 @@
 package de.teamlapen.lib.lib.client.gui;
 
 
-import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.teamlapen.lib.LIBREFERENCE;
-import de.teamlapen.lib.lib.util.UtilLib;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.KeyMapping;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.resources.ResourceLocation;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
+import de.teamlapen.lib.LIBREFERENCE;
+import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.Color;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
 import java.util.ArrayList;
 
 

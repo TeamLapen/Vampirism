@@ -15,6 +15,7 @@ import de.maxanier.guideapi.entry.EntryResourceLocation;
 import de.maxanier.guideapi.page.*;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -38,29 +39,22 @@ import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.network.chat.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
-import java.awt.Color;
 import java.net.URI;
 import java.util.*;
 import java.util.regex.Matcher;
-
-
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 @de.maxanier.guideapi.api.GuideBook
 public class GuideBook implements IGuideBook {
@@ -594,7 +588,7 @@ public class GuideBook implements IGuideBook {
         binder.setItemNameKey("guide.vampirism");
         binder.setHeaderKey("guide.vampirism.welcome");
         binder.setAuthor(new TextComponent("Maxanier"));
-        binder.setColor(Color.WHITE);
+        binder.setColor(Color.WHITE.getRGB());
         binder.setOutlineTexture(new ResourceLocation("vampirismguide", "textures/gui/book_violet_border.png"));
         binder.setSpawnWithBook();
         binder.setContentProvider(GuideBook::buildCategories);

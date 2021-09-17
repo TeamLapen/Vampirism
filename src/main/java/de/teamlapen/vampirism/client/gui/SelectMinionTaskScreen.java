@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.lib.lib.client.gui.GuiPieMenu;
+import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -11,16 +12,15 @@ import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.SelectMinionTaskPacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
 
-import java.awt.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -29,7 +29,7 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
 
 
     public SelectMinionTaskScreen() {
-        super(Color.gray, new TranslatableComponent("text.vampirism.minion.give_order"));
+        super(Color.GRAY, new TranslatableComponent("text.vampirism.minion.give_order"));
     }
 
     @Override
@@ -38,7 +38,7 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
             if (Minecraft.getInstance().player.isAlive()) {
                 IPlayableFaction<?> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
                 if (faction != null) {
-                    Minecraft.getInstance().setScreen(new ActionSelectScreen(faction.getColor(), false));
+                    Minecraft.getInstance().setScreen(new ActionSelectScreen(new Color(faction.getColor()), false));
                 }
             }
         }

@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.world;
 
 import com.google.common.collect.Lists;
+import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.network.UpdateMultiBossInfoPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.BossEvent;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

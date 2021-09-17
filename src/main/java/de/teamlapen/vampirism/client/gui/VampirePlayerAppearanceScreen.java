@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableArrayTextComponentList;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget;
+import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -12,19 +13,18 @@ import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.Checkbox;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fmlclient.gui.widget.ExtendedButton;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 
 @OnlyIn(Dist.CLIENT)
 public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
@@ -67,7 +67,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     protected void init() {
         super.init();
         IFaction<?> f = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
-        this.color = f == null ? Color.gray.getRGBColorComponents(null) : f.getColor().getRGBColorComponents(null);
+        this.color = f == null ? Color.GRAY.getRGBColorComponents() : new Color(f.getColor()).getRGBColorComponents();
         VampirePlayerSpecialAttributes vampAtt = VampirismPlayerAttributes.get(this.minecraft.player).getVampSpecial();
         this.fangType = vampAtt.fangType;
         this.eyeType = vampAtt.eyeType;
