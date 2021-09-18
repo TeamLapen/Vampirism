@@ -19,6 +19,7 @@ jobs:
         uses: actions/setup-java@v2.3.0
         with:
           java-version: '16'
+          distribution: 'adopt-hotspot'
           cache: 'gradle'
       - name: Setup Gradle
         run: ./gradlew
