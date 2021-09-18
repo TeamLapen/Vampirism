@@ -19,7 +19,7 @@ public class TriggerFaction extends SimpleCriterionTrigger<TriggerFaction.Instan
 
     private final static Logger LOGGER = LogManager.getLogger();
 
-    public static Instance builder(@Nullable IPlayableFaction<?> faction, int level) { //TODO 1.17 rename level
+    public static Instance level(@Nullable IPlayableFaction<?> faction, int level) {
         return new Instance(Type.LEVEL, faction, level);
     }
 

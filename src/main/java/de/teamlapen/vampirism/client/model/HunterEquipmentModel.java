@@ -71,7 +71,6 @@ public class HunterEquipmentModel<T extends Mob> extends HumanoidModel<T> {
         super.setAllVisible(false);
     }
 
-    //TODO 1.17 maybe migrate hat type to enum or similar
     public void setHat(HatType hatType) {
         hatTop.visible = hatRim.visible = hatType == HatType.HAT1;
         hatTop2.visible = hatRim2.visible = hatType == HatType.HAT2;

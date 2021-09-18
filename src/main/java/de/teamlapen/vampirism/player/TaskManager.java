@@ -205,64 +205,6 @@ public class TaskManager implements ITaskManager {
                 }
             });
         }
-
-        //TODO 1.17 remove following lines
-
-        //tasks
-        if (compoundNBT.contains("tasks")) {
-            compoundNBT.getCompound("tasks").getAllKeys().forEach(taskBoardIdStr -> {
-                TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(UUID.fromString(taskBoardIdStr), TaskWrapper::new);
-                CompoundTag entityIdNBT = compoundNBT.getCompound("tasks").getCompound(taskBoardIdStr);
-                Set<Task> tasks = new HashSet<>();
-                entityIdNBT.getAllKeys().forEach((taskId -> {
-                    Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
-                    if (task != null) {
-                        tasks.add(task);
-                    }
-                }));
-                wrapper.tasks.putAll(tasks.stream().map(t -> new TaskInstance(t, wrapper.id, this.factionPlayer, this.getTaskTimeConfig() * 1200L * 4)).collect(Collectors.toMap(TaskInstance::getId, t -> t)));
-            });
-        }
-        //fewer tasks
-        if (compoundNBT.contains("lessTasks")) {
-            CompoundTag lessTasksNBT = compoundNBT.getCompound("lessTasks");
-            lessTasksNBT.getAllKeys().forEach(taskBoardId -> {
-                TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(UUID.fromString(taskBoardId), TaskWrapper::new);
-                wrapper.lessTasks = (lessTasksNBT.getInt(taskBoardId));
-            });
-        }
-        //accepted tasks
-        if (compoundNBT.contains("acceptedTasks")) {
-            compoundNBT.getCompound("acceptedTasks").getAllKeys().forEach(taskBoardId -> {
-                TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(UUID.fromString(taskBoardId), TaskWrapper::new);
-                CompoundTag entityIdNBT = compoundNBT.getCompound("acceptedTasks").getCompound(taskBoardId);
-                entityIdNBT.getAllKeys().forEach((taskId -> {
-                    Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
-                    if (task != null) {
-                        wrapper.acceptTask(task, this.player.level.getGameTime() + getTaskTimeConfig() * 1200L * 4);
-                    }
-                }));
-            });
-        }
-        //stats
-        if (compoundNBT.contains("stats")) {
-            CompoundTag stats = compoundNBT.getCompound("stats");
-            for (String taskBoardId : stats.getAllKeys()) {
-                TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(UUID.fromString(taskBoardId), TaskWrapper::new);
-                CompoundTag taskBoardNBT = stats.getCompound(taskBoardId);
-                for (String taskRegistryName : taskBoardNBT.getAllKeys()) {
-                    CompoundTag taskNBT = taskBoardNBT.getCompound(taskRegistryName);
-                    Map<ResourceLocation, Integer> requirements = new HashMap<>();
-                    for (String requirementString : taskNBT.getAllKeys()) {
-                        requirements.put(new ResourceLocation(requirementString), taskNBT.getInt(requirementString));
-                    }
-                    Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskRegistryName));
-                    if (task != null) {
-                        wrapper.getTaskInstances().stream().filter(ins -> ins.getTask() == task).forEach(ins -> ins.setStats(requirements));
-                    }
-                }
-            }
-        }
     }
 
     // task actions ----------------------------------------------------------------------------------------------------
@@ -592,11 +534,6 @@ public class TaskManager implements ITaskManager {
             this.taskAmount = taskAmount;
             this.tasks = tasks;
             this.lastSeenPos = lastSeenPos;
-        }
-
-        @Deprecated
-        public void acceptTask(Task task, long timeStamp) { //TODO 1.17 remove
-            this.tasks.values().stream().filter(ins -> ins.getTask() == task).forEach(ins -> this.acceptTask(ins.getId(), timeStamp));
         }
 
         public ITaskInstance acceptTask(UUID taskInstance, long timeStamp) {

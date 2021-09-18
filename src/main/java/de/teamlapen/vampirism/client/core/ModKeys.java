@@ -40,9 +40,9 @@ import javax.annotation.Nullable;
  * Handles all key/input related stuff
  */
 @OnlyIn(Dist.CLIENT)
-public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting the keybindings
+public class ModKeys {
 
-    private static final Logger LOGGER = LogManager.getLogger(ModKeys.class);
+    private static final Logger LOGGER = LogManager.getLogger();
     /**
      * Time between multiple action button presses in ms
      */
@@ -60,40 +60,14 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
 
     private static final String MINION_TASK = "keys.vampirism.minion_task";
 
-    private static final KeyMapping SUCK = new KeyMapping(SUCK_BLOOD, KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
-    private static final KeyMapping ACTION = new KeyMapping(TOGGLE_ACTIONS, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);//Middle Mouse -98
-    private static final KeyMapping VAMPIRISM_MENU = new KeyMapping(OPEN_VAMPIRISM_MENU, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_P, CATEGORY);
-    private static final KeyMapping VISION = new KeyMapping(SWITCH_VISION, KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_N, CATEGORY);
-    private static final KeyMapping ACTION1 = new KeyMapping(ACTIVATE_ACTION1, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_1, CATEGORY);
-    private static final KeyMapping ACTION2 = new KeyMapping(ACTIVATE_ACTION2, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_2, CATEGORY);
-    private static final KeyMapping ACTION3 = new KeyMapping(ACTIVATE_ACTION3, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_3, CATEGORY);
-
-    private static final KeyMapping MINION = new KeyMapping(MINION_TASK, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
-
-    @Nonnull
-    public static KeyMapping getKeyBinding(@Nonnull KEY key) {
-        switch (key) {
-            case SUCK:
-                return SUCK;
-            case ACTION:
-                return ACTION;
-            case VAMPIRISM_MENU:
-                return VAMPIRISM_MENU;
-            case VISION:
-                return VISION;
-            case ACTION1:
-                return ACTION1;
-            case ACTION2:
-                return ACTION2;
-            case ACTION3:
-                return ACTION3;
-            case MINION:
-                return MINION;
-            default:
-                LOGGER.error("Keybinding {} does not exist", key);
-                return ACTION;
-        }
-    }
+    public static final KeyMapping SUCK = new KeyMapping(SUCK_BLOOD, KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
+    public static final KeyMapping ACTION = new KeyMapping(TOGGLE_ACTIONS, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);//Middle Mouse -98
+    public static final KeyMapping VAMPIRISM_MENU = new KeyMapping(OPEN_VAMPIRISM_MENU, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_P, CATEGORY);
+    public static final KeyMapping VISION = new KeyMapping(SWITCH_VISION, KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_N, CATEGORY);
+    public static final KeyMapping ACTION1 = new KeyMapping(ACTIVATE_ACTION1, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_1, CATEGORY);
+    public static final KeyMapping ACTION2 = new KeyMapping(ACTIVATE_ACTION2, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_2, CATEGORY);
+    public static final KeyMapping ACTION3 = new KeyMapping(ACTIVATE_ACTION3, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_3, CATEGORY);
+    public static final KeyMapping MINION = new KeyMapping(MINION_TASK, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
 
     public static void register() {
         MinecraftForge.EVENT_BUS.register(new ModKeys());
@@ -119,96 +93,75 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
 
     @SubscribeEvent
     public void handleInputEvent(InputEvent event) {
-        KEY keyPressed = getPressedKeyBinding(); // Only call isPressed once, so
-        // get value here!
-        if (!suckKeyDown && keyPressed == KEY.SUCK) {
-            HitResult mouseOver = Minecraft.getInstance().hitResult;
-            suckKeyDown = true;
-            Player player = Minecraft.getInstance().player;
-            if (mouseOver != null && !player.isSpectator() && VampirePlayer.getOpt(player).map(vp -> vp.getLevel() > 0 && !vp.getActionHandler().isActionActive(VampireActions.bat)).orElse(false)) {
-                if (mouseOver instanceof EntityHitResult) {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + ((EntityHitResult) mouseOver).getEntity().getId()));
-                } else if (mouseOver instanceof BlockHitResult) {
-                    BlockPos pos = ((BlockHitResult) mouseOver).getBlockPos();
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DRINK_BLOOD_BLOCK, "" + pos.getX() + ":" + pos.getY() + ":" + pos.getZ()));
-                } else {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + -1));
-                }
-            }
-        } else if (keyPressed == KEY.ACTION) {
-            if (Minecraft.getInstance().player.isAlive()) {
-                IPlayableFaction<?> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
-                if (faction != null) {
-                    Minecraft.getInstance().setScreen(new ActionSelectScreen(new Color(faction.getColor()), false));
-                }
-            }
-        } else if (keyPressed == KEY.VAMPIRISM_MENU) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.OPEN_VAMPIRISM_MENU, ""));
-        } else if (keyPressed == KEY.VISION) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.VAMPIRE_VISION_TOGGLE, ""));
-        } else if (keyPressed == KEY.ACTION1) {
-            long t = System.currentTimeMillis();
-            if (t - lastAction1Trigger > ACTION_BUTTON_COOLDOWN) {
-                lastAction1Trigger = System.currentTimeMillis();
-                Player player = Minecraft.getInstance().player;
-                if (player.isAlive()) {
-                    FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(1))));
-                }
-            }
-
-        } else if (keyPressed == KEY.ACTION2) {
-            long t = System.currentTimeMillis();
-            if (t - lastAction2Trigger > ACTION_BUTTON_COOLDOWN) {
-                lastAction2Trigger = System.currentTimeMillis();
-                Player player = Minecraft.getInstance().player;
-                if (player.isAlive()) {
-                    FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(2))));
-                }
-            }
-
-        } else if (keyPressed == KEY.ACTION3) {
-            long t = System.currentTimeMillis();
-            if (t - lastAction3Trigger > ACTION_BUTTON_COOLDOWN) {
-                lastAction3Trigger = System.currentTimeMillis();
-                Player player = Minecraft.getInstance().player;
-                if (player.isAlive()) {
-                    FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(3))));
-                }
-            }
-
-        } else if (keyPressed == KEY.MINION) {
-            if (FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
-                Minecraft.getInstance().setScreen(new SelectMinionTaskScreen());
-            }
-        }
-        if (suckKeyDown && !SUCK.isDown()) {
-            suckKeyDown = false;
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
-        }
-    }
-
-    /**
-     * @return the KeyBinding that is currently pressed
-     */
-    private KEY getPressedKeyBinding() {
         if (SUCK.isDown()) {
-            return KEY.SUCK;
-        } else if (ACTION.isDown()) {
-            return KEY.ACTION;
-        } else if (VAMPIRISM_MENU.isDown()) {
-            return KEY.VAMPIRISM_MENU;
-        } else if (VISION.isDown()) {
-            return KEY.VISION;
-        } else if (ACTION1.isDown()) {
-            return KEY.ACTION1;
-        } else if (ACTION2.isDown()) {
-            return KEY.ACTION2;
-        } else if (ACTION3.isDown()) {
-            return KEY.ACTION3;
-        } else if (MINION.isDown()) {
-            return KEY.MINION;
+            if (!suckKeyDown) {
+                HitResult mouseOver = Minecraft.getInstance().hitResult;
+                suckKeyDown = true;
+                Player player = Minecraft.getInstance().player;
+                if (mouseOver != null && !player.isSpectator() && VampirePlayer.getOpt(player).map(vp -> vp.getLevel() > 0 && !vp.getActionHandler().isActionActive(VampireActions.bat)).orElse(false)) {
+                    if (mouseOver instanceof EntityHitResult) {
+                        VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + ((EntityHitResult) mouseOver).getEntity().getId()));
+                    } else if (mouseOver instanceof BlockHitResult) {
+                        BlockPos pos = ((BlockHitResult) mouseOver).getBlockPos();
+                        VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DRINK_BLOOD_BLOCK, "" + pos.getX() + ":" + pos.getY() + ":" + pos.getZ()));
+                    } else {
+                        VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + -1));
+                    }
+                }
+            }
+        } else {
+            if (suckKeyDown) {
+                suckKeyDown = false;
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
+            }
+
+            if (ACTION.isDown()) {
+                if (Minecraft.getInstance().player.isAlive()) {
+                    IPlayableFaction<?> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
+                    if (faction != null) {
+                        Minecraft.getInstance().setScreen(new ActionSelectScreen(new Color(faction.getColor()), false));
+                    }
+                }
+            } else if (VAMPIRISM_MENU.isDown()) {
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.OPEN_VAMPIRISM_MENU, ""));
+            } else if (VISION.isDown()) {
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.VAMPIRE_VISION_TOGGLE, ""));
+            } else if (ACTION1.isDown()) {
+                long t = System.currentTimeMillis();
+                if (t - lastAction1Trigger > ACTION_BUTTON_COOLDOWN) {
+                    lastAction1Trigger = System.currentTimeMillis();
+                    Player player = Minecraft.getInstance().player;
+                    if (player.isAlive()) {
+                        FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(1))));
+                    }
+                }
+
+            } else if (ACTION2.isDown()) {
+                long t = System.currentTimeMillis();
+                if (t - lastAction2Trigger > ACTION_BUTTON_COOLDOWN) {
+                    lastAction2Trigger = System.currentTimeMillis();
+                    Player player = Minecraft.getInstance().player;
+                    if (player.isAlive()) {
+                        FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(2))));
+                    }
+                }
+
+            } else if (ACTION3.isDown()) {
+                long t = System.currentTimeMillis();
+                if (t - lastAction3Trigger > ACTION_BUTTON_COOLDOWN) {
+                    lastAction3Trigger = System.currentTimeMillis();
+                    Player player = Minecraft.getInstance().player;
+                    if (player.isAlive()) {
+                        FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(3))));
+                    }
+                }
+
+            } else if (MINION.isDown()) {
+                if (FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
+                    Minecraft.getInstance().setScreen(new SelectMinionTaskScreen());
+                }
+            }
         }
-        return KEY.UNKNOWN;
     }
 
     /**
@@ -225,9 +178,5 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
             }
         }
 
-    }
-
-    public enum KEY {
-        SUCK, UNKNOWN, ACTION, VAMPIRISM_MENU, VISION, ACTION1, ACTION2, ACTION3, MINION
     }
 }

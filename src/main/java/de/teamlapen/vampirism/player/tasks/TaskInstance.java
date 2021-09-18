@@ -144,11 +144,6 @@ public class TaskInstance implements ITaskInstance {
         return stats;
     }
 
-    public void setStats(@Nonnull Map<ResourceLocation, Integer> newStats) {
-        this.stats.clear();
-        this.stats.putAll(newStats);
-    }
-
     @Nonnull
     public Task getTask() {
         return task;

@@ -47,7 +47,7 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
 
     @Override
     public boolean keyReleased(int key, int scancode, int modifiers) {
-        if (ModKeys.getKeyBinding(ModKeys.KEY.MINION).matches(key, scancode) || ModKeys.getKeyBinding(ModKeys.KEY.ACTION).matches(key, scancode)) {
+        if (ModKeys.MINION.matches(key, scancode) || ModKeys.ACTION.matches(key, scancode)) {
             this.onClose();
             if (getSelectedElement() >= 0) {
                 this.onElementSelected(elements.get(getSelectedElement()));
@@ -63,7 +63,7 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
 
     @Override
     protected KeyMapping getMenuKeyBinding() {
-        return ModKeys.getKeyBinding(ModKeys.KEY.MINION);
+        return ModKeys.MINION;
     }
 
     @Override

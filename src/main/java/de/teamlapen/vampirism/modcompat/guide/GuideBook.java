@@ -157,7 +157,7 @@ public class GuideBook implements IGuideBook {
         gettingStarted.addAll(PageHelper.pagesForLongText(translateComponent(base + "getting_started.become")));
         gettingStarted.addAll(PageHelper.pagesForLongText(translateComponent(base + "getting_started.as_vampire")));
         gettingStarted.addAll(PageHelper.pagesForLongText(translateComponent(base + "getting_started.zombie")));
-        gettingStarted.addAll(PageHelper.pagesForLongText(translateComponent(base + "getting_started.blood", new TranslatableComponent(ModKeys.getKeyBinding(ModKeys.KEY.SUCK).saveString()))));
+        gettingStarted.addAll(PageHelper.pagesForLongText(translateComponent(base + "getting_started.blood", new TranslatableComponent(ModKeys.SUCK.saveString()))));
         gettingStarted.addAll(PageHelper.pagesForLongText(FormattedText.composite(translateComponent(base + "getting_started.level"), translateComponent(base + "getting_started.level2"))));
 
         entries.put(new ResourceLocation(base + "getting_started"), new EntryText(gettingStarted, translateComponent(base + "getting_started")));
@@ -217,7 +217,7 @@ public class GuideBook implements IGuideBook {
 
         List<IPage> skillPages = new ArrayList<>();
         skillPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "skills.text")), new ResourceLocation(base + "vampirism_menu")));
-        skillPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "skills.actions", UtilLib.translate(ModKeys.getKeyBinding(ModKeys.KEY.ACTION).saveString()))));
+        skillPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "skills.actions", UtilLib.translate(ModKeys.ACTION.saveString()))));
         skillPages.addAll(PageHelper.pagesForLongText(translateComponent("guide.vampirism.skills.bind_action")));
         skillPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "skills.actions2")));
         skillPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "skills.refinements")), new ResourceLocation("guide.vampirism.items.accessories")));
@@ -240,11 +240,11 @@ public class GuideBook implements IGuideBook {
         lordTitleBuilder.addLine(5, VReference.VAMPIRE_FACTION.getLordTitle(5, false).getString(), VReference.VAMPIRE_FACTION.getLordTitle(5, true).getString());
         lordPages.add(lordTitleBuilder.build());
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.minion", loc(ModItems.vampire_minion_binding), loc(ModItems.vampire_minion_upgrade_simple), loc(ModItems.vampire_minion_upgrade_enhanced), loc(ModItems.vampire_minion_upgrade_special))), new ResourceLocation("guide.vampirism.items.vampire_minion_binding")));
-        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent("guide.vampirism.common.minion_control", translate(ModKeys.getKeyBinding(ModKeys.KEY.MINION).saveString()), translate("text.vampirism.minion.call_single"), translate("text.vampirism.minion.respawn")))));
+        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent("guide.vampirism.common.minion_control", translate(ModKeys.MINION.saveString()), translate("text.vampirism.minion.call_single"), translate("text.vampirism.minion.respawn")))));
         entries.put(new ResourceLocation(base + "lord"), new EntryText(lordPages, new TranslatableComponent(base + "lord")));
 
 
-        List<IPage> vampirismMenu = new ArrayList<>(PageHelper.pagesForLongText(translateComponent("guide.vampirism.overview.vampirism_menu.text", translateComponent(ModKeys.getKeyBinding(ModKeys.KEY.VAMPIRISM_MENU).saveString())).append(translateComponent("guide.vampirism.overview.vampirism_menu.text_vampire", translateComponent("guide.vampirism.items.accessories"))))); //Lang key shared with vampires
+        List<IPage> vampirismMenu = new ArrayList<>(PageHelper.pagesForLongText(translateComponent("guide.vampirism.overview.vampirism_menu.text", translateComponent(ModKeys.VAMPIRISM_MENU.saveString())).append(translateComponent("guide.vampirism.overview.vampirism_menu.text_vampire", translateComponent("guide.vampirism.items.accessories"))))); //Lang key shared with vampires
         entries.put(new ResourceLocation(base + "vampirism_menu"), new EntryText(vampirismMenu, translateComponent("guide.vampirism.overview.vampirism_menu")));
 
 
@@ -300,7 +300,7 @@ public class GuideBook implements IGuideBook {
         List<IPage> skillPages = new ArrayList<>();
         skillPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "skills.intro")), new ResourceLocation(base + "vampirism_menu")));
         String disguise = String.format("§l%s§r\n", HunterActions.disguise_hunter.getName().getString());
-        disguise += translate(base + "skills.disguise.text", ModKeys.getKeyBinding(ModKeys.KEY.ACTION).saveString());
+        disguise += translate(base + "skills.disguise.text", ModKeys.ACTION.saveString());
         skillPages.addAll(PageHelper.pagesForLongText(new TextComponent(disguise)));
         String weaponTable = String.format("§l%s§r\n", loc(ModBlocks.weapon_table));
         weaponTable += translate(base + "skills.weapon_table.text");
@@ -338,10 +338,10 @@ public class GuideBook implements IGuideBook {
         lordTitleBuilder.addLine(5, VReference.HUNTER_FACTION.getLordTitle(5, false).getString());
         lordPages.add(lordTitleBuilder.build());
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.minion", loc(ModItems.hunter_minion_equipment), loc(ModItems.hunter_minion_upgrade_simple), loc(ModItems.hunter_minion_upgrade_enhanced), loc(ModItems.hunter_minion_upgrade_special))), new ResourceLocation("guide.vampirism.items.hunter_minion_equipment")));
-        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent("guide.vampirism.common.minion_control", translate(ModKeys.getKeyBinding(ModKeys.KEY.MINION).saveString()), translate("text.vampirism.minion.call_single"), translate("text.vampirism.minion.respawn")))));
+        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent("guide.vampirism.common.minion_control", translate(ModKeys.MINION.saveString()), translate("text.vampirism.minion.call_single"), translate("text.vampirism.minion.respawn")))));
         entries.put(new ResourceLocation(base + "lord"), new EntryText(lordPages, new TranslatableComponent(base + "lord")));
 
-        List<IPage> vampirismMenu = new ArrayList<>(PageHelper.pagesForLongText(translateComponent("guide.vampirism.overview.vampirism_menu.text", translate(ModKeys.getKeyBinding(ModKeys.KEY.VAMPIRISM_MENU).saveString())))); //Lang key shared with vampires
+        List<IPage> vampirismMenu = new ArrayList<>(PageHelper.pagesForLongText(translateComponent("guide.vampirism.overview.vampirism_menu.text", translate(ModKeys.VAMPIRISM_MENU.saveString())))); //Lang key shared with vampires
         entries.put(new ResourceLocation(base + "vampirism_menu"), new EntryText(vampirismMenu, translateComponent("guide.vampirism.overview.vampirism_menu")));
 
         List<IPage> unHunterPages = new ArrayList<>();
@@ -524,7 +524,7 @@ public class GuideBook implements IGuideBook {
         //Vampirism 1.8
         List<IPage> v1_8 = new ArrayList<>(PageHelper.pagesForLongText(translateComponent(base1_8 + "overview.text")));
         //vampirism menu
-        List<IPage> vampirism_menu = PageHelper.pagesForLongText(translateComponent(base1_8 + "vampirism_menu.text", ModKeys.getKeyBinding(ModKeys.KEY.VAMPIRISM_MENU).getTranslatedKeyMessage()));
+        List<IPage> vampirism_menu = PageHelper.pagesForLongText(translateComponent(base1_8 + "vampirism_menu.text", ModKeys.VAMPIRISM_MENU.getTranslatedKeyMessage()));
         vampirism_menu.add(new PageTextImage(translateComponent(base1_8 + "vampirism_menu.image"), new ResourceLocation(IMAGE_BASE + "vampirism_menu.png"), false));
         v1_8.addAll(vampirism_menu);
         //vampire accessories

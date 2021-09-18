@@ -71,7 +71,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (ModKeys.getKeyBinding(ModKeys.KEY.VAMPIRISM_MENU).matches(keyCode, scanCode)) {
+        if (ModKeys.VAMPIRISM_MENU.matches(keyCode, scanCode)) {
             this.onClose();
             return true;
         }

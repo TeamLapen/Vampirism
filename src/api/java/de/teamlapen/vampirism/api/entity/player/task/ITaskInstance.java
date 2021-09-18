@@ -37,12 +37,6 @@ public interface ITaskInstance {
     Map<ResourceLocation, Integer> getStats();
 
     /**
-     * temporary here for compatibility with old worlds
-     */
-    @Deprecated
-    void setStats(Map<ResourceLocation, Integer> requirements); //TODO 1.17 remove
-
-    /**
      * @return the corresponding task
      */
     Task getTask();

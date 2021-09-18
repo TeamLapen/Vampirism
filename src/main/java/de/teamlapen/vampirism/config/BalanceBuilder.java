@@ -61,7 +61,7 @@ public class BalanceBuilder {
     }
 
     /**
-     * Build the registered configuration considering the modifiers using the give Forge builder and inject the created {@link ForgeConfigSpec.ConfigValue} into the given BalanceConfig using reflection
+     * Build the registered configuration considering the modifiers using the give Forge level and inject the created {@link ForgeConfigSpec.ConfigValue} into the given BalanceConfig using reflection
      */
     public void build(BalanceConfig conf, ForgeConfigSpec.Builder builder) {
         if (balanceModifications.size() > 0) {

@@ -12,8 +12,6 @@ public interface IGarlicChunkHandler {
 
 
     /**
-     * TODO 1.17 rename ?
-     *
      * @return The garlic strength at the given position
      */
     @Nonnull

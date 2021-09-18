@@ -30,7 +30,6 @@ import net.minecraftforge.fmlclient.gui.GuiUtils;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
-import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -71,16 +70,7 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
      * safes the action order to client config
      */
     private static void saveActionOrder() {
-        StringBuilder s = new StringBuilder();
-        Iterator<IAction> iterator = ACTIONORDER.iterator();
-        while (iterator.hasNext()) {
-            IAction action = iterator.next();
-            if (action == fakeAction) continue;
-            s.append(action.getRegistryName());
-            if (iterator.hasNext())
-                s.append(",");
-        }
-        VampirismConfig.CLIENT.actionOrder.set(s.toString());
+        VampirismConfig.CLIENT.actionOrder.set(ACTIONORDER.stream().filter(action -> action != fakeAction).map(action -> action.getRegistryName().toString()).collect(Collectors.toList()));
     }
 
     /**
@@ -88,16 +78,10 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
      */
     public static void loadActionOrder() {
         List<IAction> actions = Lists.newArrayList(ModRegistries.ACTIONS.getValues());
-        String[] actionOrder = VampirismConfig.CLIENT.actionOrder.get().split(",");
-        for (String s : actionOrder) {
-            ResourceLocation name = ResourceLocation.tryParse(s);
-            if (name != null) {
-                IAction a = ModRegistries.ACTIONS.getValue(name);
-                if (a == null) continue;
-                ACTIONORDER.add(a);
-                actions.remove(a);
-            }
-        }
+        VampirismConfig.CLIENT.actionOrder.get().stream().map(action -> ModRegistries.ACTIONS.getValue(new ResourceLocation(action))).forEachOrdered(action -> {
+            actions.remove(action);
+            ACTIONORDER.add(action);
+        });
         if (!actions.isEmpty()) {
             ACTIONORDER.addAll(actions);
             saveActionOrder();
@@ -133,7 +117,7 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
     @Override
     public boolean keyReleased(int key, int scancode, int modifiers) {
         if (!editActions) {
-            if (ModKeys.getKeyBinding(ModKeys.KEY.MINION).matches(key, scancode) || ModKeys.getKeyBinding(ModKeys.KEY.ACTION).matches(key, scancode)) {
+            if (ModKeys.MINION.matches(key, scancode) || ModKeys.ACTION.matches(key, scancode)) {
                 this.onClose();
                 if (getSelectedElement() >= 0) {
                     this.onElementSelected(elements.get(getSelectedElement()));
@@ -192,7 +176,7 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
     public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
         if (editActions)
-            GuiUtils.drawHoveringText(stack, Lists.newArrayList(new TranslatableComponent("gui.vampirism.action_select.action_binding"), ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA), ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA)), 0, ((int) (this.height * 0.8)), width, height, this.width / 4, this.font);
+            GuiUtils.drawHoveringText(stack, Lists.newArrayList(new TranslatableComponent("gui.vampirism.action_select.action_binding"), ModKeys.ACTION1.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA), ModKeys.ACTION2.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA)), 0, ((int) (this.height * 0.8)), width, height, this.width / 4, this.font);
     }
 
     @Override
@@ -241,7 +225,7 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
 
     @Override
     protected KeyMapping getMenuKeyBinding() {
-        return ModKeys.getKeyBinding(ModKeys.KEY.ACTION);
+        return ModKeys.ACTION;
     }
 
     @Override
@@ -268,13 +252,13 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
         if (elements.get(getSelectedElement()) == fakeAction) {
             return true;
         }
-        if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION1)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).getKeyModifier().isActive(KeyConflictContext.GUI)) {
+        if (func.apply(ModKeys.ACTION1) && ModKeys.ACTION1.getKeyModifier().isActive(KeyConflictContext.GUI)) {
             setBinding(1);
             return true;
-        } else if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION2)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).getKeyModifier().isActive(KeyConflictContext.GUI)) {
+        } else if (func.apply(ModKeys.ACTION2) && ModKeys.ACTION2.getKeyModifier().isActive(KeyConflictContext.GUI)) {
             setBinding(2);
             return true;
-        } else if (func.apply(ModKeys.getKeyBinding(ModKeys.KEY.ACTION3)) && ModKeys.getKeyBinding(ModKeys.KEY.ACTION3).getKeyModifier().isActive(KeyConflictContext.GUI)) {
+        } else if (func.apply(ModKeys.ACTION3) && ModKeys.ACTION3.getKeyModifier().isActive(KeyConflictContext.GUI)) {
             setBinding(3);
             return true;
         }
