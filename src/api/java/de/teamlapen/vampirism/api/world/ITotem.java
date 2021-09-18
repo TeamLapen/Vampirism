@@ -11,26 +11,53 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
+/**
+ * Implemented in TotemBlockEntity
+ */
 public interface ITotem {
 
+    /**
+     * @param faction the faction for the capture entity
+     * @return entityType of a capture entity
+     */
     Optional<EntityType<? extends Mob>> getCaptureEntityForFaction(IFaction<?> faction);
 
+    /**
+     * @return current capturing faction of the totem or {@code null} if none
+     */
     @Nullable
     IFaction getCapturingFaction();
 
+    /**
+     * @return current controlling faction of the totem or {@code null} if none
+     */
     @Nullable
     IFaction getControllingFaction();
 
+    /**
+     * support method for getting block entity level
+     *
+     * @return level of the totem
+     */
     default Level getTileWorld() {
         return ((BlockEntity) this).getLevel();
     }
 
+    /**
+     * @return area of the village
+     */
     @Nonnull
     AABB getVillageArea();
 
+    /**
+     * @return reduced area of the village
+     */
     @Nonnull
     AABB getVillageAreaReduced();
 
+    /**
+     * @return whether a running raid was triggered by a faction BadOmen effect
+     */
     boolean isRaidTriggeredByBadOmen();
 
 }
