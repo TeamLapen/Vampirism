@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.network.chat.Component;
@@ -45,9 +45,9 @@ public class HolyWaterBottleItem extends VampirismItem implements IItemWithTier,
         return regName;
     }
 
-    @Nonnull
+    @Nullable
     @Override
-    public IFaction<?> getExclusiveFaction() {
+    public IPlayableFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
         return VReference.HUNTER_FACTION;
     }
 

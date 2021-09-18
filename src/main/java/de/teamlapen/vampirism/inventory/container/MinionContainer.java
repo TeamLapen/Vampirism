@@ -42,7 +42,7 @@ public class MinionContainer extends InventoryContainer {
     }
 
     private static SelectorInfo[] createSelectors(MinionEntity<?> minionEntity, int extraSlots) {
-        Predicate<ItemStack> factionPredicate = itemStack -> !(itemStack.getItem() instanceof IFactionExclusiveItem) || ((IFactionExclusiveItem) itemStack.getItem()).getExclusiveFaction().equals(minionEntity.getFaction());
+        Predicate<ItemStack> factionPredicate = itemStack -> !(itemStack.getItem() instanceof IFactionExclusiveItem) || minionEntity.getFaction().equals(((IFactionExclusiveItem) itemStack.getItem()).getExclusiveFaction(itemStack));
         SelectorInfo[] slots = new SelectorInfo[6 + extraSlots];
         slots[0] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlot.MAINHAND, minionEntity)), 7, 60, false, 1, null);
         slots[1] = new SelectorInfo(factionPredicate.and(stack -> stack.canEquip(EquipmentSlot.OFFHAND, minionEntity) || stack.getUseAnimation() == UseAnim.DRINK || stack.getUseAnimation() == UseAnim.EAT), 7, 78, false, 5, null);

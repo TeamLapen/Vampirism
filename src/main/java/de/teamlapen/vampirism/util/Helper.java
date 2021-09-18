@@ -222,7 +222,7 @@ public class Helper {
      * Checks if the given {@link IFactionLevelItem} can be used by the given player
      */
     public static boolean canUseFactionItem(ItemStack stack, IFactionLevelItem item, IFactionPlayerHandler playerHandler) {
-        IPlayableFaction usingFaction = item.getUsingFaction(stack);
+        IPlayableFaction usingFaction = item.getExclusiveFaction(stack);
         ISkill requiredSkill = item.getRequiredSkill(stack);
         int reqLevel = item.getMinLevel(stack);
         if (usingFaction != null && !playerHandler.isInFaction(usingFaction)) return false;

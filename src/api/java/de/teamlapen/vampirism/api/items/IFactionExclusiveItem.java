@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.items;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -25,14 +26,14 @@ public interface IFactionExclusiveItem {
     @OnlyIn(Dist.CLIENT)
     default void addFactionPoisonousToolTip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn, @Nullable Player player) {
         IFaction<?> faction = player != null ? VampirismAPI.factionRegistry().getFaction(player) : null;
-        if (faction == null ? !VReference.HUNTER_FACTION.equals(getExclusiveFaction()) : faction != getExclusiveFaction()) {
-            tooltip.add(new TranslatableComponent("text.vampirism.poisonous_to_non", getExclusiveFaction().getNamePlural()).withStyle(ChatFormatting.DARK_RED));
+        if (faction == null ? !VReference.HUNTER_FACTION.equals(getExclusiveFaction(stack)) : faction != getExclusiveFaction(stack)) {
+            tooltip.add(new TranslatableComponent("text.vampirism.poisonous_to_non", getExclusiveFaction(stack).getNamePlural()).withStyle(ChatFormatting.DARK_RED));
         }
     }
 
     /**
-     * @return The faction this item is meant for
+     * @return The faction that can use this item or null if any
      */
-    @Nonnull
-    IFaction<?> getExclusiveFaction();
+    @Nullable
+    IPlayableFaction<?> getExclusiveFaction(@Nonnull ItemStack stack);
 }

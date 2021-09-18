@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
@@ -25,7 +26,7 @@ import java.util.List;
 /**
  * Basic sword for vampire hunters
  */
-public abstract class VampirismHunterWeapon extends VampirismItemWeapon implements IFactionLevelItem, IFactionSlayerItem, IVampireFinisher, IFactionExclusiveItem {
+public abstract class VampirismHunterWeapon extends VampirismItemWeapon implements IFactionLevelItem<IHunterPlayer>, IFactionSlayerItem, IVampireFinisher, IFactionExclusiveItem {
 
 
     public VampirismHunterWeapon(String regName, Tier material, int attackDamage, float attackSpeed, Properties props) {
@@ -36,16 +37,16 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
-        if (getUsingFaction(stack) != null || getMinLevel(stack) > 0 || getRequiredSkill(stack) != null) {
+        if (getExclusiveFaction(stack) != null || getMinLevel(stack) > 0 || getRequiredSkill(stack) != null) {
             Player player = VampirismMod.proxy.getClientPlayer();
             addFactionLevelToolTip(stack, worldIn, tooltip, flagIn, player);
         }
     }
 
 
-    @Nonnull
+    @Nullable
     @Override
-    public IFaction<?> getExclusiveFaction() {
+    public IPlayableFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
         return VReference.HUNTER_FACTION;
     }
 
@@ -56,12 +57,7 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
     }
 
     @Override
-    public IFaction getSlayedFaction() {
+    public IFaction<?> getSlayedFaction() {
         return VReference.VAMPIRE_FACTION;
-    }
-
-    @Override
-    public IPlayableFaction getUsingFaction(@Nonnull ItemStack stack) {
-        return VReference.HUNTER_FACTION;
     }
 }

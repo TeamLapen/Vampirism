@@ -450,7 +450,7 @@ public class ModPlayerEventHandler {
         if (!stack.isEmpty() && stack.getItem() instanceof IFactionLevelItem item) {
             if (!player.isAlive()) return false;
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            IPlayableFaction usingFaction = item.getUsingFaction(stack);
+            IPlayableFaction usingFaction = item.getExclusiveFaction(stack);
             ISkill requiredSkill = item.getRequiredSkill(stack);
             if (usingFaction != null && !handler.isInFaction(usingFaction)) {
 

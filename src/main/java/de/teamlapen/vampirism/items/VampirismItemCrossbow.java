@@ -95,7 +95,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
     @Nullable
     @Override
-    public IPlayableFaction<IHunterPlayer> getUsingFaction(@Nonnull ItemStack stack) {
+    public IPlayableFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
         return VReference.HUNTER_FACTION;
     }
 

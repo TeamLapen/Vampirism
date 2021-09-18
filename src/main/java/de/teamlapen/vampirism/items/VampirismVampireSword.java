@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
@@ -112,9 +111,9 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         stack.addTagElement("dont_name", ByteTag.valueOf(Byte.MAX_VALUE));
     }
 
-    @Nonnull
+    @Nullable
     @Override
-    public IFaction<?> getExclusiveFaction() {
+    public IPlayableFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
         return VReference.VAMPIRE_FACTION;
     }
 
@@ -132,12 +131,6 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     @Override
     public int getUseDuration(@Nonnull ItemStack stack) {
         return 40;
-    }
-
-    @Nullable
-    @Override
-    public IPlayableFaction getUsingFaction(@Nonnull ItemStack stack) {
-        return VReference.VAMPIRE_FACTION;
     }
 
     @Nonnull

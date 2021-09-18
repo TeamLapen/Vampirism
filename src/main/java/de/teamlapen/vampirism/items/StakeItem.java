@@ -4,7 +4,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.HunterActionTrigger;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
@@ -62,9 +62,9 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
         super(regName, Tiers.WOOD, 1, -1, new Properties().tab(VampirismMod.creativeTab));
     }
 
-    @Nonnull
+    @Nullable
     @Override
-    public IFaction<?> getExclusiveFaction() {
+    public IPlayableFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
         return VReference.HUNTER_FACTION;
     }
 
