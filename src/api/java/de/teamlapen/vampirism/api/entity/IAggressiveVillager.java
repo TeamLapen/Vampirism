@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.api.entity;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 
 /**
- * Interface for villagers that are (can be) agressive and hunt vampires.
- * E.g. used by MCA integration to allow MCAVillagers to be agressive villagers
+ * Interface for villagers that are (can be) aggressive and hunt vampires.
+ * E.g. used by MCA integration to allow MCAVillagers to be aggressive villagers
  * <p>
  * May only be implemented by subclasses of EntityVillager
  * <p>

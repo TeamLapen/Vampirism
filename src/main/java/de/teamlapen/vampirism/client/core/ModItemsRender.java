@@ -38,12 +38,8 @@ public class ModItemsRender {
             }
             return 0xFFFFFF;
         }, ModItems.crossbow_arrow_normal, ModItems.crossbow_arrow_vampire_killer, ModItems.crossbow_arrow_spitfire);
-        colors.register((state, tintIndex) -> {
-            return 0x1E1F1F;
-        }, ModBlocks.vampire_spruce_leaves);
-        colors.register((state, tintIndex) -> {
-            return 0x2e0606;
-        }, ModBlocks.bloody_spruce_leaves);
+        colors.register((state, tintIndex) -> 0x1E1F1F, ModBlocks.vampire_spruce_leaves);
+        colors.register((state, tintIndex) -> 0x2e0606, ModBlocks.bloody_spruce_leaves);
         colors.register((stack, tintIndex) -> {
             if (tintIndex == 1) {
                 if (stack.getItem() instanceof VampireRefinementItem) {

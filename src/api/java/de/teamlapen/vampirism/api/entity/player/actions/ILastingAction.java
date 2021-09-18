@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.api.entity.player.actions;
 
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-
 /**
  * Action with a duration which is updated every tick
  */

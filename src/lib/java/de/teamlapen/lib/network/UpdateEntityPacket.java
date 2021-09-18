@@ -161,7 +161,7 @@ public class UpdateEntityPacket implements IMessage {
     public static @Nullable
     UpdateEntityPacket createJoinWorldPacket(Entity entity) {
         final List<ISyncable.ISyncableEntityCapabilityInst> capsToSync = new ArrayList<>();
-        Collection<Capability> allCaps = null;
+        Collection<Capability<ISyncable.ISyncableEntityCapabilityInst>> allCaps = null;
         if (entity instanceof PathfinderMob) {
             allCaps = HelperRegistry.getSyncableEntityCaps().values();
         } else if (entity instanceof Player) {
@@ -169,8 +169,8 @@ public class UpdateEntityPacket implements IMessage {
 
         }
         if (allCaps != null && allCaps.size() > 0) {
-            for (Capability cap : allCaps) {
-                entity.getCapability(cap, null).ifPresent(inst -> capsToSync.add((ISyncable.ISyncableEntityCapabilityInst) inst));
+            for (Capability<ISyncable.ISyncableEntityCapabilityInst> cap : allCaps) {
+                entity.getCapability(cap, null).ifPresent(capsToSync::add);
             }
         }
         if (capsToSync.size() > 0) {

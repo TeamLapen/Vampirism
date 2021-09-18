@@ -5,13 +5,9 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.SerializationContext;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,9 +37,7 @@ public class TriggerFaction extends SimpleCriterionTrigger<TriggerFaction.Instan
      * Trigger this criterion
      */
     public void trigger(ServerPlayer playerMP, IPlayableFaction<?> faction, int level, int lordLevel) {
-        this.trigger(playerMP, (instance -> {
-            return instance.test(faction, level, lordLevel);
-        }));
+        this.trigger(playerMP, (instance -> instance.test(faction, level, lordLevel)));
     }
 
     @Nonnull

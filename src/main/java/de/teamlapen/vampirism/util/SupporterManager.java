@@ -72,6 +72,7 @@ public class SupporterManager {
         return "Vampires: " + Arrays.toString(supporters[0]) + " Hunters: " + Arrays.toString(supporters[1]);
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     private void init() {
         Supporter[][] supporters = null;
         InputStream inputStream = null;

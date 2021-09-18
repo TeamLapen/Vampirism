@@ -1,18 +1,18 @@
 package de.teamlapen.lib.lib.client.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.LIBREFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 import javax.annotation.Nonnull;
@@ -32,7 +32,7 @@ public class ProgressBar extends AbstractWidget {
     @Override
     public void renderButton(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
-        Font fontrenderer = minecraft.font;
+        Font font = minecraft.font;
         int i = this.getYImage(this.isHovered());
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -44,7 +44,7 @@ public class ProgressBar extends AbstractWidget {
         if (this.active) blit(matrixStack, x + 3, y + 3, 0, 32, (int) ((progress) * (this.width - 6)), 14);
         this.renderBg(matrixStack, minecraft, mouseX, mouseY);
         int j = getFGColor();
-        drawCenteredString(matrixStack, fontrenderer, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24);
+        drawCenteredString(matrixStack, font, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24);
 
         if (isHovered()) {
             renderToolTip(matrixStack, mouseX, mouseY);

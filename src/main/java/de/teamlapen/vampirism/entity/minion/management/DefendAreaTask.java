@@ -3,10 +3,10 @@ package de.teamlapen.vampirism.entity.minion.management;
 
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
 
@@ -36,6 +36,7 @@ public class DefendAreaTask extends DefaultMinionTask<Desc, MinionData> {
         return new Desc(pos, dist);
     }
 
+    @SuppressWarnings("ClassCanBeRecord")
     public static class Desc implements IMinionTask.IMinionTaskDesc<MinionData> {
 
         public final BlockPos center;

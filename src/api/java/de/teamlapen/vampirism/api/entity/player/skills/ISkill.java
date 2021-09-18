@@ -50,7 +50,7 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
     String getTranslationKey();
 
     /**
-     * Called when the skill is disenabled (Server: on load from nbt/on disabling all skills e.g. via the gui. Client: on update from server)
+     * Called when the skill is disabled (Server: on load from nbt/on disabling all skills e.g. via the gui. Client: on update from server)
      *
      * @param player Must be of the type that {@link ISkill#getFaction()} belongs to
      */

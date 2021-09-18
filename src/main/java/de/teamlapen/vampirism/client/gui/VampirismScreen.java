@@ -108,7 +108,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
         if (this.list.isEmpty()) {
             Component text = new TranslatableComponent("gui.vampirism.vampirism_menu.no_tasks").withStyle(ChatFormatting.WHITE);
             int width = this.font.width(text);
-            this.font.drawShadow(matrixStack, text, this.leftPos + 152 - (width / 2), this.topPos + 52, 0);
+            this.font.drawShadow(matrixStack, text, this.leftPos + 152 - (width / 2F), this.topPos + 52, 0);
         }
 
         this.oldMouseX = mouseX;

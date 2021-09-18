@@ -426,6 +426,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                     return FactionPlayerHandler.getOpt(player).map(fph -> {
                         if (fph.getMaxMinions() > 0) {
                             ItemStack heldItem = player.getItemInHand(hand);
+                            //noinspection Convert2MethodRef
                             boolean freeSlot = MinionWorldData.getData(player.level).map(data -> data.getOrCreateController(fph)).map(c->c.hasFreeMinionSlot()).orElse(false);
                             player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_vampire.minion.available"), true);
                             if (heldItem.getItem() == ModItems.vampire_minion_binding) {

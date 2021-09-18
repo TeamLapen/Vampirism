@@ -1227,7 +1227,6 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
                     if (vampire instanceof ICaptureIgnore)
                         continue;
                     this.getCaptureEntityForFaction(this.capturingFaction).ifPresent(type -> this.spawnEntity(type.create(this.level), vampire, true, false));
-                    ;
                 }
             }
         }

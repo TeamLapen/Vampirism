@@ -1,20 +1,22 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import com.google.common.collect.Streams;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import de.teamlapen.vampirism.core.ModItems;
+import com.mojang.math.Vector3f;
 import de.teamlapen.vampirism.blockentity.GarlicDiffusorBlockEntity;
+import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.util.Mth;
-import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -27,6 +29,7 @@ public class GarlicBeaconBESR extends VampirismBESR<GarlicDiffusorBlockEntity> {
 
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     @Override
     public void render(@Nonnull GarlicDiffusorBlockEntity tileEntityIn, float partialTicks, @Nonnull PoseStack matrixStackIn, @Nonnull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         Entity e = Minecraft.getInstance().getCameraEntity();

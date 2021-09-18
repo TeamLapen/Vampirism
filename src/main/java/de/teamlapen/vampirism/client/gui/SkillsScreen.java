@@ -300,7 +300,7 @@ public class SkillsScreen extends Screen {
         FormattedCharSequence s = Language.getInstance().getVisualOrder(f);
 
 
-        font.drawInBatch(s, (float) tooltipX + (tooltipTextWidth / 2) - this.font.width(f) / 2, (float) tooltipY + (tooltipHeight / 2) - 3, -1, true, mat, renderType, false, 0, 15728880);
+        font.drawInBatch(s, (float) tooltipX + (tooltipTextWidth / 2F) - this.font.width(f) / 2F, (float) tooltipY + (tooltipHeight / 2F) - 3, -1, true, mat, renderType, false, 0, 15728880);
 
         renderType.endBatch();
         mStack.popPose();
@@ -360,7 +360,7 @@ public class SkillsScreen extends Screen {
             RenderSystem.setShaderColor(f2, f2, f2, 1.0F);
 
             for (int x = 0; (float) x * f1 - (float) i2 < 224.0F; ++x) {
-                random.setSeed(this.minecraft.getUser().getUuid().hashCode() + k1 + x + (l1 + y) * 16);
+                random.setSeed(this.minecraft.getUser().getUuid().hashCode() + k1 + x + (l1 + y) * 16L);
                 int j4 = random.nextInt(1 + l1 + y) + (l1 + y) / 2;
                 TextureAtlasSprite textureatlassprite = this.getTexture(Blocks.SAND);
 

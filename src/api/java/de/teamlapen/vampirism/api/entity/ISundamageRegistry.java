@@ -19,7 +19,7 @@ public interface ISundamageRegistry {
     void addNoSundamageBiomes(ResourceLocation... biomes);
 
     /**
-     * Checkd if vampirs can get sundamage in that biome
+     * Check if vampires can get sundamage in that biome
      *
      * @return Whether vampires can get sundamage in that biome
      */
@@ -27,7 +27,7 @@ public interface ISundamageRegistry {
 
 
     /**
-     * Checks if vampires can get sundamge in that dimension
+     * Checks if vampires can get sundamage in that dimension
      *
      */
     boolean getSundamageInDim(ResourceKey<Level> dim);

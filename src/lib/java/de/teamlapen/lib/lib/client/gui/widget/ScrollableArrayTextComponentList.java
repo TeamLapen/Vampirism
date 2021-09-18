@@ -3,8 +3,8 @@ package de.teamlapen.lib.lib.client.gui.widget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.BaseComponent;
+import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -79,7 +79,7 @@ public class ScrollableArrayTextComponentList extends ScrollableListWidget<Pair<
                 width = listWidth;
             }
 
-            Minecraft.getInstance().font.drawShadow(matrixStack, this.item.getRight(), x + (listWidth / 2) - (width / 2), y + 7, -1);
+            Minecraft.getInstance().font.drawShadow(matrixStack, this.item.getRight(), x + (listWidth / 2F) - (width / 2F), y + 7, -1);
 
             if (this.onHover != null) {
                 boolean newHovered = mouseX >= x && mouseX < x + listWidth && mouseY >= y && mouseY < y + itemHeight;

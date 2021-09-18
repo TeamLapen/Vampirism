@@ -83,25 +83,25 @@ public class InventoryHelper {
      * Write the given inventory as new ListNBT "inventory" to given tag
      */
     public static void writeInventoryToTag(CompoundTag tag, SimpleContainer inventory) {
-        ListTag listnbt = new ListTag();
+        ListTag listTag = new ListTag();
 
         for (int i = 0; i < inventory.getContainerSize(); ++i) {
             ItemStack itemstack = inventory.getItem(i);
             if (!itemstack.isEmpty()) {
-                listnbt.add(itemstack.save(new CompoundTag()));
+                listTag.add(itemstack.save(new CompoundTag()));
             }
         }
-        tag.put("inventory", listnbt);
+        tag.put("inventory", listTag);
     }
 
     /**
      * Write the given inventory from ListNBT "inventory" in the given tag
      */
     public static void readInventoryFromTag(CompoundTag tag, SimpleContainer inventory) {
-        ListTag listnbt = tag.getList("inventory", 10);
+        ListTag list = tag.getList("inventory", 10);
 
-        for (int i = 0; i < listnbt.size(); ++i) {
-            ItemStack itemstack = ItemStack.of(listnbt.getCompound(i));
+        for (int i = 0; i < list.size(); ++i) {
+            ItemStack itemstack = ItemStack.of(list.getCompound(i));
             if (!itemstack.isEmpty()) {
                 inventory.addItem(itemstack);
             }

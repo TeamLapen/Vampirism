@@ -34,7 +34,7 @@ public interface ISkillHandler<T> {
      * Equip the refinement set from the given stack to the appropriate slot
      * If no set is present, or it is from the wrong faction, the old set for the slot will be removed, but no new set will be added
      *
-     * @return Whether the item wass equipped
+     * @return Whether the item was equipped
      */
     boolean equipRefinementItem(ItemStack stack);
 
@@ -73,7 +73,7 @@ public interface ISkillHandler<T> {
          */
         PARENT_NOT_ENABLED,
         /**
-         * the skill could not be found in the skilltree
+         * the skill could not be found in the skill tree
          */
         NOT_FOUND,
         /**

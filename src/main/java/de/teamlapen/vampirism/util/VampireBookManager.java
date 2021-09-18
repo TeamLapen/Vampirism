@@ -4,9 +4,9 @@ import com.google.common.io.ByteStreams;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
+import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -50,6 +50,7 @@ public class VampireBookManager {
         return (bookTags == null || bookTags.length == 0) ? new CompoundTag() : bookTags[rnd.nextInt(bookTags.length)];
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     public void init() {
         InputStream inputStream = null;
         try {

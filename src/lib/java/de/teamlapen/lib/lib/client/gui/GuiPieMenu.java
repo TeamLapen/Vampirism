@@ -279,14 +279,14 @@ public abstract class GuiPieMenu<T> extends Screen {
         stack.translate(cX, cY, this.getBlitOffset());
         stack.scale(scale, scale, 1);
 
-        // Draw the cicle image
+        // Draw the circle image
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1f);
         RenderSystem.setShaderTexture(0, backgroundTex);
         Matrix4f matrix = stack.last().pose();
 
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder builder = tessellator.getBuilder();
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder builder = tesselator.getBuilder();
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
         builder.vertex(matrix, BGS / 2f, BGS / 2f, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(1, 1).endVertex();
@@ -296,7 +296,7 @@ public abstract class GuiPieMenu<T> extends Screen {
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0, 0).endVertex();
         builder.vertex(matrix, -BGS / 2f, BGS / 2f, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0, 1).endVertex();
-        tessellator.end();
+        tesselator.end();
 
 
         // Draw the lines
@@ -305,7 +305,7 @@ public abstract class GuiPieMenu<T> extends Screen {
                 double rad = i * radDiff + radDiff / 2;
                 double cos = Math.cos(rad);
                 double sin = Math.sin(rad);
-                this.drawLine(stack, cos * RR, sin * RR, +cos * BGS / 2, sin * BGS / 2);
+                this.drawLine(stack, cos * RR, sin * RR, cos * BGS / 2, sin * BGS / 2);
             }
         }
         RenderSystem.disableBlend();
@@ -320,7 +320,7 @@ public abstract class GuiPieMenu<T> extends Screen {
      */
     private void drawSelectedCenter(PoseStack stack, double cX, double cY, double rad) {
 
-        // Caluculate rotation and scale
+        // Calculate rotation and scale
         double deg = Math.toDegrees(-rad);
         float scale = (this.height
         ) / 4F / CS;
@@ -337,8 +337,8 @@ public abstract class GuiPieMenu<T> extends Screen {
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1f);
         RenderSystem.setShaderTexture(0, centerTex);
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder builder = tessellator.getBuilder();
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder builder = tesselator.getBuilder();
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
         builder.vertex(matrix, CS / 2f, CS / 2f, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0.5f, 1).endVertex();
@@ -348,7 +348,7 @@ public abstract class GuiPieMenu<T> extends Screen {
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0, 0).endVertex();
         builder.vertex(matrix, -CS / 2f, CS / 2f, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0, 1).endVertex();
-        tessellator.end();
+        tesselator.end();
 
 
         RenderSystem.disableBlend();
@@ -374,8 +374,8 @@ public abstract class GuiPieMenu<T> extends Screen {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1f);
         RenderSystem.setShaderTexture(0, centerTex);
 
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder builder = tessellator.getBuilder();
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder builder = tesselator.getBuilder();
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
         builder.vertex(matrix, CS / 2f, CS / 2f, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(1, 1).endVertex();
@@ -385,7 +385,7 @@ public abstract class GuiPieMenu<T> extends Screen {
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0.5f, 0).endVertex();
         builder.vertex(matrix, -CS / 2f, CS / 2f, this.getBlitOffset
                 ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0.5f, 1).endVertex();
-        tessellator.end();
+        tesselator.end();
 
 
         RenderSystem.disableBlend();

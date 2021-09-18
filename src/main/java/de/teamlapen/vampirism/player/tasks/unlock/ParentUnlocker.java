@@ -8,6 +8,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.function.Supplier;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class ParentUnlocker implements TaskUnlocker {
 
     private final Supplier<Task> parent;

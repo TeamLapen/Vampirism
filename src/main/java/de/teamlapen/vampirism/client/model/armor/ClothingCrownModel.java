@@ -21,7 +21,7 @@ public class ClothingCrownModel extends VampirismArmorModel {
     public static LayerDefinition createLayer() {
         MeshDefinition mesh = VampirismArmorModel.createMesh();
         PartDefinition part = mesh.getRoot();
-        CubeDeformation def1 = new CubeDeformation(-0.2F, 0.1F, -0.1F);;
+        CubeDeformation def1 = new CubeDeformation(-0.2F, 0.1F, -0.1F);
         part.addOrReplaceChild(LEFT, CubeListBuilder.create().texOffs(0, 6).addBox(-5.0F, -7.7F, -4.0F, 1.0F, 1.0F, 8.0F, new CubeDeformation(-0.2F, 0.1F, 0.1F)).texOffs(12, 17).addBox(-5.0F, -8.8F, -3.7F, 1.0F, 1.0F, 2.0F, def1).texOffs(0, 17).addBox(-5.0F, -8.8F, 1.7F, 1.0F, 1.0F, 2.0F, def1).texOffs(6, 17).addBox(-5.0F, -8.8F, -1.0F, 1.0F, 1.0F, 2.0F, new CubeDeformation(-0.2F, 0.0F, 0.1F)).texOffs(13, 15).addBox(-5.0F, -9.8F, -3.25F, 1.0F, 1.0F, 1.0F, def1).texOffs(1, 15).addBox(-5.0F, -9.8F, 2.2F, 1.0F, 1.0F, 1.0F, def1).texOffs(7, 15).addBox(-5.0F, -9.8F, -0.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(-0.2F, 0.0F, -0.05F)), PartPose.ZERO);
         CubeDeformation def2 = new CubeDeformation( -0.1F, 0.0F, -0.2F);
         part.addOrReplaceChild(FRONT, CubeListBuilder.create()  .texOffs(0, 4).addBox(-4.0F, -7.7F, -5.0F, 8.0F, 1.0F, 1.0F, new CubeDeformation(0.1F, 0.1F, -0.2F))

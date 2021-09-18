@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.client.gui.widget;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWithDummyWidget;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -15,33 +15,32 @@ import de.teamlapen.vampirism.client.gui.ExtendedScreen;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.player.tasks.reward.ItemRewardInstance;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.Tag;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.tags.Tag;
-import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 /**
  * Element for {@link ScrollableListWithDummyWidget} that presents a {@link Task}
@@ -210,7 +209,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
             }
             int width = this.screen.font.width(msg);
             int color = 11184810;
-            if (remainingTime < this.item.getTaskDuration() / 20 * 0.1) {
+            if (remainingTime < this.item.getTaskDuration() / 20F * 0.1F) {
                 color = 16733525;
             }
             this.screen.font.drawShadow(matrixStack, msg, x + 134 - width, y + 12, color);

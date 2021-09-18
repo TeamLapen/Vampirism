@@ -2,7 +2,9 @@ package de.teamlapen.vampirism;
 
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.config.BloodValueLoaderDynamic;
+import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
+import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.ModCompatLoader;
 import de.teamlapen.lib.lib.util.VersionChecker;
@@ -58,6 +60,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -239,14 +242,15 @@ public class VampirismMod {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void enqueueIMC(final InterModEnqueueEvent event) {
         onInitStep(IInitListener.Step.ENQUEUE_IMC, event);
-        HelperRegistry.registerPlayerEventReceivingCapability(VampirePlayer.CAP, VampirePlayer.class);
-        HelperRegistry.registerPlayerEventReceivingCapability(HunterPlayer.CAP, HunterPlayer.class);
-        HelperRegistry.registerSyncableEntityCapability(ExtendedCreature.CAP, REFERENCE.EXTENDED_CREATURE_KEY, ExtendedCreature.class);
-        HelperRegistry.registerSyncablePlayerCapability(VampirePlayer.CAP, REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.class);
-        HelperRegistry.registerSyncablePlayerCapability(HunterPlayer.CAP, REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.class);
-        HelperRegistry.registerSyncablePlayerCapability(FactionPlayerHandler.CAP, REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.class);
+        HelperRegistry.registerPlayerEventReceivingCapability((Capability<IPlayerEventListener>)(Object)VampirePlayer.CAP, VampirePlayer.class);
+        HelperRegistry.registerPlayerEventReceivingCapability((Capability<IPlayerEventListener>)(Object)HunterPlayer.CAP, HunterPlayer.class);
+        HelperRegistry.registerSyncableEntityCapability((Capability<ISyncable.ISyncableEntityCapabilityInst>)(Object)ExtendedCreature.CAP, REFERENCE.EXTENDED_CREATURE_KEY, ExtendedCreature.class);
+        HelperRegistry.registerSyncablePlayerCapability((Capability<ISyncable.ISyncableEntityCapabilityInst>)(Object)VampirePlayer.CAP, REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.class);
+        HelperRegistry.registerSyncablePlayerCapability((Capability<ISyncable.ISyncableEntityCapabilityInst>)(Object)HunterPlayer.CAP, REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.class);
+        HelperRegistry.registerSyncablePlayerCapability((Capability<ISyncable.ISyncableEntityCapabilityInst>)(Object)FactionPlayerHandler.CAP, REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.class);
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {

@@ -55,12 +55,8 @@ public class ModBlocksRender {
             }
             return 0xFFFFFF;
         }, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0]));
-        colors.register((state, worldIn, pos, tintIndex) -> {
-            return 0x1E1F1F;
-        }, ModBlocks.vampire_spruce_leaves);
-        colors.register((state, worldIn, pos, tintIndex) -> {
-            return 0x2e0606;
-        }, ModBlocks.bloody_spruce_leaves);
+        colors.register((state, worldIn, pos, tintIndex) -> 0x1E1F1F, ModBlocks.vampire_spruce_leaves);
+        colors.register((state, worldIn, pos, tintIndex) -> 0x2e0606, ModBlocks.bloody_spruce_leaves);
     }
 
     public static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {

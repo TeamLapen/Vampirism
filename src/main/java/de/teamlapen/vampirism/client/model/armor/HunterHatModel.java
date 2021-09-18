@@ -5,7 +5,10 @@ import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -31,8 +34,8 @@ public class HunterHatModel extends VampirismArmorModel {
     }
     private static  HunterHatModel hat0 ;
     private static HunterHatModel hat1 ;
-    private ModelPart hatTop;
-    private ModelPart hatRim;
+    private final ModelPart hatTop;
+    private final ModelPart hatRim;
 
     public static HunterHatModel getInstance0(){
         if(hat0 == null){

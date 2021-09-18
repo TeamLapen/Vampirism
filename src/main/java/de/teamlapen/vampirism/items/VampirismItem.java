@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.Util;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 
@@ -29,7 +29,7 @@ public class VampirismItem extends Item {
     @Override
     protected String getOrCreateDescriptionId() {
         if (this.translation_key == null) {
-            this.translation_key = Util.makeDescriptionId("item", Registry.ITEM.getKey(this));
+            this.translation_key = Util.makeDescriptionId("item", ForgeRegistries.ITEMS.getKey(this));
         }
 
         return this.translation_key;

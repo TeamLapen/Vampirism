@@ -7,22 +7,17 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import net.minecraft.advancements.*;
-import net.minecraft.data.advancements.AdvancementProvider;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.advancements.AdvancementProvider;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.KilledTrigger;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.LocationTrigger;
 
 public class AdvancementGenerator extends AdvancementProvider {
     public AdvancementGenerator(DataGenerator generatorIn) {
@@ -31,6 +26,7 @@ public class AdvancementGenerator extends AdvancementProvider {
         this.tabs = ImmutableList.of(main, new HunterAdvancements(main::getRoot), new VampireAdvancements(main::getRoot), new MinionAdvancements(main::getRoot));
     }
 
+    @SuppressWarnings("ClassCanBeRecord")
     private static class HunterAdvancements implements Consumer<Consumer<Advancement>> {
 
         private final Supplier<Advancement> root;
@@ -120,6 +116,7 @@ public class AdvancementGenerator extends AdvancementProvider {
 
     }
 
+    @SuppressWarnings("ClassCanBeRecord")
     private static class VampireAdvancements implements Consumer<Consumer<Advancement>> {
 
         private final Supplier<Advancement> root;
@@ -187,6 +184,7 @@ public class AdvancementGenerator extends AdvancementProvider {
         }
     }
 
+    @SuppressWarnings("ClassCanBeRecord")
     private static class MinionAdvancements implements Consumer<Consumer<Advancement>> {
 
         private final Supplier<Advancement> root;

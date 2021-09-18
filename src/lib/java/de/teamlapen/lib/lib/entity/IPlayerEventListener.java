@@ -10,7 +10,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.event.TickEvent;
 
 /**
- * Provides serveral event related methods, which should be called by a dedicated EventHandler.
+ * Provides several event related methods, which should be called by a dedicated EventHandler.
  * You can register a {@link Capability}, which instances implement this interface, in {@link de.teamlapen.lib.HelperRegistry} to let the library call this.
  */
 public interface IPlayerEventListener {

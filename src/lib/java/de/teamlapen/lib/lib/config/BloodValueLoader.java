@@ -2,10 +2,10 @@ package de.teamlapen.lib.lib.config;
 
 import com.google.common.collect.Maps;
 import de.teamlapen.lib.lib.util.LogUtil;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.ModList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -23,7 +23,7 @@ import java.util.function.BiConsumer;
 
 public class BloodValueLoader extends SimplePreparableReloadListener<Collection<ResourceLocation>> {
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final String BLOODVALUEDIRECTORY = "vampirism_blood_values/";
+    private static final String BLOOD_VALUE_DIRECTORY = "vampirism_blood_values/";
 
     private final String folderLocation;
     private final String type;
@@ -38,7 +38,7 @@ public class BloodValueLoader extends SimplePreparableReloadListener<Collection<
      * @param multiplierNameIn the ResourceLocation which declares a multiplier in data pack
      */
     public BloodValueLoader(@Nonnull String nameIn, @Nonnull BiConsumer<Map<ResourceLocation, Integer>, Integer> consumerIn, @Nullable ResourceLocation multiplierNameIn) {
-        this.folderLocation = BLOODVALUEDIRECTORY + nameIn;
+        this.folderLocation = BLOOD_VALUE_DIRECTORY + nameIn;
         this.consumer = consumerIn;
         this.multiplierName = multiplierNameIn;
         this.type = nameIn;

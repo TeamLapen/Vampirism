@@ -146,7 +146,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
      */
     public Optional<Integer> claimMinionSlot(int id) {
         if (id < minionTokens.length) {
-            if (!minionTokens[id].isPresent() && !minions[id].isStillRecovering()) {
+            if (minionTokens[id].isEmpty() && !minions[id].isStillRecovering()) {
                 int t = rng.nextInt();
                 minionTokens[id] = Optional.of(t);
                 return minionTokens[id];
@@ -295,7 +295,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     public Collection<Integer> getUnclaimedMinions() {
         List<Integer> ids = new ArrayList<>();
         for (int i = 0; i < minionTokens.length; i++) {
-            if (!minionTokens[i].isPresent()) {
+            if (minionTokens[i].isEmpty()) {
                 if (!minions[i].isStillRecovering()) {
                     ids.add(i);
                 }

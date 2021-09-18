@@ -17,7 +17,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -90,6 +89,7 @@ public class VersionChecker implements Runnable {
         versionInfo.checked = true;
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     private void check(URL url) throws IOException, JsonSyntaxException {
 
         InputStream con = openUrlStream(url);
@@ -99,6 +99,7 @@ public class VersionChecker implements Runnable {
 
         @SuppressWarnings("unchecked")
         Map<String, Object> json = new Gson().fromJson(data, Map.class);
+        //noinspection unchecked
         Map<String, String> promos = (Map<String, String>) json.get("promos");
         versionInfo.homePage = (String) json.getOrDefault("homepage", "");
         String rec = promos.get(MCPVersion.getMCVersion() + "-recommended");
@@ -113,7 +114,7 @@ public class VersionChecker implements Runnable {
             if (lat != null) possibleTarget = Version.parse(lat);
         }
         if (possibleTarget == null) {
-            LOGGER.info("Did not find a version of type {} for {} ({})", current.type, MCPVersion.getMCVersion(), current.type == Version.TYPE.RELEASE ? rec : lat);
+            LOGGER.info("Did not find a version of type {} for {} ({})", current.type, MCPVersion.getMCVersion(), current.type == Version.TYPE.RELEASE ? rec : lat); //TODO maxanier last parameter is always null
             return;
         }
         int res = possibleTarget.compareTo(current);
@@ -128,7 +129,7 @@ public class VersionChecker implements Runnable {
             List<Version> ordered = new ArrayList<>();
             for (String key : tmp.keySet()) {
                 Version ver = Version.parse(key);
-                if (ver != null && ver.compareTo(current) > 0 && (ver.compareTo(possibleTarget) < 1)) {
+                if (ver.compareTo(current) > 0 && ver.compareTo(possibleTarget) < 1) {
                     ordered.add(ver);
                 }
             }
@@ -145,8 +146,10 @@ public class VersionChecker implements Runnable {
             LOGGER.info("No changelog provided for new version {}", possibleTarget.name);
         }
         possibleTarget.setChanges(changes);
+        //noinspection unchecked
         Map<String, Object> downloads = (Map<String, Object>) json.get("downloads");
         if (downloads != null) {
+            //noinspection unchecked
             Map<String, String> tmp2 = (Map<String, String>) downloads.get(MCPVersion.getMCVersion());
             if (tmp2 != null) {
                 String download = tmp2.get(possibleTarget.name);
@@ -169,22 +172,14 @@ public class VersionChecker implements Runnable {
     }
 
     private String getStatsString() {
-        try {
-            return "?" +
-                    "current=" +
-                    URLEncoder.encode(currentVersion.getMajorVersion() + "." + currentVersion.getMinorVersion() + "." + currentVersion.getIncrementalVersion(), "UTF-8") +
-                    '&' +
-                    "mc=" +
-                    URLEncoder.encode(MCPVersion.getMCVersion(), "UTF-8") +
-                    '&' +
-                    "count=" +
-                    URLEncoder.encode("" + ModList.get().size(), "UTF-8") +
-                    '&' +
-                    "side=" +
-                    (EffectiveSide.get() == LogicalSide.CLIENT ? "client" : "server");
-        } catch (UnsupportedEncodingException e) {
-            return "";
-        }
+        return "?" +
+                "current=" + URLEncoder.encode(currentVersion.getMajorVersion() + "." + currentVersion.getMinorVersion() + "." + currentVersion.getIncrementalVersion(), StandardCharsets.UTF_8) +
+                '&' +
+                "mc=" + URLEncoder.encode(MCPVersion.getMCVersion(), StandardCharsets.UTF_8) +
+                '&' +
+                "count=" + URLEncoder.encode("" + ModList.get().size(), StandardCharsets.UTF_8) +
+                '&' +
+                "side=" + (EffectiveSide.get() == LogicalSide.CLIENT ? "client" : "server");
     }
 
     /**
@@ -214,7 +209,7 @@ public class VersionChecker implements Runnable {
     }
 
     /**
-     * Holds new version, current version and moar
+     * Holds new version, current version and more
      */
     public static class VersionInfo {
         private Version newVersion;

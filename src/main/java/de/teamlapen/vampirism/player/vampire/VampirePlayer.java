@@ -121,7 +121,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      * Must check Entity#isAlive before
      */
     public static VampirePlayer get(@Nonnull Player player) {
-        return (VampirePlayer) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get Vampire player capability from player " + player));
+        return (VampirePlayer) player.getCapability(CAP).orElseThrow(() -> new IllegalStateException("Cannot get Vampire player capability from player " + player));
     }
 
 
@@ -129,7 +129,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      * Return a LazyOptional, but print a warning message if not present.
      */
     public static LazyOptional<VampirePlayer> getOpt(@Nonnull Player player) {
-        LazyOptional<VampirePlayer> opt = player.getCapability(CAP, null).cast();
+        LazyOptional<VampirePlayer> opt = player.getCapability(CAP).cast();
         if (!opt.isPresent()) {
             LOGGER.warn("Cannot get Vampire player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
         }

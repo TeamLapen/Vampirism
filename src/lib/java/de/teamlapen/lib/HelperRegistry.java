@@ -21,24 +21,24 @@ import java.util.concurrent.ConcurrentHashMap;
 public class HelperRegistry {
     private final static Logger LOGGER = LogManager.getLogger();
 
-    private static Map<ResourceLocation, Capability> syncablePlayerCaps = new ConcurrentHashMap<>();
-    private static Map<ResourceLocation, Capability> syncableEntityCaps = new ConcurrentHashMap<>();
-    private static Set<Capability> playerEventListenerCaps = new ConcurrentSet<>();
-    private static Capability[] playerEventListenerCapsFinal;
+    private static Map<ResourceLocation, Capability<ISyncable.ISyncableEntityCapabilityInst>> syncablePlayerCaps = new ConcurrentHashMap<>();
+    private static Map<ResourceLocation, Capability<ISyncable.ISyncableEntityCapabilityInst>> syncableEntityCaps = new ConcurrentHashMap<>();
+    private static Set<Capability<IPlayerEventListener>> playerEventListenerCaps = new ConcurrentSet<>();
+    private static Capability<IPlayerEventListener>[] playerEventListenerCapsFinal;
     /**
      * Stores syncable capabilities for {@link net.minecraft.world.entity.player.Player}
      */
-    private static ImmutableMap<ResourceLocation, Capability> syncablePlayerCapsFinal;
+    private static ImmutableMap<ResourceLocation, Capability<ISyncable.ISyncableEntityCapabilityInst>> syncablePlayerCapsFinal;
     /**
      * Stores syncable capabilities for {@link net.minecraft.world.entity.Mob}
      */
-    private static ImmutableMap<ResourceLocation, Capability> syncableEntityCapsFinal;
+    private static ImmutableMap<ResourceLocation, Capability<ISyncable.ISyncableEntityCapabilityInst>> syncableEntityCapsFinal;
 
     /**
      * Return all player capabilities that should receive events
      * FOR INTERNAL USAGE ONLY
      */
-    static Capability[] getEventListenerCaps() {
+    static Capability<IPlayerEventListener>[] getEventListenerCaps() {
         return playerEventListenerCapsFinal;
     }
 
@@ -46,7 +46,7 @@ public class HelperRegistry {
      * Return all player capabilities that should be synced
      * FOR INTERNAL USAGE ONLY
      */
-    public static ImmutableMap<ResourceLocation, Capability> getSyncablePlayerCaps() {
+    public static ImmutableMap<ResourceLocation, Capability<ISyncable.ISyncableEntityCapabilityInst>> getSyncablePlayerCaps() {
         return syncablePlayerCapsFinal;
     }
 
@@ -54,7 +54,7 @@ public class HelperRegistry {
      * Return all entity capabilities that should be synced
      * FOR INTERNAL USAGE ONLY
      */
-    public static ImmutableMap<ResourceLocation, Capability> getSyncableEntityCaps() {
+    public static ImmutableMap<ResourceLocation, Capability<ISyncable.ISyncableEntityCapabilityInst>> getSyncableEntityCaps() {
         return syncableEntityCapsFinal;
     }
 
@@ -67,7 +67,7 @@ public class HelperRegistry {
      *            Has to be called before post init.
      */
     @ThreadSafeLibAPI
-    public static void registerSyncableEntityCapability(Capability capability, ResourceLocation key, Class<? extends ISyncable.ISyncableEntityCapabilityInst> clz) {
+    public static void registerSyncableEntityCapability(Capability<ISyncable.ISyncableEntityCapabilityInst> capability, ResourceLocation key, Class<? extends ISyncable.ISyncableEntityCapabilityInst> clz) {
         if (syncableEntityCaps == null) {
             LOGGER.error("You have to register the syncable property {} ({}) during InterModEnqueueEvent", clz, capability);
             return;
@@ -83,7 +83,7 @@ public class HelperRegistry {
      *            Has to be called before post init.
      */
     @ThreadSafeLibAPI
-    public static void registerSyncablePlayerCapability(Capability capability, ResourceLocation key, Class<? extends ISyncable.ISyncableEntityCapabilityInst> clz) {
+    public static void registerSyncablePlayerCapability(Capability<ISyncable.ISyncableEntityCapabilityInst> capability, ResourceLocation key, Class<? extends ISyncable.ISyncableEntityCapabilityInst> clz) {
         if (syncablePlayerCaps == null) {
             LOGGER.error("You have to register the syncable property {} ({}) before post init", clz, capability);
             return;
@@ -98,7 +98,7 @@ public class HelperRegistry {
      * @param clz        Class of the object returned, when {@link net.minecraft.world.entity.player.Player#getCapability(Capability, Direction)} is called on the player with the given capability
      */
     @ThreadSafeLibAPI
-    public static void registerPlayerEventReceivingCapability(Capability capability, Class<? extends IPlayerEventListener> clz) {
+    public static void registerPlayerEventReceivingCapability(Capability<IPlayerEventListener> capability, Class<? extends IPlayerEventListener> clz) {
         if (playerEventListenerCaps == null) {
             LOGGER.error("You have to register PlayerEventReceiver BEFORE post init. (" + capability + ")");
         } else {
@@ -115,7 +115,8 @@ public class HelperRegistry {
         syncableEntityCaps = null;
         syncablePlayerCapsFinal = ImmutableMap.copyOf(syncablePlayerCaps);
         syncablePlayerCaps = null;
-        playerEventListenerCapsFinal = playerEventListenerCaps.toArray(new Capability[0]);
+        //noinspection unchecked
+        playerEventListenerCapsFinal = playerEventListenerCaps.toArray((Capability<IPlayerEventListener>[]) new Capability[0]);
         playerEventListenerCaps = null;
     }
 }

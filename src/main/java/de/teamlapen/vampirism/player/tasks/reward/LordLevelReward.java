@@ -15,6 +15,7 @@ import javax.annotation.Nonnull;
 /**
  * Reward to level up (1 level) as lord
  */
+@SuppressWarnings("ClassCanBeRecord")
 public class LordLevelReward implements TaskReward, ITaskRewardInstance {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "lord_level_reward");
 

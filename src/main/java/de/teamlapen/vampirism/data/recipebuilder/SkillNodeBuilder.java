@@ -60,6 +60,7 @@ public class SkillNodeBuilder {
         }
     }
 
+    @SuppressWarnings("ClassCanBeRecord")
     private static class Result implements FinishedSkillNode {
         private final ResourceLocation parent;
         private final ISkill[] skills;

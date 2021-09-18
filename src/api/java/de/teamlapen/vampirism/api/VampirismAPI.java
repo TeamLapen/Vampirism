@@ -38,9 +38,9 @@ public class VampirismAPI {
     @CapabilityInject(IVampirismWorld.class)
     private static Capability<IVampirismWorld> CAP_WORLD = null;
     @CapabilityInject(IVampirePlayer.class)
-    private static Capability<IVampirePlayer> CAP_VAMPIRE = null;
+    private static final Capability<IVampirePlayer> CAP_VAMPIRE = null;
     @CapabilityInject(IHunterPlayer.class)
-    private static Capability<IHunterPlayer> CAP_HUNTER = null;
+    private static final Capability<IHunterPlayer> CAP_HUNTER = null;
 
     private static IFactionRegistry factionRegistry;
     private static ISundamageRegistry sundamageRegistry;

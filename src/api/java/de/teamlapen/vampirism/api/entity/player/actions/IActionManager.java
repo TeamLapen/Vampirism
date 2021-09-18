@@ -17,8 +17,7 @@ public interface IActionManager {
     List<IAction> getActionsForFaction(IPlayableFaction faction);
 
     /**
-     * Use net.minecraftforge.registries.RegistryManager.ACTIVE.getRegistry(new ResourceLocation("vampirism:actions"))
-     *
+     * or use {@code net.minecraftforge.registries.RegistryManager.ACTIVE.getRegistry(new ResourceLocation("vampirism:actions"))}
      */
     IForgeRegistry<IAction> getRegistry();
 }

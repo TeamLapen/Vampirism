@@ -22,6 +22,7 @@ import java.util.Random;
 /**
  * Extends the basic weapon table model, by a variable lava fluid level
  */
+@SuppressWarnings("ClassCanBeRecord")
 @OnlyIn(Dist.CLIENT)
 public class BakedWeaponTableModel implements BakedModel {
 

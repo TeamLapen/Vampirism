@@ -11,21 +11,21 @@ import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LightningBolt;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelDataManager;
@@ -150,8 +150,6 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
                     blockEntity.ritualPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, targetLevel * 10 * 20));
                     FactionPlayerHandler.get(blockEntity.ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, targetLevel);
                     VampirePlayer.get(blockEntity.ritualPlayer).drinkBlood(Integer.MAX_VALUE, 0, false);
-                    break;
-                default:
                     break;
             }
 

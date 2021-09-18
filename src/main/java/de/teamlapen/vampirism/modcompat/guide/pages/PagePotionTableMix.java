@@ -11,12 +11,12 @@ import de.maxanier.guideapi.api.util.PageHelper;
 import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
 import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
@@ -25,7 +25,6 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 
 public class PagePotionTableMix extends Page {
@@ -127,8 +126,8 @@ public class PagePotionTableMix extends Page {
     private void deriveItemStacks(ExtendedPotionMix recipe) {
         input = PotionUtils.setPotion(new ItemStack(Items.POTION), recipe.input.get());
         output = PotionUtils.setPotion(new ItemStack(Items.POTION), recipe.output.get());
-        ingredients1 = recipe.reagent1.map(Ingredient::getItems).map(Arrays::stream).orElse(Stream.empty()).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent1Count)).toArray(ItemStack[]::new);
-        ingredients2 = recipe.reagent2.map(Ingredient::getItems).map(Arrays::stream).orElse(Stream.empty()).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent2Count)).toArray(ItemStack[]::new);
+        ingredients1 = recipe.reagent1.map(Ingredient::getItems).stream().flatMap(Arrays::stream).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent1Count)).toArray(ItemStack[]::new);
+        ingredients2 = recipe.reagent2.map(Ingredient::getItems).stream().flatMap(Arrays::stream).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent2Count)).toArray(ItemStack[]::new);
         if (ingredients1.length == 0) {
             ingredients1 = new ItemStack[]{ItemStack.EMPTY};
         }

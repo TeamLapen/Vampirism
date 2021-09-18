@@ -5,11 +5,11 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
-import net.minecraft.world.entity.MobType;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.PlantType;
 
 /**
@@ -46,7 +46,7 @@ public class VReference {
     public static MobCategory VAMPIRE_CREATURE_TYPE;
     /**
      * Vampire creatures have this creature attribute.
-     * Don't know why this exists alongside EnumCreatureType, but this is used by enchanments
+     * Don't know why this exists alongside EnumCreatureType, but this is used by enchantments
      */
     public static MobType VAMPIRE_CREATURE_ATTRIBUTE;
     /**

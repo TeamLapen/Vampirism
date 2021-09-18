@@ -99,8 +99,9 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
     }
 
     /**
-     * Can be useed if the task is stateless and therfore does not need to store any information
+     * Can be used if the task is stateless and therefore does not need to store any information
      */
+    @SuppressWarnings("ClassCanBeRecord")
     class NoDesc<Q extends IMinionData> implements IMinionTaskDesc<Q> {
         private final IMinionTask<NoDesc<Q>, Q> task;
 

@@ -7,8 +7,8 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -111,6 +111,7 @@ public class SkillNode {
                 '}';
     }
 
+    @SuppressWarnings("ClassCanBeRecord")
     public static class Builder {
         public static Builder deserialize(JsonObject json, @SuppressWarnings("unused") JsonDeserializationContext context) {
             if (json.has("remove") && GsonHelper.getAsBoolean(json, "remove")) return null;

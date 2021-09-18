@@ -8,16 +8,16 @@ import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -89,7 +89,7 @@ public class GarlicDiffusorBlockEntity extends BlockEntity {
     public void load(@Nonnull CompoundTag compound) {
         super.load(compound);
         r = compound.getInt("radius");
-        defaultStrength = EnumStrength.getFromStrenght(compound.getInt("strength"));
+        defaultStrength = EnumStrength.getFromStrength(compound.getInt("strength"));
         bootTimer = compound.getInt("boot_timer");
         setFueledTime(compound.getInt("fueled"));
     }
@@ -213,7 +213,7 @@ public class GarlicDiffusorBlockEntity extends BlockEntity {
         int baseZ = (getBlockPos().getZ() >> 4);
         ChunkPos[] chunks = new ChunkPos[(2 * r + 1) * (2 * r + 1)];
         int i = 0;
-        for (int x = -r; x <= +r; x++) {
+        for (int x = -r; x <= r; x++) {
             for (int z = -r; z <= r; z++) {
                 chunks[i++] = new ChunkPos(x + baseX, z + baseZ);
             }

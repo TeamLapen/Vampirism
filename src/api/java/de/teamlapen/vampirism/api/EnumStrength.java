@@ -6,7 +6,7 @@ package de.teamlapen.vampirism.api;
 public enum EnumStrength {
     NONE(0), WEAK(1), MEDIUM(2), STRONG(3);
 
-    public static EnumStrength getFromStrenght(int strength) {
+    public static EnumStrength getFromStrength(int strength) {
         for (EnumStrength s : values()) {
             if (s.strength == strength) {
                 return s;

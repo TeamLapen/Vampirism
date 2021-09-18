@@ -15,13 +15,13 @@ public enum EntityClassType {
     Caster(0, 0.1, 0),
     Assassin(0, 0, 0.08);
 
-    public static final Map<EntityClassType, Integer> ENTITYCLASSTYPES = Maps.newHashMap();
+    public static final Map<EntityClassType, Integer> ENTITY_CLASS_TYPES = Maps.newHashMap();
     public static final Map<Integer, EntityClassType> ID = Maps.newHashMap();
 
     static {
-        for (EntityClassType entityclasstypes : values()) {
-            ENTITYCLASSTYPES.put(entityclasstypes, ENTITYCLASSTYPES.size());
-            ID.put(ID.size(), entityclasstypes);
+        for (EntityClassType entityclasstype : values()) {
+            ENTITY_CLASS_TYPES.put(entityclasstype, ENTITY_CLASS_TYPES.size());
+            ID.put(ID.size(), entityclasstype);
         }
     }
 
@@ -29,8 +29,8 @@ public enum EntityClassType {
         return values()[rand.nextInt(values().length - 1)];
     }
 
-    public static int getID(EntityClassType entityclasstypes) {
-        return ENTITYCLASSTYPES.get(entityclasstypes);
+    public static int getID(EntityClassType entityclasstype) {
+        return ENTITY_CLASS_TYPES.get(entityclasstype);
     }
 
     /**

@@ -42,7 +42,7 @@ public interface IEntityAction extends IForgeRegistryEntry<IEntityAction> {
 
     /**
      * The higher the weight, the more likely the action is chosen,
-     * Can be varied depending on the given entities situtation.
+     * Can be varied depending on the given entities situation.
      * Should be in the range 1-10, but could be higher
      *
      * @return weight of this action

@@ -1,11 +1,12 @@
 package de.teamlapen.lib.lib.util;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.NaturalSpawner;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,12 +16,6 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Random;
 import java.util.function.Consumer;
-
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.MobSpawnType;
 
 /**
  * Simple mob spawning logic. More configurable than {@link net.minecraft.world.level.BaseSpawner} but less functional.
@@ -46,7 +41,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
     private long spawnedLast = 0L;
     private boolean flag = true;
     private MobCategory limitType;
-    private Random rng = new Random();
+    private final Random rng = new Random();
 
     public SimpleSpawnerLogic(@Nonnull EntityType<T> entityTypeIn) {
         this.entityType = entityTypeIn;

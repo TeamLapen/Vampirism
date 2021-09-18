@@ -3,14 +3,10 @@ package de.teamlapen.vampirism.advancements;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.SerializationContext;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.GsonHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -34,9 +30,7 @@ public class SkillUnlockedTrigger extends SimpleCriterionTrigger<SkillUnlockedTr
     }
 
     public void trigger(ServerPlayer player, ISkill skill) {
-        this.trigger(player, (instance -> {
-            return instance.test(skill);
-        }));
+        this.trigger(player, (instance -> instance.test(skill)));
     }
 
     @Nonnull

@@ -5,9 +5,9 @@ import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.network.UpdateEntityPacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -21,29 +21,27 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 /**
  * Library's entity event handler to do stuff
  */
+@SuppressWarnings("ClassCanBeRecord")
 public class EntityEventHandler {
 
-    private final Capability[] listeners;
+    private final Capability<IPlayerEventListener>[] listeners;
 
-    public EntityEventHandler(Capability[] listeners) {
+    public EntityEventHandler(Capability<IPlayerEventListener>[] listeners) {
         this.listeners = listeners;
     }
 
     @SubscribeEvent
     public void onChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
-        for (Capability listener : listeners) {
-            event.getPlayer().getCapability(listener, null).ifPresent(cap -> ((IPlayerEventListener) cap).onChangedDimension(event.getFrom(), event.getTo()));
+        for (Capability<IPlayerEventListener> listener : listeners) {
+            event.getPlayer().getCapability(listener, null).ifPresent(cap -> cap.onChangedDimension(event.getFrom(), event.getTo()));
         }
     }
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (event.getEntity() instanceof Player) {
-            for (Capability listener : listeners) {
-
-                (event.getEntity().getCapability(listener, null)).ifPresent(cap -> {
-                    ((IPlayerEventListener) cap).onJoinWorld();
-                });
+            for (Capability<IPlayerEventListener> listener : listeners) {
+                (event.getEntity().getCapability(listener, null)).ifPresent(IPlayerEventListener::onJoinWorld);
             }
         }
 
@@ -52,8 +50,8 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onLivingAttack(LivingAttackEvent event) {
         if (event.getEntity() instanceof Player) {
-            for (Capability listener : listeners) {
-                boolean cancel = (boolean) event.getEntity().getCapability(listener, null).map(cap -> ((IPlayerEventListener) cap).onEntityAttacked(event.getSource(), event.getAmount())).orElse(false);
+            for (Capability<IPlayerEventListener> listener : listeners) {
+                boolean cancel = event.getEntity().getCapability(listener, null).map(cap -> cap.onEntityAttacked(event.getSource(), event.getAmount())).orElse(false);
                 if (cancel) {
                     event.setCanceled(true);
                 }
@@ -64,13 +62,13 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event) {
         if (event.getEntity() instanceof Player) {
-            for (Capability listener : listeners) {
-                (event.getEntity().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onDeath(event.getSource()));
+            for (Capability<IPlayerEventListener> listener : listeners) {
+                (event.getEntity().getCapability(listener, null)).ifPresent(cap -> cap.onDeath(event.getSource()));
             }
         }
         if (event.getSource().getEntity() instanceof Player) {
-            for (Capability listener : listeners) {
-                (event.getSource().getEntity().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onEntityKilled(event.getEntityLiving(), event.getSource()));
+            for (Capability<IPlayerEventListener> listener : listeners) {
+                (event.getSource().getEntity().getCapability(listener, null)).ifPresent(cap -> cap.onEntityKilled(event.getEntityLiving(), event.getSource()));
             }
         }
     }
@@ -78,38 +76,38 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
         if (event.getEntity() instanceof Player) {
-            for (Capability listener : listeners) {
-                event.getEntity().getCapability(listener, null).ifPresent(cap -> ((IPlayerEventListener) cap).onUpdate());
+            for (Capability<IPlayerEventListener> listener : listeners) {
+                event.getEntity().getCapability(listener, null).ifPresent(IPlayerEventListener::onUpdate);
             }
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onPlayerClone(PlayerEvent.Clone event) {
-        for (Capability listener : listeners) {
-            (event.getEntity().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onPlayerClone(event.getOriginal(), event.isWasDeath()));
+        for (Capability<IPlayerEventListener> listener : listeners) {
+            (event.getEntity().getCapability(listener, null)).ifPresent(cap -> cap.onPlayerClone(event.getOriginal(), event.isWasDeath()));
         }
 
     }
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        for (Capability listener : listeners) {
-            (event.getPlayer().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onPlayerLoggedIn());
+        for (Capability<IPlayerEventListener> listener : listeners) {
+            (event.getPlayer().getCapability(listener, null)).ifPresent(IPlayerEventListener::onPlayerLoggedIn);
         }
     }
 
     @SubscribeEvent
     public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
-        for (Capability listener : listeners) {
-            (event.getPlayer().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onPlayerLoggedOut());
+        for (Capability<IPlayerEventListener> listener : listeners) {
+            (event.getPlayer().getCapability(listener, null)).ifPresent(IPlayerEventListener::onPlayerLoggedOut);
         }
     }
 
     @SubscribeEvent
     public void onPlayerUpdate(TickEvent.PlayerTickEvent event) {
-        for (Capability listener : listeners) {
-            (event.player.getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onUpdatePlayer(event.phase));
+        for (Capability<IPlayerEventListener> listener : listeners) {
+            (event.player.getCapability(listener, null)).ifPresent(cap -> cap.onUpdatePlayer(event.phase));
         }
     }
 

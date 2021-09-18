@@ -3,13 +3,14 @@ package de.teamlapen.vampirism.player.tasks.reward;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskRewardInstance;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class ItemRewardInstance implements ITaskRewardInstance {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "item");
 

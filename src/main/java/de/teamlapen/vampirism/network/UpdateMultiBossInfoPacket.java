@@ -129,6 +129,6 @@ public class UpdateMultiBossInfoPacket implements IMessage {
         UPDATE_PROGRESS,
         UPDATE_NAME,
         UPDATE_STYLE,
-        UPDATE_PROPERTIES;
+        UPDATE_PROPERTIES
     }
 }

@@ -25,6 +25,7 @@ import java.util.Random;
 /**
  * Extends the basic (JSON) baked altar inspiration model, by the textured model that fits to the fluid level
  */
+@SuppressWarnings("ClassCanBeRecord")
 @OnlyIn(Dist.CLIENT)
 public class BakedAltarInspirationModel implements IDynamicBakedModel {
 

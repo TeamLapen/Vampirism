@@ -4,6 +4,7 @@ package de.teamlapen.lib.lib.util;
 import java.lang.reflect.Array;
 import java.util.Comparator;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class ValuedObject<T> {
     public static <Q> Comparator<ValuedObject<Q>> getComparator() {
         return Comparator.comparingInt(qValuedObject -> qValuedObject.value);

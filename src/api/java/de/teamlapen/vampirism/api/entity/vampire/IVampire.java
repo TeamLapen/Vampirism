@@ -66,7 +66,7 @@ public interface IVampire extends IFactionEntity {
 
     /**
      * Checks if the player is being affected by garlic.
-     * The result is cached for several ticks unless you use forcerefresh
+     * The result is cached for several ticks unless you use forceRefresh
      * Careful, this checks quite a large area of blocks and should not be refreshed to often
      * <p>
      * For VampirePlayer instances for players with vampire level 0 this returns {@link EnumStrength#NONE}
@@ -79,7 +79,7 @@ public interface IVampire extends IFactionEntity {
 
     /**
      * Checks if all requirements are met for the entity to be damaged by the sun, e.g. standing in the sun and not raining.
-     * The result is cached for a few ticks unless you use forcerefresh
+     * The result is cached for a few ticks unless you use forceRefresh
      * <p>
      * For VampirePlayer instances for players with vampire level 0 this returns false
      *

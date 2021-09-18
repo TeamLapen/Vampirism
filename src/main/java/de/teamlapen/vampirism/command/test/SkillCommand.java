@@ -9,8 +9,8 @@ import de.teamlapen.vampirism.command.arguments.SkillArgument;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
 
 public class SkillCommand extends BasicCommand {
 
@@ -57,10 +57,10 @@ public class SkillCommand extends BasicCommand {
             case OK:
                 factionPlayer.getSkillHandler().enableSkill(skill);
                 commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.enabled", skill.getRegistryName() + " (" + skill.getName().getString() + ")"), false);
-                return 0;
+                break;
             case ALREADY_ENABLED:
                 commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.alreadyenabled", skill.getName()), false);
-                return 0;
+                break;
             case PARENT_NOT_ENABLED:
                 ISkill[] skills = factionPlayer.getSkillHandler().getParentSkills(skill);
                 if (skills == null || skills.length == 0) return 0;
@@ -68,23 +68,22 @@ public class SkillCommand extends BasicCommand {
                     commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.parent", skills[0].getRegistryName()), false);
                 else
                     commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.parents", skills[0].getRegistryName(), skills[1].getRegistryName()), false);
-                return 0;
+                break;
             case NO_POINTS:
                 commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.nopoints"), false);
-                return 0;
+                break;
             case OTHER_NODE_SKILL:
                 commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.othernode"), false);
-                return 0;
+                break;
             case NOT_FOUND:
                 commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.otherfaction"), false);
-                return 0;
+                break;
             case LOCKED_BY_OTHER_NODE:
                 commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.locked"), false);
-                return 0;
+                break;
             case LOCKED_BY_PLAYER_STATE:
                 commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.locked_player_state"), false);
-                return 0;
-            default:
+                break;
         }
         return 0;
     }

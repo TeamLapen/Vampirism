@@ -5,18 +5,17 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.util.Mth;
 
 import javax.annotation.Nullable;
-
-import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler.IDefaultHelper;
+import java.util.Objects;
 
 /**
  * Default converting handler for entities.
@@ -66,11 +65,7 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
      * @param helper If null a default one will be used
      */
     public DefaultConvertingHandler(@Nullable IDefaultHelper helper) {
-        if (helper == null) {
-            this.helper = defaultHelper;
-        } else {
-            this.helper = helper;
-        }
+        this.helper = Objects.requireNonNullElse(helper, defaultHelper);
     }
 
     @Nullable

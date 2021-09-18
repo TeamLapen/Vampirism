@@ -10,17 +10,17 @@ import de.teamlapen.vampirism.entity.villager.Trades;
 import de.teamlapen.vampirism.entity.villager.VampireVillagerHostilesSensor;
 import de.teamlapen.vampirism.world.FactionPointOfInterestType;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.ai.sensing.SensorType;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.entity.schedule.Schedule;
 import net.minecraft.world.entity.schedule.ScheduleBuilder;
-import net.minecraft.world.entity.ai.sensing.SensorType;
-import net.minecraft.world.entity.npc.VillagerProfession;
-import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -83,6 +83,7 @@ public class ModVillage {
         registry.register(new ScheduleBuilder(new Schedule()).changeActivityAt(12000, Activity.IDLE).changeActivityAt(10, Activity.REST).changeActivityAt(14000, Activity.WORK).changeActivityAt(21000, Activity.MEET).changeActivityAt(23000, Activity.IDLE).build().setRegistryName(REFERENCE.MODID, "converted_default"));
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     private static Set<BlockState> getAllStates(Block... blocks) {
         return Arrays.stream(blocks).map(block -> block.getStateDefinition().any()).collect(ImmutableSet.toImmutableSet());
     }

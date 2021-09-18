@@ -17,7 +17,7 @@ public interface IWorldGenManager {
     /**
      * returns biome categories in which the named structure shouldn't be generated
      *
-     * @param structure resourcelocation of the structure
+     * @param structure location of the structure
      * @return set of biome categories to ignore
      */
     Set<Biome.BiomeCategory> getIgnoredBiomeCategories(ResourceLocation structure);
@@ -25,7 +25,7 @@ public interface IWorldGenManager {
     /**
      * returns biomes in which the named structure shouldn't be generated
      *
-     * @param structure resourcelocation of the structure
+     * @param structure location of the structure
      * @return set of biomes to ignore
      */
     Set<ResourceLocation> getIgnoredBiomes(ResourceLocation structure);
@@ -33,7 +33,7 @@ public interface IWorldGenManager {
     /**
      * add a structure which should not be generated in the listed biome categories
      *
-     * @param structure  resourcelocation of the structure
+     * @param structure  location of the structure
      * @param categories categories
      */
     void removeStructureFromBiomeCategories(ResourceLocation structure, List<Biome.BiomeCategory> categories);
@@ -41,7 +41,7 @@ public interface IWorldGenManager {
     /**
      * add a structure which should not be generated in the listed biomes
      *
-     * @param structure resourcelocation of the structure
+     * @param structure location of the structure
      * @param biomes    biome ids
      */
     void removeStructureFromBiomes(ResourceLocation structure, List<ResourceLocation> biomes);

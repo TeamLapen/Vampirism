@@ -2,8 +2,8 @@ package de.teamlapen.lib.lib.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import net.minecraft.client.gui.GuiComponent;
 import com.mojang.math.Matrix4f;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -29,13 +29,13 @@ public class ExtendedGui extends GuiComponent {
         float f5 = (float) (endColor >> 16 & 255) / 255.0F;
         float f6 = (float) (endColor >> 8 & 255) / 255.0F;
         float f7 = (float) (endColor & 255) / 255.0F;
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuilder();
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder bufferBuilder = tesselator.getBuilder();
         RenderSystem.disableTexture();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        Tesselator tesselator = Tesselator.getInstance();
+        tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.getBuilder();
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         bufferBuilder.vertex(matrix, right, top, this.getBlitOffset()).color(f1, f2, f3, f).endVertex();

@@ -255,6 +255,7 @@ public class GuideBook implements IGuideBook {
         return entries;
     }
 
+    @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
     private static Map<ResourceLocation, EntryAbstract> buildHunter(BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.hunter.";

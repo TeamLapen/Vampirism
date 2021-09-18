@@ -2,12 +2,12 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -119,12 +119,12 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
 
     private void applyAttributesModifiersToEntity(Player player) {
         for (Map.Entry<Attribute, LazyOptional<AttributeModifier>> entry : this.attributeModifierMap.entrySet()) {
-            AttributeInstance iattributeinstance = player.getAttribute(entry.getKey());
+            AttributeInstance instance = player.getAttribute(entry.getKey());
 
-            if (iattributeinstance != null) {
+            if (instance != null) {
                 AttributeModifier attributemodifier = entry.getValue().orElseThrow(IllegalStateException::new);
-                iattributeinstance.removeModifier(attributemodifier);
-                iattributeinstance.addPermanentModifier(new AttributeModifier(attributemodifier.getId(), this.getRegistryName().toString(), attributemodifier.getAmount(), attributemodifier.getOperation()));
+                instance.removeModifier(attributemodifier);
+                instance.addPermanentModifier(new AttributeModifier(attributemodifier.getId(), this.getRegistryName().toString(), attributemodifier.getAmount(), attributemodifier.getOperation()));
             }
         }
     }
@@ -142,10 +142,10 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
 
     private void removeAttributesModifiersFromEntity(Player player) {
         for (Map.Entry<Attribute, LazyOptional<AttributeModifier>> entry : this.attributeModifierMap.entrySet()) {
-            AttributeInstance iattributeinstance = player.getAttribute(entry.getKey());
+            AttributeInstance attribute = player.getAttribute(entry.getKey());
 
-            if (iattributeinstance != null) {
-                iattributeinstance.removeModifier(entry.getValue().orElseThrow(IllegalStateException::new));
+            if (attribute != null) {
+                attribute.removeModifier(entry.getValue().orElseThrow(IllegalStateException::new));
             }
         }
     }

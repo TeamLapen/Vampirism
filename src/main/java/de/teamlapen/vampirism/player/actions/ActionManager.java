@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionManager;
 import de.teamlapen.vampirism.core.ModRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.List;
@@ -22,6 +21,6 @@ public class ActionManager implements IActionManager {
 
     @Override
     public IForgeRegistry<IAction> getRegistry() {
-        return net.minecraftforge.registries.RegistryManager.ACTIVE.getRegistry(new ResourceLocation("vampirism:actions"));
+        return ModRegistries.ACTIONS;
     }
 }

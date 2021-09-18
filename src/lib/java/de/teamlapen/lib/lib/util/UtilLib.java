@@ -81,14 +81,14 @@ public class UtilLib {
     public static void drawTexturedModalRect(Matrix4f matrix, float zLevel, int x, int y, int textureX, int textureY, int width, int height, int texWidth, int texHeight) {
         float f = 1 / (float) texWidth;
         float f1 = 1 / (float) texHeight;
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder vertexbuffer = tessellator.getBuilder();
-        vertexbuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        vertexbuffer.vertex(matrix, x, y + height, zLevel).uv((float) (textureX) * f, (float) (textureY + height) * f1).endVertex();
-        vertexbuffer.vertex(matrix, x + width, y + height, zLevel).uv((float) (textureX + width) * f, (float) (textureY + height) * f1).endVertex();
-        vertexbuffer.vertex(matrix, x + width, y, zLevel).uv((float) (textureX + width) * f, (float) (textureY) * f1).endVertex();
-        vertexbuffer.vertex(matrix, x, y, zLevel).uv((float) (textureX) * f, (float) (textureY) * f1).endVertex();
-        tessellator.end();
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder buffer = tesselator.getBuilder();
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.vertex(matrix, x, y + height, zLevel).uv((float) (textureX) * f, (float) (textureY + height) * f1).endVertex();
+        buffer.vertex(matrix, x + width, y + height, zLevel).uv((float) (textureX + width) * f, (float) (textureY + height) * f1).endVertex();
+        buffer.vertex(matrix, x + width, y, zLevel).uv((float) (textureX + width) * f, (float) (textureY) * f1).endVertex();
+        buffer.vertex(matrix, x, y, zLevel).uv((float) (textureX) * f, (float) (textureY) * f1).endVertex();
+        tesselator.end();
     }
 
     /**
@@ -144,10 +144,10 @@ public class UtilLib {
         List<ChunkPos> chunks = Lists.newArrayList();
         int i = 0;
 
-        for (Player entityplayer : world.players()) {
-            if (!entityplayer.isSpectator()) {
-                int x = Mth.floor(entityplayer.getX() / 16.0D);
-                int z = Mth.floor(entityplayer.getZ() / 16.0D);
+        for (Player player : world.players()) {
+            if (!player.isSpectator()) {
+                int x = Mth.floor(player.getX() / 16.0D);
+                int z = Mth.floor(player.getZ() / 16.0D);
 
                 for (int dx = -8; dx <= 8; ++dx) {
                     for (int dz = -8; dz <= 8; ++dz) {
@@ -297,7 +297,7 @@ public class UtilLib {
      * Teleports the entity
      *
      * @param sound  If a teleport sound should be played
-     * @return Wether the teleport was successful or not
+     * @return Whether the teleport was successful or not
      */
     public static boolean teleportTo(Mob entity, double x, double y, double z, boolean sound) {
         double d3 = entity.getX();
@@ -408,7 +408,7 @@ public class UtilLib {
     /**
      * Checks if the target entity is in the field of view (180 degree) of the base entity. Only works reliable for players (due to server-client sync)
      *
-     * @param alsoRaytrace Raytraces first
+     * @param alsoRaytrace Raytrace first
      */
     public static boolean canReallySee(LivingEntity entity, LivingEntity target, boolean alsoRaytrace) {
         if (alsoRaytrace && !entity.hasLineOfSight(target)) {
@@ -416,7 +416,7 @@ public class UtilLib {
         }
         Vec3 look1 = new Vec3(-Math.sin(entity.yHeadRot / 180 * Math.PI), 0, Math.cos(entity.yHeadRot / 180 * Math.PI));
         Vec3 dist = new Vec3(target.getX() - entity.getX(), 0, target.getZ() - entity.getZ());
-        //look1.yCoord = 0;
+        //look1.y = 0;
         look1 = look1.normalize();
         dist = dist.normalize();
 
@@ -442,7 +442,7 @@ public class UtilLib {
     }
 
     /**
-     * Stores the given pos with in the tagcompound using base.
+     * Stores the given pos with in the compoundtag using base.
      * Can be retrieved again with {@link UtilLib#readPos(CompoundTag, String)}
      *
      */
@@ -505,7 +505,7 @@ public class UtilLib {
     }
 
     /**
-     * Search for a vampire biome by checking every second chunk starting at the player and moving in cicles to the outside
+     * Search for a vampire biome by checking every second chunk starting at the player and moving in circles to the outside
      *
      * @param center  Pos to start with
      * @param maxDist Max radius
@@ -712,8 +712,8 @@ public class UtilLib {
      */
     public static int renderMultiLine(Font fontRenderer, PoseStack stack, Component text, int textLength, int x, int y, int color) {
         int d = 0;
-        for (FormattedCharSequence ireorderingprocessor : fontRenderer.split(text, textLength)) {
-            fontRenderer.draw(stack, ireorderingprocessor, x, y + d, color);
+        for (FormattedCharSequence sequence : fontRenderer.split(text, textLength)) {
+            fontRenderer.draw(stack, sequence, x, y + d, color);
             d += fontRenderer.lineHeight;
         }
         return d;

@@ -37,7 +37,7 @@ public interface IVillageCaptureEntity extends IFactionEntity {
     boolean isDefendingVillage();
 
     /**
-     * Called when the entity is within a village whre a capture progress has been stopped.
+     * Called when the entity is within a village where a capture progress has been stopped.
      * {@link #attackVillage(ICaptureAttributes)} or {@link #defendVillage(ICaptureAttributes)} may not have been called before
      */
     void stopVillageAttackDefense();

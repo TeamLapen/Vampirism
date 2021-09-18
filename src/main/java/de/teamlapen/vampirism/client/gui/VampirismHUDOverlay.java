@@ -242,7 +242,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 mc.font.draw(mStack, text, x, y, color);
             }
         }
-    };
+    }
 
 
     @SubscribeEvent
