@@ -90,7 +90,6 @@ class VampirismRecipeHelper {
 
     /**
      * deserialize ingredients for shapeless recipes
-     *
      */
     static NonNullList<Ingredient> readIngredients(JsonArray ingredientArray) {
         NonNullList<Ingredient> nonnulllist = NonNullList.create();
@@ -141,7 +140,6 @@ class VampirismRecipeHelper {
 
     /**
      * deserialize ingredients for shaped recipes
-     *
      */
     static NonNullList<Ingredient> deserializeIngredients(String[] pattern, Map<String, Ingredient> keys, int patternWidth, int patternHeight) {
         NonNullList<Ingredient> nonnulllist = NonNullList.withSize(patternWidth * patternHeight, Ingredient.EMPTY);
@@ -171,7 +169,7 @@ class VampirismRecipeHelper {
     /**
      * get pattern from shaped recipe
      *
-     * @param max     crafting grid max size (4x4 -> 4)
+     * @param max crafting grid max size (4x4 -> 4)
      */
     static String[] patternFromJson(JsonArray jsonArr, int max) {
         String[] astring = new String[jsonArr.size()];

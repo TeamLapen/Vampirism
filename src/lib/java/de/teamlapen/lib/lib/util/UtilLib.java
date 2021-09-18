@@ -296,7 +296,7 @@ public class UtilLib {
     /**
      * Teleports the entity
      *
-     * @param sound  If a teleport sound should be played
+     * @param sound If a teleport sound should be played
      * @return Whether the teleport was successful or not
      */
     public static boolean teleportTo(Mob entity, double x, double y, double z, boolean sound) {
@@ -391,7 +391,6 @@ public class UtilLib {
     /**
      * Sends the component message to all players except the given one.
      * Only use on server or common side
-     *
      */
     public static void sendMessageToAllExcept(Player player, Component message) {
         for (Player o : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
@@ -444,7 +443,6 @@ public class UtilLib {
     /**
      * Stores the given pos with in the compoundtag using base.
      * Can be retrieved again with {@link UtilLib#readPos(CompoundTag, String)}
-     *
      */
     public static void write(CompoundTag nbt, String base, BlockPos pos) {
         nbt.putInt(base + "_x", pos.getX());
@@ -454,7 +452,6 @@ public class UtilLib {
 
     /**
      * Reads a position written by {@link UtilLib#write(CompoundTag, String, BlockPos)}.
-     *
      */
     public static BlockPos readPos(CompoundTag nbt, String base) {
         return new BlockPos(nbt.getInt(base + "_x"), nbt.getInt(base + "_y"), nbt.getInt(base + "_z"));
@@ -462,7 +459,6 @@ public class UtilLib {
 
     /**
      * Prefixes each of the strings with the given prefix
-     *
      */
     public static String[] prefix(String prefix, String... strings) {
         String[] result = new String[strings.length];
@@ -474,7 +470,6 @@ public class UtilLib {
 
     /**
      * Creates a predicate which checks for the given class
-     *
      */
     public static <T> Predicate<T> getPredicateForClass(final Class<T> clazz) {
         return clazz::isInstance;
@@ -483,7 +478,7 @@ public class UtilLib {
     /**
      * Return a square bounding box around the given center with the given distance
      *
-     * @param fullY    If it should reach from yDisplay 0 to 265 or use the distance for yDisplay as well
+     * @param fullY If it should reach from yDisplay 0 to 265 or use the distance for yDisplay as well
      */
     public static AABB createBB(BlockPos center, int distance, boolean fullY) {
         return new AABB(center.getX() - distance, fullY ? 0 : center.getY() - distance, center.getZ() - distance, center.getX() + distance, fullY ? 256 : center.getY() + distance, center.getZ() + distance);
@@ -602,7 +597,6 @@ public class UtilLib {
     /**
      * Rotate voxel. Credits to JTK222|Lukas
      * Cache the result
-     *
      */
     public static VoxelShape rotateShape(VoxelShape shape, RotationAmount rotation) {
         Set<VoxelShape> rotatedShapes = new HashSet<>();

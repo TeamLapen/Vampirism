@@ -1,27 +1,32 @@
 package de.teamlapen.vampirism.world.gen.structures.huntercamp;
 
 import com.google.common.collect.Lists;
+import de.teamlapen.vampirism.blockentity.TentBlockEntity;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFeatures;
-import de.teamlapen.vampirism.blockentity.TentBlockEntity;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.StructureFeatureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.StructurePieceType;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -30,12 +35,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.world.level.StructureFeatureManager;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
-import net.minecraft.world.level.levelgen.feature.StructurePieceType;
-import net.minecraft.world.level.levelgen.structure.StructurePiece;
-import net.minecraft.world.level.levelgen.structure.StructureStart;
-
 @ParametersAreNonnullByDefault
 public abstract class HunterCampPieces extends StructurePiece {
     public static void init(int chunkX, int chunkZ, Biome biomeIn, Random rand, StructurePieceAccessor pieceAccessor) {
@@ -43,13 +42,14 @@ public abstract class HunterCampPieces extends StructurePiece {
         pieceAccessor.addPiece(hunterCamp);
         hunterCamp.addChildren(hunterCamp, pieceAccessor, rand);
     }
+
     protected final int x, z;
     protected final Block baseBlock;
     protected int y;
 
 
     public HunterCampPieces(StructurePieceType structurePieceType, int part, int x, int y, int z, Block baseBlock) {
-        super(structurePieceType, part,  new BoundingBox(x - 1, y, z - 1, x + 1, y + 2, z + 1));
+        super(structurePieceType, part, new BoundingBox(x - 1, y, z - 1, x + 1, y + 2, z + 1));
         this.baseBlock = baseBlock;
         this.x = x;
         this.y = y;

@@ -25,10 +25,10 @@ public class SimpleSpawnerLogic<T extends Entity> {
     private final static Logger LOGGER = LogManager.getLogger();
     private static final int MOB_COUNT_DIV = (int) Math.pow(17.0D, 2.0D);
 
-    private @Nonnull
-    final EntityType<T> entityType;
-    private @Nullable
-    Consumer<T> onSpawned;
+    @Nonnull
+    private final EntityType<T> entityType;
+    @Nullable
+    private Consumer<T> onSpawned;
     private int minSpawnDelay = 200;
     private int maxSpawnDelay = 800;
     private int activateRange = 16;

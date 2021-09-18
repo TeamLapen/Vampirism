@@ -7,22 +7,22 @@ import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.inventory.container.BloodGrinderContainer;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -45,6 +45,7 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
         int posZ = pos.getZ();
         return worldIn.getEntitiesOfClass(ItemEntity.class, new AABB(posX, posY + 0.5D, posZ, posX + 1D, posY + 1.5D, posZ + 1D), EntitySelector.ENTITY_STILL_ALIVE);
     }
+
     //Used to provide ItemHandler compatibility
     private final IItemHandler itemHandler;
     private final LazyOptional<IItemHandler> itemHandlerOptional;
@@ -82,22 +83,22 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, BloodGrinderBlockEntity blockEntity) {
-            --blockEntity.cooldownPull;
-            if (blockEntity.cooldownPull <= 0) {
-                blockEntity.cooldownPull = 10;
-                if (!blockEntity.isFull()) {
-                    boolean flag = pullItems(blockEntity, level, pos);
-                    if (flag) {
-                        blockEntity.cooldownPull = 20;
-                    }
+        --blockEntity.cooldownPull;
+        if (blockEntity.cooldownPull <= 0) {
+            blockEntity.cooldownPull = 10;
+            if (!blockEntity.isFull()) {
+                boolean flag = pullItems(blockEntity, level, pos);
+                if (flag) {
+                    blockEntity.cooldownPull = 20;
                 }
             }
+        }
 
-            --blockEntity.cooldownProcess;
-            if (blockEntity.cooldownProcess <= 0) {
-                blockEntity.cooldownProcess = 10;
-                blockEntity.updateProcess();
-            }
+        --blockEntity.cooldownProcess;
+        if (blockEntity.cooldownProcess <= 0) {
+            blockEntity.cooldownProcess = 10;
+            blockEntity.updateProcess();
+        }
     }
 
     @Nonnull

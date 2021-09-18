@@ -28,8 +28,8 @@ public class BloodValueLoader extends SimplePreparableReloadListener<Collection<
     private final String folderLocation;
     private final String type;
     private final BiConsumer<Map<ResourceLocation, Integer>, Integer> consumer;
-    private @Nullable
-    final ResourceLocation multiplierName;
+    @Nullable
+    private final ResourceLocation multiplierName;
     private int multiplier;
 
     /**

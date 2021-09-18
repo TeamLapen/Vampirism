@@ -4,15 +4,13 @@ package de.teamlapen.vampirism.items;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import de.teamlapen.vampirism.VampirismMod;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.UUID;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class UmbrellaItem extends VampirismItem {
     private final static String regName = "umbrella";

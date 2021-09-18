@@ -10,24 +10,18 @@ import de.teamlapen.vampirism.inventory.inventory.WeaponTableCraftingSlot;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.RecipeBookCategories;
-import net.minecraft.recipebook.ServerPlaceRecipe;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.inventory.ResultContainer;
-import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.Container;
-import net.minecraft.world.inventory.ContainerListener;
-import net.minecraft.world.inventory.RecipeBookMenu;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.inventory.RecipeBookType;
-import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.core.BlockPos;
+import net.minecraft.recipebook.ServerPlaceRecipe;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -228,7 +222,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void setData(int id, int data) {
-        super.setData(id,data);
+        super.setData(id, data);
         if (id == 0) {
             missingLava = data != 0;
         }

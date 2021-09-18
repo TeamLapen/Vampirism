@@ -14,7 +14,6 @@ public interface ISundamageRegistry {
 
     /**
      * Register a biome by instance in which no sundamage applies to vampires.*
-     *
      */
     void addNoSundamageBiomes(ResourceLocation... biomes);
 
@@ -28,7 +27,6 @@ public interface ISundamageRegistry {
 
     /**
      * Checks if vampires can get sundamage in that dimension
-     *
      */
     boolean getSundamageInDim(ResourceKey<Level> dim);
 
@@ -40,7 +38,6 @@ public interface ISundamageRegistry {
 
     /**
      * Specifies if vampires should get sundamage in this dimension
-     *
      */
     void specifySundamageForDim(ResourceKey<Level> dimension, boolean sundamage);
 }

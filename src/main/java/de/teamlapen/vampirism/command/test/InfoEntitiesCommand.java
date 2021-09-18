@@ -6,9 +6,9 @@ import de.teamlapen.vampirism.api.VReference;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.NaturalSpawner;
 
 public class InfoEntitiesCommand extends BasicCommand {

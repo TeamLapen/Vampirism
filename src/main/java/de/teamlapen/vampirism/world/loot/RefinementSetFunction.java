@@ -8,17 +8,15 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.core.ModLoot;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction.Builder;
 
 public class RefinementSetFunction extends LootItemConditionalFunction {
 
@@ -29,6 +27,7 @@ public class RefinementSetFunction extends LootItemConditionalFunction {
     public static Builder<?> builder() {
         return simpleBuilder(conditions -> new RefinementSetFunction(conditions, null));
     }
+
     @Nullable
     public final IFaction<?> faction;
 

@@ -2,15 +2,15 @@ package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemUtils;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;

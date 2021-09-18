@@ -151,7 +151,8 @@ public class SupporterManager {
 
     }
 
-    public record Supporter(@Nullable String senderName, @Nullable String textureName, int typeId, @Nullable String bookID) {
+    public record Supporter(@Nullable String senderName, @Nullable String textureName, int typeId,
+                            @Nullable String bookID) {
         public Supporter(@Nullable String senderName, @Nullable String textureName, int typeId, @Nullable String bookID) {
             this.typeId = typeId;
             if (senderName != null && senderName.equals("null")) {

@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.api.items;
 
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.registries.ForgeRegistries;

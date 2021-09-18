@@ -11,8 +11,6 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nonnull;
 import java.util.EnumSet;
 
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
-
 /**
  * Similar to vanilla ranged bow.
  *

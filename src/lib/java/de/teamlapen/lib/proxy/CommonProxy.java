@@ -1,12 +1,12 @@
 package de.teamlapen.lib.proxy;
 
 import de.teamlapen.lib.util.ISoundReference;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;

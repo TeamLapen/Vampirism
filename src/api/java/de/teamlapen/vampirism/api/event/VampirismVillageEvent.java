@@ -70,11 +70,11 @@ public abstract class VampirismVillageEvent extends Event {
          * Random existing villager in totemTile
          * Used as a "seed" villager to get a valid spawn point.
          */
-        private final @Nullable
-        Mob oldEntity;
+        @Nullable
+        private final Mob oldEntity;
         private final boolean replace;
-        private @Nullable
-        Villager newVillager;
+        @Nullable
+        private Villager newVillager;
         private boolean willBeConverted;
 
         public SpawnNewVillager(ITotem totem, @Nullable Mob oldEntity, @Nonnull Villager newVillager, boolean replace, boolean willBeConverted) {
@@ -100,7 +100,6 @@ public abstract class VampirismVillageEvent extends Event {
         /**
          * The villager that should be spawned
          * The position should already be set
-         *
          */
         public void setNewVillager(@Nullable Villager newVillager) {
             this.newVillager = newVillager;
@@ -108,7 +107,6 @@ public abstract class VampirismVillageEvent extends Event {
 
         /**
          * A random existing villager which can be used as a seed (e.g. for the position)
-         *
          */
         @Nullable
         public Mob getOldEntity() {

@@ -41,11 +41,11 @@ public class PlayerSkinHelper {
                 THREAD_POOL.submit(() -> {
                     GameProfile gameprofile = (input.getId() == null ? SkullBlockEntity.profileCache.get(input.getName()) : SkullBlockEntity.profileCache.get(input.getId())).orElse(input); //This might create race conditions with other game profile updates. Maybe this has to be moved to the main thread
 
-                        Property property = (Property) Iterables.getFirst(gameprofile.getProperties().get("textures"), (Object) null);
+                    Property property = (Property) Iterables.getFirst(gameprofile.getProperties().get("textures"), (Object) null);
 
-                        if (property == null) {
-                            gameprofile = SkullBlockEntity.sessionService.fillProfileProperties(gameprofile, true);
-                        }
+                    if (property == null) {
+                        gameprofile = SkullBlockEntity.sessionService.fillProfileProperties(gameprofile, true);
+                    }
 
                     callback.accept(gameprofile);
                 });

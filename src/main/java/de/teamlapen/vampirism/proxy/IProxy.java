@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.lib.lib.util.IInitListener;
+import de.teamlapen.vampirism.blockentity.GarlicDiffusorBlockEntity;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.player.skills.SkillTree;
-import de.teamlapen.vampirism.blockentity.GarlicDiffusorBlockEntity;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;

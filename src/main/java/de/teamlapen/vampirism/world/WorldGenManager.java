@@ -16,13 +16,13 @@ public class WorldGenManager implements IWorldGenManager {
     /**
      * stores structures {@link ResourceLocation} -> set of {@link Biome}s in which the structure shouldn't be generated
      */
-    private @Nonnull
-    final Map<ResourceLocation, Set<ResourceLocation>> ignoreStructureBiome = Maps.newHashMap();
+    @Nonnull
+    private final Map<ResourceLocation, Set<ResourceLocation>> ignoreStructureBiome = Maps.newHashMap();
     /**
      * stores structures {@link ResourceLocation} -> set of {@link Biome.BiomeCategory}s in which the structure shouldn't be generated
      */
-    private @Nonnull
-    final Map<ResourceLocation, Set<Biome.BiomeCategory>> ignoreStructureBiomeCategory = Maps.newHashMap();
+    @Nonnull
+    private final Map<ResourceLocation, Set<Biome.BiomeCategory>> ignoreStructureBiomeCategory = Maps.newHashMap();
 
     @Override
     public boolean canStructureBeGeneratedInBiome(ResourceLocation featureRegistryName, ResourceLocation biomeRegistryKey, Biome.BiomeCategory biomeCategory) {

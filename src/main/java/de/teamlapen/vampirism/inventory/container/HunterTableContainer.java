@@ -12,23 +12,21 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.HunterIntelItem;
 import de.teamlapen.vampirism.items.PureBloodItem;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerListener;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fmllegacy.network.IContainerFactory;
-
-import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorInfo;
 
 import javax.annotation.Nonnull;
 

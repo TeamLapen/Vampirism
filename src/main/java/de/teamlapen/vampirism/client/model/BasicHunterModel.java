@@ -4,10 +4,10 @@ import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -23,7 +23,7 @@ public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<
     private float xAngle = 0;
 
     public static LayerDefinition createBodyLayer() {
-            return LayerDefinition.create(BipedCloakedModel.createMesh(false), 64, 64);
+        return LayerDefinition.create(BipedCloakedModel.createMesh(false), 64, 64);
     }
 
     public static LayerDefinition createSlimBodyLayer() {

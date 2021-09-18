@@ -385,7 +385,6 @@ public class BalanceConfig {
         vaHissingEnabled = builder.define("hissingEnabled", true);
 
 
-
         builder.category("minions", "mi");
         miResourceCooldown = builder.comment("Cooldown in ticks,before new resources are added in collect resource task types").defineInRange("resourceCooldown", 1500, 20, Integer.MAX_VALUE);
         miResourceCooldownOfflineMult = builder.comment("Cooldown multiplier for collect resource task types while player is offline").defineInRange("resourceCooldownOfflineMult", 20D, 1D, 100000D);

@@ -133,7 +133,6 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
 
     /**
      * reset the given {@link IEntityAction} or if null, reset the {@link ActionHandlerEntity#action}
-     *
      */
     private void deactivateAction(@Nullable IEntityAction actionIn) {
         IEntityAction action = actionIn != null ? actionIn : this.action;

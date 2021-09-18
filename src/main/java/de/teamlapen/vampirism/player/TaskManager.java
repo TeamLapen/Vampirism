@@ -569,6 +569,7 @@ public class TaskManager implements ITaskManager {
             }
             return new TaskWrapper(id, lessTasks, taskAmount, tasks, pos);
         }
+
         private final UUID id;
         @Nonnull
         private final Map<UUID, ITaskInstance> tasks;

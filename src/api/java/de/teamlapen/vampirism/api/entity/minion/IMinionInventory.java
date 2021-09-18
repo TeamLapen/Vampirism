@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.api.entity.minion;
 
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.NonNullList;
 
 import javax.annotation.Nonnull;
 

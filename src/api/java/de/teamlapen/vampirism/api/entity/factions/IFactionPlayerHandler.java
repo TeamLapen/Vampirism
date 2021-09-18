@@ -76,7 +76,6 @@ public interface IFactionPlayerHandler extends ILordPlayer {
     /**
      * Join the given faction and set the faction level to 1.
      * Only successful if {@link IFactionPlayerHandler#canJoin(IPlayableFaction)}
-     *
      */
     void joinFaction(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction);
 

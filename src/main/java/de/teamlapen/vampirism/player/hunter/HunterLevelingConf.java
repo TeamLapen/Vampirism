@@ -26,7 +26,6 @@ public class HunterLevelingConf {
 
     /**
      * Converts hunter level to metadata for hunter intel. Returns -1 if there is no hunter intel for the given level
-     *
      */
     public int getHunterIntelMetaForLevel(int level) {
         return isLevelValidForTable(level) ? level - TABLE_MIN_LEVEL : -1;

@@ -5,15 +5,15 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import net.minecraft.client.model.AgeableListModel;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.HeadedModel;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.util.Mth;
 
 import javax.annotation.Nonnull;
 
@@ -34,7 +34,7 @@ public class BaronModel extends AgeableListModel<VampireBaronEntity> implements 
     private static final String ARM_RIGHT = "arm_right";
     private static final String ARM_LEFT = "arm_left";
     private static final String LEG_RIGHT = "leg_right";
-    private static final String LEG_LEFT  = "leg_left";
+    private static final String LEG_LEFT = "leg_left";
     private static final String CLAWS_RIGHT = "claws_right";
     private static final String CLAWS_LEFT = "claws_left";
 
@@ -60,20 +60,20 @@ public class BaronModel extends AgeableListModel<VampireBaronEntity> implements 
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         CubeDeformation DEFORM_OVERLAY = new CubeDeformation(0.2f);
-        PartDefinition body = part.addOrReplaceChild(BODY, CubeListBuilder.create().texOffs(16,16).addBox(-4,0,-2,8,12,4), PartPose.ZERO);
-        part.addOrReplaceChild(BODY_OVERLAY, CubeListBuilder.create().texOffs(16,32).addBox(-4,0,-2,8,12,4, DEFORM_OVERLAY), PartPose.ZERO);
-        PartDefinition armLeft = body.addOrReplaceChild(ARM_LEFT, CubeListBuilder.create().texOffs(32,48).addBox(0,-2,-2,4,12,4), PartPose.offset(4,2,0));
-        PartDefinition armRight = body.addOrReplaceChild(ARM_RIGHT, CubeListBuilder.create().texOffs(40, 16).addBox(-4,-2,-2,4,12,4), PartPose.offset(-4,2,0));
-        part.addOrReplaceChild(ARM_LEFT_OVERLAY, CubeListBuilder.create().texOffs(48,48).addBox(0,-2,-2,4,12,4, DEFORM_OVERLAY), PartPose.offset(4,2,0));
-        armLeft.addOrReplaceChild(CLAWS_LEFT, CubeListBuilder.create().texOffs(24,0).addBox(-4,0,-2,4,3,4), PartPose.offset(4,-9,0));
-        armRight.addOrReplaceChild(CLAWS_RIGHT, CubeListBuilder.create().texOffs(24,0).addBox(0,-2,-2, 4,3,4), PartPose.offset(-4,-9,0));
-        part.addOrReplaceChild(LEG_RIGHT_OVERLAY, CubeListBuilder.create().texOffs(0,32).addBox(-2,0,-2,4,12,4, DEFORM_OVERLAY), PartPose.offset(-2,12,0));
-        body.addOrReplaceChild(LEG_LEFT, CubeListBuilder.create().texOffs(16,48).addBox(-2,0,-2,4,12,4), PartPose.offset(2,12,0));
-        part.addOrReplaceChild(HEAD_OVERLAY, CubeListBuilder.create().texOffs(32,0).addBox(-4,-8,-4,8,8,8, new CubeDeformation(0.5f)), PartPose.ZERO);
-        part.addOrReplaceChild(ARM_RIGHT_OVERLAY, CubeListBuilder.create().texOffs(40,32).addBox(-4,-2,-2,4,12,4, DEFORM_OVERLAY),PartPose.offset(-4,2,0));
-        body.addOrReplaceChild(LEG_RIGHT, CubeListBuilder.create().texOffs(0,16).addBox(-2,0,-2,4,12,4), PartPose.offset(-2,12,0));
-        body.addOrReplaceChild(HEAD, CubeListBuilder.create().texOffs(0,0).addBox(-4,-8,-4,8,8,8),PartPose.ZERO);
-        part.addOrReplaceChild(LEG_LEFT_OVERLAY, CubeListBuilder.create().texOffs(0, 48).addBox(-2, 0,-2,4,12,4, DEFORM_OVERLAY), PartPose.offset(2,12,0));
+        PartDefinition body = part.addOrReplaceChild(BODY, CubeListBuilder.create().texOffs(16, 16).addBox(-4, 0, -2, 8, 12, 4), PartPose.ZERO);
+        part.addOrReplaceChild(BODY_OVERLAY, CubeListBuilder.create().texOffs(16, 32).addBox(-4, 0, -2, 8, 12, 4, DEFORM_OVERLAY), PartPose.ZERO);
+        PartDefinition armLeft = body.addOrReplaceChild(ARM_LEFT, CubeListBuilder.create().texOffs(32, 48).addBox(0, -2, -2, 4, 12, 4), PartPose.offset(4, 2, 0));
+        PartDefinition armRight = body.addOrReplaceChild(ARM_RIGHT, CubeListBuilder.create().texOffs(40, 16).addBox(-4, -2, -2, 4, 12, 4), PartPose.offset(-4, 2, 0));
+        part.addOrReplaceChild(ARM_LEFT_OVERLAY, CubeListBuilder.create().texOffs(48, 48).addBox(0, -2, -2, 4, 12, 4, DEFORM_OVERLAY), PartPose.offset(4, 2, 0));
+        armLeft.addOrReplaceChild(CLAWS_LEFT, CubeListBuilder.create().texOffs(24, 0).addBox(-4, 0, -2, 4, 3, 4), PartPose.offset(4, -9, 0));
+        armRight.addOrReplaceChild(CLAWS_RIGHT, CubeListBuilder.create().texOffs(24, 0).addBox(0, -2, -2, 4, 3, 4), PartPose.offset(-4, -9, 0));
+        part.addOrReplaceChild(LEG_RIGHT_OVERLAY, CubeListBuilder.create().texOffs(0, 32).addBox(-2, 0, -2, 4, 12, 4, DEFORM_OVERLAY), PartPose.offset(-2, 12, 0));
+        body.addOrReplaceChild(LEG_LEFT, CubeListBuilder.create().texOffs(16, 48).addBox(-2, 0, -2, 4, 12, 4), PartPose.offset(2, 12, 0));
+        part.addOrReplaceChild(HEAD_OVERLAY, CubeListBuilder.create().texOffs(32, 0).addBox(-4, -8, -4, 8, 8, 8, new CubeDeformation(0.5f)), PartPose.ZERO);
+        part.addOrReplaceChild(ARM_RIGHT_OVERLAY, CubeListBuilder.create().texOffs(40, 32).addBox(-4, -2, -2, 4, 12, 4, DEFORM_OVERLAY), PartPose.offset(-4, 2, 0));
+        body.addOrReplaceChild(LEG_RIGHT, CubeListBuilder.create().texOffs(0, 16).addBox(-2, 0, -2, 4, 12, 4), PartPose.offset(-2, 12, 0));
+        body.addOrReplaceChild(HEAD, CubeListBuilder.create().texOffs(0, 0).addBox(-4, -8, -4, 8, 8, 8), PartPose.ZERO);
+        part.addOrReplaceChild(LEG_LEFT_OVERLAY, CubeListBuilder.create().texOffs(0, 48).addBox(-2, 0, -2, 4, 12, 4, DEFORM_OVERLAY), PartPose.offset(2, 12, 0));
 
         return LayerDefinition.create(mesh, 64, 64);
 

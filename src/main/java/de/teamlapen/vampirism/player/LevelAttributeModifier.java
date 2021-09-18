@@ -33,7 +33,6 @@ public class LevelAttributeModifier {
 
     /**
      * Can be used to register an additional modifiable attribute from modcompat
-     *
      */
     public static void registerModdedAttributeModifier(Attribute attribute, UUID uuid) {
         modifiers.put(attribute, uuid);

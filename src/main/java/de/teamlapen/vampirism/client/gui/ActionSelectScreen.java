@@ -103,6 +103,7 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
             saveActionOrder();
         }
     }
+
     private final boolean editActions;
     private IActionHandler actionHandler;
 

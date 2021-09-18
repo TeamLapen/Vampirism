@@ -5,10 +5,10 @@ import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.lib.lib.util.LogUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.List;

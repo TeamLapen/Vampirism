@@ -44,7 +44,6 @@ public interface IPlayableFaction<T extends IFactionPlayer> extends IFaction<T> 
 
     /**
      * Set if the level should be rendered, default is true
-     *
      */
     IPlayableFaction<T> setRenderLevel(boolean render);
 

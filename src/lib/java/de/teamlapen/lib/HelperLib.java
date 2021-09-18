@@ -15,7 +15,6 @@ public class HelperLib {
     /**
      * Syncs the entity to players tracking this entity.
      * Entity has to implement {@link ISyncable}
-     *
      */
     public static <T extends Entity & ISyncable> void sync(T entity) {
         if (!entity.getCommandSenderWorld().isClientSide) {
@@ -28,7 +27,6 @@ public class HelperLib {
     /**
      * Syncs the entity to players tracking this entity using the given data
      * Entity has to implement {@link ISyncable}
-     *
      */
     public static <T extends Entity & ISyncable> void sync(T entity, CompoundTag data) {
         if (!entity.getCommandSenderWorld().isClientSide) {
@@ -44,7 +42,6 @@ public class HelperLib {
      * Otherwise it will we send to all players tracking the entity radius using the given data
      * <p>
      * CAREFUL: If this is a player, and it is not connected yet, no message is sent, but no exception is thrown.
-     *
      */
     public static void sync(ISyncable.ISyncableEntityCapabilityInst cap, Entity entity, boolean all) {
         if (!entity.getCommandSenderWorld().isClientSide) {
@@ -67,7 +64,6 @@ public class HelperLib {
      * Otherwise it will we send to all players tracking this entity using the given data
      * <p>
      * CAREFUL: If this is a player, and it is not connected yet, no message is sent, but no exception is thrown.
-     *
      */
     public static void sync(ISyncable.ISyncableEntityCapabilityInst cap, CompoundTag data, Entity entity, boolean all) {
         if (!entity.getCommandSenderWorld().isClientSide) {

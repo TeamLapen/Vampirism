@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.effects;
 
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

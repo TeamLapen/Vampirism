@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.world.gen.util;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.core.ModFeatures;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.*;
 import org.apache.commons.lang3.tuple.Pair;
 

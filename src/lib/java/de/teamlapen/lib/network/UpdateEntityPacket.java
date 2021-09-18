@@ -70,7 +70,6 @@ public class UpdateEntityPacket implements IMessage {
 
     /**
      * Create a sync packet for the given capability instance.
-     *
      */
     public static UpdateEntityPacket create(ISyncable.ISyncableEntityCapabilityInst cap) {
         CompoundTag data = new CompoundTag();

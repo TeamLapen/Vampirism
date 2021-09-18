@@ -2,14 +2,14 @@ package de.teamlapen.vampirism.client.render.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.entity.IDefaultTaskMasterEntity;
+import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.model.VillagerModel;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.npc.VillagerType;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.Registry;
 
 import javax.annotation.Nonnull;
 

@@ -8,8 +8,8 @@ import de.teamlapen.vampirism.command.*;
 import de.teamlapen.vampirism.command.arguments.*;
 import de.teamlapen.vampirism.command.test.*;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.synchronization.EmptyArgumentSerializer;
 import net.minecraft.commands.synchronization.ArgumentTypes;
+import net.minecraft.commands.synchronization.EmptyArgumentSerializer;
 
 import java.util.List;
 

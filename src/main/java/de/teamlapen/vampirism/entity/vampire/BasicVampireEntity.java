@@ -151,7 +151,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     /**
      * Assumes preconditions as been met. Check conditions but does not give feedback to user
-     *
      */
     public void convertToMinion(Player lord) {
         FactionPlayerHandler.getOpt(lord).ifPresent(fph -> {
@@ -196,8 +195,8 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     /**
      * @return The advanced vampire this entity is following or null if none
      */
-    public @Nullable
-    IEntityLeader getAdvancedLeader() {
+    @Nullable
+    public IEntityLeader getAdvancedLeader() {
         return advancedLeader;
     }
 
@@ -427,7 +426,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                         if (fph.getMaxMinions() > 0) {
                             ItemStack heldItem = player.getItemInHand(hand);
                             //noinspection Convert2MethodRef
-                            boolean freeSlot = MinionWorldData.getData(player.level).map(data -> data.getOrCreateController(fph)).map(c->c.hasFreeMinionSlot()).orElse(false);
+                            boolean freeSlot = MinionWorldData.getData(player.level).map(data -> data.getOrCreateController(fph)).map(c -> c.hasFreeMinionSlot()).orElse(false);
                             player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_vampire.minion.available"), true);
                             if (heldItem.getItem() == ModItems.vampire_minion_binding) {
                                 if (!freeSlot) {

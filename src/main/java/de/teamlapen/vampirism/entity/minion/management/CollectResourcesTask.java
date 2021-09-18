@@ -6,12 +6,12 @@ import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import net.minecraft.Util;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.WeighedRandom;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.Util;
-import net.minecraft.util.WeighedRandom;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 
 import javax.annotation.Nonnull;
@@ -76,7 +76,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
         if (--desc.coolDown <= 0) {
             boolean lordOnline = desc.lordEntityID != null && ServerLifecycleHooks.getCurrentServer() != null && ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(desc.lordEntityID) != null;
             desc.coolDown = lordOnline ? coolDownSupplier.apply(data) : (int) (coolDownSupplier.apply(data) * VampirismConfig.BALANCE.miResourceCooldownOfflineMult.get());
-            WeighedRandom.getRandomItem(rng, resources).map(WeightedRandomItem::getItem).map(ItemStack::copy).ifPresent(s->data.getInventory().addItemStack(s));
+            WeighedRandom.getRandomItem(rng, resources).map(WeightedRandomItem::getItem).map(ItemStack::copy).ifPresent(s -> data.getInventory().addItemStack(s));
         }
     }
 

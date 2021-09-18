@@ -3,12 +3,12 @@ package de.teamlapen.vampirism.entity.minion.goals;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.DefendAreaTask;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
 
 import java.util.EnumSet;
 

@@ -101,7 +101,7 @@ public class ModPlayerEventHandler {
                 for (int z = event.getPos().getZ() - 1; z <= event.getPos().getZ() + 1; ++z) {
                     for (double y = event.getPos().getY() - 1; y <= event.getPos().getY() + 1; ++y) {
                         BlockPos pos1 = new BlockPos(x, y, z);
-                        if (((Level)event.getWorld()).isLoaded(pos1) && event.getWorld().getBlockState(pos1).getBlock() == block) {
+                        if (((Level) event.getWorld()).isLoaded(pos1) && event.getWorld().getBlockState(pos1).getBlock() == block) {
                             BlockPos totemPos1 = TotemHelper.getTotemPosition(((Level) event.getWorld()).dimension(), pos1);
                             if (totemPos1 != null && totemPos == null) {
                                 totemPos = totemPos1;

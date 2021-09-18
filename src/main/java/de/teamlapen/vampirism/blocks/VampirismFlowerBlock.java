@@ -1,16 +1,14 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.REFERENCE;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.block.FlowerBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.util.StringRepresentable;
 
 import javax.annotation.Nonnull;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 /**
  * Vampirism's flowers. To add one add it to {@link TYPE}

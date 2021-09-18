@@ -20,13 +20,11 @@ public interface ISkillHandler<T> {
 
     /**
      * Disables the given skill
-     *
      */
     void disableSkill(ISkill skill);
 
     /**
      * Enable the given skill. Check canSkillBeEnabled first
-     *
      */
     void enableSkill(ISkill skill);
 

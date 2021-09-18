@@ -54,6 +54,7 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
     public static List<BloodValueLoaderDynamic> getDynamicBloodLoader() {
         return ImmutableList.copyOf(LOADER);
     }
+
     private final Consumer<Map<ResourceLocation, Integer>> addCalculatedValues;
     private final Supplier<Map<ResourceLocation, Integer>> getCalculatedValues;
     private final String name;

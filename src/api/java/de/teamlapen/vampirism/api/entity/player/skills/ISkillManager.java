@@ -14,7 +14,6 @@ public interface ISkillManager {
 
     /**
      * A mutable copied list of all skills registered for this faction
-     *
      */
     List<ISkill> getSkillsForFaction(IPlayableFaction faction);
 }

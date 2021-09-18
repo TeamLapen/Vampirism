@@ -77,6 +77,7 @@ public class UpdateMultiBossInfoPacket implements IMessage {
         ctx.enqueueWork(() -> VampirismMod.proxy.handleUpdateMultiBossInfoPacket(msg));
         ctx.setPacketHandled(true);
     }
+
     private final UUID uniqueId;
     private final OperationType operation;
     protected List<Color> colors;

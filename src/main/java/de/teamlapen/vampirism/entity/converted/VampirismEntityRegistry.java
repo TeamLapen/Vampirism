@@ -169,7 +169,6 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     /**
      * Set the creator for Vampirism's default converting handler
      * FOR INTERNAL USAGE ONLY
-     *
      */
     public void setDefaultConvertingHandlerCreator(Function<IConvertingHandler.IDefaultHelper, IConvertingHandler> creator) {
         defaultConvertingHandlerCreator = creator;

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.entity.convertible;
 
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
 
 import javax.annotation.Nullable;
 

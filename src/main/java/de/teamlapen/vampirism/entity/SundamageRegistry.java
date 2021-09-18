@@ -90,7 +90,6 @@ public class SundamageRegistry implements ISundamageRegistry {
 
     /**
      * Adds settings from Vampirism's config file.
-     *
      */
     public void specifyConfiguredSundamageForDim(ResourceKey<Level> dimension, boolean sundamage) {
         sundamageConfiguredDims.put(dimension, sundamage);

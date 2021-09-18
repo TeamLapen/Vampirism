@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.blockentity.TentBlockEntity;
+import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
@@ -40,6 +40,6 @@ public class TentMainBlock extends TentBlock implements EntityBlock {
      */
     @Nullable
     private static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> p_152133_, BlockEntityType<E> p_152134_, BlockEntityTicker<? super E> p_152135_) {
-        return p_152134_ == p_152133_ ? (BlockEntityTicker<A>)p_152135_ : null;
+        return p_152134_ == p_152133_ ? (BlockEntityTicker<A>) p_152135_ : null;
     }
 }

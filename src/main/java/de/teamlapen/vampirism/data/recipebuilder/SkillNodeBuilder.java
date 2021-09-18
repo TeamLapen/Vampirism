@@ -24,6 +24,7 @@ public class SkillNodeBuilder {
     public static SkillNodeBuilder vampire(ResourceLocation parent, ISkill... skills) {
         return skill(parent, skills).faction(VReference.VAMPIRE_FACTION);
     }
+
     private final ResourceLocation parent;
     private final ISkill[] skills;
     private ResourceLocation faction;

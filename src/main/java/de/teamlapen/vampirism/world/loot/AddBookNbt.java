@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.core.ModLoot;
 import de.teamlapen.vampirism.entity.hunter.AdvancedHunterEntity;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.util.VampireBookManager;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -13,12 +14,9 @@ import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunct
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.nbt.CompoundTag;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
-
-import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction.Builder;
 
 /**
  * Loot function that adds a random vampire text to a book stack

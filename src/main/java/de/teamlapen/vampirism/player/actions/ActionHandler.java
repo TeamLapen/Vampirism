@@ -242,7 +242,6 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     /**
      * Saves action timings to nbt
      * Should only be called by the corresponding Capability instance
-     *
      */
     public void saveToNbt(CompoundTag nbt) {
 
@@ -345,7 +344,6 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     /**
      * Writes an update for the client.
      * Should only be called by the corresponding Capability instance
-     *
      */
     public void writeUpdateForClient(CompoundTag nbt) {
         nbt.put("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));

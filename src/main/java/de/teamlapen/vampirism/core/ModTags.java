@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.item.Item;
-import net.minecraft.tags.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.*;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
 
 public class ModTags {
     private static ResourceLocation forge(String resourceName) {

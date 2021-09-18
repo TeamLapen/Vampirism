@@ -6,8 +6,8 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.entity.DarkBloodProjectileEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 public class DarkBloodProjectileAction extends DefaultVampireAction {

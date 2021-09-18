@@ -55,6 +55,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     public static AttributeSupplier.Builder getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder().add(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
+
     private final boolean countAsMonsterForSpawn;
     protected EnumStrength garlicResist = EnumStrength.NONE;
     protected boolean canSuckBloodFromPlayer = false;
@@ -252,7 +253,6 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
     /**
      * Calculates the increased fire damage is this vampire creature is especially vulnerable to fire
-     *
      */
     protected float calculateFireDamage(float amount) {
         return amount;

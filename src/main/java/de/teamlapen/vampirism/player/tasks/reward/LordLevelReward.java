@@ -26,6 +26,7 @@ public class LordLevelReward implements TaskReward, ITaskRewardInstance {
     public static LordLevelReward readNbt(CompoundTag nbt) {
         return new LordLevelReward(nbt.getInt("targetLevel"));
     }
+
     public final int targetLevel;
 
     public LordLevelReward(int targetLevel) {

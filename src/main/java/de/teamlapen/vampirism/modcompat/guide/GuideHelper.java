@@ -6,10 +6,10 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.crafting.Ingredient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

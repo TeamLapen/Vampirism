@@ -6,12 +6,12 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
@@ -25,7 +25,7 @@ public class VampirePlayerHeadLayer<T extends Player, Q extends HumanoidModel<T>
     private final ResourceLocation[] eyeOverlays;
     private final ResourceLocation[] fangOverlays;
 
-    public VampirePlayerHeadLayer(RenderLayerParent<T,Q> entityRendererIn) {
+    public VampirePlayerHeadLayer(RenderLayerParent<T, Q> entityRendererIn) {
         super(entityRendererIn);
         eyeOverlays = new ResourceLocation[REFERENCE.EYE_TYPE_COUNT];
         for (int i = 0; i < eyeOverlays.length; i++) {

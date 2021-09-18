@@ -12,7 +12,6 @@ public interface IActionManager {
 
     /**
      * A copied mutable list of all actions registered for this faction
-     *
      */
     List<IAction> getActionsForFaction(IPlayableFaction faction);
 

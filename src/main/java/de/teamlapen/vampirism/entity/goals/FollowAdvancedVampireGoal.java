@@ -9,8 +9,6 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import java.util.EnumSet;
 import java.util.List;
 
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
-
 /**
  * Makes the basic hunter follow a nearby advanced vampires
  */

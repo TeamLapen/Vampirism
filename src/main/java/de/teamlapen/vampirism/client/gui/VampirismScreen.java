@@ -101,7 +101,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
                 Slot slot = this.menu.getSlot(i);
                 int x = slot.x + this.leftPos;
                 int y = slot.y + this.topPos;
-                this.itemRenderer.renderAndDecorateItem( stack, x, y);
+                this.itemRenderer.renderAndDecorateItem(stack, x, y);
                 this.itemRenderer.renderGuiItemDecorations(this.font, stack, x, y, null);
             }
         }
@@ -155,7 +155,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
         this.renderBackground(matrixStack);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0,this.menu.areRefinementsAvailable() ? BACKGROUND_REFINEMENTS : BACKGROUND);
+        RenderSystem.setShaderTexture(0, this.menu.areRefinementsAvailable() ? BACKGROUND_REFINEMENTS : BACKGROUND);
         this.blit(matrixStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
         InventoryScreen.renderEntityInInventory(this.leftPos + 31, this.topPos + 72, 30, (float) (this.leftPos + 10) - this.oldMouseX, (float) (this.topPos + 75 - 50) - this.oldMouseY, this.minecraft.player);
     }

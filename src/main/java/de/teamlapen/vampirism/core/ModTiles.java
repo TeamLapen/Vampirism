@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.blockentity.*;
+import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -45,7 +45,7 @@ public class ModTiles {
         registry.register(create("potion_table", PotionTableBlockEntity::new, ModBlocks.potion_table));
     }
 
-    private static <T extends BlockEntity> BlockEntityType<?> create(String id, BlockEntityType.BlockEntitySupplier<? extends T>  factoryIn, Block... blocks) {
+    private static <T extends BlockEntity> BlockEntityType<?> create(String id, BlockEntityType.BlockEntitySupplier<? extends T> factoryIn, Block... blocks) {
         return BlockEntityType.Builder.of(factoryIn, blocks).build(null).setRegistryName(REFERENCE.MODID, id);
     }
 }

@@ -169,6 +169,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     public static double getNaturalArmorToughnessValue(int lvl) {
         return (lvl / (double) REFERENCE.HIGHEST_VAMPIRE_LEVEL) * VampirismConfig.BALANCE.vpNaturalArmorToughnessIncrease.get();
     }
+
     private final BloodStats bloodStats;
     private final ActionHandler<IVampirePlayer> actionHandler;
     private final SkillHandler<IVampirePlayer> skillHandler;
@@ -280,7 +281,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (e instanceof LivingEntity) {
             if (e.distanceTo(player) <= player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1) {
                 feed_victim_bite_type = determineBiteType((LivingEntity) e);
-                switch (feed_victim_bite_type){
+                switch (feed_victim_bite_type) {
                     case HUNTER_CREATURE:
                         player.addEffect(new MobEffectInstance(ModEffects.poison, 60));
                         if (player instanceof ServerPlayer) {
@@ -476,7 +477,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     /**
      * Sets glowing eyes.
      * Also sends a sync packet if on server
-     *
      */
     public void setGlowingEyes(boolean value) {
         if (value != this.getSpecialAttributes().glowingEyes) {

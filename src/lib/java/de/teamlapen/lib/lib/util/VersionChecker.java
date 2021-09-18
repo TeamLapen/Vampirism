@@ -47,7 +47,7 @@ public class VersionChecker implements Runnable {
     /**
      * Execute an async version check.
      *
-     * @param stats          if to send very basic stats
+     * @param stats if to send very basic stats
      * @return a version info object, which is update when the check is finished
      */
     public static VersionInfo executeVersionCheck(String updateUrl, ArtifactVersion currentVersion, boolean stats) {
@@ -307,7 +307,6 @@ public class VersionChecker implements Runnable {
 
         /**
          * 1 if the given version is older, 0 if they are equal and -1 if the given version is newer
-         *
          */
         @Override
         public int compareTo(@Nonnull Version version) {
@@ -374,7 +373,6 @@ public class VersionChecker implements Runnable {
 
         /**
          * two if the given version is older, 0 if they are equal and -1 if the two is newer
-         *
          */
         private int compareDate(String one, String two) {
             try {
@@ -402,7 +400,6 @@ public class VersionChecker implements Runnable {
 
             /**
              * 1 if the given type is less recommend, 0 if equal, -1 if the given type is more recommend
-             *
              */
             public int compare(TYPE type) {
                 return Integer.compare(type.ORDER, this.ORDER);

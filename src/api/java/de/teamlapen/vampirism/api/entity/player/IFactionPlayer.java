@@ -27,7 +27,6 @@ public interface IFactionPlayer<T extends IFactionPlayer<?>> extends IFactionEnt
      * Mostly relevant in the set level command
      * Vampirism's factions always return true here.
      * Can be used if another mod does not want that a player leaves its faction via the command
-     *
      */
     boolean canLeaveFaction();
 
@@ -93,7 +92,6 @@ public interface IFactionPlayer<T extends IFactionPlayer<?>> extends IFactionEnt
      * Is called on world load.
      * Is called on client and server side.
      * Might be called with oldLevel=newLevel to reset things
-     *
      */
     void onLevelChanged(int newLevel, int oldLevel);
 

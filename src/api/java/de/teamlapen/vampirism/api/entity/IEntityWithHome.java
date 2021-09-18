@@ -40,7 +40,6 @@ public interface IEntityWithHome {
 
     /**
      * Sets the entity's home bounding box to an area that extends r blocks in every direction from pos
-     *
      */
     void setHomeArea(BlockPos pos, int r);
 }

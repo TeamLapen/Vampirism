@@ -3,21 +3,19 @@ package de.teamlapen.vampirism.inventory.container;
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.core.ModContainer;
-import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.fmllegacy.network.IContainerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorInfo;
 
 public class PotionTableContainer extends InventoryContainer {
     public static SelectorInfo[] SELECTOR_INFOS;

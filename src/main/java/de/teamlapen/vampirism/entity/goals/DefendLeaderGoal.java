@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.entity.goals;
 
 import de.teamlapen.vampirism.api.entity.IEntityLeader;
 import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 
 import java.util.EnumSet;
 

@@ -164,7 +164,7 @@ public abstract class GuiPieMenu<T> extends Screen {
 
             // Draw Icon
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderColor(1f,1f,1f,1f);
+            RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
             RenderSystem.setShaderTexture(0, getIconLoc(element));
             UtilLib.drawTexturedModalRect(stack.last().pose(), getBlitOffset(), x, y, 0, 0, 16, 16, 16, 16);
 
@@ -195,7 +195,7 @@ public abstract class GuiPieMenu<T> extends Screen {
             } else {
                 this.minecraft
                         .player.input.tick(this.minecraft
-                        .player.isMovingSlowly()); //shouldRenderSneaking
+                                .player.isMovingSlowly()); //shouldRenderSneaking
             }
         }
     }
@@ -394,7 +394,6 @@ public abstract class GuiPieMenu<T> extends Screen {
 
     /**
      * Calculates the absolute mouse coordinates from the scaled ones and sets the cursor accordingly
-     *
      */
     private void setAbsoluteMouse(double x, double y) {
         x = x * this.minecraft

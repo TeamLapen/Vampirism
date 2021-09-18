@@ -4,9 +4,9 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Cow;
-import net.minecraft.server.level.ServerPlayer;
 
 public class SpawnTestAnimalCommand extends BasicCommand {
 

@@ -89,7 +89,6 @@ public class ModFeatures {
     /**
      * Make sure a given world (that is being loaded) has our structure separation settings.
      * Datapack worlds might generate without them otherwise.
-     *
      */
     public static void checkWorldStructureSeparation(ResourceKey<Level> dimension, boolean flatWorld, StructureSettings settings) {
         if (dimension.compareTo(Level.OVERWORLD) != 0 || flatWorld) return;

@@ -98,7 +98,6 @@ public class AlchemicalFireBlock extends VampirismBlock {
 
     /**
      * Marks the block to burn for an infinite time
-     *
      */
     public void setBurningInfinite(Level worldIn, BlockPos pos, BlockState state) {
         worldIn.setBlock(pos, state.setValue(AGE, 15), 4);

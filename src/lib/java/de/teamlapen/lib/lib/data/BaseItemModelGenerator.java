@@ -19,6 +19,7 @@ public abstract class BaseItemModelGenerator extends ItemModelProvider {
 
     /**
      * create {@link ItemModelBuilder} from the block with default texture
+     *
      * @param name the block for the {@link ItemModelBuilder}
      */
     @SuppressWarnings("ConstantConditions")
@@ -28,6 +29,7 @@ public abstract class BaseItemModelGenerator extends ItemModelProvider {
 
     /**
      * create {@link ItemModelBuilder} from the block with texture
+     *
      * @param name the block for the {@link ItemModelBuilder}
      * @param path the block path in the {@code assets/vampirism/texture/block} folder
      */
@@ -48,6 +50,7 @@ public abstract class BaseItemModelGenerator extends ItemModelProvider {
 
     /**
      * create {@link ItemModelBuilder} from item with default texture
+     *
      * @param item the item for the {@link ItemModelBuilder}
      */
     @SuppressWarnings("ConstantConditions")
@@ -57,9 +60,9 @@ public abstract class BaseItemModelGenerator extends ItemModelProvider {
 
     /**
      * create {@link ItemModelBuilder} from item with layered texture
-     * @param item the item for the {@link ItemModelBuilder}
-     * @param texture all layers for the model
      *
+     * @param item    the item for the {@link ItemModelBuilder}
+     * @param texture all layers for the model
      * @see #item(String, ResourceLocation...)
      */
     @SuppressWarnings("ConstantConditions")
@@ -69,7 +72,8 @@ public abstract class BaseItemModelGenerator extends ItemModelProvider {
 
     /**
      * create {@link ItemModelBuilder} from item with layered texture
-     * @param item the item for the {@link ItemModelBuilder}
+     *
+     * @param item    the item for the {@link ItemModelBuilder}
      * @param texture all layers for the model
      */
     public ItemModelBuilder item(String item, ResourceLocation... texture) {

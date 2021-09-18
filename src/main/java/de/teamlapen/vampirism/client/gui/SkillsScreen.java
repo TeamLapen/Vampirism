@@ -248,7 +248,6 @@ public class SkillsScreen extends Screen {
 
     /**
      * Add the given node and all it's child nodes to the list
-     *
      */
     private void addToList(List<SkillNode> list, SkillNode root) {
         list.add(root);
@@ -386,7 +385,7 @@ public class SkillsScreen extends Screen {
                     textureatlassprite = this.getTexture(block);
                 }
 
-                RenderSystem.setShaderTexture(0,TextureAtlas.LOCATION_BLOCKS);
+                RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
                 blit(stack, x * 16 - i2, y * 16 - j2, this.getBlitOffset(), 16, 16, textureatlassprite);
             }
         }

@@ -5,18 +5,16 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 import java.util.List;
-
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class BiteNearbyEntityVampireGoal<T extends Mob & IVampireMob> extends Goal {
     private final T vampire;

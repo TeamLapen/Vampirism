@@ -51,8 +51,8 @@ public class VampireLevelingConf {
         assert altarInfusionRequirementsHashMap.size() == INFUSION_MAX_LEVEL - INFUSION_MIN_LEVEL + 1;
     }
 
-    public @Nonnull
-    AltarInfusionRequirements getAltarInfusionRequirements(int targetLevel) {
+    @Nonnull
+    public AltarInfusionRequirements getAltarInfusionRequirements(int targetLevel) {
         if (!altarInfusionRequirementsHashMap.containsKey(targetLevel)) {
             throw new IllegalArgumentException("Level " + targetLevel + " cannot be reached with an altar of infusion");
         }

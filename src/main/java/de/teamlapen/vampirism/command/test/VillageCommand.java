@@ -3,13 +3,13 @@ package de.teamlapen.vampirism.command.test;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.command.arguments.FactionArgument;
-import de.teamlapen.vampirism.blockentity.TotemHelper;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
+import de.teamlapen.vampirism.blockentity.TotemHelper;
+import de.teamlapen.vampirism.command.arguments.FactionArgument;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 
 public class VillageCommand extends BasicCommand {
 

@@ -64,7 +64,6 @@ public class Helper {
     /**
      * Checks if the entity can get sundamage at its current position.
      * It is recommended to cache the value for a few ticks.
-     *
      */
     public static boolean gettingSundamge(LivingEntity entity, LevelAccessor world, @Nullable ProfilerFiller profiler) {
         if (profiler != null) profiler.push("vampirism_checkSundamage");

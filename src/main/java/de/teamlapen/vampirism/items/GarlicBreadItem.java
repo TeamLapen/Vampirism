@@ -11,8 +11,6 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class GarlicBreadItem extends VampirismItem implements IFactionExclusiveItem {
     private static final String regName = "garlic_bread";
 

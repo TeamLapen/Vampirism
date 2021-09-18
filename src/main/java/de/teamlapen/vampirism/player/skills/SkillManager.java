@@ -25,10 +25,9 @@ public class SkillManager implements ISkillManager {
     /**
      * Get the root skill of the faction (Registered with the same key as the faction itself).
      * If none ist found, prints a warning and returns a dummy one
-     *
      */
-    public @Nonnull
-    ISkill getRootSkill(IPlayableFaction faction) {
+    @Nonnull
+    public ISkill getRootSkill(IPlayableFaction faction) {
         ISkill skill = ModRegistries.SKILLS.getValue(faction.getID());
         if (skill == null) {
             LOGGER.warn("No root skill exists for faction {}", faction.getID());
@@ -47,7 +46,6 @@ public class SkillManager implements ISkillManager {
     /**
      * For debug purpose only.
      * Prints the skills of the given faction to the given sender
-     *
      */
     public void printSkills(IPlayableFaction faction, CommandSourceStack sender) {
         for (ISkill s : getSkillsForFaction(faction)) {

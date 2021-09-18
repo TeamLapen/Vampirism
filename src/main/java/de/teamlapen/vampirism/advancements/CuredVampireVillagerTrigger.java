@@ -3,15 +3,11 @@ package de.teamlapen.vampirism.advancements;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.SerializationContext;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.level.storage.loot.LootContext;
 
 import javax.annotation.Nonnull;
 
@@ -42,6 +38,7 @@ public class CuredVampireVillagerTrigger extends SimpleCriterionTrigger<CuredVam
         public static Instance any() {
             return new Instance(EntityPredicate.Composite.ANY, EntityPredicate.Composite.ANY, EntityPredicate.Composite.ANY);
         }
+
         private final EntityPredicate.Composite vampire;
         private final EntityPredicate.Composite villager;
 

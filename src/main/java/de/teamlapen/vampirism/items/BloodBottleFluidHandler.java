@@ -27,7 +27,6 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
 
     /**
      * Returns an amount which is a multiple of capacity%10
-     *
      */
     public static int getAdjustedAmount(int amt) {
         return amt - amt % MULTIPLIER;

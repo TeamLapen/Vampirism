@@ -11,14 +11,14 @@ import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskActionPacket;
 import de.teamlapen.vampirism.player.TaskManager;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.ChatFormatting;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -28,9 +28,6 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorInfo;
-import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorSlot;
 
 public class VampirismContainer extends InventoryContainer implements TaskContainer {
 
@@ -101,7 +98,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
         return refinementsAvailable;
     }
 
-    public boolean areRefinementsAvailable(){
+    public boolean areRefinementsAvailable() {
         return refinementsAvailable;
     }
 

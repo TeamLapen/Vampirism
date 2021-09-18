@@ -52,8 +52,8 @@ public class GarlicBeaconBESR extends VampirismBESR<GarlicDiffusorBlockEntity> {
 //            vertexConsumer.pos(matrix4f, (float)(p_230013_18_ ), (float)(p_230013_20_ ), (float)(p_230013_22_ )).color(1, 1, 1, 1f).endVertex();
 //        });
 
-            BakedModel garlic_model = Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(ModItems.item_garlic),null, null, 0);
-            Minecraft.getInstance().getItemRenderer().renderModelLists(garlic_model,new ItemStack(ModItems.item_garlic), combinedLightIn, combinedOverlayIn, matrixStackIn, vertexConsumer);
+            BakedModel garlic_model = Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(ModItems.item_garlic), null, null, 0);
+            Minecraft.getInstance().getItemRenderer().renderModelLists(garlic_model, new ItemStack(ModItems.item_garlic), combinedLightIn, combinedOverlayIn, matrixStackIn, vertexConsumer);
             matrixStackIn.popPose();
             matrixStackIn.popPose();
         }

@@ -9,19 +9,19 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
+import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BannerPattern;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -45,6 +45,7 @@ public class VampireVillageData implements IVillageFactionData {
         itemStack.setHoverName(new TranslatableComponent("block.minecraft.ominous_banner").withStyle(ChatFormatting.GOLD));
         return itemStack;
     }
+
     private final ItemStack banner = createBanner();
     private List<CaptureEntityEntry> captureEntityEntries;
 

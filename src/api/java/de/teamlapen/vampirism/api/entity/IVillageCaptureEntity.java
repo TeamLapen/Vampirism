@@ -30,7 +30,6 @@ public interface IVillageCaptureEntity extends IFactionEntity {
 
     /**
      * if this village is
-     *
      */
     boolean isAttackingVillage();
 

@@ -16,8 +16,6 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.Set;
 
-import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet.Rarity;
-
 public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> implements IRefinementSet {
 
     private final Set<IRefinement> refinements;

@@ -3,9 +3,9 @@ package de.teamlapen.vampirism.client.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 
 import javax.annotation.Nonnull;
 
@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
  */
 public class BaronWrapperModel extends EntityModel<VampireBaronEntity> {
     private final BaronModel baron;
-    private final BaronessModel baroness ;
+    private final BaronessModel baroness;
     private boolean lady = false;
 
     public BaronWrapperModel(BaronModel baron, BaronessModel baroness) {

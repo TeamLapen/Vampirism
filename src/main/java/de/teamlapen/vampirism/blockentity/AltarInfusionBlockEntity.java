@@ -158,7 +158,6 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
     /**
      * Returns the affected player. If the ritual isn't running it returns null
-     *
      */
     public Player getPlayer() {
         if (this.runningTick <= 1)
@@ -178,7 +177,6 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
     /**
      * Returns the position of the tips. If the ritual isn't running it returns null
-     *
      */
     public BlockPos[] getTips() {
         if (this.runningTick <= 1)
@@ -255,7 +253,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     /**
      * Called when the ritual is running
      */
-    private void tickRitual(){
+    private void tickRitual() {
         if (player == null || !player.isAlive()) {
             runningTick = 1;
         } else {
@@ -312,7 +310,8 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
             player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 400, 2));
         }
     }
-    public static void tick(Level level, BlockPos pos, BlockState state, AltarInfusionBlockEntity blockEntity){
+
+    public static void tick(Level level, BlockPos pos, BlockState state, AltarInfusionBlockEntity blockEntity) {
         if (blockEntity.playerToLoadUUID != null) { //Restore loaded ritual
             if (!blockEntity.loadRitual(blockEntity.playerToLoadUUID)) return;
             blockEntity.playerToLoadUUID = null;
@@ -325,7 +324,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
             blockEntity.consumeItems();
             blockEntity.setChanged();
         }
-        if (blockEntity.runningTick > 0){
+        if (blockEntity.runningTick > 0) {
             blockEntity.runningTick--;
             blockEntity.tickRitual();
         }
@@ -368,7 +367,6 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     /**
      * Determines the structure required for leveling up.
      * The current implementation returns a value between 4 two high stone pillars and 6 three high gold pillars.
-     *
      */
     private int checkRequiredLevel() {
         int newLevel = targetLevel;
@@ -384,7 +382,6 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      * Checks if the structure around the altar is at least the required one.
      * Also determines which tips are used for that and stores them in {@link AltarInfusionBlockEntity#tips }
      * Used at max the 8 most valued pillars
-     *
      */
     private boolean checkStructureLevel(int required) {
         if (level == null) return false;

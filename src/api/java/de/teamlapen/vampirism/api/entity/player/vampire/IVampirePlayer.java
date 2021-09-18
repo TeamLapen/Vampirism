@@ -93,14 +93,12 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
 
     /**
      * Locks the vision again, preventing the player from using it
-     *
      */
     void unUnlockVision(@Nonnull IVampireVision vision);
 
     /**
      * Unlocks the given vision, so the player can activate it.
      * Is not saved to nbt
-     *
      */
     void unlockVision(@Nonnull IVampireVision vision);
 

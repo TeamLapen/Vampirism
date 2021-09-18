@@ -8,8 +8,8 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
 
 public class EyeCommand extends BasicCommand {
 

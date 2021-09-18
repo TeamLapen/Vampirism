@@ -245,12 +245,12 @@ public class VampirismMod {
     @SuppressWarnings("unchecked")
     private void enqueueIMC(final InterModEnqueueEvent event) {
         onInitStep(IInitListener.Step.ENQUEUE_IMC, event);
-        HelperRegistry.registerPlayerEventReceivingCapability((Capability<IPlayerEventListener>)(Object)VampirePlayer.CAP, VampirePlayer.class);
-        HelperRegistry.registerPlayerEventReceivingCapability((Capability<IPlayerEventListener>)(Object)HunterPlayer.CAP, HunterPlayer.class);
-        HelperRegistry.registerSyncableEntityCapability((Capability<ISyncable.ISyncableEntityCapabilityInst>)(Object)ExtendedCreature.CAP, REFERENCE.EXTENDED_CREATURE_KEY, ExtendedCreature.class);
-        HelperRegistry.registerSyncablePlayerCapability((Capability<ISyncable.ISyncableEntityCapabilityInst>)(Object)VampirePlayer.CAP, REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.class);
-        HelperRegistry.registerSyncablePlayerCapability((Capability<ISyncable.ISyncableEntityCapabilityInst>)(Object)HunterPlayer.CAP, REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.class);
-        HelperRegistry.registerSyncablePlayerCapability((Capability<ISyncable.ISyncableEntityCapabilityInst>)(Object)FactionPlayerHandler.CAP, REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.class);
+        HelperRegistry.registerPlayerEventReceivingCapability((Capability<IPlayerEventListener>) (Object) VampirePlayer.CAP, VampirePlayer.class);
+        HelperRegistry.registerPlayerEventReceivingCapability((Capability<IPlayerEventListener>) (Object) HunterPlayer.CAP, HunterPlayer.class);
+        HelperRegistry.registerSyncableEntityCapability((Capability<ISyncable.ISyncableEntityCapabilityInst>) (Object) ExtendedCreature.CAP, REFERENCE.EXTENDED_CREATURE_KEY, ExtendedCreature.class);
+        HelperRegistry.registerSyncablePlayerCapability((Capability<ISyncable.ISyncableEntityCapabilityInst>) (Object) VampirePlayer.CAP, REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.class);
+        HelperRegistry.registerSyncablePlayerCapability((Capability<ISyncable.ISyncableEntityCapabilityInst>) (Object) HunterPlayer.CAP, REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.class);
+        HelperRegistry.registerSyncablePlayerCapability((Capability<ISyncable.ISyncableEntityCapabilityInst>) (Object) FactionPlayerHandler.CAP, REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.class);
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
@@ -364,7 +364,7 @@ public class VampirismMod {
         onInitStep(IInitListener.Step.CLIENT_SETUP, event);
     }
 
-    private void onInitStep(IInitListener.Step step, ParallelDispatchEvent event){
+    private void onInitStep(IInitListener.Step step, ParallelDispatchEvent event) {
         registryManager.onInitStep(step, event);
         proxy.onInitStep(step, event);
         modCompatLoader.onInitStep(step, event);

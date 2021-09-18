@@ -7,10 +7,10 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
 
 public class GarlicCheckCommand extends BasicCommand {
 

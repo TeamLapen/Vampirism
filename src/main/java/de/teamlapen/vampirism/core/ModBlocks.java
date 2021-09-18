@@ -250,11 +250,11 @@ public class ModBlocks {
         event.getAllMappings().forEach(missingMapping -> {
             if ("vampirism:blood_potion_table".equals(missingMapping.key.toString())) {
                 missingMapping.remap(ModBlocks.potion_table);
-            } else if("vampirism:garlic_beacon_normal".equals(missingMapping.key.toString())){
+            } else if ("vampirism:garlic_beacon_normal".equals(missingMapping.key.toString())) {
                 missingMapping.remap(ModBlocks.garlic_diffusor_normal);
-            } else if("vampirism:garlic_beacon_weak".equals(missingMapping.key.toString())){
+            } else if ("vampirism:garlic_beacon_weak".equals(missingMapping.key.toString())) {
                 missingMapping.remap(ModBlocks.garlic_diffusor_weak);
-            } else if("vampirism:garlic_beacon_improved".equals(missingMapping.key.toString())){
+            } else if ("vampirism:garlic_beacon_improved".equals(missingMapping.key.toString())) {
                 missingMapping.remap(ModBlocks.garlic_diffusor_improved);
             }
         });

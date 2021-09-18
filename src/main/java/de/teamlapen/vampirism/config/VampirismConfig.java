@@ -143,7 +143,6 @@ public class VampirismConfig {
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDisabledBiomes;
 
 
-
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> blacklistedBloodEntity;
 
         public final ForgeConfigSpec.BooleanValue disableFangInfection;
@@ -282,7 +281,7 @@ public class VampirismConfig {
 
         //World
         public final ForgeConfigSpec.IntValue vampireForestWeight;
-//        public final ForgeConfigSpec.IntValue vampireForestHillsWeight;
+        //        public final ForgeConfigSpec.IntValue vampireForestHillsWeight;
         public final ForgeConfigSpec.IntValue hunterTentDistance;
         public final ForgeConfigSpec.IntValue hunterTentSeparation;
         public final ForgeConfigSpec.BooleanValue villageModify;
@@ -292,8 +291,6 @@ public class VampirismConfig {
         public final ForgeConfigSpec.IntValue villageDistance;
         public final ForgeConfigSpec.IntValue villageSeparation;
         public final ForgeConfigSpec.BooleanValue enableHunterTentGeneration;
-
-
 
 
         Common(ForgeConfigSpec.Builder builder) {
@@ -316,9 +313,9 @@ public class VampirismConfig {
             builder.push("mobspawn");
             vampireSpawnChance = builder.comment("Vampire spawn chance/weight (e.g. Zombie: 100). Does not affect vampire forest.").defineInRange("vampireSpawnChance", 80, 0, 100000);
             advancedVampireSpawnChance = builder.comment("Advanced vampire spawn chance/weight (e.g. Zombie: 100). Does not affect vampire forest.").defineInRange("advancedVampireSpawnChance", 26, 0, 100000);
-            hunterSpawnChance = builder.comment("Hunter spawn chance. By default they only spawn in tent camps, but you can enable global spawn here.").defineInRange("hunterSpawnChance",0,0,10000);
-            advancedHunterSpawnChance = builder.comment("Advanced hunter spawn chance. By default they only spawn in large tent camps, but you can enable global spawn here.").defineInRange("advancedHunterSpawnChance",0,0,100000);
-            baronSpawnChance = builder.comment("Vampire baron spawn chance in vampire forest (reference vampire in forest: 35)").defineInRange("baronSpawnChance",10,0,10000);
+            hunterSpawnChance = builder.comment("Hunter spawn chance. By default they only spawn in tent camps, but you can enable global spawn here.").defineInRange("hunterSpawnChance", 0, 0, 10000);
+            advancedHunterSpawnChance = builder.comment("Advanced hunter spawn chance. By default they only spawn in large tent camps, but you can enable global spawn here.").defineInRange("advancedHunterSpawnChance", 0, 0, 100000);
+            baronSpawnChance = builder.comment("Vampire baron spawn chance in vampire forest (reference vampire in forest: 35)").defineInRange("baronSpawnChance", 10, 0, 10000);
             builder.pop();
             builder.push("world");
             vampireForestWeight = builder.defineInRange("vampireForestWeight", 3, 0, Integer.MAX_VALUE);

@@ -65,6 +65,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.HUNTER_VILLAGER_ATTACK_DAMAGE)
                 .add(Attributes.FOLLOW_RANGE, 32);
     }
+
     //Village capture---------------------------------------------------------------------------------------------------
     @Nullable
     private ICaptureAttributes villageAttributes;

@@ -25,6 +25,7 @@ public class VampireBookManager {
     public static VampireBookManager getInstance() {
         return ourInstance;
     }
+
     private final Map<String, CompoundTag> booksById = new HashMap<>();
     private CompoundTag[] bookTags = null;
 

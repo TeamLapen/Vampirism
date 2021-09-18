@@ -4,11 +4,11 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +30,7 @@ public class MinionWorldData extends SavedData {
 
     @Nonnull
     public static MinionWorldData getData(final MinecraftServer server) {
-        return server.getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent((data)->MinionWorldData.load(server,data),() -> new MinionWorldData(server), ID);
+        return server.getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent((data) -> MinionWorldData.load(server, data), () -> new MinionWorldData(server), ID);
     }
 
 

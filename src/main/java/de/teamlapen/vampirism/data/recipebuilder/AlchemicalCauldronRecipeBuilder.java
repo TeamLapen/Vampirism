@@ -12,13 +12,13 @@ import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.Tag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.tags.Tag;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -35,6 +35,7 @@ public class AlchemicalCauldronRecipeBuilder {
     public static AlchemicalCauldronRecipeBuilder cauldronRecipe(Item item, int count) {
         return new AlchemicalCauldronRecipeBuilder(item, count);
     }
+
     private final ItemStack result;
     private final Advancement.Builder advancementBuilder = Advancement.Builder.advancement();
     private String group;

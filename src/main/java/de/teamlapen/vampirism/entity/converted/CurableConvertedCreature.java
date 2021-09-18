@@ -76,7 +76,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     @SuppressWarnings("JavadocReference")
     default InteractionResult mobInteractC(@Nonnull Player player, @Nonnull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() != ModItems.cure_apple){
+        if (stack.getItem() != ModItems.cure_apple) {
             return mobInteractSuper(player, hand);
         }
         return interactWithCureItem(player, stack, ((PathfinderMob) this));
@@ -225,7 +225,6 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
 
     /**
      * Calculates the increased fire damage is this vampire creature is especially vulnerable to fire
-     *
      */
     default float calculateFireDamage(float amount) {
         return amount;
@@ -284,7 +283,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
      */
     boolean hurtSuper(DamageSource damageSource, float amount);
 
-    static <T extends PathfinderMob, Z extends PathfinderMob & ICurableConvertedCreature<T>> void createFrom(){
+    static <T extends PathfinderMob, Z extends PathfinderMob & ICurableConvertedCreature<T>> void createFrom() {
 
     }
 }

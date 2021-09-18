@@ -159,6 +159,7 @@ public class SkillNode {
 
             return new Builder(parent, merge, skillList, lockingList);
         }
+
         public final List<ResourceLocation> lockingNodes;
         public final ResourceLocation parentId;
         public final List<ISkill> skills;

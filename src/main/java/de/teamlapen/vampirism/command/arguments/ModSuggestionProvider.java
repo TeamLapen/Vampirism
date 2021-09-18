@@ -2,12 +2,12 @@ package de.teamlapen.vampirism.command.arguments;
 
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import de.teamlapen.vampirism.REFERENCE;
+import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.synchronization.SuggestionProviders;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.Util;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class ModSuggestionProvider {

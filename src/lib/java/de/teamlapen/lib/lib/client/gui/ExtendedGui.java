@@ -41,7 +41,8 @@ public class ExtendedGui extends GuiComponent {
         bufferBuilder.vertex(matrix, right, top, this.getBlitOffset()).color(f1, f2, f3, f).endVertex();
         bufferBuilder.vertex(matrix, left, top, this.getBlitOffset()).color(f5, f6, f7, f4).endVertex();
         bufferBuilder.vertex(matrix, left, bottom, this.getBlitOffset()).color(f5, f6, f7, f4).endVertex();
-        bufferBuilder.vertex(matrix, right, bottom, this.getBlitOffset()).color(f1, f2, f3, f).endVertex();        tesselator.end();
+        bufferBuilder.vertex(matrix, right, bottom, this.getBlitOffset()).color(f1, f2, f3, f).endVertex();
+        tesselator.end();
         RenderSystem.disableBlend();
         RenderSystem.enableTexture();
     }

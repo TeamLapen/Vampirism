@@ -8,8 +8,8 @@ import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.phys.AABB;
 
 public class AwarenessHunterAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {

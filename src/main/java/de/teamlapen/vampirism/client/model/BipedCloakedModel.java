@@ -26,7 +26,7 @@ public class BipedCloakedModel<T extends LivingEntity> extends PlayerModel<T> {
     public static MeshDefinition createMesh(boolean smallArms) {
         MeshDefinition var2 = PlayerModel.createMesh(CubeDeformation.NONE, smallArms);
         PartDefinition var3 = var2.getRoot();
-        var3.addOrReplaceChild(CLOAK, CubeListBuilder.create().texOffs(0,0).addBox(-7,0,0.4f,14,20,1), PartPose.offset(0,0,2));
+        var3.addOrReplaceChild(CLOAK, CubeListBuilder.create().texOffs(0, 0).addBox(-7, 0, 0.4f, 14, 20, 1), PartPose.offset(0, 0, 2));
         return var2;
     }
 

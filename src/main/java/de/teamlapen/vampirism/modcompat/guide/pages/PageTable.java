@@ -1,18 +1,18 @@
 package de.teamlapen.vampirism.modcompat.guide.pages;
 
 
-import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.Matrix4f;
 import de.maxanier.guideapi.api.impl.Book;
 import de.maxanier.guideapi.api.impl.Page;
 import de.maxanier.guideapi.api.impl.abstraction.CategoryAbstract;
 import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
 import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.lib.lib.util.UtilLib;
-import net.minecraft.client.gui.Font;
-import com.mojang.math.Matrix4f;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;

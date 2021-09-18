@@ -167,7 +167,7 @@ public class DamageHandler {
      * Scales a damage value depending on the players vampire level.
      * Scales linear between min and max
      *
-     * @param level     The players level
+     * @param level The players level
      */
     private static double scaleDamageWithLevel(int level, int maxLevel, double minDamage, double maxDamage) {
         return minDamage + level / (double) maxLevel * (maxDamage - minDamage);

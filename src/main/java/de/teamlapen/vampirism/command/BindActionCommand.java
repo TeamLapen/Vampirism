@@ -9,8 +9,8 @@ import de.teamlapen.vampirism.command.arguments.ActionArgument;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
 
 public class BindActionCommand extends BasicCommand {
 

@@ -1,19 +1,19 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.StringUtils;
@@ -50,7 +50,7 @@ public class NameSwordScreen extends Screen {
     @Override
     public void init() {
         super.init();
-        this.addRenderableWidget(new Button(this.width / 2 - 155, this.height / 6 + 96, 150, 20,  this.yes, (context) -> {
+        this.addRenderableWidget(new Button(this.width / 2 - 155, this.height / 6 + 96, 150, 20, this.yes, (context) -> {
             if (!StringUtils.isBlank(nameField.getValue())) {
                 NameSwordScreen.this.sword.setHoverName(new TextComponent(nameField.getValue()));
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, nameField.getValue()));

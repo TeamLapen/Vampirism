@@ -10,9 +10,9 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.commands.arguments.selector.options.EntitySelectorOptions;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

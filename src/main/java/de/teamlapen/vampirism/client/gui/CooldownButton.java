@@ -1,18 +1,16 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.util.Mth;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
+import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 import javax.annotation.Nonnull;
-
-import net.minecraft.client.gui.components.Button.OnPress;
-import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 public class CooldownButton extends Button {
     private float progress = 1f;

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.mixin.client;
 
-import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.gui.components.BossHealthOverlay;
+import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.Mixin;

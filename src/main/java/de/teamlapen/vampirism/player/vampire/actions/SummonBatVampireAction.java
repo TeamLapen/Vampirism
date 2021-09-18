@@ -8,8 +8,8 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.BlindingBatEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * Summon bat skill

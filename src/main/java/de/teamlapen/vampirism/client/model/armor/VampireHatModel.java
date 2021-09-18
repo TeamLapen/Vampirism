@@ -31,16 +31,16 @@ public class VampireHatModel extends VampirismArmorModel {
         MeshDefinition mesh = VampirismArmorModel.createMesh();
         PartDefinition part = mesh.getRoot();
         CubeDeformation def = new CubeDeformation(0.25f);
-        PartDefinition base = part.addOrReplaceChild(BASE, CubeListBuilder.create().texOffs(16,0).addBox(-4.5f,-8.4f,-3.5f,7,0.4f,7f,def), PartPose.ZERO);
-        base.addOrReplaceChild(TOP, CubeListBuilder.create().addBox(-0.6f,-14.5f,-3,4,7,4,def), PartPose.rotation(-0.22217304763960307F, 0.0F, -0.27750734440919567F));
-        return LayerDefinition.create(mesh, 64,32);
+        PartDefinition base = part.addOrReplaceChild(BASE, CubeListBuilder.create().texOffs(16, 0).addBox(-4.5f, -8.4f, -3.5f, 7, 0.4f, 7f, def), PartPose.ZERO);
+        base.addOrReplaceChild(TOP, CubeListBuilder.create().addBox(-0.6f, -14.5f, -3, 4, 7, 4, def), PartPose.rotation(-0.22217304763960307F, 0.0F, -0.27750734440919567F));
+        return LayerDefinition.create(mesh, 64, 32);
     }
+
     public VampireHatModel(ModelPart part) {
         super(part);
         base = part.getChild(BASE);
         top = part.getChild(TOP);
     }
-
 
 
     @Override

@@ -87,7 +87,6 @@ public class DifficultyCalculator {
     /**
      * Tries to find a difficulty for the given position, by checking local area, world and then sever. If none returns a difficulty a zero difficulty is returned.
      * ONLY CALLED SERVER SIDE
-     *
      */
     public static
     @Nonnull

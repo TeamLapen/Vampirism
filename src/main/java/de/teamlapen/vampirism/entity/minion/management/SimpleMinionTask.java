@@ -2,12 +2,10 @@ package de.teamlapen.vampirism.entity.minion.management;
 
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
-
-import de.teamlapen.vampirism.api.entity.minion.IMinionTask.NoDesc;
 
 public class SimpleMinionTask extends DefaultMinionTask<IMinionTask.NoDesc<MinionData>, MinionData> {
 

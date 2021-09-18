@@ -247,8 +247,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
                 currentLordLevel = nbt.getInt("lord_level");
             }
         }
-        if(old != currentFaction || oldLevel != currentLevel){
-            VampirismEventFactory.fireFactionLevelChangedEvent(this,old,oldLevel,currentFaction,currentLevel);
+        if (old != currentFaction || oldLevel != currentLevel) {
+            VampirismEventFactory.fireFactionLevelChangedEvent(this, old, oldLevel, currentFaction, currentLevel);
         }
         if (nbt.contains("title_gender")) {
             this.titleGender = nbt.getBoolean("title_gender");
@@ -347,8 +347,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
         updateCache();
         notifyFaction(old, oldLevel);
-        if(old != currentFaction || oldLevel != currentLevel){
-            VampirismEventFactory.fireFactionLevelChangedEvent(this,old,oldLevel,currentFaction,currentLevel);
+        if (old != currentFaction || oldLevel != currentLevel) {
+            VampirismEventFactory.fireFactionLevelChangedEvent(this, old, oldLevel, currentFaction, currentLevel);
         }
         sync(!Objects.equals(old, currentFaction));
         if (player instanceof ServerPlayer) {
@@ -438,7 +438,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     /**
      * Notify faction about changes.
      * {@link FactionPlayerHandler#currentFaction} and {@link FactionPlayerHandler#currentLevel} will be used as the new ones
-     *
      */
     private void notifyFaction(IPlayableFaction<? extends IFactionPlayer<?>> oldFaction, int oldLevel) {
         if (oldFaction != null && !oldFaction.equals(currentFaction)) {

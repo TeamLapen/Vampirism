@@ -2,19 +2,12 @@ package de.teamlapen.vampirism.inventory.container;
 
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModRecipes;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.inventory.AbstractFurnaceMenu;
-import net.minecraft.world.inventory.FurnaceFuelSlot;
-import net.minecraft.world.inventory.FurnaceResultSlot;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.inventory.RecipeBookType;
-import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 
 import javax.annotation.Nonnull;
 

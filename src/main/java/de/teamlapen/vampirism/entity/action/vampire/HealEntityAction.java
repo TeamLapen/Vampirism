@@ -6,8 +6,8 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.IInstantAction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.entity.PathfinderMob;
 
 public class HealEntityAction<T extends PathfinderMob & IEntityActionUser> extends VampireEntityAction<T> implements IInstantAction<T> {
 

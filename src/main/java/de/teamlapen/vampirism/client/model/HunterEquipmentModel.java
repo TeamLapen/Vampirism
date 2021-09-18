@@ -19,7 +19,7 @@ public class HunterEquipmentModel<T extends Mob> extends HumanoidModel<T> {
     private static final String AXE_BLADE2 = "axe_blade2";
     private static final String STAKE_LEFT = "stake_left";
     private static final String STAKE_RIGHT = "stake_right";
-    private static final String HAT_TOP2 ="hat_top2";
+    private static final String HAT_TOP2 = "hat_top2";
     private static final String HAT_RIM2 = "hat_rim2";
     private static final String HAT_RIM3 = "hat_rim3";
 
@@ -36,22 +36,22 @@ public class HunterEquipmentModel<T extends Mob> extends HumanoidModel<T> {
 
     public static LayerDefinition createLayer() {
         float offset = 0f;
-        PartPose headPose = PartPose.offset(0,offset,0);
+        PartPose headPose = PartPose.offset(0, offset, 0);
         PartPose rightArmPose = PartPose.offset(-5.0F, 2.0F + offset, 0.0F);
         PartPose leftArmPose = PartPose.offset(5.0F, 2.0F + offset, 0.0F);
         MeshDefinition mesh = HumanoidModel.createMesh(CubeDeformation.NONE, offset);
 
         PartDefinition part = mesh.getRoot();
-        part.addOrReplaceChild(HAT_TOP2, CubeListBuilder.create().texOffs(0,31).mirror().addBox(-4.5f,-12,-4.5f,9,3,9), headPose);
-        part.addOrReplaceChild(HAT_RIM2, CubeListBuilder.create().texOffs(0,31).mirror().addBox(-8F, -9F, -8F, 16, 1, 16), headPose);
-        part.addOrReplaceChild(HAT_RIM3, CubeListBuilder.create().texOffs(0,37).mirror().addBox(-5F, -6F, -5F, 10, 1, 10), headPose);
-        part.addOrReplaceChild(HAT_TOP, CubeListBuilder.create().texOffs(0,31).mirror().addBox(-4F, -14F, -4F, 8, 5, 8), headPose);
-        part.addOrReplaceChild(HAT_RIM, CubeListBuilder.create().texOffs(0,35).mirror().addBox(-6F, -9F, -6F, 12, 1, 12), headPose);
-        part.addOrReplaceChild(AXE_SHAFT, CubeListBuilder.create().texOffs(16,48).mirror().addBox(-2F, 8F, -17F, 1, 1, 15), rightArmPose);
-        part.addOrReplaceChild(AXE_BLADE1, CubeListBuilder.create().texOffs(0,53).mirror().addBox(-2F, 4F, -16F, 1, 4, 7), rightArmPose);
-        part.addOrReplaceChild(AXE_BLADE2, CubeListBuilder.create().texOffs(16,48).mirror().addBox(-2F, 9F, -16F, 1, 4, 7), rightArmPose);
-        part.addOrReplaceChild(STAKE_LEFT, CubeListBuilder.create().texOffs(16,48).mirror().addBox(1F, 8F, -8F, 1, 1, 6), leftArmPose);
-        part.addOrReplaceChild(STAKE_RIGHT, CubeListBuilder.create().texOffs(16,48).mirror().addBox(-2F, 8F, -8, 1, 1, 6), rightArmPose);
+        part.addOrReplaceChild(HAT_TOP2, CubeListBuilder.create().texOffs(0, 31).mirror().addBox(-4.5f, -12, -4.5f, 9, 3, 9), headPose);
+        part.addOrReplaceChild(HAT_RIM2, CubeListBuilder.create().texOffs(0, 31).mirror().addBox(-8F, -9F, -8F, 16, 1, 16), headPose);
+        part.addOrReplaceChild(HAT_RIM3, CubeListBuilder.create().texOffs(0, 37).mirror().addBox(-5F, -6F, -5F, 10, 1, 10), headPose);
+        part.addOrReplaceChild(HAT_TOP, CubeListBuilder.create().texOffs(0, 31).mirror().addBox(-4F, -14F, -4F, 8, 5, 8), headPose);
+        part.addOrReplaceChild(HAT_RIM, CubeListBuilder.create().texOffs(0, 35).mirror().addBox(-6F, -9F, -6F, 12, 1, 12), headPose);
+        part.addOrReplaceChild(AXE_SHAFT, CubeListBuilder.create().texOffs(16, 48).mirror().addBox(-2F, 8F, -17F, 1, 1, 15), rightArmPose);
+        part.addOrReplaceChild(AXE_BLADE1, CubeListBuilder.create().texOffs(0, 53).mirror().addBox(-2F, 4F, -16F, 1, 4, 7), rightArmPose);
+        part.addOrReplaceChild(AXE_BLADE2, CubeListBuilder.create().texOffs(16, 48).mirror().addBox(-2F, 9F, -16F, 1, 4, 7), rightArmPose);
+        part.addOrReplaceChild(STAKE_LEFT, CubeListBuilder.create().texOffs(16, 48).mirror().addBox(1F, 8F, -8F, 1, 1, 6), leftArmPose);
+        part.addOrReplaceChild(STAKE_RIGHT, CubeListBuilder.create().texOffs(16, 48).mirror().addBox(-2F, 8F, -8, 1, 1, 6), rightArmPose);
         return LayerDefinition.create(mesh, 64, 64);
     }
 
@@ -73,7 +73,7 @@ public class HunterEquipmentModel<T extends Mob> extends HumanoidModel<T> {
 
     //TODO 1.17 maybe migrate hat type to enum or similar
     public void setHat(HatType hatType) {
-        hatTop.visible = hatRim.visible =  hatType ==HatType.HAT1;
+        hatTop.visible = hatRim.visible = hatType == HatType.HAT1;
         hatTop2.visible = hatRim2.visible = hatType == HatType.HAT2;
         hatRim3.visible = hatType == HatType.RIM_ONLY;
 
@@ -122,7 +122,7 @@ public class HunterEquipmentModel<T extends Mob> extends HumanoidModel<T> {
     public enum HatType {
         NONE, RIM_ONLY /*>=2*/, HAT1 /*-1/0*/, HAT2 /*1*/;
 
-        public static HatType from(int id){
+        public static HatType from(int id) {
             return switch (id) {
                 case 0 -> HAT1;
                 case 1 -> HAT2;

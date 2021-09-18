@@ -20,7 +20,6 @@ abstract class VampirismBESR<T extends BlockEntity> implements BlockEntityRender
     /**
      * Rotates the block to fit the enum facing.
      * ONLY CALL THIS IF THE BLOCK HAS A {@link HorizontalDirectionalBlock#FACING} PROPERTY
-     *
      */
     protected void adjustRotatePivotViaState(@Nullable BlockEntity tile, PoseStack matrixStack) {
         if (tile == null) return;

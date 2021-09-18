@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.entity.goals;
 
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
-import net.minecraft.world.level.pathfinder.Path;
-import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.level.pathfinder.Node;
+import net.minecraft.world.level.pathfinder.Path;
 
 /**
  * Checks paths of {@link MeleeAttackGoal} for sunny parts.

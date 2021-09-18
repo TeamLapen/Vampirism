@@ -219,7 +219,6 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
     /**
      * Set the old creature (the one before conversion)
-     *
      */
     public void setEntityCreature(T creature) {
         if ((creature == null && entityCreature != null)) {
@@ -370,7 +369,6 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
     /**
      * Write the old entity to nbt
-     *
      */
     private void writeOldEntityToNBT(CompoundTag nbt) {
         if (!nil()) {

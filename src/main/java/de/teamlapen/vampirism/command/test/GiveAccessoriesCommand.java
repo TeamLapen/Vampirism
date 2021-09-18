@@ -12,9 +12,9 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.chat.TranslatableComponent;
 
 
 public class GiveAccessoriesCommand extends BasicCommand {

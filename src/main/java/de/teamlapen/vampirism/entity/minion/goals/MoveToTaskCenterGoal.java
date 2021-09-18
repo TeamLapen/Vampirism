@@ -7,8 +7,8 @@ import de.teamlapen.vampirism.entity.minion.management.DefendAreaTask;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.minion.management.StayTask;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.Vec3i;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 

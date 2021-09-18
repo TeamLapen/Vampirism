@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.effects;
 
 import de.teamlapen.vampirism.REFERENCE;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 

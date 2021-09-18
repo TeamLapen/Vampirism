@@ -15,35 +15,33 @@ import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.world.biome.VampirismBiomeFeatures;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.stats.StatType;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.schedule.Schedule;
 import net.minecraft.world.entity.ai.sensing.SensorType;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.npc.VillagerProfession;
-import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.entity.schedule.Schedule;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.core.particles.ParticleType;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.stats.StatType;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.registries.ObjectHolderRegistry;
-
-import de.teamlapen.lib.lib.util.IInitListener.Step;
 
 /**
  * Handles registrations of all registrable things as well as a few additional

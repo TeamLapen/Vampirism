@@ -7,15 +7,13 @@ import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.core.ModLoot;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-
-import javax.annotation.Nonnull;
-
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction.Builder;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
+
+import javax.annotation.Nonnull;
 
 /**
  * Function to set the charge of any {@link de.teamlapen.vampirism.api.items.IBloodChargeable}
@@ -25,6 +23,7 @@ public class SetItemBloodCharge extends LootItemConditionalFunction {
     public static Builder<?> builder(NumberProvider p_215931_0_) {
         return simpleBuilder((p_215930_1_) -> new SetItemBloodCharge(p_215930_1_, p_215931_0_));
     }
+
     /**
      * In blood mB
      */

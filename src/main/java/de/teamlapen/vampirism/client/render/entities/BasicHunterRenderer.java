@@ -20,13 +20,13 @@ import org.apache.commons.lang3.tuple.Pair;
  */
 @OnlyIn(Dist.CLIENT)
 public class BasicHunterRenderer extends DualBipedRenderer<BasicHunterEntity, BasicHunterModel<BasicHunterEntity>> {
-    private final Pair<ResourceLocation, Boolean> textureDefault = Pair.of(new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base1.png"),false);
+    private final Pair<ResourceLocation, Boolean> textureDefault = Pair.of(new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base1.png"), false);
     private final Pair<ResourceLocation, Boolean>[] textures;
     private final ResourceLocation textureCloak = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_cloak.png");
 
     public BasicHunterRenderer(EntityRendererProvider.Context context) {
-        super(context, new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER),false), new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER_SLIM),true), 0.5F);
-        this.addLayer(new HunterEquipmentLayer<>(this,context.getModelSet(), entity -> (entity.getLevel() < 2 || entity.isCrossbowInMainhand()) ? HunterEquipmentModel.StakeType.ONLY : HunterEquipmentModel.StakeType.FULL, entity -> entity.getLevel() == 0 ? HunterEquipmentModel.HatType.from(entity.getEntityTextureType()%3) : HunterEquipmentModel.HatType.HAT1));
+        super(context, new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER), false), new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER_SLIM), true), 0.5F);
+        this.addLayer(new HunterEquipmentLayer<>(this, context.getModelSet(), entity -> (entity.getLevel() < 2 || entity.isCrossbowInMainhand()) ? HunterEquipmentModel.StakeType.ONLY : HunterEquipmentModel.StakeType.FULL, entity -> entity.getLevel() == 0 ? HunterEquipmentModel.HatType.from(entity.getEntityTextureType() % 3) : HunterEquipmentModel.HatType.HAT1));
         this.addLayer(new CloakLayer<>(this, textureCloak, entity -> entity.getLevel() > 0));
         textures = gatherTextures("textures/entity/hunter", true);
     }

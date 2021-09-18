@@ -28,9 +28,9 @@ public abstract class DefaultEntityAction extends ForgeRegistryEntry<IEntityActi
     /**
      * @return the actions {@link EntityActionTier}
      */
+    @Nonnull
     @Override
-    public @Nonnull
-    EntityActionTier getTier() {
+    public EntityActionTier getTier() {
         return entityActionTier;
     }
 }

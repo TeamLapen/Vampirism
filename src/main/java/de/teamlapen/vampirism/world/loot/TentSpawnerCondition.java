@@ -3,13 +3,13 @@ package de.teamlapen.vampirism.world.loot;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import de.teamlapen.vampirism.core.ModLoot;
 import de.teamlapen.vampirism.blockentity.TentBlockEntity;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
+import de.teamlapen.vampirism.core.ModLoot;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
 import javax.annotation.Nonnull;
 

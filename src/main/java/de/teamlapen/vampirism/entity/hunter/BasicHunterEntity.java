@@ -97,14 +97,14 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     /**
      * Player currently being trained otherwise null
      */
-    private @Nullable
-    Player trainee;
+    @Nullable
+    private Player trainee;
     /**
      * Stores the x-axis angle between when targeting an enemy with the crossbow
      */
     private float targetAngle = 0;
-    private @Nullable
-    ICaptureAttributes villageAttributes;
+    @Nullable
+    private ICaptureAttributes villageAttributes;
     //Village capture --------------------------------------------------------------------------------------------------
     private boolean attack;
 
@@ -184,7 +184,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     /**
      * Assumes preconditions as been met. Check conditions but does not give feedback to user
-     *
      */
     public void convertToMinion(Player lord) {
         FactionPlayerHandler.getOpt(lord).ifPresent(fph -> {
@@ -229,15 +228,15 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         return entityActionHandler;
     }
 
+    @Nonnull
     @Override
-    public @Nonnull
-    ItemStack getArrowStackForAttack(LivingEntity target) {
+    public ItemStack getArrowStackForAttack(LivingEntity target) {
         return new ItemStack(ModItems.crossbow_arrow_normal);
     }
 
+    @Nullable
     @Override
-    public @Nullable
-    ICaptureAttributes getCaptureInfo() {
+    public ICaptureAttributes getCaptureInfo() {
         return this.villageAttributes;
     }
 
@@ -304,9 +303,9 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         return targetAngle;
     }
 
+    @Nullable
     @Override
-    public @Nullable
-    AABB getTargetVillageArea() {
+    public AABB getTargetVillageArea() {
         return villageAttributes == null ? null : villageAttributes.getVillageArea();
     }
 

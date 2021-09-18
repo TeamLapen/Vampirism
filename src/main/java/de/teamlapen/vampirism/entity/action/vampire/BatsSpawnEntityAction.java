@@ -8,8 +8,8 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.PathfinderMob;
 
 public class BatsSpawnEntityAction<T extends PathfinderMob & IEntityActionUser> extends VampireEntityAction<T> implements IInstantAction<T> {
 

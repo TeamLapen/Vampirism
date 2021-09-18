@@ -137,13 +137,11 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<?>> implements 
 
     /**
      * Copy all relevant values from the given player and return an instance of the old players VampirismPlayer, so {@link FactionBasePlayer} can copy its values as well
-     *
      */
     protected abstract FactionBasePlayer<T> copyFromPlayer(Player old);
 
     /**
      * Can be overridden to load data from updates in subclasses
-     *
      */
     protected void loadUpdate(CompoundTag nbt) {
     }
@@ -151,7 +149,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<?>> implements 
     /**
      * Sync the capability using the given data
      *
-     * @param all  Whether all tracking players should receive this packet or only the representing player
+     * @param all Whether all tracking players should receive this packet or only the representing player
      */
     protected void sync(CompoundTag data, boolean all) {
         HelperLib.sync(this, data, player, all);
@@ -159,7 +157,6 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<?>> implements 
 
     /**
      * Can be overridden to put data into updates in subclasses
-     *
      */
     protected void writeFullUpdate(CompoundTag nbt) {
     }

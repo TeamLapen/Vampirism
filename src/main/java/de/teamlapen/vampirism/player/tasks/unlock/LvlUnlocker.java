@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.player.tasks.unlock;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.BaseComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 
 public class LvlUnlocker implements TaskUnlocker {

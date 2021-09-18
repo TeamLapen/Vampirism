@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.fluids;
 
+import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.util.LazyOptional;

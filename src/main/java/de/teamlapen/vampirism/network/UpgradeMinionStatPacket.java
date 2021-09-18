@@ -3,9 +3,9 @@ package de.teamlapen.vampirism.network;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;

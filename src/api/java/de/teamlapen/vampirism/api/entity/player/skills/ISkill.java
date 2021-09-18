@@ -65,7 +65,6 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
 
     /**
      * Save this. It's required for rendering
-     *
      */
     void setRenderPos(int row, int column);
 }

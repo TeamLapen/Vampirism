@@ -184,7 +184,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         RenderSystem.setShaderTexture(0, TASKMASTER_GUI_TEXTURE);
         GuiComponent.blit(matrixStack, x, y, this.screen.getBlitOffset(), 17, 187, 136, 21, 256, 256);
         GuiComponent.blit(matrixStack, x + 132, y, this.screen.getBlitOffset(), 17 + 133, 187, 136 - 133, 21, 256, 256);
-        RenderSystem.setShaderColor(1,1,1,1);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
 
         //render name
         Optional<FormattedCharSequence> text = Optional.ofNullable(this.screen.font.split(this.item.getTask().getTranslation(), 131).get(0));

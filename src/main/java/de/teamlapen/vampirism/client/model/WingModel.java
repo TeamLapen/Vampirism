@@ -8,10 +8,10 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -31,10 +31,10 @@ public class WingModel<T extends LivingEntity> extends AgeableListModel<T> {
     public static LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
-        PartDefinition wingr = part.addOrReplaceChild(WING_RIGHT, CubeListBuilder.create().texOffs(0, 46).addBox(-18,-6,0,18,18,0), PartPose.offsetAndRotation(0.2f,2.5f,2,0.136659280431156F, 0.5462880558742251F, 0.27314402793711257F));
-        wingr.addOrReplaceChild(WING_RIGHT2, CubeListBuilder.create().texOffs(0, 28).addBox(-16,-4,0,16,18,0), PartPose.offsetAndRotation(-18,-2,0,0.0F, -0.8196066167365371F, 0.0F));
-        PartDefinition wingl = part.addOrReplaceChild(WING_LEFT, CubeListBuilder.create().texOffs(0, 46).mirror().addBox(0,-6,0,18,18,0), PartPose.offsetAndRotation(-0.2f,-2.5f,2,0.136659280431156F, -0.6373942428283291F, -0.27314402793711257F));
-        wingl.addOrReplaceChild(WING_LEFT2, CubeListBuilder.create().texOffs(0, 28).mirror().addBox(0,-4,0,16,18,0), PartPose.offsetAndRotation(18,-2,0,0,0.8196066167365371F,0));
+        PartDefinition wingr = part.addOrReplaceChild(WING_RIGHT, CubeListBuilder.create().texOffs(0, 46).addBox(-18, -6, 0, 18, 18, 0), PartPose.offsetAndRotation(0.2f, 2.5f, 2, 0.136659280431156F, 0.5462880558742251F, 0.27314402793711257F));
+        wingr.addOrReplaceChild(WING_RIGHT2, CubeListBuilder.create().texOffs(0, 28).addBox(-16, -4, 0, 16, 18, 0), PartPose.offsetAndRotation(-18, -2, 0, 0.0F, -0.8196066167365371F, 0.0F));
+        PartDefinition wingl = part.addOrReplaceChild(WING_LEFT, CubeListBuilder.create().texOffs(0, 46).mirror().addBox(0, -6, 0, 18, 18, 0), PartPose.offsetAndRotation(-0.2f, -2.5f, 2, 0.136659280431156F, -0.6373942428283291F, -0.27314402793711257F));
+        wingl.addOrReplaceChild(WING_LEFT2, CubeListBuilder.create().texOffs(0, 28).mirror().addBox(0, -4, 0, 16, 18, 0), PartPose.offsetAndRotation(18, -2, 0, 0, 0.8196066167365371F, 0));
 
         return LayerDefinition.create(mesh, 128, 64);
     }

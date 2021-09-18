@@ -19,7 +19,7 @@ public class MoveToBiteableVampireGoal<T extends Mob & IVampireMob> extends Goal
     private int timeout;
 
     /**
-     * @param vampire       Has to be a {@link Mob}
+     * @param vampire Has to be a {@link Mob}
      */
     public MoveToBiteableVampireGoal(T vampire, double movementSpeed) {
         this.vampire = vampire;

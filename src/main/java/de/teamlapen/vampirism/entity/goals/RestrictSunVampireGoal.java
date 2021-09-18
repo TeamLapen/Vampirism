@@ -3,10 +3,10 @@ package de.teamlapen.vampirism.entity.goals;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
-import net.minecraft.resources.ResourceLocation;
 
 
 public class RestrictSunVampireGoal<T extends PathfinderMob & IVampire> extends Goal {

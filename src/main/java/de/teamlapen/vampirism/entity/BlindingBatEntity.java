@@ -5,23 +5,23 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.ambient.Bat;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -77,7 +77,7 @@ public class BlindingBatEntity extends Bat {
             this.hurt(DamageSource.MAGIC, 10F);
         }
         if (!this.level.isClientSide) {
-            List<? extends LivingEntity> l = targetingMob ? level.getEntitiesOfClass(Monster.class, this.getBoundingBox()): level.getEntitiesOfClass( Player.class, this.getBoundingBox());
+            List<? extends LivingEntity> l = targetingMob ? level.getEntitiesOfClass(Monster.class, this.getBoundingBox()) : level.getEntitiesOfClass(Player.class, this.getBoundingBox());
             boolean hit = false;
             for (LivingEntity e : l) {
                 if (e.isAlive() && !Helper.isVampire(e)) {
@@ -110,7 +110,7 @@ public class BlindingBatEntity extends Bat {
                     float f = (float) (Mth.atan2(mov.z, mov.x) * (double) (180F / (float) Math.PI)) - 90.0F;
                     float f1 = Mth.wrapDegrees(f - this.getYRot());
                     this.zza = 0.5F;
-                    this.setYRot(this.getYRot()+f1);
+                    this.setYRot(this.getYRot() + f1);
                     t = true;
                 }
             }

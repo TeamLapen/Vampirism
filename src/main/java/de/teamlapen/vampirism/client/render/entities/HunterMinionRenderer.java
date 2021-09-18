@@ -6,13 +6,13 @@ import de.teamlapen.vampirism.client.model.HunterEquipmentModel;
 import de.teamlapen.vampirism.client.render.layers.HunterEquipmentLayer;
 import de.teamlapen.vampirism.client.render.layers.PlayerBodyOverlayLayer;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.PlayerModel;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
@@ -32,7 +32,7 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
         textures = gatherTextures("textures/entity/hunter", true);
         minionSpecificTextures = gatherTextures("textures/entity/minion/hunter", false);
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
-        this.addLayer(new HunterEquipmentLayer<>(this, context.getModelSet(), minion -> minion.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty() ? minion.getItemBySlot(EquipmentSlot.OFFHAND).isEmpty() ? HunterEquipmentModel.StakeType.FULL : HunterEquipmentModel.StakeType.AXE_ONLY : HunterEquipmentModel.StakeType.NONE, e-> HunterEquipmentModel.HatType.from(e.getHatType())));
+        this.addLayer(new HunterEquipmentLayer<>(this, context.getModelSet(), minion -> minion.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty() ? minion.getItemBySlot(EquipmentSlot.OFFHAND).isEmpty() ? HunterEquipmentModel.StakeType.FULL : HunterEquipmentModel.StakeType.AXE_ONLY : HunterEquipmentModel.StakeType.NONE, e -> HunterEquipmentModel.HatType.from(e.getHatType())));
         this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_ARMOR_INNER)), new HumanoidModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_ARMOR_OUTER))));
     }
 

@@ -11,9 +11,9 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.util.Mth;
 
 import javax.annotation.Nonnull;
 
@@ -33,9 +33,9 @@ public class BaronAttireModel extends EntityModel<VampireBaronEntity> {
     public static LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
-        PartDefinition hood = part.addOrReplaceChild(HOOD, CubeListBuilder.create().texOffs(44,0).addBox(-4.5f, -8.5f, -4, 9,9,9), PartPose.ZERO);
-        hood.addOrReplaceChild(CLOAK, CubeListBuilder.create().texOffs(0,0).addBox(-8.5f,-0.5f,-2.5f,17,22,5), PartPose.ZERO);
-        return LayerDefinition.create( mesh, 128, 64);
+        PartDefinition hood = part.addOrReplaceChild(HOOD, CubeListBuilder.create().texOffs(44, 0).addBox(-4.5f, -8.5f, -4, 9, 9, 9), PartPose.ZERO);
+        hood.addOrReplaceChild(CLOAK, CubeListBuilder.create().texOffs(0, 0).addBox(-8.5f, -0.5f, -2.5f, 17, 22, 5), PartPose.ZERO);
+        return LayerDefinition.create(mesh, 128, 64);
     }
 
     public BaronAttireModel(ModelPart part) {

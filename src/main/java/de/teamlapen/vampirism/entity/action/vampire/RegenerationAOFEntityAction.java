@@ -7,9 +7,9 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.AABB;
 
 import java.util.List;

@@ -51,7 +51,7 @@ public class TagGenerator {
 
             //Tool types
             tag(BlockTags.MINEABLE_WITH_SHOVEL).add(ModBlocks.cursed_earth);
-            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.altar_inspiration, ModBlocks.altar_pillar, ModBlocks.altar_tip, ModBlocks.blood_pedestal, ModBlocks.altar_infusion, ModBlocks.grave_cage, ModBlocks.tombstone1, ModBlocks.tombstone2, ModBlocks.tombstone3).addTags(ModTags.Blocks.CASTLE_BLOCK,ModTags.Blocks.CASTLE_SLAPS, ModTags.Blocks.CASTLE_STAIRS);
+            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.altar_inspiration, ModBlocks.altar_pillar, ModBlocks.altar_tip, ModBlocks.blood_pedestal, ModBlocks.altar_infusion, ModBlocks.grave_cage, ModBlocks.tombstone1, ModBlocks.tombstone2, ModBlocks.tombstone3).addTags(ModTags.Blocks.CASTLE_BLOCK, ModTags.Blocks.CASTLE_SLAPS, ModTags.Blocks.CASTLE_STAIRS);
 
             tag(BlockTags.NEEDS_STONE_TOOL).add(ModBlocks.altar_inspiration, ModBlocks.altar_tip);
             tag(BlockTags.NEEDS_IRON_TOOL).add(ModBlocks.blood_pedestal, ModBlocks.altar_infusion);

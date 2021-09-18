@@ -14,7 +14,6 @@ public interface IAdjustableLevel {
 
     /**
      * Set the level
-     *
      */
     void setLevel(int level);
 

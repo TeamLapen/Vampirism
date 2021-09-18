@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.player.tasks.req;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.tags.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.entity.EntityType;
 
 import javax.annotation.Nonnull;
 

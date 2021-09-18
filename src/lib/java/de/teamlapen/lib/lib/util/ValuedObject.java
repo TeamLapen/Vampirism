@@ -16,7 +16,6 @@ public class ValuedObject<T> {
 
     /**
      * Extract the objects of the ValuedObjects out of the given array into a new array
-     *
      */
     public static <Q> Q[] extract(Class<Q> clz, ValuedObject<Q>[] array) {
         Q[] a = (Q[]) Array.newInstance(clz, array.length);

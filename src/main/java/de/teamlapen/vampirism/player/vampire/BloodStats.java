@@ -134,7 +134,6 @@ public class BloodStats implements IBloodStats {
 
     /**
      * Reads nbt written by either {@link #writeNBTBlood(CompoundTag)} or {@link #writeNBT(CompoundTag)}
-     *
      */
     public void readNBT(CompoundTag nbt) {
         if (nbt.contains("bloodLevel")) {
@@ -160,7 +159,6 @@ public class BloodStats implements IBloodStats {
 
     /**
      * Add exhaustion. Value is multiplied with the EntityAttribute {@link de.teamlapen.vampirism.core.ModAttributes#blood_exhaustion}
-     *
      */
     void addExhaustion(float amount) {
         this.addExhaustion(amount, false);
@@ -208,7 +206,6 @@ public class BloodStats implements IBloodStats {
 
     /**
      * Write all relevant data to nbt
-     *
      */
     void writeNBT(CompoundTag nbt) {
         writeNBTBlood(nbt);
@@ -220,7 +217,6 @@ public class BloodStats implements IBloodStats {
 
     /**
      * Write only the blood level to nbt
-     *
      */
     void writeNBTBlood(CompoundTag nbt) {
         nbt.putInt("bloodLevel", bloodLevel);

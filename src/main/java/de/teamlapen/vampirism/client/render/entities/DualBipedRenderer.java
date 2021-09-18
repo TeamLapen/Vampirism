@@ -65,11 +65,12 @@ public abstract class DualBipedRenderer<T extends Mob, M extends HumanoidModel<T
 
     /**
      * Gather all available textures (.png) in the given directory and in MODID namespace
-     * @param dirPath relative assets' path (no namespace)
+     *
+     * @param dirPath  relative assets' path (no namespace)
      * @param required whether to throw an illegal state exception if none found
      * @return Array of texture and slim status
      */
-    protected Pair<ResourceLocation, Boolean>[] gatherTextures(String dirPath, boolean required){
+    protected Pair<ResourceLocation, Boolean>[] gatherTextures(String dirPath, boolean required) {
         Collection<ResourceLocation> hunterTextures = new ArrayList<>(Minecraft.getInstance().getResourceManager().listResources(dirPath, s -> s.endsWith(".png")));
         Pair<ResourceLocation, Boolean>[] textures = separateSlimTextures(hunterTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
         if (textures.length == 0 && required) {

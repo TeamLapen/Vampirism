@@ -37,12 +37,12 @@ import java.util.Set;
 public class BiteableEntryManager {
     private final static Logger LOGGER = LogManager.getLogger();
 
-    private @Nonnull
-    final Map<ResourceLocation, BiteableEntry> biteableEntries = Maps.newHashMap();
-    private @Nonnull
-    final Map<ResourceLocation, BiteableEntry> calculated = Maps.newHashMap();
-    private @Nonnull
-    final Set<ResourceLocation> blacklist = Sets.newHashSet();
+    @Nonnull
+    private final Map<ResourceLocation, BiteableEntry> biteableEntries = Maps.newHashMap();
+    @Nonnull
+    private final Map<ResourceLocation, BiteableEntry> calculated = Maps.newHashMap();
+    @Nonnull
+    private final Set<ResourceLocation> blacklist = Sets.newHashSet();
 
     private boolean initialized = false;
 
@@ -102,8 +102,8 @@ public class BiteableEntryManager {
      * @param creature for which a {@link BiteableEntry} is requested
      * @return {@code null} if resources aren't loaded or the creatures type is blacklisted.
      */
-    public @Nullable
-    BiteableEntry get(PathfinderMob creature) {
+    @Nullable
+    public BiteableEntry get(PathfinderMob creature) {
         if (!initialized) return null;
         EntityType<?> type = creature.getType();
         ResourceLocation id = EntityType.getKey(type);

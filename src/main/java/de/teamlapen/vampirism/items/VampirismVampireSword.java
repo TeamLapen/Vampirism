@@ -301,7 +301,6 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     /**
-     *
      * @return The amount of charge consumed per hit
      */
     protected abstract float getChargeUsage();

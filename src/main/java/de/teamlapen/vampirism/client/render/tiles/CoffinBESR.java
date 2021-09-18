@@ -86,7 +86,7 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
         } catch (IllegalArgumentException e) {
             LOGGER.error("Failed to check coffin head at {} caused by wrong blockstate. Block at that pos: {}", pos, world.getBlockState(pos));
         } catch (Exception e) {
-            LOGGER.error(  "Failed to check coffin head.", e);
+            LOGGER.error("Failed to check coffin head.", e);
         }
         return false;
     }

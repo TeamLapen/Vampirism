@@ -3,15 +3,13 @@ package de.teamlapen.vampirism.inventory.container;
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.core.ModContainer;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Predicate;
-
-import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorInfo;
 
 public class BloodGrinderContainer extends InventoryContainer {
     private static final Predicate<ItemStack> canProcess = stack -> BloodConversionRegistry.canBeConverted(stack.getItem());

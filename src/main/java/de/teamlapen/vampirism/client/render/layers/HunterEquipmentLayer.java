@@ -4,13 +4,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.HunterEquipmentModel;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Mob;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -31,7 +31,7 @@ public class HunterEquipmentLayer<T extends Mob, Q extends EntityModel<T>> exten
     /**
      * @param predicateStake entity -> Type of equipment that should be rendered
      */
-    public HunterEquipmentLayer(RenderLayerParent<T, Q> entityRendererIn,  EntityModelSet modelSet,Function<T, HunterEquipmentModel.StakeType> predicateStake, Function<T, HunterEquipmentModel.HatType> functionHat) {
+    public HunterEquipmentLayer(RenderLayerParent<T, Q> entityRendererIn, EntityModelSet modelSet, Function<T, HunterEquipmentModel.StakeType> predicateStake, Function<T, HunterEquipmentModel.HatType> functionHat) {
         super(entityRendererIn);
         equipmentModel = new HunterEquipmentModel<>(modelSet.bakeLayer(ModEntitiesRender.HUNTER_EQUIPMENT));
         this.predicateStake = predicateStake;

@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.entity.goals;
 
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
 
 

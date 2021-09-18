@@ -3,8 +3,6 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.world.item.Tiers;
 
-import net.minecraft.world.item.Item.Properties;
-
 /**
  * Mainly intended to be used by aggressive villagers.
  */

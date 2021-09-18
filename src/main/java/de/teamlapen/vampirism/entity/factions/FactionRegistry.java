@@ -27,7 +27,6 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 
-
 public class FactionRegistry implements IFactionRegistry {
     private static final Logger LOGGER = LogManager.getLogger();
     private final Map<Integer, Predicate<LivingEntity>> predicateMap = new HashMap<>();

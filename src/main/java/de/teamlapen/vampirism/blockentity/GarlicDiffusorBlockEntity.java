@@ -138,7 +138,7 @@ public class GarlicDiffusorBlockEntity extends BlockEntity {
         this.maxBootTimer = delayTicks;
     }
 
-    public void initiateBootTimer(){
+    public void initiateBootTimer() {
         this.initiateBootTimer = true;
     }
 
@@ -178,8 +178,8 @@ public class GarlicDiffusorBlockEntity extends BlockEntity {
 
 
     public static void tick(Level level, BlockPos pos, BlockState state, GarlicDiffusorBlockEntity blockEntity) {
-        if(blockEntity.initiateBootTimer){
-            blockEntity.initiateBootTimer=false;
+        if (blockEntity.initiateBootTimer) {
+            blockEntity.initiateBootTimer = false;
             int bootTime = VampirismConfig.BALANCE.garlicDiffusorStartupTime.get() * 20;
             if (level instanceof ServerLevel) {
                 if (((ServerLevel) level).players().size() <= 1) {

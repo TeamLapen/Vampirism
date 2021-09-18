@@ -215,9 +215,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
     }
 
-    public void renderFactionLevel(ForgeIngameGui gui,PoseStack mStack, float partialTicks, int screenWidth, int screenHeight) {
-        if (!mc.player.isRidingJumpable() && !mc.options.hideGui)
-        {
+    public void renderFactionLevel(ForgeIngameGui gui, PoseStack mStack, float partialTicks, int screenWidth, int screenHeight) {
+        if (!mc.player.isRidingJumpable() && !mc.options.hideGui) {
             gui.setupOverlayRenderState(true, false);
 
             IPlayableFaction<?> faction = VampirismPlayerAttributes.get(mc.player).faction;
@@ -260,8 +259,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
                             RenderSystem.setShaderTexture(0, icons);
                             int left = this.mc.getWindow().getGuiScaledWidth() / 2 + 91;
-                            int top = this.mc.getWindow().getGuiScaledHeight() - ((ForgeIngameGui)mc.gui).right_height;
-                            ((ForgeIngameGui)mc.gui).right_height += 10;
+                            int top = this.mc.getWindow().getGuiScaledHeight() - ((ForgeIngameGui) mc.gui).right_height;
+                            ((ForgeIngameGui) mc.gui).right_height += 10;
                             int blood = stats.getBloodLevel();
                             int maxBlood = stats.getMaxBlood();
                             int blood2 = blood - 20;

@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.entity;
 
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.util.Mth;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -9,11 +11,9 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerType;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.util.Mth;
-import net.minecraft.world.Difficulty;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 
 import javax.annotation.Nonnull;
 
@@ -25,6 +25,7 @@ public class VampirismVillagerEntity extends Villager {
     public static AttributeSupplier.Builder getAttributeBuilder() {
         return Villager.createAttributes().add(Attributes.ATTACK_DAMAGE);
     }
+
     protected boolean peaceful = false;
     /**
      * A timer which reaches 0 every 70 to 120 ticks

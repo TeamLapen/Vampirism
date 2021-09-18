@@ -6,8 +6,8 @@ import de.teamlapen.lib.lib.util.BasicCommand;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.Registry;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
 
 public class CurrentDimensionCommand extends BasicCommand {
 

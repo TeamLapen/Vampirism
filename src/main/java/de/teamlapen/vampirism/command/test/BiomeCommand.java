@@ -5,9 +5,9 @@ import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 
 public class BiomeCommand extends BasicCommand {
 

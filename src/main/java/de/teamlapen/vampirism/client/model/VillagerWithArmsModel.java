@@ -6,11 +6,11 @@ import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -31,18 +31,17 @@ public class VillagerWithArmsModel<T extends Mob> extends VillagerModel<T> imple
         MeshDefinition mesh = VillagerModel.createBodyModel();
         PartDefinition root = mesh.getRoot();
         CubeDeformation def = new CubeDeformation(scale);
-        root.addOrReplaceChild(RIGHT_ARM, CubeListBuilder.create().texOffs(44,22).addBox(-4F, -2F, -2F, 4, 8, 4, def).addBox(-4, 6, -2, 4, 3, 4,def ), PartPose.offset(0,2,0));
-        root.addOrReplaceChild(LEFT_ARM, CubeListBuilder.create().texOffs(44,22).mirror().addBox(0, -2, -2, 4, 8, 4, def).addBox(0, 6, -2, 4, 3, 4, def), PartPose.offset(-5,2,0));
+        root.addOrReplaceChild(RIGHT_ARM, CubeListBuilder.create().texOffs(44, 22).addBox(-4F, -2F, -2F, 4, 8, 4, def).addBox(-4, 6, -2, 4, 3, 4, def), PartPose.offset(0, 2, 0));
+        root.addOrReplaceChild(LEFT_ARM, CubeListBuilder.create().texOffs(44, 22).mirror().addBox(0, -2, -2, 4, 8, 4, def).addBox(0, 6, -2, 4, 3, 4, def), PartPose.offset(-5, 2, 0));
         return LayerDefinition.create(mesh, 64, 64);
     }
 
     public VillagerWithArmsModel(ModelPart part) {
-       super(part);
-       this.leftArm = part.getChild(LEFT_ARM);
-       this.rightArm = part.getChild(RIGHT_ARM);
+        super(part);
+        this.leftArm = part.getChild(LEFT_ARM);
+        this.rightArm = part.getChild(RIGHT_ARM);
 
     }
-
 
 
     @Override

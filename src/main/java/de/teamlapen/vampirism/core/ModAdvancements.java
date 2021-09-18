@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.advancements.*;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.advancements.CriterionTriggerInstance;
 
 /**
  * Actual advancements are loaded from assets (JSON)

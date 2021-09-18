@@ -6,12 +6,9 @@ import net.minecraft.world.BossEvent;
 
 import java.util.UUID;
 
-import net.minecraft.world.BossEvent.BossBarColor;
-import net.minecraft.world.BossEvent.BossBarOverlay;
-
 public class DummyBossInfo extends LerpingBossEvent {
     public DummyBossInfo(UUID uniqueIdIn, Component nameIn) {
-        super(uniqueIdIn,nameIn, 0,BossBarColor.WHITE, BossBarOverlay.PROGRESS, false, false, false);
+        super(uniqueIdIn, nameIn, 0, BossBarColor.WHITE, BossBarOverlay.PROGRESS, false, false, false);
     }
 
     public static class DummyBossInfo2 extends BossEvent {

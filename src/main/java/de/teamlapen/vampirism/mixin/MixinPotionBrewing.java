@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.mixin;
 
 import de.teamlapen.vampirism.effects.VampirismPotion;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import org.spongepowered.asm.mixin.Mixin;

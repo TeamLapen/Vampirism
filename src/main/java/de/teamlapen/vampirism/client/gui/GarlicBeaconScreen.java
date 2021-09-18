@@ -6,9 +6,9 @@ import de.teamlapen.lib.lib.client.gui.ProgressBar;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blockentity.GarlicDiffusorBlockEntity;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 

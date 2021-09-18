@@ -22,37 +22,37 @@ public class HunterHatModel extends VampirismArmorModel {
     public static LayerDefinition createLayer(float p_170683_, int type) {
         MeshDefinition mesh = VampirismArmorModel.createMesh();
         PartDefinition part = mesh.getRoot();
-        if(type==1){
-            part.addOrReplaceChild(HAT_TOP, CubeListBuilder.create().texOffs(0,31).mirror().addBox(-4,-14,-4,8,5,8), PartPose.offset(0,p_170683_,0));
-            part.addOrReplaceChild(HAT_RIM, CubeListBuilder.create().texOffs(0,35).mirror().addBox(-6,-9,-6,8,3,8), PartPose.offset(0, p_170683_,0));
+        if (type == 1) {
+            part.addOrReplaceChild(HAT_TOP, CubeListBuilder.create().texOffs(0, 31).mirror().addBox(-4, -14, -4, 8, 5, 8), PartPose.offset(0, p_170683_, 0));
+            part.addOrReplaceChild(HAT_RIM, CubeListBuilder.create().texOffs(0, 35).mirror().addBox(-6, -9, -6, 8, 3, 8), PartPose.offset(0, p_170683_, 0));
+        } else {
+            part.addOrReplaceChild(HAT_TOP, CubeListBuilder.create().texOffs(0, 31).mirror().addBox(-4, -12, -4, -8, 3, 8), PartPose.offset(0, p_170683_, 0));
+            part.addOrReplaceChild(HAT_RIM, CubeListBuilder.create().texOffs(0, 31).mirror().addBox(-8, -9, -8, 16, 1, 16), PartPose.offset(0, p_170683_, 0));
         }
-        else{
-            part.addOrReplaceChild(HAT_TOP, CubeListBuilder.create().texOffs(0,31).mirror().addBox(-4,-12,-4,-8,3,8), PartPose.offset(0,p_170683_,0));
-            part.addOrReplaceChild(HAT_RIM, CubeListBuilder.create().texOffs(0,31).mirror().addBox(-8,-9,-8,16,1,16), PartPose.offset(0,p_170683_,0));
-        }
-        return LayerDefinition.create(mesh, 128 , 64);
+        return LayerDefinition.create(mesh, 128, 64);
     }
-    private static  HunterHatModel hat0 ;
-    private static HunterHatModel hat1 ;
+
+    private static HunterHatModel hat0;
+    private static HunterHatModel hat1;
     private final ModelPart hatTop;
     private final ModelPart hatRim;
 
-    public static HunterHatModel getInstance0(){
-        if(hat0 == null){
-            hat0= new HunterHatModel( Minecraft.getInstance().getEntityModels().bakeLayer(ModEntitiesRender.HUNTER_HAT0));
+    public static HunterHatModel getInstance0() {
+        if (hat0 == null) {
+            hat0 = new HunterHatModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModEntitiesRender.HUNTER_HAT0));
         }
         return hat0;
     }
 
-    public static HunterHatModel getInstance1(){
-        if(hat1==null){
-            hat1= new HunterHatModel( Minecraft.getInstance().getEntityModels().bakeLayer(ModEntitiesRender.HUNTER_HAT1));
+    public static HunterHatModel getInstance1() {
+        if (hat1 == null) {
+            hat1 = new HunterHatModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModEntitiesRender.HUNTER_HAT1));
         }
         return hat1;
     }
 
 
-    public HunterHatModel(ModelPart part){
+    public HunterHatModel(ModelPart part) {
         super(part);
         this.hatTop = part.getChild(HAT_TOP);
         this.hatRim = part.getChild(HAT_RIM);

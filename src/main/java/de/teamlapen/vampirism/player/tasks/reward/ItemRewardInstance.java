@@ -21,6 +21,7 @@ public class ItemRewardInstance implements ITaskRewardInstance {
     public static ItemRewardInstance readNbt(CompoundTag nbt) {
         return new ItemRewardInstance(ItemStack.of(nbt.getCompound("reward")));
     }
+
     @Nonnull
     protected final ItemStack reward;
 

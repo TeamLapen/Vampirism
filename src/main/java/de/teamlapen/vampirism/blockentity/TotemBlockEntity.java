@@ -97,6 +97,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         AggressiveVillagerEntity hunter = AggressiveVillagerEntity.makeHunter(villager);
         UtilLib.replaceEntity(villager, hunter);
     }
+
     private final ServerMultiBossInfo captureInfo = new ServerMultiBossInfo(new TranslatableComponent("text.vampirism.village.bossinfo.raid"), BossEvent.BossBarOverlay.NOTCHED_10);
     public long timeSinceLastRaid = 0;
     //block attributes
@@ -104,31 +105,31 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     private boolean isInsideVillage;
     private boolean isDisabled;
     //tile attributes
-    private @Nonnull
-    Set<PoiRecord> village = Sets.newHashSet();
+    @Nonnull
+    private Set<PoiRecord> village = Sets.newHashSet();
     /**
      * use {@link #setControllingFaction(IFaction)}
      */
-    private @Nullable
-    IFaction<?> controllingFaction;
+    @Nullable
+    private IFaction<?> controllingFaction;
     /**
      * use {@link #setCapturingFaction(IFaction)}
      */
-    private @Nullable
-    IFaction<?> capturingFaction;
+    @Nullable
+    private IFaction<?> capturingFaction;
     /**
      * use {@link #getVillageArea()}
      */
-    private @Nullable
-    AABB villageArea;
+    @Nullable
+    private AABB villageArea;
     /**
      * use {@link #getVillageAreaReduced()}
      */
-    private @Nullable
-    AABB villageAreaReduced;
+    @Nullable
+    private AABB villageAreaReduced;
     //forced attributes
-    private @Nullable
-    IFaction<?> forcedFaction;
+    @Nullable
+    private IFaction<?> forcedFaction;
     private int forcedFactionTimer;
     private boolean forceVillageUpdate;
     //capturing attributes
@@ -140,10 +141,10 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     private float strengthRatio;
     private int badOmenLevel;
     //client attributes
-    private @OnlyIn(Dist.CLIENT)
-    long beamRenderCounter;
-    private @OnlyIn(Dist.CLIENT)
-    float beamRenderScale;
+    @OnlyIn(Dist.CLIENT)
+    private long beamRenderCounter;
+    @OnlyIn(Dist.CLIENT)
+    private float beamRenderScale;
     private float[] baseColors = DyeColor.WHITE.getTextureDiffuseColors();
     private float[] progressColor = DyeColor.WHITE.getTextureDiffuseColors();
 
@@ -223,9 +224,9 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         return this.progressColor;
     }
 
+    @Nullable
     @Override
-    public @Nullable
-    IFaction<?> getCapturingFaction() {
+    public IFaction<?> getCapturingFaction() {
         return capturingFaction;
     }
 
@@ -235,9 +236,9 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         return new ClientboundBlockEntityDataPacket(this.worldPosition, 1, this.getUpdateTag());
     }
 
+    @Nullable
     @Override
-    public @Nullable
-    IFaction<?> getControllingFaction() {
+    public IFaction<?> getControllingFaction() {
         return controllingFaction;
     }
 
@@ -272,18 +273,18 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         initiateCapture(VampirismPlayerAttributes.get(player).faction, player::displayClientMessage, -1, -1f);
     }
 
+    @Nonnull
     @Override
-    public @Nonnull
-    AABB getVillageArea() {
+    public AABB getVillageArea() {
         if (this.villageArea == null) {
             updateVillageArea();
         }
         return this.villageArea;
     }
 
+    @Nonnull
     @Override
-    public @Nonnull
-    AABB getVillageAreaReduced() {
+    public AABB getVillageAreaReduced() {
         if (this.villageAreaReduced == null) {
             updateVillageArea();
         }
@@ -520,9 +521,9 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         return this.beamRenderScale;
     }
 
-    public static void clientTick(Level level, BlockPos pos, BlockState state, TotemBlockEntity blockEntity){
+    public static void clientTick(Level level, BlockPos pos, BlockState state, TotemBlockEntity blockEntity) {
         if (level.getGameTime() % 10 == 7 && blockEntity.controllingFaction != null) {
-            ModParticles.spawnParticlesClient(level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_4"), 20, blockEntity.controllingFaction.getColor(), 0.2F),pos.getX(), pos.getY(), pos.getZ(), 3, 30, level.random);
+            ModParticles.spawnParticlesClient(level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_4"), 20, blockEntity.controllingFaction.getColor(), 0.2F), pos.getX(), pos.getY(), pos.getZ(), 3, 30, level.random);
         }
     }
 
@@ -530,7 +531,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
      * Ticked every second when no capture is active
      * Handle normal village live
      */
-    private void serverTickSecondNonCapture(){
+    private void serverTickSecondNonCapture() {
         //Update/spawn entities
         if (this.controllingFaction != null && level.getGameTime() % 512 == 0) {
             int beds = (int) ((ServerLevel) level).getPoiManager().getInRange(pointOfInterestType -> pointOfInterestType.equals(PoiType.HOME), this.worldPosition, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXsize(), 2) + Math.pow(this.getVillageArea().getZsize(), 2))) / 2, PoiManager.Occupancy.ANY).count();
@@ -600,7 +601,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
      * Ticked every second during raid.
      * Handle raid activity
      */
-    private void serverTickSecondCapture(){
+    private void serverTickSecondCapture() {
         List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, this.getVillageArea());
         this.updateBossinfoPlayers(entities);
         int currentAttacker = 0; //include player
@@ -713,7 +714,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         }
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, TotemBlockEntity blockEntity){
+    public static void serverTick(Level level, BlockPos pos, BlockState state, TotemBlockEntity blockEntity) {
         if (blockEntity.isDisabled) {
             level.destroyBlock(pos, true);
             if (level.getBlockState(pos.below()).getBlock() instanceof TotemBaseBlock) {
@@ -765,7 +766,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         //Normal village life
         else {
             blockEntity.timeSinceLastRaid++;
-            if(time % 20 == 7 ){
+            if (time % 20 == 7) {
                 blockEntity.serverTickSecondNonCapture();
             }
 
@@ -1194,7 +1195,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
                 for (HunterBaseEntity hunter : hunterEntities) {
                     if (hunter instanceof ICaptureIgnore)
                         continue;
-                    this.getCaptureEntityForFaction(this.capturingFaction).ifPresent(type ->  this.spawnEntity(type.create(this.level), hunter, true, false) );
+                    this.getCaptureEntityForFaction(this.capturingFaction).ifPresent(type -> this.spawnEntity(type.create(this.level), hunter, true, false));
                 }
             }
         } else {

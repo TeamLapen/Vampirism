@@ -1,15 +1,13 @@
 package de.teamlapen.vampirism.blocks;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockGetter;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nonnull;
 
@@ -32,7 +30,6 @@ public class AltarTipBlock extends VampirismBlock {
     public AltarTipBlock() {
         super(name, Properties.of(Material.METAL).strength(1f).noOcclusion());
     }
-
 
 
     @Nonnull

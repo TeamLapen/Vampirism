@@ -17,7 +17,6 @@ public class VampirismItem extends Item {
 
     /**
      * Set's the registry name and the unlocalized name
-     *
      */
     public VampirismItem(String regName, Item.Properties properties) {
         super(properties);

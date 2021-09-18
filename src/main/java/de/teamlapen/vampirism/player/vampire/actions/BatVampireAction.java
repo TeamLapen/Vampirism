@@ -164,7 +164,6 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     /**
      * Adjust the players size and eye height to fit to the bat model
-     *
      */
     private void updatePlayer(VampirePlayer vampire, boolean bat) {
         Player player = vampire.getRepresentingPlayer();

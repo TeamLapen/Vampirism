@@ -7,13 +7,13 @@ import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.core.NonNullList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

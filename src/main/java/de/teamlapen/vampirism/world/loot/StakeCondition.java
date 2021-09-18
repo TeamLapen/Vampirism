@@ -5,22 +5,21 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import de.teamlapen.vampirism.core.ModLoot;
 import de.teamlapen.vampirism.items.StakeItem;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
 import javax.annotation.Nonnull;
-
-import net.minecraft.world.level.storage.loot.predicates.LootItemCondition.Builder;
 
 public class StakeCondition implements LootItemCondition {
     public static Builder builder(LootContext.EntityTarget target) {
         return () -> new StakeCondition(target);
     }
+
     private final LootContext.EntityTarget target;
 
     public StakeCondition(LootContext.EntityTarget targetIn) {

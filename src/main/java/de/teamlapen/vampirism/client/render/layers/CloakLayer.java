@@ -8,8 +8,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Mob;
 
 import javax.annotation.Nonnull;
 import java.util.function.Predicate;

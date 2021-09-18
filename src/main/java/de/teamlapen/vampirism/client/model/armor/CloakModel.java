@@ -9,8 +9,8 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -33,7 +33,7 @@ public class CloakModel extends VampirismArmorModel {
 
     public static CloakModel getRotatedCloak() {
         if (cloakItemModel == null) {
-            cloakItemModel = new CloakModel( Minecraft.getInstance().getEntityModels().bakeLayer(ModEntitiesRender.CLOAK));
+            cloakItemModel = new CloakModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModEntitiesRender.CLOAK));
         }
         return cloakItemModel;
     }
@@ -41,16 +41,16 @@ public class CloakModel extends VampirismArmorModel {
     public static LayerDefinition createLayer() {
         MeshDefinition mesh = VampirismArmorModel.createMesh();
         PartDefinition part = mesh.getRoot();
-        part.addOrReplaceChild(CLOAK_BACK, CubeListBuilder.create().texOffs(0, 48).mirror().addBox(-4,0,2,8,15,1), PartPose.offsetAndRotation(0,0.2f,2,0.0872665F, 0F, 0F));
-        part.addOrReplaceChild(LEFT_LONG, CubeListBuilder.create().texOffs(18, 48).mirror().addBox(4,0,2,1,15,1), PartPose.offsetAndRotation(0,0.2f,2, 0.0872665F, 0F, 0F));
-        part.addOrReplaceChild(RIGHT_MEDIUM, CubeListBuilder.create().texOffs(22, 50).addBox(-5,0,1,1,13,1), PartPose.offsetAndRotation(0,0.2f,2f,0.0872665F, 0F, 0F));
-        part.addOrReplaceChild(LEFT_MEDIUM, CubeListBuilder.create().texOffs(22,50).mirror().addBox(4,0,1,1,13,1), PartPose.offsetAndRotation(0,0.2f,2,0.0872665F, 0F, 0F));
-        part.addOrReplaceChild(RIGHT_SHORT, CubeListBuilder.create().texOffs(26,52).addBox(-5,0,0,1,11,1), PartPose.offsetAndRotation(0,0.2f,2,0.0872665F, 0F, 0F));
-        part.addOrReplaceChild(LEFT_SHORT, CubeListBuilder.create().texOffs(26, 52).addBox(4,0,0,1,11,1),PartPose.offsetAndRotation(0,0.2f,2,0.0872665F, 0F, 0F));
-        part.addOrReplaceChild(RIGHT_LONG, CubeListBuilder.create().texOffs(18, 48).addBox(-5,0,2,1,15,1), PartPose.offsetAndRotation(0,0.2f,2f,0.0872665F, 0F, 0F));
-        part.addOrReplaceChild(SHOULDER_RIGHT, CubeListBuilder.create().texOffs(30, 60).addBox(-4,0,0,1,1,3), PartPose.offset(-5,0,0));
-        part.addOrReplaceChild(SHOULDER_LEFT, CubeListBuilder.create().texOffs(30, 60).mirror().addBox(3,0,0,1,1,3), PartPose.offset(-5,0,0));
-        return LayerDefinition.create(mesh, 64,64);
+        part.addOrReplaceChild(CLOAK_BACK, CubeListBuilder.create().texOffs(0, 48).mirror().addBox(-4, 0, 2, 8, 15, 1), PartPose.offsetAndRotation(0, 0.2f, 2, 0.0872665F, 0F, 0F));
+        part.addOrReplaceChild(LEFT_LONG, CubeListBuilder.create().texOffs(18, 48).mirror().addBox(4, 0, 2, 1, 15, 1), PartPose.offsetAndRotation(0, 0.2f, 2, 0.0872665F, 0F, 0F));
+        part.addOrReplaceChild(RIGHT_MEDIUM, CubeListBuilder.create().texOffs(22, 50).addBox(-5, 0, 1, 1, 13, 1), PartPose.offsetAndRotation(0, 0.2f, 2f, 0.0872665F, 0F, 0F));
+        part.addOrReplaceChild(LEFT_MEDIUM, CubeListBuilder.create().texOffs(22, 50).mirror().addBox(4, 0, 1, 1, 13, 1), PartPose.offsetAndRotation(0, 0.2f, 2, 0.0872665F, 0F, 0F));
+        part.addOrReplaceChild(RIGHT_SHORT, CubeListBuilder.create().texOffs(26, 52).addBox(-5, 0, 0, 1, 11, 1), PartPose.offsetAndRotation(0, 0.2f, 2, 0.0872665F, 0F, 0F));
+        part.addOrReplaceChild(LEFT_SHORT, CubeListBuilder.create().texOffs(26, 52).addBox(4, 0, 0, 1, 11, 1), PartPose.offsetAndRotation(0, 0.2f, 2, 0.0872665F, 0F, 0F));
+        part.addOrReplaceChild(RIGHT_LONG, CubeListBuilder.create().texOffs(18, 48).addBox(-5, 0, 2, 1, 15, 1), PartPose.offsetAndRotation(0, 0.2f, 2f, 0.0872665F, 0F, 0F));
+        part.addOrReplaceChild(SHOULDER_RIGHT, CubeListBuilder.create().texOffs(30, 60).addBox(-4, 0, 0, 1, 1, 3), PartPose.offset(-5, 0, 0));
+        part.addOrReplaceChild(SHOULDER_LEFT, CubeListBuilder.create().texOffs(30, 60).mirror().addBox(3, 0, 0, 1, 1, 3), PartPose.offset(-5, 0, 0));
+        return LayerDefinition.create(mesh, 64, 64);
     }
 
     private final ModelPart cloakback;

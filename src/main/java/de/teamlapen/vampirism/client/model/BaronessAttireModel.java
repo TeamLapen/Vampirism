@@ -8,9 +8,9 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.util.Mth;
 
 import javax.annotation.Nonnull;
 
@@ -45,15 +45,15 @@ public class BaronessAttireModel extends EntityModel<VampireBaronEntity> {
     public static LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
-        PartDefinition hat = part.addOrReplaceChild(HAT, CubeListBuilder.create().texOffs(68,36).addBox(-3,-8,-3,6,1,6), PartPose.ZERO);
-        PartDefinition hood = part.addOrReplaceChild(HOOD, CubeListBuilder.create().texOffs(44,0).addBox(-4.5f,-8.5f,-4f,9,9,9), PartPose.ZERO);
-        PartDefinition dressTorso = part.addOrReplaceChild(DRESS_TORSO, CubeListBuilder.create().texOffs(72,30).addBox(-4,0,-2,8,12,4, new CubeDeformation(0.4f)),PartPose.ZERO);
-        hat.addOrReplaceChild(VEIL, CubeListBuilder.create().texOffs(32,28).addBox(-4.5f, -8.5f, -4.5f, 9 , 9 ,9), PartPose.ZERO);
-        part.addOrReplaceChild(DRESS_ARM_LEFT, CubeListBuilder.create().texOffs(60, 46).addBox(0,2,-2,3,3,5, new CubeDeformation(0.5f)), PartPose.offset(4,2,0));
-        dressTorso.addOrReplaceChild(DRESS_CURTAIN, CubeListBuilder.create().texOffs(64,43).addBox(-6,0,-4,12,11,10), PartPose.offset(0,12,0) );
-        hat.addOrReplaceChild(HAT2, CubeListBuilder.create().texOffs(72,30).addBox(-2,-11,-2,4,2,4), PartPose.ZERO);
-        hood.addOrReplaceChild(CLOAK, CubeListBuilder.create().texOffs(0,0).addBox(-8.5f,-1,-2.5f,17,22,5), PartPose.rotation(0.3141592653589793F, 0.0F, 0.0F));
-        part.addOrReplaceChild(DRESS_ARM_RIGHT, CubeListBuilder.create().texOffs(60, 46).addBox(-3,2,-2,3,3,4, new CubeDeformation(0.5f)), PartPose.offset(-4,2,0));
+        PartDefinition hat = part.addOrReplaceChild(HAT, CubeListBuilder.create().texOffs(68, 36).addBox(-3, -8, -3, 6, 1, 6), PartPose.ZERO);
+        PartDefinition hood = part.addOrReplaceChild(HOOD, CubeListBuilder.create().texOffs(44, 0).addBox(-4.5f, -8.5f, -4f, 9, 9, 9), PartPose.ZERO);
+        PartDefinition dressTorso = part.addOrReplaceChild(DRESS_TORSO, CubeListBuilder.create().texOffs(72, 30).addBox(-4, 0, -2, 8, 12, 4, new CubeDeformation(0.4f)), PartPose.ZERO);
+        hat.addOrReplaceChild(VEIL, CubeListBuilder.create().texOffs(32, 28).addBox(-4.5f, -8.5f, -4.5f, 9, 9, 9), PartPose.ZERO);
+        part.addOrReplaceChild(DRESS_ARM_LEFT, CubeListBuilder.create().texOffs(60, 46).addBox(0, 2, -2, 3, 3, 5, new CubeDeformation(0.5f)), PartPose.offset(4, 2, 0));
+        dressTorso.addOrReplaceChild(DRESS_CURTAIN, CubeListBuilder.create().texOffs(64, 43).addBox(-6, 0, -4, 12, 11, 10), PartPose.offset(0, 12, 0));
+        hat.addOrReplaceChild(HAT2, CubeListBuilder.create().texOffs(72, 30).addBox(-2, -11, -2, 4, 2, 4), PartPose.ZERO);
+        hood.addOrReplaceChild(CLOAK, CubeListBuilder.create().texOffs(0, 0).addBox(-8.5f, -1, -2.5f, 17, 22, 5), PartPose.rotation(0.3141592653589793F, 0.0F, 0.0F));
+        part.addOrReplaceChild(DRESS_ARM_RIGHT, CubeListBuilder.create().texOffs(60, 46).addBox(-3, 2, -2, 3, 3, 4, new CubeDeformation(0.5f)), PartPose.offset(-4, 2, 0));
         return LayerDefinition.create(mesh, 128, 64);
     }
 

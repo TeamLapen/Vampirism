@@ -19,7 +19,6 @@ public class FluidLib {
 
     /**
      * Checks if either both stacks are null or if they are equal. DOES NOT CHECK AMOUNTS
-     *
      */
     public static boolean areFluidStacksEqual(@Nullable FluidStack stackA, @Nullable FluidStack stackB) {
         return stackA == null && stackB == null || ((stackA != null && stackB != null) && stackA.isFluidEqual(stackB));
@@ -27,7 +26,6 @@ public class FluidLib {
 
     /**
      * Checks if either both stacks are null or if they are identical. DOES  CHECK AMOUNTS
-     *
      */
     public static boolean areFluidStacksIdentical(@Nullable FluidStack stackA, @Nullable FluidStack stackB) {
         return stackA == null && stackB == null || ((stackA != null && stackB != null) && stackA.isFluidStackIdentical(stackB));

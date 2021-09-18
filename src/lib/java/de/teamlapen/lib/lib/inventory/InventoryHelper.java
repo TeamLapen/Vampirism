@@ -55,7 +55,7 @@ public class InventoryHelper {
     /**
      * Removes the given amount from the corresponding slot in the given inventory
      *
-     * @param amounts   Has to have the same size as the inventory
+     * @param amounts Has to have the same size as the inventory
      */
     public static void removeItems(Container inventory, int[] amounts) {
         if (inventory.getContainerSize() < amounts.length) {

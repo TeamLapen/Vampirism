@@ -3,15 +3,13 @@ package de.teamlapen.vampirism.entity.goals;
 import de.teamlapen.vampirism.entity.DarkBloodProjectileEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
-
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class AttackRangedDarkBloodGoal extends Goal {
 

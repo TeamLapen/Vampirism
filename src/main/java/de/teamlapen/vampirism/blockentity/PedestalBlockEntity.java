@@ -7,15 +7,15 @@ import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -174,36 +174,36 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, PedestalBlockEntity blockEntity) {
-            if (blockEntity.chargingTicks > 0) {
-                blockEntity.chargingTicks--;
-                if (blockEntity.chargingTicks == 0) {
-                    IBloodChargeable chargeable = getChargeItem(blockEntity.internalStack);
-                    if (chargeable != null) {
-                        if (blockEntity.bloodStored > 0) {
-                            int charged = chargeable.charge(blockEntity.internalStack, blockEntity.bloodStored);
-                            blockEntity.bloodStored -= Math.max(0, charged);
-                        }
-                    }
-                    blockEntity.markDirtyAndUpdateClient();
-                }
-            } else if (blockEntity.chargingTicks == 0) {
+        if (blockEntity.chargingTicks > 0) {
+            blockEntity.chargingTicks--;
+            if (blockEntity.chargingTicks == 0) {
                 IBloodChargeable chargeable = getChargeItem(blockEntity.internalStack);
-                if (chargeable != null && chargeable.canBeCharged(blockEntity.internalStack)) {
-                    if (blockEntity.bloodStored < blockEntity.chargeRate) {
-                        blockEntity.drainBlood();
-                    }
+                if (chargeable != null) {
                     if (blockEntity.bloodStored > 0) {
-                        blockEntity.chargingTicks = 20;
-                        blockEntity.markDirtyAndUpdateClient();
-                    } else {
-                        blockEntity.chargingTicks = -40;
+                        int charged = chargeable.charge(blockEntity.internalStack, blockEntity.bloodStored);
+                        blockEntity.bloodStored -= Math.max(0, charged);
                     }
+                }
+                blockEntity.markDirtyAndUpdateClient();
+            }
+        } else if (blockEntity.chargingTicks == 0) {
+            IBloodChargeable chargeable = getChargeItem(blockEntity.internalStack);
+            if (chargeable != null && chargeable.canBeCharged(blockEntity.internalStack)) {
+                if (blockEntity.bloodStored < blockEntity.chargeRate) {
+                    blockEntity.drainBlood();
+                }
+                if (blockEntity.bloodStored > 0) {
+                    blockEntity.chargingTicks = 20;
+                    blockEntity.markDirtyAndUpdateClient();
                 } else {
                     blockEntity.chargingTicks = -40;
                 }
             } else {
-                blockEntity.chargingTicks++;
+                blockEntity.chargingTicks = -40;
             }
+        } else {
+            blockEntity.chargingTicks++;
+        }
     }
 
     public static void clientTick(Level level, BlockPos pos, BlockState state, PedestalBlockEntity blockEntity) {

@@ -11,7 +11,7 @@ public class Color {
     public static final Color GRAY = new Color(128, 128, 128);
     public static final Color GREEN = new Color(0, 255, 0);
     public static final Color RED = new Color(255, 0, 0);
-    public static final Color YELLOW    = new Color(255, 255, 0);
+    public static final Color YELLOW = new Color(255, 255, 0);
 
 
     private final int value;
@@ -74,11 +74,11 @@ public class Color {
     }
 
     public float[] getRGBComponents() {
-        return Arrays.copyOf(this.frgbvalue,4);
+        return Arrays.copyOf(this.frgbvalue, 4);
     }
 
     public float[] getRGBColorComponents() {
-        return Arrays.copyOf(this.frgbvalue,3);
+        return Arrays.copyOf(this.frgbvalue, 3);
     }
 
     public static int getRgb(int red, int green, int blue, int alpha) {

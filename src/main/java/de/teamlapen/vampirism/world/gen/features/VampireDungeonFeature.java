@@ -5,18 +5,18 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.MonsterRoomFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.material.Material;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -83,10 +83,10 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
                             if (!blockstate.is(Blocks.CHEST) && !blockstate.is(Blocks.SPAWNER)) {
                                 context.level().setBlock(blockpos1, CAVE_AIR, 2);
                             }
-                        } else if (blockpos1.getY() >= 0 && ! context.level().getBlockState(blockpos1.below()).getMaterial().isSolid()) {
+                        } else if (blockpos1.getY() >= 0 && !context.level().getBlockState(blockpos1.below()).getMaterial().isSolid()) {
                             context.level().setBlock(blockpos1, CAVE_AIR, 2);
                         } else if (blockstate.getMaterial().isSolid() && !blockstate.is(Blocks.CHEST)) {
-                            if (i4 == -1 &&  context.random().nextInt(4) != 0) {
+                            if (i4 == -1 && context.random().nextInt(4) != 0) {
                                 if (context.random().nextInt(20) == 0) // changed to castle bricks
                                     context.level().setBlock(blockpos1, ModBlocks.castle_block_dark_brick_bloody.defaultBlockState(), 2);
                                 else
@@ -105,18 +105,18 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
                     int i5 = context.origin().getY();
                     int j5 = context.origin().getZ() + context.random().nextInt(k1 * 2 + 1) - k1;
                     BlockPos blockpos2 = new BlockPos(l4, i5, j5);
-                    if ( context.level().isEmptyBlock(blockpos2)) {
+                    if (context.level().isEmptyBlock(blockpos2)) {
                         int j3 = 0;
 
                         for (Direction direction : Direction.Plane.HORIZONTAL) {
-                            if ( context.level().getBlockState(blockpos2.relative(direction)).getMaterial().isSolid()) {
+                            if (context.level().getBlockState(blockpos2.relative(direction)).getMaterial().isSolid()) {
                                 ++j3;
                             }
                         }
 
                         if (j3 == 1) {
-                            context.level().setBlock(blockpos2, StructurePiece.reorient( context.level(), blockpos2, Blocks.CHEST.defaultBlockState()), 2);
-                            RandomizableContainerBlockEntity.setLootTable( context.level(), context.random(), blockpos2, ModLootTables.chest_vampire_dungeon);
+                            context.level().setBlock(blockpos2, StructurePiece.reorient(context.level(), blockpos2, Blocks.CHEST.defaultBlockState()), 2);
+                            RandomizableContainerBlockEntity.setLootTable(context.level(), context.random(), blockpos2, ModLootTables.chest_vampire_dungeon);
                             break;
                         }
                     }
@@ -124,7 +124,7 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
             }
 
             context.level().setBlock(context.origin(), Blocks.SPAWNER.defaultBlockState(), 2);
-            BlockEntity tileentity =  context.level().getBlockEntity(context.origin());
+            BlockEntity tileentity = context.level().getBlockEntity(context.origin());
             if (tileentity instanceof SpawnerBlockEntity) {
                 ((SpawnerBlockEntity) tileentity).getSpawner().setEntityId(ModEntities.vampire);
             } else {

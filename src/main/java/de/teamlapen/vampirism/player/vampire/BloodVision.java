@@ -4,8 +4,8 @@ import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * Blood vision

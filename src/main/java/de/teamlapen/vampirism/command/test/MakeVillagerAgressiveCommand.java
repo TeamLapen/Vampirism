@@ -6,8 +6,8 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.npc.Villager;
 
 import java.util.List;
 

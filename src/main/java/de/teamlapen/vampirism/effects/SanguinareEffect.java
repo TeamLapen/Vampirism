@@ -74,7 +74,6 @@ public class SanguinareEffect extends VampirismEffect {
     }
 
 
-
     @OnlyIn(Dist.CLIENT)
     @Override
     public void initializeClient(Consumer<EffectRenderer> consumer) {

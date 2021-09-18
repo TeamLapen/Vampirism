@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.client.render.entities;
 
 import de.teamlapen.vampirism.entity.SoulOrbEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

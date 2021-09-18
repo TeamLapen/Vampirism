@@ -95,7 +95,7 @@ public class HelperRegistry {
      * Key of a {@link Capability} which implementation implements {@link IPlayerEventListener} and which instances should receive the events.
      * Has to be called before post init.
      *
-     * @param clz        Class of the object returned, when {@link net.minecraft.world.entity.player.Player#getCapability(Capability, Direction)} is called on the player with the given capability
+     * @param clz Class of the object returned, when {@link net.minecraft.world.entity.player.Player#getCapability(Capability, Direction)} is called on the player with the given capability
      */
     @ThreadSafeLibAPI
     public static void registerPlayerEventReceivingCapability(Capability<IPlayerEventListener> capability, Class<? extends IPlayerEventListener> clz) {

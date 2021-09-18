@@ -1,20 +1,18 @@
 package de.teamlapen.vampirism.world.gen.structures.huntercamp;
 
 import com.mojang.serialization.Codec;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-
-import net.minecraft.world.level.levelgen.feature.StructureFeature.StructureStartFactory;
 
 @ParametersAreNonnullByDefault
 public class HunterCampStructure extends StructureFeature<NoneFeatureConfiguration> {

@@ -57,6 +57,7 @@ public class TaskInstance implements ITaskInstance {
         long taskDuration = buffer.readVarLong();
         return new TaskInstance(id, task, stats, accepted, taskTimer, insId, reward, taskDuration);
     }
+
     @Nonnull
     private final UUID taskGiver;
     @Nonnull
