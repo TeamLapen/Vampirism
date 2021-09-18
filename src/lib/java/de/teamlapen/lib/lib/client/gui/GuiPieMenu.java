@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 /**
  * Radial/pie menu which can be used as screen overlay to select stuff The angles (in radiant) used in this class are used to describe the direction from the screen center. 0/2Pi shows right, Pi/2 up
- * (!negative Y), Pi left ... (similar to the visualization of complex numbers.
+ * (!negative Y), Pi left ... (similar to the visualization of complex numbers).
  *
  * @author maxanier
  */
@@ -224,7 +224,6 @@ public abstract class GuiPieMenu<T> extends Screen {
     /**
      * This method is called to retrieve the color for the elements border
      *
-     * @param s
      * @return Color
      */
     @Nonnull
@@ -233,7 +232,6 @@ public abstract class GuiPieMenu<T> extends Screen {
     }
 
     /**
-     * @param item
      * @return the location of the icon map where the icon for the given item is in
      */
     protected abstract ResourceLocation getIconLoc(T item);
@@ -267,7 +265,7 @@ public abstract class GuiPieMenu<T> extends Screen {
     }
 
     /**
-     * Draws the background cicle image as well as border lines between the different segments
+     * Draws the background circle image as well as borderlines between the different segments
      *
      * @param cX CenterX
      * @param cY CenterY
@@ -318,8 +316,6 @@ public abstract class GuiPieMenu<T> extends Screen {
     /**
      * Draws a circle with an arrow at the given coords
      *
-     * @param cX
-     * @param cY
      * @param rad The direction the arrow should point in radiant
      */
     private void drawSelectedCenter(PoseStack stack, double cX, double cY, double rad) {
@@ -399,8 +395,6 @@ public abstract class GuiPieMenu<T> extends Screen {
     /**
      * Calculates the absolute mouse coordinates from the scaled ones and sets the cursor accordingly
      *
-     * @param x
-     * @param y
      */
     private void setAbsoluteMouse(double x, double y) {
         x = x * this.minecraft
@@ -415,7 +409,7 @@ public abstract class GuiPieMenu<T> extends Screen {
     }
 
     /**
-     * Checks if the mouse if the mouse cursor is to far from the center and moves it back if necessary
+     * Checks if the mouse cursor is too far from the center and moves it back if necessary
      *
      * @param x  MouseX
      * @param y  MouseY

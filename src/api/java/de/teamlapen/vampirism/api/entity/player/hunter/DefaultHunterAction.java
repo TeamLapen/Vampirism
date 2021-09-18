@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.DefaultAction;
 import javax.annotation.Nonnull;
 
 /**
- * Basic implementation of IAction<IHunterPlayer>. It is recommend to extend this
+ * Basic implementation of IAction<IHunterPlayer>. It is recommended to extend this
  */
 public abstract class DefaultHunterAction extends DefaultAction<IHunterPlayer> {
     @Nonnull

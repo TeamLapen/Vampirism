@@ -8,8 +8,6 @@ import javax.annotation.Nonnull;
 import java.util.EnumSet;
 import java.util.Optional;
 
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
-
 /**
  * Makes the hunter trainer look at his trainee
  */
@@ -17,7 +15,7 @@ public class ForceLookEntityGoal<T extends Mob & ForceLookEntityGoal.TaskOwner> 
     private final T theTrainer;
 
     /**
-     * @param theTrainer Has to be instance of ITrainer
+     * @param theTrainer Has to be {@code instanceof} ITrainer
      */
     public ForceLookEntityGoal(T theTrainer) {
         super(theTrainer, Player.class, 8.0F);

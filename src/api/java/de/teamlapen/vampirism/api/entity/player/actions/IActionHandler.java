@@ -21,7 +21,6 @@ public interface IActionHandler<T> {
     /**
      * If active, the remaining duration is extended by the giving duration
      *
-     * @param action
      */
     void extendActionTimer(@Nonnull ILastingAction action, int duration);
 
@@ -34,8 +33,6 @@ public interface IActionHandler<T> {
      * Returns +Ticks_Left/Total_Duration(Positive) if action is active
      * Returns -Cooldown_Left/Total_Cooldown(Negative) if action is in cooldown
      *
-     * @param action
-     * @return
      */
     float getPercentageForAction(@Nonnull IAction action);
 
@@ -47,8 +44,6 @@ public interface IActionHandler<T> {
     /**
      * Checks if the action is currently activated
      *
-     * @param action
-     * @return
      */
     boolean isActionActive(@Nonnull ILastingAction action);
 
@@ -56,7 +51,6 @@ public interface IActionHandler<T> {
      * Checks if the lasting action is currently activated.
      * Prefer {@link IActionHandler#isActionActive(ILastingAction)} over this one
      *
-     * @param id
      */
     boolean isActionActive(ResourceLocation id);
 
@@ -67,7 +61,6 @@ public interface IActionHandler<T> {
     /**
      * Locks the given actions again
      *
-     * @param actions
      */
     void relockActions(Collection<IAction> actions);
 
@@ -79,15 +72,12 @@ public interface IActionHandler<T> {
     /**
      * toggle the action (server side)
      *
-     * @param action
-     * @return
      */
     IAction.PERM toggleAction(IAction action);
 
     /**
      * Unlock the given actions. The given action have to belong to the players faction and have to be registered
      *
-     * @param actions
      */
     void unlockActions(Collection<IAction> actions);
 }

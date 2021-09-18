@@ -117,7 +117,7 @@ public class VampirismConfig {
     }
 
     /**
-     * This is stored server side on an per world base.
+     * This is stored server side on a per world base.
      * Config is synced to clients on connect
      */
     public static class Server {

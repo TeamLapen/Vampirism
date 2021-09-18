@@ -21,7 +21,6 @@ public interface IEntityActionManager {
     /**
      * Use net.minecraftforge.registries.RegistryManager.ACTIVE.getRegistry(new ResourceLocation("vampirism:entityactions"))
      *
-     * @return
      */
     IForgeRegistry<IEntityAction> getRegistry();
 }

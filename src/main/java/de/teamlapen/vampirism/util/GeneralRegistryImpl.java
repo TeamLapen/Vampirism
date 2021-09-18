@@ -17,7 +17,6 @@ public class GeneralRegistryImpl implements IVampireVisionRegistry {
     private final ArrayList<IVampireVision> visionList = new ArrayList<>();
 
     /**
-     * @param vision
      * @return Return the id of the given vision, -1 if not registered
      */
     public int getIdOfVision(IVampireVision vision) {
@@ -25,7 +24,6 @@ public class GeneralRegistryImpl implements IVampireVisionRegistry {
     }
 
     /**
-     * @param id
      * @return the vision belonging to the given id. Null if not found
      */
     public

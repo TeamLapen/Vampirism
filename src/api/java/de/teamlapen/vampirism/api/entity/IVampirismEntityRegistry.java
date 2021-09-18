@@ -3,9 +3,9 @@ package de.teamlapen.vampirism.api.entity;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -23,7 +23,6 @@ public interface IVampirismEntityRegistry {
      * Register a {@link EntityType} which can be converted using Vampirism's default {@link IConvertingHandler} and thereby being turned into Vampirim's default {@link IConvertedCreature}
      * Requires a blood value to be registered for that creature
      *
-     * @param type
      * @param overlay_loc Location of the overlay texture file
      */
     @ThreadSafeAPI
@@ -33,7 +32,6 @@ public interface IVampirismEntityRegistry {
      * Register a {@link EntityType} which can be converted using a default {@link IConvertingHandler} and thereby being turned into Vampirim's default {@link IConvertedCreature}
      * Requires a blood value to be registered for that creature
      *
-     * @param type
      * @param helper      Helper instance for the DefaultHandler to specify some values for the converted creature
      * @param overlay_loc Location of the overlay texture file
      */
@@ -44,7 +42,6 @@ public interface IVampirismEntityRegistry {
      * Register a {@link EntityType} which can be converted
      * Requires a blood value to be registered for that creature
      *
-     * @param type
      * @param overlay_loc Location of the overlay texture file. Only required if Vampirism's default Converted Creature renderer is used, if you handle that stuff yourself, null is just fine.
      * @param handler     Handles the conversion
      */
@@ -52,7 +49,7 @@ public interface IVampirismEntityRegistry {
     void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc, IConvertingHandler handler);
 
     /**
-     * Registers a custom {@link IExtendedCreatureVampirism} for a entity class
+     * Registers a custom {@link IExtendedCreatureVampirism} for an entity class
      *
      * @param clazz       The entity class that should use the given constructor
      * @param constructor A 'constructor' that can be used to create the {@link IExtendedCreatureVampirism} object from the entity's object

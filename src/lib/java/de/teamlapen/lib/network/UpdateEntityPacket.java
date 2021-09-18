@@ -3,12 +3,12 @@ package de.teamlapen.lib.network;
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.network.ISyncable;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
@@ -71,8 +71,6 @@ public class UpdateEntityPacket implements IMessage {
     /**
      * Create a sync packet for the given capability instance.
      *
-     * @param cap
-     * @return
      */
     public static UpdateEntityPacket create(ISyncable.ISyncableEntityCapabilityInst cap) {
         CompoundTag data = new CompoundTag();
@@ -85,7 +83,6 @@ public class UpdateEntityPacket implements IMessage {
      *
      * @param entity EntityLiving which implements ISyncable
      * @param caps   Have to belong to the given entity
-     * @return
      */
     public static UpdateEntityPacket create(Mob entity, ISyncable.ISyncableEntityCapabilityInst... caps) {
         if (!(entity instanceof ISyncable)) {
@@ -101,7 +98,6 @@ public class UpdateEntityPacket implements IMessage {
      * Create one sync packet for all given capability instances.
      *
      * @param caps Have to belong to the same entity
-     * @return
      */
     public static UpdateEntityPacket create(ISyncable.ISyncableEntityCapabilityInst... caps) {
         UpdateEntityPacket packet = new UpdateEntityPacket();
@@ -118,9 +114,7 @@ public class UpdateEntityPacket implements IMessage {
     /**
      * Create a sync packet for the given capability instance containing the given data
      *
-     * @param cap
      * @param data Should be loadable by the capability instance
-     * @return
      */
     public static UpdateEntityPacket create(ISyncable.ISyncableEntityCapabilityInst cap, CompoundTag data) {
         UpdateEntityPacket packet = new UpdateEntityPacket();
@@ -134,7 +128,6 @@ public class UpdateEntityPacket implements IMessage {
      * Create a sync packet for the given syncable entity containing the data from it's ISyncable implementation
      *
      * @param entity Has to implement ISyncable
-     * @return
      */
     public static UpdateEntityPacket create(Entity entity) {
         if (!(entity instanceof ISyncable)) {
@@ -152,7 +145,6 @@ public class UpdateEntityPacket implements IMessage {
      *
      * @param entity Has to implement ISyncable
      * @param data   Should be loadable by the entity
-     * @return
      */
     public static <T extends Entity & ISyncable> UpdateEntityPacket create(T entity, CompoundTag data) {
         UpdateEntityPacket packet = new UpdateEntityPacket();
@@ -201,7 +193,7 @@ public class UpdateEntityPacket implements IMessage {
     private boolean playerItself = false;
 
     /**
-     * Dont use
+     * Don't use
      */
     public UpdateEntityPacket() {
 

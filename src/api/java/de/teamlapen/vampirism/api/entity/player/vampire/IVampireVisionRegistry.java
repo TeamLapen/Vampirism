@@ -7,7 +7,7 @@ import java.util.List;
  */
 public interface IVampireVisionRegistry {
     /**
-     * @return A immutable copied list which contains all visions
+     * @return An immutable copied list which contains all visions
      */
     List<IVampireVision> getVisions();
 

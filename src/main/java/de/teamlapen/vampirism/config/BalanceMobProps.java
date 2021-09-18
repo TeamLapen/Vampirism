@@ -57,10 +57,10 @@ public class BalanceMobProps {
     public final double ADVANCED_VAMPIRE_ATTACK_DAMAGE_PL = 5;
     //    @DefaultDouble(value = 0.285D, minValue = 0.1, maxValue = 2, name = "advanced_vampire_speed")
     public final double ADVANCED_VAMPIRE_SPEED = 0.285;
-    //    @DefaultInt(value = 5, minValue = 0, maxValue = 100, comment = "Maximum number of vampires that will follow a advanced vampire")
+    //    @DefaultInt(value = 5, minValue = 0, maxValue = 100, comment = "Maximum number of vampires that will follow an advanced vampire")
     public final int ADVANCED_VAMPIRE_MAX_FOLLOWER = 5;
 
-    //    @DefaultDouble(value = 3, minValue = 0, comment = "Any fire damage that is received by a advanced vampire is multiplied by this")
+    //    @DefaultDouble(value = 3, minValue = 0, comment = "Any fire damage that is received by an advanced vampire is multiplied by this")
     public final double ADVANCED_VAMPIRE_FIRE_VULNERABILITY = 3;
 
 

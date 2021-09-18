@@ -13,15 +13,12 @@ public interface IActionManager {
     /**
      * A copied mutable list of all actions registered for this faction
      *
-     * @param faction
-     * @return
      */
     List<IAction> getActionsForFaction(IPlayableFaction faction);
 
     /**
      * Use net.minecraftforge.registries.RegistryManager.ACTIVE.getRegistry(new ResourceLocation("vampirism:actions"))
      *
-     * @return
      */
     IForgeRegistry<IAction> getRegistry();
 }

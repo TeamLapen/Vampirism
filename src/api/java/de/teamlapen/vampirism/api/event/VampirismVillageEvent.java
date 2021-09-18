@@ -2,20 +2,18 @@ package de.teamlapen.vampirism.api.event;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.world.ITotem;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-
-import net.minecraftforge.eventbus.api.Event.HasResult;
 
 @SuppressWarnings("unused")
 public abstract class VampirismVillageEvent extends Event {
@@ -103,7 +101,6 @@ public abstract class VampirismVillageEvent extends Event {
          * The villager that should be spawned
          * The position should already be set
          *
-         * @param newVillager
          */
         public void setNewVillager(@Nullable Villager newVillager) {
             this.newVillager = newVillager;
@@ -112,7 +109,6 @@ public abstract class VampirismVillageEvent extends Event {
         /**
          * A random existing villager which can be used as a seed (e.g. for the position)
          *
-         * @return
          */
         @Nullable
         public Mob getOldEntity() {
@@ -165,7 +161,7 @@ public abstract class VampirismVillageEvent extends Event {
     }
 
     /**
-     * Fired when the Capture process is finished the the Villager should be affected by the faction change
+     * Fired when the Capture process is finished the Villager should be affected by the faction change
      * if result is {@link Result#DENY} the Vanilla code is skipped
      */
     @HasResult
@@ -244,7 +240,7 @@ public abstract class VampirismVillageEvent extends Event {
 
     /**
      * fired when the caption process is started
-     * set the result to DENY to skip the vanilla code
+     * set the result to {@code DENY} to skip the vanilla code
      */
     @HasResult
     public static class InitiateCapture extends VampirismVillageEvent {

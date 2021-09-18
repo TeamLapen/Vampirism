@@ -94,7 +94,6 @@ public class UtilLib {
     /**
      * Gets players looking spot (blocks only).
      *
-     * @param player
      * @param restriction Max distance or 0 for player reach distance or -1 for not restricted
      * @return The position as a MovingObjectPosition, null if not existent cf: https ://github.com/bspkrs/bspkrsCore/blob/master/src/main/java/bspkrs /util/CommonUtils.java
      */
@@ -245,7 +244,7 @@ public class UtilLib {
         BlockPos backupPos = null; //
         while (!flag && i++ < maxTry) {
             BlockPos c = getRandomPosInBox(world, box); //TODO select a better location (more viable)
-            if (world.isAreaLoaded(c, 5) && NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(e.getType()), world, c, e.getType())) {//i see no other way
+            if (world.isAreaLoaded(c, 5) && NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(e.getType()), world, c, e.getType())) {//I see no other way
                 e.setPos(c.getX(), c.getY() + 0.2, c.getZ());
                 if (!(e instanceof Mob) || (((Mob) e).checkSpawnRules(world, reason) && ((Mob) e).checkSpawnObstruction(e.getCommandSenderWorld()))) {
                     backupPos = c; //Store the location in case we do not find a better one
@@ -297,10 +296,6 @@ public class UtilLib {
     /**
      * Teleports the entity
      *
-     * @param entity
-     * @param x
-     * @param y
-     * @param z
      * @param sound  If a teleport sound should be played
      * @return Wether the teleport was successful or not
      */
@@ -397,8 +392,6 @@ public class UtilLib {
      * Sends the component message to all players except the given one.
      * Only use on server or common side
      *
-     * @param player
-     * @param message
      */
     public static void sendMessageToAllExcept(Player player, Component message) {
         for (Player o : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
@@ -415,10 +408,7 @@ public class UtilLib {
     /**
      * Checks if the target entity is in the field of view (180 degree) of the base entity. Only works reliable for players (due to server-client sync)
      *
-     * @param entity
-     * @param target
      * @param alsoRaytrace Raytraces first
-     * @return
      */
     public static boolean canReallySee(LivingEntity entity, LivingEntity target, boolean alsoRaytrace) {
         if (alsoRaytrace && !entity.hasLineOfSight(target)) {
@@ -437,7 +427,7 @@ public class UtilLib {
     }
 
     /**
-     * Returns null, but makes it look like non null
+     * Returns null, but makes it look like non-null
      * <p>
      * If this causes issues when compiling with IntelliJ check the following link and rebuild the entire project afterwards
      * <p>
@@ -455,9 +445,6 @@ public class UtilLib {
      * Stores the given pos with in the tagcompound using base.
      * Can be retrieved again with {@link UtilLib#readPos(CompoundTag, String)}
      *
-     * @param nbt
-     * @param base
-     * @param pos
      */
     public static void write(CompoundTag nbt, String base, BlockPos pos) {
         nbt.putInt(base + "_x", pos.getX());
@@ -468,9 +455,6 @@ public class UtilLib {
     /**
      * Reads a position written by {@link UtilLib#write(CompoundTag, String, BlockPos)}.
      *
-     * @param nbt
-     * @param base
-     * @return
      */
     public static BlockPos readPos(CompoundTag nbt, String base) {
         return new BlockPos(nbt.getInt(base + "_x"), nbt.getInt(base + "_y"), nbt.getInt(base + "_z"));
@@ -479,9 +463,6 @@ public class UtilLib {
     /**
      * Prefixes each of the strings with the given prefix
      *
-     * @param prefix
-     * @param strings
-     * @return
      */
     public static String[] prefix(String prefix, String... strings) {
         String[] result = new String[strings.length];
@@ -494,8 +475,6 @@ public class UtilLib {
     /**
      * Creates a predicate which checks for the given class
      *
-     * @param clazz
-     * @return
      */
     public static <T> Predicate<T> getPredicateForClass(final Class<T> clazz) {
         return clazz::isInstance;
@@ -504,10 +483,7 @@ public class UtilLib {
     /**
      * Return a square bounding box around the given center with the given distance
      *
-     * @param center
-     * @param distance
      * @param fullY    If it should reach from yDisplay 0 to 265 or use the distance for yDisplay as well
-     * @return
      */
     public static AABB createBB(BlockPos center, int distance, boolean fullY) {
         return new AABB(center.getX() - distance, fullY ? 0 : center.getY() - distance, center.getZ() - distance, center.getX() + distance, fullY ? 256 : center.getY() + distance, center.getZ() + distance);
@@ -531,10 +507,8 @@ public class UtilLib {
     /**
      * Search for a vampire biome by checking every second chunk starting at the player and moving in cicles to the outside
      *
-     * @param world
      * @param center  Pos to start with
      * @param maxDist Max radius
-     * @return
      */
     public static ChunkPos findNearBiome(ServerLevel world, BlockPos center, int maxDist, List<Biome> biomes) {
         long start = System.currentTimeMillis();
@@ -629,9 +603,6 @@ public class UtilLib {
      * Rotate voxel. Credits to JTK222|Lukas
      * Cache the result
      *
-     * @param shape
-     * @param rotation
-     * @return
      */
     public static VoxelShape rotateShape(VoxelShape shape, RotationAmount rotation) {
         Set<VoxelShape> rotatedShapes = new HashSet<>();
@@ -688,7 +659,6 @@ public class UtilLib {
     /**
      * Makes sure the given stack has a NBT Tag Compound
      *
-     * @param stack
      * @return The stacks NBT Tag
      */
     public static CompoundTag checkNBT(ItemStack stack) {

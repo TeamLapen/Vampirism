@@ -8,8 +8,6 @@ import net.minecraftforge.eventbus.api.Event;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraftforge.eventbus.api.Event.HasResult;
-
 /**
  * Event related to any faction changes of players
  */
@@ -126,9 +124,12 @@ public class FactionEvent extends Event {
 
     /**
      * Posted to check if a player can join a faction.
-     * DENY disallows
-     * DEFAULT default check (if the current faction is null)
-     * ALLOW allows to join even if in another faction (not recommend)
+     * <p>
+     * {@code DENY} disallows
+     * <p>
+     * {@code DEFAULT} default check (if the current faction is null)
+     * <p>
+     * {@code ALLOW} allows joining even if in another faction (not recommend)
      * <p>
      * The player is not notified if not DEFAULT, so you should consider doing so.
      */

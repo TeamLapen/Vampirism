@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.REFERENCE;
-import net.minecraft.world.item.Item;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 
 import javax.annotation.Nonnull;
 
@@ -18,7 +18,6 @@ public class VampirismItem extends Item {
     /**
      * Set's the registry name and the unlocalized name
      *
-     * @param regName
      */
     public VampirismItem(String regName, Item.Properties properties) {
         super(properties);

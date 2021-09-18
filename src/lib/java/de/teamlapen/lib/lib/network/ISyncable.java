@@ -17,7 +17,7 @@ public interface ISyncable {
     void loadUpdateFromNBT(CompoundTag nbt);
 
     /**
-     * This method is called to get update informations which should be send to the client
+     * This method is called to get update information which should be sent to the client
      */
     void writeFullUpdateToNBT(CompoundTag nbt);
 

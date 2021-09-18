@@ -113,7 +113,7 @@ this https://github.com/TeamLapen/VampirismAddonExample and consider contacting 
 ## Code Structure
 
 The _minecraft_version_ branch serves as the main development branch. There might be older (stable) branches for the
-same MC version postfixed with the Vampirism main version.  
+same MC version suffixed with the Vampirism main version.  
 It may receive bugfixes until the latest branch is released.  
 The source code is currently divided into three parts, which might be split in the future.
 
@@ -130,8 +130,8 @@ Provides Helpers and Registries to automate stuff like EntityUpdates.
 Provides abstract classes/default implementations/interfaces to simplify things (located under de.teamlapen.lib.lib).  
 
 ## Setting up the development environment
-If you would like to compile your own versions or even contribute to Vampirism's development you need to setup a dev environment.
-The following example instructions will setup IntelliJ (Free community edition or Non-Free Ultimate edition). If you already have a setup or want to use another IDE, jump [here](#eclipse-or-other-ides).
+If you would like to compile your own versions or even contribute to Vampirism's development you need to set up a dev environment.
+The following example instructions will set up IntelliJ (Free community edition or Non-Free Ultimate edition). If you already have a setup or want to use another IDE, jump [here](#eclipse-or-other-ides).
 
 #### IntelliJ
 1. Make sure you have the Java **JDK** (minimum Java 8) as well as the IntelliJ IDE installed.
@@ -139,24 +139,24 @@ The following example instructions will setup IntelliJ (Free community edition o
 3. (Optionally) Install Git, so you can clone the repository and push changes.
 4. Clone (`git clone https://github.com/TeamLapen/Vampirism`) or [download](https://github.com/TeamLapen/Vampirism/archive/refs/heads/1.16.zip) Vampirism to a new "Vampirism" folder.
 5. In IntelliJ use `New...` -> `New from Version Control` -> Fill out repo, directory and name
-6. After cloning is done IntelliJ offers you to import a unlinked Gradle Project. Click this.
+6. After cloning is done IntelliJ offers you to import an unlinked Gradle Project. Click this.
 7. Refresh the gradle project  
 8. Run `genIntellijRuns` and edit the run config to use the correct module
 9. Make sure `Settings -> Build, Execution, Deployment -> Compiler -> 'Add runtime assertions for not-null-annotated methods and parameters' is disabled` (Unfortunately required, requires rebuild if the project has been built before)
-10. You might have to modify the projets compiler output path  
+10. You might have to modify the projects' compiler output path  
 
 
 That's it.
 
 #### Eclipse or other IDEs
-If you would like to setup Vampirism in another way or another IDE, you should pay regard to the following points.  
+If you would like to set up Vampirism in another way or another IDE, you should pay regard to the following points.  
 1. Make sure `src/main/java`, `src/api/java` and `src/lib/java` are marked as source folders and `src/main/resources` and `src/lib/resources` are marked as resource folders.  
 2. Vampirism might have a few dependencies (e.g. Waila), which are specified in the gradle files and should be automatically downloaded and added when you run `ideaModule` or `eclipse`.  
 3. Vampirism requires at least Java 8 
 
 ### Code Style
 The code style used in this project is the IntelliJ default one.  
-For Eclipse you can use the settings created by @Cheaterpaul [FormatFile](https://gist.github.com/Cheaterpaul/1aa0d0014240c8bd854434b5147804df) [ImportOrder](https://gist.github.com/Cheaterpaul/594d16f54358bdca6ea5e549f81b3589)
+For Eclipse, you can use the settings created by @Cheaterpaul [FormatFile](https://gist.github.com/Cheaterpaul/1aa0d0014240c8bd854434b5147804df) [ImportOrder](https://gist.github.com/Cheaterpaul/594d16f54358bdca6ea5e549f81b3589)
 
 ## Licence
 This mod is licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/Vampirism/master/LICENCE) ***except*** for the following parts:

@@ -23,11 +23,9 @@ public class SkillManager implements ISkillManager {
     private final static Logger LOGGER = LogManager.getLogger(SkillManager.class);
 
     /**
-     * Get the root skill of the faction (Registered with the same key as the faction itself.
+     * Get the root skill of the faction (Registered with the same key as the faction itself).
      * If none ist found, prints a warning and returns a dummy one
      *
-     * @param faction
-     * @return
      */
     public @Nonnull
     ISkill getRootSkill(IPlayableFaction faction) {
@@ -50,8 +48,6 @@ public class SkillManager implements ISkillManager {
      * For debug purpose only.
      * Prints the skills of the given faction to the given sender
      *
-     * @param faction
-     * @param sender
      */
     public void printSkills(IPlayableFaction faction, CommandSourceStack sender) {
         for (ISkill s : getSkillsForFaction(faction)) {

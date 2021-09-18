@@ -10,18 +10,18 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.Util;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.Util;
-import net.minecraft.util.Mth;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 import java.util.UUID;
@@ -165,7 +165,6 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     /**
      * Adjust the players size and eye height to fit to the bat model
      *
-     * @param bat
      */
     private void updatePlayer(VampirePlayer vampire, boolean bat) {
         Player player = vampire.getRepresentingPlayer();

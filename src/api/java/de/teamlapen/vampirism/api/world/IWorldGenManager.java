@@ -10,9 +10,6 @@ import java.util.Set;
 public interface IWorldGenManager {
 
     /**
-     * @param featureRegistryName
-     * @param biomeRegistryKey
-     * @param biomeCategory
      * @return Whether the given feature should be generated in the given biome id and category
      */
     boolean canStructureBeGeneratedInBiome(ResourceLocation featureRegistryName, ResourceLocation biomeRegistryKey, Biome.BiomeCategory biomeCategory);

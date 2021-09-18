@@ -2,15 +2,13 @@ package de.teamlapen.vampirism.entity.goals;
 
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 import java.util.List;
-
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class MoveToBiteableVampireGoal<T extends Mob & IVampireMob> extends Goal {
 
@@ -22,7 +20,6 @@ public class MoveToBiteableVampireGoal<T extends Mob & IVampireMob> extends Goal
 
     /**
      * @param vampire       Has to be a {@link Mob}
-     * @param movementSpeed
      */
     public MoveToBiteableVampireGoal(T vampire, double movementSpeed) {
         this.vampire = vampire;

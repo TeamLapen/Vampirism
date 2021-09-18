@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.player;
 
 import de.teamlapen.vampirism.core.ModAttributes;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,8 +34,6 @@ public class LevelAttributeModifier {
     /**
      * Can be used to register an additional modifiable attribute from modcompat
      *
-     * @param attribute
-     * @param uuid
      */
     public static void registerModdedAttributeModifier(Attribute attribute, UUID uuid) {
         modifiers.put(attribute, uuid);

@@ -290,7 +290,7 @@ public class VampirismMod {
     }
 
     /**
-     * Called during constructor to setup the API as well as VReference
+     * Called during constructor to set up the API as well as VReference
      */
     private void prepareAPI() {
         FactionRegistry factionRegistry = new FactionRegistry();

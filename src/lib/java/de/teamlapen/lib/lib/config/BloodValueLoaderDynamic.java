@@ -9,8 +9,8 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.lib.lib.util.ResourceLocationTypeAdapter;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -108,7 +108,7 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
      */
     private void saveDynamicBloodValues(File f) {
         Map<ResourceLocation, Integer> values = this.getCalculatedValues.get();
-        if (!f.exists() && values.isEmpty()) return; //Don't create a empty file
+        if (!f.exists() && values.isEmpty()) return; //Don't create an empty file
         if (!f.exists()) {
             if (f.getParentFile() != null) f.getParentFile().mkdirs();
         }

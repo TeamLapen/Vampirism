@@ -110,8 +110,7 @@ public class BalanceBuilder {
     /**
      * Checks if all fields in {@link BalanceConfig} have been set. Throws otherwise
      *
-     * @param config
-     * @throws IllegalStateException If a unset field is found
+     * @throws IllegalStateException If an unset field is found
      */
     public void checkFields(BalanceConfig config) throws IllegalStateException {
         try {

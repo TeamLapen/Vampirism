@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.difficulty;
 
 /**
- * If a entity implements this the level will automatically be set on world join.
+ * If an entity implements this the level will automatically be set on world join.
  * 0 is the minimum level
  */
 public interface IAdjustableLevel {
@@ -15,7 +15,6 @@ public interface IAdjustableLevel {
     /**
      * Set the level
      *
-     * @param level
      */
     void setLevel(int level);
 
@@ -28,7 +27,6 @@ public interface IAdjustableLevel {
      * Calculate a (random) level under consideration of the given difficulty
      * If result is smaller than zero the entity is not spawned
      *
-     * @param d
      * @return Can be over max level. Will be capped.
      */
     int suggestLevel(Difficulty d);

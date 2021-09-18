@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.blockentity;
 
-import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.lib.lib.blockentity.InventoryBlockEntity;
+import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.lib.lib.util.ValuedObject;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -17,24 +17,29 @@ import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -47,12 +52,6 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-
-import net.minecraft.Util;
-import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.inventory.ContainerLevelAccess;
 
 public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
@@ -160,7 +159,6 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     /**
      * Returns the affected player. If the ritual isn't running it returns null
      *
-     * @return
      */
     public Player getPlayer() {
         if (this.runningTick <= 1)
@@ -181,7 +179,6 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     /**
      * Returns the position of the tips. If the ritual isn't running it returns null
      *
-     * @return
      */
     public BlockPos[] getTips() {
         if (this.runningTick <= 1)
@@ -372,7 +369,6 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      * Determines the structure required for leveling up.
      * The current implementation returns a value between 4 two high stone pillars and 6 three high gold pillars.
      *
-     * @return
      */
     private int checkRequiredLevel() {
         int newLevel = targetLevel;
@@ -389,8 +385,6 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      * Also determines which tips are used for that and stores them in {@link AltarInfusionBlockEntity#tips }
      * Used at max the 8 most valued pillars
      *
-     * @param required
-     * @return
      */
     private boolean checkStructureLevel(int required) {
         if (level == null) return false;

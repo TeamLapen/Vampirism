@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
 /**
  * Cache frequently accessed values from the player capabilities.
  * Injected into {@link Player} via Mixin {@link de.teamlapen.vampirism.mixin.MixinPlayerEntity}
- * If you need 100% guaranteed correct values, use the capabilities instead. Otherwise prefer this for performance reason
+ * If you need 100% guaranteed correct values, use the capabilities instead. Otherwise, prefer this for performance reason
  */
 public class VampirismPlayerAttributes {
     public static VampirismPlayerAttributes get(Player player) {

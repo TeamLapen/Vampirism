@@ -2,18 +2,18 @@ package de.teamlapen.vampirism.client.render.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.blockentity.CoffinBlockEntity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.CoffinModel;
-import de.teamlapen.vampirism.blockentity.CoffinBlockEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
-import com.mojang.math.Vector3f;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -23,7 +23,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 
 /**
- * Render the coffin with it's different colors and the lid opening animation
+ * Render the coffin with its different colors and the lid opening animation
  */
 @OnlyIn(Dist.CLIENT)
 public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {

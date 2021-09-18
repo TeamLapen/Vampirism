@@ -5,11 +5,11 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.world.biome.VampireForestBiome;
 import de.teamlapen.vampirism.world.biome.VampirismBiomeFeatures;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.Registry;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
@@ -47,7 +47,7 @@ public class ModBiomes {
     }
 
     /**
-     * Only call from main thread / non parallel event
+     * Only call from main thread / non-parallel event
      */
     static void addBiomesToGeneratorUnsafe() {
         //TODO don't generate hills biome for now. Should be added as a hills variant at some point if supported by Forge

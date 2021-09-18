@@ -5,15 +5,15 @@ import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
@@ -23,10 +23,10 @@ import java.util.Random;
 public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbowArrow {
 
     /**
-     * Create a entity arrow for a shooting entity (with offset)
+     * Create an entity arrow for a shooting entity (with offset)
      *
-     * @param heightOffset An height offset for the position the entity is created
-     * @param rightHanded  If the entiy is right handed
+     * @param heightOffset A height offset for the position the entity is created
+     * @param rightHanded  If the entity is right-handed
      * @param arrow        ItemStack of the represented arrow. Is copied.
      * @param centerOffset An offset from the center of the entity
      */

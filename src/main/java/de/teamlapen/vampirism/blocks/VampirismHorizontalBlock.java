@@ -2,31 +2,31 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.data.BlockStateGenerator;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Implements some basic horizontal rotation functionality.
- * Don't forget to use `horizontalBlock` in {@link BlockStateGenerator} so the model is actually rotated
- * If your subclass adds additional states:
- * - Add FACING to the defaultState in the constructor
- * this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
- * - Add FACING to {@link Block#createBlockStateDefinition(StateDefinition.Builder)}
+ * Implements some basic horizontal rotation functionality. <br>
+ * Don't forget to use {@code horizontalBlock} in {@link BlockStateGenerator} so the model is actually rotated
+ * If your subclass adds additional states: <br>
+ * - Add {@code FACING} to the defaultState in the constructor
+ * {@code this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));} <br>
+ * - Add {@code FACING} to {@link Block#createBlockStateDefinition(StateDefinition.Builder)}
  */
 public class VampirismHorizontalBlock extends VampirismBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;

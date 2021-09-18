@@ -30,7 +30,7 @@ public interface IFactionRegistry {
     IFaction getFaction(Entity entity);
 
     /**
-     * Get a faction by it's name
+     * Get a faction by its name
      */
     @Nullable
     IFaction getFactionByID(ResourceLocation id);
@@ -48,9 +48,7 @@ public interface IFactionRegistry {
     /**
      * Get a cached or create a predicate which selects all other faction entities
      *
-     * @param thisFaction
      * @param ignoreDisguise If disguised players should still be counted for their actual faction (disguised vampires will still be detected as vampires)
-     * @return
      */
     Predicate<LivingEntity> getPredicate(IFaction<?> thisFaction, boolean ignoreDisguise);
 
@@ -63,12 +61,11 @@ public interface IFactionRegistry {
      * @param neutralPlayer  If neutral players should be selected
      * @param ignoreDisguise If disguised players should still be counted for their actual faction (disguised vampires will still be detected as vampires)
      * @param otherFaction   If this is not null, only entities of this faction are selected.
-     * @return
      */
     Predicate<LivingEntity> getPredicate(IFaction<?> thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, @Nullable IFaction<?> otherFaction);
 
     /**
-     * Create and registerAdvancements a non playable faction. Must be called before InterModProccessEvent e.g. during InterModEnqueueEvent
+     * Create and registerAdvancements a non-playable faction. Must be called before InterModProccessEvent e.g. during InterModEnqueueEvent
      *
      * @param id              Faction id e.g. for level command
      * @param entityInterface Interface all entities implement
@@ -80,12 +77,12 @@ public interface IFactionRegistry {
     <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral);
 
     /**
-     * Create and registerAdvancements a non playable faction. Must be called before InterModProccessEvent e.g. during InterModEnqueueEvent
+     * Create and registerAdvancements a non-playable faction. Must be called before InterModProccessEvent e.g. during InterModEnqueueEvent
      *
      * @param id                 Faction id e.g. for level command
      * @param entityInterface    Interface all entities implement
      * @param color              Color e.g. for level rendering
-     * @param villageFactionData village capture related utility class (if null will gets filled with dummy)
+     * @param villageFactionData village capture related utility class (if null will get filled with dummy)
      * @param <T>                Interface all entities implement
      * @return The created faction
      */
@@ -119,7 +116,7 @@ public interface IFactionRegistry {
      * @param highestLevel             The highest reachable player level
      * @param highestLordLevel         The highest reachable lord level or 0 if no lord
      * @param lordTitleFunction        Function supplying a textcomponent representing the title for a given lord level and female boolean flag
-     * @param villageFactionData       village capture related utility class (if null will gets filled with dummy)
+     * @param villageFactionData       village capture related utility class (if null will get filled with dummy)
      * @param <T>                      Interface all entities or (the given capability for players)  implement
      * @return The created faction
      */

@@ -2,23 +2,23 @@ package de.teamlapen.lib.lib.blockentity;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.NonNullList;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 import javax.annotation.Nonnull;
 
 
 /**
- * Basic abstract class for BlockEntities which need a small inventory (with an gui)
+ * Basic abstract class for BlockEntities which need a small inventory (with a gui)
  */
 public abstract class InventoryBlockEntity extends BaseContainerBlockEntity implements MenuProvider {
 

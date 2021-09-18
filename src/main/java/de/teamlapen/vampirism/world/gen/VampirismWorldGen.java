@@ -13,15 +13,20 @@ import de.teamlapen.vampirism.util.MixinHooks;
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.util.RandomBlockState;
 import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.data.worldgen.Pools;
+import net.minecraft.data.worldgen.ProcessorLists;
+import net.minecraft.data.worldgen.VillagePools;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.data.BuiltinRegistries;
-import net.minecraft.world.level.levelgen.feature.structures.StructureTemplatePool;
-import net.minecraft.data.worldgen.Pools;
-import net.minecraft.world.level.levelgen.feature.structures.StructurePoolElement;
 import net.minecraft.world.level.levelgen.feature.structures.SinglePoolElement;
-import net.minecraft.data.worldgen.VillagePools;
+import net.minecraft.world.level.levelgen.feature.structures.StructurePoolElement;
+import net.minecraft.world.level.levelgen.feature.structures.StructureTemplatePool;
+import net.minecraft.world.level.levelgen.structure.templatesystem.AlwaysTrueTest;
+import net.minecraft.world.level.levelgen.structure.templatesystem.RandomBlockMatchTest;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,12 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import net.minecraft.data.worldgen.ProcessorLists;
-import net.minecraft.world.level.levelgen.structure.templatesystem.AlwaysTrueTest;
-import net.minecraft.world.level.levelgen.structure.templatesystem.RandomBlockMatchTest;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
 
 public class VampirismWorldGen {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -98,7 +97,7 @@ public class VampirismWorldGen {
     }
 
     /**
-     * replaces half of the temples with temples with church altar
+     * replaces half of the temples with church altar
      */
     private static void replaceTemples(Map<String, List<Pair<StructurePoolElement, Integer>>> buildings) {
         //biome string -> JigsawPattern of the biome

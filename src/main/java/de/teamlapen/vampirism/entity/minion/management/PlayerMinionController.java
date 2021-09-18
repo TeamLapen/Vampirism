@@ -10,17 +10,17 @@ import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -41,17 +41,17 @@ import java.util.stream.Collectors;
  * When the player has a free minion slot {@link PlayerMinionController#createNewMinionSlot(MinionData, EntityType)} can be used to reserve one.
  * The minion slots are represented by their id (0-x). The minion slot holds the minion data and is not directly related to an entity.
  * <p>
- * A unclaimed minion slot (either a freshly reserved one or of a dead minion) can be claimed by a {@link MinionEntity} via {@link PlayerMinionController#claimMinionSlot(int)}.
+ * An unclaimed minion slot (either a freshly reserved one or of a dead minion) can be claimed by a {@link MinionEntity} via {@link PlayerMinionController#claimMinionSlot(int)}.
  * If successful, it returns a token that grants the entity access to the minion data. It should be saved with the slot id in the minion entity.
- * Once the entity joins the world it checkout the minion data via {@link PlayerMinionController#checkoutMinion(int, int, MinionEntity)}.
- * While the minion is checked out, the minion controller knows about the entity id and dimension and can access it when necessary. Furthermore, no other minion can access the data (noone else should have the token anyway).
- * When the minion is unloaded it must checkin the data and save the token, so it can checkout the data on load again.
+ * Once the entity joins the world checks out the minion data via {@link PlayerMinionController#checkoutMinion(int, int, MinionEntity)}.
+ * While the minion is checked out, the minion controller knows about the entity id and dimension and can access it when necessary. Furthermore, no other minion can access the data (no one else should have the token anyway).
+ * When the minion is unloaded it must check in the data and save the token, so it can check out the data on load again.
  * <p>
- * If the player calls the minions to them, the checkout (loaded) minions  are forced to checkin their data and are removed from the world. Then the tokens are invalidated and a fresh set of tokens is created for the new minion entities that access the same minion slots.
- * If a minion entity is stored in an unloaded chunk, it will try to checkout the minion data/slot again once loaded. However, if the player has recalled it in the meantime (which means a new shell entity has been created, the minion entity will fail to checkout the data and remove itself from the world.
+ * If the player calls the minions to them, the checkout (loaded) minions  are forced to check in their data and are removed from the world. Then the tokens are invalidated and a fresh set of tokens is created for the new minion entities that access the same minion slots.
+ * If a minion entity is stored in an unloaded chunk, it will try to check out the minion data/slot again once loaded. However, if the player has recalled it in the meantime (which means a new shell entity has been created) the minion entity will fail to check out the data and remove itself from the world.
  * <p>
  * <p>
- * - Recruit a new minion{@link PlayerMinionController#createNewMinionSlot(MinionData, EntityType)} }
+ * - Recruit a new minion{@link PlayerMinionController#createNewMinionSlot(MinionData, EntityType)}
  * - Associate a entity representation (real entity, nbt saved entity, ...) with the minion slot {@link PlayerMinionController#claimMinionSlot(int)}
  * - Checkout minion slot if entity is added to world. Can "fail" if minion has been reclaimed in the meantime. {@link PlayerMinionController#checkoutMinion(int, int, MinionEntity)}
  * - Checkin minion slot if entity is removed from world {@link PlayerMinionController#checkInMinion(int, int)}
@@ -290,7 +290,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     }
 
     /**
-     * @return A collection of currently unclaimed and non dead minion slots
+     * @return A collection of currently unclaimed and non-dead minion slots
      */
     public Collection<Integer> getUnclaimedMinions() {
         List<Integer> ids = new ArrayList<>();

@@ -3,12 +3,12 @@ package de.teamlapen.vampirism.client.render.entities;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Mob;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -65,7 +65,7 @@ public abstract class DualBipedRenderer<T extends Mob, M extends HumanoidModel<T
 
     /**
      * Gather all available textures (.png) in the given directory and in MODID namespace
-     * @param dirPath relative assets path (no namespace)
+     * @param dirPath relative assets' path (no namespace)
      * @param required whether to throw an illegal state exception if none found
      * @return Array of texture and slim status
      */

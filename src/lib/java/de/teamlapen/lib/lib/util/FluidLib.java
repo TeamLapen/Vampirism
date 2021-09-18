@@ -1,7 +1,7 @@
 package de.teamlapen.lib.lib.util;
 
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -20,9 +20,6 @@ public class FluidLib {
     /**
      * Checks if either both stacks are null or if they are equal. DOES NOT CHECK AMOUNTS
      *
-     * @param stackA
-     * @param stackB
-     * @return
      */
     public static boolean areFluidStacksEqual(@Nullable FluidStack stackA, @Nullable FluidStack stackB) {
         return stackA == null && stackB == null || ((stackA != null && stackB != null) && stackA.isFluidEqual(stackB));
@@ -31,9 +28,6 @@ public class FluidLib {
     /**
      * Checks if either both stacks are null or if they are identical. DOES  CHECK AMOUNTS
      *
-     * @param stackA
-     * @param stackB
-     * @return
      */
     public static boolean areFluidStacksIdentical(@Nullable FluidStack stackA, @Nullable FluidStack stackB) {
         return stackA == null && stackB == null || ((stackA != null && stackB != null) && stackA.isFluidStackIdentical(stackB));

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.entity;
 
-import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nullable;
 
@@ -41,8 +41,6 @@ public interface IEntityWithHome {
     /**
      * Sets the entity's home bounding box to an area that extends r blocks in every direction from pos
      *
-     * @param pos
-     * @param r
      */
     void setHomeArea(BlockPos pos, int r);
 }

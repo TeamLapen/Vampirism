@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -77,7 +77,6 @@ public interface IFactionPlayerHandler extends ILordPlayer {
      * Join the given faction and set the faction level to 1.
      * Only successful if {@link IFactionPlayerHandler#canJoin(IPlayableFaction)}
      *
-     * @param faction
      */
     void joinFaction(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction);
 
@@ -92,8 +91,6 @@ public interface IFactionPlayerHandler extends ILordPlayer {
     /**
      * Set the players faction and it's level. Only use this if you are sure that you want to override the previous faction.
      *
-     * @param faction
-     * @param level
      * @return If successful
      */
     boolean setFactionAndLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level);
@@ -102,8 +99,6 @@ public interface IFactionPlayerHandler extends ILordPlayer {
      * Set the level for a faction. Only works if the player already is in the given faction.
      * Use {@link IFactionPlayerHandler#joinFaction(IPlayableFaction)} to join a faction first or {@link IFactionPlayerHandler#setFactionAndLevel(IPlayableFaction, int)} if you are sure what you do
      *
-     * @param faction
-     * @param level
      * @return If successful
      */
     boolean setFactionLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level);
@@ -112,7 +107,6 @@ public interface IFactionPlayerHandler extends ILordPlayer {
      * Set the players lord level.
      * Checks if player is in faction and at faction max level and if level is lower than max lord level
      *
-     * @param level
      * @return if successful
      */
     boolean setLordLevel(int level);

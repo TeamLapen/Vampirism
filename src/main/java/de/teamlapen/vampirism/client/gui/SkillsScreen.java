@@ -249,8 +249,6 @@ public class SkillsScreen extends Screen {
     /**
      * Add the given node and all it's child nodes to the list
      *
-     * @param list
-     * @param root
      */
     private void addToList(List<SkillNode> list, SkillNode root) {
         list.add(root);
@@ -417,7 +415,7 @@ public class SkillsScreen extends Screen {
                 this.hLine(stack, xs, xp, yp, color);
                 this.vLine(stack, xs, ys - 11, yp, color);
                 if (ys > yp) {
-                    //Currently always like this. The other option are here in case this changes at some point
+                    //Currently, always like this. The other option are here in case this changes at some point
                     this.blit(stack, xs - 5, ys - 11 - 7, 96, 234, 11, 7);
                 } else if (ys < yp) {
                     this.blit(stack, xs - 5, ys + 11, 96, 241, 11, 7);
@@ -437,7 +435,7 @@ public class SkillsScreen extends Screen {
 //        RenderSystem.enableColorMaterial();
 
         //Draw skills
-        ISkill newSelected = null;//Not sure if mouse clicks can occur while this is running, so don't set #selected to null here but use a extra variable to be sure
+        ISkill newSelected = null;//Not sure if mouse clicks can occur while this is running, so don't set #selected to null here but use an extra variable to be sure
         SkillNode newSelectedNode = null;
         for (SkillNode node : skillNodes) {
             ISkill[] elements = node.getElements();

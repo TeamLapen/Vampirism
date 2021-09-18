@@ -16,16 +16,16 @@ import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.player.tasks.reward.ItemRewardInstance;
 import de.teamlapen.vampirism.player.tasks.reward.LordLevelReward;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.Tag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -223,7 +223,7 @@ public class TaskManager implements ITaskManager {
                 wrapper.tasks.putAll(tasks.stream().map(t -> new TaskInstance(t, wrapper.id, this.factionPlayer, this.getTaskTimeConfig() * 1200L * 4)).collect(Collectors.toMap(TaskInstance::getId, t -> t)));
             });
         }
-        //less tasks
+        //fewer tasks
         if (compoundNBT.contains("lessTasks")) {
             CompoundTag lessTasksNBT = compoundNBT.getCompound("lessTasks");
             lessTasksNBT.getAllKeys().forEach(taskBoardId -> {
@@ -418,7 +418,7 @@ public class TaskManager implements ITaskManager {
      * gets all visible tasks for a task board
      * <p>
      * locks task that are no longer unlocked
-     * if there are to less tasks already chosen, add new task
+     * if there are fewer tasks already chosen, add new task
      *
      * @param taskBoardId the id of the task board
      * @return all visible tasks for the task board

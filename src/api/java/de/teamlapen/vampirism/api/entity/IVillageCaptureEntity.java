@@ -31,7 +31,6 @@ public interface IVillageCaptureEntity extends IFactionEntity {
     /**
      * if this village is
      *
-     * @return
      */
     boolean isAttackingVillage();
 

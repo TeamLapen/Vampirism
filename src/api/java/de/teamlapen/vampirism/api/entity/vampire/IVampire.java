@@ -14,7 +14,6 @@ import javax.annotation.Nonnull;
 public interface IVampire extends IFactionEntity {
 
     /**
-     * @param strength
      * @return True if the entity is not affected by that garlic level
      */
     boolean doesResistGarlic(EnumStrength strength);
@@ -32,7 +31,7 @@ public interface IVampire extends IFactionEntity {
 
     /**
      * Adds blood to the vampires blood stats.
-     * If useRemaining is true, any remaining blood might be used otherwise. For example it might be put into blood bottles
+     * If useRemaining is true, any remaining blood might be used otherwise. For example, it might be put into blood bottles
      *
      * @param amt           In blood food unit, not mB. See {@link de.teamlapen.vampirism.api.VReference#FOOD_TO_FLUID_BLOOD} for conversion
      * @param saturationMod Similar to the food saturation modifier

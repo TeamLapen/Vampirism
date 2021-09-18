@@ -27,7 +27,7 @@ import java.util.Map;
 
 /**
  * Version Checker. Not a very good implementation, but it does what it should do.
- * Uses a update file format which is an extension to forge one's so you can use the same file for forge, but have additional information here e.g. download link.
+ * Uses an update file format which is an extension to forge one's, so you can use the same file for forge, but have additional information here e.g. download link.
  * Requires a versioning system, which is like Vampirism's
  */
 public class VersionChecker implements Runnable {
@@ -48,8 +48,6 @@ public class VersionChecker implements Runnable {
     /**
      * Execute an async version check.
      *
-     * @param updateUrl
-     * @param currentVersion
      * @param stats          if to send very basic stats
      * @return a version info object, which is update when the check is finished
      */
@@ -315,8 +313,6 @@ public class VersionChecker implements Runnable {
         /**
          * 1 if the given version is older, 0 if they are equal and -1 if the given version is newer
          *
-         * @param version
-         * @return
          */
         @Override
         public int compareTo(@Nonnull Version version) {
@@ -384,7 +380,6 @@ public class VersionChecker implements Runnable {
         /**
          * two if the given version is older, 0 if they are equal and -1 if the two is newer
          *
-         * @return
          */
         private int compareDate(String one, String two) {
             try {
@@ -413,8 +408,6 @@ public class VersionChecker implements Runnable {
             /**
              * 1 if the given type is less recommend, 0 if equal, -1 if the given type is more recommend
              *
-             * @param type
-             * @return
              */
             public int compare(TYPE type) {
                 return Integer.compare(type.ORDER, this.ORDER);

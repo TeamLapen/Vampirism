@@ -16,8 +16,8 @@ import java.util.function.Predicate;
 
 /**
  * Basic interface for all of Vampirism's player types (VampirePlayer, HunterPlayer, ...)
- * The child classes are used as capabilities and attached to the player
- * The player can have levels.
+ * The child classes are used as capabilities and attached to the player.
+ * A player can have levels.
  * A player can only be part of one faction at once, this means only one IFactionPlayer capability belonging to a single player can have a level >0.
  * <p>
  * If you are writing an addon and not a standalone mod, consider extending VampirismPlayer instead of implementing this
@@ -26,9 +26,8 @@ public interface IFactionPlayer<T extends IFactionPlayer<?>> extends IFactionEnt
     /**
      * Mostly relevant in the set level command
      * Vampirism's factions always return true here.
-     * Can be used if another mod does not want that a player leaves it's faction via the command
+     * Can be used if another mod does not want that a player leaves its faction via the command
      *
-     * @return
      */
     boolean canLeaveFaction();
 
@@ -59,11 +58,11 @@ public interface IFactionPlayer<T extends IFactionPlayer<?>> extends IFactionEnt
     int getMaxLevel();
 
     /**
-     * Careful this selects all {@link LivingEntity}'s including etc Items
+     * Careful this selects all {@link LivingEntity}'s including etc. Items
      *
      * @param otherFactionPlayers Whether other entities from the same faction that might be hostile should be included
      * @param ignoreDisguise      If disguised players should still be counted for their actual faction
-     * @return A predicate that selects all non friendly entities
+     * @return A predicate that selects all non-friendly entities
      */
     Predicate<LivingEntity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise);
 
@@ -90,13 +89,11 @@ public interface IFactionPlayer<T extends IFactionPlayer<?>> extends IFactionEnt
     boolean isRemote();
 
     /**
-     * Is called when the players faction level changed.
+     * Is called when the player's faction level changed.
      * Is called on world load.
      * Is called on client and server side.
      * Might be called with oldLevel=newLevel to reset things
      *
-     * @param newLevel
-     * @param oldLevel
      */
     void onLevelChanged(int newLevel, int oldLevel);
 

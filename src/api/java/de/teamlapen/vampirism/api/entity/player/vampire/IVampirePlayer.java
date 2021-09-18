@@ -6,8 +6,8 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -68,7 +68,7 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     }
 
     /**
-     * @return The amount of ticks the player has been in sun. Never higher than 100
+     * @return The amount of ticks the player has been in sun. Never higher than 100.
      */
     int getTicksInSun();
 
@@ -87,14 +87,13 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      * Initiates DBNO state if death prevented
      *
      * @param source The lethal damage source
-     * @return Whether death event should be cancel
+     * @return Whether death event should be canceled
      */
     boolean onDeadlyHit(DamageSource source);
 
     /**
      * Locks the vision again, preventing the player from using it
      *
-     * @param vision
      */
     void unUnlockVision(@Nonnull IVampireVision vision);
 
@@ -102,7 +101,6 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      * Unlocks the given vision, so the player can activate it.
      * Is not saved to nbt
      *
-     * @param vision
      */
     void unlockVision(@Nonnull IVampireVision vision);
 

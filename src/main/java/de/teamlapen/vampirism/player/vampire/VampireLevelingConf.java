@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 import java.util.Map;
 
 /**
- * Stores values/informations about the leveling of vampires. Might be replaced by an actually configurable object at some point
+ * Stores values/information about the leveling of vampires. Might be replaced by an actually configurable object at some point
  * All levels here are target levels, not the levels the player currently is on
  */
 public class VampireLevelingConf {

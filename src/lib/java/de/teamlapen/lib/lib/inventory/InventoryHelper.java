@@ -1,18 +1,18 @@
 package de.teamlapen.lib.lib.inventory;
 
 import de.teamlapen.lib.lib.util.ItemStackUtil;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -29,7 +29,6 @@ public class InventoryHelper {
     /**
      * Checks if the given inventory contains at least the given amount of tileInventory in the respective slots.
      *
-     * @param inventory
      * @param items           Has to have the same size as the inventory
      * @param amounts         Has to have the same size as the inventory
      * @param compareFunction Used to determine if the first items can be used in place of the second one (most simple -> equals)
@@ -56,7 +55,6 @@ public class InventoryHelper {
     /**
      * Removes the given amount from the corresponding slot in the given inventory
      *
-     * @param inventory
      * @param amounts   Has to have the same size as the inventory
      */
     public static void removeItems(Container inventory, int[] amounts) {
@@ -116,10 +114,8 @@ public class InventoryHelper {
     }
 
     /**
-     * Try add stack to given slot. Tries to merge. DOES NOT check mergeability
+     * Try to add stack to given slot. Tries to merge. DOES NOT check mergeability
      *
-     * @param inv
-     * @param slot
      * @param addStack is Modified to remove the added items
      */
     public static void addStackToSlotWithoutCheck(Container inv, int slot, ItemStack addStack) {

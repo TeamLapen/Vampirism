@@ -94,7 +94,7 @@ public class ModCompatLoader implements IInitListener {
         if (mod.isPresent()) {
             String s = modCompat.getAcceptedVersionRange();
             if (s == null) return true;
-            VersionRange range = null;
+            VersionRange range;
             try {
                 range = VersionRange.createFromVersionSpec(s);
             } catch (InvalidVersionSpecificationException e) {

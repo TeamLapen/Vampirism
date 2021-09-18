@@ -28,7 +28,7 @@ public interface IMinionEntity extends IFactionEntity {
     Optional<ILordPlayer> getLordOpt();
 
     /**
-     * @return The id of this minion. Empty if failed to checkout minion data
+     * @return The id of this minion. Empty if failed to check out minion data
      */
     Optional<Integer> getMinionId();
 

@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
@@ -33,7 +33,6 @@ public interface IPlayableFaction<T extends IFactionPlayer> extends IFaction<T> 
     Component getLordTitle(int level, boolean female);
 
     /**
-     * @param player
      * @return The "<? extends IFactionPlayer>" of this faction for the given player
      */
     LazyOptional<T> getPlayerCapability(Player player);
@@ -46,7 +45,6 @@ public interface IPlayableFaction<T extends IFactionPlayer> extends IFaction<T> 
     /**
      * Set if the level should be rendered, default is true
      *
-     * @param render
      */
     IPlayableFaction<T> setRenderLevel(boolean render);
 

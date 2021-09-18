@@ -6,7 +6,7 @@ import java.util.UUID;
 public interface ITaskManager {
 
     /**
-     * removes a accepted taskInstance from the taskInstance board and cleans the the taskInstance board from already completed requirements
+     * removes an accepted taskInstance from the taskInstance board and cleans the taskInstance board from already completed requirements
      *
      * @param taskBoardId  the id of the taskInstance board
      * @param taskInstance the aborted taskInstance
@@ -28,7 +28,7 @@ public interface ITaskManager {
      * checks if the taskInstance is unlocked and can be completed
      * cleans the taskInstance board from the taskInstance
      * <p>
-     * handles rewards and requirements
+     * handles reward and requirements
      *
      * @param taskBoardId  the id of the taskInstance board
      * @param taskInstance the taskInstance to complete

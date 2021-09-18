@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Stores values/informations about the leveling of hunters. Might be replaced by an actually configurable object at some point
+ * Stores values/information about the leveling of hunters. Might be replaced by an actually configurable object at some point
  * All levels here are target levels, not the levels the player currently is on
  */
 public class HunterLevelingConf {
@@ -25,10 +25,8 @@ public class HunterLevelingConf {
     public final int HUNTER_INTEL_COUNT = 10;
 
     /**
-     * Converts hunter level to metadata for hunter intel. Returns -1 if there is no hunter intel for he given level
+     * Converts hunter level to metadata for hunter intel. Returns -1 if there is no hunter intel for the given level
      *
-     * @param level
-     * @return
      */
     public int getHunterIntelMetaForLevel(int level) {
         return isLevelValidForTable(level) ? level - TABLE_MIN_LEVEL : -1;
@@ -88,7 +86,6 @@ public class HunterLevelingConf {
     }
 
     /**
-     * @param meta
      * @return the hunter level that can be reached with this hunter intel metadata
      */
     public int getLevelForHunterIntelMeta(int meta) {
@@ -111,7 +108,7 @@ public class HunterLevelingConf {
     }
 
     /**
-     * Checks if a hunter player can be trained by an basic hunter to reach the target level
+     * Checks if a hunter player can be trained by a basic hunter to reach the target level
      */
     public boolean isLevelValidForBasicHunter(int targetLevel) {
         return targetLevel >= BASIC_HUNTER_MIN_LEVEL && targetLevel <= BASIC_HUNTER_MAX_LEVEL;

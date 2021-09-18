@@ -5,11 +5,11 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.actions.*;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.WeighedRandom;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -134,7 +134,6 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
     /**
      * reset the given {@link IEntityAction} or if null, reset the {@link ActionHandlerEntity#action}
      *
-     * @param actionIn
      */
     private void deactivateAction(@Nullable IEntityAction actionIn) {
         IEntityAction action = actionIn != null ? actionIn : this.action;
@@ -172,11 +171,11 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
             deactivateAction();
             duration--;
         } else if (duration > 0) { /* action is in progress */
-            /* calls updateAction() for {@link ILastingAction} & {@link IInstantAction} as long as the actions duration last */
+            /* calls updateAction() for {@link ILastingAction} & {@link IInstantAction} as long as the action's duration last */
             duration--;
             updateAction();
         } else if (cooldown > 0) {/* action on cooldown */
-            /* calls updateAction() for {@link ILastingAction} & {@link IInstantAction} as long as the actions cooldown last */
+            /* calls updateAction() for {@link ILastingAction} & {@link IInstantAction} as long as the action's cooldown last */
             cooldown--;
         } else { /* new action */
             /* sets a new action if cooldown is over */

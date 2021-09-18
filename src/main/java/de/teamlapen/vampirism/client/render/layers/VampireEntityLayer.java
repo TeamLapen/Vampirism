@@ -2,12 +2,12 @@ package de.teamlapen.vampirism.client.render.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.client.render.entities.ConvertedCreatureRenderer;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -23,7 +23,6 @@ public class VampireEntityLayer<T extends LivingEntity, U extends EntityModel<T>
     private final boolean checkIfRender;
 
     /**
-     * @param overlay
      * @param checkIfRender If it should check if {@link ConvertedCreatureRenderer#renderOverlay} is true
      */
     public VampireEntityLayer(RenderLayerParent<T, U> entityRendererIn, ResourceLocation overlay, boolean checkIfRender) {

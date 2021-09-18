@@ -3,17 +3,17 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Tiers;
-import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -23,9 +23,6 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import de.teamlapen.vampirism.api.items.IItemWithTier.TIER;
-import net.minecraft.world.item.Item.Properties;
 
 public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTier {
     private static final String regName = "hunter_axe";
@@ -65,7 +62,7 @@ public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTie
     }
 
     /**
-     * @return A itemstack with the correct knockback enchantment applied
+     * @return An {@link ItemStack} with the correct knockback enchantment applied
      */
     public ItemStack getEnchantedStack() {
         ItemStack stack = new ItemStack(this);

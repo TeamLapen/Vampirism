@@ -18,7 +18,7 @@ public class Trades {
     public static final VillagerTrades.ItemListing[] converted_trades = new VillagerTrades.ItemListing[]{new net.minecraft.world.entity.npc.VillagerTrades.EmeraldForItems(ModItems.human_heart, 9, 2, 2), new VillagerTrades.ItemsForEmeralds(ModItems.human_heart, 3, 9, 2), new ItemsForEmeraldsTradeWithDamage(BloodBottleItem.getStackWithDamage(9), 1, 3, 12, 2)};
 
     /**
-     * copy of {@link VillagerTrades.ItemsForEmeralds} with damage of itemstack
+     * copy of {@link VillagerTrades.ItemsForEmeralds} with damage to {@link ItemStack}
      */
     public static class ItemsForEmeraldsTradeWithDamage implements VillagerTrades.ItemListing {
         private final ItemStack result;

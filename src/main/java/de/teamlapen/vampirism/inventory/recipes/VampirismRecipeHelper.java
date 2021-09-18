@@ -6,11 +6,11 @@ import com.google.gson.*;
 import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRegistries;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -91,8 +91,6 @@ class VampirismRecipeHelper {
     /**
      * deserialize ingredients for shapeless recipes
      *
-     * @param ingredientArray
-     * @return
      */
     static NonNullList<Ingredient> readIngredients(JsonArray ingredientArray) {
         NonNullList<Ingredient> nonnulllist = NonNullList.create();
@@ -144,11 +142,6 @@ class VampirismRecipeHelper {
     /**
      * deserialize ingredients for shaped recipes
      *
-     * @param pattern
-     * @param keys
-     * @param patternWidth
-     * @param patternHeight
-     * @return
      */
     static NonNullList<Ingredient> deserializeIngredients(String[] pattern, Map<String, Ingredient> keys, int patternWidth, int patternHeight) {
         NonNullList<Ingredient> nonnulllist = NonNullList.withSize(patternWidth * patternHeight, Ingredient.EMPTY);
@@ -178,9 +171,7 @@ class VampirismRecipeHelper {
     /**
      * get pattern from shaped recipe
      *
-     * @param jsonArr
      * @param max     crafting grid max size (4x4 -> 4)
-     * @return
      */
     static String[] patternFromJson(JsonArray jsonArr, int max) {
         String[] astring = new String[jsonArr.size()];

@@ -15,7 +15,7 @@ public interface IModCompat extends IInitListener {
 
     /**
      * Can be null if all versions are accepted
-     * {@link net.minecraftforge.fml.common.versioning.VersionRange} String
+     * {@link org.apache.maven.artifact.versioning.VersionRange} String
      */
     @Nullable
     default String getAcceptedVersionRange() {

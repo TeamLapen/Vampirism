@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.api.items;
 
-import net.minecraft.util.StringRepresentable;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.StringRepresentable;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -25,7 +25,7 @@ public interface IItemWithTier {
     }
 
     /**
-     * The registry name all tier items are derived from (basename+"_"+tier)
+     * The registry name all tier items are derived from {@code (basename + "_" + tier)}
      */
     String getBaseRegName();
 

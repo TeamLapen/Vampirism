@@ -18,24 +18,31 @@ import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.ByteTag;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.FloatTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
-import net.minecraft.nbt.ByteTag;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.FloatTag;
-import net.minecraft.util.*;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -43,15 +50,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
-
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.item.Item.Properties;
 
 public abstract class VampirismVampireSword extends VampirismItemWeapon implements IBloodChargeable, IFactionExclusiveItem, IFactionLevelItem {
 
@@ -260,8 +258,6 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     /**
      * Updated during {@link net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent}
      *
-     * @param stack
-     * @param player
      * @return True if the cached value was updated
      */
     public boolean updateTrainedCached(@Nonnull ItemStack stack, @Nonnull LivingEntity player) {
@@ -313,7 +309,6 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     /**
      * Gets the charged value from the tag compound
      *
-     * @param stack
      * @return Value between 0 and 1
      */
     protected float getCharged(@Nonnull ItemStack stack) {
@@ -331,7 +326,6 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     /**
      * Gets a cached trained value from the tag compound
      *
-     * @param stack
      * @return Value between 0 and 1. Defaults to 0
      */
     protected float getTrained(@Nonnull ItemStack stack) {
@@ -347,8 +341,6 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     /**
      * Gets the trained value from the tag compound
      *
-     * @param stack
-     * @param player
      * @return Value between 0 and 1. Defaults to 0
      */
     protected float getTrained(@Nonnull ItemStack stack, @Nullable LivingEntity player) {

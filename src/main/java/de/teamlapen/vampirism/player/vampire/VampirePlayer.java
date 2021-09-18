@@ -29,9 +29,9 @@ import de.teamlapen.vampirism.items.VampirismHunterArmor;
 import de.teamlapen.vampirism.mixin.ArmorItemAccessor;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
+import de.teamlapen.vampirism.player.FactionBasePlayer;
 import de.teamlapen.vampirism.player.IVampirismPlayer;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
-import de.teamlapen.vampirism.player.FactionBasePlayer;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
@@ -41,34 +41,42 @@ import de.teamlapen.vampirism.util.GeneralRegistryImpl;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.particles.ItemParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.stats.Stats;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fluids.FluidStack;
@@ -84,18 +92,6 @@ import java.util.*;
 import java.util.function.Predicate;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
-
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.NeutralMob;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.Pose;
 
 /**
  * Main class for Vampire Players.
@@ -481,7 +477,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      * Sets glowing eyes.
      * Also sends a sync packet if on server
      *
-     * @param value
      */
     public void setGlowingEyes(boolean value) {
         if (value != this.getSpecialAttributes().glowingEyes) {
@@ -1358,7 +1353,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     /**
      * Spawn particle after biting an entity
      *
-     * @param entityId Id of the entity
+     * @param entityId ID of the entity
      */
     private void spawnBiteParticle(int entityId) {
         Entity entity = player.level.getEntity(entityId);

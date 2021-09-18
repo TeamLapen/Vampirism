@@ -16,11 +16,11 @@ import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.world.entity.MobType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
 
@@ -168,9 +168,6 @@ public class DamageHandler {
      * Scales linear between min and max
      *
      * @param level     The players level
-     * @param minDamage
-     * @param maxDamage
-     * @return
      */
     private static double scaleDamageWithLevel(int level, int maxLevel, double minDamage, double maxDamage) {
         return minDamage + level / (double) maxLevel * (maxDamage - minDamage);

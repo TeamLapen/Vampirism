@@ -29,7 +29,7 @@ public interface IGarlicChunkHandler {
     int registerGarlicBlock(EnumStrength strength, ChunkPos... pos);
 
     /**
-     * Removes a garlic "emitter" registration"
+     * Removes a garlic "emitter" registration
      *
      * @param id The unique hash obtained during registration
      */

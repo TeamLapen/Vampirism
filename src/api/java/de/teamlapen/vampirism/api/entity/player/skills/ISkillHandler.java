@@ -10,7 +10,6 @@ import net.minecraft.world.item.ItemStack;
 public interface ISkillHandler<T> {
 
     /**
-     * @param skill
      * @return Returns false if the skill already is unlocked or the parent node is not unlocked or the skill is not found
      */
     Result canSkillBeEnabled(ISkill skill);
@@ -22,22 +21,19 @@ public interface ISkillHandler<T> {
     /**
      * Disables the given skill
      *
-     * @param skill
      */
     void disableSkill(ISkill skill);
 
     /**
      * Enable the given skill. Check canSkillBeEnabled first
      *
-     * @param skill
      */
     void enableSkill(ISkill skill);
 
     /**
      * Equip the refinement set from the given stack to the appropriate slot
-     * If no set is present or it is from the wrong faction, the old set for the slot will be removed, but no new set will be added
+     * If no set is present, or it is from the wrong faction, the old set for the slot will be removed, but no new set will be added
      *
-     * @param stack
      * @return Whether the item wass equipped
      */
     boolean equipRefinementItem(ItemStack stack);

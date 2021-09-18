@@ -23,7 +23,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 /**
  * Class for core api methods
- * Don't use before init since it is setup in pre-init
+ * Don't use before init since it is set up in pre-init
  */
 public class VampirismAPI {
 
@@ -101,7 +101,7 @@ public class VampirismAPI {
     }
 
     /**
-     * Setup the API registries
+     * Set up the API registries
      * FOR INTERNAL USAGE ONLY
      */
     public static void setUpRegistries(IFactionRegistry factionRegistryIn, ISundamageRegistry sundamageRegistryIn, IVampirismEntityRegistry entityRegistryIn, IActionManager actionManagerIn, ISkillManager skillManagerIn,
@@ -120,7 +120,7 @@ public class VampirismAPI {
 
     /**
      * FOR FUTURE INTERNAL USE ONLY
-     * Called once Vampirism has finished preparing the API and it is ready to use.
+     * Called once Vampirism has finished preparing the API, and it is ready to use.
      */
     @Deprecated
     public static void onSetupComplete() {
@@ -128,7 +128,6 @@ public class VampirismAPI {
     }
 
     /**
-     * @param player
      * @return The respective {@link IFactionPlayerHandler}
      */
     public static LazyOptional<IFactionPlayerHandler> getFactionPlayerHandler(Player player) {
@@ -136,7 +135,6 @@ public class VampirismAPI {
     }
 
     /**
-     * @param player
      * @return The respective {@link IVampirePlayer}
      */
     public static LazyOptional<IVampirePlayer> getVampirePlayer(Player player) {
@@ -144,7 +142,6 @@ public class VampirismAPI {
     }
 
     /**
-     * @param player
      * @return The respective {@link de.teamlapen.vampirism.api.entity.hunter.IHunter}
      */
     public static LazyOptional<IHunterPlayer> getHunterPlayer(Player player) {

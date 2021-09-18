@@ -5,10 +5,6 @@ import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.*;
-import de.teamlapen.vampirism.client.core.ModBlocksRender;
-import de.teamlapen.vampirism.data.BlockStateGenerator;
-import de.teamlapen.vampirism.data.ItemModelGenerator;
-import de.teamlapen.vampirism.data.LootTablesGenerator;
 import de.teamlapen.vampirism.items.CoffinItem;
 import de.teamlapen.vampirism.util.BlockVoxelshapes;
 import net.minecraft.resources.ResourceLocation;
@@ -217,7 +213,7 @@ public class ModBlocks {
         registry.register(prepareRegister(new VampirismHorizontalBlock("grave_cage", BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL).strength(6, 8).requiresCorrectToolForDrops().sound(SoundType.METAL), BlockVoxelshapes.grave_cage).markDecorativeBlock()));
 
 
-        /**
+        /*
          * TUTORIAL:
          * - Register block here.
          * - Register itemblock in {@link ModBlocks#registerItemBlocks(IForgeRegistry)}

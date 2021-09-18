@@ -14,21 +14,19 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler.Result;
 
 /**
  * Handles skills for Vampirism's IFactionPlayers
@@ -230,7 +228,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     }
 
     /**
-     * @return If an update should be send to the client
+     * @return If an update should be sent to the client
      */
     public boolean isDirty() {
         return dirty;

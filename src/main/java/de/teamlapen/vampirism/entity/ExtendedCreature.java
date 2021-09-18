@@ -17,15 +17,18 @@ import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.capabilities.*;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
@@ -82,7 +85,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     private final boolean canBecomeVampire;
     private boolean poisonousBlood;
     /**
-     * If the blood value of this creatures should be calculated
+     * If the blood value of these creatures should be calculated
      */
     private boolean markForBloodCalculation = false;
     private int maxBlood;

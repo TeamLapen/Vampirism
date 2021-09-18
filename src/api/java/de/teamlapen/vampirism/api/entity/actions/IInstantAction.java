@@ -8,7 +8,7 @@ import net.minecraft.world.entity.PathfinderMob;
 public interface IInstantAction<T extends PathfinderMob & IEntityActionUser> extends IEntityAction {
 
     /**
-     * called to active the action
+     * called to activate the action
      *
      * @param entity for which the action should be activated
      */

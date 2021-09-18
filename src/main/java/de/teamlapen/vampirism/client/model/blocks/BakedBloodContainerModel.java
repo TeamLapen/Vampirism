@@ -1,19 +1,19 @@
 package de.teamlapen.vampirism.client.model.blocks;
 
+import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -37,7 +37,7 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
 
     /**
      * Stores a fluid level -> fluid model array
-     * Filled when the fluid json model is loaded (in {@link ClientEventHandler#onModelBakeEvent(ModelBakeEvent)} )}
+     * Filled when the fluid json model is loaded (in {@link ClientEventHandler#onModelBakeEvent(ModelBakeEvent)})
      */
     public static final BakedModel[] BLOOD_FLUID_MODELS = new BakedModel[FLUID_LEVELS];
     public static final BakedModel[] IMPURE_BLOOD_FLUID_MODELS = new BakedModel[FLUID_LEVELS];

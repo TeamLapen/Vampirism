@@ -3,12 +3,12 @@ package de.teamlapen.vampirism.player.vampire;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAttributes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.food.FoodData;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.level.GameRules;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -49,10 +49,10 @@ public class BloodStats implements IBloodStats {
     }
 
     /**
-     * Change the maximum storeable amount of blood
+     * Change the maximum storable amount of blood
      * Also caps the current blood at this level
      *
-     * @param maxBlood Should be a even number
+     * @param maxBlood Should be an even number
      */
     void setMaxBlood(int maxBlood) {
         this.maxBlood = Math.max(1, maxBlood);
@@ -135,7 +135,6 @@ public class BloodStats implements IBloodStats {
     /**
      * Reads nbt written by either {@link #writeNBTBlood(CompoundTag)} or {@link #writeNBT(CompoundTag)}
      *
-     * @param nbt
      */
     public void readNBT(CompoundTag nbt) {
         if (nbt.contains("bloodLevel")) {
@@ -162,7 +161,6 @@ public class BloodStats implements IBloodStats {
     /**
      * Add exhaustion. Value is multiplied with the EntityAttribute {@link de.teamlapen.vampirism.core.ModAttributes#blood_exhaustion}
      *
-     * @param amount
      */
     void addExhaustion(float amount) {
         this.addExhaustion(amount, false);
@@ -171,7 +169,6 @@ public class BloodStats implements IBloodStats {
     /**
      * Add exhaustion
      *
-     * @param amount
      * @param ignoreModifier If the entity exhaustion attribute {@link de.teamlapen.vampirism.core.ModAttributes#blood_exhaustion} should be ignored
      */
     void addExhaustion(float amount, boolean ignoreModifier) {
@@ -203,7 +200,7 @@ public class BloodStats implements IBloodStats {
             changed = true;
             return true;
         } else if (allowPartial) {
-            bloodLevel = 0; //a is larger than the blood level, so use up as much as possible
+            bloodLevel = 0; //an is larger than the blood level, so use up as much as possible
             changed = true;
         }
         return false;
@@ -212,7 +209,6 @@ public class BloodStats implements IBloodStats {
     /**
      * Write all relevant data to nbt
      *
-     * @param nbt
      */
     void writeNBT(CompoundTag nbt) {
         writeNBTBlood(nbt);
@@ -225,7 +221,6 @@ public class BloodStats implements IBloodStats {
     /**
      * Write only the blood level to nbt
      *
-     * @param nbt
      */
     void writeNBTBlood(CompoundTag nbt) {
         nbt.putInt("bloodLevel", bloodLevel);

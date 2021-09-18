@@ -38,7 +38,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
 
     /**
      * Holds any action in cooldown state. Maps it to the corresponding cooldown timer
-     * Actions represented by any key in this map have to be registered..
+     * Actions represented by any key in this map have to be registerer…
      * Values should be larger 0, they will be counted down and removed if they would hit 0.
      * <p>
      * Keys should be mutually exclusive with {@link #activeTimers}
@@ -178,8 +178,8 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
          * 3) Update the timing for any action that is present in both activeMap and nbt.
          * 4) Override the cooldown map with the server update
          *
-         * To accomplish 1-3 we first iterate over the active actions in the local map and check if they have a updated value in the nbt or if they have been disabled.
-         * Any locally active action is removed from the NBT so after the iteration only actions that are not locally active should be present in the map. Therefore any remaining actions are activated.
+         * To accomplish 1-3 we first iterate over the active actions in the local map and check if they have an updated value in the nbt or if they have been disabled.
+         * Any locally active action is removed from the NBT so after the iteration only actions that are not locally active should be present in the map. Therefore, any remaining actions are activated.
          *
          */
         if (nbt.contains("actions_active")) {
@@ -243,7 +243,6 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      * Saves action timings to nbt
      * Should only be called by the corresponding Capability instance
      *
-     * @param nbt
      */
     public void saveToNbt(CompoundTag nbt) {
 
@@ -304,7 +303,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      * Update the actions
      * Should only be called by the corresponding Capability instance
      *
-     * @return If a sync is recommend, only relevant on server side
+     * @return If a sync is recommended, only relevant on server side
      */
     public boolean updateActions() {
         //First update cooldown timers so active actions that become deactivated are not ticked.
@@ -347,7 +346,6 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      * Writes an update for the client.
      * Should only be called by the corresponding Capability instance
      *
-     * @param nbt
      */
     public void writeUpdateForClient(CompoundTag nbt) {
         nbt.put("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));

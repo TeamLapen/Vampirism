@@ -59,7 +59,7 @@ public class HelperRegistry {
     }
 
     /**
-     * Register a entity {@link Capability} which instances should be synced on world join
+     * Register an entity {@link Capability} which instances should be synced on world join
      * Only works for entities extending {@link net.minecraft.world.entity.PathfinderMob}
      *
      * @param clz Class of the object returned, when {@link net.minecraft.world.entity.player.Player#getCapability(Capability, Direction)} is called on the entity with the given capability
@@ -95,7 +95,6 @@ public class HelperRegistry {
      * Key of a {@link Capability} which implementation implements {@link IPlayerEventListener} and which instances should receive the events.
      * Has to be called before post init.
      *
-     * @param capability
      * @param clz        Class of the object returned, when {@link net.minecraft.world.entity.player.Player#getCapability(Capability, Direction)} is called on the player with the given capability
      */
     @ThreadSafeLibAPI

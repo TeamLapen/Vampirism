@@ -6,17 +6,14 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-
-import de.teamlapen.vampirism.api.items.IItemWithTier.TIER;
-import net.minecraft.world.item.Item.Properties;
 
 /**
  * HolyWaterBottle
@@ -57,8 +54,6 @@ public class HolyWaterBottleItem extends VampirismItem implements IItemWithTier,
     /**
      * Converts the tier of this bottle into the strength of the applied holy water
      *
-     * @param tier
-     * @return
      */
     public EnumStrength getStrength(TIER tier) {
         return switch (tier) {

@@ -8,7 +8,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import javax.annotation.Nonnull;
 
 /**
- * Represents a entity faction (e.g. Vampires)
+ * Represents an entity faction (e.g. Vampires)
  */
 public interface IFaction<T extends IFactionEntity> {
 
@@ -65,7 +65,6 @@ public interface IFaction<T extends IFactionEntity> {
     /**
      * Set the unlocalized name
      *
-     * @param name
      * @return The same instance
      */
     IFaction<T> setTranslationKeys(String name, String plural);

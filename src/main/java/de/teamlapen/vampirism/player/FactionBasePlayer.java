@@ -5,11 +5,11 @@ import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.damagesource.DamageSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -136,17 +136,14 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<?>> implements 
     }
 
     /**
-     * Copy all relevant values from the given player and return a instance of the old players VampirismPlayer, so {@link FactionBasePlayer} can copy it's values as well
+     * Copy all relevant values from the given player and return an instance of the old players VampirismPlayer, so {@link FactionBasePlayer} can copy its values as well
      *
-     * @param old
-     * @return
      */
     protected abstract FactionBasePlayer<T> copyFromPlayer(Player old);
 
     /**
      * Can be overridden to load data from updates in subclasses
      *
-     * @param nbt
      */
     protected void loadUpdate(CompoundTag nbt) {
     }
@@ -154,7 +151,6 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<?>> implements 
     /**
      * Sync the capability using the given data
      *
-     * @param data
      * @param all  Whether all tracking players should receive this packet or only the representing player
      */
     protected void sync(CompoundTag data, boolean all) {
@@ -164,7 +160,6 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<?>> implements 
     /**
      * Can be overridden to put data into updates in subclasses
      *
-     * @param nbt
      */
     protected void writeFullUpdate(CompoundTag nbt) {
     }

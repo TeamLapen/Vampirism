@@ -55,7 +55,7 @@ public interface ITaskInstance {
     long getTaskDuration();
 
     /**
-     * gets the time this instance is not longer available
+     * gets the time this instance is no longer available
      * <p>
      * <0 when this task is not accepted
      */
@@ -79,7 +79,7 @@ public interface ITaskInstance {
     /**
      * sets the active status and timestamp
      *
-     * @param timeStamp the gametime this task is not longer completable
+     * @param timeStamp the game time this task is no longer completable
      */
     void startTask(long timeStamp);
 

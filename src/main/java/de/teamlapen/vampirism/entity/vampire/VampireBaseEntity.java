@@ -20,34 +20,28 @@ import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
-import net.minecraft.world.*;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.server.level.ServerLevel;
-
-import javax.annotation.Nonnull;
-import java.util.Random;
-
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.MobType;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.npc.Npc;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+
+import javax.annotation.Nonnull;
+import java.util.Random;
 
 /**
  * Base class for Vampirism's vampire entities
@@ -259,8 +253,6 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     /**
      * Calculates the increased fire damage is this vampire creature is especially vulnerable to fire
      *
-     * @param amount
-     * @return
      */
     protected float calculateFireDamage(float amount) {
         return amount;

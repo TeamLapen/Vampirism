@@ -16,19 +16,19 @@ import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.resources.model.BlockModelRotation;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -55,7 +55,7 @@ public class ClientEventHandler {
     public static void onModelBakeEvent(ModelBakeEvent event) {
         /*
          * Not really a clean solution but it works
-         * Bake the each model, then replace the fluid texture with impure blood, then bake it again.
+         * Bake each model, then replace the fluid texture with impure blood, then bake it again.
          * Use {@link BakedBloodContainerModel} to render to appropriate one
          */
         try {

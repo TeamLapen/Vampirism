@@ -17,7 +17,7 @@ public class ModAttributes {
      */
     public static final RangedAttribute sundamage = getNull();
     /**
-     * Allows modifying the blood exhaustion. Is multiplied with with the value calculated (from movement etc.).
+     * Allows modifying the blood exhaustion. Is multiplied with the value calculated (from movement etc.).
      * Registered for EntityPlayer
      */
     public static final RangedAttribute blood_exhaustion = getNull();

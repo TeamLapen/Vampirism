@@ -20,7 +20,7 @@ public class IntegrationsNotifier {
      * Checks if it is installed, if there are any mods with potential compat installed and if there already was a notification about these mods
      * Only call after pre-init
      *
-     * @return Empty list if no notification. Otherwise list of installed mod ids with potential compat
+     * @return Empty list if no notification. Otherwise, list of installed mod ids with potential compat
      */
     public static List<String> shouldNotifyAboutIntegrations() {
         if (!ModList.get().isLoaded(REFERENCE.INTEGRATIONS_MODID)) {
@@ -44,7 +44,6 @@ public class IntegrationsNotifier {
      * Check if a notification regarding all the given mods has been displayed already.
      * If not add the given mods to the already notified mod list
      *
-     * @param mods
      * @return If already notified
      */
     private static boolean checkAndUpdateAlreadyNotified(List<String> mods) {

@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.client.model.blocks;
 
-import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.blockentity.AltarInspirationBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
+import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -32,7 +32,7 @@ public class BakedAltarInspirationModel implements IDynamicBakedModel {
 
     /**
      * Stores a fluid level -> fluid model array
-     * Filled when the fluid json model is loaded (in {@link ClientEventHandler#onModelBakeEvent(ModelBakeEvent)} )}
+     * Filled when the fluid json model is loaded (in {@link ClientEventHandler#onModelBakeEvent(ModelBakeEvent)})
      */
     public static final BakedModel[] FLUID_MODELS = new BakedModel[FLUID_LEVELS];
 

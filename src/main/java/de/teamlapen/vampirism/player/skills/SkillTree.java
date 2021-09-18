@@ -119,7 +119,7 @@ public class SkillTree {
                     }
                 }
             }
-            if (!flag) {//Went though all builders but could not create a single one. So we can stop here
+            if (!flag) {//Went through all builders but could not create a single one. So we can stop here
                 for (Map.Entry<ResourceLocation, SkillNode.Builder> entry : nodes.entrySet()) {
                     LOGGER.error("Could not load skill node (probably parent invalid) {}: {}", entry.getKey(), entry.getValue());
                 }

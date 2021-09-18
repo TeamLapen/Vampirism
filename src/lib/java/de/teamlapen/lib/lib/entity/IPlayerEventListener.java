@@ -1,10 +1,10 @@
 package de.teamlapen.lib.lib.entity;
 
 
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.event.TickEvent;
@@ -20,14 +20,14 @@ public interface IPlayerEventListener {
     void onDeath(DamageSource src);
 
     /**
-     * Called when the corrosponding player is attacked.
+     * Called when the corresponding player is attacked.
      *
      * @return If true the damage will be canceled
      */
     boolean onEntityAttacked(DamageSource src, float amt);
 
     /**
-     * Called when the player killed an living entity
+     * Called when the player killed a living entity
      *
      * @param victim The killed entity
      * @param src    The lethal damage source
@@ -52,7 +52,6 @@ public interface IPlayerEventListener {
      * Called at the beginning and at the end of {@link Player}'s onUpdate. {@link IPlayerEventListener#onUpdate()} is called in between.
      * Should only be used for stuff that requires to run at the beginning or end
      *
-     * @param phase
      */
     void onUpdatePlayer(TickEvent.Phase phase);
 }

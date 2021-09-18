@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -66,8 +66,6 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
     /**
      * Save this. It's required for rendering
      *
-     * @param row
-     * @param column
      */
     void setRenderPos(int row, int column);
 }

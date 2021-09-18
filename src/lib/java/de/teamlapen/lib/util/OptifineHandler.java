@@ -29,7 +29,7 @@ public class OptifineHandler {
         }
         try {
             Class<?> configClass = Class.forName("net.optifine.Config");
-            isLoaded = true; //If no exception is thrown the class is present and we expect Optifine to be active
+            isLoaded = true; //If no exception is thrown the class is present, so we expect Optifine to be active
             try {
                 method_isShaders = configClass.getDeclaredMethod("isShaders");
             } catch (NoSuchMethodException e) {

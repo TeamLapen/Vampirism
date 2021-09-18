@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Represents a entity faction (e.g. Vampires)
+ * Represents an entity faction (e.g. Vampires)
  */
 public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private static int nextId = 0;
@@ -23,7 +23,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private final int color;
     private final boolean hostileTowardsNeutral;
     /**
-     * Id used for hashing
+     * ID used for hashing
      */
     private final int integerId;
     @Nonnull

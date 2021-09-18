@@ -2,14 +2,14 @@ package de.teamlapen.lib.network;
 
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.network.ISyncable;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 /**
- * Request a update packet for the players {@link ISyncable.ISyncableEntityCapabilityInst} (e.g. on World join)
+ * Request an update packet for the players {@link ISyncable.ISyncableEntityCapabilityInst} (e.g. on World join)
  */
 public class RequestPlayerUpdatePacket implements IMessage {
 

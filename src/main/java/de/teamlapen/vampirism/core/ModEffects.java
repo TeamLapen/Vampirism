@@ -5,8 +5,13 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.effects.*;
 import de.teamlapen.vampirism.util.SRGNAMES;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
@@ -14,12 +19,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
-
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.item.alchemy.Potions;
 
 /**
  * Handles all potion registrations and reference.
@@ -83,7 +82,6 @@ public class ModEffects {
             Issue with JEI/Bug
             Annoying Forge warning
         2) Update the potion object in these potion types using reflection
-            Reflection :/
 
         Using 2) for now
         */

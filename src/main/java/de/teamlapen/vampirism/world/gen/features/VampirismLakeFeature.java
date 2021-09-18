@@ -1,20 +1,20 @@
 package de.teamlapen.vampirism.world.gen.features;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.levelgen.BaseStoneSource;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
-import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.BaseStoneSource;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.LakeFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration;
+import net.minecraft.world.level.material.Material;
 
 import java.util.Random;
 
@@ -113,7 +113,7 @@ public class VampirismLakeFeature extends LakeFeature {
                                 if (isDirt(worldgenlevel.getBlockState(blockpos3)) && worldgenlevel.getBrightness(LightLayer.SKY, blockpos.offset(i2, i4, i3)) > 0) {
                                     Biome biome = worldgenlevel.getBiome(blockpos3);
 // ---------------------------------------------------------------------------------------------------------------------
-// --------------------------------------------------------- Replace Grass block with top material ---------------------
+// --------------------------------------------------------- Replace Grass Block with top material ---------------------
                                     worldgenlevel.setBlock(blockpos, biome.getGenerationSettings().getSurfaceBuilderConfig().getTopMaterial(), 2);
 // ---------------------------------------------------------------------------------------------------------------------
                                 }

@@ -7,11 +7,11 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTags;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.phys.AABB;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +25,7 @@ import java.util.Set;
 
 /**
  * Manages biteable entries.
- * Get's values from various sources
+ * Get values from various sources
  * Static values present in datapacks from {@link BloodValues#ENTITIES}
  * Dynamically calculated values from itself
  * Dynamically saved values on world load from {@link BloodValues#ENTITIES}}

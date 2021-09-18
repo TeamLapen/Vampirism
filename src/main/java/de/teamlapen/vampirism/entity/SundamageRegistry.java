@@ -3,12 +3,12 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.Registry;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -91,8 +91,6 @@ public class SundamageRegistry implements ISundamageRegistry {
     /**
      * Adds settings from Vampirism's config file.
      *
-     * @param dimension
-     * @param sundamage
      */
     public void specifyConfiguredSundamageForDim(ResourceKey<Level> dimension, boolean sundamage) {
         sundamageConfiguredDims.put(dimension, sundamage);

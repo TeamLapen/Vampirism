@@ -4,8 +4,8 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
@@ -23,7 +23,6 @@ public class DifficultyCalculator {
     /**
      * Can be null if no players are found
      *
-     * @param playerList
      * @return a difficulty level based on the given player's faction levels
      */
     private static
@@ -55,7 +54,6 @@ public class DifficultyCalculator {
     /**
      * Can be null if no players are found
      *
-     * @param w
      * @return A difficulty level based on the world's player's faction levels
      */
     public static Difficulty getWorldDifficulty(Level w) {
@@ -90,10 +88,6 @@ public class DifficultyCalculator {
      * Tries to find a difficulty for the given position, by checking local area, world and then sever. If none returns a difficulty a zero difficulty is returned.
      * ONLY CALLED SERVER SIDE
      *
-     * @param world
-     * @param pos
-     * @param radius
-     * @return
      */
     public static
     @Nonnull
