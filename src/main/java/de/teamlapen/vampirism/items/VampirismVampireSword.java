@@ -58,7 +58,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     /**
      * Minimal strength modifier
      */
-    private final float minStrength = 0.2f;
+    private static final float minStrength = 0.2f;
     /**
      * Minimal speed modifier
      */

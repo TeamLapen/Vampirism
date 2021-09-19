@@ -32,7 +32,7 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
     @Override
     public void initializeClient(Consumer<IItemRenderProperties> consumer) {
         consumer.accept(new IItemRenderProperties() {
-                            @SuppressWarnings({"DuplicateBranchesInSwitch", "SwitchStatementWithTooFewBranches", "UnnecessaryDefault"})
+                            @SuppressWarnings({"DuplicateBranchesInSwitch", "SwitchStatementWithTooFewBranches", "UnnecessaryDefault", "unchecked"})
                             @Override
                             public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
                                 return switch (model) {

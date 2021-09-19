@@ -81,6 +81,7 @@ public class BalanceBuilder {
 
                 }
                 Conf c = stringConfEntry.getValue();
+                @SuppressWarnings("unchecked")
                 Consumer<Conf> modifier = (Consumer<Conf>) balanceModifications.get(fullName);
                 if (modifier != null) {
                     try {

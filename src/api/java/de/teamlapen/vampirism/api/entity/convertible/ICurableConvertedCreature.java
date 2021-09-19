@@ -44,6 +44,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
      */
     default T createCuredEntity(PathfinderMob entity, EntityType<T> newType) {
         T newEntity = newType.create(entity.level);
+        assert newEntity != null;
         newEntity.load(entity.saveWithoutId(new CompoundTag()));
         newEntity.yBodyRot = entity.yBodyRot;
         newEntity.yHeadRot = entity.yHeadRot;

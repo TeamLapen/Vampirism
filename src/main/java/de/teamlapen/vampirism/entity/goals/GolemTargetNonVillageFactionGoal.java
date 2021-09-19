@@ -29,12 +29,13 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
         this.golem = creature;
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public boolean canUse() {
         IFaction<?> faction = VReference.HUNTER_FACTION;
         if (VampirismConfig.BALANCE.golemAttackNonVillageFaction.get()) {
             Optional<TotemBlockEntity> tile = TotemHelper.getTotemNearPos(((ServerLevel) this.golem.level), this.golem.blockPosition(), true);
-            faction = tile.map(TotemBlockEntity::getControllingFaction).orElse(((IFaction) VReference.HUNTER_FACTION));
+            faction = tile.map(TotemBlockEntity::getControllingFaction).orElse(((IFaction) VReference.HUNTER_FACTION)); // Raw type because otherwise it does not work
         }
 
         if (faction != this.faction) {

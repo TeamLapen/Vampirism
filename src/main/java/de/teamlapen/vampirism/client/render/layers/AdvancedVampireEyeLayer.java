@@ -22,13 +22,10 @@ import javax.annotation.Nonnull;
 @OnlyIn(Dist.CLIENT)
 public class AdvancedVampireEyeLayer extends RenderLayer<AdvancedVampireEntity, HumanoidModel<AdvancedVampireEntity>> {
 
-    private final RenderLayerParent<AdvancedVampireEntity, HumanoidModel<AdvancedVampireEntity>> renderer;
-
     private final ResourceLocation[] overlays;
 
     public AdvancedVampireEyeLayer(RenderLayerParent<AdvancedVampireEntity, HumanoidModel<AdvancedVampireEntity>> renderer) {
         super(renderer);
-        this.renderer = renderer;
         overlays = new ResourceLocation[REFERENCE.EYE_TYPE_COUNT];
         for (int i = 0; i < overlays.length; i++) {
             overlays[i] = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vanilla/eyes" + (i) + ".png");

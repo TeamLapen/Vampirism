@@ -25,7 +25,8 @@ import javax.annotation.Nullable;
 @OnlyIn(Dist.CLIENT)
 public class FlyingBloodEntityParticle extends TextureSheetParticle {
     private static final Logger LOGGER = LogManager.getLogger();
-    private final int MAX_AGE = 60;
+    private static final int MAX_AGE = 60;
+
     private final Entity entity;
 
     public FlyingBloodEntityParticle(ClientLevel world, double posX, double posY, double posZ, Entity entity, boolean direct) {

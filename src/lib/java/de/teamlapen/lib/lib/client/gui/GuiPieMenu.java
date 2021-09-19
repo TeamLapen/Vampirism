@@ -30,28 +30,28 @@ import java.util.ArrayList;
  */
 @OnlyIn(Dist.CLIENT)
 public abstract class GuiPieMenu<T> extends Screen {
-    private final static ResourceLocation backgroundTex = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/pie_menu_bg.png");
-    private final static ResourceLocation centerTex = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/pie_menu_center.png");
+    private static final ResourceLocation backgroundTex = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/pie_menu_bg.png");
+    private static final ResourceLocation centerTex = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/pie_menu_center.png");
     private static final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");
-    protected final ArrayList<T> elements;
-
-    protected final Color backgroundColor;
     /**
      * transparency of the background
      */
-    private final float BGT = 0.7f;
+    private static final float BGT = 0.7f;
     /**
      * Size of the background image
      */
-    private final int BGS = 300;
+    private static final int BGS = 300;
     /**
      * Radius of the ring in the middle
      */
-    private final int RR = 60;
+    private static final int RR = 60;
     /**
      * Size of the images for the center
      */
-    private final int CS = 100;
+    private static final int CS = 100;
+
+    protected final ArrayList<T> elements;
+    protected final Color backgroundColor;
 
     private int selectedElement = -1;
     private int elementCount;

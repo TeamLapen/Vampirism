@@ -63,11 +63,11 @@ import java.util.*;
 @OnlyIn(Dist.CLIENT)
 public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills_window.png");
-    private final int area_min_y = -77;
-    private final int skill_width = 24;
+    private static final int area_min_y = -77;
+    private static final int skill_width = 24;
+    private static final int display_width = 256;
+    private static final int display_height = 202;
     private final List<SkillNode> skillNodes = new ArrayList<>();
-    private final int display_width = 256;
-    private final int display_height = 202;
     @Nullable
     private final Screen backScreen;
     private final Map<ISkill<?>, List<Component>> skillToolTipsCache = new HashMap<>();
@@ -82,7 +82,6 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
     private SkillHandler<T> skillHandler;
     private boolean display;
     private ISkill<T> selected;
-    private SkillNode selectedNode;
     private int displayXWidth;
     private int displayYHeight;
     @Nullable
@@ -526,7 +525,7 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
         }
         //Draw information for selected skill
         selected = newSelected;
-        selectedNode = newSelectedNode;
+        SkillNode selectedNode = newSelectedNode;
         if (selected != null) {
             stack.pushPose();
             stack.translate(0, 0, 1); //Render tooltips in front of buttons

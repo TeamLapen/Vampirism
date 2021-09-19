@@ -83,6 +83,7 @@ public class ModEntityEventHandler {
         }
         if (target != null) {
             e.targetSelector.removeGoal(target);
+            @SuppressWarnings("unchecked")
             EntityType<? extends T> type = (EntityType<? extends T>) e.getType();
             if (typeCheck.test(type)) {
                 e.targetSelector.addGoal(attackPriority, replacement.apply(e, nonVampireCheck));
@@ -193,6 +194,7 @@ public class ModEntityEventHandler {
             if (VampirismConfig.BALANCE.creeperIgnoreVampire.get()) {
                 if (event.getEntity() instanceof Creeper) {
                     ((Creeper) event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>((Creeper) event.getEntity(), Player.class, 20, 1.1, 1.3, Helper::isVampire));
+                    //noinspection unchecked
                     makeVampireFriendly("creeper", (Creeper) event.getEntity(), NearestAttackableTargetGoal.class, Player.class, 1, (entity, predicate) -> new NearestAttackableTargetGoal<>(entity, Player.class, 10, true, false, predicate), type -> type == EntityType.CREEPER);
 
                     return;
@@ -202,8 +204,10 @@ public class ModEntityEventHandler {
             //Zombie AI changes
             if (VampirismConfig.BALANCE.zombieIgnoreVampire.get()) {
                 if (event.getEntity() instanceof Zombie) {
+                    //noinspection unchecked
                     makeVampireFriendly("zombie", (Zombie) event.getEntity(), NearestAttackableTargetGoal.class, Player.class, 2, (entity, predicate) -> entity instanceof Drowned ? new NearestAttackableTargetGoal<>(entity, Player.class, 10, true, false, predicate.and(((Drowned) entity)::okTarget)) : new NearestAttackableTargetGoal<>(entity, Player.class, 10, true, false, predicate), type -> type == EntityType.ZOMBIE || type == EntityType.HUSK || type == EntityType.ZOMBIE_VILLAGER || type == EntityType.DROWNED);
                     //Also replace attack villager task for entities that have it
+                    //noinspection unchecked
                     makeVampireFriendly("villager zombie", (Zombie) event.getEntity(), NearestAttackableTargetGoal.class, AbstractVillager.class, 3, (entity, predicate) -> new NearestAttackableTargetGoal<>(entity, AbstractVillager.class, 10, true, false, predicate), type -> type == EntityType.ZOMBIE || type == EntityType.HUSK || type == EntityType.ZOMBIE_VILLAGER || type == EntityType.DROWNED);
                     return;
                 }
@@ -211,6 +215,7 @@ public class ModEntityEventHandler {
 
             if (VampirismConfig.BALANCE.skeletonIgnoreVampire.get()) {
                 if (event.getEntity() instanceof Skeleton) {
+                    //noinspection unchecked
                     makeVampireFriendly("skeleton", (Skeleton) event.getEntity(), NearestAttackableTargetGoal.class, Player.class, 2, (entity, predicate) -> new NearestAttackableTargetGoal<>(entity, Player.class, 10, true, false, predicate), type -> type == EntityType.SKELETON);
                 }
             }
@@ -243,6 +248,7 @@ public class ModEntityEventHandler {
                 if (tile.filter(t -> VReference.HUNTER_FACTION.equals(t.getControllingFaction())).isPresent()) {
                     ExtendedCreature.getSafe(event.getEntity()).ifPresent(e -> e.setPoisonousBlood(true));
                 }
+                //noinspection UnnecessaryReturnStatement
                 return;
             }
         }

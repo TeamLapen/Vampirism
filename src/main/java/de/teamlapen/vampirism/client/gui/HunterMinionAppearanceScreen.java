@@ -33,6 +33,7 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
     private Checkbox useLordSkinButton;
     private EditBox nameWidget;
     private int normalSkinCount;
+    @SuppressWarnings("FieldCanBeLocal")
     private int minionSkinCount;
 
     public HunterMinionAppearanceScreen(HunterMinionEntity minion, Screen backScreen) {

@@ -88,6 +88,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         if (!this.level.isClientSide && this.isAlive() && this.isConverting(this)) {
             --this.conversionTime;
             if (this.conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(this, EntityType.VILLAGER, (timer) -> this.conversionTime = timer)) {
+                //noinspection unchecked
                 this.cureEntity((ServerLevel) this.level, this, ((EntityType<T>) entityCreature.getType()));
             }
         }
@@ -169,6 +170,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     @Override
     public void loadUpdateFromNBT(CompoundTag nbt) {
         if (nbt.contains("entity_old")) {
+            //noinspection unchecked
             setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), getCommandSenderWorld()).orElse(null));
         }
     }
@@ -177,6 +179,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     public void readAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         if (nbt.contains("entity_old")) {
+            //noinspection unchecked
             setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), level).orElse(null));
             if (nil()) {
                 LOGGER.warn("Failed to create old entity {}. Maybe the entity does not exist anymore", nbt.getCompound("entity_old"));
@@ -386,6 +389,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static class IMob extends ConvertedCreatureEntity implements net.minecraft.world.entity.monster.Enemy {
 
         public IMob(EntityType<? extends ConvertedCreatureEntity> type, Level world) {

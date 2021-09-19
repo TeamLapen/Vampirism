@@ -386,6 +386,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     private boolean checkStructureLevel(int required) {
         if (level == null) return false;
         BlockPos[] tips = findTips();
+        @SuppressWarnings("unchecked")
         ValuedObject<BlockPos>[] valuedTips = new ValuedObject[tips.length];
         for (int i = 0; i < tips.length; i++) {
             BlockPos pPos = tips[i];

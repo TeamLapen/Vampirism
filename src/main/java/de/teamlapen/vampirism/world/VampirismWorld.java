@@ -91,6 +91,7 @@ public class VampirismWorld implements IVampirismWorld {
     }
 
     // VampireFog
+    @SuppressWarnings("FieldCanBeLocal")
     @Nonnull
     private final Level world;
     // Garlic Handler ------------

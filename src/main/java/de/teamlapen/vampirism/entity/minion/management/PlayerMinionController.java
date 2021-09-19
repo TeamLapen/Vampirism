@@ -132,6 +132,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
             int entityId = entity.getId();
             ResourceKey<Level> dimension = entity.level.dimension();
             if (i.checkout(entityId, dimension)) {
+                //noinspection unchecked
                 return (T) i.data;
             }
         }
@@ -498,6 +499,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
 
     }
 
+    @SuppressWarnings("unchecked")
     private <Q extends IMinionTask.IMinionTaskDesc<MinionData>, T extends IMinionTask<Q, MinionData>> void tickTask(T task, IMinionTask.IMinionTaskDesc<MinionData> desc, MinionInfo info) {
         if (info.isActive()) {
             task.tickActive((Q) desc, () -> getMinionEntity(info).map(m -> m), info.data);

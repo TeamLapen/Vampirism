@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  * Hunter Trainer which allows Hunter players to level up
  */
 public class DummyHunterTrainerEntity extends VampirismEntity implements ICaptureIgnore {
-    private final int MOVE_TO_RESTRICT_PRIO = 3;
+    private static final int MOVE_TO_RESTRICT_PRIO = 3;
 
     public DummyHunterTrainerEntity(EntityType<? extends DummyHunterTrainerEntity> type, Level world) {
         super(type, world);

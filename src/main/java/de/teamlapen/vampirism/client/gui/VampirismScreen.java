@@ -40,10 +40,9 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
 
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/vampirism_menu.png");
     private static final ResourceLocation BACKGROUND_REFINEMENTS = new ResourceLocation(REFERENCE.MODID, "textures/gui/vampirism_menu_refinements.png");
+    private static final int display_width = 234;
+    private static final int display_height = 205;
 
-
-    private final int display_width = 234;
-    private final int display_height = 205;
     private final IFactionPlayer<?> factionPlayer;
     private int oldMouseX;
     private int oldMouseY;

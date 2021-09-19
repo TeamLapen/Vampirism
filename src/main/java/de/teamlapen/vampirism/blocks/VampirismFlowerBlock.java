@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
  * Vampirism's flowers. To add one add it to {@link TYPE}
  */
 public class VampirismFlowerBlock extends FlowerBlock {
+    @SuppressWarnings("FieldCanBeLocal")
     private final TYPE type;
 
     public VampirismFlowerBlock(TYPE type) {

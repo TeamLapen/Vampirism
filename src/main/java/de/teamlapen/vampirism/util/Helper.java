@@ -178,6 +178,7 @@ public class Helper {
     /**
      * @return Checks if all given skills are enabled
      */
+    @SafeVarargs
     public static <T extends IFactionPlayer<T>> boolean areSkillsEnabled(ISkillHandler<T> skillHandler, ISkill<T>... skills) {
         if (skills == null) return true;
         for (ISkill<T> skill : skills) {

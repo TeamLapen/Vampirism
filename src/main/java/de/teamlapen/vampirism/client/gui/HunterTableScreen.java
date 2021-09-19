@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 @OnlyIn(Dist.CLIENT)
 public class HunterTableScreen extends AbstractContainerScreen<HunterTableContainer> {
     private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_table.png");
+    @SuppressWarnings("FieldCanBeLocal")
     private final ContainerLevelAccess worldPos;
 
     public HunterTableScreen(HunterTableContainer inventorySlotsIn, Inventory playerInventory, Component name) {

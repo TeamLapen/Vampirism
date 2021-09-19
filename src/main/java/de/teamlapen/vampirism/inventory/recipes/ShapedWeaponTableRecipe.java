@@ -12,7 +12,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.registries.ForgeRegistryEntry;
@@ -119,7 +122,7 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
 
     @Nonnull
     @Override
-    public RecipeType<? extends Recipe> getType() {
+    public RecipeType<IWeaponTableRecipe> getType() {
         return ModRecipes.WEAPONTABLE_CRAFTING_TYPE;
     }
 

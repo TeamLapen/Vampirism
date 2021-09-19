@@ -20,9 +20,11 @@ import org.apache.commons.lang3.tuple.Pair;
  */
 @OnlyIn(Dist.CLIENT)
 public class BasicHunterRenderer extends DualBipedRenderer<BasicHunterEntity, BasicHunterModel<BasicHunterEntity>> {
+
+    private static final ResourceLocation textureCloak = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_cloak.png");
+
     private final Pair<ResourceLocation, Boolean> textureDefault = Pair.of(new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base1.png"), false);
     private final Pair<ResourceLocation, Boolean>[] textures;
-    private final ResourceLocation textureCloak = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_cloak.png");
 
     public BasicHunterRenderer(EntityRendererProvider.Context context) {
         super(context, new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER), false), new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER_SLIM), true), 0.5F);

@@ -31,11 +31,11 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     public final static float BAT_EYE_HEIGHT = 0.85F * 0.6f;
     public static final EntityDimensions BAT_SIZE = EntityDimensions.fixed(0.8f, 0.6f);
 
+    private static final float PLAYER_WIDTH = 0.6F;
+    private static final float PLAYER_HEIGHT = 1.8F;
 
     private final UUID armorModifierUUID = UUID.fromString("4392fccb-4bfd-4290-b2e6-5cc91439053c");
     private final UUID armorToughnessModifierUUID = UUID.fromString("6d3df16d-85e4-4b99-b2fc-301818697a6d");
-    private final float PLAYER_WIDTH = 0.6F;
-    private final float PLAYER_HEIGHT = 1.8F;
 
     public BatVampireAction() {
         super();

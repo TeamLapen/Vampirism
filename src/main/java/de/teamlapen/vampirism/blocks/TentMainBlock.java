@@ -32,14 +32,15 @@ public class TentMainBlock extends TentBlock implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, @Nonnull BlockState p_153213_, @Nonnull BlockEntityType<T> p_153214_) {
-        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModTiles.tent, TentBlockEntity::serverTick);
+        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, TentBlockEntity::serverTick);
     }
 
     /**
-     * Need this to convince generics. Copy from BaseEntityBlock
+     * Need this to convince generics. Copy from {@link net.minecraft.world.level.block.BaseEntityBlock}
      */
+    @SuppressWarnings("unchecked")
     @Nullable
-    private static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> p_152133_, BlockEntityType<E> p_152134_, BlockEntityTicker<? super E> p_152135_) {
-        return p_152134_ == p_152133_ ? (BlockEntityTicker<A>) p_152135_ : null;
+    private static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> type1, BlockEntityTicker<? super E> ticker) {
+        return ModTiles.tent == type1 ? (BlockEntityTicker<A>) ticker : null;
     }
 }

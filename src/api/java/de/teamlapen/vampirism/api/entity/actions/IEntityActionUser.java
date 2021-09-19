@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface IEntityActionUser extends IAdjustableLevel, IFactionEntity {
 
+    @SuppressWarnings("ConstantConditions")
     static <T extends LivingEntity & IEntityActionUser> void applyAttributes(T entity) {
         entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(entity.getEntityClass().getHealthModifier());
         entity.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(entity.getEntityClass().getDamageModifier());

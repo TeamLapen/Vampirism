@@ -94,6 +94,7 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
     /**
      * activates the {@link ActionHandlerEntity#action}
      */
+    @SuppressWarnings("unchecked")
     private void activateAction() {
         if (action instanceof ILastingAction) {
             ((ILastingAction<T>) action).activate(entity);
@@ -134,6 +135,7 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
     /**
      * reset the given {@link IEntityAction} or if null, reset the {@link ActionHandlerEntity#action}
      */
+    @SuppressWarnings("unchecked")
     private void deactivateAction(@Nullable IEntityAction actionIn) {
         IEntityAction action = actionIn != null ? actionIn : this.action;
         if (action instanceof ILastingAction) {
@@ -144,6 +146,7 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
     /**
      * updates the {@link ActionHandlerEntity#action}
      */
+    @SuppressWarnings("unchecked")
     private void updateAction() {
         if (action instanceof ILastingAction) {
             ((ILastingAction<T>) action).onUpdate(entity, duration);
@@ -187,6 +190,7 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
             preActivation = action.getPreActivationTime();
             minimumHealthThreshold = (float) (entity.getHealth() - (entity.getMaxHealth() * VampirismConfig.BALANCE.eaHealthThreshold.get()));
             if (action instanceof ILastingAction) {
+                //noinspection unchecked
                 duration = ((ILastingAction<T>) action).getDuration(entity.getLevel());
             }
         }
@@ -195,6 +199,7 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
     /**
      * updates the {@link ActionHandlerEntity#action}
      **/
+    @SuppressWarnings("unchecked")
     private void updatePreAction() {
         if (action instanceof ILastingAction) {
             ((ILastingAction<T>) action).updatePreAction(entity, preActivation);

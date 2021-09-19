@@ -17,6 +17,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+@SuppressWarnings("FieldCanBeLocal")
 @OnlyIn(Dist.CLIENT)
 public class CoffinModel extends Model {
 

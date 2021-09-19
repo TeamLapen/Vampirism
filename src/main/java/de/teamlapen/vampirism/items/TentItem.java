@@ -33,6 +33,7 @@ public class TentItem extends VampirismItem {
     private static final String name = "item_tent";
     private static final String name_spawner = "item_tent_spawner";
 
+    @SuppressWarnings("DuplicateExpressions")
     public static boolean placeAt(LevelAccessor world, BlockPos pos, Direction dir, boolean force, boolean spawner) {
         int x = pos.getX();
         int y = pos.getY();

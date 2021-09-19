@@ -12,8 +12,8 @@ import java.util.List;
 
 public class MoveToBiteableVampireGoal<T extends Mob & IVampireMob> extends Goal {
 
-
     private final T vampire;
+    @SuppressWarnings("FieldCanBeLocal")
     private final double movementSpeed;
     private PathfinderMob target;
     private int timeout;

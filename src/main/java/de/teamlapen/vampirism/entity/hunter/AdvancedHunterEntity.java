@@ -62,6 +62,8 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<String> NAME = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.STRING);
+    private static final int MAX_LEVEL = 1;
+    private static final int MOVE_TO_RESTRICT_PRIO = 3;
 
     public static AttributeSupplier.Builder getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder()
@@ -69,9 +71,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE)
                 .add(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.ADVANCED_HUNTER_SPEED);
     }
-
-    private final int MAX_LEVEL = 1;
-    private final int MOVE_TO_RESTRICT_PRIO = 3;
     /**
      * available actions for AI task & task
      */

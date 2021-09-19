@@ -31,6 +31,7 @@ public class HunterHatItem extends VampirismHunterArmor {
     @Override
     public void initializeClient(Consumer<IItemRenderProperties> consumer) {
         consumer.accept(new IItemRenderProperties() {
+                            @SuppressWarnings("unchecked")
                             @Override
                             public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
                                 return (A) (type == 0 ? HunterHatModel.getInstance0() : HunterHatModel.getInstance1());

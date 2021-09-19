@@ -29,6 +29,7 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
     private Checkbox lordSkinButton;
     private EditBox nameWidget;
     private int normalSkinCount;
+    @SuppressWarnings("FieldCanBeLocal")
     private int minionSkinCount;
 
     public VampireMinionAppearanceScreen(VampireMinionEntity minion, Screen backScreen) {

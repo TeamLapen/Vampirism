@@ -104,7 +104,7 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("master_brewer", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("swift_brewing", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("concentrated_durable_brewing", true));
-        registry.register(new ActionSkill<IHunterPlayer>("potion_resistance", HunterActions.potion_resistance_hunter, true));
+        registry.register(new ActionSkill<>("potion_resistance", HunterActions.potion_resistance_hunter, true));
     }
 
     public static void fixMappings(RegistryEvent.MissingMappings<ISkill<?>> event) {

@@ -15,8 +15,9 @@ import javax.annotation.Nonnull;
 /**
  * Renders a converted creature, by rendering its old creature
  */
+@SuppressWarnings("rawtypes")
 @OnlyIn(Dist.CLIENT)
-public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureEntity> {
+public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureEntity> { // RawType because of ConvertedCreatureEntity#IMob
     public static boolean renderOverlay = false;
 
     public ConvertedCreatureRenderer(EntityRendererProvider.Context context) {
@@ -24,6 +25,7 @@ public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureE
     }
 
 
+    @SuppressWarnings("ConstantConditions")
     @Nonnull
     @Override
     public ResourceLocation getTextureLocation(@Nonnull ConvertedCreatureEntity entity) {

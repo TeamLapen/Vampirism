@@ -12,7 +12,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class ConvertedVillagerRenderer extends VillagerRenderer {
 
-    private final ResourceLocation overlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/vanilla/villager_overlay.png");
+    private static final ResourceLocation overlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/vanilla/villager_overlay.png");
 
     public ConvertedVillagerRenderer(EntityRendererProvider.Context context) {
         super(context);

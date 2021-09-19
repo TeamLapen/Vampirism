@@ -64,6 +64,8 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     private static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(BasicVampireEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(BasicVampireEntity.class, EntityDataSerializers.INT);
+    private static final int MAX_LEVEL = 2;
+    private static final int ANGRY_TICKS_PER_ATTACK = 120;
 
     public static AttributeSupplier.Builder getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
@@ -72,8 +74,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                 .add(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.VAMPIRE_SPEED);
     }
 
-    private final int MAX_LEVEL = 2;
-    private final int ANGRY_TICKS_PER_ATTACK = 120;
     /**
      * available actions for AI task & task
      */

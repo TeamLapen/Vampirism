@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 
+@SuppressWarnings("ClassCanBeRecord")
 public class FactionArgument implements ArgumentType<IFaction<?>> {
     private static final Collection<String> EXAMPLES = Arrays.asList("vampirism:vampire", "vampirism:hunter");
 

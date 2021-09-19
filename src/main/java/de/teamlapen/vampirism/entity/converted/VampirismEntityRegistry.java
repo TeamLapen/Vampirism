@@ -47,7 +47,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     /**
      * Stores custom extended creature constructors after {@link InterModEnqueueEvent}
      */
-    private final Map<Class<? extends PathfinderMob>, Function> extendedCreatureConstructors = new ConcurrentHashMap<>();
+    private final Map<Class<? extends PathfinderMob>, Function<? extends PathfinderMob,IExtendedCreatureVampirism>> extendedCreatureConstructors = new ConcurrentHashMap<>();
     private int bloodMultiplier = 100;
     private Function<IConvertingHandler.IDefaultHelper, IConvertingHandler<?>> defaultConvertingHandlerCreator;
 
@@ -157,7 +157,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends PathfinderMob> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(T entity) {
-        return extendedCreatureConstructors.get(entity.getClass());
+        return (Function<T, IExtendedCreatureVampirism>) extendedCreatureConstructors.get(entity.getClass());
     }
 
     @Nullable

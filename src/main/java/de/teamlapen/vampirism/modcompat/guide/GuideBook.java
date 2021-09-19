@@ -61,6 +61,7 @@ public class GuideBook implements IGuideBook {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private final static String IMAGE_BASE = "vampirismguide:textures/images/";
+    @SuppressWarnings("FieldCanBeLocal")
     private static Book guideBook;
 
     static void buildCategories(List<CategoryAbstract> categories) {
@@ -96,6 +97,7 @@ public class GuideBook implements IGuideBook {
     }
 
 
+    @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
     private static Map<ResourceLocation, EntryAbstract> buildOverview(BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.overview.";
@@ -149,6 +151,7 @@ public class GuideBook implements IGuideBook {
         return UtilLib.translate(i.getDescriptionId());
     }
 
+    @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
     private static Map<ResourceLocation, EntryAbstract> buildVampire(BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.vampire.";

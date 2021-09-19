@@ -183,15 +183,13 @@ public class GarlicDiffusorBlock extends VampirismBlockContainer {
     }
 
     public enum Type implements StringRepresentable {
-        NORMAL("normal", 0), IMPROVED("improved", 1), WEAK("weak", 2);
+        NORMAL("normal"), IMPROVED("improved"), WEAK("weak");
 
 
         private final String name;
-        private final int id;
 
-        Type(String name, int id) {
+        Type(String name) {
             this.name = name;
-            this.id = id;
         }
 
         public String getName() {

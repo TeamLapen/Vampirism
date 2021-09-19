@@ -208,6 +208,7 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public <Q extends IMinionTask.IMinionTaskDesc<MinionData>, T extends IMinionTask<Q, ?>> void switchTask(T oldTask, IMinionTask.IMinionTaskDesc<MinionData> oldDesc, IMinionTask.IMinionTaskDesc<MinionData> newDesc) {
         oldTask.deactivateTask((Q) oldDesc);
         this.activeTaskDesc = newDesc;

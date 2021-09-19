@@ -58,6 +58,7 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
     private final Consumer<Map<ResourceLocation, Integer>> addCalculatedValues;
     private final Supplier<Map<ResourceLocation, Integer>> getCalculatedValues;
     private final String name;
+    @SuppressWarnings("FieldCanBeLocal")
     private final String modId;
     private final LevelResource worldSubFolder;
     /**

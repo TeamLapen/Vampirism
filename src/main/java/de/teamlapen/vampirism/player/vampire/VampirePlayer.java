@@ -440,9 +440,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public
     @Nullable
-    IFaction getDisguisedAs() {
+    public IFaction<?> getDisguisedAs() {
         return isDisguised() ? getSpecialAttributes().disguisedAs : getFaction();
     }
 

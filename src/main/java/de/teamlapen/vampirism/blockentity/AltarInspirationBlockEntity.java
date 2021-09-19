@@ -53,7 +53,8 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
         }
     }
 
-    private final int RITUAL_TIME = 60;
+    private static final int RITUAL_TIME = 60;
+
     private int ritualTicksLeft = 0;
     private Player ritualPlayer;
     private IModelData modelData;

@@ -26,6 +26,7 @@ import net.minecraft.client.renderer.entity.HorseRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
@@ -131,23 +132,28 @@ public class ModEntitiesRender {
     }
 
     public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
+        _onAddLayers(event);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Player, Q extends EntityModel<T>, Z extends HumanoidModel<T>, I extends LivingEntity, U extends EntityModel<I>> void _onAddLayers(EntityRenderersEvent.AddLayers event) {
 
         for (String s : event.getSkins()) {
-            LivingEntityRenderer<? extends Player, ? extends EntityModel<? extends Player>> renderPlayer = event.getSkin(s);
+            LivingEntityRenderer<T,Q> renderPlayer = event.getSkin(s);
             if (renderPlayer != null && renderPlayer.getModel() instanceof HumanoidModel) {
-                (renderPlayer).addLayer(new VampirePlayerHeadLayer(renderPlayer));
-                renderPlayer.addLayer(new WingsLayer(renderPlayer, Minecraft.getInstance().getEntityModels(), player -> VampirePlayer.getOpt((Player) player).map(VampirePlayer::getWingCounter).filter(i -> i > 0).isPresent(), (e, m) -> ((HumanoidModel) m).body));
-
+                LivingEntityRenderer<T, Z> renderPlayer2 = (LivingEntityRenderer<T, Z>) renderPlayer;
+                renderPlayer2.addLayer(new VampirePlayerHeadLayer<>(renderPlayer2));
+                renderPlayer2.addLayer(new WingsLayer<>(renderPlayer2, Minecraft.getInstance().getEntityModels(), player -> VampirePlayer.getOpt(player).map(VampirePlayer::getWingCounter).filter(i -> i > 0).isPresent(), (e, m) -> m.body));
             }
         }
         for (Map.Entry<EntityType<? extends PathfinderMob>, ResourceLocation> entry : VampirismAPI.entityRegistry().getConvertibleOverlay().entrySet()) {
             EntityType<? extends PathfinderMob> type = entry.getKey();
-            LivingEntityRenderer<?, ?> render = event.getRenderer(type);
+            LivingEntityRenderer<I, U> render = (LivingEntityRenderer<I, U>)event.getRenderer(type);
             if (render == null) {
                 LOGGER.error("Did not find renderer for {}", type);
                 continue;
             }
-            render.addLayer(new VampireEntityLayer(render, entry.getValue(), true));
+            render.addLayer(new VampireEntityLayer<>(render, entry.getValue(), true));
         }
     }
 

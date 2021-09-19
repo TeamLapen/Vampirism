@@ -45,9 +45,11 @@ sourceSets {
     lib {
         compileClasspath += configurations["minecraft"]
     }
+    //noinspection GroovyAssignabilityCheck
     main {
          java{
          }
+        //noinspection GroovyAssignabilityCheck
         resources {
             srcDirs += 'src/generated/resources'
             exclude '.cache'

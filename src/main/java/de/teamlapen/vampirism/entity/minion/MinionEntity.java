@@ -334,10 +334,11 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     @Override
     public void loadUpdateFromNBT(CompoundTag nbt) {
         if (nbt.contains("data_type")) {
-            MinionData data = MinionData.fromNBT(nbt);
             try {
-                this.minionData = (T) data;
-                this.onMinionDataReceived((T) data);
+                @SuppressWarnings("unchecked")
+                T data = (T) MinionData.fromNBT(nbt);
+                this.minionData = data;
+                this.onMinionDataReceived(data);
                 this.minionId = nbt.getInt("minion_id");
                 super.setCustomName(data.getFormattedName());
             } catch (ClassCastException e) {

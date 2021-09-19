@@ -73,6 +73,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
     public void deactivateAllActions() {
         for (ResourceLocation r : activeTimers.keySet()) {
+            @SuppressWarnings("unchecked")
             ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(r);
             assert action != null;
             int cooldown = action.getCooldown(player);
@@ -156,6 +157,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     public void onActionsReactivated() {
         if (!player.isRemote()) {
             for (ResourceLocation id : activeTimers.keySet()) {
+                @SuppressWarnings("unchecked")
                 ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(id);
                 assert action != null;
                 action.onReActivated(player);
@@ -191,6 +193,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                     client_active.setValue(active.getInt(key));
                     nbt.remove(key);
                 } else {
+                    @SuppressWarnings("unchecked")
                     ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(client_active.getKey());
                     assert action != null;
                     action.onDeactivated(player);
@@ -199,6 +202,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             }
             for (String key : active.getAllKeys()) {
                 ResourceLocation id = new ResourceLocation(key);
+                @SuppressWarnings("unchecked")
                 ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(id);
                 if (action == null) {
                     LOGGER.error("Action {} is not available client side", key);
@@ -230,6 +234,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     @Override
     public void resetTimers() {
         for (ResourceLocation id : activeTimers.keySet()) {
+            @SuppressWarnings("unchecked")
             ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(id);
             assert action != null;
             action.onDeactivated(player);
@@ -319,6 +324,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         for (Iterator<Object2IntMap.Entry<ResourceLocation>> it = activeTimers.object2IntEntrySet().iterator(); it.hasNext(); ) {
             Object2IntMap.Entry<ResourceLocation> entry = it.next();
             int newtimer = entry.getIntValue() - 1;
+            @SuppressWarnings("unchecked")
             ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(entry.getKey());
             assert action != null;
             if (newtimer == 0) {

@@ -126,6 +126,7 @@ public class ConfigCommand extends BasicCommand {
     private static int modifyList(ServerPlayer player, ResourceLocation id, ForgeConfigSpec.ConfigValue<List<? extends String>> configList, String blacklist, String not_blacklist) {
         List<? extends String> list = configList.get();
         if (!list.contains(id.toString())) {
+            //noinspection unchecked
             ((List<String>) list).add(id.toString());
             player.displayClientMessage(new TranslatableComponent(blacklist, id), false);
         } else {

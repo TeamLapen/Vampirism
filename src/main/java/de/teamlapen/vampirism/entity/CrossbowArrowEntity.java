@@ -103,7 +103,7 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
             if (ignoreHurtTimer && living.invulnerableTime > 0) {
                 living.invulnerableTime = 0;
             }
-            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, getOwner());
+            ((IVampirismCrossbowArrow<?>) item).onHitEntity(arrowStack, living, this, getOwner());
         }
     }
 
@@ -117,7 +117,7 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
     protected void onHitBlock(@Nonnull BlockHitResult blockRayTraceResult) { //onHitBlock
         Item item = arrowStack.getItem();
         if (item instanceof IVampirismCrossbowArrow) {
-            ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, (blockRayTraceResult).getBlockPos(), this, getOwner());
+            ((IVampirismCrossbowArrow<?>) item).onHitBlock(arrowStack, (blockRayTraceResult).getBlockPos(), this, getOwner());
         }
         super.onHitBlock(blockRayTraceResult);
     }

@@ -195,7 +195,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent
-    public void onRenderLivingPost(RenderLivingEvent.Post event) {
+    public void onRenderLivingPost(RenderLivingEvent.Post<?,?> event) {
         if (!isInsideBloodVisionRendering && shouldRenderBloodVision() && !reducedBloodVision) {
             Entity entity = event.getEntity();
 

@@ -18,6 +18,7 @@ public class ValuedObject<T> {
      * Extract the objects of the ValuedObjects out of the given array into a new array
      */
     public static <Q> Q[] extract(Class<Q> clz, ValuedObject<Q>[] array) {
+        @SuppressWarnings("unchecked")
         Q[] a = (Q[]) Array.newInstance(clz, array.length);
         for (int i = 0; i < array.length; i++) {
             a[i] = array[i].object;

@@ -39,6 +39,7 @@ import java.util.Optional;
  */
 public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEntityGoal.TaskOwner, ICaptureIgnore {
     private static final Component name = new TranslatableComponent("container.huntertrainer");
+    private static final int MOVE_TO_RESTRICT_PRIO = 3;
 
     public static AttributeSupplier.Builder getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder()
@@ -48,7 +49,6 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
                 .add(Attributes.FOLLOW_RANGE, 5);
     }
 
-    private final int MOVE_TO_RESTRICT_PRIO = 3;
     private Player trainee;
     private boolean shouldCreateHome;
 
