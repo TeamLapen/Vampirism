@@ -188,7 +188,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public ActionHandlerEntity getActionHandler() {
+    public ActionHandlerEntity<?> getActionHandler() {
         return entityActionHandler;
     }
 

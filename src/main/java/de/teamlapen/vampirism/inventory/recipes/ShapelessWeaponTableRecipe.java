@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.inventory.recipes;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
@@ -31,11 +32,11 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
     private final NonNullList<Ingredient> recipeItems;
     private final ItemStack recipeOutput;
     private final int requiredLevel;
-    private final ISkill[] requiredSkills;
+    private final ISkill<IHunterPlayer>[] requiredSkills;
     private final int requiredLava;
     private final boolean isSimple;
 
-    public ShapelessWeaponTableRecipe(ResourceLocation recipeId, String group, NonNullList<Ingredient> ingredients, ItemStack result, int level, int lava, @Nonnull ISkill[] skills) {
+    public ShapelessWeaponTableRecipe(ResourceLocation recipeId, String group, NonNullList<Ingredient> ingredients, ItemStack result, int level, int lava, @Nonnull ISkill<IHunterPlayer>[] skills) {
         this.id = recipeId;
         this.group = group;
         this.recipeItems = ingredients;
@@ -91,7 +92,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
 
     @Nonnull
     @Override
-    public ISkill[] getRequiredSkills() {
+    public ISkill<IHunterPlayer>[] getRequiredSkills() {
         return requiredSkills;
     }
 
@@ -137,7 +138,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
             String group = GsonHelper.getAsString(json, "group", "");
             NonNullList<Ingredient> ingredients = VampirismRecipeHelper.readIngredients(GsonHelper.getAsJsonArray(json, "ingredients"));
             int level = GsonHelper.getAsInt(json, "level", 1);
-            ISkill[] skills = VampirismRecipeHelper.deserializeSkills(GsonHelper.getAsJsonArray(json, "skill", null));
+            ISkill<?>[] skills = VampirismRecipeHelper.deserializeSkills(GsonHelper.getAsJsonArray(json, "skill", null));
             int lava = GsonHelper.getAsInt(json, "lava", 0);
             if (ingredients.isEmpty()) {
                 throw new JsonParseException("No ingredients for shapeless recipe");
@@ -145,7 +146,8 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
                 throw new JsonParseException("Too many ingredients for shapeless recipe the max is " + (ShapelessWeaponTableRecipe.MAX_WIDTH * ShapelessWeaponTableRecipe.MAX_HEIGHT));
             } else {
                 ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
-                return new ShapelessWeaponTableRecipe(recipeId, group, ingredients, result, level, lava, skills);
+                //noinspection unchecked
+                return new ShapelessWeaponTableRecipe(recipeId, group, ingredients, result, level, lava, (ISkill<IHunterPlayer>[]) skills);
             }
         }
 
@@ -159,11 +161,12 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
             ItemStack result = buffer.readItem();
             int level = buffer.readVarInt();
             int lava = buffer.readVarInt();
-            ISkill[] skills = new ISkill[buffer.readVarInt()];
+            ISkill<?>[] skills = new ISkill[buffer.readVarInt()];
             for (int i = 0; i < skills.length; i++) {
                 skills[i] = ModRegistries.SKILLS.getValue(new ResourceLocation(buffer.readUtf(32767)));
             }
-            return new ShapelessWeaponTableRecipe(recipeId, group, ingredients, result, level, lava, skills);
+            //noinspection unchecked
+            return new ShapelessWeaponTableRecipe(recipeId, group, ingredients, result, level, lava, (ISkill<IHunterPlayer>[]) skills);
         }
 
         @Override
@@ -177,7 +180,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
             buffer.writeVarInt(recipe.requiredLevel);
             buffer.writeVarInt(recipe.requiredLava);
             buffer.writeVarInt(recipe.requiredSkills.length);
-            for (ISkill skill : recipe.requiredSkills) {
+            for (ISkill<?> skill : recipe.requiredSkills) {
                 buffer.writeUtf(skill.getRegistryName().toString());
             }
         }

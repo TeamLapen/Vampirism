@@ -43,7 +43,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
 
     private final JsonObject extraNbt;
     private int lava = 1;
-    private ISkill[] skills;
+    private ISkill<?>[] skills;
     private int level = 1;
 
     public ShapedWeaponTableRecipeBuilder(ItemLike item, int count, @Nullable JsonObject extraNbt) {
@@ -110,18 +110,18 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         return (ShapedWeaponTableRecipeBuilder) super.unlockedBy(name, criterionIn);
     }
 
-    public ShapedWeaponTableRecipeBuilder skills(ISkill... skills) {
+    public ShapedWeaponTableRecipeBuilder skills(ISkill<?>... skills) {
         this.skills = skills;
         return this;
     }
 
     private static class Result extends ShapedRecipeBuilder.Result {
         private final int lava;
-        private final ISkill[] skills;
+        private final ISkill<?>[] skills;
         private final int level;
         private final JsonObject extraNbt;
 
-        public Result(ResourceLocation id, Item item, int count, String group, List<String> pattern, Map<Character, Ingredient> ingredients, Advancement.Builder advancementBuilder, ResourceLocation advancementId, int lava, ISkill[] skills, int level, JsonObject extraNbt) {
+        public Result(ResourceLocation id, Item item, int count, String group, List<String> pattern, Map<Character, Ingredient> ingredients, Advancement.Builder advancementBuilder, ResourceLocation advancementId, int lava, ISkill<?>[] skills, int level, JsonObject extraNbt) {
             super(id, item, count, group, pattern, ingredients, advancementBuilder, advancementId);
             this.lava = lava;
             this.skills = skills;
@@ -140,7 +140,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
             super.serializeRecipeData(jsonObject);
             jsonObject.addProperty("lava", this.lava);
             JsonArray skills = new JsonArray();
-            for (ISkill skill : this.skills) {
+            for (ISkill<?> skill : this.skills) {
                 skills.add(skill.getRegistryName().toString());
             }
             jsonObject.add("skill", skills);

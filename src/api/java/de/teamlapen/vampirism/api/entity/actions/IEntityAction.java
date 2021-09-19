@@ -25,7 +25,7 @@ public interface IEntityAction extends IForgeRegistryEntry<IEntityAction> {
     /**
      * @return needed {@link IFaction} for usage
      */
-    IFaction getFaction();
+    IFaction<?> getFaction();
 
     /**
      * @return activation time in ticks before the action is activated once ready to start

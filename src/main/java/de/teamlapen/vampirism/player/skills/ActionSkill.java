@@ -13,21 +13,21 @@ import java.util.Collection;
 /**
  * Simple skill that unlocks one action
  */
-public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
-    private final IAction action;
+public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> {
+    private final IAction<T> action;
 
     @Deprecated
-    public ActionSkill(String id, IAction action) {
+    public ActionSkill(String id, IAction<T> action) {
         this(new ResourceLocation("vampirism", id), action, false);
 
     }
 
     @Deprecated
-    public ActionSkill(String id, IAction action, boolean customDescription) {
+    public ActionSkill(String id, IAction<T> action, boolean customDescription) {
         this(new ResourceLocation("vampirism", id), action, customDescription);
     }
 
-    public ActionSkill(ResourceLocation id, IAction action) {
+    public ActionSkill(ResourceLocation id, IAction<T> action) {
         this(id, action, false);
     }
 
@@ -36,7 +36,7 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
      * @param action            The corresponding action
      * @param customDescription If false a generic "unlocks action" string is used
      */
-    public ActionSkill(ResourceLocation id, IAction action, boolean customDescription) {
+    public ActionSkill(ResourceLocation id, IAction<T> action, boolean customDescription) {
         this.action = action;
         this.setRegistryName(id);
         if (customDescription) {
@@ -53,7 +53,7 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
 
     @Nonnull
     @Override
-    public IPlayableFaction getFaction() {
+    public IPlayableFaction<?> getFaction() {
         return action.getFaction();
     }
 
@@ -69,7 +69,7 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
     }
 
     @Override
-    protected void getActions(Collection<IAction> list) {
+    protected void getActions(Collection<IAction<T>> list) {
         list.add(action);
     }
 }

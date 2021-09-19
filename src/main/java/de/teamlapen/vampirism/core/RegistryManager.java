@@ -117,13 +117,13 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onMissingMappingsSkills(RegistryEvent.MissingMappings<ISkill> event) {
+    public void onMissingMappingsSkills(RegistryEvent.MissingMappings<ISkill<?>> event) {
         HunterSkills.fixMappings(event);
         VampireSkills.fixMappings(event);
     }
 
     @SubscribeEvent
-    public void onRegisterActions(RegistryEvent.Register<IAction> event) {
+    public void onRegisterActions(RegistryEvent.Register<IAction<?>> event) {
         VampireActions.registerDefaultActions(event.getRegistry());
         HunterActions.registerDefaultActions(event.getRegistry());
         ObjectHolderRegistry.applyObjectHolders(); //Apply object holders so action skills can use them
@@ -237,7 +237,7 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterSkills(RegistryEvent.Register<ISkill> event) {
+    public void onRegisterSkills(RegistryEvent.Register<ISkill<?>> event) {
         HunterSkills.registerHunterSkills(event.getRegistry());
         VampireSkills.registerVampireSkills(event.getRegistry());
     }

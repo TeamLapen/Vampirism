@@ -26,13 +26,13 @@ public interface ITotem {
      * @return current capturing faction of the totem or {@code null} if none
      */
     @Nullable
-    IFaction getCapturingFaction();
+    IFaction<?> getCapturingFaction();
 
     /**
      * @return current controlling faction of the totem or {@code null} if none
      */
     @Nullable
-    IFaction getControllingFaction();
+    IFaction<?> getControllingFaction();
 
     /**
      * support method for getting block entity level

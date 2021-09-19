@@ -64,7 +64,7 @@ public class SkillTree {
     public void initRootSkills() {
         //Built root nodes
         rootNodes.clear();
-        for (IPlayableFaction faction : VampirismAPI.factionRegistry().getPlayableFactions()) {
+        for (IPlayableFaction<?> faction : VampirismAPI.factionRegistry().getPlayableFactions()) {
             SkillNode rootNode = new SkillNode(faction, ((SkillManager) VampirismAPI.skillManager()).getRootSkill(faction));
             rootNodes.put(faction.getID(), rootNode);
 
@@ -76,7 +76,7 @@ public class SkillTree {
         Map<ResourceLocation, SkillNode> builtNodes = new HashMap<>();
         //Built root nodes
         rootNodes.clear();
-        for (IPlayableFaction faction : VampirismAPI.factionRegistry().getPlayableFactions()) {
+        for (IPlayableFaction<?> faction : VampirismAPI.factionRegistry().getPlayableFactions()) {
             SkillNode rootNode = new SkillNode(faction, ((SkillManager) VampirismAPI.skillManager()).getRootSkill(faction));
             builtNodes.put(faction.getID(), rootNode);
             rootNodes.put(faction.getID(), rootNode);
@@ -190,7 +190,7 @@ public class SkillTree {
     @OnlyIn(Dist.CLIENT)
     private void setRenderPos(SkillNode base, int column) {
         int left = -(base.getElements().length * 2 - 1) / 2;
-        for (ISkill skill : base.getElements()) {
+        for (ISkill<?> skill : base.getElements()) {
             skill.setRenderPos(base.getDepth() * 2, column + left);
             left += 2;
         }

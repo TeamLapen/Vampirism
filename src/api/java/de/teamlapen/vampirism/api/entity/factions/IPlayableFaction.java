@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
  * Represents one playable faction (e.g. Vampire Player)
  * One instance should be used for players and entities at the same time.
  */
-public interface IPlayableFaction<T extends IFactionPlayer> extends IFaction<T> {
+public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<T> {
     Class<T> getFactionPlayerInterface();
 
     /**

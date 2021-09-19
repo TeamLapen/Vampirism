@@ -38,19 +38,20 @@ import java.util.stream.Collectors;
  * Gui which is used to select vampire actions
  */
 @OnlyIn(Dist.CLIENT)
-public class ActionSelectScreen extends GuiPieMenu<IAction> {
-    public final static List<IAction> ACTIONORDER = Lists.newArrayList();
+public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<IAction<T>> {
+    public final static List<IAction<?>> ACTIONORDER = Lists.newArrayList();
     /**
      * Fake skill which represents the cancel button
      */
-    private static final IAction fakeAction = new DefaultVampireAction() {
+    private static final IAction<?> fakeAction = new DefaultVampireAction() {
         @Override
         public boolean activate(IVampirePlayer vampire) {
             return true;
         }
 
+
         @Override
-        public int getCooldown(IFactionPlayer<?> player) {
+        public int getCooldown(IVampirePlayer player) {
             return 0;
         }
 
@@ -64,7 +65,7 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
             return true;
         }
     };
-    public static IAction SELECTEDACTION;
+    public static IAction<?> SELECTEDACTION;
 
     /**
      * safes the action order to client config
@@ -77,7 +78,7 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
      * loades action order from client config
      */
     public static void loadActionOrder() {
-        List<IAction> actions = Lists.newArrayList(ModRegistries.ACTIONS.getValues());
+        List<IAction<?>> actions = Lists.newArrayList(ModRegistries.ACTIONS.getValues());
         VampirismConfig.CLIENT.actionOrder.get().stream().map(action -> ModRegistries.ACTIONS.getValue(new ResourceLocation(action))).forEachOrdered(action -> {
             actions.remove(action);
             ACTIONORDER.add(action);
@@ -89,7 +90,7 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
     }
 
     private final boolean editActions;
-    private IActionHandler actionHandler;
+    private IActionHandler<T> actionHandler;
 
     public ActionSelectScreen(Color backgroundColor, boolean edit) {
         super(backgroundColor, new TranslatableComponent("selectAction"));
@@ -161,7 +162,8 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
         if (editActions) {
             if (SELECTEDACTION != null) {
                 if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT && getSelectedElement() >= 0 && elements.get(getSelectedElement()) != fakeAction) {
-                    switchActions(SELECTEDACTION, elements.get(getSelectedElement()));
+                    //noinspection unchecked
+                    switchActions((IAction<T>) SELECTEDACTION, elements.get(getSelectedElement()));
                     updateElements();
                 }
                 SELECTEDACTION = null;
@@ -180,7 +182,7 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
     }
 
     @Override
-    protected void afterIconDraw(PoseStack stack, IAction p, int x, int y) {
+    protected void afterIconDraw(PoseStack stack, IAction<T> p, int x, int y) {
         if (p == fakeAction || editActions) //noinspection UnnecessaryReturnStatement
             return;
         // Draw usage indicator
@@ -199,7 +201,7 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
 
     @Override
     @Nonnull
-    protected Color getColor(IAction s) {
+    protected Color getColor(IAction<T> s) {
         if (s == fakeAction) return super.getColor(s);
         if (editActions) {
             if (SELECTEDACTION != null && (s == SELECTEDACTION || (getSelectedElement() >= 0 && elements.get(getSelectedElement()) == s)))
@@ -207,7 +209,8 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
             else return Color.WHITE;
         }
         if (!minecraft.player.isAlive()) return Color.RED;
-        IFactionPlayer factionPlayer = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElse(null);
+        //noinspection unchecked
+        T factionPlayer = (T)FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElse(null);
         if (!(s.canUse(factionPlayer) == IAction.PERM.ALLOWED) || actionHandler.getPercentageForAction(s) < 0) {
             return Color.RED;
         } else if (actionHandler.getPercentageForAction(s) > 0) {
@@ -218,7 +221,7 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
     }
 
     @Override
-    protected ResourceLocation getIconLoc(IAction item) {
+    protected ResourceLocation getIconLoc(IAction<T> item) {
         if (item == fakeAction) return new ResourceLocation(REFERENCE.MODID, "textures/actions/cancel.png");
         return new ResourceLocation(item.getRegistryName().getNamespace(), "textures/actions/" + item.getRegistryName().getPath() + ".png");
     }
@@ -229,20 +232,22 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
     }
 
     @Override
-    protected Component getName(IAction item) {
+    protected Component getName(IAction<T> item) {
         return item.getName();
     }
 
     @Override
-    protected void onElementSelected(IAction action) {
-        if (action != fakeAction && action.canUse(FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElse(null)) == IAction.PERM.ALLOWED) {
+    protected void onElementSelected(IAction<T> action) {
+        //noinspection unchecked
+        if (action != fakeAction && action.canUse((T)FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElse(null)) == IAction.PERM.ALLOWED) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + action.getRegistryName().toString()));
         }
     }
 
     @Override
     protected void onGuiInit() {
-        IFactionPlayer player = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElse(null);
+        //noinspection unchecked
+        T player = (T)FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElseThrow(() -> new NullPointerException("Player can not be null"));
         actionHandler = player.getActionHandler();
         updateElements();
 
@@ -268,21 +273,17 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
     /**
      * orders the given list after client preference
      */
-    private ImmutableList<IAction> getActionOrdered(List<IAction> toSort) {
-        List<IAction> ordered = Lists.newArrayList();
+    private ImmutableList<IAction<T>> getActionOrdered(List<IAction<T>> toSort) {
         if (ACTIONORDER.isEmpty()) ACTIONORDER.addAll(ModRegistries.ACTIONS.getValues());
-        for (IAction a : ACTIONORDER) {
-            if (toSort.contains(a)) {
-                ordered.add(a);
-                toSort.remove(a);
-            }
-        }
-        ordered.addAll(toSort);
-        return ImmutableList.copyOf(ordered);
+        @SuppressWarnings({"SuspiciousMethodCalls", "unchecked"})
+        List<IAction<T>> list = (List<IAction<T>>) (Object)ACTIONORDER.stream().filter(toSort::contains).collect(Collectors.toList());
+        toSort.removeAll(list);
+        list.addAll(toSort);
+        return ImmutableList.copyOf(list);
     }
 
     private void setBinding(int id) {
-        IAction action = elements.get(getSelectedElement());
+        IAction<T> action = elements.get(getSelectedElement());
         FactionPlayerHandler.get(minecraft.player).setBoundAction(id, action, false, true);
         VampirismMod.dispatcher.sendToServer(new ActionBindingPacket(id, action));
         if (!editActions) {
@@ -294,7 +295,7 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
     /**
      * switches the position of the given actions
      */
-    private void switchActions(IAction first, IAction second) {
+    private void switchActions(IAction<T> first, IAction<T> second) {
         if (first == second) return;
         int a = ACTIONORDER.indexOf(first);
         int b = ACTIONORDER.indexOf(second);
@@ -307,8 +308,8 @@ public class ActionSelectScreen extends GuiPieMenu<IAction> {
      */
     private void updateElements() {
         elements.clear();
+        elements.addAll(getActionOrdered(actionHandler.getUnlockedActions().stream().filter(a -> a.showInSelectAction(minecraft.player)).collect(Collectors.toList())));
         //noinspection unchecked
-        elements.addAll(getActionOrdered(((List<IAction>) actionHandler.getUnlockedActions()).stream().filter(a -> a.showInSelectAction(minecraft.player)).collect(Collectors.toList())));
-        elements.add(fakeAction);
+        elements.add((IAction<T>) fakeAction);
     }
 }

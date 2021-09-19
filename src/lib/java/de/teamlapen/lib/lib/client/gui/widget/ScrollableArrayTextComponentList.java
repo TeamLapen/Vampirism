@@ -44,6 +44,11 @@ public class ScrollableArrayTextComponentList extends ScrollableListWidget<Pair<
         super(xPos, yPos, width, height, itemHeight, () -> getItems(createTextArray(valueAmount, baseName)), (item, list) -> new TextComponentItem<>(item, list, buttonPressed, onHover), baseName);
     }
 
+    @Override
+    public ScrollableArrayTextComponentList scrollSpeed(double scrollSpeed) {
+        return (ScrollableArrayTextComponentList) super.scrollSpeed(scrollSpeed);
+    }
+
     public static class TextComponentItem<T> extends ListItem<Pair<T, Component>> {
 
         @Nonnull

@@ -26,12 +26,12 @@ public abstract class VampirismVillageEvent extends Event {
     }
 
     @Nullable
-    public IFaction getCapturingFaction() {
+    public IFaction<?> getCapturingFaction() {
         return this.totem.getCapturingFaction();
     }
 
     @Nullable
-    public IFaction getControllingFaction() {
+    public IFaction<?> getControllingFaction() {
         return this.totem.getControllingFaction();
     }
 

@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 /**
  * Default implementation of ISkill. Handles entity modifiers and actions
  */
-public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegistryEntry<ISkill> implements ISkill {
+public abstract class DefaultSkill<T extends IFactionPlayer<T>> extends ForgeRegistryEntry<ISkill<?>> implements ISkill<T> {
 
     private final Map<Attribute, LazyOptional<AttributeModifier>> attributeModifierMap = new HashMap<>();
     private int renderRow;
@@ -51,25 +51,23 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
     }
 
     @Override
-    public final void onDisable(IFactionPlayer player) {
+    public final void onDisable(T player) {
         removeAttributesModifiersFromEntity(player.getRepresentingPlayer());
         player.getActionHandler().relockActions(getActions());
         if (this.getFaction().getFactionPlayerInterface().isInstance(player)) {
-            //noinspection unchecked
-            onDisabled((T) player);
+            onDisabled(player);
         } else {
             throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().getFactionPlayerInterface());
         }
     }
 
     @Override
-    public final void onEnable(IFactionPlayer player) {
+    public final void onEnable(T player) {
         applyAttributesModifiersToEntity(player.getRepresentingPlayer());
 
         player.getActionHandler().unlockActions(getActions());
         if (this.getFaction().getFactionPlayerInterface().isInstance(player)) {
-            //noinspection unchecked
-            onEnabled((T) player);
+            onEnabled(player);
         } else {
             throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().getFactionPlayerInterface());
         }
@@ -101,7 +99,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
     /**
      * Add actions that should be added to the list
      */
-    protected void getActions(Collection<IAction> list) {
+    protected void getActions(Collection<IAction<T>> list) {
 
     }
 
@@ -129,8 +127,8 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
         }
     }
 
-    private Collection<IAction> getActions() {
-        Collection<IAction> collection = new ArrayList<>();
+    private Collection<IAction<T>> getActions() {
+        Collection<IAction<T>> collection = new ArrayList<>();
         getActions(collection);
         collection.forEach((iAction -> {
             if (!iAction.getFaction().equals(this.getFaction())) {

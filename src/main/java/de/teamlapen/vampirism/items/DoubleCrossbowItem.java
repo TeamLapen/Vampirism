@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.world.InteractionHand;
@@ -26,7 +27,7 @@ public class DoubleCrossbowItem extends SimpleCrossbowItem {
 
     @Nullable
     @Override
-    public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
+    public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
         return HunterSkills.double_crossbow;
     }
 

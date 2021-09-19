@@ -1123,7 +1123,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    protected FactionBasePlayer copyFromPlayer(Player old) {
+    protected FactionBasePlayer<IVampirePlayer> copyFromPlayer(Player old) {
         VampirePlayer oldVampire = get(old);
         CompoundTag nbt = new CompoundTag();
         oldVampire.saveData(nbt);

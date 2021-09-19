@@ -14,7 +14,7 @@ import java.util.Optional;
  * Predicate for faction related selection
  */
 public class PredicateFaction implements Predicate<LivingEntity> {
-    private final IFaction thisFaction;
+    private final IFaction<?> thisFaction;
     private final boolean player;
     private final boolean nonPlayer;
     private final boolean neutralPlayer;
@@ -22,9 +22,8 @@ public class PredicateFaction implements Predicate<LivingEntity> {
     /**
      * If null, all other faction are seen as hostile
      */
-    private final
     @Nullable
-    IFaction otherFaction;
+    private final IFaction<?> otherFaction;
 
     /**
      * Selects entities
@@ -36,7 +35,7 @@ public class PredicateFaction implements Predicate<LivingEntity> {
      * @param ignoreDisguise If the disguise ability of players should be ignored.
      * @param otherFaction   If this is not null, only entities of this faction are selected.
      */
-    protected PredicateFaction(@Nonnull IFaction thisFaction, boolean player, boolean nonPlayer, boolean neutralPlayer, boolean ignoreDisguise, @Nullable IFaction otherFaction) {
+    protected PredicateFaction(@Nonnull IFaction<?> thisFaction, boolean player, boolean nonPlayer, boolean neutralPlayer, boolean ignoreDisguise, @Nullable IFaction<?> otherFaction) {
         this.thisFaction = thisFaction;
         this.player = player;
         this.nonPlayer = nonPlayer;
@@ -45,7 +44,7 @@ public class PredicateFaction implements Predicate<LivingEntity> {
         this.ignoreDisguise = ignoreDisguise;
     }
 
-    protected PredicateFaction(Faction thisFaction, boolean player, boolean nonPlayer, boolean neutralPlayer, boolean ignoreDisguise) {
+    protected PredicateFaction(Faction<?> thisFaction, boolean player, boolean nonPlayer, boolean neutralPlayer, boolean ignoreDisguise) {
         this(thisFaction, player, nonPlayer, neutralPlayer, ignoreDisguise, null);
     }
 

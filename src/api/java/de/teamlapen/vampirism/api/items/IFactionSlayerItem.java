@@ -19,5 +19,5 @@ public interface IFactionSlayerItem {
     /**
      * @return Modify damage for this faction
      */
-    IFaction getSlayedFaction();
+    IFaction<?> getSlayedFaction();
 }

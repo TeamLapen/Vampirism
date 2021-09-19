@@ -109,7 +109,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (event.phase == TickEvent.Phase.END)
             return;
 
-        @Nullable IFactionPlayer player = FactionPlayerHandler.get(mc.player).getCurrentFactionPlayer().orElse(null);
+        @Nullable IFactionPlayer<?> player = FactionPlayerHandler.get(mc.player).getCurrentFactionPlayer().orElse(null);
         if (player instanceof VampirePlayer) {
             handleScreenColorVampire((VampirePlayer) player);
         } else if (player instanceof HunterPlayer) {

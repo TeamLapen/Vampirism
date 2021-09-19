@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.player.vampire.skills;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
@@ -25,37 +26,37 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 @SuppressWarnings("unused")
 public class VampireSkills {
 
-    public static final ISkill advanced_biter = getNull();
-    public static final ISkill bat = getNull();
-    public static final ISkill blood_charge = getNull();
-    public static final ISkill blood_vision = getNull();
-    public static final ISkill blood_vision_garlic = getNull();
-    public static final ISkill dark_blood_projectile = getNull();
-    public static final ISkill freeze = getNull();
-    public static final ISkill half_invulnerable = getNull();
-    public static final ISkill less_blood_thirst = getNull();
-    public static final ISkill less_sundamage = getNull();
-    public static final ISkill night_vision = getNull();
-    public static final ISkill sunscreen = getNull();
-    public static final ISkill summon_bats = getNull();
-    public static final ISkill sword_finisher = getNull();
-    public static final ISkill teleport = getNull();
-    public static final ISkill vampire_disguise = getNull();
-    public static final ISkill vampire_invisibility = getNull();
-    public static final ISkill vampire_jump = getNull();
-    public static final ISkill vampire_rage = getNull();
-    public static final ISkill vampire_regeneration = getNull();
-    public static final ISkill vampire_speed = getNull();
-    public static final ISkill water_resistance = getNull();
-    public static final ISkill vampire_attack_speed = getNull();
-    public static final ISkill vampire_attack_damage = getNull();
-    public static final ISkill neonatal_decrease = getNull();
-    public static final ISkill dbno_duration = getNull();
-    public static final ISkill hissing = getNull();
+    public static final ISkill<IVampirePlayer> advanced_biter = getNull();
+    public static final ISkill<IVampirePlayer> bat = getNull();
+    public static final ISkill<IVampirePlayer> blood_charge = getNull();
+    public static final ISkill<IVampirePlayer> blood_vision = getNull();
+    public static final ISkill<IVampirePlayer> blood_vision_garlic = getNull();
+    public static final ISkill<IVampirePlayer> dark_blood_projectile = getNull();
+    public static final ISkill<IVampirePlayer> freeze = getNull();
+    public static final ISkill<IVampirePlayer> half_invulnerable = getNull();
+    public static final ISkill<IVampirePlayer> less_blood_thirst = getNull();
+    public static final ISkill<IVampirePlayer> less_sundamage = getNull();
+    public static final ISkill<IVampirePlayer> night_vision = getNull();
+    public static final ISkill<IVampirePlayer> sunscreen = getNull();
+    public static final ISkill<IVampirePlayer> summon_bats = getNull();
+    public static final ISkill<IVampirePlayer> sword_finisher = getNull();
+    public static final ISkill<IVampirePlayer> teleport = getNull();
+    public static final ISkill<IVampirePlayer> vampire_disguise = getNull();
+    public static final ISkill<IVampirePlayer> vampire_invisibility = getNull();
+    public static final ISkill<IVampirePlayer> vampire_jump = getNull();
+    public static final ISkill<IVampirePlayer> vampire_rage = getNull();
+    public static final ISkill<IVampirePlayer> vampire_regeneration = getNull();
+    public static final ISkill<IVampirePlayer> vampire_speed = getNull();
+    public static final ISkill<IVampirePlayer> water_resistance = getNull();
+    public static final ISkill<IVampirePlayer> vampire_attack_speed = getNull();
+    public static final ISkill<IVampirePlayer> vampire_attack_damage = getNull();
+    public static final ISkill<IVampirePlayer> neonatal_decrease = getNull();
+    public static final ISkill<IVampirePlayer> dbno_duration = getNull();
+    public static final ISkill<IVampirePlayer> hissing = getNull();
 
 
     @SuppressWarnings({"deprecation", "Convert2MethodRef"})
-    public static void registerVampireSkills(IForgeRegistry<ISkill> registry) {
+    public static void registerVampireSkills(IForgeRegistry<ISkill<?>> registry) {
         registry.register(new VampirismSkill.SimpleVampireSkill(VReference.VAMPIRE_FACTION.getID(), false));
         registry.register(new VampirismSkill.SimpleVampireSkill("advanced_biter", false).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = true, player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = false).setHasDefaultDescription());
         registry.register(new ActionSkill<>("bat", VampireActions.bat, true));
@@ -94,7 +95,7 @@ public class VampireSkills {
         registry.register(new ActionSkill<>("hissing", VampireActions.hissing, true));
     }
 
-    public static void fixMappings(RegistryEvent.MissingMappings<ISkill> event) {
+    public static void fixMappings(RegistryEvent.MissingMappings<ISkill<?>> event) {
         event.getAllMappings().forEach(missingMapping -> {
             if ("vampirism:creeper_avoided".equals(missingMapping.key.toString())) {
                 missingMapping.ignore();

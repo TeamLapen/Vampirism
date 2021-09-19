@@ -10,6 +10,7 @@ import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.client.core.ModKeys;
@@ -60,7 +61,7 @@ import java.util.*;
  * Inspired by Minecraft's old GuiAchievement
  */
 @OnlyIn(Dist.CLIENT)
-public class SkillsScreen extends Screen {
+public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills_window.png");
     private final int area_min_y = -77;
     private final int skill_width = 24;
@@ -69,7 +70,7 @@ public class SkillsScreen extends Screen {
     private final int display_height = 202;
     @Nullable
     private final Screen backScreen;
-    private final Map<ISkill, List<Component>> skillToolTipsCache = new HashMap<>();
+    private final Map<ISkill<?>, List<Component>> skillToolTipsCache = new HashMap<>();
     private int area_min_x = 0;
     private int area_max_x = 0;
     private int area_max_y;
@@ -78,9 +79,9 @@ public class SkillsScreen extends Screen {
     private double displayY;
     private double displayXNew;
     private double displayYNew;
-    private SkillHandler<?> skillHandler;
+    private SkillHandler<T> skillHandler;
     private boolean display;
-    private ISkill selected;
+    private ISkill<T> selected;
     private SkillNode selectedNode;
     private int displayXWidth;
     private int displayYHeight;
@@ -118,7 +119,8 @@ public class SkillsScreen extends Screen {
             fph.getCurrentFactionPlayer().ifPresent(factionPlayer -> {
                 IPlayableFaction<?> faction = factionPlayer.getFaction();
                 display = true;
-                skillHandler = (SkillHandler<?>) factionPlayer.getSkillHandler();
+                //noinspection unchecked
+                skillHandler = (SkillHandler<T>) factionPlayer.getSkillHandler();
                 Integer[] info = VampirismMod.proxy.getSkillTree(true).getDisplayInfo(faction.getID());
                 int w = info[0] * info[1] * skill_width * 2;
                 area_max_x = w + 10 - display_width;
@@ -434,10 +436,11 @@ public class SkillsScreen extends Screen {
 //        RenderSystem.enableColorMaterial();
 
         //Draw skills
-        ISkill newSelected = null;//Not sure if mouse clicks can occur while this is running, so don't set #selected to null here but use an extra variable to be sure
+        ISkill<T> newSelected = null;//Not sure if mouse clicks can occur while this is running, so don't set #selected to null here but use an extra variable to be sure
         SkillNode newSelectedNode = null;
         for (SkillNode node : skillNodes) {
-            ISkill[] elements = node.getElements();
+            //noinspection unchecked
+            ISkill<T>[] elements = (ISkill<T>[]) node.getElements();
             if (elements.length > 1) {
                 int minX = elements[0].getRenderColumn() * skill_width - offsetX;
                 int maxX = elements[elements.length - 1].getRenderColumn() * skill_width - offsetX;
@@ -450,7 +453,7 @@ public class SkillsScreen extends Screen {
 
             }
             for (int i = 0; i < elements.length; i++) {
-                ISkill skill = elements[i];
+                ISkill<T> skill = elements[i];
                 int x = skill.getRenderColumn() * skill_width - offsetX;
                 int y = skill.getRenderRow() * skill_width - offsetY;
 
@@ -541,7 +544,7 @@ public class SkillsScreen extends Screen {
 
                 ISkillHandler.Result result = skillHandler.canSkillBeEnabled(selected);
 
-                List<ISkill> lockingSkills = null;
+                List<ISkill<T>> lockingSkills = null;
                 ChatFormatting lockingColor = ChatFormatting.BLACK;
                 if (selectedNode.getLockingNodes().length != 0) {
                     lockingSkills = skillHandler.getLockingSkills(selectedNode);
@@ -549,7 +552,7 @@ public class SkillsScreen extends Screen {
                 }
                 if (lockingSkills != null) {
                     tooltips.add(new TranslatableComponent("text.vampirism.skill.excluding").withStyle(lockingColor));
-                    for (ISkill lockingSkill : lockingSkills) {
+                    for (ISkill<T> lockingSkill : lockingSkills) {
                         tooltips.add(new TextComponent("  ").append(lockingSkill.getName().copy().withStyle(lockingColor)));
                     }
                 }
@@ -579,9 +582,9 @@ public class SkillsScreen extends Screen {
         return node.getElements()[0].getRenderColumn() * skill_width + width / 2;
     }
 
-    private ResourceLocation getIconLoc(ISkill skill) {
+    private ResourceLocation getIconLoc(ISkill<T> skill) {
         if (skill instanceof ActionSkill) {
-            return new ResourceLocation(((ActionSkill) skill).getActionID().getNamespace(), "textures/actions/" + ((ActionSkill) skill).getActionID().getPath() + ".png");
+            return new ResourceLocation(((ActionSkill<T>) skill).getActionID().getNamespace(), "textures/actions/" + ((ActionSkill<T>) skill).getActionID().getPath() + ".png");
         } else {
             return new ResourceLocation(skill.getRegistryName().getNamespace(), "textures/skills/" + skill.getRegistryName().getPath() + ".png");
         }

@@ -21,13 +21,13 @@ import java.util.Set;
 class VampirismRecipeHelper {
 
     @Nonnull
-    static ISkill[] deserializeSkills(JsonArray jsonObject) {
+    static ISkill<?>[] deserializeSkills(JsonArray jsonObject) {
         if (jsonObject == null || jsonObject.size() == 0)
             return new ISkill[0];
-        ISkill[] skills = new ISkill[jsonObject.size()];
+        ISkill<?>[] skills = new ISkill[jsonObject.size()];
         for (int i = 0; i < skills.length; ++i) {
             String s = GsonHelper.convertToString(jsonObject.get(i), "skill[" + i + "]");
-            ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(s));
+            ISkill<?> skill = ModRegistries.SKILLS.getValue(new ResourceLocation(s));
             if (skill == null) {
                 throw new JsonSyntaxException("Unknown skill '" + s + "'");
             } else {

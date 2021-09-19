@@ -192,13 +192,12 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         }
     }
 
-    @Override
-    public
     @Nullable
-    IConvertedCreature makeVampire() {
+    @Override
+    public IConvertedCreature<?> makeVampire() {
         if (canBecomeVampire()) {
             blood = 0;
-            IConvertedCreature c = VampirismAPI.entityRegistry().convert(entity);
+            IConvertedCreature<?> c = VampirismAPI.entityRegistry().convert(entity);
             if (c != null) {
                 UtilLib.replaceEntity(entity, (PathfinderMob) c);
             }

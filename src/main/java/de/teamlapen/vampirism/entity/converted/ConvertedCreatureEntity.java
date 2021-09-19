@@ -54,7 +54,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedCreatureEntity.class, EntityDataSerializers.BOOLEAN);
 
 
-    public static boolean spawnPredicate(EntityType<? extends ConvertedCreatureEntity> entityType, LevelAccessor iWorld, MobSpawnType spawnReason, BlockPos blockPos, Random random) {
+    public static boolean spawnPredicate(EntityType<? extends ConvertedCreatureEntity<?>> entityType, LevelAccessor iWorld, MobSpawnType spawnReason, BlockPos blockPos, Random random) {
         return (iWorld.getBlockState(blockPos.below()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.below()).getBlock() == ModBlocks.cursed_earth) && iWorld.getRawBrightness(blockPos, 0) > 8;
     }
 
@@ -295,9 +295,9 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
             LOGGER.warn("Cannot find biteable entry for {}", entityCreature);
             return null;
         }
-        IConvertingHandler handler = biteableEntry.convertingHandler;
+        IConvertingHandler<?> handler = biteableEntry.convertingHandler;
         if (handler instanceof DefaultConvertingHandler) {
-            return ((DefaultConvertingHandler) handler).getHelper();
+            return ((DefaultConvertingHandler<?>) handler).getHelper();
         }
         return null;
     }

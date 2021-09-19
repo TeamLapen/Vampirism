@@ -449,8 +449,8 @@ public class ModPlayerEventHandler {
         if (!stack.isEmpty() && stack.getItem() instanceof IFactionLevelItem item) {
             if (!player.isAlive()) return false;
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            IFaction usingFaction = item.getExclusiveFaction(stack);
-            ISkill requiredSkill = item.getRequiredSkill(stack);
+            IFaction<?> usingFaction = item.getExclusiveFaction(stack);
+            ISkill<?> requiredSkill = item.getRequiredSkill(stack);
             if (usingFaction != null && !handler.isInFaction(usingFaction)) {
                 if (message)
                     player.displayClientMessage(new TranslatableComponent("text.vampirism.can_only_be_used_by", usingFaction.getNamePlural()), true);
@@ -460,7 +460,7 @@ public class ModPlayerEventHandler {
                     player.displayClientMessage(new TranslatableComponent("text.vampirism.can_only_be_used_by_level", usingFaction == null ? new TranslatableComponent("text.vampirism.all") : usingFaction.getNamePlural(), item.getMinLevel(stack)), true);
                 return false;
             } else if (requiredSkill != null) {
-                IFactionPlayer factionPlayer = handler.getCurrentFactionPlayer().orElse(null);
+                IFactionPlayer<?> factionPlayer = handler.getCurrentFactionPlayer().orElse(null);
                 if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
                     if (message)
                         player.displayClientMessage(new TranslatableComponent("text.vampirism.can_only_be_used_with_skill", requiredSkill.getName()), true);

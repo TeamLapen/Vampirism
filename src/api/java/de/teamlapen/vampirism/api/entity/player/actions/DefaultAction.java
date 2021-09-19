@@ -11,7 +11,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 /**
  * Default implementation for an action
  */
-public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegistryEntry<IAction> implements IAction {
+public abstract class DefaultAction<T extends IFactionPlayer<T>> extends ForgeRegistryEntry<IAction<?>> implements IAction<T> {
     private Component name;
 
     public void addEffectInstance(T player, MobEffectInstance instance) {
@@ -27,12 +27,11 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
     }
 
     @Override
-    public IAction.PERM canUse(IFactionPlayer player) {
+    public IAction.PERM canUse(T player) {
         if (!isEnabled())
             return IAction.PERM.DISABLED;
         if (this.getFaction().getFactionPlayerInterface().isInstance(player)) {
-            //noinspection unchecked
-            return (canBeUsedBy((T) player) ? IAction.PERM.ALLOWED : IAction.PERM.DISALLOWED);
+            return (canBeUsedBy(player) ? IAction.PERM.ALLOWED : IAction.PERM.DISALLOWED);
         } else {
             throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().getFactionPlayerInterface());
         }
@@ -56,10 +55,9 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
     public abstract boolean isEnabled();
 
     @Override
-    public boolean onActivated(IFactionPlayer player) {
+    public boolean onActivated(T player) {
         if (this.getFaction().getFactionPlayerInterface().isInstance(player)) {
-            //noinspection unchecked
-            return activate((T) player);
+            return activate(player);
         } else {
             throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().getFactionPlayerInterface());
         }

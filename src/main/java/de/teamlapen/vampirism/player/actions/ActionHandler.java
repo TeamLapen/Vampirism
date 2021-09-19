@@ -32,7 +32,7 @@ import java.util.List;
  * <p>
  * Probably not the fastest or cleanest approach, but I did not find the perfect solution yet.
  */
-public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T> {
+public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandler<T> {
     private final static Logger LOGGER = LogManager.getLogger(ActionHandler.class);
 
 
@@ -55,7 +55,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
 
     private final T player;
 
-    private final List<IAction> unlockedActions = new ArrayList<>();
+    private final List<IAction<T>> unlockedActions = new ArrayList<>();
 
     /**
      * If active/cooldown timers have changed and should be synced
@@ -64,7 +64,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
 
     public ActionHandler(T player) {
         this.player = player;
-        List<IAction> actions = VampirismAPI.actionManager().getActionsForFaction(player.getFaction());
+        List<IAction<T>> actions = VampirismAPI.actionManager().getActionsForFaction(player.getFaction());
 
         cooldownTimers = new Object2IntOpenHashMap<>(actions.size(), 0.9f);
         activeTimers = new Object2IntOpenHashMap<>(actions.size(), 0.9f);
@@ -83,7 +83,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     @Override
-    public void extendActionTimer(@Nonnull ILastingAction action, int duration) {
+    public void extendActionTimer(@Nonnull ILastingAction<T> action, int duration) {
         int i = activeTimers.getOrDefault(action.getRegistryName(), -1);
         if (i > 0) {
             activeTimers.put(action.getRegistryName(), i + duration);
@@ -91,9 +91,9 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     @Override
-    public List<IAction> getAvailableActions() {
-        ArrayList<IAction> actions = new ArrayList<>();
-        for (IAction action : unlockedActions) {
+    public List<IAction<T>> getAvailableActions() {
+        ArrayList<IAction<T>> actions = new ArrayList<>();
+        for (IAction<T> action : unlockedActions) {
             if (action.canUse(player) == IAction.PERM.ALLOWED) {
                 actions.add(action);
             }
@@ -103,9 +103,9 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     @Override
-    public float getPercentageForAction(@Nonnull IAction action) {
+    public float getPercentageForAction(@Nonnull IAction<T> action) {
         if (activeTimers.containsKey(action.getRegistryName())) {
-            return activeTimers.get(action.getRegistryName()) / ((float) ((ILastingAction) action).getDuration(player));
+            return activeTimers.get(action.getRegistryName()) / ((float) ((ILastingAction<T>) action).getDuration(player));
         }
         if (cooldownTimers.containsKey(action.getRegistryName())) {
             return -cooldownTimers.get(action.getRegistryName()) / (float) action.getCooldown(player);
@@ -114,12 +114,12 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     @Override
-    public ImmutableList<IAction> getUnlockedActions() {
+    public ImmutableList<IAction<T>> getUnlockedActions() {
         return ImmutableList.copyOf(unlockedActions);
     }
 
     @Override
-    public boolean isActionActive(@Nonnull ILastingAction action) {
+    public boolean isActionActive(@Nonnull ILastingAction<T> action) {
         return activeTimers.containsKey(action.getRegistryName());
     }
 
@@ -129,12 +129,12 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     @Override
-    public boolean isActionOnCooldown(IAction action) {
+    public boolean isActionOnCooldown(IAction<T> action) {
         return cooldownTimers.containsKey(action.getRegistryName());
     }
 
     @Override
-    public boolean isActionUnlocked(IAction action) {
+    public boolean isActionUnlocked(IAction<T> action) {
         return unlockedActions.contains(action);
     }
 
@@ -218,10 +218,10 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     @Override
-    public void relockActions(Collection<IAction> actions) {
+    public void relockActions(Collection<IAction<T>> actions) {
         unlockedActions.removeAll(actions);
-        for (IAction action : actions) {
-            if (action instanceof ILastingAction && isActionActive((ILastingAction) action)) {
+        for (IAction<T> action : actions) {
+            if (action instanceof ILastingAction && isActionActive((ILastingAction<T>) action)) {
                 toggleAction(action);
             }
         }
@@ -250,16 +250,16 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     @Override
-    public IAction.PERM toggleAction(IAction action) {
+    public IAction.PERM toggleAction(IAction<T> action) {
 
         ResourceLocation id = action.getRegistryName();
         if (activeTimers.containsKey(id)) {
             int cooldown = action.getCooldown(player);
-            int leftTime = activeTimers.get(id);
-            int duration = ((ILastingAction) action).getDuration(player);
+            int leftTime = activeTimers.getInt(id);
+            int duration = ((ILastingAction<T>) action).getDuration(player);
             cooldown -= cooldown * (leftTime / (float) duration / 2f);
             ((ILastingAction<T>) action).onDeactivated(player);
-            activeTimers.remove(id);
+            activeTimers.removeInt(id);
             cooldownTimers.put(id, Math.max(cooldown, 1));//Entries should to be at least 1
 
             dirty = true;
@@ -273,7 +273,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             if (r == IAction.PERM.ALLOWED) {
                 if (action.onActivated(player)) {
                     if (action instanceof ILastingAction) {
-                        activeTimers.put(id, ((ILastingAction) action).getDuration(player));
+                        activeTimers.put(id, ((ILastingAction<T>) action).getDuration(player));
                     } else {
                         cooldownTimers.put(id, action.getCooldown(player));
                     }
@@ -289,8 +289,8 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     @Override
-    public void unlockActions(Collection<IAction> actions) {
-        for (IAction action : actions) {
+    public void unlockActions(Collection<IAction<T>> actions) {
+        for (IAction<T> action : actions) {
             if (!ModRegistries.ACTIONS.containsValue(action)) {
                 throw new ActionNotRegisteredException(action);
             }
@@ -350,7 +350,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         nbt.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
     }
 
-    private boolean isActionAllowedPermission(IAction action) {
+    private boolean isActionAllowedPermission(IAction<T> action) {
         ResourceLocation id = action.getRegistryName();
         return player.getRepresentingEntity().level.isClientSide || PermissionAPI.hasPermission(player.getRepresentingPlayer(), Permissions.ACTION_PREFIX + id.getNamespace() + "." + id.getPath());
     }
@@ -358,8 +358,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     private void loadTimerMapFromNBT(CompoundTag nbt, Object2IntMap<ResourceLocation> map) {
         for (String key : nbt.getAllKeys()) {
             ResourceLocation id = new ResourceLocation(key);
-            IAction action = ModRegistries.ACTIONS.getValue(id);
-            if (action == null) {
+            if (ModRegistries.ACTIONS.getValue(id) == null) {
                 LOGGER.warn("Did not find action with key {}", key);
             } else {
                 map.put(id, nbt.getInt(key));
@@ -383,7 +382,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             super("Action " + name + " is not registered. You cannot use it otherwise");
         }
 
-        public ActionNotRegisteredException(IAction action) {
+        public ActionNotRegisteredException(IAction<?> action) {
             this(action.toString());
         }
     }

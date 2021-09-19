@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.inventory.recipes;
 
 import com.google.gson.JsonObject;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
@@ -33,11 +34,11 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
     private final NonNullList<Ingredient> recipeItems;
     private final ItemStack recipeOutput;
     private final int requiredLevel;
-    private final @Nonnull
-    ISkill[] requiredSkills;
+    @Nonnull
+    private final ISkill<IHunterPlayer>[] requiredSkills;
     private final int requiredLava;
 
-    public ShapedWeaponTableRecipe(ResourceLocation idIn, String groupIn, int recipeWidthIn, int recipeHeightIn, NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn, int requiredLevel, @Nonnull ISkill[] requiredSkills, int requiredLava) {
+    public ShapedWeaponTableRecipe(ResourceLocation idIn, String groupIn, int recipeWidthIn, int recipeHeightIn, NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn, int requiredLevel, @Nonnull ISkill<IHunterPlayer>[] requiredSkills, int requiredLava) {
         this.id = idIn;
         this.group = groupIn;
         this.recipeWidth = recipeWidthIn;
@@ -106,7 +107,7 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
 
     @Nonnull
     @Override
-    public ISkill[] getRequiredSkills() {
+    public ISkill<IHunterPlayer>[] getRequiredSkills() {
         return requiredSkills;
     }
 
@@ -180,10 +181,11 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
             NonNullList<Ingredient> ingredients = VampirismRecipeHelper.deserializeIngredients(astring, map, width, length);
             ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
             int level = GsonHelper.getAsInt(json, "level", 1);
-            ISkill[] skill = VampirismRecipeHelper.deserializeSkills(GsonHelper.getAsJsonArray(json, "skill", null));
+            ISkill<?>[] skill = VampirismRecipeHelper.deserializeSkills(GsonHelper.getAsJsonArray(json, "skill", null));
             int lava = GsonHelper.getAsInt(json, "lava", 0);
 
-            return new ShapedWeaponTableRecipe(recipeId, group, width, length, ingredients, result, level, skill, lava);
+            //noinspection unchecked
+            return new ShapedWeaponTableRecipe(recipeId, group, width, length, ingredients, result, level, (ISkill<IHunterPlayer>[]) skill, lava);
         }
 
         @Override
@@ -198,13 +200,14 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
             ItemStack itemstack = buffer.readItem();
             int level = buffer.readVarInt();
             int lava = buffer.readVarInt();
-            ISkill[] skills = new ISkill[buffer.readVarInt()];
+            ISkill<?>[] skills = new ISkill[buffer.readVarInt()];
             if (skills.length != 0) {
                 for (int i = 0; i < skills.length; i++) {
                     skills[i] = ModRegistries.SKILLS.getValue(new ResourceLocation(buffer.readUtf(32767)));
                 }
             }
-            return new ShapedWeaponTableRecipe(recipeId, group, width, height, ingredients, itemstack, level, skills, lava);
+            //noinspection unchecked
+            return new ShapedWeaponTableRecipe(recipeId, group, width, height, ingredients, itemstack, level, (ISkill<IHunterPlayer>[]) skills, lava);
         }
 
         @Override
@@ -220,7 +223,7 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
             buffer.writeVarInt(recipe.requiredLava);
             buffer.writeVarInt(recipe.requiredSkills.length);
             if (recipe.requiredSkills.length != 0) {
-                for (ISkill skill : recipe.requiredSkills) {
+                for (ISkill<?> skill : recipe.requiredSkills) {
                     buffer.writeUtf(skill.getRegistryName().toString());
                 }
             }

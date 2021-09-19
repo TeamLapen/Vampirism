@@ -49,7 +49,7 @@ public class ModBlocksRender {
             if (tintIndex == 255) {
                 BlockEntity tile = (worldIn == null || pos == null) ? null : worldIn.getBlockEntity(pos);
                 if (tile instanceof TotemBlockEntity) {
-                    IFaction f = ((TotemBlockEntity) tile).getControllingFaction();
+                    IFaction<?> f = ((TotemBlockEntity) tile).getControllingFaction();
                     if (f != null) return f.getColor();
                 }
             }

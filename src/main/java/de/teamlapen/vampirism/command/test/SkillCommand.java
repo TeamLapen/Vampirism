@@ -29,7 +29,7 @@ public class SkillCommand extends BasicCommand {
     }
 
     private static int disableall(CommandSourceStack commandSource, ServerPlayer asPlayer) {
-        IFactionPlayer factionPlayer = asPlayer.isAlive() ? FactionPlayerHandler.get(asPlayer).getCurrentFactionPlayer().orElse(null) : null;
+        IFactionPlayer<?> factionPlayer = asPlayer.isAlive() ? FactionPlayerHandler.get(asPlayer).getCurrentFactionPlayer().orElse(null) : null;
         if (factionPlayer == null) {
             commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.noinfaction"), false);
             return 0;
@@ -38,8 +38,9 @@ public class SkillCommand extends BasicCommand {
         return 0;
     }
 
-    private static int skill(CommandSourceStack commandSource, ServerPlayer asPlayer, ISkill skill, boolean force) {
-        IFactionPlayer factionPlayer = asPlayer.isAlive() ? FactionPlayerHandler.get(asPlayer).getCurrentFactionPlayer().orElse(null) : null;
+    @SuppressWarnings("unchecked")
+    private static int skill(CommandSourceStack commandSource, ServerPlayer asPlayer, @SuppressWarnings("rawtypes") ISkill skill, boolean force) {
+        IFactionPlayer<?> factionPlayer = asPlayer.isAlive() ? FactionPlayerHandler.get(asPlayer).getCurrentFactionPlayer().orElse(null) : null;
         if (factionPlayer == null) {
             commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.noinfaction"), false);
             return 0;
@@ -62,7 +63,7 @@ public class SkillCommand extends BasicCommand {
                 commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.alreadyenabled", skill.getName()), false);
                 break;
             case PARENT_NOT_ENABLED:
-                ISkill[] skills = factionPlayer.getSkillHandler().getParentSkills(skill);
+                ISkill<?>[] skills = factionPlayer.getSkillHandler().getParentSkills(skill);
                 if (skills == null || skills.length == 0) return 0;
                 if (skills.length == 1)
                     commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.parent", skills[0].getRegistryName()), false);

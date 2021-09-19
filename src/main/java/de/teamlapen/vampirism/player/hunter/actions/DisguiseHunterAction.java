@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.player.hunter.actions;
 
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -29,7 +28,7 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     }
 
     @Override
-    public int getCooldown(IFactionPlayer<?> player) {
+    public int getCooldown(IHunterPlayer player) {
         return 0;
     }
 

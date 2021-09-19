@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
  */
 public class VampirePlayerSpecialAttributes {
     public boolean disguised = false;
-    public IFaction disguisedAs = null;
+    public IFaction<?> disguisedAs = null;
     public boolean bat = false;
     public boolean blood_vision = false;
     public boolean half_invulnerable = false;

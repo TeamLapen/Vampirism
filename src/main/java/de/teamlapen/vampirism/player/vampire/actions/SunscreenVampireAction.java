@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.player.vampire.actions;
 
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -18,7 +17,7 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
     }
 
     @Override
-    public int getCooldown(IFactionPlayer<?> player) {
+    public int getCooldown(IVampirePlayer player) {
         return VampirismConfig.BALANCE.vaSunscreenCooldown.get() * 20;
     }
 

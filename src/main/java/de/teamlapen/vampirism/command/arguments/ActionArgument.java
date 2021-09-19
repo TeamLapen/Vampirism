@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
-public class ActionArgument implements ArgumentType<IAction> {
+public class ActionArgument implements ArgumentType<IAction<?>> {
     public static final DynamicCommandExceptionType ACTION_NOT_FOUND = new DynamicCommandExceptionType((particle) -> {
         return new TranslatableComponent("command.vampirism.argument.action.notfound", particle);
     });
@@ -28,7 +28,7 @@ public class ActionArgument implements ArgumentType<IAction> {
         return new ActionArgument();
     }
 
-    public static IAction getAction(CommandContext<CommandSourceStack> context, String name) {
+    public static IAction<?> getAction(CommandContext<CommandSourceStack> context, String name) {
         return context.getArgument(name, IAction.class);
     }
 
@@ -43,9 +43,9 @@ public class ActionArgument implements ArgumentType<IAction> {
     }
 
     @Override
-    public IAction parse(StringReader reader) throws CommandSyntaxException {
+    public IAction<?> parse(StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
-        IAction action = ModRegistries.ACTIONS.getValue(id);
+        IAction<?> action = ModRegistries.ACTIONS.getValue(id);
         if (action == null)
             throw ACTION_NOT_FOUND.create(id);
         return action;

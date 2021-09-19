@@ -146,7 +146,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public ActionHandlerEntity getActionHandler() {
+    public ActionHandlerEntity<?> getActionHandler() {
         return entityActionHandler;
     }
 

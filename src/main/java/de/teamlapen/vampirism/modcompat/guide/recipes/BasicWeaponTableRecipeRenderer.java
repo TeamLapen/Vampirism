@@ -67,7 +67,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
             FormattedText newLine = new TextComponent("\n");
             List<FormattedText> skills = new ArrayList<>();
             skills.add(new TranslatableComponent("gui.vampirism.hunter_weapon_table.skill", "\n"));
-            for (ISkill skill : recipe.getRequiredSkills()) {
+            for (ISkill<?> skill : recipe.getRequiredSkills()) {
                 skills.add(skill.getName().copy().withStyle(ChatFormatting.ITALIC));
                 skills.add(newLine);
             }

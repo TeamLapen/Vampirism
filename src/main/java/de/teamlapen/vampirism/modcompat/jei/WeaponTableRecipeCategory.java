@@ -66,11 +66,11 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
             minecraft.font.draw(stack, level, x, y, Color.GRAY.getRGB());
             y += minecraft.font.lineHeight + 2;
         }
-        ISkill[] requiredSkills = recipe.getRequiredSkills();
+        ISkill<?>[] requiredSkills = recipe.getRequiredSkills();
         if (requiredSkills.length > 0) {
             MutableComponent skillText = new TranslatableComponent("gui.vampirism.hunter_weapon_table.skill", " ");
 
-            for (ISkill skill : recipe.getRequiredSkills()) {
+            for (ISkill<?> skill : recipe.getRequiredSkills()) {
                 skillText.append(skill.getName()).append(" ");
 
             }

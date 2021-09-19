@@ -224,7 +224,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public ActionHandlerEntity getActionHandler() {
+    public ActionHandlerEntity<?> getActionHandler() {
         return entityActionHandler;
     }
 

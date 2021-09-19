@@ -255,7 +255,8 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
                 return;
             }
 
-            EntityType type = ForgeRegistries.ENTITIES.getValue(entityTypeID);
+            //noinspection unchecked
+            EntityType<? extends MinionEntity<?>> type = (EntityType<? extends MinionEntity<?>>) ForgeRegistries.ENTITIES.getValue(entityTypeID);
 
             MinionInfo i = new MinionInfo(id, d, type);
             i.deathCooldown = tag.getInt("death_timer");
@@ -438,7 +439,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
 
     private void activateTask(MinionInfo info, IMinionTask<?, MinionData> task) {
         @Nullable
-        IMinionTask.IMinionTaskDesc desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data);
+        IMinionTask.IMinionTaskDesc<MinionData> desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data);
         if (desc == null) {
             getLordPlayer().ifPresent(player -> player.displayClientMessage(new TranslatableComponent("text.vampirism.minion.could_not_activate"), false));
         } else {

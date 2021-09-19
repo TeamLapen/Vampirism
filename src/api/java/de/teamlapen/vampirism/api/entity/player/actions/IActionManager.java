@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.player.actions;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.List;
@@ -13,10 +14,10 @@ public interface IActionManager {
     /**
      * A copied mutable list of all actions registered for this faction
      */
-    List<IAction> getActionsForFaction(IPlayableFaction faction);
+    <T extends IFactionPlayer<T>> List<IAction<T>> getActionsForFaction(IPlayableFaction<T> faction);
 
     /**
      * or use {@code net.minecraftforge.registries.RegistryManager.ACTIVE.getRegistry(new ResourceLocation("vampirism:actions"))}
      */
-    IForgeRegistry<IAction> getRegistry();
+    IForgeRegistry<IAction<?>> getRegistry();
 }

@@ -1,9 +1,11 @@
 package de.teamlapen.vampirism.api.entity.player.actions;
 
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+
 /**
  * Action with a duration which is updated every tick
  */
-public interface ILastingAction<T> extends IAction {
+public interface ILastingAction<T extends IFactionPlayer<T>> extends IAction<T> {
 
     /**
      * @return Skill duration in ticks
@@ -25,7 +27,7 @@ public interface ILastingAction<T> extends IAction {
     /**
      * Called when the action is activated after a world reload.
      * Called SERVER SIDE ONLY.
-     * For client side check {@link ILastingAction#onActivatedClient(Object)}
+     * For client side check {@link ILastingAction#onActivatedClient(IFactionPlayer)}}
      */
     void onReActivated(T player);
 

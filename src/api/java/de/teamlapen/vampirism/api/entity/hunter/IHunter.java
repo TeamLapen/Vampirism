@@ -13,7 +13,7 @@ public interface IHunter extends IFactionEntity {
 
     @Nonnull
     @Override
-    default IFaction getFaction() {
+    default IFaction<?> getFaction() {
         return VReference.HUNTER_FACTION;
     }
 }

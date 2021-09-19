@@ -51,7 +51,7 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
 
     @Nullable
     @Override
-    public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
+    public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
         return null;
     }
 

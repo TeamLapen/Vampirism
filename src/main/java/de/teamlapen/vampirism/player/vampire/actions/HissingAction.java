@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.player.vampire.actions;
 
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -14,7 +13,7 @@ import net.minecraft.world.phys.AABB;
 public class HissingAction extends DefaultVampireAction {
 
     @Override
-    public int getCooldown(IFactionPlayer<?> player) {
+    public int getCooldown(IVampirePlayer player) {
         return VampirismConfig.BALANCE.vaHissingCooldown.get() * 20;
     }
 

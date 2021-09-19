@@ -1,18 +1,19 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
 
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import net.minecraft.world.item.ItemStack;
 
 /**
  * Handles the players skills
  */
-public interface ISkillHandler<T> {
+public interface ISkillHandler<T extends IFactionPlayer<T>> {
 
     /**
      * @return Returns false if the skill already is unlocked or the parent node is not unlocked or the skill is not found
      */
-    Result canSkillBeEnabled(ISkill skill);
+    Result canSkillBeEnabled(ISkill<T> skill);
 
     ItemStack[] createRefinementItems();
 
@@ -21,12 +22,12 @@ public interface ISkillHandler<T> {
     /**
      * Disables the given skill
      */
-    void disableSkill(ISkill skill);
+    void disableSkill(ISkill<T> skill);
 
     /**
      * Enable the given skill. Check canSkillBeEnabled first
      */
-    void enableSkill(ISkill skill);
+    void enableSkill(ISkill<T> skill);
 
     /**
      * Equip the refinement set from the given stack to the appropriate slot
@@ -41,11 +42,11 @@ public interface ISkillHandler<T> {
      */
     int getLeftSkillPoints();
 
-    ISkill[] getParentSkills(ISkill skill);
+    ISkill<T>[] getParentSkills(ISkill<T> skill);
 
     boolean isRefinementEquipped(IRefinement refinement);
 
-    boolean isSkillEnabled(ISkill skill);
+    boolean isSkillEnabled(ISkill<?> skill);
 
     /**
      * remove all equipped refinements

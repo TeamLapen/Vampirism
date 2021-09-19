@@ -30,9 +30,9 @@ import java.util.function.Predicate;
 public class FactionRegistry implements IFactionRegistry {
     private static final Logger LOGGER = LogManager.getLogger();
     private final Map<Integer, Predicate<LivingEntity>> predicateMap = new HashMap<>();
-    private List<Faction> temp = new CopyOnWriteArrayList<>(); //Copy on write is costly, but we only expect very few elements anyway
-    private Faction[] allFactions;
-    private PlayableFaction[] playableFactions;
+    private List<Faction<?>> temp = new CopyOnWriteArrayList<>(); //Copy on write is costly, but we only expect very few elements anyway
+    private Faction<?>[] allFactions;
+    private PlayableFaction<?>[] playableFactions;
 
     /**
      * Finishes registrations during InterModProcessEvent
@@ -40,19 +40,18 @@ public class FactionRegistry implements IFactionRegistry {
     public void finish() {
         allFactions = temp.toArray(new Faction[0]);
         temp = null;
-        List<PlayableFaction> temp2 = new ArrayList<>();
-        for (Faction allFaction : allFactions) {
+        List<PlayableFaction<?>> temp2 = new ArrayList<>();
+        for (Faction<?> allFaction : allFactions) {
             if (allFaction instanceof PlayableFaction) {
-                temp2.add((PlayableFaction) allFaction);
+                temp2.add((PlayableFaction<?>) allFaction);
             }
         }
         playableFactions = temp2.toArray(new PlayableFaction[0]);
     }
 
     @Override
-    public
     @Nullable
-    IFaction getFaction(Entity entity) {
+    public IFaction<?> getFaction(Entity entity) {
         if (entity instanceof IFactionEntity) {
             return ((IFactionEntity) entity).getFaction();
         } else if (entity instanceof Player) {
@@ -63,11 +62,11 @@ public class FactionRegistry implements IFactionRegistry {
 
     @Nullable
     @Override
-    public IFaction getFactionByID(ResourceLocation id) {
+    public IFaction<?> getFactionByID(ResourceLocation id) {
         if (allFactions == null) {
             return null;
         }
-        for (IFaction f : allFactions) {
+        for (IFaction<?> f : allFactions) {
             if (f.getID().equals(id)) {
                 return f;
             }
@@ -76,7 +75,7 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public Faction[] getFactions() {
+    public Faction<?>[] getFactions() {
         return allFactions;
     }
 
@@ -86,7 +85,7 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public Predicate<LivingEntity> getPredicate(IFaction thisFaction, boolean ignoreDisguise) {
+    public Predicate<LivingEntity> getPredicate(IFaction<?> thisFaction, boolean ignoreDisguise) {
 
         return getPredicate(thisFaction, true, true, true, ignoreDisguise, null);
     }
@@ -129,12 +128,12 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral) {
+    public <T extends IFactionEntity> IFaction<T> registerFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral) {
         return registerFaction(id, entityInterface, color, hostileTowardsNeutral, null);
     }
 
     @Override
-    public <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, @Nullable IVillageFactionData villageFactionData) {
+    public <T extends IFactionEntity> IFaction<T> registerFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, @Nullable IVillageFactionData villageFactionData) {
         if (!UtilLib.isNonNull(id, entityInterface)) {
             throw new IllegalArgumentException("[Vampirism]Parameter for faction cannot be null");
         }
@@ -144,7 +143,7 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull BiFunction<Integer, Boolean, Component> lordTitleFunction, @Nullable IVillageFactionData villageFactionData) {
+    public <T extends IFactionPlayer<T>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull BiFunction<Integer, Boolean, Component> lordTitleFunction, @Nullable IVillageFactionData villageFactionData) {
         if (!UtilLib.isNonNull(id, entityInterface, playerCapabilitySupplier)) {
             throw new IllegalArgumentException("[Vampirism]Parameters for faction cannot be null");
         }
@@ -156,12 +155,12 @@ public class FactionRegistry implements IFactionRegistry {
 
     @ThreadSafeAPI
     @Override
-    public <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel) {
+    public <T extends IFactionPlayer<T>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel) {
         return registerPlayableFaction(id, entityInterface, color, hostileTowardsNeutral, playerCapabilitySupplier, highestLevel, 0, (a, b) -> new TextComponent("Lord " + a), null);
     }
 
     @ThreadSafeAPI
-    private void addFaction(Faction faction) {
+    private void addFaction(Faction<?> faction) {
         if (temp == null) {
             throw new IllegalStateException(String.format("[Vampirism]You have to register factions during InterModEnqueueEvent. (%s)", faction.getID()));
         } else {

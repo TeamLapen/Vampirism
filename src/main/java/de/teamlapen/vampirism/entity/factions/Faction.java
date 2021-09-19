@@ -45,7 +45,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof Faction) && this.id == (((Faction) obj).id);
+        return (obj instanceof Faction) && this.id == (((Faction<?>) obj).id);
     }
 
     @Override

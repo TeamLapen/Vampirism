@@ -24,13 +24,13 @@ public class SkillNode {
     private final static Logger LOGGER = LogManager.getLogger();
     private final SkillNode parent;
     private final List<SkillNode> children;
-    private final ISkill[] elements;
+    private final ISkill<?>[] elements;
     private final ResourceLocation[] lockingNodes;
     private final int depth;
     private final IPlayableFaction<?> faction;
     private final ResourceLocation id;
 
-    private SkillNode(ResourceLocation id, IPlayableFaction<?> faction, SkillNode parent, int depth, ISkill[] elements, ResourceLocation... lockingNodes) {
+    private SkillNode(ResourceLocation id, IPlayableFaction<?> faction, SkillNode parent, int depth, ISkill<?>[] elements, ResourceLocation... lockingNodes) {
         this.id = id;
         this.parent = parent;
         this.faction = faction;
@@ -44,7 +44,7 @@ public class SkillNode {
     /**
      * For root skill node
      */
-    public SkillNode(IPlayableFaction<?> faction, ISkill element) {
+    public SkillNode(IPlayableFaction<?> faction, ISkill<?> element) {
         this(faction.getID(), faction, null, 0, new ISkill[]{element});
 
     }
@@ -54,7 +54,7 @@ public class SkillNode {
      *
      * @param elements One or more xor skills
      */
-    public SkillNode(ResourceLocation id, SkillNode parent, ISkill[] elements, ResourceLocation... lockingNodes) {
+    public SkillNode(ResourceLocation id, SkillNode parent, ISkill<?>[] elements, ResourceLocation... lockingNodes) {
         this(id, parent.getFaction(), parent, parent.depth + 1, elements, lockingNodes);
         parent.children.add(this);
     }
@@ -62,7 +62,7 @@ public class SkillNode {
     /**
      * @return If the given skill is an element of this node
      */
-    public boolean containsSkill(ISkill skill) {
+    public boolean containsSkill(ISkill<?> skill) {
         return ArrayUtils.contains(elements, skill);
     }
 
@@ -78,7 +78,7 @@ public class SkillNode {
         return depth;
     }
 
-    public ISkill[] getElements() {
+    public ISkill<?>[] getElements() {
         return elements;
     }
 
@@ -118,10 +118,10 @@ public class SkillNode {
             ResourceLocation parent = json.has("parent") ? new ResourceLocation(GsonHelper.getAsString(json, "parent")) : null;
             ResourceLocation merge = json.has("merge") ? new ResourceLocation(GsonHelper.getAsString(json, "merge")) : null;
             JsonArray skills = GsonHelper.getAsJsonArray(json, "skills", new JsonArray());
-            List<ISkill> skillList = new ArrayList<>();
+            List<ISkill<?>> skillList = new ArrayList<>();
             for (int i = 0; i < skills.size(); i++) {
                 ResourceLocation id = new ResourceLocation(GsonHelper.convertToString(skills.get(i), "skill"));
-                ISkill s = ModRegistries.SKILLS.getValue(id);
+                ISkill<?> s = ModRegistries.SKILLS.getValue(id);
                 if (s == null) {
                     throw new IllegalArgumentException("Skill " + id + " is not registered");
                 }
@@ -139,11 +139,11 @@ public class SkillNode {
             ResourceLocation parent = buf.readBoolean() ? buf.readResourceLocation() : null;
             ResourceLocation merge = buf.readBoolean() ? buf.readResourceLocation() : null;
 
-            List<ISkill> skillList = new ArrayList<>();
+            List<ISkill<?>> skillList = new ArrayList<>();
             int count = buf.readVarInt();
             for (int i = 0; i < count; i++) {
                 ResourceLocation id = buf.readResourceLocation();
-                ISkill s = ModRegistries.SKILLS.getValue(id);
+                ISkill<?> s = ModRegistries.SKILLS.getValue(id);
                 if (s == null) {
                     LOGGER.warn("Skill {} is not registered", id);
                 }
@@ -162,10 +162,10 @@ public class SkillNode {
 
         public final List<ResourceLocation> lockingNodes;
         public final ResourceLocation parentId;
-        public final List<ISkill> skills;
+        public final List<ISkill<?>> skills;
         public final ResourceLocation mergeId;
 
-        private Builder(ResourceLocation parentId, ResourceLocation mergeId, List<ISkill> skills, List<ResourceLocation> lockingNodes) {
+        private Builder(ResourceLocation parentId, ResourceLocation mergeId, List<ISkill<?>> skills, List<ResourceLocation> lockingNodes) {
             this.mergeId = mergeId;
             this.parentId = parentId;
             this.skills = skills;
@@ -177,7 +177,7 @@ public class SkillNode {
         }
 
         public boolean checkSkillFaction(IPlayableFaction<?> faction) {
-            for (ISkill s : skills) {
+            for (ISkill<?> s : skills) {
                 if (!faction.getID().equals(s.getFaction().getID())) {
                     return false;
                 }
@@ -195,7 +195,7 @@ public class SkillNode {
             }
 
             JsonArray skillIds = new JsonArray();
-            for (ISkill s : skills) {
+            for (ISkill<?> s : skills) {
                 skillIds.add(s.getRegistryName().toString());
             }
             jsonobject.add("skills", skillIds);
@@ -231,7 +231,7 @@ public class SkillNode {
             }
 
             buf.writeVarInt(this.skills.size());
-            for (ISkill s : skills) {
+            for (ISkill<?> s : skills) {
                 buf.writeResourceLocation(s.getRegistryName());
             }
 

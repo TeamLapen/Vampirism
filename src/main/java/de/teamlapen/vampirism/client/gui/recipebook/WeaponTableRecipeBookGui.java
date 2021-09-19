@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui.recipebook;
 
 import com.google.common.collect.Lists;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
@@ -32,8 +33,8 @@ public class WeaponTableRecipeBookGui extends RecipeBookComponent {
                 }
                 return recipeList.getRecipes().stream().anyMatch(recipe -> {
                     if (recipe instanceof IWeaponTableRecipe) {
-                        ISkill[] skills = ((IWeaponTableRecipe) recipe).getRequiredSkills();
-                        for (ISkill skill : skills) {
+                        ISkill<IHunterPlayer>[] skills = ((IWeaponTableRecipe) recipe).getRequiredSkills();
+                        for (ISkill<IHunterPlayer> skill : skills) {
                             if (!player.getSkillHandler().isSkillEnabled(skill)) {
                                 return true;
                             }

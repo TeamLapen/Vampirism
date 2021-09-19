@@ -21,8 +21,8 @@ public class ModRegistries {
     public static final ResourceLocation REFINEMENT_ID = new ResourceLocation("vampirism:refinement");
     public static final ResourceLocation REFINEMENT_SET_ID = new ResourceLocation("vampirism:refinement_set");
 
-    public static final IForgeRegistry<ISkill> SKILLS;
-    public static final IForgeRegistry<IAction> ACTIONS;
+    public static final IForgeRegistry<ISkill<?>> SKILLS;
+    public static final IForgeRegistry<IAction<?>> ACTIONS;
     public static final IForgeRegistry<IEntityAction> ENTITYACTIONS;
     public static final IForgeRegistry<IMinionTask<?, ?>> MINION_TASKS;
     public static final IForgeRegistry<Task> TASKS;
@@ -30,8 +30,10 @@ public class ModRegistries {
     public static final IForgeRegistry<IRefinementSet> REFINEMENT_SETS;
 
     static {
-        SKILLS = makeRegistry(SKILLS_ID, ISkill.class, Integer.MAX_VALUE >> 5);
-        ACTIONS = makeRegistry(ACTIONS_ID, IAction.class, Integer.MAX_VALUE >> 5);
+        //noinspection unchecked
+        SKILLS = makeRegistry(SKILLS_ID, (Class<ISkill<?>>) (Object)ISkill.class, Integer.MAX_VALUE >> 5);
+        //noinspection unchecked
+        ACTIONS = makeRegistry(ACTIONS_ID, (Class<IAction<?>>) (Object)IAction.class, Integer.MAX_VALUE >> 5);
         ENTITYACTIONS = makeRegistry(ENTITYACTIONS_ID, IEntityAction.class, Integer.MAX_VALUE >> 5);
         //noinspection unchecked
         MINION_TASKS = ModRegistries.makeRegistry(MINION_TASKS_ID, (Class<IMinionTask<?, ?>>) (Object) IMinionTask.class, Integer.MAX_VALUE >> 5);

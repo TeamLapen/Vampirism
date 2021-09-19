@@ -115,7 +115,7 @@ public class Tests {
         return !failed;
     }
 
-    private static boolean checkObjectHolders(@Nonnull Class clazz) {
+    private static boolean checkObjectHolders(@Nonnull Class<?> clazz) {
         boolean failed = false;
         for (Field f : clazz.getFields()) {
             int mods = f.getModifiers();

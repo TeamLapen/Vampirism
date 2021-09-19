@@ -73,7 +73,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
         if (recipe.getRequiredSkills().length > 0) {
             MutableComponent skillText = new TranslatableComponent("gui.vampirism.alchemical_cauldron.skill", " ");
 
-            for (ISkill s : recipe.getRequiredSkills()) {
+            for (ISkill<?> s : recipe.getRequiredSkills()) {
                 skillText.append(s.getName()).append(" ");
             }
             y += UtilLib.renderMultiLine(minecraft.font, stack, skillText, 132, x, y, Color.GRAY.getRGB());

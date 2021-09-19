@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.items;
 
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -43,5 +44,5 @@ public interface IWeaponTableRecipe extends Recipe<CraftingContainer> {
      * @return The skills that have to be unlocked to craft this. Can be empty
      */
     @Nonnull
-    ISkill[] getRequiredSkills();
+    ISkill<IHunterPlayer>[] getRequiredSkills();
 }

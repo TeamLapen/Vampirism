@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 public abstract class DefaultHunterAction extends DefaultAction<IHunterPlayer> {
     @Nonnull
     @Override
-    public IPlayableFaction getFaction() {
+    public IPlayableFaction<?> getFaction() {
         return VReference.HUNTER_FACTION;
     }
 }

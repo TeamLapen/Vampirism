@@ -19,7 +19,7 @@ public class BiteableEntry {
     /**
      * if {@link #convertible} is true, this stores the handler which should be used for conversion
      */
-    public final IConvertingHandler convertingHandler;
+    public final IConvertingHandler<?> convertingHandler;
 
     /**
      * Entry for a biteable and convertible creature
@@ -27,7 +27,7 @@ public class BiteableEntry {
      * @param blood             Maximum blood the creature can have
      * @param convertingHandler Handler used for conversion
      */
-    public BiteableEntry(int blood, IConvertingHandler convertingHandler) {
+    public BiteableEntry(int blood, IConvertingHandler<?> convertingHandler) {
         this.blood = blood;
         this.convertible = true;
         this.convertingHandler = convertingHandler;

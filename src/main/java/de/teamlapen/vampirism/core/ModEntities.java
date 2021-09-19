@@ -38,7 +38,7 @@ public class ModEntities {
     public static final EntityType<AdvancedVampireEntity> advanced_vampire;
     public static final EntityType<AdvancedVampireEntity.IMob> advanced_vampire_imob = getNull();
     public static final EntityType<BlindingBatEntity> blinding_bat;
-    public static final EntityType<ConvertedCreatureEntity> converted_creature;
+    public static final EntityType<ConvertedCreatureEntity<?>> converted_creature;
     public static final EntityType<ConvertedCreatureEntity.IMob> converted_creature_imob = getNull();
     public static final EntityType<ConvertedSheepEntity> converted_sheep = getNull();
     public static final EntityType<ConvertedCowEntity> converted_cow = getNull();

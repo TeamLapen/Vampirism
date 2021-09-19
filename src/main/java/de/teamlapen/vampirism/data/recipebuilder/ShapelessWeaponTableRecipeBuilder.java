@@ -38,7 +38,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
     }
 
     private int lava = 1;
-    private ISkill[] skills;
+    private ISkill<?>[] skills;
     private int level = 1;
 
     public ShapelessWeaponTableRecipeBuilder(ItemLike resultIn, int countIn) {
@@ -110,17 +110,17 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
         return (ShapelessWeaponTableRecipeBuilder) super.unlockedBy(name, criterionIn);
     }
 
-    public ShapelessWeaponTableRecipeBuilder skills(ISkill... skills) {
+    public ShapelessWeaponTableRecipeBuilder skills(ISkill<?>... skills) {
         this.skills = skills;
         return this;
     }
 
     private static class Result extends ShapelessRecipeBuilder.Result {
         private final int lava;
-        private final ISkill[] skills;
+        private final ISkill<?>[] skills;
         private final int level;
 
-        public Result(ResourceLocation idIn, Item resultIn, int countIn, String groupIn, List<Ingredient> ingredientsIn, Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn, int lavaIn, ISkill[] skillsIn, int levelIn) {
+        public Result(ResourceLocation idIn, Item resultIn, int countIn, String groupIn, List<Ingredient> ingredientsIn, Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn, int lavaIn, ISkill<?>[] skillsIn, int levelIn) {
             super(idIn, resultIn, countIn, groupIn, ingredientsIn, advancementBuilderIn, advancementIdIn);
             this.lava = lavaIn;
             this.skills = skillsIn;
@@ -138,7 +138,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
             super.serializeRecipeData(json);
             json.addProperty("lava", this.lava);
             JsonArray skills = new JsonArray();
-            for (ISkill skill : this.skills) {
+            for (ISkill<?> skill : this.skills) {
                 skills.add(skill.getRegistryName().toString());
             }
             json.add("skill", skills);

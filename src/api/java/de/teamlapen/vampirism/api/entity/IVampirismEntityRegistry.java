@@ -46,7 +46,7 @@ public interface IVampirismEntityRegistry {
      * @param handler     Handles the conversion
      */
     @ThreadSafeAPI
-    void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc, IConvertingHandler handler);
+    void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc, IConvertingHandler<?> handler);
 
     /**
      * Registers a custom {@link IExtendedCreatureVampirism} for an entity class
@@ -59,7 +59,7 @@ public interface IVampirismEntityRegistry {
     <T extends PathfinderMob> void addCustomExtendedCreature(Class<? extends T> clazz, Function<T, IExtendedCreatureVampirism> constructor);
 
     @Nullable
-    IConvertedCreature convert(PathfinderMob entity);
+    IConvertedCreature<?> convert(PathfinderMob entity);
 
     /**
      * @return A map mapping the overlay resource location string to e convertible entity's class

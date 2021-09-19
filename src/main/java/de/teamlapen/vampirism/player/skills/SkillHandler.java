@@ -31,12 +31,12 @@ import java.util.stream.Collectors;
 /**
  * Handles skills for Vampirism's IFactionPlayers
  */
-public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<T> {
+public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<T> {
     private final static Logger LOGGER = LogManager.getLogger(SkillHandler.class);
     /**
      * All currently activated skills
      */
-    private final ArrayList<ISkill> enabledSkills = new ArrayList<>();
+    private final ArrayList<ISkill<T>> enabledSkills = new ArrayList<>();
     private final T player;
     private final IPlayableFaction<T> faction;
     private final IRefinementSet[] appliedRefinementSets = new IRefinementSet[3];
@@ -70,7 +70,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     }
 
     @Override
-    public Result canSkillBeEnabled(ISkill skill) {
+    public Result canSkillBeEnabled(ISkill<T> skill) {
         if (player.getRepresentingPlayer().getEffect(ModEffects.oblivion) != null) {
             return Result.LOCKED_BY_PLAYER_STATE;
         }
@@ -128,7 +128,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     }
 
     public void disableAllSkills() {
-        for (ISkill skill : enabledSkills) {
+        for (ISkill<T> skill : enabledSkills) {
             skill.onDisable(player);
         }
         enabledSkills.clear();
@@ -136,7 +136,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     }
 
     @Override
-    public void disableSkill(ISkill skill) {
+    public void disableSkill(ISkill<T> skill) {
         if (enabledSkills.remove(skill)) {
             skill.onDisable(player);
             dirty = true;
@@ -146,11 +146,12 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     }
 
     public void enableRootSkill() {
-        enableSkill(getRootNode().getElements()[0]);
+        //noinspection unchecked
+        enableSkill((ISkill<T>) getRootNode().getElements()[0]);
     }
 
     @Override
-    public void enableSkill(ISkill skill) {
+    public void enableSkill(ISkill<T> skill) {
         if (!enabledSkills.contains(skill)) {
             skill.onEnable(player);
             enabledSkills.add(skill);
@@ -180,8 +181,8 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         return false;
     }
 
-    public SkillNode findSkillNode(SkillNode base, ISkill skill) {
-        for (ISkill s : base.getElements()) {
+    public SkillNode findSkillNode(SkillNode base, ISkill<T> skill) {
+        for (ISkill<?> s : base.getElements()) {
             if (s.equals(skill)) {
                 return base;
             }
@@ -206,17 +207,20 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         return remainingSkillPoints;
     }
 
-    public List<ISkill> getLockingSkills(SkillNode nodeIn) {
-        return Arrays.stream(nodeIn.getLockingNodes()).map(id -> SkillTreeManager.getInstance().getSkillTree().getNodeFromId(id)).filter(Objects::nonNull).flatMap(node -> Arrays.stream(node.getElements())).collect(Collectors.toList());
+    public List<ISkill<T>> getLockingSkills(SkillNode nodeIn) {
+        //noinspection unchecked
+        return (List<ISkill<T>>) (Object) Arrays.stream(nodeIn.getLockingNodes()).map(id -> SkillTreeManager.getInstance().getSkillTree().getNodeFromId(id)).filter(Objects::nonNull).flatMap(node -> Arrays.stream(node.getElements())).collect(Collectors.toList());
     }
 
     @Override
-    public ISkill[] getParentSkills(ISkill skill) {
+    public ISkill<T>[] getParentSkills(ISkill<T> skill) {
         SkillNode node = findSkillNode(getRootNode(), skill);
-        if (node == null)
+        if (node == null) {
             return null;
-        else
-            return node.getParent().getElements();
+        } else {
+            //noinspection unchecked
+            return (ISkill<T>[]) node.getParent().getElements();
+        }
     }
 
     public T getPlayer() {
@@ -235,7 +239,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     }
 
     public boolean isNodeEnabled(SkillNode node) {
-        for (ISkill s : enabledSkills) {
+        for (ISkill<T> s : enabledSkills) {
             if (node.containsSkill(s)) return true;
         }
         return false;
@@ -247,7 +251,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     }
 
     @Override
-    public boolean isSkillEnabled(ISkill skill) {
+    public boolean isSkillEnabled(ISkill<?> skill) {
         return enabledSkills.contains(skill);
     }
 
@@ -258,7 +262,8 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     public void loadFromNbt(CompoundTag nbt) {
         if (nbt.contains("skills")) {
             for (String id : nbt.getCompound("skills").getAllKeys()) {
-                ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(id));
+                //noinspection unchecked
+                ISkill<T> skill = (ISkill<T>) ModRegistries.SKILLS.getValue(new ResourceLocation(id));
                 if (skill == null) {
                     LOGGER.warn("Skill {} does not exist anymore", id);
                     continue;
@@ -289,9 +294,10 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         if (nbt.contains("skills")) {
 
             //noinspection unchecked
-            List<ISkill> old = (List<ISkill>) enabledSkills.clone();
+            List<ISkill<T>> old = (List<ISkill<T>>) enabledSkills.clone();
             for (String id : nbt.getCompound("skills").getAllKeys()) {
-                ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(id));
+                //noinspection unchecked
+                ISkill<T> skill = (ISkill<T>) ModRegistries.SKILLS.getValue(new ResourceLocation(id));
                 if (skill == null) {
                     LOGGER.error("Skill {} does not exist on client!!!", id);
                     continue;
@@ -304,7 +310,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
 
             }
-            for (ISkill skill : old) {
+            for (ISkill<T> skill : old) {
                 disableSkill(skill);
             }
             VampirismMod.proxy.resetSkillScreenCache();
@@ -345,7 +351,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     public void saveToNbt(CompoundTag nbt) {
         CompoundTag skills = new CompoundTag();
-        for (ISkill skill : enabledSkills) {
+        for (ISkill<T> skill : enabledSkills) {
             skills.putBoolean(skill.getRegistryName().toString(), true);
         }
         nbt.put("skills", skills);
@@ -364,7 +370,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     public void writeUpdateForClient(CompoundTag nbt) {
         CompoundTag skills = new CompoundTag();
-        for (ISkill skill : enabledSkills) {
+        for (ISkill<T> skill : enabledSkills) {
             skills.putBoolean(skill.getRegistryName().toString(), true);
         }
         nbt.put("skills", skills);

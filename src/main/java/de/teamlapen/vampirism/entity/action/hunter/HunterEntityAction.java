@@ -18,7 +18,7 @@ public abstract class HunterEntityAction<T extends PathfinderMob & IEntityAction
     }
 
     @Override
-    public IFaction getFaction() {
+    public IFaction<?> getFaction() {
         return VReference.HUNTER_FACTION;
     }
 

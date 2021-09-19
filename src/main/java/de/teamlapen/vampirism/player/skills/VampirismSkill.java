@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 /**
  * Extension of {@link DefaultSkill} with vampirism default unloc names/descriptions
  */
-public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSkill<T> {
+public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends DefaultSkill<T> {
     private Supplier<Component> description = () -> null;
     private Consumer<T> activate = (T player) -> {
     };
@@ -64,6 +64,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
     /**
      * Simple hunter skill implementation. Does nothing by itself
      */
+    @SuppressWarnings("DeprecatedIsStillUsed")
     public static class SimpleHunterSkill extends VampirismSkill<IHunterPlayer> {
 
         /**
@@ -82,7 +83,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
 
         @Nonnull
         @Override
-        public IPlayableFaction getFaction() {
+        public IPlayableFaction<?> getFaction() {
             return VReference.HUNTER_FACTION;
         }
     }
@@ -91,6 +92,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
     /**
      * Simple vampire skill implementation. Does nothing by itself
      */
+    @SuppressWarnings("DeprecatedIsStillUsed")
     public static class SimpleVampireSkill extends VampirismSkill<IVampirePlayer> {
         @Deprecated
         public SimpleVampireSkill(String id, boolean desc) {
@@ -108,7 +110,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
 
         @Nonnull
         @Override
-        public IPlayableFaction getFaction() {
+        public IPlayableFaction<?> getFaction() {
             return VReference.VAMPIRE_FACTION;
         }
     }

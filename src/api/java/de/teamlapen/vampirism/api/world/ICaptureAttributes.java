@@ -15,13 +15,13 @@ public interface ICaptureAttributes {
      * @return currently attacking faction of the village
      */
     @Nullable
-    IFaction getAttackingFaction();
+    IFaction<?> getAttackingFaction();
 
     /**
      * @return currently defending faction of the village
      */
     @Nullable
-    IFaction getDefendingFaction();
+    IFaction<?> getDefendingFaction();
 
     /**
      * @return totem position

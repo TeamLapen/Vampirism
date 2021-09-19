@@ -18,7 +18,7 @@ public abstract class VampireEntityAction<T extends PathfinderMob & IEntityActio
     }
 
     @Override
-    public IFaction getFaction() {
+    public IFaction<?> getFaction() {
         return VReference.VAMPIRE_FACTION;
     }
 

@@ -95,13 +95,14 @@ public class InputEventPacket implements IMessage {
         return msg;
     }
 
-    public static void handle(final InputEventPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static <T extends IFactionPlayer<T>> void handle(final InputEventPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         Validate.notNull(msg.action);
         ServerPlayer player = ctx.getSender();
         Validate.notNull(player);
         ctx.enqueueWork(() -> {
-            Optional<? extends IFactionPlayer> factionPlayerOpt = FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty());
+            //noinspection unchecked
+            Optional<T> factionPlayerOpt = (Optional<T>) FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty());
             switch (msg.action) {
                 case SUCKBLOOD: {
                     try {
@@ -121,8 +122,9 @@ public class InputEventPacket implements IMessage {
                 case TOGGLEACTION: {
                     ResourceLocation id = new ResourceLocation(msg.param);
                     factionPlayerOpt.ifPresent(factionPlayer -> {
-                        IActionHandler actionHandler = factionPlayer.getActionHandler();
-                        IAction action = ModRegistries.ACTIONS.getValue(id);
+                        IActionHandler<T> actionHandler = factionPlayer.getActionHandler();
+                        //noinspection unchecked
+                        IAction<T> action = (IAction<T>) ModRegistries.ACTIONS.getValue(id);
                         if (action != null) {
                             IAction.PERM r = actionHandler.toggleAction(action);
                             switch (r) {
@@ -158,16 +160,17 @@ public class InputEventPacket implements IMessage {
                     break;
                 case UNLOCKSKILL:
                     factionPlayerOpt.ifPresent(factionPlayer -> {
-                        ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(msg.param));
+                        //noinspection unchecked
+                        ISkill<T> skill = (ISkill<T>) ModRegistries.SKILLS.getValue(new ResourceLocation(msg.param));
                         if (skill != null) {
-                            ISkillHandler skillHandler = factionPlayer.getSkillHandler();
+                            ISkillHandler<T> skillHandler = factionPlayer.getSkillHandler();
                             ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill);
                             if (result == ISkillHandler.Result.OK) {
                                 skillHandler.enableSkill(skill);
                                 if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
                                     //does this cause problems with addons?
                                     CompoundTag sync = new CompoundTag();
-                                    ((SkillHandler) skillHandler).writeUpdateForClient(sync);
+                                    ((SkillHandler<T>) skillHandler).writeUpdateForClient(sync);
                                     HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
                                 }
 

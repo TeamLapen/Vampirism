@@ -37,10 +37,12 @@ public class VampirismAPI {
     @SuppressWarnings("FieldMayBeFinal")
     @CapabilityInject(IVampirismWorld.class)
     private static Capability<IVampirismWorld> CAP_WORLD = null;
+    @SuppressWarnings("FieldMayBeFinal")
     @CapabilityInject(IVampirePlayer.class)
-    private static final Capability<IVampirePlayer> CAP_VAMPIRE = null;
+    private static Capability<IVampirePlayer> CAP_VAMPIRE = null;
+    @SuppressWarnings("FieldMayBeFinal")
     @CapabilityInject(IHunterPlayer.class)
-    private static final Capability<IHunterPlayer> CAP_HUNTER = null;
+    private static Capability<IHunterPlayer> CAP_HUNTER = null;
 
     private static IFactionRegistry factionRegistry;
     private static ISundamageRegistry sundamageRegistry;

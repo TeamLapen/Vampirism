@@ -41,7 +41,7 @@ public class AlchemicalCauldronRecipeBuilder {
     private String group;
     private Ingredient ingredient;
     private Either<Ingredient, FluidStack> fluid;
-    private ISkill[] skills;
+    private ISkill<?>[] skills;
     private int reqLevel = 1;
     private int cookTime = 200;
     private float exp = 0.2f;
@@ -121,7 +121,7 @@ public class AlchemicalCauldronRecipeBuilder {
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withSkills(ISkill... skills) {
+    public AlchemicalCauldronRecipeBuilder withSkills(ISkill<?>... skills) {
         this.skills = skills;
         return this;
     }
@@ -140,14 +140,14 @@ public class AlchemicalCauldronRecipeBuilder {
         private final Ingredient ingredient;
         private final Either<Ingredient, FluidStack> fluid;
         private final ItemStack result;
-        private final ISkill[] skills;
+        private final ISkill<?>[] skills;
         private final int reqLevel;
         private final int cookTimeIn;
         private final float exp;
         private final Advancement.Builder advancementBuilder;
         private final ResourceLocation advancementId;
 
-        public Result(@Nonnull ResourceLocation idIn, @Nonnull String groupIn, @Nonnull Ingredient ingredientIn, @Nonnull Either<Ingredient, FluidStack> fluidIn, @Nonnull ItemStack resultIn, @Nonnull ISkill[] skillsIn, int reqLevelIn, int cookTimeIn, float exp, Advancement.Builder advancementBuilderIn, ResourceLocation advancementId) {
+        public Result(@Nonnull ResourceLocation idIn, @Nonnull String groupIn, @Nonnull Ingredient ingredientIn, @Nonnull Either<Ingredient, FluidStack> fluidIn, @Nonnull ItemStack resultIn, @Nonnull ISkill<?>[] skillsIn, int reqLevelIn, int cookTimeIn, float exp, Advancement.Builder advancementBuilderIn, ResourceLocation advancementId) {
             this.id = idIn;
             this.group = groupIn;
             this.ingredient = ingredientIn;
@@ -208,7 +208,7 @@ public class AlchemicalCauldronRecipeBuilder {
             });
 
             JsonArray skills = new JsonArray();
-            for (ISkill skill : this.skills) {
+            for (ISkill<?> skill : this.skills) {
                 skills.add(skill.getRegistryName().toString());
             }
             jsonObject.add("skill", skills);

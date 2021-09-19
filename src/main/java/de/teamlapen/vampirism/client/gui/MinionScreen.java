@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.client.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableArrayTextComponentList;
-import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.inventory.container.MinionContainer;
@@ -32,7 +31,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
 
     private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/minion_inventory.png");
     private final int extraSlots;
-    private ScrollableListWidget taskList;
+    private ScrollableArrayTextComponentList taskList;
     private Button taskButton;
     private Button appearanceButton;
     private Button statButton;

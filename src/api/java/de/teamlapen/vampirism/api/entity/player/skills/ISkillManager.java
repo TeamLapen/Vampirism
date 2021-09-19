@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 
 import java.util.List;
 
@@ -15,5 +16,5 @@ public interface ISkillManager {
     /**
      * A mutable copied list of all skills registered for this faction
      */
-    List<ISkill> getSkillsForFaction(IPlayableFaction faction);
+    <T extends IFactionPlayer<T>> List<ISkill<T>> getSkillsForFaction(IPlayableFaction<T> faction);
 }

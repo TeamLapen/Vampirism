@@ -281,7 +281,7 @@ public class UtilLib {
      * @return The spawned creature or null if not successful
      */
     @Nullable
-    public static Entity spawnEntityInWorld(ServerLevel world, AABB box, EntityType entityType, int maxTry, @Nonnull List<? extends LivingEntity> avoidedEntities, MobSpawnType reason) {
+    public static Entity spawnEntityInWorld(ServerLevel world, AABB box, EntityType<?> entityType, int maxTry, @Nonnull List<? extends LivingEntity> avoidedEntities, MobSpawnType reason) {
         Entity e = entityType.create(world);
         if (spawnEntityInWorld(world, box, e, maxTry, avoidedEntities, reason)) {
             return e;

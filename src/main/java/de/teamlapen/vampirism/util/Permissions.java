@@ -19,7 +19,7 @@ public class Permissions {
         PermissionAPI.registerNode(FEED, DefaultPermissionLevel.ALL, "Allow feeding");
         PermissionAPI.registerNode(FEED_PLAYER, DefaultPermissionLevel.ALL, "Allow feeding from players");
         PermissionAPI.registerNode(INFECT_PLAYER, DefaultPermissionLevel.ALL, "Allow players to infect other players");
-        for (IAction action : ModRegistries.ACTIONS.getValues()) {
+        for (IAction<?> action : ModRegistries.ACTIONS.getValues()) {
             PermissionAPI.registerNode(ACTION_PREFIX + action.getRegistryName().getNamespace() + "." + action.getRegistryName().getPath(), DefaultPermissionLevel.ALL, "Use action " + action.getName().getString());
         }
     }

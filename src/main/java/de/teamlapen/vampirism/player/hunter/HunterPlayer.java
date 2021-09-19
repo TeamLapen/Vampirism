@@ -135,7 +135,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     }
 
     @Override
-    public IFaction getDisguisedAs() {
+    public IFaction<?> getDisguisedAs() {
         return player.hasEffect(ModEffects.disguise_as_vampire) ? VReference.VAMPIRE_FACTION : getFaction();
     }
 
@@ -297,7 +297,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     }
 
     @Override
-    protected FactionBasePlayer copyFromPlayer(Player old) {
+    protected FactionBasePlayer<IHunterPlayer> copyFromPlayer(Player old) {
         HunterPlayer oldHunter = get(old);
         CompoundTag nbt = new CompoundTag();
         oldHunter.saveData(nbt);

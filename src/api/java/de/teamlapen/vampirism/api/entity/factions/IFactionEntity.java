@@ -12,7 +12,7 @@ public interface IFactionEntity {
      * @return the faction this entity belongs to
      */
     @Nonnull
-    IFaction getFaction();
+    IFaction<?> getFaction();
 
     /**
      * Can be the same object or for Player Capabilities the player object

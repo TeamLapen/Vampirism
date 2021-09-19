@@ -71,7 +71,8 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
     @Nullable
     @Override
     public IConvertedCreature<T> createFrom(T entity) {
-        return Helper.createEntity(ModEntities.converted_creature, entity.getCommandSenderWorld()).map(convertedCreature -> {
+        //noinspection unchecked
+        return Helper.createEntity((EntityType<ConvertedCreatureEntity<T>>) (Object)ModEntities.converted_creature, entity.getCommandSenderWorld()).map(convertedCreature -> {
             copyImportantStuff(convertedCreature, entity);
             convertedCreature.setUUID(Mth.createInsecureUUID(convertedCreature.getRandom()));
             convertedCreature.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 2));

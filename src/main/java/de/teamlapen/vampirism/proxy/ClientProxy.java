@@ -218,8 +218,8 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void resetSkillScreenCache() {
-        if (Minecraft.getInstance().screen instanceof SkillsScreen) {
-            ((SkillsScreen) Minecraft.getInstance().screen).resetToolTipCache();
+        if (Minecraft.getInstance().screen instanceof SkillsScreen<?>) {
+            ((SkillsScreen<?>) Minecraft.getInstance().screen).resetToolTipCache();
         }
     }
 

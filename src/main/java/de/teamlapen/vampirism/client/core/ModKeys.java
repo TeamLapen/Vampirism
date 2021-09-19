@@ -119,7 +119,7 @@ public class ModKeys {
                 if (Minecraft.getInstance().player.isAlive()) {
                     IPlayableFaction<?> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
                     if (faction != null) {
-                        Minecraft.getInstance().setScreen(new ActionSelectScreen(new Color(faction.getColor()), false));
+                        Minecraft.getInstance().setScreen(new ActionSelectScreen<>(new Color(faction.getColor()), false));
                     }
                 }
             } else if (VAMPIRISM_MENU.isDown()) {
@@ -167,7 +167,7 @@ public class ModKeys {
     /**
      * Try to toggle the given action
      **/
-    private void toggleBoundAction(@Nonnull IFactionPlayer player, @Nullable IAction action) {
+    private void toggleBoundAction(@Nonnull IFactionPlayer<?> player, @Nullable IAction<?> action) {
         if (action == null) {
             player.getRepresentingPlayer().displayClientMessage(new TranslatableComponent("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
         } else {

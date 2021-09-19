@@ -104,7 +104,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     private final Player player;
     @Nonnull
-    private final Int2ObjectMap<IAction> boundActions = new Int2ObjectArrayMap<>();
+    private final Int2ObjectMap<IAction<?>> boundActions = new Int2ObjectArrayMap<>();
     private IPlayableFaction<?> currentFaction = null;
     private int currentLevel = 0;
     private int currentLordLevel = 0;
@@ -149,7 +149,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      * @return action if bound
      */
     @Nullable
-    public IAction getBoundAction(int id) {
+    public IAction<?> getBoundAction(int id) {
         return this.boundActions.get(id);
     }
 
@@ -167,7 +167,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     @Nonnull
     @Override
     public Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer() {
-        return currentFaction == null ? Optional.empty() : (Optional<? extends IFactionPlayer<?>>) (Object) currentFaction.getPlayerCapability(player).map(Optional::of).orElse(Optional.empty());
+        return currentFaction == null ? Optional.empty() : currentFaction.getPlayerCapability(player).map(Optional::of).orElse(Optional.empty());
     }
 
     @Override
@@ -291,7 +291,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         ModRegistries.TASKS.getValues().stream().filter(task -> task.isUnique() && task.getReward() instanceof LordLevelReward && ((LordLevelReward) task.getReward()).targetLevel > minLevel).forEach(task -> getCurrentFactionPlayer().map(IFactionPlayer::getTaskManager).ifPresent(manager -> manager.resetUniqueTask(task)));
     }
 
-    public void setBoundAction(int id, @Nullable IAction boundAction, boolean sync, boolean notify) {
+    public void setBoundAction(int id, @Nullable IAction<?> boundAction, boolean sync, boolean notify) {
         if (boundAction == null) {
             this.boundActions.remove(id);
         } else {
@@ -390,8 +390,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         this.writeBoundActions(nbt);
     }
 
-    private IPlayableFaction<? extends IFactionPlayer<?>> getFactionFromKey(ResourceLocation key) {
-        for (IPlayableFaction p : VampirismAPI.factionRegistry().getPlayableFactions()) {
+    private IPlayableFaction<?> getFactionFromKey(ResourceLocation key) {
+        for (IPlayableFaction<?> p : VampirismAPI.factionRegistry().getPlayableFactions()) {
             if (p.getID().equals(key)) {
                 return p;
             }
@@ -412,7 +412,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         CompoundTag bounds = nbt.getCompound("bound_actions");
         for (String s : bounds.getAllKeys()) {
             int id = Integer.parseInt(s);
-            IAction action = ModRegistries.ACTIONS.getValue(new ResourceLocation(bounds.getString(s)));
+            IAction<?> action = ModRegistries.ACTIONS.getValue(new ResourceLocation(bounds.getString(s)));
             this.boundActions.put(id, action);
         }
     }
@@ -509,7 +509,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     private void writeBoundActions(CompoundTag nbt) {
         CompoundTag bounds = new CompoundTag();
-        for (Int2ObjectMap.Entry<IAction> entry : this.boundActions.int2ObjectEntrySet()) {
+        for (Int2ObjectMap.Entry<IAction<?>> entry : this.boundActions.int2ObjectEntrySet()) {
             bounds.putString(String.valueOf(entry.getIntKey()), entry.getValue().getRegistryName().toString());
         }
         nbt.put("bound_actions", bounds);

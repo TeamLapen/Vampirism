@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
@@ -50,7 +51,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class VampirismVampireSword extends VampirismItemWeapon implements IBloodChargeable, IFactionExclusiveItem, IFactionLevelItem {
+public abstract class VampirismVampireSword extends VampirismItemWeapon implements IBloodChargeable, IFactionExclusiveItem, IFactionLevelItem<IVampirePlayer> {
 
 
     public static final String DO_NOT_NAME_STRING = "DO_NOT_NAME";
@@ -124,7 +125,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
 
     @Nullable
     @Override
-    public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
+    public ISkill<IVampirePlayer> getRequiredSkill(@Nonnull ItemStack stack) {
         return null;
     }
 

@@ -15,7 +15,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class SkillUnlockedTrigger extends SimpleCriterionTrigger<SkillUnlockedTrigger.Instance> {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "skill_unlocked");
 
-    public static Instance builder(ISkill skill) {
+    public static Instance builder(ISkill<?> skill) {
         return new Instance(skill);
     }
 
@@ -29,7 +29,7 @@ public class SkillUnlockedTrigger extends SimpleCriterionTrigger<SkillUnlockedTr
         return ID;
     }
 
-    public void trigger(ServerPlayer player, ISkill skill) {
+    public void trigger(ServerPlayer player, ISkill<?> skill) {
         this.trigger(player, (instance -> instance.test(skill)));
     }
 
@@ -43,7 +43,7 @@ public class SkillUnlockedTrigger extends SimpleCriterionTrigger<SkillUnlockedTr
         @Nonnull
         private final ResourceLocation skillId;
 
-        Instance(@Nonnull ISkill skill) {
+        Instance(@Nonnull ISkill<?> skill) {
             super(ID, EntityPredicate.Composite.ANY);
             this.skillId = skill.getRegistryName();
         }
@@ -61,7 +61,7 @@ public class SkillUnlockedTrigger extends SimpleCriterionTrigger<SkillUnlockedTr
             return jsonObject;
         }
 
-        public boolean test(@Nonnull ISkill skill) {
+        public boolean test(@Nonnull ISkill<?> skill) {
             return this.skillId.equals(skill.getRegistryName());
         }
     }

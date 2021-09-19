@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 /**
  * Skill that can be unlocked
  */
-public interface ISkill extends IForgeRegistryEntry<ISkill> {
+public interface ISkill<T extends IFactionPlayer<T>> extends IForgeRegistryEntry<ISkill<?>> {
     /**
      * The description for this skill. Can be null
      */
@@ -25,7 +25,7 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
      * @return The faction this skill belongs to
      */
     @Nonnull
-    IPlayableFaction getFaction();
+    IPlayableFaction<?> getFaction();
 
     default Component getName() {
         return new TranslatableComponent(getTranslationKey());
@@ -54,14 +54,14 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
      *
      * @param player Must be of the type that {@link ISkill#getFaction()} belongs to
      */
-    void onDisable(IFactionPlayer player);
+    void onDisable(T player);
 
     /**
      * Called when the skill is enabled (Server: on load from nbt/on enabling it via the gui. Client: on update from server)
      *
      * @param player Must be of the type that {@link ISkill#getFaction()} belongs to
      */
-    void onEnable(IFactionPlayer player);
+    void onEnable(T player);
 
     /**
      * Save this. It's required for rendering

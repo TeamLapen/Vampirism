@@ -26,13 +26,13 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
-    private static final ISkill[] EMPTY_SKILLS = {};
+    private static final ISkill<?>[] EMPTY_SKILLS = {};
     private final Either<Ingredient, FluidStack> fluid;
     @Nonnull
-    private final ISkill[] skills;
+    private final ISkill<?>[] skills;
     private final int reqLevel;
 
-    public AlchemicalCauldronRecipe(ResourceLocation idIn, String groupIn, Ingredient ingredientIn, Either<Ingredient, FluidStack> fluidIn, ItemStack resultIn, @Nonnull ISkill[] skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
+    public AlchemicalCauldronRecipe(ResourceLocation idIn, String groupIn, Ingredient ingredientIn, Either<Ingredient, FluidStack> fluidIn, ItemStack resultIn, @Nonnull ISkill<?>[] skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
         super(ModRecipes.ALCHEMICAL_CAULDRON_TYPE, idIn, groupIn, ingredientIn, resultIn, exp, cookTimeIn);
         this.fluid = fluidIn;
         this.skills = skillsIn;
@@ -41,7 +41,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
 
     public boolean canBeCooked(int level, ISkillHandler<IHunterPlayer> skillHandler) {
         if (level < reqLevel) return false;
-        for (ISkill s : skills) {
+        for (ISkill<?> s : skills) {
             if (!skillHandler.isSkillEnabled(s)) return false;
         }
         return true;
@@ -56,7 +56,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
     }
 
     @Nonnull
-    public ISkill[] getRequiredSkills() {
+    public ISkill<?>[] getRequiredSkills() {
         return skills;
     }
 
@@ -99,7 +99,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
             String group = GsonHelper.getAsString(json, "group", "");
             Ingredient ingredients = Ingredient.fromJson(GsonHelper.isArrayNode(json, "ingredient") ? GsonHelper.getAsJsonArray(json, "ingredient") : GsonHelper.getAsJsonObject(json, "ingredient"));
             int level = GsonHelper.getAsInt(json, "level", 1);
-            ISkill[] skills = VampirismRecipeHelper.deserializeSkills(GsonHelper.getAsJsonArray(json, "skill", null));
+            ISkill<?>[] skills = VampirismRecipeHelper.deserializeSkills(GsonHelper.getAsJsonArray(json, "skill", null));
             ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
             Either<Ingredient, FluidStack> fluid = VampirismRecipeHelper.getFluidOrItem(json);
             int cookTime = GsonHelper.getAsInt(json, "cookTime", 200);
@@ -121,7 +121,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
             float exp = buffer.readFloat();
             int cookingtime = buffer.readVarInt();
             int level = buffer.readVarInt();
-            ISkill[] skills = new ISkill[buffer.readVarInt()];
+            ISkill<?>[] skills = new ISkill[buffer.readVarInt()];
             for (int i = 0; i < skills.length; i++) {
                 skills[i] = ModRegistries.SKILLS.getValue(new ResourceLocation(buffer.readUtf(32767)));
             }
@@ -145,7 +145,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
             buffer.writeVarInt(recipe.cookingTime);
             buffer.writeVarInt(recipe.reqLevel);
             buffer.writeVarInt(recipe.skills.length);
-            for (ISkill skill : recipe.skills) {
+            for (ISkill<?> skill : recipe.skills) {
                 buffer.writeUtf(skill.getRegistryName().toString());
             }
         }

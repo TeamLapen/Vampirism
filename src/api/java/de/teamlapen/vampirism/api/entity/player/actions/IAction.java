@@ -12,25 +12,25 @@ import javax.annotation.Nonnull;
 /**
  * Interface for player actions
  */
-public interface IAction extends IForgeRegistryEntry<IAction> {
+public interface IAction<T extends IFactionPlayer<T>> extends IForgeRegistryEntry<IAction<?>> {
     /**
      * Checks if the player can use this action
      *
      * @param player Must be an instance of class that belongs to {@link IAction#getFaction()}
      */
-    PERM canUse(IFactionPlayer player);
+    PERM canUse(T player);
 
 
     /**
      * @return Cooldown time in ticks until the action can be used again
      */
-    int getCooldown(IFactionPlayer<?> player);
+    int getCooldown(T player);
 
     /**
      * @return the faction, which players can use this action
      */
     @Nonnull
-    IPlayableFaction getFaction();
+    IPlayableFaction<?> getFaction();
 
     default Component getName() {
         return new TranslatableComponent(getTranslationKey());
@@ -48,7 +48,7 @@ public interface IAction extends IForgeRegistryEntry<IAction> {
      * @param player Must be an instance of class that belongs to {@link IAction#getFaction()}
      * @return Whether the action was successfully activated. !Does not give any feedback to the user!
      */
-    boolean onActivated(IFactionPlayer player);
+    boolean onActivated(T player);
 
     default boolean showInSelectAction(Player player) {
         return true;

@@ -34,24 +34,17 @@ public class ClientProxy extends CommonProxy {
     private static final Logger LOGGER = LogManager.getLogger();
 
     private static void handleCapability(Entity e, ResourceLocation key, CompoundTag data) {
-        Capability cap = HelperRegistry.getSyncableEntityCaps().get(key);
+        Capability<ISyncable.ISyncableEntityCapabilityInst> cap = HelperRegistry.getSyncableEntityCaps().get(key);
         if (cap == null && e instanceof Player) {
             cap = HelperRegistry.getSyncablePlayerCaps().get(key);
         }
         if (cap == null) {
             LOGGER.warn("Capability with key {} is not registered in the HelperRegistry", key);
         } else {
-            LazyOptional opt = e.getCapability(cap, null); //Lazy Optional is kinda strange
-            opt.ifPresent(inst -> {
-                if (inst instanceof ISyncable) {
-                    ((ISyncable) inst).loadUpdateFromNBT(data);
-                } else {
-                    LOGGER.warn("Target entity's capability {} ({})does not implement ISyncable", inst, key);
-                }
-            });
+            LazyOptional<ISyncable.ISyncableEntityCapabilityInst> opt = e.getCapability(cap); //Lazy Optional is kinda strange
+            opt.ifPresent(inst -> inst.loadUpdateFromNBT(data));
             if (!opt.isPresent()) {
                 LOGGER.warn("Target entity {} does not have capability {}", e, cap);
-
             }
         }
     }

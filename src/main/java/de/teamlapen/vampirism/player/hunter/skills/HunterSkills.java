@@ -27,34 +27,34 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 @SuppressWarnings("unused")
 public class HunterSkills {
 
-    public static final ISkill basic_alchemy = getNull();
-    public static final ISkill double_crossbow = getNull();
-    public static final ISkill enhanced_armor = getNull();
-    public static final ISkill enhanced_weapons = getNull();
-    public static final ISkill garlic_beacon = getNull();
-    public static final ISkill garlic_beacon_improved = getNull();
-    public static final ISkill holy_water_enhanced = getNull();
-    public static final ISkill hunter_attack_speed = getNull();
-    public static final ISkill hunter_attack_speed_advanced = getNull();
-    public static final ISkill hunter_attack_damage = getNull();
-    public static final ISkill hunter_awareness = getNull();
-    public static final ISkill hunter_disguise = getNull();
-    public static final ISkill purified_garlic = getNull();
-    public static final ISkill stake1 = getNull();
-    public static final ISkill stake2 = getNull();
-    public static final ISkill tech_weapons = getNull();
-    public static final ISkill weapon_table = getNull();
-    public static final ISkill durable_brewing = getNull();
-    public static final ISkill concentrated_brewing = getNull();
-    public static final ISkill multitask_brewing = getNull();
-    public static final ISkill efficient_brewing = getNull();
-    public static final ISkill master_brewer = getNull();
-    public static final ISkill swift_brewing = getNull();
-    public static final ISkill concentrated_durable_brewing = getNull();
-    public static final ISkill potion_resistance = getNull();
+    public static final ISkill<IHunterPlayer> basic_alchemy = getNull();
+    public static final ISkill<IHunterPlayer> double_crossbow = getNull();
+    public static final ISkill<IHunterPlayer> enhanced_armor = getNull();
+    public static final ISkill<IHunterPlayer> enhanced_weapons = getNull();
+    public static final ISkill<IHunterPlayer> garlic_beacon = getNull();
+    public static final ISkill<IHunterPlayer> garlic_beacon_improved = getNull();
+    public static final ISkill<IHunterPlayer> holy_water_enhanced = getNull();
+    public static final ISkill<IHunterPlayer> hunter_attack_speed = getNull();
+    public static final ISkill<IHunterPlayer> hunter_attack_speed_advanced = getNull();
+    public static final ISkill<IHunterPlayer> hunter_attack_damage = getNull();
+    public static final ISkill<IHunterPlayer> hunter_awareness = getNull();
+    public static final ISkill<IHunterPlayer> hunter_disguise = getNull();
+    public static final ISkill<IHunterPlayer> purified_garlic = getNull();
+    public static final ISkill<IHunterPlayer> stake1 = getNull();
+    public static final ISkill<IHunterPlayer> stake2 = getNull();
+    public static final ISkill<IHunterPlayer> tech_weapons = getNull();
+    public static final ISkill<IHunterPlayer> weapon_table = getNull();
+    public static final ISkill<IHunterPlayer> durable_brewing = getNull();
+    public static final ISkill<IHunterPlayer> concentrated_brewing = getNull();
+    public static final ISkill<IHunterPlayer> multitask_brewing = getNull();
+    public static final ISkill<IHunterPlayer> efficient_brewing = getNull();
+    public static final ISkill<IHunterPlayer> master_brewer = getNull();
+    public static final ISkill<IHunterPlayer> swift_brewing = getNull();
+    public static final ISkill<IHunterPlayer> concentrated_durable_brewing = getNull();
+    public static final ISkill<IHunterPlayer> potion_resistance = getNull();
 
     @SuppressWarnings("deprecation")
-    public static void registerHunterSkills(IForgeRegistry<ISkill> registry) {
+    public static void registerHunterSkills(IForgeRegistry<ISkill<?>> registry) {
         registry.register(new VampirismSkill.SimpleHunterSkill(VReference.HUNTER_FACTION.getID(), false));
         registry.register(new VampirismSkill.SimpleHunterSkill("basic_alchemy", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("double_crossbow", true));
@@ -72,8 +72,8 @@ public class HunterSkills {
         //Config null, so cannot get method ref
         //noinspection Convert2MethodRef
         registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_damage", true).registerAttributeModifier(Attributes.ATTACK_DAMAGE, "ffafd115-96e2-4d08-9588-d1bc9be0d902", () -> VampirismConfig.BALANCE.hsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADDITION));
-        registry.register(new ActionSkill<IHunterPlayer>("hunter_awareness", HunterActions.awareness_hunter, true));
-        registry.register(new ActionSkill<IHunterPlayer>("hunter_disguise", HunterActions.disguise_hunter, true));
+        registry.register(new ActionSkill<>("hunter_awareness", HunterActions.awareness_hunter, true));
+        registry.register(new ActionSkill<>("hunter_disguise", HunterActions.disguise_hunter, true));
         registry.register(new VampirismSkill.SimpleHunterSkill("purified_garlic", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("stake1", false)
                 .setDescription(() -> {
@@ -107,7 +107,7 @@ public class HunterSkills {
         registry.register(new ActionSkill<IHunterPlayer>("potion_resistance", HunterActions.potion_resistance_hunter, true));
     }
 
-    public static void fixMappings(RegistryEvent.MissingMappings<ISkill> event) {
+    public static void fixMappings(RegistryEvent.MissingMappings<ISkill<?>> event) {
         event.getAllMappings().forEach(missingMapping -> {
             if (missingMapping.key.toString().startsWith("vampirism:blood_potion_")) {
                 missingMapping.ignore();

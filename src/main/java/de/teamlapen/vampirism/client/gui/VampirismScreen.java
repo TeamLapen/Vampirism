@@ -125,7 +125,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
 
         this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.topPos + 90, 20, 20, 40, 205, 20, BACKGROUND, 256, 256, context -> {
             if (this.minecraft.player.isAlive() && VampirismPlayerAttributes.get(this.minecraft.player).faction != null) {
-                Minecraft.getInstance().setScreen(new SkillsScreen(this));
+                Minecraft.getInstance().setScreen(new SkillsScreen<>(this));
             }
         }, (button, matrixStack, mouseX, mouseY) -> {
             this.renderTooltip(matrixStack, new TranslatableComponent("gui.vampirism.vampirism_menu.skill_screen"), mouseX, mouseY);
@@ -133,7 +133,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
 
         this.addRenderableWidget(new ImageButton(this.leftPos + 26, this.topPos + 90, 20, 20, 0, 205, 20, BACKGROUND, 256, 256, (context) -> {
             IPlayableFaction<?> factionNew = VampirismPlayerAttributes.get(this.minecraft.player).faction;
-            Minecraft.getInstance().setScreen(new ActionSelectScreen(new Color(factionNew.getColor()), true));
+            Minecraft.getInstance().setScreen(new ActionSelectScreen<>(new Color(factionNew.getColor()), true));
         }, (button, matrixStack, mouseX, mouseY) -> {
             this.renderTooltip(matrixStack, new TranslatableComponent("gui.vampirism.vampirism_menu.edit_actions"), mouseX, mouseY);
         }, TextComponent.EMPTY));

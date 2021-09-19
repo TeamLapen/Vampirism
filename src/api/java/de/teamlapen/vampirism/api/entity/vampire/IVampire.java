@@ -40,7 +40,7 @@ public interface IVampire extends IFactionEntity {
 
     @Nonnull
     @Override
-    default IFaction getFaction() {
+    default IFaction<?> getFaction() {
         return VReference.VAMPIRE_FACTION;
     }
 

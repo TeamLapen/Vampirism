@@ -61,7 +61,7 @@ public class FactionArgument implements ArgumentType<IFaction<?>> {
     @Override
     public IFaction<?> parse(StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
-        IFaction faction = VampirismAPI.factionRegistry().getFactionByID(id);
+        IFaction<?> faction = VampirismAPI.factionRegistry().getFactionByID(id);
         if (faction == null) throw FACTION_NOT_FOUND.create(id);
         if (this.onlyPlayableFactions & !(faction instanceof IPlayableFaction)) throw FACTION_NOT_PLAYABLE.create(id);
         return faction;

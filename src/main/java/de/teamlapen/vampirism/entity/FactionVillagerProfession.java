@@ -16,5 +16,5 @@ public abstract class FactionVillagerProfession extends VillagerProfession {
         super(nameIn, pointOfInterestIn, specificItemsIn, relatedWorldBlocksIn, soundEvent);
     }
 
-    public abstract IFaction getFaction();
+    public abstract IFaction<?> getFaction();
 }

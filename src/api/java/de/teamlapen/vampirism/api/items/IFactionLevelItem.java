@@ -28,7 +28,7 @@ import java.util.List;
  * Item's implementing this can only be used by players that match the requirements.
  * Currently, only affects {@link Player#attack(Entity)} and {@link Player#startUsingItem(InteractionHand)}
  */
-public interface IFactionLevelItem<T extends IFactionPlayer> extends IFactionExclusiveItem {
+public interface IFactionLevelItem<T extends IFactionPlayer<T>> extends IFactionExclusiveItem {
 
     @SuppressWarnings("RedundantCast")
     @OnlyIn(Dist.CLIENT)
@@ -39,8 +39,8 @@ public interface IFactionLevelItem<T extends IFactionPlayer> extends IFactionExc
 
         LazyOptional<IFactionPlayerHandler> playerHandler = player != null && player.isAlive() ? VampirismAPI.getFactionPlayerHandler(player) : LazyOptional.empty();
 
-        IFaction usingFaction = getExclusiveFaction(stack);
-        ISkill requiredSkill = getRequiredSkill(stack);
+        IFaction<?> usingFaction = getExclusiveFaction(stack);
+        ISkill<T> requiredSkill = getRequiredSkill(stack);
         int reqLevel = getMinLevel(stack);
         if ((Boolean) playerHandler.map(p -> p.isInFaction(usingFaction)).orElse(false)) {
             factionC = ChatFormatting.GREEN;
@@ -59,7 +59,7 @@ public interface IFactionLevelItem<T extends IFactionPlayer> extends IFactionExc
             string.append(new TextComponent("@" + getMinLevel(stack)).withStyle(levelC));
         }
         tooltip.add(string);
-        ISkill reqSkill = this.getRequiredSkill(stack);
+        ISkill<T> reqSkill = this.getRequiredSkill(stack);
         if (reqSkill != null) {
             tooltip.add(new TranslatableComponent("text.vampirism.required_skill", reqSkill.getName()).withStyle(skillC));
         }
@@ -74,5 +74,5 @@ public interface IFactionLevelItem<T extends IFactionPlayer> extends IFactionExc
      * @return The skill required to use this or null if none
      */
     @Nullable
-    ISkill getRequiredSkill(@Nonnull ItemStack stack);
+    ISkill<T> getRequiredSkill(@Nonnull ItemStack stack);
 }

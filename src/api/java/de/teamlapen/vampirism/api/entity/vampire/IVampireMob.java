@@ -5,5 +5,5 @@ import de.teamlapen.vampirism.api.entity.IFactionMob;
 /**
  * Interface for all non player vampires
  */
-public interface IVampireMob extends IFactionMob<IVampireMob>, IVampire {
+public interface IVampireMob extends IFactionMob, IVampire {
 }

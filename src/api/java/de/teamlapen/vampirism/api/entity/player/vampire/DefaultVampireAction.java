@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 public abstract class DefaultVampireAction extends DefaultAction<IVampirePlayer> {
     @Nonnull
     @Override
-    public IPlayableFaction getFaction() {
+    public IPlayableFaction<?> getFaction() {
         return VReference.VAMPIRE_FACTION;
     }
 }

@@ -16,7 +16,7 @@ public interface IEntityActionManager {
     /**
      * @return A copied mutable list of all actions registered with corresponding @{@link IFaction}, {@link EntityActionTier} and {@link EntityClassType}
      */
-    List<IEntityAction> getAllEntityActionsByTierAndClassType(IFaction faction, EntityActionTier tier, EntityClassType classType);
+    List<IEntityAction> getAllEntityActionsByTierAndClassType(IFaction<?> faction, EntityActionTier tier, EntityClassType classType);
 
     /**
      * or use {@code net.minecraftforge.registries.RegistryManager.ACTIVE.getRegistry(new ResourceLocation("vampirism:entityactions"))}

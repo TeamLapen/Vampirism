@@ -17,7 +17,7 @@ import java.util.function.BiFunction;
  * Represents one playable faction (e.g. Vampire Player)
  * One instance should be used for players and entities at the same time.
  */
-public class PlayableFaction<T extends IFactionPlayer<?>> extends Faction<T> implements IPlayableFaction<T> {
+public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> implements IPlayableFaction<T> {
     private final int highestLevel;
     private final int highestLordLevel;
     private final NonNullSupplier<Capability<T>> playerCapabilitySupplier;

@@ -39,7 +39,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      * Used to store convertible handlers after {@link FMLCommonSetupEvent}
      */
     @Nonnull
-    private final Map<EntityType<? extends PathfinderMob>, IConvertingHandler> convertibles = new ConcurrentHashMap<>();
+    private final Map<EntityType<? extends PathfinderMob>, IConvertingHandler<?>> convertibles = new ConcurrentHashMap<>();
     @Nonnull
     private final Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay = new ConcurrentHashMap<>();
     @Nonnull
@@ -49,7 +49,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      */
     private final Map<Class<? extends PathfinderMob>, Function> extendedCreatureConstructors = new ConcurrentHashMap<>();
     private int bloodMultiplier = 100;
-    private Function<IConvertingHandler.IDefaultHelper, IConvertingHandler> defaultConvertingHandlerCreator;
+    private Function<IConvertingHandler.IDefaultHelper, IConvertingHandler<?>> defaultConvertingHandlerCreator;
 
     /**
      * denies convertible addition after {@link InterModProcessEvent}
@@ -59,7 +59,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @Override
     @ThreadSafeAPI
     public void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlayLocation) {
-        addConvertible(type, overlayLocation, new DefaultConvertingHandler(null));
+        addConvertible(type, overlayLocation, new DefaultConvertingHandler<>(null));
     }
 
     @Override
@@ -70,7 +70,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
 
     @Override
     @ThreadSafeAPI
-    public void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc, @Nonnull IConvertingHandler handler) {
+    public void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc, @Nonnull IConvertingHandler<?> handler) {
         if (finished) throw new IllegalStateException("Register convertibles during InterModEnqueueEvent");
         convertibles.put(type, handler);
 
@@ -92,8 +92,8 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         Map<ResourceLocation, BiteableEntry> biteables = Maps.newHashMap();
         Set<ResourceLocation> blacklist = Sets.newHashSet();
         float bloodValueMultiplier = bloodMultiplier / 10F;
-        final IConvertingHandler defaultHandler = defaultConvertingHandlerCreator.apply(null);
-        for (Map.Entry<EntityType<? extends PathfinderMob>, IConvertingHandler> entry : convertibles.entrySet()) {
+        final IConvertingHandler<?> defaultHandler = defaultConvertingHandlerCreator.apply(null);
+        for (Map.Entry<EntityType<? extends PathfinderMob>, IConvertingHandler<?>> entry : convertibles.entrySet()) {
             ResourceLocation id = entry.getKey().getRegistryName();
             if (id == null) {
                 LOGGER.warn("Cannot register convertible {} since there is no EntityString for it", entry.getKey());
@@ -124,10 +124,10 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @Override
     @Nullable
     @SuppressWarnings("unchecked")
-    public IConvertedCreature convert(PathfinderMob entity) {
+    public IConvertedCreature<?> convert(PathfinderMob entity) {
         BiteableEntry b = biteableEntryManager.get(entity);
         if (b != null && b.convertingHandler != null) {
-            return b.convertingHandler.createFrom(entity);
+            return ((DefaultConvertingHandler<PathfinderMob>) b.convertingHandler).createFrom(entity);
         }
         LOGGER.warn("Failed to find convertible entry for {}", entity);
         return null;
@@ -170,7 +170,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      * Set the creator for Vampirism's default converting handler
      * FOR INTERNAL USAGE ONLY
      */
-    public void setDefaultConvertingHandlerCreator(Function<IConvertingHandler.IDefaultHelper, IConvertingHandler> creator) {
+    public void setDefaultConvertingHandlerCreator(Function<IConvertingHandler.IDefaultHelper, IConvertingHandler<?>> creator) {
         defaultConvertingHandlerCreator = creator;
     }
 }

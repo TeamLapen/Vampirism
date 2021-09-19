@@ -44,7 +44,9 @@ public class OblivionEffect extends VampirismEffect {
                     ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
                     Optional<SkillNode> nodeOPT = ((SkillHandler<?>) skillHandler).anyLastNode();
                     if (nodeOPT.isPresent()) {
+                        //noinspection rawtypes
                         for (ISkill element : nodeOPT.get().getElements()) {
+                            //noinspection unchecked
                             skillHandler.disableSkill(element);
                         }
                     } else {

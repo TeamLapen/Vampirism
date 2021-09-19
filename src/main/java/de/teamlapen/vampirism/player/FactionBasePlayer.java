@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
  * Implements basic methods for level or minion handling
  * TODO 1.17 refactor to FactionBasePlayer
  */
-public abstract class FactionBasePlayer<T extends IFactionPlayer<?>> implements IFactionPlayer<T>, ISyncable.ISyncableEntityCapabilityInst, IPlayerEventListener {
+public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements IFactionPlayer<T>, ISyncable.ISyncableEntityCapabilityInst, IPlayerEventListener {
 
     private static final Logger LOGGER = LogManager.getLogger(FactionBasePlayer.class);
     protected final Player player;

@@ -14,11 +14,11 @@ import javax.annotation.Nullable;
 public class PlayerFactionEvent extends Event {
 
     @Nullable
-    private final IPlayableFaction currentFaction;
+    private final IPlayableFaction<?> currentFaction;
     @Nonnull
     private final IFactionPlayerHandler player;
 
-    private PlayerFactionEvent(@Nonnull IFactionPlayerHandler player, @Nullable IPlayableFaction currentFaction) {
+    private PlayerFactionEvent(@Nonnull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> currentFaction) {
         this.currentFaction = currentFaction;
         this.player = player;
     }
@@ -27,7 +27,7 @@ public class PlayerFactionEvent extends Event {
      * @return The faction the respective player is currently in.
      */
     @Nullable
-    public IPlayableFaction getCurrentFaction() {
+    public IPlayableFaction<?> getCurrentFaction() {
         return currentFaction;
     }
 
@@ -51,9 +51,9 @@ public class PlayerFactionEvent extends Event {
         private final int currentLevel;
         private final int newLevel;
         @Nullable
-        private final IPlayableFaction newFaction;
+        private final IPlayableFaction<?> newFaction;
 
-        public FactionLevelChangePre(@Nonnull IFactionPlayerHandler player, @Nullable IPlayableFaction currentFaction, int currentLevel, @Nullable IPlayableFaction newFaction, int newLevel) {
+        public FactionLevelChangePre(@Nonnull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> currentFaction, int currentLevel, @Nullable IPlayableFaction<?> newFaction, int newLevel) {
             super(player, currentFaction);
             this.currentLevel = currentLevel;
             this.newLevel = newLevel;
@@ -71,7 +71,7 @@ public class PlayerFactionEvent extends Event {
          * @return The faction the player is going to be
          */
         @Nullable
-        public IPlayableFaction getNewFaction() {
+        public IPlayableFaction<?> getNewFaction() {
             return newFaction;
         }
 
@@ -136,9 +136,9 @@ public class PlayerFactionEvent extends Event {
     @HasResult
     public static class CanJoinFaction extends PlayerFactionEvent {
 
-        private final IPlayableFaction toJoin;
+        private final IPlayableFaction<?> toJoin;
 
-        public CanJoinFaction(@Nonnull IFactionPlayerHandler player, @Nullable IPlayableFaction currentFaction, IPlayableFaction toJoin) {
+        public CanJoinFaction(@Nonnull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> currentFaction, IPlayableFaction<?> toJoin) {
             super(player, currentFaction);
             this.toJoin = toJoin;
         }
@@ -146,7 +146,7 @@ public class PlayerFactionEvent extends Event {
         /**
          * @return The faction the player wants to join
          */
-        public IPlayableFaction getFactionToJoin() {
+        public IPlayableFaction<?> getFactionToJoin() {
             return toJoin;
         }
 

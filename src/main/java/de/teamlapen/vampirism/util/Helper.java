@@ -178,9 +178,9 @@ public class Helper {
     /**
      * @return Checks if all given skills are enabled
      */
-    public static boolean areSkillsEnabled(ISkillHandler skillHandler, ISkill... skills) {
+    public static <T extends IFactionPlayer<T>> boolean areSkillsEnabled(ISkillHandler<T> skillHandler, ISkill<T>... skills) {
         if (skills == null) return true;
-        for (ISkill skill : skills) {
+        for (ISkill<T> skill : skills) {
             if (!skillHandler.isSkillEnabled(skill)) {
                 return false;
             }
@@ -221,9 +221,9 @@ public class Helper {
     /**
      * Checks if the given {@link IFactionLevelItem} can be used by the given player
      */
-    public static boolean canUseFactionItem(ItemStack stack, IFactionLevelItem item, IFactionPlayerHandler playerHandler) {
-        IFaction usingFaction = item.getExclusiveFaction(stack);
-        ISkill requiredSkill = item.getRequiredSkill(stack);
+    public static boolean canUseFactionItem(ItemStack stack, IFactionLevelItem<?> item, IFactionPlayerHandler playerHandler) {
+        IFaction<?> usingFaction = item.getExclusiveFaction(stack);
+        ISkill<?> requiredSkill = item.getRequiredSkill(stack);
         int reqLevel = item.getMinLevel(stack);
         if (usingFaction != null && !playerHandler.isInFaction(usingFaction)) return false;
         if (playerHandler.getCurrentLevel() < reqLevel) return false;

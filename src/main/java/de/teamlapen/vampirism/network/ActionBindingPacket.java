@@ -10,8 +10,7 @@ import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public record ActionBindingPacket(int actionBindingId,
-                                  IAction action) implements IMessage {
+public record ActionBindingPacket(int actionBindingId, IAction<?> action) implements IMessage {
 
     static void encode(final ActionBindingPacket msg, FriendlyByteBuf buf) {
         buf.writeVarInt(msg.actionBindingId);

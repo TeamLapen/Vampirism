@@ -145,7 +145,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public ActionHandlerEntity getActionHandler() {
+    public ActionHandlerEntity<?> getActionHandler() {
         return entityActionHandler;
     }
 

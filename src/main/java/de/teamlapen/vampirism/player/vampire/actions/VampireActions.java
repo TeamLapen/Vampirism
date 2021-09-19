@@ -25,7 +25,7 @@ public class VampireActions {
     public static final RageVampireAction vampire_rage = getNull();
     public static final HissingAction hissing = getNull();
 
-    public static void registerDefaultActions(IForgeRegistry<IAction> registry) {
+    public static void registerDefaultActions(IForgeRegistry<IAction<?>> registry) {
         registry.register(new BatVampireAction().setRegistryName(REFERENCE.MODID, "bat"));
         registry.register(new DarkBloodProjectileAction().setRegistryName(REFERENCE.MODID, "dark_blood_projectile"));
         registry.register(new DisguiseVampireAction().setRegistryName(REFERENCE.MODID, "disguise_vampire"));

@@ -96,7 +96,7 @@ public class VampireBookItem extends VampirismItem {
             this.resolveContents(stack, playerIn);
             VampirismMod.dispatcher.sendTo(new OpenVampireBookPacket(stack), (ServerPlayer) playerIn);
         }
-        return new InteractionResultHolder(InteractionResult.SUCCESS, stack);
+        return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
     }
 
     private void resolveContents(ItemStack stack, Player player) {

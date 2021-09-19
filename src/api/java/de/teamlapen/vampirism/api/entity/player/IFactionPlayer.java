@@ -22,7 +22,7 @@ import java.util.function.Predicate;
  * <p>
  * If you are writing an addon and not a standalone mod, consider extending VampirismPlayer instead of implementing this
  */
-public interface IFactionPlayer<T extends IFactionPlayer<?>> extends IFactionEntity {
+public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEntity {
     /**
      * Mostly relevant in the set level command
      * Vampirism's factions always return true here.
@@ -36,7 +36,7 @@ public interface IFactionPlayer<T extends IFactionPlayer<?>> extends IFactionEnt
      * @return The faction the player is disguised as.
      */
     @Nullable
-    IFaction getDisguisedAs();
+    IFaction<?> getDisguisedAs();
 
     /**
      * @return the faction this faction player belongs to

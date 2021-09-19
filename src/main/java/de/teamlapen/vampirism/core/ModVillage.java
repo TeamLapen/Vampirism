@@ -47,13 +47,13 @@ public class ModVillage {
     static void registerProfessions(IForgeRegistry<VillagerProfession> registry) {
         VillagerProfession vampire_expert = new FactionVillagerProfession("vampire_expert", vampire_faction, ImmutableSet.of(), ImmutableSet.of(), null) {
             @Override
-            public IFaction getFaction() {
+            public IFaction<?> getFaction() {
                 return VReference.VAMPIRE_FACTION;
             }
         }.setRegistryName(REFERENCE.MODID, "vampire_expert");
         VillagerProfession hunter_expert = new FactionVillagerProfession("hunter_expert", hunter_faction, ImmutableSet.of(), ImmutableSet.of(), null) {
             @Override
-            public IFaction getFaction() {
+            public IFaction<?> getFaction() {
                 return VReference.HUNTER_FACTION;
             }
         }.setRegistryName(REFERENCE.MODID, "hunter_expert");

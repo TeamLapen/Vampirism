@@ -49,7 +49,7 @@ public interface IExtendedCreatureVampirism extends IBiteableEntity {
      * @return The converted creature
      */
     @Nullable
-    IConvertedCreature makeVampire();
+    IConvertedCreature<?> makeVampire();
 
     /**
      * set if the bite attacker should get poisoned on bite

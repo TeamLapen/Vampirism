@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.player.vampire.actions;
 
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -18,7 +17,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
     }
 
     @Override
-    public int getCooldown(IFactionPlayer player) {
+    public int getCooldown(IVampirePlayer player) {
         int cooldown = VampirismConfig.BALANCE.vaDarkBloodProjectileCooldown.get() * 20;
         if (player.getSkillHandler().isRefinementEquipped(ModRefinements.dark_blood_projectile_aoe)) {
             cooldown *= VampirismConfig.BALANCE.vrDarkBloodProjectileAOECooldownMod.get();

@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
-public class SkillArgument implements ArgumentType<ISkill> {
+public class SkillArgument implements ArgumentType<ISkill<?>> {
     public static final DynamicCommandExceptionType SKILL_NOT_FOUND = new DynamicCommandExceptionType((particle) -> {
         return new TranslatableComponent("command.vampirism.argument.skill.notfound", particle);
     });
@@ -28,7 +28,7 @@ public class SkillArgument implements ArgumentType<ISkill> {
         return new SkillArgument();
     }
 
-    public static ISkill getSkill(CommandContext<CommandSourceStack> context, String name) {
+    public static ISkill<?> getSkill(CommandContext<CommandSourceStack> context, String name) {
         return context.getArgument(name, ISkill.class);
     }
 
@@ -43,9 +43,9 @@ public class SkillArgument implements ArgumentType<ISkill> {
     }
 
     @Override
-    public ISkill parse(StringReader reader) throws CommandSyntaxException {
+    public ISkill<?> parse(StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
-        ISkill skill = ModRegistries.SKILLS.getValue(id);
+        ISkill<?> skill = ModRegistries.SKILLS.getValue(id);
         if (skill == null)
             throw SKILL_NOT_FOUND.create(id);
         return skill;

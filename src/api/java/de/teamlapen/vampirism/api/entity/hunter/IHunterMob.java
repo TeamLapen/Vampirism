@@ -5,5 +5,5 @@ import de.teamlapen.vampirism.api.entity.IFactionMob;
 /**
  * Interface for all non player hunters
  */
-public interface IHunterMob extends IFactionMob<IHunterMob>, IHunter {
+public interface IHunterMob extends IFactionMob, IHunter {
 }

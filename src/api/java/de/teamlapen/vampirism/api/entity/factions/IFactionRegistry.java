@@ -27,18 +27,18 @@ public interface IFactionRegistry {
      * @return The faction of the given entity or null
      */
     @Nullable
-    IFaction getFaction(Entity entity);
+    IFaction<?> getFaction(Entity entity);
 
     /**
      * Get a faction by its name
      */
     @Nullable
-    IFaction getFactionByID(ResourceLocation id);
+    IFaction<?> getFactionByID(ResourceLocation id);
 
     /**
      * @return All factions after post init
      */
-    IFaction[] getFactions();
+    IFaction<?>[] getFactions();
 
     /**
      * @return All playable factions after post init
@@ -74,7 +74,7 @@ public interface IFactionRegistry {
      * @return The created faction
      */
     @ThreadSafeAPI
-    <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral);
+    <T extends IFactionEntity> IFaction<T> registerFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral);
 
     /**
      * Create and registerAdvancements a non-playable faction. Must be called before InterModProcessEvent e.g. during InterModEnqueueEvent
@@ -87,7 +87,7 @@ public interface IFactionRegistry {
      * @return The created faction
      */
     @ThreadSafeAPI
-    <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, @Nullable IVillageFactionData villageFactionData);
+    <T extends IFactionEntity> IFaction<T> registerFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, @Nullable IVillageFactionData villageFactionData);
 
     /**
      * Use {@link IFactionRegistry#registerPlayableFaction(ResourceLocation, Class, int, boolean, NonNullSupplier, int, int, BiFunction, IVillageFactionData)} instead
@@ -104,7 +104,7 @@ public interface IFactionRegistry {
      */
     @Deprecated
     @ThreadSafeAPI
-    <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel);
+    <T extends IFactionPlayer<T>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel);
 
     /**
      * Create and registerAdvancements a playable faction. Must be called before InterModProcessEvent e.g. during InterModEnqueueEvent
@@ -121,5 +121,5 @@ public interface IFactionRegistry {
      * @return The created faction
      */
     @ThreadSafeAPI
-    <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull BiFunction<Integer, Boolean, Component> lordTitleFunction, @Nullable IVillageFactionData villageFactionData);
+    <T extends IFactionPlayer<T>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull BiFunction<Integer, Boolean, Component> lordTitleFunction, @Nullable IVillageFactionData villageFactionData);
 }
