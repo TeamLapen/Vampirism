@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.core.BlockPos;
@@ -30,7 +30,7 @@ public class GarlicItem extends VampirismItem implements IPlantable, IFactionExc
 
     @Nullable
     @Override
-    public IPlayableFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
+    public IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
         return VReference.HUNTER_FACTION;
     }
 

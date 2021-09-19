@@ -21,9 +21,9 @@ public class ActionManagerEntity implements IEntityActionManager {
     }
 
     @Override
-    public List<IEntityAction> getAllEntityActionsByTierAndClassType(IFaction faction, @Nonnull EntityActionTier tier, EntityClassType classtype) {
+    public List<IEntityAction> getAllEntityActionsByTierAndClassType(IFaction faction, @Nonnull EntityActionTier tier, EntityClassType classType) {
         List<IEntityAction> actions = getAllEntityActions();
-        actions.removeIf(action -> action.getFaction() != faction || action.getTier().getId() > tier.getId() || !ArrayUtils.contains(action.getClassTypes(), (classtype)));
+        actions.removeIf(action -> action.getFaction() != faction || action.getTier().getId() > tier.getId() || !ArrayUtils.contains(action.getClassTypes(), classType));
         return actions;
     }
 

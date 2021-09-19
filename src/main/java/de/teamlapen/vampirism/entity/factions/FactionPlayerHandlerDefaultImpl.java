@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.factions;
 
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -29,7 +30,7 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
 
 
     @Override
-    public boolean canJoin(IPlayableFaction<? extends IFactionPlayer<?>> faction) {
+    public boolean canJoin(IPlayableFaction<?> faction) {
         return false;
     }
 
@@ -40,7 +41,7 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
 
     @Nullable
     @Override
-    public IPlayableFaction<? extends IFactionPlayer<?>> getCurrentFaction() {
+    public IPlayableFaction<?> getCurrentFaction() {
         return null;
     }
 
@@ -56,7 +57,7 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
     }
 
     @Override
-    public int getCurrentLevel(IPlayableFaction<? extends IFactionPlayer<?>> f) {
+    public int getCurrentLevel(IPlayableFaction<?> f) {
         return 0;
     }
 
@@ -89,12 +90,12 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
     }
 
     @Override
-    public boolean isInFaction(IPlayableFaction<? extends IFactionPlayer<?>> f) {
+    public boolean isInFaction(IFaction<?> f) {
         return false;
     }
 
     @Override
-    public void joinFaction(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction) {
+    public void joinFaction(@Nonnull IPlayableFaction<?> faction) {
 
     }
 
@@ -104,12 +105,12 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
     }
 
     @Override
-    public boolean setFactionAndLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level) {
+    public boolean setFactionAndLevel(@Nullable IPlayableFaction<?> faction, int level) {
         return false;
     }
 
     @Override
-    public boolean setFactionLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level) {
+    public boolean setFactionLevel(@Nonnull IPlayableFaction<?> faction, int level) {
         return false;
     }
 

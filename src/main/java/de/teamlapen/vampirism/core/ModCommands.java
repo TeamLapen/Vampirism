@@ -6,6 +6,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.command.*;
 import de.teamlapen.vampirism.command.arguments.*;
+import de.teamlapen.vampirism.command.arguments.serializer.FactionArgumentSerializer;
 import de.teamlapen.vampirism.command.test.*;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.synchronization.ArgumentTypes;
@@ -78,7 +79,7 @@ public class ModCommands {
      * Make sure to use deferred queue
      */
     static void registerArgumentTypesUsage() {
-        ArgumentTypes.register("vampirism_faction", FactionArgument.class, new EmptyArgumentSerializer<>(FactionArgument::new));
+        ArgumentTypes.register("vampirism_faction", FactionArgument.class, new FactionArgumentSerializer());
         ArgumentTypes.register("vampirism_skill", SkillArgument.class, new EmptyArgumentSerializer<>(SkillArgument::new));
         ArgumentTypes.register("vampirism_action", ActionArgument.class, new EmptyArgumentSerializer<>(ActionArgument::new));
         ArgumentTypes.register("vampirism_refinement_set", RefinementSetArgument.class, new EmptyArgumentSerializer<>(RefinementSetArgument::new));

@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.api.items;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import net.minecraft.ChatFormatting;
@@ -39,7 +39,7 @@ public interface IFactionLevelItem<T extends IFactionPlayer> extends IFactionExc
 
         LazyOptional<IFactionPlayerHandler> playerHandler = player != null && player.isAlive() ? VampirismAPI.getFactionPlayerHandler(player) : LazyOptional.empty();
 
-        IPlayableFaction usingFaction = getExclusiveFaction(stack);
+        IFaction usingFaction = getExclusiveFaction(stack);
         ISkill requiredSkill = getRequiredSkill(stack);
         int reqLevel = getMinLevel(stack);
         if ((Boolean) playerHandler.map(p -> p.isInFaction(usingFaction)).orElse(false)) {

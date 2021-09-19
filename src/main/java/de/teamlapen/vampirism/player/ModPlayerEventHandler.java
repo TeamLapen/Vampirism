@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
@@ -450,10 +449,9 @@ public class ModPlayerEventHandler {
         if (!stack.isEmpty() && stack.getItem() instanceof IFactionLevelItem item) {
             if (!player.isAlive()) return false;
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            IPlayableFaction usingFaction = item.getExclusiveFaction(stack);
+            IFaction usingFaction = item.getExclusiveFaction(stack);
             ISkill requiredSkill = item.getRequiredSkill(stack);
             if (usingFaction != null && !handler.isInFaction(usingFaction)) {
-
                 if (message)
                     player.displayClientMessage(new TranslatableComponent("text.vampirism.can_only_be_used_by", usingFaction.getNamePlural()), true);
                 return false;

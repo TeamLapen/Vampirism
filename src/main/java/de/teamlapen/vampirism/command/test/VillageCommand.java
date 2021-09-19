@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.blockentity.TotemHelper;
 import de.teamlapen.vampirism.command.arguments.FactionArgument;
@@ -17,14 +17,14 @@ public class VillageCommand extends BasicCommand {
         return Commands.literal("village")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
                 .then(Commands.literal("capture")
-                        .then(Commands.argument("faction", FactionArgument.factionArgument())
+                        .then(Commands.argument("faction", FactionArgument.factions())
                                 .executes(context -> capture(context.getSource(), context.getSource().getPlayerOrException(), FactionArgument.getFaction(context, "faction")))))
                 .then(Commands.literal("abort")
                         .executes(context -> abort(context.getSource())));
 
     }
 
-    private static int capture(CommandSourceStack source, ServerPlayer player, IPlayableFaction<?> faction) {
+    private static int capture(CommandSourceStack source, ServerPlayer player, IFaction<?> faction) {
         source.sendSuccess(TotemHelper.forceFactionCommand(faction, player), true);
         return 0;
     }

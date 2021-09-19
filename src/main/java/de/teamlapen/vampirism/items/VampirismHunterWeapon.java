@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
@@ -46,7 +45,7 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
 
     @Nullable
     @Override
-    public IPlayableFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
+    public IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
         return VReference.HUNTER_FACTION;
     }
 

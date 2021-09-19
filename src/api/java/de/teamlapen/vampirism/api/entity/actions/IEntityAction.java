@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.entity.actions;
 
 import de.teamlapen.vampirism.api.entity.EntityClassType;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -23,9 +23,9 @@ public interface IEntityAction extends IForgeRegistryEntry<IEntityAction> {
     int getCooldown(int level);
 
     /**
-     * @return needed {@link IPlayableFaction} for usage
+     * @return needed {@link IFaction} for usage
      */
-    IPlayableFaction getFaction();
+    IFaction getFaction();
 
     /**
      * @return activation time in ticks before the action is activated once ready to start

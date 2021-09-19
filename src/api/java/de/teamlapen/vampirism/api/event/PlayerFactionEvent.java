@@ -11,14 +11,14 @@ import javax.annotation.Nullable;
 /**
  * Event related to any faction changes of players
  */
-public class FactionEvent extends Event {
+public class PlayerFactionEvent extends Event {
 
     @Nullable
     private final IPlayableFaction currentFaction;
     @Nonnull
     private final IFactionPlayerHandler player;
 
-    private FactionEvent(@Nonnull IFactionPlayerHandler player, @Nullable IPlayableFaction currentFaction) {
+    private PlayerFactionEvent(@Nonnull IFactionPlayerHandler player, @Nullable IPlayableFaction currentFaction) {
         this.currentFaction = currentFaction;
         this.player = player;
     }
@@ -47,7 +47,7 @@ public class FactionEvent extends Event {
      * But the player is not notified, so you should probably consider doing so.
      */
     @Cancelable
-    public static class FactionLevelChangePre extends FactionEvent {
+    public static class FactionLevelChangePre extends PlayerFactionEvent {
         private final int currentLevel;
         private final int newLevel;
         @Nullable
@@ -86,7 +86,7 @@ public class FactionEvent extends Event {
     /**
      * Posted when a player after a player changed their faction or faction level
      */
-    public static class FactionLevelChanged extends FactionEvent {
+    public static class FactionLevelChanged extends PlayerFactionEvent {
         private final int oldLevel;
         private final int newLevel;
         @Nullable
@@ -134,7 +134,7 @@ public class FactionEvent extends Event {
      * The player is not notified if not DEFAULT, so you should consider doing so.
      */
     @HasResult
-    public static class CanJoinFaction extends FactionEvent {
+    public static class CanJoinFaction extends PlayerFactionEvent {
 
         private final IPlayableFaction toJoin;
 

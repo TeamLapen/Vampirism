@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.items;
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,7 +19,7 @@ public interface IVampirismCrossbowArrow<T extends AbstractArrow & IEntityCrossb
 
     @Nullable
     @Override
-    default IPlayableFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
+    default IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
         return VReference.HUNTER_FACTION;
     }
 

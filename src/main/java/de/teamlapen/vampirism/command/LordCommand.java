@@ -8,7 +8,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -40,7 +39,7 @@ public class LordCommand extends BasicCommand {
     private static int setLevel(CommandContext<CommandSourceStack> context, int level, Collection<ServerPlayer> players) throws CommandSyntaxException {
         for (ServerPlayer player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            IPlayableFaction<? extends IFactionPlayer<?>> faction = handler.getCurrentFaction();
+            IPlayableFaction<?> faction = handler.getCurrentFaction();
             if (faction == null) {
                 throw NO_FACTION.create();
             }

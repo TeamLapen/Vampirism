@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.event.FactionEvent;
+import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
 import de.teamlapen.vampirism.api.world.ITotem;
 import net.minecraft.core.BlockPos;
@@ -41,18 +41,18 @@ public class VampirismEventFactory {
     }
 
     public static Event.Result fireCanJoinFactionEvent(@Nonnull IFactionPlayerHandler playerHandler, @Nullable IPlayableFaction<?> currentFaction, IPlayableFaction<?> newFaction) {
-        FactionEvent.CanJoinFaction event = new FactionEvent.CanJoinFaction(playerHandler, currentFaction, newFaction);
+        PlayerFactionEvent.CanJoinFaction event = new PlayerFactionEvent.CanJoinFaction(playerHandler, currentFaction, newFaction);
         MinecraftForge.EVENT_BUS.post(event);
         return event.getResult();
     }
 
     public static boolean fireChangeLevelOrFactionEvent(@Nonnull IFactionPlayerHandler player, @Nullable IPlayableFaction currentFaction, int currentLevel, @Nullable IPlayableFaction newFaction, int newLevel) {
-        FactionEvent.FactionLevelChangePre event = new FactionEvent.FactionLevelChangePre(player, currentFaction, currentLevel, newFaction, newLevel);
+        PlayerFactionEvent.FactionLevelChangePre event = new PlayerFactionEvent.FactionLevelChangePre(player, currentFaction, currentLevel, newFaction, newLevel);
         return MinecraftForge.EVENT_BUS.post(event);
     }
 
     public static void fireFactionLevelChangedEvent(@Nonnull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> oldFaction, int oldLevel, @Nullable IPlayableFaction<?> newFaction, int newLevel) {
-        FactionEvent.FactionLevelChanged event = new FactionEvent.FactionLevelChanged(player, oldFaction, oldLevel, newFaction, newLevel);
+        PlayerFactionEvent.FactionLevelChanged event = new PlayerFactionEvent.FactionLevelChanged(player, oldFaction, oldLevel, newFaction, newLevel);
         MinecraftForge.EVENT_BUS.post(event);
     }
 

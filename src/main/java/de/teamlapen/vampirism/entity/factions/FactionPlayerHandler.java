@@ -6,6 +6,7 @@ import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -104,7 +105,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     private final Player player;
     @Nonnull
     private final Int2ObjectMap<IAction> boundActions = new Int2ObjectArrayMap<>();
-    private IPlayableFaction<? extends IFactionPlayer<?>> currentFaction = null;
+    private IPlayableFaction<?> currentFaction = null;
     private int currentLevel = 0;
     private int currentLordLevel = 0;
     /**
@@ -119,7 +120,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public boolean canJoin(IPlayableFaction<? extends IFactionPlayer<?>> faction) {
+    public boolean canJoin(IPlayableFaction<?> faction) {
         Event.Result res = VampirismEventFactory.fireCanJoinFactionEvent(this, currentFaction, faction);
         if (res == Event.Result.DEFAULT) {
             return currentFaction == null;
@@ -159,14 +160,14 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     @Nullable
     @Override
-    public IPlayableFaction<? extends IFactionPlayer<?>> getCurrentFaction() {
+    public IPlayableFaction<?> getCurrentFaction() {
         return currentFaction;
     }
 
     @Nonnull
     @Override
     public Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer() {
-        return currentFaction == null ? Optional.empty() : currentFaction.getPlayerCapability(player).map(Optional::of).orElse(Optional.empty());
+        return currentFaction == null ? Optional.empty() : (Optional<? extends IFactionPlayer<?>>) (Object) currentFaction.getPlayerCapability(player).map(Optional::of).orElse(Optional.empty());
     }
 
     @Override
@@ -175,7 +176,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public int getCurrentLevel(IPlayableFaction<? extends IFactionPlayer<?>> f) {
+    public int getCurrentLevel(IPlayableFaction<?> f) {
         return isInFaction(f) ? currentLevel : 0;
     }
 
@@ -217,12 +218,12 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public boolean isInFaction(@Nullable IPlayableFaction<? extends IFactionPlayer<?>> f) {
+    public boolean isInFaction(@Nullable IFaction<?> f) {
         return Objects.equals(currentFaction, f);
     }
 
     @Override
-    public void joinFaction(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction) {
+    public void joinFaction(@Nonnull IPlayableFaction<?> faction) {
         if (canJoin(faction)) {
             setFactionAndLevel(faction, 1);
         }
@@ -230,7 +231,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     @Override
     public void loadUpdateFromNBT(CompoundTag nbt) {
-        IPlayableFaction<? extends IFactionPlayer<?>> old = currentFaction;
+        IPlayableFaction<?> old = currentFaction;
         int oldLevel = currentLevel;
         String f = nbt.getString("faction");
         if ("null".equals(f)) {
@@ -305,8 +306,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public boolean setFactionAndLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level) {
-        IPlayableFaction<? extends IFactionPlayer<?>> old = currentFaction;
+    public boolean setFactionAndLevel(@Nullable IPlayableFaction<?> faction, int level) {
+        IPlayableFaction<?> old = currentFaction;
         int oldLevel = currentLevel;
         int newLordLevel = this.currentLordLevel;
 
@@ -359,7 +360,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public boolean setFactionLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level) {
+    public boolean setFactionLevel(@Nonnull IPlayableFaction<?> faction, int level) {
         return faction.equals(currentFaction) && setFactionAndLevel(faction, level);
     }
 
@@ -439,7 +440,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      * Notify faction about changes.
      * {@link FactionPlayerHandler#currentFaction} and {@link FactionPlayerHandler#currentLevel} will be used as the new ones
      */
-    private void notifyFaction(IPlayableFaction<? extends IFactionPlayer<?>> oldFaction, int oldLevel) {
+    private void notifyFaction(IPlayableFaction<?> oldFaction, int oldLevel) {
         if (oldFaction != null && !oldFaction.equals(currentFaction)) {
             LOGGER.debug(LogUtil.FACTION, "{} is leaving faction {}", this.player.getName().getString(), oldFaction.getID());
             oldFaction.getPlayerCapability(player).ifPresent(c -> c.onLevelChanged(0, oldLevel));

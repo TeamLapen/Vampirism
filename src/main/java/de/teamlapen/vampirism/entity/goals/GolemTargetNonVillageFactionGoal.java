@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity.goals;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.blockentity.TotemHelper;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -35,7 +34,7 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
         IFaction<?> faction = VReference.HUNTER_FACTION;
         if (VampirismConfig.BALANCE.golemAttackNonVillageFaction.get()) {
             Optional<TotemBlockEntity> tile = TotemHelper.getTotemNearPos(((ServerLevel) this.golem.level), this.golem.blockPosition(), true);
-            faction = tile.map(TotemBlockEntity::getControllingFaction).orElse(((IPlayableFaction) VReference.HUNTER_FACTION));
+            faction = tile.map(TotemBlockEntity::getControllingFaction).orElse(((IFaction) VReference.HUNTER_FACTION));
         }
 
         if (faction != this.faction) {

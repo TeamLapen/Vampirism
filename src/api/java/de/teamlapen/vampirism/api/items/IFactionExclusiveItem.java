@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.api.items;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -35,5 +34,5 @@ public interface IFactionExclusiveItem {
      * @return The faction that can use this item or null if any
      */
     @Nullable
-    IPlayableFaction<?> getExclusiveFaction(@Nonnull ItemStack stack);
+    IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack);
 }

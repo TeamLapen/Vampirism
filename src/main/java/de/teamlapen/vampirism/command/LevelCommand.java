@@ -6,7 +6,6 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.command.arguments.FactionArgument;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.commands.CommandSourceStack;
@@ -24,19 +23,19 @@ public class LevelCommand extends BasicCommand {
 
         return Commands.literal("level")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
-                .then(Commands.argument("faction", new FactionArgument())
-                        .executes(context -> setLevel(context, FactionArgument.getFaction(context, "faction"), 1, Lists.newArrayList(context.getSource().getPlayerOrException())))
+                .then(Commands.argument("faction", FactionArgument.playableFactions())
+                        .executes(context -> setLevel(context, FactionArgument.getPlayableFaction(context, "faction"), 1, Lists.newArrayList(context.getSource().getPlayerOrException())))
                         .then(Commands.argument("level", IntegerArgumentType.integer(0))
-                                .executes(context -> setLevel(context, FactionArgument.getFaction(context, "faction"), IntegerArgumentType.getInteger(context, "level"), Lists.newArrayList(context.getSource().getPlayerOrException())))
+                                .executes(context -> setLevel(context, FactionArgument.getPlayableFaction(context, "faction"), IntegerArgumentType.getInteger(context, "level"), Lists.newArrayList(context.getSource().getPlayerOrException())))
                                 .then(Commands.argument("player", EntityArgument.entities())
-                                        .executes(context -> setLevel(context, FactionArgument.getFaction(context, "faction"), IntegerArgumentType.getInteger(context, "level"), EntityArgument.getPlayers(context, "player"))))))
+                                        .executes(context -> setLevel(context, FactionArgument.getPlayableFaction(context, "faction"), IntegerArgumentType.getInteger(context, "level"), EntityArgument.getPlayers(context, "player"))))))
                 .then(Commands.literal("none")
                         .executes(context -> leaveFaction(Lists.newArrayList(context.getSource().getPlayerOrException())))
                         .then(Commands.argument("player", EntityArgument.entities())
                                 .executes(context -> leaveFaction(EntityArgument.getPlayers(context, "player")))));
     }
 
-    private static int setLevel(CommandContext<CommandSourceStack> context, IPlayableFaction<IFactionPlayer<?>> faction, int level, Collection<ServerPlayer> players) {
+    private static int setLevel(CommandContext<CommandSourceStack> context, IPlayableFaction<?> faction, int level, Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             if (level == 0 && !handler.canLeaveFaction()) {

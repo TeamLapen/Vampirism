@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.player;
 
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import net.minecraft.world.entity.player.Player;
@@ -24,7 +23,7 @@ public class VampirismPlayerAttributes {
     public int vampireLevel = 0;
     public int hunterLevel = 0;
     @Nullable
-    public IPlayableFaction<? extends IFactionPlayer<?>> faction = null;
+    public IPlayableFaction<?> faction = null;
     public int lordLevel = 0;
 
     public HunterPlayerSpecialAttribute getHuntSpecial() {

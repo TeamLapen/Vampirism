@@ -10,7 +10,6 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -21,18 +20,32 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 
-public class FactionArgument implements ArgumentType<IPlayableFaction<?>> {
+public class FactionArgument implements ArgumentType<IFaction<?>> {
     private static final Collection<String> EXAMPLES = Arrays.asList("vampirism:vampire", "vampirism:hunter");
 
     private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((id) -> new TranslatableComponent("command.vampirism.argument.faction.notfound", id));
     private static final DynamicCommandExceptionType FACTION_NOT_PLAYABLE = new DynamicCommandExceptionType((id) -> new TranslatableComponent("command.vampirism.argument.faction.notplayable", id));
 
-    public static IPlayableFaction<IFactionPlayer<?>> getFaction(CommandContext<CommandSourceStack> context, String id) {
-        return (IPlayableFaction<IFactionPlayer<?>>) context.getArgument(id, IFaction.class);
+    public static IFaction<?> getFaction(CommandContext<CommandSourceStack> context, String id) {
+        return (IFaction<?>) context.getArgument(id, IFaction.class);
     }
 
-    public static FactionArgument factionArgument() {
-        return new FactionArgument();
+    public static IPlayableFaction<?> getPlayableFaction(CommandContext<CommandSourceStack> context, String id) {
+        return (IPlayableFaction<?>) context.getArgument(id, IFaction.class);
+    }
+
+    public static FactionArgument playableFactions() {
+        return new FactionArgument(true);
+    }
+
+    public static FactionArgument factions() {
+        return new FactionArgument(false);
+    }
+
+    public final boolean onlyPlayableFactions;
+
+    public FactionArgument(boolean onlyPlayableFactions) {
+        this.onlyPlayableFactions = onlyPlayableFactions;
     }
 
     @Override
@@ -42,15 +55,15 @@ public class FactionArgument implements ArgumentType<IPlayableFaction<?>> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return SharedSuggestionProvider.suggest(Arrays.stream(VampirismAPI.factionRegistry().getFactions()).map(i -> i.getID().toString()), builder);
+        return SharedSuggestionProvider.suggest(Arrays.stream(this.onlyPlayableFactions ? VampirismAPI.factionRegistry().getPlayableFactions(): VampirismAPI.factionRegistry().getFactions()).map(i -> i.getID().toString()), builder);
     }
 
     @Override
-    public IPlayableFaction<IFactionPlayer<?>> parse(StringReader reader) throws CommandSyntaxException {
+    public IFaction<?> parse(StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
         IFaction faction = VampirismAPI.factionRegistry().getFactionByID(id);
         if (faction == null) throw FACTION_NOT_FOUND.create(id);
-        if (!(faction instanceof IPlayableFaction)) throw FACTION_NOT_PLAYABLE.create(id);
-        return (IPlayableFaction) faction;
+        if (this.onlyPlayableFactions & !(faction instanceof IPlayableFaction)) throw FACTION_NOT_PLAYABLE.create(id);
+        return faction;
     }
 }

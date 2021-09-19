@@ -4,7 +4,7 @@ package de.teamlapen.vampirism.entity.minion.management;
 import de.teamlapen.lib.util.WeightedRandomItem;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -41,7 +41,7 @@ public class MinionTasks {
         registry.register(new CollectResourcesTask<VampireMinionEntity.VampireMinionData>(VReference.VAMPIRE_FACTION, data -> VampirismConfig.BALANCE.miResourceCooldown.get(), Arrays.asList(new WeightedRandomItem<>(BloodBottleItem.getStackWithDamage(BloodBottleItem.AMOUNT), 20), new WeightedRandomItem<>(new ItemStack(ModItems.human_heart), 5), new WeightedRandomItem<>(new ItemStack(Items.IRON_NUGGET, 12), 12), new WeightedRandomItem<>(new ItemStack(Items.GOLD_NUGGET, 6), 10))).setRegistryName(REFERENCE.MODID, "collect_blood"));
         registry.register(new SimpleMinionTask() {
             @Override
-            public boolean isAvailable(IPlayableFaction<?> faction, @Nullable ILordPlayer player) {
+            public boolean isAvailable(IFaction<?> faction, @Nullable ILordPlayer player) {
                 return false;
             }
         }.setRegistryName(REFERENCE.MODID, "nothing"));

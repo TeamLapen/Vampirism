@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.commands.arguments.selector.options.EntitySelectorOptions;
@@ -35,15 +34,15 @@ public class VampirismEntitySelectors {
         EntitySelectorOptions.register(FACTION, (parser) -> {
             boolean invert = parser.shouldInvertValue();
             ResourceLocation factionID = new ResourceLocation(parser.getReader().readString());
-            IFaction[] factions = VampirismAPI.factionRegistry().getFactions();
-            for (final IFaction f : factions) {
+            IFaction<?>[] factions = VampirismAPI.factionRegistry().getFactions();
+            for (final IFaction<?> f : factions) {
                 if (f.getID().equals(factionID)) {
                     parser.addPredicate(input -> {
                         if (input instanceof IFactionEntity) {
                             boolean flag1 = f.equals(((IFactionEntity) input).getFaction());
                             return invert != flag1;
                         } else if (f instanceof IPlayableFaction && input instanceof Player) {
-                            boolean flag1 = FactionPlayerHandler.getOpt((Player) input).map(h -> h.isInFaction((IPlayableFaction<IFactionPlayer<?>>) f)).orElse(false);
+                            boolean flag1 = FactionPlayerHandler.getOpt((Player) input).map(h -> h.isInFaction(f)).orElse(false);
                             return invert != flag1;
                         }
                         return invert;

@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.world.entity.PathfinderMob;
 
 import javax.annotation.Nonnull;
@@ -18,7 +18,7 @@ public abstract class HunterEntityAction<T extends PathfinderMob & IEntityAction
     }
 
     @Override
-    public IPlayableFaction getFaction() {
+    public IFaction getFaction() {
         return VReference.HUNTER_FACTION;
     }
 

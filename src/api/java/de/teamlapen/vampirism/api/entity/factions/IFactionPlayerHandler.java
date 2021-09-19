@@ -20,7 +20,7 @@ public interface IFactionPlayerHandler extends ILordPlayer {
      *
      * @return If the player can join the given faction
      */
-    boolean canJoin(IPlayableFaction<? extends IFactionPlayer<?>> faction);
+    boolean canJoin(IPlayableFaction<?> faction);
 
     /**
      * Checks currents factions {@link IFactionPlayer#canLeaveFaction()}
@@ -31,7 +31,7 @@ public interface IFactionPlayerHandler extends ILordPlayer {
      * @return The currently active faction. Can be null
      */
     @Nullable
-    IPlayableFaction<? extends IFactionPlayer<?>> getCurrentFaction();
+    IPlayableFaction<?> getCurrentFaction();
 
     /**
      * @return The currently active faction player. Can be null
@@ -53,7 +53,7 @@ public interface IFactionPlayerHandler extends ILordPlayer {
      *
      * @return If the faction is active: The faction level, otherwise 0
      */
-    int getCurrentLevel(IPlayableFaction<? extends IFactionPlayer<?>> f);
+    int getCurrentLevel(IPlayableFaction<?> f);
 
     /**
      * If not in faction returns 0f
@@ -71,13 +71,13 @@ public interface IFactionPlayerHandler extends ILordPlayer {
     /**
      * @return If the given faction is equal to the current one
      */
-    boolean isInFaction(IPlayableFaction<? extends IFactionPlayer<?>> f);
+    boolean isInFaction(IFaction<?> f);
 
     /**
      * Join the given faction and set the faction level to 1.
      * Only successful if {@link IFactionPlayerHandler#canJoin(IPlayableFaction)}
      */
-    void joinFaction(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction);
+    void joinFaction(@Nonnull IPlayableFaction<?> faction);
 
     /**
      * Should be called if the entity attacked.
@@ -92,7 +92,7 @@ public interface IFactionPlayerHandler extends ILordPlayer {
      *
      * @return If successful
      */
-    boolean setFactionAndLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level);
+    boolean setFactionAndLevel(@Nullable IPlayableFaction<?> faction, int level);
 
     /**
      * Set the level for a faction. Only works if the player already is in the given faction.
@@ -100,7 +100,7 @@ public interface IFactionPlayerHandler extends ILordPlayer {
      *
      * @return If successful
      */
-    boolean setFactionLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level);
+    boolean setFactionLevel(@Nonnull IPlayableFaction<?> faction, int level);
 
     /**
      * Set the players lord level.

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
 import de.teamlapen.lib.util.WeightedRandomItem;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
@@ -32,13 +32,13 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     private final List<WeightedRandomItem<ItemStack>> resources;
     private final Random rng = new Random();
     @Nullable
-    private final IPlayableFaction<?> faction;
+    private final IFaction<?> faction;
 
 
     /**
      * @param faction If given, only available to this faction
      */
-    public CollectResourcesTask(@Nullable IPlayableFaction<?> faction, @Nonnull Function<Q, Integer> coolDownSupplier, @Nonnull List<WeightedRandomItem<ItemStack>> resources) {
+    public CollectResourcesTask(@Nullable IFaction<?> faction, @Nonnull Function<Q, Integer> coolDownSupplier, @Nonnull List<WeightedRandomItem<ItemStack>> resources) {
         this.coolDownSupplier = coolDownSupplier;
         this.resources = resources;
         this.faction = faction;
@@ -62,7 +62,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     }
 
     @Override
-    public boolean isAvailable(IPlayableFaction<?> faction, @Nullable ILordPlayer player) {
+    public boolean isAvailable(IFaction<?> faction, @Nullable ILordPlayer player) {
         return this.faction == null || this.faction == faction;
     }
 

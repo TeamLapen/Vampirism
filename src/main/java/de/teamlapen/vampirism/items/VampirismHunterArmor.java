@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
@@ -68,7 +67,7 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
 
     @Override
     @Nullable
-    public IPlayableFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
+    public IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
         return VReference.HUNTER_FACTION;
     }
 
