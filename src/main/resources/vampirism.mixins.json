@@ -1,15 +1,15 @@
 {
   "required": true,
   "package": "de.teamlapen.vampirism.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "refmap": "vampirism.refmap.json",
   "mixins": [
+    "AbstractFurnaceBlockEntityAccessor",
     "ArmorItemAccessor",
     "AssemblerMixin",
     "DimensionStructureSettingsAccessor",
     "FlatGenerationSettingsAccessor",
     "LivingEntityAccessor",
-    "AbstractFurnaceBlockEntityAccessor",
     "MixinBellBlock",
     "MixinEffectInstance",
     "MixinEntity",
@@ -25,5 +25,5 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "minVersion": "0.8"
+  "minVersion": "0.8.4"
 }

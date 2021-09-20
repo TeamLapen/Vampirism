@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 @Mixin(MobEffectInstance.class)
 public class MixinEffectInstance implements EffectInstanceWithSource {
 
-    @Inject(remap = false, method = "loadSpecifiedEffect(Lnet/minecraft/world/effect/MobEffect;Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/effect/MobEffectInstance;", at = @At("RETURN"))
+    @Inject(method = "loadSpecifiedEffect(Lnet/minecraft/world/effect/MobEffect;Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/effect/MobEffectInstance;", at = @At("RETURN"))
     private static void readInternal_vampirism(MobEffect effect, CompoundTag nbt, CallbackInfoReturnable<MobEffectInstance> cir) {
         if (nbt.contains("source")) {
             ((EffectInstanceWithSource) cir.getReturnValue()).setSource(new ResourceLocation(nbt.getString("source")));
@@ -58,17 +58,17 @@ public class MixinEffectInstance implements EffectInstanceWithSource {
         this.duration = 1;
     }
 
-    @Inject(remap = false, method = "update(Lnet/minecraft/world/effect/MobEffectInstance;)Z", at = @At(value = "JUMP", ordinal = 2))
+    @Inject(method = "update(Lnet/minecraft/world/effect/MobEffectInstance;)Z", at = @At(value = "JUMP", ordinal = 2))
     private void copySource(MobEffectInstance other, CallbackInfoReturnable<Boolean> cir) {
         this.source = ((EffectInstanceWithSource) other).getSource();
     }
 
-    @Inject(remap = false, method = "setDetailsFrom(Lnet/minecraft/world/effect/MobEffectInstance;)V", at = @At("TAIL"))
+    @Inject(method = "setDetailsFrom(Lnet/minecraft/world/effect/MobEffectInstance;)V", at = @At("TAIL"))
     private void copySource1(MobEffectInstance other, CallbackInfo ci) {
         this.source = ((EffectInstanceWithSource) other).getSource();
     }
 
-    @Inject(remap = false, method = "writeDetailsTo(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("TAIL"))
+    @Inject(method = "writeDetailsTo(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("TAIL"))
     private void writeInternal_vampirism(CompoundTag nbt, CallbackInfo ci) {
         if (source != null) {
             nbt.putString("source", source.toString());

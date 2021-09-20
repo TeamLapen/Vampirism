@@ -50,12 +50,10 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${project.jei_version}") //Full for runtime
     compileOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}") //For compile (not exported to POM)
     runtimeOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}") //For runtime (not exported to POM)
-    library 'org.spongepowered:mixin:0.8.4-SNAPSHOT' //TODO remove
-    library "com.google.guava:guava:21.0" //TODO remove
 
     //runtimeOnly fg.deobf("curse.maven:angel-of-vengeance:2810906")
     if (System.getProperty("idea.sync.active") != "true") {
-        annotationProcessor 'org.spongepowered:mixin:0.8.4-SNAPSHOT:processor'
+        annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
     }
     //Blame for debugging
 //    runtimeOnly fg.deobf("com.telepathicgrunt:Blame:${project.blame_version}")
@@ -81,7 +79,7 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             workingDirectory project.file('run/client1').canonicalPath
             jvmArg '-ea:de.teamlapen...'
-            args '--mixin.config', 'vampirism.mixins.json'
+            arg "-mixin.config=vampirism.mixins.json"
             
             mods {
                 vampirism {
