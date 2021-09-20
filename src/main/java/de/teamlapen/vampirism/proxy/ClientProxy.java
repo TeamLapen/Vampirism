@@ -59,7 +59,7 @@ public class ClientProxy extends CommonProxy {
     private final static Logger LOGGER = LogManager.getLogger(ClientProxy.class);
     private final ClientSkillTreeManager skillTreeManager = new ClientSkillTreeManager();
     private VampirismHUDOverlay overlay;
-    private CustomBossInfoOverlay bossInfoOverlay;
+    private CustomBossEventOverlay bossInfoOverlay;
     private VampirismBlockEntityWitoutLevelRenderer itemStackBESR;
 
     public ClientProxy() {
@@ -177,7 +177,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handleUpdateMultiBossInfoPacket(UpdateMultiBossInfoPacket msg) {
+    public void handleUpdateMultiBossInfoPacket(MultiBossEventPacket msg) {
         this.bossInfoOverlay.read(msg);
     }
 
@@ -191,12 +191,14 @@ public class ClientProxy extends CommonProxy {
         super.onInitStep(step, event);
         switch (step) {
             case CLIENT_SETUP:
-                overlay = new VampirismHUDOverlay(Minecraft.getInstance());
+                this.overlay = new VampirismHUDOverlay(Minecraft.getInstance());
+                this.bossInfoOverlay = new CustomBossEventOverlay();
                 ModKeys.register();
                 registerSubscriptions();
                 ActionSelectScreen.loadActionOrder();
                 ModBlocksRender.register();
                 OverlayRegistry.registerOverlayAbove(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT, "faction_level", overlay::renderFactionLevel);
+                OverlayRegistry.registerOverlayAbove(ForgeIngameGui.BOSS_HEALTH_ELEMENT,"vampirism_raid", bossInfoOverlay::onRenderOverlayBoss);
                 break;
             case LOAD_COMPLETE:
                 ModBlocksRender.registerColors();
@@ -231,9 +233,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     private void registerSubscriptions() {
-        this.bossInfoOverlay = new CustomBossInfoOverlay();
-        MinecraftForge.EVENT_BUS.register(overlay);
-        MinecraftForge.EVENT_BUS.register(this.bossInfoOverlay);
+        MinecraftForge.EVENT_BUS.register(this.overlay);
         MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
         MinecraftForge.EVENT_BUS.register(new ScreenEventHandler());
     }

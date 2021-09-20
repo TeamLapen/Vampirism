@@ -77,7 +77,7 @@ public interface IProxy extends IInitListener {
     default void handleTaskStatusPacket(TaskStatusPacket msg) {
     }
 
-    default void handleUpdateMultiBossInfoPacket(UpdateMultiBossInfoPacket msg) {
+    default void handleUpdateMultiBossInfoPacket(MultiBossEventPacket msg) {
     }
 
     default void handleVampireBookPacket(OpenVampireBookPacket msg) {

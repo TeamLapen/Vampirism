@@ -32,7 +32,7 @@ import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
-import de.teamlapen.vampirism.world.ServerMultiBossInfo;
+import de.teamlapen.vampirism.world.ServerMultiBossEvent;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -98,7 +98,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         UtilLib.replaceEntity(villager, hunter);
     }
 
-    private final ServerMultiBossInfo captureInfo = new ServerMultiBossInfo(new TranslatableComponent("text.vampirism.village.bossinfo.raid"), BossEvent.BossBarOverlay.NOTCHED_10);
+    private final ServerMultiBossEvent captureInfo = new ServerMultiBossEvent(new TranslatableComponent("text.vampirism.village.bossinfo.raid"), BossEvent.BossBarOverlay.NOTCHED_10);
     public long timeSinceLastRaid = 0;
     //block attributes
     private boolean isComplete;

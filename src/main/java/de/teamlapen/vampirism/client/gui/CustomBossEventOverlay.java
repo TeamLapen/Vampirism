@@ -4,29 +4,28 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.mixin.client.BossOverlayGuiAccessor;
-import de.teamlapen.vampirism.network.UpdateMultiBossInfoPacket;
+import de.teamlapen.vampirism.network.MultiBossEventPacket;
 import de.teamlapen.vampirism.world.DummyBossInfo;
-import de.teamlapen.vampirism.world.MultiBossInfo;
+import de.teamlapen.vampirism.world.MultiBossEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.BossEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class CustomBossInfoOverlay extends GuiComponent {
+public class CustomBossEventOverlay extends GuiComponent {
     private static final ResourceLocation GUI_BARS_TEXTURES = new ResourceLocation("textures/gui/bars.png");
     private final Minecraft client;
-    private final Map<UUID, MultiBossInfo> bossInfoMap = new LinkedHashMap<>();
+    private final Map<UUID, MultiBossEvent> bossInfoMap = new LinkedHashMap<>();
 
-    public CustomBossInfoOverlay() {
+    public CustomBossEventOverlay() {
         this.client = Minecraft.getInstance();
     }
 
@@ -34,20 +33,17 @@ public class CustomBossInfoOverlay extends GuiComponent {
         this.bossInfoMap.clear();
     }
 
-    @SubscribeEvent
-    public void onRenderOverlayBoss(RenderGameOverlayEvent.Post event) {
-        if (event.getType() == RenderGameOverlayEvent.ElementType.BOSSINFO) {
-            RenderSystem.defaultBlendFunc();
-            RenderSystem.enableBlend();
-            render(event.getMatrixStack());
-            RenderSystem.disableBlend();
-        }
+    public void onRenderOverlayBoss(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.enableBlend();
+        render(poseStack);
+        RenderSystem.disableBlend();
     }
 
-    public void read(UpdateMultiBossInfoPacket packet) {
-        if (packet.getOperation() == UpdateMultiBossInfoPacket.OperationType.ADD) {
-            this.bossInfoMap.put(packet.getUniqueId(), new MultiBossInfo(packet));
-        } else if (packet.getOperation() == UpdateMultiBossInfoPacket.OperationType.REMOVE) {
+    public void read(MultiBossEventPacket packet) {
+        if (packet.getOperation() == MultiBossEventPacket.OperationType.ADD) {
+            this.bossInfoMap.put(packet.getUniqueId(), new MultiBossEvent(packet));
+        } else if (packet.getOperation() == MultiBossEventPacket.OperationType.REMOVE) {
             this.bossInfoMap.remove(packet.getUniqueId());
         } else {
             this.bossInfoMap.get(packet.getUniqueId()).updateFromPackage(packet);
@@ -57,7 +53,7 @@ public class CustomBossInfoOverlay extends GuiComponent {
     public void render(PoseStack stack) {
         int i = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int j = 12 + ((BossOverlayGuiAccessor) this.client.gui.getBossOverlay()).getMapBossInfos().size() * (10 + this.client.font.lineHeight);
-        for (MultiBossInfo value : bossInfoMap.values()) {
+        for (MultiBossEvent value : bossInfoMap.values()) {
             int k = i / 2 - 91;
             net.minecraftforge.client.event.RenderGameOverlayEvent.BossInfo event =
                     net.minecraftforge.client.ForgeHooksClient.bossBarRenderPre(stack, this.client.getWindow(), new DummyBossInfo(value.getUniqueId(), value.getName()), k, j, 10 + this.client.font.lineHeight);
@@ -81,7 +77,7 @@ public class CustomBossInfoOverlay extends GuiComponent {
         }
     }
 
-    private void render(PoseStack stack, int k, int j, MultiBossInfo value) {
+    private void render(PoseStack stack, int k, int j, MultiBossEvent value) {
         int textureStart = 0;
         List<Color> s = value.getColors();
         Map<Color, Float> perc = value.getEntries();
@@ -94,7 +90,7 @@ public class CustomBossInfoOverlay extends GuiComponent {
                     width = 182 - textureStart;
                 }
             }
-            RenderSystem.setShaderColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+            RenderSystem.setShaderColor(color.getRedF(), color.getGreenF(), color.getBlueF(), color.getAlphaF());
             this.blit(stack, k + textureStart, j, textureStart, BossEvent.BossBarColor.WHITE.ordinal() * 5 * 2 + 5, width, 5);
             textureStart += width;
         }

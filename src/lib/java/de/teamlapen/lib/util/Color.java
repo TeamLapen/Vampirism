@@ -2,6 +2,9 @@ package de.teamlapen.lib.util;
 
 import java.util.Arrays;
 
+/**
+ * Color wrapper from {@link java.awt.Color} to work on headless server without java.awt
+ */
 public class Color {
 
     public static final Color WHITE = new Color(255, 255, 255);
@@ -69,6 +72,22 @@ public class Color {
         return (value >> 24) & 0xff;
     }
 
+    public float getRedF() {
+        return this.frgbvalue[0];
+    }
+
+    public float getGreenF() {
+        return this.frgbvalue[1];
+    }
+
+    public float getBlueF() {
+        return this.frgbvalue[2];
+    }
+
+    public float getAlphaF() {
+        return this.frgbvalue[3];
+    }
+
     public int getRGB() {
         return value;
     }
@@ -88,4 +107,18 @@ public class Color {
                 ((blue & 0xFF));
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Color color = (Color) o;
+
+        return value == color.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return value;
+    }
 }

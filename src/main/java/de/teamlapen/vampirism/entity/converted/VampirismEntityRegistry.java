@@ -127,7 +127,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     public IConvertedCreature<?> convert(PathfinderMob entity) {
         BiteableEntry b = biteableEntryManager.get(entity);
         if (b != null && b.convertingHandler != null) {
-            return ((DefaultConvertingHandler<PathfinderMob>) b.convertingHandler).createFrom(entity);
+            return ((IConvertingHandler<PathfinderMob>) b.convertingHandler).createFrom(entity);
         }
         LOGGER.warn("Failed to find convertible entry for {}", entity);
         return null;
