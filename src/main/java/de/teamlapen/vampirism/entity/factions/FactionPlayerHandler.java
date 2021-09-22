@@ -423,8 +423,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             if (currentFaction == null) {
                 LOGGER.warn("Could not find faction {}. Did mods change?", nbt.getString("faction"));
             } else {
-                currentLevel = nbt.getInt("level");
-                currentLordLevel = nbt.getInt("lord_level");
+                currentLevel = Math.min(nbt.getInt("level"), this.currentFaction.getHighestReachableLevel());
+                currentLordLevel = Math.min(nbt.getInt("lord_level"), this.currentFaction.getHighestLordLevel());
                 updateCache();
                 notifyFaction(null, 0);
             }
