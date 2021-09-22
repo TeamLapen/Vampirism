@@ -79,7 +79,6 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             workingDirectory project.file('run/client1').canonicalPath
             jvmArg '-ea:de.teamlapen...'
-            arg "-mixin.config=vampirism.mixins.json"
             
             mods {
                 vampirism {
@@ -109,7 +108,6 @@ minecraft {
             property 'vampirism_target', 'dev_server'
             workingDirectory project.file('run/server').canonicalPath
             jvmArg '-ea:de.teamlapen...'
-            arg "-mixin.config=vampirism.mixins.json"
 
             mods {
                 vampirism {
@@ -129,7 +127,7 @@ minecraft {
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             property 'vampirism_target', 'dev_data'
-            args "-mixin.config=vampirism.mixins.json", '--mod', 'vampirism', '--all', '--output', file('src/generated/resources/'),  '--existing', sourceSets.main.resources.srcDirs[0]
+            args '--mod', 'vampirism', '--all', '--output', file('src/generated/resources/'),  '--existing', sourceSets.main.resources.srcDirs[0]
             mods {
                 vampirism {
                     source sourceSets.main
@@ -255,13 +253,18 @@ jar {
                 "Implementation-Title": project.name,
                 "Implementation-Version": mod_version,
                 "Implementation-Vendor" :"maxanier",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs": "vampirism.mixins.json"
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
 }
 apply plugin: 'org.spongepowered.mixin'
 
+
+// https://github.com/SpongePowered/Mixin/wiki/Mixins-on-Minecraft-Forge
 mixin {
     add sourceSets.main, "vampirism.refmap.json"
+    config 'vampirism.mixins.json'
+
+    debug.verbose = true
+    debug.export = true
 }
