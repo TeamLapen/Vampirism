@@ -256,15 +256,15 @@ public class TotemHelper {
      * use {@link #isVillage(Set, ServerLevel, BlockPos, boolean)}
      * <p>
      * <p>
-     * flag & 1 != 0 :
+     * {@code flag & 1 != 0} :
      * <p>
      * - enough homes
      * <p>
-     * flag & 2 != 0 :
+     * {@code flag & 2 != 0} :
      * <p>
      * - enough work stations
      * <p>
-     * flag & 4 != 0 :
+     * {@code flag & 4 != 0} :
      * <p>
      * - enough villager
      * <p>
@@ -291,15 +291,15 @@ public class TotemHelper {
      * checks if the given  {@link PoiRecord} Set can be interpreted as village
      * <p>
      * <p>
-     * flag & 1 != 0 :
+     * {@code flag & 1 != 0} :
      * <p>
      * - enough homes
      * <p>
-     * flag & 2 != 0 :
+     * {@code flag & 2 != 0} :
      * <p>
      * - enough work stations
      * <p>
-     * flag & 4 != 0 :
+     * {@code flag & 4 != 0} :
      * <p>
      * - enough villager
      * <p>

@@ -59,7 +59,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
     }
 
     /**
-     * null on client & @Nonnull on server
+     * null on client and @Nonnull on server
      */
     @Nonnull
     @Override
