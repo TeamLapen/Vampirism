@@ -182,9 +182,14 @@ public class SimpleSpawnerLogic<T extends Entity> {
                     if (limitType != null) {
                         @Nullable
                         WorldEntitySpawner.EntityDensityManager densityManager = ((ServerWorld) this.world).getChunkSource().getLastSpawnState();
-                        if (densityManager != null && !densityManager.canSpawnForCategory(limitType)) {
-                            this.resetTimer();
-                            break;
+                        try {
+                            if (densityManager != null && !densityManager.canSpawnForCategory(limitType)) {
+                                this.resetTimer();
+                                break;
+                            }
+                        } catch (NoSuchMethodError e) {
+                            //Workaround for https://github.com/TeamLapen/Vampirism/issues/983
+                            //Maybe remove when https://github.com/magmafoundation/Magma-1.16.x/issues/154 is solved
                         }
 
                     }
