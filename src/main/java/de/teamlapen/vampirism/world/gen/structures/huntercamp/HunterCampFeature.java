@@ -15,9 +15,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class HunterCampStructure extends StructureFeature<NoneFeatureConfiguration> {
+public class HunterCampFeature extends StructureFeature<NoneFeatureConfiguration> {
 
-    public HunterCampStructure(Codec<NoneFeatureConfiguration> deserializer) {
+    public HunterCampFeature(Codec<NoneFeatureConfiguration> deserializer) {
         super(deserializer);
     }
 

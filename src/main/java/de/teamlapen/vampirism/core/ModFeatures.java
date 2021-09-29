@@ -9,8 +9,8 @@ import de.teamlapen.vampirism.mixin.DimensionStructureSettingsAccessor;
 import de.teamlapen.vampirism.util.ConfigurableStructureSeparationSettings;
 import de.teamlapen.vampirism.world.gen.features.VampireDungeonFeature;
 import de.teamlapen.vampirism.world.gen.features.VampirismLakeFeature;
+import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampFeature;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampPieces;
-import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampStructure;
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
 import net.minecraft.resources.ResourceKey;
@@ -38,7 +38,7 @@ public class ModFeatures {
     public static final VampireDungeonFeature vampire_dungeon = new VampireDungeonFeature(NoneFeatureConfiguration.CODEC);
     public static final VampirismLakeFeature mod_lake = new VampirismLakeFeature(BlockStateConfiguration.CODEC);
     //structures
-    public static final StructureFeature<NoneFeatureConfiguration> hunter_camp = new HunterCampStructure(NoneFeatureConfiguration.CODEC/*deserialize*/);
+    public static final StructureFeature<NoneFeatureConfiguration> hunter_camp = new HunterCampFeature(NoneFeatureConfiguration.CODEC/*deserialize*/);
     //structure pieces
     public static final StructurePieceType hunter_camp_fireplace = StructurePieceType.setPieceId(HunterCampPieces.Fireplace::new, REFERENCE.MODID + ":hunter_camp_fireplace");
     public static final StructurePieceType hunter_camp_tent = StructurePieceType.setPieceId(HunterCampPieces.Tent::new, REFERENCE.MODID + ":hunter_camp_tent");

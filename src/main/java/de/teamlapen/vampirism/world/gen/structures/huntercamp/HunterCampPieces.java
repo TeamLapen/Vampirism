@@ -67,7 +67,7 @@ public abstract class HunterCampPieces extends StructurePiece {
     @Override
     public boolean postProcess/*addComponentParts*/(WorldGenLevel worldIn, StructureFeatureManager structureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
         this.y = worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z);
-
+        this.boundingBox = new BoundingBox(this.x - 1, this.y, this.z - 1, this.x + 1, this.y + 2, this.z + 1);
         //fail conditions
         return testPreconditions(worldIn, structureManager, chunkPos);
     }
