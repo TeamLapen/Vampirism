@@ -202,7 +202,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
 
     public void setOwnerID(Player player) {
         ownerID = player.getUUID();
-        ownerName = player.getDisplayName().getString();
+        ownerName = player.getName().getString();
         this.setChanged();
     }
 

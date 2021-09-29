@@ -27,8 +27,7 @@ public class AlchemicalCauldronScreen extends AbstractContainerScreen<Alchemical
     @Override
     public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
-        super.render
-                (stack, mouseX, mouseY, partialTicks);
+        super.render(stack, mouseX, mouseY, partialTicks);
         this.renderTooltip(stack, mouseX, mouseY);
     }
 
@@ -45,7 +44,7 @@ public class AlchemicalCauldronScreen extends AbstractContainerScreen<Alchemical
 
         int l = menu.getBurnProgress();
         this.blit(stack, i + 79, j + 34, 176, 14, l + 1, 16);
-        l = l / 24 * 30;
+        l = (int)(l / 24F * 30F);
         this.blit(stack, i + 142, j + 28 + 30 - l, 176, 60 - l, 12, l);
     }
 

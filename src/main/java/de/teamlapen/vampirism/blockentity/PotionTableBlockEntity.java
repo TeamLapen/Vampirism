@@ -259,7 +259,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
 
     public void setOwnerID(Player player) {
         ownerID = player.getUUID();
-        ownerName = player.getDisplayName();
+        ownerName = player.getName();
         this.setChanged();
     }
 
