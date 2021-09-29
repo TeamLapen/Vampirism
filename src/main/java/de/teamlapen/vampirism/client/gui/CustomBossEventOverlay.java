@@ -56,7 +56,7 @@ public class CustomBossEventOverlay extends GuiComponent {
         for (MultiBossEvent value : bossInfoMap.values()) {
             int k = i / 2 - 91;
             net.minecraftforge.client.event.RenderGameOverlayEvent.BossInfo event =
-                    net.minecraftforge.client.ForgeHooksClient.bossBarRenderPre(stack, this.client.getWindow(), new DummyBossInfo(value.getUniqueId(), value.getName()), k, j, 10 + this.client.font.lineHeight);
+                    net.minecraftforge.client.ForgeHooksClient.bossBarRenderPre(stack, this.client.getWindow(), new DummyBossInfo(value), k, j, 10 + this.client.font.lineHeight);
             if (!event.isCanceled()) {
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

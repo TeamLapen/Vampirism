@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.inventory.container;
 
 import com.google.common.collect.Lists;
+import de.teamlapen.lib.lib.inventory.BooleanDataSlot;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -23,8 +24,6 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fmllegacy.network.IContainerFactory;
 
@@ -41,8 +40,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
     private final Player player;
     private final CraftingContainer craftMatrix = new CraftingContainer(this, 4, 4);
     private final ResultContainer craftResult = new ResultContainer();
-    private boolean missingLava = false;
-    private boolean prevMissingLava = false;
+    private final BooleanDataSlot missingLava = new BooleanDataSlot();
 
     public WeaponTableContainer(int id, Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
         super(ModContainer.weapon_table, id);
@@ -68,18 +66,12 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
         }
 
         this.slotsChanged(this.craftMatrix);
+        this.addDataSlot(missingLava);
     }
 
     @Override
     public void broadcastChanges() {
         super.broadcastChanges();
-        for (ContainerListener icontainerlistener : this.containerListeners) {
-            if (this.prevMissingLava != this.missingLava) {
-                icontainerlistener.dataChanged(this, 0, missingLava ? 1 : 0);
-            }
-
-        }
-        this.prevMissingLava = missingLava;
     }
 
     /**
@@ -153,7 +145,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
         ItemStack itemStackCopy = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
 
-        if (slot != null && slot.hasItem()) {
+        if (slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemStackCopy = itemstack1.copy();
             if (index == 0) {
@@ -194,8 +186,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
      * @return if there's a recipe available for the given setup, which requires more lava
      */
     public boolean isMissingLava() {
-        return missingLava;
-
+        return missingLava.getB();
     }
 
     @Override
@@ -215,17 +206,8 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
                     playerIn.drop(itemstack, false);
                 }
             }
-            missingLava = false;
+            missingLava.set(false);
         });
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void setData(int id, int data) {
-        super.setData(id, data);
-        if (id == 0) {
-            missingLava = data != 0;
-        }
     }
 
     @Override
@@ -241,24 +223,24 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
     }
 
     private void slotChangedCraftingGrid(Level worldIn, Player playerIn, HunterPlayer hunter, CraftingContainer craftMatrixIn, ResultContainer craftResultIn) {
-        if (!worldIn.isClientSide && playerIn instanceof ServerPlayer entityplayermp) {
+        if (!worldIn.isClientSide && playerIn instanceof ServerPlayer serverPlayer) {
             Optional<IWeaponTableRecipe> optional = worldIn.getServer() == null ? Optional.empty() : worldIn.getServer().getRecipeManager().getRecipeFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, craftMatrixIn, worldIn);
-            this.missingLava = false;
+            this.missingLava.set(false);
             craftResultIn.setItem(0, ItemStack.EMPTY);
             if (optional.isPresent()) {
                 IWeaponTableRecipe recipe = optional.get();
-                if ((craftResultIn.setRecipeUsed(worldIn, entityplayermp, recipe) || ModList.get().isLoaded("fastbench")) && recipe.getRequiredLevel() <= hunter.getLevel() && Helper.areSkillsEnabled(hunter.getSkillHandler(), recipe.getRequiredSkills())) {
+                if ((craftResultIn.setRecipeUsed(worldIn, serverPlayer, recipe) || ModList.get().isLoaded("fastbench")) && recipe.getRequiredLevel() <= hunter.getLevel() && Helper.areSkillsEnabled(hunter.getSkillHandler(), recipe.getRequiredSkills())) {
                     this.worldPos.execute((world, pos) -> {
                         if (world.getBlockState(pos).getValue(WeaponTableBlock.LAVA) >= recipe.getRequiredLavaUnits()) {
                             craftResultIn.setItem(0, recipe.assemble(craftMatrixIn));
                         } else {
-                            this.missingLava = true;
+                            this.missingLava.set(true);
                         }
                     });
                 }
             }
             broadcastChanges();
-            entityplayermp.connection.send(new ClientboundContainerSetSlotPacket(this.containerId, this.incrementStateId(), 0, craftResultIn.getItem(0)));
+            serverPlayer.connection.send(new ClientboundContainerSetSlotPacket(this.containerId, this.incrementStateId(), 0, craftResultIn.getItem(0)));
         }
     }
 

@@ -1,19 +1,14 @@
 package de.teamlapen.vampirism.world;
 
 import net.minecraft.client.gui.components.LerpingBossEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.BossEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
-import java.util.UUID;
-
+/**
+ * used as dummy boss event that can be passed to {@link RenderGameOverlayEvent.BossInfo}
+ */
 public class DummyBossInfo extends LerpingBossEvent {
-    public DummyBossInfo(UUID uniqueIdIn, Component nameIn) {
-        super(uniqueIdIn, nameIn, 0, BossBarColor.WHITE, BossBarOverlay.PROGRESS, false, false, false);
-    }
 
-    public static class DummyBossInfo2 extends BossEvent {
-        public DummyBossInfo2(UUID uniqueIdIn, Component nameIn) {
-            super(uniqueIdIn, nameIn, BossBarColor.WHITE, BossBarOverlay.PROGRESS);
-        }
+    public DummyBossInfo(MultiBossEvent multiBossEvent) {
+        super(multiBossEvent.getUniqueId(), multiBossEvent.getName(), 0, BossBarColor.WHITE, BossBarOverlay.PROGRESS, false, false, false);
     }
 }
