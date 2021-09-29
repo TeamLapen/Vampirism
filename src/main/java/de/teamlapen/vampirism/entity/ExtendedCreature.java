@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
@@ -269,6 +270,13 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     @Override
     public void tick() {
         if (!entity.getCommandSenderWorld().isClientSide) {
+            /*
+             * Make sure all entities with no blood die
+             * check for sanguinare as the entity might converted instead of dying
+             */
+            if (blood == 0 && entity.tickCount % 20 == 10 && entity.getEffect(ModEffects.sanguinare) == null) {
+                entity.hurt(VReference.NO_BLOOD, 1000);
+            }
             if (blood > 0 && blood < getMaxBlood() && entity.tickCount % 40 == 8) {
                 entity.addEffect(new EffectInstance(Effects.WEAKNESS, 41));
                 entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 41, 2));

@@ -308,15 +308,4 @@ public class ModEntityEventHandler {
 
         }
     }
-
-    @SubscribeEvent
-    public void onLivingHurt(LivingHurtEvent event) {
-        /*
-         * This makes sure that Entities that have no blood left die.
-         * Because e.g. Minecolony citizen can only receive 'maxhealth * 0.2' damage
-         */
-        if (event.getSource() == VReference.NO_BLOOD) {
-            event.setAmount(1000);
-        }
-    }
 }
