@@ -79,8 +79,10 @@ public class AltarCleansingBlock extends VampirismHorizontalBlock {
         if (!player.isAlive()) return InteractionResult.PASS;
         IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
         ItemStack heldItem = player.getItemInHand(hand);
-        if (handler.isInFaction(VReference.VAMPIRE_FACTION) && world.isClientSide()) {
-            VampirismMod.proxy.displayRevertBackScreen();
+        if (handler.isInFaction(VReference.VAMPIRE_FACTION)) {
+            if (world.isClientSide()) {
+                VampirismMod.proxy.displayRevertBackScreen();
+            }
             return InteractionResult.SUCCESS;
         } else if (!heldItem.isEmpty()) {
             if (ModItems.holy_salt_water.equals(heldItem.getItem())) {

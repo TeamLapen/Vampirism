@@ -156,7 +156,9 @@ public class MedChairBlock extends VampirismHorizontalBlock {
             return false;
         }
         if (VReference.HUNTER_FACTION.equals(currentFaction)) {
-            VampirismMod.proxy.displayRevertBackScreen();
+            if (player.level.isClientSide()) {
+                VampirismMod.proxy.displayRevertBackScreen();
+            }
             return true;
         }
         if (currentFaction == null) {

@@ -177,26 +177,27 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     @Override
     public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
-        if (editActions)
+        if (editActions) {
             GuiUtils.drawHoveringText(stack, Lists.newArrayList(new TranslatableComponent("gui.vampirism.action_select.action_binding"), ModKeys.ACTION1.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA), ModKeys.ACTION2.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA)), 0, ((int) (this.height * 0.8)), width, height, this.width / 4, this.font);
+        }
     }
 
     @Override
     protected void afterIconDraw(PoseStack stack, IAction<T> p, int x, int y) {
-        if (p == fakeAction || editActions) //noinspection UnnecessaryReturnStatement
+        if (p == fakeAction || editActions)
             return;
         // Draw usage indicator
 
-//        float active = actionHandler.getPercentageForAction(p);
-//        if (active > 0) {
-//
-//            float h = active * 16;
-//            this.fillGradient(stack, x, (int) (y + h), x + 16, y + 16, Color.YELLOW.getRGB() - 0x88000000, Color.YELLOW.getRGB());
-//        } else if (active < 0) {
-//
-//            float h = (1F + (active)) * 16;
-//            this.fillGradient(stack, x, (int) (y + h), x + 16, y + 16, Color.BLACK.getRGB() - 0x55000000, Color.BLACK.getRGB());
-//        }
+        float active = actionHandler.getPercentageForAction(p);
+        if (active > 0) {
+
+            float h = active * 16;
+            this.fillGradient(stack, x, (int) (y + h), x + 16, y + 16, Color.YELLOW.getRGB() - 0x88000000, Color.YELLOW.getRGB());
+        } else if (active < 0) {
+
+            float h = (1F + (active)) * 16;
+            this.fillGradient(stack, x, (int) (y + h), x + 16, y + 16, Color.BLACK.getRGB() - 0x55000000, Color.BLACK.getRGB());
+        }
     }
 
     @Override

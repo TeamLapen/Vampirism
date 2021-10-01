@@ -19,7 +19,6 @@ public class AltarInfusionContainer extends InventoryContainer {
     @Deprecated
     public AltarInfusionContainer(int id, Inventory playerInventory) {
         this(id, playerInventory, new SimpleContainer(3), ContainerLevelAccess.NULL);
-        this.addPlayerSlots(playerInventory);
     }
 
     public AltarInfusionContainer(int id, Inventory playerInventory, Container inventory, ContainerLevelAccess worldPosCallable) {

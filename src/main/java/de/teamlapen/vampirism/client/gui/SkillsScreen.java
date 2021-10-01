@@ -29,7 +29,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.locale.Language;
@@ -42,6 +41,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -333,8 +333,7 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
         //Limit render area
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         double scale = minecraft.getWindow().getGuiScale();
-        GL11.glScissor((int) (k * scale), (int) (l * scale),
-                (int) (display_width * scale), (int) (display_height * scale));
+        GL11.glScissor((int) (k * scale), (int) (l * scale), (int) (display_width * scale), (int) (display_height * scale));
 
         this.setBlitOffset(0);
         RenderSystem.depthFunc(518);
@@ -342,9 +341,6 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
         stack.translate(i1, j1, -200);
         stack.scale(1 / this.zoomOut, 1 / this.zoomOut, 1);
         RenderSystem.enableTexture();
-//        RenderSystem.disableLighting();
-//        RenderSystem.enableRescaleNormal();
-//        RenderSystem.enableColorMaterial();
         int k1 = offsetX + 288 >> 4;
         int l1 = offsetY + 288 >> 4;
         int i2 = (offsetX + display_width * 2) % 16;
@@ -386,7 +382,7 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
                     textureatlassprite = this.getTexture(block);
                 }
 
-                RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
+                RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
                 blit(stack, x * 16 - i2, y * 16 - j2, this.getBlitOffset(), 16, 16, textureatlassprite);
             }
         }
@@ -412,8 +408,13 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
                 } else if (skillHandler.isNodeEnabled(node.getParent())) {
                     color = 0xff009900;
                 }
+                // Draw Line
+                RenderSystem.setShaderColor(1.0F,1.0F,1.0F, 1.0F);
                 this.hLine(stack, xs, xp, yp, color);
                 this.vLine(stack, xs, ys - 11, yp, color);
+
+                // Draw Arrow
+                RenderSystem.setShaderColor(0.2F,0.2F,0.2F, 1.0F);
                 if (ys > yp) {
                     //Currently, always like this. The other option are here in case this changes at some point
                     this.blit(stack, xs - 5, ys - 11 - 7, 96, 234, 11, 7);
@@ -429,12 +430,9 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
 
         float mMouseX = (float) (mouseX - i1) * this.zoomOut;
         float mMouseY = (float) (mouseY - j1) * this.zoomOut;
-//        Lighting.turnBackOn();
-//        RenderSystem.disableLighting();
-//        RenderSystem.enableRescaleNormal();
-//        RenderSystem.enableColorMaterial();
 
         //Draw skills
+//        RenderSystem.setShaderColor(1.0F,1.0F,1.0F, 1.0F);
         ISkill<T> newSelected = null;//Not sure if mouse clicks can occur while this is running, so don't set #selected to null here but use an extra variable to be sure
         SkillNode newSelectedNode = null;
         for (SkillNode node : skillNodes) {
@@ -571,9 +569,6 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
 
 
         RenderSystem.enableDepthTest();
-//        RenderSystem.enableLighting();
-//        Lighting.turnOff();
-
     }
 
     private int findHorizontalNodeCenter(SkillNode node) {

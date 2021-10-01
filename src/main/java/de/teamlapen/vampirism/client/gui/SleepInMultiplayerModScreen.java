@@ -16,7 +16,7 @@ public class SleepInMultiplayerModScreen extends InBedChatScreen {
     @Override
     protected void init() {
         super.init();
-        GuiEventListener l = this.children().get(0);
+        GuiEventListener l = this.children().get(1);
         if (l instanceof AbstractWidget) {
             ((AbstractWidget) l).setMessage(new TranslatableComponent(leaveText));
         }
