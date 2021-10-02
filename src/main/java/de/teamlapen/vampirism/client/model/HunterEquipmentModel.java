@@ -49,7 +49,7 @@ public class HunterEquipmentModel<T extends Mob> extends HumanoidModel<T> {
         part.addOrReplaceChild(HAT_RIM, CubeListBuilder.create().texOffs(0, 35).mirror().addBox(-6F, -9F, -6F, 12, 1, 12), headPose);
         part.addOrReplaceChild(AXE_SHAFT, CubeListBuilder.create().texOffs(16, 48).mirror().addBox(-2F, 8F, -17F, 1, 1, 15), rightArmPose);
         part.addOrReplaceChild(AXE_BLADE1, CubeListBuilder.create().texOffs(0, 53).mirror().addBox(-2F, 4F, -16F, 1, 4, 7), rightArmPose);
-        part.addOrReplaceChild(AXE_BLADE2, CubeListBuilder.create().texOffs(16, 48).mirror().addBox(-2F, 9F, -16F, 1, 4, 7), rightArmPose);
+        part.addOrReplaceChild(AXE_BLADE2, CubeListBuilder.create().texOffs(0, 53).mirror().addBox(-2F, 9F, -16F, 1, 4, 7), rightArmPose);
         part.addOrReplaceChild(STAKE_LEFT, CubeListBuilder.create().texOffs(16, 48).mirror().addBox(1F, 8F, -8F, 1, 1, 6), leftArmPose);
         part.addOrReplaceChild(STAKE_RIGHT, CubeListBuilder.create().texOffs(16, 48).mirror().addBox(-2F, 8F, -8, 1, 1, 6), rightArmPose);
         return LayerDefinition.create(mesh, 64, 64);
