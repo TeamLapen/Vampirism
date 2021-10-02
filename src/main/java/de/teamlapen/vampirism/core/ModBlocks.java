@@ -51,14 +51,14 @@ public class ModBlocks {
     public static final CastleStairsBlock castle_stairs_dark_brick = getNull();
     public static final CastleStairsBlock castle_stairs_dark_stone = getNull();
     public static final CastleStairsBlock castle_stairs_purple_brick = getNull();
-    public static final ChurchAltarBlock church_altar = getNull();
+    public static final AltarCleansingBlock altar_cleansing = getNull();
     public static final CoffinBlock coffin = getNull();
     public static final CursedEarthBlock cursed_earth = getNull();
     public static final FirePlaceBlock fire_place = getNull();
     public static final GarlicBlock garlic = getNull();
-    public static final GarlicDiffusorBlock garlic_diffusor_improved = getNull();
-    public static final GarlicDiffusorBlock garlic_diffusor_normal = getNull();
-    public static final GarlicDiffusorBlock garlic_diffusor_weak = getNull();
+    public static final GarlicDiffuserBlock garlic_diffuser_improved = getNull();
+    public static final GarlicDiffuserBlock garlic_diffuser_normal = getNull();
+    public static final GarlicDiffuserBlock garlic_diffuser_weak = getNull();
     public static final HunterTableBlock hunter_table = getNull();
     public static final MedChairBlock med_chair = getNull();
     public static final FlowerPotBlock potted_vampire_orchid = getNull();
@@ -104,7 +104,7 @@ public class ModBlocks {
         registry.register(itemBlock(blood_grinder));
         registry.register(itemBlock(blood_pedestal));
         registry.register(itemBlock(blood_sieve));
-        registry.register(itemBlock(church_altar));
+        registry.register(itemBlock(altar_cleansing));
         registry.register(itemBlock(castle_block_dark_brick));
         registry.register(itemBlock(castle_block_dark_brick_bloody));
         registry.register(itemBlock(castle_block_dark_stone));
@@ -119,9 +119,9 @@ public class ModBlocks {
         registry.register(new CoffinItem(coffin));
         registry.register(itemBlock(cursed_earth));
         registry.register(itemBlock(fire_place));
-        registry.register(itemBlock(garlic_diffusor_improved));
-        registry.register(itemBlock(garlic_diffusor_normal));
-        registry.register(itemBlock(garlic_diffusor_weak));
+        registry.register(itemBlock(garlic_diffuser_improved));
+        registry.register(itemBlock(garlic_diffuser_normal));
+        registry.register(itemBlock(garlic_diffuser_weak));
         registry.register(itemBlock(hunter_table));
         registry.register(itemBlock(sunscreen_beacon, new Item.Properties().tab(VampirismMod.creativeTab).rarity(Rarity.EPIC)));
         registry.register(itemBlock(totem_base));
@@ -172,14 +172,14 @@ public class ModBlocks {
         registry.register(prepareRegister(new CastleStairsBlock(castle_block_dark_brick.defaultBlockState(), CastleBricksBlock.EnumVariant.DARK_BRICK)));
         registry.register(prepareRegister(new CastleStairsBlock(castle_block_dark_stone.defaultBlockState(), CastleBricksBlock.EnumVariant.DARK_STONE)));
         registry.register(prepareRegister(new CastleStairsBlock(castle_block_purple_brick.defaultBlockState(), CastleBricksBlock.EnumVariant.PURPLE_BRICK)));
-        registry.register(prepareRegister(new ChurchAltarBlock()));
+        registry.register(prepareRegister(new AltarCleansingBlock()));
         registry.register(prepareRegister(new CoffinBlock()));
         registry.register(prepareRegister(new CursedEarthBlock()));
         registry.register(prepareRegister(new FirePlaceBlock()));
         registry.register(prepareRegister(new GarlicBlock()));
-        registry.register(prepareRegister(new GarlicDiffusorBlock(GarlicDiffusorBlock.Type.IMPROVED)));
-        registry.register(prepareRegister(new GarlicDiffusorBlock(GarlicDiffusorBlock.Type.NORMAL)));
-        registry.register(prepareRegister(new GarlicDiffusorBlock(GarlicDiffusorBlock.Type.WEAK)));
+        registry.register(prepareRegister(new GarlicDiffuserBlock(GarlicDiffuserBlock.Type.IMPROVED)));
+        registry.register(prepareRegister(new GarlicDiffuserBlock(GarlicDiffuserBlock.Type.NORMAL)));
+        registry.register(prepareRegister(new GarlicDiffuserBlock(GarlicDiffuserBlock.Type.WEAK)));
         registry.register(prepareRegister(new HunterTableBlock()));
         registry.register(prepareRegister(new MedChairBlock()));
         registry.register(prepareRegister(new FlowerPotBlock(vampire_orchid, Block.Properties.of(Material.DECORATION).instabreak().noOcclusion()).setRegistryName(REFERENCE.MODID, "potted_vampire_orchid")));
@@ -251,11 +251,13 @@ public class ModBlocks {
             if ("vampirism:blood_potion_table".equals(missingMapping.key.toString())) {
                 missingMapping.remap(ModBlocks.potion_table);
             } else if ("vampirism:garlic_beacon_normal".equals(missingMapping.key.toString())) {
-                missingMapping.remap(ModBlocks.garlic_diffusor_normal);
+                missingMapping.remap(ModBlocks.garlic_diffuser_normal);
             } else if ("vampirism:garlic_beacon_weak".equals(missingMapping.key.toString())) {
-                missingMapping.remap(ModBlocks.garlic_diffusor_weak);
+                missingMapping.remap(ModBlocks.garlic_diffuser_weak);
             } else if ("vampirism:garlic_beacon_improved".equals(missingMapping.key.toString())) {
-                missingMapping.remap(ModBlocks.garlic_diffusor_improved);
+                missingMapping.remap(ModBlocks.garlic_diffuser_improved);
+            } else if("vampirism:church_altar".equals(missingMapping.key.toString())){
+                missingMapping.remap(ModBlocks.altar_cleansing);
             }
         });
     }

@@ -41,7 +41,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue taskDurationDedicatedServer;
     public final ForgeConfigSpec.DoubleValue skillPointsPerLevel;
     public final ForgeConfigSpec.BooleanValue allowInfiniteSpecialArrows;
-    public final ForgeConfigSpec.IntValue garlicDiffusorStartupTime;
+    public final ForgeConfigSpec.IntValue garlicDiffuserStartupTime;
 
     public final ForgeConfigSpec.DoubleValue eaHealthThreshold;
     public final ForgeConfigSpec.IntValue eaInvisibilityCooldown;
@@ -87,9 +87,9 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue hsInstantKill1MaxHealth;
     public final ForgeConfigSpec.IntValue hsInstantKill2MaxHealth;
     public final ForgeConfigSpec.BooleanValue hsInstantKill2OnlyNPC;
-    public final ForgeConfigSpec.IntValue hsGarlicDiffusorNormalDist;
-    public final ForgeConfigSpec.IntValue hsGarlicDiffusorEnhancedDist;
-    public final ForgeConfigSpec.IntValue hsGarlicDiffusorWeakDist;
+    public final ForgeConfigSpec.IntValue hsGarlicDiffuserNormalDist;
+    public final ForgeConfigSpec.IntValue hsGarlicDiffuserEnhancedDist;
+    public final ForgeConfigSpec.IntValue hsGarlicDiffuserWeakDist;
 
     public final ForgeConfigSpec.BooleanValue viReplaceBlocks;
     public final ForgeConfigSpec.IntValue viPhase1Duration;
@@ -230,7 +230,7 @@ public class BalanceConfig {
         taskDurationDedicatedServer = builder.comment("Duration a task can be completed on a dedicated server. In Minutes").defineInRange("taskDurationDedicatedServer", 1440, 1, Integer.MAX_VALUE);
         skillPointsPerLevel = builder.comment("Players receive n skill points for each leve-up. Anything except 1 is unbalanced, but to unlock all skills on maxlevel this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLevel", 1D, 1D, 20D);
         allowInfiniteSpecialArrows = builder.comment("Whether special crossbow arrows (e.g. spitfire) can be used with infinity enchantment").define("allowInfiniteSpecialArrows", false);
-        garlicDiffusorStartupTime = builder.comment("Delay in seconds before a newly placed garlic diffusor becomes active. *0.25 in Singleplayer").defineInRange("garlicDiffusorStartupTime", 5 * 20, 1, 10000);
+        garlicDiffuserStartupTime = builder.comment("Delay in seconds before a newly placed garlic diffuser becomes active. *0.25 in Singleplayer").defineInRange("garlicDiffuserStartupTime", 5 * 20, 1, 10000);
 
         //Entity actions
         builder.category("entityActions", "ea");
@@ -284,9 +284,9 @@ public class BalanceConfig {
         hsInstantKill1MaxHealth = builder.comment("First stake skill -The maximal relative health a entity may have to be instantly killed").defineInRange("instantKill1MaxHealth", 0.35, 0, 1);
         hsInstantKill2MaxHealth = builder.comment("Second stake skill - The max (not the actual) health of an entity that can be one hit killed from behind").defineInRange("instantKill2MaxHealth", 200, 0, Integer.MAX_VALUE);
         hsInstantKill2OnlyNPC = builder.comment("Second stake skill - Whether only NPCs can be one hit killed with this skill").define("instantKill2OnlyNPC", true);
-        hsGarlicDiffusorNormalDist = builder.comment("The chunk radius a normal diffusor affects. 0 results in a one chunk area. Changing this only affects newly placed blocks").defineInRange("garlicDiffusorNormalDist", 0, 0, 5);
-        hsGarlicDiffusorEnhancedDist = builder.comment("The chunk radius a enhanced diffusor affects. 0 results in a one chunk area. Changing this only affects newly placed blocks").defineInRange("garlicDiffusorEnhancedDist", 1, 0, 5);
-        hsGarlicDiffusorWeakDist = builder.comment("The chunk radius a normal diffusor affects. 0 results in a one chunk area. Changing this only affects newly placed blocks").defineInRange("garlicDiffusorWeakDist", 2, 0, 5);
+        hsGarlicDiffuserNormalDist = builder.comment("The chunk radius a normal diffusor affects. 0 results in a one chunk area. Changing this only affects newly placed blocks").defineInRange("garlicDiffuserNormalDist", 0, 0, 5);
+        hsGarlicDiffuserEnhancedDist = builder.comment("The chunk radius a enhanced diffusor affects. 0 results in a one chunk area. Changing this only affects newly placed blocks").defineInRange("garlicDiffuserEnhancedDist", 1, 0, 5);
+        hsGarlicDiffuserWeakDist = builder.comment("The chunk radius a normal diffusor affects. 0 results in a one chunk area. Changing this only affects newly placed blocks").defineInRange("garlicDiffuserWeakDist", 2, 0, 5);
 
         //Village
         builder.category("village", "vi");

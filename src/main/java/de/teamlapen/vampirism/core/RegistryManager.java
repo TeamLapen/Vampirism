@@ -112,6 +112,11 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
+    public void onMissingMappingsTiles(RegistryEvent.MissingMappings<BlockEntityType<?>> event) {
+        ModTiles.fixMappings(event);
+    }
+
+    @SubscribeEvent
     public void onMissingMappingsPotions(RegistryEvent.MissingMappings<Potion> event) {
         ModPotions.fixMappings(event);
     }

@@ -69,8 +69,8 @@ public class ModItems {
     public static final DoubleCrossbowItem enhanced_double_crossbow = getNull();
     public static final TechCrossbowItem enhanced_tech_crossbow = getNull();
 
-    public static final VampirismItem garlic_beacon_core = getNull();
-    public static final VampirismItem garlic_beacon_core_improved = getNull();
+    public static final VampirismItem garlic_diffuser_core = getNull();
+    public static final VampirismItem garlic_diffuser_core_improved = getNull();
 
     public static final HeartSeekerItem heart_seeker_enhanced = getNull();
     public static final HeartSeekerItem heart_seeker_normal = getNull();
@@ -329,8 +329,8 @@ public class ModItems {
             }
         });
         registry.register(new AlchemicalFireItem());
-        registry.register(new VampirismItem("garlic_beacon_core", creativeTabProps()));
-        registry.register(new VampirismItem("garlic_beacon_core_improved", creativeTabProps()));
+        registry.register(new VampirismItem("garlic_diffuser_core", creativeTabProps()));
+        registry.register(new VampirismItem("garlic_diffuser_core_improved", creativeTabProps()));
         registry.register(new VampirismItem("purified_garlic", creativeTabProps()));
 
         registry.register(new ArmorOfSwiftnessItem(EquipmentSlot.HEAD, IItemWithTier.TIER.NORMAL));
@@ -453,6 +453,8 @@ public class ModItems {
                 case "vampirism:blood_potion", "vampirism:blood_potion_table" -> missingMapping.ignore();
                 case "vampirism:vampire_clothing_head" -> missingMapping.remap(vampire_clothing_crown);
                 case "vampirism:vampire_clothing_feet" -> missingMapping.remap(vampire_clothing_boots);
+                case "vampirism:garlic_beacon_core" -> missingMapping.remap(garlic_diffuser_core);
+                case "vampirism:garlic_beacon_core_improved" -> missingMapping.remap(garlic_diffuser_core_improved);
             }
         });
     }

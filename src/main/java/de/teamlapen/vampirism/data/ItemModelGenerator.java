@@ -40,7 +40,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModBlocks.blood_pedestal);
             add(ModBlocks.potion_table);
             add(ModBlocks.blood_sieve);
-            add(ModBlocks.church_altar);
+            add(ModBlocks.altar_cleansing);
             add(ModBlocks.cursed_earth);
             add(ModBlocks.hunter_table);
             add(ModBlocks.sunscreen_beacon);
@@ -147,9 +147,9 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
         items.forEach(this::item);
         itemsWithTexture.forEach(this::item);
 
-        block(ModBlocks.garlic_diffusor_weak, "garlic_beacon_weak");
-        block(ModBlocks.garlic_diffusor_normal, "garlic_beacon_normal");
-        block(ModBlocks.garlic_diffusor_improved, "garlic_beacon_improved");
+        block(ModBlocks.garlic_diffuser_weak, "garlic_diffuser_weak");
+        block(ModBlocks.garlic_diffuser_normal, "garlic_diffuser_normal");
+        block(ModBlocks.garlic_diffuser_improved, "garlic_diffuser_improved");
 
         withExistingParent(ModBlocks.bloody_spruce_leaves, mcLoc("block/oak_leaves"));
         withExistingParent(ModBlocks.vampire_spruce_leaves, mcLoc("block/oak_leaves"));
@@ -204,7 +204,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
         withExistingParent(ModItems.enhanced_double_crossbow, modLoc("item/double_crossbow")).texture("texture", "item/enhanced_crossbow");
         withExistingParent(ModItems.enhanced_tech_crossbow, modLoc("item/tech_crossbow")).texture("extra", "item/tech_crossbow_extra_enhanced");
 
-        withExistingParent(ModItems.garlic_beacon_core_improved, ModItems.garlic_beacon_core).texture("texture", "block/garlic_beacon_inside_improved");
+        withExistingParent(ModItems.garlic_diffuser_core_improved, ModItems.garlic_diffuser_core).texture("texture", "block/garlic_diffuser_inside_improved");
 
         withExistingParent(ModItems.heart_seeker_normal, modLoc("item/heart_seeker_model"));
         withExistingParent(ModItems.heart_seeker_enhanced, modLoc("item/heart_seeker_model")).texture("3", "item/heart_seeker_enhanced");

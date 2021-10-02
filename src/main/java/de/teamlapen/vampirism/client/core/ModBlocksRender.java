@@ -64,14 +64,14 @@ public class ModBlocksRender {
         event.registerBlockEntityRenderer(ModTiles.altar_infusion, AltarInfusionBESR::new);
         event.registerBlockEntityRenderer(ModTiles.blood_pedestal, PedestalBESR::new);
         event.registerBlockEntityRenderer(ModTiles.totem, TotemBESR::new);
-        event.registerBlockEntityRenderer(ModTiles.garlic_beacon, GarlicBeaconBESR::new);
+        event.registerBlockEntityRenderer(ModTiles.garlic_diffuser, GarlicDiffuserBESR::new);
     }
 
     private static void registerRenderType() {
         RenderType cutout = RenderType.cutout();
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_diffusor_weak, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_diffusor_improved, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_diffusor_normal, cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_diffuser_weak, cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_diffuser_improved, cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_diffuser_normal, cutout);
         ItemBlockRenderTypes.setRenderLayer(ModFluids.impure_blood, RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModFluids.blood, RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.alchemical_cauldron, cutout);
@@ -84,7 +84,7 @@ public class ModBlocksRender {
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.blood_pedestal, cutout);
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.potion_table, cutout);
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.blood_sieve, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.church_altar, cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.altar_cleansing, cutout);
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.fire_place, cutout);
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.sunscreen_beacon, cutout);
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.tent, cutout);

@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:hunter/garlic_diffuser_improved"
+    ]
+  },
+  "criteria": {
+    "has_garlic_diffuser": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "vampirism:garlic_diffuser_normal"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:hunter/garlic_diffuser_improved"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_garlic_diffuser",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -31,8 +31,8 @@ public class HunterSkills {
     public static final ISkill<IHunterPlayer> double_crossbow = getNull();
     public static final ISkill<IHunterPlayer> enhanced_armor = getNull();
     public static final ISkill<IHunterPlayer> enhanced_weapons = getNull();
-    public static final ISkill<IHunterPlayer> garlic_beacon = getNull();
-    public static final ISkill<IHunterPlayer> garlic_beacon_improved = getNull();
+    public static final ISkill<IHunterPlayer> garlic_diffuser = getNull();
+    public static final ISkill<IHunterPlayer> garlic_diffuser_improved = getNull();
     public static final ISkill<IHunterPlayer> holy_water_enhanced = getNull();
     public static final ISkill<IHunterPlayer> hunter_attack_speed = getNull();
     public static final ISkill<IHunterPlayer> hunter_attack_speed_advanced = getNull();
@@ -60,8 +60,8 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("double_crossbow", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_armor", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_weapons", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("garlic_beacon", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("garlic_beacon_improved", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("garlic_diffuser", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("garlic_diffuser_improved", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("holy_water_enhanced", true));
         //Config null, so cannot get method ref
         //noinspection Convert2MethodRef
@@ -111,6 +111,12 @@ public class HunterSkills {
         event.getAllMappings().forEach(missingMapping -> {
             if (missingMapping.key.toString().startsWith("vampirism:blood_potion_")) {
                 missingMapping.ignore();
+            }
+            else if(missingMapping.key.toString().startsWith("vampirism:garlic_beacon_improved")){
+                missingMapping.remap(garlic_diffuser_improved);
+            }
+            else if(missingMapping.key.toString().startsWith("vampirism:garlic_beacon")){
+                missingMapping.remap(garlic_diffuser);
             }
         });
     }

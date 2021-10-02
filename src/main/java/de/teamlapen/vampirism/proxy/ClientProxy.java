@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
-import de.teamlapen.vampirism.blockentity.GarlicDiffusorBlockEntity;
+import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.client.core.*;
@@ -76,8 +76,8 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void displayGarlicBeaconScreen(GarlicDiffusorBlockEntity tile, Component title) {
-        Minecraft.getInstance().setScreen(new GarlicBeaconScreen(tile, title));
+    public void displayGarlicBeaconScreen(GarlicDiffuserBlockEntity tile, Component title) {
+        Minecraft.getInstance().setScreen(new GarlicDiffuserScreen(tile, title));
     }
 
     @Override

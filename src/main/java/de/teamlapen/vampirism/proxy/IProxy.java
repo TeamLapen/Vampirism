@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.lib.lib.util.IInitListener;
-import de.teamlapen.vampirism.blockentity.GarlicDiffusorBlockEntity;
+import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.player.skills.SkillTree;
 import net.minecraft.network.chat.Component;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 public interface IProxy extends IInitListener {
 
-    default void displayGarlicBeaconScreen(GarlicDiffusorBlockEntity tile, Component title) {
+    default void displayGarlicBeaconScreen(GarlicDiffuserBlockEntity tile, Component title) {
     }
 
     default void displayNameSwordScreen(ItemStack stack) {

@@ -246,7 +246,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.castle_stairs_dark_brick);
             this.dropSelf(ModBlocks.castle_stairs_dark_stone);
             this.dropSelf(ModBlocks.castle_stairs_purple_brick);
-            this.dropSelf(ModBlocks.church_altar);
+            this.dropSelf(ModBlocks.altar_cleansing);
             this.dropSelf(ModBlocks.cursed_earth);
             this.dropSelf(ModBlocks.fire_place);
             this.add(ModBlocks.garlic, applyExplosionDecay(ModBlocks.garlic, LootTable.lootTable()
@@ -255,9 +255,9 @@ public class LootTablesGenerator extends LootTableProvider {
                     .withPool(LootPool.lootPool()
                             .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.garlic).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(GarlicBlock.AGE, 7)))
                             .add(LootItem.lootTableItem(ModItems.item_garlic).apply(ApplyBonusCount.addBonusBinomialDistributionCount(Enchantments.BLOCK_FORTUNE, 0.5714286F, 3))))));
-            this.dropSelf(ModBlocks.garlic_diffusor_weak);
-            this.dropSelf(ModBlocks.garlic_diffusor_normal);
-            this.dropSelf(ModBlocks.garlic_diffusor_improved);
+            this.dropSelf(ModBlocks.garlic_diffuser_weak);
+            this.dropSelf(ModBlocks.garlic_diffuser_normal);
+            this.dropSelf(ModBlocks.garlic_diffuser_improved);
             this.dropSelf(ModBlocks.hunter_table);
             this.add(ModBlocks.med_chair, block -> createSinglePropConditionTable(block, MedChairBlock.PART, MedChairBlock.EnumPart.TOP));
             this.dropSelf(ModBlocks.sunscreen_beacon);

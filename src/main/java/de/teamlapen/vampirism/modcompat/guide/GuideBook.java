@@ -252,7 +252,7 @@ public class GuideBook implements IGuideBook {
 
 
         List<IPage> unvampirePages = new ArrayList<>();
-        unvampirePages.addAll(PageHelper.pagesForLongText(translateComponent(base + "unvampire.text", loc(ModBlocks.church_altar))));
+        unvampirePages.addAll(PageHelper.pagesForLongText(translateComponent(base + "unvampire.text", loc(ModBlocks.altar_cleansing))));
         entries.put(new ResourceLocation(base + "unvampire"), new EntryText(unvampirePages, translateComponent(base + "unvampire")));
 
         return entries;
@@ -319,8 +319,8 @@ public class GuideBook implements IGuideBook {
         List<IPage> vampSlayerPages = new ArrayList<>();
         vampSlayerPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "vamp_slayer.intro")));
         String garlic = String.format("§l%s§r\n", loc(ModItems.item_garlic));
-        garlic += translate(base + "vamp_slayer.garlic") + "\n" + translate(base + "vamp_slayer.garlic2") + "\n" + translate(base + "vamp_slayer.garlic.diffusor");
-        vampSlayerPages.addAll(helper.addLinks(PageHelper.pagesForLongText(new TextComponent(garlic)), new ResourceLocation("guide.vampirism.blocks.garlic_beacon_normal")));
+        garlic += translate(base + "vamp_slayer.garlic") + "\n" + translate(base + "vamp_slayer.garlic2") + "\n" + translate(base + "vamp_slayer.garlic.diffuser");
+        vampSlayerPages.addAll(helper.addLinks(PageHelper.pagesForLongText(new TextComponent(garlic)), new ResourceLocation("guide.vampirism.blocks.garlic_diffuser")));
         String holyWater = String.format("§l%s§r\n", loc(ModItems.holy_water_bottle_normal));
         holyWater += translate(base + "vamp_slayer.holy_water");
         vampSlayerPages.addAll(helper.addLinks(PageHelper.pagesForLongText(new TextComponent(holyWater)), new ResourceLocation("guide.vampirism.items.holy_water_bottle")));
@@ -449,7 +449,7 @@ public class GuideBook implements IGuideBook {
         helper.info(ModItems.heart_striker_normal, ModItems.heart_striker_enhanced, ModItems.heart_striker_ultimate).recipes("vampire/heart_striker_normal", "vampire/heart_striker_normal").build(entries);
         helper.info(ModItems.feeding_adapter).customPages(GuideHelper.createItemTaskDescription(ModTasks.feeding_adapter)).build(entries);
         helper.info(ModItems.vampire_minion_binding, ModItems.vampire_minion_upgrade_simple, ModItems.vampire_minion_upgrade_enhanced, ModItems.vampire_minion_upgrade_special).setFormats(loc(ModItems.vampire_minion_binding), loc(ModItems.vampire_minion_upgrade_simple), ModItems.vampire_minion_upgrade_simple.getMinLevel() + 1, ModItems.vampire_minion_upgrade_simple.getMaxLevel() + 1, loc(ModItems.vampire_minion_upgrade_enhanced), ModItems.vampire_minion_upgrade_enhanced.getMinLevel() + 1, ModItems.vampire_minion_upgrade_enhanced.getMaxLevel() + 1, loc(ModItems.vampire_minion_upgrade_special), ModItems.vampire_minion_upgrade_special.getMinLevel() + 1, ModItems.vampire_minion_upgrade_special.getMaxLevel() + 1, translate(ModEntities.task_master_vampire.getDescriptionId())).setLinks(new ResourceLocation("guide.vampirism.entity.taskmaster"), new ResourceLocation("guide.vampirism.vampire.lord")).build(entries);
-        helper.info(ModItems.garlic_finder).setLinks(new ResourceLocation("guide.vampirism.blocks.garlic_diffusor")).recipes("vampire/garlic_finder").build(entries);
+        helper.info(ModItems.garlic_finder).setLinks(new ResourceLocation("guide.vampirism.blocks.garlic_diffuser")).recipes("vampire/garlic_finder").build(entries);
         helper.info(ModItems.vampire_clothing_crown, ModItems.vampire_clothing_hat, ModItems.vampire_clothing_legs, ModItems.vampire_clothing_boots, ModItems.vampire_cloak_red_black, ModItems.vampire_cloak_black_red, ModItems.vampire_cloak_black_blue, ModItems.vampire_cloak_red_black, ModItems.vampire_cloak_black_white, ModItems.vampire_cloak_white_black).useCustomEntryName().setKeyName("vampire_clothing").recipes("vampire/vampire_clothing_legs", "vampire/vampire_clothing_boots", "vampire/vampire_clothing_hat", "vampire/vampire_clothing_crown", "vampire/vampire_cloak_black_red", "vampire/vampire_cloak_black_blue", "vampire/vampire_cloak_black_white", "vampire/vampire_cloak_red_black", "vampire/vampire_cloak_white_black").build(entries);
         helper.info(ModItems.amulet, ModItems.ring, ModItems.obi_belt).setLinks(new ResourceLocation("guide.vampirism.vampire.vampirism_menu")).useCustomEntryName().setKeyName("accessories").build(entries);
 
@@ -457,7 +457,7 @@ public class GuideBook implements IGuideBook {
         helper.info(ModItems.injection_empty, ModItems.injection_garlic, ModItems.injection_sanguinare).recipes("general/injection_0", "general/injection_1", "general/injection_2").build(entries);
         helper.info(ModItems.hunter_intel_0).setLinks(new ResourceLocation("guide.vampirism.blocks.hunter_table")).setFormats(loc(ModBlocks.hunter_table)).build(entries);
         helper.info(ModItems.item_garlic).build(entries);
-        helper.info(ModItems.purified_garlic).setFormats(loc(ModBlocks.garlic_diffusor_normal)).setLinks(new ResourceLocation("guide.vampirism.blocks.garlic_beacon_normal")).recipes("alchemical_cauldron/purified_garlic").build(entries);
+        helper.info(ModItems.purified_garlic).setFormats(loc(ModBlocks.garlic_diffuser_normal)).setLinks(new ResourceLocation("guide.vampirism.blocks.garlic_diffuser")).recipes("alchemical_cauldron/purified_garlic").build(entries);
         helper.info(ModItems.pitchfork).recipes("weapontable/pitchfork").build(entries);
         helper.info(ModItems.stake).setFormats(((int) (VampirismConfig.BALANCE.hsInstantKill1MaxHealth.get() * 100)) + "%").recipes("hunter/stake").build(entries);
         helper.info(ModItems.basic_crossbow, ModItems.enhanced_crossbow, ModItems.basic_double_crossbow, ModItems.enhanced_double_crossbow, ModItems.basic_tech_crossbow, ModItems.enhanced_tech_crossbow).setFormats(loc(ModItems.crossbow_arrow_normal), loc(ModItems.tech_crossbow_ammo_package)).setLinks(new ResourceLocation("guide.vampirism.items.crossbow_arrow_normal")).recipes("weapontable/basic_crossbow", "weapontable/enhanced_crossbow", "weapontable/basic_double_crossbow", "weapontable/enhanced_double_crossbow", "weapontable/basic_tech_crossbow", "weapontable/enhanced_tech_crossbow", "weapontable/tech_crossbow_ammo_package").useCustomEntryName().setKeyName("crossbows").build(entries);
@@ -484,15 +484,15 @@ public class GuideBook implements IGuideBook {
         helper.info(ModBlocks.altar_inspiration).setLinks(new ResourceLocation("guide.vampirism.vampire.leveling")).recipes("vampire/altar_inspiration").build(entries);
         helper.info(ModBlocks.altar_infusion).setLinks(new ResourceLocation("guide.vampirism.vampire.leveling")).recipes("vampire/altar_infusion", "vampire/altar_pillar", "vampire/altar_tip").build(entries);
         helper.info(ModBlocks.coffin).recipes("vampire/coffin").build(entries);
-        helper.info(ModBlocks.church_altar).build(entries);
+        helper.info(ModBlocks.altar_cleansing).build(entries);
         //Hunter
         helper.info(true, new ItemStack(ModItems.item_med_chair)).setFormats(loc(ModItems.injection_garlic), loc(ModItems.injection_sanguinare)).recipes("hunter/item_med_chair").build(entries);
         helper.info(ModBlocks.hunter_table).setFormats(loc(ModItems.hunter_intel_0)).setLinks(new ResourceLocation("guide.vampirism.hunter.leveling"), new ResourceLocation("guide.vampirism.items.hunter_intel")).recipes("hunter/hunter_table").build(entries);
         helper.info(ModBlocks.weapon_table).recipes("hunter/weapon_table").build(entries);
         helper.info(ModBlocks.alchemical_cauldron).recipes("hunter/alchemical_cauldron").build(entries);
-        int cn = VampirismConfig.BALANCE.hsGarlicDiffusorNormalDist.get() * 2 + 1;
-        int ce = VampirismConfig.BALANCE.hsGarlicDiffusorEnhancedDist.get() * 2 + 1;
-        helper.info(ModBlocks.garlic_diffusor_normal, ModBlocks.garlic_diffusor_weak, ModBlocks.garlic_diffusor_weak).setFormats(cn, cn, ce, ce, loc(ModItems.purified_garlic)).setLinks(new ResourceLocation("guide.vampirism.items.item_garlic"), new ResourceLocation("guide.vampirism.items.purified_garlic"), new ResourceLocation("guide.vampirism.items.holy_water_bottle")).recipes("hunter/garlic_beacon_normal", "hunter/garlic_beacon_improved", "alchemical_cauldron/garlic_beacon_core", "alchemical_cauldron/garlic_beacon_core_improved").build(entries);
+        int cn = VampirismConfig.BALANCE.hsGarlicDiffuserNormalDist.get() * 2 + 1;
+        int ce = VampirismConfig.BALANCE.hsGarlicDiffuserEnhancedDist.get() * 2 + 1;
+        helper.info(ModBlocks.garlic_diffuser_normal, ModBlocks.garlic_diffuser_weak, ModBlocks.garlic_diffuser_weak).setFormats(cn, cn, ce, ce, loc(ModItems.purified_garlic)).useCustomEntryName().setKeyName("garlic_diffuser").setLinks(new ResourceLocation("guide.vampirism.items.item_garlic"), new ResourceLocation("guide.vampirism.items.purified_garlic"), new ResourceLocation("guide.vampirism.items.holy_water_bottle")).recipes("hunter/garlic_diffuser_normal", "hunter/garlic_diffuser_improved", "alchemical_cauldron/garlic_diffuser_core", "alchemical_cauldron/garlic_diffuser_core_improved").build(entries);
         helper.info(ModBlocks.blood_pedestal).recipes("vampire/blood_pedestal").build(entries);
         helper.info(ModBlocks.blood_grinder).recipes("general/blood_grinder").setFormats(loc(ModItems.human_heart), loc(Items.BEEF), loc(ModBlocks.blood_sieve)).build(entries);
         helper.info(ModBlocks.blood_sieve).recipes("general/blood_sieve").setFormats(translateComponent(ModFluids.impure_blood.getAttributes().getTranslationKey()), loc(ModBlocks.blood_grinder)).setLinks(new ResourceLocation("guide.vampirism.blocks.blood_grinder")).build(entries);
