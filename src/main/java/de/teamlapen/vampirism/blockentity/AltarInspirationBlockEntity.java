@@ -56,6 +56,10 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
     private static final int RITUAL_TIME = 60;
 
     private int ritualTicksLeft = 0;
+    /**
+     * Only valid while ritualTicksLeft > 0
+     */
+    private int targetLevel;
     private Player ritualPlayer;
     private IModelData modelData;
 
@@ -110,7 +114,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
 
     public void startRitual(Player p) {
         if (ritualTicksLeft > 0 || !p.isAlive()) return;
-        int targetLevel = VampirismPlayerAttributes.get(p).vampireLevel + 1;
+        targetLevel = VampirismPlayerAttributes.get(p).vampireLevel + 1;
         VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
         if (!levelingConf.isLevelValidForAltarInspiration(targetLevel)) {
             if (p.level.isClientSide)
@@ -137,23 +141,21 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
             return;
 
         switch (blockEntity.ritualTicksLeft) {
-            case 5:
+            case 5 -> {
                 LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(level);
                 lightningboltentity.moveTo(Vec3.atBottomCenterOf(pos));
                 lightningboltentity.setVisualOnly(true);
                 level.addFreshEntity(lightningboltentity);
                 blockEntity.ritualPlayer.setHealth(blockEntity.ritualPlayer.getMaxHealth());
-                break;
-            case 1:
-                int targetLevel = VampirePlayer.get(blockEntity.ritualPlayer).getLevel() + 1;
+            }
+            case 1 -> {
                 VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
-                int blood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
+                int blood = levelingConf.getRequiredBloodForAltarInspiration(blockEntity.targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
                 ((InternalTank) blockEntity.tank).doDrain(blood, IFluidHandler.FluidAction.EXECUTE);
-
-                blockEntity.ritualPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, targetLevel * 10 * 20));
-                FactionPlayerHandler.get(blockEntity.ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, targetLevel);
+                blockEntity.ritualPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, blockEntity.targetLevel * 10 * 20));
+                FactionPlayerHandler.get(blockEntity.ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, blockEntity.targetLevel);
                 VampirePlayer.get(blockEntity.ritualPlayer).drinkBlood(Integer.MAX_VALUE, 0, false);
-                break;
+            }
         }
 
         blockEntity.ritualTicksLeft--;
