@@ -455,6 +455,10 @@ public class ModItems {
                 case "vampirism:vampire_clothing_feet" -> missingMapping.remap(vampire_clothing_boots);
                 case "vampirism:garlic_beacon_core" -> missingMapping.remap(garlic_diffuser_core);
                 case "vampirism:garlic_beacon_core_improved" -> missingMapping.remap(garlic_diffuser_core_improved);
+                case "vampirism:garlic_beacon" -> missingMapping.remap(BlockItem.byBlock(ModBlocks.garlic_diffuser_normal));
+                case "vampirism:garlic_beacon_weak" -> missingMapping.remap(BlockItem.byBlock(ModBlocks.garlic_diffuser_weak));
+                case "vampirism:garlic_beacon_improved" -> missingMapping.remap(BlockItem.byBlock(ModBlocks.garlic_diffuser_improved));
+                case "vampirism:church_altar" -> missingMapping.remap(BlockItem.byBlock(ModBlocks.altar_cleansing));
             }
         });
     }
