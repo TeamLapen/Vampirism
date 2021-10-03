@@ -289,8 +289,8 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         } else {
             this.setLeftHanded(false);
         }
-
         this.updateCombatTask();
+        getEntityData().set(TYPE, this.getRandom().nextInt(TYPES));
         return livingData;
     }
 
@@ -372,13 +372,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     //Entityactions ----------------------------------------------------------------------------------------------------
 
-    @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
-        if (getEntityData().get(TYPE) == -1) {
-            getEntityData().set(TYPE, this.getRandom().nextInt(TYPES));
-        }
-    }
 
     @Override
     public void readAdditionalSaveData(@Nonnull CompoundTag tagCompund) {

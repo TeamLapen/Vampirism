@@ -246,6 +246,8 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         if ((reason == MobSpawnType.NATURAL || reason == MobSpawnType.STRUCTURE) && this.getRandom().nextInt(50) == 0) {
             this.setItemSlot(EquipmentSlot.HEAD, VampireVillageData.createBanner());
         }
+        getEntityData().set(TYPE, this.getRandom().nextInt(TYPES));
+
         return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
@@ -317,14 +319,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         boolean flag = super.hurt(damageSource, amount);
         if (flag) angryTimer += ANGRY_TICKS_PER_ATTACK;
         return flag;
-    }
-
-    @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
-        if (getEntityData().get(TYPE) == -1) {
-            getEntityData().set(TYPE, this.getRandom().nextInt(TYPES));
-        }
     }
 
     @Override
