@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
  */
 public class VampirismAPI {
 
-
+    private static boolean INIT;
     /**
      * TODO 1.17 remove
      */
@@ -130,9 +130,12 @@ public class VampirismAPI {
     /**
      * Setup the API registries
      * FOR INTERNAL USAGE ONLY
+     *
+     * @throws IllegalStateException if the API was already setup
      */
     public static void setUpRegistries(IFactionRegistry factionRegistryIn, ISundamageRegistry sundamageRegistryIn, IVampirismEntityRegistry entityRegistryIn, IActionManager actionManagerIn, ISkillManager skillManagerIn,
                                        IVampireVisionRegistry vampireVisionRegistryIn, IEntityActionManager entityActionManagerIn, IWorldGenManager worldGenRegistryIn, IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistryIn) {
+        if (INIT) throw new IllegalStateException("Vampirism API can only be setup once");
         factionRegistry = factionRegistryIn;
         sundamageRegistry = sundamageRegistryIn;
         entityRegistry = entityRegistryIn;
@@ -142,7 +145,7 @@ public class VampirismAPI {
         entityActionManager = entityActionManagerIn;
         worldGenRegistry = worldGenRegistryIn;
         extendedBrewingRecipeRegistry = extendedBrewingRecipeRegistryIn;
-
+        INIT = true;
     }
 
     /**
