@@ -152,12 +152,7 @@ public class VampirismWorld implements IVampirismWorld {
         rebuildStrengthMap();
     }
 
-    /**
-     * adds/updates/removes the bounding box of a fog generating block
-     *
-     * @param totemPos position of the village totem
-     * @param box      new bounding box of the village or null if the area should be removed
-     */
+    @Override
     public void updateArtificialFogBoundingBox(@Nonnull BlockPos totemPos, @Nullable AABB box) {
         if (box == null) {
             fogAreas.remove(totemPos);
@@ -167,6 +162,7 @@ public class VampirismWorld implements IVampirismWorld {
         }
     }
 
+    @Override
     public void updateTemporaryArtificialFog(@Nonnull BlockPos totemPos, @Nullable AABB box) {
         if (box == null) {
             tmpFogAreas.remove(totemPos);

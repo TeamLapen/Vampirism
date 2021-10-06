@@ -29,8 +29,9 @@ import net.minecraftforge.common.util.LazyOptional;
  */
 public class VampirismAPI {
 
-
-    private static final Capability<IExtendedCreatureVampirism> CAP_CREATURE = CapabilityManager.get(new CapabilityToken<>(){});
+    private static boolean INIT;
+    private static final Capability<IExtendedCreatureVampirism> CAP_CREATURE = CapabilityManager.get(new CapabilityToken<>() {
+    });
     private static final Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = CapabilityManager.get(new CapabilityToken<>(){});
     private static final Capability<IVampirismWorld> CAP_WORLD = CapabilityManager.get(new CapabilityToken<>(){});
     private static final Capability<IVampirePlayer> CAP_VAMPIRE = CapabilityManager.get(new CapabilityToken<>(){});
@@ -97,9 +98,12 @@ public class VampirismAPI {
     /**
      * Set up the API registries
      * FOR INTERNAL USAGE ONLY
+     *
+     * @throws IllegalStateException if the API was already setup
      */
     public static void setUpRegistries(IFactionRegistry factionRegistryIn, ISundamageRegistry sundamageRegistryIn, IVampirismEntityRegistry entityRegistryIn, IActionManager actionManagerIn, ISkillManager skillManagerIn,
                                        IVampireVisionRegistry vampireVisionRegistryIn, IEntityActionManager entityActionManagerIn, IWorldGenManager worldGenRegistryIn, IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistryIn) {
+        if (INIT) throw new IllegalStateException("Vampirism API can only be setup once");
         factionRegistry = factionRegistryIn;
         sundamageRegistry = sundamageRegistryIn;
         entityRegistry = entityRegistryIn;
@@ -109,7 +113,7 @@ public class VampirismAPI {
         entityActionManager = entityActionManagerIn;
         worldGenRegistry = worldGenRegistryIn;
         extendedBrewingRecipeRegistry = extendedBrewingRecipeRegistryIn;
-
+        INIT = true;
     }
 
     /**
