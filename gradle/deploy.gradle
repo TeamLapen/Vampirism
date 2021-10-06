@@ -64,8 +64,7 @@ publishing {
                 asNode().dependencies.dependency.each { dep ->
 
                     // Check if the dependency has been mapped with MCP
-                    if (dep.version.last().value().last().contains('_mapped_snapshot_') || dep.version.last().value().last().contains('_mapped_stable_') || dep.version.last().value().last().contains('_mapped_official_')) {
-
+                    if (dep.version.last().value().last().contains('_mapped_snapshot_') || dep.version.last().value().last().contains('_mapped_stable_') || dep.version.last().value().last().contains('_mapped_official_') || dep.version.last().value().last().contains('_mapped_parchment_')) {
                         // Remove the MCP mapped artifact from the dependency list.
                         println 'Surpressing MCP mapped artifact ' + dep.artifactId.last().value().last() + ' from maven dependencies.'
                         assert dep.parent().remove(dep)
