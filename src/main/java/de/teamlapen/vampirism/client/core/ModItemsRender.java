@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.core;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
@@ -8,14 +9,31 @@ import de.teamlapen.vampirism.items.CrossbowArrowItem;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColors;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.stream.Stream;
 
 /**
  * Handles item render registration
  */
 @OnlyIn(Dist.CLIENT)
 public class ModItemsRender {
+
+    public static void registerItemModelPropertyUnsafe() {
+        Stream.of(ModItems.basic_crossbow, ModItems.basic_double_crossbow, ModItems.enhanced_crossbow, ModItems.enhanced_double_crossbow, ModItems.basic_tech_crossbow, ModItems.enhanced_tech_crossbow).forEach(item -> {
+            ItemProperties.register(item, new ResourceLocation(REFERENCE.MODID, "charged"), (stack, world, entity, value) -> {
+                if (entity == null) {
+                    return 0.0F;
+                } else {
+                    return entity.getUseItem() != stack && entity instanceof Player ? ((Player) entity).getCooldowns().getCooldownPercent(stack.getItem(), Minecraft.getInstance().getFrameTime()) : 0.0F;
+                }
+            });
+        });
+    }
 
     public static void registerColors() {
         ItemColors colors = Minecraft.getInstance().getItemColors();
