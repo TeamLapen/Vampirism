@@ -131,6 +131,20 @@ public class VampirismWorldGen {
                                 pattern.templates.add(modified);
                                 pattern.templates.add(oldPieces.get(i));
                             }
+
+                            // Add modified temple pieces to the weighted list for better mod compat if other mods read this field instead of templates
+                            // (ex: Repurposed Structures)
+                            List<Pair<StructurePoolElement, Integer>> weightedElementList = new ArrayList<>(pattern.rawTemplates);
+                            Optional<Pair<StructurePoolElement, Integer>> originalPiece = weightedElementList.stream().filter(entry -> entry.getFirst().toString().equals(original)).findAny();
+                            originalPiece.ifPresent(originalEntry -> {
+                                // remove original
+                                weightedElementList.remove(originalPiece.get());
+
+                                // Readd original at reduced weight and new piece as well.
+                                weightedElementList.add(new Pair<>(originalEntry.getFirst(), (int) (originalEntry.getSecond() * 0.6)));
+                                weightedElementList.add(new Pair<>(modified, (int) (originalEntry.getSecond() * 0.6)));
+                            });
+                            pattern.rawTemplates = weightedElementList;
                         });
                     }));
         });
@@ -152,6 +166,12 @@ public class VampirismWorldGen {
                     for (int i = 0; i < VampirismConfig.COMMON.villageHunterTrainerWeight.get(); i++) {
                         pattern.templates.add(piece);
                     }
+
+                    // Add hunter trainer house to the weighted list for better mod compat if other mods read this field instead of templates
+                    // (ex: Repurposed Structures)
+                    List<Pair<StructurePoolElement, Integer>> weightedElementList = new ArrayList<>(pattern.rawTemplates);
+                    weightedElementList.add(new Pair<>(piece, VampirismConfig.COMMON.villageHunterTrainerWeight.get()));
+                    pattern.rawTemplates = weightedElementList;
                 });
             });
         });
@@ -176,6 +196,12 @@ public class VampirismWorldGen {
                     for (int i = 0; i < VampirismConfig.COMMON.villageTotemWeight.get(); ++i) {
                         pattern.templates.add(totem);
                     }
+
+                    // Add totem house to the weighted list for better mod compat if other mods read this field instead of templates
+                    // (ex: Repurposed Structures)
+                    List<Pair<StructurePoolElement, Integer>> weightedElementList = new ArrayList<>(pattern.rawTemplates);
+                    weightedElementList.add(new Pair<>(totem, VampirismConfig.COMMON.villageTotemWeight.get()));
+                    pattern.rawTemplates = weightedElementList;
                 });
             });
         });
