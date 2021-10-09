@@ -220,7 +220,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             gui.setupOverlayRenderState(true, false);
 
             IPlayableFaction<?> faction = VampirismPlayerAttributes.get(mc.player).faction;
-            if (mc.gameMode.hasExperience() && faction != null && faction.renderLevel()) {
+            if (mc.gameMode.hasExperience() && mc.player.isAlive() && faction != null && faction.renderLevel()) {
                 IFactionPlayerHandler handler = FactionPlayerHandler.get(mc.player);
                 // boolean flag1 = false;
                 int color = faction.getColor();

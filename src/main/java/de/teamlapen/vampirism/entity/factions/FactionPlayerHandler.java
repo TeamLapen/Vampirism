@@ -133,6 +133,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return currentFaction == null || currentFaction.getPlayerCapability(player).map(IFactionPlayer::canLeaveFaction).orElse(false);
     }
 
+    /**
+     * Make sure the player caps are valid (call #reviveCaps if dead)
+     */
     public void copyFrom(Player old) {
         FactionPlayerHandler oldP = get(old);
         currentFaction = oldP.currentFaction;

@@ -73,10 +73,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fluids.FluidStack;
@@ -220,7 +217,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             if (vision != null) {
                 vision.onActivated(this);
             }
-            if (!isRemote()) {
+            if (!isRemote() && player.isAddedToWorld()) {
                 CompoundTag nbt = new CompoundTag();
                 nbt.putInt(KEY_VISION, activatedVision == null ? -1 : ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
                 this.sync(nbt, false);

@@ -103,7 +103,9 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
 
     @Override
     public void onPlayerClone(Player original, boolean wasDeath) {
-        copyFrom(original);
+        original.reviveCaps();
+        copyFromPlayer(original);
+        original.invalidateCaps();
     }
 
     @Override
@@ -159,9 +161,5 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
      * Can be overridden to put data into updates in subclasses
      */
     protected void writeFullUpdate(CompoundTag nbt) {
-    }
-
-    private void copyFrom(Player old) {
-        FactionBasePlayer<T> p = copyFromPlayer(old);
     }
 }

@@ -314,7 +314,9 @@ public class ModPlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onPlayerClone(PlayerEvent.Clone event) {
         if (!event.getPlayer().getCommandSenderWorld().isClientSide) {
+            event.getOriginal().reviveCaps();
             FactionPlayerHandler.get(event.getPlayer()).copyFrom(event.getOriginal());
+            event.getOriginal().invalidateCaps();
         }
     }
 
