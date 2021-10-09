@@ -209,8 +209,8 @@ public class VampirismWorldGen {
      * ensure single generation of following structures
      */
     private static void setupSingleJigsawPieceGeneration() {
-        List<String> list = Lists.newArrayList(singleJigsawString("vampirism:village/totem"));
-        list.addAll(Arrays.stream(BiomeType.values()).map(type -> singleJigsawString("vampirism:village/" + type.path + "houses/hunter_trainer")).collect(Collectors.toList()));
+        List<ResourceLocation> list = Lists.newArrayList(new ResourceLocation(REFERENCE.MODID, "village/totem"));
+        list.addAll(Arrays.stream(BiomeType.values()).map(type -> new ResourceLocation(REFERENCE.MODID, "village/" + type.path + "/houses/hunter_trainer")).collect(Collectors.toList()));
         MixinHooks.addSingleInstanceStructure(list);
     }
 
