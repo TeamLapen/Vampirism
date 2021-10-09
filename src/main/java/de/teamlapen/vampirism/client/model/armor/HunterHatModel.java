@@ -24,9 +24,9 @@ public class HunterHatModel extends VampirismArmorModel {
         PartDefinition part = mesh.getRoot();
         if (type == 1) {
             part.addOrReplaceChild(HAT_TOP, CubeListBuilder.create().texOffs(0, 31).mirror().addBox(-4, -14, -4, 8, 5, 8), PartPose.offset(0, p_170683_, 0));
-            part.addOrReplaceChild(HAT_RIM, CubeListBuilder.create().texOffs(0, 35).mirror().addBox(-6, -9, -6, 8, 3, 8), PartPose.offset(0, p_170683_, 0));
+            part.addOrReplaceChild(HAT_RIM, CubeListBuilder.create().texOffs(0, 35).mirror().addBox(-6, -9, -6, 12, 1, 12), PartPose.offset(0, p_170683_, 0));
         } else {
-            part.addOrReplaceChild(HAT_TOP, CubeListBuilder.create().texOffs(0, 31).mirror().addBox(-4, -12, -4, -8, 3, 8), PartPose.offset(0, p_170683_, 0));
+            part.addOrReplaceChild(HAT_TOP, CubeListBuilder.create().texOffs(0, 31).mirror().addBox(-4, -12, -4, 8, 3, 8), PartPose.offset(0, p_170683_, 0));
             part.addOrReplaceChild(HAT_RIM, CubeListBuilder.create().texOffs(0, 31).mirror().addBox(-8, -9, -8, 16, 1, 16), PartPose.offset(0, p_170683_, 0));
         }
         return LayerDefinition.create(mesh, 128, 64);
