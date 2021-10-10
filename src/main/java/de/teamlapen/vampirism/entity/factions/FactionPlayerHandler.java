@@ -33,10 +33,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.Event;
 import org.apache.logging.log4j.LogManager;
@@ -54,8 +51,7 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
  */
 public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapabilityInst, IFactionPlayerHandler {
     private final static Logger LOGGER = LogManager.getLogger(FactionPlayerHandler.class);
-    @CapabilityInject(IFactionPlayerHandler.class)
-    public static Capability<IFactionPlayerHandler> CAP = getNull();
+    public static final Capability<IFactionPlayerHandler> CAP = CapabilityManager.get(new CapabilityToken<>(){});
 
     /**
      * Must check Entity#isAlive before

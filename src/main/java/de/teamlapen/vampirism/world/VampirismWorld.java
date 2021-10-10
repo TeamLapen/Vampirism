@@ -14,10 +14,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
@@ -41,8 +38,7 @@ public class VampirismWorld implements IVampirismWorld {
      */
     private static final Map<BlockPos, BoundingBox> fogAreas = Maps.newHashMap();
     private static final Map<BlockPos, BoundingBox> tmpFogAreas = Maps.newHashMap();
-    @CapabilityInject(IVampirismWorld.class)
-    public static Capability<IVampirismWorld> CAP = getNull();
+    public static final Capability<IVampirismWorld> CAP = CapabilityManager.get(new CapabilityToken<>(){});
 
     public static VampirismWorld get(Level world) {
         return (VampirismWorld) world.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get VampirismWorld from World " + world));

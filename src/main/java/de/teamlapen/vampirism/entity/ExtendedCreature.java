@@ -26,10 +26,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
@@ -46,8 +43,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     private final static String KEY_BLOOD = "bloodLevel";
     private final static String KEY_MAX_BLOOD = "maxBlood";
     private final static String POISONOUS_BLOOD = "poisonousBlood";
-    @CapabilityInject(IExtendedCreatureVampirism.class)
-    public static Capability<IExtendedCreatureVampirism> CAP = getNull();
+    public static final Capability<IExtendedCreatureVampirism> CAP = CapabilityManager.get(new CapabilityToken<>(){});
 
 
     public static LazyOptional<IExtendedCreatureVampirism> getSafe(Entity mob) {

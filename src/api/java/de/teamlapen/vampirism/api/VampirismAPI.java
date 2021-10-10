@@ -19,6 +19,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 
 /**
@@ -28,21 +30,11 @@ import net.minecraftforge.common.util.LazyOptional;
 public class VampirismAPI {
 
 
-    @SuppressWarnings("FieldMayBeFinal")
-    @CapabilityInject(IExtendedCreatureVampirism.class)
-    private static Capability<IExtendedCreatureVampirism> CAP_CREATURE = null;
-    @SuppressWarnings("FieldMayBeFinal")
-    @CapabilityInject(IFactionPlayerHandler.class)
-    private static Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = null;
-    @SuppressWarnings("FieldMayBeFinal")
-    @CapabilityInject(IVampirismWorld.class)
-    private static Capability<IVampirismWorld> CAP_WORLD = null;
-    @SuppressWarnings("FieldMayBeFinal")
-    @CapabilityInject(IVampirePlayer.class)
-    private static Capability<IVampirePlayer> CAP_VAMPIRE = null;
-    @SuppressWarnings("FieldMayBeFinal")
-    @CapabilityInject(IHunterPlayer.class)
-    private static Capability<IHunterPlayer> CAP_HUNTER = null;
+    private static final Capability<IExtendedCreatureVampirism> CAP_CREATURE = CapabilityManager.get(new CapabilityToken<>(){});
+    private static final Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = CapabilityManager.get(new CapabilityToken<>(){});
+    private static final Capability<IVampirismWorld> CAP_WORLD = CapabilityManager.get(new CapabilityToken<>(){});
+    private static final Capability<IVampirePlayer> CAP_VAMPIRE = CapabilityManager.get(new CapabilityToken<>(){});
+    private static final Capability<IHunterPlayer> CAP_HUNTER = CapabilityManager.get(new CapabilityToken<>(){});
 
     private static IFactionRegistry factionRegistry;
     private static ISundamageRegistry sundamageRegistry;

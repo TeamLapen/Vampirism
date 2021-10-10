@@ -110,8 +110,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private final static String KEY_WING_COUNTER = "wing";
     private final static String KEY_DBNO_TIMER = "dbno";
     private final static String KEY_DBNO_MSG = "dbno_msg";
-    @CapabilityInject(IVampirePlayer.class)
-    public static Capability<IVampirePlayer> CAP = getNull();
+    public static final Capability<IVampirePlayer> CAP = CapabilityManager.get(new CapabilityToken<>(){});
 
     /**
      * Don't call before the construction event of the player entity is finished

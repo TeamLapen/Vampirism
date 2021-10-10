@@ -34,10 +34,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import org.apache.logging.log4j.LogManager;
@@ -55,8 +52,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
 
     private static final Logger LOGGER = LogManager.getLogger(HunterPlayer.class);
 
-    @CapabilityInject(IHunterPlayer.class)
-    public static Capability<IHunterPlayer> CAP = getNull();
+    public static final Capability<IHunterPlayer> CAP = CapabilityManager.get(new CapabilityToken<>(){});
 
     /**
      * Don't call before the construction event of the player entity is finished
