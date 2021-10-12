@@ -26,6 +26,9 @@ public class BiomeTopBlockProcessor extends StructureProcessor {
 
     private final BlockState replaceBlock;
 
+    /**
+     * @param blockState indicator what blocks should be replaced with the biome top block
+     */
     public BiomeTopBlockProcessor(BlockState blockState) {
         this.replaceBlock = blockState;
     }
