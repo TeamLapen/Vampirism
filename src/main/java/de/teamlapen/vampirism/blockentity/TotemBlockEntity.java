@@ -531,9 +531,9 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
      * Ticked every second when no capture is active
      * Handle normal village live
      */
-    private void serverTickSecondNonCapture() {
+    private void serverTickSecondNonCapture(int timeInSeconds) {
         //Update/spawn entities
-        if (this.controllingFaction != null && level.getGameTime() % 512 == 0) {
+        if (this.controllingFaction != null && timeInSeconds % 16  == 0) {
             int beds = (int) ((ServerLevel) level).getPoiManager().getInRange(pointOfInterestType -> pointOfInterestType.equals(PoiType.HOME), this.worldPosition, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXsize(), 2) + Math.pow(this.getVillageArea().getZsize(), 2))) / 2, PoiManager.Occupancy.ANY).count();
             boolean spawnTaskMaster = RNG.nextInt(6) == 0;
             int villager = this.level.getEntitiesOfClass(Villager.class, this.getVillageArea().inflate(20)).size();
@@ -601,7 +601,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
      * Ticked every second during raid.
      * Handle raid activity
      */
-    private void serverTickSecondCapture() {
+    private void serverTickSecondCapture(int timeInSeconds) {
         List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, this.getVillageArea());
         this.updateBossinfoPlayers(entities);
         int currentAttacker = 0; //include player
@@ -760,14 +760,14 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         if (blockEntity.capturingFaction != null) {
             if (time % 20 == 0) {
                 assert blockEntity.level == level;
-                blockEntity.serverTickSecondCapture();
+                blockEntity.serverTickSecondCapture((int)(time / 20));
             }
         }
         //Normal village life
         else {
             blockEntity.timeSinceLastRaid++;
             if (time % 20 == 7) {
-                blockEntity.serverTickSecondNonCapture();
+                blockEntity.serverTickSecondNonCapture( (int)(time /20) );
             }
 
         }
