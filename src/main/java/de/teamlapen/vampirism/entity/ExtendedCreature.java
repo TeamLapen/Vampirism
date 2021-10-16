@@ -199,7 +199,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     @Nullable
     IConvertedCreature makeVampire() {
         if (canBecomeVampire()) {
-            blood = 0;
+            blood = -1;
             IConvertedCreature c = VampirismAPI.entityRegistry().convert(entity);
             if (c != null) {
                 UtilLib.replaceEntity(entity, (CreatureEntity) c);
