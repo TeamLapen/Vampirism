@@ -193,7 +193,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     @Override
     public IConvertedCreature<?> makeVampire() {
         if (canBecomeVampire()) {
-            blood = 0;
+            blood = -1;
             IConvertedCreature<?> c = VampirismAPI.entityRegistry().convert(entity);
             if (c != null) {
                 UtilLib.replaceEntity(entity, (PathfinderMob) c);
@@ -266,7 +266,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         if (!entity.getCommandSenderWorld().isClientSide) {
             /*
              * Make sure all entities with no blood die
-             * check for sanguinare as the entity might converted instead of dying
+             * check for sanguinare as the entity might be converting instead of dying
              */
             if (blood == 0 && entity.tickCount % 20 == 10 && entity.getEffect(ModEffects.sanguinare) == null) {
                 entity.hurt(VReference.NO_BLOOD, 1000);
