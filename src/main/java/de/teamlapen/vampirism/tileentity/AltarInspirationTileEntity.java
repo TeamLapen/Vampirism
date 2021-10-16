@@ -53,6 +53,10 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
     }
     private final int RITUAL_TIME = 60;
     private int ritualTicksLeft = 0;
+    /**
+     * Only valid while ritualTicksLeft > 0
+     */
+    private int targetLevel;
     private PlayerEntity ritualPlayer;
     private IModelData modelData;
 
@@ -107,12 +111,8 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
 
     public void startRitual(PlayerEntity p) {
         if (ritualTicksLeft > 0 || !p.isAlive()) return;
+        targetLevel = VampirismPlayerAttributes.get(p).vampireLevel + 1;
         VampirismPlayerAttributes attributes = VampirismPlayerAttributes.get(p);
-        if (attributes.getVampSpecial().inspirationRitualRunning) {
-            if (p.level.isClientSide)
-                p.displayClientMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_other"), true);
-            return;
-        }
         int targetLevel = attributes.vampireLevel + 1;
         VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
         if (!levelingConf.isLevelValidForAltarInspiration(targetLevel)) {
@@ -131,7 +131,6 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
         } else {
             ((InternalTank) this.tank).doDrain(neededBlood, IFluidHandler.FluidAction.EXECUTE);
         }
-        attributes.getVampSpecial().inspirationRitualRunning = true;
         this.ritualPlayer = p;
         this.ritualTicksLeft = RITUAL_TIME;
     }
@@ -150,7 +149,6 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
                     ritualPlayer.setHealth(ritualPlayer.getMaxHealth());
                     break;
                 case 1:
-                    int targetLevel = VampirePlayer.get(ritualPlayer).getLevel() + 1;
                     VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
                     if (!levelingConf.isLevelValidForAltarInspiration(targetLevel)) return; //no level available
                     int blood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
@@ -160,7 +158,6 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
                     FactionPlayerHandler.get(ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, targetLevel);
                     VampirePlayer player = VampirePlayer.get(ritualPlayer);
                     player.drinkBlood(Integer.MAX_VALUE, 0, false);
-                    player.getSpecialAttributes().inspirationRitualRunning = false;
                     this.setChanged();
                     break;
                 default:
