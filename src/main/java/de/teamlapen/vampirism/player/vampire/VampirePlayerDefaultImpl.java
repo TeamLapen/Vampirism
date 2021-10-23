@@ -39,6 +39,11 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
+    public void addExhaustion(float exhaustion) {
+
+    }
+
+    @Override
     public float calculateFireDamage(float amount) {
         return amount;
     }

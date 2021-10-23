@@ -112,7 +112,11 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         } else if (!VampirismConfig.SERVER.batModeInEnd.get() && vampire.getRepresentingPlayer().getCommandSenderWorld().dimension() == World.END) {
             vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_end"), Util.NIL_UUID);
             return true;
-        } else return vampire.getRepresentingPlayer().isInWater();
+        } else {
+            double exhaustion = VampirismConfig.BALANCE.vaBatExhaustion.get();
+            if(exhaustion>0)vampire.addExhaustion((float) exhaustion);
+            return vampire.getRepresentingPlayer().isInWater();
+        }
     }
 
     /**
