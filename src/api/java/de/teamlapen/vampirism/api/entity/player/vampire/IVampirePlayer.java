@@ -27,6 +27,11 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     void activateVision(@Nullable IVampireVision vision);
 
     /**
+     * Increases exhaustion level by supplied amount
+     */
+    void addExhaustion(float exhaustion);
+
+    /**
      * Vampires receive increased damage from fire.
      * This method will be used to convert {@link net.minecraft.world.damagesource.DamageSource#IN_FIRE} and {@link net.minecraft.world.damagesource.DamageSource#ON_FIRE} to {@link de.teamlapen.vampirism.api.VReference#VAMPIRE_IN_FIRE} or respectively {@link de.teamlapen.vampirism.api.VReference#VAMPIRE_ON_FIRE}
      *

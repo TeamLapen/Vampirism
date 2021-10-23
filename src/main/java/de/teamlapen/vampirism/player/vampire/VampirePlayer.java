@@ -225,9 +225,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     }
 
-    /**
-     * Increases exhaustion level by supplied amount
-     */
+    @Override
     public void addExhaustion(float exhaustion) {
         if (!player.getAbilities().invulnerable && getLevel() > 0) {
             if (!isRemote()) {
