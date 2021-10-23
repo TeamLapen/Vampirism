@@ -144,39 +144,41 @@ public class VampirismHUDOverlay extends ExtendedGui {
         HitResult p = Minecraft.getInstance().hitResult;
 
         if (p != null && p.getType() == HitResult.Type.ENTITY) {
-            VampirismPlayerAttributes atts = VampirismPlayerAttributes.get(mc.player);
-            if (atts.vampireLevel > 0 && !mc.player.isSpectator() && !atts.getVampSpecial().bat) {
-                Entity entity = ((EntityHitResult) p).getEntity();
-                VampirePlayer.getOpt(mc.player).ifPresent(player -> {
-                    LazyOptional<? extends IBiteableEntity> biteableOpt = LazyOptional.empty();
-                    if (entity instanceof IBiteableEntity) {
-                        biteableOpt = LazyOptional.of(() -> (IBiteableEntity) entity);
-                    } else if (entity instanceof PathfinderMob && entity.isAlive()) {
-                        biteableOpt = ExtendedCreature.getSafe(entity);
-                    } else if (entity instanceof Player) {
-                        biteableOpt = VampirePlayer.getOpt((Player) entity);
-                    }
-                    biteableOpt.filter(iBiteableEntity -> iBiteableEntity.canBeBitten(player)).ifPresent(biteable -> {
-                        int color = 0xFF0000;
-                        if (entity instanceof IHunterMob || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false))
-                            color = 0x099022;
-                        renderBloodFangs(event.getMatrixStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), Mth.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
-                        event.setCanceled(true);
-                    });
-                });
-
-            }
-            if (atts.hunterLevel > 0 && !mc.player.isSpectator() && mc.player.getMainHandItem().getItem() == ModItems.stake) {
-                Entity entity = ((EntityHitResult) p).getEntity();
-                if (entity instanceof LivingEntity && entity instanceof IVampireMob) {
-                    if (StakeItem.canKillInstant((LivingEntity) entity, mc.player)) {
-                        if (((LivingEntity) entity).getHealth() > 0) {
-                            this.renderStakeInstantKill(event.getMatrixStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight());
+            Entity entity = ((EntityHitResult) p).getEntity();
+            if (!entity.isInvisible()) {
+                VampirismPlayerAttributes atts = VampirismPlayerAttributes.get(mc.player);
+                if (atts.vampireLevel > 0 && !mc.player.isSpectator() && !atts.getVampSpecial().bat) {
+                    VampirePlayer.getOpt(mc.player).ifPresent(player -> {
+                        LazyOptional<? extends IBiteableEntity> biteableOpt = LazyOptional.empty();
+                        if (entity instanceof IBiteableEntity) {
+                            biteableOpt = LazyOptional.of(() -> (IBiteableEntity) entity);
+                        } else if (entity instanceof PathfinderMob && entity.isAlive()) {
+                            biteableOpt = ExtendedCreature.getSafe(entity);
+                        } else if (entity instanceof Player) {
+                            biteableOpt = VampirePlayer.getOpt((Player) entity);
+                        }
+                        biteableOpt.filter(iBiteableEntity -> iBiteableEntity.canBeBitten(player)).ifPresent(biteable -> {
+                            int color = 0xFF0000;
+                            if (entity instanceof IHunterMob || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false))
+                                color = 0x099022;
+                            renderBloodFangs(event.getMatrixStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), Mth.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
                             event.setCanceled(true);
+                        });
+                    });
+
+                }
+                if (atts.hunterLevel > 0 && !mc.player.isSpectator() && mc.player.getMainHandItem().getItem() == ModItems.stake) {
+                    if (entity instanceof LivingEntity && entity instanceof IVampireMob) {
+                        if (StakeItem.canKillInstant((LivingEntity) entity, mc.player)) {
+                            if (((LivingEntity) entity).getHealth() > 0) {
+                                this.renderStakeInstantKill(event.getMatrixStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight());
+                                event.setCanceled(true);
+                            }
                         }
                     }
                 }
             }
+
         } else if (p != null && p.getType() == HitResult.Type.BLOCK) {
             BlockState block = Minecraft.getInstance().level.getBlockState(((BlockHitResult) p).getBlockPos());
             if (ModBlocks.blood_container.equals(block.getBlock())) {
