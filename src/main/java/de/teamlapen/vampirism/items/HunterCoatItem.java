@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
+import de.teamlapen.vampirism.util.VampirismArmorMaterials;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -47,7 +47,7 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
     private final TIER tier;
 
     public HunterCoatItem(EquipmentSlotType equipmentSlotIn, TIER tier) {
-        super(baseRegName, tier.getName(), ArmorMaterial.IRON, equipmentSlotIn, new Properties().tab(VampirismMod.creativeTab));
+        super(baseRegName, tier.getName(), VampirismArmorMaterials.MASTERLY_IRON, equipmentSlotIn, new Properties().tab(VampirismMod.creativeTab));
         this.tier = tier;
     }
 
