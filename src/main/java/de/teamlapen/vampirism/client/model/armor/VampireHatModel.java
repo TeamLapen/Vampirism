@@ -39,7 +39,7 @@ public class VampireHatModel extends VampirismArmorModel {
     public VampireHatModel(ModelPart part) {
         super(part);
         base = part.getChild(BASE);
-        top = part.getChild(TOP);
+        top = base.getChild(TOP);
     }
 
 
