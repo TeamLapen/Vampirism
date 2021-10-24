@@ -37,7 +37,6 @@ import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
-import de.teamlapen.vampirism.util.GeneralRegistryImpl;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
@@ -110,7 +109,10 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private final static String KEY_WING_COUNTER = "wing";
     private final static String KEY_DBNO_TIMER = "dbno";
     private final static String KEY_DBNO_MSG = "dbno_msg";
-    public static final Capability<IVampirePlayer> CAP = CapabilityManager.get(new CapabilityToken<>(){});
+    private final static String KEY_WAS_DBNO = "wasDBNO";
+
+    public static final Capability<IVampirePlayer> CAP = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     /**
      * Don't call before the construction event of the player entity is finished
@@ -205,7 +207,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public void activateVision(@Nullable IVampireVision vision) {
-        if (vision != null && !isRemote() && ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getIdOfVision(vision) == -1) {
+        if (vision != null && !isRemote() && (VampirismAPI.vampireVisionRegistry()).getIdOfVision(vision) == -1) {
             throw new IllegalArgumentException("You have to register the vision first: " + vision);
         }
         if (!Objects.equals(activatedVision, vision)) {
@@ -218,7 +220,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             }
             if (!isRemote() && player.isAddedToWorld()) {
                 CompoundTag nbt = new CompoundTag();
-                nbt.putInt(KEY_VISION, activatedVision == null ? -1 : ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
+                nbt.putInt(KEY_VISION, activatedVision == null ? -1 : (VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
                 this.sync(nbt, false);
             }
         }
@@ -575,7 +577,12 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         a.glowingEyes = nbt.getBoolean(KEY_GLOWING_EYES);
         actionHandler.loadFromNbt(nbt);
         skillHandler.loadFromNbt(nbt);
-        if (nbt.getBoolean("wasDBNO")) wasDBNO = true;
+        if (nbt.getBoolean(KEY_WAS_DBNO)) wasDBNO = true;
+        IVampireVision vision = null;
+        if (nbt.contains(KEY_VISION)) { //Must be after loading skillHandler due to night vision skill being automatically activated
+            vision = (VampirismAPI.vampireVisionRegistry()).getVisionOfId(nbt.getInt(KEY_VISION));
+        }
+        activatedVision = vision;
 
     }
 
@@ -948,7 +955,9 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());
         actionHandler.saveToNbt(nbt);
         skillHandler.saveToNbt(nbt);
-        if (isDBNO()) nbt.putBoolean("wasDBNO", true);
+        if (activatedVision != null)
+            nbt.putInt(KEY_VISION, (VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
+        if (isDBNO()) nbt.putBoolean(KEY_WAS_DBNO, true);
     }
 
     /**
@@ -1071,7 +1080,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public void unlockVision(@Nonnull IVampireVision vision) {
-        if (((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getIdOfVision(vision) == -1) {
+        if ((VampirismAPI.vampireVisionRegistry()).getIdOfVision(vision) == -1) {
             throw new IllegalArgumentException("You have to register the vision first: " + vision);
         }
         unlockedVisions.add(vision);
@@ -1183,7 +1192,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             if (id == -1) {
                 vision = null;
             } else {
-                vision = ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getVisionOfId(id);
+                vision = (VampirismAPI.vampireVisionRegistry()).getVisionOfId(id);
                 if (vision == null) {
                     LOGGER.warn("Failed to find vision with id {}", id);
                 }
@@ -1203,7 +1212,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         bloodStats.writeUpdate(nbt);
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);
-        nbt.putInt(KEY_VISION, activatedVision == null ? -1 : ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
+        nbt.putInt(KEY_VISION, activatedVision == null ? -1 : (VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
         nbt.putInt(KEY_DBNO_TIMER, getDbnoTimer());
         if (dbnoMessage != null) nbt.putString(KEY_DBNO_MSG, Component.Serializer.toJson(dbnoMessage));
     }
