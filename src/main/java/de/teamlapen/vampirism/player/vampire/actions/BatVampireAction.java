@@ -113,8 +113,8 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             vampire.getRepresentingPlayer().sendMessage(new TranslatableComponent("text.vampirism.cant_fly_end"), Util.NIL_UUID);
             return true;
         } else {
-            double exhaustion = VampirismConfig.BALANCE.vaBatExhaustion.get();
-            if (exhaustion > 0) vampire.addExhaustion((float) exhaustion);
+            float exhaustion = VampirismConfig.BALANCE.vaBatExhaustion.get().floatValue();
+            if (exhaustion > 0) vampire.addExhaustion(exhaustion);
             return vampire.getRepresentingPlayer().isInWater();
         }
     }
@@ -141,7 +141,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
             player.getAbilities().mayfly = true;
             player.getAbilities().flying = true;
-            setFlightSpeed(player, (float) 0.03);
+            setFlightSpeed(player, VampirismConfig.BALANCE.vaBatFlightSpeed.get().floatValue());
         } else {
             // Health modifier
             AttributeInstance armorAttributeInst = player.getAttribute(Attributes.ARMOR);
