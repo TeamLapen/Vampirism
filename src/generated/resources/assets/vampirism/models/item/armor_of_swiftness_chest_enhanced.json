@@ -1,3 +1,7 @@
 {
-  "parent": "vampirism:item/armor_of_swiftness_chest"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "vampirism:item/armor_of_swiftness_chest_enhanced",
+    "layer1": "vampirism:item/armor_of_swiftness_chest_enhanced_overlay"
+  }
 }
