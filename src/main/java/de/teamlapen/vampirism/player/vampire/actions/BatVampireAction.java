@@ -149,8 +149,8 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             if (m != null) {
                 armorAttributeInst.removeModifier(m);
             }
-            ModifiableAttributeInstance armorToughnessAttributeInst = player.getAttribute(Attributes.ARMOR);
-            AttributeModifier m2 = armorToughnessAttributeInst.getModifier(armorModifierUUID);
+            ModifiableAttributeInstance armorToughnessAttributeInst = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
+            AttributeModifier m2 = armorToughnessAttributeInst.getModifier(armorToughnessModifierUUID);
             if (m2 != null) {
                 armorToughnessAttributeInst.removeModifier(m2);
             }
