@@ -9,10 +9,8 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.BalanceMobProps;
-import de.teamlapen.vampirism.core.ModAttributes;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.SoulOrbEntity;
@@ -21,6 +19,7 @@ import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.StructureTags;
 import net.minecraft.util.RandomSource;
@@ -90,9 +89,15 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
             isGettingSundamage(level, true);
         }
         if (!level.isClientSide) {
-            if (isGettingSundamage(level) && tickCount % 40 == 11) {
-                double dmg = getAttribute(ModAttributes.SUNDAMAGE.get()).getValue();
-                if (dmg > 0) this.hurt(VReference.SUNDAMAGE, (float) dmg);
+            if (isGettingSundamage(level) && this.isAlive()) {
+                if (VampirismConfig.BALANCE.vpSundamageInstantDeath.get()) {
+                    this.hurt(VReference.SUNDAMAGE, 1000);
+                    turnToAsh();
+                } else if (tickCount % 40 == 11) {
+                    double dmg = getAttribute(ModAttributes.SUNDAMAGE.get()).getValue();
+                    if (dmg > 0) this.hurt(VReference.SUNDAMAGE, (float) dmg);
+                }
+
             }
             if (isGettingGarlicDamage(level) != EnumStrength.NONE) {
                 DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(level), this.tickCount);
@@ -107,6 +112,19 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
             }
         }
         super.aiStep();
+    }
+
+    /**
+     * Spawn ash particles and remove body.
+     * Must be dead already
+     */
+    private void turnToAsh() {
+        if (!this.isAlive()) {
+            this.deathTime = 19;
+            ModParticles.spawnParticlesServer(this.level, ParticleTypes.WHITE_ASH, this.getX() + 0.5, this.getY() + this.getBbHeight(), this.getZ() + 0.5f, 20, 0.2, this.getBbHeight() * 0.2d, 0.2, 0.1);
+            ModParticles.spawnParticlesServer(this.level, ParticleTypes.ASH, this.getX() + 0.5, this.getY() + this.getBbHeight() / 2, this.getZ() + 0.5f, 20, 0.2, this.getBbHeight() * 0.2d, 0.2, 0.1);
+            this.remove(RemovalReason.KILLED);
+        }
     }
 
     @Override

@@ -1324,10 +1324,16 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (ticksInSun < 100) {
             ticksInSun++;
         }
-        if (sunscreen >= 5 && ticksInSun > 50) {
+        if (sunscreen >= 4 && ticksInSun > 50) {
             ticksInSun = 50;
         }
-        if (isRemote || player.getAbilities().instabuild || player.getAbilities().invulnerable) return;
+        if (!player.isAlive() || isRemote || player.getAbilities().instabuild || player.getAbilities().invulnerable) return;
+
+        if (ticksInSun == 100 && VampirismConfig.BALANCE.vpSundamageInstantDeath.get()) {
+            player.hurt(VReference.SUNDAMAGE, 1000);
+            turnToAsh();
+        }
+
         if (VampirismConfig.BALANCE.vpSundamageNausea.get() && getLevel() >= VampirismConfig.BALANCE.vpSundamageNauseaMinLevel.get() && player.tickCount % 300 == 1 && ticksInSun > 50 && sunscreen == -1) {
             player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 180));
         }
@@ -1337,6 +1343,21 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (getLevel() >= VampirismConfig.BALANCE.vpSundamageMinLevel.get() && ticksInSun >= 100 && player.tickCount % 40 == 5) {
             float damage = (float) (player.getAttribute(ModAttributes.SUNDAMAGE.get()).getValue());
             if (damage > 0) player.hurt(VReference.SUNDAMAGE, damage);
+            if (!player.isAlive()) {
+                turnToAsh(); //Instead of the normal dying animation, just turn to ash
+            }
+        }
+    }
+
+    /**
+     * Spawn ash particles and remove body.
+     * Must be dead already
+     */
+    private void turnToAsh() {
+        if (!player.isAlive()) {
+            player.deathTime = 19;
+            ModParticles.spawnParticlesServer(player.level, ParticleTypes.WHITE_ASH, player.getX() + 0.5, player.getY() + player.getBbHeight(), player.getZ() + 0.5f, 20, 0.2, player.getBbHeight() * 0.2d, 0.2, 0.1);
+            ModParticles.spawnParticlesServer(player.level, ParticleTypes.ASH, player.getX() + 0.5, player.getY() + player.getBbHeight() / 2, player.getZ() + 0.5f, 20, 0.2, player.getBbHeight() * 0.2d, 0.2, 0.1);
         }
     }
 
