@@ -688,6 +688,7 @@ a7ade90cb53949660a98f2a2343802e881f138f6 data/vampirism/tags/entity_types/advanc
 0d3c9f4dbad2eaeb2c6ffa0427078c78201ca663 data/vampirism/tags/entity_types/advanced_vampire.json
 2a5f5817fd4c037204469554b97eb6f1e368d898 data/vampirism/tags/entity_types/hunter.json
 33b03bc64f4a83d8ef1d5f39877dc0ec458330a0 data/vampirism/tags/entity_types/vampire.json
+b4dea7afa6c480f3dc5788190dec4c9650babd8d data/vampirism/tags/entity_types/zombies.json
 052c96e352a5ab4d1d24dab25e8af31f59b42005 data/vampirism/tags/fluids/vampirism_blood.json
 471457089210d84add7fdacb9d0eb520abdf9002 data/vampirism/tags/fluids/vampirism_impure_blood.json
 d4a0a289e890be3685d664f380313daf4031bbb6 data/vampirism/tags/items/castle_block.json
