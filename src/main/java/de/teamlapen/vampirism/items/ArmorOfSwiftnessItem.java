@@ -71,9 +71,9 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
             return getTextureLocationLeather(slot);
         }
         return switch (getVampirismTier()) {
-            case ENHANCED -> getTextureLocation("swiftness_enhanced", slot, type);
-            case ULTIMATE -> getTextureLocation("swiftness_ultimate", slot, type);
-            default -> getTextureLocation("swiftness", slot, type);
+            case ENHANCED -> getTextureLocation("armor_of_swiftness_enhanced", slot, type);
+            case ULTIMATE -> getTextureLocation("armor_of_swiftness_ultimate", slot, type);
+            default -> getTextureLocation("armor_of_swiftness_normal", slot, type);
         };
     }
 

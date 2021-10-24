@@ -167,25 +167,21 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
         withExistingParent(ModItems.CROSSBOW_ARROW_SPITFIRE.get(), modLoc("item/crossbow_arrow"));
         withExistingParent(ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), modLoc("item/crossbow_arrow"));
 
-        item("armor_of_swiftness_chest", mcLoc("item/leather_chestplate"), modLoc("item/swiftness_chest_overlay"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), modLoc("item/armor_of_swiftness_chest"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), modLoc("item/armor_of_swiftness_chest"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.get(), modLoc("item/armor_of_swiftness_chest"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), modLoc("item/armor_of_swiftness_chest_normal"), modLoc("item/armor_of_swiftness_chest_normal_overlay"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), modLoc("item/armor_of_swiftness_chest_enhanced"), modLoc("item/armor_of_swiftness_chest_enhanced_overlay"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.get(), modLoc("item/armor_of_swiftness_chest_ultimate"), modLoc("item/armor_of_swiftness_chest_ultimate_overlay"));
 
-        item("armor_of_swiftness_feet", mcLoc("item/leather_boots"), modLoc("item/swiftness_feet_overlay"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), modLoc("item/armor_of_swiftness_feet"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), modLoc("item/armor_of_swiftness_feet"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get(), modLoc("item/armor_of_swiftness_feet"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), modLoc("item/armor_of_swiftness_feet_normal"), modLoc("item/armor_of_swiftness_feet_normal_overlay"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), modLoc("item/armor_of_swiftness_feet_enhanced"), modLoc("item/armor_of_swiftness_feet_enhanced_overlay"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get(), modLoc("item/armor_of_swiftness_feet_ultimate"), modLoc("item/armor_of_swiftness_feet_ultimate_overlay"));
 
-        item("armor_of_swiftness_head", mcLoc("item/leather_helmet"), modLoc("item/swiftness_head_overlay"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), modLoc("item/armor_of_swiftness_head"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), modLoc("item/armor_of_swiftness_head"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), modLoc("item/armor_of_swiftness_head"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), modLoc("item/armor_of_swiftness_head_normal"), modLoc("item/armor_of_swiftness_head_normal_overlay"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), modLoc("item/armor_of_swiftness_head_enhanced"), modLoc("item/armor_of_swiftness_head_enhanced_overlay"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), modLoc("item/armor_of_swiftness_head_ultimate"), modLoc("item/armor_of_swiftness_head_ultimate_overlay"));
 
-        item("armor_of_swiftness_legs", mcLoc("item/leather_leggings"), modLoc("item/swiftness_legs_overlay"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), modLoc("item/armor_of_swiftness_legs"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), modLoc("item/armor_of_swiftness_legs"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get(), modLoc("item/armor_of_swiftness_legs"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), modLoc("item/armor_of_swiftness_legs_normal"), modLoc("item/armor_of_swiftness_legs_normal_overlay"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), modLoc("item/armor_of_swiftness_legs_enhanced"), modLoc("item/armor_of_swiftness_legs_enhanced_overlay"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get(), modLoc("item/armor_of_swiftness_legs_ultimate"), modLoc("item/armor_of_swiftness_legs_ultimate_overlay"));
 
         withExistingParent(ModItems.ADVANCED_VAMPIRE_HUNTER_SPAWN_EGG.get(), mcLoc("item/template_spawn_egg"));
         withExistingParent(ModItems.ADVANCED_VAMPIRE_SPAWN_EGG.get(), mcLoc("item/template_spawn_egg"));

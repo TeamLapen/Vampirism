@@ -5,12 +5,12 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.items.ArmorOfSwiftnessItem;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
@@ -38,15 +38,7 @@ public class ModItemsRender {
     public static void registerColors(RegisterColorHandlersEvent.Item event) {
         // Swiftness armor
         event.register((stack, tintIndex) -> {
-            if (tintIndex == 0) {
-                return 10511680;
-            } else {
-                return switch (((ArmorOfSwiftnessItem) stack.getItem()).getVampirismTier()) {
-                    case ENHANCED -> 0x007CFF;
-                    case ULTIMATE -> 0x07F8FF;
-                    default -> 0xFFF100;
-                };
-            }
+            return tintIndex > 0 ? -1 : ((DyeableLeatherItem)stack.getItem()).getColor(stack);
         }, ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get());
         //Crossbow arrow
         event.register((stack, tintIndex) -> {
