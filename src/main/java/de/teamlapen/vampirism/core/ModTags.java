@@ -73,6 +73,11 @@ public class ModTags {
          */
         public static final Tag.Named<EntityType<?>> ADVANCED_VAMPIRE = tag("advanced_vampire");
 
+        /**
+         * Vanilla zombies
+         */
+        public static final Tag.Named<EntityType<?>> ZOMBIES = tag("zombies");
+
         private static Tag.Named<EntityType<?>> tag(ResourceLocation resourceLocation) {
             return EntityTypeTags.bind(resourceLocation.toString());
         }
