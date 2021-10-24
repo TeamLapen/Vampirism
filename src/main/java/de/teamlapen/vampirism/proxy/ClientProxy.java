@@ -206,7 +206,7 @@ public class ClientProxy extends CommonProxy {
             case LOAD_COMPLETE:
                 ModBlocksRender.registerColors();
                 ModItemsRender.registerColors();
-                ModItemsRender.registerItemModelProperty();
+                event.enqueueWork(ModItemsRender::registerItemModelPropertyUnsafe);
                 ModParticleFactories.registerFactories();
                 event.enqueueWork(ModScreens::registerScreensUnsafe);
                 skillTreeManager.init();

@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 @OnlyIn(Dist.CLIENT)
 public class ModItemsRender {
 
-    public static void registerItemModelProperty() {
+    public static void registerItemModelPropertyUnsafe() {
         Stream.of(ModItems.basic_crossbow, ModItems.basic_double_crossbow, ModItems.enhanced_crossbow, ModItems.enhanced_double_crossbow, ModItems.basic_tech_crossbow, ModItems.enhanced_tech_crossbow).forEach(item -> {
             ItemModelsProperties.register(item, new ResourceLocation(REFERENCE.MODID, "charged"), (stack, world, entity) -> {
                 if (entity == null) {
