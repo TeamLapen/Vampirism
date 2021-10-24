@@ -81,7 +81,7 @@ public class GeneralEventHandler {
                 event.getPlayer().sendMessage(new TranslatableComponent("text.vampirism.integrations_available.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.INTEGRATIONS_LINK)).setUnderlined(true)), Util.NIL_UUID);
             }
 
-            if (!ModList.get().isLoaded("guideapi-vp")) {
+            if (!ModList.get().isLoaded("guideapi_vp")) {
                 if (VampirismConfig.SERVER.infoAboutGuideAPI.get()) {
                     event.getPlayer().sendMessage(new TranslatableComponent("text.vampirism.guideapi_available.first"), Util.NIL_UUID);
                     event.getPlayer().sendMessage(new TranslatableComponent("text.vampirism.guideapi_available.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.GUIDEAPI_LINK)).setUnderlined(true)), Util.NIL_UUID);

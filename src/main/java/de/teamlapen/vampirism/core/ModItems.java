@@ -439,7 +439,7 @@ public class ModItems {
 
 
         if (VampirismMod.inDataGen) {
-            registry.register(new DummyItem().setRegistryName("guideapi-vp", "vampirism-guidebook"));
+            registry.register(new DummyItem().setRegistryName("guideapi_vp", "vampirism-guidebook"));
         }
     }
 
