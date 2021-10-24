@@ -47,16 +47,13 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
-        if (type == null) {
-            return getTextureLocationLeather(slot);
-        }
         switch (getVampirismTier()) {
             case ENHANCED:
-                return getTextureLocation("swiftness_enhanced", slot, type);
+                return getTextureLocation("armor_of_swiftness_enhanced", slot, type);
             case ULTIMATE:
-                return getTextureLocation("swiftness_ultimate", slot, type);
+                return getTextureLocation("armor_of_swiftness_ultimate", slot, type);
             default:
-                return getTextureLocation("swiftness", slot, type);
+                return getTextureLocation("armor_of_swiftness_normal", slot, type);
         }
     }
 
