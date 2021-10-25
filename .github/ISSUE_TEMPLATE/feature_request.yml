@@ -25,5 +25,5 @@ body:
     id: help
     attributes:
       label: Contributions
-      description: Can you provide additional resources
+      description: Can you provide additional resources?
       placeholder: Textures, models, etc.
