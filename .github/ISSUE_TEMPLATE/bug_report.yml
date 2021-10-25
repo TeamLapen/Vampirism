@@ -35,13 +35,6 @@ body:
       placeholder: 1.8.3
     validations:
       required: true
-  - type: textarea
-    id: other-version
-    attributes:
-      label: Other relevant mods
-      description: List any other interesting mods and their version here
-    validations:
-      required: false
   - type: input
     id: modpack
     attributes:
@@ -58,13 +51,22 @@ body:
         - Both
     validations:
       required: true
-  - type: input
+  - type: textarea
     id: description
     attributes:
       label: What happened?
       description: Please describe what happened or what you expected instead
     validations:
       required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. If your game crashes, this must be a crash-report
+      placeholder: |
+        If crashed either crash-xxx-server.txt or crash-xxx-client.txt
+        Otherwise logs/debug.log
+      render: shell
   - type: textarea
     id: reproduce
     attributes:
@@ -77,8 +79,9 @@ body:
     validations:
       required: false
   - type: textarea
-    id: logs
+    id: other-version
     attributes:
-      label: Relevant log output
-      description: Please copy and paste any relevant log output. If your game crashes, this must be a crash-report
-      render: shell
+      label: Other relevant mods
+      description: List any other interesting mods and their version here
+    validations:
+      required: false
