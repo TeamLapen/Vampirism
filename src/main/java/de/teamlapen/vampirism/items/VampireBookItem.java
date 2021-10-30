@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
@@ -14,7 +13,6 @@ import net.minecraft.item.WritableBookItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
-import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.util.*;
 import net.minecraft.util.text.*;
 import net.minecraft.world.World;
@@ -103,7 +101,7 @@ public class VampireBookItem extends VampirismItem {
                     for (int slot = 0; slot < nbttaglist.size(); ++slot) {
                         String s = nbttaglist.getString(slot);
 
-                        Object lvt_7_1_;
+                        ITextComponent lvt_7_1_;
                         try {
                             ITextComponent var11 = ITextComponent.Serializer.fromJsonLenient(s);
                             lvt_7_1_ = TextComponentUtils.updateForEntity(null, var11, player, 0);
@@ -111,14 +109,10 @@ public class VampireBookItem extends VampirismItem {
                             lvt_7_1_ = new StringTextComponent(s);
                         }
 
-                        nbttaglist.set(slot, StringNBT.valueOf(ITextComponent.Serializer.toJson((ITextComponent) lvt_7_1_)));
+                        nbttaglist.set(slot, StringNBT.valueOf(ITextComponent.Serializer.toJson(lvt_7_1_)));
                     }
 
                     nbttagcompound.put("pages", nbttaglist);
-                    if (player instanceof ServerPlayerEntity && player.getMainHandItem() == stack) {
-                        Slot var10 = player.containerMenu.slots.get(player.inventory.selected);
-                        ((ServerPlayerEntity) player).connection.send(new SSetSlotPacket(0, var10.index, stack));
-                    }
                 }
             }
         }
