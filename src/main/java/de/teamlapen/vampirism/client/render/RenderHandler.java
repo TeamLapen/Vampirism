@@ -238,7 +238,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     @SubscribeEvent
     public void onRenderLivingPre(RenderLivingEvent.Pre<PlayerEntity, PlayerModel<PlayerEntity>> event) {
         LivingEntity entity = event.getEntity();
-        if (entity instanceof PlayerEntity && VampirismPlayerAttributes.get(mc.player).getHuntSpecial().isDisguised()) {
+        if (entity instanceof PlayerEntity && VampirismPlayerAttributes.get(((PlayerEntity) entity)).getHuntSpecial().isDisguised()) {
             double dist = this.mc.player == null ? 0 : entity.distanceToSqr(this.mc.player);
             if (dist > 64) {
                 event.setCanceled(true);
