@@ -235,7 +235,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     @SubscribeEvent
     public void onRenderLivingPre(RenderLivingEvent.Pre<Player, PlayerModel<Player>> event) {
         LivingEntity entity = event.getEntity();
-        if (entity instanceof Player && VampirismPlayerAttributes.get(mc.player).getHuntSpecial().isDisguised()) {
+        if (entity instanceof Player && VampirismPlayerAttributes.get((Player) entity).getHuntSpecial().isDisguised()) {
             double dist = this.mc.player == null ? 0 : entity.distanceToSqr(this.mc.player);
             if (dist > 64) {
                 event.setCanceled(true);
