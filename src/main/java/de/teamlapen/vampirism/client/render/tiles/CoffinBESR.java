@@ -45,7 +45,7 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
             if (!isHeadSafe(tile.getLevel(), tile.getBlockPos())) return;
 
             // Calculate lid position
-            boolean occupied = tile.hasLevel() && CoffinBlock.isOccupied(tile.getLevel(), tile.getBlockPos());
+            boolean occupied = tile.hasLevel() && CoffinBlock.isClosed(tile.getLevel(), tile.getBlockPos());
             if (!occupied && tile.lidPos > 0)
                 tile.lidPos--;
             else if (occupied && tile.lidPos < maxLidPos)
