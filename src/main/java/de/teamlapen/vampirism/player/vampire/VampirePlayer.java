@@ -50,6 +50,7 @@ import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -60,6 +61,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -838,10 +840,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     player.setAirSupply(300);
                     if (player.tickCount % 16 == 4 && !getSpecialAttributes().waterResistance && !player.abilities.instabuild) {
                         if (player.isInWater()) {
-                            player.addEffect(new EffectInstance(Effects.WEAKNESS, 80, (int) (getLevel() / (float) getMaxLevel() * 3)));
-
-                        } else if (player.isInWaterOrRain()) {
-                            player.addEffect(new EffectInstance(Effects.WEAKNESS, 80, 0));
+                            FluidState state1 = world.getFluidState(player.blockPosition());
+                            FluidState state2 = world.getFluidState(player.blockPosition().above());
+                            if ((FluidTags.WATER.contains(state1.getType()) && (state1.getFlow(world, player.blockPosition()).lengthSqr() > 0)) || (FluidTags.WATER.contains(state2.getType()) && (state2.getFlow(world, player.blockPosition().above()).lengthSqr() > 0))) {
+                                player.addEffect(new EffectInstance(Effects.WEAKNESS, 80, (int) (getLevel() / (float) getMaxLevel() * 3)));
+                            }
                         }
                     }
                 }
