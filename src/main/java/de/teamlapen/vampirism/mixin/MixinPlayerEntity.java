@@ -2,11 +2,15 @@ package de.teamlapen.vampirism.mixin;
 
 import de.teamlapen.vampirism.player.IVampirismPlayer;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.util.MixinHooks;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(Player.class)
 public abstract class MixinPlayerEntity extends LivingEntity implements IVampirismPlayer {
@@ -21,5 +25,10 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IVampiri
     @Override
     public VampirismPlayerAttributes getVampAtts() {
         return vampirismPlayerAttributes;
+    }
+
+    @ModifyVariable(method = "attack(Lnet/minecraft/world/entity/Entity;)V", at = @At(value = "STORE", ordinal = 0), ordinal = 1)
+    public float vampireSlayerEnchantment(float damage, Entity target) {
+        return MixinHooks.calculateVampireSlayerEnchantments(target, this.getMainHandItem());
     }
 }

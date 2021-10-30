@@ -13,6 +13,7 @@
     "MixinEntityPredicate",
     "MixinJigsawPlacer",
     "MixinLivingEntity",
+    "MixinMobEntity",
     "MixinPlayerEntity",
     "MixinPotionBrewing",
     "MultiNoiseBiomeSourcePresetAccessor",
