@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.blocks;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableTable;
+import com.google.common.collect.Table;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
@@ -15,6 +17,7 @@ import net.minecraft.item.DyeColor;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathType;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.stats.Stats;
@@ -24,6 +27,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.*;
@@ -41,7 +45,8 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     public static final String name = "coffin";
     public static final EnumProperty<CoffinPart> PART = EnumProperty.create("part", CoffinPart.class);
-    private static final VoxelShape shape = makeShape();
+    public static final BooleanProperty CLOSED = BooleanProperty.create("closed");
+    private static final Table<Direction, Boolean, VoxelShape> shapes;
     private static final Map<PlayerEntity.SleepResult, ITextComponent> sleepResults = ImmutableMap.of(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW, new TranslationTextComponent("text.vampirism.coffin.no_sleep"), PlayerEntity.SleepResult.TOO_FAR_AWAY, new TranslationTextComponent("text.vampirism.coffin.too_far_away"), PlayerEntity.SleepResult.OBSTRUCTED, new TranslationTextComponent("text.vampirism.coffin.obstructed"));
 
     public static boolean isOccupied(IBlockReader world, BlockPos pos) {
@@ -49,6 +54,10 @@ public class CoffinBlock extends VampirismBlockContainer {
         return state.getBlock() instanceof CoffinBlock && state.getValue(BedBlock.OCCUPIED);
     }
 
+    public static boolean isClosed(IBlockReader world, BlockPos pos) {
+        BlockState state = world.getBlockState(pos);
+        return state.getBlock() instanceof CoffinBlock && state.getValue(CLOSED);
+    }
 
     public static boolean isHead(IBlockReader world, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
@@ -59,13 +68,35 @@ public class CoffinBlock extends VampirismBlockContainer {
         return type == CoffinPart.FOOT ? facing : facing.getOpposite();
     }
 
-    private static VoxelShape makeShape() {
-        return Block.box(0, 0, 0, 16, 13, 16);
+    static {
+        VoxelShape bottom = Block.box(0,0,0,16,1,16);
+        VoxelShape lid = Block.box(0,12,0,16,13,16);
+
+        VoxelShape w = Block.box(0,0,0,1,13,16);
+        VoxelShape s = Block.box(0,0,15,16,13,16);
+        VoxelShape e = Block.box(15,0,0,16,13,16);
+        VoxelShape n = Block.box(0,0,0,16,13,1);
+
+        VoxelShape west = VoxelShapes.or(bottom, n, s, e);
+        VoxelShape south = VoxelShapes.or(bottom, w, n, e);
+        VoxelShape east = VoxelShapes.or(bottom, w, s, n);
+        VoxelShape north = VoxelShapes.or(bottom, w, s, e);
+
+        ImmutableTable.Builder<Direction, Boolean, VoxelShape> shapeBuilder = ImmutableTable.builder();
+        shapeBuilder.put(Direction.WEST, false, west);
+        shapeBuilder.put(Direction.SOUTH, false, south);
+        shapeBuilder.put(Direction.NORTH, false, north);
+        shapeBuilder.put(Direction.EAST, false, east);
+        shapeBuilder.put(Direction.WEST, true, VoxelShapes.or(west, lid));
+        shapeBuilder.put(Direction.SOUTH, true, VoxelShapes.or(south, lid));
+        shapeBuilder.put(Direction.NORTH, true, VoxelShapes.or(north, lid));
+        shapeBuilder.put(Direction.EAST, true, VoxelShapes.or(east, lid));
+        shapes = shapeBuilder.build();
     }
 
     public CoffinBlock() {
         super(name, Properties.of(Material.WOOD).strength(0.2f).noOcclusion());
-        this.registerDefaultState(this.getStateDefinition().any().setValue(BedBlock.OCCUPIED, Boolean.FALSE).setValue(PART, CoffinPart.FOOT).setValue(HORIZONTAL_FACING, Direction.NORTH));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(BedBlock.OCCUPIED, Boolean.FALSE).setValue(PART, CoffinPart.FOOT).setValue(HORIZONTAL_FACING, Direction.NORTH).setValue(CLOSED, false));
 
     }
 
@@ -103,7 +134,8 @@ public class CoffinBlock extends VampirismBlockContainer {
     @Nonnull
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return shape;
+        Direction facing = state.getValue(HORIZONTAL_FACING);
+        return shapes.get(state.getValue(PART) == CoffinPart.FOOT ? facing:facing.getOpposite(), state.getValue(CLOSED));
     }
 
     @Override
@@ -125,7 +157,7 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     @Override
     public boolean isBed(BlockState state, IBlockReader world, BlockPos pos, Entity player) {
-        return true;
+        return !state.getValue(CLOSED) || state.getValue(BedBlock.OCCUPIED);
     }
 
     @Override
@@ -204,8 +236,17 @@ public class CoffinBlock extends VampirismBlockContainer {
                 }
             }
 
-            if (VampirismPlayerAttributes.get(player).vampireLevel == 0) {
+            if (player.isShiftKeyDown() && !state.getValue(BedBlock.OCCUPIED)) {
+                worldIn.setBlock(pos, state.setValue(CLOSED, !state.getValue(CLOSED)), 3);
+                return ActionResultType.SUCCESS;
+            } else if (VampirismPlayerAttributes.get(player).vampireLevel == 0) {
                 player.displayClientMessage(new TranslationTextComponent("text.vampirism.coffin.cant_use"), true);
+                return ActionResultType.SUCCESS;
+            } else if (state.getValue(BedBlock.OCCUPIED)) {
+                player.displayClientMessage(new TranslationTextComponent("text.vampirism.coffin.occupied"), true);
+                return ActionResultType.SUCCESS;
+            } else if (state.getValue(CLOSED)) {
+                player.displayClientMessage(new TranslationTextComponent("text.vampirism.coffin.closed"), true);
                 return ActionResultType.SUCCESS;
             }
 
@@ -228,19 +269,26 @@ public class CoffinBlock extends VampirismBlockContainer {
                         player.displayClientMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
                     }
                 }).ifRight(u -> {
-                    BlockState blockstate = worldIn.getBlockState(finalPos);
-                    if (blockstate.getBlock() instanceof CoffinBlock) {
-                        worldIn.setBlock(finalPos, blockstate.setValue(BedBlock.OCCUPIED, Boolean.TRUE), 3);
-                    }
+                    setCoffinSleepPosition(player, finalPos);
                 });
                 return ActionResultType.SUCCESS;
             }
         }
     }
 
+    public static void setCoffinSleepPosition(PlayerEntity player, BlockPos blockPos) {
+        player.setPos(blockPos.getX() + 0.5D, blockPos.getY() + 0.1D, blockPos.getZ() + 0.5D);
+    }
+
+    @Override
+    public void setBedOccupied(BlockState state, World world, BlockPos pos, LivingEntity sleeper, boolean occupied) {
+        super.setBedOccupied(state, world, pos, sleeper, occupied);
+        world.setBlock(pos, world.getBlockState(pos).setValue(CLOSED, occupied), 3);
+    }
+
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(HORIZONTAL_FACING, BedBlock.OCCUPIED, PART);
+        builder.add(HORIZONTAL_FACING, BedBlock.OCCUPIED, PART, CLOSED);
     }
 
 
