@@ -1,6 +1,13 @@
 package de.teamlapen.vampirism.util;
 
 import com.google.common.collect.Lists;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.core.ModEnchantments;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
 import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
@@ -50,6 +57,14 @@ public class MixinHooks {
     public static boolean checkStructures(List<? super AbstractVillagePiece> pieces, JigsawPiece jigsawPiece) {
         if (!onlyOneStructure.contains(jigsawPiece.toString())) return false;
         return pieces.stream().anyMatch(structurePiece -> onlyOneStructure.stream().anyMatch(string -> ((AbstractVillagePiece) structurePiece).getElement().toString().equals(string)));
+    }
+
+    public static float calculateVampireSlayerEnchantments(Entity entity, ItemStack item) {
+        if (!(entity instanceof PlayerEntity)) return 0;
+        if (!Helper.isVampire(entity)) return 0;
+        Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(item);
+        if (!enchantments.containsKey(ModEnchantments.vampireslayer)) return 0;
+        return ModEnchantments.vampireslayer.getDamageBonus(enchantments.get(ModEnchantments.vampireslayer), VReference.VAMPIRE_CREATURE_ATTRIBUTE);
     }
 
     private static String singleJigsawString(ResourceLocation resourceLocation) {
