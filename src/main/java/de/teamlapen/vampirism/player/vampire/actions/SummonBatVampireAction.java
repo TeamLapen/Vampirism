@@ -59,4 +59,9 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     public boolean isEnabled() {
         return VampirismConfig.BALANCE.vaSummonBatsEnabled.get();
     }
+
+    @Override
+    public boolean showHudCooldown(PlayerEntity player) {
+        return true;
+    }
 }

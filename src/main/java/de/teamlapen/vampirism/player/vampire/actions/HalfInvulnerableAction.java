@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 
@@ -57,6 +58,16 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     protected boolean activate(IVampirePlayer vampire) {
         ((VampirePlayer) vampire).getSpecialAttributes().half_invulnerable = true;
         addEffectInstance(vampire, new EffectInstance(Effects.MOVEMENT_SLOWDOWN, getDuration(vampire) - 1, 1, false, false));
+        return true;
+    }
+
+    @Override
+    public boolean showHudCooldown(PlayerEntity player) {
+        return true;
+    }
+
+    @Override
+    public boolean showHudDuration(PlayerEntity player) {
         return true;
     }
 

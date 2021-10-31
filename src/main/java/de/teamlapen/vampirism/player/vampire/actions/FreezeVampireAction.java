@@ -54,4 +54,8 @@ public class FreezeVampireAction extends DefaultVampireAction {
         return VampirismConfig.BALANCE.vaFreezeEnabled.get();
     }
 
+    @Override
+    public boolean showHudCooldown(PlayerEntity player) {
+        return true;
+    }
 }

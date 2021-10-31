@@ -7,12 +7,16 @@ import de.teamlapen.lib.lib.client.gui.ExtendedGui;
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
+import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -225,33 +229,17 @@ public class VampirismHUDOverlay extends ExtendedGui {
      */
     @SubscribeEvent
     public void onRenderExperienceBar(RenderGameOverlayEvent.Post event) {
-
-        if (event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE || mc.player == null || !mc.player.isAlive()) {
+        if (mc.player == null || !mc.player.isAlive()) {
             return;
         }
         MatrixStack stack = event.getMatrixStack();
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        IFactionPlayerHandler handler = FactionPlayerHandler.get(mc.player);
-        IPlayableFaction<?> faction = handler.getCurrentFaction();
-        if (mc.gameMode.hasExperience() && faction != null && faction.renderLevel()) {
-            // boolean flag1 = false;
-            int color = faction.getColor().getRGB();
-            int lord = handler.getLordLevel();
-            String text;
-            if (lord > 0) {
-                String title = handler.getLordTitle().getString();
-                text = title.substring(0, Math.min(3, title.length()));
-            } else {
-                text = "" + handler.getCurrentLevel();
-            }
-            int x = (this.mc.getWindow().getGuiScaledWidth() - mc.font.width(text)) / 2 + VampirismConfig.CLIENT.guiLevelOffsetX.get();
-            int y = this.mc.getWindow().getGuiScaledHeight() - VampirismConfig.CLIENT.guiLevelOffsetY.get();
-            mc.font.draw(stack, text, x + 1, y, 0);
-            mc.font.draw(stack, text, x - 1, y, 0);
-            mc.font.draw(stack, text, x, y + 1, 0);
-            mc.font.draw(stack, text, x, y - 1, 0);
-            mc.font.draw(stack, text, x, y, color);
+        switch (event.getType()){
+            case EXPERIENCE:
+                this.renderFactionLevel(stack);
+                break;
+            case ALL:
+                this.renderAction(stack);
+                break;
         }
     }
 
@@ -483,6 +471,83 @@ public class VampirismHUDOverlay extends ExtendedGui {
             this.blit(mStack, k, j, 68, 94, 16, 16);
             this.blit(mStack, k, j, 36, 94, 16, 4);
             this.blit(mStack, k, j, 52, 94, 17, 4);
+        }
+    }
+
+    private void renderFactionLevel(MatrixStack stack) {
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        IFactionPlayerHandler handler = FactionPlayerHandler.get(mc.player);
+        IPlayableFaction<?> faction = handler.getCurrentFaction();
+        if (mc.gameMode.hasExperience() && faction != null && faction.renderLevel()) {
+            // boolean flag1 = false;
+            int color = faction.getColor().getRGB();
+            int lord = handler.getLordLevel();
+            String text;
+            if (lord > 0) {
+                String title = handler.getLordTitle().getString();
+                text = title.substring(0, Math.min(3, title.length()));
+            } else {
+                text = "" + handler.getCurrentLevel();
+            }
+            int x = (this.mc.getWindow().getGuiScaledWidth() - mc.font.width(text)) / 2 + VampirismConfig.CLIENT.guiLevelOffsetX.get();
+            int y = this.mc.getWindow().getGuiScaledHeight() - VampirismConfig.CLIENT.guiLevelOffsetY.get();
+            mc.font.draw(stack, text, x + 1, y, 0);
+            mc.font.draw(stack, text, x - 1, y, 0);
+            mc.font.draw(stack, text, x, y + 1, 0);
+            mc.font.draw(stack, text, x, y - 1, 0);
+            mc.font.draw(stack, text, x, y, color);
+        }
+    }
+
+    private void renderAction(MatrixStack matrixStack) {
+        if (VampirismAPI.factionRegistry().getFaction(this.mc.player) != null) {
+            VampirismAPI.getFactionPlayerHandler(this.mc.player).ifPresent(playerHandler -> {
+                playerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> {
+                    IActionHandler<?> actionHandler = factionPlayer.getActionHandler();
+
+                    int x = 12;
+                    int y = this.mc.getWindow().getGuiScaledHeight() - 27;
+
+                    // render action durations
+                    if (!VampirismConfig.CLIENT.disableHudActionDurationRendering.get()) {
+                        for (IAction action : factionPlayer.getActionHandler().getUnlockedActions()) {
+                            if (!(action instanceof ILastingAction)) continue;
+                            if (!(((ILastingAction<?>) action).showHudDuration(this.mc.player))) continue;
+                            if (!actionHandler.isActionActive(((ILastingAction<?>) action))) continue;
+                            ResourceLocation loc = new ResourceLocation(action.getRegistryName().getNamespace(), "textures/actions/" + action.getRegistryName().getPath() + ".png");
+                            this.mc.getTextureManager().bind(loc);
+                            int perc = (int) ((1 - actionHandler.getPercentageForAction(action)) * 16);
+                            //render gray transparent background for remaining duration
+                            this.fillGradient(matrixStack, x, y + perc, x + 16, y + 16, 0x44888888/*Color.GRAY - 0xBB000000 */, 0x44888888/*Color.GRAY - 0xBB000000 */);
+                            //render action icon transparent
+                            RenderSystem.enableBlend();
+                            RenderSystem.color4f(1, 1, 1, 0.5f);
+                            blit(matrixStack, x, y, this.getBlitOffset(), 0, 0, 16, 16, 16, 16);
+                            x += 17;
+                        }
+                    }
+
+                    // render action cooldowns
+                    x = this.mc.getWindow().getGuiScaledWidth() - 12 - 16;
+                    if (!VampirismConfig.CLIENT.disableHudActionDurationRendering.get()) {
+                        for (IAction action : factionPlayer.getActionHandler().getUnlockedActions()) {
+                            if (!(action.showHudCooldown(this.mc.player))) continue;
+                            if (!actionHandler.isActionOnCooldown(action)) continue;
+                            ResourceLocation loc = new ResourceLocation(action.getRegistryName().getNamespace(), "textures/actions/" + action.getRegistryName().getPath() + ".png");
+                            this.mc.getTextureManager().bind(loc);
+                            int perc = (int) ((1 - - actionHandler.getPercentageForAction(action)) * 16);
+                            //render gray transparent background for remaining cooldown
+                            this.fillGradient(matrixStack, x, y + perc, x + 16, y + 16, 0x44888888/*Color.GRAY - 0xBB000000 */, 0x44888888/*Color.GRAY - 0xBB000000 */);
+                            //render action icon transparent
+                            RenderSystem.enableBlend();
+                            RenderSystem.color4f(1, 1, 1, 0.5f);
+                            blit(matrixStack, x, y, this.getBlitOffset(), 0, 0, 16, 16, 16, 16);
+                            x -= 17;
+                        }
+                    }
+                });
+            });
         }
     }
 

@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -60,6 +61,16 @@ public class PotionResistanceHunterAction extends DefaultHunterAction implements
     @Override
     protected boolean activate(IHunterPlayer player) {
         onUpdate(player);
+        return true;
+    }
+
+    @Override
+    public boolean showHudCooldown(PlayerEntity player) {
+        return true;
+    }
+
+    @Override
+    public boolean showHudDuration(PlayerEntity player) {
         return true;
     }
 }

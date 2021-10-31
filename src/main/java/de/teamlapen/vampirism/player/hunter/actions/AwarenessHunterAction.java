@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 
 public class AwarenessHunterAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
@@ -80,6 +81,16 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
                 - r, player.getRepresentingEntity().getX() + r, player.getRepresentingEntity().getY() + r + 1, player.getRepresentingEntity().getZ() + r));
         if (closestVampire != null) return closestVampire.distanceTo(player.getRepresentingEntity());
         return Double.MAX_VALUE;
+    }
+
+    @Override
+    public boolean showHudCooldown(PlayerEntity player) {
+        return true;
+    }
+
+    @Override
+    public boolean showHudDuration(PlayerEntity player) {
+        return true;
     }
 
 }

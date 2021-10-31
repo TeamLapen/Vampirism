@@ -181,4 +181,9 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             player.setPos(player.getX(), player.getY() + (PLAYER_HEIGHT - BAT_SIZE.height), player.getZ());
     }
 
+    @Override
+    public boolean showHudDuration(PlayerEntity player) {
+        return true;
+    }
+
 }

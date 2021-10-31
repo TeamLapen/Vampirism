@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.core.ModSounds;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.ai.goal.TargetGoal;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 
@@ -31,6 +32,11 @@ public class HissingAction extends DefaultVampireAction {
                 e.setTarget(null);
             }
         });
+        return true;
+    }
+
+    @Override
+    public boolean showHudCooldown(PlayerEntity player) {
         return true;
     }
 }

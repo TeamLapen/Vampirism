@@ -100,4 +100,9 @@ public class TeleportVampireAction extends DefaultVampireAction {
     public boolean isEnabled() {
         return VampirismConfig.BALANCE.vaTeleportEnabled.get();
     }
+
+    @Override
+    public boolean showHudCooldown(PlayerEntity player) {
+        return true;
+    }
 }

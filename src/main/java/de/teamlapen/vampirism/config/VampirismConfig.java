@@ -231,6 +231,8 @@ public class VampirismConfig {
         public final ForgeConfigSpec.ConfigValue<String> actionOrder;//TODO 1.17 make List<? extends String>
         public final ForgeConfigSpec.BooleanValue disableFovChange;
         public final ForgeConfigSpec.BooleanValue disableBloodVisionRendering;
+        public final ForgeConfigSpec.BooleanValue disableHudActionCooldownRendering;
+        public final ForgeConfigSpec.BooleanValue disableHudActionDurationRendering;
 
         Client(ForgeConfigSpec.Builder builder) {
             builder.comment("Client configuration settings")
@@ -256,6 +258,8 @@ public class VampirismConfig {
             actionOrder = builder.comment("Action Order in Select Action Screen (reset with \"\"), unnamed actions will appended").define("actionOrder", "");
             disableFovChange = builder.comment("Disable the FOV change caused by the speed buf for vampire players").define("disableFovChange", false);
             disableBloodVisionRendering = builder.comment("Disable the effect of blood vision. It can still be unlocked and activated but does not have any effect").define("disableBloodVisionRendering", false);
+            disableHudActionCooldownRendering = builder.comment("Disable the rendering of the action cooldowns in the HUD").define("disableHudActionCooldownRendering", false);
+            disableHudActionDurationRendering = builder.comment("Disable the rendering of the action durations in the HUD").define("disableHudActionDurationRendering", false);
 
             builder.pop();
 

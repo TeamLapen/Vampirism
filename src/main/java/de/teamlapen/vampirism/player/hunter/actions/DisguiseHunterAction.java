@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 /**
  * Allows a hunter player to disguise himself which makes him less visible and reduces the detection radius for mobs
@@ -64,5 +65,10 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     public boolean onUpdate(IHunterPlayer player) {
         ((HunterPlayer) player).getSpecialAttributes().increaseDisguiseTicks();
         return false;
+    }
+
+    @Override
+    public boolean showHudDuration(PlayerEntity player) {
+        return true;
     }
 }
