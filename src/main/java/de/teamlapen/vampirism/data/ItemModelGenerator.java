@@ -295,6 +295,10 @@ public class ItemModelGenerator extends ItemModelProvider {
 
         withExistingParent(ModItems.item_candelabra, modLoc("block/candelabra"));
 
+        withExistingParent(ModItems.crucifix_normal, modLoc("item/crucifix")).texture("texture", "item/crucifix_wooden");
+        withExistingParent(ModItems.crucifix_enhanced, modLoc("item/crucifix")).texture("texture", "item/crucifix_iron");
+        withExistingParent(ModItems.crucifix_ultimate, modLoc("item/crucifix")).texture("texture", "item/crucifix_gold");
+
 
         singleTexture("blood_bottle", mcLoc("item/generated"), "layer0", modLoc("item/blood_bottle_0"))
                 .override().predicate(mcLoc("damage"), 0f).model(withExistingParent("blood_bottle_0", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_0"))).end()

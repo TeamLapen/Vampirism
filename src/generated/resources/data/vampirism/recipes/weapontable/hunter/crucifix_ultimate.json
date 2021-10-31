@@ -1,0 +1,31 @@
+{
+  "type": "vampirism:shaped_crafting_weapontable",
+  "pattern": [
+    "XYYX",
+    "YZAY",
+    "XYYX",
+    "XYYX"
+  ],
+  "key": {
+    "X": {
+      "item": "vampirism:item_alchemical_fire"
+    },
+    "Y": {
+      "tag": "forge:storage_blocks/gold"
+    },
+    "Z": {
+      "item": "vampirism:holy_water_bottle_enhanced"
+    },
+    "A": {
+      "item": "vampirism:stake"
+    }
+  },
+  "result": {
+    "item": "vampirism:crucifix_ultimate"
+  },
+  "lava": 1,
+  "skill": [
+    "vampirism:ultimate_crucifix"
+  ],
+  "level": 1
+}

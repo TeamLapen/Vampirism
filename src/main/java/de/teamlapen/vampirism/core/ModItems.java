@@ -205,6 +205,9 @@ public class ModItems {
     public static final SignItem dark_spruce_sign = getNull();
     public static final SignItem cursed_spruce_sign = getNull();
 
+    public static final CrucifixItem crucifix_normal = getNull();
+    public static final CrucifixItem crucifix_enhanced = getNull();
+    public static final CrucifixItem crucifix_ultimate = getNull();
 
     static void registerCraftingRecipes() {
         // Brewing
@@ -417,6 +420,10 @@ public class ModItems {
 
         registry.register(new SignItem((new Item.Properties()).stacksTo(16).tab(ItemGroup.TAB_DECORATIONS), ModBlocks.dark_spruce_sign, ModBlocks.dark_spruce_wall_sign).setRegistryName(REFERENCE.MODID, "dark_spruce_sign"));
         registry.register(new SignItem((new Item.Properties()).stacksTo(16).tab(ItemGroup.TAB_DECORATIONS), ModBlocks.cursed_spruce_sign, ModBlocks.cursed_spruce_wall_sign).setRegistryName(REFERENCE.MODID, "cursed_spruce_sign"));
+
+        registry.register(new CrucifixItem(IItemWithTier.TIER.NORMAL));
+        registry.register(new CrucifixItem(IItemWithTier.TIER.ENHANCED));
+        registry.register(new CrucifixItem(IItemWithTier.TIER.ULTIMATE));
 
         if (VampirismMod.inDataGen) {
             registry.register(new DummyItem().setRegistryName("guideapi-vp", "vampirism-guidebook"));
