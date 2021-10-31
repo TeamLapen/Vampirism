@@ -31,6 +31,11 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
     }
 
     @Override
+    public boolean showHudCooldown(Player player) {
+        return true;
+    }
+
+    @Override
     protected boolean activate(IVampirePlayer player) {
         Player shooter = player.getRepresentingPlayer();
 

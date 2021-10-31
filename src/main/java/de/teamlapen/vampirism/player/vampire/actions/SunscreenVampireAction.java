@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModRefinements;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.player.Player;
 
 public class SunscreenVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
@@ -53,5 +54,15 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
         return false;
+    }
+
+    @Override
+    public boolean showHudCooldown(Player player) {
+        return true;
+    }
+
+    @Override
+    public boolean showHudDuration(Player player) {
+        return true;
     }
 }

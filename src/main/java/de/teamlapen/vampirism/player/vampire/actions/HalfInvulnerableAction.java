@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
 
 public class HalfInvulnerableAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
@@ -54,6 +55,16 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     protected boolean activate(IVampirePlayer vampire) {
         ((VampirePlayer) vampire).getSpecialAttributes().half_invulnerable = true;
         addEffectInstance(vampire, new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, getDuration(vampire) - 1, 1, false, false));
+        return true;
+    }
+
+    @Override
+    public boolean showHudCooldown(Player player) {
+        return true;
+    }
+
+    @Override
+    public boolean showHudDuration(Player player) {
         return true;
     }
 

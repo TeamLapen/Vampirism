@@ -8,10 +8,7 @@ import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.*;
-import de.teamlapen.vampirism.client.gui.overlay.BloodBarOverlay;
-import de.teamlapen.vampirism.client.gui.overlay.CustomBossEventOverlay;
-import de.teamlapen.vampirism.client.gui.overlay.FactionLevelOverlay;
-import de.teamlapen.vampirism.client.gui.overlay.VampirismHUDOverlay;
+import de.teamlapen.vampirism.client.gui.overlay.*;
 import de.teamlapen.vampirism.client.render.RenderHandler;
 import de.teamlapen.vampirism.client.render.VampirismBlockEntityWitoutLevelRenderer;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
@@ -242,6 +239,8 @@ public class ClientProxy extends CommonProxy {
         VIngameOverlays.FACTION_RAID_BAR_ELEMENT = this.bossInfoOverlay = new CustomBossEventOverlay();
         VIngameOverlays.BLOOD_BAR_ELEMENT = new BloodBarOverlay();
         VIngameOverlays.FACTION_LEVEL_ELEMENT = new FactionLevelOverlay();
+        VIngameOverlays.ACTION_COOLDOWN_ELEMENT = new ActionCooldownOverlay();
+        VIngameOverlays.ACTION_DURATION_ELEMENT = new ActionDurationOverlay();
     }
 
     /**

@@ -211,7 +211,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     this.blit(event.getPoseStack(), x, y, 0, 19, 16, 2);
                     this.blit(event.getPoseStack(), x, y, 16, 19, l, 2);
                 }
-
             }
         }
     }
@@ -406,5 +405,4 @@ public class VampirismHUDOverlay extends ExtendedGui {
             this.blit(mStack, k, j, 52, 94, 17, 4);
         }
     }
-
 }

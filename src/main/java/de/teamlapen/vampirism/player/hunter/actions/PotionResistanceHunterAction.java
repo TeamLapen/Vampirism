@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.core.ModEffects;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.Collection;
 
@@ -59,6 +60,16 @@ public class PotionResistanceHunterAction extends DefaultHunterAction implements
     @Override
     protected boolean activate(IHunterPlayer player) {
         onUpdate(player);
+        return true;
+    }
+
+    @Override
+    public boolean showHudCooldown(Player player) {
+        return true;
+    }
+
+    @Override
+    public boolean showHudDuration(Player player) {
         return true;
     }
 }

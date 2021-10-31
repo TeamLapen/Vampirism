@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
 
 public class RageVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
@@ -63,5 +64,15 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
         return false;
+    }
+
+    @Override
+    public boolean showHudCooldown(Player player) {
+        return true;
+    }
+
+    @Override
+    public boolean showHudDuration(Player player) {
+        return true;
     }
 }

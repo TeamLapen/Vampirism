@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * Disguise skill
@@ -55,5 +56,15 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
     @Override
     public boolean onUpdate(IVampirePlayer player) {
         return false;
+    }
+
+    @Override
+    public boolean showHudCooldown(Player player) {
+        return true;
+    }
+
+    @Override
+    public boolean showHudDuration(Player player) {
+        return true;
     }
 }

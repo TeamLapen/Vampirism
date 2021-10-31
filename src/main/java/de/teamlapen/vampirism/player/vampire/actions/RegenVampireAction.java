@@ -34,4 +34,9 @@ public class RegenVampireAction extends DefaultVampireAction {
     public boolean isEnabled() {
         return VampirismConfig.BALANCE.vaRegenerationEnabled.get();
     }
+
+    @Override
+    public boolean showHudCooldown(Player player) {
+        return true;
+    }
 }

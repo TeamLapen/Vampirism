@@ -35,4 +35,9 @@ public class HissingAction extends DefaultVampireAction {
         });
         return true;
     }
+
+    @Override
+    public boolean showHudCooldown(Player player) {
+        return true;
+    }
 }

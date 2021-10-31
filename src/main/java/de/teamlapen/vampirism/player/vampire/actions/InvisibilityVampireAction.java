@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import net.minecraft.world.entity.player.Player;
 
 
 public class InvisibilityVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
@@ -55,5 +56,15 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
             vampire.getRepresentingPlayer().setInvisible(true);
         }
         return false;
+    }
+
+    @Override
+    public boolean showHudCooldown(Player player) {
+        return true;
+    }
+
+    @Override
+    public boolean showHudDuration(Player player) {
+        return true;
     }
 }
