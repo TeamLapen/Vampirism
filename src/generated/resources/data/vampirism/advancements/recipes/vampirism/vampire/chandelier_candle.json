@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:vampire/chandelier_candle"
+    ]
+  },
+  "criteria": {
+    "has_honey": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:candles"
+          }
+        ]
+      }
+    },
+    "has_candelabra": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "vampirism:item_candelabra"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:vampire/chandelier_candle"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_honey",
+      "has_candelabra",
+      "has_the_recipe"
+    ]
+  ]
+}

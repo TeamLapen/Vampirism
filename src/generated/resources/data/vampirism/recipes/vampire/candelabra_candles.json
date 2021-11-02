@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "YYY",
+    "ZAZ"
+  ],
+  "key": {
+    "Y": {
+      "tag": "minecraft:candles"
+    },
+    "Z": {
+      "tag": "forge:ingots/iron"
+    },
+    "A": {
+      "tag": "forge:ingots/gold"
+    }
+  },
+  "result": {
+    "item": "vampirism:item_candelabra"
+  }
+}
