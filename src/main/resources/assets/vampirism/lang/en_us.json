@@ -598,6 +598,7 @@
   "block.vampirism.tombstone2": "Tombstone",
   "block.vampirism.tombstone3": "Large Tombstone",
   "block.vampirism.grave_cage": "Grave Cage",
+  "block.vampirism.cursed_grass": "Cursed Grass",
   "__comment": "items",
   "item.vampirism.hunter_intel": "Hunter Intel",
   "item.vampirism.pure_blood": "Pure Blood",

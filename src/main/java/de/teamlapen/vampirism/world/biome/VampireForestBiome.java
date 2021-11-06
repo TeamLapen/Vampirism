@@ -15,7 +15,7 @@ public class VampireForestBiome {
     }
 
     public static Biome.Builder createBiomeBuilder(float depth, float scale, MobSpawnInfo.Builder spawnBuilder, BiomeAmbience.Builder ambienceBuilder) {
-        BiomeGenerationSettings.Builder builder = new BiomeGenerationSettings.Builder().surfaceBuilder(SurfaceBuilder.DEFAULT.configured(new SurfaceBuilderConfig(ModBlocks.cursed_earth.defaultBlockState(), ModBlocks.cursed_earth.defaultBlockState(), ModBlocks.cursed_earth.defaultBlockState())));
+        BiomeGenerationSettings.Builder builder = new BiomeGenerationSettings.Builder().surfaceBuilder(SurfaceBuilder.DEFAULT.configured(new SurfaceBuilderConfig(ModBlocks.cursed_grass.defaultBlockState(), ModBlocks.cursed_earth.defaultBlockState(), ModBlocks.cursed_earth.defaultBlockState())));
         DefaultBiomeFeatures.addDefaultCarvers(builder); //carver
         VampirismBiomeFeatures.addModdedWaterLake(builder);
 

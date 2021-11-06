@@ -296,7 +296,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
         boolean vampireBiome = ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(iWorld, this.blockPosition())) || ModBiomes.vampire_forest_hills.getRegistryName().equals(Helper.getBiomeId(iWorld, this.blockPosition()));
         if (!vampireBiome) return isLowLightLevel(iWorld);
         BlockState iblockstate = iWorld.getBlockState((this.blockPosition()).below());
-        return ModBlocks.cursed_earth.equals(iblockstate.getBlock());
+        return iblockstate.is(ModTags.Blocks.CURSEDEARTH);
     }
 
     public enum SpawnRestriction {

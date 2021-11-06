@@ -225,5 +225,9 @@ public class BlockStateGenerator extends BlockStateProvider {
         horizontalBlock(ModBlocks.tombstone2, models().getExistingFile(modLoc("block/tombstone2")));
         horizontalBlock(ModBlocks.tombstone3, models().getExistingFile(modLoc("block/tombstone3")));
         horizontalBlock(ModBlocks.grave_cage, models().getExistingFile(modLoc("block/grave_cage")));
+
+        getMultipartBuilder(ModBlocks.cursed_grass)
+                .part().modelFile(models().cubeBottomTop(ModBlocks.cursed_grass.getRegistryName().toString(),modLoc("block/cursed_grass_side"), modLoc("block/cursed_earth"),modLoc("block/cursed_grass_top"))).addModel().end()
+                .part().modelFile(models().cubeBottomTop(ModBlocks.cursed_grass.getRegistryName().toString()+"_snowy",modLoc("block/cursed_grass_side_snowy"), modLoc("block/cursed_earth"),modLoc("block/cursed_grass_top"))).addModel().condition(BlockStateProperties.SNOWY, true).end();
     }
 }
