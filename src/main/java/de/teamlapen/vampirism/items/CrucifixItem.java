@@ -35,17 +35,26 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class CrucifixItem extends VampirismItem implements IItemWithTier, IFactionExclusiveItem, IFactionLevelItem<IHunterPlayer> {
 
     private final static String baseRegName = "crucifix";
     private final TIER tier;
+    /**
+     * All crucifix items are added to this set. This is used to add cooldown for all existing crucifix items at once.
+     * Synchronized set, so no issues during Mod creation. Later on no synchronicity needed.
+     */
+    private static final Set<CrucifixItem> all_crucifix = Collections.synchronizedSet(new HashSet<>());
 
     public CrucifixItem(IItemWithTier.TIER tier) {
         super(baseRegName + "_" + tier.getName(), new Properties().tab(VampirismMod.creativeTab).stacksTo(1));
         this.tier = tier;
+        all_crucifix.add(this);
     }
 
     @Override
@@ -121,7 +130,9 @@ public class CrucifixItem extends VampirismItem implements IItemWithTier, IFacti
     @Override
     public void releaseUsing(ItemStack stack, World world, LivingEntity entity, int p_77615_4_) {
         if (entity instanceof PlayerEntity) {
-            ((PlayerEntity) entity).getCooldowns().addCooldown(this, getCooldown(stack));
+            all_crucifix.forEach(item -> {
+                ((PlayerEntity) entity).getCooldowns().addCooldown(item, getCooldown(stack));
+            });
         }
     }
 
