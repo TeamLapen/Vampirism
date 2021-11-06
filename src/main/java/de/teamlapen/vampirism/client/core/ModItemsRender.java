@@ -4,12 +4,12 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.items.ArmorOfSwiftnessItem;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.IDyeableArmorItem;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -39,7 +39,18 @@ public class ModItemsRender {
         ItemColors colors = Minecraft.getInstance().getItemColors();
         // Swiftness armor
         colors.register((stack, tintIndex) -> {
-            return tintIndex > 0 ? -1 : ((IDyeableArmorItem)stack.getItem()).getColor(stack);
+            if (tintIndex == 0) {
+                return 10511680;
+            } else {
+                switch (((ArmorOfSwiftnessItem) stack.getItem()).getVampirismTier()) {
+                    case ENHANCED:
+                        return 0x007CFF;
+                    case ULTIMATE:
+                        return 0x07F8FF;
+                    default:
+                        return 0xFFF100;
+                }
+            }
         }, ModItems.armor_of_swiftness_feet_normal, ModItems.armor_of_swiftness_chest_normal, ModItems.armor_of_swiftness_head_normal, ModItems.armor_of_swiftness_legs_normal, ModItems.armor_of_swiftness_feet_enhanced, ModItems.armor_of_swiftness_chest_enhanced, ModItems.armor_of_swiftness_head_enhanced, ModItems.armor_of_swiftness_legs_enhanced, ModItems.armor_of_swiftness_feet_ultimate, ModItems.armor_of_swiftness_chest_ultimate, ModItems.armor_of_swiftness_head_ultimate, ModItems.armor_of_swiftness_legs_ultimate);
         //Crossbow arrow
         colors.register((stack, tintIndex) -> {
