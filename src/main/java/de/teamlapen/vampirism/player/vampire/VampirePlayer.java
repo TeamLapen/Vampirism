@@ -50,7 +50,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -859,9 +858,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                     MobEffectInstance hunterEffect = player.getEffect(MobEffects.HUNGER);
                     player.addEffect(new MobEffectInstance(ModEffects.THIRST.get(), hunterEffect.getDuration(), hunterEffect.getAmplifier()));
                     player.removeEffect(MobEffects.HUNGER);
-                }
-                if (player.tickCount % 64 == 0 && player instanceof ServerPlayer) {
-                    ((ServerPlayer) player).getStats().setValue(player, Stats.CUSTOM.get(Stats.TIME_SINCE_REST), 1);
                 }
                 if (actionHandler.updateActions()) {
                     sync = true;
