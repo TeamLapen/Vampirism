@@ -12,7 +12,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class ModParticleFactories {
 
-    public static void registerFactories() {
+    public static void registerFactoriesUnsafe() {
         ParticleManager manager = Minecraft.getInstance().particleEngine;
         manager.register(ModParticles.flying_blood, new FlyingBloodParticle.Factory());
         manager.register(ModParticles.flying_blood_entity, new FlyingBloodEntityParticle.Factory());

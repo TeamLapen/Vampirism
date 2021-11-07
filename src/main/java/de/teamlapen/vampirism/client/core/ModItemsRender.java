@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 @OnlyIn(Dist.CLIENT)
 public class ModItemsRender {
 
-    public static void registerItemModelProperty() {
+    public static void registerItemModelPropertyUnsafe() {
         Stream.of(ModItems.basic_crossbow, ModItems.basic_double_crossbow, ModItems.enhanced_crossbow, ModItems.enhanced_double_crossbow, ModItems.basic_tech_crossbow, ModItems.enhanced_tech_crossbow).forEach(item -> {
             ItemModelsProperties.register(item, new ResourceLocation(REFERENCE.MODID, "charged"), (stack, world, entity) -> {
                 if (entity == null) {
@@ -35,11 +35,11 @@ public class ModItemsRender {
         });
     }
 
-    public static void registerColors() {
+    public static void registerColorsUnsafe() {
         ItemColors colors = Minecraft.getInstance().getItemColors();
         // Swiftness armor
         colors.register((stack, tintIndex) -> {
-            return tintIndex > 0 ? -1 : ((IDyeableArmorItem)stack.getItem()).getColor(stack);
+            return tintIndex > 0 ? -1 : ((IDyeableArmorItem) stack.getItem()).getColor(stack);
         }, ModItems.armor_of_swiftness_feet_normal, ModItems.armor_of_swiftness_chest_normal, ModItems.armor_of_swiftness_head_normal, ModItems.armor_of_swiftness_legs_normal, ModItems.armor_of_swiftness_feet_enhanced, ModItems.armor_of_swiftness_chest_enhanced, ModItems.armor_of_swiftness_head_enhanced, ModItems.armor_of_swiftness_legs_enhanced, ModItems.armor_of_swiftness_feet_ultimate, ModItems.armor_of_swiftness_chest_ultimate, ModItems.armor_of_swiftness_head_ultimate, ModItems.armor_of_swiftness_legs_ultimate);
         //Crossbow arrow
         colors.register((stack, tintIndex) -> {
