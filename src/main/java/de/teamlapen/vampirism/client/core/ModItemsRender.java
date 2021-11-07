@@ -35,7 +35,7 @@ public class ModItemsRender {
         });
     }
 
-    public static void registerColors() {
+    public static void registerColorsUnsafe() {
         ItemColors colors = Minecraft.getInstance().getItemColors();
         // Swiftness armor
         colors.register((stack, tintIndex) -> {

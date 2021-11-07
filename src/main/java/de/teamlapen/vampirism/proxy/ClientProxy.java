@@ -204,10 +204,10 @@ public class ClientProxy extends CommonProxy {
                 ((FMLClientSetupEvent) event).getMinecraftSupplier().get().getEntityRenderDispatcher().getSkinMap().forEach((k, r) -> r.addLayer(new WingsLayer<>(r, player -> VampirePlayer.getOpt(player).map(VampirePlayer::getWingCounter).filter(i -> i > 0).isPresent(), (e, m) -> m.body)));
                 break;
             case LOAD_COMPLETE:
-                ModBlocksRender.registerColors();
-                ModItemsRender.registerColors();
+                event.enqueueWork(ModBlocksRender::registerColorsUnsafe);
+                event.enqueueWork(ModItemsRender::registerColorsUnsafe);
                 event.enqueueWork(ModItemsRender::registerItemModelPropertyUnsafe);
-                ModParticleFactories.registerFactories();
+                event.enqueueWork(ModParticleFactories::registerFactoriesUnsafe);
                 event.enqueueWork(ModScreens::registerScreensUnsafe);
                 skillTreeManager.init();
                 registerVampireEntityOverlays();
