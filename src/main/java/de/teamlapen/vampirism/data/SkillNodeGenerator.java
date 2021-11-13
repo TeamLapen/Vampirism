@@ -62,7 +62,7 @@ public class SkillNodeGenerator implements IDataProvider {
             ResourceLocation alchemy1 = SkillNodeBuilder.hunter(skill4, HunterSkills.basic_alchemy).build(consumer, modId("alchemy1"));
             ResourceLocation alchemy2 = SkillNodeBuilder.hunter(alchemy1, HunterSkills.garlic_beacon).build(consumer, modId("alchemy2"));
             ResourceLocation alchemy3 = SkillNodeBuilder.hunter(alchemy2, HunterSkills.crucifix_wielder).build(consumer, modId("alchemy3"));
-            ResourceLocation alchemy4 = SkillNodeBuilder.hunter(alchemy3, HunterSkills.purified_garlic, HunterSkills.holy_water_enhanced).build(consumer, modId("alchemy4"));
+            ResourceLocation alchemy4 = SkillNodeBuilder.hunter(alchemy3, HunterSkills.purified_garlic, HunterSkills.enhanced_blessing).build(consumer, modId("alchemy4"));
             ResourceLocation alchemy5 = SkillNodeBuilder.hunter(alchemy4, HunterSkills.garlic_beacon_improved, HunterSkills.ultimate_crucifix).build(consumer, modId("alchemy5"));
             ResourceLocation alchemy6 = SkillNodeBuilder.hunter(alchemy5, HunterSkills.hunter_awareness).build(consumer, modId("alchemy6"));
 
@@ -135,5 +135,6 @@ public class SkillNodeGenerator implements IDataProvider {
         }
     }
 
+Organ Ambience, Calm, A by InspectorJ https://freesound.org/people/InspectorJ/sounds/411991/ -- License CC Attribution
 
 }

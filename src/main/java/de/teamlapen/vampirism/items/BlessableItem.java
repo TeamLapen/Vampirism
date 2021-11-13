@@ -3,9 +3,14 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModSounds;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,15 +27,47 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class BlessableItem extends VampirismItem {
 
-    private final Supplier<Item> blessedVersion;
+    private final Supplier<Item> blessedItem;
+    @Nullable
+    private final Supplier<Item> enhancedBlessedItem;
 
-    public BlessableItem(String regName, Properties properties, Supplier<Item> blessedVersion) {
+    private final static List<BlessableItem> BLESSABLE_ITEMS = new ArrayList<>();
+
+    public static List<Recipe> getBlessableRecipes() {
+        List<Recipe> recipes = new ArrayList<>();
+        for (BlessableItem i : BLESSABLE_ITEMS) {
+            recipes.add(new Recipe(false, i, i.blessedItem.get()));
+            if (i.enhancedBlessedItem != null) {
+                recipes.add(new Recipe(true, i, i.enhancedBlessedItem.get()));
+            }
+        }
+        return recipes;
+    }
+
+    public static class Recipe {
+        public final boolean enhanced;
+        public final BlessableItem input;
+        public final Item output;
+
+        public Recipe(boolean enhanced, BlessableItem input, Item output) {
+            this.enhanced = enhanced;
+            this.input = input;
+            this.output = output;
+        }
+    }
+
+    public BlessableItem(String regName, Properties properties, Supplier<Item> blessedItem, @Nullable Supplier<Item> enhancedBlessedItem) {
         super(regName, properties);
-        this.blessedVersion = blessedVersion;
+        this.blessedItem = blessedItem;
+        this.enhancedBlessedItem = enhancedBlessedItem;
+        BLESSABLE_ITEMS.add(this);
     }
 
     @Override
@@ -84,7 +121,12 @@ public class BlessableItem extends VampirismItem {
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity livingEntity) {
-        return new ItemStack(blessedVersion.get(), stack.getCount());
+        if (enhancedBlessedItem != null && livingEntity instanceof PlayerEntity) {
+            IFactionPlayerHandler handler = FactionPlayerHandler.get((PlayerEntity) livingEntity);
+            boolean enhanced = handler.isInFaction(VReference.HUNTER_FACTION) && handler.getCurrentFactionPlayer().map(ISkillPlayer::getSkillHandler).map(s -> s.isSkillEnabled(HunterSkills.enhanced_blessing)).orElse(false);
+            return new ItemStack(enhanced ? enhancedBlessedItem.get() : blessedItem.get(), stack.getCount());
+        }
+        return new ItemStack(blessedItem.get(), stack.getCount());
     }
 
     @Override
@@ -96,5 +138,9 @@ public class BlessableItem extends VampirismItem {
                 }
             });
         }
+    }
+
+    public Item getBlessedItem() {
+        return blessedItem.get();
     }
 }

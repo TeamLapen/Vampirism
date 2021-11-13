@@ -3,17 +3,11 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
-import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
@@ -318,27 +312,8 @@ public class ModItems {
                 return true;
             }
         });
-        registry.register(new BlessableItem("pure_salt", creativeTabProps(), () -> holy_salt));
-
-        registry.register(new VampirismItem("holy_salt_water", new Item.Properties().stacksTo(1)) {
-
-            @Override
-            public boolean isFoil(ItemStack stack) {
-
-                return true;
-            }
-
-            @Override
-            public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity player) {
-                if (player instanceof PlayerEntity) {
-                    IFactionPlayerHandler handler = FactionPlayerHandler.get((PlayerEntity) player);
-                    boolean enhanced = handler.isInFaction(VReference.HUNTER_FACTION) && handler.getCurrentFactionPlayer().map(ISkillPlayer::getSkillHandler).map(s -> s.isSkillEnabled(HunterSkills.holy_water_enhanced)).orElse(false);
-                    return new ItemStack(enhanced ? ModItems.holy_water_bottle_enhanced : ModItems.holy_water_bottle_normal, stack.getCount());
-                }
-                return super.finishUsingItem(stack, world, player);
-
-            }
-        });
+        registry.register(new BlessableItem("pure_salt", creativeTabProps(), () -> holy_salt, null));
+        registry.register(new BlessableItem("holy_salt_water", new Item.Properties().stacksTo(1), () -> holy_water_bottle_normal, () -> holy_water_bottle_enhanced));
         registry.register(new AlchemicalFireItem());
         registry.register(new VampirismItem("garlic_beacon_core", creativeTabProps()));
         registry.register(new VampirismItem("garlic_beacon_core_improved", creativeTabProps()));
