@@ -125,21 +125,19 @@ public class RenderHandler implements ResourceManagerReloadListener {
         if (event.phase == TickEvent.Phase.END) return;
         lastBloodVisionTicks = bloodVisionTicks;
         VampirePlayer vampire = VampirePlayer.get(mc.player);
-        //Blood vision TODO 1.17
-//        if (vampire.getSpecialAttributes().blood_vision && !VampirismConfig.CLIENT.disableBloodVisionRendering.get() && !vampire.isGettingSundamage(mc.player.level)) {
-//
-//            if (bloodVisionTicks < BLOOD_VISION_FADE_TICKS) {
-//                bloodVisionTicks++;
-//
-//            }
-//        } else {
-//            if (bloodVisionTicks > 0) {
-//                bloodVisionTicks -= 2;
-//            }
-//            if (vampireBiomeTicks > 10 && bloodVisionTicks == 15) {
-//                bloodVisionTicks = 0;
-//            }
-//        }
+        if (vampire.getSpecialAttributes().blood_vision && !VampirismConfig.CLIENT.disableBloodVisionRendering.get() && !vampire.isGettingSundamage(mc.player.level)) {
+            if (bloodVisionTicks < BLOOD_VISION_FADE_TICKS) {
+                bloodVisionTicks++;
+
+            }
+        } else {
+            if (bloodVisionTicks > 0) {
+                bloodVisionTicks -= 2;
+            }
+            if (vampireBiomeTicks > 10 && bloodVisionTicks == 15) {
+                bloodVisionTicks = 0;
+            }
+        }
         //Vampire biome/village fog
         if (mc.player.tickCount % 10 == 0) {
             if ((VampirismConfig.CLIENT.renderVampireForestFog.get() || VampirismConfig.SERVER.enforceRenderForestFog.get()) && (Helper.isEntityInArtificalVampireFogArea(mc.player) || Helper.isEntityInVampireBiome(mc.player))) {
@@ -334,8 +332,8 @@ public class RenderHandler implements ResourceManagerReloadListener {
         if (blit0 == null || blur1 == null || blur2 == null) return;
         progress = Mth.clamp(progress, 0, 1);
         blit0.getEffect().safeGetUniform("ColorModulate").set((1 - 0.4F * progress), (1 - 0.5F * progress), (1 - 0.3F * progress), 1);
-        blur1.getEffect().safeGetUniform("Radius").set(Math.round(15 * progress));
-        blur2.getEffect().safeGetUniform("Radius").set(Math.round(15 * progress));
+        blur1.getEffect().safeGetUniform("Radius").set((float) Math.round(15 * progress)); //Round, because fractional values cause issues, but use float method.
+        blur2.getEffect().safeGetUniform("Radius").set((float) Math.round(15 * progress));
 
     }
 

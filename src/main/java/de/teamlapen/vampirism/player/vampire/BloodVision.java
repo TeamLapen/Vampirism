@@ -28,9 +28,6 @@ public class BloodVision implements IVampireVision {
                 entity.displayClientMessage(new TranslatableComponent("text.vampirism.warning_optifine_bloodvision"), false);
             }
         }
-        if(entity.level.isClientSide()){
-            entity.displayClientMessage(new TextComponent("Blood vision does not work on 1.17 yet"), false); //TODO 1.17
-        }
     }
 
     @Override
