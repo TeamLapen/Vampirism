@@ -75,7 +75,7 @@ public class LootTablesGenerator extends LootTableProvider {
                             .add(ItemLootEntry.lootTableItem(ModItems.item_garlic).setWeight(4).apply(LootingEnchantBonus.lootingMultiplier(RandomValueRange.between(0, 1))))
                             .add(ItemLootEntry.lootTableItem(ModItems.holy_water_bottle_enhanced).setWeight(3).apply(SetNBT.setTag(splash)))
                             .add(ItemLootEntry.lootTableItem(ModItems.holy_water_bottle_ultimate).setWeight(1).apply(SetNBT.setTag(splash)))
-                            .add(ItemLootEntry.lootTableItem(ModItems.holy_salt).setWeight(4).apply(LootingEnchantBonus.lootingMultiplier(RandomValueRange.between(0, 1))).apply(SetCount.setCount(RandomValueRange.between(1, 2)))))
+                            .add(ItemLootEntry.lootTableItem(ModItems.pure_salt_water).setWeight(4).apply(LootingEnchantBonus.lootingMultiplier(RandomValueRange.between(0, 1))).apply(SetCount.setCount(RandomValueRange.between(1, 2)))))
                     .withPool(LootPool.lootPool().name("special").when(RandomChanceWithLooting.randomChanceAndLootingBoost(0.05f, 0.01f)).setRolls(ConstantRange.exactly(1))
                             .add(ItemLootEntry.lootTableItem(ModItems.vampire_book).setWeight(1).apply(AddBookNbt.builder())));
             this.add(ModEntities.advanced_hunter, advanced_hunter);
@@ -127,8 +127,6 @@ public class LootTablesGenerator extends LootTableProvider {
             LootTable.Builder hunter = LootTable.lootTable()
                     .withPool(LootPool.lootPool().name("general").setRolls(ConstantRange.exactly(1)).when(KilledByPlayer.killedByPlayer()).when(RandomChanceWithLooting.randomChanceAndLootingBoost(0.33f, 0.005f))
                             .add(ItemLootEntry.lootTableItem(ModItems.human_heart).setWeight(1)))
-                    .withPool(LootPool.lootPool().name("special").setRolls(ConstantRange.exactly(1)).when(KilledByPlayer.killedByPlayer()).when(RandomChanceWithLooting.randomChanceAndLootingBoost(0.25f, 0.05f))
-                            .add(ItemLootEntry.lootTableItem(ModItems.holy_salt).setWeight(1)))
                     .withPool(LootPool.lootPool().name("refinement_item").setRolls(ConstantRange.exactly(1)).when(RandomChanceWithLooting.randomChanceAndLootingBoost(0.05f, 0.02f))
                             .add(ItemLootEntry.lootTableItem(ModItems.amulet).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
                             .add(ItemLootEntry.lootTableItem(ModItems.ring).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
@@ -177,7 +175,7 @@ public class LootTablesGenerator extends LootTableProvider {
                             .add(ItemLootEntry.lootTableItem(ModItems.hunter_coat_feet_ultimate).setWeight(10).apply(SetDamage.setDamage(RandomValueRange.between(0.3f, 0.9f))))
                             .add(EmptyLootEntry.emptyItem().setWeight(60)))
                     .withPool(LootPool.lootPool().name("holy_water").setRolls(ConstantRange.exactly(5))
-                            .add(ItemLootEntry.lootTableItem(ModItems.holy_salt).setWeight(50))
+                            .add(ItemLootEntry.lootTableItem(ModItems.pure_salt).setWeight(50))
                             .add(ItemLootEntry.lootTableItem(ModItems.holy_water_bottle_normal).setWeight(20))
                             .add(ItemLootEntry.lootTableItem(ModItems.holy_water_bottle_enhanced).setWeight(20))
                             .add(ItemLootEntry.lootTableItem(ModItems.holy_water_bottle_ultimate).setWeight(10))));
@@ -345,8 +343,7 @@ public class LootTablesGenerator extends LootTableProvider {
                             .add(ItemLootEntry.lootTableItem(ModItems.heart_seeker_enhanced).setWeight(20).apply(SetDamage.setDamage(RandomValueRange.between(0.3f, 0.9f))))
                             .add(ItemLootEntry.lootTableItem(ModItems.heart_striker_enhanced).setWeight(20).apply(SetDamage.setDamage(RandomValueRange.between(0.3f, 0.9f))))
                             .add(EmptyLootEntry.emptyItem().setWeight(60)))
-                    .withPool(LootPool.lootPool().name("holy_Water").setRolls(ConstantRange.exactly(2))
-                            .add(ItemLootEntry.lootTableItem(ModItems.holy_salt).setWeight(50))
+                    .withPool(LootPool.lootPool().name("holy_water").setRolls(ConstantRange.exactly(2))
                             .add(ItemLootEntry.lootTableItem(ModItems.holy_water_bottle_normal).setWeight(20))
                             .add(ItemLootEntry.lootTableItem(ModItems.holy_water_bottle_enhanced).setWeight(20))
                             .add(ItemLootEntry.lootTableItem(ModItems.holy_water_bottle_ultimate).setWeight(10)))

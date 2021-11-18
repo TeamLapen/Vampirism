@@ -209,7 +209,7 @@
         {
           "type": "minecraft:item",
           "weight": 50,
-          "name": "vampirism:holy_salt"
+          "name": "vampirism:pure_salt"
         },
         {
           "type": "minecraft:item",

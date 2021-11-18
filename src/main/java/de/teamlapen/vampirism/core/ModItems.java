@@ -82,8 +82,7 @@ public class ModItems {
     public static final HeartStrikerItem heart_striker_normal = getNull();
     public static final HeartStrikerItem heart_striker_ultimate = getNull();
 
-    public static final VampirismItem holy_salt = getNull();
-    public static final VampirismItem holy_salt_water = getNull();
+    public static final BlessableItem pure_salt_water = getNull();
 
     public static final HolyWaterBottleItem holy_water_bottle_enhanced = getNull();
     public static final HolyWaterBottleItem holy_water_bottle_normal = getNull();
@@ -149,7 +148,7 @@ public class ModItems {
     public static final PureBloodItem pure_blood_4 = getNull();
 
     public static final VampirismItem purified_garlic = getNull();
-    public static final BlessableItem pure_salt = getNull();
+    public static final VampirismItem pure_salt = getNull();
     public static final VampirismItem soul_orb_vampire = getNull();
 
     public static final StakeItem stake = getNull();
@@ -211,7 +210,7 @@ public class ModItems {
 
     static void registerCraftingRecipes() {
         // Brewing
-        BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)), Ingredient.of(new ItemStack(holy_salt)), new ItemStack(holy_salt_water));
+        BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)), Ingredient.of(new ItemStack(pure_salt)), new ItemStack(pure_salt_water));
 
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(holy_water_bottle_normal), Ingredient.of(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_normal)) {
             @Override
@@ -303,17 +302,8 @@ public class ModItems {
         registry.register(new HolyWaterSplashBottleItem(IItemWithTier.TIER.NORMAL));
         registry.register(new HolyWaterSplashBottleItem(IItemWithTier.TIER.ENHANCED));
         registry.register(new HolyWaterSplashBottleItem(IItemWithTier.TIER.ULTIMATE));
-
-        registry.register(new VampirismItem("holy_salt", creativeTabProps()) {
-
-            @Override
-            public boolean isFoil(ItemStack stack) {
-
-                return true;
-            }
-        });
-        registry.register(new BlessableItem("pure_salt", creativeTabProps(), () -> holy_salt, null));
-        registry.register(new BlessableItem("holy_salt_water", new Item.Properties().stacksTo(1), () -> holy_water_bottle_normal, () -> holy_water_bottle_enhanced));
+        registry.register(new VampirismItem("pure_salt", creativeTabProps()));
+        registry.register(new BlessableItem("pure_salt_water", new Item.Properties().stacksTo(1), () -> holy_water_bottle_normal, () -> holy_water_bottle_enhanced));
         registry.register(new AlchemicalFireItem());
         registry.register(new VampirismItem("garlic_beacon_core", creativeTabProps()));
         registry.register(new VampirismItem("garlic_beacon_core_improved", creativeTabProps()));
@@ -447,6 +437,12 @@ public class ModItems {
                     break;
                 case "vampirism:bloody_spruce_leaves":
                     missingMapping.remap(dark_spruce_leaves);
+                    break;
+                case "vampirism:holy_salt_water":
+                    missingMapping.remap(pure_salt_water);
+                    break;
+                case "vampirism:holy_salt":
+                    missingMapping.remap(pure_salt);
                     break;
             }
             if(missingMapping.key.toString().startsWith("vampirism:obsidian_armor")){

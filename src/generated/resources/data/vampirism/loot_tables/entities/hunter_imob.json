@@ -22,26 +22,6 @@
       ]
     },
     {
-      "name": "special",
-      "rolls": 1,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "vampirism:holy_salt"
-        }
-      ],
-      "conditions": [
-        {
-          "condition": "minecraft:killed_by_player"
-        },
-        {
-          "condition": "minecraft:random_chance_with_looting",
-          "chance": 0.25,
-          "looting_multiplier": 0.05
-        }
-      ]
-    },
-    {
       "name": "refinement_item",
       "rolls": 1,
       "entries": [
