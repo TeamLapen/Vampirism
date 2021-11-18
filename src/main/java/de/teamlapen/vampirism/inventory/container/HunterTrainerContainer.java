@@ -57,7 +57,7 @@ public class HunterTrainerContainer extends InventoryContainer implements IInven
      * @return If the player can levelup with the given tileInventory
      */
     public boolean canLevelup() {
-        int targetLevel = FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION) + 1;
+        int targetLevel = FactionPlayerHandler.getOpt(player).map(h->h.getCurrentLevel(VReference.HUNTER_FACTION)).orElse(0) + 1;
         HunterLevelingConf levelingConf = HunterLevelingConf.instance();
         if (levelingConf.isLevelValidForTrainer(targetLevel) != 0) return false;
         int[] req = levelingConf.getItemRequirementsForTrainer(targetLevel);

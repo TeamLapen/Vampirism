@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
@@ -23,6 +22,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -69,15 +69,15 @@ public class ChurchAltarBlock extends VampirismHorizontalBlock {
     @Override
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!player.isAlive()) return ActionResultType.PASS;
-        IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
+        LazyOptional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(player);
         ItemStack heldItem = player.getItemInHand(hand);
-        if (handler.isInFaction(VReference.VAMPIRE_FACTION)) {
+        if (handler.map(h->h.isInFaction(VReference.VAMPIRE_FACTION)).orElse(false)) {
             VampirismMod.proxy.displayRevertBackScreen();
             return ActionResultType.SUCCESS;
         } else if (!heldItem.isEmpty()) {
             if (ModItems.holy_salt_water.equals(heldItem.getItem())) {
                 if (world.isClientSide) return ActionResultType.SUCCESS;
-                boolean enhanced = handler.isInFaction(VReference.HUNTER_FACTION) && handler.getCurrentFactionPlayer().map(s -> s.getSkillHandler()).map(s -> s.isSkillEnabled(HunterSkills.holy_water_enhanced)).orElse(false);
+                boolean enhanced = handler.map(h-> h.isInFaction(VReference.HUNTER_FACTION) && h.getCurrentFactionPlayer().map(s -> s.getSkillHandler()).map(s -> s.isSkillEnabled(HunterSkills.holy_water_enhanced)).orElse(false)).orElse(false);
                 ItemStack newStack = new ItemStack(enhanced ? ModItems.holy_water_bottle_enhanced : ModItems.holy_water_bottle_normal, heldItem.getCount());
                 player.setItemInHand(hand, newStack);
                 return ActionResultType.SUCCESS;

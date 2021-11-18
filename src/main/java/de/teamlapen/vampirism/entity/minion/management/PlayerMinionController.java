@@ -23,6 +23,7 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -448,8 +449,8 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         }
     }
 
-    private Optional<ILordPlayer> getLord() {
-        return getLordPlayer().map(FactionPlayerHandler::get);
+    private LazyOptional<? extends ILordPlayer> getLord() {
+        return getLordPlayer().map(FactionPlayerHandler::getOpt).orElse(LazyOptional.empty());
     }
 
     private Optional<PlayerEntity> getLordPlayer() {
