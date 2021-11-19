@@ -27,7 +27,7 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
     }
 
     @Override
-    public IAction.PERM canUse(T player) {
+    public final IAction.PERM canUse(T player) {
         if (!isEnabled())
             return IAction.PERM.DISABLED;
         if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(true)) {

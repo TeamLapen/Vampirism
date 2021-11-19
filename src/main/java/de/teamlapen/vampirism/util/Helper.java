@@ -145,6 +145,7 @@ public class Helper {
     }
 
     public static boolean canTurnPlayer(IVampire biter, @Nullable Player target) {
+        if (target != null && (target.isCreative() || target.isSpectator())) return false;
         if (biter instanceof IVampirePlayer player) {
             if (!VampirismConfig.SERVER.playerCanTurnPlayer.get()) return false;
             return !(player instanceof ServerPlayer) || PermissionAPI.getPermission((ServerPlayer) player, Permissions.INFECT_PLAYER);

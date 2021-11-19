@@ -12,7 +12,7 @@ import net.minecraftforge.registries.RegistryObject;
  */
 public class VampireActions {
     public static final DeferredRegister<IAction<?>> ACTIONS = DeferredRegister.create(VampirismRegistries.ACTIONS_ID, REFERENCE.MODID);
-    
+
     public static final RegistryObject<BatVampireAction> BAT = ACTIONS.register("bat", BatVampireAction::new);
     public static final RegistryObject<DarkBloodProjectileAction> DARK_BLOOD_PROJECTILE = ACTIONS.register("dark_blood_projectile", DarkBloodProjectileAction::new);
     public static final RegistryObject<DisguiseVampireAction> DISGUISE_VAMPIRE = ACTIONS.register("disguise_vampire", DisguiseVampireAction::new);
@@ -25,6 +25,7 @@ public class VampireActions {
     public static final RegistryObject<InvisibilityVampireAction> VAMPIRE_INVISIBILITY = ACTIONS.register("vampire_invisibility", InvisibilityVampireAction::new);
     public static final RegistryObject<RageVampireAction> VAMPIRE_RAGE = ACTIONS.register("vampire_rage", RageVampireAction::new);
     public static final RegistryObject<HissingAction> HISSING = ACTIONS.register("hissing", HissingAction::new);
+    public static final RegistryObject<InfectAction> INFECT = ACTIONS.register("infect", InfectAction::new);
 
     public static void registerDefaultActions(IEventBus bus) {
         ACTIONS.register(bus);

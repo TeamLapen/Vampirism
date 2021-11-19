@@ -84,7 +84,7 @@ public class SkillNodeGenerator implements DataProvider {
         {
             ResourceLocation skill2 = SkillNodeBuilder.vampire(modId("vampire"), VampireSkills.NIGHT_VISION.get()).build(consumer, modId("skill2"));
             ResourceLocation skill3 = SkillNodeBuilder.vampire(skill2, VampireSkills.VAMPIRE_REGENERATION.get()).build(consumer, modId("skill3"));
-            ResourceLocation skill4 = SkillNodeBuilder.vampire(skill3, VampireSkills.BAT.get()).build(consumer, modId("skill4"));
+            ResourceLocation skill4 = SkillNodeBuilder.vampire(skill3, VampireSkills.FLEDGLING.get()).build(consumer, modId("skill4"));
 
             ResourceLocation util1 = SkillNodeBuilder.vampire(skill4, VampireSkills.SUMMON_BATS.get()).build(consumer, modId("util1"));
             ResourceLocation util15 = SkillNodeBuilder.vampire(util1, VampireSkills.HISSING.get()).build(consumer, modId("util15"));
