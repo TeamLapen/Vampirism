@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -74,6 +75,7 @@ public class InputEventPacket implements IMessage {
     public static final String RESURRECT = "rst";
     public static final String DIE = "die";
     public static final String OPEN_VAMPIRISM_MENU = "ovm";
+    public static final String DELETE_REFINEMENT = "dr";
 
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -276,6 +278,9 @@ public class InputEventPacket implements IMessage {
                     break;
                 case DIE:
                     VampirePlayer.getOpt(player).ifPresent(VampirePlayer::giveUpDBNO);
+                    break;
+                case DELETE_REFINEMENT:
+                    FactionPlayerHandler.getOpt(player).ifPresent(fph -> fph.getCurrentFactionPlayer().ifPresent(fp -> fp.getSkillHandler().removeRefinementItem(IRefinementItem.AccessorySlotType.valueOf(msg.param))));
                     break;
             }
             ctx.setPacketHandled(true);

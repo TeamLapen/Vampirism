@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
+import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -36,6 +37,8 @@ public interface ISkillHandler<T extends IFactionPlayer<T>> {
      * @return Whether the item was equipped
      */
     boolean equipRefinementItem(ItemStack stack);
+
+    void removeRefinementItem(IRefinementItem.AccessorySlotType slot);
 
     /**
      * @return The count of additional skills that can be currently unlocked

@@ -46,7 +46,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     public Map<UUID, Set<UUID>> completableTasks = new HashMap<>();
     public Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements = new HashMap<>();
     private Runnable listener;
-    private boolean refinementsAvailable = false;
+    private final boolean refinementsAvailable;
 
     public VampirismContainer(int id, @Nonnull Inventory playerInventory) {
         super(ModContainer.vampirism, id, playerInventory, ContainerLevelAccess.NULL, new SimpleContainer(3), RemovingSelectorSlot::new, SELECTOR_INFOS.apply(playerInventory.player));
@@ -170,9 +170,9 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
         this.listener = listener;
     }
 
-    private static class RemovingSelectorSlot extends SelectorSlot {
+    public static class RemovingSelectorSlot extends SelectorSlot {
 
-        public RemovingSelectorSlot(Container inventoryIn, int index, SelectorInfo info, Consumer<Container> refreshInvFunc, Function<Integer, Boolean> activeFunc) {
+        private RemovingSelectorSlot(Container inventoryIn, int index, SelectorInfo info, Consumer<Container> refreshInvFunc, Function<Integer, Boolean> activeFunc) {
             super(inventoryIn, index, info, refreshInvFunc, activeFunc);
         }
 
