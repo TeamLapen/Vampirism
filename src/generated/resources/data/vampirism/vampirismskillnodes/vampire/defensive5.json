@@ -1,5 +1,5 @@
 {
-  "parent": "vampirism:vampire/defensive4",
+  "parent": "vampirism:vampire/defensive3",
   "skills": [
     "vampirism:vampire_attack_damage",
     "vampirism:vampire_jump"

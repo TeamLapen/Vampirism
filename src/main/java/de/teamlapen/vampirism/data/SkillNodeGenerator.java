@@ -104,10 +104,10 @@ public class SkillNodeGenerator implements DataProvider {
             ResourceLocation defensive1 = SkillNodeBuilder.vampire(skill4, VampireSkills.SUNSCREEN.get()).build(consumer, modId("defensive1"));
             ResourceLocation defensive2 = SkillNodeBuilder.vampire(defensive1, VampireSkills.VAMPIRE_ATTACK_SPEED.get(), VampireSkills.VAMPIRE_SPEED.get()).build(consumer, modId("defensive2"));
             ResourceLocation defensive3 = SkillNodeBuilder.vampire(defensive2, VampireSkills.BLOOD_VISION.get()).build(consumer, modId("defensive3"));
-            ResourceLocation defensive4 = SkillNodeBuilder.vampire(defensive3, VampireSkills.BLOOD_VISION_GARLIC.get()).build(consumer, modId("defensive4"));
-            ResourceLocation defensive5 = SkillNodeBuilder.vampire(defensive4, VampireSkills.VAMPIRE_ATTACK_DAMAGE.get(), VampireSkills.VAMPIRE_JUMP.get()).build(consumer, modId("defensive5"));
-            ResourceLocation defensive6 = SkillNodeBuilder.vampire(defensive5, VampireSkills.NEONATAL_DECREASE.get(), VampireSkills.DBNO_DURATION.get()).build(consumer, modId("defensive6"));
-            ResourceLocation defensive7 = SkillNodeBuilder.vampire(defensive6, VampireSkills.TELEPORT.get()).build(consumer, modId("defensive7"));
+            ResourceLocation defensive4_1 = SkillNodeBuilder.vampire(defensive3, VampireSkills.VAMPIRE_ATTACK_DAMAGE.get(), VampireSkills.VAMPIRE_JUMP.get()).build(consumer, modId("defensive5"));
+            ResourceLocation defensive4_2 = SkillNodeBuilder.vampire(defensive3, VampireSkills.BLOOD_VISION_GARLIC.get()).build(consumer, modId("defensive4"));
+            ResourceLocation defensive5 = SkillNodeBuilder.vampire(defensive4_1, VampireSkills.NEONATAL_DECREASE.get(), VampireSkills.DBNO_DURATION.get()).build(consumer, modId("defensive6"));
+            ResourceLocation defensive6 = SkillNodeBuilder.vampire(defensive5, VampireSkills.TELEPORT.get()).build(consumer, modId("defensive7"));
         }
 
     }
