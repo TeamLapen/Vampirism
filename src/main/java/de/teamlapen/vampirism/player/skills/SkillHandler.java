@@ -164,7 +164,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
                 @Nullable IRefinementSet newSet = refinementItem.getRefinementSet(stack);
                 IRefinementItem.AccessorySlotType setSlot = refinementItem.getSlotType();
 
-            removeRefinementSet(setSlot.getSlot());
+            removeRefinementItem(setSlot);
             this.dirty = true;
 
                 if (newSet != null && newSet.getFaction() == faction) {
@@ -175,6 +175,12 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         }
 
         return false;
+    }
+
+    @Override
+    public void removeRefinementItem(IRefinementItem.AccessorySlotType slot) {
+        this.removeRefinementSet(slot.getSlot());
+        this.dirty = true;
     }
 
     public SkillNode findSkillNode(SkillNode base, ISkill skill) {
