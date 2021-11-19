@@ -5,15 +5,19 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWithDummyWidget;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
+import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.inventory.container.VampirismContainer;
+import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.Helper;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
@@ -33,6 +37,7 @@ import net.minecraft.util.text.event.HoverEvent;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 
 public class VampirismScreen extends ContainerScreen<VampirismContainer> implements ExtendedScreen {
 
@@ -46,6 +51,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
     private int oldMouseX;
     private int oldMouseY;
     private ScrollableListWidget<ITaskInstance> list;
+    private final Map<Integer, Button> refinementRemoveButtons = new Int2ObjectOpenHashMap<>(3);
 
     public VampirismScreen(VampirismContainer container, PlayerInventory playerInventory, ITextComponent titleIn) {
         super(container, playerInventory, titleIn);
@@ -109,11 +115,23 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
             this.font.drawShadow(matrixStack, text, this.leftPos + 152 - (width / 2), this.topPos + 52, 0);
         }
 
+        this.renderAccessorySlots(matrixStack, mouseX, mouseY, partialTicks);
+
         this.oldMouseX = mouseX;
         this.oldMouseY = mouseY;
         this.list.renderToolTip(matrixStack, mouseX, mouseY);
         this.renderTooltip(matrixStack, mouseX, mouseY);
-        if (this.menu.areRefinementsAvailable()) this.renderHoveredRefinementTooltip(matrixStack, mouseX, mouseY);
+        if (this.menu.areRefinementsAvailable()) {
+            this.renderHoveredRefinementTooltip(matrixStack, mouseX, mouseY);
+        }
+    }
+
+    protected void renderAccessorySlots(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        for (Slot slot : this.menu.slots) {
+            if (this.isHovering(slot, mouseX, mouseY) && slot instanceof VampirismContainer.RemovingSelectorSlot && !this.menu.getRefinementStacks().get(slot.getSlotIndex()).isEmpty()){
+                this.refinementRemoveButtons.get(slot.getSlotIndex()).render(matrixStack, mouseX, mouseY, partialTicks);
+            }
+        }
     }
 
     @Override
@@ -136,14 +154,39 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
             this.renderTooltip(matrixStack, new TranslationTextComponent("gui.vampirism.vampirism_menu.edit_actions"), mouseX, mouseY);
         }, StringTextComponent.EMPTY));
 
-        Button button = this.addButton(new ImageButton(this.leftPos + 47, this.topPos + 90, 20, 20, 20, 205, 20, BACKGROUND, 256, 256, (context) -> {
+        Button appearanceButton = this.addButton(new ImageButton(this.leftPos + 47, this.topPos + 90, 20, 20, 20, 205, 20, BACKGROUND, 256, 256, (context) -> {
             Minecraft.getInstance().setScreen(new VampirePlayerAppearanceScreen(this));
         }, (button1, matrixStack, mouseX, mouseY) -> {
             this.renderTooltip(matrixStack, new TranslationTextComponent("gui.vampirism.vampirism_menu.appearance_menu"), mouseX, mouseY);
         }, StringTextComponent.EMPTY));
         if (!Helper.isVampire(minecraft.player)) {
-            button.active = false;
-            button.visible = false;
+            appearanceButton.active = false;
+            appearanceButton.visible = false;
+        }
+
+        NonNullList<ItemStack> refinementList = this.menu.getRefinementStacks();
+        for (Slot slot : this.menu.slots) {
+            if (slot instanceof VampirismContainer.RemovingSelectorSlot){
+                Button xButton = this.addButton(new ImageButton(this.getGuiLeft() + slot.x + 16 - 5, this.getGuiTop() + slot.y + 16 - 5, 5, 5, 60, 205, 0, BACKGROUND_REFINEMENTS, 256, 256, (button) -> {
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DELETE_REFINEMENT, IRefinementItem.AccessorySlotType.values()[slot.index].name()));
+                    refinementList.set(slot.index, ItemStack.EMPTY);
+                }, (button12, matrixStack, xPos, yPos) -> {
+                    VampirismScreen.this.renderTooltip(matrixStack,new TranslationTextComponent("gui.vampirism.vampirism_menu.destroy_item").withStyle(TextFormatting.RED), xPos, yPos);
+                }, StringTextComponent.EMPTY) {
+                    @Override
+                    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+                        this.visible = !refinementList.get(slot.index).isEmpty() && VampirismScreen.this.draggingItem.isEmpty() && overSlot(slot, mouseX, mouseY);
+                        super.render(matrixStack, mouseX, mouseY, partialTicks);
+                    }
+
+                    private boolean overSlot(Slot slot, int mouseX, int mouseY) {
+                        mouseX -= VampirismScreen.this.leftPos;
+                        mouseY -= VampirismScreen.this.topPos;
+                        return slot.x <= mouseX && slot.x + 16 > mouseX && slot.y <= mouseY && slot.y +16 > mouseY;
+                    }
+                });
+                refinementRemoveButtons.put(slot.getSlotIndex(),xButton );
+            }
         }
 
     }
@@ -163,7 +206,10 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
             NonNullList<ItemStack> list = this.menu.getRefinementStacks();
             if (index < list.size() && index >= 0) {
                 if (this.minecraft.player.inventory.getCarried().isEmpty() && !list.get(index).isEmpty()) {
-                    this.renderTooltip(matrixStack, list.get(index), mouseX, mouseY);
+                    if (!this.refinementRemoveButtons.get(this.hoveredSlot.getSlotIndex()).isHovered()){
+                        this.renderTooltip(matrixStack, list.get(index), mouseX, mouseY);
+
+                    }
                 } else {
                     if (!list.get(index).isEmpty() && this.menu.getSlot(index).mayPlace(this.minecraft.player.inventory.getCarried())) {
                         this.renderTooltip(matrixStack, new TranslationTextComponent("gui.vampirism.vampirism_menu.destroy_item").withStyle(TextFormatting.RED), mouseX, mouseY);
