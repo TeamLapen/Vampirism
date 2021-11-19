@@ -15,7 +15,7 @@ public class BalanceMobProps {
     public final int CONVERTED_MOB_DEFAULT_DMG = 1;
 
     //    @DefaultInt(value = 60, comment = "Duration of the sanguinare effect for mobs in seconds", name = "sanguinare_avg_duration", minValue = 1)
-    public final int SANGUINARE_AVG_DURATION = 60;
+    public final int SANGUINARE_AVG_DURATION = 30;
 
     //    @DefaultInt(value = 20, name = "blood_regen_chance", comment = "Probability that a bitten creature will regen one blood. Is checked every 2 seconds with a 1/n chance")
     public final int BLOOD_REGEN_CHANCE = 20;

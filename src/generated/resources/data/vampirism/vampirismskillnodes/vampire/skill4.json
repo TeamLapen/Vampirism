@@ -1,6 +1,6 @@
 {
   "parent": "vampirism:vampire/skill3",
   "skills": [
-    "vampirism:bat"
+    "vampirism:fledgling"
   ]
 }

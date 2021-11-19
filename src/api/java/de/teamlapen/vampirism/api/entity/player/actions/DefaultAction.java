@@ -27,7 +27,7 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
     }
 
     @Override
-    public IAction.PERM canUse(IFactionPlayer player) {
+    public final IAction.PERM canUse(IFactionPlayer player) {
         if (!isEnabled())
             return IAction.PERM.DISABLED;
         if (this.getFaction().getFactionPlayerInterface().isInstance(player)) {
