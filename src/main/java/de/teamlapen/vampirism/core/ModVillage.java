@@ -35,10 +35,12 @@ public class ModVillage {
 
     public static final VillagerProfession hunter_expert = getNull();
     public static final VillagerProfession vampire_expert = getNull();
+    public static final VillagerProfession priest = getNull();
 
     public static final FactionPointOfInterestType no_faction = getNull();
     public static final FactionPointOfInterestType hunter_faction = getNull();
     public static final FactionPointOfInterestType vampire_faction = getNull();
+    public static final PointOfInterestType church_altar = getNull();
 
     public static final Schedule converted_default = getNull();
 
@@ -57,22 +59,28 @@ public class ModVillage {
                 return VReference.HUNTER_FACTION;
             }
         }.setRegistryName(REFERENCE.MODID, "hunter_expert");
+        VillagerProfession priest = new VillagerProfession("priest", church_altar, ImmutableSet.of(), ImmutableSet.of(), ModSounds.blessing_music).setRegistryName(REFERENCE.MODID, "priest");
         registry.register(vampire_expert);
         registry.register(hunter_expert);
+        registry.register(priest);
         VillagerTrades.TRADES.computeIfAbsent(hunter_expert, trades -> new Int2ObjectOpenHashMap<>()).putAll(getHunterTrades());
         VillagerTrades.TRADES.computeIfAbsent(vampire_expert, trades -> new Int2ObjectOpenHashMap<>()).putAll(getVampireTrades());
+        VillagerTrades.TRADES.computeIfAbsent(priest, trades -> new Int2ObjectOpenHashMap<>()).putAll(getPriestTrades());
     }
 
     static void registerVillagePointOfInterestType(IForgeRegistry<PointOfInterestType> registry) {
         PointOfInterestType hunter_faction = new FactionPointOfInterestType("hunter_faction", getAllStates(ModBlocks.totem_top_vampirism_hunter, ModBlocks.totem_top_vampirism_hunter_crafted), 1, 1).setRegistryName(REFERENCE.MODID, "hunter_faction");
         PointOfInterestType vampire_faction = new FactionPointOfInterestType("vampire_faction", getAllStates(ModBlocks.totem_top_vampirism_vampire, ModBlocks.totem_top_vampirism_vampire_crafted), 1, 1).setRegistryName(REFERENCE.MODID, "vampire_faction");
         PointOfInterestType no_faction = new FactionPointOfInterestType("no_faction", getAllStates(ModBlocks.totem_top, ModBlocks.totem_top_crafted), 1, 1).setRegistryName(REFERENCE.MODID, "no_faction");
+        PointOfInterestType church_altar = new PointOfInterestType("church_altar", getAllStates(ModBlocks.church_altar), 1, 1).setRegistryName(REFERENCE.MODID, "church_altar");
         registry.register(hunter_faction);
         registry.register(vampire_faction);
         registry.register(no_faction);
+        registry.register(church_altar);
         PointOfInterestType.registerBlockStates(hunter_faction);
         PointOfInterestType.registerBlockStates(vampire_faction);
         PointOfInterestType.registerBlockStates(no_faction);
+        PointOfInterestType.registerBlockStates(church_altar);
     }
 
     static void registerSensor(IForgeRegistry<SensorType<?>> registry) {
@@ -112,7 +120,6 @@ public class ModVillage {
                 },
                 3, new VillagerTrades.ITrade[]{
                         new Trades.ItemsForSouls(new Trades.Price(40, 64), ModItems.vampire_book, new Trades.Price(1, 1), 10, 1),
-                        new Trades.ItemsForSouls(new Trades.Price(10, 20), ModItems.holy_water_bottle_enhanced, new Trades.Price(1, 3)),
                         new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.hunter_coat_chest_enhanced, new Trades.Price(1, 1), 8, 1),
                         new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.hunter_coat_legs_enhanced, new Trades.Price(1, 1), 7, 1),
                         new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.hunter_coat_feet_enhanced, new Trades.Price(1, 1), 5, 1),
@@ -126,11 +133,38 @@ public class ModVillage {
                         new Trades.ItemsForSouls(new Trades.Price(20, 32), Items.DIAMOND, new Trades.Price(1, 2)),
                 },
                 5, new VillagerTrades.ITrade[]{
-                        new Trades.ItemsForSouls(new Trades.Price(15, 25), ModItems.holy_water_bottle_ultimate, new Trades.Price(1, 2)),
                         new Trades.ItemsForSouls(new Trades.Price(30, 55), ModItems.hunter_coat_chest_ultimate, new Trades.Price(1, 1), 8, 1),
                         new Trades.ItemsForSouls(new Trades.Price(25, 55), ModItems.hunter_coat_legs_ultimate, new Trades.Price(1, 1), 7, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 35), ModItems.hunter_coat_feet_ultimate, new Trades.Price(1, 1), 5, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 35), ModItems.hunter_coat_head_ultimate, new Trades.Price(1, 1), 6, 1)
+                });
+    }
+
+    private static Map<Integer, VillagerTrades.ITrade[]> getPriestTrades() {
+        return ImmutableMap.of(
+                1, new VillagerTrades.ITrade[]{
+                        new VillagerTrades.EmeraldForItemsTrade(ModItems.pure_salt, 25, 1, 4),
+                        new VillagerTrades.EmeraldForItemsTrade(ModItems.pure_salt_water, 25, 1, 4),
+                        new VillagerTrades.EmeraldForItemsTrade(ModItems.item_garlic, 30, 4, 2),
+
+                },
+                2, new VillagerTrades.ITrade[]{
+                        new VillagerTrades.ItemsForEmeraldsTrade(ModItems.holy_water_bottle_normal, 3, 5, 4),
+                        new VillagerTrades.EmeraldForItemsTrade(ModItems.soul_orb_vampire, 10, 10, 4),
+                        new VillagerTrades.EmeraldForItemsTrade(ModItems.vampire_blood_bottle, 9, 4, 5)
+                },
+                3, new VillagerTrades.ITrade[]{
+                        new VillagerTrades.ItemsForEmeraldsTrade(ModItems.holy_water_bottle_enhanced, 2, 5, 4),
+
+
+                },
+                4, new VillagerTrades.ITrade[]{
+                        new VillagerTrades.ItemsForEmeraldsTrade(ModItems.holy_water_bottle_ultimate, 1, 4, 4),
+
+                },
+                5, new VillagerTrades.ITrade[]{
+                        new VillagerTrades.ItemsForEmeraldsTrade(ModItems.holy_water_bottle_enhanced, 3, 4, 4),
+
                 });
     }
 
