@@ -594,6 +594,20 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
+    public boolean canBeInfected(IVampire vampire) {
+        return !player.hasEffect(ModEffects.sanguinare) && Helper.canTurnPlayer(vampire, player) && Helper.canBecomeVampire(player);
+    }
+
+    @Override
+    public boolean tryInfect(IVampire vampire) {
+        if (canBeInfected(vampire)) {
+            SanguinareEffect.addRandom(player, true);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public int onBite(IVampire biter) {
         float perc = biter instanceof IVampirePlayer ? 0.2F : 0.08F;
         if (getLevel() == 0) {
@@ -601,9 +615,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             int sucked = (int) Math.ceil((amt * perc));
             player.getFoodData().setFoodLevel(amt - sucked);
             player.causeFoodExhaustion(1000F);
-            if (!player.hasEffect(ModEffects.sanguinare) && Helper.canTurnPlayer(biter, player) && Helper.canBecomeVampire(player)) {
-                if (!player.isCreative()) SanguinareEffect.addRandom(player, true);
-            }
             return sucked;
         }
         int amt = this.getBloodStats().getBloodLevel();
