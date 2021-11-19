@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.player.vampire;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.config.VampirismConfig;
 
 /**
  * Stores special attributes that can be activated by skills or actions.
@@ -36,6 +37,6 @@ public class VampirePlayerSpecialAttributes {
     }
 
     public boolean isCannotInteract() {
-        return bat || isDBNO;
+        return isDBNO || (bat && !VampirismConfig.BALANCE.vaBatAllowInteraction.get());
     }
 }

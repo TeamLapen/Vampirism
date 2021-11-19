@@ -162,6 +162,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vaBatHealthReduction;
     public final ForgeConfigSpec.DoubleValue vaBatExhaustion;
     public final ForgeConfigSpec.DoubleValue vaBatFlightSpeed;
+    public final ForgeConfigSpec.BooleanValue vaBatAllowInteraction;
     public final ForgeConfigSpec.BooleanValue vaSummonBatsEnabled;
     public final ForgeConfigSpec.IntValue vaSummonBatsCooldown;
     public final ForgeConfigSpec.IntValue vaSummonBatsCount;
@@ -369,6 +370,7 @@ public class BalanceConfig {
         vaBatHealthReduction = builder.comment("The player health will be reduced by this factor").defineInRange("batHealthReduction", 0.9, 0, 0.95);
         vaBatExhaustion = builder.comment("Additional exhaustion added while in bat mode. E.g. Thirst I would be 0.01").defineInRange("batExhaustion", 0.005f, 0, 0.05);
         vaBatFlightSpeed = builder.defineInRange("batFlightSpeed", 0.025f, 0.001, 0.2);
+        vaBatAllowInteraction = builder.comment("Whether to allow players in bat mode to interact with items/blocks and place/break blocks").define("batAllowInteraction", false);
         vaSummonBatsCooldown = builder.comment("In seconds").defineInRange("summonBatsCooldown", 300, 1, 10000);
         vaSummonBatsCount = builder.defineInRange("summonBatsCount", 16, 1, 100);
         vaSummonBatsEnabled = builder.define("summonBatsEnabled", true);
