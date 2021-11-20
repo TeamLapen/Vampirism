@@ -39,7 +39,7 @@ dependencies {
 
     //runtimeOnly fg.deobf("curse.maven:angel-of-vengeance:2810906")
     if (System.getProperty("idea.sync.active") != "true") {
-        annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
+        annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
     }
     //Blame for debugging
     runtimeOnly fg.deobf("com.telepathicgrunt:Blame:${project.blame_version}")
