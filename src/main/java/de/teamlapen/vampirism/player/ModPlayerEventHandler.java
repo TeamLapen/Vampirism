@@ -48,6 +48,7 @@ import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
@@ -191,9 +192,17 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
         if (!(event.getEntity() instanceof PlayerEntity) || !event.getEntity().isAlive()) return;
+        if(event.getPlacedBlock().isAir(event.getWorld(), event.getPos())) return; //If for some reason, cough Create cough, a block is removed (so air is placed) we don't want to prevent that.
         try {
             if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
                 event.setCanceled(true);
+
+                if(event.getEntity() instanceof ServerPlayerEntity){ //For some reason this event is only run serverside. Therefore, we have to make sure the client is notified about the not-placed block.
+                    MinecraftServer server = event.getEntity().level.getServer();
+                    if(server!=null){
+                        server.getPlayerList().sendAllPlayerInfo((ServerPlayerEntity) event.getEntity()); //Would probably suffice to just sent a SHeldItemChangePacket
+                    }
+                }
             }
             HunterPlayer.getOpt((PlayerEntity) event.getEntity()).ifPresent(HunterPlayer::breakDisguise);
         } catch (Exception e) {
