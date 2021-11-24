@@ -1,22 +1,25 @@
 package de.teamlapen.vampirism.player.tasks.reward;
 
 import de.teamlapen.lib.util.WeightedRandomItem;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
 import de.teamlapen.vampirism.player.refinements.RefinementSet;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandom;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class RefinementItemReward extends ItemReward {
 
@@ -48,14 +51,22 @@ public class RefinementItemReward extends ItemReward {
 
     @Override
     public List<ItemStack> getAllPossibleRewards() {
-        return (!this.reward.isEmpty() ? Stream.of((VampireRefinementItem) this.reward.getItem()) : Arrays.stream(IRefinementItem.AccessorySlotType.values()).map(VampireRefinementItem::getItemForType)).map(ItemStack::new).collect(Collectors.toList());
+        return (!this.reward.isEmpty() ? Collections.singletonList(new ItemStack(this.reward.getItem())) : getAllRefinementItems());
     }
 
-    protected ItemStack createItem() {
-        VampireRefinementItem item = VampireRefinementItem.getItemForType(IRefinementItem.AccessorySlotType.values()[RANDOM.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
+    protected <Z extends Item & IRefinementItem> ItemStack createItem() {
+        if (this.faction != null && !(this.faction instanceof IPlayableFaction<?>)) return ItemStack.EMPTY;
+        IPlayableFaction<?> faction = ((IPlayableFaction<?>) this.faction);
+        if (faction == null) {
+            faction = getRandomFactionWithAccessories();
+        }
+        if (faction == null) return ItemStack.EMPTY;
+        IPlayableFaction<?> finalFaction = faction;
+
+        Z item = faction.getAccessoryItem(IRefinementItem.AccessorySlotType.values()[RANDOM.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
         IRefinementItem.AccessorySlotType slot = (item).getSlotType();
         List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream()
-                .filter(set -> this.faction == null || set.getFaction() == faction)
+                .filter(set -> finalFaction == null || set.getFaction() == finalFaction)
                 .filter(set -> this.rarity == null || set.getRarity().ordinal() >= this.rarity.ordinal())
                 .filter(set -> set.getSlotType().map(slot1 -> slot1 == slot).orElse(true))
                 .map(set -> ((RefinementSet) set).getWeightedRandom()).collect(Collectors.toList());
@@ -64,5 +75,16 @@ public class RefinementItemReward extends ItemReward {
         ItemStack stack = new ItemStack(item);
         item.applyRefinementSet(stack, set);
         return stack;
+    }
+
+    @Nullable
+    private static IPlayableFaction<?> getRandomFactionWithAccessories() {
+        List<IPlayableFaction<?>> factions = Arrays.stream(VampirismAPI.factionRegistry().getPlayableFactions()).filter(IPlayableFaction::hasAccessories).collect(Collectors.toList());
+        if (factions.isEmpty()) return null;
+        return factions.get(RANDOM.nextInt(factions.size())-1);
+    }
+
+    private static List<ItemStack> getAllRefinementItems() {
+        return Arrays.stream(VampirismAPI.factionRegistry().getPlayableFactions()).filter(IPlayableFaction::hasAccessories).flatMap(function -> Arrays.stream(IRefinementItem.AccessorySlotType.values()).map(function::getAccessoryItem)).map(a -> new ItemStack((Item)a)).collect(Collectors.toList());
     }
 }

@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -49,5 +51,18 @@ public interface IPlayableFaction<T extends IFactionPlayer> extends IFaction<T> 
      * @param render
      */
     IPlayableFaction<T> setRenderLevel(boolean render);
+
+    /**
+     * @return If this faction is allowed to have accessories
+     */
+    boolean hasAccessories();
+
+    /**
+     * Gets the corresponding item for the slot
+     *
+     * @param type
+     * @throws NullPointerException if there are no accessories available
+     */
+    <Z extends Item & IRefinementItem> Z getAccessoryItem(IRefinementItem.AccessorySlotType type);
 
 }

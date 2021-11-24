@@ -1,12 +1,14 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public interface IPlayableFactionBuilder<T extends IFactionPlayer<?>> extends IFactionBuilder<T> {
 
@@ -45,6 +47,14 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<?>> extends IF
 
     @Override
     IPlayableFactionBuilder<T> village(@Nullable IVillageFactionData villageFactionData);
+
+    /**
+     * Allows this faction to have accessories
+     *
+     * @param accessoryBySlotFunction function to get the refinement item for each slot
+     * @return the builder
+     */
+    IPlayableFactionBuilder<T> accessoryItems(Function<IRefinementItem.AccessorySlotType, IRefinementItem> accessoryBySlotFunction);
 
     @Override
     IPlayableFaction<T> register();
