@@ -6,9 +6,11 @@ import com.mojang.brigadier.context.CommandContext;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.command.arguments.RefinementSetArgument;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -62,14 +64,16 @@ public class GiveAccessoriesCommand extends BasicCommand {
         return 0;
     }
 
-    private static int random(CommandContext<CommandSource> context, ServerPlayerEntity entity, int amount) {
+    private static <T extends IFactionPlayer<?>> int random(CommandContext<CommandSource> context, ServerPlayerEntity entity, int amount) {
         IFaction<?> faction = VampirismAPI.factionRegistry().getFaction(entity);
-        for (int i = 0; i < amount; ++i) {
-            ItemStack stack = VampireRefinementItem.getRandomRefinementItem(faction);
-            if (!stack.isEmpty()) {
-                entity.addItem(stack);
-            } else {
-                context.getSource().sendSuccess(new TranslationTextComponent("command.vampirism.test.give_accessories.no_item"), false);
+        if (faction instanceof PlayableFaction<?>) {
+            for (int i = 0; i < amount; ++i) {
+                ItemStack stack = VampireRefinementItem.getRandomRefinementItem(((PlayableFaction) faction));
+                if (!stack.isEmpty()) {
+                    entity.addItem(stack);
+                } else {
+                    context.getSource().sendSuccess(new TranslationTextComponent("command.vampirism.test.give_accessories.no_item"), false);
+                }
             }
         }
         return 0;
