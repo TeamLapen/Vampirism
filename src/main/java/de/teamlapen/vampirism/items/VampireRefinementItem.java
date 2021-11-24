@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.util.WeightedRandomItem;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
@@ -31,12 +33,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class VampireRefinementItem extends Item implements IRefinementItem {
+public class VampireRefinementItem extends Item implements IRefinementItem { //TODO 1.17 rename to RefinementItem and create subclass for Vampires
 
     public static final int MAX_DAMAGE = 500;
     private static final Random RANDOM = new Random();
 
-    public static ItemStack getRandomRefinementItem(IFaction<?> faction) {
+    public static ItemStack getRandomRefinementItem(IPlayableFaction<?> faction) {
         List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream().filter(set -> set.getFaction() == faction).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return ItemStack.EMPTY;
         IRefinementSet s = WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedRandomItem::getItem).orElse(sets.get(0).getItem());
@@ -47,8 +49,8 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
                 default -> AccessorySlotType.AMULET;
             };
         });
-        VampireRefinementItem i = getItemForType(t);
-        ItemStack stack = new ItemStack(i);
+        IRefinementItem i = faction.getAccessoryItem(t);
+        ItemStack stack = new ItemStack(((Item) i));
         if (i.applyRefinementSet(stack, s)) {
             return stack;
         }
@@ -76,6 +78,12 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
         this.type = type;
     }
 
+    @Nonnull
+    @Override
+    public IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) { //TODO 1.17 remove
+        return VReference.VAMPIRE_FACTION;
+    }
+
     @Override
     public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
@@ -87,12 +95,7 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
         }
     }
 
-    /**
-     * Apply refinement set to the given stack.
-     * Note: Not all refinements can be applied to all accessory slot types
-     *
-     * @return Whether the set was successfully applied
-     */
+    @Override
     public boolean applyRefinementSet(ItemStack stack, IRefinementSet set) {
         if (set.getSlotType().map(t -> t == type).orElse(true)) {
             CompoundTag tag = stack.getOrCreateTag();

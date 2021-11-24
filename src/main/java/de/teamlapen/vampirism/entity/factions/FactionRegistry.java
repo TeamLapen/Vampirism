@@ -5,6 +5,7 @@ import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.factions.*;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 
@@ -199,6 +201,7 @@ public class FactionRegistry implements IFactionRegistry {
         protected int highestLevel = 1;
         protected int highestLordLevel = 0;
         protected BiFunction<Integer, Boolean, Component> lordTitleFunction;
+        protected Function<IRefinementItem.AccessorySlotType, IRefinementItem> accessoryBySlotFunction;
 
         public PlayableFactionBuilder(ResourceLocation id, Class<T> entityInterface, NonNullSupplier<Capability<T>> playerCapabilitySupplier) {
             super(id, entityInterface);
@@ -242,11 +245,17 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
+        public IPlayableFactionBuilder<T> accessoryItems(Function<IRefinementItem.AccessorySlotType, IRefinementItem> accessoryBySlotFunction) {
+            this.accessoryBySlotFunction = accessoryBySlotFunction;
+            return this;
+        }
+
+        @Override
         public IPlayableFaction<T> register() {
             if (this.lordTitleFunction == null) {
                 this.lordTitleFunction = (a, b) -> new TextComponent("Lord " + a);
             }
-            PlayableFaction<T> faction = new PlayableFaction<>(this.id, this.entityInterface, this.color, this.hostileTowardsNeutral, this.playerCapabilitySupplier, this.highestLevel, this.highestLordLevel, this.lordTitleFunction, this.villageFactionData);
+            PlayableFaction<T> faction = new PlayableFaction<>(this.id, this.entityInterface, this.color, this.hostileTowardsNeutral, this.playerCapabilitySupplier, this.highestLevel, this.highestLordLevel, this.lordTitleFunction, this.villageFactionData, this.accessoryBySlotFunction);
             addFaction(faction);
             return faction;
         }

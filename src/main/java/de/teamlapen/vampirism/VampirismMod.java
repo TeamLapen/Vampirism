@@ -34,6 +34,7 @@ import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.inventory.recipes.ExtendedBrewingRecipeRegistry;
+import de.teamlapen.vampirism.items.VampireRefinementItem;
 import de.teamlapen.vampirism.modcompat.IMCHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.player.ModPlayerEventHandler;
@@ -310,7 +311,7 @@ public class VampirismMod {
         VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, entityActionManager, worldGenRegistry, extendedBrewingRecipeRegistry);
 
 
-        VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry().createPlayableFaction(REFERENCE.VAMPIRE_PLAYER_KEY, IVampirePlayer.class, () -> VampirePlayer.CAP).color(Color.MAGENTA_DARK.getRGB()).hostileTowardsNeutral().highestLevel(REFERENCE.HIGHEST_VAMPIRE_LEVEL).lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD).lordTitle(LordTitles::getVampireTitle).village(new VampireVillageData()).register();
+        VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry().createPlayableFaction(REFERENCE.VAMPIRE_PLAYER_KEY, IVampirePlayer.class, () -> VampirePlayer.CAP).color(Color.MAGENTA_DARK.getRGB()).hostileTowardsNeutral().highestLevel(REFERENCE.HIGHEST_VAMPIRE_LEVEL).lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD).lordTitle(LordTitles::getVampireTitle).village(new VampireVillageData()).accessoryItems(VampireRefinementItem::getItemForType).register();
         VReference.VAMPIRE_FACTION.setChatColor(ChatFormatting.DARK_PURPLE).setTranslationKeys("text.vampirism.vampire", "text.vampirism.vampires");
         VReference.HUNTER_FACTION = VampirismAPI.factionRegistry().createPlayableFaction(REFERENCE.HUNTER_PLAYER_KEY, IHunterPlayer.class, () -> HunterPlayer.CAP).color(Color.BLUE.getRGB()).highestLevel(REFERENCE.HIGHEST_HUNTER_LEVEL).lordLevel(REFERENCE.HIGHEST_HUNTER_LORD).lordTitle(LordTitles::getHunterTitle).village(new HunterVillageData()).register();
         VReference.HUNTER_FACTION.setChatColor(ChatFormatting.BLUE).setTranslationKeys("text.vampirism.hunter", "text.vampirism.hunters");
