@@ -144,6 +144,7 @@ public class FactionRegistry implements IFactionRegistry {
         return f;
     }
 
+    @Deprecated
     @Override
     public <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull BiFunction<Integer, Boolean, ITextComponent> lordTitleFunction, @Nullable IVillageFactionData villageFactionData) {
         if (!UtilLib.isNonNull(id, entityInterface, playerCapabilitySupplier)) {
@@ -155,6 +156,7 @@ public class FactionRegistry implements IFactionRegistry {
         return f;
     }
 
+    @Deprecated
     @ThreadSafeAPI
     @Override
     public <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel) {
@@ -170,5 +172,118 @@ public class FactionRegistry implements IFactionRegistry {
         }
     }
 
+    @Override
+    public <T extends IFactionEntity> IFactionBuilder<T> createFaction(ResourceLocation id, Class<T> entityInterface) {
+        if (!UtilLib.isNonNull(id, entityInterface)) {
+            throw new IllegalArgumentException("[Vampirism] Parameter for faction cannot be null");
+        }
+        return new FactionBuilder<>(id, entityInterface);
+    }
+
+    @Override
+    public <T extends IFactionPlayer<?>> IPlayableFactionBuilder<T> createPlayableFaction(ResourceLocation id, Class<T> entityInterface, NonNullSupplier<Capability<T>> playerCapabilitySupplier) {
+        if (!UtilLib.isNonNull(id, entityInterface, playerCapabilitySupplier)) {
+            throw new IllegalArgumentException("[Vampirism] Parameters for faction cannot be null");
+        }
+        return new PlayableFactionBuilder<>(id, entityInterface, playerCapabilitySupplier);
+    }
+
+    private class FactionBuilder<T extends IFactionEntity> implements IFactionBuilder<T> {
+
+        protected final ResourceLocation id;
+        protected final Class<T> entityInterface;
+        protected Color color= Color.WHITE;
+        protected boolean hostileTowardsNeutral;
+        protected IVillageFactionData villageFactionData;
+
+        public FactionBuilder(ResourceLocation id, Class<T> entityInterface) {
+            this.id = id;
+            this.entityInterface = entityInterface;
+        }
+
+        @Override
+        public IFactionBuilder<T> color(Color color) {
+            this.color = color;
+            return this;
+        }
+
+        @Override
+        public IFactionBuilder<T> hostileTowardsNeutral() {
+            this.hostileTowardsNeutral = true;
+            return this;
+        }
+
+        @Override
+        public IFactionBuilder<T> village(@Nullable IVillageFactionData villageFactionData) {
+            this.villageFactionData = villageFactionData;
+            return this;
+        }
+
+        @Override
+        public IFaction<T> register() {
+            Faction<T> faction = new Faction<>(this.id, this.entityInterface, this.color, this.hostileTowardsNeutral, this.villageFactionData);
+            addFaction(faction);
+            return faction;
+        }
+    }
+
+    private class PlayableFactionBuilder<T extends IFactionPlayer<?>> extends FactionBuilder<T> implements IPlayableFactionBuilder<T> {
+
+        protected final NonNullSupplier<Capability<T>> playerCapabilitySupplier;
+        protected int highestLevel = 1;
+        protected int highestLordLevel = 0;
+        protected BiFunction<Integer, Boolean, ITextComponent> lordTitleFunction;
+
+        public PlayableFactionBuilder(ResourceLocation id, Class<T> entityInterface, NonNullSupplier<Capability<T>> playerCapabilitySupplier) {
+            super(id, entityInterface);
+            this.playerCapabilitySupplier = playerCapabilitySupplier;
+        }
+
+        @Override
+        public IPlayableFactionBuilder<T> color(Color color) {
+            this.color = color;
+            return this;
+        }
+
+        @Override
+        public IPlayableFactionBuilder<T> hostileTowardsNeutral() {
+            this.hostileTowardsNeutral = true;
+            return this;
+        }
+
+        @Override
+        public IPlayableFactionBuilder<T> highestLevel(int highestLevel) {
+            this.highestLevel = highestLevel;
+            return this;
+        }
+
+        @Override
+        public IPlayableFactionBuilder<T> lordLevel(int highestLordLevel) {
+            this.highestLordLevel = highestLordLevel;
+            return this;
+        }
+
+        @Override
+        public IPlayableFactionBuilder<T> lordTitle(@Nonnull BiFunction<Integer, Boolean, ITextComponent> lordTitleFunction) {
+            this.lordTitleFunction = lordTitleFunction;
+            return this;
+        }
+
+        @Override
+        public IPlayableFactionBuilder<T> village(@Nullable IVillageFactionData villageFactionData) {
+            this.villageFactionData = villageFactionData;
+            return this;
+        }
+
+        @Override
+        public IPlayableFaction<T> register() {
+            if (this.lordTitleFunction == null) {
+                this.lordTitleFunction = (a, b) -> new StringTextComponent("Lord " + a);
+            }
+            PlayableFaction<T> faction = new PlayableFaction<>(this.id, this.entityInterface, this.color, this.hostileTowardsNeutral, this.playerCapabilitySupplier, this.highestLevel, this.highestLordLevel, this.lordTitleFunction, this.villageFactionData);
+            addFaction(faction);
+            return faction;
+        }
+    }
 
 }
