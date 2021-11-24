@@ -22,6 +22,14 @@ repositories {
     }
     mavenCentral()
     mavenLocal()
+    repositories {
+        maven {
+            url "https://www.cursemaven.com"
+            content {
+                includeGroup "curse.maven"
+            }
+        }
+    }
 }
 
 
