@@ -310,9 +310,9 @@ public class VampirismMod {
         VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, entityActionManager, worldGenRegistry, extendedBrewingRecipeRegistry);
 
 
-        VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction(REFERENCE.VAMPIRE_PLAYER_KEY, IVampirePlayer.class, Color.MAGENTA_DARK.getRGB(), true, () -> VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL, REFERENCE.HIGHEST_VAMPIRE_LORD, LordTitles::getVampireTitle, new VampireVillageData());
+        VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry().createPlayableFaction(REFERENCE.VAMPIRE_PLAYER_KEY, IVampirePlayer.class, () -> VampirePlayer.CAP).color(Color.MAGENTA_DARK.getRGB()).hostileTowardsNeutral().highestLevel(REFERENCE.HIGHEST_VAMPIRE_LEVEL).lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD).lordTitle(LordTitles::getVampireTitle).village(new VampireVillageData()).register();
         VReference.VAMPIRE_FACTION.setChatColor(ChatFormatting.DARK_PURPLE).setTranslationKeys("text.vampirism.vampire", "text.vampirism.vampires");
-        VReference.HUNTER_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction(REFERENCE.HUNTER_PLAYER_KEY, IHunterPlayer.class, Color.BLUE.getRGB(), false, () -> HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL, REFERENCE.HIGHEST_HUNTER_LORD, LordTitles::getHunterTitle, new HunterVillageData());
+        VReference.HUNTER_FACTION = VampirismAPI.factionRegistry().createPlayableFaction(REFERENCE.HUNTER_PLAYER_KEY, IHunterPlayer.class, () -> HunterPlayer.CAP).color(Color.BLUE.getRGB()).highestLevel(REFERENCE.HIGHEST_HUNTER_LEVEL).lordLevel(REFERENCE.HIGHEST_HUNTER_LORD).lordTitle(LordTitles::getHunterTitle).village(new HunterVillageData()).register();
         VReference.HUNTER_FACTION.setChatColor(ChatFormatting.BLUE).setTranslationKeys("text.vampirism.hunter", "text.vampirism.hunters");
         VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_TYPE = VAMPIRE_CREATURE_TYPE;
