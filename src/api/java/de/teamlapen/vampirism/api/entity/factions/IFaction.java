@@ -18,13 +18,6 @@ public interface IFaction<T extends IFactionEntity> {
     ChatFormatting getChatColor();
 
     /**
-     * Set the chat color
-     *
-     * @return The same instance
-     */
-    IFaction<T> setChatColor(ChatFormatting color);
-
-    /**
      * Used for some rendering, e.g. for displaying the level
      */
     int getColor();
@@ -62,10 +55,4 @@ public interface IFaction<T extends IFactionEntity> {
      */
     boolean isHostileTowardsNeutral();
 
-    /**
-     * Set the unlocalized name
-     *
-     * @return The same instance
-     */
-    IFaction<T> setTranslationKeys(String name, String plural);
 }

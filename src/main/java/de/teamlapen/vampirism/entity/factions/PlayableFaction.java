@@ -4,7 +4,10 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.IVillageFactionData;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -30,8 +33,8 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
 
     private boolean renderLevel = true;
 
-    PlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull BiFunction<Integer, Boolean, Component> lordTitleFunction, @Nonnull IVillageFactionData villageFactionData, @Nullable Function<IRefinementItem.AccessorySlotType, IRefinementItem> accessoryBySlotFunction) {
-        super(id, entityInterface, color, hostileTowardsNeutral, villageFactionData);
+    PlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull BiFunction<Integer, Boolean, Component> lordTitleFunction, @Nonnull IVillageFactionData villageFactionData, @Nullable Function<IRefinementItem.AccessorySlotType, IRefinementItem> accessoryBySlotFunction, ChatFormatting chatColor, Component name, Component namePlural) {
+        super(id, entityInterface, color, hostileTowardsNeutral, villageFactionData, chatColor, name, namePlural);
         this.highestLevel = highestLevel;
         this.playerCapabilitySupplier = playerCapabilitySupplier;
         this.highestLordLevel = highestLordLevel;

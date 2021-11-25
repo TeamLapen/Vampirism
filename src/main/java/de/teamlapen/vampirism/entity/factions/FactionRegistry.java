@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.factions.*;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -163,6 +164,9 @@ public class FactionRegistry implements IFactionRegistry {
         protected int color= Color.WHITE.getRGB();
         protected boolean hostileTowardsNeutral;
         protected IVillageFactionData villageFactionData;
+        protected ChatFormatting chatColor;
+        protected String name;
+        protected String namePlural;
 
         public FactionBuilder(ResourceLocation id, Class<T> entityInterface) {
             this.id = id;
@@ -172,6 +176,12 @@ public class FactionRegistry implements IFactionRegistry {
         @Override
         public IFactionBuilder<T> color(int color) {
             this.color = color;
+            return this;
+        }
+
+        @Override
+        public IFactionBuilder<T> chatColor(ChatFormatting color) {
+            this.chatColor = color;
             return this;
         }
 
@@ -188,8 +198,28 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
+        public IFactionBuilder<T> name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        @Override
+        public IFactionBuilder<T> namePlural(String plural) {
+            this.namePlural = plural;
+            return this;
+        }
+
+        @Override
         public IFaction<T> register() {
-            Faction<T> faction = new Faction<>(this.id, this.entityInterface, this.color, this.hostileTowardsNeutral, this.villageFactionData);
+            Faction<T> faction = new Faction<>(
+                    this.id,
+                    this.entityInterface,
+                    this.color,
+                    this.hostileTowardsNeutral,
+                    this.villageFactionData,
+                    this.chatColor != null ? this.chatColor : ChatFormatting.WHITE,
+                    this.name == null?new TextComponent(id.toString()):new TranslatableComponent(this.name),
+                    this.namePlural == null ? this.name == null?new TextComponent(id.toString()):new TranslatableComponent(this.name):new TranslatableComponent(this.namePlural));
             addFaction(faction);
             return faction;
         }
@@ -251,11 +281,42 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
+        public IPlayableFactionBuilder<T> chatColor(ChatFormatting color) {
+            this.chatColor = color;
+            return this;
+        }
+
+        @Override
+        public IPlayableFactionBuilder<T> name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        @Override
+        public IPlayableFactionBuilder<T> namePlural(String plural) {
+            this.namePlural = plural;
+            return this;
+        }
+
+        @Override
         public IPlayableFaction<T> register() {
             if (this.lordTitleFunction == null) {
                 this.lordTitleFunction = (a, b) -> new TextComponent("Lord " + a);
             }
-            PlayableFaction<T> faction = new PlayableFaction<>(this.id, this.entityInterface, this.color, this.hostileTowardsNeutral, this.playerCapabilitySupplier, this.highestLevel, this.highestLordLevel, this.lordTitleFunction, this.villageFactionData, this.accessoryBySlotFunction);
+            PlayableFaction<T> faction = new PlayableFaction<>(
+                    this.id,
+                    this.entityInterface,
+                    this.color,
+                    this.hostileTowardsNeutral,
+                    this.playerCapabilitySupplier,
+                    this.highestLevel,
+                    this.highestLordLevel,
+                    this.lordTitleFunction,
+                    this.villageFactionData,
+                    this.accessoryBySlotFunction,
+                    this.chatColor != null ? this.chatColor : ChatFormatting.WHITE,
+                    this.name == null?new TextComponent(id.toString()):new TranslatableComponent(this.name),
+                    this.namePlural == null ? this.name == null?new TextComponent(id.toString()):new TranslatableComponent(this.name):new TranslatableComponent(this.namePlural));
             addFaction(faction);
             return faction;
         }
