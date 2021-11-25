@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
@@ -30,8 +31,8 @@ public class PlayableFaction<T extends IFactionPlayer<?>> extends Faction<T> imp
     private final Function<IRefinementItem.AccessorySlotType, IRefinementItem> accessoryBySlotFunction;
     private boolean renderLevel = true;
 
-    PlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull BiFunction<Integer, Boolean, ITextComponent> lordTitleFunction, @Nonnull IVillageFactionData villageFactionData, @Nullable Function<IRefinementItem.AccessorySlotType, IRefinementItem> accessoryBySlotFunction) {
-        super(id, entityInterface, color, hostileTowardsNeutral, villageFactionData);
+    PlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull BiFunction<Integer, Boolean, ITextComponent> lordTitleFunction, @Nonnull IVillageFactionData villageFactionData, @Nullable Function<IRefinementItem.AccessorySlotType, IRefinementItem> accessoryBySlotFunction, TextFormatting chatColor, ITextComponent name, ITextComponent namePlural) {
+        super(id, entityInterface, color, hostileTowardsNeutral, villageFactionData, chatColor, name, namePlural);
         this.highestLevel = highestLevel;
         this.playerCapabilitySupplier = playerCapabilitySupplier;
         this.highestLordLevel = highestLordLevel;

@@ -6,12 +6,10 @@ import de.teamlapen.vampirism.api.entity.factions.IVillageFactionData;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.awt.*;
 
 /**
@@ -29,18 +27,22 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private final int integerId;
     @Nonnull
     private final IVillageFactionData villageFactionData;
-    @Nullable
-    private String translationKey;
-    @Nullable
-    private String translationKeyPlural;
+    @Nonnull
+    private ITextComponent name;
+    @Nonnull
+    private ITextComponent namePlural;
+    @Nonnull
     private TextFormatting chatColor;
 
-    Faction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, @Nonnull IVillageFactionData villageFactionData) {
+    Faction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, @Nonnull IVillageFactionData villageFactionData, @Nonnull TextFormatting chatColor, @Nonnull ITextComponent name, @Nonnull ITextComponent namePlural) {
         this.id = id;
         this.entityInterface = entityInterface;
         this.color = color;
         this.hostileTowardsNeutral = hostileTowardsNeutral;
         this.villageFactionData = villageFactionData;
+        this.chatColor = chatColor;
+        this.name = name;
+        this.namePlural = namePlural;
         integerId = nextId++;
     }
 
@@ -49,11 +51,13 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
         return (obj instanceof Faction) && this.id == (((Faction) obj).id);
     }
 
+    @Nonnull
     @Override
     public TextFormatting getChatColor() {
-        return chatColor == null ? TextFormatting.WHITE : chatColor;
+        return this.chatColor;
     }
 
+    @Override
     public Faction<T> setChatColor(TextFormatting chatColor) {
         this.chatColor = chatColor;
         return this;
@@ -76,12 +80,12 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
 
     @Override
     public ITextComponent getName() {
-        return translationKey == null ? new StringTextComponent(id.toString()) : new TranslationTextComponent(translationKey);
+        return name;
     }
 
     @Override
     public ITextComponent getNamePlural() {
-        return translationKeyPlural == null ? new StringTextComponent(id.toString()) : new TranslationTextComponent(translationKeyPlural);
+        return namePlural;
     }
 
     @Nonnull
@@ -105,9 +109,10 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
         return hostileTowardsNeutral;
     }
 
+    @Override
     public Faction<T> setTranslationKeys(String unlocalizedName, String unlocalizedNamePlural) {
-        this.translationKey = unlocalizedName;
-        this.translationKeyPlural = unlocalizedNamePlural;
+        this.name = new TranslationTextComponent(unlocalizedName);
+        this.namePlural = new TranslationTextComponent(unlocalizedNamePlural);
         return this;
     }
 
