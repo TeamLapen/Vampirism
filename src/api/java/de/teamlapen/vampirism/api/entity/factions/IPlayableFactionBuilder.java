@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.entity.factions;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -55,6 +56,15 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<?>> extends IF
      * @return the builder
      */
     IPlayableFactionBuilder<T> accessoryItems(Function<IRefinementItem.AccessorySlotType, IRefinementItem> accessoryBySlotFunction);
+
+    @Override
+    IPlayableFactionBuilder<T> chatColor(TextFormatting color);
+
+    @Override
+    IPlayableFactionBuilder<T> name(String name);
+
+    @Override
+    IPlayableFactionBuilder<T> namePlural(String plural);
 
     @Override
     IPlayableFaction<T> register();

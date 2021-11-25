@@ -12,6 +12,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.NonNullSupplier;
 
@@ -141,7 +143,7 @@ public class FactionRegistry implements IFactionRegistry {
         if (!UtilLib.isNonNull(id, entityInterface)) {
             throw new IllegalArgumentException("[Vampirism]Parameter for faction cannot be null");
         }
-        Faction<T> f = new Faction<>(id, entityInterface, color, hostileTowardsNeutral, villageFactionData == null ? IVillageFactionData.INSTANCE : villageFactionData);
+        Faction<T> f = new Faction<>(id, entityInterface, color, hostileTowardsNeutral, villageFactionData == null ? IVillageFactionData.INSTANCE : villageFactionData, TextFormatting.WHITE, new StringTextComponent(id.toString()), new StringTextComponent(id.toString()));
         addFaction(f);
         return f;
     }
@@ -153,7 +155,7 @@ public class FactionRegistry implements IFactionRegistry {
             throw new IllegalArgumentException("[Vampirism]Parameters for faction cannot be null");
         }
 
-        PlayableFaction<T> f = new PlayableFaction<>(id, entityInterface, color, hostileTowardsNeutral, playerCapabilitySupplier, highestLevel, highestLordLevel, lordTitleFunction, villageFactionData == null ? IVillageFactionData.INSTANCE : villageFactionData, null);
+        PlayableFaction<T> f = new PlayableFaction<>(id, entityInterface, color, hostileTowardsNeutral, playerCapabilitySupplier, highestLevel, highestLordLevel, lordTitleFunction, villageFactionData == null ? IVillageFactionData.INSTANCE : villageFactionData, null, TextFormatting.WHITE, new StringTextComponent(id.toString()), new StringTextComponent(id.toString()));
         addFaction(f);
         return f;
     }
@@ -194,9 +196,12 @@ public class FactionRegistry implements IFactionRegistry {
 
         protected final ResourceLocation id;
         protected final Class<T> entityInterface;
-        protected Color color= Color.WHITE;
+        protected Color color = Color.WHITE;
         protected boolean hostileTowardsNeutral;
         protected IVillageFactionData villageFactionData;
+        protected TextFormatting chatColor;
+        protected String name;
+        protected String namePlural;
 
         public FactionBuilder(ResourceLocation id, Class<T> entityInterface) {
             this.id = id;
@@ -206,6 +211,12 @@ public class FactionRegistry implements IFactionRegistry {
         @Override
         public IFactionBuilder<T> color(Color color) {
             this.color = color;
+            return this;
+        }
+
+        @Override
+        public IFactionBuilder<T> chatColor(TextFormatting color) {
+            this.chatColor = color;
             return this;
         }
 
@@ -222,8 +233,28 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
+        public IFactionBuilder<T> name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        @Override
+        public IFactionBuilder<T> namePlural(String plural) {
+            this.namePlural = plural;
+            return this;
+        }
+
+        @Override
         public IFaction<T> register() {
-            Faction<T> faction = new Faction<>(this.id, this.entityInterface, this.color, this.hostileTowardsNeutral, this.villageFactionData);
+            Faction<T> faction = new Faction<>(
+                    this.id,
+                    this.entityInterface,
+                    this.color,
+                    this.hostileTowardsNeutral,
+                    this.villageFactionData,
+                    this.chatColor != null ? this.chatColor : TextFormatting.WHITE,
+                    this.name == null?new StringTextComponent(id.toString()):new TranslationTextComponent(this.name),
+                    this.namePlural == null ? this.name == null?new StringTextComponent(id.toString()):new TranslationTextComponent(this.name):new TranslationTextComponent(this.namePlural));
             addFaction(faction);
             return faction;
         }
@@ -285,11 +316,42 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
+        public IPlayableFactionBuilder<T> chatColor(TextFormatting color) {
+            this.chatColor = color;
+            return this;
+        }
+
+        @Override
+        public IPlayableFactionBuilder<T> name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        @Override
+        public IPlayableFactionBuilder<T> namePlural(String plural) {
+            this.namePlural = plural;
+            return this;
+        }
+
+        @Override
         public IPlayableFaction<T> register() {
             if (this.lordTitleFunction == null) {
                 this.lordTitleFunction = (a, b) -> new StringTextComponent("Lord " + a);
             }
-            PlayableFaction<T> faction = new PlayableFaction<>(this.id, this.entityInterface, this.color, this.hostileTowardsNeutral, this.playerCapabilitySupplier, this.highestLevel, this.highestLordLevel, this.lordTitleFunction, this.villageFactionData, this.accessoryBySlotFunction);
+            PlayableFaction<T> faction = new PlayableFaction<>(
+                    this.id,
+                    this.entityInterface,
+                    this.color,
+                    this.hostileTowardsNeutral,
+                    this.playerCapabilitySupplier,
+                    this.highestLevel,
+                    this.highestLordLevel,
+                    this.lordTitleFunction,
+                    this.villageFactionData,
+                    this.accessoryBySlotFunction,
+                    this.chatColor != null ? this.chatColor : TextFormatting.WHITE,
+                    this.name == null?new StringTextComponent(id.toString()):new TranslationTextComponent(this.name),
+                    this.namePlural == null ? this.name == null?new StringTextComponent(id.toString()):new TranslationTextComponent(this.name):new TranslationTextComponent(this.namePlural));
             addFaction(faction);
             return faction;
         }

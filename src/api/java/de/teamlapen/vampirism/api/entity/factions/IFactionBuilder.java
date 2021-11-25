@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
+import net.minecraft.util.text.TextFormatting;
+
 import javax.annotation.Nullable;
 import java.awt.*;
 
@@ -12,6 +14,8 @@ public interface IFactionBuilder<T extends IFactionEntity> {
      * @return the builder
      */
     IFactionBuilder<T> color(Color color);
+
+    IFactionBuilder<T> chatColor(TextFormatting color);
 
     /**
      * Sets this faction as hostile to neutral entities
@@ -27,6 +31,10 @@ public interface IFactionBuilder<T extends IFactionEntity> {
      * @return the builder
      */
     IFactionBuilder<T> village(@Nullable IVillageFactionData villageFactionData);
+
+    IFactionBuilder<T> name(String name);
+
+    IFactionBuilder<T> namePlural(String plural);
 
     /**
      * finish the building and registers the faction with values from the builder

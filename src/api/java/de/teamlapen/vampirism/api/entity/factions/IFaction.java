@@ -23,7 +23,8 @@ public interface IFaction<T extends IFactionEntity> {
      *
      * @return The same instance
      */
-    IFaction<T> setChatColor(TextFormatting color);
+    @Deprecated
+    IFaction<T> setChatColor(TextFormatting color); //TODO 1.17 remove
 
     /**
      * Used for some rendering, e.g. for displaying the level
@@ -69,5 +70,6 @@ public interface IFaction<T extends IFactionEntity> {
      * @param name
      * @return The same instance
      */
-    IFaction<T> setTranslationKeys(String name, String plural);
+    @Deprecated
+    IFaction<T> setTranslationKeys(String name, String plural); //TODO 1.17 remove
 }
