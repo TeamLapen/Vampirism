@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModRegistries;
-import de.teamlapen.vampirism.items.VampireRefinementItem;
 import de.teamlapen.vampirism.player.refinements.RefinementSet;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.item.Item;
@@ -38,8 +37,8 @@ public class RefinementItemReward extends ItemReward {
         this(faction, null, refinementRarity);
     }
 
-    public RefinementItemReward(@Nullable IFaction<?> faction, @Nullable VampireRefinementItem item, @Nullable IRefinementSet.Rarity refinementRarity) {
-        super(new ItemStack(item));
+    public RefinementItemReward(@Nullable IFaction<?> faction, @Nullable IRefinementItem item, @Nullable IRefinementSet.Rarity refinementRarity) {
+        super(new ItemStack((Item) item));
         this.faction = faction;
         this.rarity = refinementRarity;
     }
@@ -77,14 +76,14 @@ public class RefinementItemReward extends ItemReward {
         return stack;
     }
 
+    private List<ItemStack> getAllRefinementItems() {
+        return Arrays.stream(this.faction != null ? new IPlayableFaction[]{(IPlayableFaction<?>) this.faction} : VampirismAPI.factionRegistry().getPlayableFactions()).filter(IPlayableFaction::hasAccessories).flatMap(function -> Arrays.stream(IRefinementItem.AccessorySlotType.values()).map(function::getAccessoryItem)).map(a -> new ItemStack((Item) a)).collect(Collectors.toList());
+    }
+
     @Nullable
     private static IPlayableFaction<?> getRandomFactionWithAccessories() {
         List<IPlayableFaction<?>> factions = Arrays.stream(VampirismAPI.factionRegistry().getPlayableFactions()).filter(IPlayableFaction::hasAccessories).collect(Collectors.toList());
         if (factions.isEmpty()) return null;
-        return factions.get(RANDOM.nextInt(factions.size())-1);
-    }
-
-    private static List<ItemStack> getAllRefinementItems() {
-        return Arrays.stream(VampirismAPI.factionRegistry().getPlayableFactions()).filter(IPlayableFaction::hasAccessories).flatMap(function -> Arrays.stream(IRefinementItem.AccessorySlotType.values()).map(function::getAccessoryItem)).map(a -> new ItemStack((Item)a)).collect(Collectors.toList());
+        return factions.get(RANDOM.nextInt(factions.size()) - 1);
     }
 }

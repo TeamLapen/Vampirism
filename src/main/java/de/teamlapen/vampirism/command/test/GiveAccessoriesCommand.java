@@ -8,14 +8,15 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
+import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.command.arguments.RefinementSetArgument;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 
@@ -35,20 +36,18 @@ public class GiveAccessoriesCommand extends BasicCommand {
                         .executes(GiveAccessoriesCommand::help));
     }
 
-    private static int give(CommandContext<CommandSourceStack> context, ServerPlayer asPlayer, int number, IRefinementSet set) {
-        VampireRefinementItem i = switch (number) {
-            case 1 -> ModItems.amulet;
-            case 2 -> ModItems.ring;
-            default -> ModItems.obi_belt;
-        };
-        ItemStack s = new ItemStack(i);
-        if (i.applyRefinementSet(s, set)) {
-            asPlayer.addItem(s);
-            context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.test.give_accessories.success", set.getName(), number), false);
-        } else {
-            context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.test.give_accessories.incompatible", set.getName(), number), false);
+    private static <Z extends Item & IRefinementItem> int give(CommandContext<CommandSourceStack> context, ServerPlayer asPlayer, int number, IRefinementSet set) {
+        IFaction<?> faction = set.getFaction();
+        if (faction instanceof PlayableFaction<?>) { // should always be true
+            Z i = ((PlayableFaction<?>) faction).getAccessoryItem(IRefinementItem.AccessorySlotType.values()[number - 1]);
+            ItemStack s = new ItemStack(i);
+            if (i.applyRefinementSet(s, set)) {
+                asPlayer.addItem(s);
+                context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.test.give_accessories.success", set.getName(), number), false);
+            } else {
+                context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.test.give_accessories.incompatible", set.getName(), number), false);
+            }
         }
-
         return 0;
     }
 
@@ -67,6 +66,7 @@ public class GiveAccessoriesCommand extends BasicCommand {
                     entity.addItem(stack);
                 } else {
                     context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.test.give_accessories.no_item"), false);
+                    return 0;
                 }
             }
         }

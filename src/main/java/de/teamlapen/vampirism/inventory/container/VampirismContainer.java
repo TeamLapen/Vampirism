@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.inventory.container;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
@@ -17,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -31,10 +32,13 @@ import java.util.stream.Collectors;
 
 public class VampirismContainer extends InventoryContainer implements TaskContainer {
 
-    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{
-            new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.AMULET, 58, 8),
-            new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.RING, 58, 26),
-            new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.OBI_BELT, 58, 44)};
+    private static final Function<Player, SelectorInfo[]> SELECTOR_INFOS = player -> {
+        IPlayableFaction<?> faction = FactionPlayerHandler.get(player).getCurrentFactionPlayer().orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction")).getFaction();
+        return new SelectorInfo[]{
+                new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.AMULET && ((IRefinementItem) stack.getItem()).getExclusiveFaction(stack).equals(faction), 58, 8),
+                new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.RING && ((IRefinementItem) stack.getItem()).getExclusiveFaction(stack).equals(faction), 58, 26),
+                new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.OBI_BELT && ((IRefinementItem) stack.getItem()).getExclusiveFaction(stack).equals(faction), 58, 44)};
+    };
     private final IFactionPlayer<?> factionPlayer;
     private final ChatFormatting factionColor;
     private final NonNullList<ItemStack> refinementStacks = NonNullList.withSize(3, ItemStack.EMPTY);
@@ -45,10 +49,10 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     private boolean refinementsAvailable = false;
 
     public VampirismContainer(int id, @Nonnull Inventory playerInventory) {
-        super(ModContainer.vampirism, id, playerInventory, ContainerLevelAccess.NULL, new SimpleContainer(3), RemovingSelectorSlot::new, SELECTOR_INFOS);
+        super(ModContainer.vampirism, id, playerInventory, ContainerLevelAccess.NULL, new SimpleContainer(3), RemovingSelectorSlot::new, SELECTOR_INFOS.apply(playerInventory.player));
         this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction"));
         this.factionColor = factionPlayer.getFaction().getChatColor();
-        this.refinementsAvailable = factionPlayer.getFaction() == VReference.VAMPIRE_FACTION;
+        this.refinementsAvailable = factionPlayer.getFaction().hasAccessories();
         this.addPlayerSlots(playerInventory, 37, 124);
         ItemStack[] sets = this.factionPlayer.getSkillHandler().createRefinementItems();
         for (int i = 0; i < sets.length; i++) {
