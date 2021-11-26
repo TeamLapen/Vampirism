@@ -59,13 +59,13 @@ public class VampireRefinementItem extends Item implements IRefinementItem { //T
         return ItemStack.EMPTY;
     }
 
-    public static IRefinementSet getRandomRefinementForItem(@Nullable IFaction<?> faction, VampireRefinementItem stack) {
+    public static IRefinementSet getRandomRefinementForItem(@Nullable IFaction<?> faction, IRefinementItem stack) {
         List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream().filter(set -> faction == null || set.getFaction() == faction).filter(set -> set.getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return null;
         return WeightedRandom.getRandomItem(RANDOM, sets).getItem();
     }
 
-    public static VampireRefinementItem getItemForType(AccessorySlotType type) {
+    public static VampireRefinementItem getItemForType(AccessorySlotType type) { //TODO 1.17 move to vampire subclass
         switch (type) {
             case AMULET:
                 return ModItems.amulet;
