@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.effects;
 
+import de.teamlapen.vampirism.api.effects.IHiddenEffectInstance;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectType;
@@ -22,11 +23,11 @@ public class VampirismNightVisionPotion extends Effect {
 
     @Override
     public boolean shouldRender(EffectInstance effect) {
-        return !(effect instanceof VampireNightVisionEffectInstance) && super.shouldRender(effect);
+        return !(effect instanceof IHiddenEffectInstance) && super.shouldRender(effect);
     }
 
     @Override
     public boolean shouldRenderHUD(EffectInstance effect) {
-        return !(effect instanceof VampireNightVisionEffectInstance) && super.shouldRender(effect);
+        return !(effect instanceof IHiddenEffectInstance) && super.shouldRender(effect);
     }
 }

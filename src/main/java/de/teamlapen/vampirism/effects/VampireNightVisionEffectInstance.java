@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.effects;
 
+import de.teamlapen.vampirism.api.effects.IHiddenEffectInstance;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Night vision effect for vampire players which is not displayed
  */
-public class VampireNightVisionEffectInstance extends EffectInstance {
+public class VampireNightVisionEffectInstance extends EffectInstance implements IHiddenEffectInstance {
 
     public VampireNightVisionEffectInstance() {
         super(Effects.NIGHT_VISION, 10000, 0, false, false);
