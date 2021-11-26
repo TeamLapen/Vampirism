@@ -1,7 +1,11 @@
 package de.teamlapen.vampirism.api.items;
 
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import net.minecraft.item.ItemStack;
+
+import javax.annotation.Nonnull;
 
 /**
  * only extended by Item
@@ -18,7 +22,14 @@ public interface IRefinementItem extends IFactionExclusiveItem {
      *
      * @return Whether the set was successfully applied
      */
-    boolean applyRefinementSet(ItemStack stack, IRefinementSet set);
+    default boolean applyRefinementSet(ItemStack stack, IRefinementSet set) {//TODO 1.17 remove default implementation
+        return false;
+    }
+
+    @Nonnull
+    default IFaction<?> getExclusiveFaction() { //TODO 1.17 remove
+        return VReference.VAMPIRE_FACTION;
+    }
 
     enum AccessorySlotType {
         AMULET(0), RING(1), OBI_BELT(2);
