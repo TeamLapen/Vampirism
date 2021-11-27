@@ -102,8 +102,8 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         ItemStack[] items = new ItemStack[this.appliedRefinementSets.length];
         for (int i = 0; i < this.appliedRefinementSets.length; i++) {
             if (this.appliedRefinementSets[i] != null) {
-                items[i] = new ItemStack(this.faction.getAccessoryItem(IRefinementItem.AccessorySlotType.values()[i]));
-                this.faction.getAccessoryItem(IRefinementItem.AccessorySlotType.values()[i]).applyRefinementSet(items[i], this.appliedRefinementSets[i]);
+                items[i] = new ItemStack(this.faction.getRefinementItem(IRefinementItem.AccessorySlotType.values()[i]));
+                this.faction.getRefinementItem(IRefinementItem.AccessorySlotType.values()[i]).applyRefinementSet(items[i], this.appliedRefinementSets[i]);
                 items[i].setDamageValue(this.refinementSetDamage[i]);
             }
         }

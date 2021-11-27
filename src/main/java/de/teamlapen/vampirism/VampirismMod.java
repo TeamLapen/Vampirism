@@ -322,7 +322,7 @@ public class VampirismMod {
                 .lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD)
                 .lordTitle(LordTitles::getVampireTitle)
                 .village(new VampireVillageData())
-                .accessoryItems(VampireRefinementItem::getItemForType)
+                .refinementItems(VampireRefinementItem::getItemForType)
                 .register();
         VReference.HUNTER_FACTION = VampirismAPI.factionRegistry()
                 .createPlayableFaction(REFERENCE.HUNTER_PLAYER_KEY, IHunterPlayer.class, () -> HunterPlayer.CAP)

@@ -49,7 +49,7 @@ public class VampireRefinementItem extends Item implements IRefinementItem { //T
                 default -> AccessorySlotType.AMULET;
             };
         });
-        IRefinementItem i = faction.getAccessoryItem(t);
+        IRefinementItem i = faction.getRefinementItem(t);
         ItemStack stack = new ItemStack(((Item) i));
         if (i.applyRefinementSet(stack, s)) {
             return stack;

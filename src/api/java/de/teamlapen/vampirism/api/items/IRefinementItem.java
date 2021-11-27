@@ -8,20 +8,24 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nonnull;
 
 /**
- * only extended by Item
+ * represents an accessory item
+ *
+ * @implSpec should only be implemented by {@link net.minecraft.world.item.Item}s
  */
 public interface IRefinementItem extends IFactionExclusiveItem {
 
     /**
-     * Gets {@link IRefinementSet} from a {@link IRefinementItem} stack
+     * Gets the refinement set that is applied to this refinement item
      *
-     * @param stack stack of a {@link IRefinementItem}
-     * @return {@link IRefinementSet} of the stack
+     * @param stack the refinement item stack
+     * @return the applied refinement set
      */
     IRefinementSet getRefinementSet(ItemStack stack);
 
     /**
-     * @return slot this IRefinementItem can be equipped
+     * Gets the accessory slot where this item can be equipped
+     *
+     * @return accessory slot
      */
     AccessorySlotType getSlotType();
 
@@ -40,6 +44,11 @@ public interface IRefinementItem extends IFactionExclusiveItem {
         return VReference.VAMPIRE_FACTION;
     }
 
+    /**
+     * Slots types for {@link IRefinementItem}
+     * <br>
+     * (like {@link net.minecraft.world.entity.EquipmentSlot} for other items)
+     */
     enum AccessorySlotType {
         AMULET(0), RING(1), OBI_BELT(2);
 
@@ -52,6 +61,9 @@ public interface IRefinementItem extends IFactionExclusiveItem {
             this.slot = slot;
         }
 
+        /**
+         * @return slot index
+         */
         public int getSlot() {
             return slot;
         }
