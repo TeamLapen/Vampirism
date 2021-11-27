@@ -62,7 +62,7 @@ public class RefinementItemReward extends ItemReward {
         if (faction == null) return ItemStack.EMPTY;
         IPlayableFaction<?> finalFaction = faction;
 
-        Z item = faction.getAccessoryItem(IRefinementItem.AccessorySlotType.values()[RANDOM.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
+        Z item = faction.getRefinementItem(IRefinementItem.AccessorySlotType.values()[RANDOM.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
         IRefinementItem.AccessorySlotType slot = (item).getSlotType();
         List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream()
                 .filter(set -> finalFaction == null || set.getFaction() == finalFaction)
@@ -77,12 +77,12 @@ public class RefinementItemReward extends ItemReward {
     }
 
     private List<ItemStack> getAllRefinementItems() {
-        return Arrays.stream(this.faction != null ? new IPlayableFaction[]{(IPlayableFaction<?>) this.faction} : VampirismAPI.factionRegistry().getPlayableFactions()).filter(IPlayableFaction::hasAccessories).flatMap(function -> Arrays.stream(IRefinementItem.AccessorySlotType.values()).map(function::getAccessoryItem)).map(a -> new ItemStack((Item) a)).collect(Collectors.toList());
+        return Arrays.stream(this.faction != null ? new IPlayableFaction[]{(IPlayableFaction<?>) this.faction} : VampirismAPI.factionRegistry().getPlayableFactions()).filter(IPlayableFaction::hasRefinements).flatMap(function -> Arrays.stream(IRefinementItem.AccessorySlotType.values()).map(function::getRefinementItem)).map(a -> new ItemStack((Item) a)).collect(Collectors.toList());
     }
 
     @Nullable
     private static IPlayableFaction<?> getRandomFactionWithAccessories() {
-        List<IPlayableFaction<?>> factions = Arrays.stream(VampirismAPI.factionRegistry().getPlayableFactions()).filter(IPlayableFaction::hasAccessories).collect(Collectors.toList());
+        List<IPlayableFaction<?>> factions = Arrays.stream(VampirismAPI.factionRegistry().getPlayableFactions()).filter(IPlayableFaction::hasRefinements).collect(Collectors.toList());
         if (factions.isEmpty()) return null;
         return factions.get(RANDOM.nextInt(factions.size()) - 1);
     }
