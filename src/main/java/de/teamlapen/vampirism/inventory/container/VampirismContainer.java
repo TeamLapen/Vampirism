@@ -52,7 +52,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
         super(ModContainer.vampirism, id, playerInventory, IWorldPosCallable.NULL, new Inventory(3), RemovingSelectorSlot::new, SELECTOR_INFOS.apply(playerInventory.player));
         this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction"));
         this.factionColor = factionPlayer.getFaction().getChatColor();
-        this.refinementsAvailable = factionPlayer.getFaction().hasAccessories();
+        this.refinementsAvailable = factionPlayer.getFaction().hasRefinements();
         this.addPlayerSlots(playerInventory, 37, 124);
         ItemStack[] sets = this.factionPlayer.getSkillHandler().createRefinementItems();
         for (int i = 0; i < sets.length; i++) {

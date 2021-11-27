@@ -233,14 +233,14 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public IFactionBuilder<T> name(String name) {
-            this.name = name;
+        public IFactionBuilder<T> name(String nameKey) {
+            this.name = nameKey;
             return this;
         }
 
         @Override
-        public IFactionBuilder<T> namePlural(String plural) {
-            this.namePlural = plural;
+        public IFactionBuilder<T> namePlural(String namePluralKey) {
+            this.namePlural = namePluralKey;
             return this;
         }
 
@@ -266,7 +266,7 @@ public class FactionRegistry implements IFactionRegistry {
         protected int highestLevel = 1;
         protected int highestLordLevel = 0;
         protected BiFunction<Integer, Boolean, ITextComponent> lordTitleFunction;
-        protected Function<IRefinementItem.AccessorySlotType, IRefinementItem> accessoryBySlotFunction;
+        protected Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot;
 
         public PlayableFactionBuilder(ResourceLocation id, Class<T> entityInterface, NonNullSupplier<Capability<T>> playerCapabilitySupplier) {
             super(id, entityInterface);
@@ -310,8 +310,8 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public IPlayableFactionBuilder<T> accessoryItems(Function<IRefinementItem.AccessorySlotType, IRefinementItem> accessoryBySlotFunction) {
-            this.accessoryBySlotFunction = accessoryBySlotFunction;
+        public IPlayableFactionBuilder<T> refinementItems(Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot) {
+            this.refinementItemBySlot = refinementItemBySlot;
             return this;
         }
 
@@ -322,14 +322,14 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public IPlayableFactionBuilder<T> name(String name) {
-            this.name = name;
+        public IPlayableFactionBuilder<T> name(String nameKey) {
+            this.name = nameKey;
             return this;
         }
 
         @Override
-        public IPlayableFactionBuilder<T> namePlural(String plural) {
-            this.namePlural = plural;
+        public IPlayableFactionBuilder<T> namePlural(String namePluralKey) {
+            this.namePlural = namePluralKey;
             return this;
         }
 
@@ -348,7 +348,7 @@ public class FactionRegistry implements IFactionRegistry {
                     this.highestLordLevel,
                     this.lordTitleFunction,
                     this.villageFactionData,
-                    this.accessoryBySlotFunction,
+                    this.refinementItemBySlot,
                     this.chatColor != null ? this.chatColor : TextFormatting.WHITE,
                     this.name == null?new StringTextComponent(id.toString()):new TranslationTextComponent(this.name),
                     this.namePlural == null ? this.name == null?new StringTextComponent(id.toString()):new TranslationTextComponent(this.name):new TranslationTextComponent(this.namePlural));
