@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -47,6 +48,7 @@ public class FactionRegistry implements IFactionRegistry {
         temp = null;
         List<PlayableFaction> temp2 = new ArrayList<>();
         for (Faction allFaction : allFactions) {
+            allFaction.finish();
             if (allFaction instanceof PlayableFaction) {
                 temp2.add((PlayableFaction) allFaction);
             }
@@ -143,7 +145,7 @@ public class FactionRegistry implements IFactionRegistry {
         if (!UtilLib.isNonNull(id, entityInterface)) {
             throw new IllegalArgumentException("[Vampirism]Parameter for faction cannot be null");
         }
-        Faction<T> f = new Faction<>(id, entityInterface, color, hostileTowardsNeutral, villageFactionData == null ? IVillageFactionData.INSTANCE : villageFactionData, TextFormatting.WHITE, new StringTextComponent(id.toString()), new StringTextComponent(id.toString()));
+        Faction<T> f = new Faction<>(id, entityInterface, color, hostileTowardsNeutral, villageFactionData == null ? new FactionVillageBuilder() : villageFactionData, TextFormatting.WHITE, new StringTextComponent(id.toString()), new StringTextComponent(id.toString()));
         addFaction(f);
         return f;
     }
@@ -155,7 +157,7 @@ public class FactionRegistry implements IFactionRegistry {
             throw new IllegalArgumentException("[Vampirism]Parameters for faction cannot be null");
         }
 
-        PlayableFaction<T> f = new PlayableFaction<>(id, entityInterface, color, hostileTowardsNeutral, playerCapabilitySupplier, highestLevel, highestLordLevel, lordTitleFunction, villageFactionData == null ? IVillageFactionData.INSTANCE : villageFactionData, null, TextFormatting.WHITE, new StringTextComponent(id.toString()), new StringTextComponent(id.toString()));
+        PlayableFaction<T> f = new PlayableFaction<>(id, entityInterface, color, hostileTowardsNeutral, playerCapabilitySupplier, highestLevel, highestLordLevel, lordTitleFunction, villageFactionData == null ? new FactionVillageBuilder() : villageFactionData, null, TextFormatting.WHITE, new StringTextComponent(id.toString()), new StringTextComponent(id.toString()));
         addFaction(f);
         return f;
     }
@@ -198,7 +200,7 @@ public class FactionRegistry implements IFactionRegistry {
         protected final Class<T> entityInterface;
         protected Color color = Color.WHITE;
         protected boolean hostileTowardsNeutral;
-        protected IVillageFactionData villageFactionData;
+        protected FactionVillageBuilder villageFactionData = new FactionVillageBuilder();
         protected TextFormatting chatColor;
         protected String name;
         protected String namePlural;
@@ -209,13 +211,13 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public IFactionBuilder<T> color(Color color) {
+        public IFactionBuilder<T> color(@Nonnull Color color) {
             this.color = color;
             return this;
         }
 
         @Override
-        public IFactionBuilder<T> chatColor(TextFormatting color) {
+        public IFactionBuilder<T> chatColor(@Nonnull TextFormatting color) {
             this.chatColor = color;
             return this;
         }
@@ -227,19 +229,19 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public IFactionBuilder<T> village(@Nullable IVillageFactionData villageFactionData) {
-            this.villageFactionData = villageFactionData;
+        public IFactionBuilder<T> village(@Nonnull Consumer<IFactionVillageBuilder> villageBuilder) {
+            villageBuilder.accept(this.villageFactionData);
             return this;
         }
 
         @Override
-        public IFactionBuilder<T> name(String nameKey) {
+        public IFactionBuilder<T> name(@Nonnull String nameKey) {
             this.name = nameKey;
             return this;
         }
 
         @Override
-        public IFactionBuilder<T> namePlural(String namePluralKey) {
+        public IFactionBuilder<T> namePlural(@Nonnull String namePluralKey) {
             this.namePlural = namePluralKey;
             return this;
         }
@@ -274,15 +276,13 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public IPlayableFactionBuilder<T> color(Color color) {
-            this.color = color;
-            return this;
+        public IPlayableFactionBuilder<T> color(@Nonnull Color color) {
+            return (IPlayableFactionBuilder<T>) super.color(color);
         }
 
         @Override
         public IPlayableFactionBuilder<T> hostileTowardsNeutral() {
-            this.hostileTowardsNeutral = true;
-            return this;
+            return (IPlayableFactionBuilder<T>) super.hostileTowardsNeutral();
         }
 
         @Override
@@ -304,33 +304,29 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public IPlayableFactionBuilder<T> village(@Nullable IVillageFactionData villageFactionData) {
-            this.villageFactionData = villageFactionData;
-            return this;
+        public IPlayableFactionBuilder<T> village(@Nonnull Consumer<IFactionVillageBuilder> villageBuilder) {
+            return (IPlayableFactionBuilder<T>) super.village(villageBuilder);
         }
 
         @Override
-        public IPlayableFactionBuilder<T> refinementItems(Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot) {
+        public IPlayableFactionBuilder<T> refinementItems(@Nonnull Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot) {
             this.refinementItemBySlot = refinementItemBySlot;
             return this;
         }
 
         @Override
-        public IPlayableFactionBuilder<T> chatColor(TextFormatting color) {
-            this.chatColor = color;
-            return this;
+        public IPlayableFactionBuilder<T> chatColor(@Nonnull TextFormatting color) {
+            return (IPlayableFactionBuilder<T>) super.chatColor(color);
         }
 
         @Override
-        public IPlayableFactionBuilder<T> name(String nameKey) {
-            this.name = nameKey;
-            return this;
+        public IPlayableFactionBuilder<T> name(@Nonnull String nameKey) {
+            return (IPlayableFactionBuilder<T>) super.name(nameKey);
         }
 
         @Override
-        public IPlayableFactionBuilder<T> namePlural(String namePluralKey) {
-            this.namePlural = namePluralKey;
-            return this;
+        public IPlayableFactionBuilder<T> namePlural(@Nonnull String namePluralKey) {
+            return (IPlayableFactionBuilder<T>) super.namePlural(namePluralKey);
         }
 
         @Override

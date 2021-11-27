@@ -297,7 +297,7 @@ public class VampirismMod {
                 .highestLevel(REFERENCE.HIGHEST_VAMPIRE_LEVEL)
                 .lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD)
                 .lordTitle(LordTitles::getVampireTitle)
-                .village(new VampireVillageData())
+                .village(VampireVillageData::vampireVillage)
                 .refinementItems(VampireRefinementItem::getItemForType)
                 .register();
         VReference.HUNTER_FACTION = VampirismAPI.factionRegistry()
@@ -309,7 +309,7 @@ public class VampirismMod {
                 .highestLevel(REFERENCE.HIGHEST_HUNTER_LEVEL)
                 .lordLevel(REFERENCE.HIGHEST_HUNTER_LORD)
                 .lordTitle(LordTitles::getHunterTitle)
-                .village(new HunterVillageData())
+                .village(HunterVillageData::hunterVillage)
                 .register();
         VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_TYPE = VAMPIRE_CREATURE_TYPE;

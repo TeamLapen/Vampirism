@@ -3,8 +3,10 @@ package de.teamlapen.vampirism.util;
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
 import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
+import de.teamlapen.vampirism.api.entity.factions.IFactionVillageBuilder;
 import de.teamlapen.vampirism.api.entity.factions.IVillageFactionData;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
@@ -25,7 +27,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class VampireVillageData implements IVillageFactionData {
+public class VampireVillageData implements IVillageFactionData {// TODO 1.17 only keep static methods
     public static ItemStack createBanner() {
         ItemStack itemStack = new ItemStack(Items.BLACK_BANNER);
         CompoundNBT compoundNBT = itemStack.getOrCreateTagElement("BlockEntityTag");
@@ -42,6 +44,17 @@ public class VampireVillageData implements IVillageFactionData {
         itemStack.setHoverName(new TranslationTextComponent("block.minecraft.ominous_banner").withStyle(TextFormatting.GOLD));
         return itemStack;
     }
+
+    public static void vampireVillage(IFactionVillageBuilder builder) {
+        builder.badOmenEffect(() -> ModEffects.bad_omen_vampire)
+                .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.vampire, 10), new CaptureEntityEntry(ModEntities.advanced_vampire, 2)))
+                .factionVillagerProfession(() -> ModVillage.vampire_expert)
+                .guardSuperClass(VampireBaseEntity.class)
+                .taskMaster(() -> ModEntities.task_master_vampire)
+                .banner(VampireVillageData::createBanner)
+                .totem(() -> ModBlocks.totem_top_vampirism_vampire, () -> ModBlocks.totem_top_vampirism_vampire_crafted);
+    }
+
     private final ItemStack banner = createBanner();
     private List<CaptureEntityEntry> captureEntityEntries;
 
@@ -59,11 +72,13 @@ public class VampireVillageData implements IVillageFactionData {
         return this.captureEntityEntries;
     }
 
+    @Nonnull
     @Override
     public VillagerProfession getFactionVillageProfession() {
         return ModVillage.vampire_expert;
     }
 
+    @Nonnull
     @Override
     public Class<? extends MobEntity> getGuardSuperClass() {
         return VampireBaseEntity.class;
@@ -74,6 +89,7 @@ public class VampireVillageData implements IVillageFactionData {
         return ModEntities.task_master_vampire;
     }
 
+    @Nonnull
     @Override
     public Pair<Block, Block> getTotemTopBlock() {
         return Pair.of(ModBlocks.totem_top_vampirism_vampire, ModBlocks.totem_top_vampirism_vampire_crafted);
