@@ -55,7 +55,7 @@ public interface IPlayableFaction<T extends IFactionPlayer> extends IFaction<T> 
     /**
      * @return If this faction is allowed to have accessories
      */
-    boolean hasAccessories();
+    boolean hasRefinements();
 
     /**
      * Gets the corresponding item for the slot
@@ -63,6 +63,6 @@ public interface IPlayableFaction<T extends IFactionPlayer> extends IFaction<T> 
      * @param type
      * @throws NullPointerException if there are no accessories available
      */
-    <Z extends Item & IRefinementItem> Z getAccessoryItem(IRefinementItem.AccessorySlotType type);
+    <Z extends Item & IRefinementItem> Z getRefinementItem(IRefinementItem.AccessorySlotType type);
 
 }

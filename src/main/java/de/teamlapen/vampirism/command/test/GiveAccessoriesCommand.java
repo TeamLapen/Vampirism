@@ -39,7 +39,7 @@ public class GiveAccessoriesCommand extends BasicCommand {
     private static <Z extends Item & IRefinementItem> int give(CommandContext<CommandSource> context, ServerPlayerEntity asPlayer, int number, IRefinementSet set) {
         IFaction<?> faction = set.getFaction();
         if (faction instanceof PlayableFaction<?>) { // should always be true
-            Z i = ((PlayableFaction<?>) faction).getAccessoryItem(IRefinementItem.AccessorySlotType.values()[number-1]);
+            Z i = ((PlayableFaction<?>) faction).getRefinementItem(IRefinementItem.AccessorySlotType.values()[number-1]);
             ItemStack s = new ItemStack(i);
             if (i.applyRefinementSet(s, set)) {
                 asPlayer.addItem(s);

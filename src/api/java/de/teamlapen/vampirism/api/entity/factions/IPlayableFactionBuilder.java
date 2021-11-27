@@ -52,19 +52,19 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<?>> extends IF
     /**
      * Allows this faction to have accessories
      *
-     * @param accessoryBySlotFunction function to get the refinement item for each slot
+     * @param refinementItemBySlot function to get the refinement item for each slot
      * @return the builder
      */
-    IPlayableFactionBuilder<T> accessoryItems(Function<IRefinementItem.AccessorySlotType, IRefinementItem> accessoryBySlotFunction);
+    IPlayableFactionBuilder<T> refinementItems(Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot);
 
     @Override
     IPlayableFactionBuilder<T> chatColor(TextFormatting color);
 
     @Override
-    IPlayableFactionBuilder<T> name(String name);
+    IPlayableFactionBuilder<T> name(String nameKey);
 
     @Override
-    IPlayableFactionBuilder<T> namePlural(String plural);
+    IPlayableFactionBuilder<T> namePlural(String namePluralKey);
 
     @Override
     IPlayableFaction<T> register();
