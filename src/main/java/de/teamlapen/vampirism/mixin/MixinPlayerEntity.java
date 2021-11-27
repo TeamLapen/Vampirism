@@ -29,6 +29,6 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IVampiri
 
     @ModifyVariable(method = "attack(Lnet/minecraft/world/entity/Entity;)V", at = @At(value = "STORE", ordinal = 0), ordinal = 1)
     public float vampireSlayerEnchantment(float damage, Entity target) {
-        return MixinHooks.calculateVampireSlayerEnchantments(target, this.getMainHandItem());
+        return damage + MixinHooks.calculateVampireSlayerEnchantments(target, this.getMainHandItem());
     }
 }

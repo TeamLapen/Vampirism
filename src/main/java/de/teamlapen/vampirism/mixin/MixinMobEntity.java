@@ -19,6 +19,6 @@ public abstract class MixinMobEntity extends LivingEntity {
 
     @ModifyVariable(method = "doHurtTarget", at = @At(value = "STORE", ordinal = 1), ordinal = 0)
     public float vampireSlayerEnchantment(float damage, Entity target) {
-        return MixinHooks.calculateVampireSlayerEnchantments(target, this.getMainHandItem());
+        return damage + MixinHooks.calculateVampireSlayerEnchantments(target, this.getMainHandItem());
     }
 }
