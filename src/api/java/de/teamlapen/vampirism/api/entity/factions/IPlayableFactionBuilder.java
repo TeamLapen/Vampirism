@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IFactionBuilder<T> {
@@ -46,7 +47,7 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IF
     IPlayableFactionBuilder<T> lordTitle(@Nonnull BiFunction<Integer, Boolean, Component> lordTitleFunction);
 
     @Override
-    IPlayableFactionBuilder<T> village(@Nullable IVillageFactionData villageFactionData);
+    IPlayableFactionBuilder<T> village(@Nonnull Consumer<IFactionVillageBuilder> villageBuilder);
 
     /**
      * Allows this faction to have accessories
@@ -54,16 +55,16 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IF
      * @param refinementItemBySlot function to get the refinement item for each slot
      * @return the builder
      */
-    IPlayableFactionBuilder<T> refinementItems(Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot);
+    IPlayableFactionBuilder<T> refinementItems(@Nonnull Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot);
 
     @Override
     IPlayableFactionBuilder<T> chatColor(ChatFormatting color);
 
     @Override
-    IPlayableFactionBuilder<T> name(String nameKey);
+    IPlayableFactionBuilder<T> name(@Nonnull String nameKey);
 
     @Override
-    IPlayableFactionBuilder<T> namePlural(String namePluralKey);
+    IPlayableFactionBuilder<T> namePlural(@Nonnull String namePluralKey);
 
     @Override
     IPlayableFaction<T> register();

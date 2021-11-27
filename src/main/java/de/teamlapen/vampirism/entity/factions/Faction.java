@@ -24,7 +24,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
      */
     private final int integerId;
     @Nonnull
-    private final IVillageFactionData villageFactionData;
+    private IVillageFactionData villageFactionData;
     @Nonnull
     private final Component name;
     @Nonnull
@@ -42,6 +42,10 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
         this.name = name;
         this.namePlural = namePlural;
         integerId = nextId++;
+    }
+
+    void finish(){
+        this.villageFactionData = this.villageFactionData.build();
     }
 
     @Override

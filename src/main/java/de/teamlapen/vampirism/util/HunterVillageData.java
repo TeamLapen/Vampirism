@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.util;
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
 import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
+import de.teamlapen.vampirism.api.entity.factions.IFactionVillageBuilder;
 import de.teamlapen.vampirism.api.entity.factions.IVillageFactionData;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -28,7 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class HunterVillageData implements IVillageFactionData {
+public class HunterVillageData implements IVillageFactionData { // TODO 1.17 only keep static methods
     public static ItemStack createBanner() {
         ItemStack itemStack = new ItemStack(Items.BLUE_BANNER);
         CompoundTag compoundNBT = itemStack.getOrCreateTagElement("BlockEntityTag");
@@ -44,6 +45,16 @@ public class HunterVillageData implements IVillageFactionData {
         itemStack.hideTooltipPart(ItemStack.TooltipPart.ADDITIONAL);
         itemStack.setHoverName(new TranslatableComponent("block.minecraft.ominous_banner").withStyle(ChatFormatting.GOLD));
         return itemStack;
+    }
+
+    public static void hunterVillage(IFactionVillageBuilder builder) {
+        builder.badOmenEffect(() -> ModEffects.bad_omen_hunter)
+                .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.hunter, 10)))
+                .factionVillagerProfession(() -> ModVillage.hunter_expert)
+                .guardSuperClass(HunterBaseEntity.class)
+                .taskMaster(() -> ModEntities.task_master_hunter)
+                .banner(HunterVillageData::createBanner)
+                .totem(() -> ModBlocks.totem_top_vampirism_hunter, () -> ModBlocks.totem_top_vampirism_hunter_crafted);
     }
 
     private final ItemStack banner = createBanner();
@@ -69,11 +80,13 @@ public class HunterVillageData implements IVillageFactionData {
         return this.captureEntityEntries;
     }
 
+    @Nonnull
     @Override
     public VillagerProfession getFactionVillageProfession() {
         return ModVillage.hunter_expert;
     }
 
+    @Nonnull
     @Override
     public Class<? extends Mob> getGuardSuperClass() {
         return HunterBaseEntity.class;
@@ -84,9 +97,10 @@ public class HunterVillageData implements IVillageFactionData {
         return ModEntities.task_master_hunter;
     }
 
+    @Nonnull
     @Override
-    public Pair<Block, Block> getTotemTopBlock() {
-        return Pair.of(ModBlocks.totem_top_vampirism_hunter, ModBlocks.totem_top_vampirism_hunter_crafted);
+    public Block getTotemTopBlock(boolean crafted) {
+        return crafted ? ModBlocks.totem_top_vampirism_hunter_crafted : ModBlocks.totem_top_vampirism_hunter;
     }
 
     @Override
