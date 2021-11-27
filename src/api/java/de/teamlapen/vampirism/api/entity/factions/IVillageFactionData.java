@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.api.entity.factions;
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
 import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
@@ -14,56 +13,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.List;
 
-public interface IVillageFactionData {
-
-    IVillageFactionData INSTANCE = new IVillageFactionData() {
-        @Nullable
-        @Override
-        public Effect getBadOmenEffect() {
-            return null;
-        }
-
-        @Nonnull
-        @Override
-        public ItemStack getBanner() {
-            return new ItemStack(Items.WHITE_BANNER);
-        }
-
-        @Override
-        public List<CaptureEntityEntry> getCaptureEntries() {
-            return Collections.emptyList();
-        }
-
-        @Override
-        public VillagerProfession getFactionVillageProfession() {
-            return VillagerProfession.NONE;
-        }
-
-        @Override
-        public Class<? extends MobEntity> getGuardSuperClass() {
-            return MobEntity.class;
-        }
-
-        @Nullable
-        @Override
-        public EntityType<? extends ITaskMasterEntity> getTaskMasterEntity() {
-            return null;
-        }
-
-        @Override
-        public Pair<Block, Block> getTotemTopBlock() {
-            return Pair.of(Blocks.AIR, Blocks.AIR);
-        }
-
-        @Override
-        public boolean isBanner(@Nonnull ItemStack stack) {
-            return ItemStack.matches(getBanner(), stack);
-        }
-    };
-
+public interface IVillageFactionData { //TODO 1.17 IFactionVillage
     /**
      * TODO 1.17 remove default for methods here (as they are implemented in the default instance)
      *
@@ -81,8 +33,10 @@ public interface IVillageFactionData {
 
     List<CaptureEntityEntry> getCaptureEntries();
 
+    @Nonnull
     VillagerProfession getFactionVillageProfession();
 
+    @Nonnull
     Class<? extends MobEntity> getGuardSuperClass();
 
     @Nullable
@@ -90,11 +44,27 @@ public interface IVillageFactionData {
 
     /**
      * @return Pair of totem top blocks for faction. Left is the generated (crafted=false), right is the crafted
+     *
+     * @deprecated use {@link #getTotemTopBlock(boolean)}
      */
-    Pair<Block, Block> getTotemTopBlock();
+    @Deprecated
+    @Nonnull
+    Pair<Block, Block> getTotemTopBlock(); //TODO 1.17 remove
+
+    @Nonnull
+    default Block getTotemTopBlock(boolean crafted) {
+        return crafted ? getTotemTopBlock().getRight() : getTotemTopBlock().getLeft();
+    }
 
     default boolean isBanner(@Nonnull ItemStack stack) {//TODO 1.17 remove default implementation
         return false;
     }
 
+    /**
+     * @deprecated internal use only
+     */
+    @Deprecated
+    default IVillageFactionData build() {
+        return this;
+    }
 }
