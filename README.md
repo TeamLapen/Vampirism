@@ -58,6 +58,7 @@ The following labeling scheme is used:
 - cournualllama2 _Lore_
 - Random _Textures/Models_
 - Shumnik _Textures/Models_
+- BugraaK _Textures/Models_
 
 ## API
 Vampirism has an API you can use to add blood values to your mod's creatures or make them convertible and more.

@@ -320,6 +320,8 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.cursed_spruce_fence_gate);
             this.dropSelf(ModBlocks.dark_spruce_fence);
             this.dropSelf(ModBlocks.cursed_spruce_fence);
+            this.dropSelf(ModBlocks.vampire_rack);
+            this.dropSelf(ModBlocks.throne);
         }
 
         @Nonnull

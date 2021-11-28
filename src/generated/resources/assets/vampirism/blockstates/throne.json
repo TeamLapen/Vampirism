@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "vampirism:block/throne"
+    },
+    "facing=south": {
+      "model": "vampirism:block/throne",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "vampirism:block/throne",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "vampirism:block/throne",
+      "y": 90
+    }
+  }
+}
