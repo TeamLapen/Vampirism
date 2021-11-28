@@ -4,10 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.blocks.AltarPillarBlock;
-import de.teamlapen.vampirism.blocks.CoffinBlock;
-import de.teamlapen.vampirism.blocks.GarlicBlock;
-import de.teamlapen.vampirism.blocks.MedChairBlock;
+import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
@@ -321,7 +318,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.dark_spruce_fence);
             this.dropSelf(ModBlocks.cursed_spruce_fence);
             this.dropSelf(ModBlocks.vampire_rack);
-            this.dropSelf(ModBlocks.throne);
+            this.add(ModBlocks.throne, (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
         }
 
         @Nonnull
