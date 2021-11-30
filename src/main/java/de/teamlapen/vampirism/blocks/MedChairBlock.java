@@ -54,10 +54,9 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         SHAPE_BOTTOM = box(1, 1, 0, 15, 10, 16);
     }
 
-
     @Nonnull
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         return new ItemStack(ModItems.item_med_chair);
     }
 

@@ -51,7 +51,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -103,7 +103,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putInt("level", getLevel());
+        nbt.putInt("level", getExpLevel());
         nbt.putInt("type", getEntityTextureType());
         nbt.putBoolean("attack", this.attack);
         nbt.putInt("entityclasstype", EntityClassType.getID(this.entityclass));
@@ -293,12 +293,12 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     //Entityactions ----------------------------------------------------------------------------------------------------
 
     @Override
-    public int getLevel() {
+    public int getExpLevel() {
         return getEntityData().get(LEVEL);
     }
 
     @Override
-    public void setLevel(int level) {
+    public void setExpLevel(int level) {
         if (level >= 0) {
             getEntityData().set(LEVEL, level);
             this.updateEntityAttributes();
@@ -339,7 +339,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     public void readAdditionalSaveData(@Nonnull CompoundTag tagCompund) {
         super.readAdditionalSaveData(tagCompund);
         if (tagCompund.contains("level")) {
-            setLevel(tagCompund.getInt("level"));
+            setExpLevel(tagCompund.getInt("level"));
         }
         if (tagCompund.contains("attack")) {
             this.attack = tagCompund.getBoolean("attack");
@@ -384,7 +384,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             protectionMod = 1F / (2F + protection.getAmplifier());
         }
 
-        return (float) (amount * protectionMod * BalanceMobProps.mobProps.VAMPIRE_FIRE_VULNERABILITY) * (getLevel() * 0.5F + 1);
+        return (float) (amount * protectionMod * BalanceMobProps.mobProps.VAMPIRE_FIRE_VULNERABILITY) * (getExpLevel() * 0.5F + 1);
     }
 
     @Override
@@ -401,7 +401,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Override
     protected int getExperienceReward(@Nonnull Player player) {
-        return 6 + getLevel();
+        return 6 + getExpLevel();
     }
 
     @Override
@@ -477,7 +477,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     protected void updateEntityAttributes() {
-        int l = Math.max(getLevel(), 0);
+        int l = Math.max(getExpLevel(), 0);
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_MAX_HEALTH + BalanceMobProps.mobProps.VAMPIRE_MAX_HEALTH_PL * l);
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE_PL * l);
     }

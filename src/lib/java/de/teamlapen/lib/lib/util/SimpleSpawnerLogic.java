@@ -173,7 +173,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
                         @Nullable
                         NaturalSpawner.SpawnState densityManager = ((ServerLevel) level).getChunkSource().getLastSpawnState();
                         try {
-                            if (densityManager != null && !densityManager.canSpawnForCategory(limitType)) {
+                            if (densityManager != null /*&& !densityManager.canSpawnForCategory(limitType)*/) { //TODO implement
                                 this.resetTimer();
                                 break;
                             }

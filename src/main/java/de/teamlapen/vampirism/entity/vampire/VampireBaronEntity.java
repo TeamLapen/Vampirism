@@ -94,7 +94,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     @Override
     public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putInt("level", getLevel());
+        nbt.putInt("level", getExpLevel());
         nbt.putBoolean("lady", isLady());
     }
 
@@ -126,7 +126,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
                     attackDecisionCounter = 0;
                 }
             }
-            if (getLevel() > 3 && this.random.nextInt(9) == 0) {
+            if (getExpLevel() > 3 && this.random.nextInt(9) == 0) {
                 this.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 60));
             }
         }
@@ -165,7 +165,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
             float tm = 1f;
             int mr = 1;
             if (entity instanceof Player) {
-                float pld = (this.getLevel() + 1) - VampirismPlayerAttributes.get((Player) entity).vampireLevel / 3f;
+                float pld = (this.getExpLevel() + 1) - VampirismPlayerAttributes.get((Player) entity).vampireLevel / 3f;
                 tm = pld + 1;
                 mr = pld < 1.5f ? 1 : (pld < 3 ? 2 : 3);
                 if (VampirismPlayerAttributes.get((Player) entity).getHuntSpecial().fullHunterCoat != null) {
@@ -203,12 +203,12 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public int getLevel() {
+    public int getExpLevel() {
         return getEntityData().get(LEVEL);
     }
 
     @Override
-    public void setLevel(int level) {
+    public void setExpLevel(int level) {
         if (level >= 0) {
             getEntityData().set(LEVEL, level);
             this.updateEntityAttributes(false);
@@ -227,7 +227,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 
     @Override
     public int getMaxFollowerCount() {
-        return (int) (BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_FOLLOWER * this.getLevel() / (float) this.getMaxLevel() * 2f);
+        return (int) (BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_FOLLOWER * this.getExpLevel() / (float) this.getMaxLevel() * 2f);
     }
 
     @Override
@@ -288,7 +288,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     @Override
     public void readAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
-        setLevel(Mth.clamp(nbt.getInt("level"), 0, MAX_LEVEL));
+        setExpLevel(Mth.clamp(nbt.getInt("level"), 0, MAX_LEVEL));
         this.getEntityData().set(LADY, nbt.getBoolean("lady"));
     }
 
@@ -334,7 +334,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 
     @Override
     protected int getExperienceReward(@Nonnull Player player) {
-        return 20 + 5 * getLevel();
+        return 20 + 5 * getExpLevel();
     }
 
     @Override
@@ -357,21 +357,21 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         if (aggressive) {
             this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(20D);
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(
-                    BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow((BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL - 1) / 5 + 1, (getLevel())));
+                    BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow((BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL - 1) / 5 + 1, (getExpLevel())));
         } else {
             this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(5D);
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(
-                    BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()) / 3);
+                    BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getExpLevel()) / 3);
         }
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_MAX_HEALTH * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_MAX_HEALTH * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getExpLevel()));
         this.getAttribute(Attributes.ATTACK_DAMAGE)
-                .setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
+                .setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getExpLevel()));
     }
 
     private boolean isLowerLevel(LivingEntity player) {
         if (player instanceof Player) {
             int playerLevel = FactionPlayerHandler.getOpt((Player) player).map(FactionPlayerHandler::getCurrentLevel).orElse(0);
-            return (playerLevel - 8) / 2F - VampireBaronEntity.this.getLevel() <= 0;
+            return (playerLevel - 8) / 2F - VampireBaronEntity.this.getExpLevel() <= 0;
         }
         return false;
     }

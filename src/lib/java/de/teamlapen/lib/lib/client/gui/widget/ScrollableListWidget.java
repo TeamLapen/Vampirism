@@ -8,8 +8,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.fmlclient.gui.GuiUtils;
-import net.minecraftforge.fmlclient.gui.widget.ExtendedButton;
+import net.minecraftforge.client.gui.GuiUtils;
+import net.minecraftforge.client.gui.widget.ExtendedButton;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

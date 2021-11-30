@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.api.entity.actions;
 
-import net.minecraft.util.WeighedRandom;
+import net.minecraft.util.random.WeightedEntry;
 
-public class EntityActionEntry extends WeighedRandom.WeighedRandomItem {
+public class EntityActionEntry extends WeightedEntry.IntrusiveBase {
     private final IEntityAction action;
 
     public EntityActionEntry(int itemWeightIn, IEntityAction actionIn) {

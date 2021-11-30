@@ -35,6 +35,7 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 
 public class VampirismScreen extends AbstractContainerScreen<VampirismContainer> implements ExtendedScreen {
 
@@ -208,7 +209,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
 
         @Override
         public void renderItemToolTip(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
-            if (this.button != null && this.button.isHovered()) {
+            if (this.button != null && this.button.isHoveredOrFocused()) {
                 this.button.renderToolTip(matrixStack, mouseX, mouseY);
             } else {
                 super.renderItemToolTip(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, zLevel);
@@ -236,7 +237,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
 
         private void onTooltip(Button button, PoseStack matrixStack, int mouseX, int mouseY) {
             Component position = menu.taskWrapper.get(this.item.getTaskBoard()).getLastSeenPos().map(pos -> new TextComponent("[" + pos.toShortString() + "]").withStyle(ChatFormatting.GREEN)).orElseGet(() -> new TranslatableComponent("gui.vampirism.vampirism_menu.last_known_pos.unknown").withStyle(ChatFormatting.GOLD));
-            renderComponentToolTip(matrixStack, Collections.singletonList(new TranslatableComponent("gui.vampirism.vampirism_menu.last_known_pos").append(position)), mouseX, mouseY, font);
+            renderComponentTooltip(matrixStack, Collections.singletonList(new TranslatableComponent("gui.vampirism.vampirism_menu.last_known_pos").append(position)), mouseX, mouseY, font);
 
         }
     }

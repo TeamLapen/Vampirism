@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
 import de.teamlapen.vampirism.player.refinements.RefinementSet;
-import net.minecraft.util.WeighedRandom;
+import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
@@ -61,7 +61,7 @@ public class RefinementItemReward extends ItemReward {
                 .map(set -> ((RefinementSet) set).getWeightedRandom()).collect(Collectors.toList());
         ItemStack stack = new ItemStack(item);
         if (!sets.isEmpty()) {
-            WeighedRandom.getRandomItem(RANDOM, sets).map(WeightedRandomItem::getItem).ifPresent(set -> item.applyRefinementSet(stack, set));
+            WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedRandomItem::getItem).ifPresent(set -> item.applyRefinementSet(stack, set));
         }
         return stack;
     }

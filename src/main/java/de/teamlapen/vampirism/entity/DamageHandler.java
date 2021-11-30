@@ -132,7 +132,7 @@ public class DamageHandler {
                     int l = VampirismPlayerAttributes.get((Player) entity).vampireLevel;
                     amount = scaleDamageWithLevel(l, REFERENCE.HIGHEST_VAMPIRE_LEVEL, amount * 0.8, amount * 1.3);
                 } else if (entity instanceof VampireBaronEntity) {
-                    int l = ((VampireBaronEntity) entity).getLevel();
+                    int l = ((VampireBaronEntity) entity).getExpLevel();
                     amount = scaleDamageWithLevel(l, VampireBaronEntity.MAX_LEVEL, amount * 0.8, amount * 2);
                 }
                 entity.hurt(VReference.HOLY_WATER, (float) amount);

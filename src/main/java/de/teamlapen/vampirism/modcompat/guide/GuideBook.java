@@ -364,12 +364,12 @@ public class GuideBook implements IGuideBook {
         ArrayList<IPage> hunterPages = new ArrayList<>();
         hunterPages.add(new PageEntity((world) -> {
             BasicHunterEntity entity = ModEntities.hunter.create(world);
-            entity.setLevel(1);
+            entity.setExpLevel(1);
             return entity;
         }));
         hunterPages.add(new PageEntity((world) -> {
             BasicHunterEntity entity = ModEntities.hunter.create(world);
-            entity.setLevel(0);
+            entity.setExpLevel(0);
             return entity;
         }));
         hunterPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "hunter.text", loc(ModItems.human_heart))));

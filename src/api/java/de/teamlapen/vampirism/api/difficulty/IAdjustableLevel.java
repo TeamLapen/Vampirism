@@ -10,12 +10,12 @@ public interface IAdjustableLevel {
      *
      * @return The current level
      */
-    int getLevel();
+    int getExpLevel();
 
     /**
      * Set the level
      */
-    void setLevel(int level);
+    void setExpLevel(int level);
 
     /**
      * @return Maximal possible level

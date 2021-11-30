@@ -129,14 +129,14 @@ public class TotemTopBlock extends BaseEntityBlock {
     }
 
     @Override
-    public boolean removedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         TotemBlockEntity tile = getTile(world, pos);
         if (tile != null) {
             if (!tile.canPlayerRemoveBlock(player)) {
                 return false;
             }
         }
-        if (super.removedByPlayer(state, world, pos, player, willHarvest, fluid)) {
+        if (super.onDestroyedByPlayer(state, world, pos, player, willHarvest, fluid)) {
             if (tile != null && tile.getControllingFaction() != null) {
                 tile.notifyNearbyPlayers(new TranslatableComponent("text.vampirism.village.village_abandoned"));
             }

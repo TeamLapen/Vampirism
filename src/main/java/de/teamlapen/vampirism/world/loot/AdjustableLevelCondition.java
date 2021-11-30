@@ -36,7 +36,7 @@ public class AdjustableLevelCondition implements LootItemCondition {
     public boolean test(LootContext lootContext) {
         Entity e = lootContext.getParamOrNull(target.getParam());
         if (e instanceof IAdjustableLevel) {
-            int l = ((IAdjustableLevel) e).getLevel();
+            int l = ((IAdjustableLevel) e).getExpLevel();
             if (levelTest != -1) {
                 return levelTest == l;
             }

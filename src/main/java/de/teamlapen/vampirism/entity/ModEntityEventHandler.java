@@ -172,7 +172,7 @@ public class ModEntityEventHandler {
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (!event.getWorld().isClientSide()) {
             if (event.getEntity() instanceof IAdjustableLevel entity) {
-                if (entity.getLevel() == -1) {
+                if (entity.getExpLevel() == -1) {
                     Difficulty d = DifficultyCalculator.findDifficultyForPos(event.getWorld(), event.getEntity().blockPosition(), 30);
                     int l = entity.suggestLevel(d);
                     if (l > entity.getMaxLevel()) {
@@ -180,7 +180,7 @@ public class ModEntityEventHandler {
                     } else if (l < 0) {
                         event.setCanceled(true);
                     }
-                    entity.setLevel(l);
+                    entity.setExpLevel(l);
                     if (entity instanceof PathfinderMob) {
                         ((PathfinderMob) entity).setHealth(((PathfinderMob) entity).getMaxHealth());
                     }

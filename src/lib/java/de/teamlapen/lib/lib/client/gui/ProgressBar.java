@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.fmlclient.gui.GuiUtils;
+import net.minecraftforge.client.gui.GuiUtils;
 
 import javax.annotation.Nonnull;
 
@@ -33,7 +33,7 @@ public class ProgressBar extends AbstractWidget {
     public void renderButton(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
-        int i = this.getYImage(this.isHovered());
+        int i = this.getYImage(this.isHovered);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
@@ -46,7 +46,7 @@ public class ProgressBar extends AbstractWidget {
         int j = getFGColor();
         drawCenteredString(matrixStack, font, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24);
 
-        if (isHovered()) {
+        if (isHovered) {
             renderToolTip(matrixStack, mouseX, mouseY);
         }
     }

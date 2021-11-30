@@ -40,8 +40,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.resource.IResourceType;
-import net.minecraftforge.resource.VanillaResourceType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -93,12 +91,6 @@ public class RenderHandler implements ResourceManagerReloadListener {
         this.mc = mc;
     }
 
-    @Nullable
-    @Override
-    public IResourceType getResourceType() {
-        return VanillaResourceType.SHADERS;
-    }
-
     @SubscribeEvent
     public void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
         if (shouldRenderBloodVision()) {
@@ -109,7 +101,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
                     this.displayWidth = mc.getWindow().getWidth();
                     this.updateFramebufferSize(this.displayWidth, this.displayHeight);
                 }
-                adjustBloodVisionShaders(getBloodVisionProgress((float) event.getRenderPartialTicks()));
+                adjustBloodVisionShaders(getBloodVisionProgress((float) event.getPartialTicks()));
             } else {
                 MixinHooks.enforcingGlowing_bloodVision = true;
             }
@@ -181,7 +173,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
         f *= vampireBiomeFogDistanceMultiplier;
         float fogStart = Math.min(event.getFarPlaneDistance() * 0.75f, 6 * f);
         float fogEnd = Math.min(event.getFarPlaneDistance(), 50 * f);
-        RenderSystem.setShaderFogStart(event.getType() == FogRenderer.FogMode.FOG_SKY ? 0 : fogStart); //maybe invert
+        RenderSystem.setShaderFogStart(event.getMode() == FogRenderer.FogMode.FOG_SKY ? 0 : fogStart); //maybe invert
         RenderSystem.setShaderFogEnd(fogEnd);
     }
 
@@ -219,12 +211,12 @@ public class RenderHandler implements ResourceManagerReloadListener {
                 int r = color >> 16 & 255;
                 int g = color >> 8 & 255;
                 int b = color & 255;
-                int alpha = (int) ((dist > ENTITY_NEAR_SQ_DISTANCE ? 50 : (dist / (double) ENTITY_NEAR_SQ_DISTANCE * 50d)) * getBloodVisionProgress(event.getPartialRenderTick()));
+                int alpha = (int) ((dist > ENTITY_NEAR_SQ_DISTANCE ? 50 : (dist / (double) ENTITY_NEAR_SQ_DISTANCE * 50d)) * getBloodVisionProgress(event.getPartialTick()));
                 bloodVisionBuffer.setColor(r, g, b, alpha);
-                float f = Mth.lerp(event.getPartialRenderTick(), entity.yRotO, entity.getYRot());
+                float f = Mth.lerp(event.getPartialTick(), entity.yRotO, entity.getYRot());
                 isInsideBloodVisionRendering = true;
                 EntityRenderer<? super Entity> entityrenderer = renderManager.getRenderer(entity);
-                entityrenderer.render(entity, f, event.getPartialRenderTick(), event.getMatrixStack(), bloodVisionBuffer, renderManager.getPackedLightCoords(entity, event.getPartialRenderTick()));
+                entityrenderer.render(entity, f, event.getPartialTick(), event.getPoseStack(), bloodVisionBuffer, renderManager.getPackedLightCoords(entity, event.getPartialTick()));
                 mc.getMainRenderTarget().bindWrite(false);
                 isInsideBloodVisionRendering = false;
 
@@ -261,7 +253,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
                 entityBat.setResting(false);
             }
 
-            float partialTicks = event.getPartialRenderTick();
+            float partialTicks = event.getPartialTick();
 
             // Copy values
             entityBat.yBodyRotO = player.yBodyRotO;
@@ -280,10 +272,10 @@ public class RenderHandler implements ResourceManagerReloadListener {
             double d1 = Mth.lerp(partialTicks, entityBat.yOld, entityBat.getY());
             double d2 = Mth.lerp(partialTicks, entityBat.zOld, entityBat.getZ());
             float f = Mth.lerp(partialTicks, entityBat.yRotO, entityBat.getYRot());
-            mc.getEntityRenderDispatcher().render(entityBat, d0, d1, d2, f, partialTicks, event.getMatrixStack(), mc.renderBuffers().bufferSource(), mc.getEntityRenderDispatcher().getPackedLightCoords(entityBat, partialTicks));
+            mc.getEntityRenderDispatcher().render(entityBat, d0, d1, d2, f, partialTicks, event.getPoseStack(), mc.renderBuffers().bufferSource(), mc.getEntityRenderDispatcher().getPackedLightCoords(entityBat, partialTicks));
 
         } else if (vAtt.isDBNO) {
-            event.getMatrixStack().translate(1.2, 0, 0);
+            event.getPoseStack().translate(1.2, 0, 0);
             PlayerModel<?> m = event.getRenderer().getModel();
             m.rightArm.visible = false;
             m.rightSleeve.visible = false;
@@ -298,7 +290,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent
-    public void onRenderWorldLast(RenderWorldLastEvent event) {
+    public void onRenderWorldLast(RenderLevelLastEvent event) {
         MixinHooks.enforcingGlowing_bloodVision = false;
         if (mc.level == null) return;
 

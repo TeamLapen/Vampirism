@@ -46,20 +46,19 @@ public class TotemBaseBlock extends VampirismBlock {
         return shape;
     }
 
-
     @Override
-    public boolean removedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         BlockPos up = pos.above();
         BlockState upState = world.getBlockState(pos.above());
         if (upState.getBlock() instanceof TotemTopBlock) {
             BlockEntity upTE = world.getBlockEntity(pos.above());
-            if (!upState.getBlock().removedByPlayer(upState, world, pos.above(), player, willHarvest, fluid)) {
+            if (!upState.getBlock().onDestroyedByPlayer(upState, world, pos.above(), player, willHarvest, fluid)) {
                 return false;
             }
             if (willHarvest) {
                 Block.dropResources(upState, world, up, upTE);
             }
         }
-        return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
+        return super.onDestroyedByPlayer(state, world, pos, player, willHarvest, fluid);
     }
 }

@@ -68,7 +68,7 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         CompoundTag nbtTag = new CompoundTag();
         this.save(nbtTag);
-        return new ClientboundBlockEntityDataPacket(getBlockPos(), 1, getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Nonnull

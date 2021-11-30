@@ -42,12 +42,12 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeI18n;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.living.LivingConversionEvent;
-import net.minecraftforge.fmllegacy.ForgeI18n;
-import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -494,7 +494,7 @@ public class UtilLib {
     }
 
     private static ChunkPos isBiomeAt(ServerLevel world, int x, int z, List<Biome> biomes) {
-        BlockPos pos = (world.getChunkSource()).getGenerator().getBiomeSource().findBiomeHorizontal(x, world.getSeaLevel(), z, 32, biomes::contains, new Random());//findBiomePosition
+        BlockPos pos = (world.getChunkSource()).getGenerator().getBiomeSource().findBiomeHorizontal(x, world.getSeaLevel(), z, 32, biomes::contains, new Random(), world.getChunkSource().getGenerator().climateSampler());//findBiomePosition
         if (pos != null) {
             return new ChunkPos(pos.getX() >> 4, pos.getZ() >> 4);
         }
@@ -649,7 +649,7 @@ public class UtilLib {
 
     @Nonnull
     public static StructureStart<?> getStructureStartAt(ServerLevel w, BlockPos pos, StructureFeature<?> s) {
-        return (w).structureFeatureManager()/*getStructureManager*/.getStructureAt(pos, false, s);
+        return (w).structureFeatureManager()/*getStructureManager*/.getStructureAt(pos, s);
     }
 
     /**

@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.api.entity;
 
-import net.minecraft.util.WeighedRandom;
+import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 
-public class CaptureEntityEntry extends WeighedRandom.WeighedRandomItem {
+public class CaptureEntityEntry extends WeightedEntry.IntrusiveBase {
     private final EntityType<? extends Mob> entity;
 
     public CaptureEntityEntry(EntityType<? extends Mob> entity, int itemWeightIn) {

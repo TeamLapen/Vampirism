@@ -128,6 +128,11 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
+    public void onMissingMappingsFeatures(RegistryEvent.MissingMappings<Feature<?>> event) {
+        ModFeatures.fixFeatureMappings(event);
+    }
+
+    @SubscribeEvent
     public void onRegisterActions(RegistryEvent.Register<IAction<?>> event) {
         VampireActions.registerDefaultActions(event.getRegistry());
         HunterActions.registerDefaultActions(event.getRegistry());

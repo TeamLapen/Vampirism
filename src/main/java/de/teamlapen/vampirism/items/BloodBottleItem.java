@@ -157,7 +157,7 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
     }
 
     @Override
-    public boolean showDurabilityBar(ItemStack stack) {
+    public boolean isBarVisible(@Nonnull ItemStack stack) {
         return false;
     }
 }

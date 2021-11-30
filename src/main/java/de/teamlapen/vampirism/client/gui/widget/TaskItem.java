@@ -34,7 +34,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.fmlclient.gui.GuiUtils;
+import net.minecraftforge.client.gui.GuiUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -301,11 +301,11 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     }
 
     private void renderItemTooltip(PoseStack mStack, ItemStack stack, int x, int y, Component text, boolean strikeThrough, @Nullable String bonus) {
-        GuiUtils.preItemToolTip(stack);
+//        GuiUtils.preItemToolTip(stack); //TODO 1.18 whats up here?
         List<Component> tooltips = getTooltipFromItem2(stack, strikeThrough, bonus);
         tooltips.add(0, text);
         this.screen.renderComponentTooltip(mStack, tooltips, x, y);
-        GuiUtils.postItemToolTip();
+//        GuiUtils.postItemToolTip(); //TODO 1.18 whats up here?
     }
 
     private void renderItemTooltip(PoseStack mStack, Task task, int x, int y) {

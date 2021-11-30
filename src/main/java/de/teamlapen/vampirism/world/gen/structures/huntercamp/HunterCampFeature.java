@@ -6,9 +6,14 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.levelgen.structure.pieces.PieceGenerator;
+import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 
 import javax.annotation.Nonnull;
@@ -18,25 +23,19 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class HunterCampFeature extends StructureFeature<NoneFeatureConfiguration> {
 
     public HunterCampFeature(Codec<NoneFeatureConfiguration> deserializer) {
-        super(deserializer);
+        super(deserializer, PieceGeneratorSupplier.simple(HunterCampFeature::checkLocation, HunterCampFeature::generatePieces));
     }
 
-    @Nonnull
-    @Override
-    public StructureStartFactory<NoneFeatureConfiguration> getStartFactory() {
-        return Start::new;
+    private static <C extends FeatureConfiguration> boolean checkLocation(PieceGeneratorSupplier.Context<C> cContext) { //TODO 1.18 check
+        if (!cContext.validBiomeOnTop(Heightmap.Types.WORLD_SURFACE_WG)) {
+            return false;
+        } else {
+            return cContext.getLowestY(12, 15) >= cContext.chunkGenerator().getSeaLevel();
+        }
     }
 
-    public static class Start extends StructureStart<NoneFeatureConfiguration> {
+    private static <C extends FeatureConfiguration> void generatePieces(StructurePiecesBuilder structurePiecesBuilder, PieceGenerator.Context<C> cContext) {
+        HunterCampPieces.addStartPieces(structurePiecesBuilder, cContext);
 
-
-        public Start(StructureFeature<NoneFeatureConfiguration> p_163595_, ChunkPos p_163596_, int p_163597_, long p_163598_) {
-            super(p_163595_, p_163596_, p_163597_, p_163598_);
-        }
-
-        @Override
-        public void generatePieces(RegistryAccess pRegistryAccess, ChunkGenerator pChunkGenerator, StructureManager pStructureManager, ChunkPos pChunkPos, Biome pBiome, NoneFeatureConfiguration pConfig, LevelHeightAccessor pLevel) {
-            HunterCampPieces.init(pChunkPos.x, pChunkPos.z, pBiome, this.random, this);
-        }
     }
 }

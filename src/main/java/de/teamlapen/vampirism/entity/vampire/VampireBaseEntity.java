@@ -119,7 +119,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                     return false;
                 }
                 if (this.level.isLoaded(blockPosition()) && worldIn instanceof ServerLevel) { //TODO check performance
-                    if (((ServerLevel) level).startsForFeature(SectionPos.of(blockPosition()), StructureFeature.VILLAGE).findAny().isPresent()) {
+                    if (!((ServerLevel) level).startsForFeature(SectionPos.of(blockPosition()), StructureFeature.VILLAGE).isEmpty()) {
                         if (getRandom().nextInt(60) != 0) {
                             return false;
                         }

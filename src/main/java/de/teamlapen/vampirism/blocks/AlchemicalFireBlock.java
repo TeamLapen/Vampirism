@@ -119,7 +119,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
         } else if (age == 14) {
             worldIn.removeBlock(pos, this.hasCollision);
         }
-        worldIn.getBlockTicks().scheduleTick(pos, this, 30 + random.nextInt(10));
+        worldIn.scheduleTick(pos, this, 30 + random.nextInt(10));
     }
 
 

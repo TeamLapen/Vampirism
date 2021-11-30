@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.WeighedRandom;
+import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 
@@ -127,7 +127,7 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
             }
         }
         if (weightsum > 0) {
-            return WeighedRandom.getRandomItem(entity.getRandom(), entry, weightsum).map(EntityActionEntry::getAction).orElse(null);
+            return WeightedRandom.getRandomItem(entity.getRandom(), entry, weightsum).map(EntityActionEntry::getAction).orElse(null);
         }
         return null;
     }
@@ -186,12 +186,12 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
                 cancelActivation();
                 return;
             }
-            cooldown = action.getCooldown(entity.getLevel());
+            cooldown = action.getCooldown(entity.getExpLevel());
             preActivation = action.getPreActivationTime();
             minimumHealthThreshold = (float) (entity.getHealth() - (entity.getMaxHealth() * VampirismConfig.BALANCE.eaHealthThreshold.get()));
             if (action instanceof ILastingAction) {
                 //noinspection unchecked
-                duration = ((ILastingAction<T>) action).getDuration(entity.getLevel());
+                duration = ((ILastingAction<T>) action).getDuration(entity.getExpLevel());
             }
         }
     }

@@ -35,7 +35,7 @@ configurations {
 
 group = "de.teamlapen.vampirism"
 archivesBaseName = "Vampirism"
-java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 ext.mod_version="Test"
 ext.type="test"
 

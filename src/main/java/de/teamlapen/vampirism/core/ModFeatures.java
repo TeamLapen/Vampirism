@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.mixin.DimensionStructureSettingsAccessor;
 import de.teamlapen.vampirism.util.ConfigurableStructureSeparationSettings;
 import de.teamlapen.vampirism.world.gen.features.VampireDungeonFeature;
-import de.teamlapen.vampirism.world.gen.features.VampirismLakeFeature;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampFeature;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
@@ -22,10 +21,10 @@ import net.minecraft.world.level.levelgen.StructureSettings;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.StructurePieceType;
-import net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,7 +35,6 @@ import java.util.Map;
 public class ModFeatures {
     //features
     public static final VampireDungeonFeature vampire_dungeon = new VampireDungeonFeature(NoneFeatureConfiguration.CODEC);
-    public static final VampirismLakeFeature mod_lake = new VampirismLakeFeature(BlockStateConfiguration.CODEC);
     //structures
     public static final StructureFeature<NoneFeatureConfiguration> hunter_camp = new HunterCampFeature(NoneFeatureConfiguration.CODEC/*deserialize*/);
     //structure pieces
@@ -50,7 +48,6 @@ public class ModFeatures {
 
     static void registerFeatures(IForgeRegistry<Feature<?>> registry) {
         registry.register(vampire_dungeon.setRegistryName(REFERENCE.MODID, "vampire_dungeon"));
-        registry.register(mod_lake.setRegistryName(REFERENCE.MODID, "mod_lake"));
     }
 
     static void registerStructures(IForgeRegistry<StructureFeature<?>> registry) {
@@ -64,6 +61,14 @@ public class ModFeatures {
         VampirismAPI.worldGenRegistry().removeStructureFromBiomes(hunter_camp.getRegistryName(), Lists.newArrayList(ModBiomes.VAMPIRE_FOREST_KEY.location()));
         VampirismAPI.worldGenRegistry().removeStructureFromBiomes(hunter_camp.getRegistryName(), Lists.newArrayList(ModBiomes.VAMPIRE_FOREST_HILLS_KEY.location()));
 
+    }
+
+    public static void fixFeatureMappings(RegistryEvent.MissingMappings<Feature<?>> event) {
+        event.getAllMappings().forEach(mappings -> {
+            if ("vampirism:mod_lake".equals(mappings.key.toString())) { //TODO 1.18 does this work & is this necessary
+                mappings.remap(Feature.LAKE);
+            }
+        });
     }
 
 
