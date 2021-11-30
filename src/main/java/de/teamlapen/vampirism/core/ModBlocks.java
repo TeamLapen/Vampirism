@@ -91,6 +91,8 @@ public class ModBlocks {
     public static final VampirismBlock tombstone3 = getNull();
     public static final VampirismBlock grave_cage = getNull();
     public static final CursedGrass cursed_grass = getNull();
+    public static final CursedGrass bloody_cursed_grass = getNull();
+    public static final RotatedPillarBlock dark_spruce_log = getNull();
 
     /**
      * empty unless in datagen
@@ -146,6 +148,8 @@ public class ModBlocks {
         registry.register(itemBlock(tombstone3));
         registry.register(itemBlock(grave_cage));
         registry.register(itemBlock(cursed_grass));
+        registry.register(itemBlock(bloody_cursed_grass));
+        registry.register(itemBlock(dark_spruce_log));
     }
 
     static void registerBlocks(IForgeRegistry<Block> registry) {
@@ -214,6 +218,10 @@ public class ModBlocks {
         registry.register(prepareRegister(new VampirismHorizontalBlock("tombstone3", AbstractBlock.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb3).markDecorativeBlock()));
         registry.register(prepareRegister(new VampirismHorizontalBlock("grave_cage", AbstractBlock.Properties.of(Material.METAL, MaterialColor.METAL).strength(6, 8).requiresCorrectToolForDrops().sound(SoundType.METAL), BlockVoxelshapes.grave_cage).markDecorativeBlock()));
         registry.register(prepareRegister(new CursedGrass(AbstractBlock.Properties.of(Material.GRASS).randomTicks().strength(0.6F).sound(SoundType.GRASS))).setRegistryName(REFERENCE.MODID, "cursed_grass"));
+        registry.register(prepareRegister(new CursedGrass(AbstractBlock.Properties.of(Material.GRASS).randomTicks().strength(0.6F).sound(SoundType.GRASS))).setRegistryName(REFERENCE.MODID, "bloody_cursed_grass"));
+        Block log2 = Blocks.log(MaterialColor.PODZOL, MaterialColor.COLOR_BROWN).setRegistryName(REFERENCE.MODID, "dark_spruce_log");
+        ((FireBlock) Blocks.FIRE).setFlammable(log2, 5, 5);
+        registry.register(prepareRegister(log2));
 
 
         /**

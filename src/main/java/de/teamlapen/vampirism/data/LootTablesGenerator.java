@@ -286,6 +286,8 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.tombstone3);
             this.dropSelf(ModBlocks.grave_cage);
             this.add(ModBlocks.cursed_grass, createSingleItemTable(ModBlocks.cursed_earth));
+            this.add(ModBlocks.bloody_cursed_grass, createSingleItemTable(ModBlocks.cursed_earth));
+            this.dropSelf(ModBlocks.dark_spruce_log);
         }
 
         @Nonnull

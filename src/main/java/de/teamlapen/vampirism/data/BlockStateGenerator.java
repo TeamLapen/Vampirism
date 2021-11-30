@@ -229,5 +229,13 @@ public class BlockStateGenerator extends BlockStateProvider {
         getMultipartBuilder(ModBlocks.cursed_grass)
                 .part().modelFile(models().cubeBottomTop(ModBlocks.cursed_grass.getRegistryName().toString(),modLoc("block/cursed_grass_side"), modLoc("block/cursed_earth"),modLoc("block/cursed_grass_top"))).addModel().end()
                 .part().modelFile(models().cubeBottomTop(ModBlocks.cursed_grass.getRegistryName().toString()+"_snowy",modLoc("block/cursed_grass_side_snowy"), modLoc("block/cursed_earth"),modLoc("block/cursed_grass_top"))).addModel().condition(BlockStateProperties.SNOWY, true).end();
+        getMultipartBuilder(ModBlocks.bloody_cursed_grass)
+                .part().modelFile(models().cubeBottomTop(ModBlocks.bloody_cursed_grass.getRegistryName().toString(),modLoc("block/bloody_cursed_grass_side"), modLoc("block/cursed_earth"),modLoc("block/bloody_cursed_grass_top"))).addModel().end()
+                .part().modelFile(models().cubeBottomTop(ModBlocks.bloody_cursed_grass.getRegistryName().toString()+"_snowy",modLoc("block/bloody_cursed_grass_side_snowy"), modLoc("block/cursed_earth"),modLoc("block/bloody_cursed_grass_top"))).addModel().condition(BlockStateProperties.SNOWY, true).end();
+        ModelFile dark_spruce_log = models().cubeColumn("dark_spruce_log", modLoc("block/dark_spruce_log"), modLoc("block/dark_spruce_log_top"));
+        getVariantBuilder(ModBlocks.dark_spruce_log)
+                .partialState().with(BlockStateProperties.AXIS, Direction.Axis.Y).modelForState().modelFile(dark_spruce_log).addModel()
+                .partialState().with(BlockStateProperties.AXIS, Direction.Axis.Z).modelForState().rotationX(90).modelFile(dark_spruce_log).addModel()
+                .partialState().with(BlockStateProperties.AXIS, Direction.Axis.X).modelForState().rotationX(90).rotationY(90).modelFile(dark_spruce_log).addModel();
     }
 }

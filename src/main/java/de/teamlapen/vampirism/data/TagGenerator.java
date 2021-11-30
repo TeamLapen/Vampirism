@@ -34,15 +34,15 @@ public class TagGenerator {
 
         @Override
         protected void addTags() {
-            tag(Tags.Blocks.DIRT).add(ModBlocks.cursed_earth, ModBlocks.cursed_grass);
-            tag(ModTags.Blocks.CURSEDEARTH).add(ModBlocks.cursed_earth, ModBlocks.cursed_grass);
+            tag(Tags.Blocks.DIRT).add(ModBlocks.cursed_earth, ModBlocks.cursed_grass, ModBlocks.bloody_cursed_grass);
+            tag(ModTags.Blocks.CURSEDEARTH).add(ModBlocks.cursed_earth, ModBlocks.cursed_grass, ModBlocks.bloody_cursed_grass);
             tag(ModTags.Blocks.CASTLE_BLOCK).add(ModBlocks.castle_block_dark_brick, ModBlocks.castle_block_dark_brick_bloody, ModBlocks.castle_block_dark_stone, ModBlocks.castle_block_normal_brick, ModBlocks.castle_block_purple_brick);
             tag(ModTags.Blocks.CASTLE_SLAPS).add(ModBlocks.castle_slab_dark_brick, ModBlocks.castle_slab_dark_stone, ModBlocks.castle_slab_purple_brick);
             tag(ModTags.Blocks.CASTLE_STAIRS).add(ModBlocks.castle_stairs_dark_stone, ModBlocks.castle_stairs_dark_brick, ModBlocks.castle_stairs_purple_brick);
             tag(BlockTags.STAIRS).addTag(ModTags.Blocks.CASTLE_STAIRS);
             tag(BlockTags.SLABS).addTag(ModTags.Blocks.CASTLE_SLAPS);
             tag(BlockTags.FLOWER_POTS).add(ModBlocks.potted_vampire_orchid);
-            tag(BlockTags.SPRUCE_LOGS).add(ModBlocks.bloody_spruce_log);
+            tag(BlockTags.SPRUCE_LOGS).add(ModBlocks.bloody_spruce_log, ModBlocks.dark_spruce_log);
             tag(BlockTags.LEAVES).add(ModBlocks.vampire_spruce_leaves, ModBlocks.bloody_spruce_leaves);
             tag(BlockTags.SAPLINGS).add(ModBlocks.bloody_spruce_sapling);
         }
@@ -76,7 +76,7 @@ public class TagGenerator {
             tag(ModTags.Items.HOLY_WATER_SPLASH).add(ModItems.holy_water_splash_bottle_normal, ModItems.holy_water_splash_bottle_enhanced, ModItems.holy_water_splash_bottle_ultimate);
             tag(ItemTags.STAIRS).addTag(ModTags.Items.CASTLE_STAIRS);
             tag(ItemTags.SLABS).addTag(ModTags.Items.CASTLE_SLAPS);
-            tag(ItemTags.SPRUCE_LOGS).add(ModBlocks.bloody_spruce_log.asItem());
+            tag(ItemTags.SPRUCE_LOGS).add(ModBlocks.bloody_spruce_log.asItem(), ModBlocks.dark_spruce_log.asItem());
             tag(ItemTags.LEAVES).add(ModBlocks.vampire_spruce_leaves.asItem(), ModBlocks.bloody_spruce_leaves.asItem());
             tag(ItemTags.SAPLINGS).add(ModBlocks.bloody_spruce_sapling.asItem());
         }

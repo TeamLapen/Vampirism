@@ -82,7 +82,7 @@ public class CursedGrass extends SpreadableSnowyDirtBlock implements IGrowable {
     @Override
     public void performBonemeal(@Nonnull ServerWorld serverWorld, @Nonnull Random random, @Nonnull BlockPos blockPos, @Nonnull BlockState blockState) {
         BlockPos targetPos = blockPos.above();
-        BlockState grassState = ModBlocks.cursed_grass.defaultBlockState(); // only the state is changed
+        BlockState grassState = this.defaultBlockState(); // only the state is changed
 
         label48:
         for (int i = 0; i < 128; ++i) {
