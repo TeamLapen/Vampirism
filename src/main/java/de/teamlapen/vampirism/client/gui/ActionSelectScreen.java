@@ -31,6 +31,7 @@ import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -178,7 +179,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
         if (editActions) {
-            GuiUtils.drawHoveringText(stack, Lists.newArrayList(new TranslatableComponent("gui.vampirism.action_select.action_binding"), ModKeys.ACTION1.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA), ModKeys.ACTION2.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA)), 0, ((int) (this.height * 0.8)), width, height, this.width / 4, this.font);
+            this.renderTooltip(stack, Lists.newArrayList(new TranslatableComponent("gui.vampirism.action_select.action_binding"), ModKeys.ACTION1.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA), ModKeys.ACTION2.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA)), Optional.empty(),0, ((int) (this.height * 0.8)), this.font); // TODO 1.18 max string width missing (this.width / 4)
         }
     }
 

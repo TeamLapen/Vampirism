@@ -562,7 +562,8 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
             }
             int width_name = Math.max(this.font.width(tooltips.get(0)), 110);
 
-            GuiUtils.drawHoveringText(stack, tooltips, mouseX, mouseY, width, height, width_name, -1073741824, -1073741824, -1073741824, this.font);
+            //GuiUtils.drawHoveringText(stack, tooltips, mouseX, mouseY, width, height, width_name, -1073741824, -1073741824, -1073741824, this.font);
+            this.renderTooltip(stack, tooltips, Optional.empty(), mouseX, mouseY,this.font); //TODO 1.18 ^^check for background color see Screen#renderTooltipInternal()#268
 
             stack.popPose();
         }

@@ -111,7 +111,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
 
 
     private void drawButtonTip(PoseStack mStack, Component text, int mouseX, int mouseY) {
-        GuiUtils.drawHoveringText(ItemStack.EMPTY, mStack, Collections.singletonList(text), mouseX, mouseY, minecraft.getWindow().getGuiScaledWidth(), minecraft.getWindow().getGuiScaledHeight(), -1, font);
+        this.renderTooltip(mStack, Collections.singletonList(text), Optional.empty(),mouseX, mouseY, font); //TODO 1.18 test
     }
 
     private Component getActiveTaskName() {
