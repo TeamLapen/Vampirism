@@ -139,7 +139,7 @@ public class TotemHelper {
      * @param pos         the position of the totem
      * @param removeTotem if the totem poi should be removed too
      */
-    public static void removeTotem(ResourceKey<Level> dimension, Collection<PoiRecord> pois, BlockPos pos, boolean removeTotem) { //TODO 1.17 change RegistryKey<World> dimension -> World world
+    public static void removeTotem(ResourceKey<Level> dimension, Collection<PoiRecord> pois, BlockPos pos, boolean removeTotem) {
         Map<BlockPos, BlockPos> totemPositions = TotemHelper.totemPositions.computeIfAbsent(dimension, key -> new HashMap<>());
         pois.forEach(pointOfInterest -> totemPositions.remove(pointOfInterest.getPos(), pos));
         if (removeTotem) {
@@ -155,7 +155,7 @@ public class TotemHelper {
      * @return the registered totem position or {@code null} if no totem exists
      */
     @Nonnull
-    public static Optional<BlockPos> getTotemPosition(ResourceKey<Level> dimension, Collection<PoiRecord> pois) { //TODO 1.17 change RegistryKey<World> dimension -> World world Max:  Yes, we always have the world object, but do we need it in here?
+    public static Optional<BlockPos> getTotemPosition(ResourceKey<Level> dimension, Collection<PoiRecord> pois) {
         Map<BlockPos, BlockPos> totemPositions = TotemHelper.totemPositions.computeIfAbsent(dimension, key -> new HashMap<>());
         for (PoiRecord pointOfInterest : pois) {
             if (totemPositions.containsKey(pointOfInterest.getPos())) {
@@ -172,7 +172,7 @@ public class TotemHelper {
      * @return the blockpos of the totem or {@code null} if there is no registered totem position for the {@link PoiRecord}
      */
     @Nullable
-    public static BlockPos getTotemPosition(ResourceKey<Level> world, BlockPos pos) { //TODO 1.17 change RegistryKey<World> dimension -> World world. Max:  Yes, we always have the world object, but do we need it in here?
+    public static BlockPos getTotemPosition(ResourceKey<Level> world, BlockPos pos) {
         if (totemPositions.containsKey(world)) {
             return totemPositions.get(world).get(pos);
         }

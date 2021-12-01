@@ -157,7 +157,7 @@ public class VampirismMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerCapabilities);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::finalizeConfiguration);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-            //TODO 1.17 maybe cleanup
+            //TODO 1.18 maybe cleanup
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventHandler::onModelBakeEvent);
             FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ModEntitiesRender::onRegisterRenderers);

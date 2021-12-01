@@ -55,7 +55,7 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> map = HashMultimap.create(); //TODO 1.17 build in constructor
+        Multimap<Attribute, AttributeModifier> map = HashMultimap.create(); //TODO 1.18 build in constructor
         if (slot == this.getSlot()) {
             map.put(Attributes.ARMOR, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor modifier", this.getDamageReduction(slot.getIndex(), stack), AttributeModifier.Operation.ADDITION));
             map.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor toughness", this.getToughness(slot.getIndex(), stack), AttributeModifier.Operation.ADDITION));
