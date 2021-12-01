@@ -201,10 +201,10 @@ public class ClientProxy extends CommonProxy {
                 OverlayRegistry.registerOverlayAbove(ForgeIngameGui.BOSS_HEALTH_ELEMENT,"vampirism_raid", bossInfoOverlay::onRenderOverlayBoss);
                 break;
             case LOAD_COMPLETE:
-                ModBlocksRender.registerColors();
-                ModItemsRender.registerColors();
+                event.enqueueWork(ModBlocksRender::registerColorsUnsafe);
+                event.enqueueWork(ModItemsRender::registerColorsUnsafe);
                 event.enqueueWork(ModItemsRender::registerItemModelPropertyUnsafe);
-                ModParticleFactories.registerFactories();
+                event.enqueueWork(ModParticleFactories::registerFactoriesUnsafe);
                 event.enqueueWork(ModScreens::registerScreensUnsafe);
                 skillTreeManager.init();
                 itemStackBESR = new VampirismBlockEntityWitoutLevelRenderer(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());

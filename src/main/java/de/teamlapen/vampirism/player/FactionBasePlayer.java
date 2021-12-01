@@ -18,7 +18,6 @@ import javax.annotation.Nonnull;
 /**
  * Basic class for all of Vampirism's players.
  * Implements basic methods for level or minion handling
- * TODO 1.17 refactor to FactionBasePlayer
  */
 public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements IFactionPlayer<T>, ISyncable.ISyncableEntityCapabilityInst, IPlayerEventListener {
 

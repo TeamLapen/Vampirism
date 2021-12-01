@@ -12,14 +12,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -122,10 +120,6 @@ public class VampireBookItem extends VampirismItem {
                     }
 
                     nbttagcompound.put("pages", nbttaglist);
-                    if (player instanceof ServerPlayer && player.getMainHandItem() == stack) {
-                        Slot var10 = player.containerMenu.slots.get(player.getInventory().selected);
-                        ((ServerPlayer) player).connection.send(new ClientboundContainerSetSlotPacket(0, player.containerMenu.incrementStateId(), var10.index, stack));
-                    }
                 }
             }
         }

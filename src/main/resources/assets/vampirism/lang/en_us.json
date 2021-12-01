@@ -1026,6 +1026,7 @@
   "refinement.vampirism.dark_blood_projectile_multi_shot.desc": "Dark Blood Projectile shoots multiple projectiles",
   "refinement.vampirism.dark_blood_projectile_aoe.desc": "Dark Blood Projectile shoots in all directions but has a very short range",
   "refinement.vampirism.dark_blood_projectile_damage.desc": "Dark Blood Projectile damage tier II",
+  "refinement.vampirism.dark_blood_projectile_speed.desc": "Dark Blood Projectile flying speed I",
   "refinement.vampirism.vista.desc": "Higher view distance in vampire fog",
   "refinement.vampirism.freeze_duration.desc": "Freeze action duration increase I",
   "refinement.vampirism.blood_charge_speed.desc": "Blood charging speedup I",

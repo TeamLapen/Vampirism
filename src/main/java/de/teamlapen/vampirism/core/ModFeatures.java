@@ -80,7 +80,7 @@ public class ModFeatures {
         //https://github.com/MinecraftForge/MinecraftForge/pull/7331
         StructureSettings settings = NoiseGeneratorSettings.bootstrap().structureSettings();
         //Copy/Overwrite
-        Map<StructureFeature<?>, StructureFeatureConfiguration> structureSettingsMapOverworld = new HashMap<>(settings.structureConfig()); //TODO 1.17 check if any PR has been accepted
+        Map<StructureFeature<?>, StructureFeatureConfiguration> structureSettingsMapOverworld = new HashMap<>(settings.structureConfig());
         addStructureSeparationSettings(structureSettingsMapOverworld);
         if (VampirismConfig.COMMON.villageModify.get()) {
             LOGGER.info("Replacing vanilla village structure separation settings for the overworld dimension preset");

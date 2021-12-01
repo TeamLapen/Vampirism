@@ -28,7 +28,7 @@ public class ModBlocksRender {
         registerRenderType();
     }
 
-    public static void registerColors() {
+    public static void registerColorsUnsafe() {
         BlockColors colors = Minecraft.getInstance().getBlockColors();
         colors.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 1) {
