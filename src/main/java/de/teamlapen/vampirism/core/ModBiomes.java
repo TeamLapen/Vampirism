@@ -11,8 +11,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.Noises;
+import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -35,6 +38,8 @@ public class ModBiomes {
     public static final ResourceKey<Biome> VAMPIRE_FOREST_KEY = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(REFERENCE.MODID, "vampire_forest"));
     public static final ResourceKey<Biome> VAMPIRE_FOREST_HILLS_KEY = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(REFERENCE.MODID, "vampire_forest_hills"));
 
+    public static final SurfaceRules.RuleSource cursed_earth = SurfaceRules.state(ModBlocks.cursed_earth.defaultBlockState());
+
 
     static void registerBiomes(IForgeRegistry<Biome> registry) {
         registry.register(VampireForestBiome.createVampireForest(0.1F, 0.025F).setRegistryName(VAMPIRE_FOREST_KEY.location()));
@@ -46,11 +51,17 @@ public class ModBiomes {
         BiomeDictionary.addTypes(VAMPIRE_FOREST_KEY, BiomeDictionary.Type.OVERWORLD, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
     }
 
+    static void registerSurfaceRules() {
+        SurfaceRules.ConditionSource inVampireBiome = SurfaceRules.isBiome(ModBiomes.VAMPIRE_FOREST_KEY);
+        SurfaceRules.RuleSource vampireForest = SurfaceRules.ifTrue(inVampireBiome, SurfaceRules.state(ModBlocks.cursed_earth.defaultBlockState()));
+        SurfaceRules.RuleSource place = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(),SurfaceRules.ifTrue(SurfaceRules.ON_FLOOR,SurfaceRules.ifTrue(SurfaceRules.waterBlockCheck(-1, 0),SurfaceRules.sequence(vampireForest)))); // TODO 1.18 add to SurfaceRuleData#overworldLike
+    }
+
     /**
      * Only call from main thread / non-parallel event
      */
     static void addBiomesToGeneratorUnsafe() {
-        //TODO don't generate hills biome for now. Should be added as a hills variant at some point if supported by Forge
+        //TODO 1.18 don't generate hills biome for now. Should be added as a hills variant at some point if supported by Forge
         BiomeManager.addAdditionalOverworldBiomes(VAMPIRE_FOREST_KEY);
         //BiomeManager.addAdditionalOverworldBiomes(VAMPIRE_FOREST_HILLS_KEY);
         BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_KEY, VampirismConfig.COMMON.vampireForestWeight.get()));
@@ -79,11 +90,7 @@ public class ModBiomes {
         }
         Biome.BiomeCategory cat = event.getCategory();
         if (cat != Biome.BiomeCategory.NETHER && cat != Biome.BiomeCategory.THEEND && cat != Biome.BiomeCategory.OCEAN && cat != Biome.BiomeCategory.NONE) {
-            event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_STRUCTURES, VampirismBiomeFeatures.vampire_dungeon);
-        }
-
-        if (VampirismAPI.worldGenRegistry().canStructureBeGeneratedInBiome(ModFeatures.hunter_camp.getRegistryName(), event.getName(), event.getCategory())) {
-            event.getGeneration().addStructureStart(VampirismBiomeFeatures.hunter_camp);
+            event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_STRUCTURES, VampirismBiomeFeatures.vampire_dungeon_placed);
         }
     }
 }

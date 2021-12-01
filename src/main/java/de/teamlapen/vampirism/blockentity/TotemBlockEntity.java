@@ -46,6 +46,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.BossEvent;
@@ -565,7 +566,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             boolean flag = false;
             if (VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
                 if (!(level.getBlockState(pos.above()).getBlock() instanceof BushBlock)) {
-                    if (b.getBlock() == level.getBiome(pos).getGenerationSettings().getSurfaceBuilderConfig().getTopMaterial().getBlock() && b.getBlock() != Blocks.SAND) {
+                    if (BlockTags.DIRT.contains(b.getBlock()) && !ModTags.Blocks.CURSEDEARTH.contains(b.getBlock())) { //TODO 1.18 is there a better solution?
                         level.removeBlock(pos.above(), false);
                         level.setBlockAndUpdate(pos, ModBlocks.cursed_earth.defaultBlockState());
                         if (level.getBlockState(pos.above()).getBlock() == Blocks.TALL_GRASS) {
@@ -575,8 +576,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
                     }
                 }
             } else if (controllingFaction == VReference.HUNTER_FACTION) {
-                if (b.getBlock() == ModBlocks.cursed_earth) {
-                    level.setBlockAndUpdate(pos, level.getBiome(pos).getGenerationSettings().getSurfaceBuilderConfig().getTopMaterial());
+                if (ModTags.Blocks.CURSEDEARTH.contains(b.getBlock())) { //TODO 1.18 is there a better solution?
+                    level.setBlockAndUpdate(pos, Blocks.DIRT.defaultBlockState());
                     flag = true;
                 }
             }

@@ -36,7 +36,7 @@ public class BiomeTopBlockProcessor extends StructureProcessor {
     @Nullable
     public StructureTemplate.StructureBlockInfo process(@Nonnull LevelReader worldReaderIn, @Nonnull BlockPos pos, @Nonnull BlockPos pos1, @Nonnull StructureTemplate.StructureBlockInfo blockInfo, StructureTemplate.StructureBlockInfo blockInfo1, @Nonnull StructurePlaceSettings placementSettings, @Nullable StructureTemplate template) {
         if (blockInfo1.state.equals(replaceBlock)) {
-            BlockState topBlock = worldReaderIn.getBiome(blockInfo1.pos).getGenerationSettings().getSurfaceBuilderConfig().getTopMaterial(); //TODO 1.18 how do we  get the surface configuration
+            BlockState topBlock = worldReaderIn.getBlockState(blockInfo1.pos);//TODO 1.18 still needed, working as expected?
             if (streetBlocks.containsKey(topBlock.getBlock())) {
                 topBlock = streetBlocks.get(topBlock.getBlock()).defaultBlockState();
             }

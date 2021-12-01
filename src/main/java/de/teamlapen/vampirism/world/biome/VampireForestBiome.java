@@ -1,13 +1,12 @@
 package de.teamlapen.vampirism.world.biome;
 
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.*;
-import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilder;
-import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilderBaseConfiguration;
+import net.minecraft.world.level.levelgen.SurfaceRules;
 
 public class VampireForestBiome {
 
@@ -16,9 +15,10 @@ public class VampireForestBiome {
     }
 
     public static Biome.BiomeBuilder createBiomeBuilder(float depth, float scale, MobSpawnSettings.Builder spawnBuilder, BiomeSpecialEffects.Builder ambienceBuilder) {
-        BiomeGenerationSettings.Builder builder = new BiomeGenerationSettings.Builder().surfaceBuilder(SurfaceBuilder.DEFAULT.configured(new SurfaceBuilderBaseConfiguration(ModBlocks.cursed_earth.defaultBlockState(), ModBlocks.cursed_earth.defaultBlockState(), ModBlocks.cursed_earth.defaultBlockState())));
-        BiomeDefaultFeatures.addDefaultCarvers(builder);
-        VampirismBiomeFeatures.addModdedWaterLake(builder);
+        //TODO 1.18 surfacebuilder ?  .surfaceBuilder(SurfaceBuilder.DEFAULT.configured(new SurfaceBuilderBaseConfiguration(ModBlocks.cursed_earth.defaultBlockState(), ModBlocks.cursed_earth.defaultBlockState(), ModBlocks.cursed_earth.defaultBlockState()))
+        BiomeGenerationSettings.Builder builder = new BiomeGenerationSettings.Builder();
+        BiomeDefaultFeatures.addDefaultCarversAndLakes(builder); //TODO 1.18 right carver ?
+        VampirismBiomeFeatures.addModdedWaterLake(builder);//TODO 1.18 check for right generation / or only water spring (was lake feature)
 
         VampirismBiomeFeatures.addVampireFlower(builder);
         BiomeDefaultFeatures.addForestGrass(builder);
@@ -31,7 +31,8 @@ public class VampireForestBiome {
         VampirismBiomeFeatures.addVampireTrees(builder);
 
         VampirismBiomeFeatures.addWaterSprings(builder);
-        return new Biome.BiomeBuilder().precipitation(Biome.Precipitation.NONE).biomeCategory(Biome.BiomeCategory.FOREST).depth(depth).scale(scale).temperature(0.3F).downfall(0F).specialEffects(ambienceBuilder.build()).mobSpawnSettings(spawnBuilder.build()).generationSettings(builder.build());
+        //TODO 1.18 what happened to .depth(depth).scale(scale) ?
+        return new Biome.BiomeBuilder().precipitation(Biome.Precipitation.NONE).biomeCategory(Biome.BiomeCategory.FOREST).temperature(0.3F).downfall(0F).specialEffects(ambienceBuilder.build()).mobSpawnSettings(spawnBuilder.build()).generationSettings(builder.build());
     }
 
     public static MobSpawnSettings.Builder createMobInfoBuilder() {

@@ -42,21 +42,18 @@ import java.util.Random;
 @ParametersAreNonnullByDefault
 public abstract class HunterCampPieces extends StructurePiece {
     public static <C extends FeatureConfiguration> void addStartPieces(StructurePiecesBuilder structurePiecesBuilder, PieceGenerator.Context<C> cContext) {
-        Biome biomeIn = ; //TODO 1.18 how do we get the getSurfaceBuilderConfig
         Random rand = cContext.random();
-        Fireplace hunterCamp = new Fireplace(rand, cContext.chunkPos().x * 16 + rand.nextInt(16), 63, cContext.chunkPos().z * 16 + rand.nextInt(16), biomeIn.getGenerationSettings().getSurfaceBuilderConfig().getTopMaterial().getBlock());
+        Fireplace hunterCamp = new Fireplace(rand, cContext.chunkPos().x * 16 + rand.nextInt(16), 63, cContext.chunkPos().z * 16 + rand.nextInt(16));
         structurePiecesBuilder.addPiece(hunterCamp);
         hunterCamp.addChildren(hunterCamp, structurePiecesBuilder, rand);
     }
 
     protected final int x, z;
-    protected final Block baseBlock;
     protected int y;
 
 
-    public HunterCampPieces(StructurePieceType structurePieceType, int part, int x, int y, int z, Block baseBlock) {
+    public HunterCampPieces(StructurePieceType structurePieceType, int part, int x, int y, int z) {
         super(structurePieceType, part, new BoundingBox(x - 1, y, z - 1, x + 1, y + 2, z + 1));
-        this.baseBlock = baseBlock;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -64,7 +61,6 @@ public abstract class HunterCampPieces extends StructurePiece {
 
     public HunterCampPieces(StructurePieceType structurePieceType, CompoundTag nbt) {
         super(structurePieceType, nbt);
-        this.baseBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(nbt.getString("baseBlock")));
         this.x = nbt.getInt("x");
         this.y = nbt.getInt("y");
         this.z = nbt.getInt("z");
@@ -81,8 +77,6 @@ public abstract class HunterCampPieces extends StructurePiece {
         tagCompound.putInt("x", x);
         tagCompound.putInt("y", y);
         tagCompound.putInt("z", z);
-        //noinspection ConstantConditions
-        tagCompound.putString("baseBlock", this.baseBlock.getRegistryName().toString());
     }
 
     protected boolean testPreconditions(WorldGenLevel worldIn, StructureFeatureManager manager, ChunkPos chunkPos) {
@@ -101,8 +95,8 @@ public abstract class HunterCampPieces extends StructurePiece {
         boolean specialComponentAdd = false;
         private boolean advanced;
 
-        public Fireplace(Random random, int x, int y, int z, Block baseBlock) {
-            super(ModFeatures.hunter_camp_fireplace, 0, x, y, z, baseBlock);
+        public Fireplace(Random random, int x, int y, int z) {
+            super(ModFeatures.hunter_camp_fireplace, 0, x, y, z);
             this.setOrientation(Direction.Plane.HORIZONTAL.getRandomDirection(random));
         }
 
@@ -167,9 +161,9 @@ public abstract class HunterCampPieces extends StructurePiece {
             //make sure a crafting table is only generated once
             if (!specialComponentAdd && rand.nextInt(2) == 0) {
                 specialComponentAdd = true;
-                return new SpecialBlock(x, y, z, direction, baseBlock, advanced);
+                return new SpecialBlock(x, y, z, direction, advanced);
             }
-            return new Tent(x, y, z, direction, baseBlock, advanced);
+            return new Tent(x, y, z, direction, advanced);
         }
 
         /**
@@ -180,7 +174,7 @@ public abstract class HunterCampPieces extends StructurePiece {
             //blockpos at center of the 3x3 component
             int x = this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 3 : -3 : 0);
             int z = this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 3 : -3 : 0);
-            return new Tent(x, y, z, direction, baseBlock, advanced);
+            return new Tent(x, y, z, direction, advanced);
         }
     }
 
@@ -191,8 +185,8 @@ public abstract class HunterCampPieces extends StructurePiece {
         int xCenter;
         private int mirror;
 
-        public Tent(int x, int y, int z, Direction direction, Block baseBlock, boolean advanced) {
-            super(ModFeatures.hunter_camp_tent, 1, x, y, z, baseBlock);
+        public Tent(int x, int y, int z, Direction direction, boolean advanced) {
+            super(ModFeatures.hunter_camp_tent, 1, x, y, z);
             this.setOrientation(direction);
             this.direction = direction;
             this.advanced = advanced;
@@ -259,19 +253,19 @@ public abstract class HunterCampPieces extends StructurePiece {
                 }
             }
 
-            //generate floor
-            BlockPos pos1 = new BlockPos(xCenter, y - 1, z - 1);
-            if (worldIn.getBlockState(pos1).getMaterial().isReplaceable())
-                this.placeBlock(worldIn, baseBlock.defaultBlockState(), xDiff, -1, 0, structureBoundingBoxIn);
-            BlockPos pos2 = new BlockPos(x, y - 1, z - 1);
-            if (worldIn.getBlockState(pos2).getMaterial().isReplaceable())
-                this.placeBlock(worldIn, baseBlock.defaultBlockState(), 1, -1, 0, structureBoundingBoxIn);
-            BlockPos pos3 = new BlockPos(x, y - 1, z);
-            if (worldIn.getBlockState(pos3).getMaterial().isReplaceable())
-                this.placeBlock(worldIn, baseBlock.defaultBlockState(), 1, -1, 1, structureBoundingBoxIn);
-            BlockPos pos4 = new BlockPos(xCenter, y - 1, z);
-            if (worldIn.getBlockState(pos4).getMaterial().isReplaceable())
-                this.placeBlock(worldIn, baseBlock.defaultBlockState(), xDiff, -1, 1, structureBoundingBoxIn);
+            //generate floor //TODO 1.18 check if needed
+//            BlockPos pos1 = new BlockPos(xCenter, y - 1, z - 1);
+//            if (worldIn.getBlockState(pos1).getMaterial().isReplaceable())
+//                this.placeBlock(worldIn, baseBlock.defaultBlockState(), xDiff, -1, 0, structureBoundingBoxIn);
+//            BlockPos pos2 = new BlockPos(x, y - 1, z - 1);
+//            if (worldIn.getBlockState(pos2).getMaterial().isReplaceable())
+//                this.placeBlock(worldIn, baseBlock.defaultBlockState(), 1, -1, 0, structureBoundingBoxIn);
+//            BlockPos pos3 = new BlockPos(x, y - 1, z);
+//            if (worldIn.getBlockState(pos3).getMaterial().isReplaceable())
+//                this.placeBlock(worldIn, baseBlock.defaultBlockState(), 1, -1, 1, structureBoundingBoxIn);
+//            BlockPos pos4 = new BlockPos(xCenter, y - 1, z);
+//            if (worldIn.getBlockState(pos4).getMaterial().isReplaceable())
+//                this.placeBlock(worldIn, baseBlock.defaultBlockState(), xDiff, -1, 1, structureBoundingBoxIn);
 
             //generate air
             BlockState air = Blocks.AIR.defaultBlockState();
@@ -318,8 +312,8 @@ public abstract class HunterCampPieces extends StructurePiece {
         private final Direction direction;
         private final boolean advanced;
 
-        public SpecialBlock(int x, int y, int z, Direction direction, Block baseBlocks, boolean advanced) {
-            super(ModFeatures.hunter_camp_special, 2, x, y, z, baseBlocks);
+        public SpecialBlock(int x, int y, int z, Direction direction, boolean advanced) {
+            super(ModFeatures.hunter_camp_special, 2, x, y, z);
             this.setOrientation(direction);
             this.direction = direction;
             this.advanced = advanced;
