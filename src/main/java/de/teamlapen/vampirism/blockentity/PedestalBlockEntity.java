@@ -162,15 +162,13 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
         return stack;
     }
 
-    @Nonnull
     @Override
-    public CompoundTag save(@Nonnull CompoundTag compound) {
+    public void saveAdditional(@Nonnull CompoundTag compound) {
         if (hasStack()) {
             compound.put("item", this.internalStack.serializeNBT());
         }
         compound.putInt("blood_stored", bloodStored);
         compound.putInt("charging_ticks", chargingTicks);
-        return super.save(compound);
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, PedestalBlockEntity blockEntity) {

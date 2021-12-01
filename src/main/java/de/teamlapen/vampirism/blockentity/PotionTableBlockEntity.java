@@ -234,10 +234,8 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
         return ContainerHelper.takeItem(this.brewingItemStacks, index);
     }
 
-    @Nonnull
     @Override
-    public CompoundTag save(@Nonnull CompoundTag compound) {
-        super.save(compound);
+    public void saveAdditional(@Nonnull CompoundTag compound) {
         compound.putShort("BrewTime", (short) this.brewTime);
         ContainerHelper.saveAllItems(compound, this.brewingItemStacks);
         compound.putByte("Fuel", (byte) this.fuel);
@@ -246,7 +244,6 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
             compound.putUUID("owner", ownerID);
             compound.putString("owner_name", Component.Serializer.toJson(ownerName));
         }
-        return compound;
     }
 
     @Override

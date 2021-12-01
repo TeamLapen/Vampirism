@@ -163,9 +163,8 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
         }
     }
 
-    @Nonnull
     @Override
-    public CompoundTag save(@Nonnull CompoundTag compound) {
+    public void saveAdditional(@Nonnull CompoundTag compound) {
         if (ownerID != null) {
             compound.putUUID("owner", ownerID);
         }
@@ -173,7 +172,6 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
             compound.putString("owner_name", ownerName);
 
         }
-        return super.save(compound);
     }
 
     @Override

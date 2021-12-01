@@ -78,12 +78,9 @@ public class CoffinBlockEntity extends BlockEntity {
         if (hasLevel()) load(packet.getTag());
     }
 
-    @Nonnull
     @Override
-    public CompoundTag save(@Nonnull CompoundTag compound) {
-        CompoundTag nbt = super.save(compound);
-        nbt.putInt("color", color.getId());
-        return nbt;
+    public void saveAdditional(@Nonnull CompoundTag compound) {
+        compound.putInt("color", color.getId());
     }
 
     @Override

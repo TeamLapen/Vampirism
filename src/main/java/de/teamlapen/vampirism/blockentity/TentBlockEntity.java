@@ -63,19 +63,16 @@ public class TentBlockEntity extends BlockEntity {
         spawn = nbt.getBoolean("spawn");
     }
 
-    @Nonnull
     @Override
-    public CompoundTag save(@Nonnull CompoundTag compound) {
-        CompoundTag nbt = super.save(compound);
+    public void saveAdditional(@Nonnull CompoundTag compound) {
         CompoundTag logic1 = new CompoundTag();
         CompoundTag logic2 = new CompoundTag();
         this.spawnerLogicHunter.writeToNbt(logic1);
         this.spawnerLogicAdvancedHunter.writeToNbt(logic2);
-        nbt.put("spawner_logic_1", logic1);
-        nbt.put("spawner_logic_2", logic2);
-        nbt.putBoolean("spawn", this.spawn);
-        nbt.putBoolean("advanced", this.advanced);
-        return nbt;
+        compound.put("spawner_logic_1", logic1);
+        compound.put("spawner_logic_2", logic2);
+        compound.putBoolean("spawn", this.spawn);
+        compound.putBoolean("advanced", this.advanced);
     }
 
     public void setAdvanced(boolean advanced) {

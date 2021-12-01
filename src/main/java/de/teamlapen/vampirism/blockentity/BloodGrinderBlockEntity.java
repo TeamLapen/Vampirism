@@ -74,12 +74,10 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
         cooldownProcess = tagCompound.getInt("cooldown_process");
     }
 
-    @Nonnull
     @Override
-    public CompoundTag save(@Nonnull CompoundTag compound) {
+    public void saveAdditional(@Nonnull CompoundTag compound) {
         compound.putInt("cooldown_pull", cooldownPull);
         compound.putInt("cooldown_process", cooldownProcess);
-        return super.save(compound);
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, BloodGrinderBlockEntity blockEntity) {

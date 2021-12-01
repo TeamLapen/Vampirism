@@ -217,15 +217,12 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         if (this.hasLevel()) this.load(pkt.getTag());
     }
 
-    @Nonnull
     @Override
-    public CompoundTag save(@Nonnull CompoundTag compound) {
-        CompoundTag nbt = super.save(compound);
-        nbt.putInt("tick", runningTick);
+    public void saveAdditional(@Nonnull CompoundTag compound) {
+        compound.putInt("tick", runningTick);
         if (player != null) {
-            nbt.putUUID("playerUUID", player.getUUID());
+            compound.putUUID("playerUUID", player.getUUID());
         }
-        return nbt;
     }
 
     /**

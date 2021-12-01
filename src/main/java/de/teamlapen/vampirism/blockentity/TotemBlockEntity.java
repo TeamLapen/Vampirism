@@ -435,9 +435,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         }
     }
 
-    @Nonnull
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public void saveAdditional(@Nonnull CompoundTag compound) {
         compound.putBoolean("isDisabled", this.isDisabled);
         compound.putBoolean("isComplete", this.isComplete);
         compound.putBoolean("isInsideVillage", this.isInsideVillage);
@@ -464,7 +463,6 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         compound.put("captureInfo", list);
         compound.putInt("badOmenTriggered", this.badOmenLevel);
         compound.putLong("timeSinceLastRaid", this.timeSinceLastRaid);
-        return super.save(compound);
     }
 
     @Override

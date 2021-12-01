@@ -91,14 +91,11 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
         this.setActive(true);
     }
 
-    @Nonnull
     @Override
-    public CompoundTag save(@Nonnull CompoundTag tag) {
-        tag = super.save(tag);
-        tank.writeToNBT(tag);
-        cooldownProcess = tag.getInt("cooldown_process");
-        cooldownPull = tag.getInt("cooldown_pull");
-        return tag;
+    public void saveAdditional(@Nonnull CompoundTag compound) {
+        tank.readFromNBT(compound);
+        compound.putInt("cooldown_process", this.cooldownProcess);
+        compound.putInt("cooldown_pull", this.cooldownPull);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, SieveBlockEntity blockEntity) {

@@ -120,17 +120,14 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
         this.setChanged();
     }
 
-    @Nonnull
     @Override
-    public CompoundTag save(@Nonnull CompoundTag compound) {
-        super.save(compound);
+    public void saveAdditional(@Nonnull CompoundTag compound) {
         compound.putInt("radius", r);
         compound.putInt("strength", defaultStrength.getStrength());
         compound.putInt("fueled", fueled);
         if (bootTimer != 0) {
             compound.putInt("boot_timer", bootTimer);
         }
-        return compound;
     }
 
     public void setNewBootDelay(int delayTicks) {
