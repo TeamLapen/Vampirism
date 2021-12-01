@@ -36,6 +36,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -188,9 +189,17 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
         if (!(event.getEntity() instanceof Player) || !event.getEntity().isAlive()) return;
+        if(event.getPlacedBlock().isAir()) return; //If for some reason, cough Create cough, a block is removed (so air is placed) we don't want to prevent that.
         try {
             if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isCannotInteract()) {
                 event.setCanceled(true);
+
+                if(event.getEntity() instanceof ServerPlayer){ //For some reason this event is only run serverside. Therefore, we have to make sure the client is notified about the not-placed block.
+                    MinecraftServer server = event.getEntity().level.getServer();
+                    if(server!=null){
+                        server.getPlayerList().sendAllPlayerInfo((ServerPlayer) event.getEntity()); //Would probably suffice to just sent a SHeldItemChangePacket
+                    }
+                }
             }
             HunterPlayer.getOpt((Player) event.getEntity()).ifPresent(HunterPlayer::breakDisguise);
         } catch (Exception e) {
