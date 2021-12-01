@@ -12,8 +12,8 @@ import java.util.Map;
 @Mixin(FlatLevelGeneratorSettings.class)
 public interface FlatGenerationSettingsAccessor {
 
-    @Accessor("STRUCTURE_FEATURES")
-    static Map<StructureFeature<?>, ConfiguredStructureFeature<?, ?>> getStructures_vampirism() {
-        throw new IllegalStateException("Mixin not applied");
-    }
+//    @Accessor("STRUCTURE_FEATURES") TODO 1.18 check if this is still a problem
+//    static Map<StructureFeature<?>, ConfiguredStructureFeature<?, ?>> getStructures_vampirism() {
+//        throw new IllegalStateException("Mixin not applied");
+//    }
 }

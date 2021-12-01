@@ -68,7 +68,7 @@ public class VampirismBiomeFeatures {
 
     public static void init() {
         if (VampirismConfig.COMMON.enforceTentGeneration.get()) {
-            FlatGenerationSettingsAccessor.getStructures_vampirism().put(ModFeatures.hunter_camp, hunter_camp);
+//            FlatGenerationSettingsAccessor.getStructures_vampirism().put(ModFeatures.hunter_camp, hunter_camp); TODO 1.18 check if this is still a problem
         }
     }
 

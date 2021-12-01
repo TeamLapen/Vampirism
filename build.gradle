@@ -48,6 +48,7 @@ sourceSets {
     //noinspection GroovyAssignabilityCheck
     main {
          java{
+             exclude 'de/teamlapen/vampirism/modcompat/jei' //TODO 1.18 remove
          }
         //noinspection GroovyAssignabilityCheck
         resources {
