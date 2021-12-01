@@ -2,11 +2,12 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
@@ -34,12 +35,13 @@ public class DifficultyCalculator {
         int sum = 0;
         for (Player p : playerList) {
             if (!p.isAlive()) continue;
-            IFactionPlayerHandler handler = FactionPlayerHandler.get(p);
-            if (handler.getCurrentLevel() == 0) {
+            LazyOptional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(p);
+            int pLevel = handler.map(FactionPlayerHandler::getCurrentLevel).orElse(0);
+            if ( pLevel == 0) {
                 min = 0;
                 continue;
             }
-            int level = (int) (handler.getCurrentLevel() / (float) handler.getCurrentFaction().getHighestReachableLevel() * 100F);
+            int level = (int) (pLevel / (float) handler.map(FactionPlayerHandler::getCurrentFaction).map(IPlayableFaction::getHighestReachableLevel).orElse(pLevel) * 100F);
             if (level < min) {
                 min = level;
             }

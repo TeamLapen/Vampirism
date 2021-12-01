@@ -153,7 +153,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
                 int blood = levelingConf.getRequiredBloodForAltarInspiration(blockEntity.targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
                 ((InternalTank) blockEntity.tank).doDrain(blood, IFluidHandler.FluidAction.EXECUTE);
                 blockEntity.ritualPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, blockEntity.targetLevel * 10 * 20));
-                FactionPlayerHandler.get(blockEntity.ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, blockEntity.targetLevel);
+                FactionPlayerHandler.getOpt(blockEntity.ritualPlayer).ifPresent(h->h.setFactionLevel(VReference.VAMPIRE_FACTION, blockEntity.targetLevel));
                 VampirePlayer.get(blockEntity.ritualPlayer).drinkBlood(Integer.MAX_VALUE, 0, false);
             }
         }

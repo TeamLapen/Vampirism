@@ -6,7 +6,6 @@ import de.teamlapen.lib.lib.util.ValuedObject;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.blocks.AltarPillarBlock;
 import de.teamlapen.vampirism.blocks.AltarTipBlock;
 import de.teamlapen.vampirism.core.*;
@@ -290,12 +289,12 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         if (phase.equals(PHASE.LEVELUP)) {
             if (!level.isClientSide) {
                 assert player.isAlive();
-                IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
-                if (handler.getCurrentLevel(VReference.VAMPIRE_FACTION) != targetLevel - 1) {
+                LazyOptional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(player);
+                if (handler.map(h->h.getCurrentLevel(VReference.VAMPIRE_FACTION) != targetLevel - 1).orElse(false)) {
                     LOGGER.warn("Player {} changed level while the ritual was running. Cannot levelup.", player);
                     return;
                 }
-                handler.setFactionLevel(VReference.VAMPIRE_FACTION, handler.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1);
+                handler.ifPresent(h->h.setFactionLevel(VReference.VAMPIRE_FACTION, h.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1));
                 VampirePlayer.get(player).drinkBlood(Integer.MAX_VALUE, 0, false);
                 if (player instanceof ServerPlayer) {
                     ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayer) player, VampireActionTrigger.Action.PERFORM_RITUAL_INFUSION);

@@ -10,7 +10,6 @@ import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -109,7 +108,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (event.phase == TickEvent.Phase.END)
             return;
 
-        @Nullable IFactionPlayer<?> player = FactionPlayerHandler.get(mc.player).getCurrentFactionPlayer().orElse(null);
+        @Nullable IFactionPlayer<?> player = FactionPlayerHandler.getOpt(mc.player).resolve().flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
         if (player instanceof VampirePlayer) {
             handleScreenColorVampire((VampirePlayer) player);
         } else if (player instanceof HunterPlayer) {
@@ -221,27 +220,28 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (!mc.player.isRidingJumpable() && !mc.options.hideGui) {
             gui.setupOverlayRenderState(true, false);
 
-            IPlayableFaction<?> faction = VampirismPlayerAttributes.get(mc.player).faction;
-            if (mc.gameMode.hasExperience() && mc.player.isAlive() && faction != null && faction.renderLevel()) {
-                IFactionPlayerHandler handler = FactionPlayerHandler.get(mc.player);
-                // boolean flag1 = false;
-                int color = faction.getColor();
-                int lord = handler.getLordLevel();
-                String text;
-                if (lord > 0) {
-                    String title = handler.getLordTitle().getString();
-                    text = title.substring(0, Math.min(3, title.length()));
-                } else {
-                    text = "" + handler.getCurrentLevel();
+            FactionPlayerHandler.getOpt(mc.player).ifPresent(handler -> {
+                IPlayableFaction<?> faction = handler.getCurrentFaction();
+                if (mc.gameMode.hasExperience() && faction != null && faction.renderLevel()) {
+                    // boolean flag1 = false;
+                    int color = faction.getColor();
+                    int lord = handler.getLordLevel();
+                    String text;
+                    if (lord > 0) {
+                        String title = handler.getLordTitle().getString();
+                        text = title.substring(0, Math.min(3, title.length()));
+                    } else {
+                        text = "" + handler.getCurrentLevel();
+                    }
+                    int x = (this.mc.getWindow().getGuiScaledWidth() - mc.font.width(text)) / 2 + VampirismConfig.CLIENT.guiLevelOffsetX.get();
+                    int y = this.mc.getWindow().getGuiScaledHeight() - VampirismConfig.CLIENT.guiLevelOffsetY.get();
+                    mc.font.draw(mStack, text, x + 1, y, 0);
+                    mc.font.draw(mStack, text, x - 1, y, 0);
+                    mc.font.draw(mStack, text, x, y + 1, 0);
+                    mc.font.draw(mStack, text, x, y - 1, 0);
+                    mc.font.draw(mStack, text, x, y, color);
                 }
-                int x = (screenWidth - mc.font.width(text)) / 2 + VampirismConfig.CLIENT.guiLevelOffsetX.get();
-                int y = screenHeight - VampirismConfig.CLIENT.guiLevelOffsetY.get();
-                mc.font.draw(mStack, text, x + 1, y, 0);
-                mc.font.draw(mStack, text, x - 1, y, 0);
-                mc.font.draw(mStack, text, x, y + 1, 0);
-                mc.font.draw(mStack, text, x, y - 1, 0);
-                mc.font.draw(mStack, text, x, y, color);
-            }
+            });
         }
     }
 
