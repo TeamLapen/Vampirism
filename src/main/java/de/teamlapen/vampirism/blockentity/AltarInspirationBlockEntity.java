@@ -83,7 +83,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
     @Nonnull
     @Override
     public CompoundTag getUpdateTag() {
-        return save(new CompoundTag());
+        return this.saveWithoutMetadata();
     }
 
     @OnlyIn(Dist.CLIENT)

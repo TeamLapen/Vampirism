@@ -84,7 +84,7 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
 
     protected void renderGuiBackground(PoseStack mStack) {
         RenderSystem.setShaderTexture(0, BACKGROUND);
-        blit(mStack, this.guiLeft, this.guiTop, this.getBlitOffset(), 0, 0, this.xSize, this.ySize, 256, 300);
+        blit(mStack, this.guiLeft, this.guiTop, this.getBlitOffset(), 0, 0, this.xSize, this.ySize, 300, 256);
     }
 
     private void drawTitle(PoseStack mStack) {

@@ -246,7 +246,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     @Nonnull
     @Override
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        return this.saveWithoutMetadata();
     }
 
     @Override
@@ -441,8 +441,9 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         compound.putBoolean("isDisabled", this.isDisabled);
         compound.putBoolean("isComplete", this.isComplete);
         compound.putBoolean("isInsideVillage", this.isInsideVillage);
-        if (this.controllingFaction != null)
+        if (this.controllingFaction != null) {
             compound.putString("controllingFaction", this.controllingFaction.getID().toString());
+        }
         if (this.capturingFaction != null) {
             compound.putString("capturingFaction", this.capturingFaction.getID().toString());
             compound.putInt("captureTimer", this.captureTimer);

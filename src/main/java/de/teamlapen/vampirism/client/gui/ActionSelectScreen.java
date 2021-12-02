@@ -179,7 +179,9 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
         if (editActions) {
-            this.renderTooltip(stack, Lists.newArrayList(new TranslatableComponent("gui.vampirism.action_select.action_binding"), ModKeys.ACTION1.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA), ModKeys.ACTION2.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA)), Optional.empty(),0, ((int) (this.height * 0.8)), this.font); // TODO 1.18 max string width missing (this.width / 4)
+            this.renderTooltip(stack, Lists.newArrayList(new TranslatableComponent("gui.vampirism.action_select.action_binding")
+                                                        , ModKeys.ACTION1.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA)
+                                                        , ModKeys.ACTION2.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA)), Optional.empty(),0, ((int) (this.height * 0.82)), this.font); // TODO 1.18 check if there is an efficient way to create a line break. See RenderToolTipEvent#GatherComponents
         }
     }
 

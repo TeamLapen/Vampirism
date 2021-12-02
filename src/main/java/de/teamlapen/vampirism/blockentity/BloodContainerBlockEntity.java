@@ -74,7 +74,9 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
     @Nonnull
     @Override
     public CompoundTag getUpdateTag() {
-        return save(new CompoundTag());
+        CompoundTag tag = this.saveWithoutMetadata();
+        tank.writeToNBT(tag);
+        return tag;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -82,7 +84,7 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         FluidStack old = tank.getFluid();
         if (hasLevel()) {
-            this.load(pkt.getTag());
+            super.onDataPacket(net, pkt);
             if (!old.isEmpty() && !old.isFluidStackIdentical(tank.getFluid()) || old.isEmpty() && !tank.getFluid().isEmpty()) {
                 setChanged();
             }

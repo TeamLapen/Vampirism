@@ -111,7 +111,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
 
 
     private void drawButtonTip(PoseStack mStack, Component text, int mouseX, int mouseY) {
-        this.renderTooltip(mStack, Collections.singletonList(text), Optional.empty(),mouseX, mouseY, font); //TODO 1.18 test
+        this.renderTooltip(mStack, Collections.singletonList(text), Optional.empty(),mouseX, mouseY, font);
     }
 
     private Component getActiveTaskName() {

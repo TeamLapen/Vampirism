@@ -192,7 +192,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     @Nonnull
     @Override
     public CompoundTag getUpdateTag() {
-        return save(new CompoundTag());
+        return this.saveWithoutMetadata();
     }
 
     @Override

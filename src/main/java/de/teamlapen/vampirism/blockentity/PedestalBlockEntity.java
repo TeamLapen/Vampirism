@@ -111,7 +111,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     @Nonnull
     @Override
     public CompoundTag getUpdateTag() {
-        return save(new CompoundTag());
+        return this.saveWithoutMetadata();
     }
 
     public boolean hasStack() {

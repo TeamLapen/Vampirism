@@ -75,7 +75,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
     @Nonnull
     @Override
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        return this.saveWithoutMetadata();
     }
 
     /**

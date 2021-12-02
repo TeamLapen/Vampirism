@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.phys.AABB;
@@ -173,7 +174,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
                         @Nullable
                         NaturalSpawner.SpawnState densityManager = ((ServerLevel) level).getChunkSource().getLastSpawnState();
                         try {
-                            if (densityManager != null /*&& !densityManager.canSpawnForCategory(limitType)*/) { //TODO implement
+                            if (densityManager != null && !densityManager.canSpawnForCategory(limitType, new ChunkPos(pos.getX() / 16, pos.getZ() / 16))) {
                                 this.resetTimer();
                                 break;
                             }

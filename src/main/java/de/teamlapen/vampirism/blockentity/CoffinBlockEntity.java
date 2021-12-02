@@ -62,7 +62,7 @@ public class CoffinBlockEntity extends BlockEntity {
     @Nonnull
     @Override
     public CompoundTag getUpdateTag() {
-        return save(new CompoundTag());
+        return this.saveWithoutMetadata();
     }
 
     @Override
