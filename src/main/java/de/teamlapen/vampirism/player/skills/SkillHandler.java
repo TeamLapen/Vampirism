@@ -12,7 +12,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModRegistries;
-import de.teamlapen.vampirism.items.VampireRefinementItem;
+import de.teamlapen.vampirism.items.RefinementItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -115,7 +115,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         for (int i = 0; i < this.refinementSetDamage.length; i++) {
             if (this.appliedRefinementSets[i] == null) continue;
             int damage = 40 + (this.appliedRefinementSets[i].getRarity().weight - 1) * 10 + this.getPlayer().getRepresentingPlayer().getRandom().nextInt(60);
-            if ((this.refinementSetDamage[i] += damage) >= VampireRefinementItem.MAX_DAMAGE) {
+            if ((this.refinementSetDamage[i] += damage) >= RefinementItem.MAX_DAMAGE) {
                 this.removeRefinementSet(i);
             }
         }

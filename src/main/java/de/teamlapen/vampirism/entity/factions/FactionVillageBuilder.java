@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
 import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionVillageBuilder;
-import de.teamlapen.vampirism.api.entity.factions.IVillageFactionData;
+import de.teamlapen.vampirism.api.entity.factions.IFactionVillage;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -13,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class FactionVillageBuilder implements IFactionVillageBuilder, IVillageFactionData {
+public class FactionVillageBuilder implements IFactionVillageBuilder, IFactionVillage {
 
     private Supplier<MobEffect> badOmenEffect = () -> null;
     private Supplier<ItemStack> bannerStack = () -> new ItemStack(Items.WHITE_BANNER);
@@ -76,8 +75,8 @@ public class FactionVillageBuilder implements IFactionVillageBuilder, IVillageFa
     }
 
     @Override
-    public FactionVillageData build() {
-        return new FactionVillageData(this.badOmenEffect.get(), this.bannerStack.get(), ImmutableList.copyOf(this.captureEntities.get()), this.factionVillageProfession.get(), guardSuperClass, this.taskMasterEntity.get(), this.fragileTotem.get(), this.craftedTotem.get());
+    public FactionVillage build() {
+        return new FactionVillage(this.badOmenEffect.get(), this.bannerStack.get(), ImmutableList.copyOf(this.captureEntities.get()), this.factionVillageProfession.get(), guardSuperClass, this.taskMasterEntity.get(), this.fragileTotem.get(), this.craftedTotem.get());
     }
 
     @Deprecated

@@ -200,9 +200,9 @@ public class ModItems {
 
     public static final OblivionItem oblivion_potion = getNull();
 
-    public static final VampireRefinementItem amulet = getNull();
-    public static final VampireRefinementItem ring = getNull();
-    public static final VampireRefinementItem obi_belt = getNull();
+    public static final RefinementItem amulet = getNull();
+    public static final RefinementItem ring = getNull();
+    public static final RefinementItem obi_belt = getNull();
 
     public static final VampireClothingItem vampire_clothing_crown = getNull();
     public static final VampireClothingItem vampire_clothing_legs = getNull();

@@ -11,7 +11,7 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.command.arguments.RefinementSetArgument;
 import de.teamlapen.vampirism.entity.factions.PlayableFaction;
-import de.teamlapen.vampirism.items.VampireRefinementItem;
+import de.teamlapen.vampirism.items.RefinementItem;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -61,7 +61,7 @@ public class GiveAccessoriesCommand extends BasicCommand {
         if (faction instanceof PlayableFaction<?>) {
             for (int i = 0; i < amount; ++i) {
                 //noinspection unchecked
-                ItemStack stack = VampireRefinementItem.getRandomRefinementItem(((PlayableFaction<T>) faction));
+                ItemStack stack = RefinementItem.getRandomRefinementItem(((PlayableFaction<T>) faction));
                 if (!stack.isEmpty()) {
                     entity.addItem(stack);
                 } else {

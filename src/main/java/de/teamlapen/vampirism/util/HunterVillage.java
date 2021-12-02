@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
 import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionVillageBuilder;
-import de.teamlapen.vampirism.api.entity.factions.IVillageFactionData;
+import de.teamlapen.vampirism.api.entity.factions.IFactionVillage;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
@@ -23,13 +23,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BannerPattern;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class HunterVillageData implements IVillageFactionData { // TODO 1.17 only keep static methods
+public class HunterVillage {
+
     public static ItemStack createBanner() {
         ItemStack itemStack = new ItemStack(Items.BLUE_BANNER);
         CompoundTag compoundNBT = itemStack.getOrCreateTagElement("BlockEntityTag");
@@ -53,58 +53,7 @@ public class HunterVillageData implements IVillageFactionData { // TODO 1.17 onl
                 .factionVillagerProfession(() -> ModVillage.hunter_expert)
                 .guardSuperClass(HunterBaseEntity.class)
                 .taskMaster(() -> ModEntities.task_master_hunter)
-                .banner(HunterVillageData::createBanner)
+                .banner(HunterVillage::createBanner)
                 .totem(() -> ModBlocks.totem_top_vampirism_hunter, () -> ModBlocks.totem_top_vampirism_hunter_crafted);
-    }
-
-    private final ItemStack banner = createBanner();
-    private List<CaptureEntityEntry> captureEntityEntries;
-
-    @Nullable
-    @Override
-    public MobEffect getBadOmenEffect() {
-        return ModEffects.bad_omen_hunter;
-    }
-
-    @Nonnull
-    @Override
-    public ItemStack getBanner() {
-        return this.banner.copy();
-    }
-
-    @Override
-    public List<CaptureEntityEntry> getCaptureEntries() {
-        if (this.captureEntityEntries == null) {
-            this.captureEntityEntries = Lists.newArrayList(new CaptureEntityEntry(ModEntities.hunter, 10)/*, new CaptureEntityEntry(ModEntities.advanced_hunter, 2)*/);
-        }
-        return this.captureEntityEntries;
-    }
-
-    @Nonnull
-    @Override
-    public VillagerProfession getFactionVillageProfession() {
-        return ModVillage.hunter_expert;
-    }
-
-    @Nonnull
-    @Override
-    public Class<? extends Mob> getGuardSuperClass() {
-        return HunterBaseEntity.class;
-    }
-
-    @Override
-    public EntityType<? extends ITaskMasterEntity> getTaskMasterEntity() {
-        return ModEntities.task_master_hunter;
-    }
-
-    @Nonnull
-    @Override
-    public Block getTotemTopBlock(boolean crafted) {
-        return crafted ? ModBlocks.totem_top_vampirism_hunter_crafted : ModBlocks.totem_top_vampirism_hunter;
-    }
-
-    @Override
-    public boolean isBanner(@Nonnull ItemStack stack) {
-        return ItemStack.matches(this.banner, stack);
     }
 }

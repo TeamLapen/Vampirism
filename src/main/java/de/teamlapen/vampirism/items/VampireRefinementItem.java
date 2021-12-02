@@ -1,147 +1,29 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.util.WeightedRandomItem;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
-import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
-import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModRegistries;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.player.refinements.RefinementSet;
-import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.random.WeightedRandom;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 
-public class VampireRefinementItem extends Item implements IRefinementItem { //TODO 1.17 rename to RefinementItem and create subclass for Vampires
+public class VampireRefinementItem extends RefinementItem {
 
-    public static final int MAX_DAMAGE = 500;
-    private static final Random RANDOM = new Random();
-
-    public static ItemStack getRandomRefinementItem(IPlayableFaction<?> faction) {
-        List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream().filter(set -> set.getFaction() == faction).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
-        if (sets.isEmpty()) return ItemStack.EMPTY;
-        IRefinementSet s = WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedRandomItem::getItem).orElse(sets.get(0).getItem());
-        AccessorySlotType t = s.getSlotType().orElseGet(() -> {
-            return switch (RANDOM.nextInt(3)) {
-                case 0 -> AccessorySlotType.OBI_BELT;
-                case 1 -> AccessorySlotType.RING;
-                default -> AccessorySlotType.AMULET;
-            };
-        });
-        IRefinementItem i = faction.getRefinementItem(t);
-        ItemStack stack = new ItemStack(((Item) i));
-        if (i.applyRefinementSet(stack, s)) {
-            return stack;
-        }
-        return ItemStack.EMPTY;
+    public VampireRefinementItem(Properties properties, AccessorySlotType type) {
+        super(properties, type);
     }
 
-    public static IRefinementSet getRandomRefinementForItem(@Nullable IFaction<?> faction, IRefinementItem stack) {
-        List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream().filter(set -> faction == null || set.getFaction() == faction).filter(set -> set.getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
-        if (sets.isEmpty()) return null;
-        return WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedRandomItem::getItem).orElse(null);
+    @Nonnull
+    @Override
+    public IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
+        return VReference.VAMPIRE_FACTION;
     }
 
-    public static VampireRefinementItem getItemForType(AccessorySlotType type) { //TODO 1.17 move to vampire subclass
+    public static RefinementItem getItemForType(AccessorySlotType type) {
         return switch (type) {
             case AMULET -> ModItems.amulet;
             case RING -> ModItems.ring;
             default -> ModItems.obi_belt;
         };
-    }
-
-    private final AccessorySlotType type;
-
-    public VampireRefinementItem(Properties properties, AccessorySlotType type) {
-        super(properties.defaultDurability(MAX_DAMAGE).setNoRepair());
-        this.type = type;
-    }
-
-    @Nonnull
-    @Override
-    public IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) { //TODO 1.17 remove
-        return VReference.VAMPIRE_FACTION;
-    }
-
-    @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        IRefinementSet set = getRefinementSet(stack);
-        if (set != null) {
-            for (IRefinement refinement : set.getRefinements()) {
-                tooltip.add(new TextComponent(" - ").append(refinement.getDescription()).withStyle(ChatFormatting.GRAY));
-            }
-        }
-    }
-
-    @Override
-    public boolean applyRefinementSet(ItemStack stack, IRefinementSet set) {
-        if (set.getSlotType().map(t -> t == type).orElse(true)) {
-            CompoundTag tag = stack.getOrCreateTag();
-            tag.putString("refinement_set", set.getRegistryName().toString());
-            return true;
-        }
-        return false;
-    }
-
-    @Nonnull
-    @Override
-    public Component getName(@Nonnull ItemStack stack) {
-        IRefinementSet set = getRefinementSet(stack);
-        if (set == null) {
-            return super.getName(stack);
-        }
-        return new TranslatableComponent(this.getDescriptionId()).append(" ").append(set.getName()).withStyle(set.getRarity().color);
-    }
-
-    @Nullable
-    @Override
-    public IRefinementSet getRefinementSet(ItemStack stack) {
-        String refinementsNBT = stack.getOrCreateTag().getString("refinement_set");
-        return ModRegistries.REFINEMENT_SETS.getValue(new ResourceLocation(refinementsNBT));
-    }
-
-    @Override
-    public AccessorySlotType getSlotType() {
-        return this.type;
-    }
-
-    @Override
-    public boolean isEnchantable(@Nonnull ItemStack stack) {
-        return false;
-    }
-
-    @Nonnull
-    @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, @Nonnull Player playerIn, @Nonnull InteractionHand handIn) {
-        if (!worldIn.isClientSide()) {
-            ItemStack stack = playerIn.getItemInHand(handIn);
-            if (FactionPlayerHandler.getOpt(playerIn).map(v -> v).flatMap(FactionPlayerHandler::getCurrentFactionPlayer).map(IFactionPlayer::getSkillHandler).map(sh -> sh.equipRefinementItem(stack)).orElse(false)) {
-                return InteractionResultHolder.consume(ItemStack.EMPTY);
-            }
-
-        }
-        return super.use(worldIn, playerIn, handIn);
     }
 }

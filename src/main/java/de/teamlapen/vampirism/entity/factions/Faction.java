@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.api.entity.factions.IVillageFactionData;
+import de.teamlapen.vampirism.api.entity.factions.IFactionVillage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +24,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
      */
     private final int integerId;
     @Nonnull
-    private IVillageFactionData villageFactionData;
+    private IFactionVillage villageFactionData;
     @Nonnull
     private final Component name;
     @Nonnull
@@ -32,7 +32,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     @Nonnull
     private final ChatFormatting chatColor;
 
-    Faction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, @Nonnull IVillageFactionData villageFactionData, @Nonnull ChatFormatting chatColor, @Nonnull Component name, @Nonnull Component namePlural) {
+    Faction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, @Nonnull IFactionVillage villageFactionData, @Nonnull ChatFormatting chatColor, @Nonnull Component name, @Nonnull Component namePlural) {
         this.id = id;
         this.entityInterface = entityInterface;
         this.color = color;
@@ -88,7 +88,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
 
     @Nonnull
     @Override
-    public IVillageFactionData getVillageData() {
+    public IFactionVillage getVillageData() {
         return villageFactionData;
     }
 

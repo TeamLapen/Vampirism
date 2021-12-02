@@ -46,7 +46,7 @@ public interface IFaction<T extends IFactionEntity> {
      * @return the village data class
      */
     @Nonnull
-    IVillageFactionData getVillageData();
+    IFactionVillage getVillageData();
 
     boolean isEntityOfFaction(PathfinderMob creature);
 

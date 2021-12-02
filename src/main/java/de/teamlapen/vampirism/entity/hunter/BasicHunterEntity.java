@@ -27,7 +27,7 @@ import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
-import de.teamlapen.vampirism.util.HunterVillageData;
+import de.teamlapen.vampirism.util.HunterVillage;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -277,7 +277,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public SpawnGroupData finalizeSpawn(@Nonnull ServerLevelAccessor worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
         if (!(reason == MobSpawnType.SPAWN_EGG || reason == MobSpawnType.BUCKET || reason == MobSpawnType.CONVERSION || reason == MobSpawnType.COMMAND) && this.getRandom().nextInt(50) == 0) {
-            this.setItemSlot(EquipmentSlot.HEAD, HunterVillageData.createBanner());
+            this.setItemSlot(EquipmentSlot.HEAD, HunterVillage.createBanner());
         }
         SpawnGroupData livingData = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 

@@ -35,14 +35,7 @@ public interface IRefinementItem extends IFactionExclusiveItem {
      *
      * @return Whether the set was successfully applied
      */
-    default boolean applyRefinementSet(ItemStack stack, IRefinementSet set) {//TODO 1.17 remove default implementation
-        return false;
-    }
-
-    @Nonnull
-    default IFaction<?> getExclusiveFaction() { //TODO 1.17 remove
-        return VReference.VAMPIRE_FACTION;
-    }
+    boolean applyRefinementSet(ItemStack stack, IRefinementSet set);
 
     /**
      * Slots types for {@link IRefinementItem}

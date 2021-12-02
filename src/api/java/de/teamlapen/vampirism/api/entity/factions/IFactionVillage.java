@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public interface IVillageFactionData { //TODO 1.17 IFactionVillage
+public interface IFactionVillage {
     /**
      * @return A faction specific bad omen effect
      */
@@ -43,7 +43,7 @@ public interface IVillageFactionData { //TODO 1.17 IFactionVillage
      * @deprecated internal use only
      */
     @Deprecated
-    default IVillageFactionData build() {
+    default IFactionVillage build() {
         return this;
     }
 }

@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModLoot;
-import de.teamlapen.vampirism.items.VampireRefinementItem;
+import de.teamlapen.vampirism.items.RefinementItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -47,7 +47,7 @@ public class RefinementSetFunction extends LootItemConditionalFunction {
     @Override
     protected ItemStack run(@Nonnull ItemStack stack, @Nonnull LootContext context) {
         if (stack.getItem() instanceof IRefinementItem) {
-            IRefinementSet set = VampireRefinementItem.getRandomRefinementForItem(faction, ((IRefinementItem) stack.getItem()));
+            IRefinementSet set = RefinementItem.getRandomRefinementForItem(faction, ((IRefinementItem) stack.getItem()));
             if (set != null) {
                 ((IRefinementItem) stack.getItem()).applyRefinementSet(stack, set);
             }

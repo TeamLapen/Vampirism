@@ -23,7 +23,7 @@ import de.teamlapen.vampirism.entity.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
-import de.teamlapen.vampirism.util.VampireVillageData;
+import de.teamlapen.vampirism.util.VampireVillage;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -244,7 +244,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     public SpawnGroupData finalizeSpawn(@Nonnull ServerLevelAccessor worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
         if ((reason == MobSpawnType.NATURAL || reason == MobSpawnType.STRUCTURE) && this.getRandom().nextInt(50) == 0) {
-            this.setItemSlot(EquipmentSlot.HEAD, VampireVillageData.createBanner());
+            this.setItemSlot(EquipmentSlot.HEAD, VampireVillage.createBanner());
         }
         getEntityData().set(TYPE, this.getRandom().nextInt(TYPES));
 
