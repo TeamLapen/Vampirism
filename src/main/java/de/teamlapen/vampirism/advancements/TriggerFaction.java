@@ -74,7 +74,7 @@ public class TriggerFaction extends SimpleCriterionTrigger<TriggerFaction.Instan
         private final int level;
 
         Instance(@Nonnull Type type, @Nullable IPlayableFaction<?> faction, int level) {
-            super(ID, EntityPredicate.Composite.ANY); //TODO check what AndPredicate does
+            super(ID, EntityPredicate.Composite.ANY);
             this.type = type;
             this.faction = faction;
             this.level = level;

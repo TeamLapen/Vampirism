@@ -195,7 +195,7 @@ public class Helper {
         Biome b = w.getBiome(e.blockPosition());
         ResourceLocation biomeId = getBiomeId(w, b);
         Objects.requireNonNull(biomeId, "Cannot determine id of local biome");
-        return ModBiomes.vampire_forest.getRegistryName().equals(biomeId) || ModBiomes.vampire_forest_hills.getRegistryName().equals(biomeId);
+        return ModBiomes.vampire_forest.getRegistryName().equals(biomeId);
     }
 
     /**

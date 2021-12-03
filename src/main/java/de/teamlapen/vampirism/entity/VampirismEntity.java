@@ -57,7 +57,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     public static boolean spawnPredicateVampireFog(LevelAccessor world, BlockPos blockPos) {
-        return ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || ModBiomes.vampire_forest_hills.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || (world instanceof Level && VampirismWorld.getOpt((Level) world).map(vh -> vh.isInsideArtificialVampireFogArea(blockPos)).orElse(false));
+        return ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || (world instanceof Level && VampirismWorld.getOpt((Level) world).map(vh -> vh.isInsideArtificialVampireFogArea(blockPos)).orElse(false));
     }
 
     public static boolean spawnPredicateCanSpawn(EntityType<? extends Mob> entityType, LevelAccessor world, MobSpawnType spawnReason, BlockPos blockPos, Random random) {

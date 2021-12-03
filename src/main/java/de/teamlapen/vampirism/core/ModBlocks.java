@@ -53,7 +53,7 @@ public class ModBlocks {
     public static final CastleStairsBlock castle_stairs_purple_brick = getNull();
     public static final AltarCleansingBlock altar_cleansing = getNull();
     public static final CoffinBlock coffin = getNull();
-    public static final CursedEarthBlock cursed_earth = getNull();
+    public static final CursedEarthBlock cursed_earth;
     public static final FirePlaceBlock fire_place = getNull();
     public static final GarlicBlock garlic = getNull();
     public static final GarlicDiffuserBlock garlic_diffuser_improved = getNull();
@@ -174,7 +174,7 @@ public class ModBlocks {
         registry.register(prepareRegister(new CastleStairsBlock(castle_block_purple_brick.defaultBlockState(), CastleBricksBlock.EnumVariant.PURPLE_BRICK)));
         registry.register(prepareRegister(new AltarCleansingBlock()));
         registry.register(prepareRegister(new CoffinBlock()));
-        registry.register(prepareRegister(new CursedEarthBlock()));
+        registry.register(prepareRegister(cursed_earth));
         registry.register(prepareRegister(new FirePlaceBlock()));
         registry.register(prepareRegister(new GarlicBlock()));
         registry.register(prepareRegister(new GarlicDiffuserBlock(GarlicDiffuserBlock.Type.IMPROVED)));
@@ -264,5 +264,9 @@ public class ModBlocks {
 
     public static Set<Block> getAllBlocks() {
         return ImmutableSet.copyOf(ALL_BLOCKS);
+    }
+
+    static {
+        cursed_earth = new CursedEarthBlock();
     }
 }

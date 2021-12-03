@@ -16,7 +16,8 @@
     "MixinEntityPredicate",
     "MixinLivingEntity",
     "MixinPlayerEntity",
-    "MixinPotionBrewing"
+    "MixinPotionBrewing",
+    "SurfaceRuleDataMixin"
   ],
   "client": [
     "client.AgeableModelAccessor",
