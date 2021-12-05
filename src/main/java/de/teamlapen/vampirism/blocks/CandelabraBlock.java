@@ -29,7 +29,7 @@ public class CandelabraBlock extends VampirismHorizontalBlock {
                 VoxelShapes.join(Block.box(7, 10, 7, 9, 14, 9), Block.box(6.5, 9, 6.5, 9.5, 10, 9.5), IBooleanFunction.OR),
                 VoxelShapes.join(Block.box(2, 8, 7, 4, 12, 9), Block.box(1.5, 7, 6.5, 4.5, 8, 9.5), IBooleanFunction.OR),
                 VoxelShapes.join(Block.box(12, 8, 7, 14, 12, 9), Block.box(11.5, 7, 6.5, 14.5, 8, 9.5), IBooleanFunction.OR)
-        ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).orElse(VoxelShapes.empty());
+        ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).orElseGet(VoxelShapes::empty);
     }
 
     public CandelabraBlock() {

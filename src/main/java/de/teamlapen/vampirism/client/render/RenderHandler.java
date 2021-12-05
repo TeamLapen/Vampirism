@@ -125,28 +125,32 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         if (mc.level == null || mc.player == null || !mc.player.isAlive()) return;
         if (event.phase == TickEvent.Phase.END) return;
         lastBloodVisionTicks = bloodVisionTicks;
-        VampirePlayer vampire = VampirePlayer.get(mc.player);
-        //Blood vision
-        if (vampire.getSpecialAttributes().blood_vision && !VampirismConfig.CLIENT.disableBloodVisionRendering.get() && !vampire.isGettingSundamage(mc.player.level)) {
+        @Nullable
+        VampirePlayer vampire = VampirePlayer.getOpt(mc.player).resolve().orElse(null);
+        if(vampire!=null){
+            //Blood vision
+            if (vampire.getSpecialAttributes().blood_vision && !VampirismConfig.CLIENT.disableBloodVisionRendering.get() && !vampire.isGettingSundamage(mc.player.level)) {
 
-            if (bloodVisionTicks < BLOOD_VISION_FADE_TICKS) {
-                bloodVisionTicks++;
+                if (bloodVisionTicks < BLOOD_VISION_FADE_TICKS) {
+                    bloodVisionTicks++;
 
-            }
-        } else {
-            if (bloodVisionTicks > 0) {
-                bloodVisionTicks -= 2;
-            }
-            if (vampireBiomeTicks > 10 && bloodVisionTicks == 15) {
-                bloodVisionTicks = 0;
+                }
+            } else {
+                if (bloodVisionTicks > 0) {
+                    bloodVisionTicks -= 2;
+                }
+                if (vampireBiomeTicks > 10 && bloodVisionTicks == 15) {
+                    bloodVisionTicks = 0;
+                }
             }
         }
+
         //Vampire biome/village fog
         if (mc.player.tickCount % 10 == 0) {
             if ((VampirismConfig.CLIENT.renderVampireForestFog.get() || VampirismConfig.SERVER.enforceRenderForestFog.get()) && (Helper.isEntityInArtificalVampireFogArea(mc.player) || Helper.isEntityInVampireBiome(mc.player))) {
                 insideFog = true;
-                vampireBiomeFogDistanceMultiplier = vampire.getLevel() > 0 ? 2 : 1;
-                vampireBiomeFogDistanceMultiplier += vampire.getSkillHandler().isRefinementEquipped(ModRefinements.vista) ? VampirismConfig.BALANCE.vrVistaMod.get() : 0;
+                vampireBiomeFogDistanceMultiplier = vampire != null && vampire.getLevel() > 0 ? 2 : 1;
+                vampireBiomeFogDistanceMultiplier += vampire!= null && vampire.getSkillHandler().isRefinementEquipped(ModRefinements.vista) ? VampirismConfig.BALANCE.vrVistaMod.get() : 0;
 
             } else {
                 insideFog = false;

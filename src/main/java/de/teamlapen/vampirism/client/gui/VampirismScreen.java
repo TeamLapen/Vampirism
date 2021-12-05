@@ -60,7 +60,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         this.inventoryLabelX = 36;
         this.inventoryLabelY = this.imageHeight - 93;
         this.menu.setReloadListener(() -> this.list.refresh());
-        this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().get();
+        this.factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(playerInventory.player).orElseThrow(() -> new IllegalStateException("Cannot open Vampirism container without faction player"));
     }
 
     @Override

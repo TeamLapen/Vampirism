@@ -51,8 +51,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
 
     public TaskBoardContainer(int id, PlayerInventory playerInventory) {
         super(ModContainer.task_master, id);
-        //noinspection OptionalGetWithoutIsPresent
-        this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().get();
+        this.factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(playerInventory.player).orElseThrow(() -> new IllegalStateException("Can't open container without faction"));
         this.factionColor = this.factionPlayer.getFaction().getChatColor();
     }
 

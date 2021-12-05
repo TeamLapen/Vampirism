@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 public class VampirismContainer extends InventoryContainer implements TaskContainer {
 
     private static final Function<PlayerEntity, SelectorInfo[]> SELECTOR_INFOS = player -> {
-        IPlayableFaction<?> faction = FactionPlayerHandler.get(player).getCurrentFactionPlayer().orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction")).getFaction();
+        IPlayableFaction<?> faction = FactionPlayerHandler.getCurrentFactionPlayer(player).orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction")).getFaction();
         return new SelectorInfo[]{
                 new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.AMULET && ((IRefinementItem) stack.getItem()).getExclusiveFaction().equals(faction), 58, 8),
                 new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.RING && ((IRefinementItem) stack.getItem()).getExclusiveFaction().equals(faction), 58, 26),

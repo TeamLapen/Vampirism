@@ -56,7 +56,12 @@ public class GarlicBlock extends CropsBlock {
     @Override
     public void entityInside(BlockState state, World world, BlockPos pos, Entity entity) {
         if (state.getValue(AGE) > 5 && Helper.isVampire(entity)) {
-            DamageHandler.affectVampireGarlicDirect(entity instanceof PlayerEntity ? VReference.VAMPIRE_FACTION.getPlayerCapability((PlayerEntity) entity).orElseThrow(() -> new IllegalStateException("Capability cannot be null")) : (IVampire) entity, EnumStrength.WEAK);
+            if(entity instanceof PlayerEntity){
+                VReference.VAMPIRE_FACTION.getPlayerCapability((PlayerEntity) entity).ifPresent( vamp -> DamageHandler.affectVampireGarlicDirect(vamp, EnumStrength.WEAK));
+            }
+            else if(entity instanceof IVampire){
+                DamageHandler.affectVampireGarlicDirect((IVampire) entity, EnumStrength.WEAK);
+            }
         }
     }
 

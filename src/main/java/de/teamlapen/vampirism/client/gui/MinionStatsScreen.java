@@ -150,7 +150,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     }
 
     private Optional<ItemStack> getOblivionPotion() {
-        return Optional.ofNullable(entity.getMinionData().flatMap(data -> Optional.ofNullable(InventoryHelper.getFirst(data.getInventory(), ModItems.oblivion_potion))).orElse(InventoryHelper.getFirst(this.minecraft.player.inventory, ModItems.oblivion_potion)));
+        return Optional.ofNullable(entity.getMinionData().flatMap(data -> Optional.ofNullable(InventoryHelper.getFirst(data.getInventory(), ModItems.oblivion_potion))).orElseGet(() -> InventoryHelper.getFirst(this.minecraft.player.inventory, ModItems.oblivion_potion)));
     }
 
 

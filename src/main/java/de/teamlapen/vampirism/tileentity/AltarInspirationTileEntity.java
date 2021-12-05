@@ -155,9 +155,8 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
                     ((InternalTank) tank).doDrain(blood, IFluidHandler.FluidAction.EXECUTE);
 
                     ritualPlayer.addEffect(new EffectInstance(Effects.REGENERATION, targetLevel * 10 * 20));
-                    FactionPlayerHandler.get(ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, targetLevel);
-                    VampirePlayer player = VampirePlayer.get(ritualPlayer);
-                    player.drinkBlood(Integer.MAX_VALUE, 0, false);
+                    FactionPlayerHandler.getOpt(ritualPlayer).ifPresent(handler -> handler.setFactionLevel(VReference.VAMPIRE_FACTION, targetLevel));
+                    VampirePlayer.getOpt(ritualPlayer).ifPresent(vampire -> vampire.drinkBlood(Integer.MAX_VALUE, 0, false));
                     this.setChanged();
                     break;
                 default:

@@ -61,6 +61,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.village.PointOfInterestType;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.*;
@@ -457,25 +458,23 @@ public class ModPlayerEventHandler {
      * @return If it is allowed to use the item
      */
     private boolean checkItemUsePerm(ItemStack stack, PlayerEntity player) {
-
         boolean message = !player.getCommandSenderWorld().isClientSide;
         if (!stack.isEmpty() && stack.getItem() instanceof IFactionLevelItem) {
             if (!player.isAlive()) return false;
-            IFactionLevelItem item = (IFactionLevelItem) stack.getItem();
-            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+            IFactionLevelItem<?> item = (IFactionLevelItem<?>) stack.getItem();
+            LazyOptional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(player);
             IPlayableFaction usingFaction = item.getUsingFaction(stack);
             ISkill requiredSkill = item.getRequiredSkill(stack);
-            if (usingFaction != null && !handler.isInFaction(usingFaction)) {
-
+            if (usingFaction != null && !handler.map(h->h.isInFaction(usingFaction)).orElse(false)) {
                 if (message)
                     player.displayClientMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by", usingFaction.getNamePlural()), true);
                 return false;
-            } else if (handler.getCurrentLevel() < item.getMinLevel(stack)) {
+            } else if (handler.map(FactionPlayerHandler::getCurrentLevel).orElse(0) < item.getMinLevel(stack)) {
                 if (message)
                     player.displayClientMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by_level", usingFaction == null ? new TranslationTextComponent("text.vampirism.all") : usingFaction.getNamePlural(), item.getMinLevel(stack)), true);
                 return false;
             } else if (requiredSkill != null) {
-                IFactionPlayer factionPlayer = handler.getCurrentFactionPlayer().orElse(null);
+                IFactionPlayer<?> factionPlayer = handler.resolve().flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
                 if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
                     if (message)
                         player.displayClientMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", requiredSkill.getName()), true);

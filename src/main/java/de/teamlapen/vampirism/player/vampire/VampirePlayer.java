@@ -60,7 +60,6 @@ import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -115,9 +114,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public static Capability<IVampirePlayer> CAP = getNull();
 
     /**
+     * Always prefer #getOpt
      * Don't call before the construction event of the player entity is finished
      * Must check Entity#isAlive before
      */
+    @Deprecated
     public static VampirePlayer get(@Nonnull PlayerEntity player) {
         return (VampirePlayer) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get Vampire player capability from player " + player));
     }
@@ -767,19 +768,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      */
     public void onSanguinareFinished() {
         if (Helper.canBecomeVampire(player) && !isRemote() && player.isAlive()) {
-            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            handler.joinFaction(getFaction());
-            player.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 300));
-            player.addEffect(new EffectInstance(Effects.SATURATION, 300));
-//            ((WorldServer) player.world).addScheduledTask(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if (player != null && player.isEntityAlive()) {
-//
-//                    }
-//                }
-//            });
-
+            FactionPlayerHandler.getOpt(player).ifPresent(handler -> {
+                handler.joinFaction(getFaction());
+                player.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 300));
+                player.addEffect(new EffectInstance(Effects.SATURATION, 300));
+            });
         }
     }
 

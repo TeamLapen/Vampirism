@@ -33,8 +33,7 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> impleme
         super(container, playerInventory, containerName);
         this.imageWidth = 176;
         this.imageHeight = 181;
-        //noinspection OptionalGetWithoutIsPresent
-        this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().get();
+        this.factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(playerInventory.player).orElseThrow(() -> new IllegalStateException("Can't open container without faction"));
         this.menu.setReloadListener(() -> this.list.refresh());
     }
 

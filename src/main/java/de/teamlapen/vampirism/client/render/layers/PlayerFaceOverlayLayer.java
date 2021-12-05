@@ -29,7 +29,7 @@ public class PlayerFaceOverlayLayer<T extends MobEntity & IPlayerOverlay, M exte
 
     @Override
     public void render(MatrixStack stack, IRenderTypeBuffer buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        ResourceLocation loc = entity.getOverlayPlayerProperties().map(Pair::getLeft).orElse(DefaultPlayerSkin.getDefaultSkin());
+        ResourceLocation loc = entity.getOverlayPlayerProperties().map(Pair::getLeft).orElseGet(DefaultPlayerSkin::getDefaultSkin);
         IVertexBuilder vertexBuilder = buffer.getBuffer(RenderType.entityCutoutNoCull(loc));
         this.getParentModel().head.visible = true;
         this.getParentModel().hat.visible = true;

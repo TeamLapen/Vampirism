@@ -132,18 +132,19 @@ public class MedChairBlock extends VampirismHorizontalBlock {
     }
 
     private boolean handleInjections(PlayerEntity player, World world, ItemStack stack) {
-        IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
-        IPlayableFaction<?> faction = handler.getCurrentFaction();
-        if (stack.getItem().equals(ModItems.injection_garlic)) {
-            return handleGarlicInjection(player, world, handler, faction);
-        }
-        if (stack.getItem().equals(ModItems.injection_sanguinare)) {
-            return handleSanguinareInjection(player, handler, faction);
-        }
-        if (stack.getItem().equals(ModItems.injection_zombie_blood)) {
-            return handleZombieBloodInjection(player);
-        }
-        return false;
+        return FactionPlayerHandler.getOpt(player).map(handler -> {
+            IPlayableFaction<?> faction = handler.getCurrentFaction();
+            if (stack.getItem().equals(ModItems.injection_garlic)) {
+                return handleGarlicInjection(player, world, handler, faction);
+            }
+            if (stack.getItem().equals(ModItems.injection_sanguinare)) {
+                return handleSanguinareInjection(player, handler, faction);
+            }
+            if (stack.getItem().equals(ModItems.injection_zombie_blood)) {
+                return handleZombieBloodInjection(player);
+            }
+            return false;
+        }).orElse(false);
     }
 
     private boolean handleSanguinareInjection(@Nonnull PlayerEntity player, @Nonnull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
