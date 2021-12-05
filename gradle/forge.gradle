@@ -20,6 +20,14 @@ repositories {
     maven {
         url "https://nexus.resourcefulbees.com/repository/maven-public/"
     }
+    repositories {
+        maven {
+            url "https://www.cursemaven.com"
+            content {
+                includeGroup "curse.maven"
+            }
+        }
+    }
     mavenCentral()
     mavenLocal()
     repositories {
@@ -44,7 +52,6 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${project.jei_version}") //Full for runtime
     compileOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}") //For compile (not exported to POM)
     runtimeOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}") //For runtime (not exported to POM)
-
     //runtimeOnly fg.deobf("curse.maven:angel-of-vengeance:2810906")
     if (System.getProperty("idea.sync.active") != "true") {
         annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'

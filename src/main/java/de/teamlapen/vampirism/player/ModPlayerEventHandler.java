@@ -63,6 +63,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.world.BlockEvent;
@@ -141,15 +142,23 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void eyeHeight(EntityEvent.Size event) {
         if (event.getEntity() instanceof PlayerEntity && ((PlayerEntity) event.getEntity()).inventory != null /*make sure we are not in the player's contructor*/) {
-            if (event.getEntity().isAlive() && event.getEntity().position().lengthSqr() != 0) { //Do not attempt to get capability while entity is being initialized
+            if (event.getEntity().isAlive() && event.getEntity().position().lengthSqr() != 0 && event.getEntity().getVehicle() == null) { //Do not attempt to get capability while entity is being initialized
                 if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().bat) {
                     event.setNewSize(BatVampireAction.BAT_SIZE);
                     event.setNewEyeHeight(BatVampireAction.BAT_EYE_HEIGHT);
+
                 } else if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isDBNO) {
                     event.setNewSize(EntitySize.fixed(0.6f, 0.95f));
                     event.setNewEyeHeight(0.725f);
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onTryMount(EntityMountEvent event){
+        if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
+            event.setCanceled(true);
         }
     }
 
