@@ -463,7 +463,7 @@ public class ModPlayerEventHandler {
             if (!player.isAlive()) return false;
             IFactionLevelItem<?> item = (IFactionLevelItem<?>) stack.getItem();
             LazyOptional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(player);
-            IPlayableFaction usingFaction = item.getUsingFaction(stack);
+            IPlayableFaction<? extends IFactionPlayer<?>> usingFaction = item.getUsingFaction(stack);
             ISkill requiredSkill = item.getRequiredSkill(stack);
             if (usingFaction != null && !handler.map(h->h.isInFaction(usingFaction)).orElse(false)) {
                 if (message)

@@ -24,7 +24,7 @@ import java.util.List;
  * Item's implementing this can only be used by players that match the requirements.
  * Currently only affects {@link PlayerEntity#attackTargetEntityWithCurrentItem(Entity)} and {@link PlayerEntity#setActiveHand(Hand)}
  */
-public interface IFactionLevelItem<T extends IFactionPlayer> { //TODO 1.17 extend IFactionExclusiveItem and modify
+public interface IFactionLevelItem<T extends IFactionPlayer<?>> { //TODO 1.17 extend IFactionExclusiveItem and modify
 
     @SuppressWarnings("RedundantCast")
     @OnlyIn(Dist.CLIENT)
@@ -35,7 +35,7 @@ public interface IFactionLevelItem<T extends IFactionPlayer> { //TODO 1.17 exten
 
         LazyOptional<IFactionPlayerHandler> playerHandler = player != null && player.isAlive() ? VampirismAPI.getFactionPlayerHandler(player) : LazyOptional.empty();
 
-        IPlayableFaction usingFaction = getUsingFaction(stack);
+        IPlayableFaction<? extends IFactionPlayer<?>> usingFaction = getUsingFaction(stack);
         ISkill requiredSkill = getRequiredSkill(stack);
         int reqLevel = getMinLevel(stack);
         if ((Boolean) playerHandler.map(p -> p.isInFaction(usingFaction)).orElse(false)) {
