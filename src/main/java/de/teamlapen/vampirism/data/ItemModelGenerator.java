@@ -113,6 +113,7 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModBlocks.cursed_grass);
             add(ModBlocks.bloody_cursed_grass);
             add(ModBlocks.dark_spruce_log);
+            add(ModBlocks.cursed_roots);
         }};
         Set<Item> items = new HashSet<Item>() {{
             add(ModItems.hunter_coat_chest_normal);

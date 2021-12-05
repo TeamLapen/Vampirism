@@ -237,5 +237,8 @@ public class BlockStateGenerator extends BlockStateProvider {
                 .partialState().with(BlockStateProperties.AXIS, Direction.Axis.Y).modelForState().modelFile(dark_spruce_log).addModel()
                 .partialState().with(BlockStateProperties.AXIS, Direction.Axis.Z).modelForState().rotationX(90).modelFile(dark_spruce_log).addModel()
                 .partialState().with(BlockStateProperties.AXIS, Direction.Axis.X).modelForState().rotationX(90).rotationY(90).modelFile(dark_spruce_log).addModel();
+
+        simpleBlock(ModBlocks.cursed_roots, models().cross("bush", modLoc("block/cursed_roots")));
+        simpleBlock(ModBlocks.potted_cursed_root, models().withExistingParent("vampirism:block/potted_cursed_roots", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/cursed_roots"));
     }
 }

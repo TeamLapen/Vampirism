@@ -288,6 +288,10 @@ public class LootTablesGenerator extends LootTableProvider {
             this.add(ModBlocks.cursed_grass, createSingleItemTable(ModBlocks.cursed_earth));
             this.add(ModBlocks.bloody_cursed_grass, createSingleItemTable(ModBlocks.cursed_earth));
             this.dropSelf(ModBlocks.dark_spruce_log);
+            this.add(ModBlocks.cursed_roots, (block) -> {
+                return createShearsDispatchTable(block, applyExplosionDecay(block, ItemLootEntry.lootTableItem(Items.STICK).apply(SetCount.setCount(RandomValueRange.between(0.0F, 2.0F)))));
+            });
+            this.dropPottedContents(ModBlocks.potted_cursed_root);
         }
 
         @Nonnull

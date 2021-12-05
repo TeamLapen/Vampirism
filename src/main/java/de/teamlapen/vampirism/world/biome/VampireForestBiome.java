@@ -22,9 +22,10 @@ public class VampireForestBiome {
         VampirismBiomeFeatures.addModdedWaterLake(builder);
 
         VampirismBiomeFeatures.addVampireFlower(builder);
+        VampirismBiomeFeatures.addBushPatch(builder);
         DefaultBiomeFeatures.addForestGrass(builder);
 
-        DefaultBiomeFeatures.addDefaultUndergroundVariety(builder); //stone variants
+        VampirismBiomeFeatures.addUndergroundVariety(builder);
         DefaultBiomeFeatures.addDefaultOres(builder); //ore
         DefaultBiomeFeatures.addDefaultSoftDisks(builder); //disks
         VampirismBiomeFeatures.addDarkStoneSoftDisk(builder); //disks
@@ -47,7 +48,7 @@ public class VampireForestBiome {
 
     public static BiomeAmbience.Builder createBiomeAmbienceBuilder() {
         return new BiomeAmbience.Builder()
-                .waterColor(0x1010101).waterFogColor(0x101010).fogColor(0x101010).skyColor(0x101010)
+                .waterColor(0x3e0101).waterFogColor(0x3e0101).fogColor(0x101010).skyColor(0x101010)
                 .foliageColorOverride(0x393939).grassColorOverride(0x454545).ambientMoodSound(new MoodSoundAmbience(SoundEvents.AMBIENT_CRIMSON_FOREST_MOOD, 6000, 8, 2.0D)).ambientAdditionsSound(new SoundAdditionsAmbience(SoundEvents.AMBIENT_CRIMSON_FOREST_ADDITIONS, 0.0111D)).backgroundMusic(BackgroundMusicTracks.createGameMusic(SoundEvents.MUSIC_BIOME_CRIMSON_FOREST));
     }
 

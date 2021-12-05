@@ -117,6 +117,7 @@ public class ModBlocksRender {
         RenderTypeLookup.setRenderLayer(ModBlocks.tombstone2, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.tombstone3, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.grave_cage, cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.cursed_roots, cutout);
     }
 
 

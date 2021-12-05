@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.*;
+import de.teamlapen.vampirism.blocks.BushBlock;
 import de.teamlapen.vampirism.client.core.ModBlocksRender;
 import de.teamlapen.vampirism.client.render.VampirismItemStackTESR;
 import de.teamlapen.vampirism.data.BlockStateGenerator;
@@ -93,6 +94,8 @@ public class ModBlocks {
     public static final CursedGrass cursed_grass = getNull();
     public static final CursedGrass bloody_cursed_grass = getNull();
     public static final RotatedPillarBlock dark_spruce_log = getNull();
+    public static final Block cursed_roots = getNull();
+    public static final Block potted_cursed_root = getNull();
 
     /**
      * empty unless in datagen
@@ -150,6 +153,7 @@ public class ModBlocks {
         registry.register(itemBlock(cursed_grass));
         registry.register(itemBlock(bloody_cursed_grass));
         registry.register(itemBlock(dark_spruce_log));
+        registry.register(itemBlock(cursed_roots));
     }
 
     static void registerBlocks(IForgeRegistry<Block> registry) {
@@ -222,6 +226,10 @@ public class ModBlocks {
         Block log2 = Blocks.log(MaterialColor.PODZOL, MaterialColor.COLOR_BROWN).setRegistryName(REFERENCE.MODID, "dark_spruce_log");
         ((FireBlock) Blocks.FIRE).setFlammable(log2, 5, 5);
         registry.register(prepareRegister(log2));
+        Block bush = new BushBlock(AbstractBlock.Properties.of(Material.REPLACEABLE_PLANT, MaterialColor.WOOD).noCollission().instabreak().sound(SoundType.GRASS)).setRegistryName(REFERENCE.MODID, "cursed_roots");
+        ((FireBlock) Blocks.FIRE).setFlammable(bush, 60, 100);
+        registry.register(prepareRegister(bush));
+        registry.register(prepareRegister(new FlowerPotBlock(bush, Block.Properties.of(Material.DECORATION).instabreak().noOcclusion()).setRegistryName(REFERENCE.MODID, "potted_cursed_roots")));
 
 
         /**
