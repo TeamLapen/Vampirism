@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vampirism:bloody_spruce_log"
+          "name": "vampirism:dark_spruce_sapling"
         }
       ],
       "conditions": [

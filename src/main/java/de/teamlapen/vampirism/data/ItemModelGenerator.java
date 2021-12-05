@@ -103,7 +103,6 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModBlocks.totem_top_vampirism_vampire);
             add(ModBlocks.totem_top_vampirism_hunter);
             add(ModBlocks.vampire_orchid);
-            add(ModBlocks.bloody_spruce_log);
             add(ModBlocks.chandelier);
             add(ModBlocks.cross);
             add(ModBlocks.tombstone1);
@@ -111,9 +110,9 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModBlocks.tombstone3);
             add(ModBlocks.grave_cage);
             add(ModBlocks.cursed_grass);
-            add(ModBlocks.bloody_cursed_grass);
             add(ModBlocks.dark_spruce_log);
             add(ModBlocks.cursed_roots);
+            add(ModBlocks.cursed_spruce_log);
         }};
         Set<Item> items = new HashSet<Item>() {{
             add(ModItems.hunter_coat_chest_normal);
@@ -206,10 +205,10 @@ public class ItemModelGenerator extends ItemModelProvider {
         items.forEach(this::item);
         itemsWithTexture.forEach(this::item);
 
-        withExistingParent(ModBlocks.bloody_spruce_leaves, mcLoc("block/oak_leaves"));
-        withExistingParent(ModBlocks.vampire_spruce_leaves, mcLoc("block/oak_leaves"));
+        withExistingParent(ModBlocks.dark_spruce_leaves, mcLoc("block/oak_leaves"));
 
-        withExistingParent(ModBlocks.bloody_spruce_sapling, mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/" + ModBlocks.bloody_spruce_sapling.getRegistryName().getPath());
+        withExistingParent(ModBlocks.dark_spruce_sapling, mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/" + ModBlocks.dark_spruce_sapling.getRegistryName().getPath());
+        withExistingParent(ModBlocks.cursed_spruce_sapling, mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/" + ModBlocks.cursed_spruce_sapling.getRegistryName().getPath());
 
         withExistingParent(ModBlocks.alchemical_fire, modLoc("block/fire_side"));
         withExistingParent(ModBlocks.altar_inspiration, modLoc("block/altar_inspiration/altar_inspiration"));

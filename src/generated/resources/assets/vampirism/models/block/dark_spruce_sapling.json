@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cross",
   "textures": {
-    "cross": "vampirism:block/bloody_spruce_sapling"
+    "cross": "vampirism:block/dark_spruce_sapling"
   }
 }

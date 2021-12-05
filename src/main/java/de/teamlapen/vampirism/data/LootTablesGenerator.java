@@ -273,10 +273,9 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.weapon_table);
             this.add(ModBlocks.tent, noDrop());
             this.dropPottedContents(ModBlocks.potted_vampire_orchid);
-            this.dropSelf(ModBlocks.bloody_spruce_sapling);
-            this.dropSelf(ModBlocks.bloody_spruce_log);
-            this.add(ModBlocks.vampire_spruce_leaves, (block) -> createLeavesDrops(block, ModBlocks.bloody_spruce_sapling, DEFAULT_SAPLING_DROP_RATES));
-            this.add(ModBlocks.bloody_spruce_leaves, (block) -> createLeavesDrops(block, ModBlocks.bloody_spruce_sapling, DEFAULT_SAPLING_DROP_RATES));
+            this.dropSelf(ModBlocks.dark_spruce_sapling);
+            this.dropSelf(ModBlocks.cursed_spruce_sapling);
+            this.add(ModBlocks.dark_spruce_leaves, (block) -> createLeavesDrops(block, ModBlocks.dark_spruce_sapling, DEFAULT_SAPLING_DROP_RATES));
             this.dropSelf(ModBlocks.chandelier);
             this.add(ModBlocks.candelabra_wall, createSingleItemTable(ModItems.item_candelabra));
             this.add(ModBlocks.candelabra, createSingleItemTable(ModItems.item_candelabra));
@@ -286,12 +285,12 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.tombstone3);
             this.dropSelf(ModBlocks.grave_cage);
             this.add(ModBlocks.cursed_grass, createSingleItemTable(ModBlocks.cursed_earth));
-            this.add(ModBlocks.bloody_cursed_grass, createSingleItemTable(ModBlocks.cursed_earth));
             this.dropSelf(ModBlocks.dark_spruce_log);
             this.add(ModBlocks.cursed_roots, (block) -> {
                 return createShearsDispatchTable(block, applyExplosionDecay(block, ItemLootEntry.lootTableItem(Items.STICK).apply(SetCount.setCount(RandomValueRange.between(0.0F, 2.0F)))));
             });
-            this.dropPottedContents(ModBlocks.potted_cursed_root);
+            this.dropPottedContents(ModBlocks.potted_cursed_roots);
+            this.dropSelf(ModBlocks.cursed_spruce_log);
         }
 
         @Nonnull

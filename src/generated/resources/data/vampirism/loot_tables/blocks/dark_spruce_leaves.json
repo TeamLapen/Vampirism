@@ -35,7 +35,7 @@
                   ]
                 }
               ],
-              "name": "vampirism:vampire_spruce_leaves"
+              "name": "vampirism:dark_spruce_leaves"
             },
             {
               "type": "minecraft:item",
@@ -54,7 +54,7 @@
                   ]
                 }
               ],
-              "name": "vampirism:bloody_spruce_sapling"
+              "name": "vampirism:dark_spruce_sapling"
             }
           ]
         }

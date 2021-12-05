@@ -212,6 +212,8 @@ public class ModItems {
     public static final VampirismItem garlic_finder = getNull();
 
     public static final WallOrFloorItem item_candelabra = getNull();
+    public static final BlockItem cursed_spruce_log = getNull();
+    public static final BlockItem dark_spruce_leaves = getNull();
 
 
     static void registerCraftingRecipes() {
@@ -459,6 +461,12 @@ public class ModItems {
                     break;
                 case "vampirism:vampire_clothing_feet":
                     missingMapping.remap(vampire_clothing_boots);
+                    break;
+                case "vampirism:bloody_spruce_log":
+                    missingMapping.remap(cursed_spruce_log);
+                    break;
+                case "vampirism:bloody_spruce_leaves":
+                    missingMapping.remap(dark_spruce_leaves);
                     break;
             }
         });

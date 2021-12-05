@@ -20,7 +20,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vampirism:bush"
+          "name": "vampirism:cursed_roots"
         }
       ],
       "conditions": [

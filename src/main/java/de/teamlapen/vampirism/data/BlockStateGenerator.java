@@ -31,8 +31,8 @@ public class BlockStateGenerator extends BlockStateProvider {
         models().withExistingParent("fire_side1", modLoc("block/fire_side")).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
         models().withExistingParent("fire_floor0", modLoc("block/fire_floor")).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
         models().withExistingParent("fire_floor1", modLoc("block/fire_floor")).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
-        ModelFile bloody_spruce_sapling = models().cross("bloody_spruce_sapling", modLoc("block/bloody_spruce_sapling"));
-        ModelFile bloody_spruce_log = models().cubeColumn("bloody_spruce_log", modLoc("block/bloody_spruce_log"), modLoc("block/bloody_spruce_log_top"));
+        ModelFile dark_spruce_sapling = models().cross("dark_spruce_sapling", modLoc("block/dark_spruce_sapling"));
+        ModelFile cursed_spruce_sapling = models().cross("cursed_spruce_sapling", modLoc("block/cursed_spruce_sapling"));
 
         //default blocks
         horizontalBlock(ModBlocks.garlic_beacon_normal, models().withExistingParent("garlic_beacon_normal", modLoc("block/garlic_beacon")));
@@ -65,9 +65,9 @@ public class BlockStateGenerator extends BlockStateProvider {
         simpleBlock(ModBlocks.potion_table, models().getExistingFile(modLoc("block/potion_table")));
         simpleBlock(ModBlocks.fire_place, models().getExistingFile(modLoc("block/fire_place")));
         simpleBlock(ModBlocks.potted_vampire_orchid, models().withExistingParent("vampirism:block/potted_vampire_orchid", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/vampire_orchid"));
-        simpleBlock(ModBlocks.vampire_spruce_leaves, models().getExistingFile(mcLoc("block/oak_leaves")));
-        simpleBlock(ModBlocks.bloody_spruce_leaves, models().getExistingFile(mcLoc("block/oak_leaves")));
-        simpleBlock(ModBlocks.bloody_spruce_sapling, bloody_spruce_sapling);
+        simpleBlock(ModBlocks.dark_spruce_leaves, models().getExistingFile(mcLoc("block/oak_leaves")));
+        simpleBlock(ModBlocks.dark_spruce_sapling, dark_spruce_sapling);
+        simpleBlock(ModBlocks.cursed_spruce_sapling, cursed_spruce_sapling);
 
 
         stairsBlock(ModBlocks.castle_stairs_dark_stone, modLoc("block/castle_block_dark_stone"));
@@ -80,11 +80,6 @@ public class BlockStateGenerator extends BlockStateProvider {
 
 
         //variants
-
-        getVariantBuilder(ModBlocks.bloody_spruce_log)
-                .partialState().with(BlockStateProperties.AXIS, Direction.Axis.Y).modelForState().modelFile(bloody_spruce_log).addModel()
-                .partialState().with(BlockStateProperties.AXIS, Direction.Axis.Z).modelForState().rotationX(90).modelFile(bloody_spruce_log).addModel()
-                .partialState().with(BlockStateProperties.AXIS, Direction.Axis.X).modelForState().rotationX(90).rotationY(90).modelFile(bloody_spruce_log).addModel();
 
         getVariantBuilder(ModBlocks.garlic)
                 .partialState().with(GarlicBlock.AGE, 0).modelForState().modelFile(models().getExistingFile(modLoc("block/garlic_stage_0"))).addModel()
@@ -229,16 +224,19 @@ public class BlockStateGenerator extends BlockStateProvider {
         getMultipartBuilder(ModBlocks.cursed_grass)
                 .part().modelFile(models().cubeBottomTop(ModBlocks.cursed_grass.getRegistryName().toString(),modLoc("block/cursed_grass_side"), modLoc("block/cursed_earth"),modLoc("block/cursed_grass_top"))).addModel().end()
                 .part().modelFile(models().cubeBottomTop(ModBlocks.cursed_grass.getRegistryName().toString()+"_snowy",modLoc("block/cursed_grass_side_snowy"), modLoc("block/cursed_earth"),modLoc("block/cursed_grass_top"))).addModel().condition(BlockStateProperties.SNOWY, true).end();
-        getMultipartBuilder(ModBlocks.bloody_cursed_grass)
-                .part().modelFile(models().cubeBottomTop(ModBlocks.bloody_cursed_grass.getRegistryName().toString(),modLoc("block/bloody_cursed_grass_side"), modLoc("block/cursed_earth"),modLoc("block/bloody_cursed_grass_top"))).addModel().end()
-                .part().modelFile(models().cubeBottomTop(ModBlocks.bloody_cursed_grass.getRegistryName().toString()+"_snowy",modLoc("block/bloody_cursed_grass_side_snowy"), modLoc("block/cursed_earth"),modLoc("block/bloody_cursed_grass_top"))).addModel().condition(BlockStateProperties.SNOWY, true).end();
         ModelFile dark_spruce_log = models().cubeColumn("dark_spruce_log", modLoc("block/dark_spruce_log"), modLoc("block/dark_spruce_log_top"));
         getVariantBuilder(ModBlocks.dark_spruce_log)
                 .partialState().with(BlockStateProperties.AXIS, Direction.Axis.Y).modelForState().modelFile(dark_spruce_log).addModel()
                 .partialState().with(BlockStateProperties.AXIS, Direction.Axis.Z).modelForState().rotationX(90).modelFile(dark_spruce_log).addModel()
                 .partialState().with(BlockStateProperties.AXIS, Direction.Axis.X).modelForState().rotationX(90).rotationY(90).modelFile(dark_spruce_log).addModel();
 
-        simpleBlock(ModBlocks.cursed_roots, models().cross("bush", modLoc("block/cursed_roots")));
-        simpleBlock(ModBlocks.potted_cursed_root, models().withExistingParent("vampirism:block/potted_cursed_roots", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/cursed_roots"));
+        simpleBlock(ModBlocks.cursed_roots, models().cross("cursed_roots", modLoc("block/cursed_roots")));
+        simpleBlock(ModBlocks.potted_cursed_roots, models().withExistingParent("vampirism:block/potted_cursed_roots", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/cursed_roots"));
+
+        ModelFile cursed_spruce_log = models().cubeColumn("cursed_spruce_log", modLoc("block/cursed_spruce_log"), modLoc("block/cursed_spruce_log_top"));
+        getVariantBuilder(ModBlocks.cursed_spruce_log)
+                .partialState().with(BlockStateProperties.AXIS, Direction.Axis.Y).modelForState().modelFile(cursed_spruce_log).addModel()
+                .partialState().with(BlockStateProperties.AXIS, Direction.Axis.Z).modelForState().rotationX(90).modelFile(cursed_spruce_log).addModel()
+                .partialState().with(BlockStateProperties.AXIS, Direction.Axis.X).modelForState().rotationX(90).rotationY(90).modelFile(cursed_spruce_log).addModel();
     }
 }

@@ -12,6 +12,8 @@ import de.teamlapen.vampirism.data.BlockStateGenerator;
 import de.teamlapen.vampirism.data.ItemModelGenerator;
 import de.teamlapen.vampirism.data.LootTablesGenerator;
 import de.teamlapen.vampirism.util.BlockVoxelshapes;
+import de.teamlapen.vampirism.world.gen.CursedSpruceTree;
+import de.teamlapen.vampirism.world.gen.DarkSpruceTree;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
@@ -79,10 +81,7 @@ public class ModBlocks {
     public static final VampirismFlowerBlock vampire_orchid = getNull();
     public static final WeaponTableBlock weapon_table = getNull();
     public static final PotionTableBlock potion_table = getNull();
-    public static final RotatedPillarBlock bloody_spruce_log = getNull();
-    public static final BloodySpruceLeavesBlock vampire_spruce_leaves = getNull();
-    public static final BloodySpruceLeavesBlock bloody_spruce_leaves = getNull();
-    public static final BloodySpruceSaplingBlock bloody_spruce_sapling = getNull();
+    public static final DarkSpruceLeavesBlock dark_spruce_leaves = getNull();
     public static final VampirismBlock chandelier = getNull();
     public static final VampirismBlock candelabra = getNull();
     public static final VampirismBlock candelabra_wall = getNull();
@@ -92,10 +91,12 @@ public class ModBlocks {
     public static final VampirismBlock tombstone3 = getNull();
     public static final VampirismBlock grave_cage = getNull();
     public static final CursedGrass cursed_grass = getNull();
-    public static final CursedGrass bloody_cursed_grass = getNull();
     public static final RotatedPillarBlock dark_spruce_log = getNull();
     public static final Block cursed_roots = getNull();
-    public static final Block potted_cursed_root = getNull();
+    public static final Block potted_cursed_roots = getNull();
+    public static final RotatedPillarBlock cursed_spruce_log = getNull();
+    public static final SaplingBlock dark_spruce_sapling = getNull();
+    public static final SaplingBlock cursed_spruce_sapling = getNull();
 
     /**
      * empty unless in datagen
@@ -140,10 +141,7 @@ public class ModBlocks {
         registry.register(itemBlock(vampire_orchid));
         registry.register(itemBlock(weapon_table));
         registry.register(itemBlock(potion_table));
-        registry.register(itemBlock(bloody_spruce_log));
-        registry.register(itemBlock(vampire_spruce_leaves));
-        registry.register(itemBlock(bloody_spruce_leaves));
-        registry.register(itemBlock(bloody_spruce_sapling));
+        registry.register(itemBlock(dark_spruce_leaves));
         registry.register(itemBlock(chandelier));
         registry.register(itemBlock(cross));
         registry.register(itemBlock(tombstone1));
@@ -151,9 +149,11 @@ public class ModBlocks {
         registry.register(itemBlock(tombstone3));
         registry.register(itemBlock(grave_cage));
         registry.register(itemBlock(cursed_grass));
-        registry.register(itemBlock(bloody_cursed_grass));
         registry.register(itemBlock(dark_spruce_log));
         registry.register(itemBlock(cursed_roots));
+        registry.register(itemBlock(cursed_spruce_log));
+        registry.register(itemBlock(dark_spruce_sapling));
+        registry.register(itemBlock(cursed_spruce_sapling));
     }
 
     static void registerBlocks(IForgeRegistry<Block> registry) {
@@ -207,12 +207,7 @@ public class ModBlocks {
         registry.register(prepareRegister(vampire_orchid));
         registry.register(prepareRegister(new WeaponTableBlock()));
         registry.register(prepareRegister(new PotionTableBlock()));
-        Block log = Blocks.log(MaterialColor.PODZOL, MaterialColor.COLOR_BROWN).setRegistryName(REFERENCE.MODID, "bloody_spruce_log");
-        ((FireBlock) Blocks.FIRE).setFlammable(log, 5, 5);
-        registry.register(prepareRegister(log));
-        registry.register(prepareRegister(new BloodySpruceLeavesBlock("vampire_spruce_leaves")));
-        registry.register(prepareRegister(new BloodySpruceLeavesBlock("bloody_spruce_leaves")));
-        registry.register(prepareRegister(new BloodySpruceSaplingBlock()));
+        registry.register(prepareRegister(new DarkSpruceLeavesBlock("dark_spruce_leaves")));
         registry.register(prepareRegister(new ChandelierBlock()));
         registry.register(prepareRegister(new CandelabraWallBlock()));
         registry.register(prepareRegister(new CandelabraBlock()));
@@ -222,15 +217,18 @@ public class ModBlocks {
         registry.register(prepareRegister(new VampirismHorizontalBlock("tombstone3", AbstractBlock.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb3).markDecorativeBlock()));
         registry.register(prepareRegister(new VampirismHorizontalBlock("grave_cage", AbstractBlock.Properties.of(Material.METAL, MaterialColor.METAL).strength(6, 8).requiresCorrectToolForDrops().sound(SoundType.METAL), BlockVoxelshapes.grave_cage).markDecorativeBlock()));
         registry.register(prepareRegister(new CursedGrass(AbstractBlock.Properties.of(Material.GRASS).randomTicks().strength(0.6F).sound(SoundType.GRASS))).setRegistryName(REFERENCE.MODID, "cursed_grass"));
-        registry.register(prepareRegister(new CursedGrass(AbstractBlock.Properties.of(Material.GRASS).randomTicks().strength(0.6F).sound(SoundType.GRASS))).setRegistryName(REFERENCE.MODID, "bloody_cursed_grass"));
-        Block log2 = Blocks.log(MaterialColor.PODZOL, MaterialColor.COLOR_BROWN).setRegistryName(REFERENCE.MODID, "dark_spruce_log");
+        Block log2 = Blocks.log(MaterialColor.PODZOL, MaterialColor.COLOR_BLACK).setRegistryName(REFERENCE.MODID, "dark_spruce_log");
         ((FireBlock) Blocks.FIRE).setFlammable(log2, 5, 5);
         registry.register(prepareRegister(log2));
         Block bush = new BushBlock(AbstractBlock.Properties.of(Material.REPLACEABLE_PLANT, MaterialColor.WOOD).noCollission().instabreak().sound(SoundType.GRASS)).setRegistryName(REFERENCE.MODID, "cursed_roots");
         ((FireBlock) Blocks.FIRE).setFlammable(bush, 60, 100);
         registry.register(prepareRegister(bush));
         registry.register(prepareRegister(new FlowerPotBlock(bush, Block.Properties.of(Material.DECORATION).instabreak().noOcclusion()).setRegistryName(REFERENCE.MODID, "potted_cursed_roots")));
-
+        Block log3 = Blocks.log(MaterialColor.PODZOL, MaterialColor.COLOR_BLACK).setRegistryName(REFERENCE.MODID, "cursed_spruce_log");
+        ((FireBlock) Blocks.FIRE).setFlammable(log3, 5, 5);
+        registry.register(prepareRegister(log3));
+        registry.register(prepareRegister(new SaplingBlock(new DarkSpruceTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)).setRegistryName(REFERENCE.MODID,"dark_spruce_sapling")));
+        registry.register(prepareRegister(new SaplingBlock(new CursedSpruceTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)).setRegistryName(REFERENCE.MODID,"cursed_spruce_sapling")));
 
         /**
          * TUTORIAL:
@@ -268,6 +266,12 @@ public class ModBlocks {
         event.getAllMappings().forEach(missingMapping -> {
             if ("vampirism:blood_potion_table".equals(missingMapping.key.toString())) {
                 missingMapping.remap(ModBlocks.potion_table);
+            }else if ("vampirism:vampire_spruce_leaves".equals(missingMapping.key.toString()))  {
+                missingMapping.remap(ModBlocks.dark_spruce_leaves);
+            } else if ("vampirism:bloody_spruce_leaves".equals(missingMapping.key.toString())) {
+                missingMapping.remap(ModBlocks.dark_spruce_leaves);
+            } else if ("vampirism:bloody_spruce_log".equals(missingMapping.key.toString())) {
+                missingMapping.remap(ModBlocks.cursed_spruce_log);
             }
         });
     }
