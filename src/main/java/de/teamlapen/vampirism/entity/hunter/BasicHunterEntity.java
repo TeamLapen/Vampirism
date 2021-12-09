@@ -128,7 +128,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putInt("level", getExpLevel());
+        nbt.putInt("level", getEntityLevel());
         nbt.putBoolean("crossbow", isCrossbowInMainhand());
         nbt.putBoolean("attack", attack);
         nbt.putInt("type", getEntityTextureType());
@@ -283,7 +283,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
         if (this.getRandom().nextInt(4) == 0) {
             this.setLeftHanded(true);
-            Item crossBow = getExpLevel() > 1 ? ModItems.enhanced_crossbow : ModItems.basic_crossbow;
+            Item crossBow = getEntityLevel() > 1 ? ModItems.enhanced_crossbow : ModItems.basic_crossbow;
             this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(crossBow));
 
         } else {
@@ -295,7 +295,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public int getMaxLevel() {
+    public int getMaxEntityLevel() {
         return MAX_LEVEL;
     }
 
@@ -330,12 +330,12 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public int getExpLevel() {
+    public int getEntityLevel() {
         return getEntityData().get(LEVEL);
     }
 
     @Override
-    public void setExpLevel(int level) {
+    public void setEntityLevel(int level) {
         if (level >= 0) {
             getEntityData().set(LEVEL, level);
             this.updateEntityAttributes();
@@ -377,7 +377,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     public void readAdditionalSaveData(@Nonnull CompoundTag tagCompund) {
         super.readAdditionalSaveData(tagCompund);
         if (tagCompund.contains("level")) {
-            setExpLevel(tagCompund.getInt("level"));
+            setEntityLevel(tagCompund.getInt("level"));
         }
 
         if (tagCompund.contains("crossbow") && tagCompund.getBoolean("crossbow")) {
@@ -423,7 +423,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public int suggestLevel(Difficulty d) {
+    public int suggestEntityLevel(Difficulty d) {
         return switch (this.random.nextInt(6)) {
             case 0 -> (int) (d.minPercLevel / 100F * MAX_LEVEL);
             case 1 -> (int) (d.avgPercLevel / 100F * MAX_LEVEL);
@@ -444,7 +444,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     @Override
     protected int getExperienceReward(@Nonnull Player player) {
-        return 6 + getExpLevel();
+        return 6 + getEntityLevel();
     }
 
     //IMob -------------------------------------------------------------------------------------------------------------
@@ -474,7 +474,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                         if (fph.getMaxMinions() > 0) {
                             ItemStack heldItem = player.getItemInHand(hand);
 
-                            if (this.getExpLevel() > 0) {
+                            if (this.getEntityLevel() > 0) {
                                 if (heldItem.getItem() == ModItems.hunter_minion_equipment) {
                                     player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_hunter.minion.unavailable"), true);
                                 }
@@ -533,7 +533,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     protected void updateEntityAttributes() {
-        int l = Math.max(getExpLevel(), 0);
+        int l = Math.max(getEntityLevel(), 0);
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH + BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH_PL * l);
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE_PL * l);
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED);

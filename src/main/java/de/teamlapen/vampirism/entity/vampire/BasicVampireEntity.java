@@ -103,7 +103,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putInt("level", getExpLevel());
+        nbt.putInt("level", getEntityLevel());
         nbt.putInt("type", getEntityTextureType());
         nbt.putBoolean("attack", this.attack);
         nbt.putInt("entityclasstype", EntityClassType.getID(this.entityclass));
@@ -252,7 +252,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public int getMaxLevel() {
+    public int getMaxEntityLevel() {
         return MAX_LEVEL;
     }
 
@@ -293,12 +293,12 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     //Entityactions ----------------------------------------------------------------------------------------------------
 
     @Override
-    public int getExpLevel() {
+    public int getEntityLevel() {
         return getEntityData().get(LEVEL);
     }
 
     @Override
-    public void setExpLevel(int level) {
+    public void setEntityLevel(int level) {
         if (level >= 0) {
             getEntityData().set(LEVEL, level);
             this.updateEntityAttributes();
@@ -339,7 +339,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     public void readAdditionalSaveData(@Nonnull CompoundTag tagCompund) {
         super.readAdditionalSaveData(tagCompund);
         if (tagCompund.contains("level")) {
-            setExpLevel(tagCompund.getInt("level"));
+            setEntityLevel(tagCompund.getInt("level"));
         }
         if (tagCompund.contains("attack")) {
             this.attack = tagCompund.getBoolean("attack");
@@ -367,7 +367,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public int suggestLevel(Difficulty d) {
+    public int suggestEntityLevel(Difficulty d) {
         return switch (this.random.nextInt(5)) {
             case 0 -> (int) (d.minPercLevel / 100F * MAX_LEVEL);
             case 1 -> (int) (d.avgPercLevel / 100F * MAX_LEVEL);
@@ -384,7 +384,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             protectionMod = 1F / (2F + protection.getAmplifier());
         }
 
-        return (float) (amount * protectionMod * BalanceMobProps.mobProps.VAMPIRE_FIRE_VULNERABILITY) * (getExpLevel() * 0.5F + 1);
+        return (float) (amount * protectionMod * BalanceMobProps.mobProps.VAMPIRE_FIRE_VULNERABILITY) * (getEntityLevel() * 0.5F + 1);
     }
 
     @Override
@@ -401,7 +401,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Override
     protected int getExperienceReward(@Nonnull Player player) {
-        return 6 + getExpLevel();
+        return 6 + getEntityLevel();
     }
 
     @Override
@@ -477,7 +477,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     protected void updateEntityAttributes() {
-        int l = Math.max(getExpLevel(), 0);
+        int l = Math.max(getEntityLevel(), 0);
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_MAX_HEALTH + BalanceMobProps.mobProps.VAMPIRE_MAX_HEALTH_PL * l);
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE_PL * l);
     }

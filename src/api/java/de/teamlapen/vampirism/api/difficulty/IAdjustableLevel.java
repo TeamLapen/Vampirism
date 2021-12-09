@@ -10,17 +10,17 @@ public interface IAdjustableLevel {
      *
      * @return The current level
      */
-    int getExpLevel();
+    int getEntityLevel();
 
     /**
      * Set the level
      */
-    void setExpLevel(int level);
+    void setEntityLevel(int level);
 
     /**
      * @return Maximal possible level
      */
-    int getMaxLevel();
+    int getMaxEntityLevel();
 
     /**
      * Calculate a (random) level under consideration of the given difficulty
@@ -28,5 +28,5 @@ public interface IAdjustableLevel {
      *
      * @return Can be over max level. Will be capped.
      */
-    int suggestLevel(Difficulty d);
+    int suggestEntityLevel(Difficulty d);
 }

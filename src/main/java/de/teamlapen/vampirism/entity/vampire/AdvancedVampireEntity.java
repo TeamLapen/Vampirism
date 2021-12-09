@@ -113,7 +113,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     @Override
     public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putInt("level", getExpLevel());
+        nbt.putInt("level", getEntityLevel());
         nbt.putInt("type", getEyeType());
         nbt.putString("texture", getEntityData().get(TEXTURE));
         nbt.putString("name", getEntityData().get(NAME));
@@ -188,12 +188,12 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public int getExpLevel() {
+    public int getEntityLevel() {
         return getEntityData().get(LEVEL);
     }
 
     @Override
-    public void setExpLevel(int level) {
+    public void setEntityLevel(int level) {
         if (level >= 0) {
             getEntityData().set(LEVEL, level);
             this.updateEntityAttributes();
@@ -209,7 +209,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public int getMaxLevel() {
+    public int getMaxEntityLevel() {
         return MAX_LEVEL;
     }
 
@@ -277,7 +277,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     public void readAdditionalSaveData(@Nonnull CompoundTag tagCompund) {
         super.readAdditionalSaveData(tagCompund);
         if (tagCompund.contains("level")) {
-            setExpLevel(tagCompund.getInt("level"));
+            setEntityLevel(tagCompund.getInt("level"));
         }
         if (tagCompund.contains("type")) {
             getEntityData().set(TYPE, tagCompund.getInt("type"));
@@ -307,7 +307,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public int suggestLevel(Difficulty d) {
+    public int suggestEntityLevel(Difficulty d) {
         if (random.nextBoolean()) {
             return (int) (d.avgPercLevel * MAX_LEVEL / 100F);
         }
@@ -339,7 +339,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
     @Override
     protected int getExperienceReward(@Nonnull Player player) {
-        return 10 * (1 + getExpLevel());
+        return 10 * (1 + getEntityLevel());
     }
 
     @Override
@@ -364,7 +364,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     protected void updateEntityAttributes() {
-        int l = Math.max(getExpLevel(), 0);
+        int l = Math.max(getEntityLevel(), 0);
         Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH + BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH_PL * l);
         Objects.requireNonNull(this.getAttribute(Attributes.ATTACK_DAMAGE)).setBaseValue(BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE + BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE_PL * l);
     }

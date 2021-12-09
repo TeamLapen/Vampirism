@@ -186,12 +186,12 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
                 cancelActivation();
                 return;
             }
-            cooldown = action.getCooldown(entity.getExpLevel());
+            cooldown = action.getCooldown(entity.getEntityLevel());
             preActivation = action.getPreActivationTime();
             minimumHealthThreshold = (float) (entity.getHealth() - (entity.getMaxHealth() * VampirismConfig.BALANCE.eaHealthThreshold.get()));
             if (action instanceof ILastingAction) {
                 //noinspection unchecked
-                duration = ((ILastingAction<T>) action).getDuration(entity.getExpLevel());
+                duration = ((ILastingAction<T>) action).getDuration(entity.getEntityLevel());
             }
         }
     }

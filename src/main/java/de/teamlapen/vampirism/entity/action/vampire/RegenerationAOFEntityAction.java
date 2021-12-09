@@ -55,7 +55,7 @@ public class RegenerationAOFEntityAction<T extends PathfinderMob & IEntityAction
         List<Mob> entities = entity.getCommandSenderWorld().getEntitiesOfClass(Mob.class, new AABB(entity.getX() - 4, entity.getY() - 1, entity.getZ() - 4, entity.getX() + 4, entity.getY() + 3, entity.getZ() + 4));
         for (Mob e : entities) {
             if (VampirismAPI.factionRegistry().getFaction(entity) == VampirismAPI.factionRegistry().getFaction(e)) {
-                e.heal(entity.getMaxHealth() / 100f * VampirismConfig.BALANCE.eaRegenerationAmount.get() / (getDuration(entity.getExpLevel()) * 20f));
+                e.heal(entity.getMaxHealth() / 100f * VampirismConfig.BALANCE.eaRegenerationAmount.get() / (getDuration(entity.getEntityLevel()) * 20f));
                 if (duration % 20 == 0) {
                     ModParticles.spawnParticlesServer(entity.getCommandSenderWorld(), ParticleTypes.HEART, e.getX(), e.getY() + 0.2, e.getZ(), 3, 0.2, 0.2, 0.2, 0);
                 }
