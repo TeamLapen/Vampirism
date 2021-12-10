@@ -55,6 +55,7 @@ import org.lwjgl.opengl.GL11;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Gui screen which displays the skills available to the players and allows him to unlock some.
@@ -271,9 +272,9 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
 
     private void drawDisableText(PoseStack mStack) {
         if (this.minecraft.player.getEffect(ModEffects.oblivion) == null) return;
-        int tooltipX = (this.width - this.display_width) / 2 + 19 + 3;
-        int tooltipY = (this.height - this.display_height) / 2 + 4 + 19;
-        int tooltipTextWidth = this.display_width - 19 - 19 - 6;
+        int tooltipX = (this.width - display_width) / 2 + 19 + 3;
+        int tooltipY = (this.height - display_height) / 2 + 4 + 19;
+        int tooltipTextWidth = display_width - 19 - 19 - 6;
         int tooltipHeight = 17;
         int backgroundColor = 0xF0aa0808;//0xF0550404;;
         int borderColorStart = 0x505f0c0c;
@@ -325,8 +326,8 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
         if (offsetY >= area_max_y) {
             offsetY = area_max_y - 1;
         }
-        int k = (this.width - this.display_width) / 2;
-        int l = (this.height - this.display_height) / 2;
+        int k = (this.width - display_width) / 2;
+        int l = (this.height - display_height) / 2;
         int i1 = k + 16;
         int j1 = l + 17;
 
@@ -507,7 +508,7 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
         Color color = new Color(skillHandler.getPlayer().getFaction().getColor());
         RenderSystem.setShaderColor(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1.0F);
         RenderSystem.setShaderTexture(0, BACKGROUND);
-        this.blit(stack, k, l, 0, 0, this.display_width, this.display_height);
+        this.blit(stack, k, l, 0, 0, display_width, display_height);
         this.setBlitOffset(0);
         RenderSystem.depthFunc(515);
         RenderSystem.disableDepthTest();
@@ -561,9 +562,9 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
                 }
             }
             int width_name = Math.max(this.font.width(tooltips.get(0)), 110);
-
             //GuiUtils.drawHoveringText(stack, tooltips, mouseX, mouseY, width, height, width_name, -1073741824, -1073741824, -1073741824, this.font);
-            this.renderTooltip(stack, tooltips, Optional.empty(), mouseX, mouseY,this.font); // TODO 1.18 check if there is an efficient way to modify the colors. See RenderToolTipEvent#Color
+            this.renderTooltip(stack, tooltips.stream().flatMap(t -> this.font.split(t,width_name).stream()).collect(Collectors.toList()), mouseX, mouseY,this.font); // TODO 1.18 1.19 check if Forge introduced a way to modify background or a better one to specifiy width. See RenderToolTipEvent#Color
+
 
             stack.popPose();
         }

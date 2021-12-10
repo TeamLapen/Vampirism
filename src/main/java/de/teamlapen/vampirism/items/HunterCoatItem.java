@@ -8,7 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -81,7 +80,7 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
     }
 
     @Override
-    protected int getDamageReduction(int slot, ItemStack stack) {
+    protected int getDamageReduction(int slot) {
         TIER tier = getVampirismTier();
         return switch (tier) {
             case ULTIMATE -> DAMAGE_REDUCTION_ULTIMATE[slot];
@@ -91,7 +90,7 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
     }
 
     @Override
-    protected double getToughness(int slot, ItemStack stack) {
+    protected double getToughness(int slot) {
         return 2;
     }
 }

@@ -2,11 +2,9 @@ package de.teamlapen.vampirism.api.event;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.world.ITotem;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
@@ -198,42 +196,6 @@ public abstract class VampirismVillageEvent extends Event {
                 super(totem, villagerIn, forced);
             }
         }
-    }
-
-    /**
-     * Fired when blocks around a village should be replaced
-     * Only fired if Vampirism didn't already replace a block.
-     * Can be used to replace a block on your own
-     */
-    public static class ReplaceBlock extends VampirismVillageEvent {
-
-        @Nonnull
-        private final BlockState state;
-        @Nonnull
-        private final BlockPos pos;
-
-        public ReplaceBlock(ITotem totem, @Nonnull BlockState b, @Nonnull BlockPos pos) {
-            super(totem);
-            this.state = b;
-            this.pos = pos;
-        }
-
-        /**
-         * @return the position of the block
-         */
-        @Nonnull
-        public BlockPos getBlockPos() {
-            return pos;
-        }
-
-        /**
-         * @return blockstate of the block to be replaced
-         */
-        @Nonnull
-        public BlockState getState() {
-            return state;
-        }
-
     }
 
     /**

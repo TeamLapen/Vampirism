@@ -46,7 +46,6 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.BossEvent;
@@ -63,11 +62,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.phys.AABB;
@@ -555,35 +551,6 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             List<? extends Mob> guards = this.level.getEntitiesOfClass(this.controllingFaction.getVillageData().getGuardSuperClass(), this.getVillageArea());
             if (defenderNumMax > guards.size()) {
                 getCaptureEntityForFaction(this.controllingFaction).ifPresent(entityType -> this.spawnEntity(entityType.create(this.level)));
-            }
-        }
-
-        //replace blocks
-        if (this.controllingFaction != null && VampirismConfig.BALANCE.viReplaceBlocks.get()) {
-            int x = (int) (this.getVillageArea().minX + RNG.nextInt((int) (this.getVillageArea().maxX - this.getVillageArea().minX)));
-            int z = (int) (this.getVillageArea().minZ + RNG.nextInt((int) (this.getVillageArea().maxZ - this.getVillageArea().minZ)));
-            BlockPos pos = new BlockPos(x, level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, new BlockPos(x, 0, z)).getY() - 1, z);
-            BlockState b = level.getBlockState(pos);
-            boolean flag = false;
-            if (VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
-                if (!(level.getBlockState(pos.above()).getBlock() instanceof BushBlock)) {
-                    if (BlockTags.DIRT.contains(b.getBlock()) && !ModTags.Blocks.CURSEDEARTH.contains(b.getBlock())) { //TODO 1.18 is there a better solution?
-                        level.removeBlock(pos.above(), false);
-                        level.setBlockAndUpdate(pos, ModBlocks.cursed_earth.defaultBlockState());
-                        if (level.getBlockState(pos.above()).getBlock() == Blocks.TALL_GRASS) {
-                            level.removeBlock(pos.above(), false);
-                            flag = true;
-                        }
-                    }
-                }
-            } else if (controllingFaction == VReference.HUNTER_FACTION) {
-                if (ModTags.Blocks.CURSEDEARTH.contains(b.getBlock())) { //TODO 1.18 is there a better solution?
-                    level.setBlockAndUpdate(pos, Blocks.DIRT.defaultBlockState());
-                    flag = true;
-                }
-            }
-            if (!flag) {
-                VampirismEventFactory.fireReplaceVillageBlockEvent(this, b, pos);
             }
         }
 

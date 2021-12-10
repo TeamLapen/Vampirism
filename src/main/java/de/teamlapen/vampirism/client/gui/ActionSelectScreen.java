@@ -26,12 +26,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.settings.KeyConflictContext;
-import net.minecraftforge.client.gui.GuiUtils;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -179,9 +177,10 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
         if (editActions) {
-            this.renderTooltip(stack, Lists.newArrayList(new TranslatableComponent("gui.vampirism.action_select.action_binding")
-                                                        , ModKeys.ACTION1.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA)
-                                                        , ModKeys.ACTION2.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA)), Optional.empty(),0, ((int) (this.height * 0.82)), this.font); // TODO 1.18 check if there is an efficient way to create a line break. See RenderToolTipEvent#GatherComponents
+            List<Component> tooltips = Lists.newArrayList(new TranslatableComponent("gui.vampirism.action_select.action_binding")
+                    , ModKeys.ACTION1.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA)
+                    , ModKeys.ACTION2.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA));
+            this.renderTooltip(stack, tooltips.stream().flatMap(t -> this.font.split(t,this.width / 4).stream()).collect(Collectors.toList()),0, ((int) (this.height * 0.82)), this.font);
         }
     }
 

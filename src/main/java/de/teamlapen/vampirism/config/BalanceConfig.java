@@ -91,7 +91,6 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue hsGarlicDiffuserEnhancedDist;
     public final ForgeConfigSpec.IntValue hsGarlicDiffuserWeakDist;
 
-    public final ForgeConfigSpec.BooleanValue viReplaceBlocks;
     public final ForgeConfigSpec.IntValue viPhase1Duration;
     public final ForgeConfigSpec.IntValue viNotifyDistanceSQ;
     public final ForgeConfigSpec.IntValue viForceTargetTime;
@@ -291,7 +290,6 @@ public class BalanceConfig {
 
         //Village
         builder.category("village", "vi");
-        viReplaceBlocks = builder.comment("Whether grass should slowly be replaced with cursed earth in vampire villages").define("replaceBlocks", true);
         viPhase1Duration = builder.comment("Duration of phase 1 of the capturing process in 2*seconds").defineInRange("phase1Duration", 80, 1, 1000);
         viNotifyDistanceSQ = builder.comment("Squared distance of village capture notification").defineInRange("notifyDistanceSQ", 40000, 0, 100000);
         viForceTargetTime = builder.comment("Time in 2*seconds in capture phase 2 after which the capture entities should find a target regardless of distance").defineInRange("forceTargetTime", 80, 1, 1000);

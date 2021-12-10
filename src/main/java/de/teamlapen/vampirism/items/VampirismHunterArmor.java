@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.items;
 
-import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
@@ -33,7 +33,7 @@ import java.util.UUID;
  */
 public abstract class VampirismHunterArmor extends ArmorItem implements IFactionExclusiveItem {
     protected static final UUID[] VAMPIRISM_ARMOR_MODIFIER = new UUID[]{UUID.fromString("f0b9a417-0cec-4629-8623-053cd0feec3c"), UUID.fromString("e54474a9-62a0-48ee-baaf-7efddca3d711"), UUID.fromString("ac0c33f4-ebbf-44fe-9be3-a729f7633329"), UUID.fromString("8839e157-d576-4cff-bf34-0a788131fe0f")};
-
+    private final Multimap<Attribute, AttributeModifier> modifierMultimap;
 
     private final String translation_key;
 
@@ -43,6 +43,14 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
         if (suffix != null) regName += "_" + suffix;
         setRegistryName(REFERENCE.MODID, regName);
         translation_key = Util.makeDescriptionId("item", new ResourceLocation(REFERENCE.MODID, baseRegName + "_" + equipmentSlotIn.getName()));
+
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        builder.put(Attributes.ARMOR, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor modifier", this.getDamageReduction(slot.getIndex()), AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor toughness", this.getToughness(slot.getIndex()), AttributeModifier.Operation.ADDITION));
+        if (this.knockbackResistance > 0) {
+            builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor knockback resistance", this.knockbackResistance, AttributeModifier.Operation.ADDITION));
+        }
+        modifierMultimap = builder.build();
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -55,14 +63,10 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> map = HashMultimap.create(); //TODO 1.18 build in constructor
-        if (slot == this.getSlot()) {
-            map.put(Attributes.ARMOR, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor modifier", this.getDamageReduction(slot.getIndex(), stack), AttributeModifier.Operation.ADDITION));
-            map.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor toughness", this.getToughness(slot.getIndex(), stack), AttributeModifier.Operation.ADDITION));
-            if (this.knockbackResistance > 0)
-                map.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor knockback resistance", this.knockbackResistance, AttributeModifier.Operation.ADDITION));
+        if(slot == this.slot){
+            return modifierMultimap;
         }
-        return map;
+        return ImmutableMultimap.of();
     }
 
     @Override
@@ -82,10 +86,9 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
     }
 
     /**
-     * @param stack Armor stack
      * @return The damage reduction the given stack gives
      */
-    protected abstract int getDamageReduction(int slot, ItemStack stack);
+    protected abstract int getDamageReduction(int slot);
 
     @Nonnull
     @Override
@@ -100,7 +103,7 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
     /**
      * @return The toughness of the given stack
      */
-    protected double getToughness(int slot, ItemStack stack) {
+    protected double getToughness(int slot) {
         return this.getToughness();
     }
 }

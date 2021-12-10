@@ -24,7 +24,6 @@ import net.minecraft.world.level.levelgen.feature.StructurePieceType;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -61,15 +60,6 @@ public class ModFeatures {
         VampirismAPI.worldGenRegistry().removeStructureFromBiomes(hunter_camp.getRegistryName(), Lists.newArrayList(ModBiomes.VAMPIRE_FOREST_KEY.location()));
 
     }
-
-    public static void fixFeatureMappings(RegistryEvent.MissingMappings<Feature<?>> event) {
-        event.getAllMappings().forEach(mappings -> {
-            if ("vampirism:mod_lake".equals(mappings.key.toString())) { //TODO 1.18 does this work & is this necessary
-                mappings.remap(Feature.LAKE);
-            }
-        });
-    }
-
 
     /**
      * Not safe to run in parallel with other mods

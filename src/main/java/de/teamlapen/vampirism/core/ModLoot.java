@@ -8,7 +8,7 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
 
-//@ObjectHolder(REFERENCE.MODID) TODO 1.18 adapt if ForgeRegistries for LootFunctionType and LootConditionType have been implemented
+//@ObjectHolder(REFERENCE.MODID) TODO 1.19 adapt in case ForgeRegistries for LootFunctionType and LootConditionType have been implemented
 public class ModLoot {
 
     public static LootItemFunctionType add_book_nbt;

@@ -102,8 +102,9 @@ public class VersionChecker implements Runnable {
         //noinspection unchecked
         Map<String, String> promos = (Map<String, String>) json.get("promos");
         versionInfo.homePage = (String) json.getOrDefault("homepage", "");
-        String rec = promos.get(MCPVersion.getMCVersion() + "-recommended");
-        String lat = promos.get(MCPVersion.getMCVersion() + "-latest");
+        String mcVersion = MCPVersion.getMCVersion();
+        String rec = promos.get(mcVersion + "-recommended");
+        String lat = promos.get(mcVersion + "-latest");
 
         Version current = Version.from(currentVersion);
         versionInfo.currentVersion = current;
@@ -114,7 +115,7 @@ public class VersionChecker implements Runnable {
             if (lat != null) possibleTarget = Version.parse(lat);
         }
         if (possibleTarget == null) {
-            LOGGER.info("Did not find a version of type {} for {} ({})", current.type, MCPVersion.getMCVersion(), current.type == Version.TYPE.RELEASE ? rec : lat); //TODO maxanier last parameter is always null
+            LOGGER.info("Did not find a version of type {} for {} ({})", current.type, mcVersion, current.type == Version.TYPE.RELEASE ? rec : lat);
             return;
         }
         int res = possibleTarget.compareTo(current);

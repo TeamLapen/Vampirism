@@ -83,7 +83,7 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
     }
 
     @Override
-    protected int getDamageReduction(int slot, ItemStack stack) {
+    protected int getDamageReduction(int slot) {
         TIER tier = getVampirismTier();
         return switch (tier) {
             case ULTIMATE -> DAMAGE_REDUCTION_ULTIMATE[slot];
