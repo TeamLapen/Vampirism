@@ -14,7 +14,6 @@ import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
-import de.teamlapen.vampirism.world.biome.VampirismBiomeFeatures;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.stats.StatType;
@@ -68,7 +67,7 @@ public class RegistryManager implements IInitListener {
         switch (step) {
             case COMMON_SETUP:
                 event.enqueueWork(ModBiomes::addBiomesToGeneratorUnsafe);
-                ModFeatures.registerIgnoredBiomesForStructures();
+                ModFeatures.registerIgnoredBiomesForStructure();
                 ModEntities.registerConvertibles();
                 ModEntities.registerSpawns();
                 ModEntities.registerCustomExtendedCreatures();
@@ -78,9 +77,7 @@ public class RegistryManager implements IInitListener {
                 event.enqueueWork(ModCommands::registerArgumentTypesUsage);
                 ModLoot.registerLootConditions();
                 ModLoot.registerLootFunctionType();
-                VampirismBiomeFeatures.init();
             case LOAD_COMPLETE:
-                event.enqueueWork(ModFeatures::registerStructureSeparation);
                 if (ModEffects.checkNightVision()) {
                     ModEffects.fixNightVisionEffectTypes();
                 }

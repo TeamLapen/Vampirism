@@ -1,24 +1,38 @@
 package de.teamlapen.vampirism.world.gen;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
+import com.google.common.collect.*;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModFeatures;
+import de.teamlapen.vampirism.mixin.LevelStructureSettingsAccessor;
+import de.teamlapen.vampirism.util.ConfigurableStructureSeparationSettings;
 import de.teamlapen.vampirism.util.MixinHooks;
+import de.teamlapen.vampirism.world.biome.VampirismBiomeFeatures;
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.util.RandomBlockState;
 import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.worldgen.Pools;
 import net.minecraft.data.worldgen.ProcessorLists;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.FlatLevelSource;
+import net.minecraft.world.level.levelgen.StructureSettings;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.structures.SinglePoolElement;
 import net.minecraft.world.level.levelgen.feature.structures.StructurePoolElement;
 import net.minecraft.world.level.levelgen.feature.structures.StructureTemplatePool;
@@ -26,14 +40,19 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.AlwaysTrueTes
 import net.minecraft.world.level.levelgen.structure.templatesystem.RandomBlockMatchTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class VampirismWorldGen {
     public static boolean debug = false;
+    private static final Logger LOGGER = LogManager.getLogger();
 
     public static void createJigsawPool() {
         VampirismWorldGen.setupSingleJigsawPieceGeneration();
@@ -45,6 +64,85 @@ public class VampirismWorldGen {
         VampirismWorldGen.addHunterTrainerHouse(dynamicRegistries, getDefaultPools());
         VampirismWorldGen.addTotem(dynamicRegistries, getDefaultPools());
         VampirismWorldGen.replaceTemples(dynamicRegistries, getTempleReplacements());
+    }
+
+    /**
+     * Credit to @TelepathicGrunt  StructureTutorialMod licenced under Creative Commons Zero v1.0 Universal
+     * https://github.com/TelepathicGrunt/StructureTutorialMod/blob/7f79b80dfee2861a0e8c02db3f63d5477be8b9ef/src/main/java/com/telepathicgrunt/structuretutorial/StructureTutorialMain.java#L83
+     */
+    public static void addBiomeStructuresTemporary(ServerLevel serverLevel) {
+        ChunkGenerator chunkGenerator = serverLevel.getChunkSource().getGenerator();
+        // Skip superflat to prevent issues with it. Plus, users don't want structures clogging up their superflat worlds.
+        if (chunkGenerator instanceof FlatLevelSource && serverLevel.dimension().equals(Level.OVERWORLD)) {
+            return;
+        }
+
+        // We will need this a lot lol
+        StructureSettings worldStructureSettings = serverLevel.getChunkSource().getGenerator().getSettings();
+
+        //////////// BIOME BASED STRUCTURE SPAWNING ////////////
+        /*
+         * NOTE: Forge does not have a hook for injecting structures into biomes yet.
+         * Instead, we will use the below to add our structure to overworld biomes.
+         * Remember, this is temporary until Forge finds a better solution for adding structures to biomes.
+         */
+
+        // Grab the map that holds what ConfigureStructures a structure has and what biomes it can spawn in.
+        // We will inject our structures into that map/multimap
+        Map<StructureFeature<?>, Multimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>> tempStructureToMultiMap = new HashMap<>();
+        ((LevelStructureSettingsAccessor) worldStructureSettings).getConfiguredStructures().forEach((key, value) -> tempStructureToMultiMap.put(key, HashMultimap.create(value)));
+        Registry<Biome> biomeRegistry = serverLevel.registryAccess().ownedRegistryOrThrow(Registry.BIOME_REGISTRY);
+
+        VampirismBiomeFeatures.addStructuresToBiomes(biomeRegistry.entrySet(), (configuredFeature, biome) -> {
+            tempStructureToMultiMap.computeIfAbsent(configuredFeature.feature, (f) -> HashMultimap.create());
+            tempStructureToMultiMap.get(configuredFeature.feature).put(configuredFeature, biome);
+        });
+
+
+        // Turn the entire map and the inner multimaps to immutable to match the source code's require type
+        ImmutableMap.Builder<StructureFeature<?>, ImmutableMultimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>> immutableOuterMap = ImmutableMap.builder();
+        tempStructureToMultiMap.forEach((key, value) -> {
+            ImmutableMultimap.Builder<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>> immutableInnerMultiMap = ImmutableMultimap.builder();
+            immutableInnerMultiMap.putAll(value);
+            immutableOuterMap.put(key, immutableInnerMultiMap.build());
+        });
+
+        // Set it in the field.
+        ((LevelStructureSettingsAccessor) worldStructureSettings).setConfiguredStructures(immutableOuterMap.build());
+
+
+        //////////// Structure separation ////////////
+
+        /*
+         * Skip Terraforged's chunk generator as they are a special case of a mod locking down their chunkgenerator.
+         * They will handle your structure spacing for your if you add to BuiltinRegistries.NOISE_GENERATOR_SETTINGS in your structure's registration.
+         * This here is done with reflection as this tutorial is not about setting up and using Mixins.
+         * If you are using mixins, you can call the codec method with an invoker mixin instead of using reflection.
+         */
+
+        try {
+            Method GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "codec");
+            ResourceLocation cgRL = Registry.CHUNK_GENERATOR.getKey((Codec<? extends ChunkGenerator>) GETCODEC_METHOD.invoke(chunkGenerator));
+            if (cgRL != null && cgRL.getNamespace().equals("terraforged")) return;
+        } catch (Exception e) {
+            LOGGER.error("Was unable to check if " + serverLevel.dimension().location() + " is using Terraforged's ChunkGenerator.");
+        }
+
+
+        Map<StructureFeature<?>, StructureFeatureConfiguration> structureSettingsMap = new HashMap<>(worldStructureSettings.structureConfig());
+
+        //Add our separation for our features
+        ModFeatures.addStructureSeparationSettings(serverLevel.dimension(), structureSettingsMap);
+
+        //Modify vanilla village separation
+        if (VampirismConfig.COMMON.villageModify.get()) {
+            LOGGER.info("Replacing vanilla village structure separation settings for the overworld dimension preset");
+            structureSettingsMap.put(StructureFeature.VILLAGE, new ConfigurableStructureSeparationSettings(VampirismConfig.COMMON.villageDistance, VampirismConfig.COMMON.villageSeparation, StructureSettings.DEFAULTS.get(StructureFeature.VILLAGE).salt()));
+        } else {
+            LOGGER.trace("Not modifying village");
+        }
+        ((LevelStructureSettingsAccessor) worldStructureSettings).setStructureSeparation_vampirism(structureSettingsMap);
+
     }
 
     /**

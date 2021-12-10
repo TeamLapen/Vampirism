@@ -50,7 +50,7 @@ import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.proxy.ServerProxy;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
-import de.teamlapen.vampirism.world.WorldGenManager;
+import de.teamlapen.vampirism.world.WorldGenConfiguration;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.data.DataGenerator;
@@ -303,7 +303,7 @@ public class VampirismMod {
         SkillManager skillManager = new SkillManager();
         GeneralRegistryImpl generalRegistry = new GeneralRegistryImpl();
         ActionManagerEntity entityActionManager = new ActionManagerEntity();
-        WorldGenManager worldGenRegistry = new WorldGenManager();
+        WorldGenConfiguration worldGenRegistry = new WorldGenConfiguration();
         ExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry = new ExtendedBrewingRecipeRegistry();
 
         biteableRegistry.setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new);

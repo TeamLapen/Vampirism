@@ -13,7 +13,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
 import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.api.world.IVampirismWorld;
-import de.teamlapen.vampirism.api.world.IWorldGenManager;
+import de.teamlapen.vampirism.api.world.IWorldGenConfiguration;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -43,7 +43,7 @@ public class VampirismAPI {
     private static ISkillManager skillManager;
     private static IActionManager actionManager;
     private static IEntityActionManager entityActionManager;
-    private static IWorldGenManager worldGenRegistry;
+    private static IWorldGenConfiguration worldGenRegistry;
     private static IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry;
 
     public static ISkillManager skillManager() {
@@ -86,7 +86,7 @@ public class VampirismAPI {
     /**
      * @return The world gen registry
      */
-    public static IWorldGenManager worldGenRegistry() {
+    public static IWorldGenConfiguration worldGenRegistry() {
         return worldGenRegistry;
     }
 
@@ -101,7 +101,7 @@ public class VampirismAPI {
      * @throws IllegalStateException if the API was already setup
      */
     public static void setUpRegistries(IFactionRegistry factionRegistryIn, ISundamageRegistry sundamageRegistryIn, IVampirismEntityRegistry entityRegistryIn, IActionManager actionManagerIn, ISkillManager skillManagerIn,
-                                       IVampireVisionRegistry vampireVisionRegistryIn, IEntityActionManager entityActionManagerIn, IWorldGenManager worldGenRegistryIn, IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistryIn) {
+                                       IVampireVisionRegistry vampireVisionRegistryIn, IEntityActionManager entityActionManagerIn, IWorldGenConfiguration worldGenRegistryIn, IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistryIn) {
         if (INIT) throw new IllegalStateException("Vampirism API can only be setup once");
         factionRegistry = factionRegistryIn;
         sundamageRegistry = sundamageRegistryIn;

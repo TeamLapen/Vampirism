@@ -6,7 +6,6 @@ import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModFeatures;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.modcompat.IntegrationsNotifier;
@@ -15,6 +14,7 @@ import de.teamlapen.vampirism.network.SkillTreePacket;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import de.teamlapen.vampirism.world.VampirismWorld;
+import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.network.chat.ClickEvent;
@@ -26,7 +26,6 @@ import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.FlatLevelSource;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -121,8 +120,7 @@ public class GeneralEventHandler {
     public void onWorldLoad(WorldEvent.Load event) {
         if (event.getWorld() instanceof ServerLevel w) {
             ServerChunkCache p = w.getChunkSource();
-            ModFeatures.checkWorldStructureSeparation(w.dimension(), p.getGenerator() instanceof FlatLevelSource, p.getGenerator().getSettings());
-
+            VampirismWorldGen.addBiomeStructuresTemporary(w);
         }
     }
 

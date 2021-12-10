@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 @SuppressWarnings("unused")
-public interface IWorldGenManager {
+public interface IWorldGenConfiguration {
 
     /**
      * @return Whether the given feature should be generated in the given biome id and category
