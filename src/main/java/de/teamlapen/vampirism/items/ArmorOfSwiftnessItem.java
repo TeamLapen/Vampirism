@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.items;
 
-import com.google.common.collect.Multimap;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.util.VampirismArmorMaterials;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -23,19 +23,40 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemWithTier, DyeableLeatherItem {
 
     private final static String baseRegName = "armor_of_swiftness";
-    private final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{3, 6, 8, 3};
-    private final int[] DAMAGE_REDUCTION_ENHANCED = new int[]{2, 5, 6, 2};
-    private final int[] DAMAGE_REDUCTION_NORMAL = new int[]{1, 2, 3, 1};
+    private static final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{3, 6, 8, 3};
+    private static final int[] DAMAGE_REDUCTION_ENHANCED = new int[]{2, 5, 6, 2};
+    private static final int[] DAMAGE_REDUCTION_NORMAL = new int[]{1, 2, 3, 1};
 
     private final TIER tier;
 
+    private static Map<Attribute, Tuple<Double, AttributeModifier.Operation>> getModifiers(EquipmentSlot slot, TIER tier) {
+        HashMap<Attribute, Tuple<Double, AttributeModifier.Operation>> map = new HashMap<>();
+        int slot1 = slot.getIndex();
+        int damageReduction = switch (tier) {
+            case ULTIMATE -> DAMAGE_REDUCTION_ULTIMATE[slot1];
+            case ENHANCED -> DAMAGE_REDUCTION_ENHANCED[slot1];
+            default -> DAMAGE_REDUCTION_NORMAL[slot1];
+        };
+        double speedReduction = switch (tier) {
+            case ULTIMATE -> 0.1;
+            case ENHANCED -> 0.075;
+            default -> 0.035;
+        };
+
+        map.put(Attributes.ARMOR, new Tuple<>((double) damageReduction, AttributeModifier.Operation.ADDITION));
+        map.put(Attributes.MOVEMENT_SPEED, new Tuple<>(speedReduction, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        return map;
+    }
+
     public ArmorOfSwiftnessItem(EquipmentSlot equipmentSlotIn, TIER tier) {
-        super(baseRegName, tier.getSerializedName(), VampirismArmorMaterials.MASTERLY_LEATHER, equipmentSlotIn, new Item.Properties().tab(VampirismMod.creativeTab));
+        super(baseRegName, tier.getSerializedName(), VampirismArmorMaterials.MASTERLY_LEATHER, equipmentSlotIn, new Item.Properties().tab(VampirismMod.creativeTab), getModifiers(equipmentSlotIn, tier));
         this.tier = tier;
     }
 
@@ -56,17 +77,6 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
             case ULTIMATE -> getTextureLocation("swiftness_ultimate", slot, type);
             default -> getTextureLocation("swiftness", slot, type);
         };
-    }
-
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> multimap = super.getAttributeModifiers(equipmentSlot, stack);
-
-        if (equipmentSlot == this.getSlot()) {
-            multimap.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[equipmentSlot.getIndex()], "Armor Swiftness", getSpeedBoost(tier), AttributeModifier.Operation.MULTIPLY_TOTAL));
-        }
-
-        return multimap;
     }
 
     @Override
@@ -104,14 +114,6 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
         }
     }
 
-    @Override
-    protected int getDamageReduction(int slot) {
-        return switch (tier) {
-            case ULTIMATE -> DAMAGE_REDUCTION_ULTIMATE[slot];
-            case ENHANCED -> DAMAGE_REDUCTION_ENHANCED[slot];
-            default -> DAMAGE_REDUCTION_NORMAL[slot];
-        };
-    }
 
     /**
      * Applied if complete armor is worn
@@ -126,16 +128,6 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
         };
     }
 
-    /**
-     * Applied per piece
-     */
-    private double getSpeedBoost(TIER tier) {
-        return switch (tier) {
-            case ULTIMATE -> 0.1;
-            case ENHANCED -> 0.075;
-            default -> 0.035;
-        };
-    }
 
     private String getTextureLocationLeather(EquipmentSlot slot) {
         return String.format("minecraft:textures/models/armor/leather_layer_%d.png", slot == EquipmentSlot.LEGS ? 2 : 1);

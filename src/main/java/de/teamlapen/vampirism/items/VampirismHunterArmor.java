@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import de.teamlapen.vampirism.REFERENCE;
@@ -12,6 +13,7 @@ import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -26,6 +28,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -38,6 +41,10 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
     private final String translation_key;
 
     public VampirismHunterArmor(String baseRegName, @Nullable String suffix, ArmorMaterial materialIn, EquipmentSlot equipmentSlotIn, Item.Properties props) {
+        this(baseRegName, suffix, materialIn, equipmentSlotIn, props, ImmutableMap.of());
+    }
+
+    public VampirismHunterArmor(String baseRegName, @Nullable String suffix, ArmorMaterial materialIn, EquipmentSlot equipmentSlotIn, Item.Properties props, Map<Attribute, Tuple<Double, AttributeModifier.Operation>> modifiers) {
         super(materialIn, equipmentSlotIn, props);
         String regName = baseRegName + "_" + equipmentSlotIn.getName();
         if (suffix != null) regName += "_" + suffix;
@@ -45,10 +52,17 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
         translation_key = Util.makeDescriptionId("item", new ResourceLocation(REFERENCE.MODID, baseRegName + "_" + equipmentSlotIn.getName()));
 
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ARMOR, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor modifier", this.getDamageReduction(slot.getIndex()), AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor toughness", this.getToughness(slot.getIndex()), AttributeModifier.Operation.ADDITION));
-        if (this.knockbackResistance > 0) {
-            builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor knockback resistance", this.knockbackResistance, AttributeModifier.Operation.ADDITION));
+        for (Map.Entry<Attribute, Tuple<Double, AttributeModifier.Operation>> modifier : modifiers.entrySet()) {
+            builder.put(modifier.getKey(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Vampirism armor modifier", modifier.getValue().getA(), modifier.getValue().getB()));
+        }
+        if (!modifiers.containsKey(Attributes.ARMOR)) {
+            builder.put(Attributes.ARMOR, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Vampirism armor modifier", materialIn.getDefenseForSlot(equipmentSlotIn), AttributeModifier.Operation.ADDITION));
+        }
+        if (!modifiers.containsKey(Attributes.ARMOR_TOUGHNESS) && materialIn.getToughness() > 0) {
+            builder.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Vampirism armor modifier", materialIn.getToughness(), AttributeModifier.Operation.ADDITION));
+        }
+        if (!modifiers.containsKey(Attributes.KNOCKBACK_RESISTANCE) && materialIn.getKnockbackResistance() > 0) {
+            builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor knockback resistance", materialIn.getKnockbackResistance(), AttributeModifier.Operation.ADDITION));
         }
         modifierMultimap = builder.build();
     }
@@ -85,11 +99,6 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
         }
     }
 
-    /**
-     * @return The damage reduction the given stack gives
-     */
-    protected abstract int getDamageReduction(int slot);
-
     @Nonnull
     @Override
     protected String getOrCreateDescriptionId() {
@@ -98,12 +107,5 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
 
     protected String getTextureLocation(String name, EquipmentSlot slot, String type) {
         return String.format(REFERENCE.MODID + ":textures/models/armor/%s_layer_%d%s.png", name, slot == EquipmentSlot.LEGS ? 2 : 1, type == null ? "" : "_overlay");
-    }
-
-    /**
-     * @return The toughness of the given stack
-     */
-    protected double getToughness(int slot) {
-        return this.getToughness();
     }
 }

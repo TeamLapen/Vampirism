@@ -47,8 +47,4 @@ public class HunterHatItem extends VampirismHunterArmor {
     }
 
 
-    @Override
-    protected int getDamageReduction(int slot) {
-        return 2;
-    }
 }
