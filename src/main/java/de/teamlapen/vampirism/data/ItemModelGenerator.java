@@ -199,6 +199,7 @@ public class ItemModelGenerator extends ItemModelProvider {
             put(ModItems.item_tent_spawner, modLoc("item/item_tent"));
             put(ModItems.pure_salt, modLoc("item/holy_salt"));
             put(ModItems.vampire_book, modLoc("item/vampire_book"));
+            put(ModBlocks.cursed_vine.asItem(), modLoc("block/" + ModBlocks.cursed_vine.getRegistryName().getPath()));
         }};
 
         blocks.forEach(this::block);

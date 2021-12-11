@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFeatures;
 import de.teamlapen.vampirism.mixin.FlatGenerationSettingsAccessor;
+import de.teamlapen.vampirism.world.gen.treedecorator.TrunkCursedVineTreeDecorator;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
@@ -20,8 +21,10 @@ import net.minecraft.world.gen.foliageplacer.SpruceFoliagePlacer;
 import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
 import net.minecraft.world.gen.placement.ChanceConfig;
 import net.minecraft.world.gen.placement.Placement;
+import net.minecraft.world.gen.treedecorator.LeaveVineTreeDecorator;
 import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
 
+import java.util.Collections;
 import java.util.OptionalInt;
 
 public class VampirismBiomeFeatures {
@@ -48,6 +51,7 @@ public class VampirismBiomeFeatures {
             new SpruceFoliagePlacer(FeatureSpread.of(2, 1), FeatureSpread.of(0, 2), FeatureSpread.of(3, 7)),
             new StraightTrunkPlacer(11,2,2),
             new ThreeLayerFeature(5,8,0,3,3, OptionalInt.of(5)))
+                    .decorators(ImmutableList.of(TrunkCursedVineTreeDecorator.INSTANCE))
             .build())
     );
 

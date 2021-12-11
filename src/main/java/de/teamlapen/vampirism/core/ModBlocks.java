@@ -97,6 +97,7 @@ public class ModBlocks {
     public static final RotatedPillarBlock cursed_spruce_log = getNull();
     public static final SaplingBlock dark_spruce_sapling = getNull();
     public static final SaplingBlock cursed_spruce_sapling = getNull();
+    public static final CursedVineBlock cursed_vine = getNull();
 
     /**
      * empty unless in datagen
@@ -154,6 +155,7 @@ public class ModBlocks {
         registry.register(itemBlock(cursed_spruce_log));
         registry.register(itemBlock(dark_spruce_sapling));
         registry.register(itemBlock(cursed_spruce_sapling));
+        registry.register(itemBlock(cursed_vine));
     }
 
     static void registerBlocks(IForgeRegistry<Block> registry) {
@@ -224,11 +226,13 @@ public class ModBlocks {
         ((FireBlock) Blocks.FIRE).setFlammable(bush, 60, 100);
         registry.register(prepareRegister(bush));
         registry.register(prepareRegister(new FlowerPotBlock(bush, Block.Properties.of(Material.DECORATION).instabreak().noOcclusion()).setRegistryName(REFERENCE.MODID, "potted_cursed_roots")));
-        Block log3 = Blocks.log(MaterialColor.PODZOL, MaterialColor.COLOR_BLACK).setRegistryName(REFERENCE.MODID, "cursed_spruce_log");
+        Block log3 = new CursedSpruceBlock().setRegistryName(REFERENCE.MODID, "cursed_spruce_log");
         ((FireBlock) Blocks.FIRE).setFlammable(log3, 5, 5);
         registry.register(prepareRegister(log3));
         registry.register(prepareRegister(new SaplingBlock(new DarkSpruceTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)).setRegistryName(REFERENCE.MODID,"dark_spruce_sapling")));
         registry.register(prepareRegister(new SaplingBlock(new CursedSpruceTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)).setRegistryName(REFERENCE.MODID,"cursed_spruce_sapling")));
+        registry.register(prepareRegister(new CursedVineBlock().setRegistryName(REFERENCE.MODID, "cursed_vine")));
+
 
         /**
          * TUTORIAL:
