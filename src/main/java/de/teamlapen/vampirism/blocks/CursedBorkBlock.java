@@ -2,8 +2,10 @@ package de.teamlapen.vampirism.blocks;
 
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -25,11 +27,12 @@ public class CursedBorkBlock extends Block {
 
     private static final VoxelShape shape =  VoxelShapes.empty();
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
+    public static final DirectionProperty FACING2 = DirectionProperty.create("facing_2", Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.UP, Direction.DOWN);
 
 
     public CursedBorkBlock() {
         super(AbstractBlock.Properties.of(Material.REPLACEABLE_PLANT).noCollission().randomTicks().strength(0.2F).sound(SoundType.VINE));
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(FACING2, Direction.NORTH));
     }
 
     @Override
@@ -39,25 +42,35 @@ public class CursedBorkBlock extends Block {
 
     @Nonnull
     @Override
-    public VoxelShape getShape(@Nonnull BlockState p_220053_1_, @Nonnull IBlockReader p_220053_2_, @Nonnull BlockPos p_220053_3_, @Nonnull ISelectionContext p_220053_4_) {
+    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull IBlockReader blockReader, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
         return shape;
     }
 
-    private boolean canAttachTo(IBlockReader p_196471_1_, BlockPos p_196471_2_, Direction p_196471_3_) {
-        BlockState blockstate = p_196471_1_.getBlockState(p_196471_2_);
-        return blockstate.isFaceSturdy(p_196471_1_, p_196471_2_, p_196471_3_);
+    private boolean canAttachTo(IBlockReader blockReader, BlockPos pos, Direction direction) {
+        BlockState blockstate = blockReader.getBlockState(pos);
+        return blockstate.isFaceSturdy(blockReader, pos, direction);
     }
 
     @Override
-    public boolean canSurvive(BlockState p_196260_1_, IWorldReader p_196260_2_, BlockPos p_196260_3_) {
-        Direction direction = p_196260_1_.getValue(FACING);
-        return this.canAttachTo(p_196260_2_, p_196260_3_.relative(direction), direction);
+    public boolean canSurvive(BlockState state, @Nonnull IWorldReader worldReader, BlockPos blockPos) {
+        Direction mainDirection = state.getValue(FACING);
+        Direction secondaryDirection = state.getValue(FACING2);
+        BlockPos pos =  blockPos.relative(secondaryDirection);
+        if (mainDirection != secondaryDirection) {
+            pos = pos.relative(mainDirection);
+        }
+        return this.canAttachTo(worldReader, pos, mainDirection);
     }
 
     @Nonnull
     @Override
     public BlockState updateShape(BlockState blockState, @Nonnull Direction direction, @Nonnull BlockState otherState, @Nonnull IWorld level, @Nonnull BlockPos pos, @Nonnull BlockPos otherPos) {
-        if (blockState.getValue(FACING) == direction && !blockState.canSurvive(level, pos)) {
+        boolean facing = blockState.getValue(FACING) == direction;
+        if (!facing && blockState.getValue(FACING) != blockState.getValue(FACING2)) {
+            pos = pos.relative(blockState.getValue(FACING));
+            facing = blockState.getValue(FACING2) == direction;
+        }
+        if (facing && !blockState.canSurvive(level, pos)) {
             return Blocks.AIR.defaultBlockState();
         } else {
             return super.updateShape(blockState, direction, otherState, level, pos, otherPos);
@@ -67,11 +80,16 @@ public class CursedBorkBlock extends Block {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection());
+        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection()).setValue(FACING2, context.getNearestLookingDirection());
+    }
+
+    @Override
+    public boolean addDestroyEffects(BlockState state, World world, BlockPos pos, ParticleManager manager) {
+        return true;
     }
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, FACING2);
     }
 }

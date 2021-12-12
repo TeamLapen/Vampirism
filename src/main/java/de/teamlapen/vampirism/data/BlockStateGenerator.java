@@ -9,6 +9,7 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import java.util.Arrays;
@@ -240,13 +241,21 @@ public class BlockStateGenerator extends BlockStateProvider {
                 .partialState().with(BlockStateProperties.AXIS, Direction.Axis.X).modelForState().rotationX(90).rotationY(90).modelFile(cursed_spruce_log).addModel();
 
         ModelFile vine = models().getBuilder(ModBlocks.cursed_bork.getRegistryName().toString()).texture("texture","block/" + ModBlocks.cursed_bork.getRegistryName().getPath()).element().from(0,0,0).to(16,16,0.01f).allFaces((f, t) -> t.uvs(0,0,16,16).texture("#texture")).end();
+        VariantBlockStateBuilder bork = getVariantBuilder(ModBlocks.cursed_bork)
+                .partialState().with(CursedBorkBlock.FACING, Direction.NORTH).with(CursedBorkBlock.FACING2, Direction.NORTH).modelForState().modelFile(vine).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.WEST).with(CursedBorkBlock.FACING2, Direction.WEST).modelForState().modelFile(vine).rotationY(270).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.SOUTH).with(CursedBorkBlock.FACING2, Direction.SOUTH).modelForState().modelFile(vine).rotationY(180).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.EAST).with(CursedBorkBlock.FACING2, Direction.EAST).modelForState().modelFile(vine).rotationY(90).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.UP).with(CursedBorkBlock.FACING2, Direction.UP).modelForState().modelFile(vine).rotationX(270).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.DOWN).with(CursedBorkBlock.FACING2, Direction.DOWN).modelForState().modelFile(vine).rotationX(90).addModel();
+        ModelFile empty = models().getBuilder(ModBlocks.cursed_bork.getRegistryName().toString() + "_empty");
+        for (Direction direction : Direction.values()) {
+            for (Direction direction1 : Direction.values()) {
+                if (direction == direction1) continue;
+                bork.partialState().with(CursedBorkBlock.FACING, direction).with(CursedBorkBlock.FACING2, direction1).modelForState().modelFile(empty).addModel();
+            }
+        }
 
-        getVariantBuilder(ModBlocks.cursed_bork)
-                .partialState().with(CursedBorkBlock.FACING, Direction.NORTH).modelForState().modelFile(vine).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.WEST).modelForState().modelFile(vine).rotationY(270).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.SOUTH).modelForState().modelFile(vine).rotationY(180).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.EAST).modelForState().modelFile(vine).rotationY(90).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.UP).modelForState().modelFile(vine).rotationX(270).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.DOWN).modelForState().modelFile(vine).rotationX(90).addModel();
     }
+
 }

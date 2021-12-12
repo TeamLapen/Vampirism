@@ -39,10 +39,19 @@ public class CursedSpruceBlock extends RotatedPillarBlock {
                 directions.remove(Direction.SOUTH);
                 break;
         }
-        Direction direction = directions.get(random.nextInt(directions.size()));
-        BlockPos pos1 = pos.relative(direction);
+        Direction mainsDirection = directions.get(random.nextInt(directions.size()));
+        directions.remove(mainsDirection.getOpposite());
+        Direction secondaryDirection = directions.get(random.nextInt(directions.size()));
+        BlockPos pos1 = pos.relative(mainsDirection);
+        if (mainsDirection != secondaryDirection) {
+            if (level.getBlockState(pos1).getBlock() == ModBlocks.cursed_bork) {
+                pos1 = pos1.relative(secondaryDirection);
+            } else {
+                return;
+            }
+        }
         if (Feature.isAir(level, pos1)) {
-            level.setBlock(pos1, ModBlocks.cursed_bork.defaultBlockState().setValue(CursedBorkBlock.FACING, direction.getOpposite()), 3);
+            level.setBlock(pos1, ModBlocks.cursed_bork.defaultBlockState().setValue(CursedBorkBlock.FACING, mainsDirection.getOpposite()).setValue(CursedBorkBlock.FACING2, secondaryDirection.getOpposite()), 3);
         }
     }
 }
