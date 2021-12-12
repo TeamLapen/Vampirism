@@ -42,7 +42,7 @@ public class CursedSpruceBlock extends RotatedPillarBlock {
         Direction direction = directions.get(random.nextInt(directions.size()));
         BlockPos pos1 = pos.relative(direction);
         if (Feature.isAir(level, pos1)) {
-            level.setBlock(pos1, ModBlocks.cursed_vine.defaultBlockState().setValue(CursedVineBlock.FACING, direction.getOpposite()), 3);
+            level.setBlock(pos1, ModBlocks.cursed_bork.defaultBlockState().setValue(CursedBorkBlock.FACING, direction.getOpposite()), 3);
         }
     }
 }

@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "vampirism:block/cursed_bork",
+      "x": 90
+    },
+    "facing=up": {
+      "model": "vampirism:block/cursed_bork",
+      "x": 270
+    },
+    "facing=north": {
+      "model": "vampirism:block/cursed_bork"
+    },
+    "facing=south": {
+      "model": "vampirism:block/cursed_bork",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "vampirism:block/cursed_bork",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "vampirism:block/cursed_bork",
+      "y": 90
+    }
+  }
+}

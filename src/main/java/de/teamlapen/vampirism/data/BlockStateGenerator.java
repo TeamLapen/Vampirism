@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.data;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.core.ModBlocks;
-import net.minecraft.block.SixWayBlock;
 import net.minecraft.data.*;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
@@ -240,14 +239,14 @@ public class BlockStateGenerator extends BlockStateProvider {
                 .partialState().with(BlockStateProperties.AXIS, Direction.Axis.Z).modelForState().rotationX(90).modelFile(cursed_spruce_log).addModel()
                 .partialState().with(BlockStateProperties.AXIS, Direction.Axis.X).modelForState().rotationX(90).rotationY(90).modelFile(cursed_spruce_log).addModel();
 
-        ModelFile vine = models().getBuilder(ModBlocks.cursed_vine.getRegistryName().toString()).texture("texture","block/" + ModBlocks.cursed_vine.getRegistryName().getPath()).element().from(0,0,0).to(16,16,0.01f).allFaces((f, t) -> t.uvs(0,0,16,16).texture("#texture")).end();
+        ModelFile vine = models().getBuilder(ModBlocks.cursed_bork.getRegistryName().toString()).texture("texture","block/" + ModBlocks.cursed_bork.getRegistryName().getPath()).element().from(0,0,0).to(16,16,0.01f).allFaces((f, t) -> t.uvs(0,0,16,16).texture("#texture")).end();
 
-        getVariantBuilder(ModBlocks.cursed_vine)
-                .partialState().with(CursedVineBlock.FACING, Direction.NORTH).modelForState().modelFile(vine).addModel()
-                .partialState().with(CursedVineBlock.FACING, Direction.WEST).modelForState().modelFile(vine).rotationY(270).addModel()
-                .partialState().with(CursedVineBlock.FACING, Direction.SOUTH).modelForState().modelFile(vine).rotationY(180).addModel()
-                .partialState().with(CursedVineBlock.FACING, Direction.EAST).modelForState().modelFile(vine).rotationY(90).addModel()
-                .partialState().with(CursedVineBlock.FACING, Direction.UP).modelForState().modelFile(vine).rotationX(270).addModel()
-                .partialState().with(CursedVineBlock.FACING, Direction.DOWN).modelForState().modelFile(vine).rotationX(90).addModel();
+        getVariantBuilder(ModBlocks.cursed_bork)
+                .partialState().with(CursedBorkBlock.FACING, Direction.NORTH).modelForState().modelFile(vine).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.WEST).modelForState().modelFile(vine).rotationY(270).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.SOUTH).modelForState().modelFile(vine).rotationY(180).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.EAST).modelForState().modelFile(vine).rotationY(90).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.UP).modelForState().modelFile(vine).rotationX(270).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.DOWN).modelForState().modelFile(vine).rotationX(90).addModel();
     }
 }

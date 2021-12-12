@@ -97,7 +97,7 @@ public class ModBlocks {
     public static final RotatedPillarBlock cursed_spruce_log = getNull();
     public static final SaplingBlock dark_spruce_sapling = getNull();
     public static final SaplingBlock cursed_spruce_sapling = getNull();
-    public static final CursedVineBlock cursed_vine = getNull();
+    public static final CursedBorkBlock cursed_bork = getNull();
 
     /**
      * empty unless in datagen
@@ -155,7 +155,7 @@ public class ModBlocks {
         registry.register(itemBlock(cursed_spruce_log));
         registry.register(itemBlock(dark_spruce_sapling));
         registry.register(itemBlock(cursed_spruce_sapling));
-        registry.register(itemBlock(cursed_vine));
+        registry.register(itemBlock(cursed_bork));
     }
 
     static void registerBlocks(IForgeRegistry<Block> registry) {
@@ -231,7 +231,7 @@ public class ModBlocks {
         registry.register(prepareRegister(log3));
         registry.register(prepareRegister(new SaplingBlock(new DarkSpruceTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)).setRegistryName(REFERENCE.MODID,"dark_spruce_sapling")));
         registry.register(prepareRegister(new SaplingBlock(new CursedSpruceTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)).setRegistryName(REFERENCE.MODID,"cursed_spruce_sapling")));
-        registry.register(prepareRegister(new CursedVineBlock().setRegistryName(REFERENCE.MODID, "cursed_vine")));
+        registry.register(prepareRegister(new CursedBorkBlock().setRegistryName(REFERENCE.MODID, "cursed_bork")));
 
 
         /**
