@@ -4,6 +4,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MoverType;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
@@ -15,6 +16,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -31,13 +33,24 @@ public class CursedBorkBlock extends Block {
 
 
     public CursedBorkBlock() {
-        super(AbstractBlock.Properties.of(Material.REPLACEABLE_PLANT).noCollission().randomTicks().strength(0.2F).sound(SoundType.VINE));
+        super(AbstractBlock.Properties.of(Material.REPLACEABLE_PLANT).noCollission().strength(0.0F).sound(SoundType.VINE));
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(FACING2, Direction.NORTH));
     }
 
     @Override
     public void entityInside(@Nonnull BlockState state, @Nonnull World level, @Nonnull BlockPos pos, @Nonnull Entity entity) {
-        entity.makeStuckInBlock(state, new Vector3d(0.5F, 0.5D, 0.5F));
+        Direction mainDirection = state.getValue(FACING);
+        Direction secondaryDirection = state.getValue(FACING2);
+        BlockPos targetPos = pos.relative(mainDirection);
+        if (mainDirection != secondaryDirection) {
+            targetPos = targetPos.relative(secondaryDirection);
+        }
+
+        Vector3d thrust = new Vector3d(targetPos.getX(), targetPos.getY(), targetPos.getZ()).subtract(pos.getX(), pos.getY(), pos.getZ()).normalize().scale(0.04);
+        if (!entity.isOnGround()) {
+            thrust = thrust.scale(0.3);
+        }
+        entity.setDeltaMovement(entity.getDeltaMovement().add(thrust));
     }
 
     @Nonnull
@@ -85,6 +98,11 @@ public class CursedBorkBlock extends Block {
 
     @Override
     public boolean addDestroyEffects(BlockState state, World world, BlockPos pos, ParticleManager manager) {
+        return true;
+    }
+
+    @Override
+    public boolean addRunningEffects(BlockState state, World world, BlockPos pos, Entity entity) {
         return true;
     }
 
