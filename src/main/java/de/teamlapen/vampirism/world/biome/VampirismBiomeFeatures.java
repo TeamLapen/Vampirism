@@ -29,12 +29,16 @@ import java.util.OptionalInt;
 
 public class VampirismBiomeFeatures {
 
-    public static final BlockClusterFeatureConfig BUSH_CONFIG = (new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.cursed_roots.defaultBlockState()), SimpleBlockPlacer.INSTANCE)).tries(4).build();
+    public static final BlockClusterFeatureConfig BUSH_CONFIG = new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.cursed_roots.defaultBlockState()), SimpleBlockPlacer.INSTANCE).tries(7).build();
+    public static final BlockClusterFeatureConfig DEFAULT_GRASS_CONFIG = new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.GRASS.defaultBlockState()), SimpleBlockPlacer.INSTANCE).tries(16).build();
+    public static final BlockClusterFeatureConfig VAMPIRE_FLOWER = new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.vampire_orchid.defaultBlockState()), SimpleBlockPlacer.INSTANCE).tries(6).build();
+
     public static final ConfiguredFeature<?, ?> patch_bush = registerFeature("patch_bush", Feature.RANDOM_PATCH.configured(BUSH_CONFIG).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE));
+    public static final ConfiguredFeature<?, ?> patch_grass_forest = registerFeature("patch_grass_forest", Feature.RANDOM_PATCH.configured(DEFAULT_GRASS_CONFIG).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(2));
     public static final ConfiguredFeature<?, ?> ore_cursed_earth = registerFeature("ore_cursed_earth", Feature.ORE.configured(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, ModBlocks.cursed_earth.defaultBlockState(), 33)).range(256).squared().count(10));
     public static final ConfiguredFeature<?, ?> ore_dark_stone = registerFeature("ore_dark_stone", Feature.ORE.configured(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, ModBlocks.castle_block_dark_stone.defaultBlockState(), 33)).range(80).squared().count(10));
 
-    public static final ConfiguredFeature<?, ?> vampire_flower = registerFeature("vampire_flower", Feature.FLOWER.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.vampire_orchid.defaultBlockState()), SimpleBlockPlacer.INSTANCE).tries(20).build()).count(FeatureSpread.of(-1, 4)).decorated(Features.Placements.ADD_32).decorated(Features.Placements.HEIGHTMAP_SQUARE).count(5));
+    public static final ConfiguredFeature<?, ?> vampire_flower = registerFeature("vampire_flower", Feature.FLOWER.configured(VAMPIRE_FLOWER).count(FeatureSpread.of(-1, 4)).decorated(Features.Placements.ADD_32).decorated(Features.Placements.HEIGHTMAP_SQUARE).count(5));
     public static final ConfiguredFeature<?, ?> mod_water_lake = registerFeature("mod_water_lake", ModFeatures.mod_lake.configured(new BlockStateFeatureConfig(Blocks.WATER.defaultBlockState())).decorated(Placement.WATER_LAKE.configured(new ChanceConfig(4))));
 
     public static final ConfiguredFeature<?, ?> vampire_dungeon = registerFeature("vampire_dungeon", ModFeatures.vampire_dungeon.configured(IFeatureConfig.NONE).range(256).squared().count(2 /*not entirely sure, but higher is more frequent - vanilla is 8 */));
@@ -98,6 +102,7 @@ public class VampirismBiomeFeatures {
 
     public static void addBushPatch(BiomeGenerationSettings.Builder builder) {
         builder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, patch_bush);
+        builder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, patch_grass_forest);
     }
 
     public static void addUndergroundVariety(BiomeGenerationSettings.Builder builder) {
