@@ -42,9 +42,18 @@ public class TagGenerator {
             tag(BlockTags.STAIRS).addTag(ModTags.Blocks.CASTLE_STAIRS);
             tag(BlockTags.SLABS).addTag(ModTags.Blocks.CASTLE_SLAPS);
             tag(BlockTags.FLOWER_POTS).add(ModBlocks.potted_vampire_orchid);
-            tag(BlockTags.SPRUCE_LOGS).add(ModBlocks.cursed_spruce_log, ModBlocks.dark_spruce_log);
+            tag(ModTags.Blocks.DARK_SPRUCE_LOG).add(ModBlocks.dark_spruce_log, ModBlocks.stripped_dark_spruce_log, ModBlocks.dark_spruce_wood, ModBlocks.stripped_dark_spruce_wood);
+            tag(ModTags.Blocks.CURSED_SPRUCE_LOG).add(ModBlocks.cursed_spruce_log, ModBlocks.stripped_cursed_spruce_log, ModBlocks.cursed_spruce_wood, ModBlocks.stripped_cursed_spruce_wood);
             tag(BlockTags.LEAVES).add(ModBlocks.dark_spruce_leaves);
             tag(BlockTags.SAPLINGS).add(ModBlocks.dark_spruce_sapling);
+            tag(BlockTags.WOODEN_TRAPDOORS).add(ModBlocks.dark_spruce_trapdoor, ModBlocks.cursed_spruce_trapdoor);
+            tag(BlockTags.WOODEN_DOORS).add(ModBlocks.dark_spruce_door, ModBlocks.cursed_spruce_door);
+            tag(BlockTags.PLANKS).add(ModBlocks.dark_spruce_planks, ModBlocks.cursed_spruce_planks);
+            tag(BlockTags.WOODEN_BUTTONS).add(ModBlocks.dark_spruce_button, ModBlocks.cursed_spruce_button);
+            tag(BlockTags.WOODEN_STAIRS).add(ModBlocks.dark_spruce_stairs, ModBlocks.cursed_spruce_stairs);
+            tag(BlockTags.WOODEN_SLABS).add(ModBlocks.dark_spruce_slab, ModBlocks.cursed_spruce_slab);
+            tag(BlockTags.WOODEN_FENCES).add(ModBlocks.dark_spruce_fence, ModBlocks.cursed_spruce_fence);
+            tag(BlockTags.WOODEN_PRESSURE_PLATES).add(ModBlocks.dark_spruce_pressure_place, ModBlocks.cursed_spruce_pressure_place);
         }
     }
 
@@ -65,6 +74,8 @@ public class TagGenerator {
             copy(ModTags.Blocks.CASTLE_STAIRS, ModTags.Items.CASTLE_STAIRS);
             copy(ModTags.Blocks.CASTLE_SLAPS, ModTags.Items.CASTLE_SLAPS);
             copy(ModTags.Blocks.CURSEDEARTH, ModTags.Items.CURSEDEARTH);
+            copy(ModTags.Blocks.DARK_SPRUCE_LOG, ModTags.Items.DARK_SPRUCE_LOG);
+            copy(ModTags.Blocks.CURSED_SPRUCE_LOG, ModTags.Items.CURSED_SPRUCE_LOG);
 
             tag(ModTags.Items.CROSSBOW_ARROW).add(ModItems.crossbow_arrow_normal, ModItems.crossbow_arrow_spitfire, ModItems.crossbow_arrow_vampire_killer);
             tag(ModTags.Items.HUNTER_INTEL).add(ModItems.hunter_intel_0, ModItems.hunter_intel_1, ModItems.hunter_intel_2, ModItems.hunter_intel_3, ModItems.hunter_intel_4, ModItems.hunter_intel_5, ModItems.hunter_intel_6, ModItems.hunter_intel_7, ModItems.hunter_intel_8, ModItems.hunter_intel_9);
@@ -76,9 +87,9 @@ public class TagGenerator {
             tag(ModTags.Items.HOLY_WATER_SPLASH).add(ModItems.holy_water_splash_bottle_normal, ModItems.holy_water_splash_bottle_enhanced, ModItems.holy_water_splash_bottle_ultimate);
             tag(ItemTags.STAIRS).addTag(ModTags.Items.CASTLE_STAIRS);
             tag(ItemTags.SLABS).addTag(ModTags.Items.CASTLE_SLAPS);
-            tag(ItemTags.SPRUCE_LOGS).add(ModBlocks.cursed_spruce_log.asItem(), ModBlocks.dark_spruce_log.asItem());
             tag(ItemTags.LEAVES).add(ModBlocks.dark_spruce_leaves.asItem());
             tag(ItemTags.SAPLINGS).add(ModBlocks.dark_spruce_sapling.asItem());
+            tag(ItemTags.PLANKS).add(ModBlocks.dark_spruce_planks.asItem(), ModBlocks.cursed_spruce_planks.asItem());
         }
     }
 

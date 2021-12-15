@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/button",
+  "textures": {
+    "texture": "vampirism:block/dark_spruce_planks"
+  }
+}

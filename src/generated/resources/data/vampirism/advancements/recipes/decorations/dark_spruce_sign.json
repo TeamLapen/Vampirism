@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:dark_spruce_sign"
+    ]
+  },
+  "criteria": {
+    "has_dark_spruce_planks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:dark_spruce_planks"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:dark_spruce_sign"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_dark_spruce_planks",
+      "has_the_recipe"
+    ]
+  ]
+}

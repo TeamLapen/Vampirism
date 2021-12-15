@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/fence_inventory",
+  "textures": {
+    "texture": "vampirism:block/dark_spruce_planks"
+  }
+}

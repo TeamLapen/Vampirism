@@ -113,6 +113,24 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModBlocks.dark_spruce_log);
             add(ModBlocks.cursed_roots);
             add(ModBlocks.cursed_spruce_log);
+            add(ModBlocks.stripped_dark_spruce_log);
+            add(ModBlocks.stripped_cursed_spruce_log);
+            add(ModBlocks.dark_spruce_planks);
+            add(ModBlocks.cursed_spruce_planks);
+            add(ModBlocks.dark_spruce_stairs);
+            add(ModBlocks.cursed_spruce_stairs);
+            add(ModBlocks.dark_spruce_wood);
+            add(ModBlocks.cursed_spruce_wood);
+            add(ModBlocks.stripped_dark_spruce_wood);
+            add(ModBlocks.stripped_cursed_spruce_wood);
+            add(ModBlocks.dark_spruce_pressure_place);
+            add(ModBlocks.cursed_spruce_pressure_place);
+            add(ModBlocks.dark_spruce_button);
+            add(ModBlocks.cursed_spruce_button);
+            add(ModBlocks.dark_spruce_slab);
+            add(ModBlocks.cursed_spruce_slab);
+            add(ModBlocks.dark_spruce_fence_gate);
+            add(ModBlocks.cursed_spruce_fence_gate);
         }};
         Set<Item> items = new HashSet<Item>() {{
             add(ModItems.hunter_coat_chest_normal);
@@ -200,6 +218,8 @@ public class ItemModelGenerator extends ItemModelProvider {
             put(ModItems.pure_salt, modLoc("item/holy_salt"));
             put(ModItems.vampire_book, modLoc("item/vampire_book"));
             put(ModBlocks.cursed_bork.asItem(), modLoc("block/" + ModBlocks.cursed_bork.getRegistryName().getPath()));
+            put(ModItems.dark_spruce_sign, modLoc("item/" + ModItems.dark_spruce_sign.getRegistryName().getPath()));
+            put(ModItems.cursed_spruce_sign, modLoc("item/" + ModItems.cursed_spruce_sign.getRegistryName().getPath()));
         }};
 
         blocks.forEach(this::block);
@@ -297,6 +317,18 @@ public class ItemModelGenerator extends ItemModelProvider {
                 .override().predicate(mcLoc("damage"), 0.77f).model(withExistingParent("blood_bottle_7", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_7"))).end()
                 .override().predicate(mcLoc("damage"), 0.88f).model(withExistingParent("blood_bottle_8", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_8"))).end()
                 .override().predicate(mcLoc("damage"), 0.99f).model(withExistingParent("blood_bottle_9", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_9"))).end();
+
+        withExistingParent(ModBlocks.dark_spruce_trapdoor, modLoc("block/dark_spruce_trapdoor_bottom"));
+        withExistingParent(ModBlocks.cursed_spruce_trapdoor, modLoc("block/cursed_spruce_trapdoor_bottom"));
+
+        item(ModBlocks.dark_spruce_door.asItem(), modLoc("item/dark_spruce_door"));
+        item(ModBlocks.cursed_spruce_door.asItem(), modLoc("item/cursed_spruce_door"));
+
+        withExistingParent(ModBlocks.dark_spruce_button.asItem(), modLoc("block/dark_spruce_button_inventory"));
+        withExistingParent(ModBlocks.cursed_spruce_button.asItem(), modLoc("block/cursed_spruce_button_inventory"));
+        withExistingParent(ModBlocks.dark_spruce_fence.asItem(), modLoc("block/dark_spruce_fence_inventory"));
+        withExistingParent(ModBlocks.cursed_spruce_fence.asItem(), modLoc("block/cursed_spruce_fence_inventory"));
+
     }
 
 }

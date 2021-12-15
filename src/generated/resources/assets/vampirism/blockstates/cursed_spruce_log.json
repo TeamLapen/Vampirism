@@ -1,7 +1,7 @@
 {
   "variants": {
     "axis=x": {
-      "model": "vampirism:block/cursed_spruce_log",
+      "model": "vampirism:block/cursed_spruce_log_horizontal",
       "x": 90,
       "y": 90
     },
@@ -9,7 +9,7 @@
       "model": "vampirism:block/cursed_spruce_log"
     },
     "axis=z": {
-      "model": "vampirism:block/cursed_spruce_log",
+      "model": "vampirism:block/cursed_spruce_log_horizontal",
       "x": 90
     }
   }

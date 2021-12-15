@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "bark",
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "vampirism:stripped_dark_spruce_log"
+    }
+  },
+  "result": {
+    "item": "vampirism:stripped_dark_spruce_wood",
+    "count": 3
+  }
+}
