@@ -25,6 +25,7 @@ public class CursedSpruceBlock extends RotatedPillarBlock {
     @Override
     public void randomTick(@Nonnull BlockState state, @Nonnull ServerWorld level, @Nonnull BlockPos pos, @Nonnull Random random) {
         List<Direction> directions = Arrays.stream(Direction.values()).collect(Collectors.toList());
+        boolean sideways = false;
         switch (state.getValue(AXIS)){
             case X:
                 directions.remove(Direction.WEST);
@@ -51,7 +52,7 @@ public class CursedSpruceBlock extends RotatedPillarBlock {
             }
         }
         if (Feature.isAir(level, pos1)) {
-            level.setBlock(pos1, ModBlocks.cursed_bork.defaultBlockState().setValue(CursedBorkBlock.FACING, mainsDirection.getOpposite()).setValue(CursedBorkBlock.FACING2, secondaryDirection.getOpposite()), 3);
+            level.setBlock(pos1, ModBlocks.cursed_bork.defaultBlockState().setValue(CursedBorkBlock.FACING, mainsDirection.getOpposite()).setValue(CursedBorkBlock.FACING2, secondaryDirection.getOpposite()).setValue(CursedBorkBlock.AXIS, state.getValue(AXIS)), 3);
         }
     }
 }

@@ -1,8 +1,18 @@
 {
   "variants": {
-    "facing=down,facing_2=down": {
-      "model": "vampirism:block/cursed_bork",
+    "axis=x,facing=down,facing_2=down": {
+      "model": "vampirism:block/cursed_bork_side_2",
+      "x": 90,
+      "y": 180
+    },
+    "axis=y,facing=down,facing_2=down": {
+      "model": "vampirism:block/cursed_bork_side",
       "x": 90
+    },
+    "axis=z,facing=down,facing_2=down": {
+      "model": "vampirism:block/cursed_bork_side_2",
+      "x": 90,
+      "y": 90
     },
     "facing=up,facing_2=down": {
       "model": "vampirism:block/cursed_bork_empty"
@@ -22,9 +32,19 @@
     "facing=down,facing_2=up": {
       "model": "vampirism:block/cursed_bork_empty"
     },
-    "facing=up,facing_2=up": {
-      "model": "vampirism:block/cursed_bork",
+    "axis=x,facing=up,facing_2=up": {
+      "model": "vampirism:block/cursed_bork_side_2",
+      "x": 270,
+      "y": 180
+    },
+    "axis=y,facing=up,facing_2=up": {
+      "model": "vampirism:block/cursed_bork_side",
       "x": 270
+    },
+    "axis=z,facing=up,facing_2=up": {
+      "model": "vampirism:block/cursed_bork_side_2",
+      "x": 270,
+      "y": 90
     },
     "facing=north,facing_2=up": {
       "model": "vampirism:block/cursed_bork_empty"
@@ -44,8 +64,17 @@
     "facing=up,facing_2=north": {
       "model": "vampirism:block/cursed_bork_empty"
     },
-    "facing=north,facing_2=north": {
-      "model": "vampirism:block/cursed_bork"
+    "axis=x,facing=north,facing_2=north": {
+      "model": "vampirism:block/cursed_bork_side_2",
+      "x": 180,
+      "y": 180
+    },
+    "axis=y,facing=north,facing_2=north": {
+      "model": "vampirism:block/cursed_bork_side"
+    },
+    "axis=z,facing=north,facing_2=north": {
+      "model": "vampirism:block/cursed_bork_side_2",
+      "x": 90
     },
     "facing=south,facing_2=north": {
       "model": "vampirism:block/cursed_bork_empty"
@@ -65,8 +94,17 @@
     "facing=north,facing_2=south": {
       "model": "vampirism:block/cursed_bork_empty"
     },
-    "facing=south,facing_2=south": {
-      "model": "vampirism:block/cursed_bork",
+    "axis=x,facing=south,facing_2=south": {
+      "model": "vampirism:block/cursed_bork_side_2",
+      "y": 180
+    },
+    "axis=y,facing=south,facing_2=south": {
+      "model": "vampirism:block/cursed_bork_side",
+      "y": 180
+    },
+    "axis=z,facing=south,facing_2=south": {
+      "model": "vampirism:block/cursed_bork_side_2",
+      "x": 90,
       "y": 180
     },
     "facing=west,facing_2=south": {
@@ -87,9 +125,19 @@
     "facing=south,facing_2=west": {
       "model": "vampirism:block/cursed_bork_empty"
     },
-    "facing=west,facing_2=west": {
-      "model": "vampirism:block/cursed_bork",
+    "axis=x,facing=west,facing_2=west": {
+      "model": "vampirism:block/cursed_bork_side_2",
+      "x": 90,
       "y": 270
+    },
+    "axis=y,facing=west,facing_2=west": {
+      "model": "vampirism:block/cursed_bork_side",
+      "y": 270
+    },
+    "axis=z,facing=west,facing_2=west": {
+      "model": "vampirism:block/cursed_bork_side_2",
+      "x": 180,
+      "y": 90
     },
     "facing=east,facing_2=west": {
       "model": "vampirism:block/cursed_bork_empty"
@@ -109,8 +157,17 @@
     "facing=west,facing_2=east": {
       "model": "vampirism:block/cursed_bork_empty"
     },
-    "facing=east,facing_2=east": {
-      "model": "vampirism:block/cursed_bork",
+    "axis=x,facing=east,facing_2=east": {
+      "model": "vampirism:block/cursed_bork_side_2",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,facing=east,facing_2=east": {
+      "model": "vampirism:block/cursed_bork_side",
+      "y": 90
+    },
+    "axis=z,facing=east,facing_2=east": {
+      "model": "vampirism:block/cursed_bork_side_2",
       "y": 90
     }
   }

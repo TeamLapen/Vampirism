@@ -43,11 +43,13 @@ public class TrunkCursedVineTreeDecorator extends TreeDecorator {
         posList.forEach((trunkPos) -> {
             BlockState trunkState = seedReader.getBlockState(trunkPos);
             List<Direction> directions = Arrays.stream(Direction.values()).collect(Collectors.toList());
+            Direction.Axis axis = Direction.Axis.Y;
             if (trunkState.hasProperty(BlockStateProperties.AXIS)) {
                 switch (trunkState.getValue(BlockStateProperties.AXIS)){
                     case X:
                         directions.remove(Direction.WEST);
                         directions.remove(Direction.EAST);
+                        axis = Direction.Axis.X;
                         break;
                     case Y:
                         directions.remove(Direction.UP);
@@ -56,28 +58,29 @@ public class TrunkCursedVineTreeDecorator extends TreeDecorator {
                     case Z:
                         directions.remove(Direction.NORTH);
                         directions.remove(Direction.SOUTH);
+                        axis = Direction.Axis.Z;
                         break;
                 }
             }
             for (Direction direction : directions) {
                 BlockPos blockpos = trunkPos.relative(direction);
                 if (Feature.isAir(seedReader, blockpos)) {
-                    this.placeCursedVine(seedReader, blockpos, direction.getOpposite(), direction.getOpposite(), posSet, boundingBox);
+                    this.placeCursedVine(seedReader, blockpos, direction.getOpposite(), direction.getOpposite(), axis, posSet, boundingBox);
                 }
                 for (Direction direction1 : directions) {
                     if (direction == direction1.getOpposite()) continue;
                     if (direction == direction1) continue;
                     BlockPos blockpos1 = blockpos.relative(direction1);
                     if (Feature.isAir(seedReader, blockpos1)) {
-                        this.placeCursedVine(seedReader, blockpos1, direction.getOpposite(), direction1.getOpposite(), posSet, boundingBox);
+                        this.placeCursedVine(seedReader, blockpos1, direction.getOpposite(), direction1.getOpposite(), axis, posSet, boundingBox);
                     }
                 }
             }
         });
     }
 
-    protected void placeCursedVine(IWorldWriter levelWriter, BlockPos pos, Direction mainDirection, Direction secondaryDirection, Set<BlockPos> blockPositions, MutableBoundingBox boundingBox) {
-        this.setBlock(levelWriter, pos, ModBlocks.cursed_bork.defaultBlockState().setValue(CursedBorkBlock.FACING, mainDirection).setValue(CursedBorkBlock.FACING2, secondaryDirection), blockPositions, boundingBox);
+    protected void placeCursedVine(IWorldWriter levelWriter, BlockPos pos, Direction mainDirection, Direction secondaryDirection, Direction.Axis axis,  Set<BlockPos> blockPositions, MutableBoundingBox boundingBox) {
+        this.setBlock(levelWriter, pos, ModBlocks.cursed_bork.defaultBlockState().setValue(CursedBorkBlock.FACING, mainDirection).setValue(CursedBorkBlock.FACING2, secondaryDirection).setValue(CursedBorkBlock.AXIS, axis), blockPositions, boundingBox);
     }
 
 }

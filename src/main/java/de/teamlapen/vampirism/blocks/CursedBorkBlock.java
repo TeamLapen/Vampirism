@@ -8,6 +8,7 @@ import net.minecraft.entity.MoverType;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
@@ -30,11 +31,12 @@ public class CursedBorkBlock extends Block {
     private static final VoxelShape shape =  VoxelShapes.empty();
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final DirectionProperty FACING2 = DirectionProperty.create("facing_2", Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.UP, Direction.DOWN);
+    public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
 
 
     public CursedBorkBlock() {
         super(AbstractBlock.Properties.of(Material.REPLACEABLE_PLANT).noCollission().strength(0.0F).sound(SoundType.VINE));
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(FACING2, Direction.NORTH));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(FACING2, Direction.NORTH).setValue(AXIS, Direction.Axis.Y));
     }
 
     @Override
@@ -93,7 +95,7 @@ public class CursedBorkBlock extends Block {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection()).setValue(FACING2, context.getNearestLookingDirection());
+        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection()).setValue(FACING2, context.getNearestLookingDirection()).setValue(AXIS, Direction.Axis.Y); //TODO usage?
     }
 
     @Override
@@ -108,6 +110,6 @@ public class CursedBorkBlock extends Block {
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, FACING2);
+        builder.add(FACING, FACING2, AXIS);
     }
 }

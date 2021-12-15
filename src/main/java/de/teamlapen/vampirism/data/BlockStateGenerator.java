@@ -6,10 +6,9 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.data.*;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import java.util.Arrays;
@@ -240,14 +239,32 @@ public class BlockStateGenerator extends BlockStateProvider {
                 .partialState().with(BlockStateProperties.AXIS, Direction.Axis.Z).modelForState().rotationX(90).modelFile(cursed_spruce_log).addModel()
                 .partialState().with(BlockStateProperties.AXIS, Direction.Axis.X).modelForState().rotationX(90).rotationY(90).modelFile(cursed_spruce_log).addModel();
 
-        ModelFile vine = models().getBuilder(ModBlocks.cursed_bork.getRegistryName().toString()).texture("texture","block/" + ModBlocks.cursed_bork.getRegistryName().getPath()).element().from(0,0,0).to(16,16,0.01f).allFaces((f, t) -> t.uvs(0,0,16,16).texture("#texture")).end();
+        ModelFile side = models().getExistingFile(new ResourceLocation(REFERENCE.MODID, "cursed_bork_side"));
+        ModelFile side2 = models().getExistingFile(new ResourceLocation(REFERENCE.MODID, "cursed_bork_side_2"));
+
         VariantBlockStateBuilder bork = getVariantBuilder(ModBlocks.cursed_bork)
-                .partialState().with(CursedBorkBlock.FACING, Direction.NORTH).with(CursedBorkBlock.FACING2, Direction.NORTH).modelForState().modelFile(vine).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.WEST).with(CursedBorkBlock.FACING2, Direction.WEST).modelForState().modelFile(vine).rotationY(270).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.SOUTH).with(CursedBorkBlock.FACING2, Direction.SOUTH).modelForState().modelFile(vine).rotationY(180).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.EAST).with(CursedBorkBlock.FACING2, Direction.EAST).modelForState().modelFile(vine).rotationY(90).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.UP).with(CursedBorkBlock.FACING2, Direction.UP).modelForState().modelFile(vine).rotationX(270).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.DOWN).with(CursedBorkBlock.FACING2, Direction.DOWN).modelForState().modelFile(vine).rotationX(90).addModel();
+                .partialState().with(CursedBorkBlock.FACING, Direction.NORTH).with(CursedBorkBlock.FACING2, Direction.NORTH).with(CursedBorkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.WEST).with(CursedBorkBlock.FACING2, Direction.WEST).with(CursedBorkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationY(270).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.SOUTH).with(CursedBorkBlock.FACING2, Direction.SOUTH).with(CursedBorkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationY(180).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.EAST).with(CursedBorkBlock.FACING2, Direction.EAST).with(CursedBorkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationY(90).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.UP).with(CursedBorkBlock.FACING2, Direction.UP).with(CursedBorkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationX(270).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.DOWN).with(CursedBorkBlock.FACING2, Direction.DOWN).with(CursedBorkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationX(90).addModel()
+
+                .partialState().with(CursedBorkBlock.FACING, Direction.NORTH).with(CursedBorkBlock.FACING2, Direction.NORTH).with(CursedBorkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationX(180).rotationY(180).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.WEST).with(CursedBorkBlock.FACING2, Direction.WEST).with(CursedBorkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationY(270).rotationX(90).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.SOUTH).with(CursedBorkBlock.FACING2, Direction.SOUTH).with(CursedBorkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationY(180).rotationX(0).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.EAST).with(CursedBorkBlock.FACING2, Direction.EAST).with(CursedBorkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationY(90).rotationX(90).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.UP).with(CursedBorkBlock.FACING2, Direction.UP).with(CursedBorkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationX(270).rotationY(180).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.DOWN).with(CursedBorkBlock.FACING2, Direction.DOWN).with(CursedBorkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationX(90).rotationY(180).addModel()
+
+                .partialState().with(CursedBorkBlock.FACING, Direction.NORTH).with(CursedBorkBlock.FACING2, Direction.NORTH).with(CursedBorkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationX(90).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.WEST).with(CursedBorkBlock.FACING2, Direction.WEST).with(CursedBorkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationY(90).rotationX(180).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.SOUTH).with(CursedBorkBlock.FACING2, Direction.SOUTH).with(CursedBorkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationY(180).rotationX(90).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.EAST).with(CursedBorkBlock.FACING2, Direction.EAST).with(CursedBorkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationY(90).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.UP).with(CursedBorkBlock.FACING2, Direction.UP).with(CursedBorkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationX(270).rotationY(90).addModel()
+                .partialState().with(CursedBorkBlock.FACING, Direction.DOWN).with(CursedBorkBlock.FACING2, Direction.DOWN).with(CursedBorkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationX(90).rotationY(90).addModel();
+
+
         ModelFile empty = models().getBuilder(ModBlocks.cursed_bork.getRegistryName().toString() + "_empty");
         for (Direction direction : Direction.values()) {
             for (Direction direction1 : Direction.values()) {
