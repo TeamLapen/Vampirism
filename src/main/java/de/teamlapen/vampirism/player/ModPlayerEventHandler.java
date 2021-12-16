@@ -158,7 +158,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onTryMount(EntityMountEvent event){
-        if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
+        if (event.getEntity() instanceof PlayerEntity && VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
             event.setCanceled(true);
         }
     }
