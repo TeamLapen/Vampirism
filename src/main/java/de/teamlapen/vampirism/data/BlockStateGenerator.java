@@ -239,7 +239,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         doorBlock(ModBlocks.cursed_spruce_door, new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_door_bottom"),  new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_door_top"));
 
         createWoodStates();
-        createCursedBork();
+        createCursedBark();
     }
 
     private void createWoodStates() {
@@ -279,35 +279,35 @@ public class BlockStateGenerator extends BlockStateProvider {
         simpleBlock(ModBlocks.cursed_spruce_sign, models().getBuilder("vampirism:cursed_spruce_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
     }
 
-    private void createCursedBork() {
-        ModelFile side = models().getExistingFile(new ResourceLocation(REFERENCE.MODID, "cursed_bork_side"));
-        ModelFile side2 = models().getExistingFile(new ResourceLocation(REFERENCE.MODID, "cursed_bork_side_2"));
-        VariantBlockStateBuilder bork = getVariantBuilder(ModBlocks.cursed_bork)
-                .partialState().with(CursedBorkBlock.FACING, Direction.NORTH).with(CursedBorkBlock.FACING2, Direction.NORTH).with(CursedBorkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.WEST).with(CursedBorkBlock.FACING2, Direction.WEST).with(CursedBorkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationY(270).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.SOUTH).with(CursedBorkBlock.FACING2, Direction.SOUTH).with(CursedBorkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationY(180).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.EAST).with(CursedBorkBlock.FACING2, Direction.EAST).with(CursedBorkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationY(90).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.UP).with(CursedBorkBlock.FACING2, Direction.UP).with(CursedBorkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationX(270).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.DOWN).with(CursedBorkBlock.FACING2, Direction.DOWN).with(CursedBorkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationX(90).addModel()
+    private void createCursedBark() {
+        ModelFile side = models().getExistingFile(new ResourceLocation(REFERENCE.MODID, "cursed_bark_side"));
+        ModelFile side2 = models().getExistingFile(new ResourceLocation(REFERENCE.MODID, "cursed_bark_side_2"));
+        VariantBlockStateBuilder bark = getVariantBuilder(ModBlocks.cursed_bark)
+                .partialState().with(CursedBarkBlock.FACING, Direction.NORTH).with(CursedBarkBlock.FACING2, Direction.NORTH).with(CursedBarkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.WEST).with(CursedBarkBlock.FACING2, Direction.WEST).with(CursedBarkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationY(270).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.SOUTH).with(CursedBarkBlock.FACING2, Direction.SOUTH).with(CursedBarkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationY(180).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.EAST).with(CursedBarkBlock.FACING2, Direction.EAST).with(CursedBarkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationY(90).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.UP).with(CursedBarkBlock.FACING2, Direction.UP).with(CursedBarkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationX(270).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.DOWN).with(CursedBarkBlock.FACING2, Direction.DOWN).with(CursedBarkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationX(90).addModel()
 
-                .partialState().with(CursedBorkBlock.FACING, Direction.NORTH).with(CursedBorkBlock.FACING2, Direction.NORTH).with(CursedBorkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationX(180).rotationY(180).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.WEST).with(CursedBorkBlock.FACING2, Direction.WEST).with(CursedBorkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationY(270).rotationX(90).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.SOUTH).with(CursedBorkBlock.FACING2, Direction.SOUTH).with(CursedBorkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationY(180).rotationX(0).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.EAST).with(CursedBorkBlock.FACING2, Direction.EAST).with(CursedBorkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationY(90).rotationX(90).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.UP).with(CursedBorkBlock.FACING2, Direction.UP).with(CursedBorkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationX(270).rotationY(180).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.DOWN).with(CursedBorkBlock.FACING2, Direction.DOWN).with(CursedBorkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationX(90).rotationY(180).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.NORTH).with(CursedBarkBlock.FACING2, Direction.NORTH).with(CursedBarkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationX(180).rotationY(180).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.WEST).with(CursedBarkBlock.FACING2, Direction.WEST).with(CursedBarkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationY(270).rotationX(90).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.SOUTH).with(CursedBarkBlock.FACING2, Direction.SOUTH).with(CursedBarkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationY(180).rotationX(0).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.EAST).with(CursedBarkBlock.FACING2, Direction.EAST).with(CursedBarkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationY(90).rotationX(90).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.UP).with(CursedBarkBlock.FACING2, Direction.UP).with(CursedBarkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationX(270).rotationY(180).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.DOWN).with(CursedBarkBlock.FACING2, Direction.DOWN).with(CursedBarkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationX(90).rotationY(180).addModel()
 
-                .partialState().with(CursedBorkBlock.FACING, Direction.NORTH).with(CursedBorkBlock.FACING2, Direction.NORTH).with(CursedBorkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationX(90).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.WEST).with(CursedBorkBlock.FACING2, Direction.WEST).with(CursedBorkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationY(90).rotationX(180).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.SOUTH).with(CursedBorkBlock.FACING2, Direction.SOUTH).with(CursedBorkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationY(180).rotationX(90).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.EAST).with(CursedBorkBlock.FACING2, Direction.EAST).with(CursedBorkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationY(90).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.UP).with(CursedBorkBlock.FACING2, Direction.UP).with(CursedBorkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationX(270).rotationY(90).addModel()
-                .partialState().with(CursedBorkBlock.FACING, Direction.DOWN).with(CursedBorkBlock.FACING2, Direction.DOWN).with(CursedBorkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationX(90).rotationY(90).addModel();
-        ModelFile empty = models().getBuilder(ModBlocks.cursed_bork.getRegistryName().toString() + "_empty");
+                .partialState().with(CursedBarkBlock.FACING, Direction.NORTH).with(CursedBarkBlock.FACING2, Direction.NORTH).with(CursedBarkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationX(90).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.WEST).with(CursedBarkBlock.FACING2, Direction.WEST).with(CursedBarkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationY(90).rotationX(180).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.SOUTH).with(CursedBarkBlock.FACING2, Direction.SOUTH).with(CursedBarkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationY(180).rotationX(90).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.EAST).with(CursedBarkBlock.FACING2, Direction.EAST).with(CursedBarkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationY(90).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.UP).with(CursedBarkBlock.FACING2, Direction.UP).with(CursedBarkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationX(270).rotationY(90).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.DOWN).with(CursedBarkBlock.FACING2, Direction.DOWN).with(CursedBarkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationX(90).rotationY(90).addModel();
+        ModelFile empty = models().getBuilder(ModBlocks.cursed_bark.getRegistryName().toString() + "_empty");
         for (Direction direction : Direction.values()) {
             for (Direction direction1 : Direction.values()) {
                 if (direction == direction1) continue;
-                bork.partialState().with(CursedBorkBlock.FACING, direction).with(CursedBorkBlock.FACING2, direction1).modelForState().modelFile(empty).addModel();
+                bark.partialState().with(CursedBarkBlock.FACING, direction).with(CursedBarkBlock.FACING2, direction1).modelForState().modelFile(empty).addModel();
             }
         }
     }

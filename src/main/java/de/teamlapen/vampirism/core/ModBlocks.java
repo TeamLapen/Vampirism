@@ -100,7 +100,7 @@ public class ModBlocks {
     public static final RotatedPillarBlock cursed_spruce_log = getNull();
     public static final SaplingBlock dark_spruce_sapling = getNull();
     public static final SaplingBlock cursed_spruce_sapling = getNull();
-    public static final CursedBorkBlock cursed_bork = getNull();
+    public static final CursedBarkBlock cursed_bark = getNull();
     public static final RotatedPillarBlock stripped_dark_spruce_log = getNull();
     public static final RotatedPillarBlock stripped_cursed_spruce_log = getNull();
     public static final Block dark_spruce_planks = getNull();
@@ -220,7 +220,7 @@ public class ModBlocks {
         registry.register(prepareItemRegistry(cursed_spruce_log));
         registry.register(prepareItemRegistry(new SaplingBlock(new DarkSpruceTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)).setRegistryName(REFERENCE.MODID,"dark_spruce_sapling")));
         registry.register(prepareItemRegistry(new SaplingBlock(new CursedSpruceTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)).setRegistryName(REFERENCE.MODID,"cursed_spruce_sapling")));
-        registry.register(prepareItemRegistry(new CursedBorkBlock().setRegistryName(REFERENCE.MODID, "cursed_bork")));
+        registry.register(prepareItemRegistry(new CursedBarkBlock().setRegistryName(REFERENCE.MODID, "cursed_bark")));
         registry.register(prepareItemRegistry(new LogBlock(MaterialColor.COLOR_BLACK, MaterialColor.COLOR_BLACK).setRegistryName(REFERENCE.MODID, "stripped_dark_spruce_log")));
         registry.register(prepareItemRegistry(new LogBlock(MaterialColor.COLOR_BLACK, MaterialColor.COLOR_BLACK).setRegistryName(REFERENCE.MODID, "stripped_cursed_spruce_log")));
         registry.register(prepareItemRegistry(dark_spruce_planks));

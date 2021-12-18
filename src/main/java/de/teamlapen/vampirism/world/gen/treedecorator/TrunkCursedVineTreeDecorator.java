@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.world.gen.treedecorator;
 
 import com.mojang.serialization.Codec;
-import de.teamlapen.vampirism.blocks.CursedBorkBlock;
+import de.teamlapen.vampirism.blocks.CursedBarkBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFeatures;
 import net.minecraft.block.BlockState;
@@ -80,7 +80,7 @@ public class TrunkCursedVineTreeDecorator extends TreeDecorator {
     }
 
     protected void placeCursedVine(IWorldWriter levelWriter, BlockPos pos, Direction mainDirection, Direction secondaryDirection, Direction.Axis axis,  Set<BlockPos> blockPositions, MutableBoundingBox boundingBox) {
-        this.setBlock(levelWriter, pos, ModBlocks.cursed_bork.defaultBlockState().setValue(CursedBorkBlock.FACING, mainDirection).setValue(CursedBorkBlock.FACING2, secondaryDirection).setValue(CursedBorkBlock.AXIS, axis), blockPositions, boundingBox);
+        this.setBlock(levelWriter, pos, ModBlocks.cursed_bark.defaultBlockState().setValue(CursedBarkBlock.FACING, mainDirection).setValue(CursedBarkBlock.FACING2, secondaryDirection).setValue(CursedBarkBlock.AXIS, axis), blockPositions, boundingBox);
     }
 
 }

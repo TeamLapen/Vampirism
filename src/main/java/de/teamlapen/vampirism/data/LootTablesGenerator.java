@@ -299,7 +299,7 @@ public class LootTablesGenerator extends LootTableProvider {
             });
             this.dropPottedContents(ModBlocks.potted_cursed_roots);
             this.dropSelf(ModBlocks.cursed_spruce_log);
-            this.add(ModBlocks.cursed_bork, noDrop());
+            this.add(ModBlocks.cursed_bark, noDrop());
             this.dropSelf(ModBlocks.dark_spruce_stairs);
             this.dropSelf(ModBlocks.cursed_spruce_stairs);
             this.dropSelf(ModBlocks.dark_spruce_wood);

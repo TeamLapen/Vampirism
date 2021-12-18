@@ -115,7 +115,7 @@ public class ModBlocksRender {
         RenderTypeLookup.setRenderLayer(ModBlocks.grave_cage, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.cursed_roots, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.cursed_spruce_sapling, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.cursed_bork, cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.cursed_bark, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.dark_spruce_door, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.cursed_spruce_door, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.dark_spruce_trapdoor, cutout);
