@@ -72,6 +72,7 @@ public class CloakModel extends VampirismArmorModel {
         shoulderleft.setPos(-5F, 0F, 0F);
         shoulderleft.mirror = true;
         setRotation(shoulderleft, 0F, 0F, 0F);
+        getBodyModels().forEach(this.body::addChild);  //Make sure hierarchy is correct (e.g. for EpicFightMod)
     }
 
     @Override

@@ -41,6 +41,7 @@ public class HunterHatModel extends VampirismArmorModel {
             hatRim.setTexSize(128, 64);
             hatRim.mirror = true;
         }
+        getHeadModels().forEach(this.head::addChild);
 
     }
 

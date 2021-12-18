@@ -60,6 +60,7 @@ public class ClothingCrownModel extends VampirismArmorModel {
         this.right.texOffs(19, 15).addBox(4.0F, -9.8F, -3.25F, 1.0F, 1.0F, 1.0F, -0.2F, 0.0F, -0.1F);
         this.right.texOffs(31, 15).addBox(4.0F, -9.8F, 2.2F, 1.0F, 1.0F, 1.0F, -0.2F, 0.0F, -0.1F);
         this.right.texOffs(25, 15).addBox(4.0F, -9.8F, -0.5F, 1.0F, 1.0F, 1.0F, -0.2F, 0.0F, -0.05F);
+        getHeadModels().forEach(this.head::addChild); //Make sure hierarchy is correct (e.g. for EpicFightMod)
     }
 
     @Override

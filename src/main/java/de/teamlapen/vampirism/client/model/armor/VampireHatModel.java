@@ -30,6 +30,7 @@ public class VampireHatModel extends VampirismArmorModel {
         this.top.addBox(-0.6F, -14.5F, -3.0F, 4.0F, 7.0F, 4.0F, 0.25F, 0.25F, 0.25F);
         this.setRotateAngle(top, -0.22217304763960307F, 0.0F, -0.27750734440919567F);
         this.base.addChild(this.top);
+        this.getHeadModels().forEach(this.head::addChild);
     }
 
     public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
