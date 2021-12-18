@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
+import de.teamlapen.vampirism.mixin.TileEntityTypeAccessor;
 import de.teamlapen.vampirism.tileentity.*;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
@@ -9,6 +10,8 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
@@ -45,6 +48,13 @@ public class ModTiles {
         registry.register(create("sieve", SieveTileEntity::new, ModBlocks.blood_sieve));
         registry.register(create("totem", TotemTileEntity::new, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0])));
         registry.register(create("potion_table", PotionTableTileEntity::new, ModBlocks.potion_table));
+    }
+
+    public static void registerTileExtensionsUnsafe() {
+        Set<Block> blocks = new HashSet<>(((TileEntityTypeAccessor) TileEntityType.SIGN).getValidBlocks());
+        blocks.add(ModBlocks.dark_spruce_sign);
+        blocks.add(ModBlocks.cursed_spruce_sign);
+        ((TileEntityTypeAccessor) TileEntityType.SIGN).setValidBlocks(blocks);
     }
 
     private static <T extends TileEntity> TileEntityType<?> create(String id, Supplier<? extends T> factoryIn, Block... blocks) {

@@ -1,8 +1,8 @@
 {
 	"textures": {
-		"0": "vampirism:block/cursed_bork",
+		"0": "vampirism:block/cursed_bark",
 		"1": "vampirism:block/dark_spruce_log",
-		"particle": "vampirism:block/cursed_bork"
+		"particle": "vampirism:block/cursed_bark"
 	},
 	"elements": [
 		{

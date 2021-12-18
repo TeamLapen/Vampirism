@@ -53,6 +53,7 @@ public class TagGenerator {
             tag(BlockTags.WOODEN_STAIRS).add(ModBlocks.dark_spruce_stairs, ModBlocks.cursed_spruce_stairs);
             tag(BlockTags.WOODEN_SLABS).add(ModBlocks.dark_spruce_slab, ModBlocks.cursed_spruce_slab);
             tag(BlockTags.WOODEN_FENCES).add(ModBlocks.dark_spruce_fence, ModBlocks.cursed_spruce_fence);
+            tag(BlockTags.LOGS_THAT_BURN).addTags(ModTags.Blocks.CURSED_SPRUCE_LOG, ModTags.Blocks.DARK_SPRUCE_LOG);
             tag(BlockTags.WOODEN_PRESSURE_PLATES).add(ModBlocks.dark_spruce_pressure_place, ModBlocks.cursed_spruce_pressure_place);
         }
     }

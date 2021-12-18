@@ -16,7 +16,8 @@
     "MixinLivingEntity",
     "MixinMobEntity",
     "MixinPlayerEntity",
-    "MixinPotionBrewing"
+    "MixinPotionBrewing",
+    "TileEntityTypeAccessor"
   ],
   "client": [
     "client.AgeableModelAccessor",

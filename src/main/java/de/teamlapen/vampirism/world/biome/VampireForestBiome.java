@@ -48,7 +48,7 @@ public class VampireForestBiome {
 
     public static BiomeAmbience.Builder createBiomeAmbienceBuilder() {
         return new BiomeAmbience.Builder()
-                .waterColor(0x670717).waterFogColor(0x670717).fogColor(0x101010).skyColor(0x101010)
+                .waterColor(0x670717).waterFogColor(0x670717).fogColor(0x171717).skyColor(0x131313)
                 .foliageColorOverride(0x101010).grassColorOverride(0x101010).ambientMoodSound(new MoodSoundAmbience(SoundEvents.AMBIENT_CRIMSON_FOREST_MOOD, 6000, 8, 2.0D)).ambientAdditionsSound(new SoundAdditionsAmbience(SoundEvents.AMBIENT_CRIMSON_FOREST_ADDITIONS, 0.0111D)).backgroundMusic(BackgroundMusicTracks.createGameMusic(SoundEvents.MUSIC_BIOME_CRIMSON_FOREST));
     }
 
