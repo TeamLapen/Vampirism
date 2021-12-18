@@ -290,7 +290,9 @@ public class VampirismMod {
 
     private void loadComplete(final FMLLoadCompleteEvent event) {
         onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
+        event.enqueueWork(VampirismWorldGen::addBiomesToOverworldUnsafe);
     }
+
 
     /**
      * Called during constructor to set up the API as well as VReference

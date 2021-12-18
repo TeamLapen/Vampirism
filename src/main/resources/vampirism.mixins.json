@@ -17,6 +17,7 @@
     "MixinLivingEntity",
     "MixinPlayerEntity",
     "MixinPotionBrewing",
+    "MultiNoiseBiomeSourcePresetAccessor",
     "SurfaceRuleDataMixin"
   ],
   "client": [
