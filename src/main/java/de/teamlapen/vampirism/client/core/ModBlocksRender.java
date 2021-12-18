@@ -10,8 +10,10 @@ import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -57,6 +59,7 @@ public class ModBlocksRender {
         }, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0]));
         colors.register((state, worldIn, pos, tintIndex) -> 0x1E1F1F, ModBlocks.vampire_spruce_leaves);
         colors.register((state, worldIn, pos, tintIndex) -> 0x2e0606, ModBlocks.bloody_spruce_leaves);
+        colors.register((state, worldIn, pos, tintIndex) -> worldIn != null && pos != null ? BiomeColors.getAverageGrassColor(worldIn, pos) : GrassColor.get(0.5D, 1.0D), ModBlocks.cursed_grass_block);
     }
 
     public static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -113,6 +116,7 @@ public class ModBlocksRender {
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.tombstone2, cutout);
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.tombstone3, cutout);
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.grave_cage, cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.cursed_grass_block, RenderType.cutoutMipped());
     }
 
 

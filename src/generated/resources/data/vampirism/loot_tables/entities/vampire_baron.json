@@ -20,8 +20,7 @@
           "level": 0,
           "entity": "this"
         }
-      ],
-      "functions": []
+      ]
     },
     {
       "name": "pure_blood_1",
@@ -42,8 +41,7 @@
           "level": 1,
           "entity": "this"
         }
-      ],
-      "functions": []
+      ]
     },
     {
       "name": "pure_blood_2",
@@ -64,8 +62,7 @@
           "level": 2,
           "entity": "this"
         }
-      ],
-      "functions": []
+      ]
     },
     {
       "name": "pure_blood_3",
@@ -86,8 +83,7 @@
           "level": 3,
           "entity": "this"
         }
-      ],
-      "functions": []
+      ]
     },
     {
       "name": "pure_blood_4",
@@ -108,8 +104,7 @@
           "level": 4,
           "entity": "this"
         }
-      ],
-      "functions": []
+      ]
     }
   ]
 }

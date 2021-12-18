@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.*;
+import de.teamlapen.vampirism.client.core.ModBlocksRender;
 import de.teamlapen.vampirism.items.CoffinItem;
 import de.teamlapen.vampirism.util.BlockVoxelshapes;
 import net.minecraft.resources.ResourceLocation;
@@ -88,11 +89,18 @@ public class ModBlocks {
     public static final VampirismBlock tombstone2 = getNull();
     public static final VampirismBlock tombstone3 = getNull();
     public static final VampirismBlock grave_cage = getNull();
+    public static final CursedGrassBlock cursed_grass_block;
 
     /**
      * empty unless in datagen
      */
     private static final Set<Block> ALL_BLOCKS = Sets.newHashSet();
+
+    static {
+        cursed_earth = new CursedEarthBlock();
+        cursed_grass_block = new CursedGrassBlock(BlockBehaviour.Properties.of(Material.GRASS).randomTicks().strength(0.6F).sound(SoundType.GRASS));
+        cursed_grass_block.setRegistryName(REFERENCE.MODID, "cursed_grass_block");
+    }
 
     static void registerItemBlocks(IForgeRegistry<Item> registry) {
         registry.register(itemBlock(alchemical_cauldron));
@@ -143,6 +151,46 @@ public class ModBlocks {
         registry.register(itemBlock(tombstone2));
         registry.register(itemBlock(tombstone3));
         registry.register(itemBlock(grave_cage));
+        registry.register(itemBlock(cursed_grass_block));
+    }
+
+    private static Block prepareRegister(Block block) {
+        if (VampirismMod.inDataGen) {
+            ALL_BLOCKS.add(block);
+        }
+        return block;
+    }
+
+    @Nonnull
+    private static BlockItem itemBlock(@Nonnull Block block, @Nonnull Item.Properties props) {
+        BlockItem item = new BlockItem(block, props);
+        item.setRegistryName(block.getRegistryName());
+        return item;
+    }
+
+    @Nonnull
+    private static BlockItem itemBlock(@Nonnull Block block) {
+        return itemBlock(block, new Item.Properties().tab(VampirismMod.creativeTab));
+    }
+
+    public static void fixMappings(RegistryEvent.MissingMappings<Block> event) {
+        event.getAllMappings().forEach(missingMapping -> {
+            if ("vampirism:blood_potion_table".equals(missingMapping.key.toString())) {
+                missingMapping.remap(ModBlocks.potion_table);
+            } else if ("vampirism:garlic_beacon_normal".equals(missingMapping.key.toString())) {
+                missingMapping.remap(ModBlocks.garlic_diffuser_normal);
+            } else if ("vampirism:garlic_beacon_weak".equals(missingMapping.key.toString())) {
+                missingMapping.remap(ModBlocks.garlic_diffuser_weak);
+            } else if ("vampirism:garlic_beacon_improved".equals(missingMapping.key.toString())) {
+                missingMapping.remap(ModBlocks.garlic_diffuser_improved);
+            } else if ("vampirism:church_altar".equals(missingMapping.key.toString())) {
+                missingMapping.remap(ModBlocks.altar_cleansing);
+            }
+        });
+    }
+
+    public static Set<Block> getAllBlocks() {
+        return ImmutableSet.copyOf(ALL_BLOCKS);
     }
 
     static void registerBlocks(IForgeRegistry<Block> registry) {
@@ -211,62 +259,19 @@ public class ModBlocks {
         registry.register(prepareRegister(new VampirismHorizontalBlock("tombstone2", BlockBehaviour.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb2).markDecorativeBlock()));
         registry.register(prepareRegister(new VampirismHorizontalBlock("tombstone3", BlockBehaviour.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb3).markDecorativeBlock()));
         registry.register(prepareRegister(new VampirismHorizontalBlock("grave_cage", BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL).strength(6, 8).requiresCorrectToolForDrops().sound(SoundType.METAL), BlockVoxelshapes.grave_cage).markDecorativeBlock()));
+        registry.register(prepareRegister(cursed_grass_block));
 
-
-        /*
+        /**
          * TUTORIAL:
          * - Register block here.
          * - Register itemblock in {@link ModBlocks#registerItemBlocks(IForgeRegistry)}
          * - Maybe set render layer in {@link ModBlocksRender#registerRenderType()}
-         * - Register blockstate in {@link BlockStateGenerator#registerStatesAndModels()} (pass existent model if desired)
-         * - Register itemrender in {@link ItemModelGenerator#registerModels()}
-         * - Register loot table in {@link LootTablesGenerator.ModBlockLootTables#addTables()}
+         * - Register blockstate in {@link de.teamlapen.vampirism.data.BlockStateGenerator#registerStatesAndModels()} (pass existent model if desired)
+         * - Register itemrender in {@link de.teamlapen.vampirism.data.ItemModelGenerator#registerModels()}
+         * - Register loot table in {@link de.teamlapen.vampirism.data.LootTablesGenerator.ModBlockLootTables#addTables()}
          * - Add lang keys
          * - Consider adding tool type in {@link de.teamlapen.vampirism.data.TagGenerator.ModBlockTagsProvider}
          * - Run genData (twice?)
          */
-    }
-
-    private static Block prepareRegister(Block block) {
-        if (VampirismMod.inDataGen) {
-            ALL_BLOCKS.add(block);
-        }
-        return block;
-    }
-
-    @Nonnull
-    private static BlockItem itemBlock(@Nonnull Block block, @Nonnull Item.Properties props) {
-        BlockItem item = new BlockItem(block, props);
-        item.setRegistryName(block.getRegistryName());
-        return item;
-    }
-
-    @Nonnull
-    private static BlockItem itemBlock(@Nonnull Block block) {
-        return itemBlock(block, new Item.Properties().tab(VampirismMod.creativeTab));
-    }
-
-    public static void fixMappings(RegistryEvent.MissingMappings<Block> event) {
-        event.getAllMappings().forEach(missingMapping -> {
-            if ("vampirism:blood_potion_table".equals(missingMapping.key.toString())) {
-                missingMapping.remap(ModBlocks.potion_table);
-            } else if ("vampirism:garlic_beacon_normal".equals(missingMapping.key.toString())) {
-                missingMapping.remap(ModBlocks.garlic_diffuser_normal);
-            } else if ("vampirism:garlic_beacon_weak".equals(missingMapping.key.toString())) {
-                missingMapping.remap(ModBlocks.garlic_diffuser_weak);
-            } else if ("vampirism:garlic_beacon_improved".equals(missingMapping.key.toString())) {
-                missingMapping.remap(ModBlocks.garlic_diffuser_improved);
-            } else if("vampirism:church_altar".equals(missingMapping.key.toString())){
-                missingMapping.remap(ModBlocks.altar_cleansing);
-            }
-        });
-    }
-
-    public static Set<Block> getAllBlocks() {
-        return ImmutableSet.copyOf(ALL_BLOCKS);
-    }
-
-    static {
-        cursed_earth = new CursedEarthBlock();
     }
 }

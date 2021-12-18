@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.*;
+import net.minecraft.world.level.levelgen.GenerationStep;
 
 public class VampireForestBiome {
 
@@ -18,8 +19,7 @@ public class VampireForestBiome {
         VampirismBiomeFeatures.addModdedWaterLake(builder);
 
         VampirismBiomeFeatures.addVampireFlower(builder);
-        BiomeDefaultFeatures.addForestGrass(builder);
-        BiomeDefaultFeatures.addDesertVegetation(builder);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismBiomeFeatures.forest_grass_placed);
 
         BiomeDefaultFeatures.addDefaultUndergroundVariety(builder);
         BiomeDefaultFeatures.addDefaultOres(builder);
@@ -42,6 +42,6 @@ public class VampireForestBiome {
     }
 
     public static BiomeSpecialEffects.Builder createBiomeAmbienceBuilder() {
-        return new BiomeSpecialEffects.Builder().waterColor(0x7d0000).waterFogColor(0x7d0000).fogColor(0x7d3535).skyColor(0x7d3535).foliageColorOverride(0x1E1F1F).grassColorOverride(0x1E1F1F).ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS);
+        return new BiomeSpecialEffects.Builder().waterColor(0x7d0000).waterFogColor(0x7d0000).fogColor(0x7d3535).skyColor(0x7d3535).foliageColorOverride(0x1E1F1F).grassColorOverride(0x2c2132).ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS);
     }
 }

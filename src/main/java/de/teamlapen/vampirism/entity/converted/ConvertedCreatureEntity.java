@@ -6,9 +6,9 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
-import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.goals.AttackMeleeNoSunGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import net.minecraft.core.BlockPos;
@@ -55,7 +55,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
 
     public static boolean spawnPredicate(EntityType<? extends ConvertedCreatureEntity<?>> entityType, LevelAccessor iWorld, MobSpawnType spawnReason, BlockPos blockPos, Random random) {
-        return (iWorld.getBlockState(blockPos.below()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.below()).getBlock() == ModBlocks.cursed_earth) && iWorld.getRawBrightness(blockPos, 0) > 8;
+        return (iWorld.getBlockState(blockPos.below()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.below()).is(ModTags.Blocks.CURSEDEARTH)) && iWorld.getRawBrightness(blockPos, 0) > 8;
     }
 
     private T entityCreature;

@@ -8,6 +8,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.worldgen.Carvers;
 import net.minecraft.data.worldgen.features.FeatureUtils;
+import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.data.worldgen.placement.MiscOverworldPlacements;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
@@ -56,6 +57,7 @@ public class VampirismBiomeFeatures {
     public static final PlacedFeature vampire_trees_placed = PlacementUtils.register("vampirism:vampire_trees", vampire_trees.placed(VegetationPlacements.treePlacement(PlacementUtils.countExtra(6, 0.2F, 2))));
     public static final PlacedFeature vampire_dungeon_placed = PlacementUtils.register("vampirism:vampire_dungeon", vampire_dungeon.placed(CountPlacement.of(3), InSquarePlacement.spread(), HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.top()), BiomeFilter.biome())); //TODO 1.18 verify correct placement
     public static final PlacedFeature vampire_flower_placed = PlacementUtils.register("vampirism:vampire_flower", vampire_flower.placed(RarityFilter.onAverageOnceEvery(5), PlacementUtils.HEIGHTMAP, InSquarePlacement.spread(), BiomeFilter.biome())); //TODO 1.18 verify correct placement
+    public static final PlacedFeature forest_grass_placed = PlacementUtils.register("vampirism:forest_grass", VegetationFeatures.PATCH_GRASS.placed(VegetationPlacements.worldSurfaceSquaredWithCount(2)));
 
     private static <T extends FeatureConfiguration> ConfiguredFeature<T, ?> registerConfiguredFeature(String name, ConfiguredFeature<T, ?> feature) {
         return Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new ResourceLocation(REFERENCE.MODID, name), feature);

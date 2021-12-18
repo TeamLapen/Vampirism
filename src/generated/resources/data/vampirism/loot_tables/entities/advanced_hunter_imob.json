@@ -76,8 +76,7 @@
         {
           "condition": "minecraft:killed_by_player"
         }
-      ],
-      "functions": []
+      ]
     },
     {
       "name": "special",
@@ -100,8 +99,7 @@
           "chance": 0.05,
           "looting_multiplier": 0.01
         }
-      ],
-      "functions": []
+      ]
     }
   ]
 }

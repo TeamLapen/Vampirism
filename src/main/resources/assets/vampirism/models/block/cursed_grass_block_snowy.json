@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "vampirism:block/cursed_grass_block_top",
+    "bottom": "vampirism:block/cursed_earth",
+    "side": "vampirism:block/cursed_grass_block_snowy",
+    "particle": "vampirism:block/cursed_earth"
+  }
+}

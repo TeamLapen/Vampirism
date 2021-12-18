@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.vampire;
 
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
-import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.converted.ConvertedCreatureEntity;
 import net.minecraft.core.BlockPos;
@@ -21,7 +21,7 @@ import java.util.Random;
 public class DummyBittenAnimalEntity extends Mob {
 
     public static boolean spawnPredicate(EntityType<? extends DummyBittenAnimalEntity> entityType, LevelAccessor iWorld, MobSpawnType spawnReason, BlockPos blockPos, Random random) {
-        return (iWorld.getBlockState(blockPos.below()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.below()).getBlock() == ModBlocks.cursed_earth);
+        return (iWorld.getBlockState(blockPos.below()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.below()).is(ModTags.Blocks.CURSEDEARTH));
     }
 
     public DummyBittenAnimalEntity(EntityType<? extends DummyBittenAnimalEntity> type, Level world) {

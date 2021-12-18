@@ -23,20 +23,11 @@
           "biome": "vampirism:vampire_forest"
         }
       }
-    },
-    "second": {
-      "trigger": "minecraft:location",
-      "conditions": {
-        "location": {
-          "biome": "vampirism:vampire_forest_hills"
-        }
-      }
     }
   },
   "requirements": [
     [
-      "main",
-      "second"
+      "main"
     ]
   ]
 }

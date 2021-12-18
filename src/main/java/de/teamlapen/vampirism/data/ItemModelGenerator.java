@@ -55,6 +55,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModBlocks.tombstone2);
             add(ModBlocks.tombstone3);
             add(ModBlocks.grave_cage);
+            add(ModBlocks.cursed_grass_block);
         }};
         Set<Item> items = new HashSet<>() {{
             add(ModItems.hunter_coat_chest_normal);

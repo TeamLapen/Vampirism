@@ -13,7 +13,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.minecraftforge.common.BiomeDictionary;
@@ -44,10 +43,11 @@ public class ModBiomes {
     }
 
     public static void registerOverworldSurfaceRules(ImmutableList.Builder<SurfaceRules.RuleSource> builder) {
+        //Any blocks here must be available before block registration, so they must be initialized statically
         SurfaceRules.RuleSource cursed_earth = SurfaceRules.state(ModBlocks.cursed_earth.defaultBlockState());
-        SurfaceRules.RuleSource cursed_earth2 = SurfaceRules.state(Blocks.GOLD_BLOCK.defaultBlockState());
+        SurfaceRules.RuleSource grass = SurfaceRules.state(ModBlocks.cursed_grass_block.defaultBlockState());
         SurfaceRules.ConditionSource inVampireBiome = SurfaceRules.isBiome(ModBiomes.VAMPIRE_FOREST_KEY);
-        SurfaceRules.RuleSource vampireForestTopLayer = SurfaceRules.ifTrue(inVampireBiome, cursed_earth);
+        SurfaceRules.RuleSource vampireForestTopLayer = SurfaceRules.ifTrue(inVampireBiome, grass);
         SurfaceRules.RuleSource vampireForestBaseLayer = SurfaceRules.ifTrue(inVampireBiome, cursed_earth);
         builder.add(SurfaceRules.sequence(
                 SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(),

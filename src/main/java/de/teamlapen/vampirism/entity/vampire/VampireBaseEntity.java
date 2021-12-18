@@ -9,10 +9,7 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.BalanceMobProps;
-import de.teamlapen.vampirism.core.ModAttributes;
-import de.teamlapen.vampirism.core.ModBiomes;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.SoulOrbEntity;
@@ -282,7 +279,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
         boolean vampireBiome = ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(iWorld, this.blockPosition()));
         if (!vampireBiome) return isLowLightLevel(iWorld);
         BlockState iblockstate = iWorld.getBlockState((this.blockPosition()).below());
-        return ModBlocks.cursed_earth.equals(iblockstate.getBlock());
+        return iblockstate.is(ModTags.Blocks.CURSEDEARTH);
     }
 
     public enum SpawnRestriction {

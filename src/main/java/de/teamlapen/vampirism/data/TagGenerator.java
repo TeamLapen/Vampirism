@@ -38,8 +38,8 @@ public class TagGenerator {
 
         @Override
         protected void addTags() {
-            tag(Tags.Blocks.DIRT).add(ModBlocks.cursed_earth);
-            tag(ModTags.Blocks.CURSEDEARTH).add(ModBlocks.cursed_earth);
+            tag(Tags.Blocks.DIRT).add(ModBlocks.cursed_earth, ModBlocks.cursed_grass_block);
+            tag(ModTags.Blocks.CURSEDEARTH).add(ModBlocks.cursed_earth, ModBlocks.cursed_grass_block);
             tag(ModTags.Blocks.CASTLE_BLOCK).add(ModBlocks.castle_block_dark_brick, ModBlocks.castle_block_dark_brick_bloody, ModBlocks.castle_block_dark_stone, ModBlocks.castle_block_normal_brick, ModBlocks.castle_block_purple_brick);
             tag(ModTags.Blocks.CASTLE_SLAPS).add(ModBlocks.castle_slab_dark_brick, ModBlocks.castle_slab_dark_stone, ModBlocks.castle_slab_purple_brick);
             tag(ModTags.Blocks.CASTLE_STAIRS).add(ModBlocks.castle_stairs_dark_stone, ModBlocks.castle_stairs_dark_brick, ModBlocks.castle_stairs_purple_brick);
