@@ -39,6 +39,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -202,6 +203,15 @@ public class ModPlayerEventHandler {
         try {
             if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isCannotInteract()) {
                 event.setCanceled(true);
+
+                //Workaround for https://github.com/MinecraftForge/MinecraftForge/issues/7609 or https://github.com/TeamLapen/Vampirism/issues/1021
+                //Chest drops content when restoring snapshot
+                if(event.getPlacedBlock().hasBlockEntity()){
+                    BlockEntity t =  event.getWorld().getBlockEntity(event.getPos());
+                    if(t instanceof Container){
+                        ((Container) t).clearContent();
+                    }
+                }
 
                 if(event.getEntity() instanceof ServerPlayer){ //For some reason this event is only run serverside. Therefore, we have to make sure the client is notified about the not-placed block.
                     MinecraftServer server = event.getEntity().level.getServer();
