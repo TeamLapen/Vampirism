@@ -7,7 +7,6 @@
     "AbstractFurnaceBlockEntityAccessor",
     "ArmorItemAccessor",
     "AssemblerMixin",
-    "FlatGenerationSettingsAccessor",
     "LevelStructureSettingsAccessor",
     "LivingEntityAccessor",
     "MixinBellBlock",

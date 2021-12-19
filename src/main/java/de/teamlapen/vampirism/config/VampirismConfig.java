@@ -322,7 +322,7 @@ public class VampirismConfig {
             advancedHunterSpawnChance = builder.comment("Advanced hunter spawn chance. By default they only spawn in large tent camps, but you can enable global spawn here.").defineInRange("advancedHunterSpawnChance", 0, 0, 100000);
             baronSpawnChance = builder.comment("Vampire baron spawn chance in vampire forest (reference vampire in forest: 35)").defineInRange("baronSpawnChance", 10, 0, 10000);
             builder.pop();
-            builder.push("world");
+            builder.comment("Settings here require a game restart").push("world");
             vampireForestWeight = builder.comment("Does not have an effect at the moment").defineInRange("vampireForestWeight", 3, 0, Integer.MAX_VALUE);
             addVampireForestToOverworld = builder.comment("Whether to inject the vampire forest into the default overworld generation and to replace some Taiga areas").define("addVampireForestToOverworld", true);
             hunterTentDistance = builder.comment("Desired maximum distance in chunks between tents. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentDistance", 10, 2, 4096);
