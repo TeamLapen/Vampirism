@@ -43,8 +43,6 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
-
 /**
  * Main class for hunter players
  */
@@ -57,7 +55,10 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     /**
      * Don't call before the construction event of the player entity is finished
      * Must check Entity#isAlive before
+     *
+     * Always prefer calling #getOpt instead
      */
+    @Deprecated
     public static HunterPlayer get(@Nonnull Player player) {
         return (HunterPlayer) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get HunterPlayer from player " + player));
     }

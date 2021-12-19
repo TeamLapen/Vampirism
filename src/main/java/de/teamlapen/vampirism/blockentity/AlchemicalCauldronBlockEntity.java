@@ -107,7 +107,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     @OnlyIn(Dist.CLIENT)
     public int getLiquidColorClient() {
         ItemStack liquidItem = this.items.get(0);
-        return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> fluidStack.getFluid().getAttributes().getColor()).orElse(ModRecipes.getLiquidColor(liquidItem.getItem()));
+        return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> fluidStack.getFluid().getAttributes().getColor()).orElseGet(()->ModRecipes.getLiquidColor(liquidItem.getItem()));
     }
 
     public Component getOwnerName() {
@@ -289,15 +289,16 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
         if (ownerID == null) return false;
         Player playerEntity = this.level.getPlayerByUUID(ownerID);
         if (playerEntity == null || !playerEntity.isAlive()) return false;
-        HunterPlayer hunter = HunterPlayer.get(playerEntity);
-        boolean canCook = recipe.canBeCooked(hunter.getLevel(), hunter.getSkillHandler());
-        if (canCook) {
-            recipeChecked = recipe;
-            return true;
-        } else {
-            recipeChecked = null;
-            return false;
-        }
+        return HunterPlayer.getOpt(playerEntity).map(hunter -> {
+            boolean canCook = recipe.canBeCooked(hunter.getLevel(), hunter.getSkillHandler());
+            if (canCook) {
+                recipeChecked = recipe;
+                return true;
+            } else {
+                recipeChecked = null;
+                return false;
+            }
+        }).orElse(false);
     }
 
     /**

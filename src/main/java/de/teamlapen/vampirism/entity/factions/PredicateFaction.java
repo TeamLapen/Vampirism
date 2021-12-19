@@ -57,7 +57,7 @@ public class PredicateFaction implements Predicate<LivingEntity> {
 
         }
         if (player && input instanceof Player && input.isAlive()) {
-            return FactionPlayerHandler.getOpt((Player) input).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty()).map(fp -> {
+            return FactionPlayerHandler.getOpt((Player) input).map(FactionPlayerHandler::getCurrentFactionPlayer).orElseGet(Optional::empty).map(fp -> {
                     IFaction<?> f = (ignoreDisguise ? fp.getFaction() : fp.getDisguisedAs());
                     return (f != null || thisFaction.isHostileTowardsNeutral()) && !thisFaction.equals(f) && (otherFaction == null || otherFaction.equals(f));
                 }).orElse(neutralPlayer);

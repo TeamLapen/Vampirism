@@ -37,21 +37,21 @@ public class BlockVoxelshapes {
             Block.box(11, 4, 0, 14, 6, 2),
             Block.box(2, 4, 0, 5, 6, 2),
             Block.box(7, 4, 0, 9, 6, 2)
-    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElse(Shapes.empty());
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElseGet(Shapes::empty);
 
     public static final VoxelShape tomb1 = Stream.of(
             Block.box(2, 0, 2, 14, 1, 7),
             Block.box(3, 1, 3, 13, 9, 6),
             Block.box(4, 9, 3, 12, 10, 6),
             Block.box(6, 10, 3, 10, 11, 6)
-    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElse(Shapes.empty());
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElseGet(Shapes::empty);
 
     public static final VoxelShape tomb2 = Stream.of(
             Block.box(2, 0, 2, 14, 2, 7),
             Block.box(3, 2, 3, 13, 14, 6),
             Block.box(4, 14, 3, 12, 15, 6),
             Block.box(6, 15, 3, 10, 16, 6)
-    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElse(Shapes.empty());
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElseGet(Shapes::empty);
 
     public static final VoxelShape tomb3 = Stream.of(
             Block.box(2, 0, 2, 14, 2, 10),
@@ -60,6 +60,6 @@ public class BlockVoxelshapes {
             Block.box(5, 18, 4, 11, 20, 8),
             Block.box(4, 20, 4, 12, 26, 8),
             Block.box(5, 26, 4, 11, 27, 8)
-    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElse(Shapes.empty());
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElseGet(Shapes::empty);
 
 }

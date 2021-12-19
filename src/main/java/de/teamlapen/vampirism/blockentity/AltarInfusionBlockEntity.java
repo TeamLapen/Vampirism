@@ -292,7 +292,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
                     return;
                 }
                 handler.ifPresent(h->h.setFactionLevel(VReference.VAMPIRE_FACTION, h.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1));
-                VampirePlayer.get(player).drinkBlood(Integer.MAX_VALUE, 0, false);
+                VampirePlayer.getOpt(player).ifPresent(v -> v.drinkBlood(Integer.MAX_VALUE, 0, false));
                 if (player instanceof ServerPlayer) {
                     ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayer) player, VampireActionTrigger.Action.PERFORM_RITUAL_INFUSION);
                 }

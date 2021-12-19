@@ -59,6 +59,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.*;
@@ -459,19 +460,19 @@ public class ModPlayerEventHandler {
         boolean message = !player.getCommandSenderWorld().isClientSide;
         if (!stack.isEmpty() && stack.getItem() instanceof IFactionLevelItem item) {
             if (!player.isAlive()) return false;
-            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+            LazyOptional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(player);
             IFaction<?> usingFaction = item.getExclusiveFaction(stack);
             ISkill<?> requiredSkill = item.getRequiredSkill(stack);
-            if (usingFaction != null && !handler.isInFaction(usingFaction)) {
+            if (usingFaction != null && !handler.map(h->h.isInFaction(usingFaction)).orElse(false)) {
                 if (message)
                     player.displayClientMessage(new TranslatableComponent("text.vampirism.can_only_be_used_by", usingFaction.getNamePlural()), true);
                 return false;
-            } else if (handler.getCurrentLevel() < item.getMinLevel(stack)) {
+            } else if (handler.map(FactionPlayerHandler::getCurrentLevel).orElse(0) < item.getMinLevel(stack)) {
                 if (message)
                     player.displayClientMessage(new TranslatableComponent("text.vampirism.can_only_be_used_by_level", usingFaction == null ? new TranslatableComponent("text.vampirism.all") : usingFaction.getNamePlural(), item.getMinLevel(stack)), true);
                 return false;
             } else if (requiredSkill != null) {
-                IFactionPlayer<?> factionPlayer = handler.getCurrentFactionPlayer().orElse(null);
+                IFactionPlayer<?> factionPlayer = handler.resolve().flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
                 if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
                     if (message)
                         player.displayClientMessage(new TranslatableComponent("text.vampirism.can_only_be_used_with_skill", requiredSkill.getName()), true);

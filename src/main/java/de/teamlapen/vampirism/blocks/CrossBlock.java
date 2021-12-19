@@ -25,7 +25,7 @@ public class CrossBlock extends VampirismHorizontalBlock {
                 Block.box(6, 3, 6, 10, 30, 10),
                 Block.box(10, 19, 6, 16, 23, 10),
                 Block.box(0, 19, 6, 6, 23, 10)
-        ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElse(Shapes.empty());
+        ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElseGet(Shapes::empty);
     }
 
     public CrossBlock() {

@@ -91,7 +91,7 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
             ((IVampire) entityLiving).drinkBlood(amt / MULTIPLIER, 0, false);
             return result[0];
         }
-        return FluidUtil.getFluidHandler(stack).map(IFluidHandlerItem::getContainer).orElse(super.finishUsingItem(stack, worldIn, entityLiving));
+        return FluidUtil.getFluidHandler(stack).map(IFluidHandlerItem::getContainer).orElseGet(() ->super.finishUsingItem(stack, worldIn, entityLiving));
     }
 
     @Override
@@ -119,8 +119,8 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
             return;
         }
         int blood = BloodHelper.getBlood(stack);
-        VampirePlayer vampire = VampirePlayer.get((Player) player);
-        if (vampire.getLevel() == 0 || blood == 0 || !vampire.getBloodStats().needsBlood()) {
+        VampirePlayer vampire = VampirePlayer.getOpt((Player) player).resolve().orElse(null);
+        if (vampire == null || vampire.getLevel() == 0 || blood == 0 || !vampire.getBloodStats().needsBlood()) {
             player.releaseUsingItem();
             return;
         }

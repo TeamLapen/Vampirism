@@ -44,8 +44,6 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.Optional;
 
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
-
 /**
  * Extended entity property that handles factions and levels for the player
  */
@@ -55,7 +53,10 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     /**
      * Must check Entity#isAlive before
+     *
+     * Always prefer using #getOpt
      */
+    @Deprecated
     public static FactionPlayerHandler get(Player player) {
         return (FactionPlayerHandler) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get FactionPlayerHandler from EntityPlayer " + player));
     }
@@ -70,6 +71,19 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
         return opt;
     }
+
+    /**
+     * Resolves the FactionPlayerHandler capability (prints a warning message if not present) and returns an Optional of the current IFactionPlayer instance
+     */
+    public static Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer(@Nonnull Player player){
+        LazyOptional<FactionPlayerHandler> opt = player.getCapability(CAP, null).cast();
+        if (!opt.isPresent()) {
+            LOGGER.warn("Cannot get Faction player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
+        }
+        return opt.resolve().flatMap(FactionPlayerHandler::getCurrentFactionPlayer);
+    }
+
+
 
     public static ICapabilityProvider createNewCapability(final Player player) {
         return new ICapabilitySerializable<CompoundTag>() {
@@ -262,11 +276,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     public boolean onEntityAttacked(DamageSource src, float amt) {
         if (VampirismConfig.SERVER.pvpOnlyBetweenFactions.get() && src instanceof EntityDamageSource) {
             if (src.getEntity() instanceof Player) {
-                FactionPlayerHandler other = get((Player) src.getEntity());
-                if (this.currentFaction == null || other.currentFaction == null) {
+                IPlayableFaction<?> otherFaction = getOpt((Player) src.getEntity()).resolve().map(FactionPlayerHandler::getCurrentFaction).orElse(null);
+                if (this.currentFaction == null || otherFaction == null) {
                     return VampirismConfig.SERVER.pvpOnlyBetweenFactionsIncludeHumans.get();
                 }
-                return !this.currentFaction.equals(other.currentFaction);
+                return !this.currentFaction.equals(otherFaction);
             }
         }
         return true;

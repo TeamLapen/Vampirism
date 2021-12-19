@@ -38,6 +38,10 @@ public class VampirismWorld implements IVampirismWorld {
     private static final Map<BlockPos, BoundingBox> tmpFogAreas = Maps.newHashMap();
     public static final Capability<IVampirismWorld> CAP = CapabilityManager.get(new CapabilityToken<>(){});
 
+    /**
+     * Always prefer #getOpt
+     */
+    @Deprecated
     public static VampirismWorld get(Level world) {
         return (VampirismWorld) world.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get VampirismWorld from World " + world));
     }

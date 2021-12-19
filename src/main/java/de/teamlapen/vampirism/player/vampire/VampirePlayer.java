@@ -87,8 +87,6 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
-
 /**
  * Main class for Vampire Players.
  */
@@ -117,7 +115,10 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     /**
      * Don't call before the construction event of the player entity is finished
      * Must check Entity#isAlive before
+     *
+     * Always prefer using #getOpt instead
      */
+    @Deprecated
     public static VampirePlayer get(@Nonnull Player player) {
         return (VampirePlayer) player.getCapability(CAP).orElseThrow(() -> new IllegalStateException("Cannot get Vampire player capability from player " + player));
     }
@@ -770,19 +771,11 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      */
     public void onSanguinareFinished() {
         if (Helper.canBecomeVampire(player) && !isRemote() && player.isAlive()) {
-            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            handler.joinFaction(getFaction());
-            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 300));
-            player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 300));
-//            ((WorldServer) player.world).addScheduledTask(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if (player != null && player.isEntityAlive()) {
-//
-//                    }
-//                }
-//            });
-
+            FactionPlayerHandler.getOpt(player).ifPresent(handler -> {
+                handler.joinFaction(getFaction());
+                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 300));
+                player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 300));
+            });
         }
     }
 

@@ -217,7 +217,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     public void renderFactionLevel(ForgeIngameGui gui, PoseStack mStack, float partialTicks, int screenWidth, int screenHeight) {
-        if (!mc.player.isRidingJumpable() && !mc.options.hideGui) {
+        if (mc.player != null && mc.player.isAlive() && !mc.player.isRidingJumpable() && !mc.options.hideGui) {
             gui.setupOverlayRenderState(true, false);
 
             FactionPlayerHandler.getOpt(mc.player).ifPresent(handler -> {

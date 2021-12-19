@@ -58,7 +58,7 @@ public class OblivionItem extends VampirismItem {
     public ItemStack finishUsingItem(ItemStack stack, @Nonnull Level worldIn, @Nonnull LivingEntity entityLiving) {
         stack.shrink(1);
         if (entityLiving instanceof Player) {
-            FactionPlayerHandler.getOpt(((Player) entityLiving)).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty()).ifPresent(OblivionItem::applyEffect);
+            FactionPlayerHandler.getOpt(((Player) entityLiving)).map(FactionPlayerHandler::getCurrentFactionPlayer).orElseGet(Optional::empty).ifPresent(OblivionItem::applyEffect);
         }
         if (entityLiving instanceof MinionEntity) {
             ((MinionEntity<?>) entityLiving).getMinionData().ifPresent(d -> d.upgradeStat(-1, (MinionEntity<?>) entityLiving));

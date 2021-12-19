@@ -194,13 +194,15 @@ public class InputEventPacket implements IMessage {
                     }
                     break;
                 case REVERTBACK:
-                    FactionPlayerHandler.get(player).setFactionAndLevel(null, 0);
-                    player.displayClientMessage(new TranslatableComponent("command.vampirism.base.level.successful", player.getName(), VReference.VAMPIRE_FACTION.getName(), 0), true);
-                    LOGGER.debug("Player {} left faction", player);
-                    if (!ServerLifecycleHooks.getCurrentServer().isHardcore()) {
-                        player.hurt(DamageSource.MAGIC, 1000);
+                    FactionPlayerHandler.getOpt(player).ifPresent(handler -> {
+                        handler.setFactionAndLevel(null, 0);
+                        player.displayClientMessage(new TranslatableComponent("command.vampirism.base.level.successful", player.getName(), VReference.VAMPIRE_FACTION.getName(), 0), true);
+                        LOGGER.debug("Player {} left faction", player);
+                        if (!ServerLifecycleHooks.getCurrentServer().isHardcore()) {
+                            player.hurt(DamageSource.MAGIC, 1000);
 
-                    }
+                        }
+                    });
                     break;
                 case VAMPIRE_VISION_TOGGLE:
                     VampirePlayer.getOpt(player).ifPresent(VampirePlayer::switchVision);
