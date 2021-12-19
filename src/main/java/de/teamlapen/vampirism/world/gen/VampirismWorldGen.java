@@ -56,8 +56,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class VampirismWorldGen {
-    public static boolean debug = false;
     private static final Logger LOGGER = LogManager.getLogger();
+    public static boolean debug = false;
 
     public static void createJigsawPool() {
         VampirismWorldGen.setupSingleJigsawPieceGeneration();
@@ -77,23 +77,25 @@ public class VampirismWorldGen {
      * @param b The point to check
      * @return Whether all parameters of point are completely contained inside outer
      */
-    private static boolean intersects(Climate.ParameterPoint a, Climate.ParameterPoint b){
-        return intersects(a.temperature(), b.temperature()) && intersects(a.humidity(), b.humidity()) && intersects(a.continentalness() , b.continentalness()) && intersects(a.erosion(), b.erosion()) && intersects(a.depth(), b.depth()) && intersects(a.weirdness(), b.weirdness());
+    private static boolean intersects(Climate.ParameterPoint a, Climate.ParameterPoint b) {
+        return intersects(a.temperature(), b.temperature()) && intersects(a.humidity(), b.humidity()) && intersects(a.continentalness(), b.continentalness()) && intersects(a.erosion(), b.erosion()) && intersects(a.depth(), b.depth()) && intersects(a.weirdness(), b.weirdness());
     }
 
     /**
-     *
      * @return Whether point is completely contained inside outer
      */
-    private static boolean intersects(Climate.Parameter a, Climate.Parameter b){
-        return (a.max() >b.min() && a.min() < b.max()) || (a.max()==a.min() && b.max() == b.min() && a.max() == b.max());
+    private static boolean intersects(Climate.Parameter a, Climate.Parameter b) {
+        return (a.max() > b.min() && a.min() < b.max()) || (a.max() == a.min() && b.max() == b.min() && a.max() == b.max());
     }
 
 
     /**
      * Call on main thread
      */
-    public static void addBiomesToOverworldUnsafe(){
+    public static void addBiomesToOverworldUnsafe() {
+        if(!VampirismConfig.COMMON.addVampireForestToOverworld.get()){
+            return;
+        }
         /*
          * Hack the vampire forest into the Overworld biome list preset, replacing some taiga biome areas.
          *
@@ -111,33 +113,31 @@ public class VampirismWorldGen {
             //Setup parameter point (basically the volume in the n-d parameter space) at which the biome should be generated
             //Order of parameters: Temp , humidity, continentalness, erosion, depth, weirdness
             Climate.ParameterPoint[] forestPoints = new Climate.ParameterPoint[]{
-                     Climate.parameters(Climate.Parameter.span(-0.45F, -0.19F), Climate.Parameter.span(0.1F, 0.3F), Climate.Parameter.span(-0.11F, 0.55F),Climate.Parameter.span(-0.375F, -0.2225F), Climate.Parameter.point(0),Climate.Parameter.span(-0.56666666F, -0.05F),0  ),
-             Climate.parameters(Climate.Parameter.span(-0.45F, -0.19F), Climate.Parameter.span(0.1F, 0.3F), Climate.Parameter.span(-0.11F, 0.55F),Climate.Parameter.span(-0.375F, -0.2225F), Climate.Parameter.point(1),Climate.Parameter.span(-0.56666666F, -0.05F),0  ),
-                    Climate.parameters(Climate.Parameter.span(-0.45F, -0.19F), Climate.Parameter.span(0.1F, 0.3F), Climate.Parameter.span(-0.11F, 0.55F),Climate.Parameter.span(-0.375F, -0.2225F), Climate.Parameter.point(0),Climate.Parameter.span(0.05f, 0.4F),0  ),
-                    Climate.parameters(Climate.Parameter.span(-0.45F, -0.19F), Climate.Parameter.span(0.1F, 0.3F), Climate.Parameter.span(-0.11F, 0.55F),Climate.Parameter.span(-0.375F, -0.2225F), Climate.Parameter.point(1),Climate.Parameter.span(0.05f, 0.4F),0  )
-
+                    Climate.parameters(Climate.Parameter.span(-0.40F, -0.19F), Climate.Parameter.span(0.1F, 0.3F), Climate.Parameter.span(-0.11F, 0.55F), Climate.Parameter.span(-0.375F, -0.2225F), Climate.Parameter.point(0), Climate.Parameter.span(-0.56666666F, -0.05F), 0),
+                    Climate.parameters(Climate.Parameter.span(-0.40F, -0.19F), Climate.Parameter.span(0.1F, 0.3F), Climate.Parameter.span(-0.11F, 0.55F), Climate.Parameter.span(-0.375F, -0.2225F), Climate.Parameter.point(1), Climate.Parameter.span(-0.56666666F, -0.05F), 0),
+                    Climate.parameters(Climate.Parameter.span(-0.40F, -0.19F), Climate.Parameter.span(0.1F, 0.3F), Climate.Parameter.span(-0.11F, 0.55F), Climate.Parameter.span(-0.375F, -0.2225F), Climate.Parameter.point(0), Climate.Parameter.span(0.05f, 0.4F), 0),
+                    Climate.parameters(Climate.Parameter.span(-0.40F, -0.19F), Climate.Parameter.span(0.1F, 0.3F), Climate.Parameter.span(-0.11F, 0.55F), Climate.Parameter.span(-0.375F, -0.2225F), Climate.Parameter.point(1), Climate.Parameter.span(0.05f, 0.4F), 0)
             };
 
 
             //Remove vanilla biomes that are completely inside the given range
             int oldCount = biomes.size();
-            int removed=0;
+            int removed = 0;
             Iterator<Pair<Climate.ParameterPoint, Supplier<Biome>>> it = biomes.iterator();
-            while(it.hasNext()){
+            while (it.hasNext()) {
                 Pair<Climate.ParameterPoint, Supplier<Biome>> pair = it.next();
                 //It should be safe to get the biome here because {@link BiomeSource} does so as well right after this function call
                 ResourceLocation biomeId = pair.getSecond().get().getRegistryName();
-                if(biomeId!= null && "minecraft".equals(biomeId.getNamespace()) && Arrays.stream(forestPoints).anyMatch(p -> intersects(p, pair.getFirst()))){
+                if (biomeId != null && "minecraft".equals(biomeId.getNamespace()) && Arrays.stream(forestPoints).anyMatch(p -> intersects(p, pair.getFirst()))) {
                     it.remove();
                     removed++;
-                    LOGGER.error("Removing biome {} from parameter point {} in overworld preset", biomeId, pair.getFirst());
+                    LOGGER.debug("Removing biome {} from parameter point {} in overworld preset", biomeId, pair.getFirst());
                 }
             }
-            LOGGER.info("Removed a total of {} points from {}", removed, oldCount);
+            LOGGER.debug("Removed a total of {} points from {}", removed, oldCount);
 
 
-
-            LOGGER.info("Adding biome {} to ParameterPoints {} ", ModBiomes.VAMPIRE_FOREST_KEY.location(), Arrays.toString(forestPoints));
+            LOGGER.info("Adding biome {} to ParameterPoints {} in Preset.OVERWORLD", ModBiomes.VAMPIRE_FOREST_KEY.location(), Arrays.toString(forestPoints));
             for (Climate.ParameterPoint forestPoint : forestPoints) {
                 biomes.add(Pair.of(forestPoint, () -> registry.get(ModBiomes.VAMPIRE_FOREST_KEY)));
             }
@@ -146,7 +146,7 @@ public class VampirismWorldGen {
         };
 
 
-        ((MultiNoiseBiomeSourcePresetAccessor)MultiNoiseBiomeSource.Preset.OVERWORLD).setPresetSupplier_vampirism(wrapperParameterSourceFunction);
+        ((MultiNoiseBiomeSourcePresetAccessor) MultiNoiseBiomeSource.Preset.OVERWORLD).setPresetSupplier_vampirism(wrapperParameterSourceFunction);
     }
 
     /**

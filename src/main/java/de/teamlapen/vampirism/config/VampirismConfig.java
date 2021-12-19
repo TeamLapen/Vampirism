@@ -282,7 +282,7 @@ public class VampirismConfig {
 
         //World
         public final ForgeConfigSpec.IntValue vampireForestWeight;
-        //        public final ForgeConfigSpec.IntValue vampireForestHillsWeight;
+        public final ForgeConfigSpec.BooleanValue addVampireForestToOverworld;
         public final ForgeConfigSpec.IntValue hunterTentDistance;
         public final ForgeConfigSpec.IntValue hunterTentSeparation;
         public final ForgeConfigSpec.BooleanValue enableHunterTentGeneration;
@@ -323,8 +323,8 @@ public class VampirismConfig {
             baronSpawnChance = builder.comment("Vampire baron spawn chance in vampire forest (reference vampire in forest: 35)").defineInRange("baronSpawnChance", 10, 0, 10000);
             builder.pop();
             builder.push("world");
-            vampireForestWeight = builder.defineInRange("vampireForestWeight", 3, 0, Integer.MAX_VALUE);
-//            vampireForestHillsWeight = builder.defineInRange("vampireForestHillsWeight", 3, 1, Integer.MAX_VALUE);
+            vampireForestWeight = builder.comment("Does not have an effect at the moment").defineInRange("vampireForestWeight", 3, 0, Integer.MAX_VALUE);
+            addVampireForestToOverworld = builder.comment("Whether to inject the vampire forest into the default overworld generation and to replace some Taiga areas").define("addVampireForestToOverworld", true);
             hunterTentDistance = builder.comment("Desired maximum distance in chunks between tents. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentDistance", 10, 2, 4096);
             hunterTentSeparation = builder.comment("Desired minimum distance in chunks between tents. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentSeparation", 4, 1, 4096);
             enableHunterTentGeneration = builder.comment("Control hunter camp generation. If disabled you should set hunterSpawnChance to 75.").define("enableHunterTentGeneration", true);

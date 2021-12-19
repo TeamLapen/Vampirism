@@ -79,7 +79,7 @@ public class RegistryManager implements IInitListener {
                 ModLoot.registerLootFunctionType();
             case LOAD_COMPLETE:
                 if (ModEffects.checkNightVision()) {
-                    ModEffects.fixNightVisionEffectTypes();
+                    event.enqueueWork(ModEffects::fixNightVisionEffectTypesUnsafe);
                 }
                 ModRecipes.registerDefaultLiquidColors();
                 break;

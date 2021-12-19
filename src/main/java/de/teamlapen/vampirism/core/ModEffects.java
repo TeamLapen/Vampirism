@@ -73,7 +73,7 @@ public class ModEffects {
         });
     }
 
-    static void fixNightVisionEffectTypes() {
+    static void fixNightVisionEffectTypesUnsafe() {
         /*We have to fix the vanilla night vision potion types as they are created using the vanilla night vision potion before it can be replaced
         There are two options:
         1) Substitute the potion types too
