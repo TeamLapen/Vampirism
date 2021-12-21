@@ -85,7 +85,7 @@ public class AdvancementGenerator extends AdvancementProvider {
         @Override
         public void accept(Consumer<Advancement> consumer) {
             root = Advancement.Builder.advancement()
-                    .display(ModItems.vampire_fang, new TranslationTextComponent("advancement.vampirism"), new TranslationTextComponent("advancement.vampirism.desc"), new ResourceLocation(REFERENCE.MODID, "textures/block/castle_block_dark_brick.png"), FrameType.TASK, false, false, false)
+                    .display(ModItems.vampire_fang, new TranslationTextComponent("advancement.vampirism"), new TranslationTextComponent("advancement.vampirism.desc"), new ResourceLocation(REFERENCE.MODID, "textures/block/castle_block_dark_brick.png"), FrameType.TASK, false, false, false) //TODO BREAKING: change background texture to "textures/gui/advancements/backgrounds/vampirism.png"
                     .addCriterion("main", InventoryChangeTrigger.Instance.hasItems(ModItems.vampire_fang))
                     .addCriterion("second", InventoryChangeTrigger.Instance.hasItems(ModItems.item_garlic))
                     .requirements(IRequirementsStrategy.OR)
