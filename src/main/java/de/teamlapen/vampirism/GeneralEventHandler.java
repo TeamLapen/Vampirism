@@ -25,6 +25,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
@@ -58,32 +59,33 @@ public class GeneralEventHandler {
         VersionChecker.VersionInfo versionInfo = VampirismMod.instance.getVersionInfo();
         if (!versionInfo.isChecked()) LOGGER.warn("Version check is not finished yet");
 
-        boolean isAdminLikePlayer = !ServerLifecycleHooks.getCurrentServer().isDedicatedServer() || UtilLib.isPlayerOp(event.getPlayer());
+        Player player = event.getPlayer();
+        boolean isAdminLikePlayer = !ServerLifecycleHooks.getCurrentServer().isDedicatedServer() || UtilLib.isPlayerOp(player);
 
         if (VampirismConfig.COMMON.versionCheck.get() && versionInfo.isNewVersionAvailable()) {
-            if (isAdminLikePlayer || event.getPlayer().getRandom().nextInt(5) == 0) {
-                if (event.getPlayer().getRandom().nextInt(4) == 0) {
+            if (isAdminLikePlayer || player.getRandom().nextInt(5) == 0) {
+                if (player.getRandom().nextInt(4) == 0) {
                     VersionChecker.Version newVersion = versionInfo.getNewVersion();
-                    event.getPlayer().sendMessage(new TranslatableComponent("text.vampirism.outdated", versionInfo.getCurrentVersion().name, newVersion.name), Util.NIL_UUID);
+                    player.sendMessage(new TranslatableComponent("text.vampirism.outdated", versionInfo.getCurrentVersion().name, newVersion.name), Util.NIL_UUID);
                     Component download = new TranslatableComponent("text.vampirism.update_message.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, newVersion.getUrl() == null ? versionInfo.getHomePage() : newVersion.getUrl())).setUnderlined(true).applyFormat(ChatFormatting.BLUE));
                     Component changelog = new TranslatableComponent("text.vampirism.update_message.changelog").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vampirism changelog")).setUnderlined(true));
                     Component modpage = new TranslatableComponent("text.vampirism.update_message.modpage").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, versionInfo.getHomePage())).setUnderlined(true).applyFormat(ChatFormatting.BLUE));
-                    event.getPlayer().sendMessage(new TextComponent("").append(download).append(new TextComponent(" ")).append(changelog).append(new TextComponent(" ")).append(modpage), Util.NIL_UUID);
+                    player.sendMessage(new TextComponent("").append(download).append(new TextComponent(" ")).append(changelog).append(new TextComponent(" ")).append(modpage), Util.NIL_UUID);
                 }
             }
         }
         if (isAdminLikePlayer) {
             List<String> mods = IntegrationsNotifier.shouldNotifyAboutIntegrations();
             if (!mods.isEmpty()) {
-                event.getPlayer().sendMessage(new TranslatableComponent("text.vampirism.integrations_available.first"), Util.NIL_UUID);
-                event.getPlayer().sendMessage(new TextComponent(ChatFormatting.BLUE + ChatFormatting.ITALIC.toString() + org.apache.commons.lang3.StringUtils.join(mods, ", ") + ChatFormatting.RESET), Util.NIL_UUID);
-                event.getPlayer().sendMessage(new TranslatableComponent("text.vampirism.integrations_available.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.INTEGRATIONS_LINK)).setUnderlined(true)), Util.NIL_UUID);
+                player.sendMessage(new TranslatableComponent("text.vampirism.integrations_available.first"), Util.NIL_UUID);
+                player.sendMessage(new TextComponent(ChatFormatting.BLUE + ChatFormatting.ITALIC.toString() + org.apache.commons.lang3.StringUtils.join(mods, ", ") + ChatFormatting.RESET), Util.NIL_UUID);
+                player.sendMessage(new TranslatableComponent("text.vampirism.integrations_available.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.INTEGRATIONS_LINK)).setUnderlined(true)), Util.NIL_UUID);
             }
 
             if (!ModList.get().isLoaded("guideapi_vp")) {
                 if (VampirismConfig.SERVER.infoAboutGuideAPI.get()) {
-                    event.getPlayer().sendMessage(new TranslatableComponent("text.vampirism.guideapi_available.first"), Util.NIL_UUID);
-                    event.getPlayer().sendMessage(new TranslatableComponent("text.vampirism.guideapi_available.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.GUIDEAPI_LINK)).setUnderlined(true)), Util.NIL_UUID);
+                    player.sendMessage(new TranslatableComponent("text.vampirism.guideapi_available.first"), Util.NIL_UUID);
+                    player.sendMessage(new TranslatableComponent("text.vampirism.guideapi_available.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.GUIDEAPI_LINK)).setUnderlined(true)), Util.NIL_UUID);
 
                     VampirismConfig.SERVER.infoAboutGuideAPI.set(false);
                 }
@@ -93,7 +95,7 @@ public class GeneralEventHandler {
 //            event.getPlayer().sendStatusMessage(new StringTextComponent("You are playing an alpha version of Vampirism for 1.16, some things might not work yet. Please report any issues except for:").mergeStyle(TextFormatting.RED), false);
 //        }
 
-        VampirismMod.dispatcher.sendTo(new SkillTreePacket(VampirismMod.proxy.getSkillTree(false).getCopy()), (ServerPlayer) event.getPlayer());
+        if(player instanceof ServerPlayer) VampirismMod.dispatcher.sendTo(new SkillTreePacket(VampirismMod.proxy.getSkillTree(false).getCopy()), (ServerPlayer) player);
 
         @SuppressWarnings("unchecked")
         Pair<Map<ResourceLocation, Integer>, Integer>[] bloodValues = (Pair<Map<ResourceLocation, Integer>, Integer>[]) Array.newInstance(Pair.class, 3);
@@ -101,11 +103,12 @@ public class GeneralEventHandler {
         bloodValues[1] = new Pair<>(BloodConversionRegistry.getItemValues(), BloodConversionRegistry.getItemMultiplier());
         bloodValues[2] = new Pair<>(BloodConversionRegistry.getFluidValues(), BloodConversionRegistry.getFluidDivider());
 
-        VampirismMod.dispatcher.sendTo(new BloodValuePacket(bloodValues), (ServerPlayer) event.getPlayer());
-        FactionPlayerHandler.getOpt(event.getPlayer()).ifPresent(FactionPlayerHandler::onPlayerLoggedIn);
+        if(player instanceof ServerPlayer) VampirismMod.dispatcher.sendTo(new BloodValuePacket(bloodValues), (ServerPlayer) player);
+        FactionPlayerHandler.getOpt(player).ifPresent(FactionPlayerHandler::onPlayerLoggedIn);
 
-        if (!PermissionAPI.hasPermission(event.getPlayer(), Permissions.VAMPIRISM)) {
-            event.getPlayer().sendMessage(new TextComponent("[" + ChatFormatting.DARK_PURPLE + "Vampirism" + ChatFormatting.RESET + "] It seems like the permission plugin used is not properly set up. Make sure all players have 'vampirism.*' for the mod to work (or at least '" + Permissions.VAMPIRISM + "' to suppress this warning)."), Util.NIL_UUID);
+        //noinspection unchecked
+        if (player instanceof ServerPlayer && !PermissionAPI.getPermission((ServerPlayer) player, Permissions.GENERAL_CHECK)) {
+            player.sendMessage(new TextComponent("[" + ChatFormatting.DARK_PURPLE + "Vampirism" + ChatFormatting.RESET + "] It seems like the permission plugin used is not properly set up. Make sure all players have 'vampirism.*' for the mod to work (or at least '" + Permissions.GENERAL_CHECK.getNodeName() + "' to suppress this warning)."), Util.NIL_UUID);
         }
     }
 

@@ -14,6 +14,7 @@ import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -357,8 +358,11 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     private boolean isActionAllowedPermission(IAction<T> action) {
-        ResourceLocation id = action.getRegistryName();
-        return player.getRepresentingEntity().level.isClientSide || PermissionAPI.hasPermission(player.getRepresentingPlayer(), Permissions.ACTION_PREFIX + id.getNamespace() + "." + id.getPath());
+        if(player.getRepresentingPlayer() instanceof ServerPlayer serverPlayer){
+            //noinspection unchecked
+            return PermissionAPI.getPermission(serverPlayer, Permissions.ACTION, Permissions.ACTION_CONTEXT.createContext(action));
+        }
+        return true;
     }
 
     private void loadTimerMapFromNBT(CompoundTag nbt, Object2IntMap<ResourceLocation> map) {

@@ -1,27 +1,29 @@
 package de.teamlapen.vampirism.util;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.core.ModRegistries;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.server.ServerLifecycleHooks;
-import net.minecraftforge.server.permission.DefaultPermissionLevel;
-import net.minecraftforge.server.permission.PermissionAPI;
+import net.minecraftforge.server.permission.events.PermissionGatherEvent;
+import net.minecraftforge.server.permission.nodes.PermissionDynamicContextKey;
+import net.minecraftforge.server.permission.nodes.PermissionNode;
+import net.minecraftforge.server.permission.nodes.PermissionTypes;
 
 public class Permissions {
-    public static final String VAMPIRISM = "vampirism.check";
-    public static final String FEED = "vampirism.bite.feed";
-    public static final String FEED_PLAYER = "vampirism.bite.feed.player";
-    public static final String INFECT_PLAYER = "vampirism.infect.player";
-    public static final String ACTION_PREFIX = "vampirism.action.";
+    public static PermissionNode<Boolean> GENERAL_CHECK = new PermissionNode<>(REFERENCE.MODID, "check", PermissionTypes.BOOLEAN, ((player, playerUUID, context) -> true));
+    public static PermissionNode<Boolean> FEED = new PermissionNode<>(REFERENCE.MODID, "bite.feed", PermissionTypes.BOOLEAN, ((player, playerUUID, context) -> true));
+    public static PermissionNode<Boolean> FEED_PLAYER = new PermissionNode<>(REFERENCE.MODID, "bite.feed.player", PermissionTypes.BOOLEAN, ((player, playerUUID, context) -> true));
+    public static PermissionNode<Boolean> INFECT_PLAYER = new PermissionNode<>(REFERENCE.MODID, "infect.player", PermissionTypes.BOOLEAN, ((player, playerUUID, context) -> true));
+    public static PermissionNode<Boolean> ACTION = new PermissionNode<>(REFERENCE.MODID, "action", PermissionTypes.BOOLEAN, (player, playerUUID, context) -> true);
+    @SuppressWarnings("rawtypes")
+    public static PermissionDynamicContextKey<IAction> ACTION_CONTEXT = new PermissionDynamicContextKey<>(IAction.class, "action", StringRepresentable::getSerializedName);
 
-    public static void init() {
-        PermissionAPI.registerNode(VAMPIRISM, DefaultPermissionLevel.ALL, "Used to check if permission system works");
-        PermissionAPI.registerNode(FEED, DefaultPermissionLevel.ALL, "Allow feeding");
-        PermissionAPI.registerNode(FEED_PLAYER, DefaultPermissionLevel.ALL, "Allow feeding from players");
-        PermissionAPI.registerNode(INFECT_PLAYER, DefaultPermissionLevel.ALL, "Allow players to infect other players");
-        for (IAction<?> action : ModRegistries.ACTIONS.getValues()) {
-            PermissionAPI.registerNode(ACTION_PREFIX + action.getRegistryName().getNamespace() + "." + action.getRegistryName().getPath(), DefaultPermissionLevel.ALL, "Use action " + action.getName().getString());
-        }
+
+    @SubscribeEvent
+    public static void registerNodes(PermissionGatherEvent.Nodes event) {
+        event.addNodes(GENERAL_CHECK, FEED, FEED_PLAYER, INFECT_PLAYER, ACTION);
     }
 
     public static boolean isPvpEnabled(Player player) {

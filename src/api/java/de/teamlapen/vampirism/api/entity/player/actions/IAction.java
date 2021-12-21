@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -12,7 +13,7 @@ import javax.annotation.Nonnull;
 /**
  * Interface for player actions
  */
-public interface IAction<T extends IFactionPlayer<T>> extends IForgeRegistryEntry<IAction<?>> {
+public interface IAction<T extends IFactionPlayer<T>> extends IForgeRegistryEntry<IAction<?>>, StringRepresentable {
     /**
      * Checks if the player can use this action
      *
@@ -52,6 +53,12 @@ public interface IAction<T extends IFactionPlayer<T>> extends IForgeRegistryEntr
 
     default boolean showInSelectAction(Player player) {
         return true;
+    }
+
+    @Override
+    @Nonnull
+    default String getSerializedName(){
+        return getRegistryName().toString();
     }
 
     enum PERM {

@@ -171,6 +171,7 @@ public class VampirismMod {
         registryManager = new RegistryManager();
         FMLJavaModLoadingContext.get().getModEventBus().register(registryManager);
         MinecraftForge.EVENT_BUS.register(registryManager);
+        MinecraftForge.EVENT_BUS.register(Permissions.class);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, ModBiomes::onBiomeLoadingEventAdditions);
 
         prepareAPI();
@@ -376,7 +377,6 @@ public class VampirismMod {
 
         SupporterManager.getInstance().initAsync();
         VampireBookManager.getInstance().init();
-        Permissions.init();
         VampirismEntitySelectors.registerSelectors();
 
     }
