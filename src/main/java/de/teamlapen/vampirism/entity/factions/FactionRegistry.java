@@ -157,7 +157,7 @@ public class FactionRegistry implements IFactionRegistry {
             throw new IllegalArgumentException("[Vampirism]Parameters for faction cannot be null");
         }
 
-        PlayableFaction<T> f = new PlayableFaction<>(id, entityInterface, color, hostileTowardsNeutral, playerCapabilitySupplier, highestLevel, highestLordLevel, lordTitleFunction, villageFactionData == null ? new FactionVillageBuilder() : villageFactionData, null, TextFormatting.WHITE, new StringTextComponent(id.toString()), new StringTextComponent(id.toString()));
+        PlayableFaction<T> f = new PlayableFaction<>(id, entityInterface, color, hostileTowardsNeutral, playerCapabilitySupplier, highestLevel, highestLordLevel, lordTitleFunction::apply, villageFactionData == null ? new FactionVillageBuilder() : villageFactionData, null, TextFormatting.WHITE, new StringTextComponent(id.toString()), new StringTextComponent(id.toString()));
         addFaction(f);
         return f;
     }
@@ -267,7 +267,7 @@ public class FactionRegistry implements IFactionRegistry {
         protected final NonNullSupplier<Capability<T>> playerCapabilitySupplier;
         protected int highestLevel = 1;
         protected int highestLordLevel = 0;
-        protected BiFunction<Integer, Boolean, ITextComponent> lordTitleFunction;
+        protected LordTitles lordTitleFunction;
         protected Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot;
 
         public PlayableFactionBuilder(ResourceLocation id, Class<T> entityInterface, NonNullSupplier<Capability<T>> playerCapabilitySupplier) {
@@ -298,9 +298,14 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public IPlayableFactionBuilder<T> lordTitle(@Nonnull BiFunction<Integer, Boolean, ITextComponent> lordTitleFunction) {
+        public IPlayableFactionBuilder<T> lordTitle(@Nonnull LordTitles lordTitleFunction) {
             this.lordTitleFunction = lordTitleFunction;
             return this;
+        }
+
+        @Override
+        public IPlayableFactionBuilder<T> lordTitle(@Nonnull LordTitles.LordTitlesNeutral lordTitleFunction) {
+            return this.lordTitle((LordTitles)lordTitleFunction);
         }
 
         @Override
