@@ -19,6 +19,20 @@ For a more detailed description head over to the Minecraft Forum or the Cursefor
 [Help to translate](https://crowdin.com/project/vampirism)   
 [Short feature overview](https://teamlapen.github.io/Vampirism/)   
 
+## Issues
+https://github.com/TeamLapen/Vampirism/issues
+Please use the appropriate template when creating an issue.
+
+The following labeling scheme is used:
+- *unconfirmed*: Awaiting triage or bug not reproduced yet
+- *discussion*: Looking for feedback
+- *enhancement*: Any minor tweak that can be introduced in minor releases
+- *feature*: Any change that takes more time to implement and test
+- *1.12-1.***: Affecting only a specific MC version
+- *v1.8-v1.**: Bug affecting or enhancement targeting a specific Vamprism release branch
+- *latest*: Bug affecting or enhancement targeting the latest (potentially unreleased) Vampirism branch
+
+
 ## People
 - [maxanier](https://maxanier.de)
 - [Cheaterpaul](https://github.com/Cheaterpaul)
