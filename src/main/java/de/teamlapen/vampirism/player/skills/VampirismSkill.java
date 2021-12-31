@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
+import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -85,8 +86,28 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
         public IPlayableFaction getFaction() {
             return VReference.HUNTER_FACTION;
         }
+
+        @Override
+        public SkillType getType() {
+            return SkillType.LEVEL;
+        }
     }
 
+    public static class LordHunterSkill extends SimpleHunterSkill {
+
+        public LordHunterSkill(ResourceLocation id, boolean desc) {
+            super(id, desc);
+        }
+
+        public LordHunterSkill(String id, boolean desc) {
+            super(id, desc);
+        }
+
+        @Override
+        public SkillType getType() {
+            return SkillType.LORD;
+        }
+    }
 
     /**
      * Simple vampire skill implementation. Does nothing by itself
@@ -110,6 +131,26 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
         @Override
         public IPlayableFaction getFaction() {
             return VReference.VAMPIRE_FACTION;
+        }
+
+        @Override
+        public SkillType getType() {
+            return SkillType.LEVEL;
+        }
+    }
+
+    public static class LordVampireSkill extends SimpleVampireSkill {
+        public LordVampireSkill(String id, boolean desc) {
+            super(id, desc);
+        }
+
+        public LordVampireSkill(ResourceLocation id, boolean desc) {
+            super(id, desc);
+        }
+
+        @Override
+        public SkillType getType() {
+            return SkillType.LORD;
         }
     }
 }

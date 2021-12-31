@@ -2,14 +2,17 @@ package de.teamlapen.vampirism.player.hunter.skills;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.VampirismSkill;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponent;
@@ -74,8 +77,8 @@ public class HunterSkills {
         //Config null, so cannot get method ref
         //noinspection Convert2MethodRef
         registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_damage", false).registerAttributeModifier(Attributes.ATTACK_DAMAGE, "ffafd115-96e2-4d08-9588-d1bc9be0d902", () -> VampirismConfig.BALANCE.hsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADDITION));
-        registry.register(new ActionSkill<IHunterPlayer>("hunter_awareness", HunterActions.awareness_hunter, true));
-        registry.register(new ActionSkill<IHunterPlayer>("hunter_disguise", HunterActions.disguise_hunter, true));
+        registry.register(actionSkillDesc("hunter_awareness", HunterActions.awareness_hunter));
+        registry.register(actionSkillDesc("hunter_disguise", HunterActions.disguise_hunter));
         registry.register(new VampirismSkill.SimpleHunterSkill("purified_garlic", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("stake1", false)
                 .setDescription(() -> {
@@ -106,9 +109,17 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("master_brewer", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("swift_brewing", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("concentrated_durable_brewing", true));
-        registry.register(new ActionSkill<IHunterPlayer>("potion_resistance", HunterActions.potion_resistance_hunter, true));
+        registry.register(actionSkillDesc("potion_resistance", HunterActions.potion_resistance_hunter));
         registry.register(new VampirismSkill.SimpleHunterSkill("crucifix_wielder", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("ultimate_crucifix", true));
+    }
+
+    private static ActionSkill<IHunterPlayer> actionSkill(String id, IAction action) {
+        return new ActionSkill<>(new ResourceLocation(REFERENCE.MODID, id), action, SkillType.LEVEL, false);
+    }
+
+    private static ActionSkill<IHunterPlayer> actionSkillDesc(String id, IAction action) {
+        return new ActionSkill<>(new ResourceLocation(REFERENCE.MODID, id), action, SkillType.LEVEL, true);
     }
 
     public static void fixMappings(RegistryEvent.MissingMappings<ISkill> event) {
