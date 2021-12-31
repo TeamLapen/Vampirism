@@ -359,7 +359,6 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
     private boolean isActionAllowedPermission(IAction<T> action) {
         if(player.getRepresentingPlayer() instanceof ServerPlayer serverPlayer){
-            //noinspection unchecked
             return PermissionAPI.getPermission(serverPlayer, Permissions.ACTION, Permissions.ACTION_CONTEXT.createContext(action));
         }
         return true;

@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.server.ServerLifecycleHooks;
@@ -18,7 +17,7 @@ public class Permissions {
     public static PermissionNode<Boolean> INFECT_PLAYER = new PermissionNode<>(REFERENCE.MODID, "infect.player", PermissionTypes.BOOLEAN, ((player, playerUUID, context) -> true));
     public static PermissionNode<Boolean> ACTION = new PermissionNode<>(REFERENCE.MODID, "action", PermissionTypes.BOOLEAN, (player, playerUUID, context) -> true);
     @SuppressWarnings("rawtypes")
-    public static PermissionDynamicContextKey<IAction> ACTION_CONTEXT = new PermissionDynamicContextKey<>(IAction.class, "action", StringRepresentable::getSerializedName);
+    public static PermissionDynamicContextKey<IAction> ACTION_CONTEXT = new PermissionDynamicContextKey<>(IAction.class, "action", action -> action.getRegistryName().toString());
 
 
     @SubscribeEvent

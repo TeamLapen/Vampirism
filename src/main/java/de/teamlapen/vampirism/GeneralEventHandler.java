@@ -106,7 +106,6 @@ public class GeneralEventHandler {
         if(player instanceof ServerPlayer) VampirismMod.dispatcher.sendTo(new BloodValuePacket(bloodValues), (ServerPlayer) player);
         FactionPlayerHandler.getOpt(player).ifPresent(FactionPlayerHandler::onPlayerLoggedIn);
 
-        //noinspection unchecked
         if (player instanceof ServerPlayer && !PermissionAPI.getPermission((ServerPlayer) player, Permissions.GENERAL_CHECK)) {
             player.sendMessage(new TextComponent("[" + ChatFormatting.DARK_PURPLE + "Vampirism" + ChatFormatting.RESET + "] It seems like the permission plugin used is not properly set up. Make sure all players have 'vampirism.*' for the mod to work (or at least '" + Permissions.GENERAL_CHECK.getNodeName() + "' to suppress this warning)."), Util.NIL_UUID);
         }
