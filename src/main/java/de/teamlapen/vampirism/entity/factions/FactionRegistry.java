@@ -157,7 +157,7 @@ public class FactionRegistry implements IFactionRegistry {
             throw new IllegalArgumentException("[Vampirism]Parameters for faction cannot be null");
         }
 
-        PlayableFaction<T> f = new PlayableFaction<>(id, entityInterface, color, hostileTowardsNeutral, playerCapabilitySupplier, highestLevel, highestLordLevel, lordTitleFunction::apply, villageFactionData == null ? new FactionVillageBuilder() : villageFactionData, null, TextFormatting.WHITE, new StringTextComponent(id.toString()), new StringTextComponent(id.toString()));
+        PlayableFaction<T> f = new PlayableFaction<>(id, entityInterface, color, hostileTowardsNeutral, playerCapabilitySupplier, highestLevel, highestLordLevel, lordTitleFunction::apply, villageFactionData == null ? new FactionVillageBuilder() : villageFactionData, null, TextFormatting.WHITE, new StringTextComponent(id.toString()), new StringTextComponent(id.toString()), false);
         addFaction(f);
         return f;
     }
@@ -269,6 +269,7 @@ public class FactionRegistry implements IFactionRegistry {
         protected int highestLordLevel = 0;
         protected LordTitles lordTitleFunction;
         protected Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot;
+        protected boolean hasLordSkills = false;
 
         public PlayableFactionBuilder(ResourceLocation id, Class<T> entityInterface, NonNullSupplier<Capability<T>> playerCapabilitySupplier) {
             super(id, entityInterface);
@@ -335,6 +336,12 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
+        public IPlayableFactionBuilder<T> enableLordSkills() {
+            this.hasLordSkills = true;
+            return this;
+        }
+
+        @Override
         public IPlayableFaction<T> register() {
             if (this.lordTitleFunction == null) {
                 this.lordTitleFunction = (a, b) -> new StringTextComponent("Lord " + a);
@@ -352,7 +359,9 @@ public class FactionRegistry implements IFactionRegistry {
                     this.refinementItemBySlot,
                     this.chatColor != null ? this.chatColor : TextFormatting.WHITE,
                     this.name == null?new StringTextComponent(id.toString()):new TranslationTextComponent(this.name),
-                    this.namePlural == null ? this.name == null?new StringTextComponent(id.toString()):new TranslationTextComponent(this.name):new TranslationTextComponent(this.namePlural));
+                    this.namePlural == null ? this.name == null?new StringTextComponent(id.toString()):new TranslationTextComponent(this.name):new TranslationTextComponent(this.namePlural),
+                    this.hasLordSkills
+            );
             addFaction(faction);
             return faction;
         }

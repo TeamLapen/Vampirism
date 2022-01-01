@@ -402,6 +402,8 @@
   "skill.vampirism.dbno_duration": "Swift Resurrection",
   "skill.vampirism.crucifix_wielder": "Crucifix Wielder",
   "skill.vampirism.ultimate_crucifix": "Crucifixion",
+  "skill.vampirism.vampire_lord": "Become a Vampire Lord",
+  "skill.vampirism.hunter_lord": "Become a Hunter Lord",
   "__comment": "skill_desc",
   "skill.vampirism.dbno_duration.desc": "Decreases the resurrection timer",
   "skill.vampirism.neonatal_decrease.desc": "Decreases the time in your neonatal form",

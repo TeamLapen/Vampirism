@@ -10,12 +10,14 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.player.IVampirismPlayer;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.tasks.reward.LordLevelReward;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
@@ -522,6 +524,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
 
         this.currentLordLevel = level;
+        if (this.currentLordLevel > 0) {
+            this.getCurrentFactionPlayer().ifPresent(p -> ((SkillHandler<?>) p.getSkillHandler()).enableRootSkill(SkillType.LORD));
+        }
         this.updateCache();
         MinionWorldData.getData(player.level).ifPresent(data -> {
             PlayerMinionController c = data.getController(this.player.getUUID());

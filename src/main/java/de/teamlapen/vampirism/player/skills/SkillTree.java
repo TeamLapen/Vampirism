@@ -4,6 +4,7 @@ package de.teamlapen.vampirism.player.skills;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -58,6 +59,13 @@ public class SkillTree {
         return rootNodes.get(id);
     }
 
+    @Nonnull
+    public SkillNode getRootNodeForFaction(ResourceLocation id, SkillType type) {
+        if (!rootNodes.containsKey(type.id(id)))
+            throw new IllegalStateException("Faction " + type.id(id) + " does not have a root skill");
+        return rootNodes.get(type.id(id));
+    }
+
     /**
      * @deprecated use {@link #getTreeWidth(SkillNode)}
      */
@@ -92,9 +100,10 @@ public class SkillTree {
         //Built root nodes
         rootNodes.clear();
         for (IPlayableFaction faction : VampirismAPI.factionRegistry().getPlayableFactions()) {
-            SkillNode rootNode = new SkillNode(faction, ((SkillManager) VampirismAPI.skillManager()).getRootSkill(faction));
-            rootNodes.put(faction.getID(), rootNode);
-
+            for (SkillType value : SkillType.values()) {
+                SkillNode rootNode = new SkillNode(faction, ((SkillManager) VampirismAPI.skillManager()).getRootSkill(faction.getID(), value), value);
+                rootNodes.put(rootNode.getId(), rootNode);
+            }
         }
     }
 
@@ -104,9 +113,11 @@ public class SkillTree {
         //Built root nodes
         rootNodes.clear();
         for (IPlayableFaction faction : VampirismAPI.factionRegistry().getPlayableFactions()) {
-            SkillNode rootNode = new SkillNode(faction, ((SkillManager) VampirismAPI.skillManager()).getRootSkill(faction));
-            builtNodes.put(faction.getID(), rootNode);
-            rootNodes.put(faction.getID(), rootNode);
+            for (SkillType value : SkillType.values()) {
+                SkillNode rootNode = new SkillNode(faction, ((SkillManager) VampirismAPI.skillManager()).getRootSkill(faction.getID(), value), value);
+                builtNodes.put(rootNode.getId(), rootNode);
+                rootNodes.put(rootNode.getId(), rootNode);
+            }
         }
 
         //Merge

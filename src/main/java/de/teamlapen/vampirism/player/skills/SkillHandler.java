@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
@@ -143,6 +144,10 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         enableSkill(getRootNode().getElements()[0]);
     }
 
+    public void enableRootSkill(SkillType type) {
+        enableSkill(getRootNode(type).getElements()[0]);
+    }
+
     @Override
     public void enableSkill(ISkill skill) {
         if (!enabledSkills.contains(skill)) {
@@ -215,7 +220,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     @Override
     public ISkill[] getParentSkills(ISkill skill) {
-        SkillNode node = findSkillNode(getRootNode(), skill);
+        SkillNode node = findSkillNode(getRootNode(skill.getType()), skill);
         if (node == null)
             return null;
         else
@@ -229,6 +234,11 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     public SkillNode getRootNode() {
         return VampirismMod.proxy.getSkillTree(player.isRemote()).getRootNodeForFaction(faction.getID());
     }
+
+    public SkillNode getRootNode(SkillType type) {
+        return VampirismMod.proxy.getSkillTree(player.isRemote()).getRootNodeForFaction(type.id(faction.getID()));
+    }
+
 
     /**
      * @return If an update should be send to the client

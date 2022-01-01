@@ -67,4 +67,9 @@ public interface IPlayableFaction<T extends IFactionPlayer> extends IFaction<T> 
      */
     <Z extends Item & IRefinementItem> Z getRefinementItem(IRefinementItem.AccessorySlotType type);
 
+    /**
+     * @return If the faction has lord skills
+     */
+    boolean hasLordSkills();
+
 }

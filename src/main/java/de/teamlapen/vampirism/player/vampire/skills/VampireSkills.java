@@ -60,7 +60,8 @@ public class VampireSkills {
 
     @SuppressWarnings({"deprecation", "Convert2MethodRef"})
     public static void registerVampireSkills(IForgeRegistry<ISkill> registry) {
-        registry.register(new VampirismSkill.SimpleVampireSkill(VReference.VAMPIRE_FACTION.getID(), false));
+        registry.register(new VampirismSkill.SimpleVampireSkill(SkillType.LEVEL.id(VReference.VAMPIRE_FACTION.getID()), false));
+        registry.register(new VampirismSkill.SimpleVampireSkill(SkillType.LORD.id(VReference.VAMPIRE_FACTION.getID()), false));
         registry.register(new VampirismSkill.SimpleVampireSkill("advanced_biter", false).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = true, player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = false).setHasDefaultDescription());
         registry.register(actionSkillDesc("bat", VampireActions.bat));
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_charge", true));

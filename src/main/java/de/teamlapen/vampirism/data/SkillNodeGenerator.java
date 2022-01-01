@@ -55,6 +55,9 @@ public class SkillNodeGenerator implements IDataProvider {
     protected void registerSkillNodes(Consumer<FinishedSkillNode> consumer) {
         //hunter
         {
+            ResourceLocation lord2 = SkillNodeBuilder.hunter(modId("hunter_lord"), HunterSkills.stake1).build(consumer, modId("lord_2"));
+
+
             ResourceLocation skill2 = SkillNodeBuilder.hunter(modId("hunter"), HunterSkills.stake1).build(consumer, modId("skill2"));
             ResourceLocation skill3 = SkillNodeBuilder.hunter(skill2, HunterSkills.weapon_table).build(consumer, modId("skill3"));
             ResourceLocation skill4 = SkillNodeBuilder.hunter(skill3, HunterSkills.hunter_disguise).build(consumer, modId("skill4"));
