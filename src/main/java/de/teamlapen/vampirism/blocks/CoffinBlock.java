@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.stats.Stats;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -114,22 +113,6 @@ public class CoffinBlock extends VampirismBlockContainer {
         return shape;
     }
 
-    @Override
-    public void neighborChanged(BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
-        Direction enumfacing = state.getValue(HORIZONTAL_FACING);
-
-        if (state.getValue(PART) == CoffinPart.HEAD) {
-            if (worldIn.getBlockState(pos.relative(enumfacing.getOpposite())).getBlock() != this) {
-                worldIn.removeBlock(pos, isMoving);
-            }
-        } else if (worldIn.getBlockState(pos.relative(enumfacing)).getBlock() != this) {
-            worldIn.removeBlock(pos, isMoving);
-
-            if (!worldIn.isClientSide()) {
-                Block.dropResources(state, worldIn, pos);
-            }
-        }
-    }
 
     @Override
     public boolean isBed(BlockState state, BlockGetter world, BlockPos pos, Entity player) {
@@ -143,18 +126,17 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, @Nonnull Player player) {
-        CoffinPart part = state.getValue(PART);
-        BlockPos blockpos = pos.relative(getDirectionToOther(part, state.getValue(HORIZONTAL_FACING)));
-        BlockState blockstate = worldIn.getBlockState(blockpos);
-        if (blockstate.getBlock() == this && blockstate.getValue(PART) != part) {
-            worldIn.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 35);
-            worldIn.levelEvent(player, 2001, blockpos, Block.getId(blockstate));
-            if (!worldIn.isClientSide && !player.isCreative()) {
-                ItemStack itemstack = player.getMainHandItem();
-                dropResources(state, worldIn, pos, null, player, itemstack);
-                dropResources(blockstate, worldIn, blockpos, null, player, itemstack);
+        //If in creative mode, also destroy the head block. Otherwise, it will be destroyed due to updateShape and an item will drop
+        if (!worldIn.isClientSide && player.isCreative()) {
+            CoffinPart part = state.getValue(PART);
+            if(part == CoffinPart.FOOT){
+                BlockPos blockpos = pos.relative(getDirectionToOther(part, state.getValue(HORIZONTAL_FACING)));
+                BlockState blockstate = worldIn.getBlockState(blockpos);
+                if (blockstate.getBlock() == this && blockstate.getValue(PART) == CoffinPart.HEAD) {
+                    worldIn.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 35);
+                    worldIn.levelEvent(player, 2001, blockpos, Block.getId(blockstate));
+                }
             }
-            player.awardStat(Stats.BLOCK_MINED.get(this));
         }
 
         super.playerWillDestroy(worldIn, pos, state, player);

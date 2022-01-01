@@ -259,7 +259,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.garlic_diffuser_normal);
             this.dropSelf(ModBlocks.garlic_diffuser_improved);
             this.dropSelf(ModBlocks.hunter_table);
-            this.add(ModBlocks.med_chair, block -> createSinglePropConditionTable(block, MedChairBlock.PART, MedChairBlock.EnumPart.TOP));
+            this.add(ModBlocks.med_chair, block ->       LootTable.lootTable().withPool(applyExplosionCondition(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(ModItems.item_med_chair).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(MedChairBlock.PART, MedChairBlock.EnumPart.TOP)))))));
             this.dropSelf(ModBlocks.sunscreen_beacon);
             this.add(ModBlocks.tent_main, createSingleItemTable(ModItems.item_tent)
                     .withPool(LootPool.lootPool().name("bonus").setRolls(ConstantValue.exactly(1)).when(TentSpawnerCondition.builder())

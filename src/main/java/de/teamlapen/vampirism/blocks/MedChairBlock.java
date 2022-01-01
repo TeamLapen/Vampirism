@@ -13,7 +13,6 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.stats.Stats;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -22,9 +21,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
@@ -67,30 +66,31 @@ public class MedChairBlock extends VampirismHorizontalBlock {
     }
 
     @Override
-    public void playerDestroy(@Nonnull Level worldIn, @Nonnull Player player, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable BlockEntity te, @Nonnull ItemStack stack) {
-        super.playerDestroy(worldIn, player, pos, Blocks.AIR.defaultBlockState(), te, stack);
+    public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
+        if (pDirection == getDirectionToOther(pState.getValue(PART), pState.getValue(FACING))) {
+            return pNeighborState.is(this) && pNeighborState.getValue(PART) != pState.getValue(PART) ? pState : Blocks.AIR.defaultBlockState();
+        } else {
+            return super.updateShape(pState, pDirection, pNeighborState, pLevel, pCurrentPos, pNeighborPos);
+        }
+    }
+
+    private static Direction getDirectionToOther(EnumPart type, Direction facing) {
+        return type == EnumPart.TOP ? facing : facing.getOpposite();
     }
 
     @Override
     public void playerWillDestroy(@Nonnull Level worldIn, @Nonnull BlockPos pos, BlockState state, @Nonnull Player player) {
-        EnumPart part = state.getValue(PART);
-        BlockPos other;
-        Direction dir = state.getValue(FACING);
-        if (state.getValue(PART) == EnumPart.TOP) {
-            other = pos.relative(dir);
-        } else {
-            other = pos.relative(dir.getOpposite());
-        }
-        BlockState otherState = worldIn.getBlockState(other);
-        if (otherState.getBlock() == this && otherState.getValue(PART) != part) {
-            worldIn.setBlock(other, Blocks.AIR.defaultBlockState(), 35);
-            worldIn.levelEvent(player, 2001, other, Block.getId(otherState));
-            if (!worldIn.isClientSide && !player.isCreative()) {
-                ItemStack itemstack = player.getMainHandItem();
-                dropResources(state, worldIn, pos, null, player, itemstack);
-                dropResources(otherState, worldIn, other, null, player, itemstack);
+        //If in creative mode, also destroy the top block. Otherwise, it will be destroyed due to updateShape and an item will drop
+        if (!worldIn.isClientSide && player.isCreative()) {
+            EnumPart part = state.getValue(PART);
+            if(part == EnumPart.BOTTOM){
+                BlockPos other = pos.relative(getDirectionToOther(state.getValue(PART), state.getValue(FACING)));
+                BlockState otherState = worldIn.getBlockState(other);
+                if (otherState.getBlock() == this && otherState.getValue(PART) == EnumPart.TOP) {
+                    worldIn.setBlock(other, Blocks.AIR.defaultBlockState(), 35);
+                    worldIn.levelEvent(player, 2001, other, Block.getId(otherState));
+                }
             }
-            player.awardStat(Stats.BLOCK_MINED.get(this));
         }
         super.playerWillDestroy(worldIn, pos, state, player);
     }
