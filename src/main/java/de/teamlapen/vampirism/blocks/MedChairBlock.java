@@ -13,7 +13,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.state.EnumProperty;
@@ -21,7 +23,6 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -31,6 +32,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 /**
  * Block which represents the top and the bottom part of a "Medical Chair" used for injections
@@ -44,16 +47,26 @@ public class MedChairBlock extends VampirismHorizontalBlock {
 
     public MedChairBlock() {
         super(name, Properties.of(Material.METAL).strength(1).noOcclusion());
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, EnumPart.TOP));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, EnumPart.BOTTOM));
         SHAPE_TOP = box(2, 6, 0, 14, 16, 16);
         SHAPE_BOTTOM = box(1, 1, 0, 15, 10, 16);
     }
 
-
-    @Nonnull
     @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        return new ItemStack(ModItems.item_med_chair);
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
+        super.setPlacedBy(worldIn, pos, state, entity, itemStack);
+        if (!worldIn.isClientSide) {
+            BlockPos blockpos = pos.relative(state.getValue(HORIZONTAL_FACING).getOpposite());
+            worldIn.setBlock(blockpos, state.setValue(PART, EnumPart.TOP).setValue(FACING, state.getValue(HORIZONTAL_FACING)), 3);
+            worldIn.blockUpdated(pos, Blocks.AIR);
+            state.updateNeighbourShapes(worldIn, pos, 3);
+        }
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Nonnull

@@ -144,6 +144,7 @@ public class ModBlocks {
         registry.register(itemBlock(tombstone2));
         registry.register(itemBlock(tombstone3));
         registry.register(itemBlock(grave_cage));
+        registry.register(itemBlock(med_chair));
     }
 
     static void registerBlocks(IForgeRegistry<Block> registry) {
