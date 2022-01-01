@@ -28,7 +28,7 @@ public class SkillNodeScreen extends AbstractGui {
     private static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills/widgets.png");
     private static final int[] TEST_SPLIT_OFFSETS = new int[]{0, 10, -10, 25, -25};
     private final Minecraft minecraft;
-    private final SkillTabScreen tab;
+    private final SkillsTabScreen tab;
     private final SkillsScreen screen;
     private final SkillNode skillNode;
     private final SkillHandler<?> skillHandler;
@@ -41,11 +41,11 @@ public class SkillNodeScreen extends AbstractGui {
     private final List<IReorderingProcessor>[] descriptions;
     private final int[] width;
 
-    public SkillNodeScreen(Minecraft minecraft, SkillsScreen screen, SkillTabScreen tab, SkillNode skillNode, SkillHandler<?> skillHandler) {
+    public SkillNodeScreen(Minecraft minecraft, SkillsScreen screen, SkillsTabScreen tab, SkillNode skillNode, SkillHandler<?> skillHandler) {
         this(minecraft, screen, tab, skillNode, skillHandler, null, 0, 0);
     }
 
-    public SkillNodeScreen(Minecraft minecraft, SkillsScreen screen, SkillTabScreen tab, SkillNode skillNode, SkillHandler<?> skillHandler, @Nullable SkillNodeScreen parent, int x, int y) {
+    public SkillNodeScreen(Minecraft minecraft, SkillsScreen screen, SkillsTabScreen tab, SkillNode skillNode, SkillHandler<?> skillHandler, @Nullable SkillNodeScreen parent, int x, int y) {
         this.minecraft = minecraft;
         this.tab = tab;
         this.screen = screen;
@@ -61,13 +61,13 @@ public class SkillNodeScreen extends AbstractGui {
             int pos = x;
             childrenCount -= 1;
             if (childrenCount > 0) {
-                pos -= w / 2;
+                pos -= w / 2 - 13;
             }
 
             for (int i = 0; i < skillNode.getChildren().size(); i++) {
                 SkillNode current = skillNode.getChildren().get(i);
                 this.children.add(new SkillNodeScreen(minecraft, screen, tab, current, skillHandler, this, pos, y + 60));
-                pos += SkillTree.getTreeWidth(current) / 2 + 60;
+                pos += SkillTree.getTreeWidth(current) / 2 + 30;
                 if (skillNode.getChildren().size() >= i + 2) {
                     SkillNode next = skillNode.getChildren().get(i + 1);
                     pos += SkillTree.getTreeWidth(next) / 2;
@@ -114,15 +114,20 @@ public class SkillNodeScreen extends AbstractGui {
     }
 
     public void draw(MatrixStack stack, int i, int j) {
+        SkillNodeState state = getState();
+        if (state == SkillNodeState.HIDDEN) return;
         int width = 26 * this.skillNode.getElements().length + (this.skillNode.getElements().length - 1) * 10;
         this.minecraft.getTextureManager().bind(WIDGETS_LOCATION);
 
         int x = getNodeStart();
+        //draw skill background
         if (this.skillNode.getElements().length > 1) {
             GuiUtils.drawContinuousTexturedBox(stack, i + x, j + this.y, 200, 0, width, 26, 26, 26, 3, this.getBlitOffset());
         }
+
+        //draw skills
         for (int i1 = 0; i1 < this.skillNode.getElements().length; i1++) {
-            if (getState() == SkillNodeState.LOCKED || !skillHandler.isSkillEnabled(this.skillNode.getElements()[i1])) {
+            if (state == SkillNodeState.LOCKED || !skillHandler.isSkillEnabled(this.skillNode.getElements()[i1])) {
                 RenderSystem.color4f(0.5f, 0.5f, 0.5f, 1);
             } else {
                 RenderSystem.color4f(1, 1, 1, 1);
@@ -130,7 +135,7 @@ public class SkillNodeScreen extends AbstractGui {
             this.minecraft.getTextureManager().bind(WIDGETS_LOCATION);
             this.blit(stack, i + x, j + this.y,  skillNode.isRoot() ?226:200, 0, 26, 26);
 
-            this.minecraft.textureManager.bind(getIconLoc(this.skillNode.getElements()[i1]));
+            this.minecraft.textureManager.bind(getSkillIconLocation(this.skillNode.getElements()[i1]));
             RenderSystem.color4f(1, 1, 1, 1);
             RenderSystem.disableLighting();
             RenderSystem.enableBlend();
@@ -145,23 +150,12 @@ public class SkillNodeScreen extends AbstractGui {
         }
     }
 
-    public void drawConnectivity(MatrixStack stack, int startX, int startY, boolean b) {
+    public void drawConnectivity(MatrixStack stack, int startX, int startY, boolean outerLine) {
+        SkillNodeState state = getState();
+        if (state == SkillNodeState.HIDDEN) return;
         if (this.parent != null) {
-            int color;
-            switch (getState()) {
-                case AVAILABLE:
-                    color = b ? -1 : 0xffa7a7a7;
-                    break;
-                case LOCKED:
-                    color = b ? 0xff6a0000 : 0xffcf0000;
-                    break;
-                case UNLOCKED:
-                    color = b ? 0xff005304 : 0xff008711;
-                    break;
-                default:
-                    color = b ? 0xff3f3f3f : 0xff222222;
-                    break;
-            }
+            int color = state.pathColor(outerLine);
+
             int i = startX + x + 13;
             int i1 = startX + this.parent.x + 13;
             int j = startY + this.y - 30;
@@ -171,7 +165,7 @@ public class SkillNodeScreen extends AbstractGui {
             int i2 = startX + x + 13;
             int j5 = startY + this.y;
             int i3 = startX + this.parent.x + 13;
-            if (b) {
+            if (outerLine) {
                 this.hLine(stack, i, i1, j - 1, color);
                 this.hLine(stack, i, i1, j + 1, color);
                 this.vLine(stack, i1 - 1, j2, j3, color);
@@ -186,11 +180,90 @@ public class SkillNodeScreen extends AbstractGui {
         }
 
         for (SkillNodeScreen child : this.children) {
-            child.drawConnectivity(stack, startX, startY, b);
+            child.drawConnectivity(stack, startX, startY, outerLine);
         }
     }
 
-    private ResourceLocation getIconLoc(ISkill skill) {
+    public void drawHover(MatrixStack stack, double mouseX, double mouseY, float fade, int scrollX, int scrollY) {
+        SkillNodeState state = getState();
+        if (state == SkillNodeState.HIDDEN) return;
+        this.minecraft.getTextureManager().bind(WIDGETS_LOCATION);
+        ISkill[] elements = this.skillNode.getElements();
+
+        //check if a node is hovered
+        int hoveredSkill = -1;
+        for (int i = 0; i < elements.length; i++) {
+            if (this.isMouseOverSkill(i, mouseX, mouseY, scrollX, scrollY)) {
+                hoveredSkill = i;
+                break;
+            }
+        }
+
+        if (hoveredSkill != -1) {
+            int x = getNodeStart() + (26 + 10) * hoveredSkill;
+
+            //draw description
+            if (elements[hoveredSkill].getDescription() != null) {
+                List<IReorderingProcessor> description = getSkillDescription(hoveredSkill);
+                GuiUtils.drawContinuousTexturedBox(stack, scrollX + x - 5, scrollY + this.y + 3, 0, 81, this.width[hoveredSkill], 26 + description.size() * 9, 200, 20, 3, this.getBlitOffset());
+                for (int i = 0; i < description.size(); i++) {
+                    this.minecraft.font.draw(stack, description.get(i), scrollX + x + 2, scrollY + this.y + 3 + 24 + i * 9, -1);
+                }
+            }
+
+            //draw title
+            this.minecraft.getTextureManager().bind(WIDGETS_LOCATION);
+            int wid = this.width[hoveredSkill] / 2;
+            int titleTextureY = state.titleTextureY;
+            if (state == SkillNodeState.UNLOCKED && !this.skillHandler.isSkillEnabled(elements[hoveredSkill])) {
+                titleTextureY = SkillNodeState.LOCKED.titleTextureY;
+            }
+            blit(stack, scrollX + x - 5, scrollY + this.y + 3, 0, titleTextureY, wid, 22);
+            blit(stack, scrollX + x - 5 + wid, scrollY + this.y + 3, 200 - wid, titleTextureY, wid, 22);
+            this.minecraft.font.drawShadow(stack, this.titles[hoveredSkill], scrollX + x + 40, scrollY + this.y + 9, -1);
+
+            //draw skill
+            RenderSystem.color4f(1f, 1f, 1f, 1);
+            this.minecraft.getTextureManager().bind(WIDGETS_LOCATION);
+            this.blit(stack, scrollX + x, scrollY + this.y, skillNode.isRoot() ?226:200, 0, 26, 26);
+            this.minecraft.textureManager.bind(getSkillIconLocation(elements[hoveredSkill]));
+            RenderSystem.color4f(1, 1, 1, 1);
+            RenderSystem.disableLighting();
+            RenderSystem.enableBlend();
+            UtilLib.drawTexturedModalRect(stack.last().pose(), this.getBlitOffset(), x + scrollX + 5, this.y + scrollY + 5, 0, 0, 16, 16, 16, 16);
+            RenderSystem.disableLighting();
+        }
+    }
+
+    /**
+     * Adds additional elements to the skill description
+     *
+     * @param skill index of the skill
+     * @return skill description
+     */
+    private List<IReorderingProcessor> getSkillDescription(int skill) {
+        List<IReorderingProcessor> description = this.descriptions[skill];
+        ISkillHandler.Result result = skillHandler.canSkillBeEnabled(this.skillNode.getElements()[skill]);
+
+        List<ISkill> lockingSkills = null;
+        TextFormatting lockingColor = TextFormatting.BLACK;
+        if (this.skillNode.getLockingNodes().length != 0) {
+            lockingSkills = skillHandler.getLockingSkills(this.skillNode);
+            lockingColor = result == ISkillHandler.Result.ALREADY_ENABLED ? TextFormatting.DARK_GRAY : lockingSkills.stream().anyMatch(skillHandler::isSkillEnabled) ? TextFormatting.DARK_RED : TextFormatting.YELLOW;
+        }
+        if (lockingSkills != null) {
+            int l = 29 + 27;
+            int size = Math.max(l + minecraft.font.width(titles[skill]), 120) - 20;
+            description = new ArrayList<>(description);
+            description.addAll(LanguageMap.getInstance().getVisualOrder(this.findOptimalLines(new TranslationTextComponent("text.vampirism.skill.excluding").withStyle(lockingColor), size)));
+            for (ISkill lockingSkill : lockingSkills) {
+                description.addAll(LanguageMap.getInstance().getVisualOrder(this.findOptimalLines(new StringTextComponent("  ").append(lockingSkill.getName().copy().withStyle(lockingColor)), size)));
+            }
+        }
+        return description;
+    }
+
+    private ResourceLocation getSkillIconLocation(ISkill skill) {
         if (skill instanceof ActionSkill) {
             return new ResourceLocation(((ActionSkill<?>) skill).getActionID().getNamespace(), "textures/actions/" + ((ActionSkill<?>) skill).getActionID().getPath() + ".png");
         } else {
@@ -200,12 +273,12 @@ public class SkillNodeScreen extends AbstractGui {
 
     public boolean isMouseOver(double mouseX, double mouseY, int scrollX, int scrollY) {
         double width = 26 * this.skillNode.getElements().length + (this.skillNode.getElements().length - 1) * 10;
-        return mouseX >= (this.x + scrollX - (width / 2) + 13) && mouseX < (this.x + scrollX + 13 + (width / 2) - 1) && mouseY > (scrollY + this.y) && mouseY < (scrollY + this.y + 26);
+        return mouseX >= this.x + scrollX - width / 2 + 13 && mouseX < this.x + scrollX + 13 + width / 2 - 1 && mouseY > scrollY + this.y && mouseY < scrollY + this.y + 26;
     }
 
     public boolean isMouseOverSkill(int index, double mouseX, double mouseY, int guiLeft, int guiTop) {
         int x = getNodeStart() + (26 + 10) * index;
-        return mouseX > (x + guiLeft) && mouseX < (x + guiLeft + 26) && mouseY > (guiTop + this.y) && mouseY < (guiTop + this.y + 26);
+        return mouseX > x + guiLeft && mouseX < x + guiLeft + 26 && mouseY > guiTop + this.y && mouseY < guiTop + this.y + 26;
     }
 
     @Nullable
@@ -219,75 +292,11 @@ public class SkillNodeScreen extends AbstractGui {
         return null;
     }
 
-    public void drawHover(MatrixStack stack, double mouseX, double mouseY, float fade, int scrollX, int scrollY) {
-        this.minecraft.getTextureManager().bind(WIDGETS_LOCATION);
-        int x = getNodeStart();
-
-        int selected = -1;
-        for (int i = 0; i < this.skillNode.getElements().length; i++) {
-            if (mouseX > (x + scrollX) && mouseX < (x + scrollX + 26) && mouseY > (this.y + scrollY) && mouseY < (this.y + scrollY + 26)) {
-                selected = i;
-                break;
-            }
-            x += 26 + 10;
-        }
-
-        if (selected != -1) {
-
-            if (this.skillNode.getElements()[selected].getDescription() != null) {
-
-                List<IReorderingProcessor> description = this.descriptions[selected];
-                ISkillHandler.Result result = skillHandler.canSkillBeEnabled(this.skillNode.getElements()[selected]);
-
-                List<ISkill> lockingSkills = null;
-                TextFormatting lockingColor = TextFormatting.BLACK;
-                if (this.skillNode.getLockingNodes().length != 0) {
-                    lockingSkills = skillHandler.getLockingSkills(this.skillNode);
-                    lockingColor = result == ISkillHandler.Result.ALREADY_ENABLED ? TextFormatting.DARK_GRAY : lockingSkills.stream().anyMatch(skillHandler::isSkillEnabled) ? TextFormatting.DARK_RED : TextFormatting.YELLOW;
-                }
-                if (lockingSkills != null) {
-                    int l = 29 + 27;
-                    int size = Math.max(l + minecraft.font.width(titles[selected]), 120) - 20;
-                    description = new ArrayList<>(description);
-                    description.addAll(LanguageMap.getInstance().getVisualOrder(this.findOptimalLines(new TranslationTextComponent("text.vampirism.skill.excluding").withStyle(lockingColor), size)));
-                    for (ISkill lockingSkill : lockingSkills) {
-                        description.addAll(LanguageMap.getInstance().getVisualOrder(this.findOptimalLines(new StringTextComponent("  ").append(lockingSkill.getName().copy().withStyle(lockingColor)), size)));
-                    }
-                }
-
-                GuiUtils.drawContinuousTexturedBox(stack, scrollX + x - 5, scrollY + this.y + 3, 0, 81, this.width[selected], 26 + description.size() * 9, 200, 20, 3, this.getBlitOffset());
-                for (int i = 0; i < description.size(); i++) {
-                    this.minecraft.font.draw(stack, description.get(i), scrollX + x + 2, scrollY + this.y + 3 + 24 + i * 9, -1);
-                }
-            }
-
-            this.minecraft.getTextureManager().bind(WIDGETS_LOCATION);
-            int wid = this.width[selected] / 2;
-            SkillNodeState state = getState();
-            blit(stack, scrollX + x - 5, scrollY + this.y + 3, 0, state.textureY, wid, 22);
-            blit(stack, scrollX + x - 5 + wid, scrollY + this.y + 3, 200 - wid, state.textureY, wid, 22);
-
-            this.minecraft.font.drawShadow(stack, this.titles[selected], scrollX + x + 40, scrollY + this.y + 9, -1);
-        }
-        x = getNodeStart();
-        for (int i1 = 0; i1 < this.skillNode.getElements().length; i1++) {
-            if (selected == i1) {
-                RenderSystem.color4f(1f, 1f, 1f, 1);
-                this.minecraft.getTextureManager().bind(WIDGETS_LOCATION);
-                this.blit(stack, scrollX + x, scrollY + this.y, skillNode.isRoot() ?226:200, 0, 26, 26);
-
-                this.minecraft.textureManager.bind(getIconLoc(this.skillNode.getElements()[i1]));
-                RenderSystem.color4f(1, 1, 1, 1);
-                RenderSystem.disableLighting();
-                RenderSystem.enableBlend();
-                UtilLib.drawTexturedModalRect(stack.last().pose(), this.getBlitOffset(), x + scrollX + 5, this.y + scrollY + 5, 0, 0, 16, 16, 16, 16);
-                RenderSystem.disableLighting();
-            }
-            x += 26 + 10;
-        }
-
-    }
-
+    /**
+     * calculates the x position of the first skill
+     *
+     * @return x pos of first skill
+     */
     private int getNodeStart() {
         int x = this.x;
         if (this.skillNode.getElements().length > 1) {
@@ -304,6 +313,9 @@ public class SkillNodeScreen extends AbstractGui {
         return x;
     }
 
+    /**
+     * from net.minecraft.client.gui.advancements.AdvancementEntryGui#findOptimalLines(ITextComponent, int)
+     */
     private List<ITextProperties> findOptimalLines(ITextComponent p_238694_1_, int p_238694_2_) {
         CharacterManager charactermanager = this.minecraft.font.getSplitter();
         List<ITextProperties> list = Collections.emptyList();
@@ -326,12 +338,54 @@ public class SkillNodeScreen extends AbstractGui {
     }
 
     enum SkillNodeState {
-        LOCKED(55), AVAILABLE(3), UNLOCKED(29), VISIBLE(3), HIDDEN(0);
+        /**
+         * Rendered and unlockable
+         */
+        AVAILABLE(3, 0xffa7a7a7, -1),
+        /**
+         * Not rendered
+         */
+        HIDDEN(0, 0, 0),
+        /**
+         * Rendered but not able to unlock (blocked)
+         */
+        LOCKED(55, 0xffcf0000, 0xff6a0000),
+        /**
+         * Rendered and unlocked
+         */
+        UNLOCKED(29, 0xff008711, 0xff005304),
+        /**
+         * Rendered but not unlockable
+         */
+        VISIBLE(3, 0xff222222, 0xff3f3f3f);
 
-        public final int textureY;
+        /**
+         * texture y offset for the tooltip title back rendering
+         */
+        public final int titleTextureY;
+        /**
+         * connectivity inner color
+         */
+        public final int innerColor;
+        /**
+         * connectivity outer color
+         */
+        public final int outerColor;
 
-        SkillNodeState(int textureY) {
-            this.textureY = textureY;
+        SkillNodeState(int titleTextureY, int innerColor, int outerColor) {
+            this.titleTextureY = titleTextureY;
+            this.outerColor = outerColor;
+            this.innerColor = innerColor;
+        }
+
+        /**
+         * Get connectivity color
+         *
+         * @param outer inner or outer color
+         * @return hex color as integer
+         */
+        int pathColor(boolean outer) {
+            return outer ? this.outerColor : this.innerColor;
         }
     }
 }

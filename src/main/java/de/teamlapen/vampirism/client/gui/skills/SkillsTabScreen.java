@@ -36,7 +36,7 @@ import java.util.Map;
 
 @NonnullDefault
 @ParametersAreNonnullByDefault
-public class SkillTabScreen extends AbstractGui {
+public class SkillsTabScreen extends AbstractGui {
 
     public static final int SCREEN_WIDTH = SkillsScreen.SCREEN_WIDTH - 18;
     public static final int SCREEN_HEIGHT = SkillsScreen.SCREEN_HEIGHT - 47;
@@ -48,6 +48,7 @@ public class SkillTabScreen extends AbstractGui {
     private final AdvancementTabType position;
     private final SkillNodeScreen root;
     private final int treeWidth;
+    private final int treeHeight;
     private final ResourceLocation background;
     private boolean centered;
     private double scrollX;
@@ -61,7 +62,7 @@ public class SkillTabScreen extends AbstractGui {
     private float fade;
 
 
-    public SkillTabScreen(Minecraft minecraft, SkillsScreen screen, int index, ItemStack icon, SkillNode rootNode, ISkillHandler<?> skillHandler) {
+    public SkillsTabScreen(Minecraft minecraft, SkillsScreen screen, int index, ItemStack icon, SkillNode rootNode, ISkillHandler<?> skillHandler) {
         this.minecraft = minecraft;
         this.screen = screen;
         this.skillHandler = skillHandler;
@@ -70,6 +71,7 @@ public class SkillTabScreen extends AbstractGui {
         this.position = AdvancementTabType.LEFT;
         this.root = new SkillNodeScreen(minecraft, screen, this, rootNode, ((SkillHandler<?>) skillHandler));
         this.treeWidth = SkillTree.getTreeWidth(rootNode);
+        this.treeHeight = SkillTree.getTreeHeight(rootNode);
         this.background = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills/backgrounds/level.png");
         addNode(this.root);
 
@@ -80,9 +82,10 @@ public class SkillTabScreen extends AbstractGui {
 
     private void recalculateBorders() {
         this.maxY = 20;
-        this.minY = -SkillTree.getTreeHeight(this.root.getSkillNode());
-        this.minX = -(SkillsScreen.SCREEN_WIDTH - 18) / 2;
-        this.maxX = (SkillsScreen.SCREEN_WIDTH - 18) / 2 + treeWidth / 2;//treeWidth - (SkillsScreen.SCREEN_WIDTH - 18)/2 - 26;
+        this.minY = (int) (-this.treeHeight * this.zoom);
+
+        this.minX = (int) ((int) (-this.treeWidth + (treeWidth/2 ))*this.zoom);
+        this.maxX = (int) ((int) (this.treeWidth  + (treeWidth/2))*this.zoom);
 
         this.centered = false;
     }
@@ -137,7 +140,7 @@ public class SkillTabScreen extends AbstractGui {
         stack.scale(this.zoom, this.zoom, 1);
 
         for (int i1 = -1; i1 <= 15 / this.zoom; ++i1) {
-            for (int j1 = -1; j1 <= 11 / this.zoom; ++j1) {
+            for (int j1 = -1; j1 <= 12 / this.zoom; ++j1) {
                 blit(stack, k + 16 * i1, l + 16 * j1, 0.0F, 0.0F, 16, 16, 16, 16);
             }
         }
@@ -226,10 +229,18 @@ public class SkillTabScreen extends AbstractGui {
     }
 
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        this.zoom = (float) MathHelper.clamp(this.zoom + (amount / 50), 0.2, 1);
-        if (this.zoom * this.treeWidth < (SCREEN_WIDTH - 20)) {
-            this.zoom = (float) (SCREEN_WIDTH - 20) / this.treeWidth;
+        double scrollXP = this.scrollX * this.zoom;
+        double scrollYP = this.scrollY * this.zoom;
+        this.zoom = (float) MathHelper.clamp(this.zoom + (amount / 25), 0, 1);
+        if (this.zoom * (this.treeHeight) < (SCREEN_HEIGHT)) {
+            this.zoom = Math.max(this.zoom, (float) (SCREEN_HEIGHT) / (this.treeHeight));
         }
+        if (this.zoom * this.treeWidth < (SCREEN_WIDTH - 20)) {
+            this.zoom = Math.max(this.zoom, (float) (SCREEN_WIDTH - 20) / this.treeWidth);
+        }
+
+        this.scrollX = scrollXP / this.zoom;
+        this.scrollY = scrollYP / this.zoom;
 
         recalculateBorders();
         return true;
@@ -242,8 +253,8 @@ public class SkillTabScreen extends AbstractGui {
         IReorderingProcessor s = LanguageMap.getInstance().getVisualOrder(f);
 
         int tooltipTextWidth = 219;
-        int tooltipX = 7;//(this.width - this.display_width) / 2 + 19 + 3;
-        int tooltipY = 19;//(this.height - this.display_height) / 2 + 4 + 19;
+        int tooltipX = 7;
+        int tooltipY = 17;
         int tooltipHeight = this.minecraft.font.lineHeight * 2;
         int backgroundColor = 0xF09b0404;//0xF0550404;;
         int borderColorStart = 0x505f0c0c;

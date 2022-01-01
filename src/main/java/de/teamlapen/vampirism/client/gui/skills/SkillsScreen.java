@@ -33,24 +33,30 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Gui screen which displays the skills available to the players and allows him to unlock some.
+ * Inspired by Minecraft's new AchievementScreen but vertical
+ * <p>
+ * relevant classes {@link SkillsScreen} {@link SkillsTabScreen} {@link SkillNodeScreen}
+ */
 @NonnullDefault
 @ParametersAreNonnullByDefault
 public class SkillsScreen extends Screen {
     public static final int SCREEN_WIDTH = 252;
     public static final int SCREEN_HEIGHT = 219;
     private static final ResourceLocation WINDOW_LOCATION = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills/window.png");
+    private static final ResourceLocation TABS_LOCATION = new ResourceLocation("textures/gui/advancements/tabs.png");
     private static final ITextComponent VERY_SAD_LABEL = new TranslationTextComponent("advancements.sad_label");
     private static final ITextComponent NO_TABS_LABEL = new TranslationTextComponent("gui.vampirism.skill_screen.no_tab");
     private static final ITextComponent TITLE = new TranslationTextComponent("gui.vampirism.vampirism_menu.skill_screen");
-    private static final ResourceLocation TABS_LOCATION = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills/tabs.png");
 
     @Nullable
     private final IFactionPlayer<?> factionPlayer;
-    private final List<SkillTabScreen> tabs = new ArrayList<>();
+    private final List<SkillsTabScreen> tabs = new ArrayList<>();
     @Nullable
     private final Screen backScreen;
     @Nullable
-    private SkillTabScreen selectedTab;
+    private SkillsTabScreen selectedTab;
     @Nullable
     private Button resetSkills;
 
@@ -72,7 +78,7 @@ public class SkillsScreen extends Screen {
 
         if (this.factionPlayer != null) {
             SkillNode rootNode = SkillTreeManager.getInstance().getSkillTree().getRootNodeForFaction(this.factionPlayer.getFaction().getID());
-            this.tabs.add(new SkillTabScreen(this.minecraft, this, 0, new ItemStack(ModItems.vampire_book), rootNode, this.factionPlayer.getSkillHandler()));
+            this.tabs.add(new SkillsTabScreen(this.minecraft, this, 0, new ItemStack(ModItems.vampire_book), rootNode, this.factionPlayer.getSkillHandler()));
         }
 
         if (this.tabs.size() > 0) {
@@ -124,7 +130,7 @@ public class SkillsScreen extends Screen {
     }
 
     public void renderInside(MatrixStack stack, int mouseX, int mouseY, int x, int y) {
-        if (selectedTab != null) {
+        if (this.selectedTab != null) {
             stack.pushPose();
             stack.translate((float) (x + 9), (float) (y + 18), 0.0F);
             this.selectedTab.drawContents(stack);
@@ -150,14 +156,14 @@ public class SkillsScreen extends Screen {
         if (this.tabs.size() > 1) {
             this.minecraft.getTextureManager().bind(TABS_LOCATION);
 
-            for (SkillTabScreen skillTab : this.tabs) {
+            for (SkillsTabScreen skillTab : this.tabs) {
                 skillTab.drawTab(stack, x, y, skillTab == this.selectedTab);
             }
 
             RenderSystem.enableRescaleNormal();
             RenderSystem.defaultBlendFunc();
 
-            for (SkillTabScreen skillTab : this.tabs) {
+            for (SkillsTabScreen skillTab : this.tabs) {
                 skillTab.drawIcon(x, y, this.itemRenderer);
             }
 
@@ -183,7 +189,7 @@ public class SkillsScreen extends Screen {
         }
 
         if (this.tabs.size() > 1) {
-            for (SkillTabScreen tabScreen : this.tabs) {
+            for (SkillsTabScreen tabScreen : this.tabs) {
                 if (tabScreen == selectedTab && tabScreen.isMouseOver(guiLeft, guiTop, mouseX, mouseY)) {
                     this.renderTooltip(stack, tabScreen.getTitle(), mouseX, mouseY);
                 }
@@ -198,7 +204,7 @@ public class SkillsScreen extends Screen {
         }
         if (button == 0) {
             clicked = true;
-            for (SkillTabScreen tab : this.tabs) {
+            for (SkillsTabScreen tab : this.tabs) {
                 if (tab != this.selectedTab && tab.isMouseOver(this.guiLeft, this.guiTop, mouseX, mouseY)) {
                     this.selectedTab = tab;
                     break;

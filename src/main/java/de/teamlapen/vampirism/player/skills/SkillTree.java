@@ -58,6 +58,10 @@ public class SkillTree {
         return rootNodes.get(id);
     }
 
+    /**
+     * @deprecated use {@link #getTreeWidth(SkillNode)}
+     */
+    @Deprecated //TODO BREAKING remove
     public int getTreeWidth(ResourceLocation id) {
         return getTreeWidth(getRootNodeForFaction(id));
     }
@@ -65,7 +69,7 @@ public class SkillTree {
     public static int getTreeWidth(SkillNode node) {
         int max = node.getElements().length * 26 + ((node.getElements().length-1) * 10);
 
-        int children = node.getChildren().size() > 0 ?(node.getChildren().size()-1) * 60:0;
+        int children = node.getChildren().size() > 0 ?(node.getChildren().size()-1) * 30:0;
         for (SkillNode child : node.getChildren()) {
             children += getTreeWidth(child);
         }
@@ -76,9 +80,9 @@ public class SkillTree {
     public static int getTreeHeight(SkillNode node) {
         int max = 26;
         for (SkillNode child : node.getChildren()) {
-            max = Math.max(max, getTreeHeight(child));
+            max = Math.max(max, getTreeHeight(child) + 60);
         }
-        return max + 40;
+        return max;
     }
 
     /**
