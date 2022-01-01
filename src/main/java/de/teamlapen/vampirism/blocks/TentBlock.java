@@ -5,9 +5,8 @@ import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.network.PlayEventPacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -38,9 +37,9 @@ import net.minecraft.world.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
+import static net.minecraft.state.properties.BlockStateProperties.OCCUPIED;
 
 /**
  * Part of a 2x2 block tent
@@ -48,6 +47,12 @@ import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FAC
  */
 public class TentBlock extends VampirismBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    /**
+     * Arrangement
+     *   23
+     *   10
+     *
+     */
     public static final IntegerProperty POSITION = IntegerProperty.create("position", 0, 3);
     private static final String name = "tent";
     private static final Table<Direction, Integer, VoxelShape> shapes;
@@ -246,38 +251,50 @@ public class TentBlock extends VampirismBlock {
         return shapes.get(blockState.getValue(FACING), blockState.getValue(POSITION));
     }
 
+
+    @Nonnull
     @Override
-    public void onBlockExploded(BlockState state, World world, BlockPos pos, Explosion explosion) {
-        forWholeTent(pos, state, (di, pos1) -> {
-            if (world.getBlockState(pos1).getBlock() instanceof TentBlock) {
-                world.setBlock(pos1, Blocks.AIR.defaultBlockState(), 3);
-                getBlock().wasExploded(world, pos1, explosion);
-            }
-        });
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        Direction thisFacing = stateIn.getValue(FACING);
+        int thisPos = stateIn.getValue(POSITION);
+        if(facing == thisFacing.getClockWise() || (thisPos == 0 || thisPos == 2) && facing == thisFacing.getOpposite() || (thisPos == 1 || thisPos == 3) && facing == thisFacing){
+            return facingState.getBlock() instanceof TentBlock ? stateIn.setValue(OCCUPIED, facingState.getValue(OCCUPIED)) : Blocks.AIR.defaultBlockState();
+        }
+        return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+
     }
 
+
     @Override
-    public void playerWillDestroy(World world, @Nonnull BlockPos blockPos, BlockState blockState, @Nonnull PlayerEntity playerEntity) {
-        forWholeTent(blockPos, blockState, (direction, blockPos1) -> {
-            world.destroyBlock(blockPos1, true);
-            if (!world.isClientSide) {
-                VampirismMod.dispatcher.sendToAllAround(new PlayEventPacket(1, blockPos1, Block.getId(world.getBlockState(blockPos1))), world.dimension(), blockPos1.getX(), blockPos1.getY(), blockPos1.getZ(), 64);
-                if (!playerEntity.isCreative()) {
-                    dropResources(world.getBlockState(blockPos1), world, blockPos1, null, playerEntity, playerEntity.getMainHandItem());
+    public void playerWillDestroy(World worldIn, @Nonnull BlockPos pos, BlockState state, @Nonnull PlayerEntity player) {
+        //If in creative mode, also destroy the main block. Otherwise, it will be destroyed due to updateShape and an item will drop
+        if (!worldIn.isClientSide && player.isCreative()) {
+            Direction thisFacing = state.getValue(FACING);
+            int thisPos = state.getValue(POSITION);
+            if(thisPos != 0){
+                BlockPos main = null;
+                switch (thisPos){
+                    case 1:
+                        main = pos.relative(thisFacing.getClockWise());
+                        break;
+                    case 2:
+                        main = pos.relative(thisFacing.getOpposite()).relative(thisFacing.getClockWise());
+                        break;
+                    case 3:
+                        main = pos.relative(thisFacing);
+                        break;
+                }
+                if(main!=null){
+                    BlockState blockstate = worldIn.getBlockState(main);
+                    if (blockstate.getBlock() == ModBlocks.tent_main) {
+                        worldIn.setBlock(main, Blocks.AIR.defaultBlockState(), 35);
+                        worldIn.levelEvent(player, 2001, main, Block.getId(blockstate));
+                    }
                 }
             }
-        });
+        }
     }
 
-    @Override
-    public void setBedOccupied(BlockState state, World world, BlockPos pos, LivingEntity sleeper, boolean occupied) {
-        forWholeTent(pos, state, ((direction, blockPos) -> {
-            BlockState blockState = world.getBlockState(blockPos);
-            if (blockState.getBlock() instanceof TentBlock) {
-                ((IWorldWriter & IWorldReader) world).setBlock(pos, world.getBlockState(pos).setValue(BlockStateProperties.OCCUPIED, occupied), 2);
-            }
-        }));
-    }
 
     @Override
     public void updateEntityAfterFallOn(IBlockReader worldIn, Entity entityIn) {
@@ -314,7 +331,6 @@ public class TentBlock extends VampirismBlock {
             player.displayClientMessage(new TranslationTextComponent("text.vampirism.tent.occupied"), true);
             return ActionResultType.SUCCESS;
         } else {
-            final BlockPos finalPos = pos;
             player.startSleepInBed(pos).ifLeft(sleepResult1 -> {
                 if (sleepResult1 != null) {
                     player.displayClientMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
@@ -332,28 +348,4 @@ public class TentBlock extends VampirismBlock {
         builder.add(FACING, POSITION, BlockStateProperties.OCCUPIED);
     }
 
-    private void forWholeTent(BlockPos blockPos, BlockState blockState, BiConsumer<Direction, BlockPos> consumer) {
-        BlockPos main = blockPos;
-        Direction dir = blockState.getValue(FACING);
-        int p = blockState.getValue(POSITION);
-        if (p == 0) {
-            dir = dir.getOpposite();
-        } else if (p == 1) {
-            main = blockPos.relative(dir.getClockWise());
-        } else if (p == 2) {
-            main = blockPos.relative(dir.getClockWise()).relative(dir.getOpposite());
-        } else if (p == 3) {
-            main = blockPos.relative(dir);
-            dir = dir.getOpposite();
-        }
-        consumer.accept(dir, blockPos);
-        BlockPos cur = main;
-        if (cur != blockPos) consumer.accept(dir, cur);
-        cur = main.relative(dir);
-        if (cur != blockPos) consumer.accept(dir, cur);
-        cur = main.relative(dir.getCounterClockWise());
-        if (cur != blockPos) consumer.accept(dir, cur);
-        cur = main.relative(dir).relative(dir.getCounterClockWise());
-        if (cur != blockPos) consumer.accept(dir, cur);
-    }
 }

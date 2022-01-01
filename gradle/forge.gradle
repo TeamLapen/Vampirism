@@ -28,6 +28,12 @@ repositories {
             }
         }
     }
+    //3rd party library repos
+    maven {
+        url = "https://maven.theillusivec4.top/"
+    }
+    maven { url 'https://maven.blamejared.com' }
+    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
     mavenCentral()
     mavenLocal()
     repositories {
@@ -58,6 +64,11 @@ dependencies {
     }
     //Blame for debugging
     runtimeOnly fg.deobf("com.telepathicgrunt:Blame:${project.blame_version}")
+
+    //Common dependencies for temporary test mods
+//    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.3")
+//    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-53.2")
+//    runtimeOnly fg.deobf("software.bernie.geckolib:geckolib-forge-1.16.5:3.0.57")
 
 
 }
