@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
@@ -13,7 +12,6 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
-import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.skills.SkillNode;
 import de.teamlapen.vampirism.player.skills.SkillTreeManager;
 import net.minecraft.client.audio.SimpleSound;
@@ -25,35 +23,43 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import org.lwjgl.system.NonnullDefault;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
+@NonnullDefault
+@ParametersAreNonnullByDefault
 public class SkillsScreen extends Screen {
-    private static final ResourceLocation WINDOW_LOCATION = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills/window.png");
-    private static final ITextComponent VERY_SAD_LABEL = new TranslationTextComponent("advancements.sad_label");
-    private static final ITextComponent NO_ADVANCEMENTS_LABEL = new TranslationTextComponent("advancements.empty");
-    private static final ITextComponent TITLE = new TranslationTextComponent("gui.vampirism.vampirism_menu.skill_screen");
-    private static final ResourceLocation TABS_LOCATION = new ResourceLocation("textures/gui/advancements/tabs.png");
     public static final int SCREEN_WIDTH = 252;
     public static final int SCREEN_HEIGHT = 219;
+    private static final ResourceLocation WINDOW_LOCATION = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills/window.png");
+    private static final ITextComponent VERY_SAD_LABEL = new TranslationTextComponent("advancements.sad_label");
+    private static final ITextComponent NO_TABS_LABEL = new TranslationTextComponent("gui.vampirism.skill_screen.no_tab");
+    private static final ITextComponent TITLE = new TranslationTextComponent("gui.vampirism.vampirism_menu.skill_screen");
+    private static final ResourceLocation TABS_LOCATION = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills/tabs.png");
+
+    @Nullable
     private final IFactionPlayer<?> factionPlayer;
-    @Nonnull
     private final List<SkillTabScreen> tabs = new ArrayList<>();
     @Nullable
+    private final Screen backScreen;
+    @Nullable
     private SkillTabScreen selectedTab;
-    private Screen backScreen;
+    @Nullable
     private Button resetSkills;
 
     private int guiLeft;
     private int guiTop;
+    private boolean scrolling;
+    private boolean clicked;
 
-    public SkillsScreen(IFactionPlayer<?> factionPlayer, Screen backScreen) {
+    public SkillsScreen(@Nullable IFactionPlayer<?> factionPlayer, @Nullable Screen backScreen) {
         super(NarratorChatListener.NO_TITLE);
         this.factionPlayer = factionPlayer;
         this.backScreen = backScreen;
@@ -64,9 +70,9 @@ public class SkillsScreen extends Screen {
         this.guiLeft = (this.width - SCREEN_WIDTH) / 2;
         this.guiTop = (this.height - SCREEN_HEIGHT) / 2;
 
-        if (factionPlayer != null) {
+        if (this.factionPlayer != null) {
             SkillNode rootNode = SkillTreeManager.getInstance().getSkillTree().getRootNodeForFaction(this.factionPlayer.getFaction().getID());
-            tabs.add(new SkillTabScreen(this.minecraft, this, 0, new ItemStack(ModItems.vampire_book), rootNode, factionPlayer.getSkillHandler()));
+            this.tabs.add(new SkillTabScreen(this.minecraft, this, 0, new ItemStack(ModItems.vampire_book), rootNode, this.factionPlayer.getSkillHandler()));
         }
 
         if (this.tabs.size() > 0) {
@@ -74,11 +80,11 @@ public class SkillsScreen extends Screen {
         }
 
         if (this.backScreen != null) {
-            this.addButton(new Button(guiLeft + 4,guiTop + 194, 80, 20, new TranslationTextComponent("gui.back"), (context) -> {
+            this.addButton(new Button(guiLeft + 4, guiTop + 194, 80, 20, new TranslationTextComponent("gui.back"), (context) -> {
                 this.minecraft.setScreen(this.backScreen);
             }));
         }
-        this.addButton(new Button(guiLeft + 168,guiTop + 194, 80, 20, new TranslationTextComponent("gui.done"), (context) -> {
+        this.addButton(new Button(guiLeft + 168, guiTop + 194, 80, 20, new TranslationTextComponent("gui.done"), (context) -> {
             this.minecraft.setScreen(null);
         }));
         FactionPlayerHandler.getOpt(minecraft.player).ifPresent(fph -> {
@@ -119,17 +125,20 @@ public class SkillsScreen extends Screen {
 
     public void renderInside(MatrixStack stack, int mouseX, int mouseY, int x, int y) {
         if (selectedTab != null) {
-            RenderSystem.pushMatrix();
-            RenderSystem.translatef((float)(x + 9), (float)(y + 18), 0.0F);
+            stack.pushPose();
+            stack.translate((float) (x + 9), (float) (y + 18), 0.0F);
             this.selectedTab.drawContents(stack);
-            RenderSystem.popMatrix();
+            stack.popPose();
             RenderSystem.depthFunc(515);
             RenderSystem.disableDepthTest();
         } else {
-            fill(stack, x + 9, y + 18, x + 9 + SCREEN_WIDTH - 18, y + 18 + SCREEN_HEIGHT - 27, -16777216);
-            int i = x + 9 + 117;
-            drawCenteredString(stack, this.font, NO_ADVANCEMENTS_LABEL, i, y + 18 + 56 - 9 / 2, -1);
-            drawCenteredString(stack, this.font, VERY_SAD_LABEL, i, y + 18 + 113 - 9, -1);
+            stack.pushPose();
+            stack.translate(x + 9,y + 18,0);
+            fill(stack, 0, 0, SCREEN_WIDTH - 18, SCREEN_HEIGHT - 27, -16777216);
+            int i = 117;
+            drawCenteredString(stack, this.font, NO_TABS_LABEL, i, 56 - 9 / 2, -1);
+            drawCenteredString(stack, this.font, VERY_SAD_LABEL, i, 113 - 9, -1);
+            stack.popPose();
         }
     }
 
@@ -155,8 +164,8 @@ public class SkillsScreen extends Screen {
             RenderSystem.disableBlend();
         }
         if (this.selectedTab != null) {
-            TextComponent remainingPoints = new TranslationTextComponent("text.vampirism.skills.points_left",String.valueOf(this.selectedTab.getRemainingPoints()));
-            this.font.draw(stack, remainingPoints, x+240 - this.font.width(remainingPoints), y+6, 4210752);
+            TextComponent remainingPoints = new TranslationTextComponent("text.vampirism.skills.points_left", String.valueOf(this.selectedTab.getRemainingPoints()));
+            this.font.draw(stack, remainingPoints, x + 240 - this.font.width(remainingPoints), y + 6, 4210752);
         }
         this.font.draw(stack, TITLE, (float) (x + 8), (float) (y + 6), 4210752);
     }
@@ -165,25 +174,22 @@ public class SkillsScreen extends Screen {
         if (this.minecraft.player.getEffect(ModEffects.oblivion) != null) return;
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.selectedTab != null) {
-            RenderSystem.pushMatrix();
+            stack.pushPose();
             RenderSystem.enableDepthTest();
-            RenderSystem.translatef((float)(guiLeft + 9), (float)(guiTop + 18), 400.0F);
-            this.selectedTab.drawTooltips(stack, mouseX, mouseY , guiLeft , guiTop);
+            stack.translate((float) (guiLeft + 9), (float) (guiTop + 18), 400.0F);
+            this.selectedTab.drawTooltips(stack, mouseX - guiLeft - 9, mouseY - guiTop - 18);
             RenderSystem.disableDepthTest();
-            RenderSystem.popMatrix();
+            stack.popPose();
         }
 
         if (this.tabs.size() > 1) {
-            for(SkillTabScreen tabScreen : this.tabs) {
-                if (tabScreen == selectedTab && tabScreen.isMouseOver(guiLeft, guiTop, (double)mouseX, (double)mouseY)) {
+            for (SkillTabScreen tabScreen : this.tabs) {
+                if (tabScreen == selectedTab && tabScreen.isMouseOver(guiLeft, guiTop, mouseX, mouseY)) {
                     this.renderTooltip(stack, tabScreen.getTitle(), mouseX, mouseY);
                 }
             }
         }
     }
-
-    private boolean scrolling;
-    private boolean clicked;
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -242,6 +248,7 @@ public class SkillsScreen extends Screen {
     }
 
     private boolean canUnlockSkill(ISkill skill) {
+        if (this.factionPlayer == null) return false;
         return this.factionPlayer.getSkillHandler().canSkillBeEnabled(skill) == ISkillHandler.Result.OK;
     }
 

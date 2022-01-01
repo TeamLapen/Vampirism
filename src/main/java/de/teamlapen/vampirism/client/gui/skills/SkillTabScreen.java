@@ -25,20 +25,30 @@ import net.minecraft.util.text.LanguageMap;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.gui.GuiUtils;
+import org.lwjgl.system.NonnullDefault;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@NonnullDefault
+@ParametersAreNonnullByDefault
 public class SkillTabScreen extends AbstractGui {
 
+    public static final int SCREEN_WIDTH = SkillsScreen.SCREEN_WIDTH - 18;
+    public static final int SCREEN_HEIGHT = SkillsScreen.SCREEN_HEIGHT - 47;
     private final Minecraft minecraft;
     private final SkillsScreen screen;
     private final ISkillHandler<?> skillHandler;
     private final ItemStack icon;
     private final Map<SkillNode, SkillNodeScreen> nodes = new HashMap<>();
     private final AdvancementTabType position;
+    private final SkillNodeScreen root;
+    private final int treeWidth;
+    private final ResourceLocation background;
     private boolean centered;
     private double scrollX;
     private double scrollY;
@@ -47,10 +57,7 @@ public class SkillTabScreen extends AbstractGui {
     private int maxX = Integer.MAX_VALUE;
     private int maxY = Integer.MAX_VALUE;
     private float zoom = 1;
-    private int index;
-    private final SkillNodeScreen root;
-    private final int treeWidth;
-    private final ResourceLocation background;
+    private final int index;
     private float fade;
 
 
@@ -65,12 +72,19 @@ public class SkillTabScreen extends AbstractGui {
         this.treeWidth = SkillTree.getTreeWidth(rootNode);
         this.background = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills/backgrounds/level.png");
         addNode(this.root);
-        this.maxY = 20;
-        this.minY = -SkillTree.getTreeHeight(rootNode);
-        this.minX = -(SkillsScreen.SCREEN_WIDTH - 18)/2;
-        this.maxX = treeWidth - (SkillsScreen.SCREEN_WIDTH - 18)/2;
-        this.scrollX = (SkillsScreen.SCREEN_WIDTH - 18)/2 - 13;
+
+        recalculateBorders();
+        this.scrollX = (SkillsScreen.SCREEN_WIDTH - 18) / 2 - 13;
         this.scrollY = 20;
+    }
+
+    private void recalculateBorders() {
+        this.maxY = 20;
+        this.minY = -SkillTree.getTreeHeight(this.root.getSkillNode());
+        this.minX = -(SkillsScreen.SCREEN_WIDTH - 18) / 2;
+        this.maxX = (SkillsScreen.SCREEN_WIDTH - 18) / 2 + treeWidth / 2;//treeWidth - (SkillsScreen.SCREEN_WIDTH - 18)/2 - 26;
+
+        this.centered = false;
     }
 
     private void addNode(SkillNodeScreen screen) {
@@ -111,7 +125,7 @@ public class SkillTabScreen extends AbstractGui {
         RenderSystem.colorMask(true, true, true, true);
         stack.translate(0.0F, 0.0F, -950.0F);
         RenderSystem.depthFunc(518);
-        fill(stack, SkillsScreen.SCREEN_WIDTH - 18, SkillsScreen.SCREEN_HEIGHT - 27, 0, 0, -16777216);
+        fill(stack, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, -16777216);
         RenderSystem.depthFunc(515);
 
         this.minecraft.getTextureManager().bind(this.background);
@@ -120,14 +134,14 @@ public class SkillTabScreen extends AbstractGui {
         int j = MathHelper.floor(this.scrollY);
         int k = i % 16;
         int l = j % 16;
+        stack.scale(this.zoom, this.zoom, 1);
 
-        for(int i1 = -1; i1 <= 15; ++i1) {
-            for(int j1 = -1; j1 <= 11; ++j1) {
+        for (int i1 = -1; i1 <= 15 / this.zoom; ++i1) {
+            for (int j1 = -1; j1 <= 11 / this.zoom; ++j1) {
                 blit(stack, k + 16 * i1, l + 16 * j1, 0.0F, 0.0F, 16, 16, 16, 16);
             }
         }
 
-        stack.scale(this.zoom, this.zoom,1);
 
         this.root.drawConnectivity(stack, i, j, true);
         this.root.drawConnectivity(stack, i, j, false);
@@ -145,33 +159,31 @@ public class SkillTabScreen extends AbstractGui {
             stack.pushPose();
             RenderSystem.enableDepthTest();
             stack.translate(0.0F, 0.0F, 200.0F);
-            fill(stack, 0, 0, 234, 172, MathHelper.floor(0.5 * 255.0F) << 24);
+            fill(stack, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MathHelper.floor(0.5 * 255.0F) << 24);
             RenderSystem.disableDepthTest();
             stack.popPose();
             stack.pushPose();
-            stack.translate(0,0,200);
+            stack.translate(0, 0, 200);
             this.drawDisableText(stack);
             stack.popPose();
         }
 
     }
 
-    public void drawTooltips(MatrixStack stack, int mouseX, int mouseY, int guiLeft, int guiTop){
+    public void drawTooltips(MatrixStack stack, int mouseX, int mouseY) {
         RenderSystem.pushMatrix();
         stack.translate(0.0F, 0.0F, 200.0F);
-        fill(stack, 0, 0, 234, 172, MathHelper.floor(this.fade * 255.0F) << 24);
+        fill(stack, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MathHelper.floor(this.fade * 255.0F) << 24);
         boolean flag = false;
-        int i = MathHelper.floor(this.scrollX);
-        int j = MathHelper.floor(this.scrollY);
-        mouseX -= guiLeft;
-        mouseY -= guiTop;
-        if (mouseX > 8 && mouseX < 243 && mouseY > 18 && mouseY < 173 + 18) {
-            for(SkillNodeScreen nodeScreen : this.nodes.values()) {
-                if (nodeScreen.isMouseOver(mouseX, mouseY,i,j+18, this.zoom)) {
+        int scrollX = MathHelper.floor(this.scrollX);
+        int scrollY = MathHelper.floor(this.scrollY);
+        if (mouseX >= 0 && mouseX < 235 && mouseY >= 0 && mouseY < 173) {
+            for (SkillNodeScreen nodeScreen : this.nodes.values()) {
+                if (nodeScreen.isMouseOver(mouseX / this.zoom, mouseY / this.zoom, scrollX, scrollY)) {
                     flag = true;
                     stack.pushPose();
-                    stack.scale(this.zoom, this.zoom,1);
-                    nodeScreen.drawHover(stack, mouseX, mouseY, this.fade, i,j, 0, 0, this.zoom);
+                    stack.scale(this.zoom, this.zoom, 1);
+                    nodeScreen.drawHover(stack, mouseX / this.zoom, mouseY / this.zoom, this.fade, scrollX, scrollY);
                     stack.popPose();
                     break;
                 }
@@ -196,11 +208,12 @@ public class SkillTabScreen extends AbstractGui {
         return Collections.emptyList();
     }
 
+    @Nullable
     public ISkill getSelected(double mouseX, double mouseY, int guiLeft, int guiTop) {
         int i = MathHelper.floor(this.scrollX);
         int j = MathHelper.floor(this.scrollY);
         for (SkillNodeScreen screen : this.nodes.values()) {
-            ISkill selected = screen.getSelectedSkill(mouseX, mouseY, guiLeft+i, guiTop+j);
+            ISkill selected = screen.getSelectedSkill((mouseX - guiLeft - 9) / this.zoom, (mouseY - guiTop - 18) / this.zoom, i, j);
             if (selected != null) {
                 return selected;
             }
@@ -213,8 +226,12 @@ public class SkillTabScreen extends AbstractGui {
     }
 
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        this.zoom = (float) MathHelper.clamp(this.zoom + (amount/50), 0.2, 1);
-        this.zoom = 1f; //TODO fix zooming tooltip rendering
+        this.zoom = (float) MathHelper.clamp(this.zoom + (amount / 50), 0.2, 1);
+        if (this.zoom * this.treeWidth < (SCREEN_WIDTH - 20)) {
+            this.zoom = (float) (SCREEN_WIDTH - 20) / this.treeWidth;
+        }
+
+        recalculateBorders();
         return true;
     }
 
