@@ -137,7 +137,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             put(ModItems.HUNTER_HAT_HEAD_1.get(), modLoc("item/hunter_hat_1"));
             put(ModItems.ITEM_ALCHEMICAL_FIRE.get(), modLoc("item/alchemical_fire"));
             put(ModItems.ITEM_GARLIC.get(), modLoc("item/garlic"));
-            put(ModItems.ITEM_MED_CHAIR.get(), modLoc("item/med_chair"));
+            put(ModBlocks.MED_CHAIR.get().asItem(), modLoc("item/med_chair"));
             put(ModItems.ITEM_TENT_SPAWNER.get(), modLoc("item/item_tent"));
             put(ModItems.PURE_SALT.get(), modLoc("item/holy_salt"));
             put(ModItems.VAMPIRE_BOOK.get(), modLoc("item/vampire_book"));

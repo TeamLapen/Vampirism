@@ -141,7 +141,6 @@ public class ModItems {
 
     public static final RegistryObject<BucketItem> IMPURE_BLOOD_BUCKET = ITEMS.register("impure_blood_bucket", () -> new BucketItem(ModFluids.IMPURE_BLOOD, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(CreativeModeTab.TAB_MISC)));
     public static final RegistryObject<GarlicItem> ITEM_GARLIC = ITEMS.register("item_garlic", GarlicItem::new);
-    public static final RegistryObject<MedChairItem> ITEM_MED_CHAIR = ITEMS.register("item_med_chair", MedChairItem::new);
     public static final RegistryObject<GarlicBreadItem> GARLIC_BREAD = ITEMS.register("garlic_bread", GarlicBreadItem::new);
     public static final RegistryObject<AlchemicalFireItem> ITEM_ALCHEMICAL_FIRE = ITEMS.register("item_alchemical_fire", AlchemicalFireItem::new);
 
@@ -281,6 +280,7 @@ public class ModItems {
                 case "vampirism:garlic_beacon_weak" -> missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_WEAK.get().asItem());
                 case "vampirism:garlic_beacon_improved" -> missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get().asItem());
                 case "vampirism:church_altar" -> missingMapping.remap(ModBlocks.ALTAR_CLEANSING.get().asItem());
+                case "vampirism:item_med_chair" -> missingMapping.remap(ModBlocks.MED_CHAIR.get().asItem());
             }
         });
     }
