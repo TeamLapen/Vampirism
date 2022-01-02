@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.IPlantable;
 
@@ -27,7 +28,7 @@ public class CursedEarthBlock extends VampirismBlock {
     private static final String name = "cursed_earth";
 
     public CursedEarthBlock() {
-        super(name, Properties.of(Material.DIRT).strength(0.5f, 2.0f).sound(SoundType.GRAVEL));
+        super(name, Properties.of(Material.DIRT, MaterialColor.WARPED_HYPHAE).strength(0.5f, 2.0f).sound(SoundType.GRAVEL));
 
     }
 

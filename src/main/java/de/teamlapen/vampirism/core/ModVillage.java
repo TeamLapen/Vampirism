@@ -95,7 +95,8 @@ public class ModVillage {
                         new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.armor_of_swiftness_chest_normal, new Trades.Price(1, 1), 8, 1),
                         new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.armor_of_swiftness_legs_normal, new Trades.Price(1, 1), 7, 1),
                         new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.armor_of_swiftness_feet_normal, new Trades.Price(1, 1), 5, 1),
-                        new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.armor_of_swiftness_head_normal, new Trades.Price(1, 1), 6, 1)
+                        new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.armor_of_swiftness_head_normal, new Trades.Price(1, 1), 6, 1),
+                        new Trades.BiomeMapForEmeralds(5, ModBiomes.VAMPIRE_FOREST_KEY,3,2)
                 },
                 2, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForSouls(new Trades.Price(25, 45), Items.DIAMOND, new Trades.Price(1, 1), 2, 5),
@@ -152,6 +153,7 @@ public class ModVillage {
                         new Trades.ItemsForHeart(new Trades.Price(10, 15), ModItems.pure_blood_0, new Trades.Price(1, 1)),
                         new Trades.BloodBottleForHeart(new Trades.Price(3, 12), new Trades.Price(1, 15), 9),
                         new VillagerTrades.EmeraldForItems(ModBlocks.vampire_orchid, 4, 1, 3),
+                        new Trades.BiomeMapForEmeralds(5, ModBiomes.VAMPIRE_FOREST_KEY,3,2)
                 },
                 2, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForHeart(new Trades.Price(25, 30), ModItems.pure_blood_1, new Trades.Price(1, 1), 10, 1),

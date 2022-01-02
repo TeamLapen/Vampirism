@@ -98,7 +98,7 @@ public class ModBlocks {
 
     static {
         cursed_earth = new CursedEarthBlock();
-        cursed_grass_block = new CursedGrassBlock(BlockBehaviour.Properties.of(Material.GRASS).randomTicks().strength(0.6F).sound(SoundType.GRASS));
+        cursed_grass_block = new CursedGrassBlock();
         cursed_grass_block.setRegistryName(REFERENCE.MODID, "cursed_grass_block");
     }
 

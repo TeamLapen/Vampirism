@@ -2,13 +2,23 @@ package de.teamlapen.vampirism.entity.villager;
 
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.BloodBottleItem;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.saveddata.maps.MapDecoration;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -157,6 +167,43 @@ public class Trades {
             ItemStack bottle = new ItemStack(ModItems.blood_bottle, selling.getPrice(random));
             bottle.setDamageValue(damage);
             return new MerchantOffer(new ItemStack(ModItems.human_heart, price.getPrice(random)), bottle, maxUses, xp, 0.2F);
+        }
+    }
+
+    public static class BiomeMapForEmeralds implements VillagerTrades.ItemListing {
+        private final int emeraldCost;
+        private final ResourceKey<Biome> destination;
+        private final int maxUses;
+        private final int villagerXp;
+
+        public BiomeMapForEmeralds(int pEmeraldCost, ResourceKey<Biome> pDestination, int pMaxUses, int pVillagerXp) {
+            this.emeraldCost = pEmeraldCost;
+            this.destination = pDestination;
+            this.maxUses = pMaxUses;
+            this.villagerXp = pVillagerXp;
+        }
+
+        @Nullable
+        public MerchantOffer getOffer(Entity pTrader, Random pRand) {
+            if (!(pTrader.level instanceof ServerLevel serverlevel)) {
+                return null;
+            } else {
+                Biome biome = serverlevel.getServer().registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getOptional(destination).orElse(null);
+                if(biome==null){
+                    LogManager.getLogger().warn("Cannot find destination biome in registry{}",destination);
+                    return null;
+                }
+                BlockPos blockpos = serverlevel.findNearestBiome(biome, pTrader.blockPosition(), 2400, 8);
+                if (blockpos != null) {
+                    ItemStack itemstack = MapItem.create(serverlevel, blockpos.getX(), blockpos.getZ(), (byte)2, true, true);
+                    MapItem.renderBiomePreviewMap(serverlevel, itemstack);
+                    MapItemSavedData.addTargetDecoration(itemstack, blockpos, "+", MapDecoration.Type.TARGET_POINT);
+                    itemstack.setHoverName(new TranslatableComponent("biome."+destination.location().getNamespace()+ "."+destination.location().getPath()));
+                    return new MerchantOffer(new ItemStack(Items.EMERALD, this.emeraldCost), new ItemStack(Items.COMPASS), itemstack, this.maxUses, this.villagerXp, 0.2F);
+                } else {
+                    return null;
+                }
+            }
         }
     }
 
