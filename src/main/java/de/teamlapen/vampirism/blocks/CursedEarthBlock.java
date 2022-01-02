@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.HolyWaterBottleItem;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -29,7 +30,7 @@ public class CursedEarthBlock extends VampirismBlock implements IGrowable {
     private static final String name = "cursed_earth";
 
     public CursedEarthBlock() {
-        super(name, Properties.of(Material.DIRT).strength(0.5f, 2.0f).sound(SoundType.GRAVEL));
+        super(name, Properties.of(Material.DIRT, MaterialColor.WARPED_HYPHAE).strength(0.5f, 2.0f).sound(SoundType.GRAVEL));
 
     }
 
