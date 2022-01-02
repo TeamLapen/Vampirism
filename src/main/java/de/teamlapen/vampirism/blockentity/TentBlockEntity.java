@@ -65,6 +65,7 @@ public class TentBlockEntity extends BlockEntity {
 
     @Override
     public void saveAdditional(@Nonnull CompoundTag compound) {
+        super.saveAdditional(compound);
         CompoundTag logic1 = new CompoundTag();
         CompoundTag logic2 = new CompoundTag();
         this.spawnerLogicHunter.writeToNbt(logic1);

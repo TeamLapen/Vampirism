@@ -67,7 +67,7 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         CompoundTag nbtTag = new CompoundTag();
-        this.save(nbtTag);
+        this.saveAdditional(nbtTag);
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
@@ -110,6 +110,12 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
             super.setChanged();
         }
 
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
+        tank.writeToNBT(pTag);
     }
 
     public void setFluidStack(FluidStack stack) {

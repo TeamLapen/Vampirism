@@ -165,6 +165,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
 
     @Override
     public void saveAdditional(@Nonnull CompoundTag compound) {
+        super.saveAdditional(compound);
         if (ownerID != null) {
             compound.putUUID("owner", ownerID);
         }

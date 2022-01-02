@@ -164,6 +164,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
 
     @Override
     public void saveAdditional(@Nonnull CompoundTag compound) {
+        super.saveAdditional(compound);
         if (hasStack()) {
             compound.put("item", this.internalStack.serializeNBT());
         }

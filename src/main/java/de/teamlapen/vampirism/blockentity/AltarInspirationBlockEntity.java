@@ -112,6 +112,12 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
         }
     }
 
+    @Override
+    protected void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
+        tank.writeToNBT(pTag);
+    }
+
     public void startRitual(Player p) {
         if (ritualTicksLeft > 0 || !p.isAlive()) return;
         targetLevel = VampirismPlayerAttributes.get(p).vampireLevel + 1;

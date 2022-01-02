@@ -76,6 +76,7 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
 
     @Override
     public void saveAdditional(@Nonnull CompoundTag compound) {
+        super.saveAdditional(compound);
         compound.putInt("cooldown_pull", cooldownPull);
         compound.putInt("cooldown_process", cooldownProcess);
     }

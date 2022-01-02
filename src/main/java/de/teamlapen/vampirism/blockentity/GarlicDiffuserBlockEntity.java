@@ -122,6 +122,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
 
     @Override
     public void saveAdditional(@Nonnull CompoundTag compound) {
+        super.saveAdditional(compound);
         compound.putInt("radius", r);
         compound.putInt("strength", defaultStrength.getStrength());
         compound.putInt("fueled", fueled);

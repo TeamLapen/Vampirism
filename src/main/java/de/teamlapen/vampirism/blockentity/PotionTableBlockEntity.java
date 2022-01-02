@@ -236,6 +236,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
 
     @Override
     public void saveAdditional(@Nonnull CompoundTag compound) {
+        super.saveAdditional(compound);
         compound.putShort("BrewTime", (short) this.brewTime);
         ContainerHelper.saveAllItems(compound, this.brewingItemStacks);
         compound.putByte("Fuel", (byte) this.fuel);

@@ -86,12 +86,10 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
         return ContainerHelper.takeItem(inventorySlots, index);
     }
 
-    @Nonnull
     @Override
-    public CompoundTag save(@Nonnull CompoundTag compound) {
-        super.save(compound);
-        ContainerHelper.saveAllItems(compound, inventorySlots);
-        return compound;
+    protected void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
+        ContainerHelper.saveAllItems(pTag, inventorySlots);
     }
 
     @Override

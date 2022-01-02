@@ -218,6 +218,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
     @Override
     public void saveAdditional(@Nonnull CompoundTag compound) {
+        super.saveAdditional(compound);
         compound.putInt("tick", runningTick);
         if (player != null) {
             compound.putUUID("playerUUID", player.getUUID());

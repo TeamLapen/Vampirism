@@ -434,6 +434,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     @Override
     public void saveAdditional(@Nonnull CompoundTag compound) {
+        super.saveAdditional(compound);
         compound.putBoolean("isDisabled", this.isDisabled);
         compound.putBoolean("isComplete", this.isComplete);
         compound.putBoolean("isInsideVillage", this.isInsideVillage);

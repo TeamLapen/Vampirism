@@ -80,6 +80,7 @@ public class CoffinBlockEntity extends BlockEntity {
 
     @Override
     public void saveAdditional(@Nonnull CompoundTag compound) {
+        super.saveAdditional(compound);
         compound.putInt("color", color.getId());
     }
 
