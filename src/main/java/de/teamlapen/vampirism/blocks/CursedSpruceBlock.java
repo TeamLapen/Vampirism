@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class CursedSpruceBlock extends LogBlock {
 
     public CursedSpruceBlock() {
-        super(AbstractBlock.Properties.of(Material.WOOD, (p_235431_2_) -> MaterialColor.COLOR_BLACK).strength(2.0F).sound(SoundType.WOOD).randomTicks());
+        super(AbstractBlock.Properties.of(Material.WOOD, (p_235431_2_) -> MaterialColor.CRIMSON_HYPHAE).strength(2.0F).sound(SoundType.WOOD).randomTicks());
     }
 
     @Override

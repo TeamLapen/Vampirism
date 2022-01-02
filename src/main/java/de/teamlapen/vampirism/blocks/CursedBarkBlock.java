@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -42,7 +43,7 @@ public class CursedBarkBlock extends Block {
 
 
     public CursedBarkBlock() {
-        super(AbstractBlock.Properties.of(Material.REPLACEABLE_PLANT).noCollission().strength(0.0F).sound(SoundType.VINE));
+        super(AbstractBlock.Properties.of(Material.REPLACEABLE_PLANT, MaterialColor.NONE).noCollission().strength(0.0F).sound(SoundType.VINE));
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(FACING2, Direction.NORTH).setValue(AXIS, Direction.Axis.Y));
     }
 

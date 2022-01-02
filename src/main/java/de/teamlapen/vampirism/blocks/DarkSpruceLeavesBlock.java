@@ -8,7 +8,7 @@ import net.minecraft.block.material.MaterialColor;
 public class DarkSpruceLeavesBlock extends LeavesBlock {
 
     public DarkSpruceLeavesBlock(String regName) {
-        super(Block.Properties.of(Material.LEAVES, MaterialColor.CRIMSON_HYPHAE).strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion());
+        super(Block.Properties.of(Material.LEAVES, MaterialColor.COLOR_BLACK).strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion());
         this.setRegistryName(REFERENCE.MODID, regName);
         ((FireBlock) Blocks.FIRE).setFlammable(this, 30, 60);
     }
