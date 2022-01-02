@@ -195,7 +195,7 @@ public class Trades {
                 }
                 BlockPos blockpos = serverlevel.findNearestBiome(biome, pTrader.blockPosition(), 2400, 8);
                 if (blockpos != null) {
-                    ItemStack itemstack = MapItem.create(serverlevel, blockpos.getX(), blockpos.getZ(), (byte)2, true, true);
+                    ItemStack itemstack = MapItem.create(serverlevel, blockpos.getX(), blockpos.getZ(), (byte)3, true, true);
                     MapItem.renderBiomePreviewMap(serverlevel, itemstack);
                     MapItemSavedData.addTargetDecoration(itemstack, blockpos, "+", MapDecoration.Type.TARGET_POINT);
                     itemstack.setHoverName(new TranslatableComponent("biome."+destination.location().getNamespace()+ "."+destination.location().getPath()));
