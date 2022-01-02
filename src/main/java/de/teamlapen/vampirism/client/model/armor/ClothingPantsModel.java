@@ -17,21 +17,24 @@ public class ClothingPantsModel extends VampirismArmorModel {
         return instance;
     }
 
-    public ModelRenderer rightLeg;
-    public ModelRenderer leftLeg;
+    public ModelRenderer rightLegOverlay;
+    public ModelRenderer leftLegOverlay;
     public ModelRenderer belt;
 
     public ClothingPantsModel() {
         super(32, 32);
-        this.leftLeg = new ModelRenderer(this, 16, 0);
-        this.leftLeg.setPos(-4F, 12.0F, 0.0F);
-        this.leftLeg.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.25F, 0.25F, 0.25F);
+        this.leftLegOverlay = new ModelRenderer(this, 16, 0);
+        this.leftLegOverlay.setPos(-4F, 12.0F, 0.0F);
+        this.leftLegOverlay.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.25F, 0.25F, 0.25F);
         this.belt = new ModelRenderer(this, 4, 16);
         this.belt.setPos(0.0F, 0.0F, 0.0F);
         this.belt.addBox(-4.0F, 7.0F, -2.0F, 8.0F, 5.0F, 4.0F, 0.25F, 0.25F, 0.25F);
-        this.rightLeg = new ModelRenderer(this, 0, 0);
-        this.rightLeg.setPos(1.9F, 12.0F, 0.0F);
-        this.rightLeg.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.25F, 0.25F, 0.25F);
+        this.rightLegOverlay = new ModelRenderer(this, 0, 0);
+        this.rightLegOverlay.setPos(1.9F, 12.0F, 0.0F);
+        this.rightLegOverlay.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.25F, 0.25F, 0.25F);
+        getBodyModels().forEach(this.body::addChild);
+        getRightLegModels().forEach(super.rightLeg::addChild);
+        getRightLegModels().forEach(super.leftLeg::addChild);
     }
 
     @Override
@@ -41,11 +44,11 @@ public class ClothingPantsModel extends VampirismArmorModel {
 
     @Override
     protected Iterable<ModelRenderer> getLeftLegModels() {
-        return ImmutableList.of(this.leftLeg);
+        return ImmutableList.of(this.leftLegOverlay);
     }
 
     @Override
     protected Iterable<ModelRenderer> getRightLegModels() {
-        return ImmutableList.of(this.rightLeg);
+        return ImmutableList.of(this.rightLegOverlay);
     }
 }

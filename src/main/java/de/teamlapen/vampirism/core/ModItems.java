@@ -134,7 +134,6 @@ public class ModItems {
 
     public static final BucketItem impure_blood_bucket = getNull();
     public static final GarlicItem item_garlic = getNull();
-    public static final MedChairItem item_med_chair = getNull();
     public static final GarlicBreadItem garlic_bread = getNull();
     public static final AlchemicalFireItem item_alchemical_fire = getNull();
 
@@ -266,7 +265,6 @@ public class ModItems {
             registry.register(new HunterIntelItem(i));
         }
         registry.register(new GarlicItem());
-        registry.register(new MedChairItem());
         registry.register(new InjectionItem(InjectionItem.TYPE.GARLIC));
         registry.register(new InjectionItem(InjectionItem.TYPE.SANGUINARE));
         registry.register(new InjectionItem(InjectionItem.TYPE.EMPTY));
@@ -467,6 +465,9 @@ public class ModItems {
                     break;
                 case "vampirism:vampire_clothing_feet":
                     missingMapping.remap(vampire_clothing_boots);
+                    break;
+                case "vampirism:item_med_chair":
+                    missingMapping.remap(Item.byBlock(ModBlocks.med_chair));
                     break;
                 case "vampirism:bloody_spruce_log":
                     missingMapping.remap(cursed_spruce_log);

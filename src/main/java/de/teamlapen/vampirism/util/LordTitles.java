@@ -54,7 +54,7 @@ public class LordTitles {
         return EMPTY;
     }
 
-    public static ITextComponent getHunterTitle(int level, boolean female) {
+    public static ITextComponent getHunterTitle(int level) {
         switch (level) {
             case 1:
                 return HUNTER_1;

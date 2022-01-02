@@ -213,10 +213,10 @@ public class ItemModelGenerator extends ItemModelProvider {
             put(ModItems.hunter_hat_head_1, modLoc("item/hunter_hat_1"));
             put(ModItems.item_alchemical_fire, modLoc("item/alchemical_fire"));
             put(ModItems.item_garlic, modLoc("item/garlic"));
-            put(ModItems.item_med_chair, modLoc("item/med_chair"));
             put(ModItems.item_tent_spawner, modLoc("item/item_tent"));
             put(ModItems.pure_salt, modLoc("item/holy_salt"));
             put(ModItems.vampire_book, modLoc("item/vampire_book"));
+            put(Item.byBlock(ModBlocks.med_chair), modLoc("item/med_chair"));
             put(ModBlocks.cursed_bark.asItem(), modLoc("block/" + ModBlocks.cursed_bark.getRegistryName().getPath()));
             put(ModItems.dark_spruce_sign, modLoc("item/" + ModItems.dark_spruce_sign.getRegistryName().getPath()));
             put(ModItems.cursed_spruce_sign, modLoc("item/" + ModItems.cursed_spruce_sign.getRegistryName().getPath()));

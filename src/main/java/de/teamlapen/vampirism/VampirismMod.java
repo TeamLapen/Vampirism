@@ -26,6 +26,7 @@ import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.inventory.recipes.ExtendedBrewingRecipeRegistry;
+import de.teamlapen.vampirism.items.VampireRefinementItem;
 import de.teamlapen.vampirism.modcompat.IMCHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.player.ModPlayerEventHandler;
@@ -286,10 +287,30 @@ public class VampirismMod {
         VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, entityActionManager, worldGenRegistry, extendedBrewingRecipeRegistry);
 
 
-        VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction(REFERENCE.VAMPIRE_PLAYER_KEY, IVampirePlayer.class, Color.MAGENTA.darker().darker(), true, () -> VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL, REFERENCE.HIGHEST_VAMPIRE_LORD, LordTitles::getVampireTitle, new VampireVillageData());
-        VReference.VAMPIRE_FACTION.setChatColor(TextFormatting.DARK_PURPLE).setTranslationKeys("text.vampirism.vampire", "text.vampirism.vampires");
-        VReference.HUNTER_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction(REFERENCE.HUNTER_PLAYER_KEY, IHunterPlayer.class, Color.BLUE, false, () -> HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL, REFERENCE.HIGHEST_HUNTER_LORD, LordTitles::getHunterTitle, new HunterVillageData());
-        VReference.HUNTER_FACTION.setChatColor(TextFormatting.BLUE).setTranslationKeys("text.vampirism.hunter", "text.vampirism.hunters");
+        VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry()
+                .createPlayableFaction(REFERENCE.VAMPIRE_PLAYER_KEY, IVampirePlayer.class, () -> VampirePlayer.CAP)
+                .color(Color.MAGENTA.darker().darker())
+                .chatColor(TextFormatting.DARK_PURPLE)
+                .name("text.vampirism.vampire")
+                .namePlural("text.vampirism.vampires")
+                .hostileTowardsNeutral()
+                .highestLevel(REFERENCE.HIGHEST_VAMPIRE_LEVEL)
+                .lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD)
+                .lordTitle(LordTitles::getVampireTitle)
+                .village(VampireVillageData::vampireVillage)
+                .refinementItems(VampireRefinementItem::getItemForType)
+                .register();
+        VReference.HUNTER_FACTION = VampirismAPI.factionRegistry()
+                .createPlayableFaction(REFERENCE.HUNTER_PLAYER_KEY, IHunterPlayer.class, () -> HunterPlayer.CAP)
+                .color(Color.BLUE)
+                .chatColor(TextFormatting.BLUE)
+                .name("text.vampirism.hunter")
+                .namePlural("text.vampirism.hunters")
+                .highestLevel(REFERENCE.HIGHEST_HUNTER_LEVEL)
+                .lordLevel(REFERENCE.HIGHEST_HUNTER_LORD)
+                .lordTitle(LordTitles::getHunterTitle)
+                .village(HunterVillageData::hunterVillage)
+                .register();
         VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_TYPE = VAMPIRE_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_ATTRIBUTE = VAMPIRE_CREATURE_ATTRIBUTE;

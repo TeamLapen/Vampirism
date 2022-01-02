@@ -114,9 +114,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public static Capability<IVampirePlayer> CAP = getNull();
 
     /**
+     * Always prefer #getOpt
      * Don't call before the construction event of the player entity is finished
      * Must check Entity#isAlive before
      */
+    @Deprecated
     public static VampirePlayer get(@Nonnull PlayerEntity player) {
         return (VampirePlayer) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get Vampire player capability from player " + player));
     }
@@ -790,19 +792,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      */
     public void onSanguinareFinished() {
         if (Helper.canBecomeVampire(player) && !isRemote() && player.isAlive()) {
-            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            handler.joinFaction(getFaction());
-            player.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 300));
-            player.addEffect(new EffectInstance(Effects.SATURATION, 300));
-//            ((WorldServer) player.world).addScheduledTask(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if (player != null && player.isEntityAlive()) {
-//
-//                    }
-//                }
-//            });
-
+            FactionPlayerHandler.getOpt(player).ifPresent(handler -> {
+                handler.joinFaction(getFaction());
+                player.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 300));
+                player.addEffect(new EffectInstance(Effects.SATURATION, 300));
+            });
         }
     }
 
@@ -1030,6 +1024,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 this.setEyeType(data[1]);
                 if (data.length > 2) {
                     this.setGlowingEyes(data[2] > 0);
+                    if (data.length > 3) {
+                        FactionPlayerHandler.getOpt(this.player).ifPresent(p -> p.setTitleGender(data[3] > 0));
+                    }
                 }
             }
         }

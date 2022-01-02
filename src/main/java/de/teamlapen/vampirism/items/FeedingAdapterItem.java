@@ -47,8 +47,8 @@ public class FeedingAdapterItem extends VampirismItem {
         ItemStack bloodContainer = BloodHelper.getBloodContainerInInventory(((PlayerEntity) player).inventory, true, false);
         FluidStack fluidStack = BloodContainerBlock.getFluidFromItemStack(bloodContainer);
         int blood = fluidStack.isEmpty() || fluidStack.getFluid() != ModFluids.blood ? 0 : fluidStack.getAmount();
-        VampirePlayer vampire = VampirePlayer.get((PlayerEntity) player);
-        if (vampire.getLevel() == 0 || blood == 0 || !vampire.getBloodStats().needsBlood()) {
+        VampirePlayer vampire = VampirePlayer.getOpt((PlayerEntity) player).resolve().orElse(null);
+        if (vampire == null || vampire.getLevel() == 0 || blood == 0 || !vampire.getBloodStats().needsBlood()) {
             player.releaseUsingItem();
             return;
         }

@@ -57,9 +57,11 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     public static Capability<IHunterPlayer> CAP = getNull();
 
     /**
+     * Always prefer #getOpt
      * Don't call before the construction event of the player entity is finished
      * Must check Entity#isAlive before
      */
+    @Deprecated
     public static HunterPlayer get(@Nonnull PlayerEntity player) {
         return (HunterPlayer) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get HunterPlayer from player " + player));
     }

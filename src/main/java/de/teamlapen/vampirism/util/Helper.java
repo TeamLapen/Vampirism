@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
@@ -251,7 +252,7 @@ public class Helper {
      * Checks if the given {@link IFactionLevelItem} can be used by the given player
      */
     public static boolean canUseFactionItem(ItemStack stack, IFactionLevelItem item, IFactionPlayerHandler playerHandler) {
-        IPlayableFaction usingFaction = item.getUsingFaction(stack);
+        IPlayableFaction<? extends IFactionPlayer<?>> usingFaction = item.getUsingFaction(stack);
         ISkill requiredSkill = item.getRequiredSkill(stack);
         int reqLevel = item.getMinLevel(stack);
         if (usingFaction != null && !playerHandler.isInFaction(usingFaction)) return false;

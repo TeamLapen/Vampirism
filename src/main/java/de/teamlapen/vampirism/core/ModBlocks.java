@@ -182,7 +182,7 @@ public class ModBlocks {
         registry.register(prepareItemRegistry(new GarlicBeaconBlock(GarlicBeaconBlock.Type.NORMAL)));
         registry.register(prepareItemRegistry(new GarlicBeaconBlock(GarlicBeaconBlock.Type.WEAK)));
         registry.register(prepareItemRegistry(new HunterTableBlock()));
-        registry.register(prepareRegister(new MedChairBlock()));
+        registry.register(prepareItemRegistry(new MedChairBlock()));
         registry.register(prepareRegister(new FlowerPotBlock(vampire_orchid, Block.Properties.of(Material.DECORATION).instabreak().noOcclusion()).setRegistryName(REFERENCE.MODID, "potted_vampire_orchid")));
         registry.register(prepareRegister(new SunscreenBeaconBlock()));
         registry.register(prepareRegister(new TentBlock()));

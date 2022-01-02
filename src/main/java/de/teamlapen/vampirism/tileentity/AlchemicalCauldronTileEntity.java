@@ -104,7 +104,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
     @OnlyIn(Dist.CLIENT)
     public int getLiquidColorClient() {
         ItemStack liquidItem = this.items.get(0);
-        return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> fluidStack.getFluid().getAttributes().getColor()).orElse(ModRecipes.getLiquidColor(liquidItem.getItem()));
+        return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> fluidStack.getFluid().getAttributes().getColor()).orElseGet(() ->ModRecipes.getLiquidColor(liquidItem.getItem()));
     }
 
     public ITextComponent getOwnerName() {
@@ -288,8 +288,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
         if (ownerID == null) return false;
         PlayerEntity playerEntity = this.level.getPlayerByUUID(ownerID);
         if (playerEntity == null || !playerEntity.isAlive()) return false;
-        HunterPlayer hunter = HunterPlayer.get(playerEntity);
-        boolean canCook = recipe.canBeCooked(hunter.getLevel(), hunter.getSkillHandler());
+        boolean canCook = HunterPlayer.getOpt(playerEntity).map(hunter -> recipe.canBeCooked(hunter.getLevel(), hunter.getSkillHandler())).orElse(false);
         if (canCook) {
             recipeChecked = recipe;
             return true;

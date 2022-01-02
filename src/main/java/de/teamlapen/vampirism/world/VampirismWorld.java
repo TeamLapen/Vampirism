@@ -42,6 +42,7 @@ public class VampirismWorld implements IVampirismWorld {
     @CapabilityInject(IVampirismWorld.class)
     public static Capability<IVampirismWorld> CAP = getNull();
 
+    @Deprecated
     public static VampirismWorld get(World world) {
         return (VampirismWorld) world.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get VampirismWorld from World " + world));
     }

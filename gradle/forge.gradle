@@ -20,6 +20,20 @@ repositories {
     maven {
         url "https://nexus.resourcefulbees.com/repository/maven-public/"
     }
+    repositories {
+        maven {
+            url "https://www.cursemaven.com"
+            content {
+                includeGroup "curse.maven"
+            }
+        }
+    }
+    //3rd party library repos
+    maven {
+        url = "https://maven.theillusivec4.top/"
+    }
+    maven { url 'https://maven.blamejared.com' }
+    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
     mavenCentral()
     mavenLocal()
 }
@@ -36,15 +50,20 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${project.jei_version}") //Full for runtime
     compileOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}") //For compile (not exported to POM)
     runtimeOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}") //For runtime (not exported to POM)
-
-    //runtimeOnly fg.deobf("curse.maven:angel-of-vengeance:2810906")
     if (System.getProperty("idea.sync.active") != "true") {
-        annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+        annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     }
     //Blame for debugging
     runtimeOnly fg.deobf("com.telepathicgrunt:Blame:${project.blame_version}")
 
+    //Common dependencies for temporary test mods
+//    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.3")
+//    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-53.2")
+//    runtimeOnly fg.deobf("software.bernie.geckolib:geckolib-forge-1.16.5:3.0.57")
 
+    //Mod compat tests - Temporary
+//  runtimeOnly fg.deobf("curse.maven:epic-fight-mod-405076:3534866")
+//  runtimeOnly fg.deobf("curse.maven:angel-of-vengeance:2810906")
 }
 
 minecraft {

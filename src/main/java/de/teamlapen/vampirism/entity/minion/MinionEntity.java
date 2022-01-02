@@ -519,7 +519,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     @Nullable
     protected ILordPlayer getLord() {
-        return this.getLordID().map(this.level::getPlayerByUUID).filter(PlayerEntity::isAlive).map(FactionPlayerHandler::get).orElse(null);
+        return this.getLordID().map(this.level::getPlayerByUUID).filter(PlayerEntity::isAlive).flatMap(p->FactionPlayerHandler.getOpt(p).resolve()).orElse(null);
     }
 
     protected Optional<UUID> getLordID() {
@@ -551,7 +551,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
         if (isLord(player)) {
             if (player instanceof ServerPlayerEntity) {
-                NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this), new TranslationTextComponent("text.vampirism.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(new StringTextComponent("Minion")))), buf -> buf.writeVarInt(this.getId()));
+                NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this), new TranslationTextComponent("text.vampirism.name").append(this.getMinionData().map(MinionData::getFormattedName).orElseGet(() -> new StringTextComponent("Minion")))), buf -> buf.writeVarInt(this.getId()));
             }
             return ActionResultType.SUCCESS;
         }

@@ -55,8 +55,10 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     public static Capability<IFactionPlayerHandler> CAP = getNull();
 
     /**
+     * You should really use #getOpt instead
      * Must check Entity#isAlive before
      */
+    @Deprecated
     public static FactionPlayerHandler get(PlayerEntity player) {
         return (FactionPlayerHandler) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get FactionPlayerHandler from EntityPlayer " + player));
     }
@@ -70,6 +72,14 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             LOGGER.warn("Cannot get Faction player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
         }
         return opt;
+    }
+
+    public static Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer(@Nonnull PlayerEntity player){
+        LazyOptional<FactionPlayerHandler> opt = player.getCapability(CAP, null).cast();
+        if (!opt.isPresent()) {
+            LOGGER.warn("Cannot get Faction player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
+        }
+        return opt.resolve().flatMap(FactionPlayerHandler::getCurrentFactionPlayer);
     }
 
 
@@ -181,7 +191,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     @Nonnull
     @Override
     public Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer() {
-        return currentFaction == null ? Optional.empty() : currentFaction.getPlayerCapability(player).map(Optional::of).orElse(Optional.empty());
+        return currentFaction == null ? Optional.empty() : currentFaction.getPlayerCapability(player).map(Optional::of).orElseGet(Optional::empty);
     }
 
     @Override
@@ -277,11 +287,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     public boolean onEntityAttacked(DamageSource src, float amt) {
         if (VampirismConfig.SERVER.pvpOnlyBetweenFactions.get() && src instanceof EntityDamageSource) {
             if (src.getEntity() instanceof PlayerEntity) {
-                FactionPlayerHandler other = get((PlayerEntity) src.getEntity());
-                if (this.currentFaction == null || other.currentFaction == null) {
+                IPlayableFaction<?> otherFaction = getOpt((PlayerEntity) src.getEntity()).resolve().map(FactionPlayerHandler::getCurrentFaction).orElse(null);
+                if (this.currentFaction == null || otherFaction == null) {
                     return VampirismConfig.SERVER.pvpOnlyBetweenFactionsIncludeHumans.get();
                 }
-                return !this.currentFaction.equals(other.currentFaction);
+                return !this.currentFaction.equals(otherFaction);
             }
         }
         return true;
@@ -409,6 +419,10 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
         this.titleGender = female;
         return true;
+    }
+
+    public boolean getTitleGender() {
+        return this.titleGender;
     }
 
     @Override

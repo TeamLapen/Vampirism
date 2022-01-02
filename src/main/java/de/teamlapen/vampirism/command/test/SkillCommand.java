@@ -49,7 +49,7 @@ public class SkillCommand extends BasicCommand {
     }
 
     private static int skill(CommandSource commandSource, ServerPlayerEntity asPlayer, ISkill skill, boolean force) {
-        IFactionPlayer factionPlayer = asPlayer.isAlive() ? FactionPlayerHandler.get(asPlayer).getCurrentFactionPlayer().orElse(null) : null;
+        IFactionPlayer<?> factionPlayer = asPlayer.isAlive() ? FactionPlayerHandler.getCurrentFactionPlayer(asPlayer).orElse(null) : null;
         if (factionPlayer == null) {
             commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.skill.noinfaction"), false);
             return 0;

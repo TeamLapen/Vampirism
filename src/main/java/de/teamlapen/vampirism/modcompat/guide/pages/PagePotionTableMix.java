@@ -127,8 +127,8 @@ public class PagePotionTableMix extends Page {
     private void deriveItemStacks(ExtendedPotionMix recipe) {
         input = PotionUtils.setPotion(new ItemStack(Items.POTION), recipe.input.get());
         output = PotionUtils.setPotion(new ItemStack(Items.POTION), recipe.output.get());
-        ingredients1 = recipe.reagent1.map(Ingredient::getItems).map(Arrays::stream).orElse(Stream.empty()).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent1Count)).toArray(ItemStack[]::new);
-        ingredients2 = recipe.reagent2.map(Ingredient::getItems).map(Arrays::stream).orElse(Stream.empty()).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent2Count)).toArray(ItemStack[]::new);
+        ingredients1 = recipe.reagent1.map(Ingredient::getItems).map(Arrays::stream).orElseGet(Stream::empty).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent1Count)).toArray(ItemStack[]::new);
+        ingredients2 = recipe.reagent2.map(Ingredient::getItems).map(Arrays::stream).orElseGet(Stream::empty).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent2Count)).toArray(ItemStack[]::new);
         if (ingredients1.length == 0) {
             ingredients1 = new ItemStack[]{ItemStack.EMPTY};
         }

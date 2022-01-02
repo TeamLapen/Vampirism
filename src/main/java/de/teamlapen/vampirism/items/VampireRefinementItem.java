@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.util.WeightedRandomItem;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
@@ -31,12 +33,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class VampireRefinementItem extends Item implements IRefinementItem {
+public class VampireRefinementItem extends Item implements IRefinementItem { //TODO 1.17 rename to RefinementItem and create subclass for Vampires
 
     public static final int MAX_DAMAGE = 500;
     private static final Random RANDOM = new Random();
 
-    public static ItemStack getRandomRefinementItem(IFaction<?> faction) {
+    public static ItemStack getRandomRefinementItem(IPlayableFaction<?> faction) {
         List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream().filter(set -> set.getFaction() == faction).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return ItemStack.EMPTY;
         IRefinementSet s = WeightedRandom.getRandomItem(RANDOM, sets).getItem();
@@ -49,21 +51,21 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
             }
             return AccessorySlotType.AMULET;
         });
-        VampireRefinementItem i = getItemForType(t);
-        ItemStack stack = new ItemStack(i);
+        IRefinementItem i = faction.getRefinementItem(t);
+        ItemStack stack = new ItemStack(((Item) i));
         if (i.applyRefinementSet(stack, s)) {
             return stack;
         }
         return ItemStack.EMPTY;
     }
 
-    public static IRefinementSet getRandomRefinementForItem(@Nullable IFaction<?> faction, VampireRefinementItem stack) {
+    public static IRefinementSet getRandomRefinementForItem(@Nullable IFaction<?> faction, IRefinementItem stack) {
         List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream().filter(set -> faction == null || set.getFaction() == faction).filter(set -> set.getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return null;
         return WeightedRandom.getRandomItem(RANDOM, sets).getItem();
     }
 
-    public static VampireRefinementItem getItemForType(AccessorySlotType type) {
+    public static VampireRefinementItem getItemForType(AccessorySlotType type) { //TODO 1.17 move to vampire subclass
         switch (type) {
             case AMULET:
                 return ModItems.amulet;
@@ -80,6 +82,12 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
         this.type = type;
     }
 
+    @Nonnull
+    @Override
+    public IFaction<?> getExclusiveFaction() { //TODO 1.17 remove
+        return VReference.VAMPIRE_FACTION;
+    }
+
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
@@ -91,12 +99,7 @@ public class VampireRefinementItem extends Item implements IRefinementItem {
         }
     }
 
-    /**
-     * Apply refinement set to the given stack.
-     * Note: Not all refinements can be applied to all accessory slot types
-     *
-     * @return Whether the set was successfully applied
-     */
+    @Override
     public boolean applyRefinementSet(ItemStack stack, IRefinementSet set) {
         if (set.getSlotType().map(t -> t == type).orElse(true)) {
             CompoundNBT tag = stack.getOrCreateTag();

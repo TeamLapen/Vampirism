@@ -103,7 +103,7 @@ public class InputEventPacket implements IMessage {
         ServerPlayerEntity player = ctx.getSender();
         Validate.notNull(player);
         ctx.enqueueWork(() -> {
-            Optional<? extends IFactionPlayer> factionPlayerOpt = FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty());
+            Optional<? extends IFactionPlayer<?>> factionPlayerOpt = FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).orElseGet(Optional::empty);
             switch (msg.action) {
                 case SUCKBLOOD: {
                     try {
@@ -123,7 +123,7 @@ public class InputEventPacket implements IMessage {
                 case TOGGLEACTION: {
                     ResourceLocation id = new ResourceLocation(msg.param);
                     factionPlayerOpt.ifPresent(factionPlayer -> {
-                        IActionHandler actionHandler = factionPlayer.getActionHandler();
+                        IActionHandler<?> actionHandler = factionPlayer.getActionHandler();
                         IAction action = ModRegistries.ACTIONS.getValue(id);
                         if (action != null) {
                             IAction.PERM r = actionHandler.toggleAction(action);
@@ -162,14 +162,14 @@ public class InputEventPacket implements IMessage {
                     factionPlayerOpt.ifPresent(factionPlayer -> {
                         ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(msg.param));
                         if (skill != null) {
-                            ISkillHandler skillHandler = factionPlayer.getSkillHandler();
+                            ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
                             ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill);
                             if (result == ISkillHandler.Result.OK) {
                                 skillHandler.enableSkill(skill);
                                 if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
                                     //does this cause problems with addons?
                                     CompoundNBT sync = new CompoundNBT();
-                                    ((SkillHandler) skillHandler).writeUpdateForClient(sync);
+                                    ((SkillHandler<?>) skillHandler).writeUpdateForClient(sync);
                                     HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
                                 }
 
@@ -193,13 +193,15 @@ public class InputEventPacket implements IMessage {
                     }
                     break;
                 case REVERTBACK:
-                    FactionPlayerHandler.get(player).setFactionAndLevel(null, 0);
-                    player.displayClientMessage(new TranslationTextComponent("command.vampirism.base.level.successful", player.getName(), VReference.VAMPIRE_FACTION.getName(), 0), true);
-                    LOGGER.debug("Player {} left faction", player);
-                    if (!ServerLifecycleHooks.getCurrentServer().isHardcore()) {
-                        player.hurt(DamageSource.MAGIC, 1000);
+                    FactionPlayerHandler.getOpt(player).ifPresent(handler -> {
+                        handler.setFactionAndLevel(null, 0);
+                        player.displayClientMessage(new TranslationTextComponent("command.vampirism.base.level.successful", player.getName(), VReference.VAMPIRE_FACTION.getName(), 0), true);
+                        LOGGER.debug("Player {} left faction", player);
+                        if (!ServerLifecycleHooks.getCurrentServer().isHardcore()) {
+                            player.hurt(DamageSource.MAGIC, 1000);
 
-                    }
+                        }
+                    });
                     break;
                 case VAMPIRE_VISION_TOGGLE:
                     VampirePlayer.getOpt(player).ifPresent(VampirePlayer::switchVision);

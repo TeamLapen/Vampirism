@@ -6,7 +6,6 @@ import de.teamlapen.lib.lib.util.ValuedObject;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.blocks.AltarPillarBlock;
 import de.teamlapen.vampirism.blocks.AltarTipBlock;
 import de.teamlapen.vampirism.core.*;
@@ -304,17 +303,17 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         }
         if (phase.equals(PHASE.LEVELUP)) {
             if (!level.isClientSide) {
-                assert player.isAlive();
-                IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
-                if (handler.getCurrentLevel(VReference.VAMPIRE_FACTION) != targetLevel - 1) {
-                    LOGGER.warn("Player {} changed level while the ritual was running. Cannot levelup.", player);
-                    return;
-                }
-                handler.setFactionLevel(VReference.VAMPIRE_FACTION, handler.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1);
-                VampirePlayer.get(player).drinkBlood(Integer.MAX_VALUE, 0, false);
-                if (player instanceof ServerPlayerEntity) {
-                    ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.PERFORM_RITUAL_INFUSION);
-                }
+                FactionPlayerHandler.getOpt(player).ifPresent(handler -> {
+                    if (handler.getCurrentLevel(VReference.VAMPIRE_FACTION) != targetLevel - 1) {
+                        LOGGER.warn("Player {} changed level while the ritual was running. Cannot levelup.", player);
+                        return;
+                    }
+                    handler.setFactionLevel(VReference.VAMPIRE_FACTION, handler.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1);
+                    VampirePlayer.getOpt(player).ifPresent(vampire->vampire.drinkBlood(Integer.MAX_VALUE, 0, false));
+                    if (player instanceof ServerPlayerEntity) {
+                        ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.PERFORM_RITUAL_INFUSION);
+                    }
+                });
             } else {
                 this.level.playLocalSound(player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F) * 0.7F, true);
                 this.level.addParticle(ParticleTypes.EXPLOSION, player.getX(), player.getY(), player.getZ(), 1.0D, 0.0D, 0.0D);

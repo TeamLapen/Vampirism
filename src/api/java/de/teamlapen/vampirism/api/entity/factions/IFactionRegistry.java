@@ -76,9 +76,12 @@ public interface IFactionRegistry {
      * @param color           Color e.g. for level rendering
      * @param <T>             Interface all entities implement
      * @return The created faction
+     *
+     * @deprecated use the faction builder ({@link #createFaction(ResourceLocation, Class)})
      */
+    @Deprecated
     @ThreadSafeAPI
-    <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral);
+    <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral);//TODO 1.17 remove
 
     /**
      * Create and registerAdvancements a non playable faction. Must be called before InterModProccessEvent e.g. during InterModEnqueueEvent
@@ -89,9 +92,12 @@ public interface IFactionRegistry {
      * @param villageFactionData village capture related utility class (if null will gets filled with dummy)
      * @param <T>                Interface all entities implement
      * @return The created faction
+     *
+     * @deprecated use the faction builder ({@link #createFaction(ResourceLocation, Class)})
      */
+    @Deprecated
     @ThreadSafeAPI
-    <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, @Nullable IVillageFactionData villageFactionData);
+    <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, @Nullable IVillageFactionData villageFactionData);//TODO 1.17 remove
 
     /**
      * Use {@link IFactionRegistry#registerPlayableFaction(ResourceLocation, Class, Color, boolean, NonNullSupplier, int, int, BiFunction, IVillageFactionData)} instead
@@ -105,10 +111,12 @@ public interface IFactionRegistry {
      * @param highestLevel             The highest reachable player level
      * @param <T>                      Interface all entities or (the given capability for players)  implement
      * @return The created faction
+     *
+     * @deprecated use the faction builder ({@link #createPlayableFaction(ResourceLocation, Class, NonNullSupplier)}
      */
     @Deprecated
     @ThreadSafeAPI
-    <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel);
+    <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel);//TODO 1.17 remove
 
     /**
      * Create and registerAdvancements a playable faction. Must be called before InterModProccessEvent e.g. during InterModEnqueueEvent
@@ -123,7 +131,33 @@ public interface IFactionRegistry {
      * @param villageFactionData       village capture related utility class (if null will gets filled with dummy)
      * @param <T>                      Interface all entities or (the given capability for players)  implement
      * @return The created faction
+     *
+     * @deprecated use the faction builder ({@link #createPlayableFaction(ResourceLocation, Class, NonNullSupplier)}
+     */
+    @Deprecated
+    @ThreadSafeAPI
+    <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull BiFunction<Integer, Boolean, ITextComponent> lordTitleFunction, @Nullable IVillageFactionData villageFactionData); //TODO 1.17 remove
+
+    /**
+     * Creates a faction builder.
+     *
+     * @param id                       Faction id e.g. for level command
+     * @param entityInterface          Interface all entities implement
+     * @param <T>                      Interface all entities implement
+     * @return a faction builder
      */
     @ThreadSafeAPI
-    <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull BiFunction<Integer, Boolean, ITextComponent> lordTitleFunction, @Nullable IVillageFactionData villageFactionData);
+    <T extends IFactionEntity> IFactionBuilder<T> createFaction(ResourceLocation id, Class<T> entityInterface);
+
+    /**
+     * Creates a playable faction builder.
+     *
+     * @param id                       Faction id e.g. for level command
+     * @param entityInterface          Interface all entities or (the given capability for players) implement
+     * @param playerCapabilitySupplier The capability which is attached to all players
+     * @param <T>                      Interface all entities or (the given capability for players)  implement
+     * @return a player faction builder
+     */
+    @ThreadSafeAPI
+    <T extends IFactionPlayer<?>> IPlayableFactionBuilder<T> createPlayableFaction(ResourceLocation id, Class<T> entityInterface, NonNullSupplier<Capability<T>> playerCapabilitySupplier);
 }

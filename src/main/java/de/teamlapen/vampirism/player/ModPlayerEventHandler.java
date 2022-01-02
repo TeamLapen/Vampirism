@@ -38,6 +38,7 @@ import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -48,6 +49,7 @@ import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
@@ -60,8 +62,10 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.village.PointOfInterestType;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.world.BlockEvent;
@@ -140,15 +144,23 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void eyeHeight(EntityEvent.Size event) {
         if (event.getEntity() instanceof PlayerEntity && ((PlayerEntity) event.getEntity()).inventory != null /*make sure we are not in the player's contructor*/) {
-            if (event.getEntity().isAlive() && event.getEntity().position().lengthSqr() != 0) { //Do not attempt to get capability while entity is being initialized
+            if (event.getEntity().isAlive() && event.getEntity().position().lengthSqr() != 0 && event.getEntity().getVehicle() == null) { //Do not attempt to get capability while entity is being initialized
                 if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().bat) {
                     event.setNewSize(BatVampireAction.BAT_SIZE);
                     event.setNewEyeHeight(BatVampireAction.BAT_EYE_HEIGHT);
+
                 } else if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isDBNO) {
                     event.setNewSize(EntitySize.fixed(0.6f, 0.95f));
                     event.setNewEyeHeight(0.725f);
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onTryMount(EntityMountEvent event){
+        if (event.getEntity() instanceof PlayerEntity && VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
+            event.setCanceled(true);
         }
     }
 
@@ -191,9 +203,26 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
         if (!(event.getEntity() instanceof PlayerEntity) || !event.getEntity().isAlive()) return;
+        if(event.getPlacedBlock().isAir(event.getWorld(), event.getPos())) return; //If for some reason, cough Create cough, a block is removed (so air is placed) we don't want to prevent that.
         try {
             if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
                 event.setCanceled(true);
+
+                //Workaround for https://github.com/MinecraftForge/MinecraftForge/issues/7609 or https://github.com/TeamLapen/Vampirism/issues/1021
+                //Chest drops content when restoring snapshot
+                if(event.getPlacedBlock().hasTileEntity()){
+                    TileEntity t =  event.getWorld().getBlockEntity(event.getPos());
+                    if(t instanceof IInventory){
+                        ((IInventory) t).clearContent();
+                    }
+                }
+
+                if(event.getEntity() instanceof ServerPlayerEntity){ //For some reason this event is only run serverside. Therefore, we have to make sure the client is notified about the not-placed block.
+                    MinecraftServer server = event.getEntity().level.getServer();
+                    if(server!=null){
+                        server.getPlayerList().sendAllPlayerInfo((ServerPlayerEntity) event.getEntity()); //Would probably suffice to just sent a SHeldItemChangePacket
+                    }
+                }
             }
             HunterPlayer.getOpt((PlayerEntity) event.getEntity()).ifPresent(HunterPlayer::breakDisguise);
         } catch (Exception e) {
@@ -448,25 +477,23 @@ public class ModPlayerEventHandler {
      * @return If it is allowed to use the item
      */
     private boolean checkItemUsePerm(ItemStack stack, PlayerEntity player) {
-
         boolean message = !player.getCommandSenderWorld().isClientSide;
         if (!stack.isEmpty() && stack.getItem() instanceof IFactionLevelItem) {
             if (!player.isAlive()) return false;
-            IFactionLevelItem item = (IFactionLevelItem) stack.getItem();
-            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            IPlayableFaction usingFaction = item.getUsingFaction(stack);
+            IFactionLevelItem<?> item = (IFactionLevelItem<?>) stack.getItem();
+            LazyOptional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(player);
+            IPlayableFaction<? extends IFactionPlayer<?>> usingFaction = item.getUsingFaction(stack);
             ISkill requiredSkill = item.getRequiredSkill(stack);
-            if (usingFaction != null && !handler.isInFaction(usingFaction)) {
-
+            if (usingFaction != null && !handler.map(h->h.isInFaction(usingFaction)).orElse(false)) {
                 if (message)
                     player.displayClientMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by", usingFaction.getNamePlural()), true);
                 return false;
-            } else if (handler.getCurrentLevel() < item.getMinLevel(stack)) {
+            } else if (handler.map(FactionPlayerHandler::getCurrentLevel).orElse(0) < item.getMinLevel(stack)) {
                 if (message)
                     player.displayClientMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by_level", usingFaction == null ? new TranslationTextComponent("text.vampirism.all") : usingFaction.getNamePlural(), item.getMinLevel(stack)), true);
                 return false;
             } else if (requiredSkill != null) {
-                IFactionPlayer factionPlayer = handler.getCurrentFactionPlayer().orElse(null);
+                IFactionPlayer<?> factionPlayer = handler.resolve().flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
                 if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
                     if (message)
                         player.displayClientMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", requiredSkill.getName()), true);

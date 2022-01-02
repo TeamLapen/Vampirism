@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
 import net.minecraft.entity.ai.attributes.Attribute;
@@ -103,19 +102,8 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         ItemStack[] items = new ItemStack[this.appliedRefinementSets.length];
         for (int i = 0; i < this.appliedRefinementSets.length; i++) {
             if (this.appliedRefinementSets[i] != null) {
-                VampireRefinementItem item;
-                switch (i) {
-                    case 0:
-                        item = ModItems.amulet;
-                        break;
-                    case 1:
-                        item = ModItems.ring;
-                        break;
-                    default:
-                        item = ModItems.obi_belt;
-                }
-                items[i] = new ItemStack(item);
-                item.applyRefinementSet(items[i], this.appliedRefinementSets[i]);
+                items[i] = new ItemStack(this.faction.getRefinementItem(IRefinementItem.AccessorySlotType.values()[i]));
+                this.faction.getRefinementItem(IRefinementItem.AccessorySlotType.values()[i]).applyRefinementSet(items[i], this.appliedRefinementSets[i]);
                 items[i].setDamageValue(this.refinementSetDamage[i]);
             }
         }
@@ -172,16 +160,18 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     public boolean equipRefinementItem(ItemStack stack) {
         if (stack.getItem() instanceof IRefinementItem) {
             IRefinementItem refinementItem = ((IRefinementItem) stack.getItem());
-            @Nullable IRefinementSet newSet = refinementItem.getRefinementSet(stack);
-            IRefinementItem.AccessorySlotType setSlot = refinementItem.getSlotType();
+            if (refinementItem.getExclusiveFaction().equals(this.faction)) {
+                @Nullable IRefinementSet newSet = refinementItem.getRefinementSet(stack);
+                IRefinementItem.AccessorySlotType setSlot = refinementItem.getSlotType();
 
-            removeRefinementItem(setSlot);
-            this.dirty = true;
+                removeRefinementItem(setSlot);
+                this.dirty = true;
 
-            if (newSet != null && newSet.getFaction() == faction) {
-                applyRefinementSet(newSet, setSlot.getSlot());
+                if (newSet != null && newSet.getFaction() == faction) {
+                    applyRefinementSet(newSet, setSlot.getSlot());
+                }
+                return true;
             }
-            return true;
         }
 
         return false;
