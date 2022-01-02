@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.skills.SkillNode;
 import de.teamlapen.vampirism.player.skills.SkillTreeManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.gui.screen.Screen;
@@ -73,6 +74,7 @@ public class SkillsScreen extends Screen {
 
     @Override
     protected void init() {
+        this.tabs.clear();
         this.guiLeft = (this.width - SCREEN_WIDTH) / 2;
         this.guiTop = (this.height - SCREEN_HEIGHT) / 2;
 
@@ -82,7 +84,7 @@ public class SkillsScreen extends Screen {
         }
 
         if (this.tabs.size() > 0) {
-            this.selectedTab = this.tabs.get(0);
+            this.selectedTab = this.tabs.get(this.selectedTab == null ?0: this.selectedTab.getIndex());
         }
 
         if (this.backScreen != null) {
