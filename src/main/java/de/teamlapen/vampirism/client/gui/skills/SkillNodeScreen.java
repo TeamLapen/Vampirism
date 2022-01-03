@@ -84,7 +84,7 @@ public class SkillNodeScreen extends AbstractGui {
         for (int i = 0; i < skillNode.getElements().length; i++) {
             this.titles[i] = LanguageMap.getInstance().getVisualOrder(minecraft.font.substrByWidth(skillNode.getElements()[i].getName(), 163));
             int size = Math.max(l + minecraft.font.width(titles[i]), 120);
-            this.descriptions[i] = LanguageMap.getInstance().getVisualOrder(this.findOptimalLines(TextComponentUtils.mergeStyles(Optional.ofNullable(skillNode.getElements()[i].getDescription()).orElse(new StringTextComponent("")).copy(), Style.EMPTY.withColor(TextFormatting.GRAY)), size - 20));
+            this.descriptions[i] = LanguageMap.getInstance().getVisualOrder(this.findOptimalLines(TextComponentUtils.mergeStyles(Optional.ofNullable(skillNode.getElements()[i].getDescription()).orElse(new StringTextComponent("")).copy(), Style.EMPTY.withColor(TextFormatting.GRAY)), size - 30));
             this.width[i] = size;
         }
     }
@@ -205,7 +205,7 @@ public class SkillNodeScreen extends AbstractGui {
             //draw description
             if (elements[hoveredSkill].getDescription() != null) {
                 List<IReorderingProcessor> description = getSkillDescription(hoveredSkill);
-                GuiUtils.drawContinuousTexturedBox(stack, scrollX + x - 5, scrollY + this.y + 3, 0, 81, this.width[hoveredSkill], 26 + description.size() * 9, 200, 20, 3, this.getBlitOffset());
+                GuiUtils.drawContinuousTexturedBox(stack, scrollX + x - 5, scrollY + this.y + 3, 0, 81, this.width[hoveredSkill], 30 + description.size() * 9, 200, 20, 3, this.getBlitOffset());
                 for (int i = 0; i < description.size(); i++) {
                     this.minecraft.font.draw(stack, description.get(i), scrollX + x + 2, scrollY + this.y + 3 + 24 + i * 9, -1);
                 }

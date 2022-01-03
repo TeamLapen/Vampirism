@@ -84,8 +84,8 @@ public class SkillsTabScreen extends AbstractGui {
         this.maxY = 20;
         this.minY = (int) (-this.treeHeight * this.zoom);
 
-        this.minX = (int) ((int) (-this.treeWidth + (treeWidth/2 ))*this.zoom);
-        this.maxX = (int) ((int) (this.treeWidth  + (treeWidth/2))*this.zoom);
+        this.minX = (int) ( (-this.treeWidth + (treeWidth/2 ))*this.zoom);
+        this.maxX = (int) ( (this.treeWidth  + (treeWidth/2))*this.zoom);
 
         this.centered = false;
     }

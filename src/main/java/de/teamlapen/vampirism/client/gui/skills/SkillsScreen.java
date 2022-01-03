@@ -14,7 +14,6 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.skills.SkillNode;
 import de.teamlapen.vampirism.player.skills.SkillTreeManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.gui.screen.Screen;
@@ -35,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Gui screen which displays the skills available to the players and allows him to unlock some.
+ * Gui screen which displays the skills available to the player and allows them to unlock some.
  * Inspired by Minecraft's new AchievementScreen but vertical
  * <p>
  * relevant classes {@link SkillsScreen} {@link SkillsTabScreen} {@link SkillNodeScreen}
@@ -74,6 +73,7 @@ public class SkillsScreen extends Screen {
 
     @Override
     protected void init() {
+        assert this.minecraft!=null;
         this.tabs.clear();
         this.guiLeft = (this.width - SCREEN_WIDTH) / 2;
         this.guiTop = (this.height - SCREEN_HEIGHT) / 2;
