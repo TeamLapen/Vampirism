@@ -240,6 +240,14 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.castle_stairs_dark_brick);
             this.dropSelf(ModBlocks.castle_stairs_dark_stone);
             this.dropSelf(ModBlocks.castle_stairs_purple_brick);
+            this.dropSelf(ModBlocks.stripped_dark_spruce_log);
+            this.dropSelf(ModBlocks.stripped_cursed_spruce_log);
+            this.dropSelf(ModBlocks.dark_spruce_planks);
+            this.dropSelf(ModBlocks.cursed_spruce_planks);
+            this.dropSelf(ModBlocks.dark_spruce_trapdoor);
+            this.dropSelf(ModBlocks.cursed_spruce_trapdoor);
+            this.add(ModBlocks.dark_spruce_door, BlockLootTables::createDoorTable);
+            this.add(ModBlocks.cursed_spruce_door, BlockLootTables::createDoorTable);
             this.dropSelf(ModBlocks.church_altar);
             this.dropSelf(ModBlocks.cursed_earth);
             this.dropSelf(ModBlocks.fire_place);
@@ -273,10 +281,9 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.weapon_table);
             this.add(ModBlocks.tent, noDrop());
             this.dropPottedContents(ModBlocks.potted_vampire_orchid);
-            this.dropSelf(ModBlocks.bloody_spruce_sapling);
-            this.dropSelf(ModBlocks.bloody_spruce_log);
-            this.add(ModBlocks.vampire_spruce_leaves, (block) -> createLeavesDrops(block, ModBlocks.bloody_spruce_sapling, DEFAULT_SAPLING_DROP_RATES));
-            this.add(ModBlocks.bloody_spruce_leaves, (block) -> createLeavesDrops(block, ModBlocks.bloody_spruce_sapling, DEFAULT_SAPLING_DROP_RATES));
+            this.dropSelf(ModBlocks.dark_spruce_sapling);
+            this.dropSelf(ModBlocks.cursed_spruce_sapling);
+            this.add(ModBlocks.dark_spruce_leaves, (block) -> createLeavesDrops(block, ModBlocks.dark_spruce_sapling, DEFAULT_SAPLING_DROP_RATES));
             this.dropSelf(ModBlocks.chandelier);
             this.add(ModBlocks.candelabra_wall, createSingleItemTable(ModItems.item_candelabra));
             this.add(ModBlocks.candelabra, createSingleItemTable(ModItems.item_candelabra));
@@ -285,6 +292,34 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.tombstone2);
             this.dropSelf(ModBlocks.tombstone3);
             this.dropSelf(ModBlocks.grave_cage);
+            this.add(ModBlocks.cursed_grass, createSingleItemTable(ModBlocks.cursed_earth));
+            this.dropSelf(ModBlocks.dark_spruce_log);
+            this.add(ModBlocks.cursed_roots, (block) -> {
+                return createShearsDispatchTable(block, applyExplosionDecay(block, ItemLootEntry.lootTableItem(Items.STICK).apply(SetCount.setCount(RandomValueRange.between(0.0F, 2.0F)))));
+            });
+            this.dropPottedContents(ModBlocks.potted_cursed_roots);
+            this.dropSelf(ModBlocks.cursed_spruce_log);
+            this.add(ModBlocks.cursed_bark, noDrop());
+            this.dropSelf(ModBlocks.dark_spruce_stairs);
+            this.dropSelf(ModBlocks.cursed_spruce_stairs);
+            this.dropSelf(ModBlocks.dark_spruce_wood);
+            this.dropSelf(ModBlocks.cursed_spruce_wood);
+            this.dropSelf(ModBlocks.stripped_dark_spruce_wood);
+            this.dropSelf(ModBlocks.stripped_cursed_spruce_wood);
+            this.dropSelf(ModBlocks.dark_spruce_sign);
+            this.dropSelf(ModBlocks.cursed_spruce_sign);
+            this.dropSelf(ModBlocks.dark_spruce_wall_sign);
+            this.dropSelf(ModBlocks.cursed_spruce_wall_sign);
+            this.dropSelf(ModBlocks.dark_spruce_pressure_place);
+            this.dropSelf(ModBlocks.cursed_spruce_pressure_place);
+            this.dropSelf(ModBlocks.dark_spruce_button);
+            this.dropSelf(ModBlocks.cursed_spruce_button);
+            this.dropSelf(ModBlocks.dark_spruce_slab);
+            this.dropSelf(ModBlocks.cursed_spruce_slab);
+            this.dropSelf(ModBlocks.dark_spruce_fence_gate);
+            this.dropSelf(ModBlocks.cursed_spruce_fence_gate);
+            this.dropSelf(ModBlocks.dark_spruce_fence);
+            this.dropSelf(ModBlocks.cursed_spruce_fence);
         }
 
         @Nonnull

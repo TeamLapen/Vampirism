@@ -22,6 +22,8 @@ public class ModTags {
         public static final ITag.INamedTag<Block> CURSEDEARTH = tag("cursed_earth");
         public static final ITag.INamedTag<Block> CASTLE_STAIRS = tag("castle_stairs");
         public static final ITag.INamedTag<Block> CASTLE_SLAPS = tag("castle_slaps");
+        public static final ITag.INamedTag<Block> DARK_SPRUCE_LOG = tag("dark_spruce_log");
+        public static final ITag.INamedTag<Block> CURSED_SPRUCE_LOG = tag("cursed_spruce_log");
 
         private static ITag.INamedTag<Block> tag(ResourceLocation resourceLocation) {
             return BlockTags.bind(resourceLocation.toString());
@@ -44,6 +46,8 @@ public class ModTags {
         public static final ITag.INamedTag<Item> CASTLE_STAIRS = tag("castle_stairs");
         public static final ITag.INamedTag<Item> CASTLE_SLAPS = tag("castle_slaps");
         public static final ITag.INamedTag<Item> CURSEDEARTH = tag("cursed_earth");
+        public static final ITag.INamedTag<Item> DARK_SPRUCE_LOG = tag("dark_spruce_log");
+        public static final ITag.INamedTag<Item> CURSED_SPRUCE_LOG = tag("cursed_spruce_log");
 
 
         private static ITag.INamedTag<Item> tag(ResourceLocation resourceLocation) {

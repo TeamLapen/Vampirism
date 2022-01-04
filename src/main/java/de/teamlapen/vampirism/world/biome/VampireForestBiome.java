@@ -3,7 +3,9 @@ package de.teamlapen.vampirism.world.biome;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
+import net.minecraft.client.audio.BackgroundMusicTracks;
 import net.minecraft.entity.EntityClassification;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.biome.*;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
@@ -15,17 +17,18 @@ public class VampireForestBiome {
     }
 
     public static Biome.Builder createBiomeBuilder(float depth, float scale, MobSpawnInfo.Builder spawnBuilder, BiomeAmbience.Builder ambienceBuilder) {
-        BiomeGenerationSettings.Builder builder = new BiomeGenerationSettings.Builder().surfaceBuilder(SurfaceBuilder.DEFAULT.configured(new SurfaceBuilderConfig(ModBlocks.cursed_earth.defaultBlockState(), ModBlocks.cursed_earth.defaultBlockState(), ModBlocks.cursed_earth.defaultBlockState())));
+        BiomeGenerationSettings.Builder builder = new BiomeGenerationSettings.Builder().surfaceBuilder(SurfaceBuilder.DEFAULT.configured(new SurfaceBuilderConfig(ModBlocks.cursed_grass.defaultBlockState(), ModBlocks.cursed_earth.defaultBlockState(), ModBlocks.cursed_earth.defaultBlockState())));
         DefaultBiomeFeatures.addDefaultCarvers(builder); //carver
         VampirismBiomeFeatures.addModdedWaterLake(builder);
 
         VampirismBiomeFeatures.addVampireFlower(builder);
+        VampirismBiomeFeatures.addBushPatch(builder);
         DefaultBiomeFeatures.addForestGrass(builder);
-        DefaultBiomeFeatures.addDesertVegetation(builder);
 
-        DefaultBiomeFeatures.addDefaultUndergroundVariety(builder); //stone variants
+        VampirismBiomeFeatures.addUndergroundVariety(builder);
         DefaultBiomeFeatures.addDefaultOres(builder); //ore
         DefaultBiomeFeatures.addDefaultSoftDisks(builder); //disks
+        VampirismBiomeFeatures.addDarkStoneSoftDisk(builder); //disks
 
         VampirismBiomeFeatures.addVampireTrees(builder);
 
@@ -44,6 +47,9 @@ public class VampireForestBiome {
     }
 
     public static BiomeAmbience.Builder createBiomeAmbienceBuilder() {
-        return new BiomeAmbience.Builder().waterColor(0x7d0000).waterFogColor(0x7d0000).fogColor(0x7d3535).skyColor(0x7d3535).foliageColorOverride(0x1E1F1F).grassColorOverride(0x1E1F1F).ambientMoodSound(MoodSoundAmbience.LEGACY_CAVE_SETTINGS);
+        return new BiomeAmbience.Builder()
+                .waterColor(0x670717).waterFogColor(0x670717).fogColor(0x171717).skyColor(0x131313)
+                .foliageColorOverride(0x101010).grassColorOverride(0x101010).ambientMoodSound(new MoodSoundAmbience(SoundEvents.AMBIENT_CRIMSON_FOREST_MOOD, 6000, 8, 2.0D)).ambientAdditionsSound(new SoundAdditionsAmbience(SoundEvents.AMBIENT_CRIMSON_FOREST_ADDITIONS, 0.0111D)).backgroundMusic(BackgroundMusicTracks.createGameMusic(SoundEvents.MUSIC_BIOME_CRIMSON_FOREST));
     }
+
 }

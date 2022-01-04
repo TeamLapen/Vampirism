@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFeatures;
 import de.teamlapen.vampirism.mixin.FlatGenerationSettingsAccessor;
+import de.teamlapen.vampirism.world.gen.treedecorator.TrunkCursedVineTreeDecorator;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
@@ -16,23 +17,54 @@ import net.minecraft.world.gen.blockplacer.SimpleBlockPlacer;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
+import net.minecraft.world.gen.foliageplacer.SpruceFoliagePlacer;
 import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
 import net.minecraft.world.gen.placement.ChanceConfig;
 import net.minecraft.world.gen.placement.Placement;
+import net.minecraft.world.gen.treedecorator.LeaveVineTreeDecorator;
 import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
+
+import java.util.Collections;
+import java.util.OptionalInt;
 
 public class VampirismBiomeFeatures {
 
-    public static final ConfiguredFeature<?, ?> vampire_flower = registerFeature("vampire_flower", Feature.FLOWER.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.vampire_orchid.defaultBlockState()), SimpleBlockPlacer.INSTANCE).tries(64).build()).count(FeatureSpread.of(-1, 4)).decorated(Features.Placements.ADD_32).decorated(Features.Placements.HEIGHTMAP_SQUARE).count(5));
+    public static final BlockClusterFeatureConfig BUSH_CONFIG = new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.cursed_roots.defaultBlockState()), SimpleBlockPlacer.INSTANCE).tries(7).build();
+    public static final BlockClusterFeatureConfig DEFAULT_GRASS_CONFIG = new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.GRASS.defaultBlockState()), SimpleBlockPlacer.INSTANCE).tries(16).build();
+    public static final BlockClusterFeatureConfig VAMPIRE_FLOWER = new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.vampire_orchid.defaultBlockState()), SimpleBlockPlacer.INSTANCE).tries(6).build();
+
+    public static final ConfiguredFeature<?, ?> patch_bush = registerFeature("patch_bush", Feature.RANDOM_PATCH.configured(BUSH_CONFIG).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE));
+    public static final ConfiguredFeature<?, ?> patch_grass_forest = registerFeature("patch_grass_forest", Feature.RANDOM_PATCH.configured(DEFAULT_GRASS_CONFIG).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(2));
+    public static final ConfiguredFeature<?, ?> ore_cursed_earth = registerFeature("ore_cursed_earth", Feature.ORE.configured(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, ModBlocks.cursed_earth.defaultBlockState(), 33)).range(256).squared().count(10));
+    public static final ConfiguredFeature<?, ?> ore_dark_stone = registerFeature("ore_dark_stone", Feature.ORE.configured(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, ModBlocks.castle_block_dark_stone.defaultBlockState(), 33)).range(80).squared().count(10));
+
+    public static final ConfiguredFeature<?, ?> vampire_flower = registerFeature("vampire_flower", Feature.FLOWER.configured(VAMPIRE_FLOWER).count(FeatureSpread.of(-1, 4)).decorated(Features.Placements.ADD_32).decorated(Features.Placements.HEIGHTMAP_SQUARE).count(5));
     public static final ConfiguredFeature<?, ?> mod_water_lake = registerFeature("mod_water_lake", ModFeatures.mod_lake.configured(new BlockStateFeatureConfig(Blocks.WATER.defaultBlockState())).decorated(Placement.WATER_LAKE.configured(new ChanceConfig(4))));
-
-    public static final ConfiguredFeature<BaseTreeFeatureConfig, ?> vampire_tree = registerFeature("vampire_tree", Feature.TREE.configured((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.SPRUCE_LOG.defaultBlockState()), new SimpleBlockStateProvider(ModBlocks.vampire_spruce_leaves.defaultBlockState()), new BlobFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(0), 3), new StraightTrunkPlacer(4, 2, 0), new TwoLayerFeature(1, 0, 1))).ignoreVines().build()));
-    public static final ConfiguredFeature<BaseTreeFeatureConfig, ?> vampire_tree_red = registerFeature("vampire_tree_red", Feature.TREE.configured((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.bloody_spruce_log.defaultBlockState()), new SimpleBlockStateProvider(ModBlocks.bloody_spruce_leaves.defaultBlockState()), new BlobFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(0), 3), new StraightTrunkPlacer(4, 2, 0), new TwoLayerFeature(1, 0, 1))).ignoreVines().build()));
-
-    public static final ConfiguredFeature<?, ?> vampire_trees = registerFeature("vampire_trees", Feature.RANDOM_SELECTOR.configured(new MultipleRandomFeatureConfig(ImmutableList.of(vampire_tree_red.weighted(0.3f)), vampire_tree)).decorated(Features.Placements.HEIGHTMAP_SQUARE).decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(6, 0.1F, 1))));
 
     public static final ConfiguredFeature<?, ?> vampire_dungeon = registerFeature("vampire_dungeon", ModFeatures.vampire_dungeon.configured(IFeatureConfig.NONE).range(256).squared().count(2 /*not entirely sure, but higher is more frequent - vanilla is 8 */));
     public static final StructureFeature<?, ?> hunter_camp = registerStructure("hunter_camp", ModFeatures.hunter_camp.configured/*withConfiguration*/(IFeatureConfig.NONE));
+
+    public static final ConfiguredFeature<BaseTreeFeatureConfig,?> dark_spruce_tree = registerFeature("dark_spruce_tree", Feature.TREE.configured(new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.dark_spruce_log.defaultBlockState()), new SimpleBlockStateProvider(ModBlocks.dark_spruce_leaves.defaultBlockState()),
+            new SpruceFoliagePlacer(FeatureSpread.of(2, 1), FeatureSpread.of(0, 2), FeatureSpread.of(3, 7)),
+            new StraightTrunkPlacer(11,2,2),
+            new ThreeLayerFeature(5,8,0,3,3, OptionalInt.of(5)))
+            .build())
+    );
+
+    public static final ConfiguredFeature<BaseTreeFeatureConfig,?> cursed_spruce_tree = registerFeature("cursed_spruce_tree", Feature.TREE.configured(new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.cursed_spruce_log.defaultBlockState()), new SimpleBlockStateProvider(ModBlocks.dark_spruce_leaves.defaultBlockState()),
+            new SpruceFoliagePlacer(FeatureSpread.of(2, 1), FeatureSpread.of(0, 2), FeatureSpread.of(3, 7)),
+            new StraightTrunkPlacer(11,2,2),
+            new ThreeLayerFeature(5,8,0,3,3, OptionalInt.of(5)))
+                    .decorators(ImmutableList.of(TrunkCursedVineTreeDecorator.INSTANCE))
+            .build())
+    );
+
+    public static final ConfiguredFeature<?, ?> vampire_trees = registerFeature("vampire_trees", Feature.RANDOM_SELECTOR.configured(
+            new MultipleRandomFeatureConfig(ImmutableList.of(cursed_spruce_tree.weighted(0.3f)), dark_spruce_tree))
+            .decorated(Features.Placements.HEIGHTMAP_SQUARE)
+            .decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(10, 0.1F, 1))));
+
+    public static final ConfiguredFeature<?,?> dark_stone = registerFeature("dark_stone", Feature.DISK.configured(new SphereReplaceConfig(ModBlocks.castle_block_dark_stone.defaultBlockState(), FeatureSpread.of(2,4),2, ImmutableList.of(Blocks.STONE.defaultBlockState()))).decorated(Features.Placements.TOP_SOLID_HEIGHTMAP_SQUARE));
 
     private static <T extends IFeatureConfig> ConfiguredFeature<T, ?> registerFeature(String name, ConfiguredFeature<T, ?> feature) {
         return Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(REFERENCE.MODID, name), feature);
@@ -63,4 +95,21 @@ public class VampirismBiomeFeatures {
     public static void addVampireTrees(BiomeGenerationSettings.Builder builder) {
         builder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, vampire_trees);
     }
+
+    public static void addDarkStoneSoftDisk(BiomeGenerationSettings.Builder builder) {
+        builder.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, dark_stone);
+    }
+
+    public static void addBushPatch(BiomeGenerationSettings.Builder builder) {
+        builder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, patch_bush);
+        builder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, patch_grass_forest);
+    }
+
+    public static void addUndergroundVariety(BiomeGenerationSettings.Builder builder) {
+        builder.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, Features.ORE_GRAVEL);
+        builder.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, ore_cursed_earth);
+        builder.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, ore_dark_stone);
+    }
+
+
 }

@@ -41,10 +41,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.IBiomeReader;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -223,6 +220,11 @@ public class Helper {
         ResourceLocation biomeId = getBiomeId(w, b);
         Objects.requireNonNull(biomeId, "Cannot determine id of local biome");
         return ModBiomes.vampire_forest.getRegistryName().equals(biomeId) || ModBiomes.vampire_forest_hills.getRegistryName().equals(biomeId);
+    }
+
+    public static boolean isPosInVampireBiome(BlockPos pos, IWorldReader level) {
+        Biome biome = level.getBiome(pos);
+        return ModBiomes.vampire_forest.equals(biome) || ModBiomes.vampire_forest_hills.equals(biome);
     }
 
     /**

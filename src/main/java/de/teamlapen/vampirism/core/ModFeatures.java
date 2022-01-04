@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.world.gen.features.VampireDungeonFeature;
 import de.teamlapen.vampirism.world.gen.features.VampirismLakeFeature;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampStructure;
+import de.teamlapen.vampirism.world.gen.treedecorator.TrunkCursedVineTreeDecorator;
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
 import net.minecraft.util.RegistryKey;
@@ -26,6 +27,8 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.IStructureProcessorType;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
+import net.minecraft.world.gen.treedecorator.TreeDecorator;
+import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,6 +51,8 @@ public class ModFeatures {
     public static final IStructureProcessorType<BiomeTopBlockProcessor> biome_based = IStructureProcessorType.register/*register*/(REFERENCE.MODID + ":biome_based", BiomeTopBlockProcessor.CODEC);
     private static final Logger LOGGER = LogManager.getLogger();
 
+    public static final TreeDecoratorType<TrunkCursedVineTreeDecorator> trunk_cursed_vine = new TreeDecoratorType<>(TrunkCursedVineTreeDecorator.CODEC);
+
     static void registerFeatures(IForgeRegistry<Feature<?>> registry) {
         registry.register(vampire_dungeon.setRegistryName(REFERENCE.MODID, "vampire_dungeon"));
         registry.register(mod_lake.setRegistryName(REFERENCE.MODID, "mod_lake"));
@@ -57,6 +62,10 @@ public class ModFeatures {
         Structure.STEP.put(hunter_camp, GenerationStage.Decoration.SURFACE_STRUCTURES);
         Structure.STRUCTURES_REGISTRY.put(REFERENCE.MODID + ":hunter_camp", hunter_camp);
         registry.register(hunter_camp.setRegistryName(REFERENCE.MODID, "hunter_camp"));
+    }
+
+    static void registerTreeDecoratorTypes(IForgeRegistry<TreeDecoratorType<?>> registry) {
+        registry.register(trunk_cursed_vine.setRegistryName(REFERENCE.MODID, "trunk_cursed_vine"));
     }
 
     static void registerIgnoredBiomesForStructures() {

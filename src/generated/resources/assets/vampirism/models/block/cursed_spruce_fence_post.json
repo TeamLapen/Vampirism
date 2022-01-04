@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/fence_post",
+  "textures": {
+    "texture": "vampirism:block/cursed_spruce_planks"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "vampirism:block/dark_spruce_wood_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "vampirism:block/dark_spruce_wood"
+    },
+    "axis=z": {
+      "model": "vampirism:block/dark_spruce_wood_horizontal",
+      "x": 90
+    }
+  }
+}

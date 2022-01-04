@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/button_pressed",
+  "textures": {
+    "texture": "vampirism:block/cursed_spruce_planks"
+  }
+}

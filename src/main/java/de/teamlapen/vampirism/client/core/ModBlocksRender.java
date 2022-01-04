@@ -58,10 +58,7 @@ public class ModBlocksRender {
         }, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0]));
         colors.register((state, worldIn, pos, tintIndex) -> {
             return 0x1E1F1F;
-        }, ModBlocks.vampire_spruce_leaves);
-        colors.register((state, worldIn, pos, tintIndex) -> {
-            return 0x2e0606;
-        }, ModBlocks.bloody_spruce_leaves);
+        }, ModBlocks.dark_spruce_leaves);
     }
 
     private static void registerTileRenderer() {
@@ -106,9 +103,8 @@ public class ModBlocksRender {
         RenderTypeLookup.setRenderLayer(ModBlocks.vampire_orchid, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.garlic, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.potted_vampire_orchid, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.bloody_spruce_leaves, RenderType.cutoutMipped());
-        RenderTypeLookup.setRenderLayer(ModBlocks.vampire_spruce_leaves, RenderType.cutoutMipped());
-        RenderTypeLookup.setRenderLayer(ModBlocks.bloody_spruce_sapling, cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.dark_spruce_leaves, RenderType.cutoutMipped());
+        RenderTypeLookup.setRenderLayer(ModBlocks.dark_spruce_sapling, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.chandelier, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.candelabra, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.candelabra_wall, cutout);
@@ -117,6 +113,13 @@ public class ModBlocksRender {
         RenderTypeLookup.setRenderLayer(ModBlocks.tombstone2, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.tombstone3, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.grave_cage, cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.cursed_roots, cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.cursed_spruce_sapling, cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.cursed_bark, cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.dark_spruce_door, cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.cursed_spruce_door, cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.dark_spruce_trapdoor, cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.cursed_spruce_trapdoor, cutout);
     }
 
 

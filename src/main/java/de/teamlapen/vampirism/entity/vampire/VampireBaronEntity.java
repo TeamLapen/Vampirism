@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireBaron;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModBiomes;
-import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.goals.AttackRangedDarkBloodGoal;
 import de.teamlapen.vampirism.entity.goals.FleeGarlicVampireGoal;
@@ -143,7 +143,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 //            return false;
 //        }
         BlockPos blockpos = new BlockPos(this.getX(), this.getBoundingBox().minY, this.getZ());
-        return ModBlocks.cursed_earth.equals(worldIn.getBlockState(blockpos.below()).getBlock()) && super.checkSpawnRules(worldIn, spawnReasonIn);
+        return worldIn.getBlockState(blockpos.below()).is(ModTags.Blocks.CURSEDEARTH) && super.checkSpawnRules(worldIn, spawnReasonIn);
     }
 
     @Override
