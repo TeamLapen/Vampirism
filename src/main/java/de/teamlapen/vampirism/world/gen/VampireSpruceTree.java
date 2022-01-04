@@ -15,6 +15,6 @@ public class VampireSpruceTree extends AbstractTreeGrower {
     @Nullable
     @Override
     protected Holder<ConfiguredFeature<TreeConfiguration, Feature<TreeConfiguration>>> getConfiguredFeature(@Nonnull RandomSource randomIn, boolean largeHive) {
-        return VampirismFeatures.VAMPIRE_TREE.getHolder().orElseThrow();
+        return VampirismFeatures.DARK_SPRUCE_TREE.getHolder().orElseThrow();
     }
 }

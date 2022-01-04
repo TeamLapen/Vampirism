@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.Blocks;
 public class DummyBittenAnimalEntity extends Mob {
 
     public static boolean spawnPredicate(EntityType<? extends DummyBittenAnimalEntity> entityType, LevelAccessor iWorld, MobSpawnType spawnReason, BlockPos blockPos, RandomSource random) {
-        return (iWorld.getBlockState(blockPos.below()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.below()).is(ModTags.Blocks.CURSEDEARTH));
+        return (iWorld.getBlockState(blockPos.below()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.below()).is(ModTags.Blocks.CURSED_EARTH));
     }
 
     public DummyBittenAnimalEntity(EntityType<? extends DummyBittenAnimalEntity> type, Level world) {

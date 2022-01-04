@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "vampirism:block/cursed_spruce_planks",
+    "side": "vampirism:block/cursed_spruce_planks",
+    "top": "vampirism:block/cursed_spruce_planks"
+  }
+}

@@ -54,7 +54,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
 
     public static boolean spawnPredicate(EntityType<? extends ConvertedCreatureEntity<?>> entityType, LevelAccessor iWorld, MobSpawnType spawnReason, BlockPos blockPos, RandomSource random) {
-        return (iWorld.getBlockState(blockPos.below()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.below()).is(ModTags.Blocks.CURSEDEARTH)) && iWorld.getRawBrightness(blockPos, 0) > 8;
+        return (iWorld.getBlockState(blockPos.below()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.below()).is(ModTags.Blocks.CURSED_EARTH)) && iWorld.getRawBrightness(blockPos, 0) > 8;
     }
 
     private T entityCreature;

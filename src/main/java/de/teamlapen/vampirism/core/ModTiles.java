@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blockentity.*;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
+import de.teamlapen.vampirism.mixin.TileEntityTypeAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -11,6 +12,9 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class ModTiles {
@@ -36,6 +40,13 @@ public class ModTiles {
 
     private static <T extends BlockEntity> BlockEntityType<T> create(BlockEntityType.BlockEntitySupplier<T> factoryIn, Block... blocks) {
         return BlockEntityType.Builder.of(factoryIn, blocks).build(null);
+    }
+
+    public static void registerTileExtensionsUnsafe() {
+        Set<Block> blocks = new HashSet<>(((TileEntityTypeAccessor) BlockEntityType.SIGN).getValidBlocks());
+        blocks.add(ModBlocks.DARK_SPRUCE_SIGN.get());
+        blocks.add(ModBlocks.CURSED_SPRUCE_SIGN.get());
+        ((TileEntityTypeAccessor) BlockEntityType.SIGN).setValidBlocks(blocks);
     }
 
     public static void fixMappings(MissingMappingsEvent event) {

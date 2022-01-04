@@ -18,7 +18,8 @@
     "MixinPotionBrewing",
     "MultiNoiseBiomeSourcePresetAccessor",
     "RecipeManagerAccessor",
-    "SurfaceRuleDataMixin"
+    "SurfaceRuleDataMixin",
+    "TileEntityTypeAccessor"
   ],
   "client": [
     "client.AgeableModelAccessor",

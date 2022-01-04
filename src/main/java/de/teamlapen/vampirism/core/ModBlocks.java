@@ -2,9 +2,12 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.blocks.BushBlock;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.items.CoffinItem;
 import de.teamlapen.vampirism.util.BlockVoxelshapes;
+import de.teamlapen.vampirism.world.gen.CursedSpruceTree;
+import de.teamlapen.vampirism.world.gen.DarkSpruceTreeGrower;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -80,15 +83,7 @@ public class ModBlocks {
             });
     public static final RegistryObject<WeaponTableBlock> WEAPON_TABLE = registerWithItem("weapon_table", WeaponTableBlock::new);
     public static final RegistryObject<PotionTableBlock> POTION_TABLE = registerWithItem("potion_table", PotionTableBlock::new);
-    public static final RegistryObject<RotatedPillarBlock> BLOODY_SPRUCE_LOG = registerWithItem("bloody_spruce_log", () -> {
-            RotatedPillarBlock log = Blocks.log(MaterialColor.PODZOL, MaterialColor.COLOR_BROWN);
-            ((FireBlock) Blocks.FIRE).setFlammable(log, 5, 5);
-            return log;
-        });
-    public static final RegistryObject<BloodySpruceLeavesBlock> VAMPIRE_SPRUCE_LEAVES = registerWithItem("vampire_spruce_leaves", BloodySpruceLeavesBlock::new);
-    public static final RegistryObject<BloodySpruceLeavesBlock> BLOODY_SPRUCE_LEAVES = registerWithItem("bloody_spruce_leaves", BloodySpruceLeavesBlock::new);
-    public static final RegistryObject<BloodySpruceSaplingBlock> BLOODY_SPRUCE_SAPLING = registerWithItem("bloody_spruce_sapling", BloodySpruceSaplingBlock::new);
-    public static final RegistryObject<VampireSpruceSaplingBlock> VAMPIRE_SPRUCE_SAPLING = registerWithItem("vampire_spruce_sapling", VampireSpruceSaplingBlock::new);
+    public static final RegistryObject<DarkSpruceLeavesBlock> DARK_SPRUCE_LEAVES = registerWithItem("vampire_spruce_leaves", DarkSpruceLeavesBlock::new);
     public static final RegistryObject<VampirismBlock> CHANDELIER = registerWithItem("chandelier", ChandelierBlock::new);
     public static final RegistryObject<VampirismBlock> CANDELABRA = BLOCKS.register("candelabra", CandelabraBlock::new);
     public static final RegistryObject<VampirismBlock> CANDELABRA_WALL = BLOCKS.register("candelabra_wall", CandelabraWallBlock::new);
@@ -97,7 +92,50 @@ public class ModBlocks {
     public static final RegistryObject<VampirismBlock> TOMBSTONE2 = registerWithItem("tombstone2", () -> new VampirismHorizontalBlock(BlockBehaviour.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb2).markDecorativeBlock());
     public static final RegistryObject<VampirismBlock> TOMBSTONE3 = registerWithItem("tombstone3", () -> new VampirismHorizontalBlock(BlockBehaviour.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb3).markDecorativeBlock());
     public static final RegistryObject<VampirismBlock> GRAVE_CAGE = registerWithItem("grave_cage", () -> new VampirismHorizontalBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL).strength(6, 8).requiresCorrectToolForDrops().sound(SoundType.METAL), BlockVoxelshapes.grave_cage).markDecorativeBlock());
-    public static final RegistryObject<CursedGrassBlock> CURSED_GRASS_BLOCK = registerWithItem("cursed_grass_block", CursedGrassBlock::new);
+    public static final RegistryObject<CursedGrass> CURSED_GRASS = registerWithItem("cursed_grass", () -> new CursedGrass(BlockBehaviour.Properties.of(Material.GRASS, MaterialColor.COLOR_BLACK).randomTicks().strength(0.6F).sound(SoundType.GRASS)));
+    public static final RegistryObject<BushBlock> CURSED_ROOTS = registerWithItem("cursed_roots",() -> {
+        BushBlock bush = new BushBlock(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT, MaterialColor.COLOR_RED).noCollission().instabreak().sound(SoundType.GRASS));
+        ((FireBlock) Blocks.FIRE).setFlammable(bush, 60, 100);
+        return bush;
+    });
+    public static final RegistryObject<Block> POTTED_CURSED_ROOTS = BLOCKS.register("potted_cursed_roots",() -> {
+        FlowerPotBlock block = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, CURSED_ROOTS, Block.Properties.of(Material.DECORATION).instabreak().noOcclusion());
+        ((FlowerPotBlock)Blocks.FLOWER_POT).addPlant(CURSED_ROOTS.getId(), () -> block);
+        return block;
+    });
+    public static final RegistryObject<Block> DARK_SPRUCE_PLANKS = registerWithItem("dark_spruce_planks",() -> new Block(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_GRAY).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<Block> CURSED_SPRUCE_PLANKS = registerWithItem("cursed_spruce_planks", () -> new Block(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.CRIMSON_HYPHAE).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<RotatedPillarBlock> DARK_SPRUCE_LOG = registerWithItem("dark_spruce_log",() -> new LogBlock(MaterialColor.COLOR_BLACK, MaterialColor.COLOR_BLACK));
+    public static final RegistryObject<RotatedPillarBlock> CURSED_SPRUCE_LOG = registerWithItem("cursed_spruce_log", CursedSpruceBlock::new);
+    public static final RegistryObject<SaplingBlock> DARK_SPRUCE_SAPLING = registerWithItem("dark_spruce_sapling",() -> new SaplingBlock(new DarkSpruceTreeGrower(), BlockBehaviour.Properties.of(Material.PLANT, MaterialColor.COLOR_BLACK).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<SaplingBlock> CURSED_SPRUCE_SAPLING = registerWithItem("cursed_spruce_sapling",() -> new SaplingBlock(new CursedSpruceTree(), BlockBehaviour.Properties.of(Material.PLANT, MaterialColor.COLOR_BLACK).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<CursedBarkBlock> CURSED_BARK = registerWithItem("cursed_bark", CursedBarkBlock::new);
+    public static final RegistryObject<RotatedPillarBlock> STRIPPED_DARK_SPRUCE_LOG = registerWithItem("stripped_dark_spruce_log",() -> new LogBlock(MaterialColor.COLOR_BLACK, MaterialColor.COLOR_GRAY));
+    public static final RegistryObject<RotatedPillarBlock> STRIPPED_CURSED_SPRUCE_LOG = registerWithItem("stripped_cursed_spruce_log",() -> new LogBlock(MaterialColor.COLOR_BLACK, MaterialColor.CRIMSON_HYPHAE));
+    public static final RegistryObject<DoorBlock> DARK_SPRUCE_DOOR = registerWithItem("dark_spruce_door",() -> new DoorBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_GRAY).strength(3.0F).sound(SoundType.WOOD).noOcclusion()));
+    public static final RegistryObject<DoorBlock> CURSED_SPRUCE_DOOR = registerWithItem("cursed_spruce_door",() -> new DoorBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.CRIMSON_HYPHAE).strength(3.0F).sound(SoundType.WOOD).noOcclusion()));
+    public static final RegistryObject<TrapDoorBlock> DARK_SPRUCE_TRAPDOOR = registerWithItem("dark_spruce_trapdoor",() -> new TrapDoorBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_GRAY).strength(3.0F).sound(SoundType.WOOD).noOcclusion().isValidSpawn((p_61031_, p_61032_, p_61033_, p_61034_) -> false)));
+    public static final RegistryObject<TrapDoorBlock> CURSED_SPRUCE_TRAPDOOR = registerWithItem("cursed_spruce_trapdoor",() -> new TrapDoorBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.CRIMSON_HYPHAE).strength(3.0F).sound(SoundType.WOOD).noOcclusion().isValidSpawn((p_61031_, p_61032_, p_61033_, p_61034_) -> false)));
+    public static final RegistryObject<StairBlock> DARK_SPRUCE_STAIRS = registerWithItem("dark_spruce_stairs",() -> new StairBlock(() -> DARK_SPRUCE_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.copy(DARK_SPRUCE_PLANKS.get())));
+    public static final RegistryObject<StairBlock> CURSED_SPRUCE_STAIRS = registerWithItem("cursed_spruce_stairs",() -> new StairBlock(() -> CURSED_SPRUCE_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.copy(CURSED_SPRUCE_PLANKS.get())));
+    public static final RegistryObject<LogBlock> DARK_SPRUCE_WOOD = registerWithItem("dark_spruce_wood",() -> new LogBlock(MaterialColor.COLOR_BLACK, MaterialColor.COLOR_BLACK));
+    public static final RegistryObject<LogBlock> CURSED_SPRUCE_WOOD = registerWithItem("cursed_spruce_wood", CursedSpruceBlock::new);
+    public static final RegistryObject<LogBlock> STRIPPED_DARK_SPRUCE_WOOD = registerWithItem("stripped_dark_spruce_wood",() -> new LogBlock(MaterialColor.COLOR_BLACK, MaterialColor.COLOR_GRAY));
+    public static final RegistryObject<LogBlock> STRIPPED_CURSED_SPRUCE_WOOD = registerWithItem("stripped_cursed_spruce_wood",() -> new LogBlock(MaterialColor.COLOR_BLACK, MaterialColor.CRIMSON_HYPHAE));
+    public static final RegistryObject<StandingSignBlock> DARK_SPRUCE_SIGN = BLOCKS.register("dark_spruce_sign",() ->new StandingSignBlock(BlockBehaviour.Properties.of(Material.WOOD, DARK_SPRUCE_LOG.get().defaultMaterialColor()).noCollission().strength(1.0F).sound(SoundType.WOOD), LogBlock.dark_spruce));
+    public static final RegistryObject<StandingSignBlock> CURSED_SPRUCE_SIGN = BLOCKS.register("cursed_spruce_sign",() -> new StandingSignBlock(BlockBehaviour.Properties.of(Material.WOOD, CURSED_SPRUCE_LOG.get().defaultMaterialColor()).noCollission().strength(1.0F).sound(SoundType.WOOD), LogBlock.cursed_spruce));
+    public static final RegistryObject<WallSignBlock> DARK_SPRUCE_WALL_SIGN = BLOCKS.register("dark_spruce_wall_sign",()-> new WallSignBlock(BlockBehaviour.Properties.of(Material.WOOD, DARK_SPRUCE_LOG.get().defaultMaterialColor()).noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom(DARK_SPRUCE_SIGN), LogBlock.dark_spruce));
+    public static final RegistryObject<WallSignBlock> CURSED_SPRUCE_WALL_SIGN = BLOCKS.register("cursed_spruce_wall_sign",() -> new WallSignBlock(BlockBehaviour.Properties.of(Material.WOOD, CURSED_SPRUCE_LOG.get().defaultMaterialColor()).noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom(CURSED_SPRUCE_SIGN), LogBlock.dark_spruce));
+    public static final RegistryObject<PressurePlateBlock> DARK_SPRUCE_PRESSURE_PLACE = registerWithItem("dark_spruce_pressure_place",() -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.of(Material.WOOD, DARK_SPRUCE_PLANKS.get().defaultMaterialColor()).noCollission().strength(0.5F).sound(SoundType.WOOD)));
+    public static final RegistryObject<PressurePlateBlock> CURSED_SPRUCE_PRESSURE_PLACE = registerWithItem("cursed_spruce_pressure_place",() -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.of(Material.WOOD, CURSED_SPRUCE_PLANKS.get().defaultMaterialColor()).noCollission().strength(0.5F).sound(SoundType.WOOD)));
+    public static final RegistryObject<WoodButtonBlock> DARK_SPRUCE_BUTTON = registerWithItem("dark_spruce_button",() -> new WoodButtonBlock(BlockBehaviour.Properties.of(Material.DECORATION).noCollission().strength(0.5F).sound(SoundType.WOOD)));
+    public static final RegistryObject<WoodButtonBlock> CURSED_SPRUCE_BUTTON = registerWithItem("cursed_spruce_button",() -> new WoodButtonBlock(BlockBehaviour.Properties.of(Material.DECORATION).noCollission().strength(0.5F).sound(SoundType.WOOD)));
+    public static final RegistryObject<SlabBlock> DARK_SPRUCE_SLAB = registerWithItem("dark_spruce_slab",() -> new SlabBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_GRAY).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<SlabBlock> CURSED_SPRUCE_SLAB = registerWithItem("cursed_spruce_slab",() -> new SlabBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.CRIMSON_HYPHAE).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<FenceGateBlock> DARK_SPRUCE_FENCE_GATE = registerWithItem("dark_spruce_fence_gate",() -> new FenceGateBlock(BlockBehaviour.Properties.of(Material.WOOD, DARK_SPRUCE_PLANKS.get().defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<FenceGateBlock> CURSED_SPRUCE_FENCE_GATE = registerWithItem("cursed_spruce_fence_gate",() -> new FenceGateBlock(BlockBehaviour.Properties.of(Material.WOOD, CURSED_SPRUCE_PLANKS.get().defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<FenceBlock> DARK_SPRUCE_FENCE = registerWithItem("dark_spruce_fence",() -> new FenceBlock(BlockBehaviour.Properties.of(Material.WOOD, DARK_SPRUCE_PLANKS.get().defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<FenceBlock> CURSED_SPRUCE_FENCE = registerWithItem("cursed_spruce_fence",() -> new FenceBlock(BlockBehaviour.Properties.of(Material.WOOD, CURSED_SPRUCE_PLANKS.get().defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
 
     /**
      * TUTORIAL:
@@ -136,6 +174,9 @@ public class ModBlocks {
                 case "vampirism:garlic_beacon_weak" -> missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_WEAK.get());
                 case "vampirism:garlic_beacon_improved" -> missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get());
                 case "vampirism:church_altar" -> missingMapping.remap(ModBlocks.ALTAR_CLEANSING.get());
+                case "vampirism:vampire_spruce_leaves" -> missingMapping.remap(ModBlocks.DARK_SPRUCE_LEAVES.get());
+                case "vampirism:bloody_spruce_leaves" -> missingMapping.remap(ModBlocks.DARK_SPRUCE_LEAVES.get());
+                case "vampirism:bloody_spruce_log" -> missingMapping.remap(ModBlocks.CURSED_SPRUCE_LOG.get());
             }
         });
     }

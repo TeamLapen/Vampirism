@@ -177,6 +177,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private boolean sundamage_cache = false;
     private EnumStrength garlic_cache = EnumStrength.NONE;
     private int ticksInSun = 0;
+    private int remainingBarkTicks = 0;
     private boolean wasDead = false;
     private IVampireVision activatedVision = null;
     private int wing_counter = 0;
@@ -423,6 +424,14 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         return bloodStats;
     }
 
+    public int getRemainingBarkTicks() {
+        return remainingBarkTicks;
+    }
+
+    public void increaseRemainingBarkTicks(int additionalTicks) {
+        this.remainingBarkTicks = additionalTicks;
+    }
+
     @Override
     public ResourceLocation getCapKey() {
         return REFERENCE.VAMPIRE_PLAYER_KEY;
@@ -609,6 +618,21 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         bloodStats.removeBlood(sucked, true);
         sync(this.bloodStats.writeUpdate(new CompoundTag()), true);
         return sucked;
+    }
+
+    public int removeBlood(float percentage) {
+        if (getLevel() == 0) {
+            int amt = player.getFoodData().getFoodLevel();
+            int sucked = (int) Math.ceil((amt * percentage));
+            player.getFoodData().setFoodLevel(amt - sucked);
+            return sucked;
+        } else {
+            int amt = this.getBloodStats().getBloodLevel();
+            int sucked = (int) Math.ceil((amt * percentage));
+            bloodStats.removeBlood(sucked, true);
+            sync(this.bloodStats.writeUpdate(new CompoundTag()), true);
+            return sucked;
+        }
     }
 
     @Override
@@ -917,6 +941,9 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
         if (wing_counter > 0) {
             --wing_counter;
+        }
+        if (remainingBarkTicks > 0) {
+            --remainingBarkTicks;
         }
         world.getProfiler().pop();
     }

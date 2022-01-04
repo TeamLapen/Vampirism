@@ -1,0 +1,13 @@
+package de.teamlapen.vampirism.blocks;
+
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+
+public class DarkSpruceLeavesBlock extends LeavesBlock {
+
+    public DarkSpruceLeavesBlock() {
+        super(Block.Properties.of(Material.LEAVES, MaterialColor.COLOR_BLACK).strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion());
+        ((FireBlock) Blocks.FIRE).setFlammable(this, 30, 60);
+    }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "tag": "vampirism:cursed_spruce_log"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "item": "vampirism:cursed_spruce_planks"
+  }
+}

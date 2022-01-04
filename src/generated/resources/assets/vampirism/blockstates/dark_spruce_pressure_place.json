@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "vampirism:block/dark_spruce_pressure_place"
+    },
+    "powered=true": {
+      "model": "vampirism:block/dark_spruce_pressure_place_down"
+    }
+  }
+}

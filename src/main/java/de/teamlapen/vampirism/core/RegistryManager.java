@@ -80,6 +80,7 @@ public class RegistryManager implements IInitListener {
                     ModStats.registerCustomStats();
                     ModVillage.villagerTradeSetup();
                 });
+                ModTiles.registerTileExtensionsUnsafe();
             case LOAD_COMPLETE:
                 if (ModEffects.checkNightVision()) {
                     event.enqueueWork(ModEffects::fixNightVisionEffectTypesUnsafe);

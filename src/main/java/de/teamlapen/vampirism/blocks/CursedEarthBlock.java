@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 public class CursedEarthBlock extends VampirismBlock {
 
     public CursedEarthBlock() {
-        super(Properties.of(Material.DIRT, MaterialColor.WARPED_HYPHAE).strength(0.5f, 2.0f).sound(SoundType.GRAVEL));
+        super(Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(0.5f, 2.0f).sound(SoundType.GRAVEL));
 
     }
 
@@ -35,10 +35,8 @@ public class CursedEarthBlock extends VampirismBlock {
         return plantable instanceof BushBlock || plantable.getPlantType(world, pos).equals(VReference.VAMPIRE_PLANT_TYPE);
     }
 
-
-    @Nonnull
     @Override
-    public InteractionResult use(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, Player player, @Nonnull InteractionHand handIn, @Nonnull BlockHitResult hit) {
+    public InteractionResult use(@Nonnull BlockState state,@Nonnull Level worldIn,@Nonnull BlockPos pos, Player player,@Nonnull InteractionHand handIn,@Nonnull BlockHitResult hit) {
         ItemStack heldItemStack = player.getItemInHand(handIn);
         Item heldItem = heldItemStack.getItem();
         if (heldItem instanceof HolyWaterBottleItem) {

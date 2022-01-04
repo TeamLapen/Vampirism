@@ -89,6 +89,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
      * If this is -1, this entity never had any blood and this value cannot be changed
      */
     private int blood;
+    private int remainingBarkTicks;
 
     public ExtendedCreature(PathfinderMob entity) {
         this.entity = entity;
@@ -259,6 +260,14 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         }
     }
 
+    public int getRemainingBarkTicks() {
+        return remainingBarkTicks;
+    }
+
+    public void increaseRemainingBarkTicks(int additionalBarkTicks) {
+        this.remainingBarkTicks += additionalBarkTicks;
+    }
+
     @Override
     public void tick() {
         if (!entity.getCommandSenderWorld().isClientSide) {
@@ -286,6 +295,9 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
                 }
                 markForBloodCalculation = false;
             }
+        }
+        if (this.remainingBarkTicks > 0) {
+            --this.remainingBarkTicks;
         }
     }
 

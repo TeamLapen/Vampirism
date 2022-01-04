@@ -1,0 +1,17 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_grass"
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_grass_snowy"
+      },
+      "when": {
+        "snowy": "true"
+      }
+    }
+  ]
+}

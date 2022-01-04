@@ -47,8 +47,7 @@ public class ModItemsRender {
             }
             return 0xFFFFFF;
         }, ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get());
-        event.register((state, tintIndex) -> 0x1E1F1F, ModBlocks.VAMPIRE_SPRUCE_LEAVES.get());
-        event.register((state, tintIndex) -> 0x2e0606, ModBlocks.BLOODY_SPRUCE_LEAVES.get());
+        event.register((state, tintIndex) -> 0x1E1F1F, ModBlocks.DARK_SPRUCE_LEAVES.get());
         event.register((stack, tintIndex) -> {
             if (tintIndex == 1) {
                 if (stack.getItem() instanceof IRefinementItem) {
@@ -60,12 +59,5 @@ public class ModItemsRender {
             }
             return 0xFFFFFF;
         }, ModItems.AMULET.get(), ModItems.RING.get(), ModItems.OBI_BELT.get());
-        event.register((stack, tintIndex) -> {
-            if (tintIndex == 0) {
-                return 0x2c2132;
-            } else {
-                return 0xFFFFFF;
-            }
-        }, ModBlocks.CURSED_GRASS_BLOCK.get());
     }
 }

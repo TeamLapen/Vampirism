@@ -225,6 +225,8 @@ public class ModItems {
     public static final RegistryObject<Item> GARLIC_FINDER = ITEMS.register("garlic_finder", () -> new Item(creativeTabProps().rarity(Rarity.RARE)));
 
     public static final RegistryObject<StandingAndWallBlockItem> ITEM_CANDELABRA = ITEMS.register("item_candelabra", () -> new StandingAndWallBlockItem(ModBlocks.CANDELABRA.get(), ModBlocks.CANDELABRA_WALL.get(), new Item.Properties().tab(VampirismMod.creativeTab)));
+    public static final RegistryObject<SignItem> dark_spruce_sign = ITEMS.register("dark_spruce_sign", () -> new SignItem((new Item.Properties()).stacksTo(16).tab(VampirismMod.creativeTab), ModBlocks.DARK_SPRUCE_SIGN.get(), ModBlocks.DARK_SPRUCE_WALL_SIGN.get()));
+    public static final RegistryObject<SignItem> cursed_spruce_sign = ITEMS.register("cursed_spruce_sign", () -> new SignItem((new Item.Properties()).stacksTo(16).tab(VampirismMod.creativeTab), ModBlocks.CURSED_SPRUCE_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_SIGN.get()));
 
 
     static void registerCraftingRecipes() {
@@ -281,6 +283,8 @@ public class ModItems {
                 case "vampirism:garlic_beacon_improved" -> missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get().asItem());
                 case "vampirism:church_altar" -> missingMapping.remap(ModBlocks.ALTAR_CLEANSING.get().asItem());
                 case "vampirism:item_med_chair" -> missingMapping.remap(ModBlocks.MED_CHAIR.get().asItem());
+                case "vampirism:bloody_spruce_log" -> missingMapping.remap(ModBlocks.CURSED_SPRUCE_LOG.get().asItem());
+                case "vampirism:bloody_spruce_leaves" -> missingMapping.remap(ModBlocks.DARK_SPRUCE_LEAVES.get().asItem());
             }
         });
     }

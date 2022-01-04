@@ -194,6 +194,11 @@ public class Helper {
         return w.getBiome(e.blockPosition()).is(ModTags.Biomes.IS_VAMPIRE_BIOME);
     }
 
+    public static boolean isPosInVampireBiome(BlockPos pos, LevelAccessor level) {
+        Holder<Biome> biome = level.getBiome(pos);
+        return biome.is(ModTags.Biomes.IS_VAMPIRE_BIOME);
+    }
+
     /**
      * @return Whether the entity is in a vampire fog area (does not check for vampire biome)
      */

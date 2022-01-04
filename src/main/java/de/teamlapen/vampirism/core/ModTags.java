@@ -26,9 +26,11 @@ public class ModTags {
 
     public static class Blocks {
         public static final TagKey<Block> CASTLE_BLOCK = tag("castle_block");
-        public static final TagKey<Block> CURSEDEARTH = tag("cursed_earth");
+        public static final TagKey<Block> CURSED_EARTH = tag("cursed_earth");
         public static final TagKey<Block> CASTLE_STAIRS = tag("castle_stairs");
         public static final TagKey<Block> CASTLE_SLAPS = tag("castle_slaps");
+        public static final TagKey<Block> DARK_SPRUCE_LOG = tag("dark_spruce_log");
+        public static final TagKey<Block> CURSED_SPRUCE_LOG = tag("cursed_spruce_log");
 
         private static TagKey<Block> tag(ResourceLocation resourceLocation) {
             return BlockTags.create(resourceLocation);
@@ -51,7 +53,8 @@ public class ModTags {
         public static final TagKey<Item> CASTLE_STAIRS = tag("castle_stairs");
         public static final TagKey<Item> CASTLE_SLAPS = tag("castle_slaps");
         public static final TagKey<Item> CURSEDEARTH = tag("cursed_earth");
-
+        public static final TagKey<Item> DARK_SPRUCE_LOG = tag("dark_spruce_log");
+        public static final TagKey<Item> CURSED_SPRUCE_LOG = tag("cursed_spruce_log");
 
         private static TagKey<Item> tag(ResourceLocation resourceLocation) {
             return ItemTags.create(resourceLocation);

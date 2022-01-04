@@ -3,13 +3,19 @@ package de.teamlapen.vampirism.data;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.PressurePlateBlock;
+import net.minecraft.world.level.block.WoodButtonBlock;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import java.util.Arrays;
@@ -35,9 +41,8 @@ public class BlockStateGenerator extends BlockStateProvider {
         models().withExistingParent("fire_side1", modLoc("block/fire_side")).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
         models().withExistingParent("fire_floor0", modLoc("block/fire_floor")).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
         models().withExistingParent("fire_floor1", modLoc("block/fire_floor")).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
-        ModelFile bloody_spruce_sapling = models().cross("bloody_spruce_sapling", modLoc("block/bloody_spruce_sapling")).renderType(cutout);
-        ModelFile vampire_spruce_sapling = models().cross("vampire_spruce_sapling", modLoc("block/vampire_spruce_sapling")).renderType(cutout);
-        ModelFile bloody_spruce_log = models().cubeColumn("bloody_spruce_log", modLoc("block/bloody_spruce_log"), modLoc("block/bloody_spruce_log_top"));
+        ModelFile dark_spruce_sapling = models().cross("dark_spruce_sapling", modLoc("block/dark_spruce_sapling")).renderType(cutout);
+        ModelFile cursed_spruce_sapling = models().cross("cursed_spruce_sapling", modLoc("block/cursed_spruce_sapling")).renderType(cutout);
 
         //default blocks
         horizontalBlock(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), models().withExistingParent("garlic_diffuser_normal", modLoc("block/garlic_diffuser")).renderType(cutout));
@@ -70,10 +75,9 @@ public class BlockStateGenerator extends BlockStateProvider {
         simpleBlock(ModBlocks.POTION_TABLE.get(), models().getExistingFile(modLoc("block/potion_table")));
         simpleBlock(ModBlocks.FIRE_PLACE.get(), models().getExistingFile(modLoc("block/fire_place")));
         simpleBlock(ModBlocks.POTTED_VAMPIRE_ORCHID.get(), models().withExistingParent("vampirism:block/potted_vampire_orchid", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/vampire_orchid").renderType(cutout));
-        simpleBlock(ModBlocks.VAMPIRE_SPRUCE_LEAVES.get(), models().getExistingFile(mcLoc("block/oak_leaves")));
-        simpleBlock(ModBlocks.BLOODY_SPRUCE_LEAVES.get(), models().getExistingFile(mcLoc("block/oak_leaves")));
-        simpleBlock(ModBlocks.BLOODY_SPRUCE_SAPLING.get(), bloody_spruce_sapling);
-        simpleBlock(ModBlocks.VAMPIRE_SPRUCE_SAPLING.get(), vampire_spruce_sapling);
+        simpleBlock(ModBlocks.DARK_SPRUCE_LEAVES.get(), models().getExistingFile(mcLoc("block/oak_leaves")));
+        simpleBlock(ModBlocks.DARK_SPRUCE_SAPLING.get(), dark_spruce_sapling);
+        simpleBlock(ModBlocks.CURSED_SPRUCE_SAPLING.get(), cursed_spruce_sapling);
 
 
         stairsBlock(ModBlocks.CASTLE_STAIRS_DARK_STONE.get(), modLoc("block/castle_block_dark_stone"));
@@ -86,11 +90,6 @@ public class BlockStateGenerator extends BlockStateProvider {
 
 
         //variants
-
-        getVariantBuilder(ModBlocks.BLOODY_SPRUCE_LOG.get())
-                .partialState().with(BlockStateProperties.AXIS, Direction.Axis.Y).modelForState().modelFile(bloody_spruce_log).addModel()
-                .partialState().with(BlockStateProperties.AXIS, Direction.Axis.Z).modelForState().rotationX(90).modelFile(bloody_spruce_log).addModel()
-                .partialState().with(BlockStateProperties.AXIS, Direction.Axis.X).modelForState().rotationX(90).rotationY(90).modelFile(bloody_spruce_log).addModel();
 
         getVariantBuilder(ModBlocks.GARLIC.get())
                 .partialState().with(GarlicBlock.AGE, 0).modelForState().modelFile(models().getExistingFile(modLoc("block/garlic_stage_0"))).addModel()
@@ -232,6 +231,136 @@ public class BlockStateGenerator extends BlockStateProvider {
         horizontalBlock(ModBlocks.TOMBSTONE3.get(), models().getExistingFile(modLoc("block/tombstone3")));
         horizontalBlock(ModBlocks.GRAVE_CAGE.get(), models().getExistingFile(modLoc("block/grave_cage")));
 
-        getVariantBuilder(ModBlocks.CURSED_GRASS_BLOCK.get()).partialState().with(BlockStateProperties.SNOWY, false).modelForState().modelFile(models().getExistingFile(modLoc("block/cursed_grass_block"))).addModel().partialState().with(BlockStateProperties.SNOWY, true).modelForState().modelFile(models().getExistingFile(modLoc("block/cursed_grass_block_snowy"))).addModel();
+        getMultipartBuilder(ModBlocks.CURSED_GRASS.get())
+                .part().modelFile(models().cubeBottomTop("vampirism:cursed_grass", modLoc("block/cursed_grass_side"), modLoc("block/cursed_earth"),modLoc("block/cursed_grass_top"))).addModel().end()
+                .part().modelFile(models().cubeBottomTop("vampirism:cursed_grass_snowy", modLoc("block/cursed_grass_side_snowy"), modLoc("block/cursed_earth"),modLoc("block/cursed_grass_top"))).addModel().condition(BlockStateProperties.SNOWY, true).end();
+
+        simpleBlock(ModBlocks.CURSED_ROOTS.get(), models().cross("cursed_roots", modLoc("block/cursed_roots")).renderType(cutout));
+        simpleBlock(ModBlocks.POTTED_CURSED_ROOTS.get(), models().withExistingParent("vampirism:block/potted_cursed_roots", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/cursed_roots"));
+
+        trapdoorBlock(ModBlocks.DARK_SPRUCE_TRAPDOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/dark_spruce_trapdoor"), true);
+        trapdoorBlock(ModBlocks.CURSED_SPRUCE_TRAPDOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_trapdoor"), true);
+
+        doorBlock(ModBlocks.DARK_SPRUCE_DOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/dark_spruce_door_bottom"),  new ResourceLocation(REFERENCE.MODID, "block/dark_spruce_door_top"));
+        doorBlock(ModBlocks.CURSED_SPRUCE_DOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_door_bottom"),  new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_door_top"));
+
+        createWoodStates();
+        createCursedBark();
     }
+
+    private void createWoodStates() {
+        simpleBlock(ModBlocks.DARK_SPRUCE_PLANKS.get());
+        simpleBlock(ModBlocks.CURSED_SPRUCE_PLANKS.get());
+
+        stairsBlock(ModBlocks.DARK_SPRUCE_STAIRS.get(), blockTexture(ModBlocks.DARK_SPRUCE_PLANKS.get()));
+        stairsBlock(ModBlocks.CURSED_SPRUCE_STAIRS.get(), blockTexture(ModBlocks.CURSED_SPRUCE_PLANKS.get()));
+        slabBlock(ModBlocks.DARK_SPRUCE_SLAB.get(), blockTexture(ModBlocks.DARK_SPRUCE_PLANKS.get()), blockTexture(ModBlocks.DARK_SPRUCE_PLANKS.get()));
+        slabBlock(ModBlocks.CURSED_SPRUCE_SLAB.get(), blockTexture(ModBlocks.CURSED_SPRUCE_PLANKS.get()), blockTexture(ModBlocks.CURSED_SPRUCE_PLANKS.get()));
+
+        fenceBlock(ModBlocks.DARK_SPRUCE_FENCE.get(), blockTexture(ModBlocks.DARK_SPRUCE_PLANKS.get()));
+        fenceBlock(ModBlocks.CURSED_SPRUCE_FENCE.get(), blockTexture(ModBlocks.CURSED_SPRUCE_PLANKS.get()));
+        models().withExistingParent("dark_spruce_fence_inventory", new ResourceLocation("block/fence_inventory")).texture("texture", "block/dark_spruce_planks");
+        models().withExistingParent("cursed_spruce_fence_inventory", new ResourceLocation("block/fence_inventory")).texture("texture", "block/cursed_spruce_planks");
+        fenceGateBlock(ModBlocks.DARK_SPRUCE_FENCE_GATE.get(), blockTexture(ModBlocks.DARK_SPRUCE_PLANKS.get()));
+        fenceGateBlock(ModBlocks.CURSED_SPRUCE_FENCE_GATE.get(),blockTexture(ModBlocks.CURSED_SPRUCE_PLANKS.get()));
+
+        logBlock(ModBlocks.DARK_SPRUCE_LOG.get());
+        logBlock(ModBlocks.CURSED_SPRUCE_LOG.get());
+        axisBlock(ModBlocks.DARK_SPRUCE_WOOD.get(), blockTexture(ModBlocks.DARK_SPRUCE_LOG.get()), blockTexture(ModBlocks.DARK_SPRUCE_LOG.get()));
+        axisBlock(ModBlocks.CURSED_SPRUCE_WOOD.get(), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()));
+        logBlock(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
+        logBlock(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
+        axisBlock(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get(), blockTexture(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get()),blockTexture(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get()));
+        axisBlock(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get(), blockTexture(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get()), blockTexture(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get()));
+
+        button(ModBlocks.DARK_SPRUCE_BUTTON.get(), blockTexture(ModBlocks.DARK_SPRUCE_PLANKS.get()));
+        button(ModBlocks.CURSED_SPRUCE_BUTTON.get(), blockTexture(ModBlocks.CURSED_SPRUCE_PLANKS.get()));
+
+        pressurePlate(ModBlocks.DARK_SPRUCE_PRESSURE_PLACE.get(), blockTexture(ModBlocks.DARK_SPRUCE_PLANKS.get()));
+        pressurePlate(ModBlocks.CURSED_SPRUCE_PRESSURE_PLACE.get(), blockTexture(ModBlocks.CURSED_SPRUCE_PLANKS.get()));
+
+        simpleBlock(ModBlocks.DARK_SPRUCE_WALL_SIGN.get(), models().getBuilder("vampirism:dark_spruce_wall_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
+        simpleBlock(ModBlocks.CURSED_SPRUCE_WALL_SIGN.get(), models().getBuilder("vampirism:cursed_spruce_wall_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
+        simpleBlock(ModBlocks.DARK_SPRUCE_SIGN.get(), models().getBuilder("vampirism:dark_spruce_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
+        simpleBlock(ModBlocks.CURSED_SPRUCE_SIGN.get(), models().getBuilder("vampirism:cursed_spruce_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
+    }
+
+    private void createCursedBark() {
+        ModelFile side = models().getExistingFile(new ResourceLocation(REFERENCE.MODID, "cursed_bark_side"));
+        ModelFile side2 = models().getExistingFile(new ResourceLocation(REFERENCE.MODID, "cursed_bark_side_2"));
+        VariantBlockStateBuilder bark = getVariantBuilder(ModBlocks.CURSED_BARK.get())
+                .partialState().with(CursedBarkBlock.FACING, Direction.NORTH).with(CursedBarkBlock.FACING2, Direction.NORTH).with(CursedBarkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.WEST).with(CursedBarkBlock.FACING2, Direction.WEST).with(CursedBarkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationY(270).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.SOUTH).with(CursedBarkBlock.FACING2, Direction.SOUTH).with(CursedBarkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationY(180).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.EAST).with(CursedBarkBlock.FACING2, Direction.EAST).with(CursedBarkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationY(90).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.UP).with(CursedBarkBlock.FACING2, Direction.UP).with(CursedBarkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationX(270).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.DOWN).with(CursedBarkBlock.FACING2, Direction.DOWN).with(CursedBarkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationX(90).addModel()
+
+                .partialState().with(CursedBarkBlock.FACING, Direction.NORTH).with(CursedBarkBlock.FACING2, Direction.NORTH).with(CursedBarkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationX(180).rotationY(180).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.WEST).with(CursedBarkBlock.FACING2, Direction.WEST).with(CursedBarkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationY(270).rotationX(90).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.SOUTH).with(CursedBarkBlock.FACING2, Direction.SOUTH).with(CursedBarkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationY(180).rotationX(0).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.EAST).with(CursedBarkBlock.FACING2, Direction.EAST).with(CursedBarkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationY(90).rotationX(90).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.UP).with(CursedBarkBlock.FACING2, Direction.UP).with(CursedBarkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationX(270).rotationY(180).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.DOWN).with(CursedBarkBlock.FACING2, Direction.DOWN).with(CursedBarkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationX(90).rotationY(180).addModel()
+
+                .partialState().with(CursedBarkBlock.FACING, Direction.NORTH).with(CursedBarkBlock.FACING2, Direction.NORTH).with(CursedBarkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationX(90).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.WEST).with(CursedBarkBlock.FACING2, Direction.WEST).with(CursedBarkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationY(90).rotationX(180).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.SOUTH).with(CursedBarkBlock.FACING2, Direction.SOUTH).with(CursedBarkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationY(180).rotationX(90).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.EAST).with(CursedBarkBlock.FACING2, Direction.EAST).with(CursedBarkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationY(90).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.UP).with(CursedBarkBlock.FACING2, Direction.UP).with(CursedBarkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationX(270).rotationY(90).addModel()
+                .partialState().with(CursedBarkBlock.FACING, Direction.DOWN).with(CursedBarkBlock.FACING2, Direction.DOWN).with(CursedBarkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationX(90).rotationY(90).addModel();
+        ModelFile empty = models().getBuilder("vampirism:cursed_bark_empty");
+        for (Direction direction : Direction.values()) {
+            for (Direction direction1 : Direction.values()) {
+                if (direction == direction1) continue;
+                bark.partialState().with(CursedBarkBlock.FACING, direction).with(CursedBarkBlock.FACING2, direction1).modelForState().modelFile(empty).addModel();
+            }
+        }
+    }
+
+    private void button(Block block, ResourceLocation texture) {
+        ResourceLocation id = RegUtil.id(block);
+        ModelFile button = models().withExistingParent("block/" + id.getPath(), new ResourceLocation("block/button")).texture("texture", texture.getPath());
+        ModelFile button_pressed = models().withExistingParent("block/" + id.getPath() + "_pressed", new ResourceLocation("block/button_pressed")).texture("texture", texture.getPath());
+        ModelFile button_inventory  = models().withExistingParent("block/" + id.getPath() + "_inventory", new ResourceLocation("block/button_inventory")).texture("texture", texture.getPath());
+        getVariantBuilder(block)
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.CEILING).with(WoodButtonBlock.FACING, Direction.EAST).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(270).rotationX(180).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.CEILING).with(WoodButtonBlock.FACING, Direction.EAST).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(270).rotationX(180).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.CEILING).with(WoodButtonBlock.FACING, Direction.NORTH).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(180).rotationX(180).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.CEILING).with(WoodButtonBlock.FACING, Direction.NORTH).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(180).rotationX(180).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.CEILING).with(WoodButtonBlock.FACING, Direction.SOUTH).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationX(180).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.CEILING).with(WoodButtonBlock.FACING, Direction.SOUTH).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationX(180).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.CEILING).with(WoodButtonBlock.FACING, Direction.WEST).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(90).rotationX(180).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.CEILING).with(WoodButtonBlock.FACING, Direction.WEST).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationX(90).rotationX(180).addModel()
+
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.FLOOR).with(WoodButtonBlock.FACING, Direction.EAST).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(90).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.FLOOR).with(WoodButtonBlock.FACING, Direction.EAST).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(90).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.FLOOR).with(WoodButtonBlock.FACING, Direction.NORTH).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.FLOOR).with(WoodButtonBlock.FACING, Direction.NORTH).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.FLOOR).with(WoodButtonBlock.FACING, Direction.SOUTH).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(180).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.FLOOR).with(WoodButtonBlock.FACING, Direction.SOUTH).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(180).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.FLOOR).with(WoodButtonBlock.FACING, Direction.WEST).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(270).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.FLOOR).with(WoodButtonBlock.FACING, Direction.WEST).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationX(270).addModel()
+
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.WALL).with(WoodButtonBlock.FACING, Direction.EAST).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(90).rotationX(90).uvLock(true).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.WALL).with(WoodButtonBlock.FACING, Direction.EAST).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(90).rotationX(90).uvLock(true).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.WALL).with(WoodButtonBlock.FACING, Direction.NORTH).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationX(90).uvLock(true).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.WALL).with(WoodButtonBlock.FACING, Direction.NORTH).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationX(90).uvLock(true).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.WALL).with(WoodButtonBlock.FACING, Direction.SOUTH).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(180).rotationX(90).uvLock(true).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.WALL).with(WoodButtonBlock.FACING, Direction.SOUTH).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(180).rotationX(90).uvLock(true).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.WALL).with(WoodButtonBlock.FACING, Direction.WEST).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(270).rotationX(90).uvLock(true).addModel()
+                .partialState().with(WoodButtonBlock.FACE, AttachFace.WALL).with(WoodButtonBlock.FACING, Direction.WEST).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(270).rotationX(90).uvLock(true).addModel()
+        ;
+    }
+
+    private void pressurePlate(Block block, ResourceLocation texture) {
+        ResourceLocation id = RegUtil.id(block);
+        ModelFile pressure_plate = models().withExistingParent("block/" + id.getPath(), new ResourceLocation("block/pressure_plate_up")).texture("texture", texture.getPath());
+        ModelFile pressure_plate_down = models().withExistingParent("block/" + id.getPath() + "_down", new ResourceLocation("block/pressure_plate_down")).texture("texture", texture.getPath());
+
+        getVariantBuilder(block)
+                .partialState().with(PressurePlateBlock.POWERED, false).modelForState().modelFile(pressure_plate).addModel()
+                .partialState().with(PressurePlateBlock.POWERED, true).modelForState().modelFile(pressure_plate_down).addModel();
+    }
+
 }

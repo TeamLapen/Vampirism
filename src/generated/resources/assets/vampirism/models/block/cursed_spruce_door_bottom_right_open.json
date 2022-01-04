@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_bottom_right_open",
+  "textures": {
+    "bottom": "vampirism:block/cursed_spruce_door_bottom",
+    "top": "vampirism:block/cursed_spruce_door_top"
+  }
+}

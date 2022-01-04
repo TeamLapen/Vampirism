@@ -246,6 +246,14 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.CASTLE_STAIRS_DARK_BRICK.get());
             this.dropSelf(ModBlocks.CASTLE_STAIRS_DARK_STONE.get());
             this.dropSelf(ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get());
+            this.dropSelf(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
+            this.dropSelf(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_PLANKS.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_PLANKS.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_TRAPDOOR.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_TRAPDOOR.get());
+            this.add(ModBlocks.DARK_SPRUCE_DOOR.get(), BlockLoot::createDoorTable);
+            this.add(ModBlocks.CURSED_SPRUCE_DOOR.get(), BlockLoot::createDoorTable);
             this.dropSelf(ModBlocks.ALTAR_CLEANSING.get());
             this.dropSelf(ModBlocks.CURSED_EARTH.get());
             this.dropSelf(ModBlocks.FIRE_PLACE.get());
@@ -279,11 +287,9 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.WEAPON_TABLE.get());
             this.add(ModBlocks.TENT.get(), noDrop());
             this.dropPottedContents(ModBlocks.POTTED_VAMPIRE_ORCHID.get());
-            this.dropSelf(ModBlocks.BLOODY_SPRUCE_SAPLING.get());
-            this.dropSelf(ModBlocks.VAMPIRE_SPRUCE_SAPLING.get());
-            this.dropSelf(ModBlocks.BLOODY_SPRUCE_LOG.get());
-            this.add(ModBlocks.VAMPIRE_SPRUCE_LEAVES.get(), (block) -> createLeavesDrops(block, ModBlocks.VAMPIRE_SPRUCE_SAPLING.get(), DEFAULT_SAPLING_DROP_RATES));
-            this.add(ModBlocks.BLOODY_SPRUCE_LEAVES.get(), (block) -> createLeavesDrops(block, ModBlocks.BLOODY_SPRUCE_SAPLING.get(), DEFAULT_SAPLING_DROP_RATES));
+            this.dropSelf(ModBlocks.DARK_SPRUCE_SAPLING.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_SAPLING.get());
+            this.add(ModBlocks.DARK_SPRUCE_LEAVES.get(), (block) -> createLeavesDrops(block, ModBlocks.DARK_SPRUCE_SAPLING.get(), DEFAULT_SAPLING_DROP_RATES));
             this.dropSelf(ModBlocks.CHANDELIER.get());
             this.add(ModBlocks.CANDELABRA_WALL.get(), createSingleItemTable(ModItems.ITEM_CANDELABRA.get()));
             this.add(ModBlocks.CANDELABRA.get(), createSingleItemTable(ModItems.ITEM_CANDELABRA.get()));
@@ -292,7 +298,32 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.TOMBSTONE2.get());
             this.dropSelf(ModBlocks.TOMBSTONE3.get());
             this.dropSelf(ModBlocks.GRAVE_CAGE.get());
-            this.add(ModBlocks.CURSED_GRASS_BLOCK.get(), createSingleItemTable(ModBlocks.CURSED_EARTH.get()));
+            this.add(ModBlocks.CURSED_GRASS.get(), createSingleItemTable(ModBlocks.CURSED_EARTH.get()));
+            this.dropSelf(ModBlocks.DARK_SPRUCE_LOG.get());
+            this.dropPottedContents(ModBlocks.POTTED_CURSED_ROOTS.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_LOG.get());
+            this.add(ModBlocks.CURSED_BARK.get(), noDrop());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_STAIRS.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_STAIRS.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_WOOD.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_WOOD.get());
+            this.dropSelf(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get());
+            this.dropSelf(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_SIGN.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_SIGN.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_WALL_SIGN.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_WALL_SIGN.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_PRESSURE_PLACE.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_PRESSURE_PLACE.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_BUTTON.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_BUTTON.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_SLAB.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_SLAB.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_FENCE_GATE.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_FENCE_GATE.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_FENCE.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_FENCE.get());
+            this.add(ModBlocks.CURSED_ROOTS.get(), (block) -> createShearsDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(Items.STICK).apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F))))));
         }
 
         @Nonnull

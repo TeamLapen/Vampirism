@@ -290,6 +290,8 @@ public class VampirismMod {
     private void gatherData(final GatherDataEvent event) {
         registryManager.onGatherData(event);
         DataGenerator gen = event.getGenerator();
+
+        ModBlockFamilies.init();
         TagGenerator.register(event, gen);
         gen.addProvider(event.includeServer(), new LootTablesGenerator(gen));
         gen.addProvider(event.includeServer(), new AdvancementGenerator(gen));

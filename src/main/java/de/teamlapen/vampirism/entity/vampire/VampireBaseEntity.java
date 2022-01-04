@@ -302,7 +302,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
         if(lowLightLevel) return true;
         if(!vampireBiome) return false;
         BlockState iblockstate = iWorld.getBlockState((this.blockPosition()).below());
-        return iblockstate.is(ModTags.Blocks.CURSEDEARTH);
+        return iblockstate.is(ModTags.Blocks.CURSED_EARTH);
     }
 
     public enum SpawnRestriction {
