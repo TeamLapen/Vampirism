@@ -204,6 +204,7 @@ public class SkillNodeScreen extends AbstractGui {
         if (hoveredSkill != -1) {
             int x = getNodeStart() + (26 + 10) * hoveredSkill;
 
+            Collection<ISkill> lockingSkills = this.getLockingSkills(this.skillNode);
             //draw blocked
             if (state == SkillNodeState.LOCKED || state == SkillNodeState.VISIBLE) {
                 List<ITextComponent> text = new ArrayList<>();
@@ -212,20 +213,36 @@ public class SkillNodeScreen extends AbstractGui {
                     text.add(t1);
                 } else {
                     text.add(new TranslationTextComponent("text.vampirism.skill.locked"));
-                    this.getLockingSkills(this.skillNode).stream().map(a -> a.getName().copy().withStyle(TextFormatting.DARK_RED)).forEach(text::add);
+                    lockingSkills.stream().map(a -> a.getName().copy().withStyle(TextFormatting.DARK_RED)).forEach(text::add);
                 }
                 int width = text.stream().mapToInt(this.minecraft.font::width).max().getAsInt();
                 this.minecraft.getTextureManager().bind(WIDGETS_LOCATION);
-                GuiUtils.drawContinuousTexturedBox(stack, scrollX + x - 5 + this.width[hoveredSkill] - width -8, scrollY + this.y -3 - text.size() * 9, 0, 81, width+5, 6 + text.size() * 10, 200, 20, 3, this.getBlitOffset());
+                GuiUtils.drawContinuousTexturedBox(stack, scrollX + x -3, scrollY + this.y -3 - text.size() * 9, 0, 81, width+8, 10 + text.size() * 10, 200, 20, 3, this.getBlitOffset());
                 int fontY = scrollY + this.y +1 - text.size() * 9;
                 for (int i = 0; i < text.size(); i++) {
-                    this.minecraft.font.drawShadow(stack, text.get(i),  scrollX + x - 8 -2+ this.width[hoveredSkill] - width ,  fontY+ i * 9, -1);
+                    this.minecraft.font.drawShadow(stack, text.get(i),  scrollX + x +2 ,  fontY+ i * 9, -1);
+                }
+            }
+
+            List<IReorderingProcessor> description = this.descriptions[hoveredSkill];
+
+            if (!lockingSkills.isEmpty()) {
+                List<ITextComponent> text = new ArrayList<>();
+                text.add(new TranslationTextComponent("text.vampirism.skill.excluding"));
+                lockingSkills.stream().map(a -> a.getName().copy().withStyle(TextFormatting.YELLOW)).forEach(text::add);
+                int width = Math.min(this.width[hoveredSkill], text.stream().mapToInt(this.minecraft.font::width).max().getAsInt());
+
+                this.minecraft.getTextureManager().bind(WIDGETS_LOCATION);
+                int yOffset = description.isEmpty() ? 15:24;
+                GuiUtils.drawContinuousTexturedBox(stack, scrollX + x - 3, scrollY + this.y +3 + 7 + description.size() * 9 , 0, 81, width+8, text.size() * 10 + yOffset, 200, 20, 3, this.getBlitOffset());
+                int fontY = scrollY + this.y +3 + yOffset +8 + description.size() * 9;
+                for (int i = 0; i < text.size(); i++) {
+                    this.minecraft.font.drawShadow(stack, text.get(i),  scrollX + x + 2  ,  fontY+ i * 9, -1);
                 }
             }
 
             //draw description
-            if (elements[hoveredSkill].getDescription() != null) {
-                List<IReorderingProcessor> description = getSkillDescription(hoveredSkill);
+            if (!description.isEmpty()) {
                 this.minecraft.getTextureManager().bind(WIDGETS_LOCATION);
                 GuiUtils.drawContinuousTexturedBox(stack, scrollX + x - 5, scrollY + this.y + 3, 0, 81, this.width[hoveredSkill], 30 + description.size() * 9, 200, 20, 3, this.getBlitOffset());
                 for (int i = 0; i < description.size(); i++) {
