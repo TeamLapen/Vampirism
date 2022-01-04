@@ -36,6 +36,7 @@ import net.minecraft.village.PointOfInterestType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
@@ -79,6 +80,7 @@ public class RegistryManager implements IInitListener {
                 ModLoot.registerLootConditions();
                 ModLoot.registerLootFunctionType();
                 VampirismBiomeFeatures.init();
+                ModTiles.registerTileExtensionsUnsafe();
             case LOAD_COMPLETE:
                 event.enqueueWork(ModFeatures::registerStructureSeparation);
                 if (ModEffects.checkNightVision()) {
@@ -268,5 +270,10 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterTiles(RegistryEvent.Register<TileEntityType<?>> event) {
         ModTiles.registerTiles(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onTreeDecoratorType(RegistryEvent.Register<TreeDecoratorType<?>> event){
+        ModFeatures.registerTreeDecoratorTypes(event.getRegistry());
     }
 }

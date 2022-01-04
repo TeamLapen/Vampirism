@@ -34,6 +34,8 @@ public interface IPlayableFaction<T extends IFactionPlayer> extends IFaction<T> 
     @Nonnull
     ITextComponent getLordTitle(int level, boolean female);
 
+    boolean hasGenderTitles();
+
     /**
      * @param player
      * @return The "<? extends IFactionPlayer>" of this faction for the given player

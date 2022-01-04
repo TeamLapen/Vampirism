@@ -421,6 +421,10 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return true;
     }
 
+    public boolean getTitleGender() {
+        return this.titleGender;
+    }
+
     @Override
     public void writeFullUpdateToNBT(CompoundNBT nbt) {
         nbt.putString("faction", currentFaction == null ? "null" : currentFaction.getID().toString());

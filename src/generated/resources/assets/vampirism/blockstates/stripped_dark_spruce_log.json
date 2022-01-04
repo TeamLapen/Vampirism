@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "vampirism:block/stripped_dark_spruce_log_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "vampirism:block/stripped_dark_spruce_log"
+    },
+    "axis=z": {
+      "model": "vampirism:block/stripped_dark_spruce_log_horizontal",
+      "x": 90
+    }
+  }
+}

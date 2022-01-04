@@ -37,7 +37,7 @@ public class ModBiomes {
 
 
     static void registerBiomes(IForgeRegistry<Biome> registry) {
-        registry.register(VampireForestBiome.createVampireForest(0.1F, 0.025F).setRegistryName(VAMPIRE_FOREST_KEY.location()));
+        registry.register(VampireForestBiome.createVampireForest(0.1F, 0.055F).setRegistryName(VAMPIRE_FOREST_KEY.location()));
         registry.register(VampireForestBiome.createVampireForest(0.8f, 0.5f).setRegistryName(VAMPIRE_FOREST_HILLS_KEY.location()));
 
         VampirismAPI.sundamageRegistry().addNoSundamageBiomes(VAMPIRE_FOREST_KEY.location());
@@ -52,9 +52,9 @@ public class ModBiomes {
     static void addBiomesToGeneratorUnsafe() {
         //TODO don't generate hills biome for now. Should be added as a hills variant at some point if supported by Forge
         BiomeManager.addAdditionalOverworldBiomes(VAMPIRE_FOREST_KEY);
-        //BiomeManager.addAdditionalOverworldBiomes(VAMPIRE_FOREST_HILLS_KEY);
+//        BiomeManager.addAdditionalOverworldBiomes(VAMPIRE_FOREST_HILLS_KEY);
         BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_KEY, VampirismConfig.COMMON.vampireForestWeight.get()));
-//            BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_HILLS_KEY, VampirismConfig.BALANCE.vampireForestHillsWeight.get()));
+//            BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_HILLS_KEY, VampirismConfig.COMMON.vampireForestWeight.get()));
 
     }
 

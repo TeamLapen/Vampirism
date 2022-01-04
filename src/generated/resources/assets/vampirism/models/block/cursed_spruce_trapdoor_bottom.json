@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_orientable_trapdoor_bottom",
+  "textures": {
+    "texture": "vampirism:block/cursed_spruce_trapdoor"
+  }
+}

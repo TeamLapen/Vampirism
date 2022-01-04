@@ -36,6 +36,8 @@ public class ClothingBootsModel extends VampirismArmorModel {
         this.leftToes = new ModelRenderer(this, 18, 9);
         this.leftToes.setPos(-1.9F, 12.0F, 0.0F);
         this.leftToes.addBox(-2.0F, 10.0F, -4.0F, 4.0F, 2.0F, 2.0F, 0.4F, 0.4F, 0.4F);
+        getLeftLegModels().forEach(this.leftLeg::addChild);
+        getRightLegModels().forEach(this.rightLeg::addChild);  //Make sure hierarchy is correct (e.g. for EpicFightMod)
     }
 
     @Override

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.IVillageFactionData;
+import de.teamlapen.vampirism.api.entity.factions.LordTitles;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,7 +17,6 @@ import net.minecraftforge.common.util.NonNullSupplier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -27,16 +27,16 @@ public class PlayableFaction<T extends IFactionPlayer<?>> extends Faction<T> imp
     private final int highestLevel;
     private final int highestLordLevel;
     private final NonNullSupplier<Capability<T>> playerCapabilitySupplier;
-    private final BiFunction<Integer, Boolean, ITextComponent> lordTitleFunction;
+    private final LordTitles lordTitles;
     private final Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot;
     private boolean renderLevel = true;
 
-    PlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull BiFunction<Integer, Boolean, ITextComponent> lordTitleFunction, @Nonnull IVillageFactionData villageFactionData, @Nullable Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot, TextFormatting chatColor, ITextComponent name, ITextComponent namePlural) {
+    PlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull LordTitles lordTitles, @Nonnull IVillageFactionData villageFactionData, @Nullable Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot, TextFormatting chatColor, ITextComponent name, ITextComponent namePlural) {
         super(id, entityInterface, color, hostileTowardsNeutral, villageFactionData, chatColor, name, namePlural);
         this.highestLevel = highestLevel;
         this.playerCapabilitySupplier = playerCapabilitySupplier;
         this.highestLordLevel = highestLordLevel;
-        this.lordTitleFunction = lordTitleFunction;
+        this.lordTitles = lordTitles;
         this.refinementItemBySlot = refinementItemBySlot;
     }
 
@@ -59,7 +59,12 @@ public class PlayableFaction<T extends IFactionPlayer<?>> extends Faction<T> imp
     @Override
     public ITextComponent getLordTitle(int level, boolean female) {
         assert level <= highestLordLevel;
-        return lordTitleFunction.apply(level, female);
+        return lordTitles.apply(level, female);
+    }
+
+    @Override
+    public boolean hasGenderTitles() {
+        return this.lordTitles.areGenderNeutral();
     }
 
     @Override

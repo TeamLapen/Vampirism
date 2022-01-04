@@ -13,25 +13,27 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.stats.Stats;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 /**
  * Block which represents the top and the bottom part of a "Medical Chair" used for injections
@@ -45,16 +47,26 @@ public class MedChairBlock extends VampirismHorizontalBlock {
 
     public MedChairBlock() {
         super(name, Properties.of(Material.METAL).strength(1).noOcclusion());
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, EnumPart.TOP));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, EnumPart.BOTTOM));
         SHAPE_TOP = box(2, 6, 0, 14, 16, 16);
         SHAPE_BOTTOM = box(1, 1, 0, 15, 10, 16);
     }
 
-
-    @Nonnull
     @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        return new ItemStack(ModItems.item_med_chair);
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
+        super.setPlacedBy(worldIn, pos, state, entity, itemStack);
+        if (!worldIn.isClientSide) {
+            BlockPos blockpos = pos.relative(state.getValue(HORIZONTAL_FACING).getOpposite());
+            worldIn.setBlock(blockpos, state.setValue(PART, EnumPart.TOP).setValue(FACING, state.getValue(HORIZONTAL_FACING)), 3);
+            worldIn.blockUpdated(pos, Blocks.AIR);
+            state.updateNeighbourShapes(worldIn, pos, 3);
+        }
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Nonnull
@@ -63,31 +75,31 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         return state.getValue(PART) == EnumPart.BOTTOM ? SHAPE_BOTTOM : SHAPE_TOP;
     }
 
-    @Override
-    public void playerDestroy(@Nonnull World worldIn, @Nonnull PlayerEntity player, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable TileEntity te, @Nonnull ItemStack stack) {
-        super.playerDestroy(worldIn, player, pos, Blocks.AIR.defaultBlockState(), te, stack);
+    public BlockState updateShape(BlockState p_196271_1_, Direction p_196271_2_, BlockState p_196271_3_, IWorld p_196271_4_, BlockPos p_196271_5_, BlockPos p_196271_6_) {
+        if (p_196271_2_ == getDirectionToOther(p_196271_1_.getValue(PART), p_196271_1_.getValue(FACING))) {
+            return p_196271_3_.is(this) && p_196271_3_.getValue(PART) != p_196271_1_.getValue(PART) ? p_196271_1_ : Blocks.AIR.defaultBlockState();
+        } else {
+            return super.updateShape(p_196271_1_, p_196271_2_, p_196271_3_, p_196271_4_, p_196271_5_, p_196271_6_);
+        }
+    }
+
+    private static Direction getDirectionToOther(EnumPart type, Direction facing) {
+        return type == EnumPart.TOP ? facing : facing.getOpposite();
     }
 
     @Override
     public void playerWillDestroy(@Nonnull World worldIn, @Nonnull BlockPos pos, BlockState state, @Nonnull PlayerEntity player) {
-        EnumPart part = state.getValue(PART);
-        BlockPos other;
-        Direction dir = state.getValue(FACING);
-        if (state.getValue(PART) == EnumPart.TOP) {
-            other = pos.relative(dir);
-        } else {
-            other = pos.relative(dir.getOpposite());
-        }
-        BlockState otherState = worldIn.getBlockState(other);
-        if (otherState.getBlock() == this && otherState.getValue(PART) != part) {
-            worldIn.setBlock(other, Blocks.AIR.defaultBlockState(), 35);
-            worldIn.levelEvent(player, 2001, other, Block.getId(otherState));
-            if (!worldIn.isClientSide && !player.isCreative()) {
-                ItemStack itemstack = player.getMainHandItem();
-                dropResources(state, worldIn, pos, null, player, itemstack);
-                dropResources(otherState, worldIn, other, null, player, itemstack);
+        //If in creative mode, also destroy the top block. Otherwise, it will be destroyed due to updateShape and an item will drop
+        if (!worldIn.isClientSide && player.isCreative()) {
+            EnumPart part = state.getValue(PART);
+            if(part == EnumPart.BOTTOM){
+                BlockPos other = pos.relative(getDirectionToOther(state.getValue(PART), state.getValue(FACING)));
+                BlockState otherState = worldIn.getBlockState(other);
+                if (otherState.getBlock() == this && otherState.getValue(PART) == EnumPart.TOP) {
+                    worldIn.setBlock(other, Blocks.AIR.defaultBlockState(), 35);
+                    worldIn.levelEvent(player, 2001, other, Block.getId(otherState));
+                }
             }
-            player.awardStat(Stats.BLOCK_MINED.get(this));
         }
         super.playerWillDestroy(worldIn, pos, state, player);
     }

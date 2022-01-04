@@ -7,7 +7,9 @@ import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
@@ -132,7 +134,6 @@ public class ModItems {
 
     public static final BucketItem impure_blood_bucket = getNull();
     public static final GarlicItem item_garlic = getNull();
-    public static final MedChairItem item_med_chair = getNull();
     public static final GarlicBreadItem garlic_bread = getNull();
     public static final AlchemicalFireItem item_alchemical_fire = getNull();
 
@@ -212,6 +213,10 @@ public class ModItems {
     public static final VampirismItem garlic_finder = getNull();
 
     public static final WallOrFloorItem item_candelabra = getNull();
+    public static final BlockItem cursed_spruce_log = getNull();
+    public static final BlockItem dark_spruce_leaves = getNull();
+    public static final SignItem dark_spruce_sign = getNull();
+    public static final SignItem cursed_spruce_sign = getNull();
 
 
     static void registerCraftingRecipes() {
@@ -260,7 +265,6 @@ public class ModItems {
             registry.register(new HunterIntelItem(i));
         }
         registry.register(new GarlicItem());
-        registry.register(new MedChairItem());
         registry.register(new InjectionItem(InjectionItem.TYPE.GARLIC));
         registry.register(new InjectionItem(InjectionItem.TYPE.SANGUINARE));
         registry.register(new InjectionItem(InjectionItem.TYPE.EMPTY));
@@ -437,6 +441,8 @@ public class ModItems {
 
         registry.register(new WallOrFloorItem(ModBlocks.candelabra, ModBlocks.candelabra_wall, new Item.Properties().tab(VampirismMod.creativeTab)).setRegistryName(REFERENCE.MODID, "item_candelabra"));
 
+        registry.register(new SignItem((new Item.Properties()).stacksTo(16).tab(ItemGroup.TAB_DECORATIONS), ModBlocks.dark_spruce_sign, ModBlocks.dark_spruce_wall_sign).setRegistryName(REFERENCE.MODID, "dark_spruce_sign"));
+        registry.register(new SignItem((new Item.Properties()).stacksTo(16).tab(ItemGroup.TAB_DECORATIONS), ModBlocks.cursed_spruce_sign, ModBlocks.cursed_spruce_wall_sign).setRegistryName(REFERENCE.MODID, "cursed_spruce_sign"));
 
         if (VampirismMod.inDataGen) {
             registry.register(new DummyItem().setRegistryName("guideapi-vp", "vampirism-guidebook"));
@@ -459,6 +465,15 @@ public class ModItems {
                     break;
                 case "vampirism:vampire_clothing_feet":
                     missingMapping.remap(vampire_clothing_boots);
+                    break;
+                case "vampirism:item_med_chair":
+                    missingMapping.remap(Item.byBlock(ModBlocks.med_chair));
+                    break;
+                case "vampirism:bloody_spruce_log":
+                    missingMapping.remap(cursed_spruce_log);
+                    break;
+                case "vampirism:bloody_spruce_leaves":
+                    missingMapping.remap(dark_spruce_leaves);
                     break;
             }
         });

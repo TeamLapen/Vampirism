@@ -7,7 +7,6 @@ import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -44,7 +43,19 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<?>> extends IF
      * @param lordTitleFunction a function that return the title for a lord player based on level and gender
      * @return the builder
      */
-    IPlayableFactionBuilder<T> lordTitle(@Nonnull BiFunction<Integer, Boolean, ITextComponent> lordTitleFunction);
+    IPlayableFactionBuilder<T> lordTitle(@Nonnull LordTitles lordTitleFunction);
+
+    /**
+     * Sets custom lord titles
+     * <br>
+     * Only relevant when lord level > 0
+     *
+     * uses gender neutral naming
+     *
+     * @param lordTitleFunction a function that return the title for a lord player based on level and gender
+     * @return the builder
+     */
+    IPlayableFactionBuilder<T> lordTitle(@Nonnull LordTitles.LordTitlesNeutral lordTitleFunction);
 
     @Override
     IPlayableFactionBuilder<T> village(@Nonnull Consumer<IFactionVillageBuilder> villageBuilder);

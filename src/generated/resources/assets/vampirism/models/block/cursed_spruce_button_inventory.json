@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/button_inventory",
+  "textures": {
+    "texture": "vampirism:block/cursed_spruce_planks"
+  }
+}

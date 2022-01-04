@@ -146,7 +146,7 @@ public class RecipesGenerator extends RecipeProvider {
         ShapedRecipeBuilder.shaped(ModBlocks.potion_table).pattern("XXX").pattern("Y Y").pattern("ZZZ").define('X', glass_bottle).define('Y', planks).define('Z', iron_ingot).unlockedBy("has_glass_bottle", has(glass_bottle)).save(consumer, hunter("potion_table"));
         ShapedRecipeBuilder.shaped(ModBlocks.garlic_beacon_normal).pattern("XYX").pattern("YZY").pattern("OOO").define('X', planks).define('Y', diamond).define('O', obsidian).define('Z', garlic_beacon_core).unlockedBy("has_diamond", has(diamond)).save(consumer, hunter("garlic_beacon_normal"));
         ShapedRecipeBuilder.shaped(ModBlocks.hunter_table).pattern("XYW").pattern("ZZZ").pattern("Z Z").define('X', vampire_fang).define('Y', book).define('Z', planks).define('W', garlic).unlockedBy("has_fang", has(vampire_fang)).save(consumer, hunter("hunter_table"));
-        ShapedRecipeBuilder.shaped(ModItems.item_med_chair).pattern("XYX").pattern("XXX").pattern("XZX").define('X', iron_ingot).define('Y', wool).define('Z', glass_bottle).unlockedBy("has_iron_ingot", has(iron_ingot)).save(consumer, hunter("item_med_chair"));
+        ShapedRecipeBuilder.shaped(ModBlocks.med_chair).pattern("XYX").pattern("XXX").pattern("XZX").define('X', iron_ingot).define('Y', wool).define('Z', glass_bottle).unlockedBy("has_iron_ingot", has(iron_ingot)).save(consumer, hunter("item_med_chair"));
         ShapedRecipeBuilder.shaped(ModBlocks.garlic_beacon_improved).pattern("XYX").pattern("YZY").pattern("OOO").define('X', planks).define('Y', diamond).define('Z', garlic_beacon_core_improved).define('O', obsidian).unlockedBy("has_garlic_beacon", has(garlic_beacon_normal)).save(consumer, hunter("garlic_beacon_improved"));
         ShapedRecipeBuilder.shaped(ModItems.stake).pattern("X").pattern("Y").pattern("X").define('X', stick).define('Y', planks).unlockedBy("has_sticks", has(stick)).save(consumer, hunter("stake"));
         ShapedRecipeBuilder.shaped(ModBlocks.weapon_table).pattern("X  ").pattern("YYY").pattern(" Z ").define('X', bucket).define('Y', iron_ingot).define('Z', iron_block).unlockedBy("has_iron_ingot", has(iron_ingot)).save(consumer, hunter("weapon_table"));
@@ -266,6 +266,31 @@ public class RecipesGenerator extends RecipeProvider {
         ShapelessRecipeBuilder.shapeless(ModBlocks.tombstone1).requires(ModBlocks.tombstone2).unlockedBy("has_tomb", has(ModBlocks.tombstone2)).save(consumer, general("tombstone1"));
         ShapelessRecipeBuilder.shapeless(ModBlocks.tombstone3).requires(ModBlocks.tombstone2).requires(Blocks.COBBLESTONE).unlockedBy("has_tomb", has(ModBlocks.tombstone2)).save(consumer, general("tombstone3"));
         ShapedRecipeBuilder.shaped(ModBlocks.grave_cage).pattern(" X ").pattern("XYX").pattern("XYX").define('X', iron_ingot).define('Y', Items.COAL).unlockedBy("has_iron", has(iron_ingot)).unlockedBy("has_coal", has(Items.COAL)).save(consumer, general("grave_cage"));
+
+        planksFromLog(consumer,ModBlocks.dark_spruce_planks, ModTags.Items.DARK_SPRUCE_LOG);
+        planksFromLog(consumer,ModBlocks.cursed_spruce_planks, ModTags.Items.CURSED_SPRUCE_LOG);
+        woodFromLogs(consumer,ModBlocks.dark_spruce_wood, ModBlocks.dark_spruce_log);
+        woodFromLogs(consumer,ModBlocks.cursed_spruce_wood, ModBlocks.cursed_spruce_log);
+        woodFromLogs(consumer,ModBlocks.stripped_dark_spruce_wood, ModBlocks.stripped_dark_spruce_log);
+        woodFromLogs(consumer,ModBlocks.stripped_cursed_spruce_wood, ModBlocks.stripped_cursed_spruce_log);
+        woodenButton(consumer, ModBlocks.dark_spruce_button, ModBlocks.dark_spruce_planks);
+        woodenButton(consumer, ModBlocks.cursed_spruce_button, ModBlocks.cursed_spruce_planks);
+        woodenDoor(consumer, ModBlocks.dark_spruce_door, ModBlocks.dark_spruce_planks);
+        woodenDoor(consumer, ModBlocks.cursed_spruce_door, ModBlocks.cursed_spruce_planks);
+        woodenFence(consumer, ModBlocks.dark_spruce_fence, ModBlocks.dark_spruce_planks);
+        woodenFence(consumer, ModBlocks.cursed_spruce_fence, ModBlocks.cursed_spruce_planks);
+        woodenFenceGate(consumer, ModBlocks.dark_spruce_fence_gate, ModBlocks.dark_spruce_planks);
+        woodenFenceGate(consumer, ModBlocks.cursed_spruce_fence_gate, ModBlocks.cursed_spruce_planks);
+        woodenPressurePlate(consumer, ModBlocks.dark_spruce_pressure_place, ModBlocks.dark_spruce_planks);
+        woodenPressurePlate(consumer, ModBlocks.cursed_spruce_pressure_place, ModBlocks.cursed_spruce_planks);
+        woodenSlab(consumer, ModBlocks.dark_spruce_slab, ModBlocks.dark_spruce_planks);
+        woodenSlab(consumer, ModBlocks.cursed_spruce_slab, ModBlocks.cursed_spruce_planks);
+        woodenStairs(consumer, ModBlocks.dark_spruce_stairs, ModBlocks.dark_spruce_planks);
+        woodenStairs(consumer, ModBlocks.cursed_spruce_stairs, ModBlocks.cursed_spruce_planks);
+        woodenTrapdoor(consumer, ModBlocks.dark_spruce_trapdoor, ModBlocks.dark_spruce_planks);
+        woodenTrapdoor(consumer, ModBlocks.cursed_spruce_trapdoor, ModBlocks.cursed_spruce_planks);
+        woodenSign(consumer, ModItems.dark_spruce_sign, ModBlocks.dark_spruce_planks);
+        woodenSign(consumer, ModItems.cursed_spruce_sign, ModBlocks.cursed_spruce_planks);
     }
 
     private JsonObject enchantment(int level, Enchantment enchantment) {

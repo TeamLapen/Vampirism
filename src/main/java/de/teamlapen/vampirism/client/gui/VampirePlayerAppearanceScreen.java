@@ -7,6 +7,7 @@ import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.AppearancePacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -36,11 +37,13 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
     private int fangType;
     private int eyeType;
     private boolean glowingEyes;
+    private boolean lordGender;
     private ScrollableListWidget<Pair<Integer, ITextComponent>> eyeList;
     private ScrollableListWidget<Pair<Integer, ITextComponent>> fangList;
     private ExtendedButton eyeButton;
     private ExtendedButton fangButton;
     private CheckboxButton glowingEyesButton;
+    private CheckboxButton lordGenderButton;
 
 
     public VampirePlayerAppearanceScreen(@Nullable Screen backScreen) {
@@ -59,7 +62,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
 
     @Override
     public void removed() {
-        VampirismMod.dispatcher.sendToServer(new AppearancePacket(this.entity.getId(), "", fangType, eyeType, glowingEyes ? 1 : 0));
+        VampirismMod.dispatcher.sendToServer(new AppearancePacket(this.entity.getId(), "", fangType, eyeType, glowingEyes ? 1 : 0, lordGender ? 1: 0));
         super.removed();
     }
 
@@ -72,6 +75,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
         this.fangType = vampAtt.fangType;
         this.eyeType = vampAtt.eyeType;
         this.glowingEyes = vampAtt.glowingEyes;
+        this.lordGender = FactionPlayerHandler.getOpt(entity).map(FactionPlayerHandler::getTitleGender).orElse(false);
 
         this.eyeList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100, 20, REFERENCE.EYE_TYPE_COUNT, new TranslationTextComponent("gui.vampirism.appearance.eye"), this::eye, this::hoverEye).scrollSpeed(2));
         this.fangList = this.addButton(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80, 20, REFERENCE.FANG_TYPE_COUNT, new TranslationTextComponent("gui.vampirism.appearance.fang"), this::fang, this::hoverFang));
@@ -87,6 +91,14 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
                 super.onPress();
                 glowingEyes = selected();
                 VampirePlayer.getOpt(entity).ifPresent(p -> p.setGlowingEyes(glowingEyes));
+            }
+        });
+        this.lordGenderButton = this.addButton(new CheckboxButton(this.guiLeft + 20, this.guiTop + 91, 99, 20, new TranslationTextComponent("gui.vampirism.appearance.lord_gender"), lordGender) {
+            @Override
+            public void onPress() {
+                super.onPress();
+                lordGender = selected();
+                FactionPlayerHandler.getOpt(entity).ifPresent(p -> p.setTitleGender(lordGender));
             }
         });
         this.setEyeListVisibility(false);
