@@ -36,6 +36,7 @@ import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -53,6 +54,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
     private int oldMouseY;
     private ScrollableListWidget<ITaskInstance> list;
     private final Map<Integer, Button> refinementRemoveButtons = new Int2ObjectOpenHashMap<>(3);
+    private ITextComponent level;
 
     public VampirismScreen(VampirismContainer container, PlayerInventory playerInventory, ITextComponent titleIn) {
         super(container, playerInventory, titleIn);
@@ -62,6 +64,11 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         this.inventoryLabelY = this.imageHeight - 93;
         this.menu.setReloadListener(() -> this.list.refresh());
         this.factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(playerInventory.player).orElseThrow(() -> new IllegalStateException("Cannot open Vampirism container without faction player"));
+        if (factionPlayer.getLevel() > 0) {
+            this.level = FactionPlayerHandler.getOpt(playerInventory.player).filter(f -> f.getLordLevel() > 0).map(f -> f.getLordTitle().copy().append(" (" + f.getLordLevel() + ")")).orElseGet(() -> new TranslationTextComponent("text.vampirism.level").append(" " + factionPlayer.getLevel())).withStyle(factionPlayer.getFaction().getChatColor());
+        } else {
+            this.level = StringTextComponent.EMPTY;
+        }
     }
 
     @Override
@@ -190,6 +197,13 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
             }
         }
 
+    }
+
+    @Override
+    protected void renderLabels(@Nonnull MatrixStack stack, int mouseX, int mouseY) {
+        super.renderLabels(stack, mouseX, mouseY);
+        int width = this.font.width(this.level);
+        this.font.draw(stack, this.level,Math.max(5, 31 - (float)width /2), 81, -1);
     }
 
     @Override

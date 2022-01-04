@@ -310,7 +310,6 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
             for (ISkill skill : old) {
                 disableSkill(skill);
             }
-            VampirismMod.proxy.resetSkillScreenCache();
         }
 
         if (nbt.contains("refinement_set")) {

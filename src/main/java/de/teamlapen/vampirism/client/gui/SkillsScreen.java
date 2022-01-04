@@ -53,10 +53,12 @@ import java.util.*;
 /**
  * Gui screen which displays the skills available to the players and allows him to unlock some.
  * Inspired by Minecraft's old GuiAchievement
+ *
+ * @deprecated unused
  */
 @Deprecated
 @OnlyIn(Dist.CLIENT)
-public class SkillsScreen extends Screen {
+public class SkillsScreen extends Screen { //TODO BREAKING remove
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills_window.png");
     private final int area_min_y = -77;
     private final int skill_width = 24;
