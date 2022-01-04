@@ -75,7 +75,12 @@ public class ConfigCommand extends BasicCommand {
                                 .then(Commands.literal("dimension")
                                         .executes(context -> enforceDimension(context.getSource().getPlayerOrException()))
                                         .then(Commands.argument("dimension", DimensionArgument.dimension())
-                                                .executes(context -> enforceDimension(context.getSource().getPlayerOrException(), DimensionArgument.getDimension(context, "dimension")))))));
+                                                .executes(context -> enforceDimension(context.getSource().getPlayerOrException(), DimensionArgument.getDimension(context, "dimension")))))))
+                .then(Commands.literal("bat-dimension-blacklist")
+                        .then(Commands.argument("dimension", DimensionArgument.dimension())
+                                .executes(context -> batBlacklistDimension(context.getSource().getPlayerOrException(), DimensionArgument.getDimension(context, "dimension")))
+                        )
+                );
     }
 
     private static int blacklistEntity(ServerPlayer player) throws CommandSyntaxException {
@@ -125,7 +130,10 @@ public class ConfigCommand extends BasicCommand {
         return modifyList(player, dimension.dimension().location(), VampirismConfig.SERVER.sundamageDimensionsOverridePositive, "command.vampirism.base.config.dimension.enforced", "command.vampirism.base.config.dimension.not_enforced");
     }
 
-    @SuppressWarnings("SameReturnValue")
+    private static int batBlacklistDimension(ServerPlayer player, ServerLevel dim) {
+        return modifyList(player, dim.dimension().location(), VampirismConfig.SERVER.batDimensionBlacklist, "command.vampirism.base.config.bat_dim.blacklisted", "command.vampirism.base.config.bat_dim.not_blacklisted");
+    }
+
     private static int modifyList(ServerPlayer player, ResourceLocation id, ForgeConfigSpec.ConfigValue<List<? extends String>> configList, String blacklist, String not_blacklist) {
         List<? extends String> list = configList.get();
         if (!list.contains(id.toString())) {

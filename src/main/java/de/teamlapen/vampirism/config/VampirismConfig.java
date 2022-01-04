@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -125,6 +126,7 @@ public class VampirismConfig {
     public static class Server {
 
         public final ForgeConfigSpec.BooleanValue enforceRenderForestFog;
+        @Deprecated
         public final ForgeConfigSpec.BooleanValue batModeInEnd;
         public final ForgeConfigSpec.BooleanValue unlockAllSkills;
         public final ForgeConfigSpec.BooleanValue pvpOnlyBetweenFactions;
@@ -143,6 +145,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDimensionsOverridePositive;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDimensionsOverrideNegative;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDisabledBiomes;
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> batDimensionBlacklist;
 
 
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> blacklistedBloodEntity;
@@ -161,7 +164,7 @@ public class VampirismConfig {
                     .push("server");
 
             enforceRenderForestFog = builder.comment("Prevent clients from disabling the vampire forest fog").define("enforceForestFog", true);
-            batModeInEnd = builder.comment("If vampires can convert to a bat in the End").define("batModeInEnd", false);
+            batModeInEnd = builder.comment("Deprecated! Use 'batDimensionBlacklist'","If vampires can convert to a bat in the End").define("batModeInEnd", false);
             pvpOnlyBetweenFactions = builder.comment("If PVP should only be allowed between factions. PVP has to be enabled in the server properties for this. Not guaranteed to always protect player from teammates").define("pvpOnlyBetweenFactions", false);
             pvpOnlyBetweenFactionsIncludeHumans = builder.comment("If pvpOnlyBetweenFactions is enabled, this decides whether human players can be attacked and attack others").define("pvpOnlyBetweenFactionsIncludeHumans", false);
             sunscreenBeaconDistance = builder.comment("Block radius the sunscreen beacon affects").defineInRange("sunscreenBeaconDistance", 32, 1, 40000);
@@ -173,6 +176,7 @@ public class VampirismConfig {
             entityIMob = builder.comment("Changes if entities are recognized as hostile by other mods. See https://github.com/TeamLapen/Vampirism/issues/199. Smart falls back to Never on servers ").defineEnum("entitiesIMob", IMobOptions.SMART);
             infectCreaturesSanguinare = builder.comment("If enabled, creatures are infected with Sanguinare Vampirism first instead of immediately being converted to a vampire when their blood is sucked dry").define("infectCreaturesSanguinare", false);
             preventRenderingDebugBoundingBoxes = builder.comment("Prevent players from enabling the rendering of debug bounding boxes. This can allow them to see certain entities they are not supposed to see (e.g. disguised hunter").define("preventDebugBoundingBoxes", false);
+            batDimensionBlacklist = builder.comment("Prevent vampire players to transform into a bat").defineList("batDimensionBlacklist", Collections.singletonList(World.END.location().toString()), string -> string instanceof String && UtilLib.isValidResourceLocation(((String) string)));
 
             builder.push("sundamage");
             sundamageUnknownDimension = builder.comment("Whether vampires should receive sundamage in unknown dimensions").define("sundamageUnknownDimension", false);
