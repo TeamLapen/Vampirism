@@ -54,7 +54,14 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.isGettingSundamage(vampire.getRepresentingEntity().level) && !ModItems.umbrella.equals(vampire.getRepresentingEntity().getMainHandItem().getItem()) && vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().level) == EnumStrength.NONE && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && !vampire.getRepresentingPlayer().isInWater() && (VampirismConfig.SERVER.batModeInEnd.get() || !(vampire.getRepresentingPlayer().getCommandSenderWorld().dimension() == World.END)) && (vampire.getRepresentingEntity().getVehicle() == null);
+        return !vampire.isGettingSundamage(vampire.getRepresentingEntity().level)
+                && !ModItems.umbrella.equals(vampire.getRepresentingEntity().getMainHandItem().getItem())
+                && vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().level) == EnumStrength.NONE
+                && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage)
+                && !vampire.getRepresentingPlayer().isInWater()
+                && (VampirismConfig.SERVER.batModeInEnd.get() || !(vampire.getRepresentingPlayer().getCommandSenderWorld().dimension() == World.END))
+                && !VampirismConfig.SERVER.batDimensionBlacklist.get().contains(vampire.getRepresentingPlayer().getCommandSenderWorld().dimension().location().toString())
+                && (vampire.getRepresentingEntity().getVehicle() == null);
     }
 
     @Override
@@ -109,8 +116,8 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         } else if (vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().level) != EnumStrength.NONE && !vampire.isRemote()) {
             vampire.getRepresentingEntity().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_garlic"), Util.NIL_UUID);
             return true;
-        } else if (!VampirismConfig.SERVER.batModeInEnd.get() && vampire.getRepresentingPlayer().getCommandSenderWorld().dimension() == World.END) {
-            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_end"), Util.NIL_UUID);
+        } else if (VampirismConfig.SERVER.batDimensionBlacklist.get().contains(vampire.getRepresentingPlayer().getCommandSenderWorld().dimension().location().toString()) || !VampirismConfig.SERVER.batModeInEnd.get() && vampire.getRepresentingPlayer().getCommandSenderWorld().dimension() == World.END) {
+            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_dimension"), Util.NIL_UUID);
             return true;
         } else {
             float exhaustion = VampirismConfig.BALANCE.vaBatExhaustion.get().floatValue();
