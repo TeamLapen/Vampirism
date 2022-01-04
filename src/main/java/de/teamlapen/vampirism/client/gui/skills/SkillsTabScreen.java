@@ -202,8 +202,8 @@ public class SkillsTabScreen extends AbstractGui {
     }
 
     public void mouseDragged(double mouseX, double mouseY, int mouseButton, double xDragged, double yDragged) {
-        this.scrollX += xDragged;
-        this.scrollY += yDragged;
+        this.scrollX += xDragged/this.zoom;
+        this.scrollY += yDragged/this.zoom;
         this.centered = false;
     }
 

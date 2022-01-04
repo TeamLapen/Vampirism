@@ -6,10 +6,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import de.teamlapen.vampirism.player.skills.ActionSkill;
-import de.teamlapen.vampirism.player.skills.SkillHandler;
-import de.teamlapen.vampirism.player.skills.SkillNode;
-import de.teamlapen.vampirism.player.skills.SkillTree;
+import de.teamlapen.vampirism.player.skills.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.util.IReorderingProcessor;
@@ -21,6 +18,7 @@ import org.lwjgl.system.NonnullDefault;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @NonnullDefault
 @ParametersAreNonnullByDefault
@@ -103,6 +101,10 @@ public class SkillNodeScreen extends AbstractGui {
         } else {
             return this.skillNode.isHidden() ? SkillNodeState.HIDDEN :SkillNodeState.VISIBLE;
         }
+    }
+
+    private Collection<ISkill> getLockingSkills(SkillNode node) {
+        return Arrays.stream(node.getLockingNodes()).map(id -> SkillTreeManager.getInstance().getSkillTree().getNodeFromId(id)).filter(Objects::nonNull).flatMap(node2 -> Arrays.stream(node2.getElements())).filter(skillHandler::isSkillEnabled).collect(Collectors.toList());
     }
 
     public List<SkillNodeScreen> getChildren() {
@@ -202,12 +204,32 @@ public class SkillNodeScreen extends AbstractGui {
         if (hoveredSkill != -1) {
             int x = getNodeStart() + (26 + 10) * hoveredSkill;
 
+            //draw blocked
+            if (state == SkillNodeState.LOCKED || state == SkillNodeState.VISIBLE) {
+                List<ITextComponent> text = new ArrayList<>();
+                if (state == SkillNodeState.VISIBLE) {
+                    ITextComponent t1 = new TranslationTextComponent("text.vampirism.skill.unlock_parent_first").withStyle(TextFormatting.DARK_RED);
+                    text.add(t1);
+                } else {
+                    text.add(new TranslationTextComponent("text.vampirism.skill.locked"));
+                    this.getLockingSkills(this.skillNode).stream().map(a -> a.getName().copy().withStyle(TextFormatting.DARK_RED)).forEach(text::add);
+                }
+                int width = text.stream().mapToInt(this.minecraft.font::width).max().getAsInt();
+                this.minecraft.getTextureManager().bind(WIDGETS_LOCATION);
+                GuiUtils.drawContinuousTexturedBox(stack, scrollX + x - 5 + this.width[hoveredSkill] - width -8, scrollY + this.y -3 - text.size() * 9, 0, 81, width+5, 6 + text.size() * 10, 200, 20, 3, this.getBlitOffset());
+                int fontY = scrollY + this.y +1 - text.size() * 9;
+                for (int i = 0; i < text.size(); i++) {
+                    this.minecraft.font.drawShadow(stack, text.get(i),  scrollX + x - 8 -2+ this.width[hoveredSkill] - width ,  fontY+ i * 9, -1);
+                }
+            }
+
             //draw description
             if (elements[hoveredSkill].getDescription() != null) {
                 List<IReorderingProcessor> description = getSkillDescription(hoveredSkill);
+                this.minecraft.getTextureManager().bind(WIDGETS_LOCATION);
                 GuiUtils.drawContinuousTexturedBox(stack, scrollX + x - 5, scrollY + this.y + 3, 0, 81, this.width[hoveredSkill], 30 + description.size() * 9, 200, 20, 3, this.getBlitOffset());
                 for (int i = 0; i < description.size(); i++) {
-                    this.minecraft.font.draw(stack, description.get(i), scrollX + x + 2, scrollY + this.y + 3 + 24 + i * 9, -1);
+                    this.minecraft.font.drawShadow(stack, description.get(i), scrollX + x + 2, scrollY + this.y + 3 + 24 + i * 9, -1);
                 }
             }
 
