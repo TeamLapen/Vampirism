@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.client.core.ModKeys;
+import de.teamlapen.vampirism.client.gui.skills.SkillsScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.inventory.container.VampirismContainer;
@@ -53,6 +54,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
     private int oldMouseY;
     private ScrollableListWidget<ITaskInstance> list;
     private final Map<Integer, Button> refinementRemoveButtons = new Int2ObjectOpenHashMap<>(3);
+    private Component level;
 
     public VampirismScreen(VampirismContainer container, Inventory playerInventory, Component titleIn) {
         super(container, playerInventory, titleIn);
@@ -62,6 +64,11 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
         this.inventoryLabelY = this.imageHeight - 93;
         this.menu.setReloadListener(() -> this.list.refresh());
         this.factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(playerInventory.player).orElseThrow(() -> new IllegalStateException("Cannot open Vampirism container without faction player"));
+        if (factionPlayer.getLevel() > 0) {
+            this.level = FactionPlayerHandler.getOpt(playerInventory.player).filter(f -> f.getLordLevel() > 0).map(f -> f.getLordTitle().copy().append(" (" + f.getLordLevel() + ")")).orElseGet(() -> Component.translatable("text.vampirism.level").append(" " + factionPlayer.getLevel())).withStyle(style -> style.withColor(factionPlayer.getFaction().getChatColor()));
+        } else {
+            this.level = Component.empty();
+        }
     }
 
     @Override
@@ -142,7 +149,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
 
         this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.topPos + 90, 20, 20, 40, 205, 20, BACKGROUND, 256, 256, context -> {
             if (this.minecraft.player.isAlive() && VampirismPlayerAttributes.get(this.minecraft.player).faction != null) {
-                Minecraft.getInstance().setScreen(new SkillsScreen<>(this));
+                Minecraft.getInstance().setScreen(new SkillsScreen(FactionPlayerHandler.getCurrentFactionPlayer(this.minecraft.player).orElse(null),this));
             }
         }, (button, matrixStack, mouseX, mouseY) -> {
             this.renderTooltip(matrixStack, Component.translatable("gui.vampirism.vampirism_menu.skill_screen"), mouseX, mouseY);
@@ -190,6 +197,13 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
             }
         }
 
+    }
+
+    @Override
+    protected void renderLabels(@Nonnull PoseStack stack, int mouseX, int mouseY) {
+        super.renderLabels(stack, mouseX, mouseY);
+        int width = this.font.width(this.level);
+        this.font.draw(stack, this.level,Math.max(5, 31 - (float)width /2), 81, -1);
     }
 
     @Override

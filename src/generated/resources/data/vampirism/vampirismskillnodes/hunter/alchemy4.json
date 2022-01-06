@@ -1,5 +1,5 @@
 {
-  "parent": "vampirism:hunter/alchemy3",
+  "parent": "vampirism:hunter/alchemy2",
   "skills": [
     "vampirism:purified_garlic",
     "vampirism:holy_water_enhanced"

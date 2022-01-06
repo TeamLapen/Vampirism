@@ -85,7 +85,11 @@ public interface IProxy extends IInitListener {
 
     void renderScreenFullColor(int ticksOn, int ticksOff, int color);
 
-    default void resetSkillScreenCache() {
+    /**
+     * @deprecated unused
+     */
+    @Deprecated
+    default void resetSkillScreenCache() { //TODO BREAKING remove
     }
 
     /**

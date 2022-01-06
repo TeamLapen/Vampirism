@@ -29,6 +29,7 @@ public class SkillNode {
     private final int depth;
     private final IPlayableFaction<?> faction;
     private final ResourceLocation id;
+    private final boolean hidden = false;
 
     private SkillNode(ResourceLocation id, IPlayableFaction<?> faction, SkillNode parent, int depth, ISkill<?>[] elements, ResourceLocation... lockingNodes) {
         this.id = id;
@@ -88,6 +89,10 @@ public class SkillNode {
 
     public ResourceLocation getId() {
         return id;
+    }
+
+    public boolean isHidden() {
+        return hidden;
     }
 
     public ResourceLocation[] getLockingNodes() {
