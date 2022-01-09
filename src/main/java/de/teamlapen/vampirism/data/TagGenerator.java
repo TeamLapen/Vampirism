@@ -103,6 +103,7 @@ public class TagGenerator {
             tag(ModTags.Items.HOLY_WATER_SPLASH).add(ModItems.holy_water_splash_bottle_normal, ModItems.holy_water_splash_bottle_enhanced, ModItems.holy_water_splash_bottle_ultimate);
             tag(ItemTags.STAIRS).addTag(ModTags.Items.CASTLE_STAIRS);
             tag(ItemTags.SLABS).addTag(ModTags.Items.CASTLE_SLAPS);
+            tag(ItemTags.PIGLIN_LOVED).add(ModItems.vampire_clothing_crown);
         }
     }
 
