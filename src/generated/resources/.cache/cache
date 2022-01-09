@@ -447,6 +447,7 @@ bd406bd5143d9b39adccd1f2519325892e94d7ba data/minecraft/tags/blocks/wooden_trapd
 2ed7808a3ca6a38fe702c8c4c6bdd68f4fe41861 data/minecraft/tags/items/leaves.json
 3f17e2e66964c8ea81edf660710f009fb8eb4ea4 data/minecraft/tags/items/logs.json
 3f17e2e66964c8ea81edf660710f009fb8eb4ea4 data/minecraft/tags/items/logs_that_burn.json
+f111315c619eb04442752125cb868e4f11069226 data/minecraft/tags/items/piglin_loved.json
 32b4a3c503d3d2a626bbbe78ba013b645a8270d5 data/minecraft/tags/items/planks.json
 6590e861e18f193e35b70b9dc20f5c89926ae406 data/minecraft/tags/items/saplings.json
 d5c3ae67803074d803f72814d933de31bdafb91d data/minecraft/tags/items/slabs.json

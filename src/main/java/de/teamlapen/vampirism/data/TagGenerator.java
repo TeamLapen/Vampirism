@@ -123,6 +123,7 @@ public class TagGenerator {
             tag(ModTags.Items.HOLY_WATER_SPLASH).add(ModItems.HOLY_WATER_SPLASH_BOTTLE_NORMAL.get(), ModItems.HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get(), ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get());
             tag(ItemTags.STAIRS).addTag(ModTags.Items.CASTLE_STAIRS);
             tag(ItemTags.SLABS).addTag(ModTags.Items.CASTLE_SLAPS);
+            tag(ItemTags.PIGLIN_LOVED).add(ModItems.VAMPIRE_CLOTHING_CROWN.get());
         }
     }
 
