@@ -284,7 +284,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.chandelier);
             this.add(ModBlocks.candelabra_wall, createSingleItemTable(ModItems.item_candelabra));
             this.add(ModBlocks.candelabra, createSingleItemTable(ModItems.item_candelabra));
-            this.dropSelf(ModBlocks.cross);
+            this.add(ModBlocks.cross, (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
             this.dropSelf(ModBlocks.tombstone1);
             this.dropSelf(ModBlocks.tombstone2);
             this.dropSelf(ModBlocks.tombstone3);

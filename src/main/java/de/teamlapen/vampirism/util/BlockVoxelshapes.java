@@ -91,8 +91,17 @@ public class BlockVoxelshapes {
             Block.box(13.3, 13.5, 2.2, 15.5, 15.5, 14.2)
     ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).orElse(VoxelShapes.empty());
 
-    public static final VoxelShape throneTop = Stream.of(
-            Block.box(2.0, 0, 1.2, 13.5, 10, 3)
+    public static final VoxelShape throneTop = Block.box(2.0, 0, 1.2, 13.5, 10, 3);
 
-    ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).orElse(VoxelShapes.empty());
+    public static final VoxelShape crossBottom = Stream.of(
+            Block.box(1, 0, 1, 15, 2, 15),
+            Block.box(3, 2, 3, 13, 3, 13),
+            Block.box(6, 3, 6, 10, 16, 10)
+    ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).orElseGet(VoxelShapes::empty);
+
+    public static final VoxelShape crossTop = Stream.of(
+            Block.box(6, 0, 6, 10, 14, 10),
+            Block.box(10, 3, 6, 16, 7, 10),
+            Block.box(0, 3, 6, 6, 7, 10)
+    ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).orElseGet(VoxelShapes::empty);
 }

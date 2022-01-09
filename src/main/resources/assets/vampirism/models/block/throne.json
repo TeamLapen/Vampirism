@@ -3,7 +3,8 @@
 	"ambientocclusion": false,
 	"texture_size": [64, 64],
 	"textures": {
-		"2": "vampirism:block/throne"
+		"2": "vampirism:block/throne",
+		"particle": "block/stripped_spruce_log"
 	},
 	"elements": [
 		{

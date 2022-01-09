@@ -203,7 +203,7 @@ public class ModBlocks {
         registry.register(prepareItemRegistry(new ChandelierBlock()));
         registry.register(prepareRegister(new CandelabraWallBlock()));
         registry.register(prepareRegister(new CandelabraBlock()));
-        registry.register(prepareItemRegistry(new CrossBlock()));
+        registry.register(prepareItemRegister(new VampirismSplitBlock("cross", AbstractBlock.Properties.of(Material.WOOD).strength(2, 3), BlockVoxelshapes.crossBottom, BlockVoxelshapes.crossTop, true).markDecorativeBlock()));
         registry.register(prepareItemRegistry(new VampirismHorizontalBlock("tombstone1", AbstractBlock.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb1).markDecorativeBlock()));
         registry.register(prepareItemRegistry(new VampirismHorizontalBlock("tombstone2", AbstractBlock.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb2).markDecorativeBlock()));
         registry.register(prepareItemRegistry(new VampirismHorizontalBlock("tombstone3", AbstractBlock.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb3).markDecorativeBlock()));
