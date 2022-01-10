@@ -252,7 +252,7 @@ public class ModBlocks {
         registry.register(prepareItemRegistry(new FenceBlock(AbstractBlock.Properties.of(Material.WOOD, dark_spruce_planks.defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD)).setRegistryName(REFERENCE.MODID, "dark_spruce_fence")));
         registry.register(prepareItemRegistry(new FenceBlock(AbstractBlock.Properties.of(Material.WOOD, cursed_spruce_planks.defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD)).setRegistryName(REFERENCE.MODID, "cursed_spruce_fence")));
         registry.register(prepareItemRegister(new VampirismHorizontalBlock("vampire_rack", AbstractBlock.Properties.of(Material.WOOD).strength(2, 3), BlockVoxelshapes.vampire_rack).markDecorativeBlock()));
-        registry.register(prepareItemRegister(new VampirismSplitBlock("throne", AbstractBlock.Properties.of(Material.WOOD).strength(2, 3), BlockVoxelshapes.throneBottom, BlockVoxelshapes.throneTop, true).markDecorativeBlock()));
+        registry.register(prepareItemRegister(new ThroneBlock());
 
         /**
          * TUTORIAL:
