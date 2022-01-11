@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:hunter/alchemy2",
+  "skills": [
+    "vampirism:garlic_diffuser"
+  ]
+}

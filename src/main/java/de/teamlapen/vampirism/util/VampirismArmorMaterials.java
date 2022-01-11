@@ -14,7 +14,6 @@ import java.util.function.Supplier;
 
 
 public enum VampirismArmorMaterials implements ArmorMaterial {
-    OBSIDIAN("obsidian", 37, new int[]{2, 5, 6, 2}, 10, SoundEvents.ARMOR_EQUIP_DIAMOND, 3.0F, 0.1f, () -> Ingredient.of(Tags.Items.OBSIDIAN)),
     MASTERLY_IRON("masterly_iron", 30, new int[]{2, 5, 6, 2}, 10, SoundEvents.ARMOR_EQUIP_IRON, 0, 0, () -> Ingredient.of(Tags.Items.INGOTS_IRON)),
     MASTERLY_LEATHER("masterly_leather", 20, new int[]{1, 2, 3, 1}, 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Tags.Items.LEATHER));
 

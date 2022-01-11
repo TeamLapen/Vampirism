@@ -87,10 +87,6 @@ public class ModVillage {
                 3, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForSouls(new Trades.Price(40, 64), ModItems.VAMPIRE_BOOK.get(), new Trades.Price(1, 1), 10, 1),
                         new Trades.ItemsForSouls(new Trades.Price(10, 20), ModItems.HOLY_WATER_BOTTLE_ENHANCED.get(), new Trades.Price(1, 3)),
-                        new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.OBSIDIAN_ARMOR_CHEST_NORMAL.get(), new Trades.Price(1, 1), 8, 1),
-                        new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.OBSIDIAN_ARMOR_LEGS_NORMAL.get(), new Trades.Price(1, 1), 7, 1),
-                        new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.OBSIDIAN_ARMOR_FEET_NORMAL.get(), new Trades.Price(1, 1), 5, 1),
-                        new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.OBSIDIAN_ARMOR_HEAD_NORMAL.get(), new Trades.Price(1, 1), 6, 1),
                         new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), new Trades.Price(1, 1), 8, 1),
                         new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.HUNTER_COAT_LEGS_ENHANCED.get(), new Trades.Price(1, 1), 7, 1),
                         new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.HUNTER_COAT_FEET_ENHANCED.get(), new Trades.Price(1, 1), 5, 1),
@@ -102,21 +98,13 @@ public class ModVillage {
                 },
                 4, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForSouls(new Trades.Price(20, 32), Items.DIAMOND, new Trades.Price(1, 2)),
+                },
+                5, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForSouls(new Trades.Price(15, 25), ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get(), new Trades.Price(1, 2)),
-                        new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.OBSIDIAN_ARMOR_CHEST_ENHANCED.get(), new Trades.Price(1, 1), 8, 1),
-                        new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.OBSIDIAN_ARMOR_LEGS_ENHANCED.get(), new Trades.Price(1, 1), 7, 1),
-                        new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.OBSIDIAN_ARMOR_FEET_ENHANCED.get(), new Trades.Price(1, 1), 5, 1),
-                        new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.OBSIDIAN_ARMOR_HEAD_ENHANCED.get(), new Trades.Price(1, 1), 6, 1),
                         new Trades.ItemsForSouls(new Trades.Price(30, 55), ModItems.HUNTER_COAT_CHEST_ULTIMATE.get(), new Trades.Price(1, 1), 8, 1),
                         new Trades.ItemsForSouls(new Trades.Price(25, 55), ModItems.HUNTER_COAT_LEGS_ULTIMATE.get(), new Trades.Price(1, 1), 7, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 35), ModItems.HUNTER_COAT_FEET_ULTIMATE.get(), new Trades.Price(1, 1), 5, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 35), ModItems.HUNTER_COAT_HEAD_ULTIMATE.get(), new Trades.Price(1, 1), 6, 1)
-                },
-                5, new VillagerTrades.ItemListing[]{
-                        new Trades.ItemsForSouls(new Trades.Price(30, 64), ModItems.OBSIDIAN_ARMOR_CHEST_ULTIMATE.get(), new Trades.Price(1, 1), 10, 1),
-                        new Trades.ItemsForSouls(new Trades.Price(25, 64), ModItems.OBSIDIAN_ARMOR_LEGS_ULTIMATE.get(), new Trades.Price(1, 1), 9, 1),
-                        new Trades.ItemsForSouls(new Trades.Price(20, 40), ModItems.OBSIDIAN_ARMOR_FEET_ULTIMATE.get(), new Trades.Price(1, 1), 7, 1),
-                        new Trades.ItemsForSouls(new Trades.Price(20, 40), ModItems.OBSIDIAN_ARMOR_HEAD_ULTIMATE.get(), new Trades.Price(1, 1), 8, 1)
                 });
     }
 

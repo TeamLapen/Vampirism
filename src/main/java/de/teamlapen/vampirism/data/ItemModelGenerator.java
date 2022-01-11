@@ -100,18 +100,6 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModItems.INJECTION_GARLIC.get());
             add(ModItems.INJECTION_SANGUINARE.get());
             add(ModItems.INJECTION_ZOMBIE_BLOOD.get());
-            add(ModItems.OBSIDIAN_ARMOR_CHEST_NORMAL.get());
-            add(ModItems.OBSIDIAN_ARMOR_CHEST_ENHANCED.get());
-            add(ModItems.OBSIDIAN_ARMOR_CHEST_ULTIMATE.get());
-            add(ModItems.OBSIDIAN_ARMOR_FEET_NORMAL.get());
-            add(ModItems.OBSIDIAN_ARMOR_FEET_ENHANCED.get());
-            add(ModItems.OBSIDIAN_ARMOR_FEET_ULTIMATE.get());
-            add(ModItems.OBSIDIAN_ARMOR_HEAD_NORMAL.get());
-            add(ModItems.OBSIDIAN_ARMOR_HEAD_ENHANCED.get());
-            add(ModItems.OBSIDIAN_ARMOR_HEAD_ULTIMATE.get());
-            add(ModItems.OBSIDIAN_ARMOR_LEGS_NORMAL.get());
-            add(ModItems.OBSIDIAN_ARMOR_LEGS_ENHANCED.get());
-            add(ModItems.OBSIDIAN_ARMOR_LEGS_ULTIMATE.get());
             add(ModItems.PURIFIED_GARLIC.get());
             add(ModItems.SOUL_ORB_VAMPIRE.get());
             add(ModItems.TECH_CROSSBOW_AMMO_PACKAGE.get());

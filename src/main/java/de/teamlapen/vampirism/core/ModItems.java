@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.items.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
@@ -23,6 +24,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
+import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -146,19 +148,6 @@ public class ModItems {
 
     public static final RegistryObject<TentItem> ITEM_TENT = ITEMS.register("item_tent", () -> new TentItem(false));
     public static final RegistryObject<TentItem> ITEM_TENT_SPAWNER = ITEMS.register("item_tent_spawner", () -> new TentItem(true));
-
-    public static final RegistryObject<ObsidianArmorItem> OBSIDIAN_ARMOR_CHEST_ENHANCED = ITEMS.register("obsidian_armor_chest_enhanced", () -> new ObsidianArmorItem(EquipmentSlot.CHEST, IItemWithTier.TIER.ENHANCED));
-    public static final RegistryObject<ObsidianArmorItem> OBSIDIAN_ARMOR_CHEST_NORMAL = ITEMS.register("obsidian_armor_chest_normal", () -> new ObsidianArmorItem(EquipmentSlot.CHEST, IItemWithTier.TIER.NORMAL));
-    public static final RegistryObject<ObsidianArmorItem> OBSIDIAN_ARMOR_CHEST_ULTIMATE = ITEMS.register("obsidian_armor_chest_ultimate", () -> new ObsidianArmorItem(EquipmentSlot.CHEST, IItemWithTier.TIER.ULTIMATE));
-    public static final RegistryObject<ObsidianArmorItem> OBSIDIAN_ARMOR_FEET_ENHANCED = ITEMS.register("obsidian_armor_feet_enhanced", () -> new ObsidianArmorItem(EquipmentSlot.FEET, IItemWithTier.TIER.ENHANCED));
-    public static final RegistryObject<ObsidianArmorItem> OBSIDIAN_ARMOR_FEET_NORMAL = ITEMS.register("obsidian_armor_feet_normal", () -> new ObsidianArmorItem(EquipmentSlot.FEET, IItemWithTier.TIER.NORMAL));
-    public static final RegistryObject<ObsidianArmorItem> OBSIDIAN_ARMOR_FEET_ULTIMATE = ITEMS.register("obsidian_armor_feet_ultimate", () -> new ObsidianArmorItem(EquipmentSlot.FEET, IItemWithTier.TIER.ULTIMATE));
-    public static final RegistryObject<ObsidianArmorItem> OBSIDIAN_ARMOR_HEAD_ENHANCED = ITEMS.register("obsidian_armor_head_enhanced", () -> new ObsidianArmorItem(EquipmentSlot.HEAD, IItemWithTier.TIER.ENHANCED));
-    public static final RegistryObject<ObsidianArmorItem> OBSIDIAN_ARMOR_HEAD_NORMAL = ITEMS.register("obsidian_armor_head_normal", () -> new ObsidianArmorItem(EquipmentSlot.HEAD, IItemWithTier.TIER.NORMAL));
-    public static final RegistryObject<ObsidianArmorItem> OBSIDIAN_ARMOR_HEAD_ULTIMATE = ITEMS.register("obsidian_armor_head_ultimate", () -> new ObsidianArmorItem(EquipmentSlot.HEAD, IItemWithTier.TIER.ULTIMATE));
-    public static final RegistryObject<ObsidianArmorItem> OBSIDIAN_ARMOR_LEGS_ENHANCED = ITEMS.register("obsidian_armor_legs_enhanced", () -> new ObsidianArmorItem(EquipmentSlot.LEGS, IItemWithTier.TIER.ENHANCED));
-    public static final RegistryObject<ObsidianArmorItem> OBSIDIAN_ARMOR_LEGS_NORMAL = ITEMS.register("obsidian_armor_legs_normal", () -> new ObsidianArmorItem(EquipmentSlot.LEGS, IItemWithTier.TIER.NORMAL));
-    public static final RegistryObject<ObsidianArmorItem> OBSIDIAN_ARMOR_LEGS_ULTIMATE = ITEMS.register("obsidian_armor_legs_ultimate", () -> new ObsidianArmorItem(EquipmentSlot.LEGS, IItemWithTier.TIER.ULTIMATE));
 
     public static final RegistryObject<PitchforkItem> PITCHFORK = ITEMS.register("pitchfork", PitchforkItem::new);
 
@@ -285,6 +274,16 @@ public class ModItems {
                 case "vampirism:item_med_chair" -> missingMapping.remap(ModBlocks.MED_CHAIR.get().asItem());
                 case "vampirism:bloody_spruce_log" -> missingMapping.remap(ModBlocks.CURSED_SPRUCE_LOG.get().asItem());
                 case "vampirism:bloody_spruce_leaves" -> missingMapping.remap(ModBlocks.DARK_SPRUCE_LEAVES.get().asItem());
+            }
+            if(missingMapping.getKey().toString().startsWith("vampirism:obsidian_armor")){
+                Item hunterArmorReplacement = (Item) event.getRegistry().getValue(new ResourceLocation(missingMapping.getKey().toString().replace("obsidian_armor","hunter_coat")));
+                if(hunterArmorReplacement != null){
+                    missingMapping.remap(hunterArmorReplacement);
+                }
+                else{
+                    LogManager.getLogger().warn("Could not find hunter armor replacement for {}", missingMapping.getKey().toString());
+                    missingMapping.ignore();
+                }
             }
         });
     }
